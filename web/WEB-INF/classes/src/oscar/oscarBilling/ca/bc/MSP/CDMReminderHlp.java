@@ -42,7 +42,7 @@ public class CDMReminderHlp {
    * has patients that need counselling
    * @param provNo String
    */
-  public void manageCDMTicklers(String[] alertCodes) {
+  public void manageCDMTicklers(String[] alertCodes) throws Exception {
     //get all demographics with a problem that falls within CDM category
     Hashtable cdms = (Hashtable)this.getCDMPatients(alertCodes);
     Enumeration demoNos = cdms.keys();
@@ -50,22 +50,27 @@ public class CDMReminderHlp {
     String remString = "SERVICE CODE: 13050 Reminder";
     while (demoNos.hasMoreElements()) {
       String demoNo = (String) demoNos.nextElement();
-      String provNo = (String)cdms.get(demoNo);
+      String provNo = (String) cdms.get(demoNo);
       ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
-      int daysPast = lgc.daysSinceLast13050(demoNo);
-      if (daysPast > 365) {
-        String oldfmt = lgc.getDateofLast13050(demoNo);
-        String newfmt = "";
-        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-
+      DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+      String oldfmt = lgc.getDateofLast13050(demoNo);
+      java.util.Date last13050 = null;
+      long daysPast = -1;
+      if (oldfmt != "") {
         try {
-          java.util.Date newDate = formatter.parse(oldfmt);
-          formatter = new SimpleDateFormat("dd-MMM-yy");
-          newfmt = formatter.format(newDate);
+          System.out.println("DATE:" + oldfmt);
+          last13050 = formatter.parse(oldfmt);
+          daysPast = System.currentTimeMillis() - last13050.getTime();
         }
         catch (ParseException ex) {
-          ex.printStackTrace();
+          throw new Exception();
         }
+      }
+
+      if (daysPast > 365) {
+        String newfmt = "";
+        formatter = new SimpleDateFormat("dd-MMM-yy");
+        newfmt = formatter.format(last13050);
 
         String message = remString + " - Last Billed On: " + newfmt;
         crt.resolveTickler(demoNo, remString);
@@ -94,13 +99,13 @@ public class CDMReminderHlp {
   private Map getCDMPatients(String[] codes) {
     Hashtable lst = new Hashtable();
     String qry = "SELECT distinct de.demographic_no,de.provider_no FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no " +
-    " and d.dxresearch_code in(";
-     for (int i = 0; i < codes.length; i++) {
-       qry+=codes[i];
-       if(i<codes.length-1){
-         qry+=",";
-       }
-     }
+        " and d.dxresearch_code in(";
+    for (int i = 0; i < codes.length; i++) {
+      qry += codes[i];
+      if (i < codes.length - 1) {
+        qry += ",";
+      }
+    }
     qry += ") and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
@@ -108,7 +113,7 @@ public class CDMReminderHlp {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
       while (rs.next()) {
-        lst.put(rs.getString(1),rs.getString(2));
+        lst.put(rs.getString(1), rs.getString(2));
       }
     }
     catch (SQLException ex) {

@@ -148,7 +148,6 @@ public class ServiceCodeValidationLogic {
     DBHandler db = null;
     ResultSet rs = null;
     try {
-      System.err.print("HELLO");
       db = new DBHandler(DBHandler.OSCAR_DATA);
       String qry =
           "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
@@ -276,6 +275,9 @@ public class ServiceCodeValidationLogic {
       rs = db.GetSQL(qry);
       if (rs.next()) {
         ret = rs.getString(1);
+      }
+      else{
+        ret = "";
       }
       db.CloseConn();
       rs.close();

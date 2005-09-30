@@ -30,113 +30,145 @@ import org.apache.struts.action.ActionMapping;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
+import oscar.util.AlertTimer;
 
-public final class LoginAction extends Action {
-    private static final Logger _logger = Logger.getLogger(LoginAction.class);
-    private static final String LOG_PRE = "Login!@#$: ";
+public final class LoginAction
+    extends Action {
+  private static final Logger _logger = Logger.getLogger(LoginAction.class);
+  private static final String LOG_PRE = "Login!@#$: ";
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
-        String ip = request.getRemoteAddr();
-        String where = "failure";
-        //String userName, password, pin, propName;
-        LoginForm frm = (LoginForm) form;
-        String userName = ((LoginForm) form).getUsername();
-        String password = ((LoginForm) form).getPassword();
-        String pin = ((LoginForm) form).getPin();
-        String propName = request.getContextPath().substring(1) + ".properties";
-        if (userName.equals("")) {
-            return mapping.findForward(where);
-        }
-
-        LoginCheckLogin cl = new LoginCheckLogin(propName);
-        if (!cl.propFileFound) {
-            String newURL = mapping.findForward("error").getPath();
-            newURL = newURL + "?errormsg=Unable to open the properties file " + cl.propFileName + ".";
-            return (new ActionForward(newURL));
-        }
-
-        if (cl.isBlock(ip, userName)) {
-            _logger.info(LOG_PRE + " Blocked: " + userName);
-            //return mapping.findForward(where); //go to block page
-            // change to block page
-            String newURL = mapping.findForward("error").getPath();
-            newURL = newURL + "?errormsg=Your account is locked. Please contact your administrator to unlock.";
-            return (new ActionForward(newURL));
-        }
-
-        String[] strAuth;
-        try {
-            strAuth = cl.auth(userName, password, pin, ip);
-        } catch (Exception e) {
-            String newURL = mapping.findForward("error").getPath();
-            if (e.getMessage().startsWith("java.lang.ClassNotFoundException")) {
-                newURL = newURL + "?errormsg=Database driver "
-                        + e.getMessage().substring(e.getMessage().indexOf(':') + 2) + " not found.";
-            } else {
-                newURL = newURL + "?errormsg=Database connection error: " + e.getMessage() + ".";
-            }
-            return (new ActionForward(newURL));
-        }
-
-        if (strAuth != null && strAuth.length != 1) { //login successfully
-            //invalidate the existing sesson
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-                session = request.getSession();// Create a new session for this user
-            }
-
-            _logger.info("Assigned new session for: " + strAuth[0] + " : " + strAuth[3] + " : " + strAuth[4]);
-            LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
-            session.setMaxInactiveInterval(6800);
-
-            //initial db setting
-            Properties pvar = cl.getOscarVariable();
-            session.setAttribute("oscarVariables", pvar);
-            if (!DBHandler.isInit())
-                DBHandler.init(pvar.getProperty("db_name"), pvar.getProperty("db_driver"),
-                        pvar.getProperty("db_uri"), pvar.getProperty("db_username"), pvar.getProperty("db_password"));
-
-            //get View Type
-            String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].toLowerCase());
-
-            session.setAttribute("user", strAuth[0]);
-            session.setAttribute("userfirstname", strAuth[1]);
-            session.setAttribute("userlastname", strAuth[2]);
-            session.setAttribute("userprofession", viewType);
-            session.setAttribute("userrole", strAuth[4]);
-
-            if (viewType.equalsIgnoreCase("receptionist") || viewType.equalsIgnoreCase("doctor")) {
-                //get preferences from preference table
-                String[] strPreferAuth = cl.getPreferences();
-                session.setAttribute("starthour", strPreferAuth[0]);
-                session.setAttribute("endhour", strPreferAuth[1]);
-                session.setAttribute("everymin", strPreferAuth[2]);
-                session.setAttribute("groupno", strPreferAuth[3]);
-            }
-
-            if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view
-                //where =
-                // "receptionist";//receptionistcontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday";
-                where = "provider";
-            } else if (viewType.equalsIgnoreCase("doctor")) { // go to provider view
-                where = "provider"; //providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday";
-            } else if (viewType.equalsIgnoreCase("admin")) { // go to admin view
-                where = "admin";
-            }
-        // expired password
-        } else if (strAuth != null && strAuth.length == 1 && strAuth[0].equals("expired")) {
-            cl.updateLoginList(ip, userName);
-            String newURL = mapping.findForward("error").getPath();
-            newURL = newURL + "?errormsg=Your account is expired. Please contact your administrator.";
-            return (new ActionForward(newURL));
-        } else { // go to normal directory
-            //request.setAttribute("login", "failed");
-            //LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
-            cl.updateLoginList(ip, userName);
-            return mapping.findForward(where);
-        }
-        return mapping.findForward(where);
+  public ActionForward execute(ActionMapping mapping, ActionForm form,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws
+      ServletException, IOException {
+    String ip = request.getRemoteAddr();
+    String where = "failure";
+    //String userName, password, pin, propName;
+    LoginForm frm = (LoginForm) form;
+    String userName = ( (LoginForm) form).getUsername();
+    String password = ( (LoginForm) form).getPassword();
+    String pin = ( (LoginForm) form).getPin();
+    String propName = request.getContextPath().substring(1) + ".properties";
+    if (userName.equals("")) {
+      return mapping.findForward(where);
     }
+
+    LoginCheckLogin cl = new LoginCheckLogin(propName);
+    if (!cl.propFileFound) {
+      String newURL = mapping.findForward("error").getPath();
+      newURL = newURL + "?errormsg=Unable to open the properties file " +
+          cl.propFileName + ".";
+      return (new ActionForward(newURL));
+    }
+
+    if (cl.isBlock(ip, userName)) {
+      _logger.info(LOG_PRE + " Blocked: " + userName);
+      //return mapping.findForward(where); //go to block page
+      // change to block page
+      String newURL = mapping.findForward("error").getPath();
+      newURL = newURL +
+          "?errormsg=Your account is locked. Please contact your administrator to unlock.";
+      return (new ActionForward(newURL));
+    }
+
+    String[] strAuth;
+    try {
+      strAuth = cl.auth(userName, password, pin, ip);
+    }
+    catch (Exception e) {
+      String newURL = mapping.findForward("error").getPath();
+      if (e.getMessage().startsWith("java.lang.ClassNotFoundException")) {
+        newURL = newURL + "?errormsg=Database driver "
+            + e.getMessage().substring(e.getMessage().indexOf(':') + 2) +
+            " not found.";
+      }
+      else {
+        newURL = newURL + "?errormsg=Database connection error: " +
+            e.getMessage() + ".";
+      }
+      return (new ActionForward(newURL));
+    }
+
+    if (strAuth != null && strAuth.length != 1) { //login successfully
+      //invalidate the existing sesson
+      HttpSession session = request.getSession(false);
+      if (session != null) {
+        session.invalidate();
+        session = request.getSession(); // Create a new session for this user
+      }
+
+      _logger.info("Assigned new session for: " + strAuth[0] + " : " +
+                   strAuth[3] + " : " + strAuth[4]);
+      LogAction.addLog(strAuth[0], LogConst.LOGIN, LogConst.CON_LOGIN, "", ip);
+      session.setMaxInactiveInterval(6800);
+
+      //initial db setting
+      Properties pvar = cl.getOscarVariable();
+      session.setAttribute("oscarVariables", pvar);
+      if (!DBHandler.isInit()) {
+        DBHandler.init(pvar.getProperty("db_name"),
+                       pvar.getProperty("db_driver"),
+                       pvar.getProperty("db_uri"),
+                       pvar.getProperty("db_username"),
+                       pvar.getProperty("db_password"));
+      }
+
+      //get View Type
+      String viewType = LoginViewTypeHlp.getInstance().getProperty(strAuth[3].
+          toLowerCase());
+
+      session.setAttribute("user", strAuth[0]);
+      session.setAttribute("userfirstname", strAuth[1]);
+      session.setAttribute("userlastname", strAuth[2]);
+      session.setAttribute("userprofession", viewType);
+      session.setAttribute("userrole", strAuth[4]);
+
+      if (viewType.equalsIgnoreCase("receptionist") ||
+          viewType.equalsIgnoreCase("doctor")) {
+        //get preferences from preference table
+        String[] strPreferAuth = cl.getPreferences();
+        session.setAttribute("starthour", strPreferAuth[0]);
+        session.setAttribute("endhour", strPreferAuth[1]);
+        session.setAttribute("everymin", strPreferAuth[2]);
+        session.setAttribute("groupno", strPreferAuth[3]);
+      }
+
+      if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view
+        //where =
+        // "receptionist";//receptionistcontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday";
+        where = "provider";
+      }
+      else if (viewType.equalsIgnoreCase("doctor")) { // go to provider view
+        where = "provider"; //providercontrol.jsp?year="+nowYear+"&month="+(nowMonth)+"&day="+(nowDay)+"&view=0&displaymode=day&dboperation=searchappointmentday";
+      }
+      else if (viewType.equalsIgnoreCase("admin")) { // go to admin view
+        where = "admin";
+      }
+
+      //Lazy Loads AlertTimer instance only once, will run as daemon for duration of server runtime
+      if (pvar.getProperty("billregion").equals("BC")) {
+        AlertTimer.getInstance();
+      }
+
+      // expired password
+    }
+    else if (strAuth != null && strAuth.length == 1 &&
+             strAuth[0].equals("expired")) {
+      cl.updateLoginList(ip, userName);
+      String newURL = mapping.findForward("error").getPath();
+      newURL = newURL +
+          "?errormsg=Your account is expired. Please contact your administrator.";
+      return (new ActionForward(newURL));
+    }
+    else { // go to normal directory
+      //request.setAttribute("login", "failed");
+      //LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
+      cl.updateLoginList(ip, userName);
+      return mapping.findForward(where);
+    }
+
+
+
+    return mapping.findForward(where);
+  }
 }
