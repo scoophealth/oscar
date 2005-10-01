@@ -20,6 +20,10 @@
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
         
     ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
+    int pageNum = 1;
+    if ( request.getParameter("pageNum") != null ) {
+        pageNum = Integer.parseInt(request.getParameter("pageNum"));
+    }
 %>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
@@ -165,7 +169,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 <html>
 <head>
 <title>
-<bean:message key="oscarMDS.index.title"/>
+<bean:message key="oscarMDS.index.title"/> Page <%=pageNum%>
 </title>
 </head>
 
@@ -254,6 +258,8 @@ function checkSelected() {
                                         <%} else {%>
                                             <%=ProviderData.getProviderName(searchProviderNo)%>
                                         <%}%>
+                                        &nbsp;&nbsp;&nbsp;
+                                        Page : <%=pageNum%>
                                      </span>                                
                                 <% } %>
                             </td>                            
@@ -295,10 +301,7 @@ function checkSelected() {
 
             </tr>
 
-        <%  int pageNum = 1;
-            if ( request.getParameter("pageNum") != null ) {
-                pageNum = Integer.parseInt(request.getParameter("pageNum"));
-            }
+        <%  
             int startIndex = 0;
             if ( request.getParameter("startIndex") != null ) {
                 startIndex = Integer.parseInt(request.getParameter("startIndex"));
@@ -317,9 +320,15 @@ function checkSelected() {
                 String segmentID        = (String) result.segmentID;
                 String status           = (String) result.acknowledgedStatus;
 
-                String resultStatus     = (String) result.resultStatus; %>
+                String resultStatus     = (String) result.resultStatus; 
 
-            <tr bgcolor="<%=(i % 2 == 0 ? "#e0e0ff" : "#ccccff" )%>" class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
+                String bgcolor = i % 2 == 0 ? "#e0e0ff" : "#ccccff" ;
+                if (!result.isMatchedToPatient){
+                   bgcolor = "#FFCC00";    
+                }
+                %>
+
+            <tr bgcolor="<%=bgcolor%>" class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
                 <td nowrap>
                     <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>"> 
                     <input type="hidden" name="labType<%=segmentID%><%=result.labType%>" value="<%=result.labType%>"/>
@@ -328,9 +337,12 @@ function checkSelected() {
                 <td nowrap>                                    
                     <% if ( result.isMDS() ){ %>
                     <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
-                    <% }else{ %>
+                    <% }else if (result.isCML()){ %>
                     <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
-                    <% } %>
+                    <% }else {%>
+                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
+                    <!--a href="javascript:reportWindow('../lab/CA/BC/report.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')">2</a-->
+                    <% }%>
                 </td>
                 <td nowrap>
                     <center><%= (String) result.sex %></center>
@@ -387,8 +399,12 @@ function checkSelected() {
                                         <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>">< <bean:message key="oscarMDS.index.msgPrevious"/></a>
                                  <% } else { %>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                 <% } %>
-                                       [<%= pageNum %>] 
+                                 <% } %>                                   
+                                    <%int count = 1;
+                                      for( int i =0; i < labs.size(); i = i +20){%>
+                                      <a style="text-decoration:none;" href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=count%>&startIndex=<%=i%>">[<%=count%>]</a>                                      
+                                      <%count++;
+                                      }%>                                                                              
                                  <% if ( labs.size() > endIndex ) { %>
                                         <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message key="oscarMDS.index.msgNext"/> ></a>
                                  
