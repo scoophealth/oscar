@@ -11,7 +11,7 @@ long loadPage = System.currentTimeMillis();
 
 
 
-<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
 
 <%@ page import="org.apache.commons.lang.*" %>
 
@@ -372,8 +372,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <oscar:newUnclaimedLab>
          <a style="color: red;" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
          </oscar:newUnclaimedLab>
-        </font></td>
-         <%}%>
+        </font></td>         
 		</security:oscarSec>
 <!-- doctor code block -->
 <!-- oscarMessenger code block -->
