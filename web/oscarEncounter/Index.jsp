@@ -1,3 +1,4 @@
+
 <%--
 /*
  *
@@ -115,6 +116,8 @@ You have no rights to access the data!
      sChart = false;
   }
 %>
+
+
 
 <html:html locale="true">
 <head>
@@ -571,7 +574,8 @@ function popupOscarComm(vheight,vwidth,varpage) {
 
 function popUpMsg(vheight,vwidth,msgPosition) {
 
-  var page = "<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
+  
+  var page = "<rewrite:reWrite jspPage="../oscarMessenger/ViewMessageByPosition.do"/>?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(page, "<bean:message key="global.oscarRx"/>", windowprops);
   if (popup != null) {
@@ -965,9 +969,12 @@ border-right: 2px solid #cfcfcf;
                                     LabResultData result =  (LabResultData) labs.get(j);
                                     if ( result.isMDS() ){ %>
                                         <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.reportStatus%>"><%=result.dateTime%> <%=result.discipline%></option>
-                                    <% }else{ %>
-                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.dateTime%> <%=result.discipline%></option>
-                                    <% } %>
+                                    <% }else if (result.isCML()){ %>
+                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.dateTime%> <%=result.discipline%></option>                                 
+                                    <% }else {%>
+                                        <option value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>" ><%=result.dateTime%> <%=result.discipline%></option>                                 
+                                    <% }%>
+                                    
                             <% } %>
                         </select>
                  </td>
@@ -1057,18 +1064,18 @@ border-right: 2px solid #cfcfcf;
                                 </td>
                             </tr>
                             <tr width="100%">
-                                <!----This is the Social History cell ...sh...-->
+                                <!-- This is the Social History cell ...sh...-->
                                 <td  valign="top">
                                     <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-                                       <textarea name='shTextarea' wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
+                                       <textarea name="shTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
                                 </td>
-                                <!----This is the Family History cell ...fh...-->
+                                <!-- This is the Family History cell ...fh...-->
                                 <td  valign="top">
-                                       <textarea name='fhTextarea' wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
+                                       <textarea name="fhTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
                                 </td>
-                                <!----This is the Medical History cell ...mh...-->
+                                <!-- This is the Medical History cell ...mh...-->
                                 <td  valign="top" colspan="2">
-                                       <textarea name='mhTextarea' wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
+                                       <textarea name="mhTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -1264,14 +1271,19 @@ border-right: 2px solid #cfcfcf;
                                   encounterText = bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
-                               }
+                               }                                                              
+                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                if(bean.eChartTimeStamp==null){
+                                  System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
+                                  //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
-                                  encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                                  //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                                   encounterText +="\n__________________________________________________\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
                                }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
-                                   encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
-                               }
+                                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                                   encounterText +="\n__________________________________________________\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
+                               } 
                                //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
                                if(!bean.oscarMsg.equals("")){
                                   encounterText +="\n\n"+bean.oscarMsg;
