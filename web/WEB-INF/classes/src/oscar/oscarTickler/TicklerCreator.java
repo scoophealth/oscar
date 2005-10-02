@@ -55,7 +55,7 @@ public class TicklerCreator {
 
       String sql = "insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) " +
           " values(" + demoNo + " ,'" + message + "','A','" + nowDate +
-          "',now()," + provNo + ",'4','" + provNo + "')";
+          "',now(),'" + provNo + "','4','" + provNo + "')";
       System.out.println("insert tickler qry=" + sql);
       DBHandler db = null;
       try {
