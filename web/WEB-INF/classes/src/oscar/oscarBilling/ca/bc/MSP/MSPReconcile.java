@@ -80,16 +80,16 @@ public class MSPReconcile {
 
   public MSPReconcile() {
     System.err.println("MSP STARTED");
-    negValues.setProperty("}","0");
-    negValues.setProperty("J","1");
-    negValues.setProperty("K","2");
-    negValues.setProperty("L","3");
-    negValues.setProperty("M","4");
-    negValues.setProperty("N","5");
-    negValues.setProperty("O","6");
-    negValues.setProperty("P","7");
-    negValues.setProperty("Q","8");
-    negValues.setProperty("R","9");
+    negValues.setProperty("}", "0");
+    negValues.setProperty("J", "1");
+    negValues.setProperty("K", "2");
+    negValues.setProperty("L", "3");
+    negValues.setProperty("M", "4");
+    negValues.setProperty("N", "5");
+    negValues.setProperty("O", "6");
+    negValues.setProperty("P", "7");
+    negValues.setProperty("Q", "8");
+    negValues.setProperty("R", "9");
   }
 
   public String getStatusDesc(String stat) {
@@ -993,10 +993,11 @@ public class MSPReconcile {
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
-
+    DBHandler db = null;
+    ResultSet rs = null;
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(p);
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
         b.billingtype = rs.getString("b.billingtype");
@@ -1015,7 +1016,7 @@ public class MSPReconcile {
         b.amount = rs.getString("bill_amount");
         b.code = rs.getString("billing_code");
         b.dx1 = rs.getString("dx_code1"); ;
-        b.serviceDate = rs.getString("service_date");
+        b.serviceDate = rs.getString("service_date").equals("")?"00000000":rs.getString("service_date");
         b.mvaCode = rs.getString("mva_claim_code");
         b.hin = rs.getString("phn");
         b.serviceLocation = rs.getString("service_location");
@@ -1032,14 +1033,22 @@ public class MSPReconcile {
         b.provName = this.getProvider(b.apptDoctorNo).getInitials();
 
         if (b.isWCB()) {
-          ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
-                                    b.billing_no + "'");
-          if (rs2.next()) {
-            b.amount = rs2.getString("bill_amount");
-            b.code = rs2.getString("w_feeitem");
-            b.dx1 = rs2.getString("w_icd9");
+          ResultSet rs2 = null;
+          try {
+           rs2 = db.GetSQL("select * from wcb where billing_no = '" +
+                                      b.billing_no + "'");
+            if (rs2.next()) {
+              b.amount = rs2.getString("bill_amount");
+              b.code = rs2.getString("w_feeitem");
+              b.dx1 = rs2.getString("w_icd9");
+            }
           }
-          rs2.close();
+          catch (SQLException ex) {
+            ex.printStackTrace();
+          }
+          finally{
+             rs2.close();
+          }
         }
 
         /**
@@ -1061,6 +1070,9 @@ public class MSPReconcile {
             }
             b.explanations = explCodes;
             b.rejectionDate = (String) dets.get(7);
+            if(b.rejectionDate == null || b.rejectionDate.equals("")){
+              b.rejectionDate = "00000000";
+            }
           }
 
           ResultSet rsDemo = db.GetSQL(
@@ -1076,12 +1088,21 @@ public class MSPReconcile {
         billSearch.list.add(b);
         billSearch.count++;
       }
-      rs.close();
-      db.CloseConn();
+
     }
     catch (Exception e) {
       e.printStackTrace();
     }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+
     return billSearch;
 
   }
@@ -1107,6 +1128,15 @@ public class MSPReconcile {
     }
     catch (SQLException ex) {
       ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
     }
 
     return desc;
@@ -1290,7 +1320,7 @@ public class MSPReconcile {
     if (repType.equals(this.REP_REJ)) {
       criteriaQry += " and bm.billingstatus = '" + this.REJECTED + "'";
     }
-    else if(repType.equals(this.REP_INVOICE)){
+    else if (repType.equals(this.REP_INVOICE)) {
       criteriaQry += " and bm.billingstatus != '" + this.DELETED + "'";
     }
     else if (repType.equals(this.REP_WO)) {
@@ -1467,11 +1497,18 @@ public class MSPReconcile {
         prov.setFirstName(rs.getString("first_name"));
         prov.setLastName(rs.getString("last_name"));
       }
-      db.CloseConn();
-      rs.close();
     }
     catch (SQLException ex) {
       ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
     }
 
     return prov;
@@ -1503,12 +1540,20 @@ public class MSPReconcile {
         prov.setProviderNo(rs.getString("provider_no"));
         list.add(prov);
       }
-      db.CloseConn();
-      rs.close();
     }
     catch (SQLException ex) {
       ex.printStackTrace();
     }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+
     return list;
   }
 
@@ -1532,12 +1577,20 @@ public class MSPReconcile {
         s21.setAmtPaid(this.convCurValue(rs.getString(5)));
         s21.setCheque(this.convCurValue(rs.getString(6)));
       }
-      db.CloseConn();
-      rs.close();
     }
     catch (SQLException ex) {
       ex.printStackTrace();
     }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+
     return s21;
   }
 
@@ -1566,12 +1619,20 @@ public class MSPReconcile {
         prov.setFirstName(rs.getString("first_name"));
         prov.setLastName(rs.getString("last_name"));
       }
-      db.CloseConn();
-      rs.close();
     }
     catch (SQLException ex) {
       ex.printStackTrace();
     }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+
     return prov;
   }
 
@@ -1585,17 +1646,18 @@ public class MSPReconcile {
    */
   public static String convCurValue(String value) {
     String ret = value;
-    String lastDigit = ret.substring(ret.length() - 1,ret.length());
+    String lastDigit = ret.substring(ret.length() - 1, ret.length());
     String preDigits = ret.substring(0, ret.length() - 1);
     //If string isn't negative(negative values contain alphabetic last char)
-    if(negValues.containsKey(lastDigit)){
+    if (negValues.containsKey(lastDigit)) {
       lastDigit = negValues.getProperty(lastDigit);
-      preDigits="-"+preDigits;
-      ret = preDigits+lastDigit;
+      preDigits = "-" + preDigits;
+      ret = preDigits + lastDigit;
     }
     int dblValue = new Integer(ret).intValue();
-    double newDouble = dblValue/100;
-    BigDecimal curValue = new BigDecimal(newDouble).setScale(2, BigDecimal.ROUND_HALF_UP);
+    double newDouble = dblValue / 100;
+    BigDecimal curValue = new BigDecimal(newDouble).setScale(2,
+        BigDecimal.ROUND_HALF_UP);
 
     return curValue.toString();
   }
