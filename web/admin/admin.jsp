@@ -25,7 +25,7 @@ String userlastname = (String) session.getAttribute("userlastname");
    oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
    response.addCookie(cs.GiveMeACookie(cs.adminCookie)); %>
 
-
+ 
 
 <!--
 /*
@@ -243,9 +243,11 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">Billing Reconcilliation Reports</a><br>
 		  <a href=# onClick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Billing Account Reports</a><br>
           <a href=# onClick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Bill Status</a><br>
+          
 
 
        <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
+          <!--a href=# onClick ="popupPage(300,600,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a><br-->
           <a href=# onClick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Add/Edit Billing Service Code</a><br>
           <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
           <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
@@ -384,6 +386,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <th><bean:message key="admin.admin.misc"/></th>
     </tr>
 
+    
       <tr bgcolor="#EEEEFF">
         <td>
           <a href="#" ONCLICK="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">
@@ -409,7 +412,13 @@ function popUpBillStatus(vheight,vwidth,varpage) {
         <font size="-2">(Setting: <a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilledvisitprovider.jsp');return false;">provider</a>, <a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilleddxgrp.jsp');return false;">dx category</a>)</font></td>
     </tr>
   <% } } %>
-
+    <tr  bgcolor="#EEEEFF">
+      <td>
+          <a href=# onClick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a>
+      </td>        
+    </tr>
+  
+        
   </table>
 
   <hr color='black'>
