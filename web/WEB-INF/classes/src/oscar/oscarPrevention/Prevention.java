@@ -156,6 +156,9 @@ public class Prevention {
             withinRange = true;
          }
       } catch (ParseException e) {
+         e.printStackTrace(); 
+      } catch (Exception ex){
+         ex.printStackTrace();
       }
       return withinRange;
    }
