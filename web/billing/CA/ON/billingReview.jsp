@@ -628,6 +628,9 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
                             scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 || 
                             scode.compareTo("P030A")==0 ||
                             scode.compareTo("K005A")==0 ||
+                            scode.compareTo("A903A")==0 || scode.compareTo("C903A")==0 || 
+                            scode.compareTo("C003A")==0 || scode.compareTo("W102A")==0 || 
+                            scode.compareTo("W109A")==0 || scode.compareTo("W903A")==0 || 
                             scode.compareTo("Z716A")==0 || scode.startsWith("S") || 
                             (scode.endsWith("B") && !scode.endsWith("C988B") && !scode.endsWith("C998B") && !scode.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(bdFee);
