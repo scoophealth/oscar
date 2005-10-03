@@ -46,6 +46,11 @@ Lab Upload Utility
 
 <SCRIPT LANGUAGE="JavaScript">
 function displayAndDisable(){
+ 
+   if ( document.forms[0].importFile.value == "" ){
+      alert("You must select a file to upload");
+      return false;
+   }
    document.forms[0].Submit.disabled = true;
    showHideItem('waitingMessage');
    return true;
@@ -113,7 +118,7 @@ function displayAndDisable(){
             </td>
             <td valign="top" class="MainTableRightColumn">
             
-            <html:form action="/lab/labUpload" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">                
+            <html:form action="/lab/labUpload" method="POST" enctype="multipart/form-data" onsubmit="javascript: return displayAndDisable()">                
                         <input type="file" name="importFile" value="">                    
                         <input type="submit" name="Submit" value="Import">                                        
             </html:form>
