@@ -63,15 +63,29 @@ public class LoginFilter implements Filter {
              * If the requested resource is in any subdirectory other than
              * /images/ then redirect to the logout page.
              */
-         if (!requestURI.startsWith(contextPath + "/images/")
-         && requestURI.indexOf("/", contextPathLength + 1) > 0) {
+         //if (!requestURI.startsWith(contextPath + "/images/") && requestURI.indexOf("/", contextPathLength + 1) > 0) {
+         System.out.println((!inListOfExemptions(requestURI,contextPath) && requestURI.indexOf("/", contextPathLength + 1) > 0));
+         if (!inListOfExemptions(requestURI,contextPath) && requestURI.indexOf("/", contextPathLength + 1) > 0) {
             System.out.println("Not logged in while accessing URL:");
             System.out.println(requestURI);
+            
             httpResponse.sendRedirect(contextPath + "/logout.jsp");
             return;
          }
       }
       chain.doFilter(request, response);
+   }
+   
+   boolean inListOfExemptions(String requestURI,String contextPath){
+      boolean exempt = false;   
+      String[] exem = {contextPath + "/images/",contextPath + "/lab/CMLlabUpload.do",contextPath + "/lab/CA/ON/uploadComplete.jsp"};      
+      for(int i =0 ;i < exem.length; i++){
+         if ( requestURI.startsWith(exem[i]) ){
+            exempt = true;
+            i = exem.length;
+         }
+      }      
+      return exempt;
    }
    
     /*
