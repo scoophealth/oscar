@@ -464,7 +464,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <a href=# onClick ="popupPage(310,430,'../share/CalendarPopup.jsp?urlfrom=../provider/providercontrol.jsp&year=<%=strYear%>&month=<%=strMonth%>&param=<%=URLEncoder.encode("&view=0&displaymode=day&dboperation=searchappointmentday","UTF-8")%>')"><bean:message key="global.calendar"/></a></td>
         <td ALIGN="center"  BGCOLOR="ivory" width="33%">
 	<% if(view==1) {%>
-	<!--a href='providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="provider.appointmentProviderAdminDay.grpView"/></a-->
+	<a href='providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=0&displaymode=day&dboperation=searchappointmentday'><bean:message key="provider.appointmentProviderAdminDay.grpView"/></a>
 	<% } else { %>
 	<B><bean:message key="global.hello"/>
 	<% out.println( userfirstname+" "+userlastname); %>
