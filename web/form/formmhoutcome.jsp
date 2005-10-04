@@ -66,6 +66,14 @@
 		windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=10,screenY=0,top=0,left=0";
 		var popup=window.open(page, "planner", windowprop);
 	}
+	
+	var mainAction = "";
+	var mainTarget = "";
+	
+	 function getMainAction(){
+	    mainAction = document.forms[0].action;	  
+	    mainTarget = docuemtn.forms[0].target;	  
+	 }
 
     function onPrint() {
         document.forms[0].submit.value="print"; //printReferral
@@ -82,6 +90,8 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
+        document.forms[0].action = mainAction;
+        document.forms[0].target = mainTarget;
         var ret = checkAllDates();
         if(ret==true)
         {
@@ -91,6 +101,8 @@
     }
     function onSaveExit() {
         var ret = checkAllDates();
+        document.forms[0].action = mainAction;
+        document.forms[0].target = mainTarget;
         if(ret==true)
         {
             ret = confirm("Are you sure you wish to save this form and return to the encounter page?");
@@ -98,6 +110,8 @@
         return ret;
     }
     function onExit() {
+        document.forms[0].action = mainAction;
+        document.forms[0].target = mainTarget;
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
         {
             window.close();
@@ -353,7 +367,7 @@ var maxYear=3100;
 </style>
 
 </head>
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="getMainAction()">
 <html:form action="/form/formname" onsubmit="return numvalidate()">
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />

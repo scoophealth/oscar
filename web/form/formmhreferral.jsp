@@ -68,6 +68,14 @@
 		var popup=window.open(page, "planner", windowprop);
 	}
 
+	var mainAction = "";
+	var mainTarget = "";
+	
+	 function getMainAction(){
+	    mainAction = document.forms[0].action;	  
+	    mainTarget = docuemtn.forms[0].target;	  
+	 }
+	
     function onPrint() {
         document.forms[0].submit.value="print"; //printReferral
         var ret = numvalidate();
@@ -83,17 +91,23 @@
     }
     function onSave() {
         document.forms[0].submit.value="save";
+        document.forms[0].action = mainAction;
+        document.forms[0].target = mainTarget;
         var ret = confirm("Are you sure you want to save this form?");
         
         return ret;
     }
     function onSaveExit() {
         document.forms[0].submit.value="exit";
+        document.forms[0].action = mainAction;
+        document.forms[0].target = mainTarget;
         var ret = confirm("Are you sure you wish to save and close this window?");
         
         return ret;
     }
     function onExit() {
+        document.forms[0].action = mainAction;
+        document.forms[0].target = mainTarget;
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
         {
             window.close();
@@ -248,7 +262,7 @@
 </style>
 </head>
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="getMainAction()">
 <html:form action="/form/formname" onsubmit="return numvalidate()">
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
