@@ -279,11 +279,18 @@ public class ServiceCodeValidationLogic {
       else{
         ret = "";
       }
-      db.CloseConn();
-      rs.close();
     }
     catch (SQLException ex) {
       ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
     }
     return ret;
   }
