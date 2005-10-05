@@ -69,11 +69,11 @@ public class PathnetResultsData {
                 " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                 " AND providerLabRouting.lab_type = 'BCP' " +
                 " AND pid.patient_name like '"+patientLastName+"%^"+patientFirstName+"%' AND pid.external_id like '%"+patientHealthNumber+"%' ";
-         } else {
-                                   
-            sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex, orc.ordering_provider as  doc_name,pid.pid_id " +
-                "from hl7_message m, hl7_pid pid, hl7_orc orc, patientLabRouting " +
-                "where m.message_id = pid.message_id  and pid.pid_id = orc.pid_id and patientLabRouting.lab_no = m.message_id "+             
+         } else {                                                                                 
+            
+            sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id " +
+                "from hl7_message m, hl7_pid pid, patientLabRouting " +
+                "where m.message_id = pid.message_id  and patientLabRouting.lab_no = m.message_id "+             
                 "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
          }
                
