@@ -199,9 +199,16 @@ c_newBornID     : left, 41, 88, 0, BaseFont.HELVETICA, 8
  conFamPhy       : left, 44, 764, 0, BaseFont.HELVETICA, 8 , X
  conOther        : left, 116, 764, 0, BaseFont.HELVETICA, 8 , X
  conOtherTxt	 : left, 150, 763, 0, BaseFont.HELVETICA, 8
- conLos			 : left, 283, 763, 0, BaseFont.HELVETICA, 8
+ conLos			 : left, 284, 763, 0, BaseFont.HELVETICA, 8
+ ppLos			 : left, 284, 754, 0, BaseFont.HELVETICA, 8
+ admisDateTime	 : left, 260, 745, 0, BaseFont.HELVETICA, 6
+ dischargeDateTime	 : left, 212, 754, 0, BaseFont.HELVETICA, 6
+ __admisDateTime	 : left, 220, 745, 0, BaseFont.HELVETICA, 6, ADMISSION:
+ __dischargeDateTime	 : left, 173, 754, 0, BaseFont.HELVETICA, 6, DISCHARGE:
  __conLosTxtPre	 : left, 260, 763, 0, BaseFont.HELVETICA, 6 , L.O.S.:
  __conLosTxtPos	 : left, 302, 763, 0, BaseFont.HELVETICA, 6 , hr
+ __ppLosTxtPre	 : left, 260, 754, 0, BaseFont.HELVETICA, 6 , PP LOS:
+ __ppLosTxtPos	 : left, 302, 754, 0, BaseFont.HELVETICA, 6 , hr
  __date    : left, 332, 50, 0, BaseFont.HELVETICA, 6 , DATE
  __motherId    : left, 473, 50, 0, BaseFont.HELVETICA, 6 , MOTHER'S I.D. NUMBER
  __surname    : left, 332, 73, 0, BaseFont.HELVETICA, 6 , SURNAME  

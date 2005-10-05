@@ -388,6 +388,92 @@ var maxYear=9900;
 
         return b;
     }
+    
+function calc1() {
+	sDate = document.forms[0].birTimeDate2.value;
+	eDate = document.forms[0].birTimeDate3.value;
+	
+	sTime = document.forms[0].birTimeHour2.value;
+	eTime = document.forms[0].birTimeHour3.value;
+	objHour = document.forms[0].birDurHour1;
+	objMin = document.forms[0].birDurMin1;
+	//alert(sHour + sMin + " " + eHour + eMin);
+	calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin);
+}
+function calc2() {
+	sDate = document.forms[0].birTimeDate3.value;
+	eDate = document.forms[0].birTimeDate4.value;
+	sTime = document.forms[0].birTimeHour3.value;
+	eTime = document.forms[0].birTimeHour4.value;
+	objHour = document.forms[0].birDurHour2;
+	objMin = document.forms[0].birDurMin2;
+	calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin);
+}
+function calc3() {
+	sDate = document.forms[0].birTimeDate4.value;
+	eDate = document.forms[0].birTimeDate5.value;
+	sTime = document.forms[0].birTimeHour4.value;
+	eTime = document.forms[0].birTimeHour5.value;
+	objHour = document.forms[0].birDurHour3;
+	objMin = document.forms[0].birDurMin3;
+	calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin);
+}
+function calcRup() {
+	sDate = document.forms[0].birTimeDate1.value;
+	eDate = document.forms[0].birTimeDate4.value;
+	sTime = document.forms[0].birTimeHour1.value;
+	eTime = document.forms[0].birTimeHour4.value;
+	objHour = document.forms[0].birDurRupHour;
+	objMin = document.forms[0].birDurRupMin;
+	calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin);
+	document.forms[0].birDurRupHour.value = document.forms[0].birDurRupHour.value + ":" + objMin.value;
+}
+function calcLOS() {
+	tempV = document.forms[0].admisDateTime.value;
+	sDate = tempV.length>10? tempV.substring(0,10) : "";
+	sTime = tempV.length>10? tempV.substring(11) : "";
+	tempV = document.forms[0].dischargeDateTime.value;
+	eDate = tempV.length>10? tempV.substring(0,10) : "";
+	eTime = tempV.length>10? tempV.substring(11) : "";
+	objHour = document.forms[0].conLos;
+	objMin = "";
+	calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin);
+}
+function calcPPLOS() {
+	sDate = document.forms[0].birTimeDate5.value;
+	sTime = document.forms[0].birTimeHour5.value;
+	tempV = document.forms[0].dischargeDateTime.value;
+	eDate = tempV.length>10? tempV.substring(0,10) : "";
+	eTime = tempV.length>10? tempV.substring(11) : "";
+	objHour = document.forms[0].ppLos;
+	objMin = "";
+	calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin);
+}
+function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
+    var sdd = sDate.substring(0, sDate.indexOf("/"));
+    var smm = eval(sDate.substring(eval(sDate.indexOf("/")+1), sDate.lastIndexOf("/")) - 1);
+    var syyyy  = sDate.substring(eval(sDate.lastIndexOf("/")+1));
+    var edd = eDate.substring(0, eDate.indexOf("/"));
+    var emm = eval(eDate.substring(eval(eDate.indexOf("/")+1), eDate.lastIndexOf("/")) - 1);
+    var eyyyy  = eDate.substring(eval(eDate.lastIndexOf("/")+1));
+	tempV = sTime;
+	sHour = tempV.substring(0, tempV.indexOf(":"));
+	sMin = tempV.substring(eval(tempV.indexOf(":")+1) );
+	tempV = eTime;
+	eHour = tempV.substring(0, tempV.indexOf(":"));
+	eMin = tempV.substring(eval(tempV.indexOf(":")+1) );
+    var s_date=new Date(syyyy,smm,sdd,sHour,sMin,0);
+    var e_date=new Date(eyyyy,emm,edd,eHour,eMin,0);
+
+	var one_hour=1000*60*60;
+	//alert(s_date.getTime());	//alert(e_date.getTime());
+	b = Math.floor((e_date.getTime()-s_date.getTime())/one_hour);
+	objHour.value = b;
+	b = Math.ceil((e_date.getTime()-s_date.getTime())%one_hour);
+	b = Math.ceil(b/(1000*60));
+	objMin.value = b;
+    return b;
+}
 </script>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1"  onLoad="setfocus()">
@@ -1167,21 +1253,21 @@ var maxYear=9900;
 	  </tr><tr>
 		<td align="right">1st STAGE</td>
 		<td>
-		<input type="text" name="birDurHour1" size="2" maxlength="2" value="<%= props.getProperty("birDurHour1", "") %>" @oscar.formDB />
+		<input type="text" name="birDurHour1" onDblClick="calc1();" class="spe" size="2" maxlength="2" value="<%= props.getProperty("birDurHour1", "") %>" @oscar.formDB />
 		</td><td>
 		<input type="text" name="birDurMin1" size="2" maxlength="2" value="<%= props.getProperty("birDurMin1", "") %>" @oscar.formDB />
 		</td>
 	  </tr><tr>
 		<td align="right">2nd STAGE</td>
 		<td>
-		<input type="text" name="birDurHour2" size="2" maxlength="2" value="<%= props.getProperty("birDurHour2", "") %>" @oscar.formDB />
+		<input type="text" name="birDurHour2" onDblClick="calc2();" class="spe" size="2" maxlength="2" value="<%= props.getProperty("birDurHour2", "") %>" @oscar.formDB />
 		</td><td>
 		<input type="text" name="birDurMin2" size="2" maxlength="2" value="<%= props.getProperty("birDurMin2", "") %>" @oscar.formDB />
 		</td>
 	  </tr><tr>
 		<td align="right">3rd STAGE</td>
 		<td>
-		<input type="text" name="birDurHour3" size="2" maxlength="2" value="<%= props.getProperty("birDurHour3", "") %>" @oscar.formDB />
+		<input type="text" name="birDurHour3" onDblClick="calc3();" class="spe" size="2" maxlength="2" value="<%= props.getProperty("birDurHour3", "") %>" @oscar.formDB />
 		</td><td>
 		<input type="text" name="birDurMin3" size="2" maxlength="2" value="<%= props.getProperty("birDurMin3", "") %>" @oscar.formDB />
 		</td>
@@ -1190,7 +1276,8 @@ var maxYear=9900;
 		<td>HOURS</td>
 	  </tr><tr>
 		<td>
-		<input type="text" name="birDurRupHour" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birDurRupHour", "") %>" @oscar.formDB />
+		<input type="text" name="birDurRupHour" onDblClick="calcRup();" class="spe" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birDurRupHour", "") %>" @oscar.formDB />
+		<input type="hidden" name="birDurRupMin" />
 		</td>
 	  </tr>
 	  </table>
@@ -1309,24 +1396,33 @@ var maxYear=9900;
 <table class="small8" width="100%" border="0"  cellspacing="0" cellpadding="0">
 <tr>
   <td colspan="2" nowrap><B>CONSULT TO:</B>
-  <input type="text" name="consultTo" size="50" maxlength="120" value="<%= props.getProperty("consultTo", "") %>" @oscar.formDB />
+  <input type="text" name="consultTo" size="30" maxlength="120" value="<%= props.getProperty("consultTo", "") %>" @oscar.formDB />
+  &nbsp;| ADMISSION 
+  <input type="text" name="admisDateTime" size="12" maxlength="16" value="<%= props.getProperty("admisDateTime", "") %>" @oscar.formDB />
+  <img src="../images/cal.gif" id="admisDateTime_cal">
   </td>
-  <td width="25%">SIGNATURE</td>
-  <td width="25%">SIGNATURE</td>
+  <td width="20%">SIGNATURE</td>
+  <td width="20%">SIGNATURE</td>
 </tr><tr>
-  <td width="20%">
+  <td width="15%">
   <input type="checkbox" name="conObste" <%= props.getProperty("conObste", "") %>  @oscar.formDB dbType="tinyint(1)"/>
   OBSTETRICIAN
   </td><td>
   <input type="checkbox" name="conPedia" <%= props.getProperty("conPedia", "") %>  @oscar.formDB dbType="tinyint(1)"/>
   PEDIATRICIAN
+  &nbsp;&nbsp;&nbsp; | DISCHARGE 
+  <input type="text" name="dischargeDateTime" size="12" maxlength="16" value="<%= props.getProperty("dischargeDateTime", "") %>" @oscar.formDB />
+  <img src="../images/cal.gif" id="dischargeDateTime_cal">
+   | PP LOS
+	<input type="text" name="ppLos" onDblClick="calcPPLOS();" class="spe" size="3" maxlength="3" value="<%= props.getProperty("ppLos", "") %>" @oscar.formDB />
+	hr
   </td><td> 
   <input type="text" name="conRmSignat" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("conRmSignat", "") %>" @oscar.formDB />
   </td><td> 
   <input type="text" name="conMdSignat" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("conMdSignat", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
-  <td width="20%">
+  <td>
   <input type="checkbox" name="conFamPhy" <%= props.getProperty("conFamPhy", "") %>  @oscar.formDB dbType="tinyint(1)"/>
   FAMILY PHYSICIAN
   </td><td nowrap>
@@ -1337,7 +1433,7 @@ var maxYear=9900;
 	<input type="text" name="conOtherTxt" size="20" maxlength="30" value="<%= props.getProperty("conOtherTxt", "") %>" @oscar.formDB />
 	</td><td align="right" nowrap>
 	L.O.S. 
-	<input type="text" name="conLos" size="3" maxlength="3" value="<%= props.getProperty("conLos", "") %>" @oscar.formDB />
+	<input type="text" name="conLos" onDblClick="calcLOS();" class="spe" size="3" maxlength="3" value="<%= props.getProperty("conLos", "") %>" @oscar.formDB />
 	hr
 	</td></tr>
 	</table>
@@ -1378,6 +1474,7 @@ var maxYear=9900;
 </table>
 
 </html:form>
+<br><br><br><br><br><br>
 <script type="text/javascript">
 Calendar.setup({ inputField : "pg1_formDate", ifFormat : "%d/%m/%Y", showsTime :false, button : "pg1_formDate_cal", singleClick : true, step : 1 });
 Calendar.setup({ inputField : "birTimeDate1", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate1_cal", singleClick : true, step : 1 });
@@ -1387,6 +1484,8 @@ Calendar.setup({ inputField : "birTimeDate4", ifFormat : "%d/%m/%Y", showsTime :
 Calendar.setup({ inputField : "birTimeDate5", ifFormat : "%d/%m/%Y", showsTime :false, button : "birTimeDate5_cal", singleClick : true, step : 1 });
 
 Calendar.setup({ inputField : "birFHR", ifFormat : "%d/%m/%Y", showsTime :false, button : "birFHR_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "admisDateTime", ifFormat : "%d/%m/%Y %H:%M", showsTime :true, button : "admisDateTime_cal", singleClick : true, step : 1 });
+Calendar.setup({ inputField : "dischargeDateTime", ifFormat : "%d/%m/%Y %H:%M", showsTime :true, button : "dischargeDateTime_cal", singleClick : true, step : 1 });
 </script>
 </body>
 </html:html>
