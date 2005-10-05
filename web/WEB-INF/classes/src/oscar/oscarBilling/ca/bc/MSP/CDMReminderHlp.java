@@ -60,7 +60,8 @@ public class CDMReminderHlp {
         try {
           System.out.println("DATE:" + oldfmt);
           last13050 = formatter.parse(oldfmt);
-          daysPast = System.currentTimeMillis() - last13050.getTime();
+          double differenceInseconds = ((System.currentTimeMillis() - last13050.getTime())*.001);
+          daysPast = (long)differenceInseconds/86400;
         }
         catch (ParseException ex) {
           throw new Exception();
