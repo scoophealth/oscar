@@ -23,34 +23,26 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import oscar.oscarDB.DBHandler;
-import java.io.*;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.text.*;
-import java.lang.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import oscar.oscarDB.DBHandler;
-import oscar.oscarBilling.ca.bc.pageUtil.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
-import oscar.*;
-import oscar.oscarBilling.ca.bc.MSP.*;
-import oscar.oscarBilling.ca.bc.data.*;
+
+import oscar.OscarProperties;
+import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
+import oscar.oscarBilling.ca.bc.data.BillingNote;
+import oscar.oscarDB.DBHandler;
 
 public class BillingSaveBillingAction
     extends Action {
@@ -120,7 +112,7 @@ public class BillingSaveBillingAction
         "'" + bean.getPatientNo() + "'," +
         "'" + bean.getBillingProvider() + "', " +
         "'" + bean.getApptNo() + "'," +
-        "'" + bean.getPatientName() + "'," +
+        "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientName()) + "'," +
         "'" + bean.getPatientPHN() + "'," +
         "'" + curDate + "'," +
         "'" + bean.getServiceDate() + "'," +
@@ -229,7 +221,7 @@ public class BillingSaveBillingAction
               + "'" + bean.getBillingGroupNo() + "',"
               + "'" + bean.getBillingPracNo() + "',"
               + "'" + bean.getPatientPHN() + "',"
-              + "'" + bean.getPatientFirstName().substring(0, 1) + " " + bean.getPatientLastName().substring(0, 2) + "',"
+              + "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientFirstName().substring(0, 1) + " " + bean.getPatientLastName().substring(0, 2)) + "',"
               + "'" + bean.getDependent() + "',"
               + "'" + ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem) billItem.get(i)).getUnit() + "',"
               + "'" + bean.getVisitLocation().substring(0, 2) + "',"
@@ -345,9 +337,9 @@ public class BillingSaveBillingAction
               "'" + bean.getPatientHCType() + "'," +
               "'" + bean.getPatientPHN() + "'," +
               "'" + convertDate8Char(bean.getPatientDoB()) + "'," +
-              "'" + bean.getPatientFirstName() + "'," +
+              "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientFirstName()) + "'," +
               "'" + " " + "'," + //oin_second_name
-              "'" + bean.getPatientLastName() + "'," +
+              "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientLastName()) + "'," +
               "'" + bean.getPatientSex() + "'," +
               "'" + bean.getPatientAddress1() + "'," +
               "'" + bean.getPatientAddress2() + "'," +
