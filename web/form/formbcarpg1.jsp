@@ -657,11 +657,11 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
 <table width="100%" border="1"  cellspacing="0" cellpadding="0">
 <tr>
   <td colspan="6"><b>3. OBSTETRICAL HISTORY INCLUDING ABORTIONS 
-	G</b><span class="small8">ravida</span> <input type="text" name="pg1_gravida" size="4" maxlength="4" value="<%= props.getProperty("pg1_gravida", "") %>" @oscar.formDB />
-	<b>T</b><span class="small8">erm</span> <input type="text" name="pg1_term" size="3" maxlength="4" value="<%= props.getProperty("pg1_term", "") %>" @oscar.formDB /> 
-    <b>P</b><span class="small8">reterm</span> <input type="text" name="pg1_preterm" size="3" maxlength="4" value="<%= props.getProperty("pg1_preterm", "") %>" @oscar.formDB /> 
-	<b>A</b><span class="small8">bortion</span> <input type="text" name="pg1_abortion" size="3" maxlength="3" value="<%= props.getProperty("pg1_abortion", "") %>" @oscar.formDB />  
-	<b>L</b><span class="small8">iving</span> <input type="text" name="pg1_living" size="3" maxlength="3" value="<%= props.getProperty("pg1_living", "") %>" @oscar.formDB />  
+	G</b><span class="small8">ravida</span> <input type="text" name="pg1_gravida" style="width: 30px;" size="2" maxlength="4" value="<%= props.getProperty("pg1_gravida", "") %>" @oscar.formDB />
+	<b>T</b><span class="small8">erm</span> <input type="text" name="pg1_term" style="width: 30px;" size="2" maxlength="4" value="<%= props.getProperty("pg1_term", "") %>" @oscar.formDB /> 
+    <b>P</b><span class="small8">reterm</span> <input type="text" name="pg1_preterm" style="width: 30px;" size="2" maxlength="4" value="<%= props.getProperty("pg1_preterm", "") %>" @oscar.formDB /> 
+	<b>A</b><span class="small8">bortion</span> <input type="text" name="pg1_abortion" style="width: 30px;" size="2" maxlength="3" value="<%= props.getProperty("pg1_abortion", "") %>" @oscar.formDB />  
+	<b>L</b><span class="small8">iving</span> <input type="text" name="pg1_living" style="width: 30px;" size="2" maxlength="3" value="<%= props.getProperty("pg1_living", "") %>" @oscar.formDB />  
 	</td>
   <td colspan="3" align="center"><b>CHILDREN</b></td>
 </tr><tr>
