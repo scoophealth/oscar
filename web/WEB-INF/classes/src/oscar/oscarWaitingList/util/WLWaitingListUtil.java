@@ -46,21 +46,16 @@ import oscar.util.*;
 public class WLWaitingListUtil {
         
     static public void removeFromWaitingList(String waitingListID, String demographicNo) {
-        System.out.println("update waiting list: " + waitingListID + " for patient " + demographicNo);
+        System.out.println("removing waiting list: " + waitingListID + " for patient " + demographicNo);
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT demographic_no FROM waitingList WHERE listID='" + waitingListID + "'";
+            String sql;
             ResultSet rs;
             
-            //go thru all the patient on the list
-            for(rs = db.GetSQL(sql); rs.next();){
-                
-                //delete patient from the waitinglist
-                //System.out.println("patient to be deleted: " + rs.getString("demographic_no"));
-                sql = "DELETE FROM waitingList WHERE demographic_no='"+ demographicNo +"' AND listID='" + waitingListID +"'";
-                    db.RunSQL(sql);                
-            }
-            rs.close();
+            
+            sql = "DELETE FROM waitingList WHERE demographic_no='"+ demographicNo +"' AND listID='" + waitingListID +"'";
+            db.RunSQL(sql);                
+            
             
             //update the list            
             sql = "SELECT * FROM waitingList WHERE listID='" + waitingListID + "' ORDER BY onListSince";

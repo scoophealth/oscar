@@ -42,7 +42,21 @@ Waiting List
 </title>
 
 </head>
-
+<script>
+function removePatient(demographicNo, waitingList){
+    var agree=confirm("Are you sure you want to remove this patient from the waiting list?");
+    if (agree){
+        windowprops = "height=50,width=50,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
+        var page = 'RemoveFromWaitingList.jsp?listId='+waitingList+'&demographicNo='+demographicNo; 
+        var popup = window.open(page, "removeWaitingList", windowprops); 
+    }
+    else{
+        return false ;
+    }
+        
+    
+}
+</script>
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->    
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -60,7 +74,7 @@ Waiting List
         </tr>
         <tr>
             <td class="MainTableLeftColumn">   
-                <a href="../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="demographicNo"/>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
+                <a href="../demographic/demographiccontrol.jsp?demographic_no=<bean:write name="demographicNo"/>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" />&nbsp;</a>
             </td>
             <td class="MainTableRightColumn">
                <table border=0 cellspacing=4 width=700>
@@ -82,6 +96,8 @@ Waiting List
                                         <td align="left" class="Header" width="100">
                                             On the Waiting List Since
                                         </td>
+                                        <td align="left" class="Header" width="100">
+                                        </td>
                                      </tr>
                                     <logic:iterate id="waitingListBean" name="patientWaitingList" property="patientWaitingListVector">
                                     <tr class="data">
@@ -89,6 +105,9 @@ Waiting List
                                         <td width="50"><bean:write name="waitingListBean" property="position" /></td>
                                         <td width="100"><bean:write name="waitingListBean" property="note" /></td>
                                         <td width="100"><bean:write name="waitingListBean" property="onListSince" /></td>                                        
+                                        <td>
+                                            <a href=# onClick ="removePatient('<bean:write name="waitingListBean" property="demographicNo"/>', '<bean:write name="waitingListBean" property="waitingListID" />');">Remove</a>
+                                        </td>
                                     </tr>                        
                                     </logic:iterate>                                    
                                 </td>

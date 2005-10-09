@@ -37,22 +37,25 @@ public class WLPatientWaitingListBean{
 
        String demographicNo;
        String waitingList;
+       String waitingListID;
        String position;
        String onListSince;
        String phoneNumber;
        String patientName;
        String note;
        
-       public WLPatientWaitingListBean(String demographicNo, String waitingList, String position, String note, String onListSince){
+       public WLPatientWaitingListBean(String demographicNo, String waitingListID, String waitingList, String position, String note, String onListSince){
            this.demographicNo=demographicNo;
+           this.waitingListID=waitingListID;
            this.waitingList = waitingList;
            this.note = note;
            this.position = position;
            this.onListSince = onListSince;
        }
        
-       public WLPatientWaitingListBean(String demographicNo, String position, String patientName, String phoneNumber, String note, String onListSince){
+       public WLPatientWaitingListBean(String demographicNo, String waitingListID, String position, String patientName, String phoneNumber, String note, String onListSince){
            this.demographicNo = demographicNo;
+           this.waitingListID=waitingListID;
            this.position=position;
            this.patientName=patientName;
            this.phoneNumber=phoneNumber;
@@ -62,6 +65,10 @@ public class WLPatientWaitingListBean{
        
        public String getDemographicNo(){
            return demographicNo;
+       }
+       
+       public String getWaitingListID(){
+           return waitingListID;
        }
        
        public String getWaitingList(){

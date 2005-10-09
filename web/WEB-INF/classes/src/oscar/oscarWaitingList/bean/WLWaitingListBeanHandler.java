@@ -48,25 +48,18 @@ public class WLWaitingListBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             
-            //String sql = "SELECT DISTINCT demographic_no FROM waitingList WHERE listID='" + waitingListID + "'";
-            //ResultSet rs;
-            //for(rs = db.GetSQL(sql); rs.next();){
-            //    WLPatientWaitingListBeanHandler.updateWaitingList(rs.getString("demographic_no"));
-            //}
-            //updateWaitingList(waitingListID);
-
-            String sql = "SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, d.phone, w.position, w.note, w.onListSince FROM waitingList w, demographic d WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' ORDER BY w.position";
+            String sql = "SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, d.phone, w.listID, w.position, w.note, w.onListSince FROM waitingList w, demographic d WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' ORDER BY w.position";
             ResultSet rs;        
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
                 WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( rs.getString("demographic_no"),
+                                                                                rs.getString("listID"),
                                                                                 rs.getString("position"),
                                                                                 rs.getString("patientName"), 
                                                                                 rs.getString("phone"),
                                                                                 rs.getString("note"),
                                                                                 rs.getString("onListSince"));   
-                //System.out.println("positing: " + rs.getString("position"));
-		//System.out.println("patientName: " + rs.getString("patientName"));
+                
                 waitingListVector.add(wLBean);
             }                            
             rs.close();        
