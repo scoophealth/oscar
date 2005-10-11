@@ -76,7 +76,23 @@ if (proNO.compareTo("000000") == 0) {
 boolean bPercS = false;
 bPercS = "".equals(oscarVariables.getProperty("billing_pCode",""))? false : true;
 boolean bDbCode = false;
-
+String billing_pCode = "";
+if(bPercS) {
+    billing_pCode = oscarVariables.getProperty("billing_pCode","");
+	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
+		String t=e.nextElement().toString();
+		if( t.startsWith("xml_") ) { 
+			t = t.substring(4).toUpperCase();
+			if("E411A".equals(t) || "E411A".equals(request.getParameter("xml_other1").toUpperCase()) 
+			        || "E411A".equals(request.getParameter("xml_other2").toUpperCase())
+			        || "E411A".equals(request.getParameter("xml_other3").toUpperCase())) {
+			    billing_pCode = oscarVariables.getProperty("billing_pCode_E411A","");
+			    break;
+			}
+		}
+	}
+}
+//System.out.println(billing_pCode);
 
 int counter = 0;
 String numCode="";
@@ -356,8 +372,8 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			sotherBuffer.insert(f,"");
 			otherstr = sotherBuffer.toString();   
 
-		    bDbCode = bPercS ? otherdbcode1.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
 			if(bPercS) {
+			    bDbCode = bPercS ? otherdbcode1.matches(billing_pCode) : false;
 			    if(bDbCode) {
 					pValue1 = pValue1.add(otherfee);
 					pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
@@ -451,7 +467,7 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			sotherBuffer.insert(f,"");
 			otherstr2 = sotherBuffer.toString();
 
-		    bDbCode = bPercS ? otherdbcode2.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+		    bDbCode = bPercS ? otherdbcode2.matches(billing_pCode) : false;
 			if(bPercS) {
 			    if(bDbCode) {
 					pValue1 = pValue1.add(otherfee02);
@@ -545,7 +561,7 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			sotherBuffer.insert(f,"");
 			otherstr3 = sotherBuffer.toString();
 
-		    bDbCode = bPercS ? otherdbcode3.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+		    bDbCode = bPercS ? otherdbcode3.matches(billing_pCode) : false;
 			if(bPercS) {
 			    if(bDbCode) {
 					pValue1 = pValue1.add(otherfee03);
@@ -654,7 +670,7 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigTotal = BigTotal.add(bdFee);
 
-		    bDbCode = bPercS ? scode.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+		    bDbCode = bPercS ? scode.matches(billing_pCode) : false;
 			if(bPercS) {
 			    if(bDbCode) {
 					pValue1 = pValue1.add(bdFee);
@@ -970,6 +986,10 @@ if (errorFlag.compareTo("1")==0){
 	session.setAttribute("content", content); 
 }
 apptMainBean.closePstmtConn();
+
+if(bPercS) {
+    billing_pCode = oscarVariables.getProperty("billing_pCode","");
+}
 %>
 
 <p>&nbsp;</p>
