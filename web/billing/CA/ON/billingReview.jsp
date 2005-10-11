@@ -1,4 +1,4 @@
-<%
+ <%
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.htm");
 String curUser_no = (String) session.getAttribute("user");
 String userfirstname = (String) session.getAttribute("userfirstname");
@@ -9,7 +9,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
-<!--  
+<!--
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -72,6 +72,12 @@ if (proNO.compareTo("000000") == 0) {
 %>
 
 <%
+// add perc. setting
+boolean bPercS = false;
+bPercS = "".equals(oscarVariables.getProperty("billing_pCode",""))? false : true;
+boolean bDbCode = false;
+
+
 int counter = 0;
 String numCode="";
 String diagcode="";
@@ -350,7 +356,19 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
 			sotherBuffer.insert(f,"");
 			otherstr = sotherBuffer.toString();   
 
-			if (otherdbcode1.compareTo("A001A")==0 || otherdbcode1.compareTo("A003A")==0 || 
+		    bDbCode = bPercS ? otherdbcode1.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+			if(bPercS) {
+			    if(bDbCode) {
+					pValue1 = pValue1.add(otherfee);
+					pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
+					pCode =otherdbcode1;
+					pDesc = otherdesc1;
+					pValue = pValue1.toString();
+
+					if (!eCode.equals(""))	eFlag = "1";
+			    }
+			}
+			else if (otherdbcode1.compareTo("A001A")==0 || otherdbcode1.compareTo("A003A")==0 || 
                             otherdbcode1.compareTo("A004A")==0 || otherdbcode1.compareTo("A007A")==0 || 
                             otherdbcode1.compareTo("A008A")==0 || otherdbcode1.compareTo("A888A")==0 || 
                             otherdbcode1.compareTo("Z777A")==0 || otherdbcode1.compareTo("P029A")==0 || 
@@ -433,6 +451,18 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
 			sotherBuffer.insert(f,"");
 			otherstr2 = sotherBuffer.toString();
 
+		    bDbCode = bPercS ? otherdbcode2.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+			if(bPercS) {
+			    if(bDbCode) {
+					pValue1 = pValue1.add(otherfee02);
+					pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
+					pCode =otherdbcode2;
+					pDesc = otherdesc2;
+					pValue = pValue1.toString();
+				
+					if (!eCode.equals(""))	eFlag = "1";
+			    }
+			} else
 			if (otherdbcode2.compareTo("A001A")==0 || otherdbcode2.compareTo("A003A")==0 || 
                             otherdbcode2.compareTo("A004A")==0 || otherdbcode2.compareTo("A007A")==0 || 
                             otherdbcode2.compareTo("A008A")==0 || otherdbcode2.compareTo("A888A")==0 || 
@@ -515,6 +545,18 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
 			sotherBuffer.insert(f,"");
 			otherstr3 = sotherBuffer.toString();
 
+		    bDbCode = bPercS ? otherdbcode3.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+			if(bPercS) {
+			    if(bDbCode) {
+					pValue1 = pValue1.add(otherfee03);
+					pValue1PerUnit = pValue1PerUnit.add(bdotherFee);
+					pCode =otherdbcode3;
+					pDesc = otherdesc3;
+					pValue = pValue1.toString();
+
+					if (!eCode.equals(""))	eFlag = "1";
+			    }
+			} else
 			if (otherdbcode3.compareTo("A001A")==0 || otherdbcode3.compareTo("A003A")==0 || 
                             otherdbcode3.compareTo("A004A")==0 || otherdbcode3.compareTo("A007A")==0 || 
                             otherdbcode3.compareTo("A008A")==0 || otherdbcode3.compareTo("A888A")==0 || 
@@ -612,6 +654,18 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
 			BigDecimal bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 			BigTotal = BigTotal.add(bdFee);
 
+		    bDbCode = bPercS ? scode.matches(oscarVariables.getProperty("billing_pCode","@")) : false;
+			if(bPercS) {
+			    if(bDbCode) {
+					pValue1 = pValue1.add(bdFee);
+					pValue1PerUnit = pValue1PerUnit.add(bdFee);
+					pCode = scode;
+					pDesc = desc;
+					pValue = pValue1.toString();
+
+					if (!eCode.equals(""))	eFlag = "1";
+			    }
+			} else
 			if (scode.compareTo("A001A")==0 || scode.compareTo("A003A")==0 || 
                             scode.compareTo("A004A")==0 || scode.compareTo("A007A")==0 || 
                             scode.compareTo("A008A")==0 || scode.compareTo("A888A")==0 || 
