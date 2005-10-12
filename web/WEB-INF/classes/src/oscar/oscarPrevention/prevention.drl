@@ -482,7 +482,19 @@
             <class>oscar.oscarPrevention.Prevention</class>
         </parameter>       
         <java:condition>prev.isTodayinDateRange("2005-10-01","2006-01-29")</java:condition> 
-        <java:condition>prev.isLastPreventionWithinRange("Flu","2005-10-01","2006-01-29")</java:condition> 
+        <java:condition>!prev.isLastPreventionWithinRange("Flu","2005-10-01","2006-01-29")</java:condition> 
+        <java:consequence>              
+              System.out.println("Flu 1");
+              prev.addWarning("Needs Flu Shot ");
+        </java:consequence>
+    </rule>
+
+    <rule name="Flu Set Date">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>       
+        <java:condition>prev.isNextDateSet("Flu")</java:condition>        
+        <java:condition>prev.isPassedNextDate("Flu")</java:condition>                    
         <java:consequence>              
               System.out.println("Flu 1");
               prev.addWarning("Needs Flu Shot ");
@@ -558,12 +570,94 @@
         <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
         <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
         <java:condition>prev.isFemale()</java:condition>             
-        
+        <java:condition>prev.getHowManyMonthsSinceLast("PAP") != -1</java:condition>             
         <java:consequence>              
               System.out.println("PAP debug");
               prev.addReminder("Last PAP was done "+prev.getHowManyMonthsSinceLast("PAP")+" month(s) ago");
         </java:consequence>
     </rule>
+
+
+<!-- Mammogram Rules Start -->
+   <rule name="MAM 1">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") &gt;= 22</java:condition>        
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") &lt;= 24</java:condition>        
+        <java:condition>!prev.isPreventionNever("MAM")</java:condition>
+        <java:condition>!prev.isNextDateSet("MAM")</java:condition>        
+        <java:consequence>              
+              System.out.println("MAM 1");
+              prev.addReminder("Mammogram is coming due for this patient");
+        </java:consequence>
+    </rule>
+
+    <rule name="MAM 2">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") &gt; 24</java:condition>        
+        <java:condition>!prev.isPreventionNever("MAM")</java:condition>
+        <java:condition>!prev.isNextDateSet("MAM")</java:condition>        
+        <java:consequence>              
+              System.out.println("MAM 2");
+              prev.addWarning("Mammogram is overdue for this patient");
+        </java:consequence>
+    </rule>
+
+    <rule name="MAM 3">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 50</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") == -1</java:condition>                
+        <java:consequence>              
+              System.out.println("MAM 3");
+              prev.addWarning("No Mammogram records can be found for this patient");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="MAM 4">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>        
+        <java:condition>prev.isFemale()</java:condition>                
+        <java:condition>prev.isNextDateSet("MAM")</java:condition>        
+        <java:condition>prev.isPassedNextDate("MAM")</java:condition>        
+        <java:consequence>              
+              System.out.println("MAM 3");
+              prev.addWarning("MAM is overdue for this patient");
+        </java:consequence>
+    </rule>
+
+
+    <rule name="MAM debug">
+        <parameter identifier="prev">
+            <class>oscar.oscarPrevention.Prevention</class>
+        </parameter>
+        <java:condition>prev.getAgeInYears() &gt;= 18</java:condition>
+        <java:condition>prev.getAgeInYears() &lt; 70</java:condition>
+        <java:condition>prev.isFemale()</java:condition>             
+        <java:condition>prev.getHowManyMonthsSinceLast("MAM") != -1</java:condition>             
+        <java:consequence>              
+              System.out.println("MAM debug");
+              prev.addReminder("Last Mammogram was done "+prev.getHowManyMonthsSinceLast("MAM")+" month(s) ago");
+        </java:consequence>
+    </rule>
+   
+<!-- Mammogram Rules End -->
+
+
 
   </rule-set>
 
