@@ -72,11 +72,18 @@ if (proNO.compareTo("000000") == 0) {
 %>
 
 <%
+String dxString = request.getParameter("xml_diagnostic_detail");
+String dx = dxString.length()>2 ? dxString.substring(0,3) : " ";
 // add perc. setting
 boolean bPercS = false;
 bPercS = "".equals(oscarVariables.getProperty("billing_pCode",""))? false : true;
 boolean bDbCode = false;
 String billing_pCode = "";
+String billing_E078A = oscarVariables.getProperty("billing_pCode_E078A","");
+if(!"".equals(billing_E078A)) {
+    String dTemp [] = billing_E078A.split("@");
+    billing_E078A = dx.matches(dTemp[2]) ? dTemp[0] : " ";
+}
 if(bPercS) {
     billing_pCode = oscarVariables.getProperty("billing_pCode","");
 	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
@@ -88,6 +95,18 @@ if(bPercS) {
 			        || "E411A".equals(request.getParameter("xml_other3").toUpperCase())) {
 			    billing_pCode = oscarVariables.getProperty("billing_pCode_E411A","");
 			    break;
+			} 
+			if(!"".equals(billing_E078A)) {
+				if("E078A".equals(t) || "E078A".equals(request.getParameter("xml_other1").toUpperCase()) 
+				        || "E078A".equals(request.getParameter("xml_other2").toUpperCase())
+				        || "E078A".equals(request.getParameter("xml_other3").toUpperCase())) {
+				    billing_pCode = billing_E078A;
+				    if(" ".equals(billing_E078A)) {
+						errorFlag = "1";
+					    errorMsg += "Error: Diagnostic code error for E078A<br>" ;
+				    }
+				    break;
+				}
 			}
 		}
 	}
