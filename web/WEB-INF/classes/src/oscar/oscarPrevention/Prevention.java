@@ -152,7 +152,7 @@ public class Prevention {
          Date startd = (Date)formatter.parse(startDate);   
          Date endd = (Date)formatter.parse(endDate);   
         
-         if (lastdate.after(startd) && lastdate.before(endd)){
+         if ( lastdate != null && lastdate.after(startd) && lastdate.before(endd)){
             withinRange = true;
          }
       } catch (ParseException e) {
