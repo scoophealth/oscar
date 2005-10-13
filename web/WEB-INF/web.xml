@@ -28,6 +28,10 @@
 -->
 
 <web-app>
+  <listener>
+    <listener-class>oscar.login.Startup</listener-class>
+  </listener>
+
 
   <!-- Login filter -->
   <filter>
