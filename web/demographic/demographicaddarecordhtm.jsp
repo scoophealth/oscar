@@ -285,7 +285,7 @@ function isValidDate(day,month,year){
 function checkHin() {
 	var typeInOK = false;
 	var hin = document.adddemographic.hin.value;
-	var province = document.adddemographic.province.value;
+	var province = document.adddemographic.hc_type.value;
 	//alert(province);
 	//check OHIP, no others
 	if(province=="ON") {

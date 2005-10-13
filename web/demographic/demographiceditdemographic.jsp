@@ -221,7 +221,7 @@ function isValidDate(day,month,year){
 function checkHin() {
 	var typeInOK = false;
 	var hin = document.updatedelete.hin.value;
-	var province = document.updatedelete.province.value;
+	var province = document.updatedelete.hc_type.value;
 	//alert(hin);
 	//check OHIP, no others
 	if(province=="ON") {
