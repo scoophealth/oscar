@@ -494,11 +494,20 @@ public class MSPBill {
    */
   public String getExpSum() {
     String summary = "";
-    Enumeration e = this.explanations.keys();
-    while (e.hasMoreElements()) {
-      String code = (String) e.nextElement();
-      String desc = (String)this.explanations.get(code);
-      summary += code + ":" + desc + "\n";
+    try{
+      if(this.explanations != null){
+        Enumeration e = this.explanations.keys();
+        while (e.hasMoreElements()) {
+          String code = (String) e.nextElement();
+          String desc = (String)this.explanations.get(code);
+          summary += code + ":" + desc + "\n";
+        }
+      }
+      else{
+        System.out.println("null sum=" + this.hashCode());
+      }
+    }catch(Exception e){
+      e.printStackTrace();
     }
     return summary;
   }
