@@ -40,17 +40,20 @@ import oscar.OscarProperties;
 public class AlertTimer {
   private static AlertTimer alerts = null;
   private static Timer timer;
-  private AlertTimer() {
+  String alertCodes[] = null;
+  oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = null;
+  private AlertTimer(String[] codes,long interval) {
     timer = new Timer(true);
-
+    alertCodes =codes;
+    hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
     //triggers alerts 5 seconds after instantiation and every 120 second interval
-    timer.scheduleAtFixedRate(new ReminderClass(),5000,120000);
+    timer.scheduleAtFixedRate(new ReminderClass(),5000,interval);
     System.err.println("Loaded Alerts Object");
   }
 
-  public static AlertTimer getInstance() {
+  public static AlertTimer getInstance(String[] codes,long interval) {
     if (alerts == null) {
-      alerts = new AlertTimer();
+      alerts = new AlertTimer(codes,interval);
     }
     return alerts;
   }
@@ -62,10 +65,6 @@ public class AlertTimer {
       extends TimerTask {
     public void run() {
       long loadAlerts = System.currentTimeMillis();
-      String alertCodes[] = OscarProperties.getInstance().getProperty(
-          "CDM_ALERTS").split(",");
-      oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = new oscar.oscarBilling.
-          ca.bc.MSP.CDMReminderHlp();
       try {
         hlp.manageCDMTicklers(alertCodes);
       }

@@ -31,6 +31,7 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.util.AlertTimer;
+import oscar.OscarProperties;
 
 public final class LoginAction
     extends Action {
@@ -147,7 +148,10 @@ public final class LoginAction
 
       //Lazy Loads AlertTimer instance only once, will run as daemon for duration of server runtime
       if (pvar.getProperty("billregion").equals("BC")) {
-        AlertTimer.getInstance();
+       String alertFreq = pvar.getProperty("ALERT_POLL_FREQUENCY");
+       Long longFreq = new Long(alertFreq);
+       String[] alertCodes =  OscarProperties.getInstance().getProperty("CDM_ALERTS").split(",");
+       AlertTimer.getInstance(alertCodes,longFreq.longValue());
       }
 
       // expired password

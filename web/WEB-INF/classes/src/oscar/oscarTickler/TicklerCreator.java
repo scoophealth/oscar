@@ -44,6 +44,7 @@ public class TicklerCreator {
    * @param reason String
    */
   public void createTickler(String demoNo, String provNo, String message) {
+    long crtTick = System.currentTimeMillis();
     if (!ticklerExists(demoNo, message)) {
       GregorianCalendar now = new GregorianCalendar();
       int curYear = now.get(Calendar.YEAR);
@@ -74,6 +75,9 @@ public class TicklerCreator {
         }
       }
     }
+    long endTick = System.currentTimeMillis();
+    System.out.println("created a TICKLER" + (endTick - crtTick) * .001 + " " +
+                       new java.util.Date());
   }
 
   /**
@@ -92,7 +96,7 @@ public class TicklerCreator {
     ResultSet rs = null;
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-     rs = db.GetSQL(sql);
+      rs = db.GetSQL(sql);
       return rs.next();
     }
     catch (SQLException ex) {
@@ -106,29 +110,74 @@ public class TicklerCreator {
       catch (SQLException ex1) {
         ex1.printStackTrace();
       }
-    }return false;
+    }
+    return false;
 
   }
 
-  public void resolveTickler(String demoNo,String remString) {
-    String sql = "update tickler set status = 'D' where demographic_no = '" + demoNo + "'"+
-        " and message like '%"+remString+"%'" +
+  public void resolveTickler(String demoNo, String remString) {
+    long crtTick = System.currentTimeMillis();
+    String sql = "update tickler set status = 'D' where demographic_no = '" +
+        demoNo + "'" +
+        " and message like '%" + remString + "%'" +
         " and status = 'A'";
-   DBHandler db = null;
-   try {
-     db = new DBHandler(DBHandler.OSCAR_DATA);
-     db.RunSQL(sql);
-   }
-   catch (SQLException ex) {
-     ex.printStackTrace();
-   }
-   finally {
-     try {
-       db.CloseConn();
-     }
-     catch (SQLException ex1) {
-       ex1.printStackTrace();
-     }
-   }
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL(sql);
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    long endTick = System.currentTimeMillis();
+    System.out.println("Resolved a TICKLER" + (endTick - crtTick) * .001 + " " +
+                       new java.util.Date());
+  }
+
+  /**
+   * resolveTicklers
+   *
+   * @param cdmPatientNos Vector
+   * @param remString String
+   */
+  public void resolveTicklers(Vector cdmPatientNos, String remString) {
+    long crtTick = System.currentTimeMillis();
+    String qry = "update tickler set status = 'D' where demographic_no in(";
+    for (int i = 0; i < cdmPatientNos.size(); i++) {
+      qry += cdmPatientNos.get(i);
+      if (i < cdmPatientNos.size() - 1) {
+        qry += ",";
+      }
+    }
+
+    qry += ") and message like '%" + remString + "%' and status = 'A'";
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL(qry);
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    long endTick = System.currentTimeMillis();
+    System.out.println("Resolved TICKLERS" + (endTick - crtTick) * .001 + " " +
+                       new java.util.Date());
+
   }
 }
