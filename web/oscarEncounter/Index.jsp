@@ -58,7 +58,7 @@ You have no rights to access the data!
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
-<%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*"%>
+<%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -1274,12 +1274,12 @@ border-right: 2px solid #cfcfcf;
                                }                                                              
                                System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                if(bean.eChartTimeStamp==null){
-                                  System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                   //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
                                }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
+                                   //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
                                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
-                                   encounterText +="\n__________________________________________________\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
+                                   encounterText +="\n__________________________________________________\n["+("".equals(bean.appointmentDate)?UtilDateUtilities.getToday("yyyy-MM-dd"):bean.appointmentDate)+" .: "+bean.reason+"]\n";
                                }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
                                    //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                                    encounterText +="\n__________________________________________________\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
