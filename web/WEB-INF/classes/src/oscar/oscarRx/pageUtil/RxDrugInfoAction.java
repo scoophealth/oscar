@@ -63,7 +63,7 @@ public final class RxDrugInfoAction extends Action {
             if(request.getParameter("GN") != null){
                 if(! request.getParameter("GN").equals("null")){
                     GN = request.getParameter("GN");                    
-                    response.sendRedirect("http://67.69.12.117:8080/oscarResource/OSCAR_search/OSCAR_search_results?title="+GN);
+                    response.sendRedirect("http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="+GN);
                 }
             }
 
@@ -77,7 +77,7 @@ public final class RxDrugInfoAction extends Action {
                     }catch(Exception e){
                      genName = BN   ;
                     }
-                    response.sendRedirect("http://67.69.12.117:8080/oscarResource/OSCAR_search/OSCAR_search_results?title="+genName);
+                    response.sendRedirect("http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="+genName);
                 }
             }
             

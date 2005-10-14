@@ -207,7 +207,7 @@ public class FrmData {
         rs.close();
         db.CloseConn();
         if(ret.compareTo("")==0)
-            ret = "http://67.69.12.117:8080/oscarResource/";
+            ret = "http://resource.oscarmcmaster.org/oscarResource/";
         return ret;
         
     }

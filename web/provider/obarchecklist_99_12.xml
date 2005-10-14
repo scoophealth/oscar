@@ -119,7 +119,7 @@ symphysis fundal height, fetal heart beyond 12 weeks. <FONT COLOR="blue">BLUE</F
     <item name="cl24n1" checkbox="yes">Counsel regarding signs and symptoms of preterm labour</item>
     <item name="cl24n2" checkbox="yes">Copy of antenatal 1 &amp; 2 plus copy of U/S, labs, blood work sent to Labor and Delivery</item>
     <item name="cl24r2" checkbox="yes" risk="2"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
-    <item name="cl24r3" checkbox="yes" risk="109"><B>(RISK: Prev. PTL/PROM)</B><a href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/preterm">Screen for bacterial vaginosis at the 24 week visit</a></item>
+    <item name="cl24r3" checkbox="yes" risk="109"><B>(RISK: Prev. PTL/PROM)</B><a href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/preterm">Screen for bacterial vaginosis at the 24 week visit</a></item>
     <item name="cl24r4" checkbox="yes" risk="128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
   </week>
 

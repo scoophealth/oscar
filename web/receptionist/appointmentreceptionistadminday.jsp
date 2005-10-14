@@ -32,7 +32,7 @@
 <jsp:useBean id="DateTimeCodeBean" class="java.util.Hashtable" scope="page" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <%
-  String resourcebaseurl = "http://67.69.12.117:8080/oscarResource/";
+  String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
   ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
   while (rsgroup1.next()) { 
  	  resourcebaseurl = rsgroup1.getString("value");

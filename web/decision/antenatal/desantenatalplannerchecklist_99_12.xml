@@ -52,7 +52,7 @@ symphysis fundal height, fetal heart beyond 12 weeks. <FONT COLOR="blue">BLUE</F
     <item name="cl0o4" checkbox="yes">Recommend .4 mg of folic acid to prevent neural tube defects</item>
     <item name="cl0o6" checkbox="yes">HIV testing discussed</item>
 
-    <item name="cl0r1" checkbox="yes" risk="pg1_cp1"><B>(RISK: 1st Trimester Bleed)</B>:Consider <a href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/c1p1">Ectopic</a></item>
+    <item name="cl0r1" checkbox="yes" risk="pg1_cp1"><B>(RISK: 1st Trimester Bleed)</B>:Consider <a href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/c1p1">Ectopic</a></item>
     <item name="cl0r2" checkbox="yes" risk="pg1_cp3"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
     <item name="cl0r6" checkbox="yes" risk="pg1_cp8"><B>(RISK: Occup. &amp; Environ.)</B>:Assess Occupational/Environmental Risk</item>
     <item name="cl0r128_1" checkbox="yes" risk="risk128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
@@ -114,7 +114,7 @@ symphysis fundal height, fetal heart beyond 12 weeks. <FONT COLOR="blue">BLUE</F
   <week number="20">
     <item name="cl20n1" checkbox="yes">Record date of quickening</item>
     <item name="cl20n2" checkbox="yes">Continue antenatal 2 discussion topics - physical and emotional changes, signs and symptoms of preterm labor, labor and pregnancy support</item>
-    <item name="cl20n3" checkbox="yes">Give patient education <a href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/ob/handout/pt_labour.pdf">pamphlet</a> on preterm labour</item>
+    <item name="cl20n3" checkbox="yes">Give patient education <a href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/ob/handout/pt_labour.pdf">pamphlet</a> on preterm labour</item>
     <item name="cl20n4" checkbox="yes"><B>Reinforce or discuss breast feeding plans</B></item>
     <item name="cl20r2" checkbox="yes" risk="pg1_cp3"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
   </week>
@@ -124,7 +124,7 @@ symphysis fundal height, fetal heart beyond 12 weeks. <FONT COLOR="blue">BLUE</F
     <item name="cl24n2" checkbox="yes">Send prenatal pkg to Labor and Delivery</item>
     <item name="cl24n3" checkbox="yes">Consider 75 gm GTT</item>
     <item name="cl24r2" checkbox="yes" risk="pg1_cp3"><B>(RISK: Smoking)</B>:Smoking Cessation Counselling</item>
-    <item name="cl24r3" checkbox="yes" risk="risk103"><B>(RISK: Prev. PTL/PROM)</B><a href="http://67.69.12.117:8080/oscarResource/ob/riskinfo/preterm">Screen for bacterial vaginosis at the 24 week visit</a></item>
+    <item name="cl24r3" checkbox="yes" risk="risk103"><B>(RISK: Prev. PTL/PROM)</B><a href="http://resource.oscarmcmaster.org/oscarResource/ob/riskinfo/preterm">Screen for bacterial vaginosis at the 24 week visit</a></item>
     <item name="cl24r4" checkbox="yes" risk="risk128"><B>(RISK: Seizure Disorder)</B>Monitor serum levels of anticonvulsants</item>
   </week>
 

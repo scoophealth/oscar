@@ -28,7 +28,7 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String form_name="ar1_99_12";
   String user_no = (String) session.getAttribute("user");
-  String resource_baseurl = "http://67.69.12.117:8080/oscarResource/";
+  String resource_baseurl = "http://resource.oscarmcmaster.org/oscarResource/";
 %>
 <%@ page import="java.util.*, java.sql.*, java.net.URLEncoder, oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="formMainBean" class="oscar.AppointmentMainBean" scope="page" />
