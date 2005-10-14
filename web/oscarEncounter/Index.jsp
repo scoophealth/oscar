@@ -957,7 +957,7 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <a href="#" ONCLICK ="popupPage2('http://67.69.12.117:8080/oscarResource/');return false;" title="<bean:message key="oscarEncounter.Index.resource"/>" onmouseover="window.status='<bean:message key="oscarEncounter.Index.viewResource"/>';return true"><bean:message key="oscarEncounter.Index.resource"/></a><br>
+                        <a href="#" ONCLICK ="popupPage2('http://resource.oscarmcmaster.org/oscarResource/');return false;" title="<bean:message key="oscarEncounter.Index.resource"/>" onmouseover="window.status='<bean:message key="oscarEncounter.Index.viewResource"/>';return true"><bean:message key="oscarEncounter.Index.resource"/></a><br>
                         <a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;"><bean:message key="oscarEncounter.Index.msgDocuments"/></a><br>
                         <a href="#" onClick="popupPage(500,950, '../eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a><br>
@@ -1000,7 +1000,7 @@ border-right: 2px solid #cfcfcf;
                     <tr>
                         <td>
                                 <select class="ControlSelect" name="channel" >
-                                    <option value="http://67.69.12.117:8080/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
+                                    <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
                                     <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
                                     <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term="><bean:message key="global.pubmed"/></option>
                                     <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER="><bean:message key="global.medlineplus"/></option>
