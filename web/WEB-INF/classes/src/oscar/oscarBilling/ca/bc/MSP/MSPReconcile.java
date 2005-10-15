@@ -1069,6 +1069,7 @@ public class MSPReconcile {
               explCodes.put(code, desc);
             }
             b.explanations = explCodes;
+            System.out.println("b.hashCode()=" + b.hashCode() + " " + (b.explanations==null));
             b.rejectionDate = (String) dets.get(7);
             if(b.rejectionDate == null || b.rejectionDate.equals("")){
               b.rejectionDate = "00000000";
@@ -1655,7 +1656,7 @@ public class MSPReconcile {
       ret = preDigits + lastDigit;
     }
     int dblValue = new Integer(ret).intValue();
-    double newDouble = dblValue / 100;
+    double newDouble = dblValue * .01;
     BigDecimal curValue = new BigDecimal(newDouble).setScale(2,
         BigDecimal.ROUND_HALF_UP);
 
