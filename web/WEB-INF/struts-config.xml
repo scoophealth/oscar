@@ -1087,10 +1087,14 @@
       <forward name="success" path="/lab/CA/ON/uploadComplete.jsp"/>
     </action>
         
- <!--   <action path="/lab/benefitScheduleUpload" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
+    <action path="/billing/CA/ON/benefitScheduleUpload" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>
     </action>
-    -->
+    <action path="/billing/CA/ON/benefitScheduleChange" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUpdateAction" name="FrmForm"  scope="request" input="/demographic/demographicImport.jsp">
+      <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>
+    </action>
+    
+    
   </action-mappings>
   <message-resources parameter="oscarResources"/>
 </struts-config>
