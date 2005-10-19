@@ -41,7 +41,7 @@
     String filePath = docdownload + filename;
     if (filetype.compareTo("active") == 0) {
       response.setContentType("application/octet-stream");
-      response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+      response.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
       //read the file name.
       File f = new File(filePath);
       InputStream is = new FileInputStream(f);
