@@ -1646,20 +1646,31 @@ public class MSPReconcile {
    *
    */
   public static String convCurValue(String value) {
-    String ret = value;
-    String lastDigit = ret.substring(ret.length() - 1, ret.length());
-    String preDigits = ret.substring(0, ret.length() - 1);
-    //If string isn't negative(negative values contain alphabetic last char)
-    if (negValues.containsKey(lastDigit)) {
-      lastDigit = negValues.getProperty(lastDigit);
-      preDigits = "-" + preDigits;
-      ret = preDigits + lastDigit;
-    }
-    int dblValue = new Integer(ret).intValue();
-    double newDouble = dblValue * .01;
-    BigDecimal curValue = new BigDecimal(newDouble).setScale(2,
-        BigDecimal.ROUND_HALF_UP);
+    BigDecimal curValue = new BigDecimal(0.0);
+    try{
+      boolean isNeg = false;
+      String ret = value;
+      String lastDigit = ret.substring(ret.length() - 1, ret.length());
+      String preDigits = ret.substring(0, ret.length() - 1);
+      //If string isn't negative(negative values contain alphabetic last char)
+      if (negValues.containsKey(lastDigit)) {
+        lastDigit = negValues.getProperty(lastDigit);
+        isNeg = true;
+        ret = preDigits + lastDigit;
+      }
+      int dblValue = new Double(ret).intValue();
+      if(isNeg){
+        dblValue=dblValue*-1;
+      }
 
+      double newDouble = dblValue * .01;
+      curValue = new BigDecimal(newDouble).setScale(2,
+          BigDecimal.ROUND_HALF_UP);
+    }catch(Exception e){
+      e.printStackTrace();
+      return curValue.toString();
+    }
+    System.out.println("curValue.toString()=" + curValue.toString());
     return curValue.toString();
   }
 }
