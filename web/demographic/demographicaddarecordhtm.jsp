@@ -898,6 +898,21 @@ document.forms[1].r_doctor_ohip.value = refNo;
         <input type="text" name="end_date_date" size="2" maxlength="2">
       </td>
     </tr>
+<% if(oscarVariables.getProperty("demographicExt") != null) {    
+	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
+	for(int k=0; k<propDemoExt.length; k=k+2) {
+%>	
+    <tr valign="top" bgcolor="#CCCCFF">
+      <td align="right"><b><%=propDemoExt[k] %></b><b>: </b></td>
+      <td align="left" >
+        <input type="text" name="<%=propDemoExt[k].replace(' ', '_') %>" value="">
+      </td>
+      <td align="right"><%=(k+1)<propDemoExt.length?("<b>"+propDemoExt[k+1]+": </b>") : "&nbsp;" %> </td>
+      <td align="left">
+        <%=(k+1)<propDemoExt.length?"<input type=\"text\" name=\""+propDemoExt[k+1].replace(' ', '_')+"\"  value=''>" : "&nbsp;" %>
+      </td>
+    </tr>
+<% }} %>    
     <tr >
       <td colspan="4">
         <table width="100%" bgcolor="#EEEEFF">

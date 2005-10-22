@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <!--  
 /*
  * 
@@ -88,6 +89,15 @@
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"language",request.getParameter("language"),request.getParameter("languageOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"hPhoneExt",request.getParameter("hPhoneExt"),request.getParameter("hPhoneExtOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"wPhoneExt",request.getParameter("wPhoneExt"),request.getParameter("wPhoneExtOrig") );
+     // customized key
+     if(oscarVariables.getProperty("demographicExt") != null) {
+	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
+		   //System.out.println("propDemoExt:" + propDemoExt[0] );
+	       for(int k=0; k<propDemoExt.length; k++) {
+	           dExt.addKey(proNo,request.getParameter("demographic_no"),propDemoExt[k].replace(' ','_'),request.getParameter(propDemoExt[k].replace(' ','_')),request.getParameter(propDemoExt[k].replace(' ','_')+"Orig"));
+	       }
+     }
+     // customized key
   //DemographicExt   
 
      

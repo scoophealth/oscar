@@ -779,7 +779,25 @@ div.demographicWrapper {
                                 </div>                                                                                                                                    
                              </div>
                             </div>
+                            
+<% // customized key
+if(oscarVariables.getProperty("demographicExt") != null) {    
+	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
+%>	
+                                <div class="demographicSection">
+                                    <h3>&nbsp;Special</h3>
+                                    <div style="background-color: #EEEEFF;" >
+<% 	for(int k=0; k<propDemoExt.length; k++) {%>	
+                                    <%=propDemoExt[k]+": <b>" + s(demoExt.get(propDemoExt[k].replace(' ', '_')))%> </b>&nbsp;<%=((k+1)%4==0&&(k+1)<propDemoExt.length)?"<br>":"" %>
+<% 	} %>    
+                                    </div>                                
+                                </div>                                                                                                                                    
+<% } %>    
+
                         </div>
+
+                                
+
 
                        <!--newEnd-->
                         
@@ -944,7 +962,7 @@ div.demographicWrapper {
                                 </b> </td>
                               <td  align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formSex"/>:</b> </td>
                               <td align="left" valign="top">
-                                <input type="text" name="sex" value="<%=rs.getString("sex")%>" onBlur="upCaseCtrl(this)" size="1" maxlength="1">
+                                <input type="text" name="sex" style="width:20px;" value="<%=rs.getString("sex")%>" onBlur="upCaseCtrl(this)" size="1" maxlength="1">
                                 <b>Language:</b>
                                     <input type="text" name="language" value="<%=s(demoExt.get("language"))%>" onBlur="upCaseCtrl(this)" size="19" />
                                     <input type="hidden" name="languageOrig" value="<%=s(demoExt.get("language"))%>" />
@@ -1268,6 +1286,30 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 <input type="text" name="end_date_month" size="2" maxlength="2" value="<%= endMonth %>">
                                 <input type="text" name="end_date_date" size="2" maxlength="2" value="<%= endDay %>">
                               </td>
+                            </tr>  
+<% // customized key
+if(oscarVariables.getProperty("demographicExt") != null) {    
+	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
+	for(int k=0; k<propDemoExt.length; k=k+2) {
+%>	
+                            <tr valign="top" bgcolor="#CCCCFF">
+                              <td align="right" nowrap><b><%=propDemoExt[k]%>: </b></td>
+                              <td align="left" >
+                                <input type="text" name="<%=propDemoExt[k].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+								<input type="hidden" name="<%=propDemoExt[k].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+                              </td>
+                              <% if((k+1)<propDemoExt.length) { %>
+                              <td align="right" nowrap><b><%= propDemoExt[k+1]+":"%> </b></td>
+                              <td align="left" >
+                                <input type="text" name="<%=propDemoExt[k+1].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+								<input type="hidden" name="<%=propDemoExt[k+1].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+                              </td>
+                              <% } else {%>    
+                              <td>&nbsp;</td><td>&nbsp;</td>
+                              <% }  %>    
+                            </tr>
+<% } }%>    
+                            
                             <tr valign="top">
                                <td nowrap colspan="4">
                                   <table width="100%" bgcolor="#EEEEFF">

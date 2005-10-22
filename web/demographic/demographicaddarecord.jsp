@@ -2,6 +2,7 @@
 <%@ page import="oscar.log.*" %>
 <%@ page  import="oscar.oscarDemographic.data.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -216,7 +217,7 @@ String curUser_no = (String)session.getAttribute("user");
 	    param2[3]=request.getParameter("cust3");
 	    param2[4]=request.getParameter("cust4");
 	    param2[5]="<unotes>"+request.getParameter("content")+"</unotes>";
-	    System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
+	    //System.out.println("demographic_no" + param2[0] +param2[1]+param2[2]+param2[3]+param2[4]+param2[5] );
         rowsAffected = apptMainBean.queryExecuteUpdate(param2, "add_custrecord" ); //add_record
 
        String dem = rs.getString("demographic_no");
@@ -225,7 +226,16 @@ String curUser_no = (String)session.getAttribute("user");
        dExt.addKey(proNo,dem,"language",request.getParameter("language"),"" );
        dExt.addKey(proNo,dem,"hPhoneExt",request.getParameter("hPhoneExt"),"");
        dExt.addKey(proNo,dem,"wPhoneExt",request.getParameter("wPhoneExt"),"");
-        
+       // customized key
+       if(oscarVariables.getProperty("demographicExt") != null) {
+	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
+		   //System.out.println("propDemoExt:" + propDemoExt[0] );
+	       for(int k=0; k<propDemoExt.length; k++) {
+	           dExt.addKey(proNo,dem,propDemoExt[k],request.getParameter(propDemoExt[k].replace(' ','_')),"");
+	       }
+       }
+       // customized key
+       
 		// add log
 		String ip = request.getRemoteAddr();
 		LogAction.addLog(curUser_no, "add", "demographic", param2[0], ip);
