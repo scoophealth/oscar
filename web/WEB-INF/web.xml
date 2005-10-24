@@ -28,10 +28,6 @@
 -->
 
 <web-app>
-  <listener>
-    <listener-class>oscar.login.Startup</listener-class>
-  </listener>
-
 
   <!-- Login filter -->
   <filter>
@@ -43,6 +39,10 @@
     <filter-name>LoginFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
+  <listener>
+    <listener-class>oscar.login.Startup</listener-class>
+  </listener>
 
   <!-- Action Servlet Configuration -->
   <servlet>
