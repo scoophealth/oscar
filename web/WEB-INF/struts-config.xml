@@ -411,19 +411,19 @@
       <forward name="success" path="/oscarRx/SearchDrug.jsp"/>
     </action>
     <!-- oscarMDS -->
-    <action path="/oscarMDS/UpdateStatus" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction" scope="request" name="/SegmentDisplay.jsp">
+    <action path="/oscarMDS/UpdateStatus" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction" scope="request" name="" input="/SegmentDisplay.jsp">
       <forward name="failure" path="/errorpage.jsp"/>
       <forward name="success" path="/oscarMDS/Close.jsp"/>
     </action>
-    <action path="/oscarMDS/ReportReassign" type="oscar.oscarMDS.pageUtil.ReportReassignAction" scope="request" name="/Index.jsp">
+    <action path="/oscarMDS/ReportReassign" type="oscar.oscarMDS.pageUtil.ReportReassignAction" scope="request" name="" input="/Index.jsp">
       <forward name="failure" path="/errorpage.jsp"/>
       <forward name="success" path="/oscarMDS/Index.jsp"/>
     </action>
-    <action path="/oscarMDS/SearchPatient" type="oscar.oscarMDS.pageUtil.SearchPatientAction" scope="request" name="/SegmentDisplay.jsp">
+    <action path="/oscarMDS/SearchPatient" type="oscar.oscarMDS.pageUtil.SearchPatientAction" scope="request" name="" input="/SegmentDisplay.jsp">
       <forward name="failure" path="/oscarMDS/PatientSearch.jsp?search_mode=search_name&amp;limit1=0&amp;limit2=10"/>
       <forward name="success" path="/oscarMDS/OpenEChart.jsp"/>
     </action>
-    <action path="/oscarMDS/PatientMatch" type="oscar.oscarMDS.pageUtil.PatientMatchAction" scope="request" name="/PatientSearch.jsp">
+    <action path="/oscarMDS/PatientMatch" type="oscar.oscarMDS.pageUtil.PatientMatchAction" scope="request" name="" input="/PatientSearch.jsp">
       <forward name="failure" path="/errorpage.jsp"/>
       <forward name="success" path="/oscarMDS/OpenEChart.jsp"/>
     </action>
