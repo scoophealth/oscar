@@ -27,6 +27,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
@@ -278,7 +280,9 @@ div.recommendations li{
                   </ul>
                   </div>
                </div>               
-               
+               <oscar:oscarPropertiesCheck property="IMMUNIZATION_IN_PREVENTION" value="yes">                                                
+                <a href="javascript: function myFunction() {return false; }" onclick="javascript:popup(700,960,'<rewrite:reWrite jspPage="../oscarEncounter/immunization/initSchedule.do"/>','oldImms')">Old <bean:message key="global.immunizations"/></a><br>
+               </oscar:oscarPropertiesCheck>
             </td>
             <td valign="top" class="MainTableRightColumn">
             <% if (warnings.size() > 0 || recomendations.size() > 0 ) { %>
