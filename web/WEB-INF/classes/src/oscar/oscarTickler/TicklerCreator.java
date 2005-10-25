@@ -88,7 +88,7 @@ public class TicklerCreator {
    * @param message String
    * @return boolean
    */
-  private boolean ticklerExists(String demoNo, String message) {
+  public boolean ticklerExists(String demoNo, String message) {
     String sql = "select * from tickler where demographic_no = " + demoNo +
         " and message = '" + message + "'" +
         " and status = 'A'";
@@ -117,7 +117,7 @@ public class TicklerCreator {
 
   public void resolveTickler(String demoNo, String remString) {
     long crtTick = System.currentTimeMillis();
-    String sql = "update tickler set status = 'D' where demographic_no = '" +
+    String sql = "delete from tickler where demographic_no = '" +
         demoNo + "'" +
         " and message like '%" + remString + "%'" +
         " and status = 'A'";
