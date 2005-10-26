@@ -9,7 +9,8 @@
 
     //oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();
     CommonLabResultData comLab = new CommonLabResultData();
-    String providerNo = request.getParameter("providerNo");
+    //String providerNo = request.getParameter("providerNo");
+    String providerNo =  (String) session.getAttribute("user");
     String searchProviderNo = request.getParameter("searchProviderNo");
     String ackStatus = request.getParameter("status");
     String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
