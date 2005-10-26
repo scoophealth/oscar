@@ -60,6 +60,22 @@ public class ReportStatus {
         timestamp = dateFormat.format(cal.getTime());
     }
 
+ 
+    public ReportStatus (String pName, String pNo, String s, String c, long t) {
+        providerName = pName;
+        providerNo = pNo;
+        status = s;
+        comment = c;
+        
+        GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
+        
+        cal.setTimeInMillis(t);        
+       
+        timestamp = dateFormat.format(cal.getTime());        
+    }
+    
+    
     public String getProviderName() {
         return providerName;
     }
