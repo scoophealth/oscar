@@ -31,6 +31,7 @@ package oscar.oscarLab.ca.on;
 
 import java.sql.*;
 import java.util.*;
+import oscar.*;
 import oscar.oscarDB.*;
 import oscar.oscarLab.ca.bc.PathNet.*;
 import oscar.oscarMDS.data.*;
@@ -51,15 +52,28 @@ public class CommonLabResultData {
    }
    
    public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {      
+      ArrayList labs = new ArrayList();
       oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();    
-      ArrayList labs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
-      ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);      
-      //ArrayList pathLabs = mDSData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);            
-      PathnetResultsData pathData = new PathnetResultsData();
-      ArrayList pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);            
       
-      labs.addAll(mdsLabs);            
-      labs.addAll(pathLabs);
+      OscarProperties op = OscarProperties.getInstance();
+      
+      String cml = op.getProperty("CML_LABS");
+      String mds = op.getProperty("MDS_LABS");
+      String pathnet = op.getProperty("PATHNET_LABS");
+      
+      if( cml != null && cml.trim().equals("yes")){
+         ArrayList cmlLabs = mDSData.populateCMLResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);
+         labs.addAll(cmlLabs);
+      }
+      if (mds != null && mds.trim().equals("yes")){
+         ArrayList mdsLabs = mDSData.populateMDSResultsData2(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);      
+         labs.addAll(mdsLabs);            
+      }
+      if (pathnet != null && pathnet.trim().equals("yes")){
+         PathnetResultsData pathData = new PathnetResultsData();
+         ArrayList pathLabs = pathData.populatePathnetResultsData(providerNo, demographicNo, patientFirstName, patientLastName, patientHealthNumber, status);            
+         labs.addAll(pathLabs);
+      }            
       return labs;
    }
    
@@ -105,7 +119,10 @@ public class CommonLabResultData {
          ResultSet rs = db.GetSQL(sql);
          System.out.println(sql);
          while(rs.next()){
-             statusArray.add( new ReportStatus(rs.getString("first_name")+" "+rs.getString("last_name"), rs.getString("provider_no"), descriptiveStatus(rs.getString("status")), rs.getString("comment"), rs.getString("timestamp") ) );
+             //statusArray.add( new ReportStatus(rs.getString("first_name")+" "+rs.getString("last_name"), rs.getString("provider_no"), descriptiveStatus(rs.getString("status")), rs.getString("comment"), rs.getString("timestamp") ) );
+             statusArray.add( new ReportStatus(rs.getString("first_name")+" "+rs.getString("last_name"), rs.getString("provider_no"), descriptiveStatus(rs.getString("status")), rs.getString("comment"), rs.getTimestamp("timestamp").getTime() ) );
+             
+             
          }
          rs.close();
          db.CloseConn();
