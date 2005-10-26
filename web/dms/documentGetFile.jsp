@@ -33,33 +33,53 @@
 <%
   String filename = "", filetype = "", doc_no = "";
   String docdownload = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+  String downloadMethod = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DOWNLOAD_METHOD");
   session.setAttribute("docdownload", docdownload);
   if (request.getParameter("document") != null) {
     filename = request.getParameter("document");
     filetype = request.getParameter("type");
     doc_no = request.getParameter("doc_no");
     String filePath = docdownload + filename;
-    if (filetype.compareTo("active") == 0) {
-      response.setContentType("application/octet-stream");
-      response.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
-      //read the file name.
-      File f = new File(filePath);
-      InputStream is = new FileInputStream(f);
-      long length = f.length();
-      byte[] bytes = new byte[(int) length];
-      int offset = 0;
-      int numRead = 0;
-      while (offset < bytes.length
+    if (filetype.compareTo("active") == 0) {              
+      if ( downloadMethod == null ) {
+      filePath = "../../OscarDocument"+request.getContextPath()+"/document/"+filename;
+      %>  
+      <html:html locale="true">
+      <head>
+         <title><bean:message key="dms.documentGetFile.title"/></title>
+         <meta http-equiv="Content-Type" content="text/html;">
+      </head>
+      <frameset rows="21,*" frameborder="NO" border="0" frames.opera/cache4/pacing="0" cols="*"> 
+         <frame name="topFrame" scrolling="NO" noresize src="docViewerHead.jsp" >
+         <frame name="mainFrame" src="<%=filePath%>">
+      </frameset>
+      <noframes>
+        <body bgcolor="#FFFFFF" text="#000000">
+        </body>
+      </noframes> 
+      </html:html>
+      
+      <%}else{         
+         response.setContentType("application/octet-stream");      
+         response.setHeader("Content-Disposition", "attachment;filename=" + filename+ "\"");
+         //read the file name.
+         File f = new File(filePath);
+         InputStream is = new FileInputStream(f);                  
+      
+         long length = f.length();
+         byte[] bytes = new byte[(int) length];
+         int offset = 0;
+         int numRead = 0;
+         while (offset < bytes.length 
              && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-        offset += numRead;
-      }
-      is.close();
-      ServletOutputStream outs = response.getOutputStream();
-      outs.write(bytes);
-      outs.flush();
-      outs.close();
-%>
-<%
+           offset += numRead;
+         }
+         is.close();
+         ServletOutputStream outs = response.getOutputStream();
+         outs.write(bytes);
+         outs.flush();
+         outs.close();
+        }
   } else {
     ResultSet rslocal2 = null;
     rslocal2 = apptMainBean.queryResults(doc_no, "search_document_content");
@@ -72,5 +92,5 @@
 <jsp:forward page='../dms/errorpage.jsp'>
   <jsp:param name="msg" value='<bean:message key="dms.documentGetFile.msgFileNotfound"/>'/>
 </jsp:forward>
-%>
+
 <%}%>
