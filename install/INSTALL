@@ -305,6 +305,10 @@ quit;
 Installing Billing Jasper Report
 1) Copy Report directory to the home directory of the user account that OSCAR runs under
 
+NOTE: In some cases, the Jasper Reports Engine will fail on systems that don't run a GUI.
+      To remedy this problem, add the following line at the top of the <tomcat dir>/bin/catalina.sh script :
+      JAVA_OPTS="-Djava.awt.headless=true"
+
 Configuring OSCAR Properties Files
 
 
