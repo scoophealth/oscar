@@ -114,8 +114,18 @@ function OtherScriptAttach() {
   awnd.focus();
 }
 
+function validate2(form){
+form.goPrev.value = "goPrev";
+if (validateProviderNo(form)){
+form.action = "dbAddFluBilling.jsp"
+form.submit()
+}
+
+else{}
+}
 
 function validate(form){
+form.goPrev.value = "";
 if (validateProviderNo(form)){
 form.action = "dbAddFluBilling.jsp"
 form.submit()
@@ -346,12 +356,13 @@ apptMainBean.closePstmtConn();
               </font></td>
           </tr>
           <tr bgcolor="#DFDFEA">
-            <td width="19%" height="20"><input type="button" name="cancel" value="Submit" class="mbttn" onClick="validate(this.form)">
+            <td width="19%" height="20" colspan="4">
+              <input type="hidden" name="goPrev" value=""/>
+              <input type="button" name="cancel" value="Submit" class="mbttn" onClick="validate(this.form)">
+              <input type="button" name="subPrev" value="Submit & Goto Prevention" class="mbttn" onClick="validate2(this.form)">
               <input type="button" name="cancel" value="Cancel" onClick="window.close()" class="mbttn">
             </td>
-            <td width="26%" height="20">&nbsp;</td>
-            <td width="31%" height="20">&nbsp;</td>
-            <td width="24%" height="20">&nbsp;</td>
+            
           </tr>
         </table>
               </td>
