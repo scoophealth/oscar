@@ -26,7 +26,7 @@
 
 <% 
 if(session.getAttribute("user") == null ) response.sendRedirect("../../../../../logout.jsp");
-
+boolean billSaved = false;
 String total = "0.00"; 
 String content = "", rd="", rdohip="", hctype="";
 rd = request.getParameter("rd").equals("null")?"":request.getParameter("rd");
@@ -47,28 +47,7 @@ userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="../../dbBilling.jsp" %>
 
-<html>
-<head>
-<script LANGUAGE="JavaScript">
-    <!--
-    function start(){
-      this.focus();
-    }
-    function closeit() {
-    	//self.opener.refresh();
-      //self.close();      
-    }   
-    //-->
-</script>
-</head>
-<body  onload="start()">
-<center>
-    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
-      <tr bgcolor="#486ebd"> 
-            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
-            ADD A BILLING RECORD</font></th>
-      </tr>
-    </table>
+
 <%
 String billNo = null, svcDesc = null, svcPrice = null, sPrice = null ;
 String[] param4 = new String[2];
@@ -138,23 +117,51 @@ if (rowsAffected ==1) {
 //	  param1[1]=request.getParameter("apptProvider_no"); param1[2]=request.getParameter("appointment_date"); param1[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
 //   rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
 	rsdemo = apptMainBean.queryResults(request.getParameter("functionid"), "search_billing_no");
-	while (rsdemo.next()) {    
-%>
-<p><h1>Successful Addition of a billing Record.</h1></p>
-<script LANGUAGE="JavaScript">
-      self.close();
-      self.opener.refresh();
-</script>
-<%
-		break; //get only one billing_no
-	}//end of while
-}  else {
-%>
-  <p><h1>Sorry, addition has failed.</h1></p>
-<%  
+	if (rsdemo.next()) {    
+       billSaved = true;
+   }
+   apptMainBean.closePstmtConn();
+   
+   System.out.println(request.getParameter("goPrev"));
+   if ( request.getParameter("goPrev") != null && request.getParameter("goPrev").equals("goPrev") && billSaved){ 
+      response.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=Flu&demographic_no=22");
+   }
 }
-apptMainBean.closePstmtConn();
 %>
+
+
+
+<html>
+<head>
+<script LANGUAGE="JavaScript">
+    <!--
+    function start(){
+      this.focus();
+    }
+    function closeit() {
+    	//self.opener.refresh();
+      //self.close();      
+    }   
+    //-->
+</script>
+</head>
+<body  onload="start()">
+<center>
+    <table border="0" cellspacing="0" cellpadding="0" width="90%" >
+      <tr bgcolor="#486ebd"> 
+            <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
+            ADD A BILLING RECORD</font></th>
+      </tr>
+    </table>    
+    <%if (billSaved) { %>   
+        <p><h1>Successful Addition of a billing Record.</h1></p>
+        <script LANGUAGE="JavaScript">             
+              self.close();
+              self.opener.refresh();              
+        </script>
+    <%}  else {%>
+        <p><h1>Sorry, addition has failed.</h1></p>
+    <%}%>
   <p></p>
   <hr width="90%"></hr>
 <form>
