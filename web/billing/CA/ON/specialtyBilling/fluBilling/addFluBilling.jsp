@@ -248,7 +248,7 @@ alert("Please select a valid Billing Provider!");
 						proOHIP = (String)billingProvider.get(i+1);
 						String proName = (String)billingProvider.get(i+2);
 				%>
-                <option value="<%=proOHIP%>|<%=specialty_code%>" <%=request.getParameter("creator").equals(specialty_code)?"selected":""%>><%=proName%></option>
+                <option value="<%=proOHIP%>|<%=specialty_code%>" <%=(request.getParameter("creator").equals(specialty_code)||billingProvider.size()==3)?"selected":""%>><%=proName%></option>
 				<%	} %>
 
              <%--
