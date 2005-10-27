@@ -53,7 +53,7 @@ public class CDMReminderHlp {
     TicklerCreator crt = new TicklerCreator();
     String remString = "SERVICE CODE: 13050 Reminder";
     ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
-    DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+    DateFormat formatter = null;
     long crtTick = System.currentTimeMillis();
 
     Vector cdmPatientNos = getCDMDemoNos(cdms.keys());
@@ -65,6 +65,7 @@ public class CDMReminderHlp {
       java.util.Date last13050 = null;
       long daysPast = -1;
       if (oldfmt != "") {
+        formatter = new SimpleDateFormat("yyyyMMdd");
         try {
           last13050 = formatter.parse(oldfmt);
           double differenceInseconds = ( (System.currentTimeMillis() -
