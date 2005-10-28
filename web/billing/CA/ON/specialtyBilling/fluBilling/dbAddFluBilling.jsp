@@ -29,6 +29,7 @@ if(session.getAttribute("user") == null ) response.sendRedirect("../../../../../
 boolean billSaved = false;
 String total = "0.00"; 
 String content = "", rd="", rdohip="", hctype="";
+String demoNo = request.getParameter("functionid");
 rd = request.getParameter("rd").equals("null")?"":request.getParameter("rd");
 rdohip = request.getParameter("rdohip").equals("null")?"000000":request.getParameter("rdohip");
 hctype = request.getParameter("demo_hctype").equals("null")?"ON":request.getParameter("demo_hctype").equals("")?"ON":request.getParameter("demo_hctype");
@@ -124,7 +125,7 @@ if (rowsAffected ==1) {
    
    System.out.println(request.getParameter("goPrev"));
    if ( request.getParameter("goPrev") != null && request.getParameter("goPrev").equals("goPrev") && billSaved){ 
-      response.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=Flu&demographic_no=22");
+      response.sendRedirect("../../../../../oscarPrevention/AddPreventionData.jsp?prevention=Flu&demographic_no="+demoNo);
    }
 }
 %>
