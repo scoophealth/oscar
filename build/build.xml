@@ -124,10 +124,13 @@
    <fileset dir="${webapp}/WEB-INF/classes/src/oscar/form/prop" includes="*" />
   </copy>
   <copy todir="${classes_web}/oscar/oscarPrevention/">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarPrevention/" includes="*.drl" />
+   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarPrevention/" includes="*.drl,*.xml" />
   </copy>
   <copy todir="${classes_web}/oscar/eform/">
    <fileset dir="${webapp}/WEB-INF/classes/src/oscar/eform/" includes="*.xml" />
+  </copy>  
+  <copy todir="${classes_web}/oscar/oscarBilling/ca/bc/MSP/">
+   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarBilling/ca/bc/MSP/" includes="*.properties" />
   </copy>  
  </target>
 
@@ -344,6 +347,8 @@
   </javac>  
  </target>
  
+ 
+ 
  <target name="cml-jar" depends="cmlfile">
         
         <jar destfile="${build}/cml-${now}.jar">
@@ -360,7 +365,6 @@
             </manifest>
         </jar>
 </target>
-
 
  <taskdef file="tomcatTasks.properties">
     <classpath>
