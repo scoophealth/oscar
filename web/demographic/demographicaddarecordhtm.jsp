@@ -484,7 +484,14 @@ function checkFormTypeIn() {
     </tr>
     <%}%>
     <tr valign="top">
-      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formprovince"/>: </b> </td>
+      <td align="right"><b>
+	  <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>                             
+      <bean:message key="demographic.demographicaddrecordhtm.formprovince"/>
+      <% } else { 
+          out.print(oscarProps.getProperty("demographicLabelProvince"));
+      	 } %>
+      : </b> 
+      </td>
       <td  align="left">
         <% if (vLocale.getCountry().equals("BR")) { %>
         <input type="text" name="province" value="<%=props.getProperty("billregion", "ON")%>">
@@ -518,7 +525,13 @@ function checkFormTypeIn() {
             </select>
         <% } %>
       </td>
-      <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formPostal"/>: </b> </td>
+      <td  align="right"><b>
+	  <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>                             
+      <bean:message key="demographic.demographicaddrecordhtm.formPostal"/>
+      <% } else { 
+          out.print(oscarProps.getProperty("demographicLabelPostal"));
+      	 } %>
+      : </b> </td>
       <td  align="left">
         <input type="text" name="postal" onBlur="upCaseCtrl(this)">
       </td>

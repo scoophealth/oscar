@@ -717,10 +717,20 @@ div.demographicWrapper {
                                             <bean:message key="demographic.demographiceditdemographic.formCity"/>: <b><%=rs.getString("city")%></b>
                                         </li>
                                         <li>
-                                            <bean:message key="demographic.demographiceditdemographic.formProcvince"/>: <b> <%=rs.getString("province")%></b>
+										<% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>                             
+                                            <bean:message key="demographic.demographiceditdemographic.formProcvince"/>
+										<% } else { 
+			                                  out.print(oscarProps.getProperty("demographicLabelProvince"));
+										   } %>
+										   : <b> <%=rs.getString("province")%></b>
                                         </li>
                                         <li>
-                                            <bean:message key="demographic.demographiceditdemographic.formPostal"/>: <b> <%=rs.getString("postal")%></b>
+										<% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>                             
+                                            <bean:message key="demographic.demographiceditdemographic.formPostal"/>
+										<% } else { 
+			                                  out.print(oscarProps.getProperty("demographicLabelPostal"));
+										   } %>
+										   : <b> <%=rs.getString("postal")%></b>
                                         </li>                                   
                                         
                                         <li>
@@ -890,7 +900,14 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                             </tr>
                             <%}%>
                             <tr valign="top">
-                              <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formProcvince"/>: </b> </td>
+                              <td align="right"><b>
+							  <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>                             
+                              <bean:message key="demographic.demographiceditdemographic.formProcvince"/> 
+                              <% } else { 
+                                  out.print(oscarProps.getProperty("demographicLabelProvince"));
+                              	 } %>
+                              :
+                              </b></td>
                               <td  align="left">
                                 <% if (vLocale.getCountry().equals("BR")) { %>
                                 <input type="text" name="province" value="<%=rs.getString("province")%>">
@@ -902,7 +919,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                        for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                                            String pr2 = (String) li.next(); %>
                                            <option value="<%=pr2%>"<%=pr2.equals(province)?" selected":""%>><%=li.next()%></option>
-                                       <% } %>
+										<% } %>
                                     <% } else { %>
                                       <option value="AB"<%=province.equals("AB")?" selected":""%>>AB-Alberta</option>
                                       <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
@@ -922,7 +939,14 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 </select>
                                 <% } %>
                               </td>
-                              <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPostal"/>: </b> </td>
+                              <td  align="right"><b>
+							  <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>                             
+                              <bean:message key="demographic.demographiceditdemographic.formPostal"/>
+                              <% } else { 
+                                  out.print(oscarProps.getProperty("demographicLabelPostal"));
+                              	 } %>
+                              : 
+                              </b> </td>
                               <td  align="left">
                                 <input type="text" name="postal" size="30" value="<%=rs.getString("postal")%>" onBlur="upCaseCtrl(this)">
                               </td>
