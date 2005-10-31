@@ -66,7 +66,7 @@ public class DemographicExportAction extends Action {
       
       ArrayList inject = new ArrayList();
       
-      PreventionDisplayConfig pdc = new PreventionDisplayConfig();         
+      PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();         
       ArrayList prevList  = pdc.getPreventions();
       //System.out.println("size"+prevList.size());
       for (int k =0 ; k < prevList.size(); k++){

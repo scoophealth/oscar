@@ -69,7 +69,7 @@
       System.out.println(prevention);      
   }
   
-  PreventionDisplayConfig pdc = new PreventionDisplayConfig();
+  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
   Hashtable prevHash = pdc.getPrevention(prevention);
   
   String layoutType = (String) prevHash.get("layout");//"injection");
