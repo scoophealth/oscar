@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : PreventionItems.xml
+    Created on : October 26, 2005, 3:06 PM
+    Author     : Jay Gallagher
+    Description:
+        Xml configuration used in the Prevention Module to set up the types of preventions available.
+-->
+
+<preventions>
+   <item 
+         desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus"
+         name="DTaP-IPV"
+         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
+         layout="injection"
+         atc="J07CA02"/>
+                 
+   <item
+        desc="Hib=haemophilus influenzae type B for children under 5 years of age"
+        name="Hib"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Hib"
+        layout="injection"
+        atc="J07AG51"/>
+        
+   <item        
+        desc="Pneu-C=pneumococcal 7-valent conjugate"
+        name="Pneu-C"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
+        layout="injection"
+        atc="J07AL"/>
+        
+   <item        
+        desc="MMR=measles, mumps and rubella"
+        name="MMR"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MMR"
+        layout="injection"
+        atc="J07BD52"/>
+        
+   <item        
+        desc="MenC-C=meningocococcal C conjugate"
+        name="MenC-C"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC"
+        layout="injection"
+        atc="J07AH07"/>
+        
+   <item        
+        desc="VZ=varicella zoster"
+        name="VZ"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var"
+        layout="injection"
+        atc="J07BK01"/>
+        
+   <item        
+        desc="Hep B=Hepatitis B"
+        name="HepB"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB"
+        layout="injection"
+        atc="J07BC01"/>
+        
+   <item        
+        desc="dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation"
+        name="dTap"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
+        layout="injection"
+        atc="J07AJ52"/>
+        
+   <item        
+        desc="Td=tetanus and diphtheria adult type formulation"
+        name="Td"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
+        layout="injection"
+        atc="J07CA01"/>
+        
+   <item        
+        desc="Flu=influenza vaccine"
+        name="Flu"
+        link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu"
+        layout="injection"
+        atc="J07BB01"/>
+                      
+   <item        
+        desc="Hep A=Hepatitis A"
+        name="HepA"
+        link=""
+        layout="injection"
+        atc="J07BC02"/>                                
+   <item        
+        desc="Hep AB=Hepatitis AB"
+        name="HepAB"
+        link=""
+        layout="injection"
+        atc="J07BC20"/>
+                
+   <item        
+        desc="Rabies=Rabies"
+        name="Rabies"
+        link=""
+        layout="injection"
+        atc="J07BG01"/>        
+                
+   <item        
+        desc="TB=Tuberculosis"
+        name="Tuberculosis"
+        link=""
+        layout="injection"
+        atc="J07AN01"/>
+   
+  <item        
+        desc="pneumovax"
+        name="pneumovax"
+        link=""
+        layout="injection"
+        atc="J07AL02"/>        
+
+  <item        
+        desc="PAP="
+        name="PAP"
+        link=""
+        layout="PAPMAM"/>               
+
+   <item        
+        desc="Mammorgram"
+        name="MAM"
+        link=""
+        layout="PAPMAM"/>
+        
+   <item        
+        desc="PSA"
+        name="PSA"
+        link=""
+        layout="PAPMAM"/>
+        
+   <item        
+        desc="Other Layout A"
+        name="OtherA"
+        link=""
+        layout="injection"/>
+               
+   <item        
+        desc="Other Layout B"
+        name="OtherB"
+        link=""
+        layout="PAPMAM"/>
+                        
+</preventions>
