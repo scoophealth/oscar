@@ -212,7 +212,7 @@ function onSub() {
               Period: (
               <%= startDate==null?"":startDate %>
               ~
-              <%= endDate==null?"":startDate %>
+              <%= endDate==null?"":endDate %>
               )
             </td>
           </tr>
