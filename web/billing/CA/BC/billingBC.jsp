@@ -540,6 +540,9 @@ function showHideLayers() { //v3.0
             if(request.getParameter("billType") != null){
                thisForm.setXml_billtype(request.getParameter("billType"));
             }
+            if ( demo != null && demo.getVersionCode() != null && demo.getVersionCode().equals("66")){
+               thisForm.setDependent("66");
+            }
             thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
 
         }
