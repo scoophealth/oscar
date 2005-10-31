@@ -34,7 +34,7 @@
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
   
-  PreventionDisplayConfig pdc = new PreventionDisplayConfig();
+  PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
   ArrayList prevList = pdc.getPreventions();
   
   ArrayList configSets = pdc.getConfigurationSets();
@@ -67,6 +67,8 @@ oscarPrevention <!--I18n-->
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
+
 <style type="text/css">
   div.ImmSet { background-color: #ffffff;clear:left;margin-top:10px;}
   div.ImmSet h2 {  }
@@ -98,6 +100,9 @@ Rounded("div.leftBox","bottom","transparent","#EEEEFF","small border #ccccff");
 }
 </script>
 
+
+
+
 <script  type="text/javascript">
 <!--
 //if (document.all || document.layers)  window.resizeTo(790,580);
@@ -107,6 +112,8 @@ function newWindow(file,window) {
 } 
 //-->
 </script>
+
+
 
 
 <style type="text/css">
@@ -310,13 +317,14 @@ div.recommendations li{
                       System.out.println("length prevs"+prevs.length);%>
                   <div class="immSet" >                     
                      <h2 style="display:block;"><%=setHash.get("title")%> <span ><%=setHash.get("effective")%></span></h2> 
-                     <a style="font-size:xx-small;" onclick="javascript:showHideItem('<%="prev"+setNum%>')" href="javascript: function myFunction() {return false; }" >show/hide</a>                                          
+                     <!--a style="font-size:xx-small;" onclick="javascript:showHideItem('<%="prev"+setNum%>')" href="javascript: function myFunction() {return false; }" >show/hide</a-->                                                                                                                               
+                     <a href="#" onclick="Element.toggle('<%="prev"+setNum%>'); return false;" style="font-size:xx-small;" >show/hide</a>                    
                      <div class="preventionSet" <%=pdc.getDisplay(setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">                        
                         <%for (int i = 0; i < prevs.length ; i++) {
                            Hashtable h = pdc.getPrevention(prevs[i]); %>
-                        <div class="preventionSection">
+                        <div class="preventionSection" >
                             <div class="headPrevention">
-                               <p> 
+                               <p > 
                                <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
                                <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
                                </a>
