@@ -117,11 +117,13 @@
         ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
         while (rsHin.next()) { 
            
-            if (!(rsHin.getString("demographic_no").equals(request.getParameter("demographic_no")))) { %>
+            if (!(rsHin.getString("demographic_no").equals(request.getParameter("demographic_no")))) { 
+                if (rsHin.getString("ver") != null && !rsHin.getString("ver").equals("66")){%>
                 ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
                 <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
           
                 <% return;
+                }
             }
         }
     }
