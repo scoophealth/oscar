@@ -1195,7 +1195,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<th width="30%" valign="top">HOURS:MINS</th>
 		<th >DAY/MONTH/YEAR</th>
 	  </tr><tr>
-		<td align="right">MEMBERANES RUPTURED</td>
+		<td align="right">MEMBRANES RUPTURED</td>
 		<td>
 		<input type="text" name="birTimeHour1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour1", "") %>" @oscar.formDB dbType="time" />
 		</td>
