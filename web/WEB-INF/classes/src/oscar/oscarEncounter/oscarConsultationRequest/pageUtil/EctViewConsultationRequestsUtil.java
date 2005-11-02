@@ -79,6 +79,9 @@ public class EctViewConsultationRequestsUtil {
         service = new Vector();
 
         date = new Vector();
+        
+        demographicNo = new Vector();
+        
         this.patientWillBook = new Vector();
 
         boolean verdict = true;
@@ -89,12 +92,13 @@ public class EctViewConsultationRequestsUtil {
 
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
-                String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook,demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and cr.status != 4 and sendTo ='" +team+ "' order by cr.referalDate desc";
+                String sql = " select demo.demographic_no, cr.status, cr.referalDate, cr.requestId, cr.patientWillBook,demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and cr.status != 4 and sendTo ='" +team+ "' order by cr.referalDate desc";
 
                 ResultSet rs= db.GetSQL(sql);
 
                 while(rs.next()) {
-
+                  demographicNo.add(rs.getString("demographic_no"));
+                  
                   date.add(rs.getString("referalDate"));
 
                   ids.add(rs.getString("requestId"));
@@ -130,14 +134,14 @@ public class EctViewConsultationRequestsUtil {
 
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
-                String sql = " select cr.status, cr.referalDate, cr.requestId,  cr.patientWillBook,demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and cr.status != 4 order by cr.referalDate desc";
+                String sql = " select demo.demographic_no, cr.status, cr.referalDate, cr.requestId,  cr.patientWillBook,demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and cr.status != 4 order by cr.referalDate desc";
 
                 ResultSet rs;
 
                 for(rs = db.GetSQL(sql); rs.next(); date.add(rs.getString("referalDate")))
 
                 {
-
+                    demographicNo.add(rs.getString("demographic_no"));
                     ids.add(rs.getString("requestId"));
 
                     status.add(rs.getString("status"));
@@ -243,6 +247,8 @@ public class EctViewConsultationRequestsUtil {
     public Vector service;
 
     public Vector date;
+    
+    public Vector demographicNo;
     public Vector patientWillBook;
 
 }
