@@ -72,6 +72,19 @@
 <title> <bean:message key="demographic.demographicaddrecordhtm.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
+  <!-- calendar stylesheet -->
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+  <!-- main calendar program -->
+  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+  <!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+
 <link rel="stylesheet" href="../web.css" />
 <style type="text/css">
     BODY{
@@ -912,20 +925,33 @@ document.forms[1].r_doctor_ohip.value = refNo;
       </td>
     </tr>
 <% if(oscarVariables.getProperty("demographicExt") != null) {    
+    boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
+    String [] propDemoExtForm = bExtForm ? (oscarVariables.getProperty("demographicExtForm","").split("\\|") ) : null;
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	for(int k=0; k<propDemoExt.length; k=k+2) {
 %>	
     <tr valign="top" bgcolor="#CCCCFF">
       <td align="right"><b><%=propDemoExt[k] %></b><b>: </b></td>
       <td align="left" >
+		<% if(bExtForm) { 
+			out.println(propDemoExtForm[k] );
+		 } else { %>
         <input type="text" name="<%=propDemoExt[k].replace(' ', '_') %>" value="">
+        <% }  %>    
       </td>
       <td align="right"><%=(k+1)<propDemoExt.length?("<b>"+propDemoExt[k+1]+": </b>") : "&nbsp;" %> </td>
       <td align="left">
+		<% if(bExtForm) { 
+			out.println(propDemoExtForm[k+1] );
+		 } else { %>
         <%=(k+1)<propDemoExt.length?"<input type=\"text\" name=\""+propDemoExt[k+1].replace(' ', '_')+"\"  value=''>" : "&nbsp;" %>
+        <% }  %>    
       </td>
     </tr>
-<% }} %>    
+<% 	} 
+}
+if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(oscarVariables.getProperty("demographicExtJScript")); }
+%>    
     <tr >
       <td colspan="4">
         <table width="100%" bgcolor="#EEEEFF">

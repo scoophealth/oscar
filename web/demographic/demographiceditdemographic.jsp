@@ -74,6 +74,19 @@ You have no rights to access the data!
 <title><bean:message key="demographic.demographiceditdemographic.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
+  <!-- calendar stylesheet -->
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+
+  <!-- main calendar program -->
+  <script type="text/javascript" src="../share/calendar/calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
+
+  <!-- the following script defines the Calendar.setup helper function, which makes
+       adding a calendar a matter of 1 or 2 lines of code. -->
+  <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
+
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 
@@ -1313,27 +1326,40 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                               </td>
                             </tr>  
 <% // customized key
-if(oscarVariables.getProperty("demographicExt") != null) {    
+if(oscarVariables.getProperty("demographicExt") != null) {
+    boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
+    String [] propDemoExtForm = bExtForm ? (oscarVariables.getProperty("demographicExtForm","").split("\\|") ) : null;
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	for(int k=0; k<propDemoExt.length; k=k+2) {
 %>	
                             <tr valign="top" bgcolor="#CCCCFF">
                               <td align="right" nowrap><b><%=propDemoExt[k]%>: </b></td>
                               <td align="left" >
+                              <% if(bExtForm) { 
+                              		out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
+                              	 } else { %>
                                 <input type="text" name="<%=propDemoExt[k].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
+                              <% }  %>    
 								<input type="hidden" name="<%=propDemoExt[k].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
                               </td>
                               <% if((k+1)<propDemoExt.length) { %>
                               <td align="right" nowrap><b><%= propDemoExt[k+1]+":"%> </b></td>
                               <td align="left" >
+                              <% if(bExtForm) { 
+                              		out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
+                              	 } else { %>
                                 <input type="text" name="<%=propDemoExt[k+1].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
+                              <% }  %>    
 								<input type="hidden" name="<%=propDemoExt[k+1].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
                               </td>
                               <% } else {%>    
                               <td>&nbsp;</td><td>&nbsp;</td>
                               <% }  %>    
                             </tr>
-<% } }%>    
+<% 	} 
+}
+if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(oscarVariables.getProperty("demographicExtJScript")); }
+%>    
                             
                             <tr valign="top">
                                <td nowrap colspan="4">
