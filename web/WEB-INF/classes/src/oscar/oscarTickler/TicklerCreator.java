@@ -157,9 +157,11 @@ public class TicklerCreator {
         qry += ",";
       }
     }
-
+    qry += cdmPatientNos.size()==0 ? "0" : "";
+    
     qry += ") and message like '%" + remString + "%' and status = 'A'";
     DBHandler db = null;
+    //System.out.println(qry);
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
