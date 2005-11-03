@@ -122,7 +122,7 @@
 
   <servlet>
 	  <servlet-name>BackupDownload</servlet-name>
-	  <servlet-class>BackupDownload</servlet-class>
+	  <servlet-class>oscar.util.BackupDownload</servlet-class>
 	  <load-on-startup>0</load-on-startup>
   </servlet>
 
