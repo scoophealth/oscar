@@ -40,63 +40,67 @@ import javax.servlet.http.HttpSession;
 import oscar.*;
 
 /**
- *
+ * 
  * @author Jay Gallagher
  */
 public class GenericDownload extends HttpServlet {
-       
-   public GenericDownload() {
-   }
-   
-   	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-                HttpSession session = req.getSession(true);
-                
-                OscarProperties oscarProps = OscarProperties.getInstance();
+    private static final long serialVersionUID = 1L;
 
-		
-		String filename      = req.getParameter("filename");
-		String dir_property  = req.getParameter("dir_property");
-                String contentType   =req.getParameter("contentType"); 
-                String dir           = oscarProps.getProperty(dir_property);		
-                String user          = (String) session.getValue("user");
-    
-		
-                if (filename != null && dir_property != null && dir != null && user != null){
-			ServletOutputStream stream = res.getOutputStream();
-			transferFile(res, stream,dir , filename, contentType);			
-			stream.close();
-		} else {
-			res.setContentType("text/html");
-			PrintWriter out = res.getWriter();
-			out.println("<html>");
-			out.println("<head><body>You have no right to download the file(s).");
-			out.println("</body>");
-			out.println("</html>");
-		}
-	}
-        
-	private void transferFile(HttpServletResponse res,ServletOutputStream stream, String dir, String filename,String contentType) throws IOException {
-		String setContentType = "application/octet-stream";
-                if (contentType != null){
-                   setContentType = contentType;
-                }
-		res.setContentType(setContentType);
-		res.setHeader("Content-Disposition", "attachment;filename=" + filename);
-		BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(dir + filename));
-		int data;
-		while ((data = bfis.read()) != -1) {
-			stream.write(data);
-			stream.flush();
-		}
-		bfis.close();
-	}
+    public GenericDownload() {}
+
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        HttpSession session = req.getSession(true);
+
+        OscarProperties oscarProps = OscarProperties.getInstance();
+
+        String filename = req.getParameter("filename");
+        String dir_property = req.getParameter("dir_property");
+        String contentType = req.getParameter("contentType");
+        String dir = oscarProps.getProperty(dir_property);
+        String user = (String) session.getAttribute("user");
+
+        boolean bDo = false;
+        if (filename != null && dir_property != null && dir != null && user != null) {
+            bDo = true;
+        }
+        download(bDo, res, dir, filename, contentType);
+
+    }
+
+    public void download(boolean bDownload, HttpServletResponse res, String dir, String filename, String contentType)
+            throws IOException {
+        if (bDownload) {
+            ServletOutputStream stream = res.getOutputStream();
+            transferFile(res, stream, dir, filename, contentType);
+            stream.close();
+        } else {
+            res.setContentType("text/html");
+            PrintWriter out = res.getWriter();
+            out.println("<html>");
+            out.println("<head><body>You have no right to download the file(s).");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    public void transferFile(HttpServletResponse res, ServletOutputStream stream, String dir, String filename,
+            String contentType) throws IOException {
+        String setContentType = "application/octet-stream";
+        if (contentType != null) {
+            setContentType = contentType;
+        }
+        res.setContentType(setContentType);
+        res.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
+        BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(dir + filename));
+        int data;
+        while ((data = bfis.read()) != -1) {
+            stream.write(data);
+            stream.flush();
+        }
+        bfis.close();
+    }
 }
 
+// /
 
-
-///
-
-
-
-
-///
+// /
