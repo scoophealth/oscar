@@ -182,6 +182,7 @@ function refresh() {
 	<td width="27%" align="left" valign="top">
 	<form name="serviceform" method="post" action="dbManageBillingLocation.jsp">
 	<B><bean:message key="billing.manageBillingLocation.msgCodeDescription"/></B>
+	<br>
 	<input type="text" name="location1" size="10">
 	<input type="text" name="location1desc" size="30">
 	<br>
