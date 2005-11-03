@@ -41,7 +41,7 @@ String billingRegion = (oscar.OscarProperties.getInstance()).getProperty("billre
 <jsp:useBean id="reportMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%  if(!reportMainBean.getBDoConfigure()) { %>
 <%@ include file="reportMainBeanConn.jsp" %>
-<% } %>
+<% }  %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -489,6 +489,18 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
     </tr>
+    
+<% if((oscar.OscarProperties.getInstance()).getProperty("demographicExt") != null && (oscar.OscarProperties.getInstance()).getProperty("demographicExt").startsWith("Approximate EDD")) {%>
+    <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300"><a href="reportBCARDemo.jsp">SCBP Demographic Report</a></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+<% } %>
+
     <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
         <td></td>
