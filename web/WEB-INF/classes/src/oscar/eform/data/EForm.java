@@ -288,8 +288,12 @@ public class EForm extends EFormBase {
             ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
             sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
             ArrayList values = EFormUtil.getValues(names, sql);
-            for (int i=0; i<names.size(); i++) {
-                output = DatabaseAP.parserReplace((String) names.get(i), (String) values.get(i), output);
+            if (values.size() != names.size()) {
+                output = "";
+            } else {
+                for (int i=0; i<names.size(); i++) {
+                    output = DatabaseAP.parserReplace((String) names.get(i), (String) values.get(i), output);
+                }
             }
         }
         if (type.equals("textarea")) {
