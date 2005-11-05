@@ -51,6 +51,110 @@ public final class EctViewConsultationRequestsForm extends ActionForm {
       currentTeam = str;
    }
    
+   /**
+    * Getter for property startDate.
+    * @return Value of property startDate.
+    */
+   public java.lang.String getStartDate() {
+      return startDate;
+   }
+   
+   /**
+    * Setter for property startDate.
+    * @param startDate New value of property startDate.
+    */
+   public void setStartDate(java.lang.String startDate) {
+      this.startDate = startDate;
+   }
+   
+   /**
+    * Getter for property endDate.
+    * @return Value of property endDate.
+    */
+   public java.lang.String getEndDate() {
+      return endDate;
+   }
+   
+   /**
+    * Setter for property endDate.
+    * @param endDate New value of property endDate.
+    */
+   public void setEndDate(java.lang.String endDate) {
+      this.endDate = endDate;
+   }
+   
+   /**
+    * Getter for property includeCompleted.
+    * @return Value of property includeCompleted.
+    */
+   public java.lang.String getIncludeCompleted() {
+      return includeCompleted;
+   }
+   
+   /**
+    * Setter for property includeCompleted.
+    * @param includeCompleted New value of property includeCompleted.
+    */
+   public void setIncludeCompleted(java.lang.String includeCompleted) {
+      this.includeCompleted = includeCompleted;
+   }
+   
+   /**
+    * Getter for property orderby.
+    * @return Value of property orderby.
+    */
+   public java.lang.String getOrderby() {
+      return orderby;
+   }
+   
+   /**
+    * Setter for property orderby.
+    * @param orderby New value of property orderby.
+    */
+   public void setOrderby(java.lang.String orderby) {
+      this.orderby = orderby;
+   }
+   
+   /**
+    * Getter for property desc.
+    * @return Value of property desc.
+    */
+   public java.lang.String getDesc() {
+      return desc;
+   }
+   
+   /**
+    * Setter for property desc.
+    * @param desc New value of property desc.
+    */
+   public void setDesc(java.lang.String desc) {
+      this.desc = desc;
+   }
+   
+   /**
+    * Getter for property searchDate.
+    * @return Value of property searchDate.
+    */
+   public java.lang.String getSearchDate() {
+      if ( searchDate  == null) { searchDate ="0"; }
+      return searchDate;
+   }
+   
+   /**
+    * Setter for property searchDate.
+    * @param searchDate New value of property searchDate.
+    */
+   public void setSearchDate(java.lang.String searchDate) {
+      this.searchDate = searchDate;
+   }
+   
    String sendTo;
    String currentTeam;
+   
+   String startDate;
+   String endDate;
+   String includeCompleted;
+   String orderby;
+   String desc;
+   String searchDate = null;
 }
