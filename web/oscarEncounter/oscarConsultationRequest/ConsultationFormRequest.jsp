@@ -461,7 +461,7 @@ function checkForm(submissionVal,formName){
                 <table class="TopStatusBar">
                     <tr>
                         <td class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=consultUtil.patientName%> <%=consultUtil.patientSex%> <%=consultUtil.patientAge%>
+                            <%=consultUtil.patientName%> <%=consultUtil.patientSex%> <%=consultUtil.patientAge%>                                                                          
                         </td>
                     </tr>
                 </table>
@@ -470,11 +470,27 @@ function checkForm(submissionVal,formName){
         <tr style="vertical-align:top">
             <td class="MainTableLeftColumn">
             <table>
+               <tr>
+                    <td class="tite4" colspan="2" >
+                    <table>
+                       <tr >
+                            <td class="stat" colspan="2">                       
+                            Created by:                                            
+                            </td>
+                        </tr>
+                        <tr >
+                            <td class="stat" colspan="2" align="right" nowrap>                                           
+                                       <%=consultUtil.getProviderName(consultUtil.providerNo) %>                       
+                            </td>
+                        </tr>
+                      </table>  
+                    </td>
+                </tr>                
                 <tr>
                     <td class="tite4" colspan="2" >
                     <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgStatus"/>
                     </td>
-                </tr>
+                </tr>                      
                 <tr >
                     <td class="tite4" colspan="2">
                         <table>
@@ -531,7 +547,8 @@ function checkForm(submissionVal,formName){
                       </table>
                     </td>
                 </tr>
-            </table>
+                
+            </table>            
             </td>
             <td class="MainTableRightColumn">
      <table cellpadding="0" cellspacing="2" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="100%" border=1>
