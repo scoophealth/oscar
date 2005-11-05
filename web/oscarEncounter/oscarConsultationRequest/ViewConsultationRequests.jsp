@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@page import="oscar.oscarEncounter.pageUtil.*"%>
+<%@page import="oscar.oscarEncounter.pageUtil.*,java.text.*,java.util.*"%>
 
 <%
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
@@ -44,25 +44,29 @@
     team = new String();
   }
 
+  Boolean includeBool = (Boolean) request.getAttribute("includeCompleted");  
+  boolean includeCompleted = false;  
+  if(includeBool != null){
+     includeCompleted  = includeBool.booleanValue();    
+  }
+  
+  Date startDate = (Date) request.getAttribute("startDate");               
+  Date endDate = (Date) request.getAttribute("endDate");    
+  String orderby = (String) request.getAttribute("orderby");
+  String desc = (String) request.getAttribute("desc");
+  String searchDate = (String) request.getAttribute("searchDate");
+  
   oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
   consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
   consultUtil.estTeams();
-  /*if (!team.equals("-1")){
-    if( bean.isCurrentTeam() ){
-      team = bean.getCurrentTeam();
-      //System.out.println("team was set");
-    }else{
-      team = (String) bean.getTeam();
-      //System.out.println("team wasn't set");
-    }
-  }*/
-
+  
 String protocol = "http";
 if (request.isSecure()){
    protocol = "https";
 }
 
 String serverURL = protocol+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath();
+ArrayList tickerList = new ArrayList();
 %>
 
 
@@ -70,7 +74,14 @@ String serverURL = protocol+"://"+request.getServerName()+":"+request.getServerP
 <title>
 <bean:message key="ectViewConsultationRequests.title"/>
 </title>
+
+
 <html:base/>
+
+<link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1" /> 
+<script type="text/javascript" src="../../share/calendar/calendar.js"></script>
+<script type="text/javascript" src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
+<script type="text/javascript" src="../../share/calendar/calendar-setup.js"></script>
 <!--META HTTP-EQUIV="Refresh" CONTENT="20;"-->
 
 <style type="text/css">
@@ -147,6 +158,21 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
 
 
 //
+
+function setOrder(val){
+  if ( document.forms[0].orderby.value == val){
+  //alert( document.forms[0].desc.value);
+    if ( document.forms[0].desc.value == '1'){
+       document.forms[0].desc.value = '0';
+    }else{
+       document.forms[0].desc.value = '1';
+    }    
+  }else{
+    document.forms[0].orderby.value = val;
+    document.forms[0].desc.value = '0';
+  }    
+  document.forms[0].submit();
+}
 </script>
 
 
@@ -184,16 +210,17 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                     <tr>
                         <td NOWRAP>
                         <a href="javascript:popupOscarConsultationConfig(700,960,'<%=serverURL%>/oscarEncounter/oscarConsultationRequest/config/ShowAllServices.jsp')" class="consultButtonsActive">
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/></a>
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgEditSpecialists"/>
+                        </a>                                                
                         </td>
-                    </tr>
+                    </tr>                    
                 </table>
             </td>
             <td class="MainTableRightColumn">
-                <table width="100%">                                
+                <table width="100%" >
                 <tr>
-                    <td>                        
-                        <html:form action="/oscarEncounter/ViewConsultation" >
+                    <td style="margin: 0; padding: 0;">
+                        <html:form action="/oscarEncounter/ViewConsultation"  method="get">
                             <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formSelectTeam"/>:
                             <select name="sendTo">
 				<option value="-1"><bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.formViewAll"/></option>
@@ -208,34 +235,59 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                                 <%}}%>
                             </select>                            
                             <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.btnConsReq"/>"/>
+                            <div style="margin: 0; padding: 0; ">
+                            Start:<html:text property="startDate" size="8" styleId="startDate"/><a id="SCal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                            End:<html:text property="endDate" size="8"   styleId="endDate"/><a id="ECal"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a>
+                            Include Completed:<html:checkbox property="includeCompleted" value="include" />
+                            Search on
+                            Referal Date<html:radio property="searchDate" value="0" titleKey="Search on Referal Date"/>
+                            Appt. Date<html:radio property="searchDate" value="1" titleKey="Search on Appt. Date"/>
                             <html:hidden property="currentTeam"/>
+                            <html:hidden property="orderby"/>
+                            <html:hidden property="desc"/>
+                            </div>
                         </html:form>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <table border="0" width="80%" cellspacing="1">
+                    <td>                    
+                        <table border="0" width="90%" cellspacing="1" style="border: thin solid #C0C0C0;" >
                             <tr>
                                 <th align="left" class="VCRheads" width="10%">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
+                                   <a href=# onclick="setOrder('1'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
+                                   </a>
                                 </th>
                                 <th align="left" class="VCRheads" width="75">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
+                                   <a href=# onclick="setOrder('2'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
+                                   </a>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgProvider"/>
+                                   <a href=# onclick="setOrder('3'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgProvider"/>
+                                   </a>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgService"/>
+                                   <a href=# onclick="setOrder('4'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgService"/>
+                                   </a>
                                 </th>
                                 <th align="left" class="VCRheads">
-                                <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
+                                   <a href=# onclick="setOrder('5'); return false;">
+                                   <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgRefDate"/>
+                                   </a>
+                                </th>
+                                <th align="left" class="VCRheads">
+                                   <a href=# onclick="setOrder('6'); return false;">
+                                   Appointment Date
+                                   </a>
                                 </th>
                             </tr>
-                        <%  
-                            oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;
-                            theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();
-                            theRequests.estConsultationVecByTeam(team);
+                        <%                              
+                            oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;                            
+                            theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();                            
+                            theRequests.estConsultationVecByTeam(team,includeCompleted,startDate,endDate,orderby,desc,searchDate);                                                        
 
                             for (int i = 0; i < theRequests.ids.size(); i++){
                             String id      = (String) theRequests.ids.elementAt(i);
@@ -244,6 +296,13 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                             String provide = (String) theRequests.provider.elementAt(i);
                             String service = (String) theRequests.service.elementAt(i);
                             String date    = (String) theRequests.date.elementAt(i);
+                            String demo    = (String) theRequests.demographicNo.elementAt(i);
+                            String appt    = (String) theRequests.apptDate.elementAt(i);
+                            String patBook = (String) theRequests.patientWillBook.elementAt(i);
+                            
+                            if(status.equals("1") && dateGreaterThanWeek(date)){
+                                tickerList.add(demo);
+                            }
                         %>
                             <tr>
                                 <td class="stat<%=status%>">
@@ -274,9 +333,17 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
                                 <td class="stat<%=status%>">
                                     <%=date%>
                                 </td>
+                                <td class="stat<%=status%>">
+                                   <% if ( patBook != null && patBook.trim().equals("1") ){%>
+                                    Patient will book
+                                   <%}else{%> 
+                                   <%=appt%> 
+                                   <%}%>
+                                </td>
                             </tr>
                         <%}%>
                         </table>
+                    
                     </td>
                 </tr>
                 </table>
@@ -287,11 +354,44 @@ function popupOscarConsultationConfig(vheight,vwidth,varpage) { //open a new pop
 
             </td>
             <td class="MainTableBottomRowRightColumn">
-
+            <% if ( tickerList.size() > 0 ) { 
+                  String queryStr = "";
+                  for (int i = 0; i < tickerList.size(); i++){
+                     String demo = (String) tickerList.get(i);
+                     if (i == 0){
+                        queryStr += "demo="+demo;
+                     }else{
+                        queryStr += "&demo="+demo;  
+                     }
+                   }%>                        
+             <a target="_blank" href="../../tickler/AddTickler.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Patient has Consultation Letter with a status of 'Nothing Done' for over one week","UTF-8")%>">Add Tickler for Consults with ND for more than one week</a>
+            <%}%>
             </td>
         </tr>
     </table>
+    <script language='javascript'>
+       Calendar.setup({inputField:"startDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"SCal",singleClick:true,step:1});          
+       Calendar.setup({inputField:"endDate",ifFormat:"%Y-%m-%d",showsTime:false,button:"ECal",singleClick:true,step:1});                      
+   </script>
 </body>
 
 </html:html>
+<%!
 
+boolean dateGreaterThanWeek(String dateStr){
+    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");    
+    Date prevDate = null;
+    try{
+       prevDate = (java.util.Date)formatter.parse(dateStr);
+    }catch (Exception e){ 
+    return false;
+    }         
+         
+    Calendar bonusEl = Calendar.getInstance();                     
+    bonusEl.add(Calendar.WEEK_OF_YEAR,-1);
+    Date bonusStartDate = bonusEl.getTime();                                          
+    
+    return bonusStartDate.after(prevDate);
+}
+
+%>
