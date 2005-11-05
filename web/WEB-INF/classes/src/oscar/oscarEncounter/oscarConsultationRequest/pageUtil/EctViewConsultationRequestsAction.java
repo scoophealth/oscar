@@ -26,30 +26,49 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.util.*;
 
 public class EctViewConsultationRequestsAction extends Action {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        String sendTo = null;
         EctViewConsultationRequestsForm frm = (EctViewConsultationRequestsForm) form;
-        //EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        //if(bean == null)
-        //    return mapping.findForward("eject");
-        //if(bean.isCurrentTeam() && frm.getSendTo() == null) {        
-            sendTo = frm.getSendTo();
-        /*} else {
-            sendTo = frm.getSendTo();
-            frm.setCurrentTeam(sendTo);
-            if(!sendTo.equals("-1"))
-                bean.setCurrentTeam(sendTo);
-        }*/
+        
+        String defaultPattern = "yyyy-MM-dd";   
+        String sendTo = null;
+        String includeCompleted = null;                
+        Date startDate = null;
+        Date endDate = null;
+        boolean includedComp = false;        
+                
+        sendTo = frm.getSendTo();
+        includeCompleted = frm.getIncludeCompleted();
+                                
+        if(includeCompleted != null && includeCompleted.equals("include") ){
+           includedComp = true; 
+        }                        
+        try{
+           startDate = UtilDateUtilities.getDateFromString(frm.getStartDate(),defaultPattern);            
+        }catch(Exception e){}        
+        try{
+           endDate = UtilDateUtilities.getDateFromString(frm.getEndDate(),defaultPattern);            
+        }catch(Exception e){}
+                                
+        request.setAttribute("startDate",startDate);               
+        request.setAttribute("endDate",endDate);               
+        request.setAttribute("includeCompleted",new Boolean(includedComp));               
         request.setAttribute("teamVar", sendTo);
+        request.setAttribute("orderby",frm.getOrderby());
+        request.setAttribute("desc",frm.getDesc());
+        request.setAttribute("searchDate",frm.getSearchDate());                
         return mapping.findForward("success");
     }
+    
+    
 }
