@@ -50,6 +50,7 @@ oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemog
 
 ArrayList billItem = bean.getBillItem();
 BillingFormData billform = new BillingFormData();
+ReferralBillingData rb = new ReferralBillingData();
 
 %>
 
@@ -226,7 +227,7 @@ function showHideLayers() { //v3.0
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
-        </tr>
+        </tr> 
       </table>
 
       <table width="107%" border="0" cellspacing="2" cellpadding="2">
@@ -258,10 +259,11 @@ function showHideLayers() { //v3.0
           <td><%=billform.getProviderName(bean.getCreator())%></td>
         </tr>
         <tr>
-          <td height="16"><%=getReferralString(bean.getReferType1())%> <%=bean.getReferral1()%></td>
-          <td><%=getReferralString(bean.getReferType2())%><%=bean.getReferral2()%></td>
-
-          <td>&nbsp;</td>
+          <td height="16" colspan="3">
+          <%=getReferralString(bean.getReferType1())%> <%=rb.getReferralDocName(bean.getReferral1()) %> <%=addBrackets(bean.getReferral1())%>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <%=getReferralString(bean.getReferType2())%> <%=rb.getReferralDocName(bean.getReferral2()) %> <%=addBrackets(bean.getReferral2())%>
+          </td>
           <td>Dependent: <%=bean.getDependent()%></td>
 
           <td>Sub Code: <%=bean.getSubmissionCode()%></td>
@@ -407,5 +409,12 @@ function showHideLayers() { //v3.0
      }catch(Exception ahEx){}
      return retval;
   }
-
+  
+  String addBrackets(String str){
+      String ret = "";
+      if (str != null && str.trim().length() != 0){
+          ret = "{"+str+")";
+      }
+      return ret;
+  }
 %>
