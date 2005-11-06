@@ -56,8 +56,43 @@ Document Transfer
 </title>
 </head>
 
+
+<style type="text/css">
+td.messengerButtonsA{
+    /*background-color: #6666ff;*/
+    /*background-color: #6699cc;*/
+    background-color: #003399;
+}
+td.messengerButtonsD{
+    /*background-color: #84c0f4;*/
+    background-color: #555599;
+}
+a.messengerButtons{
+    color: #ffffff;
+    font-size: 9pt;
+    text-decoration: none;
+}
+
+table.messButtonsA{
+border-top: 2px solid #cfcfcf;
+border-left: 2px solid #cfcfcf;
+border-bottom: 2px solid #333333;
+border-right: 2px solid #333333;
+}
+
+table.messButtonsD{
+border-top: 2px solid #333333;
+border-left: 2px solid #333333;
+border-bottom: 2px solid #cfcfcf;
+border-right: 2px solid #cfcfcf;
+}
+
+
+</style>
+
 <body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
+
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
@@ -79,19 +114,42 @@ Document Transfer
                 </table>
             </td>
         </tr>
+        
+     
         <tr>
             <td class="MainTableBottomRowLeftColumn">
-
+                
             </td>
             
             <html:form action="/oscarMessenger/ViewPDFFile">
                 <td class="MainTableBottomRowRightColumn">
+                    <table cellspacing=3 >
+                                <tr >
+                                    <td >
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3>
+                                            <tr>
+                                                <td class="messengerButtonsA">
+                                                <a href="#" onclick="javascript:top.window.close()" class="messengerButtons">
+                                                Close Attachment
+                                                </a>
+                                            </td></tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                    <table>
+                    
                     <% Vector attVector = Doc2PDF.getXMLTagValue(pdfAttch, "TITLE" ); %>
                     <% for ( int i = 0 ; i < attVector.size(); i++) { %>
-                            <%=(String) attVector.get(i)%> <input type=submit onclick=" document.forms[0].file_id.value = <%=i%>" value="Download" /> <br/>
+                    <tr>
+                        <td bgcolor="#DDDDFF">                            <%=(String) attVector.get(i)%> </td>
+                        <td bgcolor="#DDDDFF"> <input type=submit onclick=" document.forms[0].file_id.value = <%=i%>" value="Download" /></td>
+                    </tr>                            
                     <% }  %>
                     <html:hidden property="file_id"/> 
                     <html:hidden property="attachment" value="<%=pdfAttch%>" />
+                    
+                    <table>
                 </td>
             </html:form>
         </tr>

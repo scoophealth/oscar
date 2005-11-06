@@ -1,9 +1,34 @@
+<%--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+--%>
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ page language="java" %>
 <%@ page import="oscar.oscarMessenger.docxfer.send.*,oscar.oscarMessenger.docxfer.util.*, 
                 oscar.oscarEncounter.data.*, oscar.oscarEncounter.pageUtil.EctSessionBean, oscar.oscarRx.pageUtil.RxSessionBean,
-                oscar.oscarRx.data.RxPatientData, oscar.oscarMessenger.pageUtil.MsgSessionBean"%>
+                oscar.oscarRx.data.RxPatientData, oscar.oscarMessenger.pageUtil.MsgSessionBean, oscar.oscarDemographic.data.*" %>
 <%@  page import=" java.util.*, org.w3c.dom.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -13,6 +38,16 @@
 
 <%
 String demographic_no = (String) request.getParameter("demographic_no");
+
+
+DemographicData demoData = new  DemographicData();
+DemographicData.Demographic demo =  demoData.getDemographic(demographic_no);
+String demoName = "";
+if ( demo != null ) {
+    demoName = demo.getLastName()+", "+demo.getFirstName();
+}
+  
+
 int indexCount = 0;
 %>
 
@@ -36,9 +71,123 @@ request.getSession().setAttribute("EctSessionBean",bean);
 
 %>
 
-<html>
-    <head><title>Generate Preview Page</title></head>
-    <script type="text/javascript">   
+
+
+<link rel="stylesheet" type="text/css" href="encounterStyles.css">
+<html:html locale="true">
+<head>
+<title>
+<bean:message key="oscarMessenger.CreateMessage.title"/>
+</title>
+
+<style type="text/css">
+td.messengerButtonsA{
+    /*background-color: #6666ff;*/
+    /*background-color: #6699cc;*/
+    background-color: #003399;
+}
+td.messengerButtonsD{
+    /*background-color: #84c0f4;*/
+    background-color: #555599;
+}
+a.messengerButtons{
+    color: #ffffff;
+    font-size: 9pt;
+    text-decoration: none;
+}
+
+table.messButtonsA{
+border-top: 2px solid #cfcfcf;
+border-left: 2px solid #cfcfcf;
+border-bottom: 2px solid #333333;
+border-right: 2px solid #333333;
+}
+
+table.messButtonsD{
+border-top: 2px solid #333333;
+border-left: 2px solid #333333;
+border-bottom: 2px solid #cfcfcf;
+border-right: 2px solid #cfcfcf;
+}
+
+
+</style>
+
+<style type="text/css">
+    BODY
+    {
+        font-family: Verdana, Tahoma, Arial, sans-serif;
+        font-size: 10pt;
+        text-decoration: none;
+    }
+
+    SPAN.treeNode
+    {
+        font-size: 10pt;
+        font-weight: bold;
+        cursor: hand;
+    }
+
+    IMG.treeNode
+    {
+        vertical-align: middle;
+    }
+
+    IMG.collapse
+    {
+        cursor: hand;
+        margin-left: 10px;
+    }
+
+
+    TABLE.treeTable
+    {
+        margin-left: 15px;
+    }
+
+    TH.treeTable
+    {
+        font-weight: bold;
+    }
+
+    PRE
+    {
+        font-size: 9pt;
+        font-weight: normal;
+    }
+
+    .content
+    {
+        margin-left: 15px;
+        border-width: 1px;
+        border-color: #A9A9A9;
+        border-style: solid;
+        //padding: 3px;
+        background-color: #F5F5F5;
+        font-size: 9pt;
+    }
+
+    .groupIndent
+    {
+        margin-left: 19px;
+        /*border-width: 1px;
+        border-color: #A9A9A9;
+        border-style: solid;
+        padding: 3px;
+        background-color: #F5F5F5;*/
+        font-size: 9pt;
+    }
+
+    .borderTop
+    {
+        border-top-width: 1px;
+        border-top-color: #A9A9A9;
+        border-top-style: solid;
+    }
+</style>
+
+
+<script type="text/javascript">   
     var timerID = null
     var timerRunning = false    
     
@@ -145,217 +294,299 @@ request.getSession().setAttribute("EctSessionBean",bean);
         return;
     }
     
-    </script>
+</script>
 
-    
 
-<body>
-        <%-- <jsp:useBean id="beanInstanceName" scope="session" class="beanPackage.BeanClassName" /> --%>
-        <%-- <jsp:getProperty name="beanInstanceName"  property="propertyName" /> --%>
-            
-        
-        <html:form action="/oscarMessenger/Doc2PDF">
-        
-        Attach document for: <%=demographic_no%>
+</head>
 
-        <table border="1" cellpadding="1" cellspacing="1" width="400">
-                <tr>
-        <td colspan="3">
-            Demographic information
-        </td>
-        </tr>       
-        <tr>
-            <td>
 
-                <% String currentURI = "../demographic/demographiccontrol.jsp?demographic_no=" + demographic_no +"&displaymode=pdflabel&dboperation=search_detail";  %>
-                <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
-                <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
-                <input type=checkbox name="titleArray" value='Demographic information' style="display:none" />
 
+<body class="BodyStyle" vlink="#0000FF" >
+
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn">
+                <bean:message key="oscarMessenger.CreateMessage.msgMessenger"/>
             </td>
-            <td>       
-                Information
-            </td>
-            <td>       
-                <% if ( request.getParameter("isAttaching") == null ) { %>
-                    <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
-                <% } %>
-                &nbsp;
-            </td>
-        </tr>        
-
-        
-        <tr>
-            <td colspan="3">
-                Encounters:
-            </td>
-        </tr>       
-        <%
-          ResultSet rsdemo = null ;
-
-          String[] param =new String[1];
-          param[0]=demographic_no; 
-          String datetime = null;
-
-          rsdemo = daySheetBean.queryResults(param, "search_ect");
-          while (rsdemo.next()) {
-
-        %>
-        <tr>
-            <td>
-                <% currentURI = "../oscarEncounter/echarthistoryprint.jsp?echartid=" + rsdemo.getString("eChartId") + "&demographic_no=" + demographic_no;  %>
-                <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
-                <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
-                <input type=checkbox name="titleArray" value='Encounter: <%=rsdemo.getString("timeStamp")%>' style="display:none" />
-
-            </td>
-            <td>       
-               <%=rsdemo.getString("timeStamp")%>
-            </td>
-            <td> 
-                <% if ( request.getParameter("isAttaching") == null ) { %>
-                    <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
-                <% } %>
-                &nbsp;
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+                            Attach document for: <%=demoName%>
+                        </td>
+                        <td  >
+                            &nbsp;
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
+                        </td>
+                    </tr>
+                </table>
             </td>
         </tr>
-               
-        <%
-          }
-          daySheetBean.closePstmtConn();
-        %>  
- 
         <tr>
-            <td colspan="3">
-                Prescriptions
+            <td class="MainTableLeftColumn">
+            &nbsp;
             </td>
-        </tr>       
-        <tr>
-            <td>
-            <%
-                // Setup bean
-                RxSessionBean Rxbean;
+            <td class="MainTableRightColumn">
+                <table >
 
-                if( request.getSession().getAttribute("RxSessionBean")!=null) {
-                    Rxbean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-                }
-                else {
-                    Rxbean = new RxSessionBean();
-                }
+                    <tr>
+                        <td>
+                            <table cellspacing=3 >
+                                <tr >
+                                    <td >
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3>
+                                            <tr>
+                                                <td class="messengerButtonsA">
+                                                <a href="#" onclick="javascript:top.window.close()" class="messengerButtons">
+                                                Close Attachment
+                                                </a>
+                                            </td></tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
 
-                request.getSession().setAttribute("RxSessionBean", Rxbean);
-                
-                RxPatientData rx = null;
-                RxPatientData.Patient patient = null;
-                try {
-                    rx = new RxPatientData();
-                    patient = rx.getPatient(demographic_no);
-                }
-                catch (java.sql.SQLException ex) {
-                    throw new ServletException(ex);
-                }
 
-                if(patient!=null) {
-                    request.getSession().setAttribute("Patient", patient);
-                }
-
-                Rxbean.setProviderNo((String) request.getSession().getAttribute("user"));              
-                Rxbean.setDemographicNo(Integer.parseInt(demographic_no));
-                                    
-            %>
-            
-                <% currentURI = "../oscarRx/PrintDrugProfile.jsp?demographic_no=" + demographic_no;  %>
-            
-                <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
-                <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
-                <input type=checkbox name="titleArray" value='Current prescriptions' style="display:none" />
-
-            </td>
-            <td>       
-                Current prescriptions
-            </td>
-            <td>       
-                <% if ( request.getParameter("isAttaching") == null ) { %>
-                    <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
-                <% } %>
-                &nbsp;
-            </td>
-        </tr>
-
+		    <tr>
+		    
+                    <td bgcolor="#EEEEFF" >
+		    
+		    
+		            <html:form action="/oscarMessenger/Doc2PDF">
         
-        <!--
-        <tr>
-        <td colspan="2">       
-            <input type="text" name="url" id="url" size="30" value="http://localhost:8084/oscar_mcmaster/form/forwardshortcutname.jsp?formname=Vascular%20Tracker&demographic_no=39" />
-        </td>
-        </tr>
 
-        <tr>
-        <td colspan="2">
-            <input type="button" name="setURL" value="setURL" onclick="SetBottomURL( document.forms[0].url.value);" />
-        </td>
-        </tr>
-        -->   
-        
-        <tr>
-            <td colspan="3" align="center">
-                
-                
-                <% if ( request.getParameter("isAttaching") != null ) { %>
-                    <input type=text name=status value='' />
-                <% } else { %>     
-                    <input type="button" name="Attach" value="Attach Document" onclick="AttachingPDF(-1)" />
-                 <% } %> 
-                <br />            
+
+                                    <table border="0" cellpadding="0" cellspacing="1" width="400">
+                                            <tr>
+                                    <th align="left" bgcolor="#DDDDFF" colspan="3">
+                                                Demographic information
+                                    </th>
+                                    </tr>       
+                                    <tr>
+                                        <td>
+
+                                            <% String currentURI = "../demographic/demographiccontrol.jsp?demographic_no=" + demographic_no +"&displaymode=pdflabel&dboperation=search_detail";  %>
+                                            <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
+                                            <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
+                                            <input type=checkbox name="titleArray" value="<%=demoName%> information" style="display:none" />
+
+                                        </td>
+                                        <td>       
+                                            <%=demoName%> Information
+                                        </td>
+                                        <td>       
+                                            <% if ( request.getParameter("isAttaching") == null ) { %>
+                                                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
+                                            <% } %>
+                                            &nbsp;
+                                        </td>
+                                    </tr>        
+
+
+                                    <tr>
+
+                                        <th align="left" bgcolor="#DDDDFF" colspan="3">
+                                                    Encounters:
+                                        </th>
+
+                                    </tr>       
+                                    <%
+                                      ResultSet rsdemo = null ;
+
+                                      String[] param =new String[1];
+                                      param[0]=demographic_no; 
+                                      String datetime = null;
+
+                                      rsdemo = daySheetBean.queryResults(param, "search_ect");
+                                      while (rsdemo.next()) {
+
+                                    %>
+                                    <tr>
+                                        <td>
+                                            <% currentURI = "../oscarEncounter/echarthistoryprint.jsp?echartid=" + rsdemo.getString("eChartId") + "&demographic_no=" + demographic_no;  %>
+                                            <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
+                                            <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
+                                            <input type=checkbox name="titleArray" value='Encounter: <%=rsdemo.getString("timeStamp")%>' style="display:none" />
+
+                                        </td>
+                                        <td>       
+                                           <%=rsdemo.getString("timeStamp")%>
+                                        </td>
+                                        <td> 
+                                            <% if ( request.getParameter("isAttaching") == null ) { %>
+                                                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
+                                            <% } %>
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+
+                                    <%
+                                      }
+                                      daySheetBean.closePstmtConn();
+                                    %>  
+
+                                    <tr>
+
+                                        <th align="left" bgcolor="#DDDDFF" colspan="3">
+                                                                    Prescriptions
+                                        </th>
+
+
+                                    </tr>       
+                                    <tr>
+                                        <td>
+                                        <%
+                                            // Setup bean
+                                            RxSessionBean Rxbean;
+
+                                            if( request.getSession().getAttribute("RxSessionBean")!=null) {
+                                                Rxbean = (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
+                                            }
+                                            else {
+                                                Rxbean = new RxSessionBean();
+                                            }
+
+                                            request.getSession().setAttribute("RxSessionBean", Rxbean);
+
+                                            RxPatientData rx = null;
+                                            RxPatientData.Patient patient = null;
+                                            try {
+                                                rx = new RxPatientData();
+                                                patient = rx.getPatient(demographic_no);
+                                            }
+                                            catch (java.sql.SQLException ex) {
+                                                throw new ServletException(ex);
+                                            }
+
+                                            if(patient!=null) {
+                                                request.getSession().setAttribute("Patient", patient);
+                                            }
+
+                                            Rxbean.setProviderNo((String) request.getSession().getAttribute("user"));              
+                                            Rxbean.setDemographicNo(Integer.parseInt(demographic_no));
+
+                                        %>
+
+                                            <% currentURI = "../oscarRx/PrintDrugProfile.jsp?demographic_no=" + demographic_no;  %>
+
+                                            <html:checkbox property="uriArray" value="<%=currentURI%>" style="display:none" />
+                                            <html:multibox property="indexArray" value="<%= Integer.toString(indexCount++) %>" />
+                                            <input type=checkbox name="titleArray" value='Current prescriptions' style="display:none" />
+
+                                        </td>
+                                        <td>       
+                                            Current prescriptions
+                                        </td>
+                                        <td>       
+                                            <% if ( request.getParameter("isAttaching") == null ) { %>
+                                                <input type=button value=Preview onclick=PreviewPDF('<%=currentURI%>') />
+                                            <% } %>
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+
+
+                                    <!--
+                                    <tr>
+                                    <td colspan="2">       
+                                        <input type="text" name="url" id="url" size="30" value="http://localhost:8084/oscar_mcmaster/form/forwardshortcutname.jsp?formname=Vascular%20Tracker&demographic_no=39" />
+                                    </td>
+                                    </tr>
+
+                                    <tr>
+                                    <td colspan="2">
+                                        <input type="button" name="setURL" value="setURL" onclick="SetBottomURL( document.forms[0].url.value);" />
+                                    </td>
+                                    </tr>
+                                    -->   
+
+                                    <tr>
+                                        <td colspan="3" align="center">
+
+
+                                            <% if ( request.getParameter("isAttaching") != null ) { %>
+                                                <input type=text name=status value='' />
+                                            <% } else { %>     
+                                                <input type="button" name="Attach" value="Attach Document" onclick="AttachingPDF(-1)" />
+                                             <% } %> 
+                                            <br />            
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="3">          
+
+
+                                            <html:hidden property="srcText" value='' />
+
+                                            <html:hidden property="attachmentCount" value='<%=request.getParameter("attachmentCount")%>'/>
+
+                                            <html:hidden property="demographic_no" value='<%=demographic_no%>'/>
+
+                                            <html:hidden property="isPreview" value='<%=request.getParameter("isPreview")%>'/>
+
+                                            <html:hidden property="isAttaching" value='<%=request.getParameter("isAttaching")%>'/>                
+
+                                            <html:hidden property="isNew" value='true' />                                
+
+                                            <html:hidden property="attachmentTitle" value='' />                                
+
+
+
+                                        </td>
+                                    </tr>
+
+                                     </table>
+                                    </html:form>
+
+
+                                    <script>
+                                        if ( document.forms[0].isAttaching.value == "true") {
+
+                                            j = 0;
+                                            var indexArray = document.forms[0].indexArray;
+                                            for( i = 0; i < indexArray.length ; i ++ ) {
+                                                if ( indexArray[i].checked ) {
+                                                   j++;
+                                                }
+                                            }
+
+                                            document.forms[0].status.value = "Attaching <%=MsgSessionBean.getCurrentAttachmentCount() + 1%> out of " + j;
+                                            AttachingPDF( <%=MsgSessionBean.getCurrentAttachmentCount()%>);      
+
+                                        }
+
+
+                                    </script>
+
+
+
+
+
+                            </td>		    
+		    
+	    
+		    
+		    </tr>                    
+                </table>
             </td>
         </tr>
-            
         <tr>
-            <td colspan="3">          
-                
-                <input type="button" name="test" value="test" onclick="testing()" />            
-                <textarea name="srcText" id="srcText" cols="80" rows="10"></textarea>
-            
-                <html:hidden property="attachmentCount" value='<%=request.getParameter("attachmentCount")%>'/>
-
-                <html:hidden property="demographic_no" value='<%=demographic_no%>'/>
-
-                <html:hidden property="isPreview" value='<%=request.getParameter("isPreview")%>'/>
-
-                <html:hidden property="isAttaching" value='<%=request.getParameter("isAttaching")%>'/>                
-
-                <html:hidden property="isNew" value='true' />                                
-
-                <html:hidden property="attachmentTitle" value='' />                                
-                
-                
-                
+            <td class="MainTableBottomRowLeftColumn">
+            &nbsp;
+            </td>
+            <td class="MainTableBottomRowRightColumn">
+            &nbsp;
             </td>
         </tr>
+    </table>
+</body>
+</html:html>
 
-         </table>
-        </html:form>
-        
-        
-        <script>
-            if ( document.forms[0].isAttaching.value == "true") {
-              
-                j = 0;
-                var indexArray = document.forms[0].indexArray;
-                for( i = 0; i < indexArray.length ; i ++ ) {
-                    if ( indexArray[i].checked ) {
-                       j++;
-                    }
-                }
 
-                document.forms[0].status.value = "Attaching <%=MsgSessionBean.getCurrentAttachmentCount() + 1%> out of " + j;
-                AttachingPDF( <%=MsgSessionBean.getCurrentAttachmentCount()%>);      
-                    
-            }
-            
-            
-        </script>
-
-    </body>
-</html>
 

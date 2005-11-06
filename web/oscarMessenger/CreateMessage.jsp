@@ -377,15 +377,21 @@ function popupSearchDemo(keyword){ // open a new popup window
 
 function popupAttachDemo(demographic){ // open a new popup window
     var vheight = 700;
-    var vwidth = 800;  
+    var vwidth = 900;  
     windowprops = "height="+vheight+",width="+vwidth+",location=0,scrollbars=1,menubar=0,toolbar=1,resizable=1,screenX=0,screenY=0,top=0,left=0";    
     var page = 'attachmentFrameset.jsp?demographic_no=' +demographic;
-    var popUp=window.open(page, "msgAttachDemo", windowprops);
-    if (popUp != null) {
-        if (popUp.opener == null) {
-          popUp.opener = self; 
+    
+    if ( demographic != '' ) { 
+        var popUp=window.open(page, "msgAttachDemo", windowprops);
+        if (popUp != null) {
+            if (popUp.opener == null) {
+              popUp.opener = self; 
+            }
+            popUp.focus();
         }
-        popUp.focus();
+    }
+    else {
+        alert('Please select a demographic');
     }
 }
 </script>
@@ -630,7 +636,7 @@ function popupAttachDemo(demographic){ // open a new popup window
                                                 }
                                             </script>
                                                <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
-                                               <input type="button" class="ControlPushButton" name="attachDemo" value="Attach Demographic" onclick="popupAttachDemo(document.forms[0].demographic_no.value)" style="display:none" />                                               
+                                               <input type="button" class="ControlPushButton" name="attachDemo" value="Attach Demographic" onclick="popupAttachDemo(document.forms[0].demographic_no.value)" style="display:" />                                               
                                         </td>
 
                                     </tr> 
