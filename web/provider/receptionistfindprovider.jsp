@@ -55,6 +55,7 @@
   int startHour=Integer.parseInt(strStartHour.trim());
   int endHour=Integer.parseInt(strEndHour.trim());
   int everyMin=Integer.parseInt(strEveryMin.trim());
+  boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
 %>
 <html>
 <head>
@@ -70,6 +71,11 @@ function selectProvider(p,pn) {
 	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
 }
 
+function selectProviderCaisi(p,pn) {
+	opener.document.ticklerForm.elements['tickler.task_assigned_to_name'].value=pn;
+	opener.document.ticklerForm.elements['tickler.task_assigned_to'].value=p;
+	self.close();
+}
 </SCRIPT>
 </head>
 <body  bgcolor="ivory" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -122,7 +128,11 @@ function selectProvider(p,pn) {
 %>    
     <tr bgcolor="<%=bColor?bgcolordef:"white"%>"> 
       <td>
+      <%if(caisi) { %>
+	      <a href=# onClick="selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>')"><%=sp%></a></td>
+	  <%} else { %>
       <a href=# onClick="selectProvider('<%=sp%>','<%=URLEncoder.encode(spnl+", "+spnf)%>')"><%=sp%></a></td>
+	  <%} %>
       <td><%=spnl%></td>
       <td><%=spnf%></td>
     </tr>
@@ -138,7 +148,11 @@ function selectProvider(p,pn) {
 %>    
     <tr bgcolor="#CCCCFF"> 
       <td colspan='3'>
+      <%if(caisi) { %>
+      <a href=# onClick="selectProviderCaisi('<%=sp%>','')"><%=sp%></a></td>
+      <%} else { %>
       <a href=# onClick="selectProvider('<%=sp%>','')"><%=sp%></a></td>
+      <%} %>
     </tr>
 <%
       nItems++;
@@ -151,7 +165,11 @@ function selectProvider(p,pn) {
 %> 
 <script language="JavaScript">
 <!--
+  <%if(caisi) {%>
+  	selectProviderCaisi('<%=sp%>','') ;
+  <%} else {%>
   selectProvider('<%=sp%>','') ;
+  <%}%>
 //-->
 </SCRIPT>
 <%

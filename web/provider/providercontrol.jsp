@@ -23,6 +23,18 @@
  * Ontario, Canada
  */
 --%>
+<!-- add by caisi -->
+<%@ taglib uri="/WEB-INF/plugin-tag.tld" prefix="plugin" %>
+<plugin:hideWhenCompExists componentName="coreComp" reverse="true">
+<%
+String isOscar = request.getParameter("infirmaryView_isOscar");
+if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
+if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);
+session.setAttribute("infirmaryView_programId",request.getParameter("infirmaryView_programId"));
+session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
+%>
+</plugin:hideWhenCompExists>
+<!-- add by caisi end -->
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");

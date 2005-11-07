@@ -34,6 +34,17 @@
     <filter-name>LoginFilter</filter-name>
     <filter-class>oscar.oscarSecurity.LoginFilter</filter-class>
   </filter>
+<!-- plugin filter -->
+  <filter>
+		<filter-name>ComponentFilter</filter-name>
+		<filter-class>
+			org.caisi.comp.web.WebComponentFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ComponentFilter</filter-name>
+		<url-pattern>/mod/*</url-pattern>
+	</filter-mapping>
 
   <filter-mapping>
     <filter-name>LoginFilter</filter-name>

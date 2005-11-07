@@ -37,6 +37,7 @@
   StringBuffer bufChart = null, bufName = null, bufNo = null;
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+  boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
 %>
 
 <%@ page import="java.util.*, java.sql.*,java.net.*, oscar.*" errorPage="errorpage.jsp" %>
@@ -211,6 +212,14 @@ function addName(demographic_no, lastname, firstname, chartno, messageID) {
   //return;
 }
 
+<%if(caisi) {%>
+function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
+	fullname=lastname+","+firstname;
+	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementName")%>'].value=fullname;
+	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementId")%>'].value=demographic_no;
+	self.close();
+}
+<%}%>
 </SCRIPT>
  
 <CENTER><table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0"> 
@@ -233,9 +242,9 @@ String bgColor = bodd?"#EEEEFF":"white";
  
 <tr bgcolor="<%=bgColor%>" align="center" 
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
-onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no")%>;addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"
+onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"
 >
-      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="addName('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"></td>
+      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
       <td><%=age%></td>
@@ -272,12 +281,26 @@ onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no"
 
 
 <%	
-  if(nItems==1 && nLastPage<=0 ) { //if there is only one search result, it should be added to the appoint page directly.
+  if(nItems==1 && nLastPage<=0 && !caisi) { //if there is only one search result, it should be added to the appoint page directly.
 %> 
 <script language="JavaScript">
 <!--
   document.addform.action="<%=request.getParameter("originalpage")%>?name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=bufNo.toString()%>&messageID=<%=request.getParameter("messageId")%>"; 
   document.addform.submit();  
+//-->
+</SCRIPT>
+<%
+  } else if (nItems==1 && nLastPage<=0 && caisi) {
+	  //caisi version
+%>
+<script language="JavaScript">
+<!--
+
+	fullname='<%=bufName.toString()%>';
+	demographic_no='<%=bufNo.toString()%>';
+	opener.document.ticklerForm.elements['tickler.demographic_webName'].value=fullname;
+	opener.document.ticklerForm.elements['tickler.demographic_no'].value=demographic_no;
+	self.close();
 //-->
 </SCRIPT>
 <%
