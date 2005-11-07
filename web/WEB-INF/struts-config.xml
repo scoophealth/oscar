@@ -284,15 +284,10 @@
       <forward name="success" path="/oscarMessenger/ViewMessage.do"/>
     </action>
 
-   <!--
-   <action path="/oscarMessenger/Doc2PDF" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFAction" name="msgDoc2PDFForm" scope="request" input="/oscarMessenger/generatePreviewPDF.jsp">
-       <forward name="success" path="/oscarMessenger/CreateMessage.jsp"/>
-   </action>
-   -->
 
    <action path="/oscarMessenger/Doc2PDF" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFAction" name="msgAttachPDFForm" scope="request" input="/oscarMessenger/generatePreviewPDF.jsp">
        <forward name="success" path="/oscarMessenger/selfCloseAndRefreshOpener.jsp"/>
-       <forward name="attaching" path="/oscarMessenger/generatePreviewPDF.jsp"/>
+       <forward name="attaching" path="/oscarMessenger/generatePreviewPDF.jsp"/>       
    </action>
 
    <action path="/oscarMessenger/ProcessDoc2PDF" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFAction" name="msgDoc2PDFForm" scope="request" input="/oscarMessenger/processPDF.jsp">
