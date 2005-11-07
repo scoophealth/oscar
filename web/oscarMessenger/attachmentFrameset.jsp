@@ -9,14 +9,17 @@
 <head>
 <%
 String demographic_no = (String) request.getParameter("demographic_no");
-
 %>
 
 <title>OSCAR attachment</title>
+
+<% if ( demographic_no != null ) { %>
 
 <frameset rows="300,0">
     <frame name="main" src="generatePreviewPDF.jsp?demographic_no=<%=demographic_no%>" noresize scrolling=auto marginheight=5 marginwidth=5>
     <frame name="srcFrame" src="">
 </frameset>
-
+<% } else { %>
+Please select a demographic.
+<% } %>
 </html>

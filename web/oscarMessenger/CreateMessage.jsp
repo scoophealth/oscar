@@ -380,8 +380,13 @@ function popupAttachDemo(demographic){ // open a new popup window
     var vwidth = 900;  
     windowprops = "height="+vheight+",width="+vwidth+",location=0,scrollbars=1,menubar=0,toolbar=1,resizable=1,screenX=0,screenY=0,top=0,left=0";    
     var page = 'attachmentFrameset.jsp?demographic_no=' +demographic;
+    var demo_no  = demographic;
     
-    if ( demographic != '' ) { 
+   
+    if ( demographic == "" || !demographic || demographic == null || demographic == "null") {
+        alert("Please select a demographic.");
+    }
+    else { 
         var popUp=window.open(page, "msgAttachDemo", windowprops);
         if (popUp != null) {
             if (popUp.opener == null) {
@@ -390,9 +395,7 @@ function popupAttachDemo(demographic){ // open a new popup window
             popUp.focus();
         }
     }
-    else {
-        alert('Please select a demographic');
-    }
+
 }
 </script>
 
@@ -631,8 +634,8 @@ function popupAttachDemo(demographic){ // open a new popup window
                                             <input type="text" name="selectedDemo" size="20" readonly style="background:#EEEEFF;border:none" value="none"/>
                                             <script>
                                                 if ( "<%=demoName%>" != "null" && "<%=demoName%>" != "") {
-                                                    document.forms[0].selectedDemo.value = "<%=demoName%>"
-                                                    document.forms[0].demographic_no.value = "<%=demographic_no%>"
+                                                    document.forms[0].selectedDemo.value = "<%=demoName%>";
+                                                    document.forms[0].demographic_no.value = "<%=demographic_no%>";
                                                 }
                                             </script>
                                                <input type="button" class="ControlPushButton" name="clearDemographic" value="Clear selected demographic" onclick='document.forms[0].demographic_no.value = ""; document.forms[0].selectedDemo.value = "none"'  />
@@ -759,4 +762,6 @@ function popupAttachDemo(demographic){ // open a new popup window
             return stringBuffer.toString();
     }
 %>
+
+
 
