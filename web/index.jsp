@@ -29,6 +29,13 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
+<%@ taglib uri="/WEB-INF/plugin-tag.tld" prefix="plugin" %>
+<plugin:hideWhenCompExists componentName="ticklerComp" reverse="true">
+<%	if(session.getValue("user") != null) {
+		response.sendRedirect("provider/providercontrol.jsp");
+	}
+%>
+</plugin:hideWhenCompExists>
 <%
     String propFile = request.getContextPath().substring(1)+".properties";
     String sep = System.getProperty("file.separator");
