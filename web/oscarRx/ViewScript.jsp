@@ -1,4 +1,5 @@
 <%@ page language="java" %>
+<%@ page import="oscar.oscarProvider.data.*, oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -49,6 +50,42 @@
 </logic:present>
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
+
+// for satellite clinics
+Vector vecAddressName = null;
+Vector vecAddress = null;
+Vector vecAddressPhone = null;
+Vector vecAddressFax = null;
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("clinicSatelliteName") != null) {
+    oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
+    ProSignatureData sig = new ProSignatureData();
+    boolean hasSig = sig.hasSignature(bean.getProviderNo());
+    String doctorName = "";
+    if (hasSig){
+       doctorName = sig.getSignature(bean.getProviderNo());
+    }else{
+       doctorName = (provider.getFirstName() + ' ' + provider.getSurname());
+    }
+    doctorName = doctorName.replaceAll("\\d{6}","");
+    doctorName = doctorName.replaceAll("\\-","");
+    ClinicData clinic = new ClinicData();
+    vecAddressName = new Vector();
+    vecAddress = new Vector();
+    vecAddressPhone = new Vector();
+    vecAddressFax = new Vector();
+    String[] temp0 = props.getProperty("clinicSatelliteName", "").split("\\|");
+    String[] temp1 = props.getProperty("clinicSatelliteAddress", "").split("\\|");
+    String[] temp2 = props.getProperty("clinicSatelliteCity", "").split("\\|");
+    String[] temp3 = props.getProperty("clinicSatelliteProvince", "").split("\\|");
+    String[] temp4 = props.getProperty("clinicSatellitePostal", "").split("\\|");
+    String[] temp5 = props.getProperty("clinicSatellitePhone", "").split("\\|");
+    String[] temp6 = props.getProperty("clinicSatelliteFax", "").split("\\|");
+    for(int i=0; i<temp0.length; i++) {
+        vecAddressName.add(temp0[i]);
+        vecAddress.add("<b>"+doctorName+"</b><br>"+provider.getClinicName().replaceAll("\\(\\d{6}\\)","")+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>Tel: " + temp5[i] + "<br>Fax: " + temp6[i]);
+    }
+}
 %>
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <style type="text/css">
@@ -78,6 +115,15 @@ function printPaste2Parent(){
 	text += "**********************************************************************************\n";
     opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
     printIframe();
+}
+
+function addressSelect() {
+	<% if(vecAddressName != null) {
+	    for(int i=0; i<vecAddressName.size(); i++) {%>
+	if(document.getElementById("addressSel").value=="<%=i%>") {
+    	frames['preview'].document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
+    } 
+<% } }%>
 }
 
 </script>
@@ -156,6 +202,20 @@ function printPaste2Parent(){
                             </script>
 
                             <table cellpadding=10 cellspacing=0>
+							<% if(vecAddress != null) { %>            
+                                <tr>
+					            <td align="center" colspan=2 >
+					                Address
+					                <select name="addressSel" id="addressSel" onChange="addressSelect()">
+					            <%  for (int i =0; i < vecAddressName.size();i++){
+					                 String te = (String) vecAddressName.get(i);
+					            %>
+					                    <option value="<%=i%>"><%=te%></option>
+					            <%  }%>
+					                </select>
+					            </td>
+                                </tr>
+							<% } %>
                                 <tr>
                                     <td colspan=2 style="font-weight:bold; ">
                                          <span>Actions</span>

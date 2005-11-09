@@ -110,7 +110,7 @@ OscarProperties props = OscarProperties.getInstance();
 			<input type="hidden" name="sigDoctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
             <!--img src="img/rx.gif" border="0"-->
         </td>
-        <td valign=top height="100px">
+        <td valign=top height="100px" id="clinicAddress">
             <b><%=doctorName %></b><br>
             <%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
             <%= provider.getClinicAddress() %><br>
@@ -122,7 +122,7 @@ OscarProperties props = OscarProperties.getInstance();
     </tr>
     <tr>
         <td colspan=2 valign=top height="75px">
-            <table width=100% cellspacing=0 cellpadding=0>
+            <table width=100% cellspacing=0 cellpadding=0 >
                 <tr>
                     <td align=left valign=top>
                       	<br>
