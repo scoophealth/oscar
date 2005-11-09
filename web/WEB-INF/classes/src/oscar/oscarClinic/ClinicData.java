@@ -153,6 +153,34 @@ public class ClinicData {
        filled = false;
        fillClinicData();
     }
+
+    public void setClinic_address(String clinic_address) {
+        this.clinic_address = clinic_address;
+    }
+
+    public void setClinic_city(String clinic_city) {
+        this.clinic_city = clinic_city;
+    }
+
+    public void setClinic_fax(String clinic_fax) {
+        this.clinic_fax = clinic_fax;
+    }
+
+    public void setClinic_name(String clinic_name) {
+        this.clinic_name = clinic_name;
+    }
+
+    public void setClinic_phone(String clinic_phone) {
+        this.clinic_phone = clinic_phone;
+    }
+
+    public void setClinic_postal(String clinic_postal) {
+        this.clinic_postal = clinic_postal;
+    }
+
+    public void setClinic_province(String clinic_province) {
+        this.clinic_province = clinic_province;
+    }
     
     
 }
