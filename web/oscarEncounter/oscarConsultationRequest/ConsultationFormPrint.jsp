@@ -72,6 +72,45 @@
     while (st.hasMoreTokens()) {
          vecFaxes.add(st.nextToken());
     }
+    
+    // for satellite clinics
+    Vector vecAddressName = null;
+    Vector vecAddress = null;
+    Vector vecAddressPhone = null;
+    Vector vecAddressFax = null;
+    Vector vecAddressBillingNo = null;
+    if(props.getProperty("clinicSatelliteName") != null) {
+        vecAddressName = new Vector();
+        vecAddress = new Vector();
+        vecAddressPhone = new Vector();
+        vecAddressFax = new Vector();
+        vecAddressBillingNo = new Vector();
+        String[] temp0 = props.getProperty("clinicSatelliteName", "").split("\\|");
+        String[] temp1 = props.getProperty("clinicSatelliteAddress", "").split("\\|");
+        String[] temp2 = props.getProperty("clinicSatelliteCity", "").split("\\|");
+        String[] temp3 = props.getProperty("clinicSatelliteProvince", "").split("\\|");
+        String[] temp4 = props.getProperty("clinicSatellitePostal", "").split("\\|");
+        String[] temp5 = props.getProperty("clinicSatellitePhone", "").split("\\|");
+        String[] temp6 = props.getProperty("clinicSatelliteFax", "").split("\\|");
+        String[] temp7 = props.getProperty("clinicDocBillingNoList", "").split("\\|");
+        for(int i=0; i<temp0.length; i++) {
+            vecAddressName.add(temp0[i]);
+            vecAddress.add(temp1[i] + ", " + temp2[i] + ", " + temp3[i] + "  " + temp4[i]);
+            vecAddressPhone.add(temp5[i]);
+            vecAddressFax.add(temp6[i]);
+        }
+        for(int i=0; i<temp7.length; i++) {
+            vecAddressBillingNo.add(temp7[i]);
+        }
+        // default address
+        //clinic.setClinic_name();
+        clinic.setClinic_address(temp1[0]);
+        clinic.setClinic_city(temp2[0]);
+        clinic.setClinic_province(temp3[0]);
+        clinic.setClinic_postal(temp4[0]);
+        clinic.setClinic_phone(temp5[0]);
+        clinic.setClinic_fax(temp6[0]);
+    }
 %>
     <head>
     <html:base/>
@@ -178,6 +217,17 @@
         document.getElementById("clinicFax").innerHTML="Fax: "+document.getElementById("sendersFax").value;
     }
 
+    function addressSelect() {
+    	<% if(vecAddressName != null) {
+    	    for(int i=0; i<vecAddressName.size(); i++) {%>
+    	if(document.getElementById("addressSel").value=="<%=i%>") {
+        	//document.getElementById("clinicName").innerHTML="<%=vecAddressName.get(i)%>";
+        	document.getElementById("clinicAddress").innerHTML="<%=vecAddress.get(i)%>";
+        	document.getElementById("clinicPhone").innerHTML="Tel: "+"<%=vecAddressPhone.get(i)%>";
+        	document.getElementById("clinicFax").innerHTML="Fax: "+"<%=vecAddressFax.get(i)%>";
+        } 
+		<% } }%>
+    }
 
     </script>
     <title>
@@ -200,6 +250,7 @@
             <td align="center">
                 <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
             </td>
+		<% if(vecPhones.size() > 0) { %>            
             <td align="center">
                 P
                 <select name="sendersPhone" id="sendersPhone" onChange="phoneNumSelect()">
@@ -210,6 +261,8 @@
             <%  }%>
                 </select>
             </td>
+		<% } %>
+		<% if(vecFaxes.size() > 0) { %>            
             <td align="center">
                 F
                 <select name="sendersFax" id="sendersFax" onChange="faxNumSelect()">
@@ -220,13 +273,26 @@
             <%  }%>
                 </select>
             </td>
+		<% } %>
+		<% if(vecAddress != null) { %>            
+            <td align="center">
+                Address
+                <select name="addressSel" id="addressSel" onChange="addressSelect()">
+            <%  for (int i =0; i < vecAddressName.size();i++){
+                 String te = (String) vecAddressName.get(i);
+            %>
+                    <option value="<%=i%>"><%=te%></option>
+            <%  }%>
+                </select>
+            </td>
+		<% } %>
             </tr>
         </table>
         <table class="printTable" name="headerTable">
             <!--header-->
             <tr>
                 <td>
-                    <table name="innerTable" border="0">
+                    <table name="innerTable" border="0" <%=vecAddressBillingNo != null? "width='100%'": ""%>>
                         <tr>
                             <td rowspan=3>
                                 &nbsp;&nbsp;  <%-- blank column for spacing --%>
@@ -237,12 +303,25 @@
                             <td rowspan=3>
                                 &nbsp;&nbsp;  <%-- blank column for spacing --%>
                             </td>
-                            <td colspan="2" class="title4">
+                            <td colspan="2" class="title4" id="clinicName">
                                 <b><%=clinic.getClinicName()%></b>
                             </td>
+<% if(vecAddressBillingNo != null) {%>
+                            <td rowspan=3 align="right">
+		                    <table name="innerTable1" border="0" cellspacing="0">
+                            <% for(int i=0; i<vecAddressBillingNo.size(); i=i+3) { %>
+		                        <tr>
+                                <td class="address"><%=i<vecAddressBillingNo.size()? ("<input type='checkbox' name='c'/>" + vecAddressBillingNo.get(i)) : ""%></td>
+                                <td class="address"><%=(i+1)<vecAddressBillingNo.size()? ("<input type='checkbox' name='c'/>")+ vecAddressBillingNo.get(i+1): ""%></td>
+                                <td class="address"><%=(i+2)<vecAddressBillingNo.size()? ("<input type='checkbox' name='c'/>")+ vecAddressBillingNo.get(i+2): ""%></td>
+                                </tr>
+							<% } %>
+							</table>
+                            </td>
+<% } %>
                         </tr>
                         <tr>
-                            <td colspan="2" class="address">
+                            <td colspan="2" class="address" id="clinicAddress">
                 <%=clinic.getClinicAddress()%>, <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%>  <%=clinic.getClinicPostal()%>
                             </td>
                         </tr>
