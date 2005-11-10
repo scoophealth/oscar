@@ -1336,7 +1336,11 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               <td align="right" nowrap><b><%=propDemoExt[k]%>: </b></td>
                               <td align="left" >
                               <% if(bExtForm) { 
-                              		out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
+                                  	if(propDemoExtForm[k].indexOf("<select")>=0) {
+                                		out.println(propDemoExtForm[k].replaceAll("value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" , "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" + " selected") );
+                                  	} else {
+                              			out.println(propDemoExtForm[k].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" ) );
+                                  	}
                               	 } else { %>
                                 <input type="text" name="<%=propDemoExt[k].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
                               <% }  %>    
@@ -1346,7 +1350,11 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               <td align="right" nowrap><b><%= propDemoExt[k+1]+":"%> </b></td>
                               <td align="left" >
                               <% if(bExtForm) { 
-                              		out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
+                                  	if(propDemoExtForm[k+1].indexOf("<select")>=0) {
+                                		out.println(propDemoExtForm[k+1].replaceAll("value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" , "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" + " selected") );
+                                  	} else {
+                              			out.println(propDemoExtForm[k+1].replaceAll("value=\"\"", "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" ) );
+                                  	}
                               	 } else { %>
                                 <input type="text" name="<%=propDemoExt[k+1].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
                               <% }  %>    
