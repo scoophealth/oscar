@@ -111,7 +111,11 @@ function printPaste2Parent(){
 	confirm("\"Paste\" function is only enable if EMR is opened.");
 	text = "**<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
 	text = text.substring(0, 82) + "\n";
-	text += preview.document.forms[0].rx.value.substring(0, (preview.document.forms[0].rx.value.length-2));
+	if (document.all){
+		text += preview.document.forms[0].rx.value.substring(0, (preview.document.forms[0].rx.value.length-2));
+	} else {
+		text += preview.document.forms[0].rx.value + "\n";;
+	}
 	text += "**********************************************************************************\n";
     opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
     printIframe();
