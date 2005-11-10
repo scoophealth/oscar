@@ -150,7 +150,7 @@ public class TicklerCreator {
    */
   public void resolveTicklers(Vector cdmPatientNos, String remString) {
     long crtTick = System.currentTimeMillis();
-    String qry = "update tickler set status = 'D' where demographic_no in(";
+    String qry = "delete from tickler where demographic_no in(";
     for (int i = 0; i < cdmPatientNos.size(); i++) {
       qry += cdmPatientNos.get(i);
       if (i < cdmPatientNos.size() - 1) {
@@ -158,7 +158,7 @@ public class TicklerCreator {
       }
     }
     qry += cdmPatientNos.size()==0 ? "0" : "";
-    
+
     qry += ") and message like '%" + remString + "%' and status = 'A'";
     DBHandler db = null;
     //System.out.println(qry);
