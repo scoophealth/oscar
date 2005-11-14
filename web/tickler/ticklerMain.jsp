@@ -444,10 +444,8 @@ var beginD = "0001-01-01"
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.getLocale());
     String provider;
     String taskAssignedTo = "";
-
     if (dateEnd.compareTo("") == 0) dateEnd = MyDateFormat.getMysqlStandardDate(curYear, curMonth, curDay);
     if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
-
     ResultSet rs=null ;
     String[] param =new String[5];
     boolean bodd=false;
@@ -477,7 +475,7 @@ var beginD = "0001-01-01"
             taskAssignedTo = rs.getString("assignedLast") + ", " + rs.getString("assignedFirst");
         }
         bodd=bodd?false:true;
-        vGrantdate = rs.getString("service_date")+ " 00:00:00.0";
+        vGrantdate = rs.getString("service_date")+ ".0";
         java.util.Date grantdate = dateFormat.parse(vGrantdate);
         java.util.Date toDate = new java.util.Date();
         long millisDifference = toDate.getTime() - grantdate.getTime();
@@ -495,7 +493,14 @@ if (daysDifference > 0){
      <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
 <%}%>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=provider%></TD>
-<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("service_date")%> </TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
+	<%
+		java.util.Date service_date = rs.getDate("service_date");
+		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		String service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("priority")%></TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?stActive:rs.getString("status").equals("C")?stComplete:rs.getString("status").equals("D")?stDeleted:rs.getString("status")%></TD>
@@ -513,7 +518,14 @@ if (daysDifference > 0){
       <TD width="12%" ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><a href=# onClick="popupPage(600,800,'../demographic/demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail')"><%=rs.getString("last_name")%>,<%=rs.getString("first_name")%></a></TD>
 <%}%>
 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=provider%></TD>
-<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("service_date")%> </TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
+	<%
+		java.util.Date service_date = rs.getDate("service_date");
+		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		String service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("priority")%></TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=taskAssignedTo%></TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>"><%=rs.getString("status").equals("A")?stActive:rs.getString("status").equals("C")?stComplete:rs.getString("status").equals("D")?stDeleted:rs.getString("status")%></TD>

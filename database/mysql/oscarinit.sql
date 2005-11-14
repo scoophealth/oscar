@@ -5838,7 +5838,7 @@ CREATE TABLE tickler (
   message text,
   status char(1) default NULL,
   update_date datetime default '0001-01-01 00:00:00',
-  service_date date default NULL,
+  service_date datetime default NULL,
   creator varchar(6) default NULL,
   priority varchar(6) default 'Normal',
   task_assigned_to varchar(255),
