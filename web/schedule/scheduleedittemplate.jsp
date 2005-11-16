@@ -43,7 +43,7 @@
     param1[0]=request.getParameter("providerid");
     param1[1]=pre + request.getParameter("name");
     param1[2]=request.getParameter("summary");
-    param1[3]=SxmlMisc.createDataString(request,"timecode","_", 256);
+    param1[3]=SxmlMisc.createDataString(request,"timecode","_", 300);
     String[] param2 =new String[2];
     param2[0]=request.getParameter("providerid");
     param2[1]= request.getParameter("name");
