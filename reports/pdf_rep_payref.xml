@@ -1687,7 +1687,7 @@ order by billing.billingtype;]]></queryString>
 						mode="Transparent"
 						x="341"
 						y="4"
-						width="41"
+						width="125"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"

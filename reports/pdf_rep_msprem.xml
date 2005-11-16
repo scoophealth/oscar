@@ -604,7 +604,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_servicedate}.equals("")?"":new SimpleDateFormat("yyyymmdd").parse($F{t_servicedate}).toString()]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{t_servicedate}.equals("")?null:new SimpleDateFormat("yyyyMMdd").parse($F{t_servicedate})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -879,13 +879,13 @@ S04 = In hold process]]></text>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="63"  isSplitAllowed="true" >
+			<band height="48"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Transparent"
 						x="0"
 						y="0"
-						width="110"
+						width="128"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -907,7 +907,7 @@ S04 = In hold process]]></text>
 						mode="Transparent"
 						x="0"
 						y="12"
-						width="110"
+						width="128"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -929,7 +929,7 @@ S04 = In hold process]]></text>
 						mode="Transparent"
 						x="0"
 						y="24"
-						width="110"
+						width="128"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -952,7 +952,7 @@ S04 = In hold process]]></text>
 						mode="Transparent"
 						x="0"
 						y="36"
-						width="110"
+						width="128"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -972,7 +972,7 @@ S04 = In hold process]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="110"
+						x="130"
 						y="0"
 						width="52"
 						height="12"
@@ -994,7 +994,7 @@ S04 = In hold process]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="110"
+						x="130"
 						y="12"
 						width="52"
 						height="12"
@@ -1016,7 +1016,7 @@ S04 = In hold process]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="110"
+						x="130"
 						y="24"
 						width="52"
 						height="12"
@@ -1038,7 +1038,7 @@ S04 = In hold process]]></text>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="110"
+						x="130"
 						y="36"
 						width="52"
 						height="12"
