@@ -1189,10 +1189,11 @@ public class MSPReconcile {
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
-
+    DBHandler db = null;
+    ResultSet rs = null;
     try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(p);
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
         b.billingtype = rs.getString("b.billingtype");
@@ -1216,17 +1217,24 @@ public class MSPReconcile {
         b.payeeName = this.getProvider(b.payeeNo).getInitials();
         b.provName = this.getProvider(b.apptDoctorNo).getInitials();
         b.type = new Double(b.amount).doubleValue() > 0 ? "PMT" : "RFD";
-        System.out.println("type=" + b.type);
 
         billSearch.justBillingMaster.add(b.billMasterNo);
         billSearch.list.add(b);
         billSearch.count++;
       }
-      rs.close();
-      db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
+    }
+    finally{
+      try {
+        rs.close();
+        db.CloseConn();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+
     }
     return billSearch;
   }
@@ -1447,14 +1455,16 @@ public class MSPReconcile {
   public ResultSet getMSPRemittanceQuery(String payeeNo, String s21Id) {
     System.out.println(new java.util.Date() +
                        ":MSPReconcile.getMSPRemittanceQuery(payeeNo, s21Id)");
-    String qry = "SELECT billing_code,provider.first_name,provider.last_name,t_practitionerno,t_s00type,t_servicedate,t_payment," +
+    String qry = "SELECT billing_code,provider.first_name,provider.last_name,t_practitionerno,t_s00type,billingmaster.service_date as 't_servicedate',t_payment," +
         "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt * .01 as 't_paidamt',t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " +
         " from teleplanS00,billing,billingmaster,provider " +
         " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
         " and teleplanS00.s21_id = " + s21Id +
         " and billingmaster.billing_no = billing.billing_no " +
         " and provider.ohip_no= teleplanS00.t_practitionerno " +
-        " and teleplanS00.t_payeeno = " + payeeNo;
+        " and teleplanS00.t_payeeno = " + payeeNo +
+        " order by provider.first_name,t_servicedate,billing.demographic_name";
+
 
     System.err.println(qry);
     DBHandler db = null;
@@ -1476,20 +1486,18 @@ public class MSPReconcile {
    * @return String
    */
   public oscar.entities.Provider getProvider(String providerNo) {
-    System.out.println(new java.util.Date() +
-                       ":MSPReconcile.getProvider(providerNo)");
-    System.err.println("PROV: " + providerNo);
-
+    oscar.entities.Provider prov = new oscar.entities.Provider();
     if (!oscar.util.StringUtils.isNumeric(providerNo)) {
-      providerNo = "-1";
+      prov.setFirstName("");
+        prov.setLastName("");
+        return prov;
     }
     DBHandler db = null;
     ResultSet rs = null;
-    oscar.entities.Provider prov = new oscar.entities.Provider();
+
     String qry =
         "select first_name,last_name from provider where provider_no = " +
         providerNo;
-    System.out.println("PROVIDER QRY:" + qry);
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
@@ -1647,6 +1655,9 @@ public class MSPReconcile {
    */
   public static String convCurValue(String value) {
     BigDecimal curValue = new BigDecimal(0.0);
+    if(value == null || value.equals("")){
+      return "0.0";
+    }
     try{
       boolean isNeg = false;
       String ret = value;
@@ -1670,7 +1681,6 @@ public class MSPReconcile {
       e.printStackTrace();
       return curValue.toString();
     }
-    System.out.println("curValue.toString()=" + curValue.toString());
     return curValue.toString();
   }
 }
