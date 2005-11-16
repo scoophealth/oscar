@@ -1336,7 +1336,7 @@ public class MSPReconcile {
       criteriaQry += " and bm.billingstatus = '" + this.BADDEBT + "'";
     }
     else if (repType.equals(this.REP_ACCOUNT_REC)) {
-      criteriaQry += " and bm.billingstatus in ('R','O','Z','F','X','H','T')";
+      criteriaQry += " and bm.billingstatus in ('R','O','Z','F','X','H','T','B')";
     }
     return criteriaQry;
   }
