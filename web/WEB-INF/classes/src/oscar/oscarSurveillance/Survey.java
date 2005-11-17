@@ -118,8 +118,11 @@ public class Survey {
        int num = 0;
        try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
+            ResultSet rs;            
             String sql = "SELECT count(demographic_no) as demoCount FROM demographic WHERE demographic_no = '" + demographicNo +"' and "+queryString;            
+            if ( queryString != null && queryString.trim().startsWith("FROM") ){
+               sql = "SELECT count(demographic.demographic_no) as demoCount "+queryString+" and demographic.demographic_no = '" + demographicNo +"'";
+            }
             rs = db.GetSQL(sql);            
             if (rs.next()) {
                num = rs.getInt("demoCount");
