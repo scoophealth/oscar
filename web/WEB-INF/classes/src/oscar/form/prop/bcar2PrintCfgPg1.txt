@@ -91,6 +91,9 @@ c_phyMid	: left, 500, 135, 0, BaseFont.HELVETICA, 8
   pg2_comment3	: left, 320, 259, 0, BaseFont.HELVETICA, 7 
   pg2_retIn3	: left, 572, 259, 0, BaseFont.HELVETICA, 7 
 
+pg2_SentHosp20	: left, 379, 289, 0, BaseFont.HELVETICA, 8  , X
+pg2_toPatient20	: left, 436, 289, 0, BaseFont.HELVETICA, 8  , X
+
   pg2_date4	: left, 50, 289, 0, BaseFont.HELVETICA, 7 
   pg2_wt4	: left, 98, 289, 0, BaseFont.HELVETICA, 7 
   pg2_bp4	: left, 128, 289, 0, BaseFont.HELVETICA, 7 
