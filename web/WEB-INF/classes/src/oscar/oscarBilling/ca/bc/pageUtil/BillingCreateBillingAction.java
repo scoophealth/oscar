@@ -85,10 +85,10 @@ public class BillingCreateBillingAction
     bean.setBillingType(frm.getXml_billtype());
     bean.setPaymentType(payMeth);
     if (payMeth.equals("8")) {
-      bean.setEncounter("O");
+      bean.setEncounter("E");
     }
     else {
-      bean.setEncounter("E");
+      bean.setEncounter("O");
     }
 
     bean.setVisitType(frm.getXml_visittype());
