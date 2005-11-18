@@ -84,7 +84,7 @@ public class BillingCreateBillingAction
     bean.setPatientAge(demo.getAge());
     bean.setBillingType(frm.getXml_billtype());
     bean.setPaymentType(payMeth);
-    bean.setEncounter(payMeth.equals("6") ? "O" : "E");
+    bean.setEncounter(payMeth.equals("8") ? "O" : "E");
     bean.setVisitType(frm.getXml_visittype());
     bean.setVisitLocation(frm.getXml_location());
     bean.setServiceDate(frm.getXml_appointment_date());
