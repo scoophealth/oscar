@@ -164,7 +164,7 @@ white-space: nowrap;
 div.headPrevention {  
     position:relative; 
     float:left;     
-    width:8.3em;
+    width:8.4em;
     height:2.5em;
 }
 
@@ -309,8 +309,82 @@ div.recommendations li{
                </ul>
                </div>
            <% } %>    
-               <div >                                                 
-                  <%if (configSets == null ){ configSets = new ArrayList(); }
+               <div >     
+               <%                 
+                 if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
+                   ArrayList hiddenlist = new ArrayList();
+                  for (int i = 0 ; i < prevList.size(); i++){ 
+                        Hashtable h = (Hashtable) prevList.get(i);
+                        String prevName = (String) h.get("name");
+                        ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no); 
+                        boolean show = pdc.display(h, demographic_no,alist.size()) ;                        
+                        if(!show){  
+                            Hashtable h2 = new Hashtable();
+                            h2.put("prev",h);
+                            h2.put("list",alist);
+                            hiddenlist.add(h2);
+                        }else{    
+               %>                   
+                      <div class="preventionSection"  >
+                            <div class="headPrevention">
+                               <p > 
+                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                               <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
+                               </a>
+                               &nbsp;
+                               <a href="<%=h.get("link")%>">#</a>                              
+                               <br/>                                 
+                               </p>
+                            </div>
+                            <%     
+                            for (int k = 0; k < alist.size(); k++){
+                                Hashtable hdata = (Hashtable) alist.get(k);
+                            %>                            
+                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+                                <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
+                                <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+                                </p>
+                            </div>
+                           <%}%>                           
+                      </div>                                                                      
+                   <%                      
+                        }
+                      } %>
+                    <a href="#" onclick="Element.toggle('otherElements'); return false;" style="font-size:xx-small;" >show/hide all other Preventions</a>                    
+                    <div style="display:none;" id="otherElements">  
+                    <%for (int i = 0 ; i < hiddenlist.size(); i++){ 
+                        Hashtable h2 = (Hashtable) hiddenlist.get(i);
+                        Hashtable h = (Hashtable)  h2.get("prev");
+                        String prevName = (String) h.get("name");                        
+                        ArrayList alist = (ArrayList)  h2.get("list");
+                    %>                 
+                        <div class="preventionSection"  >
+                            <div class="headPrevention">
+                               <p > 
+                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                               <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
+                               </a>
+                               &nbsp;
+                               <a href="<%=h.get("link")%>">#</a>                              
+                               <br/>                                 
+                               </p>
+                            </div>
+                            <%     
+                            for (int k = 0; k < alist.size(); k++){
+                                Hashtable hdata = (Hashtable) alist.get(k);
+                            %>                            
+                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+                                <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
+                                <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+                                </p>
+                            </div>
+                           <%}%>                           
+                        </div>                                                
+                    
+                    <%}%>
+                    </div>
+                  <%}else{  //OLD
+                    if (configSets == null ){ configSets = new ArrayList(); }
                     for ( int setNum = 0; setNum < configSets.size(); setNum++){ 
                       Hashtable setHash = (Hashtable) configSets.get(setNum);
                       String[] prevs = (String[]) setHash.get("prevList");
@@ -344,10 +418,12 @@ div.recommendations li{
                             </div>
                            <%}%>                           
                         </div>                                                
-                        <%}%>                                       
+                        <%}%>                      
+                        
                      </div>
                   </div><!--immSet-->
-                  <%}%>                                                      
+                  <%}
+                }%>                                                      
                </div>
             </td>
         </tr>
