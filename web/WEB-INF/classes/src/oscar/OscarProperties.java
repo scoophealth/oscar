@@ -68,6 +68,20 @@ public class OscarProperties extends Properties {
 	*/
         private OscarProperties() {  System.out.println("OSCAR PROPS CONSTRUCTOR"); }
         
+        /**
+         * Will check the properties to see if that property is set and if its set to the value.  If it is method returns true if not method returns false
+         * @param key key of property
+         * @param val value that will cause a true value to be returned
+         * @return boolean
+         */
+        public boolean getBooleanProperty(String key,String val){
+           boolean prop = false;
+           String propertyValue = getProperty(key);
+           if ( propertyValue != null && propertyValue.equalsIgnoreCase(val)){
+              prop = true;
+           }
+           return prop;
+        }
         
         
         public void loader(String propFileName){
