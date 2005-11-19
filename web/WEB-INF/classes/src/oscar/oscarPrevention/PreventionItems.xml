@@ -14,133 +14,172 @@
          name="DTaP-IPV"
          link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#DTaPIPV"
          layout="injection"
-         atc="J07CA02"/>
+         atc="J07CA02"
+         minAge="0"
+         maxAge="19"/>
                  
    <item
         desc="Hib=haemophilus influenzae type B for children under 5 years of age"
         name="Hib"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Hib"
         layout="injection"
-        atc="J07AG51"/>
+        atc="J07AG51"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="Pneu-C=pneumococcal 7-valent conjugate"
         name="Pneu-C"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#PneuC"
         layout="injection"
-        atc="J07AL"/>
+        atc="J07AL"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="MMR=measles, mumps and rubella"
         name="MMR"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MMR"
         layout="injection"
-        atc="J07BD52"/>
+        atc="J07BD52"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="MenC-C=meningocococcal C conjugate"
         name="MenC-C"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#MenC"
         layout="injection"
-        atc="J07AH07"/>
+        atc="J07AH07"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="VZ=varicella zoster"
         name="VZ"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Var"
         layout="injection"
-        atc="J07BK01"/>
+        atc="J07BK01"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="Hep B=Hepatitis B"
         name="HepB"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#HepB"
         layout="injection"
-        atc="J07BC01"/>
+        atc="J07BC01"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation"
         name="dTap"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
         layout="injection"
-        atc="J07AJ52"/>
+        atc="J07AJ52"
+        minAge="0"
+        maxAge="19"/>
         
    <item        
         desc="Td=tetanus and diphtheria adult type formulation"
         name="Td"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#dTap"
         layout="injection"
-        atc="J07CA01"/>
+        atc="J07CA01"
+        minAge="0"/>
         
    <item        
         desc="Flu=influenza vaccine"
         name="Flu"
         link="http://www.phac-aspc.gc.ca/naci-ccni/is-si/recimmsche-icy_e.html#Flu"
         layout="injection"
-        atc="J07BB01"/>
+        atc="J07BB01"
+        minAge="0"
+        />
                       
    <item        
         desc="Hep A=Hepatitis A"
         name="HepA"
         link=""
         layout="injection"
-        atc="J07BC02"/>                                
+        atc="J07BC02"
+        showIfMinRecordNum="1"/>                                
    <item        
         desc="Hep AB=Hepatitis AB"
         name="HepAB"
         link=""
         layout="injection"
-        atc="J07BC20"/>
+        atc="J07BC20"
+        showIfMinRecordNum="1"
+        />
                 
    <item        
         desc="Rabies=Rabies"
         name="Rabies"
         link=""
         layout="injection"
-        atc="J07BG01"/>        
+        atc="J07BG01"
+        showIfMinRecordNum="1"/>        
                 
    <item        
         desc="TB=Tuberculosis"
         name="Tuberculosis"
         link=""
         layout="injection"
-        atc="J07AN01"/>
+        atc="J07AN01"
+        showIfMinRecordNum="1"/>
    
   <item        
         desc="Pneumovax"
         name="Pneumovax"
         link=""
         layout="injection"
-        atc="J07AL02"/>        
+        atc="J07AL02"
+        showIfMinRecordNum="1"/>        
 
   <item        
         desc="PAP="
         name="PAP"
         link=""
-        layout="PAPMAM"/>               
+        layout="PAPMAM"
+        minAge="20"
+        maxAge="65"
+        sex="F"
+        showIfMinRecordNum="1"/>               
 
    <item        
         desc="Mammorgram"
         name="MAM"
         link=""
-        layout="PAPMAM"/>
+        layout="PAPMAM"
+        minAge="50"
+        maxAge="70"
+        sex="F"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="PSA"
         name="PSA"
         link=""
-        layout="PAPMAM"/>
+        layout="PAPMAM"
+        minAge="50"
+        maxAge="70"
+        sex="M"
+        showIfMinRecordNum="1"/>
         
    <item        
         desc="Other Layout A"
         name="OtherA"
         link=""
-        layout="injection"/>
+        layout="injection"
+        showIfMinRecordNum="1"/>
                
    <item        
         desc="Other Layout B"
         name="OtherB"
         link=""
-        layout="PAPMAM"/>
+        layout="PAPMAM"
+        showIfMinRecordNum="1"/>
                         
 </preventions>
