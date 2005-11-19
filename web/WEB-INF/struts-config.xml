@@ -204,6 +204,8 @@
     <!-- OscarBilling BC stop -->
     <!-- OscarBilling ON start-->
     <form-bean name="BillingDocumentErrorReportUploadForm" type="oscar.oscarBilling.ca.on.pageUtil.BillingDocumentErrorReportUploadForm"/>
+    <form-bean name="AddReferralDocForm" type="oscar.oscarBilling.ca.bc.pageUtil.AddReferralDocForm"/>
+    
     <!-- OscarBilling ON stop -->
     <!-- OscarSurveillance ON start -->
     <form-bean name="CheckSurveillanceForm" type="oscar.oscarSurveillance.CheckSurveillanceForm"/>
@@ -1072,6 +1074,11 @@
         <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/saveAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveAssocAction">
           <forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
     </action>        
+    <action input="billingManageReferralDoc.jsp" name="AddReferralDocForm" path="/billing/CA/BC/AddReferralDoc" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AddReferralDocAction">
+          <forward name="success" path="/billing/CA/BC/billingManageReferralDoc.jsp" />
+          <forward name="error" path="/billing/CA/BC/billingAddReferralDoc.jsp" />
+    </action>        
+    
     <!-- Diagnostic code association ends -->
     
     <action path="/lab/labUpload" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
