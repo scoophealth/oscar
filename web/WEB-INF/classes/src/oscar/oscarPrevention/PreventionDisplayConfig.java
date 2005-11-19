@@ -438,6 +438,82 @@ public class PreventionDisplayConfig {
         return display;
     }
 
+    public void showAllElements(Hashtable h){
+       Enumeration e = h.keys();//elements();
+       while(e.hasMoreElements()){
+          
+          System.out.println(e.nextElement());
+       }
+    }
+    
+    public boolean display(Hashtable setHash, String Demographic_no,int numberOfPrevs) {
+        boolean display = false;
+        DemographicData dData = new DemographicData();
+        System.out.println("demoage " + Demographic_no);
+        DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);
+        try {
+            String minAgeStr = (String) setHash.get("minAge");
+            String maxAgeStr = (String) setHash.get("maxAge");
+            String sex = (String) setHash.get("sex");
+            String minNumPrevs = (String) setHash.get("showIfMinRecordNum");
+            int demoAge = demograph.getAgeInYears();
+            String demoSex = demograph.getSex();
+            boolean inAgeGroup = true;
+            //System.out.println("min age " + minAgeStr + " max age " + maxAgeStr + " sex " + sex + " demoAge " + demoAge
+            //        + " demoSex " + demoSex);
+            
+            if (minNumPrevs != null){
+               int minNum = Integer.parseInt(minNumPrevs);
+               if (numberOfPrevs >= minNum){
+                  display = true;
+               }
+            }
+            
+            if(!display){
+            
+               if (minAgeStr != null && maxAgeStr != null) { // between ages
+                   //System.out.println("HERE1");
+                   int minAge = Integer.parseInt(minAgeStr);
+                   int maxAge = Integer.parseInt(maxAgeStr);
+                   if (minAge <= demoAge && maxAge >= demoAge) {
+                       display = true;
+                   } else {
+                       inAgeGroup = false;
+                   }
+               } else if (minAgeStr != null) { // older than
+                   //System.out.println("HERE2");
+                   int minAge = Integer.parseInt(minAgeStr);
+                   if (minAge <= demoAge) {
+                       display = true;
+                   } else {
+                       inAgeGroup = false;
+                   }
+               } else if (maxAgeStr != null) { // younger than
+                   //System.out.println("HERE3");
+                   int maxAge = Integer.parseInt(maxAgeStr);
+                   if (maxAge >= demoAge) {
+                       display = true;
+                   } else {
+                       inAgeGroup = false;
+                   }
+               }// else? neither defined should the default be to display it or
+                   // not?
+            
+               if (sex != null && inAgeGroup) {
+                   //System.out.println("HERE4");
+                   if (sex.equals(demoSex)) {
+                       display = true;
+                   } else {
+                       display = false;
+                   }
+               }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return display;
+    }
+    
     /*
      * <div class="immSet"> <div> <h2>Childhood Immunization <span
      * style="font-size:smaller">(Ontario February 2005)</span></h2> </div>
