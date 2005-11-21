@@ -39,7 +39,8 @@ public class MsgDemoMap {
         try{            
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = "";                   
-            sql = "insert into msgDemoMap values("+msgId+"," +demographic_no+ ")";
+            sql = "insert into msgDemoMap values ('"+msgId+"','"+demographic_no+"')";
+            System.out.println(sql);
             db.RunSQL(sql);
             db.CloseConn();
         }
