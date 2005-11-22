@@ -102,7 +102,7 @@ if (provider.compareTo("all") == 0 ){
 		String zero ="";
 		if (fLength == 1) zero = "0";
 		if (fLength == 2) zero = "00";
-		String htmlFilename = "H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm";
+		String htmlFilename = "H" + request.getParameter("monthCode") + billinggroup_no + "_" + proOHIP + "_" + zero +  batchCount + ".htm";
 		String ohipFilename = "H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount;
 	  	    
 		String[] param =new String[13];
@@ -184,7 +184,7 @@ if (provider.compareTo("all") == 0 ){
 		String zero ="";
 		if (fLength == 1) zero = "0";
 		if (fLength == 2) zero = "00";
-		String htmlFilename = "H" + request.getParameter("monthCode") + proOHIP + "_" + zero +  batchCount + ".htm";
+		String htmlFilename = "H" + request.getParameter("monthCode") + billinggroup_no + "_" + proOHIP + "_" + zero +  batchCount + ".htm";
 		String ohipFilename = "H" + request.getParameter("monthCode") + billinggroup_no + "." + zero + batchCount;
 
 		String[] param =new String[13];
