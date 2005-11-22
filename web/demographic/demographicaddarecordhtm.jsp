@@ -941,7 +941,7 @@ document.forms[1].r_doctor_ohip.value = refNo;
       </td>
       <td align="right"><%=(k+1)<propDemoExt.length?("<b>"+propDemoExt[k+1]+": </b>") : "&nbsp;" %> </td>
       <td align="left">
-		<% if(bExtForm) { 
+		<% if(bExtForm && (k+1)<propDemoExt.length) { 
 			out.println(propDemoExtForm[k+1] );
 		 } else { %>
         <%=(k+1)<propDemoExt.length?"<input type=\"text\" name=\""+propDemoExt[k+1].replace(' ', '_')+"\"  value=''>" : "&nbsp;" %>
