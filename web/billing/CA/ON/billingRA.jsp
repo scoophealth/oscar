@@ -37,7 +37,16 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 function setfocus() {
     this.focus();
 }
+
 //-->
+
+function onSubmit(){   
+   if ( document.form1.file1.value == "" ){
+      alert("You must select a file before creating a report");
+      return false;
+   }
+   return true;
+}
 </SCRIPT>
 </head>
 
@@ -51,7 +60,7 @@ function setfocus() {
 
 <p>
 <table width="400" border="0">
-<form name="form1" method="post" action="../../../servlet/oscar.DocumentUploadServlet" ENCTYPE="multipart/form-data">
+<form name="form1" method="post" action="../../../servlet/oscar.DocumentUploadServlet" ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
 <tr> 
 	<td width="181">
 	<b><font face="Arial, Helvetica, sans-serif" size="2">Select diskette </font></b></td>
