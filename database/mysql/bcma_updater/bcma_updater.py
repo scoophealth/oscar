@@ -3,11 +3,22 @@
 
 from java.sql import *
 from java.lang import *
+from java.util import *
+from java.io import *
 
 #Set your database info!
-conStr = "jdbc:mysql://server:3306/database/?user=&password="
-driver = "org.gjt.mm.mysql.Driver"
-Class.forName(driver)	
+props = Properties()
+finstream = FileInputStream("db.properties")		
+props.load(finstream)
+# set db properties
+db_name = props.getProperty('db_name')
+db_username = props.getProperty('db_username')
+db_password = props.getProperty('db_password')
+db_driver = props.getProperty('db_driver')
+db_uri = props.getProperty('db_uri')
+
+Class.forName(db_driver)
+conStr = db_uri+"/" + db_name + "?user="+db_username+"&password="+db_password	
 conn = DriverManager.getConnection(conStr)
 fees = open("bcmafees.csv")
 fout = open("bcmaimport.log","w")
@@ -34,7 +45,7 @@ for ln in fees.readlines():
 		    st.executeUpdate()
     else:
         if bcma != "":
-            privcode = "P" + str(code)
+            privcode = "A" + str(code)
             print "Inserted New BCMA Fee:" + privcode
             qry = "insert into billingservice(service_code,description,value,billingservice_date,region) values(?,?,?,'2005-04-01','BC')"
             st = conn.prepareStatement(qry)
