@@ -147,14 +147,14 @@ public class BillingSaveBillingAction
 
     String billedAmount;
     if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("PRIV")) {
-
       for (int i = 0; i < billItem.size(); i++) {
         if (paymentMode == 'E') {
           billedAmount = "0000000";
         }
         else {
-          billedAmount = ( (BillingBillingManager.BillingItem) billItem.get(i)).
-              getDispPrice();
+          billedAmount = ( (oscar.oscarBilling.ca.bc.pageUtil.
+                            BillingBillingManager.BillingItem) billItem.get(i)).
+              getDispLineTotal();
         }
 
         if (bean.getPatientHCType().trim().compareTo(bean.getBillRegion().trim()) ==
@@ -229,7 +229,7 @@ public class BillingSaveBillingAction
               + "'" + bean.getAfterHours() + "'," //after_hours
               + "'00'," //new_program
               + "'" + ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem) billItem.get(i)).getServiceCode() + "',"
-              + "'" + ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem) billItem.get(i)).getDispLineTotal() + "',"
+              + "'" + billedAmount + "',"
               + "'" + paymentMode + "'," //payment_mode
               + "'" + convertDate8Char(bean.getServiceDate()) + "',"
               + "'" + bean.getService_to_date() + "'," //service_to_day
@@ -301,17 +301,20 @@ public class BillingSaveBillingAction
               "'" + "0000" + "'," + //name_verify
               "'" + "00" + "'," + //dependent_num
               "'" +
-              ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)
+              ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.
+                 BillingItem)
                billItem.get(i)).getUnit() + "'," +
               "'" + bean.getVisitLocation().substring(0, 2) + "'," +
               "'00'," + //anatomical_area
               "'" + bean.getAfterHours() + "'," + //after_hour
               "'00'," + //new_program
               "'" +
-              ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)
+              ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.
+                 BillingItem)
                billItem.get(i)).getServiceCode() + "'," +
               "'" +
-              ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem)
+              ( (oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.
+                 BillingItem)
                billItem.get(i)).getDispLineTotal() + "'," +
               "'" + paymentMode + "'," + //payment_mode
               "'" + convertDate8Char(bean.getServiceDate()) + "'," +
