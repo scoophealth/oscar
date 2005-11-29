@@ -12,14 +12,16 @@
   String premiumFlag     = "";
   String service_form    = "";
 %>
-  <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-  <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-  <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-  <%@ page errorPage="errorpage.jsp"import="java.util.*,java.net.*,
-                                            java.sql.*, oscar.*" %>
-  <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
-  <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
-  <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ page errorPage="errorpage.jsp"%>
+<%@ page import="java.util.*,java.net.*, java.sql.*, oscar.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<jsp:useBean id="oscarVariables" class="java.util.Properties"
+	scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties"
+	scope="session" />
 <%
   boolean bHospitalBilling = true;
   String            clinicview        = bHospitalBilling? oscarVariables.getProperty("clinic_hospital", "") : oscarVariables.getProperty("clinic_view", "");
@@ -44,7 +46,7 @@
   String            action            = "edit";
   Properties        propHist          = null;
   Vector            vecHist           = new Vector();
-//System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;" + msg);
+
   // get provider's detail
   String proOHIPNO="", proRMA="";
   String sql = "select * from provider where provider_no='" + request.getParameter("xml_provider") + "'";
@@ -107,10 +109,10 @@
   }
 
   // get patient's billing history
-  sql               =
-          "select billing_no,billing_date,visitdate,visitType, update_date, clinic_ref_code from billing where demographic_no=" + demo_no +
-          " and status!='D' order by billing_date desc, billing_no desc limit 5";
-  rs                = dbObj.searchDBRecord(sql);
+  boolean bFirst = true;
+  sql = "select billing_no,billing_date,visitdate,visitType, update_date, clinic_ref_code, content from billing " +
+		" where demographic_no=" + demo_no + " and status!='D' order by billing_date desc, billing_no desc limit 5";
+  rs = dbObj.searchDBRecord(sql);
 
   while (rs.next()) {
     propHist = new Properties();
@@ -122,6 +124,12 @@
     propHist.setProperty("visitType", rs.getString("visitType"));
     propHist.setProperty("clinic_ref_code", rs.getString("clinic_ref_code"));
     vecHist.add(propHist);
+    
+    // get the latest ref. doctor number
+    if(bFirst && "checked".equals(SxmlMisc.getXmlContent(rs.getString("content"),"xml_referral")) ) {
+        bFirst = false;
+		r_doctor_ohip= SxmlMisc.getXmlContent(rs.getString("content"), "rdohip");
+    }
   }
 
   Vector vecHistD = new Vector();
@@ -184,6 +192,12 @@
 
   // set default value
   // use parameter -> history record
+  sql = "select last_name,first_name from billingreferral where referral_no='" + r_doctor_ohip + "'";
+  rs = dbObj.searchDBRecord(sql);
+  while (rs.next()) {
+      r_doctor = rs.getString("last_name") + "," + rs.getString("first_name");
+  }
+  
   String paraName = request.getParameter("dxCode");
   String dxCode = getDefaultValue(paraName, vecHistD, "diagnostic_code");
 
@@ -305,20 +319,23 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
-<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE"/>
-<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8"/>
-  <title>HospitalBilling</title>
-  <!-- calendar stylesheet -->
-  <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
-  <!-- main calendar program -->
-  <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
-  <!-- language for the calendar -->
-  <script type="text/javascript" src="../../../share/calendar/lang/calendar-en.js"></script>
-  <!-- the following script defines the Calendar.setup helper function, which makes
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
+<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
+<title>HospitalBilling</title>
+<!-- calendar stylesheet -->
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<!-- main calendar program -->
+<script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
+<!-- language for the calendar -->
+<script type="text/javascript"
+	src="../../../share/calendar/lang/calendar-en.js"></script>
+<!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript"
+	src="../../../share/calendar/calendar-setup.js"></script>
 
-  <script type="text/javascript" language="JavaScript">
+<script type="text/javascript" language="JavaScript">
 
             <!--
 function setfocus() {
@@ -486,15 +503,20 @@ function onDblClickServiceCode(item) {
   </script>
 </head>
 
-  <body onload="setfocus();" topmargin="0" >
-<div id="Layer1" style="position:absolute; left:360px; top:165px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
-	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
+<body onload="setfocus();" topmargin="0">
+<div id="Layer1"
+	style="position:absolute; left:360px; top:165px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+<table width="98%" border="0" cellspacing="0" cellpadding="0"
+	align=center>
 	<tr bgcolor="#393764">
-		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b>Billing Form</b></font></td>
-		<td width="3%" bgcolor="#FFCC00" height="7"><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></td>
+		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2"
+			face="Geneva, Arial, Helvetica, san-serif" color="#000000"><b>Billing
+		Form</b></font></td>
+		<td width="3%" bgcolor="#FFCC00" height="7"><b><a href="#"
+			onClick="showHideLayers('Layer1','','hide');return false;">X</a></b></td>
 	</tr>
 
-<%
+	<%
 String ctlcode="", ctlcodename="", currentFormName="";
 int ctlCount = 0;
   sql = "select distinct servicetype_name, servicetype from ctl_billingservice where status='A'";
@@ -506,22 +528,27 @@ int ctlCount = 0;
 	if(ctlcode.equals(ctlBillForm)) currentFormName = ctlcodename;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
-		<td colspan="2"><b><font size="-2" color="#7A388D"><a href="billingShortcutPg1.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1" onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
+		<td colspan="2"><b><font size="-2" color="#7A388D"><a
+			href="billingShortcutPg1.jsp?billForm=<%=ctlcode%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=user_no%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1"
+			onClick="showHideLayers('Layer1','','hide');"><%=ctlcodename%></a></font></b></td>
 	</tr>
-<%
+	<%
 }
 %>
-	</table>
+</table>
 </div>
-<div id="Layer2" style="position:absolute; left:1px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
-	<table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
+<div id="Layer2"
+	style="position:absolute; left:1px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+<table width="98%" border="0" cellspacing="0" cellpadding="0"
+	align=center>
 	<tr>
 		<td width="18%"><b><font size="-2">Dx Code</font></b></td>
 		<td width="76%"><b><font size="-2">Description</font></b></td>
-		<td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide');return false">X</a></td>
+		<td width="6%"><a href="#"
+			onClick="showHideLayers('Layer2','','hide');return false">X</a></td>
 	</tr>
 
-<%
+	<%
 String ctldiagcode="", ctldiagcodename="";
 ctlCount = 0;
   sql = "select d.diagnostic_code dcode, d.description des from diagnosticcode d, ctl_diagcode c where c.diagnostic_code=d.diagnostic_code and c.servicetype='" + ctlBillForm + "' order by d.description";
@@ -531,200 +558,236 @@ ctlCount = 0;
 	ctldiagcodename = rs.getString("des");
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
-		<td width="18%"><b><font size="-2" color="#7A388D"><a href="#" onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
-		<td colspan="2"><font size="-2" color="#7A388D"><a href="#" onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;">
+		<td width="18%"><b><font size="-2" color="#7A388D"><a href="#"
+			onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
+		<td colspan="2"><font size="-2" color="#7A388D"><a href="#"
+			onClick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;">
 		<%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0,55)%></a></font></td>
 	</tr>
-<%
+	<%
 }
 %>
-	</table>
+</table>
 </div>
 
 
-  <form method="post" name="titlesearch" action="billingShortcutPg2.jsp" onsubmit="return onNext();">
-  <table border="0" cellpadding="0" cellspacing="2" width="100%" bgcolor="#CCCCFF">
-      <tr>
-        <td>
-          <table border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr><td>
-          	<b>OscarBilling </b>
-        	</td>
-			<td align="right">
-            <input type="submit" name="submit" value="Next" style="width: 120px;" />
-            <input type="button" name="button" value="Exit" style="width: 120px;" onClick="self.close();"/>
-            </td>
+<form method="post" name="titlesearch" action="billingShortcutPg2.jsp"
+	onsubmit="return onNext();">
+<table border="0" cellpadding="0" cellspacing="2" width="100%"
+	bgcolor="#CCCCFF">
+	<tr>
+		<td>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td><b>OscarBilling </b></td>
+				<td align="right"><input type="submit" name="submit" value="Next"
+					style="width: 120px;" /> <input type="button" name="button"
+					value="Exit" style="width: 120px;" onClick="self.close();" /></td>
 			</tr>
-		  </table>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <table border="0" cellspacing="0" cellpadding="0" width="100%">
-            <tr bgcolor="#33CCCC">
-              <td nowrap bgcolor="#FFCC99" width="10%" align="center">
-                <%= demoname %>
-              </td>
-              <td bgcolor="#99CCCC" align="center">
-                <font color="black"><%= msg %></font>
-              </td>
-            </tr>
-          </table>
+		</table>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr bgcolor="#33CCCC">
+				<td nowrap bgcolor="#FFCC99" width="10%" align="center"><%= demoname %>
+				</td>
+				<td bgcolor="#99CCCC" align="center"><font color="black"><%= msg %></font>
+				</td>
+			</tr>
+		</table>
 
-          <table border="1" cellspacing="0" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#FFFFFF">
-            <tr >
-              <td width="50%">
+		<table border="1" cellspacing="0" cellpadding="0" width="100%"
+			bordercolorlight="#99A005" bordercolordark="#FFFFFF"
+			bgcolor="#FFFFFF">
+			<tr>
+				<td width="50%">
 
-              <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="ivory">
-              <tr><td nowrap width="30%" align="center">
-                <a id="trigger" href="#">[Service Date]</a><br>
-                <textarea name="billDate" cols="11" rows="5" readonly><%=request.getParameter("billDate")!=null?request.getParameter("billDate"):""%></textarea>
-              </td>
-              <td align="center" width="33%">
-                Service Code x Unit<br>
-                <input type="text" name="serviceDate0" size="5" maxlength="5" value="<%=request.getParameter("serviceDate0")!=null?request.getParameter("serviceDate0"):""%>">x
-                <input type="text" name="serviceUnit0" size="2" maxlength="2" style="width=20px" value="<%=request.getParameter("serviceUnit0")!=null?request.getParameter("serviceUnit0"):""%>"><br>
-                <input type="text" name="serviceDate1" size="5" maxlength="5" value="<%=request.getParameter("serviceDate1")!=null?request.getParameter("serviceDate1"):""%>">x
-                <input type="text" name="serviceUnit1" size="2" maxlength="2" style="width=20px" value="<%=request.getParameter("serviceUnit1")!=null?request.getParameter("serviceUnit1"):""%>"><br>
-                <input type="text" name="serviceDate2" size="5" maxlength="5" value="<%=request.getParameter("serviceDate2")!=null?request.getParameter("serviceDate2"):""%>">x
-                <input type="text" name="serviceUnit2" size="2" maxlength="2" style="width=20px" value="<%=request.getParameter("serviceUnit2")!=null?request.getParameter("serviceUnit2"):""%>"><br>
-              </td>
-              <td valign="top">
-              	<table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td>
-	                <a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a><br>
-	                <input type="text" name="dxCode" size="5" maxlength="5" onDblClick="dxScriptAttach('dxCode')" value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>">
-	                </td><td>
-	                Cal.% mode<br>
-					<select name="rulePerc" >
-					<% String rulePerc= request.getParameter("rulePerc")!=null?request.getParameter("rulePerc"):""; %>
-					<option value="onlyAboveCode" <%="onlyAboveCode".equals(rulePerc)?"selected":""%> >Only Above</option>
-					<option value="allAboveCode" <%="allAboveCode".equals(rulePerc)?"selected":""%> >All</option>
-	                </select>
-	                </td></tr>
-                </table>
+				<table border="1" cellspacing="2" cellpadding="0" width="100%"
+					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
+					bgcolor="ivory">
+					<tr>
+						<td nowrap width="30%" align="center"><a id="trigger" href="#">[Service
+						Date]</a><br>
+						<textarea name="billDate" cols="11" rows="5" readonly><%=request.getParameter("billDate")!=null?request.getParameter("billDate"):""%></textarea>
+						</td>
+						<td align="center" width="33%">Service Code x Unit<br>
+						<input type="text" name="serviceDate0" size="5" maxlength="5"
+							value="<%=request.getParameter("serviceDate0")!=null?request.getParameter("serviceDate0"):""%>">x
+						<input type="text" name="serviceUnit0" size="2" maxlength="2"
+							style="width=20px"
+							value="<%=request.getParameter("serviceUnit0")!=null?request.getParameter("serviceUnit0"):""%>"><br>
+						<input type="text" name="serviceDate1" size="5" maxlength="5"
+							value="<%=request.getParameter("serviceDate1")!=null?request.getParameter("serviceDate1"):""%>">x
+						<input type="text" name="serviceUnit1" size="2" maxlength="2"
+							style="width=20px"
+							value="<%=request.getParameter("serviceUnit1")!=null?request.getParameter("serviceUnit1"):""%>"><br>
+						<input type="text" name="serviceDate2" size="5" maxlength="5"
+							value="<%=request.getParameter("serviceDate2")!=null?request.getParameter("serviceDate2"):""%>">x
+						<input type="text" name="serviceUnit2" size="2" maxlength="2"
+							style="width=20px"
+							value="<%=request.getParameter("serviceUnit2")!=null?request.getParameter("serviceUnit2"):""%>"><br>
+						</td>
+						<td valign="top">
+						<table border="0" cellspacing="0" cellpadding="0" width="100%">
+							<tr>
+								<td><a href="#"
+									onClick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a><br>
+								<input type="text" name="dxCode" size="5" maxlength="5"
+									onDblClick="dxScriptAttach('dxCode')"
+									value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>">
+								</td>
+								<td>Cal.% mode<br>
+								<select name="rulePerc">
+									<% String rulePerc= request.getParameter("rulePerc")!=null?request.getParameter("rulePerc"):""; %>
+									<option value="onlyAboveCode"
+										<%="onlyAboveCode".equals(rulePerc)?"selected":""%>>Only Above</option>
+									<option value="allAboveCode"
+										<%="allAboveCode".equals(rulePerc)?"selected":""%>>All</option>
+								</select></td>
+							</tr>
+						</table>
 
-                <hr>
-                <a href="javascript:referralScriptAttach2('referralCode','referralDocName')">Refer. Doctor #</a>
-                <input type="text" name="referralCode" size="5" maxlength="6" value="<%=request.getParameter("referralCode")!=null?request.getParameter("referralCode"):r_doctor_ohip%>" ><br>
-                <input type="text" name="referralDocName" size="22" maxlength="30" value="<%=request.getParameter("referralDocName")!=null?request.getParameter("referralDocName"):r_doctor%>" >
-              </td>
-              </tr>
-              </table>
+						<hr>
+						<a
+							href="javascript:referralScriptAttach2('referralCode','referralDocName')">Refer.
+						Doctor #</a> <input type="text" name="referralCode" size="5"
+							maxlength="6"
+							value="<%=request.getParameter("referralCode")!=null?request.getParameter("referralCode"):r_doctor_ohip%>"><br>
+						<input type="text" name="referralDocName" size="22" maxlength="30"
+							value="<%=request.getParameter("referralDocName")!=null?request.getParameter("referralDocName"):r_doctor%>">
+						</td>
+					</tr>
+				</table>
 
-              </td><td valign="top">
+				</td>
+				<td valign="top">
 
-              <table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF" bgcolor="#EEEEFF">
-              <tr><td nowrap width="30%" align="center">
-				<b>Billing Physician</b></td>
-				<td width="20%">
-				<select name="xml_provider">
-				<%
+				<table border="1" cellspacing="2" cellpadding="0" width="100%"
+					bordercolorlight="#99A005" bordercolordark="#FFFFFF"
+					bgcolor="#EEEEFF">
+					<tr>
+						<td nowrap width="30%" align="center"><b>Billing Physician</b></td>
+						<td width="20%"><select name="xml_provider">
+							<%
 				if(vecProvider.size()==1) {
 					propT = (Properties) vecProvider.get(0);
 				%>
-					<option value="<%=propT.getProperty("proOHIP")%>" <%=providerview.equals(propT.getProperty("proOHIP"))?"selected":""%>><b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b></option>
-				<%	} else { %>
-				<option value="000000" <%=providerview.equals("000000")?"selected":""%>><b>Select Provider</b></option>
-				<%
+							<option value="<%=propT.getProperty("proOHIP")%>"
+								<%=providerview.equals(propT.getProperty("proOHIP"))?"selected":""%>><b><%=propT.getProperty("last_name")%>,
+							<%=propT.getProperty("first_name")%></b></option>
+							<%	} else { %>
+							<option value="000000"
+								<%=providerview.equals("000000")?"selected":""%>><b>Select
+							Provider</b></option>
+							<%
 				for(int i=0; i<vecProvider.size(); i++) {
 					propT = (Properties) vecProvider.get(i);
 				%>
-					<option value="<%=propT.getProperty("proOHIP")%>" <%=providerview.equals(propT.getProperty("proOHIP"))?"selected":""%>><b><%=propT.getProperty("last_name")%>, <%=propT.getProperty("first_name")%></b></option>
-				<%	}
+							<option value="<%=propT.getProperty("proOHIP")%>"
+								<%=providerview.equals(propT.getProperty("proOHIP"))?"selected":""%>><b><%=propT.getProperty("last_name")%>,
+							<%=propT.getProperty("first_name")%></b></option>
+							<%	}
 				}
 				%>
-				</select></td>
-				<td nowrap width="30%" align="center"><b>Assig. Physician</b></td>
-				<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
-              	</td>
-              </tr>
-              <tr>
+						</select></td>
+						<td nowrap width="30%" align="center"><b>Assig. Physician</b></td>
+						<td width="20%"><%=providerBean.getProperty(assgProvider_no, "")%>
+						</td>
+					</tr>
+					<tr>
 
-				<td width="30%"><b>Visit Type</b></td>
-				<td width="20%">
-				<select name="xml_visittype">
-					<option value="00| Clinic Visit" <%=visitType.startsWith("00")?"selected":""%>>00 | Clinic Visit</option>
-					<option value="01| Outpatient Visit" <%=visitType.startsWith("01")?"selected":""%>>01 | Outpatient Visit</option>
-					<option value="02| Hospital Visit" <%=visitType.startsWith("02")?"selected":""%>>02 | Hospital Visit</option>
-					<option value="03| ER" <%=visitType.startsWith("03")?"selected":""%>>03 | ER</option>
-					<option value="04| Nursing Home" <%=visitType.startsWith("04")?"selected":""%>>04 | Nursing Home</option>
-					<option value="05| Home Visit" <%=visitType.startsWith("05")?"selected":""%>>05 | Home Visit</option>
-				</select>
-				</td>
+						<td width="30%"><b>Visit Type</b></td>
+						<td width="20%"><select name="xml_visittype">
+							<option value="00| Clinic Visit"
+								<%=visitType.startsWith("00")?"selected":""%>>00 | Clinic Visit</option>
+							<option value="01| Outpatient Visit"
+								<%=visitType.startsWith("01")?"selected":""%>>01 | Outpatient
+							Visit</option>
+							<option value="02| Hospital Visit"
+								<%=visitType.startsWith("02")?"selected":""%>>02 | Hospital
+							Visit</option>
+							<option value="03| ER"
+								<%=visitType.startsWith("03")?"selected":""%>>03 | ER</option>
+							<option value="04| Nursing Home"
+								<%=visitType.startsWith("04")?"selected":""%>>04 | Nursing Home</option>
+							<option value="05| Home Visit"
+								<%=visitType.startsWith("05")?"selected":""%>>05 | Home Visit</option>
+						</select></td>
 
-				<td width="30%"><b>Billing Type</b></td>
-				<td width="20%">
-				<% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
-				<select name="xml_billtype" >
-					<option value="ODP | Bill OHIP" <%=srtBillType.startsWith("ODP")?"selected" : ""%> >Bill OHIP</option>
-					<option value="PAT | Bill Patient" <%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill Patient</option>
-					<option value="WCB | Worker's Compensation Board" <%=srtBillType.startsWith("WCB")?"selected" : ""%>>WSIB</option>
-				</select>
-				</td>
-              </tr>
-              <tr>
-				<td><b>Visit Location</b></td>
-				<td colspan="3">
-				<select name="xml_location">
-				<%
+						<td width="30%"><b>Billing Type</b></td>
+						<td width="20%"><% String srtBillType = request.getParameter("xml_billtype")!=null? request.getParameter("xml_billtype"):""; %>
+						<select name="xml_billtype">
+							<option value="ODP | Bill OHIP"
+								<%=srtBillType.startsWith("ODP")?"selected" : ""%>>Bill OHIP</option>
+							<option value="PAT | Bill Patient"
+								<%=srtBillType.startsWith("PAT")?"selected" : ""%>>Bill Patient</option>
+							<option value="WCB | Worker's Compensation Board"
+								<%=srtBillType.startsWith("WCB")?"selected" : ""%>>WSIB</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td><b>Visit Location</b></td>
+						<td colspan="3"><select name="xml_location">
+							<%
 				for(int i=0; i<vecLocation.size(); i++) {
 					propT = (Properties) vecLocation.get(i);
 					String strLocation = request.getParameter("xml_location")!=null? request.getParameter("xml_location"):clinicview;
 				%>
-					<option value="<%=propT.getProperty("clinic_location_no") + "|" + propT.getProperty("clinic_location_name")%>" <%=strLocation.startsWith(propT.getProperty("clinic_location_no"))?"selected":""%>>
-					<%=propT.getProperty("clinic_location_name")%></option>
-				<%
+							<option
+								value="<%=propT.getProperty("clinic_location_no") + "|" + propT.getProperty("clinic_location_name")%>"
+								<%=strLocation.startsWith(propT.getProperty("clinic_location_no"))?"selected":""%>>
+							<%=propT.getProperty("clinic_location_name")%></option>
+							<%
 				}
 				%>
-				</select></td>
-              </tr>
-              <tr>
-				<td><b>Admission Date</b></td>
-				<td >
-				<%
+						</select></td>
+					</tr>
+					<tr>
+						<td><b>Admission Date</b></td>
+						<td><%
 				String admDate = "";
 				if(visitType.startsWith("02") ) {
 					admDate = visitdate;
-				} %>
-				<!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
-				<input type="text" name="xml_vdate" id="xml_vdate" value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):admDate%>" size='10' maxlength='10' >
-              	<img src="../../../images/cal.gif" id="xml_vdate_cal">
+				} %> <!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
+						<input type="text" name="xml_vdate" id="xml_vdate"
+							value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):admDate%>"
+							size='10' maxlength='10'> <img src="../../../images/cal.gif"
+							id="xml_vdate_cal"></td>
+						<td colspan="2"><a href="#"
+							onClick="showHideLayers('Layer1','','show');return false;">Billing
+						form</a>:</font></b> <%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
+						</td>
+
+					</tr>
+				</table>
+
+
 				</td>
-				<td colspan="2">
-				<a href="#" onClick="showHideLayers('Layer1','','show');return false;">Billing form</a>:</font></b>
-				<%=currentFormName.length()<30 ? currentFormName : currentFormName.substring(0,30)%>
-				</td>
-
-              </tr>
-              </table>
-
-
-              </td>
-            </tr>
-          </table>
-
-        </td>
-      </tr>
-      <tr>
-        <td>
-
-
-		<table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
-		<tr>
-			<td valign="top" width="33%">
-
-			<table width="100%" border="1" cellspacing="0" cellpadding="0" height="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF" >
-			<tr bgcolor="#CCCCFF">
-				<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle1%>
-				</font>
-				</th>
-				<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
-				<th>
-				<font size="-1" color="#000000">
-				Fee</font>
-				</th>
 			</tr>
-			<%
+		</table>
+
+		</td>
+	</tr>
+	<tr>
+		<td>
+
+
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			height="137">
+			<tr>
+				<td valign="top" width="33%">
+
+				<table width="100%" border="1" cellspacing="0" cellpadding="0"
+					height="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
+					<tr bgcolor="#CCCCFF">
+						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle1%>
+						</font></th>
+						<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
+						<th><font size="-1" color="#000000"> Fee</font></th>
+					</tr>
+					<%
 			for(int i=0; i<vecCodeCol1.size(); i++) {
 					propT = (Properties) vecCodeCol1.get(i);
 					serviceCode = propT.getProperty("serviceCode");
@@ -734,39 +797,42 @@ ctlCount = 0;
 					if(propPremium.getProperty(serviceCode)!=null) premiumFlag = "A";
 					else premiumFlag = "";
 			%>
-			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
-				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;">
+					<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
+						<td nowrap><input type="checkbox" name="code_xml_<%=serviceCode%>"
+							value="checked"
+							<%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%>>
+						<b><font size="-1"
+							color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
+							id="sc<%=(""+i).substring(0,1)+serviceCode%>"
+							onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+						<input type="text" name="unit_xml_<%=serviceCode%>"
+							value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>"
+							size="1" maxlength="2" style="width:20px; height:12px;"></td>
+						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
+							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
+						<input type="hidden" name="desc_xml_<%=serviceCode%>"
+							value="<%=serviceDesc%>" /> </font></td>
+						<td align="right"><font size="-1"><%=serviceDisp%></font> <input
+							type="hidden" name="price_xml_<%=serviceCode%>"
+							value="<%=serviceDisp%>" /> <input type="hidden"
+							name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
+						</td>
+					</tr>
+					<% } %>
+				</table>
+
 				</td>
-				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
-				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />
-				</font></td>
-				<td align="right">
-				<font size="-1" ><%=serviceDisp%></font>
+				<td width="33%" valign="top">
 
-				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
-				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
-				</td>
-			</tr>
-			<% } %>
-			</table>
-
-		</td><td width="33%" valign="top">
-
-			<table width="100%" border="1" cellspacing="0" cellpadding="0" height="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF" >
-			<tr bgcolor="#CCCCFF">
-				<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle2%>
-				</font>
-				</th>
-				<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
-				<th>
-				<font size="-1" color="#000000">
-				Fee</font>
-				</th>
-			</tr>
-			<%
+				<table width="100%" border="1" cellspacing="0" cellpadding="0"
+					height="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
+					<tr bgcolor="#CCCCFF">
+						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle2%>
+						</font></th>
+						<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
+						<th><font size="-1" color="#000000"> Fee</font></th>
+					</tr>
+					<%
 			for(int i=0; i<vecCodeCol2.size(); i++) {
 					propT = (Properties) vecCodeCol2.get(i);
 					serviceCode = propT.getProperty("serviceCode");
@@ -776,40 +842,43 @@ ctlCount = 0;
 					if(propPremium.getProperty(serviceCode)!=null) premiumFlag = "A";
 					else premiumFlag = "";
 			%>
-			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
-				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;" />
+					<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
+						<td nowrap><input type="checkbox" name="code_xml_<%=serviceCode%>"
+							value="checked"
+							<%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
+						<b><font size="-1"
+							color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
+							id="sc<%=(""+i).substring(0,1)+serviceCode%>"
+							onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+						<input type="text" name="unit_xml_<%=serviceCode%>"
+							value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>"
+							size="1" maxlength="2" style="width:20px; height:12px;" /></td>
+						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
+							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
+						<input type="hidden" name="desc_xml_<%=serviceCode%>"
+							value="<%=serviceDesc%>" /> </font></td>
+						<td align="right"><font size="-1"><%=serviceDisp%></font> <input
+							type="hidden" name="price_xml_<%=serviceCode%>"
+							value="<%=serviceDisp%>" /> <input type="hidden"
+							name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
+						</td>
+					</tr>
+					<% } %>
+				</table>
+
+
 				</td>
-				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
-				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />
-				</font></td>
-				<td align="right">
-				<font size="-1" ><%=serviceDisp%></font>
+				<td width="33%" valign="top">
 
-				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
-				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
-				</td>
-			</tr>
-			<% } %>
-			</table>
-
-
-		</td><td width="33%" valign="top">
-
-			<table width="100%" border="1" cellspacing="0" cellpadding="0" height="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF" >
-			<tr bgcolor="#CCCCFF">
-				<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle3%>
-				</font>
-				</th>
-				<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
-				<th>
-				<font size="-1" color="#000000">
-				Fee</font>
-				</th>
-			</tr>
-			<%
+				<table width="100%" border="1" cellspacing="0" cellpadding="0"
+					height="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
+					<tr bgcolor="#CCCCFF">
+						<th width="10%" nowrap><font size="-1" color="#000000"><%=headerTitle3%>
+						</font></th>
+						<th width="70%" bgcolor="#CCCCFF"><font size="-1" color="#000000">Description</font></th>
+						<th><font size="-1" color="#000000"> Fee</font></th>
+					</tr>
+					<%
 			for(int i=0; i<vecCodeCol3.size(); i++) {
 					propT = (Properties) vecCodeCol3.get(i);
 					serviceCode = propT.getProperty("serviceCode");
@@ -819,34 +888,39 @@ ctlCount = 0;
 					if(propPremium.getProperty(serviceCode)!=null) premiumFlag = "A";
 					else premiumFlag = "";
 			%>
-			<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
-				<td nowrap>
-				<input type="checkbox" name="code_xml_<%=serviceCode%>" value="checked" <%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
-				<b><font size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span id="sc<%=(""+i).substring(0,1)+serviceCode%>" onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
-				<input type="text" name="unit_xml_<%=serviceCode%>" value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>" size="1" maxlength="2" style="width:20px; height:12px;" />
-				</td>
-				<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font size="-1" ><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
-				<input type="hidden" name="desc_xml_<%=serviceCode%>" value="<%=serviceDesc%>" />
-				</font></td>
-				<td align="right">
-				<font size="-1" ><%=serviceDisp%></font>
+					<tr bgcolor=<%=i%2==0?"#FFFFFF":"#EEEEFF"%>>
+						<td nowrap><input type="checkbox" name="code_xml_<%=serviceCode%>"
+							value="checked"
+							<%="checked".equals(request.getParameter("code_xml_"+serviceCode))? "checked":""%> />
+						<b><font size="-1"
+							color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
+							id="sc<%=(""+i).substring(0,1)+serviceCode%>"
+							onDblClick="onDblClickServiceCode(this)"><%=serviceCode%></span></font></b>
+						<input type="text" name="unit_xml_<%=serviceCode%>"
+							value="<%=request.getParameter("unit_xml_"+serviceCode)!=null? request.getParameter("unit_xml_"+serviceCode):""%>"
+							size="1" maxlength="2" style="width:20px; height:12px;" /></td>
+						<td <%=serviceDesc.length()>30?"title=\""+serviceDesc+"\"":""%>><font
+							size="-1"><%=serviceDesc.length()>30?serviceDesc.substring(0,30)+"...":serviceDesc%>
+						<input type="hidden" name="desc_xml_<%=serviceCode%>"
+							value="<%=serviceDesc%>" /> </font></td>
+						<td align="right"><font size="-1"><%=serviceDisp%></font> <input
+							type="hidden" name="price_xml_<%=serviceCode%>"
+							value="<%=serviceDisp%>" /> <input type="hidden"
+							name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
+						</td>
+					</tr>
+					<% } %>
+				</table>
 
-				<input type="hidden" name="price_xml_<%=serviceCode%>" value="<%=serviceDisp%>" />
-				<input type="hidden" name="perc_xml_<%=serviceCode%>" value="<%=servicePercentage%>" />
+
 				</td>
 			</tr>
-			<% } %>
-			</table>
-
-
-		</td>
-		</tr>
 		</table>
 
 
 
-        </td>
-      </tr>
+		</td>
+	</tr>
 
 	<input type="hidden" name="clinic_no" value="<%=clinicNo%>" />
 	<input type="hidden" name="demographic_no" value="<%=demo_no%>" />
@@ -855,89 +929,70 @@ ctlCount = 0;
 	<input type="hidden" name="ohip_version" value="V03G" />
 	<input type="hidden" name="hin" value="<%=demoHIN%>" />
 
-	<input type="hidden" name="start_time" value="<%=request.getParameter("start_time")%>" />
+	<input type="hidden" name="start_time"
+		value="<%=request.getParameter("start_time")%>" />
 
 	<input type="hidden" name="demographic_dob" value="<%=demoDOB%>" />
 
-	<input type="hidden" name="apptProvider_no" value="<%=request.getParameter("apptProvider_no")%>" />
-	<input type="hidden" name="asstProvider_no" value="<%=request.getParameter("asstProvider_no")%>" />
+	<input type="hidden" name="apptProvider_no"
+		value="<%=request.getParameter("apptProvider_no")%>" />
+	<input type="hidden" name="asstProvider_no"
+		value="<%=request.getParameter("asstProvider_no")%>" />
 
 	<input type="hidden" name="demographic_name" value="<%=demoname%>" />
 	<input type="hidden" name="providerview" value="<%=providerview%>" />
-	<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>" />
-	<input type="hidden" name="assgProvider_no" value="<%=assgProvider_no%>" />
+	<input type="hidden" name="appointment_date"
+		value="<%=request.getParameter("appointment_date")%>" />
+	<input type="hidden" name="assgProvider_no"
+		value="<%=assgProvider_no%>" />
 	<input type="hidden" name="billForm" value="<%=ctlBillForm%>" />
 
-  </table>
-  </form>
+</table>
+</form>
 
 
-  <br>
-  <table border="0" cellpadding="0" cellspacing="2" width="100%" bgcolor="#CCCCFF">
-    <tr>
-      <td colspan="6" class="RowTop">
-        <%= demoname %>
-        -
-        <b>Billing History</b> (last 5 records)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <table border="1" cellspacing="0" cellpadding="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%" bgcolor="#FFFFFF">
-          <tr bgcolor="#99CCCC" align="center">
-            <td nowrap>
-              Serial No.
-            </td>
-            <td nowrap>
-              Billing Date
-            </td>
-            <td nowrap>
-              Appt/Adm Date
-            </td>
-            <td nowrap>
-              Service Code
-            </td>
-            <td nowrap>
-              Dx
-            </td>
-            <td>
-              Create Date
-            </td>
-          </tr>
-<%
+<br>
+<table border="0" cellpadding="0" cellspacing="2" width="100%"
+	bgcolor="#CCCCFF">
+	<tr>
+		<td colspan="6" class="RowTop"><%= demoname %> - <b>Billing History</b>
+		(last 5 records)</td>
+	</tr>
+	<tr>
+		<td>
+		<table border="1" cellspacing="0" cellpadding="0"
+			bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%"
+			bgcolor="#FFFFFF">
+			<tr bgcolor="#99CCCC" align="center">
+				<td nowrap>Serial No.</td>
+				<td nowrap>Billing Date</td>
+				<td nowrap>Appt/Adm Date</td>
+				<td nowrap>Service Code</td>
+				<td nowrap>Dx</td>
+				<td>Create Date</td>
+			</tr>
+			<%
           for (int i = 0; i < vecHist.size(); i++) {
             Properties prop  = (Properties)vecHist.get(i);
             Properties propD = (Properties)vecHistD.get(i);
 %>
-            <tr bgcolor="<%=i%2==0?"ivory":"#EEEEFF"%>" align="center">
-              <td>
-                <%= prop.getProperty("billing_no", "&nbsp;") %>
-              </td>
-              <td>
-                <%= prop.getProperty("billing_date", "&nbsp;") %>
-              </td>
-              <td>
-                <%= prop.getProperty("visitdate", "&nbsp;") %>
-              </td>
-              <td>
-                <%= propD.getProperty("service_code", "&nbsp;") %>
-              </td>
-              <td>
-                <%= propD.getProperty("diagnostic_code", "&nbsp;") %>
-              </td>
-              <td>
-                <%= prop.getProperty("update_date", "&nbsp;") %>
-              </td>
-            </tr>
-<%
+			<tr bgcolor="<%=i%2==0?"ivory":"#EEEEFF"%>" align="center">
+				<td><%= prop.getProperty("billing_no", "&nbsp;") %></td>
+				<td><%= prop.getProperty("billing_date", "&nbsp;") %></td>
+				<td><%= prop.getProperty("visitdate", "&nbsp;") %></td>
+				<td><%= propD.getProperty("service_code", "&nbsp;") %></td>
+				<td><%= propD.getProperty("diagnostic_code", "&nbsp;") %></td>
+				<td><%= prop.getProperty("update_date", "&nbsp;") %></td>
+			</tr>
+			<%
           }
 %>
-        </table>
-      </td>
-    </tr>
-  </table>
+		</table>
+		</td>
+	</tr>
+</table>
 
-  <script type="text/javascript">//<![CDATA[
+<script type="text/javascript">//<![CDATA[
     // the default multiple dates selected, first time the calendar is instantiated
     var MA = [];
     function closed(cal) {
@@ -981,5 +1036,5 @@ String getDefaultValue(String paraName, Vector vec, String propName) {
   return ret;
 }
 %>
-  </body>
+</body>
 </html>
