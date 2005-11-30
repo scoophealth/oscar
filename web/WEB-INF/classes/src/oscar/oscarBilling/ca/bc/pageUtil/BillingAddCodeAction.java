@@ -68,7 +68,7 @@ public final class BillingAddCodeAction
     boolean added = true;
 
     if (whereTo != null && whereTo.equals("private")) {
-      code = "P" + code;
+      code = "A" + code;
     }
 
     BillingCodeData bcd = new BillingCodeData();

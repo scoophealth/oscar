@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -52,7 +52,7 @@ function isNumeric(strString){
      return retval;
 }
 
-function checkUnits(){   
+function checkUnits(){
 	if  (!isNumeric(document.BillingAddCodeForm.value.value)){
 		alert("Price has to be a numeric value");
 	        document.BillingAddCodeForm.value.focus();
@@ -60,8 +60,8 @@ function checkUnits(){
 	}
 	return true;
 }
-	
-	
+
+
 
 </script>
 
@@ -89,10 +89,10 @@ function checkUnits(){
                 text-align: center;
         }
 	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
+	   border-left: 1pt solid #888888;
 	   border-right: 1pt solid #888888;
            text-align: center;
-	}	
+	}
 </style>
 </head>
 
@@ -110,7 +110,7 @@ function checkUnits(){
 						Add Private Billing Code
                         </td>
                         <td  >&nbsp;
-							
+
                         </td>
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
@@ -123,11 +123,11 @@ function checkUnits(){
             <td class="MainTableLeftColumn" valign="top">&nbsp;
             &nbsp;
             </td>
-            <td class="MainTableRightColumn">    
-                             
-            
-            
-            
+            <td class="MainTableRightColumn">
+
+
+
+
               <html:form action="/billing/CA/BC/billingAddCode" onsubmit="return checkUnits();">
                 <%
                     BillingAddCodeForm frm = (BillingAddCodeForm) request.getAttribute("BillingAddCodeForm");
@@ -136,29 +136,29 @@ function checkUnits(){
                         frm.setDesc((String) request.getAttribute("desc"));
                         frm.setValue((String) request.getAttribute("value"));
                     }
-                    
+
                 if (request.getAttribute("returnMessage") != null){%>
-                  
+
                 <table>
                     <tr>
                     <td style="font-color: red;"><%=request.getAttribute("returnMessage")%></td>
                     </tr>
                 </table>
-                
+
               <%}%>
                 <html:hidden property="whereTo" value="private"/>
-                
+
                 <table>
                     <!--<tr>
                         <td>Code ID</td>
                         <td><html:text property="codeId"/></td>
                     </tr>-->
                     <tr>
-                        <td colspan="2">Private Codes will be prefixed with 'P' by default</td>
+                        <td colspan="2">Private Codes will be prefixed with 'A' by default</td>
                     </tr>
                     <tr>
                         <td>Code</td>
-                        <td>P-<html:text property="code" maxlength="9"/></td>
+                        <td>A-<html:text property="code" maxlength="9"/></td>
                     </tr>
                     <tr>
                         <td>Desc</td>
@@ -173,7 +173,7 @@ function checkUnits(){
                         <td><html:submit value="Add"/><html:button onclick="javascript: document.location = 'billingPrivateCodeAdjust.jsp'" property="back" value="Back"/>
                     </tr>
                 </table>
-              </html:form>  
+              </html:form>
 			   </td>
         </tr>
         <tr>

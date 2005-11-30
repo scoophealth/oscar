@@ -649,7 +649,7 @@ public class BillingFormData {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       ResultSet rs;
       for (int i = 0; i < svc.length; i++) {
-        String sql = "SELECT value FROM billingservice WHERE service_code='P" +
+        String sql = "SELECT value FROM billingservice WHERE service_code='A" +
             svc[i].getServiceCode() + "'";
         rs = db.GetSQL(sql);
 
