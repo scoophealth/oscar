@@ -151,40 +151,6 @@ public final class BillingCodeData {
 
     return retval;
   }
-
-  /**
-   * Updates an existing private code with the supplied values
-   * @param code String - The private service code
-   * @param desc String - The service code description
-   * @param val String - The dollar value of the service performed
-   * @return boolean
-   */
-  public boolean updateBillingCode(String code, String desc, String val) {
-    boolean retval = true;
-    DBHandler db = null;
-    String str = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      str = "update billingservice " +
-          "set service_code = '" + Misc.mysqlEscape(code) + "'," + //service_code
-          "description = '" + Misc.mysqlEscape(desc) + "'," + //description
-          "value ='" + Misc.mysqlEscape(val) + "'"; //value
-      db.RunSQL(str);
-    }
-    catch (Exception e1) {
-      e1.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
-    return retval;
-  }
-
   private ArrayList codeSearch(String queryString) {
     ArrayList list = new ArrayList();
     DBHandler db = null;
@@ -195,7 +161,6 @@ public final class BillingCodeData {
       while (rs.next()) {
         list.add(new BillingCodeData().fillCodeData(rs));
       }
-
     }
     catch (Exception e1) {
       e1.printStackTrace();
