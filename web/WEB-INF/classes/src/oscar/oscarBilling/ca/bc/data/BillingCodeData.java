@@ -116,6 +116,34 @@ public final class BillingCodeData {
     return retval;
   }
 
+  /**
+   * Removes a private billing code from database
+   * @param codeId String - The service code to be removed
+   * @return boolean
+   */
+  public boolean deleteBillingCode(String codeId) {
+     boolean retval = true;
+     DBHandler db = null;
+     String str = null;
+     try {
+       db = new DBHandler(DBHandler.OSCAR_DATA);
+       str = "delete from billingservice where billingservice_no = '" + Misc.mysqlEscape(codeId) + "'";
+       db.RunSQL(str);
+     }
+     catch (Exception e1) {
+       e1.printStackTrace();
+     }
+     finally {
+       try {
+         db.CloseConn();
+       }
+       catch (SQLException ex) {
+         ex.printStackTrace();
+       }
+     }
+     return retval;
+   }
+
   public boolean addBillingCode(String code, String desc, String val) {
     boolean retval = true;
     DBHandler db = null;
@@ -148,7 +176,6 @@ public final class BillingCodeData {
         ex.printStackTrace();
       }
     }
-
     return retval;
   }
   private ArrayList codeSearch(String queryString) {
