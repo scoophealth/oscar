@@ -11,16 +11,16 @@
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
  * Hamilton
  * Ontario, Canada   Creates a new instance of BillingCode
  *
- * 
+ *
  * BillingCodeData.java
  *
  * Created on August 4, 2004, 10:37 AM
@@ -134,8 +134,37 @@ public final class  BillingCodeData {
       return retval;
    }
 
-
-
+   /**
+    * Updates an existing private code with the supplied values
+    * @param code String - The private service code
+    * @param desc String - The service code description
+    * @param val String - The dollar value of the service performed
+    * @return boolean
+    */
+   public boolean updateBillingCode(String code, String desc, String val){
+      boolean retval = true;
+      DBHandler db = null;
+      String str = null;
+      try{
+         db = new DBHandler(DBHandler.OSCAR_DATA);
+         str = "update billingservice " +
+                      "set service_code = '"+Misc.mysqlEscape(code)+"',"+   //service_code
+                      "description = '"+Misc.mysqlEscape(desc)+"',"+   //description
+                      "value ='"+Misc.mysqlEscape(val)+"'";  //value
+      }catch(Exception e1){
+         e1.printStackTrace();
+      }
+      finally{
+        try {
+          db.RunSQL(str);
+          db.CloseConn();
+        }
+        catch (SQLException ex) {
+          ex.printStackTrace();
+        }
+      }
+      return retval;
+   }
 
    private ArrayList codeSearch(String queryString){
       ArrayList list = new ArrayList();
