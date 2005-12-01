@@ -167,7 +167,18 @@
         maxAge="70"
         sex="M"
         showIfMinRecordNum="1"/>
-        
+
+   <item        
+        desc="Fecal Occult Blood Test"
+        name="FOBT"
+        link=""
+        layout="PAPMAM"
+        minAge="50"
+        maxAge="80"
+        showIfMinRecordNum="1"/>
+
+   
+                
    <item        
         desc="Other Layout A"
         name="OtherA"
