@@ -93,7 +93,6 @@ public class ArchiveDeletedRecords {
                                ")";
             
             db.RunSQL(insertSql);
-            rs.close();
             db.CloseConn();
         }
         catch(SQLException e) {
