@@ -1,0 +1,105 @@
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version. *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ *  Jason Gallagher
+ *
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada   Creates a new instance of Prevention
+ *
+ * ArchiveDeletedRecords.java
+ *
+ * Created on December 1, 2005, 7:39 PM
+ *
+ */
+
+package oscar.oscarDB;
+
+import org.apache.commons.lang.*;
+import java.sql.*;
+import org.jdom.*;
+
+/**
+ * This class is used where rows are deleted from a table but it would still be nice to record that they existed at one time
+ * 
+ *
+   CREATE TABLE `table_modification` (
+     `id` int(10) NOT NULL auto_increment primary key,
+     `demographic_no` int(10) NOT NULL default '0',
+     `modification_date` datetime default NULL,
+     `provider_no` varchar(6) NOT NULL default '',
+     `modification_type` varchar(20) default NULL,
+     `table` varchar(255) default NULL,
+     `row_id` varchar(20) default NULL,
+     `resultSet` text,
+      KEY `table_modification_demographic_no` (`demographic_no`),
+      KEY `table_modification_provider_no` (`provider_no`),
+      KEY `table_modification_modification_type` (`modification_type`(10))
+  );
+   
+  
+ * 
+ * @author Jay Gallagher
+ */
+public class ArchiveDeletedRecords {
+    static String DELETE = "delete";
+    static String UPDATE = "update";
+    
+    /**
+     * Creates a new instance of ArchiveDeletedRecords 
+     */
+    public ArchiveDeletedRecords() {
+    }
+    
+    public int recordRowsToBeDeleted(String sql){
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);   
+            ResultSet rs = db.GetSQL(sql);
+            ResultSetBuilder builder = new ResultSetBuilder(rs);
+            Document doc = builder.build();
+            
+            rs.close();
+            db.CloseConn();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    
+    private void addRowsToModifiedTable(String demoNo,String provNo,String modType,String table,String rowId){
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);   
+            String insertSql = "insert into table_modification (demographic_no,provider_no,modification_type,table,row_id,modification_date) " +
+                               " values ('"+StringEscapeUtils.escapeSql(demoNo)+"', " +
+                               " '"+StringEscapeUtils.escapeSql(provNo)+"', " +
+                               " '"+StringEscapeUtils.escapeSql(modType)+"', " +
+                               " '"+StringEscapeUtils.escapeSql(table)+"', " +
+                               " '"+StringEscapeUtils.escapeSql(rowId)+"', " +
+                               "  now()" +
+                               ")";
+            
+            db.RunSQL(insertSql);
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+}
