@@ -673,8 +673,15 @@ function showHideLayers() { //v3.0
                 <td title="Submission Code">
                     Sub Code:
                     <html:select property="submissionCode">
-                        <html:option value="0">Normal</html:option>
-                        <html:option value="D">Duplicate</html:option>
+                        <html:option value="0">O - Normal</html:option>
+                        <html:option value="D">D - Duplicate</html:option>
+						<html:option value="E" >E - Debit</html:option>
+						<html:option value="C" >C - Subscriber Coverage</html:option>
+						<html:option value="R" >R - Resubmitted</html:option>
+						<html:option value="I" >I - ICBC Claim > 90 Days</html:option>
+						<html:option value="A" >A - Requested Preapproval</html:option>
+						<html:option value="W" >W - WCB Rejected Claim</html:option>
+						<html:option value="X" >X - Resubmitting Refused / Partially Paid Claim</html:option>
                     </html:select>
                 </td>
                 <td>
