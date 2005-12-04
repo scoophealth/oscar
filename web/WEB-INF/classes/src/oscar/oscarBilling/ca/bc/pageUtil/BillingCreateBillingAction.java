@@ -84,6 +84,7 @@ public class BillingCreateBillingAction
     bean.setPatientAge(demo.getAge());
     bean.setBillingType(frm.getXml_billtype());
     bean.setPaymentType(payMeth);
+
     if (payMeth.equals("8")) {
       bean.setEncounter("E");
     }
@@ -137,8 +138,7 @@ public class BillingCreateBillingAction
       checkCDMStatus(request, errors, demo);
       return mapping.getInputForward();
     }
-
-    validate00120(errors, demo, billItem);
+    validate00120(errors, demo, billItem,bean.getServiceDate());
     if (!errors.isEmpty()) {
       checkCDMStatus(request, errors, demo);
       return mapping.getInputForward();
@@ -238,7 +238,7 @@ public class BillingCreateBillingAction
   }
 
   private void validate00120(ActionErrors errors, Demographic demo,
-                             ArrayList billItem) {
+                             ArrayList billItem,String serviceDate) {
     for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
       BillingItem item = (BillingItem) iter.next();
       String[] cnlsCodes = OscarProperties.getInstance().getProperty(
@@ -246,7 +246,7 @@ public class BillingCreateBillingAction
       Vector vCodes = new Vector(Arrays.asList(cnlsCodes));
       if (vCodes.contains(item.getServiceCode())) {
         if (!vldt.hasMore00120Codes(demo.getDemographicNo(),
-                                    item.getServiceCode())) {
+                                    item.getServiceCode(),serviceDate)) {
           errors.add("",
                      new ActionMessage(
                          "oscar.billing.CA.BC.billingBC.error.noMore00120"));
