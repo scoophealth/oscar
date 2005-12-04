@@ -1,4 +1,3 @@
-
 <!--
   /*
   *
@@ -30,14 +29,15 @@
 <html:html locale="true">
 <head>
 <title>Adjust Private Billing Codes</title>
-  <link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
+<link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
 
 
 
 
 
-</script>  <style type="text/css">
+</script>
+<style type="text/css">
     table.outline{
     margin-top:50px;
     border-bottom: 1pt solid #888888;
@@ -68,82 +68,79 @@
 </style>
 </head>
 <body class="BodyStyle" vlink="#0000FF" onLoad="setValues()">
-  <!--  -->
-  <table class="MainTable" id="scrollNumber1" name="encounterTable">
-    <tr class="MainTableTopRow">
-      <td class="MainTableTopRowLeftColumn">billing</td>
-      <td class="MainTableTopRowRightColumn">
-        <table class="TopStatusBar">
-          <tr>
-            <td>Adjust Private Billing Codes</td>
-            <td>&nbsp;</td>
-            <td style="text-align:right">
-              <a href="javascript:popupStart(300,400,'Help.jsp')">
-                <bean:message key="global.help"/>
-              </a>
-              |
-              <a href="javascript:popupStart(300,400,'About.jsp')">
-                <bean:message key="global.about"/>
-              </a>
-              |
-              <a href="javascript:popupStart(300,400,'License.jsp')">
-                <bean:message key="global.license"/>
-              </a>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-    <tr>
-      <td class="MainTableLeftColumn" valign="top">        &nbsp;
-        <a href="billingAddPrivateCode.jsp?addNew=true">Add Code
-      </td>
-      <td class="MainTableRightColumn">
-      <form action="billingPrivateCodeAdjust.jsp" method="get">
-      <%if (request.getAttribute("returnMessage") != null) {      %>
+<!--  -->
+<table class="MainTable" id="scrollNumber1" name="encounterTable">
+  <tr class="MainTableTopRow">
+    <td width="10%" class="MainTableTopRowLeftColumn">Billing</td>
+    <td width="88%" class="MainTableTopRowRightColumn"><table class="TopStatusBar">
+        <tr>
+          <td>Adjust Private Billing Codes</td>
+          <td>&nbsp;</td>
+          <td style="text-align:right"><a href="javascript:popupStart(300,400,'Help.jsp')"> <bean:message key="global.help"/> </a> | <a href="javascript:popupStart(300,400,'About.jsp')"> <bean:message key="global.about"/> </a> | <a href="javascript:popupStart(300,400,'License.jsp')"> <bean:message key="global.license"/> </a> </td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td class="MainTableLeftColumn" valign="top">&nbsp; <a href="billingAddPrivateCode.jsp?addNew=true">Add Code</a> </td>
+    <td class="MainTableRightColumn"><form action="billingPrivateCodeAdjust.jsp" method="get">
+        <%if (request.getAttribute("returnMessage") != null) {      %>
         <table>
           <tr>
-            <td style="font-color: red;"><%=request.getAttribute("returnMessage")%>            </td>
+            <td style="font-color: red;"><%=request.getAttribute("returnMessage")%> </td>
           </tr>
         </table>
-      <%}      %>
+        <%}      %>
         <table>
           <tr>
-            <td>            </td>
+            <td></td>
           </tr>
         </table>
       </form>
       <%
+
+      String sortOrder = request.getParameter("sortOrder")!=null?request.getParameter("sortOrder"):"";
+      System.out.println("sortOrder=" + sortOrder);
         BillingCodeData bcds = new BillingCodeData();
-        ArrayList list = (ArrayList) bcds.findBillingCodesByCode("P");
+        ArrayList list = (ArrayList) bcds.findBillingCodesByCode("A",sortOrder.equals("desc")?1:0);
         if (list != null) {
+          String arrow = "";
+          String newOrder =  "";
+          if(sortOrder.equals("desc")){
+            newOrder = "";
+            arrow = "&uarr;";
+          }
+          else if(sortOrder.equals("")){
+            newOrder = "desc";
+             arrow = "&darr;";
+          }
       %>
-        <table border=1>
-          <tr>
-            <td>code</td>
-            <td>desc</td>
-            <td>price</td>
-          </tr>
+      <table border=1 width="50%">
+        <tr>
+          <th>Service Code<a href="billingPrivateCodeAdjust.jsp?sortOrder=<%=newOrder%>"><%=arrow%></a></th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Options</th>
+        </tr>
         <%
           for (int i = 0; i < list.size(); i++) {
             BillingCodeData bcd = (BillingCodeData) list.get(i);
         %>
-          <tr>
-            <td>
-              <a href="billingEditCode.jsp?codeId=<%=bcd.getBillingserviceNo()%>&code=<%=bcd.getServiceCode()%>&desc=<%=bcd.getDescription()%>&value=<%=bcd.getValue()%>&whereTo=private"><%=bcd.getServiceCode()%>              </a>
-            </td>
-            <td><%=bcd.getDescription()%>            </td>
-            <td><%=bcd.getValue()%>            </td>
-          </tr>
+        <tr align="center">
+          <td><strong><%=bcd.getServiceCode()%> </strong></td>
+          <td><%=bcd.getDescription()%> </td>
+          <td><%=bcd.getValue()%></td>
+          <td><a href="billingEditCode.jsp?codeId=<%=bcd.getBillingserviceNo()%>&code=<%=bcd.getServiceCode()%>&desc=<%=bcd.getDescription()%>&value=<%=bcd.getValue()%>&whereTo=private">Edit</a> <br>
+            <a href="deletePrivateCode.jsp?code=<%=bcd.getBillingserviceNo()%>">Delete</a></td>
+        </tr>
         <%}        %>
-        </table>
+      </table>
       <%}      %>
-      </td>
-    </tr>
-    <tr>
-      <td class="MainTableBottomRowLeftColumn">      </td>
-      <td class="MainTableBottomRowRightColumn">      </td>
-    </tr>
-  </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="MainTableBottomRowLeftColumn"></td>
+    <td class="MainTableBottomRowRightColumn"></td>
+  </tr>
+</table>
 </body>
 </html:html>
