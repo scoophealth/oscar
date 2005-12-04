@@ -181,7 +181,7 @@ public class ServiceCodeValidationLogic {
    * @param demoNo String
    * @return boolean
    */
-  public boolean hasMore00120Codes(String demoNo, String cnslCode) {
+  public boolean hasMore00120Codes(String demoNo, String cnslCode,String serviceDate) {
     boolean ret = false;
     DBHandler db = null;
     ResultSet rs = null;
@@ -191,7 +191,7 @@ public class ServiceCodeValidationLogic {
           "FROM billingmaster " +
           "WHERE demographic_no = '" + demoNo + "'" +
           "AND billing_code = " + cnslCode +
-          " AND YEAR(service_date) = YEAR(CURDATE())";
+          " AND YEAR(service_date) = YEAR("+serviceDate+")";
       System.out.println("qry=" + qry);
       rs = db.GetSQL(qry);
       if (rs.next()) {
