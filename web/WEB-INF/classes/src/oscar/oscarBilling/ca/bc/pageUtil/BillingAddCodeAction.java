@@ -72,7 +72,7 @@ public final class BillingAddCodeAction
     }
 
     BillingCodeData bcd = new BillingCodeData();
-    ArrayList list = bcd.findBillingCodesByCode(code);
+    ArrayList list = bcd.findBillingCodesByCode(code,1);
 
     if (list.size() == 0) {
       bcd.addBillingCode(code, desc, value);

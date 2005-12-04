@@ -204,9 +204,16 @@ public final class BillingCodeData {
     return list;
   }
 
-  public ArrayList findBillingCodesByCode(String code) {
+  /**
+   * Finds private service codes by code id
+   * @param code String - the service code
+   * @param order int - the sort order: 1 = descending otherwise the order is ascending
+   * @return ArrayList - list of codes
+   */
+  public ArrayList findBillingCodesByCode(String code,int order) {
+    String orderByClause = order == 1?"order by service_code desc":"order by service_code";
     return codeSearch("select * from billingservice where service_code like '" +
-                      Misc.mysqlEscape(code) + "%' ");
+                      Misc.mysqlEscape(code) + "%' " + orderByClause);
   }
 
   public ArrayList findBillingCodesByDesc(String desc) {
