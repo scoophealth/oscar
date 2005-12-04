@@ -31,18 +31,19 @@ package oscar.oscarDB;
 import org.apache.commons.lang.*;
 import java.sql.*;
 import org.jdom.*;
+import org.jdom.output.*;
 
 /**
- * This class is used where rows are deleted from a table but it would still be nice to record that they existed at one time
+ * This class is used to archive deleted or updated rows that won't be used again.
  * 
  *
    CREATE TABLE `table_modification` (
      `id` int(10) NOT NULL auto_increment primary key,
      `demographic_no` int(10) NOT NULL default '0',
-     `modification_date` datetime default NULL,
      `provider_no` varchar(6) NOT NULL default '',
+     `modification_date` datetime default NULL,     
      `modification_type` varchar(20) default NULL,
-     `table` varchar(255) default NULL,
+     `table_name` varchar(255) default NULL,
      `row_id` varchar(20) default NULL,
      `resultSet` text,
       KEY `table_modification_demographic_no` (`demographic_no`),
@@ -64,13 +65,23 @@ public class ArchiveDeletedRecords {
     public ArchiveDeletedRecords() {
     }
     
-    public int recordRowsToBeDeleted(String sql){
+    private String getStringXmlFromResultSet(ResultSet rs) throws Exception{
+       ResultSetBuilder builder = new ResultSetBuilder(rs);
+       Document doc = builder.build();
+       XMLOutputter xml = new XMLOutputter();
+       String xmlStr = xml.outputString(doc); 
+       return xmlStr;     
+    }
+    
+    
+    public int recordRowsToBeDeleted(String sql,String provNo,String table){
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);   
-            ResultSet rs = db.GetSQL(sql);
-            ResultSetBuilder builder = new ResultSetBuilder(rs);
-            Document doc = builder.build();
-            
+            ResultSet rs = db.GetSQL(sql);            
+            if ( rs.next()){
+               String xmlStr = getStringXmlFromResultSet(rs);
+               addRowsToModifiedTable(null,provNo,ArchiveDeletedRecords.DELETE,table,null,xmlStr);
+            }
             rs.close();
             db.CloseConn();
         }
@@ -80,25 +91,25 @@ public class ArchiveDeletedRecords {
         return 0;
     }
     
-    private void addRowsToModifiedTable(String demoNo,String provNo,String modType,String table,String rowId){
+    private void addRowsToModifiedTable(String demoNo,String provNo,String modType,String table,String rowId,String resultSet){
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);   
-            String insertSql = "insert into table_modification (demographic_no,provider_no,modification_type,table,row_id,modification_date) " +
+            String insertSql = "insert into table_modification (demographic_no,provider_no,modification_type,table_name,row_id,resultSet,modification_date) " +
                                " values ('"+StringEscapeUtils.escapeSql(demoNo)+"', " +
                                " '"+StringEscapeUtils.escapeSql(provNo)+"', " +
                                " '"+StringEscapeUtils.escapeSql(modType)+"', " +
                                " '"+StringEscapeUtils.escapeSql(table)+"', " +
                                " '"+StringEscapeUtils.escapeSql(rowId)+"', " +
+                               " '"+StringEscapeUtils.escapeSql(resultSet)+"', " +                               
                                "  now()" +
-                               ")";
-            
+                               ")";            
+            System.out.println(insertSql);
             db.RunSQL(insertSql);
             db.CloseConn();
         }
         catch(SQLException e) {
             e.printStackTrace();
-        }
-        
+        }        
     }
     
 }
