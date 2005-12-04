@@ -42,17 +42,17 @@ import oscar.oscarDB.DBHandler;
  * @author Jay Gallagher
  */
 public class TicklerTag extends TagSupport {
-   
-  
+
+
    public TicklerTag() {
 	numNewLabs = 0;
    }
-   
+
    public int doStartTag() throws JspException    {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             //;
-            String sql = new String("select count(*) from tickler where status = 'A' and service_date <= now() and task_assigned_to  = '"+ providerNo +"' ");            
+            String sql = new String("select count(*) from tickler where status = 'A' and TO_DAYS(service_date) <= TO_DAYS(now()) and task_assigned_to  = '"+ providerNo +"' ");
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                numNewLabs = (rs.getInt(1));
@@ -65,17 +65,17 @@ public class TicklerTag extends TagSupport {
             e.printStackTrace(System.out);
         }
         try        {
-            JspWriter out = super.pageContext.getOut();            
+            JspWriter out = super.pageContext.getOut();
             if(numNewLabs > 0)
                 out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"red\">  ");
             else
                 out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">  ");
         } catch(Exception p) {
             p.printStackTrace(System.out);
-        }        
+        }
         return(EVAL_BODY_INCLUDE);
     }
-   
+
 
     public void setProviderNo(String providerNo1)    {
        providerNo = providerNo1;
@@ -85,11 +85,11 @@ public class TicklerTag extends TagSupport {
         return providerNo;
     }
 
-    
+
 
     public int doEndTag()        throws JspException    {
        try{
-          JspWriter out = super.pageContext.getOut();         
+          JspWriter out = super.pageContext.getOut();
           out.print("</font>");
        }catch(Exception p) {
             p.printStackTrace(System.out);
