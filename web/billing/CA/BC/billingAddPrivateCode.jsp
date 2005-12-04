@@ -101,7 +101,7 @@ function checkUnits(){
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
-                billing
+                Billing
             </td>
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar">
@@ -123,7 +123,7 @@ function checkUnits(){
             <td class="MainTableLeftColumn" valign="top">&nbsp;
             &nbsp;
             </td>
-            <td class="MainTableRightColumn">
+            <td class="MainTableRightColumn" valign="top">
 
 
 
@@ -131,6 +131,7 @@ function checkUnits(){
               <html:form action="/billing/CA/BC/billingAddCode" onsubmit="return checkUnits();">
                 <%
                     BillingAddCodeForm frm = (BillingAddCodeForm) request.getAttribute("BillingAddCodeForm");
+					String isEdit = request.getParameter("edit")!=null?request.getParameter("edit"):"";
                     if (request.getAttribute("code") != null){
                         frm.setCode((String) request.getAttribute("code"));
                         frm.setDesc((String) request.getAttribute("desc"));
@@ -144,28 +145,27 @@ function checkUnits(){
                     <td style="font-color: red;"><%=request.getAttribute("returnMessage")%></td>
                     </tr>
                 </table>
-
-              <%}%>
+                <%}%>                
                 <html:hidden property="whereTo" value="private"/>
 
-                <table>
+                <table width="50%">
                     <!--<tr>
                         <td>Code ID</td>
                         <td><html:text property="codeId"/></td>
                     </tr>-->
                     <tr>
-                        <td colspan="2">Private Codes will be prefixed with 'A' by default</td>
+                        <td colspan="2"><strong>Private Codes will be prefixed with 'A' by default</strong><</td>
                     </tr>
                     <tr>
-                        <td>Code</td>
-                        <td>A-<html:text property="code" maxlength="9"/></td>
+                        <td width="23%"><strong>Service Code:</strong></td>
+                        <td width="77%">A-<html:text property="code" maxlength="9"/></td>
                     </tr>
                     <tr>
-                        <td>Desc</td>
+                        <td><strong>Description:</strong></td>
                         <td><html:text property="desc"/></td>
                     </tr>
                     <tr>
-                        <td>Price</td>
+                        <td><strong>Price:</strong></td>
                         <td><html:text property="value"/></td>
                     </tr>
                     <tr>
