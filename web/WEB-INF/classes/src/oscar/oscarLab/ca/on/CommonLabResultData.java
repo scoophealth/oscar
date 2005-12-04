@@ -88,15 +88,20 @@ public class CommonLabResultData {
          
          if(rs.next()){  //
             String id = rs.getString("id");
-            sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";
-            db.queryExecute(sql, new String[] { comment });
+            sql = "update providerLabRouting set status='"+status+"', comment=? where id = '"+id+"'";            
+            db.queryExecute(sql, new String[] { comment });         
          }else{  
             sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment,lab_type) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?,'"+labType+"')";
-            db.queryExecute(sql, new String[] { comment });
-            sql = "delete from providerLabRouting where provider_no='0' and lab_no=? and lab_type = '"+labType+"'";
-            db.queryExecute(sql, new String[] { Integer.toString(labNo) });   
+            db.queryExecute(sql, new String[] { comment });            
          }
-                  
+         
+         if ( providerNo != 0){            
+            String recordsToDeleteSql = "select * from providerLabRouting where provider_no='0' and lab_no='"+labNo+"' and lab_type = '"+labType+"'";
+            sql = "delete from providerLabRouting where provider_no='0' and lab_no=? and lab_type = '"+labType+"'";
+            ArchiveDeletedRecords adr = new ArchiveDeletedRecords();
+            adr.recordRowsToBeDeleted(recordsToDeleteSql, ""+providerNo,"providerLabRouting");
+            db.queryExecute(sql, new String[] { Integer.toString(labNo) });            
+         }
          db.closeConn();
          return true;
       }catch(Exception e){
