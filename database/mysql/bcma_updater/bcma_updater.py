@@ -27,7 +27,6 @@ row = ""
 for ln in fees.readlines():
     ln = ln.split("|")
     code = ln[0].strip()
-    desc = ln[1].strip()
     msp = ln[2].strip()
     bcma = ln[3].strip()
     rs = conn.createStatement().executeQuery("select billingservice_no,value from billingservice where service_code = '" + code +"' and region = 'BC'")
@@ -44,6 +43,33 @@ for ln in fees.readlines():
 		    st.setString(3,rs.getString(1))
 		    st.executeUpdate()
     else:
+        if msp != "":
+	        print "Inserted New MSP Fee:" + code
+	        qry = "insert into billingservice(service_code,description,value,billingservice_date,region) values(?,?,?,'2005-04-01','BC')"
+	        st = conn.prepareStatement(qry)
+	        st.setString(1,code)
+	        st.setString(2,desc)
+	        st.setString(3,msp)
+	        st.executeUpdate()
+                fout.write("Inserted new MSP code" + code +"\n")
+	   
+	   
+	   
+    rs = conn.createStatement().executeQuery("select billingservice_no,value from billingservice where service_code = 'A" + code +"' and region = 'BC'")
+    if rs.next():
+    	   if bcma != "":
+	            dbmsp = rs.getString("value")
+	            if msp!=str(dbmsp):
+			    fout.write("Updated BCMA code:" + code +"\n")
+			    qry = "update billingservice set value = ?, billingservice_date = ? where billingservice_no=?"
+			    print qry +"\n"
+			    st  = conn.prepareStatement(qry)
+			    st.setString(1,bcma)
+			    st.setString(2,"2005-04-01")
+			    st.setString(3,rs.getString(1))
+		    	    st.executeUpdate()
+    
+    else:
         if bcma != "":
             privcode = "A" + str(code)
             print "Inserted New BCMA Fee:" + privcode
@@ -53,16 +79,8 @@ for ln in fees.readlines():
             st.setString(2,desc)
             st.setString(3,bcma)
             st.executeUpdate()
-	    fout.write("Inserting NEW BCMA code" + code +"\n")
-        if msp != "":
-                print "Inserted New MSP Fee:" + code
-                qry = "insert into billingservice(service_code,description,value,billingservice_date,region) values(?,?,?,'2005-04-01','BC')"
-                st = conn.prepareStatement(qry)
-                st.setString(1,code)
-                st.setString(2,desc)
-                st.setString(3,msp)
-                st.executeUpdate()
-                fout.write("Inserted new MSP code" + code +"\n")
+	    fout.write("Inserting NEW BCMA code" + code +"\n")	   
+ 
 fees.close()
 fout.close()
 
