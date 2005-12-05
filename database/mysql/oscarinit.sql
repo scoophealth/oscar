@@ -6109,6 +6109,21 @@ CREATE TABLE `relationships` (
 ) ;
 
 
+CREATE TABLE `table_modification` (
+  `id` int(10) NOT NULL auto_increment primary key,
+  `demographic_no` int(10) NOT NULL default '0',
+  `provider_no` varchar(6) NOT NULL default '',
+  `modification_date` datetime default NULL,     
+  `modification_type` varchar(20) default NULL,
+  `table_name` varchar(255) default NULL,
+  `row_id` varchar(20) default NULL,
+  `resultSet` text,
+  KEY `table_modification_demographic_no` (`demographic_no`),
+  KEY `table_modification_provider_no` (`provider_no`),
+  KEY `table_modification_modification_type` (`modification_type`(10))
+);
+
+
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
 create index preventions_prevention_type on preventions (prevention_type(10));
