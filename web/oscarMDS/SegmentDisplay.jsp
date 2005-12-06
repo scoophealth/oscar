@@ -394,6 +394,18 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <div class="FieldData">
+                                        <strong>Lab Vendor:</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="FieldData" nowrap="nowrap">
+                                        MDS                                        
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </td>
                 </tr>
