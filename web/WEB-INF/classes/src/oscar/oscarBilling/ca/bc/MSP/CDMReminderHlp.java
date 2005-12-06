@@ -120,7 +120,7 @@ public class CDMReminderHlp {
         qry += ",";
       }
     }
-    qry += ") and status = 'A'";
+    qry += ") and status = 'A' and patient_status = 'AC'";
     System.out.println("CDM Patients QRY=" + qry);
     DBHandler db = null;
     ResultSet rs = null;
