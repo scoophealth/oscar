@@ -25,16 +25,15 @@ package oscar.oscarBilling.ca.bc.MSP;
  */
 
 import java.lang.reflect.*;
+import java.math.*;
 import java.sql.*;
 import java.util.*;
 
 import org.apache.commons.beanutils.*;
 import oscar.*;
 import oscar.entities.*;
+import oscar.oscarBilling.MSP.*;
 import oscar.oscarDB.*;
-import oscar.util.StringUtils;
-import java.text.NumberFormat;
-import java.math.BigDecimal;
 
 /**
  *
@@ -116,7 +115,7 @@ public class MSPReconcile {
       statusDesc = "Data Center Changed";
     }
     else if (stat.equals(PAIDWITHEXP)) {
-      statusDesc = "Paid With Exception";
+      statusDesc = "Paid With Explanation";
     }
     else if (stat.equals(REFUSED)) {
       statusDesc = "Refused";
@@ -1016,7 +1015,8 @@ public class MSPReconcile {
         b.amount = rs.getString("bill_amount");
         b.code = rs.getString("billing_code");
         b.dx1 = rs.getString("dx_code1"); ;
-        b.serviceDate = rs.getString("service_date").equals("")?"00000000":rs.getString("service_date");
+        b.serviceDate = rs.getString("service_date").equals("") ? "00000000" :
+            rs.getString("service_date");
         b.mvaCode = rs.getString("mva_claim_code");
         b.hin = rs.getString("phn");
         b.serviceLocation = rs.getString("service_location");
@@ -1035,8 +1035,8 @@ public class MSPReconcile {
         if (b.isWCB()) {
           ResultSet rs2 = null;
           try {
-           rs2 = db.GetSQL("select * from wcb where billing_no = '" +
-                                      b.billing_no + "'");
+            rs2 = db.GetSQL("select * from wcb where billing_no = '" +
+                            b.billing_no + "'");
             if (rs2.next()) {
               b.amount = rs2.getString("bill_amount");
               b.code = rs2.getString("w_feeitem");
@@ -1046,15 +1046,12 @@ public class MSPReconcile {
           catch (SQLException ex) {
             ex.printStackTrace();
           }
-          finally{
-             rs2.close();
+          finally {
+            rs2.close();
           }
         }
 
-        /**
-         * @todo Clean up this section
-         */
-        if (status.equals(REP_REJ)) {
+        else if (status.equals(REP_REJ)) {
           if (rejDetails.containsKey(b.billMasterNo)) {
             Vector dets = (Vector) rejDetails.get(b.billMasterNo);
             String[] exps = new String[7];
@@ -1069,9 +1066,10 @@ public class MSPReconcile {
               explCodes.put(code, desc);
             }
             b.explanations = explCodes;
-            System.out.println("b.hashCode()=" + b.hashCode() + " " + (b.explanations==null));
+            System.out.println("b.hashCode()=" + b.hashCode() + " " +
+                               (b.explanations == null));
             b.rejectionDate = (String) dets.get(7);
-            if(b.rejectionDate == null || b.rejectionDate.equals("")){
+            if (b.rejectionDate == null || b.rejectionDate.equals("")) {
               b.rejectionDate = "00000000";
             }
           }
@@ -1082,6 +1080,16 @@ public class MSPReconcile {
           if (rsDemo.next()) {
             b.demoPhone = rsDemo.getString("phone");
             b.demoPhone2 = rsDemo.getString("phone2");
+          }
+        }
+        /**
+         * If the bill is of type AR and it was paid with an explanation
+         * we need to get the difference between what was billed and what was paid
+       **/
+        else if (status.equals(this.REP_ACCOUNT_REC)) {
+          if ("E".equals(b.status)) {
+           System.out.println("b.status=" + b.status);
+            b.amount = this.getAmountOwing(b.billMasterNo,b.amount);
           }
         }
 
@@ -1106,6 +1114,48 @@ public class MSPReconcile {
 
     return billSearch;
 
+  }
+
+  /**
+   * getAmountOwing
+   *
+   * @param string String
+   * @return String
+   */
+  private String getAmountOwing(String billingMasterNo,String amountBilled) {
+    String qry =  "SELECT t_paidamt from teleplanS00,billing,billingmaster " +
+        " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
+        " and billingstatus = 'E'" +
+        " and billingmaster.billingmaster_no = " + billingMasterNo;
+    DBHandler db = null;
+    ResultSet rs = null;
+    String ret = "";
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(qry);
+      if(rs.next()){
+        String paidAmount = rs.getString(1);
+        paidAmount = this.convCurValue(paidAmount);
+        amountBilled = (amountBilled != null&&!amountBilled.equals(""))?amountBilled:"0.0";
+        Double dblAmtBilled = new Double(amountBilled);
+        Double dblAmtPaid = new Double(paidAmount);
+        ret = String.valueOf(dblAmtBilled.doubleValue() - dblAmtPaid.doubleValue());
+
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally{
+      try {
+        db.CloseConn();
+         rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    return ret;
   }
 
   /**
@@ -1226,7 +1276,7 @@ public class MSPReconcile {
     catch (Exception e) {
       e.printStackTrace();
     }
-    finally{
+    finally {
       try {
         rs.close();
         db.CloseConn();
@@ -1336,7 +1386,8 @@ public class MSPReconcile {
       criteriaQry += " and bm.billingstatus = '" + this.BADDEBT + "'";
     }
     else if (repType.equals(this.REP_ACCOUNT_REC)) {
-      criteriaQry += " and bm.billingstatus in ('R','O','Z','F','X','H','T','B')";
+      criteriaQry +=
+          " and bm.billingstatus in ('R','O','Z','F','X','H','T','B','E')";
     }
     return criteriaQry;
   }
@@ -1465,7 +1516,6 @@ public class MSPReconcile {
         " and teleplanS00.t_payeeno = " + payeeNo +
         " order by provider.first_name,t_servicedate,billing.demographic_name";
 
-
     System.err.println(qry);
     DBHandler db = null;
     ResultSet rs = null;
@@ -1489,8 +1539,8 @@ public class MSPReconcile {
     oscar.entities.Provider prov = new oscar.entities.Provider();
     if (!oscar.util.StringUtils.isNumeric(providerNo)) {
       prov.setFirstName("");
-        prov.setLastName("");
-        return prov;
+      prov.setLastName("");
+      return prov;
     }
     DBHandler db = null;
     ResultSet rs = null;
@@ -1655,10 +1705,10 @@ public class MSPReconcile {
    */
   public static String convCurValue(String value) {
     BigDecimal curValue = new BigDecimal(0.0);
-    if(value == null || value.equals("")){
+    if (value == null || value.equals("")) {
       return "0.0";
     }
-    try{
+    try {
       boolean isNeg = false;
       String ret = value;
       String lastDigit = ret.substring(ret.length() - 1, ret.length());
@@ -1670,14 +1720,15 @@ public class MSPReconcile {
         ret = preDigits + lastDigit;
       }
       int dblValue = new Double(ret).intValue();
-      if(isNeg){
-        dblValue=dblValue*-1;
+      if (isNeg) {
+        dblValue = dblValue * -1;
       }
 
       double newDouble = dblValue * .01;
       curValue = new BigDecimal(newDouble).setScale(2,
           BigDecimal.ROUND_HALF_UP);
-    }catch(Exception e){
+    }
+    catch (Exception e) {
       e.printStackTrace();
       return curValue.toString();
     }
