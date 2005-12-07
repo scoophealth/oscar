@@ -191,7 +191,7 @@ public class ServiceCodeValidationLogic {
           "FROM billingmaster " +
           "WHERE demographic_no = '" + demoNo + "'" +
           "AND billing_code = " + cnslCode +
-          " AND YEAR(service_date) = YEAR("+serviceDate+")";
+          " AND YEAR(service_date) = YEAR('"+convertDate8Char(serviceDate) +"') and billingstatus != 'D'";
       System.out.println("qry=" + qry);
       rs = db.GetSQL(qry);
       if (rs.next()) {
@@ -206,6 +206,46 @@ public class ServiceCodeValidationLogic {
     }
     return ret;
   }
+
+  /**
+   * @todo Move this to utility class!
+   * @param s String
+   * @return String
+   */
+  public String convertDate8Char(String s){
+        String sdate = "00000000", syear="", smonth="", sday="";
+        System.out.println("s=" + s);
+        if (s != null){
+
+            if (s.indexOf("-") != -1){
+
+                syear = s.substring(0, s.indexOf("-"));
+                s = s.substring(s.indexOf("-")+1);
+                smonth = s.substring(0, s.indexOf("-"));
+                if (smonth.length() == 1)  {
+                    smonth = "0" + smonth;
+                }
+                s = s.substring(s.indexOf("-")+1);
+                sday = s;
+                if (sday.length() == 1)  {
+                    sday = "0" + sday;
+                }
+
+
+                System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+                sdate = syear + smonth + sday;
+
+            }else{
+                sdate = s;
+            }
+            System.out.println("sdate:" + sdate);
+        }else{
+            sdate="00000000";
+
+        }
+        return sdate;
+    }
+
 
   /**
    * Returns true if the patient state satisfies the following criteria:
