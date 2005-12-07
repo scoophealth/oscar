@@ -23202,7 +23202,7 @@ INSERT INTO billing_payment_type (id, payment_type) VALUES (4,'MASTERCARD');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (5,'AMEX');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (6,'ELECTRONIC');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (7,'DEBIT');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (8,'OTHER');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (8,'ALTERNATE');
 
 
 --
