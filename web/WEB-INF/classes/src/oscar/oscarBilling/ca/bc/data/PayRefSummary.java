@@ -59,7 +59,7 @@ public class PayRefSummary {
       else if (getPaymentMethod.equals("7")) {
         this.debit += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("8")) {
+      else{
         this.other += value.doubleValue();
       }
     }catch(Exception e){
