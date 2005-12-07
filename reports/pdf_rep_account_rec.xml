@@ -68,7 +68,7 @@
 	<variable name="one" class="java.lang.Double" resetType="Group" resetGroup="status" calculation="Sum">
 		<variableExpression><![CDATA[$F{serviceDateRange}.equals("1")?new Double($F{amount}):new Double(0)]]></variableExpression>
 	</variable>
-	<variable name="grpAmt" class="java.lang.Double" resetType="Report" calculation="Sum">
+	<variable name="grpAmt" class="java.lang.Double" resetType="Group" resetGroup="status" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{amount})]]></variableExpression>
 	</variable>
 	<variable name="fourGtotal" class="java.lang.Double" resetType="Report" calculation="Sum">
