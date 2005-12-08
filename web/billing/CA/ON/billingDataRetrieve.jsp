@@ -23,53 +23,68 @@
  * Ontario, Canada 
  */
 -->
-<% 
- 
+<%// 
+            rslocation = null;
+            rslocation = apptMainBean.queryResults(billNo, "search_bill");
+            while (rslocation.next()) {
+                DemoNo = rslocation.getString("demographic_no");
+                DemoName = rslocation.getString("demographic_name");
+                UpdateDate = rslocation.getString("update_date");
+                // hin = rslocation.getString("hin");
+                location = rslocation.getString("clinic_ref_code");
+                // DemoDOB = rslocation.getString("dob");
+                BillDate = rslocation.getString("billing_date");
+                BillType = rslocation.getString("status");
+                Provider = rslocation.getString("provider_no");
+                BillTotal = rslocation.getString("total");
+                visitdate = rslocation.getString("visitdate");
+                visittype = rslocation.getString("visittype");
+                r_status = SxmlMisc.getXmlContent(rslocation.getString("content"), "<xml_referral>", "</xml_referral>") == null ? ""
+                        : SxmlMisc.getXmlContent(rslocation.getString("content"), "<xml_referral>", "</xml_referral>");
+                // HCTYPE= SxmlMisc.getXmlContent(rslocation.getString("content"),"<hctype>","</hctype>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<hctype>","</hctype>");
+                // HCSex= SxmlMisc.getXmlContent(rslocation.getString("content"),"<demosex>","</demosex>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<demosex>","</demosex>");
+                m_review = SxmlMisc.getXmlContent(rslocation.getString("content"), "<mreview>", "</mreview>") == null ? ""
+                        : SxmlMisc.getXmlContent(rslocation.getString("content"), "<mreview>", "</mreview>");
+                specialty = SxmlMisc.getXmlContent(rslocation.getString("content"), "<specialty>", "</specialty>") == null ? ""
+                        : SxmlMisc.getXmlContent(rslocation.getString("content"), "<specialty>", "</specialty>");
+                r_doctor_ohip_s = SxmlMisc.getXmlContent(rslocation.getString("content"), "rdohip") == null ? ""
+                        : SxmlMisc.getXmlContent(rslocation.getString("content"), "rdohip");
+            }
+            BillingONDataHelp dbObj             = new BillingONDataHelp();
+            String bsql = "select last_name,first_name from billingreferral where referral_no='" + r_doctor_ohip_s + "'";
+            rslocation = dbObj.searchDBRecord(bsql);
+            while (rslocation.next()) {
+                r_doctor_s = rslocation.getString("last_name") + "," + rslocation.getString("first_name");
+            }
 
- rslocation = null;
- rslocation = apptMainBean.queryResults(billNo, "search_bill");
- while(rslocation.next()){
- DemoNo = rslocation.getString("demographic_no");
- DemoName = rslocation.getString("demographic_name");
- UpdateDate = rslocation.getString("update_date");
- // hin = rslocation.getString("hin");
- location = rslocation.getString("clinic_ref_code");
- // DemoDOB = rslocation.getString("dob");
- BillDate = rslocation.getString("billing_date");
- BillType = rslocation.getString("status");
- Provider = rslocation.getString("provider_no");
-  BillTotal = rslocation.getString("total");
-  visitdate = rslocation.getString("visitdate");
-  visittype = rslocation.getString("visittype");
- r_status= SxmlMisc.getXmlContent(rslocation.getString("content"),"<xml_referral>","</xml_referral>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<xml_referral>","</xml_referral>");
-// HCTYPE= SxmlMisc.getXmlContent(rslocation.getString("content"),"<hctype>","</hctype>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<hctype>","</hctype>");
-// HCSex= SxmlMisc.getXmlContent(rslocation.getString("content"),"<demosex>","</demosex>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<demosex>","</demosex>");
- m_review = SxmlMisc.getXmlContent(rslocation.getString("content"),"<mreview>","</mreview>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<mreview>","</mreview>");
-specialty = SxmlMisc.getXmlContent(rslocation.getString("content"),"<specialty>","</specialty>")==null?"":SxmlMisc.getXmlContent(rslocation.getString("content"),"<specialty>","</specialty>");
 
- }
-
- rsPatient = null;
- rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
- while(rsPatient.next()){
- DemoSex = rsPatient.getString("sex");
- DemoAddress = rsPatient.getString("address");
- DemoCity = rsPatient.getString("city");
- DemoProvince = rsPatient.getString("province");
- DemoPostal = rsPatient.getString("postal");
- DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(rsPatient.getString("year_of_birth")),Integer.parseInt(rsPatient.getString("month_of_birth")),Integer.parseInt(rsPatient.getString("date_of_birth")));
- hin = rsPatient.getString("hin") + rsPatient.getString("ver");
-  if (rsPatient.getString("family_doctor") == null){ r_doctor = "N/A"; r_doctor_ohip="000000";}else{
-   r_doctor=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rd");
-   r_doctor_ohip=SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip")==null?"":SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"),"rdohip");
-  }
-  HCTYPE = rsPatient.getString("hc_type")==null?"ON":rsPatient.getString("hc_type");
-if (DemoSex.equals("M")) HCSex = "1";
-if (DemoSex.equals("F")) HCSex = "2";
- roster_status = rsPatient.getString("roster_status");
-   }
-   
-
-   
-
- %>
+            rsPatient = null;
+            rsPatient = apptMainBean.queryResults(DemoNo, "search_demographic_details");
+            while (rsPatient.next()) {
+                DemoSex = rsPatient.getString("sex");
+                DemoAddress = rsPatient.getString("address");
+                DemoCity = rsPatient.getString("city");
+                DemoProvince = rsPatient.getString("province");
+                DemoPostal = rsPatient.getString("postal");
+                DemoDOB = MyDateFormat.getStandardDate(Integer.parseInt(rsPatient.getString("year_of_birth")), Integer
+                        .parseInt(rsPatient.getString("month_of_birth")), Integer.parseInt(rsPatient
+                        .getString("date_of_birth")));
+                hin = rsPatient.getString("hin") + rsPatient.getString("ver");
+                if (rsPatient.getString("family_doctor") == null) {
+                    r_doctor = "N/A";
+                    r_doctor_ohip = "000000";
+                } else {
+                    r_doctor = SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"), "rd") == null ? ""
+                            : SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"), "rd");
+                    r_doctor_ohip = SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"), "rdohip") == null ? ""
+                            : SxmlMisc.getXmlContent(rsPatient.getString("family_doctor"), "rdohip");
+                }
+                HCTYPE = rsPatient.getString("hc_type") == null ? "ON" : rsPatient.getString("hc_type");
+                if (DemoSex.equals("M"))
+                    HCSex = "1";
+                if (DemoSex.equals("F"))
+                    HCSex = "2";
+                roster_status = rsPatient.getString("roster_status");
+            }
+            
+        %>

@@ -26,6 +26,8 @@ String HCTYPE="";
 String HCSex="";
 String r_doctor_ohip="";
 String r_doctor="";
+String r_doctor_ohip_s="";
+String r_doctor_s="";
 String m_review="";
 String specialty="";
 String r_status="";
@@ -37,6 +39,7 @@ ResultSet rsPatient = null;
 %>
 
 <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
@@ -177,7 +180,12 @@ if (billNo.compareTo("") == 0 || billNo == null) {
 	bFlag =true;         
 %>         
 <%@ include file="billingDataRetrieve.jsp" %>         
-<% } %>
+<% 
+	if(oscarVariables.getProperty("isSpecialist", "").equals("true")) {
+	    r_doctor_ohip = r_doctor_ohip_s;
+	    r_doctor = r_doctor_s;
+	}
+} %>
 
 <table width="100%" border="0" bgcolor="#FFFFFF">
 <form name="form1" method="post" action="billingCorrection.jsp">
