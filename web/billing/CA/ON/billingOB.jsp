@@ -221,6 +221,7 @@ function checkData() {
 		}
 	}<%}%>
 	
+	checkServiceDate();
     return b;
 }
 
@@ -232,6 +233,32 @@ function onDblClickServiceCode(item) {
 		document.forms[0].xml_other2.value = item.id.substring(3);
 	} else if(document.forms[0].xml_other3.value=="") {
 		document.forms[0].xml_other3.value = item.id.substring(3);
+	}
+}
+
+function checkServiceDate() {
+	var calDate=new Date();
+	varYear = calDate.getFullYear();
+	varMonth = calDate.getMonth()+1;
+	varDate = calDate.getDate();
+    var str_date = document.forms[0].xml_appointment_date.value;
+    var yyyy = str_date.substring(0, str_date.indexOf("-"));
+	var mm = str_date.substring(eval(str_date.indexOf("-")+1), str_date.lastIndexOf("-"));
+	var dd = str_date.substring(eval(str_date.lastIndexOf("-")+1));
+	var bWrongDate = false;
+	sMsg = "";
+	if(yyyy > varYear) {
+		sMsg = "year";
+		bWrongDate = true;
+	} else if(yyyy == varYear && mm > varMonth) {
+		sMsg = "month";
+		bWrongDate = true;
+	} else if(yyyy == varYear && mm == varMonth && dd > varDate) {
+		sMsg = "date";
+		bWrongDate = true;
+	}
+	if(bWrongDate) {
+		alert("You may have a wrong Service Date!" + " Wrong " + sMsg);
 	}
 }
 
