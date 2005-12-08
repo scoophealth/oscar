@@ -24,15 +24,17 @@
 package oscar.form.study;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Properties;
+
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.*;
-import oscar.form.study.FrmStudyRecord;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 public final class FrmStudyAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
@@ -45,8 +47,8 @@ public final class FrmStudyAction extends Action {
             rec = recorder.factory(request.getParameter("study_name"));
             Properties props = new Properties();
             String name;
-            for(Enumeration enum = request.getParameterNames(); enum.hasMoreElements(); props.setProperty(name, request.getParameter(name)))
-                name = (String)enum.nextElement();
+            for(Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements(); props.setProperty(name, request.getParameter(name)))
+                name = (String)varEnum.nextElement();
 
             newID = rec.saveFormRecord(props);
         
@@ -69,8 +71,8 @@ public final class FrmStudyAction extends Action {
             EctType2DiabetesRecord rec = new EctType2DiabetesRecord();
             Properties props = new Properties();
             String name;
-            for(Enumeration enum = request.getParameterNames(); enum.hasMoreElements(); props.setProperty(name, request.getParameter(name)))
-                name = (String)enum.nextElement();
+            for(Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements(); props.setProperty(name, request.getParameter(name)))
+                name = (String)varEnum.nextElement();
 
             newID = rec.saveType2DiabetesRecord(props);
         } catch(SQLException ex) {

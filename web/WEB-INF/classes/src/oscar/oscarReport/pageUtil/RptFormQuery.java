@@ -75,9 +75,9 @@ public class RptFormQuery {
         Vector vecValue = new Vector();
         Vector vecDateFormat = new Vector();
 
-        Enumeration enum = request.getParameterNames();
-        while (enum.hasMoreElements()) {
-            String name = (String) enum.nextElement();
+        Enumeration varEnum = request.getParameterNames();
+        while (varEnum.hasMoreElements()) {
+            String name = (String) varEnum.nextElement();
             if (name.startsWith(VALUE)) {
                 serialNo = name.substring(VALUE.length());
                 if (request.getParameter(CHECK_BOX + serialNo) == null)

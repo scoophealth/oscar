@@ -60,9 +60,9 @@ public final class UtilDict extends Properties {
     }
   }
   public void setDef(HttpServletRequest req) {
-    Enumeration enum=req.getParameterNames();
-    while(enum.hasMoreElements()) {
-      String name=(String)enum.nextElement();
+    Enumeration varEnum=req.getParameterNames();
+    while(varEnum.hasMoreElements()) {
+      String name=(String)varEnum.nextElement();
       String val=req.getParameter(name);
       setDef(name,val);
     }

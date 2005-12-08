@@ -58,12 +58,12 @@ public final class FrmAction extends Action {
 
                 //empty the current page
                 Properties currentParam = new Properties();
-                for (Enumeration enum = request.getParameterNames(); enum.hasMoreElements();) {
-                    name = (String) enum.nextElement();
+                for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
+                    name = (String) varEnum.nextElement();
                     currentParam.setProperty(name, "");
                 }
-                for (Enumeration enum = props.propertyNames(); enum.hasMoreElements();) {
-                    name = (String) enum.nextElement();
+                for (Enumeration varEnum = props.propertyNames(); varEnum.hasMoreElements();) {
+                    name = (String) varEnum.nextElement();
                     // kick off the current page elements, commonField on the current page
                     if (name.startsWith(curPageNum + "_")
                             || (name.startsWith(commonField) && currentParam.containsKey(name))) {
@@ -73,8 +73,8 @@ public final class FrmAction extends Action {
             }
 
             //update the current record
-            for (Enumeration enum = request.getParameterNames(); enum.hasMoreElements();) {
-                name = (String) enum.nextElement();
+            for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
+                name = (String) varEnum.nextElement();
                 props.setProperty(name, request.getParameter(name));
             }
 

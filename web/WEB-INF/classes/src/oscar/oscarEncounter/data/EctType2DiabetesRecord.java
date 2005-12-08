@@ -87,9 +87,9 @@ public class EctType2DiabetesRecord {
 	String db_type = oscar.OscarProperties.getInstance() .getProperty("db_type") .trim();
 	if (db_type.equalsIgnoreCase("postgresql")) {
 	    Properties temp = new Properties();
-	    java.util.Enumeration enum = props.propertyNames();
-	    while (enum.hasMoreElements()){
-		String parameter = ((String) enum.nextElement());
+	    java.util.Enumeration varEnum = props.propertyNames();
+	    while (varEnum.hasMoreElements()){
+		String parameter = ((String) varEnum.nextElement());
 		temp.setProperty(parameter.toLowerCase(), props.getProperty(parameter));
 	    }
 	    props = temp;
