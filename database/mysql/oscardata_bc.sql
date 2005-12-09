@@ -1,4 +1,4 @@
--- MySQL dump 9.07
+<div class="moz-text-flowed" style="font-family: -moz-fixed">-- MySQL dump 9.07
 --
 -- Host: localhost    Database: oscar_mcmaster
 ---------------------------------------------------------
@@ -10262,7 +10262,6 @@ INSERT INTO billingreferral VALUES (10025,'08004','Murdoch','MJ','Radiol','Capit
 INSERT INTO billingreferral VALUES (10026,'25239','Oommen','S','','P.O. Box 1720','','One Hundred Mil','BC','V0K2E0','2503953000','2503953055');
 INSERT INTO billingreferral VALUES (10027,'24792','Rerri','BE','Orthop','Nanaimo Regional General','1200 Dufferin Cres.','Nanaimo','BC','V9S2B7','2507167687','2507167747');
 INSERT INTO billingreferral VALUES (10028,'25905','Maher','D','Intern','Geriatric Services','Royal Jubilee Hospital','Victoria','BC','V8R1J8','2503708000','');
-INSERT INTO billingreferral VALUES (10028,'25905','Maher','D','Intern','Geriatric Services','Royal Jubilee Hospital','Victoria','BC','V8R1J8','2503708000','');
 insert into billingreferral values (10029,'28091','Poon','C','Urology','102-123 East 15th Street','','North Vancouver','BC','V7L2P7','6049878171','');
 insert into billingreferral values (10039,'28149','Gilbart','Michael Kenneth','Orthopedic Surgery','Allan McGavin Sports Med. Center','3055 Wesbrook Mall','Vancouver','BC','V6T1Z3','6048225699','');
 
@@ -14667,6 +14666,7 @@ INSERT INTO billingservice VALUES (13312,'','00081','EMERGENCY BEDSIDE CARE     
 INSERT INTO billingservice VALUES (13311,'','00080','MINOR TRAY                                        ','8.89','','2003-05-05','','BC','00');
 INSERT INTO billingservice VALUES (13310,'','00067','MENTAL ILL-HEALTH - VOLUNTARY COMMITTAL           ','27.52','','2003-05-05','','BC','00');
 INSERT INTO billingservice VALUES (13309,'','00066','MENTAL ILL-HEALTH-DOCUMENTATION                   ','27.60','','2003-05-05','','BC','00');
+
 INSERT INTO billingservice VALUES (13308,'','00065','MENTAL ILL-HEALTH-INVESTIGATION                   ','61.41','','2003-05-05','','BC','00');
 INSERT INTO billingservice VALUES (13307,'','00064','ADOPTION-SUBSEQUENT EXAM                          ','27.90','','2003-05-05','','BC','00');
 INSERT INTO billingservice VALUES (13306,'','00062','ADOPTION-EXAMINATION                              ','62.03','','2003-05-05','','BC','00');
@@ -23324,3 +23324,4 @@ INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALU
 INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALUES (113,0,130,'19940');
 INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALUES (114,0,130,'19941');
 
+</div>
