@@ -1900,7 +1900,6 @@ CREATE TABLE `hl7_obr` (
   `planned_patient_transport_comment` varchar(200) default NULL,
   `note` text,
   PRIMARY KEY  (`obr_id`),
-  UNIQUE KEY `FillerIndex` (`filler_order_number`)
 ) TYPE=MyISAM;
  
  
@@ -1962,7 +1961,6 @@ CREATE TABLE `hl7_orc` (
   `entering_device` char(60) default NULL,
   `action_by` char(120) default NULL,
   PRIMARY KEY  (`orc_id`),
-  UNIQUE KEY `Filler` (`filler_order_number`)
 ) TYPE=MyISAM;
  
  
