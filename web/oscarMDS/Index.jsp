@@ -361,7 +361,7 @@ function checkSelected() {
                     <%= (String) result.requestingClient%>
                 </td>
                 <td nowrap>
-                    <%= (String) result.discipline%>
+                    <%= (String) result.getDiscipline()%>
                 </td>
                 <td nowrap>                                    
                     <%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
