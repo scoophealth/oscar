@@ -31,6 +31,7 @@ package oscar.oscarLab.ca.on.CML;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import org.apache.commons.lang.StringUtils;
 import oscar.oscarDB.*;
 import oscar.oscarLab.ca.on.*;
 import oscar.util.*;
@@ -179,6 +180,58 @@ public class CMLLabTest {
          populateDemoNo(labid);         
       }
          
+   }
+   
+   
+   public String getDiscipline(String labid){
+      String dis = ""; 
+   
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs = db.GetSQL("select distinct title from labTestResults where title != '' and labPatientPhysicianInfo_id = '"+labid+"'"); 
+         ArrayList alist = new ArrayList();
+         int count = 0;
+         while (rs.next()){             
+            String title = rs.getString("title");
+            count += title.length();
+            alist.add(title);
+            System.out.println("line "+title);                                    
+         }      
+         
+         if(alist.size() == 1 ){
+            dis = (String) alist.get(0); //Only one item
+         }else if(alist.size() != 0) {
+             int lenAvail = 20 - ( alist.size() - 1); 
+             if ( lenAvail > count){
+               StringBuffer s = new StringBuffer();  
+               for(int i = 0; i < alist.size(); i++){
+                   s.append( (String) alist.get(i));
+                   if (i < (alist.size() -1)){
+                       s.append("/");
+                   }
+               }
+               dis = s.toString();
+             }else{//need to divide up characters
+               int charEach = lenAvail / alist.size();  
+               StringBuffer s = new StringBuffer();  
+               for(int i = 0; i < alist.size(); i++){
+                   String str = (String) alist.get(i);
+                   
+                   s.append(  StringUtils.substring(str,0,charEach) );
+                   if (i < (alist.size() -1)){
+                       s.append("/");
+                   }
+               }
+               dis = s.toString();
+             }            
+         }       
+         rs.close();
+         db.CloseConn();         
+      }catch(Exception e){
+         e.printStackTrace();
+      }     
+      return dis;
+    
    }
    
    public ArrayList getStatusArray(){
