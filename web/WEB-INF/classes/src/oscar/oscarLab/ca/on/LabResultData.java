@@ -27,6 +27,8 @@
 
 package oscar.oscarLab.ca.on;
 
+import oscar.oscarLab.ca.on.CML.CMLLabTest;
+
 /**
  *
  * @author Jay Gallagher
@@ -61,7 +63,10 @@ public class LabResultData {
          labType = CML;
       }else if (MDS.equals(labT)){
          labType = MDS;
+      }else if (EXCELLERIS.equals(labT)){
+          labType = EXCELLERIS;
       }
+      
    }
    
    public boolean isMatchedToPatient() { return isMatchedToPatient; }
@@ -82,6 +87,18 @@ public class LabResultData {
       if (CML.equals(labType)){ ret = true; }
       return ret;
    }   
+   
+   public String getDiscipline(){
+       if (CML.equals(this.labType)){
+         CMLLabTest cml = new CMLLabTest();  
+         this.discipline = cml.getDiscipline(this.segmentID);
+       }
+       
+       return this.discipline;
+   }
+   
 }
+
+
 
 
