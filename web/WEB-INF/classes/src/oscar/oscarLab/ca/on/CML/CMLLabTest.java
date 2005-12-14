@@ -232,6 +232,9 @@ public class CMLLabTest {
                   labRes.notUsed2 = rs.getString("notUsed2");
                   labRes.testName = rs.getString("test_name");
                   labRes.abn = rs.getString("abn");
+                  if(labRes.abn != null && labRes.abn.equals("N")){
+                      labRes.abn = "";
+                  }
                   labRes.minimum = rs.getString("minimum");
                   labRes.maximum = rs.getString("maximum");
                   labRes.units = rs.getString("units");
