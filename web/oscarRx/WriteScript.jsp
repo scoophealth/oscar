@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
@@ -39,7 +40,7 @@
 <title><bean:message key="WriteScript.title"/></title>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
-<title>Write Prescription</title>
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 
 <html:base/>
 
@@ -63,6 +64,7 @@ int specialStringLen = 0;
 String quan = "";
 boolean isCustom = true;
 String atcCode = null;
+String regionalIdentifier="";
 %>
 
 <script language=javascript>
@@ -801,7 +803,7 @@ Special:        <%= thisForm.getSpecial() %><br>
 ATC:            <%= thisForm.getAtcCode() %>
 regional ident  <%= thisForm.getRegionalIdentifier() %>
 
-
+<% regionalIdentifier = thisForm.getRegionalIdentifier(); %>
 
 -->
 <%
@@ -904,9 +906,7 @@ int i;
                                     <b><%= thisForm.getGenericName() %></b>
                                     <%if ( compString != null ){%>
                                     <a href="javascript: function myFunction() {return false; }" title="<%=compString%>" >Components</a>
-                                    <%}%>
-                                    
-                                                       
+                                    <%}%>                                
                                 </td>
                                  <td valign=top rowspan=8>
                                                 <select size=20 name="selSpecial" ondblclick="javascript:cmdSpecial_click();">
@@ -925,7 +925,11 @@ int i;
                                 </td>
                                 <td colspan=2>                                                                        
                                             <html:hidden property="brandName" />
-                                            <b><%= thisForm.getBrandName() %></b>                                                                     
+                                            <b><%= thisForm.getBrandName() %></b>
+                                            <oscar:oscarPropertiesCheck property="SHOW_ODB_LINK" value="yes">                          
+                                            <!--a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,630,'http://216.176.50.202/formulary/SearchServlet?searchType=singleQuery&phrase=exact&keywords=<%=regionalIdentifier%>','ODBInfo')">ODB info</a-->                             
+                                            <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(725,630,'http://216.176.50.202/formulary/SearchServlet?sort=genericName&section=1&pcg=%25&manufacturerID=%25&keywords=<%=regionalIdentifier%>&searchType=drugID&Search=Search&phrase=exact','ODBInfo')">ODB info</a> 
+                                            </oscar:oscarPropertiesCheck>
                                 </td>
                                 <!--<td >
                                     &nbsp;
@@ -1239,9 +1243,7 @@ int i;
                                 <div>Drug to Drug Interaction Service not available</div>                          
                         <%   }                        
                           }%>
-                          
-                        
-                        
+                                                         
                         <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
                         </div>
