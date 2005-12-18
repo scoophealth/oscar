@@ -10400,3 +10400,5 @@ INSERT INTO diagnosticcode VALUES (528,'998','Of surgical and medical care, e.g.
 -- Dumping data for table 'validations'
 --
 insert into encounterForm values('Growth Charts', '../form/formGrowthChart.jsp?demographic_no=', 'formGrowthChart', 0);
+insert into encounterForm values('AR2005', '../form/formonar.jsp?demographic_no=', 'formONAR', '0');
+
