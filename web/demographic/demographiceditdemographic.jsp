@@ -148,7 +148,16 @@ function popupOscarRx(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-
+function popup(varpage) {
+	if (! window.focus)return true;
+	var href;
+	if (typeof(varpage) == 'string')
+	   href=varpage;
+	else
+	   href=varpage.href;
+	window.open(href, "fullwin", ',type=fullWindow,fullscreen,scrollbars=yes');
+	return false;
+}
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
   
@@ -555,7 +564,7 @@ div.demographicWrapper {
                          </td></tr>
                       <% } %>                   
                       <tr><td>
-                      <a href=# onclick="popupPage(700, 1000, '../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("hospital_view", default_view))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Hospital Billing</a>
+                      <a href=# onclick="popup('../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("hospital_view", default_view))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Hospital Billing</a>
                       </td></tr>
                 
                       <tr><td>
