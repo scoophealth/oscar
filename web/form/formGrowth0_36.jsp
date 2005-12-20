@@ -253,7 +253,7 @@ function htEnglish2Metric(source) {
 		var day = eval((check_date.getTime() - start.getTime() + delta) / (24*60*60*1000));
 		//alert(day);
         var year = Math.floor(day/30.5);
-		var yearday = (Math.floor((day%30.5)/3.));
+		var yearday = (Math.floor((day%30.5)/30.5*10));
         source.value = year + "." + yearday;
         //var week = Math.floor(day/7);
 		//var weekday = day%7;
