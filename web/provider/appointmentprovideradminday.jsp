@@ -787,7 +787,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         			  //System.out.println(name+" / " +demographic_no);
 				%>	<% if (tickler_no.compareTo("") != 0) {%>
 			        	<plugin:hideWhenCompExists componentName="ticklerComp">
-    		    			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
+    		    			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no %>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
     					</plugin:hideWhenCompExists>
     					<plugin:hideWhenCompExists componentName="ticklerComp" reverse="true">
 		    				<a href="../mod/ticklerComp/Tickler.do?method=filter&filter.client=<%=demographic_no %>" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
