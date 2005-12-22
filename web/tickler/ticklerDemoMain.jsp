@@ -396,8 +396,7 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
      else{
         taskAssignedTo = rs.getString("assignedLast") + ", " + rs.getString("assignedFirst");
      }
-     vGrantdate = rs.getString("service_date")+ ".0";
-     java.util.Date grantdate = dateFormat.parse(vGrantdate); 
+     java.util.Date grantdate =  rs.getDate("service_date");  
      java.util.Date toDate = new java.util.Date(); 
      long millisDifference = toDate.getTime() - grantdate.getTime(); 
      long daysDifference = millisDifference / (1000 * 60 * 60 * 24); 
