@@ -64,19 +64,19 @@ function checkBillingNumber(){
         alert("You must enter a Billing Number");
         return false;
     }else if  (!isNumeric(document.AddReferralDocForm.referral_no.value)){
-		alert("Billing Number has to be a numeric value");
-	        document.AddReferralDocForm.referral_no.value.focus();
-		return false;
-	}else if( document.AddReferralDocForm.referral_no.value.length != 5){
-	   if( document.AddReferralDocForm.referral_no.value.length < 5){
-	      //need to addzeros 
-	      document.AddReferralDocForm.referral_no.value = forwardZero(document.AddReferralDocForm.referral_no.value, 5));
-	   }else{
-	      alert("Billing Number must be digits");
+        alert("Billing Number has to be a numeric value");
+	document.AddReferralDocForm.referral_no.value.focus();
         return false;
-	   }
+    }else if( document.AddReferralDocForm.referral_no.value.length != 5){
+       if( document.AddReferralDocForm.referral_no.value.length < 5){
+          //need to addzeros 
+	  document.AddReferralDocForm.referral_no.value = forwardZero(document.AddReferralDocForm.referral_no.value, 5);
+       }else{
+	  alert("Billing Number must be digits");
+          return false;
+       }
 	
-	}
+    }
 	
 	return true;
 }
