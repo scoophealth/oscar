@@ -338,6 +338,8 @@
 <script type="text/javascript" language="JavaScript">
 
             <!--
+window.focus();
+
 function setfocus() {
     this.focus();
 }
@@ -403,6 +405,20 @@ function showHideLayers() { //v3.0
         } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")){
         	alert("Need an admission date.");
             b = false;
+        } 
+
+		if(document.forms[0].xml_vdate.value.length>0) {
+        	b = checkServiceDate(document.forms[0].xml_vdate.value);
+        } 
+        if(document.forms[0].billDate.value.length>0) {
+        	var billDateA = document.forms[0].billDate.value.split("\n");
+        	for (var i in billDateA) {
+        		var v = billDateA[i];
+        		if (v) {
+					//alert(" !" + v);
+					b = checkServiceDate(v);
+				}
+			}
         }
 
         if(!isInteger(document.forms[0].dxCode.value)) {
@@ -418,6 +434,35 @@ function showHideLayers() { //v3.0
 
         return b;
     }
+function checkServiceDate(s) {
+	var calDate=new Date();
+	varYear = calDate.getFullYear();
+	varMonth = calDate.getMonth()+1;
+	varDate = calDate.getDate();
+    var str_date = s; //document.forms[0].xml_appointment_date.value;
+    var yyyy = str_date.substring(0, str_date.indexOf("-"));
+	var mm = str_date.substring(eval(str_date.indexOf("-")+1), str_date.lastIndexOf("-"));
+	var dd = str_date.substring(eval(str_date.lastIndexOf("-")+1));
+	var bWrongDate = false;
+	sMsg = "";
+	if(yyyy > varYear) {
+		sMsg = "year";
+		bWrongDate = true;
+	} else if(yyyy == varYear && mm > varMonth) {
+		sMsg = "month";
+		bWrongDate = true;
+	} else if(yyyy == varYear && mm == varMonth && dd > varDate) {
+		sMsg = "date";
+		bWrongDate = true;
+	}
+	if(bWrongDate) {
+		alert("You may have a wrong Service/admission Date!" + " Wrong " + sMsg);
+		return false;
+	} else {
+		return true;
+	}
+}
+    
     function isInteger(s){
         var i;
         for (i = 0; i < s.length; i++){

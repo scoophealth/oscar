@@ -113,7 +113,8 @@
   }
 
   // save the billing if needed
-  if(request.getParameter("submit")!=null && ("Next".equals(request.getParameter("submit"))||"Save".equals(request.getParameter("submit"))  ) ) {
+  if(request.getParameter("submit")!=null && ("Next".equals(request.getParameter("submit")) 
+          || "Save".equals(request.getParameter("submit")) || "Save and Back".equals(request.getParameter("submit"))  ) ) {
     // parse billing date
     int NUMTYPEINFIELD = 5;
 	// get billing detail info
@@ -342,8 +343,17 @@
 			}
 		} // end of for loop
 		msg = "<br>Billing records were added.<br>";
-		msg += "<script language=\"JavaScript\"> self.close();</script>/>";
-		msg += "<input type=\"button\" name=\"submit\" value=\" Close \" onclick=\"self.close();\"/>";
+		if("Save".equals(request.getParameter("submit"))) {
+			msg += "<script language=\"JavaScript\"> self.close();</script>";
+		} else {
+		    msg += "<script language=\"JavaScript\">window.location = 'billingShortcutPg1.jsp?billRegion=&billForm=" 
+		        + URLEncoder.encode(oscarVariables.getProperty("hospital_view", "")) + "&hotclick=&appointment_no=0&demographic_name="
+		        + URLEncoder.encode(demoLast) + "%2C" 
+		        + URLEncoder.encode(demoFirst) + "&demographic_no="
+		        + demo_no + "&providerview=1&user_no="
+		        + user_no + "&apptProvider_no=none&appointment_date=" 
+		        + curYear +"-"+curMonth+"-"+curDay + "&start_time=0:00&bNewForm=1&status=t'</script>";
+		}
 	}
   }
 
@@ -482,6 +492,7 @@ System.out.println(" * ******************************" + sql);
                 <td colspan='2' align='center' bgcolor="silver">
                 <input type="submit" name="button" value="Back to Edit"  style="width: 120px;" />
                 <input type="submit" name="submit" value="Save"  style="width: 120px;"/>
+                <input type="submit" name="submit" value="Save and Back"  style="width: 120px;"/>
 				</td>
               </tr>
             </table>
