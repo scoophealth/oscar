@@ -43,8 +43,8 @@ import oscar.oscarResearch.oscarDxResearch.util.*;
 public class dxResearchAction extends Action {
 
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException
-    {
+        throws ServletException, IOException{
+        
         dxResearchForm frm = (dxResearchForm) form; 
         request.getSession().setAttribute("dxResearchForm", frm);
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
@@ -54,12 +54,13 @@ public class dxResearchAction extends Action {
         String providerNo = frm.getProviderNo();
         String forward = frm.getForward();
         String [] xml_research = null;
-        
+                
         if(!forward.equals("")){
             xml_research = new String[1];
             xml_research[0] = forward;
-        }
-        else{
+        }else if ( request.getParameterValues("xml_research") != null ){
+            xml_research = request.getParameterValues("xml_research");   
+        } else{   
             xml_research = new String[5];
             xml_research[0] = frm.getXml_research1();
             xml_research[1] = frm.getXml_research2();
@@ -125,13 +126,16 @@ public class dxResearchAction extends Action {
         if(!valid)
             return (new ActionForward(mapping.getInput()));
         
-        ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
+        String forwardTo = "success";
+        if (request.getParameter("forwardTo") != null){
+            forwardTo = request.getParameter("forwardTo");
+        }
+        
+        ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward(forwardTo));
         actionforward.addParameter("demographicNo", demographicNo);
         actionforward.addParameter("providerNo", providerNo);
         actionforward.addParameter("quickList", "");
-        
-        
+                
         return actionforward;
-    }
-     
+    }     
 }
