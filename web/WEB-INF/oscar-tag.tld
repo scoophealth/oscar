@@ -90,4 +90,28 @@
   </attribute>
 </tag>
 
+
+<tag>
+  <name>nextAppt</name>
+  <tagclass>oscar.appt.tld.NextApptTag</tagclass>
+  <bodycontent>empty</bodycontent>
+  <attribute>
+    <name>demographicNo</name>
+    <required>true</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+    <name>date</name>
+    <required>false</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+  <attribute>
+    <name>format</name>
+    <required>false</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+</tag>
+
+
+
 </taglib>
