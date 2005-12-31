@@ -27,10 +27,10 @@
 */
 
         A:link{            
-            font-family: 
-            verdana,arial,helvetica; 
+            font-family: verdana,arial,helvetica; 
             color: #336666;
-            cursor: hand }
+            cursor: pointer ;
+        }
 	A:visited{            
             font-family: verdana,arial,helvetica; 
             color: #336666; }
@@ -87,7 +87,8 @@
             color:#000066;
             height:19px;
             text-decoration:none;
-            cursor: hand}          
+            cursor: pointer;
+        }          
 	.mbttn{
             background: #D7DBF2;
             border-bottom: 1px solid #104A7B;
@@ -96,4 +97,5 @@
             border-top:1px solid #AFC4D5;
             color:#000066;height:19px;
             text-decoration:none;
-            cursor: hand}
+            cursor: pointer;
+        }
