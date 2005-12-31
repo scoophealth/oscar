@@ -107,19 +107,24 @@ function printIframe(){
    preview.print();
 }
 
+
 function printPaste2Parent(){
-	confirm("\"Paste\" function is only enable if EMR is opened.");
-	text = "**<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
-	text = text.substring(0, 82) + "\n";
-	if (document.all){
-		text += preview.document.forms[0].rx.value.substring(0, (preview.document.forms[0].rx.value.length-2));
-	} else {
-		text += preview.document.forms[0].rx.value + "\n";;
-	}
-	text += "**********************************************************************************\n";
-    opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
-    printIframe();
+   try{
+      text = "**<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
+      text = text.substring(0, 82) + "\n";
+      if (document.all){
+         text += preview.document.forms[0].rx_no_newlines.value
+      } else {
+         text += preview.document.forms[0].rx_no_newlines.value + "\n";
+      }
+      text += "**********************************************************************************\n";
+      opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
+   }catch (e){
+      alert ("ERROR: could not paste to EMR");
+   }
+   printIframe();
 }
+
 
 function addressSelect() {
 	<% if(vecAddressName != null) {
