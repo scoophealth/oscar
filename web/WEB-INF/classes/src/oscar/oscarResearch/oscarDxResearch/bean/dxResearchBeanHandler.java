@@ -79,5 +79,16 @@ public class dxResearchBeanHandler {
     public Vector getDxResearchBeanVector(){
         return dxResearchBeanVector;
     }
+    
+    public Vector getActiveCodeList(){ //TODO: NEED TO CHECK STATUS
+        Vector v = new Vector();
+        for (int i = 0; i < dxResearchBeanVector.size(); i++){
+            dxResearchBean dx = (dxResearchBean) dxResearchBeanVector.get(i);
+            if( !v.contains(dx.getDxSearchCode())){
+               v.add(dx.getDxSearchCode()); 
+            }
+        }
+        return v;
+    }
 }
 
