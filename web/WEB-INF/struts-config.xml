@@ -790,6 +790,7 @@
     <action path="/oscarResearch/oscarDxResearch/dxResearch" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchAction" name="dxResearchForm" scope="request" input="/oscarResearch/oscarDxResearch/dxResearch.jsp">
       <forward name="codeSearch" path="/oscarResearch/oscarDxResearch/dxcodeSearch.do"/>
       <forward name="success" path="/oscarResearch/oscarDxResearch/setupDxResearch.do"/>
+      <forward name="codeList" path="/oscarResearch/oscarDxResearch/quickCodeList.jsp"/>
     </action>
     <action path="/oscarResearch/oscarDxResearch/dxResearchCodeSearch" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxResearchCodeSearchAction" name="" scope="request" input="/oscarResearch/oscarDxResearch/dxResearch.jsp">
       <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearchCodeSearch.jsp"/>
