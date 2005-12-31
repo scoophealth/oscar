@@ -5,7 +5,8 @@ String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarResearch.oscarDxResearch.bean.*" errorPage="../errorpage.jsp" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
@@ -38,11 +39,97 @@ String userlastname = (String) session.getAttribute("userlastname");
 <head>
 <title>Billing Summary</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../../../share/javascript/nifty.js"></script>
+<link rel="stylesheet" type="text/css" href="../../../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="../../../share/css/niftyPrint.css" media="print"/>
+
+<script type="text/javascript">
+window.onload=function(){
+  if(!NiftyCheck())
+    return;
+Rounded("div.dxBox","top","transparent","#CCCCFF","small border #CCCCFF");
+Rounded("div.dxBox","bottom","transparent","#EEEEFF","small border #CCCCFF");
+}
+</script>
+
 <style type="text/css">
 <!--
 A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family: Arial, Verdana, Helvetica;  }
 -->
 </style>  
+
+<style type="text/css">
+div.wrapper{
+  background-color: #eeeeff;
+  margin-top:0px;
+  padding-top:0px;
+  margin-bottom:0px;
+  padding-bottom:0px;	
+}
+
+div.wrapper br{
+  clear: left;
+}
+
+div.wrapper ul{
+  width: 80%;
+  background-color: #eeeeff;
+  list-style:none;
+  list-style-type:none; 
+  list-style-position:outside;       
+  padding-left:1px;
+  margin-left:1px;    
+  margin-top:0px;
+  padding-top:1px;
+  margin-bottom:0px;
+  padding-bottom:0px;	
+}
+
+div.wrapper ul li{
+  background-color: #eeeeff;
+}
+
+div.dxBox{
+   width:90%;
+   background-color: #eeeeff;
+   margin-top: 2px;
+   margin-left:3px;
+   margin-right:3px;   
+   margin-bottom:0px;
+   padding-bottom:0px;
+   float: left;
+}
+
+div.dxBox h3 {  
+   background-color: #ccccff; 
+   /*font-size: 1.25em;*/
+   font-size: 10pt;
+   font-variant:small-caps;
+   font-weight: bold;
+   margin-top:0px;
+   padding-top:0px;
+   margin-bottom:0px;
+   padding-bottom:0px;
+}
+
+
+div.dxBox form { 
+  margin-top:0px;
+  padding-top:0px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+div.dxBox input {
+  margin-top:0px;
+  padding-top:0px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+</style>
+
 <script language="JavaScript">
 <!--
 function validate_form(){
@@ -1018,7 +1105,83 @@ if(bPercS) {
 }
 %>
 
-<p>&nbsp;</p>
+
 </form>
+
+<script language="JavaScript">
+
+function addToDiseaseRegistry(){
+    if ( validateItems() ) {
+	var url = "../../../oscarResearch/oscarDxResearch/dxResearch.do";
+	var data = Form.serialize(dxForm);
+	//alert ( data);
+	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList}); 
+    }else{
+       alert("Error: Nothing was selected");
+    }
+}
+
+function validateItems(form){
+    dxChecks = document.forms['dxForm'].xml_research
+    var ret = false;
+    try{
+      var len = dxChecks.length
+    }catch(e){
+       return ret;
+    }
+  
+    for (i=0;i<dxChecks.length;++ i){
+      if (dxChecks[i].checked){
+         ret = true;
+      }
+    }
+    return ret;
+}
+
+function getNewCurrentDxCodeList(origRequest){
+   //alert("calling get NEW current Dx Code List");
+   var url = "../../../oscarResearch/oscarDxResearch/currentCodeList.jsp";
+   var ran_number=Math.round(Math.random()*1000000);
+   var params = "demographicNo=<%=demoNO%>&rand="+ran_number;  //hack to get around ie caching the page
+   //alert(params);
+   new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true}); 
+   //alert(origRequest.responseText);
+}
+
+
+</script>
+
+
+<oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW" value="yes">
+
+<div class="dxBox">
+    <h3>&nbsp;Dx Quick Pick Add List</h3>
+       <form id="dxForm">
+       <input type="hidden" name="demographicNo" value="<%=demoNO%>" />
+       <input type="hidden" name="providerNo" value="<%=proNO%>" />
+       <input type="hidden" name="forward" value="" />
+       <input type="hidden" name="forwardTo" value="codeList"/>
+       <div class="wrapper" id="dxListing">
+       <jsp:include page="../../../oscarResearch/oscarDxResearch/quickCodeList.jsp">
+          <jsp:param name="demographicNo" value="<%=demoNO%>"/>
+       </jsp:include>
+       </div>
+       <input type="button" value="Add To Disease Registry" onclick="addToDiseaseRegistry()"/>
+       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
+<input type="button" value="check" onclick="validateItems()"/--> 
+       </form>
+</div>
+
+
+<div class="dxBox">
+    <h3>&nbsp;Current Patient Dx List</h3>
+       <div class="wrapper" id="dxFullListing">
+       <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
+          <jsp:param name="demographicNo" value="<%=demoNO%>"/>
+       </jsp:include>
+       </div>
+</div>
+</oscar:oscarPropertiesCheck>
+
 </body>    
 </html>
