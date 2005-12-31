@@ -91,7 +91,8 @@ public class dxQuickListItemsHandler {
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String codingSystem = codingSys.getCodingSystem();        
             
-            String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
+            String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";           
+         
             ResultSet rs = db.GetSQL(sql);            
             while(rs.next()){                
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
@@ -110,6 +111,28 @@ public class dxQuickListItemsHandler {
     
     public Collection getDxQuickListItemsVector(){
         return dxQuickListItemsVector;
+    }
+    
+    public Collection getDxQuickListItemsVectorNotInPatientsList(Vector dxList){
+        Vector v = new Vector();
+        for ( int j = 0; j < dxQuickListItemsVector.size();j++){
+            dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
+            if(!dxList.contains(dxCod.getDxSearchCode())){
+                v.add(dxCod);
+            }    
+        }
+        return v;
+    }
+    
+    public Collection getDxQuickListItemsVectorInPatientsList(Vector dxList){
+        Vector v = new Vector();
+        for ( int j = 0; j < dxQuickListItemsVector.size();j++){
+            dxCodeSearchBean dxCod = (dxCodeSearchBean) dxQuickListItemsVector.get(j);
+            if(dxList.contains(dxCod.getDxSearchCode())){
+                v.add(dxCod);
+            }    
+        }
+        return v;
     }
 }
 
