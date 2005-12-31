@@ -4,7 +4,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ page import="oscar.oscarProvider.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ page import="oscar.*"%>
+<%@ page import="oscar.*,java.lang.*"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--
@@ -150,6 +150,7 @@ OscarProperties props = OscarProperties.getInstance();
                     <td colspan=2 height=225px>
                         <%
                         String strRx = "";
+                        StringBuffer strRxNoNewLines = new StringBuffer();
                         for(i=0;i<bean.getStashSize();i++)
                         {
                             rx = bean.getStashItem(i);
@@ -159,9 +160,11 @@ OscarProperties props = OscarProperties.getInstance();
                             <hr>
                             <%
                             strRx += rx.getFullOutLine() + ";;";
+                            strRxNoNewLines.append(rx.getFullOutLine().replaceAll(";"," ")+ "\n");
                         }
                         %>
 			<input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
+			<input type="hidden" name="rx_no_newlines" value="<%= strRxNoNewLines.toString() %>"/>
                     </td>
                 </tr>
                 <tr valign=bottom>
