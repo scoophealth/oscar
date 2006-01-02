@@ -291,8 +291,7 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
        Hashtable h = (Hashtable) bList.get(i);    
        ArrayList raList = raData.getRAData(""+h.get("billing_no"));
        boolean incorrectVal = false;
-       // h.put("demographic_no", rs.getString("demographic_no"));
-       //       h.put("provider_no", rs.getString("provider_no"));
+       
        BigDecimal valueToAdd = new BigDecimal("0.00");
        try{
           valueToAdd = new BigDecimal(""+h.get("total")).setScale(2, BigDecimal.ROUND_HALF_UP);  
@@ -311,7 +310,11 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
              <td><%=h.get("status")%></td> <!--STAT-->
              <td>&nbsp;</td><!--CODE-->
              <td><%=h.get("total")%></td><!--BILLED-->
-             <td><%=amountPaid%></td><!--PAID-->
+             <td>
+                 <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(700,700,'billingRAView.jsp?billing_no=<%=h.get("billing_no")%>','RAView<%=h.get("billing_no")%>')">
+                 <%=amountPaid%>
+                 </a>
+             </td><!--PAID-->
              <td>&nbsp;</td><!--DX1-->
              <td>&nbsp;</td><!--DX2-->
              <td>&nbsp;</td><!--DX3-->
@@ -331,7 +334,7 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
              <td>&nbsp;</td> <!--STAT-->
              <td>Total:</td><!--CODE-->
              <td><%=total.toString()%></td><!--BILLED-->
-             <td>&nbsp;</td><!--PAID-->
+             <td><%=paidTotal.toString()%></td><!--PAID-->
              <td>&nbsp;</td><!--DX1-->
              <td>&nbsp;</td><!--DX2-->
              <td>&nbsp;</td><!--DX3-->
