@@ -67,6 +67,7 @@ public class RAData {
               h.put("amountpay", rs.getString("amountpay"));
               h.put("service_date", rs.getString("service_date"));
               h.put("error_code", rs.getString("error_code"));
+              h.put("billtype", rs.getString("billtype"));
               list.add(h);
            }
            rs.close();
