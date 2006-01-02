@@ -302,7 +302,7 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
        }
        total = total.add(valueToAdd);
        String amountPaid = raData.getAmountPaid(raList);
-       pasidTotal.add(new BigDeicumal(amountPaid).setScale(2,BigDecimal.ROUND_HALF_UP));
+       paidTotal.add(new BigDecimal(amountPaid).setScale(2,BigDecimal.ROUND_HALF_UP));
        
        %>       
           <tr> 
