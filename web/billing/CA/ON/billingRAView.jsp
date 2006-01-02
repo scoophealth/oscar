@@ -1,0 +1,117 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * Jason Gallagher 
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */ 
+-->
+<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
+<%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*,oscar.oscarProvider.data.*,oscar.oscarBilling.ca.on.data.*" %>
+
+<%
+String billingNo = request.getParameter("billingNo");
+
+RAData raData = new RAData();
+ArrayList aList = raData.getRAData(billingNo);
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <style type="text/css">
+           body {
+              margin:0;
+              padding:0;
+              font-family: verdana,arial,helvetica,sans-serif;
+           }
+           
+           div.tableListing table {
+               width: 100%;
+               margin-top:0px;
+               border-width: 1px 1px 1px 1px;
+	       border-spacing: 0px;
+	       border-style: outset outset outset outset;
+	       border-color: gray gray gray gray;
+	       border-collapse: collapse;        
+            }
+            
+            div.tableListing table tr td{
+               font-size: x-small;
+               text-align: center;
+               border-width: 1px 1px 1px 1px;
+               padding: 1px 1px 1px 1px;
+               border-style: inset inset inset inset;
+               border-color: gray gray gray gray;
+               background-color: white;
+               -moz-border-radius: 0px 0px 0px 0px;
+            }
+            
+            div.tableListing table tr th{
+               font-size: small;
+               border-width: 1px 1px 1px 1px;
+               padding: 1px 1px 1px 1px;
+               border-style: inset inset inset inset;
+               border-color: gray gray gray gray;
+               background-color: white;
+               -moz-border-radius: 0px 0px 0px 0px;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="tableListing">
+       <table >
+          <tr > 
+             <th>RA HEADER #</th>
+             <th>OHIP #</th>
+             <th>SERVICE CODE</th>
+             <th>SERVICE COUNT</th>
+             <th>HIN</th>
+             <th>AMOUNT CLAIMED</th>
+             <th>AMOUNT PAYED</th>
+             <th>SERVICE DATE</th>
+             <th>ERROR CODE</th>
+             <th>BILL TYPE</th>           
+          </tr>
+       <% for (int i = 0 ; i < aList.size(); i++) { 
+       Hashtable h = (Hashtable) aList.get(i);           
+       %>
+          <tr> 
+             <td><%=h.get("raheader_no")%></td>  
+             <td><%=h.get("providerohip_no")%></a></td> 
+             <td><%=h.get("service_code")%></td> 
+             <td><%=h.get("service_count")%></td>
+             <td><%=h.get("hin")%></td>
+             <td><%=h.get("amountclaim")%></td>
+             <td><%=h.get("amountpay")%></td>
+             <td><%=h.get("service_date")%></td>
+             <td><%=h.get("error_code")%></td>
+             <td><%=h.get("billtype")%></td>            
+          </tr>
+       <% } %> 
+       <table>
+    </div>
+    </body>
+</html>
