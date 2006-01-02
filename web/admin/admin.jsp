@@ -259,6 +259,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
           <a href=# onClick ="popupPage(600,900,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
           <a href=# onClick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>
+          <oscar:oscarPropertiesCheck property="TESTING" value="yes">
+             <a href=# onClick ="popupPage(800,1000,'../billing/CA/ON/billStatus.jsp');return false;">Bill Status</a><br>
+          </oscar:oscarPropertiesCheck>
        <%}%>
 
         </td>
