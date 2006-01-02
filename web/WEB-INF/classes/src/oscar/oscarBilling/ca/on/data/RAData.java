@@ -93,9 +93,12 @@ public class RAData {
            Hashtable h = (Hashtable) a.get(i);
            BigDecimal valueToAdd = new BigDecimal("0.00");
            try{
-              valueToAdd = new BigDecimal(""+h.get("amountpay")).setScale(2, BigDecimal.ROUND_HALF_UP);  
+              String amount = ""+h.get("amountpay");
+              amount = amount.trim();
+              valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);  
            }catch(Exception badValueException){ 
               System.out.println(" Error calculating value for "+h.get("billing_no")); 
+              badValueException.printStackTrace();
            }
            total = total.add(valueToAdd);
         }
