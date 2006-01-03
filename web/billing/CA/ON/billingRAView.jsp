@@ -28,7 +28,7 @@
 <%@ page import="java.math.*,java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.util.*,oscar.oscarProvider.data.*,oscar.oscarBilling.ca.on.data.*" %>
 
 <%
-String billingNo = request.getParameter("billingNo");
+String billingNo = request.getParameter("billing_no");
 
 RAData raData = new RAData();
 ArrayList aList = raData.getRAData(billingNo);
