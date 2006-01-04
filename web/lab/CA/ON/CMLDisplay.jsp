@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%
 if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 
@@ -200,6 +201,8 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>                            
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=CML&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
                         <% } %>
+                        
+                        <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=lab.getDemographicNo()%>"/></i></span>
                     </td>
                 </tr>
             </table>
