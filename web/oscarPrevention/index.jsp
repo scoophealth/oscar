@@ -46,7 +46,14 @@
   
   PreventionDS pf = PreventionDS.getInstance();
   
-  pf.getMessages(p);
+  
+  boolean dsProblems = false;
+  try{
+     pf.getMessages(p);
+  }catch(Exception dsException){
+      dsProblems = true;
+  }
+  
   ArrayList warnings = p.getWarnings();      
   System.out.println("warnings size ----"+warnings.size());
   ArrayList recomendations = p.getReminder();
@@ -292,7 +299,7 @@ div.recommendations li{
                </oscar:oscarPropertiesCheck>
             </td>
             <td valign="top" class="MainTableRightColumn">
-            <% if (warnings.size() > 0 || recomendations.size() > 0 ) { %>
+            <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
                <div class="recommendations">
                <span style="font-size:larger;">Prevention Recommendations</span>               
                <ul >                                        
@@ -305,7 +312,10 @@ div.recommendations li{
                         <li style="color: black;"><%=warn%></li>     
                     <%}%>
                  <!--li style="color: red;">6 month TD overdue</li>
-                 <li>12 month MMR due in 2 months</li-->  
+                 <li>12 month MMR due in 2 months</li-->
+                    <% if (dsProblems){ %>
+                        <li style="color: red;">Decision Support Had Errors Running.</li>
+                    <% } %>
                </ul>
                </div>
            <% } %>    
