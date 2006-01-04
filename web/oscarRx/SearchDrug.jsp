@@ -87,9 +87,10 @@ table.hiddenLayer {
     
     function goDOC(){
        if (document.RxSearchDrugForm.searchString.value.length == 0){
-          popupDrugOfChoice(720,700,'http://resource.oscarmcmaster.org/oscarResource/DoC/')
+          popupDrugOfChoice(720,700,'http://doc.oscartools.org/')
        }else{
-          var docURL = "http://resource.oscarmcmaster.org/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
+          //var docURL = "http://resource.oscarmcmaster.org/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
+          var docURL = "http://doc.oscartools.org/search?SearchableText="+document.RxSearchDrugForm.searchString.value;          
           popupDrugOfChoice(720,700,docURL);                               
        }
     }     
