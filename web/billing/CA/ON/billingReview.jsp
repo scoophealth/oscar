@@ -1174,8 +1174,8 @@ function getNewCurrentDxCodeList(origRequest){
 
 
 <div class="dxBox">
-    <h3>&nbsp;Current Patient Dx List</h3>
-       <div class="wrapper" id="dxFullListing">
+    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
+       <div class="wrapper" id="dxFullListing"  style="display:none;">
        <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
           <jsp:param name="demographicNo" value="<%=demoNO%>"/>
        </jsp:include>
