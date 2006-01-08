@@ -44,36 +44,25 @@ public class CDMReminderHlp {
    */
   public void manageCDMTicklers(String[] alertCodes) throws Exception {
     //get all demographics with a problem that falls within CDM category
-    long getPatients = System.currentTimeMillis();
     Hashtable cdms = (Hashtable)this.getCDMPatients(alertCodes);
-    long gotPatients = System.currentTimeMillis();
-    System.out.println("GET CDM PATIENTS" + (gotPatients - getPatients) * .001 +
-                       " " + new java.util.Date());
     Enumeration demoNos = cdms.keys();
     TicklerCreator crt = new TicklerCreator();
     String remString = "SERVICE CODE: 13050 Reminder";
-    ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
-    DateFormat formatter = null;
-    long crtTick = System.currentTimeMillis();
-
-    Vector cdmPatientNos = getCDMDemoNos(cdms.keys());
-    crt.resolveTicklers(cdmPatientNos, remString);
     while (demoNos.hasMoreElements()) {
       String demoNo = (String) demoNos.nextElement();
       String provNo = (String) cdms.get(demoNo);
+      ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
+      DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
       String oldfmt = lgc.getDateofLast13050(demoNo);
       java.util.Date last13050 = null;
       long daysPast = -1;
       if (oldfmt != "") {
-        formatter = new SimpleDateFormat("yyyyMMdd");
         try {
+          System.out.println("DATE:" + oldfmt);
           last13050 = formatter.parse(oldfmt);
-          double differenceInseconds = ( (System.currentTimeMillis() -
-                                          last13050.getTime()) * .001);
-          daysPast = (long) differenceInseconds / 86400;
+          daysPast = System.currentTimeMillis() - last13050.getTime();
         }
         catch (ParseException ex) {
-          ex.printStackTrace();
           throw new Exception();
         }
       }
@@ -82,26 +71,23 @@ public class CDMReminderHlp {
         String newfmt = "";
         formatter = new SimpleDateFormat("dd-MMM-yy");
         newfmt = formatter.format(last13050);
+
         String message = remString + " - Last Billed On: " + newfmt;
+        crt.resolveTickler(demoNo, remString);
         crt.createTickler(demoNo, provNo, message);
       }
       else if (daysPast < 0) {
         String message =
             remString + " - Never billed for this patient";
+        crt.resolveTickler(demoNo, remString);
         crt.createTickler(demoNo, provNo, message);
       }
+      else {
+        //This code has been billed for this patient within the last year
+        //Resolve unnecessary ticklers
+        crt.resolveTickler(demoNo, remString);
+      }
     }
-    long endTick = System.currentTimeMillis();
-    System.out.println("created tICKLERS" + (endTick - crtTick) * .001 + " " +
-                       new java.util.Date());
-  }
-
-  private Vector getCDMDemoNos(Enumeration demoNos) {
-    Vector cdmPatientNos = new Vector();
-    while (demoNos.hasMoreElements()) {
-      cdmPatientNos.add(demoNos.nextElement());
-    }
-    return cdmPatientNos;
   }
 
   /**
@@ -120,8 +106,7 @@ public class CDMReminderHlp {
         qry += ",";
       }
     }
-    qry += ") and status = 'A' and patient_status = 'AC'";
-    System.out.println("CDM Patients QRY=" + qry);
+    qry += ") and status = 'A'";
     DBHandler db = null;
     ResultSet rs = null;
     try {
