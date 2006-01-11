@@ -106,7 +106,7 @@ public class SecurityTag implements Tag {
             }
             
             String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
-            System.out.println("sql for roles: "+sql );
+            //System.out.println("sql for roles: "+sql );
             rs = db.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
