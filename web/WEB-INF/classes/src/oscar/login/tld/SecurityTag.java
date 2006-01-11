@@ -1,7 +1,31 @@
-/*
- * Created on 2005-5-20
- */
 /**
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ * 
+ * Yi Li
+ * 
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada   Creates a new instance of PreventionDS
+ *
+ *
+ * PreventionDS.java
+ *
+ * Created on 2005-5-20
+ *
+ *
  * @author yilee18
  */
 package oscar.login.tld;
@@ -43,12 +67,14 @@ public class SecurityTag implements Tag {
          * try { JspWriter out = pageContext.getOut(); out.print("goooooooo"); } catch (Exception e) { }
          */
         int ret = 0;
-        if (checkPrivilege(roleName, (Properties) getPrivilegeProp(objectName).get(0), (Vector) getPrivilegeProp(
-                objectName).get(1)))
+        Vector v = getPrivilegeProp(objectName);
+        //if (checkPrivilege(roleName, (Properties) getPrivilegeProp(objectName).get(0), (Vector) getPrivilegeProp(
+        ///        objectName).get(1)))
+        if (checkPrivilege(roleName, (Properties) v.get(0), (Vector) v.get(1))){
             ret = EVAL_BODY_INCLUDE;
-        else
+        }else{
             ret = SKIP_BODY;
-
+        }
         //System.out.println("reverse: " + reverse);
         if (reverse) {
             if (ret == EVAL_BODY_INCLUDE)
@@ -69,8 +95,18 @@ public class SecurityTag implements Tag {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             java.sql.ResultSet rs;
-            String sql = new String("select roleUserGroup,privilege from secObjPrivilege where objectName = '"
-                    + objName + "' order by priority desc");
+            String [] objectNames  = getVecObjectName(objName);
+            StringBuffer objectWhere = new StringBuffer();
+            for (int i = 0; i < objectNames.length; i++){
+                if (i < (objectNames.length - 1)){
+                   objectWhere.append(" objectName = '"+objectNames[i]+"' or ");
+                }else{
+                   objectWhere.append(" objectName = '"+objectNames[i]+"'  "); 
+                }
+            }
+            
+            String sql = new String("select roleUserGroup,privilege from secObjPrivilege where "+ objectWhere.toString() +" order by priority desc");
+            System.out.println("sql for roles: "+sql );
             rs = db.GetSQL(sql);
             Vector roleInObj = new Vector();
             while (rs.next()) {
@@ -87,7 +123,9 @@ public class SecurityTag implements Tag {
         }
         return ret;
     }
-
+    /**
+     *returns the providers roles as properties object
+     */
     private Properties getVecRole(String roleName) {
         Properties prop = new Properties();
         String[] temp = roleName.split("\\,");
@@ -96,6 +134,12 @@ public class SecurityTag implements Tag {
         }
         return prop;
     }
+    
+    private String[] getVecObjectName(String objectName) {
+        String[] temp = objectName.split("\\,");
+        return temp;
+    }
+    
 
     private Vector getVecPrivilege(String privilege) {
         Vector vec = new Vector();
@@ -108,6 +152,7 @@ public class SecurityTag implements Tag {
         return vec;
     }
 
+    
     private boolean checkPrivilege(String roleName, Properties propPrivilege, Vector roleInObj) {
         boolean ret = false;
         Properties propRoleName = getVecRole(roleName);
