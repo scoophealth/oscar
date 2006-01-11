@@ -134,7 +134,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
       <td width="5%" align="center" height="25">
         <a href=# onClick="popupPage(600,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=rs.getString("billing_no")%>&dboperation=search_bill&hotclick=0')"><%=rs.getString("billing_no")%></a>
-        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r">
+        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r">
         <a href=# onClick="popupPage(600,800, 'billingCorrection.jsp?billing_no=<%=rs.getString("billing_no")%>')">edit</a>
         </security:oscarSec>
       </td>
