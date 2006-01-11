@@ -3,7 +3,7 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
-<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r" reverse="<%=true%>" >
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r" reverse="<%=true%>" >
 <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
 
@@ -25,7 +25,9 @@ String userlastname = (String) session.getAttribute("userlastname");
    oscar.oscarSecurity.CookieSecurity cs = new oscar.oscarSecurity.CookieSecurity();
    response.addCookie(cs.GiveMeACookie(cs.adminCookie)); %>
 
- 
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+      
 
 <!--
 /*
@@ -56,8 +58,8 @@ String userlastname = (String) session.getAttribute("userlastname");
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.admin.title"/></title>
-<link rel="stylesheet" href="../web.css">
-<script LANGUAGE="JavaScript">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<script type="text/JavaScript">
 function onsub() {
 	if(document.searchprovider.keyword.value=="") {
 		alert("<bean:message key="global.msgInputKeyword"/>");
@@ -103,337 +105,296 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 }
 </script>
 <style type="text/css">
-        a:link{
-            text-decoration: none;
-            color:#003399;
-        }
+    a:link{
+        text-decoration: none;
+        color:#003399;
+    }
 
-        a:active{
-            text-decoration: none;
-            color:#003399;
-        }
+    a:active{
+        text-decoration: none;
+        color:#003399;
+    }
 
-        a:visited{
-            text-decoration: none;
-            color:#003399;
-        }
+    a:visited{
+        text-decoration: none;
+        color:#003399;
+    }
 
-        a:hover{
-            text-decoration: none;
-            color:#003399;
-        }
+    a:hover{
+        text-decoration: none;
+        color:#003399;
+    }
 
-        BODY {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-            background-color: #A9A9A9;
-        }
+    BODY {
+        font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
+        background-color: #A9A9A9;
+    }
+    .title{
+        font-size: 15pt;
+        font-weight: bold;
+        text-align: center;
+        background-color: #000000;
+        color:#FFFFFF;
+    }
+    
+    div.adminBox {
 
-        TABLE {
-            font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
-        }
+       width:90%;
+       background-color: #eeeeff;
+       margin-top: 2px;
+       margin-left:auto;
+       margin-right:auto;   
+       margin-bottom:0px;
+       padding-bottom:0px;
 
-        TD{
-            font-size:14pt;
-        }
+    }
 
-        TH{
-            font-size:14pt;
-            font-weight: bold;
-            text-align: left;
-            background-color:#486ebd;
-            color:#FFFFFF;
-        }
-        .title{
-            font-size: 15pt;
-            font-weight: bold;
-            text-align: center;
-            background-color: #000000;
-            color:#FFFFFF;
-        }
+    div.adminBox h3 { 
+       color : #ffffff;
+       font-size:14pt;
+       font-weight: bold;
+       text-align: left;
+       background-color:#486ebd;
+       margin-top:0px;
+       padding-top:0px;
+       margin-bottom:0px;
+       padding-bottom:0px;
+    }
 
-    </style>
+    div.adminBox ul{
+      text-align: left;
+      list-style:none;
+      list-style-type:none; 
+      list-style-position:outside;       
+      padding-left:1px;
+      margin-left:1px;    
+      margin-top:0px;
+      padding-top:1px;
+      margin-bottom:0px;
+      padding-bottom:0px;	
+
+    }
+
+    div.logoutBox {
+       text-align: right;
+    }
+
+
+</style>
+    
 </head>
 
-<body onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<center>
-  <table cellspacing="0" cellpadding="2" width="100%" border="0">
-    <tr><th  class="title"><bean:message key="admin.admin.description"/></th></tr>
-  </table>
-  <table border="0" cellspacing="0" cellpadding="2" width="90%">
-  <tr>
-      <td align="right"><% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a><% }%></td>
-  </tr>
-    <tr bgcolor="#CCCCFF">
-      <th>
-        <p><bean:message key="admin.admin.provider"/></p>
-      </th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-        <p><a href="provideraddarecordhtm.jsp"><bean:message key="admin.admin.btnAddProvider"/></a><br>
-          <a href="providersearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchProvider"/></a></p>
-        </td>
-    </tr>
-    <tr bgcolor="#CCCCFF">
-      <th><bean:message key="admin.admin.groupNo"/></th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-        <p><a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=newgroup&submit=blank')"><bean:message key="admin.admin.btnAddGroupNoRecord"/></a><br>
-          <a href=# onClick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&dboperation=searchmygroupall')"><bean:message key="admin.admin.btnSearchGroupNoRecords"/></a></p>
-      </td>
-    </tr>
-    <tr bgcolor="#CCCCFF">
-      <th colspan="2"><bean:message key="admin.admin.preference"/></th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-        <p><a href="preferenceaddarecord.jsp"><bean:message key="admin.admin.btnAddPreference"/></a><br>
-          <a href="preferencesearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchPreference"/></a></p>
-      </td>
-    </tr>
-    <tr bgcolor="#CCCCFF">
-      <th><bean:message key="admin.admin.security"/></th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-        <p><a href="securityaddarecord.jsp"><bean:message key="admin.admin.btnAddLogin"/></a><br>
-          <a href="securitysearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchLogin"/></a><br>
-          <a href=# onClick ="popupPage(300,600,'providerAddRole.jsp');return false;">Add A Role</a><br>
-          <a href=# onClick ="popupPage(500,700,'providerRole.jsp');return false;">Assign Role to Provider</a></br>
-          <a href=# onClick ="popupPage(500,800,'providerPrivilege.jsp');return false;">Assign Role/Rights to Object</a></br>
-          <a href=# onClick ="popupPage(500,800,'logReport.jsp?keyword=admin');return false;">Security Log Report</a>
-		  <% if (oscarVariables.getProperty("login_lock", "").trim().equals("true")){ %>
-          	</br><a href=# onClick ="popupPage(500,800,'unLock.jsp');return false;">Unlock Account</a>
-		  <% } %>
-        </p>
-      </td>
-    </tr>
+<body class="BodyStyle" >
 
-    <tr bgcolor="#CCCCFF">
-      <th>
-        <p><bean:message key="admin.admin.schedule"/></p>
-      </th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-	      <a href="#" ONCLICK ="popupPage(550,800,'../schedule/scheduletemplatesetting.jsp');return false;" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message key="admin.admin.scheduleSetting"/></a>
+  <div class="title">
+  <bean:message key="admin.admin.description"/>
+  </div>
 
-        </td>
-    </tr>
-
-           <%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
-           <% if (!country.equals("BR")) { %>
-    <tr bgcolor="#CCCCFF">
-      <th>
-        <p><bean:message key="admin.admin.billing"/></p>
-      </th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-        <p>
-        <% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
+  <div class="logoutBox">
+     <% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a>&nbsp;<% }%>
+  </div>   
+       
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>" >   
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.provider"/></h3>
+      <ul>
+         <li><a href="provideraddarecordhtm.jsp"><bean:message key="admin.admin.btnAddProvider"/></a></li>
+         <li><a href="providersearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchProvider"/></a></li>
+      </ul>
+  </div>
   
-          <a href=# onClick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a><br>
-          <a href=# onClick ="popupPage(600,600,'../billing/CA/BC/billingPrivateCodeAdjust.jsp');return false;">Manage Private Bill</a><br/>
-          <a href=# onClick="popupPage(600,600,'../billing/CA/BC/showServiceCodeAssocs.do');return false;">Manage Service/Diagnostic Code Associations</a>
-            <br>
-          <a href=# onClick ="popupPage(700,1000,'../billing/CA/BC/billingManageReferralDoc.jsp');return false;">Manage Referral Doc</a><br>
-          <a href=# onClick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a><br>
-          <a href=# onClick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a><br>
-          <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a><br>
-          <a href=# onClick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">Billing Reconcilliation Reports</a><br>
-		  <a href=# onClick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Billing Account Reports</a><br>
-          <a href=# onClick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Bill Status</a><br>
-          
-
-
-       <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
-          <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a><br>
-          <a href=# onClick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Add/Edit Billing Service Code</a><br>
-          <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a><br>
-          <a href=# onClick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a><br>
-          <a href=# onClick ="popupPage(700,700,'../billing/CA/ON/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a><br>
-          <a href=# onClick ="popupPage(700,720,'../billing/CA/ON/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a><br>
-          <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a><br>
-          <a href=# onClick ="popupPage(700,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a><br>
-          <a href=# onClick ="popupPage(600,900,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a><br>
-          <a href=# onClick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a><br>
-          <oscar:oscarPropertiesCheck property="TESTING" value="yes">
-             <a href=# onClick ="popupPage(800,1000,'../billing/CA/ON/billStatus.jsp');return false;">Bill Status</a><br>
-          </oscar:oscarPropertiesCheck>
-       <%}%>
-
-        </td>
-    </tr>
-           <% } %>
-    <%-- removed the add demographic button because it was never used, it was out of sync with the
-         doctor/receptionist version, and it was too much of a pain to keep it up to date --%>
-    <%-- <tr bgcolor="#CCCCFF">
-      <td colspan="2"><bean:message key="admin.admin.demographic"/></td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td> <a href="demographicaddarecordhtm.jsp"><bean:message key="admin.admin.btnAddDemographicRecord"/></a></td>
-    </tr>--%>
-    <tr bgcolor="#CCCCFF">
-      <th>
-        <p><bean:message key="admin.admin.resource"/></p>
-      </th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td> <a href="#" ONCLICK ="popupPage(200,300,'resourcebaseurl.jsp');return false;" title="<bean:message key="admin.admin.baseURLSettingTitle"/>"><bean:message key="admin.admin.btnBaseURLSetting"/></a> </td>
-    </tr>
-
-  <!--oscarReport Code block -->
-
-      <tr bgcolor="#EEEEFF">
-        <th bgcolor="#CCCCFF" colspan="2"><bean:message key="admin.admin.oscarReport"/></th>
-      </tr>
-      <tr bgcolor="#EEEEFF">
-          <td colspan="2" nowrap>
-          <%      session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/");
-          %>
-            <% if (!country.equals("BR")) { %>
-           <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/RptByExample.do');return false;"><bean:message key="admin.admin.btnQueryByExample"/></a><br>
-            <% } %>
-           <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/dbReportAgeSex.jsp');return false;"><bean:message key="admin.admin.btnAgeSexReport"/></a><br>
-           <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportVisitControl.jsp');return false;"><bean:message key="admin.admin.btnVisitReport"/></a><br>
-           <%-- This links doesnt make sense on Brazil. Hide then --%>
-           <% if (!country.equals("BR")) { %>
-              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;"><bean:message key="admin.admin.btnPCNCatchmentReport"/></a><br>
-              <a HREF="#" ONCLICK ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;"><bean:message key="admin.admin.btnFluBillingReport"/></a><br>
-              <a href=# onClick ="popupPage(600,1000,'../oscarReport/obec.jsp');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a><br/>
-           <% } else {%>
-              <a HREF="#" ONCLICK ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a><br/>
-           <% } %>
-              <a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a><br/>
-              <a href="#" onclick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a><br/>
-              <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
-              <a href="#" onclick="popupPage(600,900, 'oscarLogging.jsp')">Server Logging</a>
-              </oscar:oscarPropertiesCheck>
-          </td>
-      </tr>
-
-           <%-- This links doesnt make sense on Brazil. Hide then --%>
-           <% if (!country.equals("BR")) { %>
-<!--/oscarReport Code block -->
-  <!--backup download Code block -->
-
-      <tr  bgcolor="#CCCCFF">
-        <th><bean:message key="admin.admin.oscarBackup"/></th>
-      </tr>
-      <tr bgcolor="#EEEEFF">
-          <td nowrap>
-              <a HREF="#" ONCLICK ="popupPage(500,600,'adminbackupdownload.jsp'); return false;"><bean:message key="admin.admin.btnAdminBackupDownload"/></a>
-          </td>
-      </tr>
-
-<!--/backup download Code block -->
-    <% } %>
-<!--oscarMessenger Code block -->
-
-    <tr>
-      <th bgcolor="#CCCCFF"><bean:message key="admin.admin.oscarMessenger"/></th>
-    </tr>
-    <tr  bgcolor="#EEEEFF">
-        <td nowrap>
-             <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&userName=<%=userfirstname%>%20<%=userlastname%>');return false;">
-             <bean:message key="admin.admin.messages"/></a>
-        </td>
-    </tr>
-       <% /*ADDED THIS FOR THE NEW OSCAR MESSENGER AUG 27 O2*/%>
-    <tr  bgcolor="#EEEEFF">
-       <td>
-            <a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a>
-       </td>
-    </tr>
-
-<!--/oscarMessenger Code block -->
-
-<!--e forms block -->
-
-    <tr bgcolor="#CCCCFF">
-      <th><bean:message key="admin.admin.eForms"/></th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td> <a href="../eform/efmformmanager.jsp"><bean:message key="admin.admin.btnUploadForm"/></a><br>
-        </td>
-    </tr>
-    <tr  bgcolor="#EEEEFF">
-      <td> <a href="../eform/efmimagemanager.jsp"><bean:message key="admin.admin.btnUploadImage"/></a><br>
-        </td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td> <a href="../eform/efmmanageformgroups.jsp">Form Groups</a><br></td>
-    </tr>
-
-<!--// end e forms block -->
-
-<!--// start oscarEncounter block-->
-    <tr bgcolor="#CCCCFF">
-      <th><bean:message key="admin.admin.oscarEncounter"/></th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(500,1000,'../form/setupSelect.do');return false;" ><bean:message key="admin.admin.btnSelectForm"/></a></td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(500,1000,'../form/formXmlUpload.jsp');return false;" ><bean:message key="admin.admin.btnImportFormData"/></a></td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(250,450,'../oscarResearch/oscarDxResearch/dxResearchCustomization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="oscar.admin.diseaseRegistryQuickList"/></a></td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(250,450,'../oscarEncounter/oscarMeasurements/Customization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="admin.admin.oscarMeasurements"/></a></td>
-    </tr>
-<!--// end of oscar measuremnt block-->
-
-    <tr bgcolor="#CCCCFF">
-      <th><bean:message key="admin.admin.misc"/></th>
-    </tr>
-
-    
-      <tr bgcolor="#EEEEFF">
-        <td>
-          <a href="#" ONCLICK="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">
-            Demographic Export <!-- I18N -->
-          </a>
-        </td>
-      </tr>
-
-    <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></td>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></td>
-    </tr>
-
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.groupNo"/></h3>
+      <ul>
+         <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=newgroup&amp;submit=blank')"><bean:message key="admin.admin.btnAddGroupNoRecord"/></a></li>
+         <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&amp;dboperation=searchmygroupall')"><bean:message key="admin.admin.btnSearchGroupNoRecords"/></a></li>
+      </ul>
+  </div>
+  
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.preference"/></h3>
+      <ul>
+         <li><a href="preferenceaddarecord.jsp"><bean:message key="admin.admin.btnAddPreference"/></a></li>
+         <li><a href="preferencesearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchPreference"/></a></li>
+      </ul>
+  </div>
+  
+  
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.security"/></h3>
+      <ul>
+         <li><a href="securityaddarecord.jsp"><bean:message key="admin.admin.btnAddLogin"/></a></li>
+         <li><a href="securitysearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchLogin"/></a></li>
+         <li><a href="#" onclick ="popupPage(300,600,'providerAddRole.jsp');return false;">Add A Role</a></li>
+         <li><a href="#" onclick ="popupPage(500,700,'providerRole.jsp');return false;">Assign Role to Provider</a></li>
+         <li><a href="#" onclick ="popupPage(500,800,'providerPrivilege.jsp');return false;">Assign Role/Rights to Object</a></li>
+         <li><a href="#" onclick ="popupPage(500,800,'logReport.jsp?keyword=admin');return false;">Security Log Report</a></li>
+         <% if (oscarVariables.getProperty("login_lock", "").trim().equals("true")){ %>
+         <li><a href="#" onclick ="popupPage(500,800,'unLock.jsp');return false;">Unlock Account</a></li>
+         <% } %>
+      </ul>
+  </div>
+  </security:oscarSec>
+  
+  
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>" >   
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.schedule"/></h3>
+      <ul>
+         <li><a href="#" onclick ="popupPage(550,800,'../schedule/scheduletemplatesetting.jsp');return false;" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message key="admin.admin.scheduleSetting"/></a></li>
+      </ul>
+  </div>
+  </security:oscarSec>  
+   
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>" >
+  <%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
   <% if (!country.equals("BR")) { %>
-    <tr  bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></td>
-    </tr>
-	<% if (oscarVariables.getProperty("billregion","").equals("ON")){    %>
-    <tr  bgcolor="#EEEEFF">
-      <td><a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilledphcp.jsp');return false;">PHCP</a>
-        <font size="-2">(Setting: <a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilledvisitprovider.jsp');return false;">provider</a>, <a href="#" ONCLICK ="popupPage(660,1000,'../report/reportonbilleddxgrp.jsp');return false;">dx category</a>)</font></td>
-    </tr>
-  <% } } %>
-    <tr  bgcolor="#EEEEFF">
-      <td>
-          <a href=# onClick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a>
-      </td>        
-    </tr>
-  
-        
-  </table>
+   <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.billing"/></h3>
+      <ul>
+         <% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a></li>
+          <li><a href="#" onclick ="popupPage(600,600,'../billing/CA/BC/billingPrivateCodeAdjust.jsp');return false;">Manage Private Bill</a></li>
+          <li><a href="#" onclick="popupPage(600,600,'../billing/CA/BC/showServiceCodeAssocs.do');return false;">Manage Service/Diagnostic Code Associations</a></li>
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingManageReferralDoc.jsp');return false;">Manage Referral Doc</a></li>
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a></li>
+          <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a></li>
+          <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a></li>
+          <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">Billing Reconcilliation Reports</a></li>
+          <li><a href="#" onclick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Billing Account Reports</a></li>
+          <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Bill Status</a></li>
+         <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a></li>
+          <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Add/Edit Billing Service Code</a></li>
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a></li>
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a></li>
+          <li><a href="#" onclick ="popupPage(700,700,'../billing/CA/ON/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a></li>
+          <li><a href="#" onclick ="popupPage(700,720,'../billing/CA/ON/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a></li>
+          <li><a href="#" onclick ="popupPage(700,640,'../billing/CA/ON/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a></li>
+          <li><a href="#" onclick ="popupPage(700,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a></li>
+          <li><a href="#" onclick ="popupPage(600,900,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li>
+          <li><a href="#" onclick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li>
+          <oscar:oscarPropertiesCheck property="TESTING" value="yes">
+             <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/ON/billStatus.jsp');return false;">Bill Status</a></li>
+          </oscar:oscarPropertiesCheck>
+         <%}%>
+      </ul>
+  </div>
+  <% } %>
+  </security:oscarSec>
 
-  <hr color='black'>
-  <table border="0" cellspacing="0" cellpadding="0" width="90%">
-  <tr>
-      <td></td>
-      <td align="right"><% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a><% }%></td>
-  </tr>
-  </table>
-</center>
+  
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.resource" rights="r" reverse="<%=false%>" >  
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.resource"/></h3>
+      <ul>
+         <li><a href="#" onclick ="popupPage(200,300,'resourcebaseurl.jsp');return false;" title="<bean:message key="admin.admin.baseURLSettingTitle"/>"><bean:message key="admin.admin.btnBaseURLSetting"/></a></li>
+      </ul>
+  </div>
+  </security:oscarSec>
+   
+  <!--oscarReport Code block -->
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>" >  
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.oscarReport"/></h3>
+      <ul>
+         <%session.setAttribute("reportdownload", "/usr/local/tomcat/webapps/oscar_sfhc/oscarReport/download/");%>
+         <% if (!country.equals("BR")) { %>
+         <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/RptByExample.do');return false;"><bean:message key="admin.admin.btnQueryByExample"/></a></li>
+         <%}%>
+         <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/dbReportAgeSex.jsp');return false;"><bean:message key="admin.admin.btnAgeSexReport"/></a></li>
+         <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/oscarReportVisitControl.jsp');return false;"><bean:message key="admin.admin.btnVisitReport"/></a></li>
+           <%-- This links doesnt make sense on Brazil. Hide then --%>
+         <% if (!country.equals("BR")) { %>
+         <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/oscarReportCatchment.jsp');return false;"><bean:message key="admin.admin.btnPCNCatchmentReport"/></a></li>
+         <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/FluBilling.do?orderby=');return false;"><bean:message key="admin.admin.btnFluBillingReport"/></a></li>
+         <li><a href="#" onclick ="popupPage(600,1000,'../oscarReport/obec.jsp');return false;"><bean:message key="admin.admin.btnOvernightChecking"/></a></li>
+         <% } else {%>
+         <li><a href="#" onclick ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a></li>
+         <% } %>
+         <li><a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a></li>
+         <li><a href="#" onclick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a></li>
+         <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
+         <li><a href="#" onclick="popupPage(600,900, 'oscarLogging.jsp')">Server Logging</a></li>
+         </oscar:oscarPropertiesCheck>
+      </ul>
+  </div>
+  </security:oscarSec> 
+  
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>" >
+  <%-- This links doesnt make sense on Brazil. Hide then --%>
+  <% if (!country.equals("BR")) { %>
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.oscarBackup"/></h3>
+      <ul>
+         <li><a href="#" onclick ="popupPage(500,600,'adminbackupdownload.jsp'); return false;"><bean:message key="admin.admin.btnAdminBackupDownload"/></a></li>
+      </ul>
+  </div>
+  <% } %>
+  </security:oscarSec>
+      
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>" >
+  <!--oscarMessenger Code block -->
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.oscarMessenger"/></h3>
+      <ul>
+         <li><a href="#" onclick ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>');return false;"><bean:message key="admin.admin.messages"/></a></li>
+         <li><a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>  
+      </ul>
+  </div>
+  </security:oscarSec>
+     
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>" >
+  <!--e forms block -->
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.eForms"/></h3>
+      <ul>
+         <li><a href="../eform/efmformmanager.jsp"><bean:message key="admin.admin.btnUploadForm"/></a></li>
+         <li><a href="../eform/efmimagemanager.jsp"><bean:message key="admin.admin.btnUploadImage"/></a></li>
+         <li><a href="../eform/efmmanageformgroups.jsp">Form Groups</a></li>
+      </ul>
+  </div>
+  </security:oscarSec>
+    
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>" >
+  <!--// start oscarEncounter block-->
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.oscarEncounter"/></h3>
+      <ul>
+        <li><a href="#" onclick ="popupPage(500,1000,'../form/setupSelect.do');return false;" ><bean:message key="admin.admin.btnSelectForm"/></a></li>
+        <li><a href="#" onclick ="popupPage(500,1000,'../form/formXmlUpload.jsp');return false;" ><bean:message key="admin.admin.btnImportFormData"/></a></li>
+        <li><a href="#" onclick ="popupPage(250,450,'../oscarResearch/oscarDxResearch/dxResearchCustomization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="oscar.admin.diseaseRegistryQuickList"/></a></li>
+        <li><a href="#" onclick ="popupPage(250,450,'../oscarEncounter/oscarMeasurements/Customization.jsp');return false;" ><bean:message key="oscarEncounter.Index.btnCustomize"/> <bean:message key="admin.admin.oscarMeasurements"/></a></li>
+      </ul>
+  </div>
+  </security:oscarSec>
+  
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>" >
+  <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
+      <ul>
+        <li><a href="#" onclick="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">Demographic Export <!-- I18N --></a></li>
+        <li><a href="#" onclick ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
+        <li><a href="#" onclick ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></li>
+        <% if (!country.equals("BR")) { %>
+        <li><a href="#" onclick ="popupPage(550,810,'demographicstudysearchresults.jsp');return false;" ><bean:message key="admin.admin.btnStudy"/></a></li>
+	<%   if (oscarVariables.getProperty("billregion","").equals("ON")){  %>
+        <li><a href="#" onclick ="popupPage(660,1000,'../report/reportonbilledphcp.jsp');return false;">PHCP</a>
+            <span style="font-size: x-small;">
+               (Setting: <a href="#" onclick ="popupPage(660,1000,'../report/reportonbilledvisitprovider.jsp');return false;">provider</a>, <a href="#" onclick ="popupPage(660,1000,'../report/reportonbilleddxgrp.jsp');return false;">dx category</a>)
+            </span>
+        </li>
+        <% } } %>
+        <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
+      </ul>
+  </div>
+  </security:oscarSec>  
+  
+  <hr style=" color: black;"/>
+  <div class="logoutBox">
+     <% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a>&nbsp;<% }%>
+  </div>
+
 
 </body>
 </html:html>
