@@ -422,7 +422,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='<bean:message key="global.tickler"/>'><oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler></a></font></td>
          </plugin:hideWhenCompExists>
 <!-- admin code block -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r">
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
 		 <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;"><font color='blue'>Admin</font></a>
          </font></td></security:oscarSec>
@@ -463,7 +463,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 		</security:oscarSec>
 <!-- doctor code block -->
 <!-- admin code block -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin" rights="r">
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
 		</security:oscarSec>
 <!-- admin code block -->
