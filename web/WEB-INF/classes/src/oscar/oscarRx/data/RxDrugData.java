@@ -534,6 +534,7 @@ public class RxDrugData {
 	    inact.effect = (String) h.get("effect");
             inact.evidence = (String) h.get("evidence");
             inact.significance = (String) h.get("significance");
+            inact.comment = (String) h.get("comment");
             lst.add(inact);
             System.out.println("affectingDrug"+inact.affectingdrug);
         }
@@ -583,7 +584,7 @@ public class RxDrugData {
         public String effect =null;
         public String affecteddrug =null;
         public String affectedatc =null;
-        
+        public String comment = null;
      }
     
 }
