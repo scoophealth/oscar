@@ -81,6 +81,18 @@ public class DemographicRelationship {
         }       
    }
    
+   public void deleteDemographicRelationship(String id){
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         String sql = "update relationships  set deleted = '1' where  id = '"+id+"'";
+         db.RunSQL(sql);                                                
+         db.CloseConn();
+      } catch (SQLException e) {
+         System.out.println(e.getMessage());
+      }       
+   }
+   
+   
    public ArrayList getDemographicRelationships(String demographic){
       ArrayList list = new ArrayList();
       try {
@@ -90,6 +102,7 @@ public class DemographicRelationship {
          rs = db.GetSQL(sql);
          while(rs.next()){
             Hashtable h = new Hashtable();
+            h.put("id", rs.getString("id"));
             h.put("demographic_no", rs.getString("relation_demographic_no"));
             h.put("relation", rs.getString("relation"));
             h.put("sub_decision_maker", rs.getString("sub_decision_maker"));
