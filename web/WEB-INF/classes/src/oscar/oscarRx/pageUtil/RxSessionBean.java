@@ -23,6 +23,7 @@
  */
 package oscar.oscarRx.pageUtil;
 
+import oscar.OscarProperties;
 import oscar.oscarRx.data.*;
 
 import java.util.*;
@@ -190,39 +191,44 @@ public class RxSessionBean {
     
     public oscar.oscarRx.data.RxPatientData.Patient.Allergy[] getAllergyWarnings(String atccode){
       oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;      
-      if (allergyWarnings.containsKey(atccode) ){
-         System.out.println("Allergy has Already been searched!");
-         allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
-      }else if(workingAllergyWarnings.contains(atccode) ){
-         System.out.println("Allergy has Already been searched but not finished !");
-         RxAllergyWarningWorker worker = (RxAllergyWarningWorker) workingAllergyWarnings.get(atccode);
-         if (worker != null){
-             try {
-                worker.join();
-                System.out.println("Allergy has Already been searched now finished!");
-                // Finished
-             } catch (InterruptedException e) {
-                // Thread was interrupted
-                System.out.println("Already been searched PROBLEM!");
-                e.printStackTrace();
-             }
-            
-             
-         }
-         allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
       
-      }else{
-         System.out.println("NEW ATC CODE for allergy");
-         try{                                
-            RxDrugData drugData = new RxDrugData();
-            oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
-            allergies = drugData.getAllergyWarnings(atccode,allAllergies);                 
-                if (allergies != null){                   
-                   addAllergyWarnings(atccode,allergies);            
-                }
-         }catch(Exception e){
-             e.printStackTrace();
-         }         
+      //Check to see if Allergy checking property is on and if atccode is not null and if atccode is not "" or "null"
+      
+      if (OscarProperties.getInstance().getBooleanProperty("RX_ALLERGY_CHECKING","yes") && atccode != null && !atccode.equals("") && !atccode.equals("null")){
+          if (allergyWarnings.containsKey(atccode) ){
+             System.out.println("Allergy has Already been searched!");
+             allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
+          }else if(workingAllergyWarnings.contains(atccode) ){
+             System.out.println("Allergy has Already been searched but not finished !");
+             RxAllergyWarningWorker worker = (RxAllergyWarningWorker) workingAllergyWarnings.get(atccode);
+             if (worker != null){
+                 try {
+                    worker.join();
+                    System.out.println("Allergy has Already been searched now finished!");
+                    // Finished
+                 } catch (InterruptedException e) {
+                    // Thread was interrupted
+                    System.out.println("Already been searched PROBLEM!");
+                    e.printStackTrace();
+                 }
+
+
+             }
+             allergies = (oscar.oscarRx.data.RxPatientData.Patient.Allergy[]) allergyWarnings.get(atccode);
+
+          }else{
+             System.out.println("NEW ATC CODE for allergy");
+             try{                                
+                RxDrugData drugData = new RxDrugData();
+                oscar.oscarRx.data.RxPatientData.Patient.Allergy[]  allAllergies = new oscar.oscarRx.data.RxPatientData().getPatient(getDemographicNo()).getAllergies();
+                allergies = drugData.getAllergyWarnings(atccode,allAllergies);                 
+                    if (allergies != null){                   
+                       addAllergyWarnings(atccode,allergies);            
+                    }
+             }catch(Exception e){
+                 e.printStackTrace();
+             }         
+          }
       }
       return allergies;
    }
