@@ -57,11 +57,13 @@ public class BillingData {
         }
 
         if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
-          startDateQuery = " and ( to_days(billing_date) >= to_days('" + startDate +"')) ";
+          //startDateQuery = " and ( to_days(billing_date) >= to_days('" + startDate +"')) ";
+          startDateQuery = " and ( billing_date >= '"+startDate+"') ";
         }
 
         if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
-           endDateQuery = " and ( to_days(billing_date) <= to_days('" + endDate +"')) ";
+           //endDateQuery = " and ( to_days(billing_date) <= to_days('" + endDate +"')) ";
+           endDateQuery = " and ( billing_date <= '"+endDate+"') ";
         }
         if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")) {
            demoQuery = " and demographic_no = '" + demoNo + "' ";
