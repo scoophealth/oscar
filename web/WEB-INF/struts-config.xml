@@ -981,6 +981,9 @@
     <action    path="/demographic/AddRelation" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction" name="FrmForm" scope="request" input="/demographic/AddAlternateContact.jsp">
        <forward name="success" path="/demographic/AddAlternateContact.jsp"/>
     </action>
+    <action    path="/demographic/DeleteRelation" type="oscar.oscarDemographic.pageUtil.DeleteDemographicRelationshipAction" name="FrmForm" scope="request" input="/demographic/AddAlternateContact.jsp">
+       <forward name="success" path="/demographic/AddAlternateContact.jsp"/>
+    </action>
     <action path="/form/importUpload" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction" name="ImportDemographicDataForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/demographic/demographicImport.jsp"/>
     </action>                     
