@@ -46,8 +46,8 @@
 
 <head>
 <title>
-Demographic Extention <!--I18n-->
-</title>
+Demographic Extention 
+</title><!--I18n-->
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 
 
@@ -63,33 +63,37 @@ function newWindow(file,window) {
 
 
 <style type="text/css">
-	table.outline{
-	   margin-top:50px;
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	table.grid{
-	   border-bottom: 1pt solid #888888;
-	   border-left: 1pt solid #888888;
-	   border-top: 1pt solid #888888;
-	   border-right: 1pt solid #888888;
-	}
-	td.gridTitles{
-		border-bottom: 2pt solid #888888;
-		font-weight: bold;
-		text-align: center;
-	}
-        td.gridTitlesWOBottom{
-                font-weight: bold;
-                text-align: center;
-        }
-	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
-	   border-right: 1pt solid #888888;
-           text-align: center;
-	}	
+	
+	div.tableListing table {
+               margin-top:0px;
+               border-width: 1px 1px 1px 1px;
+	       border-spacing: 0px;
+	       border-style: outset outset outset outset;
+	       border-color: gray gray gray gray;
+	       border-collapse: collapse;
+            }
+            
+            div.tableListing table tr td{
+               font-size: x-small;
+               text-align: center;
+               border-width: 1px 1px 1px 1px;
+               padding: 1px 1px 1px 1px;
+               border-style: inset inset inset inset;
+               border-color: gray gray gray gray;
+               background-color: white;
+               -moz-border-radius: 0px 0px 0px 0px;
+            }
+            
+            div.tableListing table tr th{
+               font-size: small;
+               border-width: 1px 1px 1px 1px;
+               padding: 1px 1px 1px 1px;
+               border-style: inset inset inset inset;
+               border-color: gray gray gray gray;
+               background-color: white;
+               -moz-border-radius: 0px 0px 0px 0px;
+            }
+	
 </style>
 </head>
 
@@ -194,11 +198,21 @@ function newWindow(file,window) {
                </html:form>            
                <%}%>
             
-               
-               <div>
+               <div class="tablelisting">
                   <table>
                <% DemographicRelationship demoRelation = new DemographicRelationship(); 
-                  ArrayList list = demoRelation.getDemographicRelationships(creatorDemo);                         
+                  ArrayList list = demoRelation.getDemographicRelationships(creatorDemo);   
+                  if (list.size() > 0){
+               %>
+                     <tr>
+                        <th>Name</th>
+                        <th>Relation</th>
+                        <th>SDM</th>
+                        <th>Notes</th>
+                        <th>&nbsp;</th>
+                     </tr>
+                  
+               <% }
                   for ( int i = 0; i < list.size(); i++ ){ 
                      Hashtable h = (Hashtable) list.get(i);
                      String relatedDemo = (String) h.get("demographic_no");              
@@ -207,11 +221,11 @@ function newWindow(file,window) {
                      <tr>
                         <td><%=demographic.getLastName() +", "+demographic.getFirstName()%></td>
                         <td><%=h.get("relation")%></td>
-                        <td><%=h.get("sub_decision_maker")%></td>
+                        <td><%=returnYesIf1(h.get("sub_decision_maker"))%></td>
                         <td><%=h.get("notes")%></td>
+                        <td><a href="DeleteRelation.do?id=<%=h.get("id")%>&amp;origDemo=<%=creatorDemo%>">del</a></td>
                      </tr>
-                 <%}
-               %>
+                <%}%>
                   </table>
                </div>
             </td>
@@ -227,3 +241,16 @@ function newWindow(file,window) {
     </table>
 </body>
 </html:html>
+<%!
+String returnYesIf1(Object o){
+    String ret = "";
+    if ( o instanceof String){
+        String s = (String) o;
+        if ( "1".equals(s)){
+            ret = "yes";
+        }
+    }
+    return ret;
+}
+
+%>
