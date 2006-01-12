@@ -41,17 +41,17 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html:html locale="true">
 
 <head>
 <title>
 Demographic Extention 
 </title><!--I18n-->
-<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css"/>
 
 
-<SCRIPT LANGUAGE="JavaScript">
+<script type="text/javascript">
 <!--
 //if (document.all || document.layers)  window.resizeTo(790,580);
 function newWindow(file,window) {
@@ -59,7 +59,7 @@ function newWindow(file,window) {
   if (msgWindow.opener == null) msgWindow.opener = self;
 } 
 //-->
-</SCRIPT>
+</script>
 
 
 <style type="text/css">
@@ -97,11 +97,11 @@ function newWindow(file,window) {
 </style>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body class="BodyStyle">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+    <table  class="MainTable" id="scrollNumber1" >
         <tr class="MainTableTopRow">
-            <td class="MainTableTopRowLeftColumn" width="175" >
+            <td class="MainTableTopRowLeftColumn"  >
       Add Relation
             </td>
             <td class="MainTableTopRowRightColumn">
@@ -127,31 +127,35 @@ function newWindow(file,window) {
             
             </td>
             <td valign="top" class="MainTableRightColumn">
-               <form name="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
-                Name: <INPUT TYPE="TEXT" NAME="keyword" size="25" VALUE="">
-                <input type="submit" name="Submit" value="Search">
-                <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
-				    <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" >
-				    <INPUT TYPE="hidden" NAME="originalpage" VALUE="../demographic/AddAlternateContact.jsp" >
-				    <INPUT TYPE="hidden" NAME="limit1" VALUE="0" >
-				    <INPUT TYPE="hidden" NAME="limit2" VALUE="5" >
-                <INPUT TYPE="hidden" NAME="displaymode" VALUE="Search "> 
+               
+               <form id="ADDAPPT" method="post" action="../appointment/appointmentcontrol.jsp">
+               <div>
+                Name: <input type="text" name="keyword" size="25" value=""/>
                 
-                <INPUT TYPE="hidden" NAME="appointment_date" VALUE="2002-10-01" WIDTH="25" HEIGHT="20" border="0" hspace="2">
-                <INPUT TYPE="hidden" NAME="status" VALUE="t"  WIDTH="25" HEIGHT="20" border="0" hspace="2">
-                <INPUT TYPE="hidden" NAME="start_time" VALUE="10:45" WIDTH="25" HEIGHT="20" border="0"  onChange="checkTimeTypeIn(this)">
-                <INPUT TYPE="hidden" NAME="type" VALUE="" WIDTH="25" HEIGHT="20" border="0" hspace="2">
-                <INPUT TYPE="hidden" NAME="duration" VALUE="15" WIDTH="25" HEIGHT="20" border="0" hspace="2" >
-                <INPUT TYPE="hidden" NAME="end_time" VALUE="10:59" WIDTH="25" HEIGHT="20" border="0" hspace="2"  onChange="checkTimeTypeIn(this)" >       
-                <input type="hidden" name="demographic_no"  readonly value="" width="25" height="20" border="0" hspace="2" >
-                <input type="hidden" name="location"  tabindex="4" value="" width="25" height="20" border="0" hspace="2">
-                <input type="hidden" name="resources"  tabindex="5" value="" width="25" height="20" border="0" hspace="2">
-                <INPUT TYPE="hidden" NAME="user_id" readonly VALUE='oscardoc, doctor' WIDTH="25" HEIGHT="20" border="0" hspace="2">
-     	          <INPUT TYPE="hidden" NAME="dboperation" VALUE="add_apptrecord">
-                <INPUT TYPE="hidden" NAME="createdatetime" readonly VALUE="2002-10-1 17:53:50" WIDTH="25" HEIGHT="20" border="0" hspace="2">
-                <INPUT TYPE="hidden" NAME="provider_no" VALUE="115">
-                <INPUT TYPE="hidden" NAME="creator" VALUE="oscardoc, doctor">
-                <INPUT TYPE="hidden" NAME="remarks" VALUE="<%=creatorDemo%>">
+                <input type="submit" name="Submit" value="Search"/>
+                <input type="hidden" name="orderby" value="last_name" />
+				    <input type="hidden" name="search_mode" value="search_name" />
+				    <input type="hidden" name="originalpage" value="../demographic/AddAlternateContact.jsp" />
+				    <input type="hidden" name="limit1" value="0" />
+				    <input type="hidden" name="limit2" value="5" />
+                <input type="hidden" name="displaymode" value="Search "/> 
+                
+                <input type="hidden" name="appointment_date" value="2002-10-01" />
+                <input type="hidden" name="status" value="t"  />
+                <input type="hidden" name="start_time" value="10:45"   onchange="checkTimeTypeIn(this)"/>
+                <input type="hidden" name="type" value="" />
+                <input type="hidden" name="duration" value="15"  />
+                <input type="hidden" name="end_time" value="10:59"   onchange="checkTimeTypeIn(this)" />       
+                <input type="hidden" name="demographic_no"   value=""  />
+                <input type="hidden" name="location"  tabindex="4" value="" />
+                <input type="hidden" name="resources"  tabindex="5" value="" />
+                <input type="hidden" name="user_id"  value="oscardoc, doctor" />
+     	        <input type="hidden" name="dboperation" value="add_apptrecord"/>
+                <input type="hidden" name="createdatetime"  value="2002-10-1 17:53:50" />
+                <input type="hidden" name="provider_no" value="115"/>
+                <input type="hidden" name="creator" value="oscardoc, doctor"/>
+                <input type="hidden" name="remarks" value="<%=creatorDemo%>"/>
+            </div>    
             </form>
             
                <%String demoNo = request.getParameter("demographic_no");
