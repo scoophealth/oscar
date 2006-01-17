@@ -345,7 +345,7 @@ public java.util.Vector estDemographicInbox(){
         java.sql.ResultSet rs;
 
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
-        +" where map.demographic_no = '"+ demographic_no+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
+        +" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+getCurrentLocationId()+"' "
         +" and m.messageid = map.messageID and ml.message=m.messageid order by "+getOrderBy(orderby));
         System.out.println(sql);
         rs = db.GetSQL(sql);
