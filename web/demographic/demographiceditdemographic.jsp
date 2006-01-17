@@ -72,6 +72,7 @@ You have no rights to access the data!
 <html:html locale="true">
 <head>
 <title><bean:message key="demographic.demographiceditdemographic.title"/></title>
+<html:base/>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
   <!-- calendar stylesheet -->
@@ -597,6 +598,9 @@ div.demographicWrapper {
                     <a href=# onClick="popupPage(700,1000,'../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" >
                     <bean:message key="global.tickler"/></a>
                 </td></tr>
+                <tr><td>
+                    <a href="javascript: function myFunction() {return false; }" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=rs.getString("demographic_no")%>','msg')">Send a Message</a>
+                </td></tr>
                 <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy %>
                 <tr><td>
                     <a href=# onClick="popupPage(700,1000,'../form/forwardshortcutname.jsp?formname=AR1&demographic_no=<%=request.getParameter("demographic_no")%>');">AR1</a>
@@ -640,7 +644,7 @@ div.demographicWrapper {
                     <tr><td>
                     <table width="100%" bgcolor="#CCCCFF" cellspacing="1" cellpadding="1">
                         <tr><td class="RowTop">
-                            <b>Record</b> (<%=rs.getString("demographic_no")%>) <a href="javascript: showHideDetail();">Edit</a>                            
+                            <b>Record</b> (<%=rs.getString("demographic_no")%>) <a href="javascript: showHideDetail();">Edit</a> 
                         </td></tr>
                         <tr><td bgcolor="#eeeeff">
                                                                                           
