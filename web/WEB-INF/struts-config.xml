@@ -267,6 +267,9 @@
       <forward name="success" path="/oscarMessenger/DisplayMessages.jsp"/>
       <forward name="demoMsg" path="/oscarMessenger/DisplayDemographicMessages.jsp"/>
     </action>
+    <action path="/oscarMessenger/SendDemoMessage" type="oscar.oscarMessenger.pageUtil.MsgSendDemographicMessageAction" name="frmForm" scope="request" input="/oscarMessenger/DisplayMessages.jsp">
+      <forward name="success" path="/oscarMessenger/CreateMessage.jsp"/>
+    </action>
     <action path="/oscarMessenger/DisplayDemographicMessages" type="oscar.oscarMessenger.pageUtil.MsgDisplayDemographicMessagesAction" name="msgDisplayDemographicMessagesForm" scope="request" input="/oscarMessenger/DisplayDemographicMessages.jsp">
       <forward name="demoMsg" path="/oscarMessenger/DisplayDemographicMessages.jsp"/>
     </action>
