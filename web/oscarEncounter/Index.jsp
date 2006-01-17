@@ -123,7 +123,7 @@ You have no rights to access the data!
 <head>
 <title><bean:message key="oscarEncounter.Index.title"/></title>
 <html:base/>
-
+<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <style type="text/css">
 	div.presBox {
 		height: <%=windowSizes.getProperty("presBoxSize")%>;
@@ -135,8 +135,6 @@ You have no rights to access the data!
        list-style:none;
        list-style-type:none;
        list-style-position:outside;
-       //border-top: 1pt soild #888888;
-       //border-left: 1pt soild #888888;
        padding-left:1px;
        margin-left:1px;
        margin-top:1px;
@@ -726,7 +724,7 @@ border-right: 2px solid #cfcfcf;
         </td>
 
         <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
-                <table name="tileTable" style="veritcal-align:middle;border-collapse:collapse;" >
+                <table name="tileTable" style="vertical-align:middle;border-collapse:collapse;" >
                     <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
                     <tr>
                         <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
@@ -867,7 +865,7 @@ border-right: 2px solid #cfcfcf;
             <form name="msgForm">
                 <tr class="Header">
                     <td style="font-weight:bold">
-                        oscarMessenger
+                        oscarMessenger <a href="javascript: function myFunction() {return false; }" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Send Msg</a>
                     </td>
                 </tr>
                 <tr>
