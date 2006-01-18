@@ -728,7 +728,7 @@ border-right: 2px solid #cfcfcf;
                     <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
                     <tr>
                         <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
+                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>              
                         </td>
                         <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
                         <!--div class="FakeLink">
@@ -751,11 +751,11 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
- 	            <%if (vLocale.getCountry().equals("BR")) {%>
-                        <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr');return false;"
-                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
+ 	            <%if (vLocale.getCountry().equals("BR")) {%>                        
+                        <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')" 
+                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>                    
 		    <%}else{%>
-	                <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail');return false;"
+                        <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')" 
                         title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
     		    <%}%><br>
              <%
