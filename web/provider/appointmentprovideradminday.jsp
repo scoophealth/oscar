@@ -170,6 +170,7 @@ public boolean isBirthday(String schedDate,String demBday){
 <% response.setHeader("Cache-Control","no-cache");%>
 <meta http-equiv="refresh" content="180;">
 </head>
+<script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script language="JavaScript">
 
 function setfocus() {
@@ -840,10 +841,10 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <!-- billing code block -->
 
     <% if (vLocale.getCountry().equals("BR")) {%>
-    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;"
-    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
+    <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master')" 
+    title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}else{%>
-    <a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;"
+    <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master')" 
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
 
