@@ -194,7 +194,8 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=BCP&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pName)%>', 'searchPatientWindow')">
                         <% } %>
                         <!--input type="button" value="Link To Lab Req" onClick="popupStart(360, 680, 'linkToLabReq.jsp?demo=<%=lab.getDemographicNo()%>&type=BCP&segmentID=<%=request.getParameter("segmentID")%>', 'searchPatientWindow')"-->
-                        <a href="linkToLabReq.jsp?demo=<%=lab.getDemographicNo()%>&type=BCP&segmentID=<%=request.getParameter("segmentID")%>"></a>
+                        <!--a href="linkToLabReq.jsp?demo=<%=lab.getDemographicNo()%>&type=BCP&segmentID=<%=request.getParameter("segmentID")%>"></a-->
+                        <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=lab.getDemographicNo()%>"/></i></span>
                     </td>
                 </tr>
             </table>
