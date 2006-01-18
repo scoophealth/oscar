@@ -46,6 +46,7 @@ You have no rights to access the data!
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
@@ -514,6 +515,7 @@ div.demographicWrapper {
                                                 if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
                         %>
                         <%=rs.getString("last_name")%>, <%=rs.getString("first_name")%> <%=rs.getString("sex")%> <%=age%> years
+                        <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=rs.getString("demographic_no")%>"/></i></span>
                         </td>
                     </tr>  
                 </table>

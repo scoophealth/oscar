@@ -728,7 +728,8 @@ border-right: 2px solid #cfcfcf;
                     <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
                     <tr>
                         <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>              
+                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
+                            <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
                         </td>
                         <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
                         <!--div class="FakeLink">
