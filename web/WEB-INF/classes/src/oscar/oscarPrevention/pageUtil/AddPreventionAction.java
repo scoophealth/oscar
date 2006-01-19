@@ -72,7 +72,11 @@ public class AddPreventionAction  extends Action {
 	 String refused = "0";
 	 if (given != null && given.equals("refused")){
             refused = "1";
+         }else if (given != null && given.equals("ineligible")){
+            refused = "2";
          }
+
+         
          
          if (neverWarn != null && neverWarn.equals("neverRemind")){
             neverWarn = "1";
