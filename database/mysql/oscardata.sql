@@ -1299,6 +1299,17 @@ insert into `secObjectName` values('_eChart.verifyButton');
 insert into `secObjectName` values('_billing');
 insert into `secObjectName` values('_tasks');
 insert into `secObjectName` values('_formMentalHealth');
+insert into `secObjectName` values ('_admin.userAdmin');
+insert into `secObjectName` values ('_admin.schedule');
+insert into `secObjectName` values ('_admin.billing');
+insert into `secObjectName` values ('_admin.resource');
+insert into `secObjectName` values ('_admin.reporting');
+insert into `secObjectName` values ('_admin.backup');
+insert into `secObjectName` values ('_admin.messenger');
+insert into `secObjectName` values ('_admin.eform');
+insert into `secObjectName` values ('_admin.encounter');
+insert into `secObjectName` values ('_admin.misc');
+ 
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('receptionist', '_demographic', '|*|', 0, '999998');
