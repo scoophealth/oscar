@@ -70,8 +70,8 @@
 
 <head>
 <title>
-oscarPrevention <!--I18n-->
-</title>
+oscarPrevention 
+</title><!--I18n-->
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
@@ -463,7 +463,9 @@ String r(Object re){
         String ret = "";
         if (re instanceof java.lang.String){                
            if (re != null && re.equals("1")){
-           ret = "style=\"background: #FFDDDD;\"";
+              ret = "style=\"background: #FFDDDD;\"";
+           }else if(re !=null && re.equals("2")){
+              ret = "style=\"background: #FFCC24;\""; 
            }
         }
         return ret;
