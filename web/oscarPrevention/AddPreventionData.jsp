@@ -38,7 +38,7 @@
   String providerName ="";
   String provider = (String) session.getValue("user");
   String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd");
-  boolean completed = true;
+  String completed = "0";
   String nextDate = "";
   boolean never = false;
   Hashtable extraData = new Hashtable();
@@ -51,7 +51,9 @@
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
      if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){         
-        completed = false;
+        completed = "1";
+     }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){         
+        completed = "2";
      }
      if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){         
         never = true;
@@ -85,8 +87,8 @@
 
 <head>
 <title>
-oscarPrevention <!--I18n-->
-</title>
+oscarPrevention 
+</title><!--I18n-->
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
      
@@ -294,8 +296,9 @@ clear: left;
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
                          <div style="float:left;">
-                            <input name="given" type="radio" value="given" <%=completed(completed)%> >Completed</input><br/>
-                            <input name="given" type="radio" value="refused" <%=refused(completed)%>>Refused</input>
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%> >Completed</input><br/>
+                            <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
                          <div style="float:left;margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
@@ -329,8 +332,9 @@ clear: left;
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
                          <div style="float:left;">                                                                              
-                            <input name="given" type="radio" value="given" <%=completed(completed)%>  >Completed</input><br/>
-                            <input name="given" type="radio" value="refused" <%=refused(completed)%>>Refused</input>
+                            <input name="given" type="radio" value="given"   <%=checked(completed,"0")%>  >Completed</input><br/>
+                            <input name="given" type="radio" value="refused" <%=checked(completed,"1")%>>Refused</input><br/>
+                            <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input><br/>
                          </div>
                          <div style="float:left;margin-left:30px;">
                             <label for="prevDate" class="fields" >Date:</label>    <input type="text" name="prevDate" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
@@ -399,6 +403,7 @@ Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :fal
 </body>
 </html:html>
 <%!
+
 String completed(boolean b){
     String ret ="";
     if(b){ret="checked";}
