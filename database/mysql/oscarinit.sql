@@ -6124,6 +6124,17 @@ CREATE TABLE `table_modification` (
 );
 
 
+
+CREATE TABLE `fileUploadCheck` (
+  `id` int(10) NOT NULL auto_increment,
+  `provider_no` varchar(6) NOT NULL default '',
+  `filename` varchar(255) NOT NULL default '',
+  `md5sum` varchar(255) default NULL,
+  `date_time` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`)
+)
+
+
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
 create index preventions_prevention_type on preventions (prevention_type(10));
