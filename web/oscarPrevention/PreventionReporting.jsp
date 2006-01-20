@@ -16,17 +16,18 @@
  * 
  * <OSCAR TEAM>
  * 
-     * This software was written for the 
+ * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity test2
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
 -->
-<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*"%>
+<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.data.*,oscar.oscarPrevention.pageUtil.*,java.net.*,oscar.eform.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
@@ -38,6 +39,9 @@
 
   String preventionText = "";
   
+  String eformSearch = (String) request.getAttribute("eformSearch");
+  EfmData efData = new EfmData();
+  
 %>
 
 <html:html locale="true">
@@ -45,8 +49,8 @@
 <head>
 <html:base/>
 <title>
-oscarPrevention I18n
-</title>
+oscarPrevention
+</title> <!--I18n-->
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
@@ -181,6 +185,21 @@ table.ele td{
     padding:2px;
 }
 </style>
+
+<style type="text/css" media="print">
+.MainTable {
+    display:none;
+}
+.hiddenInPrint{
+    display:none;
+}
+.shownInPrint{
+    display:block;
+}
+
+</style>
+
+
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
@@ -242,7 +261,20 @@ table.ele td{
                <input type="submit" />
                </html:form>
                
-               <div>
+               
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            &nbsp;
+            </td>
+            <td class="MainTableBottomRowRightColumn" valign="top">
+            &nbsp;
+            </td>
+        </tr>
+    </table>
+    
+    <div>
                 <%ArrayList overDueList = new ArrayList();
                   String type = (String) request.getAttribute("ReportType");
                   String ineligible = (String) request.getAttribute("inEligible");
@@ -255,11 +287,11 @@ table.ele td{
               <table class="ele" width="80%">
                        <tr>
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                       <td colspan="3">Up to date or due: <%=done%> = <%=percentage %> %</td>
+                       <td colspan="3">Up to date: <%=done%> = <%=percentage %> %</td>
                        <%if (type != null ){ %>
-                       <td colspan=7">&nbsp;</td>                          
+                       <td colspan="10">&nbsp;<%=request.getAttribute("patientSet")%> </td>
                        <%}else{%>
-                       <td colspan="6">&nbsp;</td>
+                       <td colspan="8">&nbsp;<%=request.getAttribute("patientSet")%> </td>
                        <%}%>
                        </tr>
                        <tr>
@@ -271,15 +303,17 @@ table.ele td{
                           <%if (type != null ){ %>
                           <td>Guardian</td>
                           <%}%>
-                          <td>&nbsp;</td>                          
+                          <td>Phone</td>                          
                           <td>Address</td>
-                          <td>Status</td>
+                          <td>Status</td>                          
                           <%if (type != null ){ %>
                           <td>Shot #</td>
-                          <%}%>
+                          <%}%>                          
+                          <td>Bonus Stat</td>
                           <td>Since Last Procedure Date</td>
                           <td>Last Procedure Date</td>
-                          
+                          <td>Last Contact Method</td>
+                          <td>Roster Physician</td>
                        </tr>
                        <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
                          DemographicData demoData= new DemographicData();
@@ -289,6 +323,10 @@ table.ele td{
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
                             Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
                             DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);
+                            Hashtable efHash = efData.getLastEformDate(eformSearch,dis.demographicNo);
+                            if (efHash == null){ System.out.println("efhash was null"); }
+                            if (efHash != null){ System.out.println("efhash wasn't null"); }
+                            
                             if (dis.state != null && dis.state.equals("Overdue")){
                                overDueList.add(dis.demographicNo);
                             }
@@ -304,8 +342,9 @@ table.ele td{
                           <td><%=h.get("lastName")%></td>
                           <td><%=h.get("firstName")%></td>
                           <td><%=demo.getPhone()%> </td>
-                          <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>
+                          <td><%=demo.getAddress()+" "+demo.getCity()+" "+demo.getProvince()+" "+demo.getPostal()%> </td>                          
                           <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
+                          <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
                           
@@ -318,12 +357,22 @@ table.ele td{
                           
                           <td><%=demoSDM==null?"":demoSDM.getLastName()%><%=demoSDM==null?"":","%> <%= demoSDM==null?"":demoSDM.getFirstName() %>&nbsp;</td>
                           <td><%=demoSDM==null?"":demoSDM.getPhone()%> &nbsp;</td>
-                          <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>
-                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>
+                          <td><%=demoSDM==null?"":demoSDM.getAddress()+" "+demoSDM==null?"":demoSDM.getCity()+" "+demoSDM==null?"":demoSDM.getProvince()+" "+demoSDM==null?"":demoSDM.getPostal()%> &nbsp;</td>                          
+                          <td bgcolor="<%=dis.color%>"><%=dis.state%></td>                          
                           <td bgcolor="<%=dis.color%>"><%=dis.numShots%></td>
+                          <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
-                          <%}%>
+                          <%}%>                          
+                          <td bgcolor="<%=dis.color%>">
+                             <% if (efHash != null ){ %>
+                                 <%=efHash.get("formName")%>
+                                 <%=efHash.get("date")%>                                 
+                             <% }else{ %>
+                                ----
+                             <% } %>                                 
+                          </td>
+                          <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
                           
                        </tr>                                                         
                       <%}%>
@@ -345,23 +394,10 @@ table.ele td{
                         <a target="_blank" href="../tickler/AddTickler.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
                   <%}%>
                </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
-            </td>
-            <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
-            </td>
-        </tr>
-    </table>
+    
 <script type="text/javascript">
     Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 </script>    
 
 </body>
 </html:html>
-<%!
-
-%>
