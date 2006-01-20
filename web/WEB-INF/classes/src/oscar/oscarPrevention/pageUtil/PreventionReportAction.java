@@ -99,6 +99,7 @@ public class PreventionReportAction extends Action {
              ArrayList  prevs = pd.getPreventionData("PAP",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
+             prd.bonusStatus = "N";
              if (prevs.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
@@ -149,7 +150,19 @@ public class PreventionReportAction extends Action {
                    numMonths = ""+num+" months";
                 }
                 
+                // if prevDate is less than as of date and greater than 2 years prior 
+                Calendar bonusEl = Calendar.getInstance();
+                bonusEl.setTime(asofDate);                
+                bonusEl.add(Calendar.YEAR,-2);
+                Date bonusStartDate = bonusEl.getTime();
                 
+                System.out.println("\n\n\n prevDate "+prevDate);
+                System.out.println("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
+                System.out.println("asofDate date"+asofDate+" "+asofDate.after(prevDate));
+                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
+                   prd.bonusStatus = "Y";
+                   done++;
+                }
                 //outcomes        
                 System.out.println("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
                 System.out.println("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
@@ -180,7 +193,7 @@ public class PreventionReportAction extends Action {
                    prd.state = "Up to date";
                    prd.numMonths = numMonths;
                    prd.color = "green";
-                   done++;
+                   //done++;
                 }
              }
              
@@ -201,6 +214,7 @@ public class PreventionReportAction extends Action {
           request.setAttribute("precent",percentStr);
           request.setAttribute("returnReport",returnReport);
           request.setAttribute("inEligible", ""+inList);
+          request.setAttribute("eformSearch","Pap");
           System.out.println("set returnReport "+returnReport);
           
        }else if (prevention.equals("Mammogram")){
@@ -213,6 +227,7 @@ public class PreventionReportAction extends Action {
              ArrayList  prevs = pd.getPreventionData("MAM",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
+             prd.bonusStatus = "N";
 
              if (prevs.size() == 0){// no info
                 prd.rank = 1;
@@ -255,7 +270,19 @@ public class PreventionReportAction extends Action {
                 
                 System.out.println("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
                
+                // if prevDate is less than as of date and greater than 2 years prior 
+                Calendar bonusEl = Calendar.getInstance();
+                bonusEl.setTime(asofDate);                
+                bonusEl.add(Calendar.YEAR,-2);
+                Date bonusStartDate = bonusEl.getTime();
                 
+                System.out.println("\n\n\n prevDate "+prevDate);
+                System.out.println("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
+                System.out.println("asofDate date"+asofDate+" "+asofDate.after(prevDate));
+                if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
+                   prd.bonusStatus = "Y";
+                   done++;
+                }
                 
                 //Calendar today = Calendar.getInstance(); 
                 //change as of date to run the report for a different year
@@ -296,7 +323,7 @@ public class PreventionReportAction extends Action {
                    prd.state = "Up to date";
                    prd.numMonths = numMonths;
                    prd.color = "green";
-                   done++;
+                   //done++;
                 }
              }
              
@@ -318,6 +345,7 @@ public class PreventionReportAction extends Action {
           request.setAttribute("returnReport",returnReport);
           request.setAttribute("inEligible", ""+inList);
           System.out.println("set returnReport "+returnReport);
+          request.setAttribute("eformSearch","Mam");
           ////
        }else if (prevention.equals("Flu")){
           /////
@@ -329,7 +357,8 @@ public class PreventionReportAction extends Action {
              ArrayList  prevs = pd.getPreventionData("Flu",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
-
+             prd.bonusStatus = "N";
+             
              if (prevs.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
@@ -374,7 +403,22 @@ public class PreventionReportAction extends Action {
                    numMonths = ""+num+" months";
                 }
                 
-                
+                // if prevDate is in the previous year 
+                Calendar bonusEl = Calendar.getInstance();
+                bonusEl.setTime(asofDate);                                
+                bonusEl.set(Calendar.DAY_OF_YEAR,1);
+                Date endOfYear = bonusEl.getTime();   
+                bonusEl.set(Calendar.YEAR,( bonusEl.get(Calendar.YEAR) - 1) );                
+                Date beginingOfYear  = bonusEl.getTime();
+                                                
+                System.out.println("\n\n\n prevDate "+prevDate);
+                System.out.println("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
+                System.out.println("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
+                System.out.println("ASOFDATE "+asofDate);
+                if (!refused && beginingOfYear.before(prevDate) && endOfYear.after(prevDate)){
+                   prd.bonusStatus = "Y";
+                   done++;
+                }
                 //outcomes        
                 System.out.println("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
                 System.out.println("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
@@ -405,7 +449,7 @@ public class PreventionReportAction extends Action {
                    prd.state = "Up to date";
                    prd.numMonths = numMonths;
                    prd.color = "green";
-                   done++;
+                   //done++;
                 }
              }
              
@@ -426,12 +470,13 @@ public class PreventionReportAction extends Action {
           request.setAttribute("precent",percentStr);
           request.setAttribute("returnReport",returnReport);
           request.setAttribute("inEligible", ""+inList);
+          request.setAttribute("eformSearch","Flu");
           System.out.println("set returnReport "+returnReport);
           
           /////
        }else if (prevention.equals("ChildImmunizations")){
           /////
-          
+          int dontInclude = 0;
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
              ArrayList fieldList = (ArrayList) list.get(i);       
              String demo = (String) fieldList.get(0);  
@@ -453,7 +498,7 @@ public class PreventionReportAction extends Action {
              int ageInMonths = demoData.getAgeInMonthsAsOf(asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
-
+             prd.bonusStatus = "N";
              if (totalImmunizations == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
@@ -526,6 +571,31 @@ public class PreventionReportAction extends Action {
                    numMonths = ""+num+" months";
                 }
                 
+                // if all shots doneprevDate is in the previous year 
+                //Calendar bonusEl = Calendar.getInstance();
+                //bonusEl.setTime(asofDate);                                
+                //bonusEl.set(Calendar.DAY_OF_YEAR,1);
+                //Date endOfYear = bonusEl.getTime();   
+                //bonusEl.set(Calendar.YEAR,( bonusEl.get(Calendar.YEAR) - 1) );                
+                //Date beginingOfYear  = bonusEl.getTime();
+                                                
+                //System.out.println("\n\n\n prevDate "+prevDate);
+                //System.out.println("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
+                //System.out.println("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
+               // System.out.println("ASOFDATE "+asofDate);
+                                                                                                                                
+                Date dob = dd.getDemographicDOB(demo);
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dob);
+                cal.add(Calendar.YEAR, 2);
+                Date twoYearsAfterDOB = cal.getTime();
+                
+                System.out.println("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
+                if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) ){//&& endOfYear.after(prevDate)){                  
+                   prd.bonusStatus = "Y";
+                   done++;
+                }
+                
                 //outcomes                        
                 if (!refused && totalImmunizations < recommTotal && ageInMonths >= 18 && ageInMonths <= 23){ // less < 9 
                    prd.rank = 2;
@@ -557,13 +627,14 @@ public class PreventionReportAction extends Action {
                    prd.numMonths = numMonths;
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "green";
-                   done++;
+                   //done++;
                 }else{
                    prd.state = "------";
                    prd.lastDate = prevDateStr;                   
                    prd.numMonths = numMonths;
                    prd.numShots = ""+totalImmunizations;
                    prd.color = "white";
+                   dontInclude++;
                 }
                 
                 
@@ -573,7 +644,7 @@ public class PreventionReportAction extends Action {
              
           }
           String percentStr = "0";
-          double eligible = list.size() - inList;
+          double eligible = list.size() - inList - dontInclude;
           System.out.println("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
@@ -587,6 +658,7 @@ public class PreventionReportAction extends Action {
           request.setAttribute("returnReport",returnReport);
           request.setAttribute("inEligible", ""+inList);
           request.setAttribute("ReportType","ChildHoodImm");
+          request.setAttribute("eformSearch","Imm");
           System.out.println("set returnReport "+returnReport);
           
           /////
