@@ -36,6 +36,7 @@ import org.apache.struts.action.*;
 import oscar.oscarDemographic.data.*;
 import oscar.oscarPrevention.*;
 import oscar.oscarReport.data.*;
+import oscar.oscarReport.pageUtil.RptDemographicReportForm;
 import oscar.util.*;
 
 /**
@@ -52,21 +53,31 @@ public class PreventionReportAction extends Action {
 				 ActionForm form,
 				 HttpServletRequest request,
 				 HttpServletResponse response){
-                                    
+       
        String setName = request.getParameter("patientSet");      
        String prevention  = request.getParameter("prevention");
+       Date asofDate = UtilDateUtilities.getDateFromString(request.getParameter("asofDate"),"yyyy-MM-dd");
        
        request.setAttribute("patientSet",setName);
        request.setAttribute("prevention",prevention);
        
-       DemographicSets dsets = new DemographicSets();
-       ArrayList list = dsets.getDemographicSet(setName);
-       ArrayList inList = dsets.getIneligibleDemographicSet(setName);
+       RptDemographicReportForm frm = new RptDemographicReportForm ();
+       frm.setSavedQuery(setName);
+       RptDemographicQueryLoader demoL = new RptDemographicQueryLoader();
+       frm = demoL.queryLoader(frm);
        
+       frm.setAsofDate(request.getParameter("asofDate"));
+       RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
+       //java.util.ArrayList searchedArray = demoQ.buildQuery(frm);
+       ArrayList list = demoQ.buildQuery(frm);
+       //DemographicSets dsets = new DemographicSets();
+       //ArrayList list = dsets.getDemographicSet(setName);
+       //ArrayList inList = dsets.getIneligibleDemographicSet(setName);
+       int inList = 0;
        ArrayList returnReport = new ArrayList();
        System.out.println("set size "+list.size());
        
-       Date asofDate = UtilDateUtilities.getDateFromString(request.getParameter("asofDate"),"yyyy-MM-dd");
+       
        
        if (asofDate == null){
           Calendar today = Calendar.getInstance();
@@ -82,23 +93,25 @@ public class PreventionReportAction extends Action {
        }else if (prevention.equals("PAP")){
           
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
-             String demo = (String) list.get(i);
+             ArrayList fieldList = (ArrayList) list.get(i);       
+             String demo = (String) fieldList.get(0);  
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs = pd.getPreventionData("PAP",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
-             if (inList.contains(demo)){
-                prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
-                prd.numMonths = "------";
-                prd.color = "grey";
-             }else if (prevs.size() == 0){// no info
+             if (prevs.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
                 prd.state = "No Info";                
                 prd.numMonths = "------";
                 prd.color = "Magenta";
+             }else if(ineligible((Hashtable) prevs.get(prevs.size()-1))){
+                prd.rank = 5;
+                prd.lastDate = "------"; 
+                prd.state = "Ineligible"; 
+                prd.numMonths = "------";
+                prd.color = "grey";
+                inList++;
              }else{
                 Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -175,7 +188,7 @@ public class PreventionReportAction extends Action {
              
           }
           String percentStr = "0";
-          double eligible = list.size() - inList.size();
+          double eligible = list.size() - inList;
           System.out.println("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
@@ -187,29 +200,33 @@ public class PreventionReportAction extends Action {
           request.setAttribute("up2date",""+Math.round(done));
           request.setAttribute("precent",percentStr);
           request.setAttribute("returnReport",returnReport);
-          request.setAttribute("inEligible", ""+inList.size());
+          request.setAttribute("inEligible", ""+inList);
           System.out.println("set returnReport "+returnReport);
           
        }else if (prevention.equals("Mammogram")){
           ////
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
-             String demo = (String) list.get(i);
+             ArrayList fieldList = (ArrayList) list.get(i);       
+             String demo = (String) fieldList.get(0);  
+
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs = pd.getPreventionData("MAM",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
-             if (inList.contains(demo)){
-                prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
-                prd.numMonths = "------";
-                prd.color = "grey";
-             }else if (prevs.size() == 0){// no info
+
+             if (prevs.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
                 prd.state = "No Info";                
                 prd.numMonths = "------";
                 prd.color = "Magenta";
+             }else if(ineligible((Hashtable) prevs.get(prevs.size()-1))){
+                prd.rank = 5;
+                prd.lastDate = "------"; 
+                prd.state = "Ineligible"; 
+                prd.numMonths = "------";
+                prd.color = "grey";
+                inList++;
              }else{
                 Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -287,7 +304,7 @@ public class PreventionReportAction extends Action {
              
           }
           String percentStr = "0";
-          double eligible = list.size() - inList.size();
+          double eligible = list.size() - inList;
           System.out.println("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
@@ -299,29 +316,33 @@ public class PreventionReportAction extends Action {
           request.setAttribute("up2date",""+Math.round(done));
           request.setAttribute("precent",percentStr);
           request.setAttribute("returnReport",returnReport);
-          request.setAttribute("inEligible", ""+inList.size());
+          request.setAttribute("inEligible", ""+inList);
           System.out.println("set returnReport "+returnReport);
           ////
        }else if (prevention.equals("Flu")){
           /////
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
-             String demo = (String) list.get(i);
+             ArrayList fieldList = (ArrayList) list.get(i);       
+             String demo = (String) fieldList.get(0);  
+
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs = pd.getPreventionData("Flu",demo); 
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
-             if (inList.contains(demo)){
-                prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
-                prd.numMonths = "------";
-                prd.color = "grey";
-             }else if (prevs.size() == 0){// no info
+
+             if (prevs.size() == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
                 prd.state = "No Info";                
                 prd.numMonths = "------";
                 prd.color = "Magenta";
+             }else if(ineligible((Hashtable) prevs.get(prevs.size()-1))){
+                prd.rank = 5;
+                prd.lastDate = "------"; 
+                prd.state = "Ineligible"; 
+                prd.numMonths = "------";
+                prd.color = "grey";
+                inList++;
              }else{
                 Hashtable h = (Hashtable) prevs.get(prevs.size()-1);
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -392,7 +413,7 @@ public class PreventionReportAction extends Action {
              
           }
           String percentStr = "0";
-          double eligible = list.size() - inList.size();
+          double eligible = list.size() - inList;
           System.out.println("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
@@ -404,7 +425,7 @@ public class PreventionReportAction extends Action {
           request.setAttribute("up2date",""+Math.round(done));
           request.setAttribute("precent",percentStr);
           request.setAttribute("returnReport",returnReport);
-          request.setAttribute("inEligible", ""+inList.size());
+          request.setAttribute("inEligible", ""+inList);
           System.out.println("set returnReport "+returnReport);
           
           /////
@@ -412,7 +433,9 @@ public class PreventionReportAction extends Action {
           /////
           
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
-             String demo = (String) list.get(i);
+             ArrayList fieldList = (ArrayList) list.get(i);       
+             String demo = (String) fieldList.get(0);  
+
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs1 = pd.getPreventionData("DTaP-IPV",demo);                                                                             
              ArrayList  prevs2 = pd.getPreventionData("Hib",demo);              
@@ -430,22 +453,21 @@ public class PreventionReportAction extends Action {
              int ageInMonths = demoData.getAgeInMonthsAsOf(asofDate);
              PreventionReportDisplay prd = new PreventionReportDisplay();
              prd.demographicNo = demo;
-             
-             if (inList.contains(demo)){
-                prd.rank = 5;
-                prd.lastDate = "------"; 
-                prd.state = "Ineligible"; 
-                prd.numMonths = "------";
-                prd.color = "grey";
-                prd.numShots = "--";
-             }else if (totalImmunizations == 0){// no info
+
+             if (totalImmunizations == 0){// no info
                 prd.rank = 1;
                 prd.lastDate = "------";
                 prd.state = "No Info";                
                 prd.numMonths = "------";
                 prd.color = "Magenta";
-                prd.numShots = "--";
-             }else{
+             }else if(  ineligible((Hashtable) prevs1.get(prevs1.size()-1)) || ineligible((Hashtable) prevs2.get(prevs2.size()-1)) || ineligible((Hashtable) prevs4.get(prevs4.size()-1)) ){
+                prd.rank = 5;
+                prd.lastDate = "------"; 
+                prd.state = "Ineligible"; 
+                prd.numMonths = "------";
+                prd.color = "grey";
+                inList++;
+            }else{
                 
                 boolean refused = false;                                
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -551,7 +573,7 @@ public class PreventionReportAction extends Action {
              
           }
           String percentStr = "0";
-          double eligible = list.size() - inList.size();
+          double eligible = list.size() - inList;
           System.out.println("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
@@ -563,7 +585,7 @@ public class PreventionReportAction extends Action {
           request.setAttribute("up2date",""+Math.round(done));
           request.setAttribute("precent",percentStr);
           request.setAttribute("returnReport",returnReport);
-          request.setAttribute("inEligible", ""+inList.size());
+          request.setAttribute("inEligible", ""+inList);
           request.setAttribute("ReportType","ChildHoodImm");
           System.out.println("set returnReport "+returnReport);
           
@@ -575,6 +597,14 @@ public class PreventionReportAction extends Action {
        
        return (mapping.findForward("success"));
    }   
+   
+   boolean ineligible(Hashtable h){
+       boolean ret =false;
+       if ( h.get("refused") != null && ((String) h.get("refused")).equals("2")){
+          ret = true;
+       }
+       return ret;
+   }
                                     
 }
 
