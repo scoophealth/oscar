@@ -31,12 +31,11 @@
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
   
-  DemographicSets  ds = new DemographicSets();
-  ArrayList sets = ds.getDemographicSets();
-
+  oscar.oscarReport.data.RptSearchData searchData  = new oscar.oscarReport.data.RptSearchData();    
+  ArrayList queryArray = searchData.getQueryTypes();
+  
   String preventionText = "";
   
   String eformSearch = (String) request.getAttribute("eformSearch");
@@ -48,9 +47,8 @@
 
 <head>
 <html:base/>
-<title>
-oscarPrevention
-</title> <!--I18n-->
+<title>oscarPrevention</title><!-- i18n -->
+
 <script src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
@@ -235,9 +233,11 @@ table.ele td{
                   Patient Set:
                   <html:select property="patientSet">
                       <html:option value="-1" >--Select Set--</html:option>
-                      <% for ( int i = 0 ; i < sets.size(); i++ ){  
-                            String s = (String) sets.get(i);%>
-                      <html:option value="<%=s%>"><%=s%></html:option>
+                      <%for (int i =0 ; i < queryArray.size(); i++){
+                        RptSearchData.SearchCriteria sc = (RptSearchData.SearchCriteria) queryArray.get(i);
+                        String qId = sc.id;
+                        String qName = sc.queryName;%>
+                        <html:option value="<%=qId%>"><%=qName%></html:option>
                       <%}%>
                   </html:select>                  
                </div>
