@@ -112,6 +112,7 @@ if (request.getParameter("loadFromSession") == null ){
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <style type="text/css">
 	<!--
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
@@ -887,6 +888,8 @@ function showHideLayers() { //v3.0
               </table>
               <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
                 <tr>
+                
+                
 
                   <td width="91%" valign="top">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
@@ -895,30 +898,34 @@ function showHideLayers() { //v3.0
                               <td width="15%"><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.service.unit"/></font></b></td>
                             </tr>
                             <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                              
                                 <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40"/>
+                                <input type="button" value=".5" onclick="$('xml_other1_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-
-                        <html:text property="xml_other1_unit" size="5" maxlength="3" />
+                              
+                        <html:text property="xml_other1_unit" size="5" maxlength="3" styleId="xml_other1_unit"/>
                                 </font></td>
                             </tr>
                             <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" />
+                                <input type="button" value=".5" onclick="$('xml_other2_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other2_unit" size="5" maxlength="3" />
+                        <html:text property="xml_other2_unit" size="5" maxlength="3" styleId="xml_other2_unit" />
                                 </font></td>
                             </tr>
                             <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" />
+                                <input type="button" value=".5" onclick="$('xml_other3_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other3_unit" size="5" maxlength="3" />
+                        <html:text property="xml_other3_unit" size="5" maxlength="3" styleId="xml_other3_unit"/>
                                 </font></td>
                             </tr>
                             <tr>
