@@ -166,6 +166,7 @@ function openNewPage(vheight,vwidth,varpage) {
                                     <option value="<bean:write name="quickLists" property="quickListName" />" <bean:write name="quickLists" property="lastUsed" />><bean:write name="quickLists" property="quickListName" /></option>
                                 </logic:iterate>
                             </html:select>
+                            <input type="button" value="GO" onclick="javascript:changeList();">
                         </td>
                     </tr>
                     <logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemsVector">
