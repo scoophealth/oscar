@@ -49,8 +49,9 @@ public class dxResearchBeanHandler {
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String codingSystem = codingSys.getCodingSystem();        
             
-            String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='" + demographicNo 
-                        +"' order by d.start_date desc, d.update_date desc";
+            String sql = "select d.start_date, d.update_date, c.description, c."+codingSystem+", d.dxresearch_no, d.status from dxresearch d, "+codingSystem+" c " +
+                         "where d.dxresearch_code=c."+codingSystem+" and d.status<>'D' and d.demographic_no ='"+ demographicNo +"' and d.coding_system = '"+codingSystem+"'"
+                        +" order by d.start_date desc, d.update_date desc";
             //System.out.println("Sql Statement: " + sql);
             ResultSet rs;
             for(rs = db.GetSQL(sql); rs.next(); )

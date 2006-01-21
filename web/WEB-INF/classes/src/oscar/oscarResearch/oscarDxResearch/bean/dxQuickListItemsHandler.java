@@ -66,7 +66,8 @@ public class dxQuickListItemsHandler {
                 db.RunSQL(sql);
             }
 
-            sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
+            sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";
+            //System.out.println(sql);
             rs = db.GetSQL(sql);            
             while(rs.next()){                
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),
@@ -90,9 +91,8 @@ public class dxQuickListItemsHandler {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String codingSystem = codingSys.getCodingSystem();        
-            
-            String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";           
-         
+            String sql = "Select q.dxResearchCode, c.description FROM quickList q, "+codingSystem+" c where codingSystem = '"+codingSystem+"' and quickListName='"+ quickListName +"' AND c."+codingSystem+" = q.dxResearchCode order by c.description";           
+            //System.out.println("when does this get called "+sql);
             ResultSet rs = db.GetSQL(sql);            
             while(rs.next()){                
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),

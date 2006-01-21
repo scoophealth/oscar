@@ -55,12 +55,12 @@ public final class dxSetupResearchAction extends Action {
         
         //System.out.println("Quick List: " + selectedQuickList);
         if (selectedQuickList.equals("")||selectedQuickList==null){
-            quicklistHd = new dxQuickListBeanHandler(providerNo);
+            quicklistHd = new dxQuickListBeanHandler(providerNo, codingSystem);
             quicklistItemsHd = new dxQuickListItemsHandler(quicklistHd.getLastUsedQuickList(),providerNo);
         }
         else{
             quicklistItemsHd = new dxQuickListItemsHandler(selectedQuickList,providerNo);
-            quicklistHd = new dxQuickListBeanHandler(providerNo);
+            quicklistHd = new dxQuickListBeanHandler(providerNo,codingSystem);
         }
         
         HttpSession session = request.getSession();

@@ -40,11 +40,23 @@ public class dxQuickListBeanHandler {
         init(providerNo);
     } 
     
+    public dxQuickListBeanHandler(String providerNo,String codingSystem) {
+        init(providerNo,codingSystem);
+    } 
+    
     public dxQuickListBeanHandler() {
         init();
     }
-        
-    public boolean init(String providerNo) {
+    
+    public boolean init(String providerNo){
+        return init(providerNo,null);
+    }
+    
+    public boolean init(String providerNo,String codingSystem) {
+        String codSys = "";
+        if ( codingSystem != null ){
+            codSys = " where codingSystem = '"+codingSystem+"' ";
+        } 
         
         boolean verdict = true;
         try {
@@ -65,13 +77,14 @@ public class dxQuickListBeanHandler {
                 lastUsed = "default";
             }
            
-            sql = "Select quickListName, createdByProvider from quickList group by quickListName"; 
+            sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";
+            //System.out.println(sql);
             rs = db.GetSQL(sql);
             while(rs.next()){                
                 dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"),
                                                            rs.getString("createdByProvider"));
                 if(lastUsed.equals(rs.getString("quickListName"))){
-                    System.out.println("lastused: " + lastUsed);
+                    //System.out.println("lastused: " + lastUsed);
                     bean.setLastUsed("Selected");
                     lastUsedQuickList = rs.getString("quickListName");
                 }                
@@ -96,7 +109,8 @@ public class dxQuickListBeanHandler {
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String lastUsed = "";
-            String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName";            
+            String sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName"; 
+            //System.out.println(sql);
             rs = db.GetSQL(sql);
             while(rs.next()){                
                 dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"));                              
