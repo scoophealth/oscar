@@ -759,7 +759,10 @@ if (!fedb.equals("") && fedb.length()==10 ) {
     }
 function calToday(field) {
 	var calDate=new Date();
-	field.value = calDate.getDate() + '/' + (calDate.getMonth()+1) + '/' + calDate.getFullYear();
+	varMonth = calDate.getMonth()+1;
+	varMonth = varMonth>9? varMonth : ("0"+varMonth);
+	varDate = calDate.getDate()>9? calDate.getDate(): ("0"+calDate.getDate());
+	field.value = varDate + '/' + (varMonth) + '/' + calDate.getFullYear();
 }
 </script>
 
