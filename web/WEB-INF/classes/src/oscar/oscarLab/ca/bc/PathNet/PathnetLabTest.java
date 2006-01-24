@@ -133,9 +133,29 @@ public String getDemographicNo(){
       return getFirstVal(s," ");
    }
    
+   public String getDemographicNumByLabId(String id){
+      String ret = null;
+      try{
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         String select_demoNo = "select demographic_no from patientLabRouting where lab_type = 'BCP' and lab_no = '"+id+"'";
+         ResultSet rs  = db.GetSQL(select_demoNo);
+         if(rs.next()){          
+             ret = rs.getString("demographic_no");
+         }
+         if (ret != null && ret.equals("0")){
+             ret = null;
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         e.printStackTrace();
+      }    
+      return ret;
+   }
+   
    public void populateLab(String labid){      
-      
-      System.out.println("lab id "+labid);
+      System.out.println("lab id "+labid); 
+      demographicNo = getDemographicNumByLabId(labid);
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          String select_pid_information = "SELECT pid_id, patient_name, external_id, date_of_birth, patient_address, sex, home_number,sending_facility  FROM hl7_pid, hl7_msh WHERE hl7_pid.message_id = '"+labid+"' and hl7_msh.message_id = hl7_pid.message_id";
