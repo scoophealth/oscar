@@ -1000,7 +1000,16 @@
     
     <action path="/report/SetEligibility" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction" name="FrmForm" scope="request" input="/oscarReport/demographicSetEdit.jsp">
       <forward name="success" path="/oscarReport/demographicSetEdit.jsp"/>
-    </action>                           
+    </action>
+    
+    <action path="/tickler/ForwardDemographicTickler" type="oscar.oscarTickler.pageUtil.ForwardDemographicTicklerAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
+      <forward name="success" path="/tickler/ticklerAdd.jsp"/>
+    </action>
+    
+    <action path="/tickler/AddTickler" type="oscar.oscarTickler.pageUtil.AddTicklerAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
+      <forward name="close" path="/close.html"/>
+    </action>
+                               
     <!--
     <action path="/oscarEncounter/SaveCPPAction" type="oscar.oscarEncounter.pageUtil.SaveCPPAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
       <forward name="success" path="/oscarEncounter/encounterCPP.jsp"/>
@@ -1009,12 +1018,7 @@
     <action path="/oscarEncounter/SaveCPPUserPrefAction" type="oscar.oscarEncounter.pageUtil.SaveCPPUserPrefAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
       <forward name="success" path="/oscarEncounter/encounterCPP.jsp"/>
     </action>        
-    
-    
-    <action path="/tickler/AddTickler" type="oscar.oscarTickler.pageUtil.AddTicklerAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
-      <forward name="close" path="/close.html"/>
-    </action>        
-    
+            
     <action path="/oscarNote/AddNote" type="oscar.oscarNote.pageUtil.AddNoteAction" name="FrmForm" scope="request" input="/oscarNote/AddNote.jsp">
       <forward name="close" path="/close.html"/>
     </action>        
