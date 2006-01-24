@@ -38,6 +38,15 @@ String providerview = request.getParameter("providerview")==null?"all":request.g
 boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 String ChartNo;
+String demoNo = "";
+String demoName = request.getParameter("name");
+if ( request.getAttribute("demographic_no") != null){
+    demoNo = (String) request.getAttribute("demographic_no");
+    demoName = (String) request.getAttribute("demoName");
+    bFirstDisp = false;
+}
+if(demoName == null){demoName ="";}
+
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -216,7 +225,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
 <tr> 
       <td width="35%"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><b><bean:message key="tickler.ticklerAdd.formDemoName"/>: </b></font></font></td>
       <td colspan="2" width="65%">
-<div align="left"><INPUT TYPE="TEXT" NAME="keyword" size="25" VALUE="<%=bFirstDisp?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname"):request.getParameter("name")%>">
+<div align="left"><INPUT TYPE="TEXT" NAME="keyword" size="25" VALUE="<%=bFirstDisp?"":demoName.equals("")?session.getAttribute("appointmentname"):demoName%>">
    	 <input type="submit" name="Submit" value="<bean:message key="tickler.ticklerAdd.btnSearch"/>">
   </div>
 </td>
@@ -253,7 +262,7 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
   <form name="serviceform" method="post" >
      <tr> 
       <td width="35%"> <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><strong><bean:message key="tickler.ticklerAdd.formChartNo"/>:</strong> </font></font></div></td>
-      <td colspan="2"> <div align="left"><INPUT TYPE="hidden" NAME="demographic_no" VALUE="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>"><%=bFirstDisp?"":request.getParameter("chart_no").equals("")?"":request.getParameter("chart_no")%></div></td>
+      <td colspan="2"> <div align="left"><INPUT TYPE="hidden" NAME="demographic_no" VALUE="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>"><%=ChartNo%></div></td>
     </tr>
 
     <tr> 
