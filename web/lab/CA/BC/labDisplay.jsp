@@ -50,6 +50,7 @@ String AbnFlag = "";
 <html:base/>
 <title><%=lab.pName%> <bean:message key="oscarMDS.segmentDisplay.title"/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
 <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
 <style type="text/css">
 <!--
@@ -191,6 +192,11 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
+                        <% System.out.println(" >>> "+lab.getDemographicNo()); %>
+                        <% if ( lab.getDemographicNo() != null && !lab.getDemographicNo().equals("") && !lab.getDemographicNo().equalsIgnoreCase("null")){ %>
+                        <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=lab.getDemographicNo()%>','msg')"/>
+                        <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=lab.getDemographicNo()%>','tickler')"/>
+                        <% } %>
                         <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>                            
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=BCP&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pName)%>', 'searchPatientWindow')">
                         <% } %>
@@ -573,21 +579,22 @@ function popupStart(vheight,vwidth,varpage,windowname) {
             </table> -->
             <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                 <tr>
-                    <td align="left" width="40%">
+                    <td align="left" width="50%">
                         <% if ( request.getParameter("providerNo") != null /*&& ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) */) { %>
                         <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
+                        <% if ( lab.getDemographicNo() != null && !lab.getDemographicNo().equals("") && !lab.getDemographicNo().equalsIgnoreCase("null")){ %>
+                        <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=lab.getDemographicNo()%>','msg')"/>
+                        <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=lab.getDemographicNo()%>','tickler')"/>
+                        <% } %>
                         <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>                            
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=BCP&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pName)%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
-                    <td width="20%" valign="center" align="middle">
+                    <td width="50%" valign="center" align="left">
                         <span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
-                    </td>
-                    <td width="40%">
-                        &nbsp;
                     </td>
                 </tr>
             </table>

@@ -52,6 +52,7 @@ String AbnFlag = "";
 <head>
 <title><%=pd.getPatientName()%> - <bean:message key="oscarMDS.segmentDisplay.title"/></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="javascript" type="text/javascript" src="../../../share/javascript/Oscar.js" ></script>
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
 <!--
@@ -192,6 +193,10 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
+                        <% if ( demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null")){ %>
+                        <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=lab.getDemographicNo()%>','msg')"/>
+                        <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=lab.getDemographicNo()%>','tickler')"/>
+                        <% } %>
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
@@ -760,17 +765,18 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
+                        <% if ( demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null")){ %>
+                        <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=lab.getDemographicNo()%>','msg')"/>
+                        <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=lab.getDemographicNo()%>','tickler')"/>
+                        <% } %>
                         <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="window.close()">
                         <% } else { // we were called from lab module %>
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName() )%>', 'searchPatientWindow')">
                         <% } %>
                     </td>
-                    <td width="20%" valign="center" align="middle">
+                    <td width="50%" valign="center" align="left">
                         <span class="Field2"><i><bean:message key="oscarMDS.segmentDisplay.msgReportEnd"/></i></span>
-                    </td>
-                    <td width="40%">
-                        &nbsp;
                     </td>
                 </tr>
             </table>
