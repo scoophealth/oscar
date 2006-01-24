@@ -528,7 +528,10 @@ if (!fedb.equals("") && fedb.length()==10 ) {
 		var temp = ""; //pg4_gest1 - pg4_date1
 		var n1 = name.substring(eval(name.indexOf("t")+1));
 
-		if (n1>36) {
+		if(name.indexOf("ar2_")>=0) {
+			n1 = name.substring(eval(name.indexOf("A")+1));
+			name = "ar2_uDate" + n1;
+		} else 		if (n1>36) {
 			name = "pg4_date" + n1;
 		} else if (n1<=36 && n1>18) {
 			name = "pg3_date" + n1;
@@ -1041,7 +1044,7 @@ function calToday(field) {
                     <td nowrap><input type="text" name="ar2_uDate1" id="ar2_uDate1" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate1", "") %>">
 					<img src="../images/cal.gif" id="ar2_uDate1_cal"> 
                     </td>
-                    <td><input type="text" name="ar2_uGA1" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA1", "")) %>"></td>
+                    <td><input type="text" name="ar2_uGA1" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA1", "")) %>"></td>
                     <td><input type="text" name="ar2_uResults1" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults1", "")) %>"></td>
                     <td>Hb</td>
 					<td><input type="text" name="ar2_hb" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_hb", "")) %>"></td>
@@ -1050,7 +1053,7 @@ function calToday(field) {
                     <td><input type="text" name="ar2_uDate2" id="ar2_uDate2" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate2", "") %>">
 					<img src="../images/cal.gif" id="ar2_uDate2_cal"> 
                     </td>
-                    <td><input type="text" name="ar2_uGA2" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA2", "")) %>"></td>
+                    <td><input type="text" name="ar2_uGA2" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA2", "")) %>"></td>
                     <td><input type="text" name="ar2_uResults2" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults2", "")) %>"></td>
                     <td>ABO/Rh</td>
 			        <td><input type="text" name="ar2_bloodGroup" size="2" maxlength="6" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_bloodGroup", "")) %>">
@@ -1060,7 +1063,7 @@ function calToday(field) {
                     <td><input type="text" name="ar2_uDate3" id="ar2_uDate3" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate3", "") %>">
 					<img src="../images/cal.gif" id="ar2_uDate3_cal"> 
                     </td>
-                    <td><input type="text" name="ar2_uGA3" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA3", "")) %>"></td>
+                    <td><input type="text" name="ar2_uGA3" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA3", "")) %>"></td>
                     <td><input type="text" name="ar2_uResults3" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults3", "")) %>"></td>
                     <td>Repeat ABS</td>
 					<td><input type="text" name="ar2_labABS" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_labABS", "")) %>"></td>
@@ -1069,7 +1072,7 @@ function calToday(field) {
                     <td><input type="text" name="ar2_uDate4" id="ar2_uDate4" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate4", "") %>">
 					<img src="../images/cal.gif" id="ar2_uDate4_cal"> 
                     </td>
-                    <td><input type="text" name="ar2_uGA4" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA4", "")) %>"></td>
+                    <td><input type="text" name="ar2_uGA4" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA4", "")) %>"></td>
                     <td><input type="text" name="ar2_uResults4" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults4", "")) %>"></td>
                     <td>1 hr. GCT</td>
 					<td><input type="text" name="ar2_lab1GCT" size="10" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_lab1GCT", "")) %>"></td>
@@ -1175,6 +1178,7 @@ function calToday(field) {
             | <a href="formonarpg2.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.1)</font></a>
             | <a href="formonarpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">AR2 <font size=-2>(pg.2)</font></a>
             &nbsp;|&nbsp;
+            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">AR Planner</a>
         </td>
 <%
   }
