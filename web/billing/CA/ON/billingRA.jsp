@@ -41,7 +41,7 @@ function setfocus() {
 //-->
 
 function onSubmit(){   
-   if ( document.form1.file1.value == "" ){
+   if ( document.form1.file1.value == "!" ){
       alert("You must select a file before creating a report");
       return false;
    }
