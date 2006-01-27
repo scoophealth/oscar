@@ -128,16 +128,14 @@ cal.add(Calendar.YEAR, 1);
   itemp1[1] = Integer.parseInt(strLimit1);
   itemp1[0] = Integer.parseInt(strLimit2);
   boolean bodd=false;
-  boolean bOnlyNewForm = true;
   int nItems=0;
   try {  // First try the version which also checks the edbrept table.  This will throw an exception if the edbrept table does not exist...
       rs = reportMainBean.queryResults(paramb,itemp1, "select_backwardscompatible");
-      bOnlyNewForm = false;
   } catch (Exception e) {  // ...in which case we go with the standard version
       rs = reportMainBean.queryResults(param,itemp1, "select_formar");
   }
   while (rs.next()) {
-    if (bOnlyNewForm && !arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
+    if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
     if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
     else demoProp.setProperty(rs.getString("demographic_no"), "1");
 
