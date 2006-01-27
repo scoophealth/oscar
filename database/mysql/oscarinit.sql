@@ -5736,6 +5736,7 @@ CREATE TABLE scheduletemplatecode (
   description varchar(80) default NULL,
   duration char(3) default '',
   color varchar(10) default NULL,
+  confirm char(3) NOT NULL default 'No',
   KEY code (code)
 ) TYPE=MyISAM;
 
