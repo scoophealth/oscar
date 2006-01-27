@@ -51,7 +51,7 @@
     {"delete_scheduleholiday", "delete from scheduleholiday where sdate=?" }, 
     {"update_scheduleholiday", "update scheduleholiday set holiday_name=? where sdate=?" }, 
     
-    {"add_scheduletemplatecode", "insert into scheduletemplatecode values(?,?,?,?)" }, 
+    {"add_scheduletemplatecode", "insert into scheduletemplatecode values(?,?,?,?,?)" }, 
     {"search_scheduletemplatecode", "select * from scheduletemplatecode order by code" }, 
     {"search_scheduletemplatecodesingle", "select * from scheduletemplatecode where code like binary ?" }, 
     {"delete_scheduletemplatecode", "delete from scheduletemplatecode where code like binary ?" }, 
