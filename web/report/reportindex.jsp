@@ -92,8 +92,13 @@ function go(r) {
   var z = document.report.eTime.value ;
   var w = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ t;
   var x = 'reportdaysheet.jsp?dsmode=' + r + '&provider_no=' + s +'&sdate='+ u + '&edate=' + v + '&sTime=' + y + '&eTime=' + z ;
+  var y2 =  'tabulardaysheetreport.jsp?provider_no=' + s +'&sdate=' + document.report.tabDay.value.replace('/', '-');
 
-  if(r=='new') {
+if (r=='tab')
+{
+	popupPage(600,750, y2);
+}
+else if(r=='new') {
     if(confirm("<bean:message key="report.reportindex.msgGoConfirm"/>") ) {
 	  popupPage(600,750,w);
 	}
@@ -265,6 +270,17 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
         <td></td>
         <td></td>
+     </tr>
+    <tr>
+        <td width="2"><%=j%><%j++;%></td>
+        <td width="1"></td>
+        <td width="300">
+			<a href="#" ONCLICK ="go('tab')">Tabular-style Daysheet</a>
+		</td>
+        <td><input type='text' name="tabDay" VALUE="<%=today%>"  size=10></td>
+        <td></td>
+        <td></td>
+    </tr>	
     <tr>
         <td width="2"><%=j%><%j++;%></td>
         <td width="1"></td>
