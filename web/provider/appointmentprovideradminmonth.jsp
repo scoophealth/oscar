@@ -95,7 +95,7 @@
 
   //verify the input date is really existed 
 	now=new GregorianCalendar(year,(month-1),day);
-  year = now.get(Calendar.YEAR); //month should be the current main display date, not the real now date
+  year = now.get(Calendar.YEAR);
   month = (now.get(Calendar.MONTH)+1);
   day = now.get(Calendar.DAY_OF_MONTH);
   int dayOfWeek = now.get(Calendar.DAY_OF_WEEK);
