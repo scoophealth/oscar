@@ -29,6 +29,7 @@
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
+  String query_name = request.getParameter("queryName")!=null?request.getParameter("queryName"):("") ;
   String curUser_no = (String) session.getAttribute("user");
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" errorPage="../../appointment/errorpage.jsp" %>
@@ -40,6 +41,7 @@
 <% 
 String [][] dbQueries=new String[][] { 
 {"search_formarrisk", "select * from formAR where ID = ?" }, 
+{"search_formonarrisk", "select * from formONAR where ID = ?" }, 
 {"search_desaprisk", "select * from desaprisk where form_no <= ? and demographic_no = ? order by form_no desc, desaprisk_date desc, desaprisk_time desc limit 1 " }, 
 {"save_desaprisk", "insert into desaprisk (desaprisk_date,desaprisk_time,provider_no,risk_content,checklist_content,demographic_no,form_no) values (?,?,?,?,?,?,? ) " }, 
 };
@@ -96,7 +98,11 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
-	  rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
+	  if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
+	      rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
+	  } else {
+		  rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
+	  }
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
       while (rsdemo.next()) { 
           finalEDB = rsdemo.getString("c_finalEDB");
