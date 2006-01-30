@@ -465,7 +465,7 @@
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgCard"/>
                                         </td>
                                         <td class="fillLine">
-                             <%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;<%=reqFrm.patientHealthCardType%>
+                             (<%=reqFrm.patientHealthCardType%>)&nbsp;<%=reqFrm.patientHealthNum %>&nbsp;<%=reqFrm.patientHealthCardVersionCode%>&nbsp;
                                         </td>
                                     </tr>
                                     <tr>
