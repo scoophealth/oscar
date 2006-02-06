@@ -16,14 +16,9 @@ public class OscarDocumentCreator {
 
   }
 
-  public FileInputStream getDocumentStream(String path) {
-    FileInputStream reportInstream = null;
-    try {
-      reportInstream = new FileInputStream(path);
-    }
-    catch (IOException ex) {
-      ex.printStackTrace();
-    }
+  public InputStream getDocumentStream(String path) {
+    InputStream reportInstream = null;
+    reportInstream = getClass().getClassLoader().getResourceAsStream(path);
     return reportInstream;
   }
 
@@ -33,8 +28,7 @@ public class OscarDocumentCreator {
     try {
       JasperReport jasperReport = null;
       JasperPrint print = null;
-      jasperReport = JasperCompileManager.compileReport(
-          xmlDesign);
+      jasperReport = getJasperReport(xmlDesign);
       if (dataSrc instanceof List) {
         JRDataSource ds = new JRBeanCollectionDataSource( (List) dataSrc);
         print = JasperFillManager.fillReport(jasperReport, parameters,
@@ -62,6 +56,23 @@ public class OscarDocumentCreator {
     catch (JRException ex) {
       ex.printStackTrace();
     }
+  }
+
+  /**
+   * Returns a JasperReport instance reprepesenting the supplied InputStream
+   * @param xmlDesign InputStream
+   * @return JasperReport
+   */
+  public JasperReport getJasperReport(InputStream xmlDesign) {
+    JasperReport jasperReport = null;
+    try {
+      jasperReport = JasperCompileManager.compileReport(
+          xmlDesign);
+    }
+    catch (JRException ex) {
+      ex.printStackTrace();
+    }
+    return jasperReport;
   }
 
   /**
