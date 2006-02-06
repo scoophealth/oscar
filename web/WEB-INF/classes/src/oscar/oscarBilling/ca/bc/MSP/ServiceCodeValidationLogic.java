@@ -154,7 +154,7 @@ public class ServiceCodeValidationLogic {
           "from billingmaster " +
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '13050'" +
-          " and billingstatus != 'D'";
+          " and billingstatus not in ('D','R','F')";
       System.out.println("13050 qry =" + qry);
       rs = db.GetSQL(qry);
       int index = 0;
@@ -311,7 +311,7 @@ public class ServiceCodeValidationLogic {
           "from billingmaster " +
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '13050'" +
-          " and billingstatus != 'D'";
+          " and billingstatus not in('D','R','F')";
       rs = db.GetSQL(qry);
       if (rs.next()) {
         ret = rs.getString(1);
