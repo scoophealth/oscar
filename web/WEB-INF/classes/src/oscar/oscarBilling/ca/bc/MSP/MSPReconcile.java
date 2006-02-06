@@ -57,6 +57,8 @@ public class MSPReconcile {
   public static final String REP_WO = "REP_WO";
   public static final String REP_MSPREM = "REP_MSPREM";
   public static final String REP_MSPREMSUM = "REP_MSPREMSUM";
+  public static final String REP_MSPREMSUM_PRACTSUM = "REP_MSPREMSUM_PRACTSUM";
+  public static final String REP_MSPREMSUM_S23 = "REP_MSPREMSUM_S23";
 
   public static String REJECTED = "R";
   public static String NOTSUBMITTED = "O";
@@ -76,6 +78,7 @@ public class MSPReconcile {
   public static String PAIDPRIVATE = "A";
 
   private static Properties negValues = new Properties();
+
 
   public MSPReconcile() {
     System.err.println("MSP STARTED");
