@@ -32,7 +32,6 @@ import java.util.*;
 import org.apache.commons.beanutils.*;
 import oscar.*;
 import oscar.entities.*;
-import oscar.oscarBilling.MSP.*;
 import oscar.oscarDB.*;
 
 /**
@@ -78,7 +77,6 @@ public class MSPReconcile {
   public static String PAIDPRIVATE = "A";
 
   private static Properties negValues = new Properties();
-
 
   public MSPReconcile() {
     System.err.println("MSP STARTED");
@@ -931,32 +929,20 @@ public class MSPReconcile {
   }
 
   /**
-   * getBills
+   * * Returns a BillSearch object containing a list of Bills according to the specified criteria
    *
+   *
+   * @param payee
    * @param account String
-   * @param payee String
-   * @param provider String
-   * @param startDate String
-   * @param endDate String
-   * @param string String
-   * @param b boolean
-   * @param b1 boolean
-   * @param b2 boolean
-   * @param b3 boolean
-   */
-  public void getBills(String account, String payee, String provider,
-                       String startDate, String endDate, String string,
-                       boolean b, boolean b1, boolean b2, boolean b3) {
-  }
-
-  /**
-   * getInvoices
-   *
-   * @param payee String
-   * @param provider String
-   * @param startDate String
-   * @param endDate String
-   * @param insurerList HashMap
+   * @param payeeNo String - The Payee responsible for the bill
+   * @param provider String - The practitioner whom provided the billable service
+   * @param startDate String - The lower limit of the specified date range
+   * @param endDate String - The upper limit of the specified date range
+   * @param excludeWCB boolean - Indicates whether to search for WCB insurer
+   * @param excludeMSP boolean - Indicates whether to search for MSP insurer
+   * @param excludePrivate boolean - Indicates whether to search for Private insurer
+   * @param exludeICBC boolean - Indicates whether to search for ICBC insurer
+   * @param status String
    * @return BillSearch
    */
   public MSPReconcile.BillSearch getBillsByType(String account, String
@@ -968,14 +954,20 @@ public class MSPReconcile {
                                                 boolean excludePrivate,
                                                 boolean exludeICBC,
                                                 String status) {
-    System.out.println("MSPReconcile.getBillsByType");
     BillSearch billSearch = new BillSearch();
     HashMap rejDetails = null;
+    boolean skipBill = false;
     String criteriaQry = createCriteriaString(account, payeeNo, providerNo,
                                               startDate,
                                               endDate, excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
                                               status);
+    String orderByClause = "order by billingstatus";
+
+   if(REP_ACCOUNT_REC.equals(status)){
+     orderByClause = "order by billingstatus,bm.paymentMethod,b.demographic_name,bm.service_date";
+   }
+
     String p = "select provider.first_name,provider.last_name,b.billingtype, b.update_date, bm.billingmaster_no,b.billing_no, "
         + " b.demographic_name,b.demographic_no,bm.billing_unit,bm.billing_code,bm.bill_amount,bm.billingstatus,bm.mva_claim_code,bm.service_location,"
         + " bm.phn,bm.service_end_time,service_start_time,bm.service_to_day,bm.service_date,bm.oin_sex_code,b.dob,dx_code1,b.provider_no,apptProvider_no "
@@ -983,15 +975,13 @@ public class MSPReconcile {
         + " where bm.billing_no=b.billing_no "
         + " and b.provider_no = provider.provider_no "
         + " and demographic.demographic_no = b.demographic_no "
-        + criteriaQry
-        + " order by billingstatus";
+        + criteriaQry + " "
+        + orderByClause;
 
     if (status.equals(REP_REJ)) {
       rejDetails = this.getRejectionDetails();
     }
 
-    System.out.println(p);
-    //String
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
@@ -1035,6 +1025,7 @@ public class MSPReconcile {
         b.providerLastName = rs.getString("last_name");
         b.provName = this.getProvider(b.apptDoctorNo).getInitials();
 
+        // WCB SECTION ---------------------------------------------------------
         if (b.isWCB()) {
           ResultSet rs2 = null;
           try {
@@ -1053,7 +1044,7 @@ public class MSPReconcile {
             rs2.close();
           }
         }
-
+        // REJECTED SECTION ---------------------------------------------------------
         else if (status.equals(REP_REJ)) {
           if (rejDetails.containsKey(b.billMasterNo)) {
             Vector dets = (Vector) rejDetails.get(b.billMasterNo);
@@ -1069,8 +1060,6 @@ public class MSPReconcile {
               explCodes.put(code, desc);
             }
             b.explanations = explCodes;
-            System.out.println("b.hashCode()=" + b.hashCode() + " " +
-                               (b.explanations == null));
             b.rejectionDate = (String) dets.get(7);
             if (b.rejectionDate == null || b.rejectionDate.equals("")) {
               b.rejectionDate = "00000000";
@@ -1085,20 +1074,29 @@ public class MSPReconcile {
             b.demoPhone2 = rsDemo.getString("phone2");
           }
         }
+        // AR SECTION ---------------------------------------------------------
         /**
          * If the bill is of type AR and it was paid with an explanation
          * we need to get the difference between what was billed and what was paid
-       **/
-        else if (status.equals(this.REP_ACCOUNT_REC)) {
-          if ("E".equals(b.status)) {
-           System.out.println("b.status=" + b.status);
-            b.amount = this.getAmountOwing(b.billMasterNo,b.amount);
+         **/
+        if (status.equals(this.REP_ACCOUNT_REC)) {
+          if (b.billing_no.equals("461")) {
+            System.out.println("");
           }
+          if ("E".equals(b.status)) {
+            b.amount = this.getAmountOwing(b.billMasterNo, b.amount);
+          }
+          skipBill = new Double(b.amount).doubleValue() == 0.0;
         }
 
-        billSearch.justBillingMaster.add(b.billMasterNo);
-        billSearch.list.add(b);
-        billSearch.count++;
+        if (!skipBill) {
+          billSearch.justBillingMaster.add(b.billMasterNo);
+          billSearch.list.add(b);
+          billSearch.count++;
+        }
+        else {
+          skipBill = false;
+        }
       }
 
     }
@@ -1114,19 +1112,19 @@ public class MSPReconcile {
         ex1.printStackTrace();
       }
     }
-
     return billSearch;
-
   }
 
+
   /**
-   * getAmountOwing
-   *
-   * @param string String
+   * Returns the dollar amount owing on a specific bill number
+   * If the specified bill has an explanation code of 'HX'(Already paid) the amount is set to zero
+   * @param billingMasterNo String - The UID of the bill in question
+   * @param amountBilled String - The total amount of the bill
    * @return String
    */
-  private String getAmountOwing(String billingMasterNo,String amountBilled) {
-    String qry =  "SELECT t_paidamt from teleplanS00,billing,billingmaster " +
+  private String getAmountOwing(String billingMasterNo, String amountBilled) {
+    String qry = "SELECT t_paidamt,t_exp1 from teleplanS00,billingmaster " +
         " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
         " and billingstatus = 'E'" +
         " and billingmaster.billingmaster_no = " + billingMasterNo;
@@ -1136,23 +1134,29 @@ public class MSPReconcile {
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       rs = db.GetSQL(qry);
-      if(rs.next()){
+      double totalPaid = 0.0;
+      while (rs.next()) {
+        if(rs.getString(2).equals("HS")){
+          totalPaid = Double.parseDouble(amountBilled);
+          break;
+        }
         String paidAmount = rs.getString(1);
         paidAmount = this.convCurValue(paidAmount);
-        amountBilled = (amountBilled != null&&!amountBilled.equals(""))?amountBilled:"0.0";
-        Double dblAmtBilled = new Double(amountBilled);
         Double dblAmtPaid = new Double(paidAmount);
-        ret = String.valueOf(dblAmtBilled.doubleValue() - dblAmtPaid.doubleValue());
-
+        totalPaid += dblAmtPaid.doubleValue();
       }
+      amountBilled = (amountBilled != null && !amountBilled.equals("")) ?
+          amountBilled : "0.0";
+      Double dblAmtBilled = new Double(amountBilled);
+      ret = String.valueOf(dblAmtBilled.doubleValue() - totalPaid);
     }
     catch (SQLException ex) {
       ex.printStackTrace();
     }
-    finally{
+    finally {
       try {
         db.CloseConn();
-         rs.close();
+        rs.close();
       }
       catch (SQLException ex1) {
         ex1.printStackTrace();
@@ -1393,21 +1397,6 @@ public class MSPReconcile {
           " and bm.billingstatus in ('R','O','Z','F','X','H','T','B','E')";
     }
     return criteriaQry;
-  }
-
-  /**
-   * getBills
-   *
-   * @param payee String
-   * @param provider String
-   * @param startDate String
-   * @param endDate String
-   * @param insurerList HashMap
-   * @return BillSearch
-   */
-  public oscar.oscarBilling.MSP.MSPReconcile.BillSearch getBills(String payee,
-      String provider, String startDate, String endDate, HashMap insurerList) {
-    return null;
   }
 
   /**
