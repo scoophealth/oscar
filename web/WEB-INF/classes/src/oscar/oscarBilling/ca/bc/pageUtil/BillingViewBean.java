@@ -23,11 +23,15 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.sql.*;
 import java.util.*;
+import java.lang.*;
+import java.math.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager;
 import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarDB.*;
 
 public class BillingViewBean {
    private String apptProviderNo = null;
@@ -73,10 +77,8 @@ public class BillingViewBean {
    private String billingGroupNo = null;
    private String billingMasterNo = null;
    private String billingNo = null;
-  private String anatomicalArea;
-  private String insurerTypeId;
 
-  public void loadBilling(String billing_no) {
+   public void loadBilling(String billing_no) {
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
@@ -84,7 +86,7 @@ public class BillingViewBean {
 
          sql = "select bi.billing_date, bi.visitdate, bi.apptProvider_no, bi.creator, bi.provider_no, b.billingmaster_no, b.billing_no, b.createdate, b.billingstatus,b.demographic_no, b.appointment_no, b.claimcode, b.datacenter, b.payee_no, b.practitioner_no, b.phn, b.name_verify, b.dependent_num,b.billing_unit,";
          sql = sql + "b.clarification_code, b.anatomical_area, b.after_hour, b.new_program, b.billing_code, b.bill_amount, b.payment_mode, b.service_date, b.service_to_day, b.submission_code, b.extended_submission_code, b.dx_code1, b.dx_code2, b.dx_code3, ";
-         sql = sql + "b.dx_expansion, b.service_location, b.referral_flag1, b.referral_no1, b.referral_flag2, b.referral_no2, b.time_call, b.service_start_time, b.service_end_time, b.birth_date, b.office_number, b.correspondence_code, b.claim_comment,b.paymentMethod ";
+         sql = sql + "b.dx_expansion, b.service_location, b.referral_flag1, b.referral_no1, b.referral_flag2, b.referral_no2, b.time_call, b.service_start_time, b.service_end_time, b.birth_date, b.office_number, b.correspondence_code, b.claim_comment ";
          sql = sql + "from billingmaster b, billing bi where bi.billing_no=b.billing_no and b.billing_no='" + billing_no+"'";
          System.out.println(sql);
          rs = db.GetSQL(sql);
@@ -112,8 +114,6 @@ public class BillingViewBean {
             this.xml_endtime = rs.getString("service_end_time");
             this.billingMasterNo = rs.getString("billingmaster_no");
             this.billingNo = rs.getString("billing_no");
-            this.anatomicalArea = rs.getString("anatomical_area");
-            this.insurerTypeId = rs.getString("paymentMethod");
          }
          //setBillItem(billingItemsArray);
          rs.close();
@@ -239,48 +239,12 @@ public class BillingViewBean {
       return billingNo;
    }
 
-  public String getAnatomicalArea() {
-    return anatomicalArea;
-  }
-
-  /**
+   /**
     * Setter for property billingNo.
     * @param billingNo New value of property billingNo.
     */
    public void setBillingNo(java.lang.String billingNo) {
       this.billingNo = billingNo;
    }
-
-  public void setAnatomicalArea(String anatomicalArea) {
-    this.anatomicalArea = anatomicalArea;
-  }
-
-  public String getInsurerType() {
-    String sql = "select * from billing_payment_type where id = " + this.insurerTypeId;
-    DBHandler db = null;
-    ResultSet rs = null;
-    String ret = "";
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL(sql);
-      if (rs.next()) {
-        ret = rs.getString(1);
-      }
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally {
-        try {
-          db.CloseConn();
-          rs.close();
-        }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
-        }
-    }
-    return ret;
-  }
-
 
 }
