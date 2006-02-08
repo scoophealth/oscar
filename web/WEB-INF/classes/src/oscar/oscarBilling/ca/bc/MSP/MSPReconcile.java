@@ -24,15 +24,14 @@ package oscar.oscarBilling.ca.bc.MSP;
  * Ontario, Canada
  */
 
-import java.lang.reflect.*;
 import java.math.*;
 import java.sql.*;
 import java.util.*;
-
-import org.apache.commons.beanutils.*;
 import oscar.*;
 import oscar.entities.*;
 import oscar.oscarDB.*;
+import oscar.util.BeanUtilHlp;
+import oscar.util.UtilMisc;
 
 /**
  *
@@ -49,6 +48,7 @@ import oscar.oscarDB.*;
  */
 public class MSPReconcile {
 
+  //Accounting Report Types
   public static final String REP_INVOICE = "REP_INVOICE";
   public static final String REP_PAYREF = "REP_PAYREF";
   public static final String REP_ACCOUNT_REC = "REP_ACCOUNT_REC";
@@ -59,27 +59,50 @@ public class MSPReconcile {
   public static final String REP_MSPREMSUM_PRACTSUM = "REP_MSPREMSUM_PRACTSUM";
   public static final String REP_MSPREMSUM_S23 = "REP_MSPREMSUM_S23";
 
-  public static String REJECTED = "R";
-  public static String NOTSUBMITTED = "O";
-  public static String SUBMITTED = "B";
-  public static String SETTLED = "S";
-  public static String DELETED = "D";
-  public static String HELD = "Z";
-  public static String DATACENTERCHANGED = "C";
-  public static String PAIDWITHEXP = "E";
-  public static String REFUSED = "F";
-  public static String BADDEBT = "X";
-  public static String WCB = "W";
-  public static String CAPITATED = "H";
-  public static String DONOTBILL = "N";
-  public static String BILLPATIENT = "P";
-  public static String COLLECTION = "T";
-  public static String PAIDPRIVATE = "A";
+  //MSP Bill Status Types
+  public static final String REJECTED = "R";
+  public static final String NOTSUBMITTED = "O";
+  public static final String SUBMITTED = "B";
+  public static final String SETTLED = "S";
+  public static final String DELETED = "D";
+  public static final String HELD = "Z";
+  public static final String DATACENTERCHANGED = "C";
+  public static final String PAIDWITHEXP = "E";
+  public static final String REFUSED = "F";
+  public static final String BADDEBT = "X";
+  public static final String WCB = "W";
+  public static final String CAPITATED = "H";
+  public static final String DONOTBILL = "N";
+  public static final String BILLPATIENT = "P";
+  public static final String COLLECTION = "T";
+  public static final String PAIDPRIVATE = "A";
 
   private static Properties negValues = new Properties();
+  private BeanUtilHlp beanut = new BeanUtilHlp();
 
   public MSPReconcile() {
-    System.err.println("MSP STARTED");
+    initTeleplanMonetarySuffixes();
+  }
+
+  /**
+   * Initializes the Teleplan Payment suffixes.</P?
+   * Teleplan employs a (COBOL??!) type numeric system wherein negative values
+   * are represented with a non-numeric suffix, indicating the last numeral of the value.
+   *
+   * <p>The suffixes are as follows:</p>
+   * } = 0<b/>
+   * J = 1<b/>
+   * K = 2<b/>
+   * L = 3<b/>
+   * M = 4<b/>
+   * N = 5<b/>
+   * O = 6<b/>
+   * P = 7<b/>
+   * Q = 8<b/>
+   * R = 9<b/>
+   *
+   */
+  private void initTeleplanMonetarySuffixes() {
     negValues.setProperty("}", "0");
     negValues.setProperty("J", "1");
     negValues.setProperty("K", "2");
@@ -206,6 +229,7 @@ public class MSPReconcile {
           p.put(s, def);
         }
         catch (NumberFormatException intEx) {
+          intEx.printStackTrace();
           System.out.println("Had trouble Parsing int from " +
                              rs.getString("t_officeno"));
         }
@@ -431,138 +455,6 @@ public class MSPReconcile {
       ResultSet rs = db.GetSQL(p);
       while (rs.next()) {
         Bill b = new Bill();
-        b.billing_no = rs.getString("billing_no");
-        b.apptDoctorNo = rs.getString("apptProvider_no");
-        b.apptNo = rs.getString("appointment_no");
-        b.demoNo = rs.getString("demographic_no");
-        b.demoName = rs.getString("demographic_name");
-        b.userno = rs.getString("provider_no");
-        b.apptDate = rs.getString("billing_date");
-        b.apptTime = rs.getString("billing_time");
-        b.reason = rs.getString("billingstatus");
-        b.billMasterNo = rs.getString("billingmaster_no");
-        b.billingtype = rs.getString("billingtype");
-
-        b.amount = rs.getString("bill_amount");
-        b.code = rs.getString("billing_code");
-        b.dx1 = rs.getString("dx_code1");
-        b.dx2 = rs.getString("dx_code2");
-        b.dx3 = rs.getString("dx_code3");
-
-        if (b.isWCB()) {
-          ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
-                                    b.billing_no + "'");
-          if (rs2.next()) {
-            b.amount = rs2.getString("bill_amount");
-            b.code = rs2.getString("w_feeitem");
-            b.dx1 = rs2.getString("w_icd9");
-          }
-          rs2.close();
-        }
-
-        billSearch.justBillingMaster.add(b.billMasterNo);
-        billSearch.list.add(b);
-        billSearch.count++;
-      }
-      rs.close();
-      db.CloseConn();
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    return billSearch;
-  }
-
-  /**
-   *
-   * Fetches data for the billing reports
-   * @param statusType String
-   * @param providerNo String
-   * @param startDate String
-   * @param endDate String
-   * @param demoNo String
-   * @param excludeWCB boolean
-   * @param excludeMSP boolean
-   * @param excludePrivate boolean
-   * @param exludeICBC boolean
-   * @return BillSearch
-   */
-  public BillSearch getBillingData(String payeeNo, String providerNo,
-                                   String startDate, String endDate,
-                                   String demoNo,
-                                   boolean excludeWCB, boolean excludeMSP,
-                                   boolean excludePrivate, boolean exludeICBC) {
-    System.out.println(new java.util.Date() + ":MSPReconcile.getBillingData");
-    BillSearch billSearch = new BillSearch();
-
-    String providerQuery = "";
-    String startDateQuery = "";
-    String endDateQuery = "";
-    String demoQuery = "";
-    String billingType = "";
-    String payeeQuery = "";
-
-    if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
-      providerQuery = " and provider_no = '" + providerNo + "'";
-    }
-
-    if (payeeNo != null && !payeeNo.trim().equalsIgnoreCase("all")) {
-      payeeQuery = " and payee_no = '" + providerNo + "'";
-    }
-
-    if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
-      startDateQuery = " and ( to_days(service_date) >= to_days('" + startDate +
-          "')) ";
-    }
-
-    if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
-      endDateQuery = " and ( to_days(service_date) <= to_days('" + endDate +
-          "')) ";
-    }
-    if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")) {
-      demoQuery = " and b.demographic_no = '" + demoNo + "' ";
-    }
-
-    if (excludeWCB) {
-      billingType += " and b.billingType != 'WCB' ";
-    }
-
-    if (excludeMSP) {
-      billingType += " and b.billingType != 'MSP' ";
-    }
-
-    if (excludePrivate) {
-      billingType += " and b.billingType != 'PRIV' ";
-    }
-
-    if (exludeICBC) {
-      billingType += " and b.billingType != 'ICBC' ";
-    }
-    //
-    String p = " select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
-        + " b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
-        +
-        " bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
-        +
-        " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
-        + " billingmaster bm where b.billing_no= bm.billing_no "
-        + providerQuery
-        + startDateQuery
-        + endDateQuery
-        + demoQuery
-        + billingType;
-
-    System.out.println(p);
-    //String
-    billSearch.list = new ArrayList();
-    billSearch.count = 0;
-    billSearch.justBillingMaster = new ArrayList();
-
-    try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(p);
-      while (rs.next()) {
-        MSPBill b = new MSPBill();
         b.billing_no = rs.getString("billing_no");
         b.apptDoctorNo = rs.getString("apptProvider_no");
         b.apptNo = rs.getString("appointment_no");
@@ -1018,12 +910,12 @@ public class MSPReconcile {
         b.apptDoctorNo = rs.getString("apptProvider_no");
         b.accountNo = rs.getString("b.provider_no");
         b.updateDate = rs.getString("update_date");
-        b.accountName = this.getProvider(b.accountNo).getFullName();
-        b.acctInit = this.getProvider(b.accountNo).getInitials();
-        b.payeeName = this.getProvider(b.payeeNo).getInitials();
+        b.accountName = this.getProvider(b.accountNo, 0).getFullName();
+        b.acctInit = this.getProvider(b.accountNo, 0).getInitials();
+        b.payeeName = this.getProvider(b.payeeNo, 0).getInitials();
         b.providerFirstName = rs.getString("first_name");
         b.providerLastName = rs.getString("last_name");
-        b.provName = this.getProvider(b.apptDoctorNo).getInitials();
+        b.provName = this.getProvider(b.apptDoctorNo, 1).getInitials();
 
         // WCB SECTION ---------------------------------------------------------
         if (b.isWCB()) {
@@ -1201,16 +1093,6 @@ public class MSPReconcile {
   }
 
   /**
-   * createC12ExpSum
-   *
-   * @param string String
-   * @return String
-   */
-  private String createC12ExpSum(String string) {
-    return "";
-  }
-
-  /**
    *
    * Retrieves a list of all bills that were Paid by MSP
    * @param payee String
@@ -1231,11 +1113,11 @@ public class MSPReconcile {
                                                 String status) {
     BillSearch billSearch = new BillSearch();
     String criteriaQry = createCriteriaString(account, payeeNo, providerNo,
-                                              startDate,
-                                              endDate, excludeWCB, excludeMSP,
+                                              UtilMisc.replace(startDate,"-",""),
+                                              UtilMisc.replace(endDate,"-",""), excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
-                                              status);
-    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod" +
+                                              this.REP_PAYREF);
+    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1" +
         " FROM `teleplanS00`,billingmaster as bm,billing as b" +
         " where teleplanS00.t_officeno = bm.billingmaster_no" +
         " and b.billing_no = bm.billing_no "
@@ -1268,11 +1150,16 @@ public class MSPReconcile {
         b.apptDoctorNo = rs.getString("apptProvider_no");
         b.userno = rs.getString("provider_no");
         b.payeeNo = rs.getString("payee_no");
+        b.adjustmentCode = rs.getString("teleplanS00.t_ajc1");
 
-        b.accountName = this.getProvider(b.userno).getFullName();
-        b.acctInit = this.getProvider(b.userno).getInitials();
-        b.payeeName = this.getProvider(b.payeeNo).getInitials();
-        b.provName = this.getProvider(b.apptDoctorNo).getInitials();
+        if(!"".equals(b.adjustmentCode)){
+           b.adjustmentCodeDesc = getAdjustmentCodeDesc(b.adjustmentCode) + "(" + b.adjustmentCode + ")";
+        }
+
+        b.accountName = this.getProvider(b.userno, 0).getFullName();
+        b.acctInit = this.getProvider(b.userno, 0).getInitials();
+        b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
+        b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
         b.type = new Double(b.amount).doubleValue() > 0 ? "PMT" : "RFD";
 
         billSearch.justBillingMaster.add(b.billMasterNo);
@@ -1346,7 +1233,7 @@ public class MSPReconcile {
                                       boolean excludePrivate,
                                       boolean exludeICBC, String repType) {
     String criteriaQry = "";
-
+    String dateField = this.REP_PAYREF.equals(repType)?"teleplanS00.t_payment":"servicedate";
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       criteriaQry += " and b.apptProvider_no = '" + providerNo + "'";
     }
@@ -1358,12 +1245,12 @@ public class MSPReconcile {
       criteriaQry += " and b.provider_no = '" + account + "'";
     }
     if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
-      criteriaQry += " and ( to_days(service_date) >= to_days('" + startDate +
+      criteriaQry += " and ( to_days(" + dateField +") >= to_days('" + startDate +
           "')) ";
     }
 
     if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
-      criteriaQry += " and ( to_days(service_date) <= to_days('" + endDate +
+      criteriaQry += " and ( to_days(" + dateField +") <= to_days('" + endDate +
           "')) ";
     }
 
@@ -1412,7 +1299,7 @@ public class MSPReconcile {
     int colSize = bills.size();
     for (int i = 0; i < colSize; i++) {
       MSPBill bill = (MSPBill) bills.get(i);
-      String propValue = getPropertyValue(bill, fieldName);
+      String propValue = beanut.getPropertyValue(bill, fieldName);
       //disgregard previously counted field value
       if (!fieldValueList.contains(propValue)) {
         fieldValueList.add(propValue);
@@ -1434,7 +1321,7 @@ public class MSPReconcile {
     double amt = 0.0;
     for (int i = 0; i < colSize; i++) {
       MSPBill bill = (MSPBill) bills.get(i);
-      String beanStatus = getPropertyValue(bill, "status");
+      String beanStatus = beanut.getPropertyValue(bill, "status");
 
       if (beanStatus.equals(status)) {
         amt += new Double(bill.getAmount()).doubleValue();
@@ -1456,37 +1343,12 @@ public class MSPReconcile {
     int cnt = 0;
     for (int i = 0; i < colSize; i++) {
       MSPBill bill = (MSPBill) bills.get(i);
-      String beanStatus = getPropertyValue(bill, "status");
+      String beanStatus = beanut.getPropertyValue(bill, "status");
       if (beanStatus.equals(status)) {
         cnt++;
       }
     }
     return new Integer(cnt);
-  }
-
-  /**
-   * A convenience method used to retrieve the field value of a specified JavaBean
-   * @todo Move this into a utility class of some sort
-   * @param bill Object
-   * @param fieldName String
-   * @return String
-   */
-  private String getPropertyValue(Object bill, String fieldName) {
-    BeanUtils ut = new BeanUtils();
-    String value = "";
-    try {
-      value = ut.getProperty(bill, fieldName);
-    }
-    catch (NoSuchMethodException ex) {
-      ex.printStackTrace();
-    }
-    catch (InvocationTargetException ex) {
-      ex.printStackTrace();
-    }
-    catch (IllegalAccessException ex) {
-      ex.printStackTrace();
-    }
-    return value;
   }
 
   /**
@@ -1527,7 +1389,7 @@ public class MSPReconcile {
    * @param payee String
    * @return String
    */
-  public oscar.entities.Provider getProvider(String providerNo) {
+  public oscar.entities.Provider getProvider(String providerNo, int criteria) {
     oscar.entities.Provider prov = new oscar.entities.Provider();
     if (!oscar.util.StringUtils.isNumeric(providerNo)) {
       prov.setFirstName("");
@@ -1536,9 +1398,12 @@ public class MSPReconcile {
     }
     DBHandler db = null;
     ResultSet rs = null;
-
+    String criteriaStr = "provider_no";
+    if(criteria == 1){
+      criteriaStr = "ohip_no";
+    }
     String qry =
-        "select first_name,last_name from provider where provider_no = " +
+        "select first_name,last_name from provider where " + criteriaStr +" = " +
         providerNo;
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -1572,7 +1437,6 @@ public class MSPReconcile {
    * @return String
    */
   public ArrayList getAllProviders() {
-    System.out.println(new java.util.Date() + ":MSPReconcile.getAllProviders()");
     ArrayList list = new ArrayList();
     DBHandler db = null;
     ResultSet rs = null;
@@ -1606,6 +1470,38 @@ public class MSPReconcile {
     }
 
     return list;
+  }
+
+  /**
+   * Returns a String description of the specified adjustment code
+   * @param code String
+   * @return String
+   */
+  public String getAdjustmentCodeDesc(String code){
+    String description = "";
+    String qry = "SELECT adj_desc FROM teleplan_adj_codes where adj_code = '" + code + "'" ;
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(qry);
+      if (rs.next()) {
+        description = rs.getString(1);
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    return description;
   }
 
   public S21 getS21Record(String s21id) {
@@ -1645,47 +1541,7 @@ public class MSPReconcile {
     return s21;
   }
 
-  /**
-   * getProviderByOHIP
-   * @todo Refactor this section so that here is a central method to handle this
-   * @param payee String
-   * @return Provider
-   */
-  public oscar.entities.Provider getProviderByOHIP(String providerNo) {
-    System.out.println(new java.util.Date() +
-                       ":MSPReconcile.getProviderByOHIP(providerNo)");
-    providerNo = oscar.util.StringUtils.isNumeric(providerNo) ? providerNo :
-        "-1";
-    DBHandler db = null;
-    ResultSet rs = null;
-    oscar.entities.Provider prov = new oscar.entities.Provider();
-    String qry =
-        "select first_name,last_name from provider where ohip_no = " +
-        providerNo;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL(qry);
 
-      if (rs.next()) {
-        prov.setFirstName(rs.getString("first_name"));
-        prov.setLastName(rs.getString("last_name"));
-      }
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-        rs.close();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
-    }
-
-    return prov;
-  }
 
   /**
    * Returns a properly formed negative numeric value
