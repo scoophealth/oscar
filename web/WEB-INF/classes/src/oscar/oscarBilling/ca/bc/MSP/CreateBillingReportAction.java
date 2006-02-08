@@ -145,15 +145,15 @@ public class CreateBillingReportAction
             list, msp.SUBMITTED));
       }
       else if (repType.equals(msp.REP_WO)) {
-        oscar.entities.Provider payeeProv = msp.getProvider(payee);
-        oscar.entities.Provider provProv = msp.getProvider(provider);
+        oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
+        oscar.entities.Provider provProv = msp.getProvider(provider, 0);
         reportParams.put("provider",
                          provider.equals("all") ? "ALL" : payeeProv.getFullName());
         reportParams.put("payee",
                          payee.equals("all") ? "ALL" : provProv.getFullName());
       }
 
-      oscar.entities.Provider acctProv = msp.getProvider(account);
+      oscar.entities.Provider acctProv = msp.getProvider(account, 0);
       reportParams.put("billCnt", billCnt);
       reportParams.put("demNoCnt", demNoCnt);
       reportParams.put("account",
@@ -166,7 +166,7 @@ public class CreateBillingReportAction
 
     }
     else if (repType.equals(msp.REP_MSPREM)) {
-      oscar.entities.Provider payeeProv = msp.getProviderByOHIP(payee);
+      oscar.entities.Provider payeeProv = msp.getProvider(payee,1);
       reportParams.put("payee", payeeProv.getFullName());
       reportParams.put("payeeno", payee);
       String s21id = request.getParameter("rano");
@@ -177,7 +177,7 @@ public class CreateBillingReportAction
       String s21id = request.getParameter("rano");
       S21 s21 = msp.getS21Record(s21id);
 
-      oscar.entities.Provider payeeProv = msp.getProvider(provider);
+      oscar.entities.Provider payeeProv = msp.getProvider(provider, 1);
       reportParams.put("mspBean", msp);
       //set parameters for payee of provider
       reportParams.put("provider",
@@ -217,9 +217,9 @@ public class CreateBillingReportAction
                                       endDate,
                                       !showWCB, !showMSP, !showPriv, !showICBC,
                                       "");
-      oscar.entities.Provider payeeProv = msp.getProvider(payee);
-      oscar.entities.Provider acctProv = msp.getProvider(account);
-      oscar.entities.Provider provProv = msp.getProvider(payee);
+      oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
+      oscar.entities.Provider acctProv = msp.getProvider(account, 0);
+      oscar.entities.Provider provProv = msp.getProvider(provider, 0);
 
       PayRefSummary sumPayed = new PayRefSummary();
       PayRefSummary sumRefunded = new PayRefSummary();
@@ -245,9 +245,9 @@ public class CreateBillingReportAction
 
       reportParams.put("provider",
                        provider.equals("all") ? "ALL" :
-                       payeeProv.getInitials());
+                       provProv.getInitials());
       reportParams.put("payee",
-                       payee.equals("all") ? "ALL" : provProv.getInitials());
+                       payee.equals("all") ? "ALL" : payeeProv.getInitials());
       reportParams.put("startDate", startDate);
       reportParams.put("endDate", endDate);
 
@@ -268,7 +268,7 @@ public class CreateBillingReportAction
         MSPBill item = (MSPBill) iter.next();
         System.err.println(item.rejectionDate);
       }
-      oscar.entities.Provider payProv = msp.getProvider(payee);
+      oscar.entities.Provider payProv = msp.getProvider(payee, 1);
       reportParams.put("account",
                        account.equals("all") ? "ALL" :
                        payProv.getFullName());
