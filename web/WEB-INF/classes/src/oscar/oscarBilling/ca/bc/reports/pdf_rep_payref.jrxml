@@ -18,9 +18,11 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+
 	<parameter name="startDate" isForPrompting="true" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -49,10 +51,11 @@
 	<queryString><![CDATA[select provider.first_name,provider.provider_no,provider.last_name,billing.billing_date,billing.billingtype,billingmaster.service_date, billingmaster.billingmaster_no,billing.billing_no,
 billing.demographic_name,billing.demographic_no,billingmaster.billing_unit,billingmaster.billing_code,billingmaster.bill_amount,billingmaster.billingstatus
 from provider,billing,billingmaster
-where billingmaster.billing_no=billing.billing_no 
+where billingmaster.billing_no=billing.billing_no
 and billing.provider_no = provider.provider_no
 and billing.provider_no = 999993
 order by billing.billingtype;]]></queryString>
+
 	<field name="billingtype" class="java.lang.String"/>
 	<field name="paymentDate" class="java.lang.String"/>
 	<field name="demoNo" class="java.lang.String"/>
@@ -71,6 +74,9 @@ order by billing.billingtype;]]></queryString>
 	<field name="acctInit" class="java.lang.String"/>
 	<field name="paymentMethod" class="java.lang.String"/>
 	<field name="paymentMethodName" class="java.lang.String"/>
+	<field name="adjustmentCode" class="java.lang.String"/>
+	<field name="adjustmentCodeDesc" class="java.lang.String"/>
+
 	<variable name="test" class="java.lang.String" resetType="None" calculation="Nothing">
 		<variableExpression><![CDATA["test"]]></variableExpression>
 		<initialValueExpression><![CDATA["test"		]]></initialValueExpression>
@@ -81,7 +87,8 @@ order by billing.billingtype;]]></queryString>
 	<variable name="methTotal" class="java.lang.Double" resetType="Group" resetGroup="payMeth" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{amount})]]></variableExpression>
 	</variable>
-		<group  name="payMeth" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+
+		<group  name="payMeth" >
 			<groupExpression><![CDATA[$F{type}]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
@@ -339,7 +346,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="105"
+						x="80"
 						y="5"
 						width="35"
 						height="12"
@@ -361,7 +368,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="449"
+						x="372"
 						y="5"
 						width="48"
 						height="12"
@@ -383,7 +390,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="375"
+						x="339"
 						y="5"
 						width="23"
 						height="12"
@@ -405,7 +412,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="183"
+						x="151"
 						y="5"
 						width="48"
 						height="12"
@@ -427,7 +434,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="296"
+						x="264"
 						y="5"
 						width="25"
 						height="12"
@@ -449,9 +456,9 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="499"
+						x="422"
 						y="5"
-						width="25"
+						width="15"
 						height="12"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -471,7 +478,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="141"
+						x="116"
 						y="5"
 						width="33"
 						height="12"
@@ -493,7 +500,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="323"
+						x="291"
 						y="5"
 						width="46"
 						height="12"
@@ -515,7 +522,7 @@ order by billing.billingtype;]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="63"
+						x="41"
 						y="5"
 						width="38"
 						height="12"
@@ -534,6 +541,28 @@ order by billing.billingtype;]]></queryString>
 					</textElement>
 				<text><![CDATA[Type]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="439"
+						y="5"
+						width="91"
+						height="12"
+						forecolor="#FFFFFF"
+						backcolor="#FFFFFF"
+						key="element-96"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="" pdfFontName="Times-Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Adjustment]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
@@ -541,7 +570,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="105"
+						x="80"
 						y="1"
 						width="35"
 						height="10"
@@ -563,7 +592,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="449"
+						x="372"
 						y="1"
 						width="48"
 						height="10"
@@ -585,9 +614,9 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="375"
+						x="339"
 						y="1"
-						width="56"
+						width="31"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -607,7 +636,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="183"
+						x="151"
 						y="1"
 						width="105"
 						height="10"
@@ -629,7 +658,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="289"
+						x="257"
 						y="1"
 						width="32"
 						height="10"
@@ -653,7 +682,7 @@ order by billing.billingtype;]]></queryString>
 						mode="Transparent"
 						x="0"
 						y="1"
-						width="63"
+						width="39"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -673,7 +702,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="140"
+						x="115"
 						y="1"
 						width="33"
 						height="10"
@@ -695,7 +724,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="499"
+						x="422"
 						y="1"
 						width="14"
 						height="10"
@@ -717,7 +746,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="63"
+						x="41"
 						y="1"
 						width="35"
 						height="10"
@@ -739,7 +768,7 @@ order by billing.billingtype;]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="323"
+						x="291"
 						y="1"
 						width="35"
 						height="10"
@@ -757,6 +786,28 @@ order by billing.billingtype;]]></queryString>
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{exp1}+$F{exp2}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="439"
+						y="1"
+						width="91"
+						height="10"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-40"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{adjustmentCodeDesc}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -1686,12 +1737,12 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="341"
-						y="4"
-						width="41"
-						height="14"
+						y="5"
+						width="52"
+						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField-39"
+						key="textField-41"
 						stretchType="NoStretch"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
@@ -1699,10 +1750,10 @@ order by billing.billingtype;]]></queryString>
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["$"+$V{invTotal}.toString()]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($P{sumPayed}.getRawTotal() - $P{sumRefunded}.getRawTotal())]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>
