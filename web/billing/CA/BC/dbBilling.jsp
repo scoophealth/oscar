@@ -1,29 +1,29 @@
-<%--  
+<%--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 --%>
-<%   
+<%
   //operation available to the client - dboperation
   String orderby="", limit="", limit1="", limit2="";
   if(request.getParameter("orderby")!=null) orderby="order by "+request.getParameter("orderby");
@@ -32,9 +32,9 @@
     limit2=request.getParameter("limit2");
     limit="limit "+limit2+" offset " +limit1;
   }
-   
-    
-  
+
+
+
   String [][] dbQueries=new String[][] {
     {"search_provider_all_dt", "select * from provider where provider_type='doctor' and provider_no like ? order by last_name"},
     {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
@@ -46,17 +46,17 @@
     {"save_bill", "insert into billing (clinic_no, demographic_no, provider_no, appointment_no, organization_spec_code, demographic_name, hin, update_date, update_time, billing_date, billing_time, clinic_ref_code, content, total, status, dob, visitdate, visittype, provider_ohip_no, provider_rma_no, apptprovider_no, asstprovider_no, creator) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
     {"search_billing_no", "select billing_no from billing where demographic_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
     {"search_billing_no_by_appt", "select max(billing_no) as billing_no from billing where status <> 'D' and demographic_no=? and appointment_no=?  order by update_date desc, update_time desc limit 1 offset 0"},
-    {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},    
-    {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},  
+    {"search_bill_location", "select * from clinic_location where clinic_no=1 and clinic_location_no=?"},
+    {"search_clinic_location", "select * from clinic_location where clinic_no=? order by clinic_location_no"},
     {"save_clinic_location","insert into clinic_location values(?,?,?)"},
-    {"search_bill_center", "select * from billcenter where billcenter_desc like ?"},    
-    {"search_bill_history", "select distinct provider.last_name, provider.first_name, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no from billing, provider, appointment where provider.provider_no=appointment.provider_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.demographic_no =? order by billing.billing_date desc, billing.billing_time desc "+ limit },    
+    {"search_bill_center", "select * from billcenter where billcenter_desc like ?"},
+    {"search_bill_history", "select distinct provider.last_name, provider.first_name, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no from billing, provider, appointment where provider.provider_no=appointment.provider_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.demographic_no =? order by billing.billing_date desc, billing.billing_time desc "+ limit },
     {"search_bill_beforedelete", "select billing_no, status from billing where appointment_no=?"},
-    {"search_unbill_history", "select * from appointment where provider_no=? and appointment_date<=? and (status='P' or status='H' or status='PS') and demographic_no <> 0 order by appointment_date desc, start_time desc "+ limit },    
-    {"search_unbill_history_daterange", "select * from appointment where provider_no=? and appointment_date >=? and appointment_date<=? and (status='P' or status='H' or status='PS') and demographic_no <> 0 order by appointment_date desc, start_time desc "+ limit },    
-    {"search_bill_history_daterange", "select * from billing where provider_no=? and billing_date >=? and billing_date<=? and (status<>'D' and status<>'S' and status<>'B') and demographic_no <> 0 order by billing_date desc, billing_time desc "+ limit },    
-    {"search_unsettled_history_daterange", "select * from billing where provider_no=? and billing_date >=? and billing_date<=? and (status='B') and demographic_no <> 0 order by billing_date desc, billing_time desc "+ limit },    
-    {"search_allbill_daterange", "select * from billing where provider_no=? and billing_date >=? and billing_date<=? and (status<>'D') and demographic_no <> 0 order by billing_date desc, billing_time desc "+ limit },    
+    {"search_unbill_history", "select * from appointment where provider_no=? and appointment_date<=? and (status='P' or status='H' or status='PS') and demographic_no <> 0 order by appointment_date desc, start_time desc "+ limit },
+    {"search_unbill_history_daterange", "select * from appointment where provider_no=? and appointment_date >=? and appointment_date<=? and (status='P' or status='H' or status='PS') and demographic_no <> 0 order by appointment_date desc, start_time desc "+ limit },
+    {"search_bill_history_daterange", "select * from billing where provider_no=? and billing_date >=? and billing_date<=? and (status<>'D' and status<>'S' and status<>'B') and demographic_no <> 0 order by billing_date desc, billing_time desc "+ limit },
+    {"search_unsettled_history_daterange", "select * from billing where provider_no=? and billing_date >=? and billing_date<=? and (status='B') and demographic_no <> 0 order by billing_date desc, billing_time desc "+ limit },
+    {"search_allbill_daterange", "select * from billing where provider_no=? and billing_date >=? and billing_date<=? and (status<>'D') and demographic_no <> 0 order by billing_date desc, billing_time desc "+ limit },
     {"search_ctlbillservice", "select distinct servicetype_name, servicetype from ctl_billingservice where status='A' and servicetype like ?"},
     {"search_ctlbillservice_detail", "select service_group_name, service_group, servicetype_name, servicetype, service_code, service_order from ctl_billingservice where status='A' and service_group=? and servicetype=?"},
     {"search_ctldiagcode_detail", "select * from ctl_diagcode where servicetype=?"},
@@ -64,27 +64,27 @@
     {"save_ctldiagcode","insert into ctl_diagcode values(?,?,?)"},
     {"delete_ctlbillservice","delete from ctl_billingservice where servicetype=?"},
     {"delete_ctldiagcode","delete from ctl_diagcode where servicetype=?"},
-    {"delete_bill", "update billing set status='D' where billing_no=?" },    
-    {"delete_bill_detail", "update billingdetail set status='D' where billing_no=?" },  
-    {"delete_bill_master", "update billingmaster set billingstatus='D' where billing_no=?" },  
-    {"search_bill_mismatch", "select distinct a.appointment_no, a.appointment_date, a.start_time, d.first_name, d.last_name, p.first_name, p.last_name, b.provider_no, b.billing_no from billing b, appointment a, demographic d, provider p where a.provider_no=? and a.appointment_no=b.appointment_no and a.demographic_no=d.demographic_no and p.provider_no=b.provider_no and b.status<>'B' and b.status<>'D' order by a.appointment_date desc, a.start_time desc;"},  
-    {"search_servicecode", "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype = ? and c.service_group =? order by c.service_order"},    
+    {"delete_bill", "update billing set status='D' where billing_no=?" },
+    {"delete_bill_detail", "update billingdetail set status='D' where billing_no=?" },
+    {"delete_bill_master", "update billingmaster set billingstatus='D' where billing_no=?" },
+    {"search_bill_mismatch", "select distinct a.appointment_no, a.appointment_date, a.start_time, d.first_name, d.last_name, p.first_name, p.last_name, b.provider_no, b.billing_no from billing b, appointment a, demographic d, provider p where a.provider_no=? and a.appointment_no=b.appointment_no and a.demographic_no=d.demographic_no and p.provider_no=b.provider_no and b.status<>'B' and b.status<>'D' order by a.appointment_date desc, a.start_time desc;"},
+    {"search_servicecode", "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype = ? and c.service_group =? order by c.service_order"},
     {"search_servicecode_detail", "select b.service_code, b.description, b.value, b.percentage from billingservice b where b.service_code=?"},
     {"save_bill_record", "insert into billingdetail (billing_no, service_code, service_desc, billing_amount, diagnostic_code, appointment_date, status, billingunit) values(?,?,?,?,?,?,?,?)"},
     {"updatediagnostic", "update diagnosticcode set description=? where diagnostic_code=?"},
-    {"searchapptstatus", "select status from appointment where appointment_no=? "}, 
+    {"searchapptstatus", "select status from appointment where appointment_no=? "},
     {"updateapptstatus", "update appointment set status=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=? and demographic_no=?"},
     {"search_bill", "select * from billing where billing_no= ?"},
     {"search_bill_record", "select * from billingdetail where billing_no=? and status <> 'D'"},
     {"search_ctl_diagnostic_code", "select diagnosticcode.diagnostic_code as dcode, diagnosticcode.description as des from diagnosticcode, ctl_diagcode where ctl_diagcode.diagnostic_code=diagnosticcode.diagnostic_code and ctl_diagcode.servicetype=? order by diagnosticcode.description"},
     {"search_diagnostic_code", "select * from diagnosticcode where diagnostic_code like ?"},
     {"search_diagnostic_text", "select * from diagnosticcode where description like ?"},
-    {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "}, 
+    {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "},
     {"search_demograph", "select *  from demographic where demographic_no=?"},
     {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
     {"search_demographicaccessory", "select * from demographicaccessory where demographic_no=?"},
     {"archive_bill", "insert into recycle_bin values(?,'billing',?,?)"},
-    {"update_bill_header", "update billing set hin=?,dob=?,visittype=?,visitdate=?,clinic_ref_code=?,provider_no=?,status=?, update_date=?, total=? , content=? where billing_no=?"},  
+    {"update_bill_header", "update billing set hin=?,dob=?,visittype=?,visitdate=?,clinic_ref_code=?,provider_no=?,status=?, update_date=?, total=? , content=? where billing_no=?"},
     {"search_bill_generic", "select distinct demographic.last_name dl, demographic.first_name df, provider.last_name pl, provider.first_name pf, billing.billing_no, billing.billing_date, billing.billing_time, billing.status, billing.appointment_no, billing.hin from billing, provider, appointment, demographic where provider.provider_no=appointment.provider_no and demographic.demographic_no= billing.demographic_no and billing.appointment_no=appointment.appointment_no and billing.status <> 'D' and billing.billing_no=?"},
     {"save_rahd", "insert into raheader (filename, paymentdate, payable, totalamount, records, claims, status, readdate, content) values(?,?,?,?,?,?,?,?,?)"},
     {"save_radt", "insert into radetail (raheader_no, providerohip_no, billing_no, service_code, service_count, hin, amountclaim, amountpay, service_date, error_code, billtype) values(?,?,?,?,?,?,?,?,?,?,?)"},
@@ -121,10 +121,10 @@
     {"search_ctlpremium", "select b.service_code, c.description service_desc from ctl_billingservice_premium b, billingservice c where b.service_code=c.service_code and b.status=?"},
     {"save_ctlpremium", "insert into ctl_billingservice_premium values(?,?,?,?)"},
     {"delete_ctlpremium", "delete from ctl_billingservice_premium where service_code=?"},
-   
+
     {"search_billingform","select distinct  servicetype_name, servicetype from ctl_billingservice where servicetype like ?"},
-    {"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
-    
+    {"search_reportprovider","select p.last_name, p.first_name, p.provider_no, r.team,p.ohip_no from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
+
     //NEW FOR BC
     {"search_teleplanbill", "select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.status, b.billing_date, b.provider_no, b.visitdate, b.visittype from billing b, billingmaster bm where b.billing_no= bm.billing_no and bm.billingmaster_no=?"},
     {"search_diagnostic_new_code", "select diagnostic_code, description from diagnosticcode where diagnostic_code like ? or diagnostic_code like ? or diagnostic_code like ? or description like ? or description like ? or description like ?"},
@@ -146,25 +146,25 @@
     {"search_taprovider", "select r.t_practitionerno, p.last_name,p.first_name from teleplanS00 r, provider p where p.ohip_no=r.t_practitionerno and r.s21_id=? group by r.t_practitionerno"},
     {"updatedigcode", "update diagnosticcode set description=? where diagnostic_code=?"},
     {"search_bill_master", "select * from billingmaster where billing_no=? "},
-    
+
     //
     {"select_user_bill_report_wcb", "SELECT * FROM billingmaster LEFT JOIN teleplanC12 ON CAST(teleplanC12.t_officefolioclaimno As unsigned)=billingmaster.billingmaster_no, demographic, wcb WHERE billingmaster.demographic_no=demographic.demographic_no AND billingmaster.billing_no=wcb.billing_no AND billingmaster.billingmaster_no=?"},
     {"select_wcb_from_ID","SELECT * FROM billingmaster bm,demographic d, wcb w WHERE bm.demographic_no=d.demographic_no AND bm.billing_no=w.billing_no AND w.ID=?"},
     {"select_user_bill_report", "SELECT * FROM billing, billingmaster JOIN teleplanC12 ON CAST(teleplanC12.t_officefolioclaimno As unsigned)=billingmaster.billingmaster_no, demographic WHERE billing.billing_no=billingmaster.billing_no AND billingmaster.demographic_no = demographic.demographic_no AND teleplanC12.status = 'O' AND billingmaster.billingmaster_no=?"},
-    {"search_reportprovider","SELECT p.last_name, p.first_name, p.provider_no, r.team from provider p,reportprovider r where r.provider_no=p.provider_no and r.status<>'D' and r.action=? order by team"},
+
     /** Billing WCB Correction **/
     {"update_wcb_billing", "UPDATE billing SET status=? WHERE billing_no=?" },
-	 {"update_wcb_billingmaster", "UPDATE billingmaster SET billingstatus=? WHERE billing_no=?" },	
+	 {"update_wcb_billingmaster", "UPDATE billingmaster SET billingstatus=? WHERE billing_no=?" },
 	 {"update_wcb_demographic", "UPDATE demographic SET first_name=?, last_name=?, address=?, city=?, province=?, postal=?, year_of_birth=?, month_of_birth=?, date_of_birth=?, hin=?, sex=?, phone=? WHERE demographic_no=?" },
 	 {"update_wcb_wcb", "UPDATE wcb SET formedited=NOW(), status='O', w_reporttype=?, bill_amount=?, w_fname=?, w_lname=?, w_mname=?, w_gender=?, w_dob=?, w_address=?, w_city=?, w_postal=?, w_area=?, w_phone=?, w_phn=?, w_empname=?, w_emparea=?, w_empphone=?, w_wcbno=?, w_opaddress=?, w_opcity=?, w_rphysician=?, w_duration=?, w_problem=?, w_servicedate=?, w_diagnosis=?, w_icd9=?, w_bp=?, w_side=?, w_noi=?, w_work=?, w_workdate=?, w_clinicinfo=?, w_capability=?, w_capreason=?, w_estimate=?, w_rehab=?, w_rehabtype=?, w_wcbadvisor=?, w_ftreatment=?, w_estimatedate=?, w_tofollow=?, w_pracno=?, w_doi=?, w_servicelocation=?, w_feeitem=?, w_extrafeeitem=? where billing_no=?"},
     {"update_provider_wcb","Update wcb set provider_no=?, w_payeeno = ?, w_pracno = ? where billing_no=?"},
     {"select_c12","SELECT * FROM teleplanC12 JOIN provider ON CAST(provider.ohip_no as unsigned) = CAST(teleplanC12.t_practitioner_no as unsigned), billingmaster JOIN billing ON billingmaster.billing_no=billing.billing_no WHERE teleplanC12.status=? AND billingmaster.billingmaster_no=CAST(teleplanC12.t_officefolioclaimno As unsigned) ORDER BY provider.last_name, provider.first_name;"},
     {"select_c12_record","SELECT * FROM teleplanC12 WHERE status=? AND CAST(t_officefolioclaimno As unsigned)=CAST(? As unsigned)"}
   //BC
-    
-    
+
+
  };
-  
+
   //associate each operation with an output JSP file - displaymode
   String[][] responseTargets=new String[][] {
     {"day" , "appointmentprovideradminday.jsp"},
