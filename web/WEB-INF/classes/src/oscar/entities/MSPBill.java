@@ -71,6 +71,8 @@ public class MSPBill {
   public String paymentMethodName;
   public Date serviceDateDate;
   public String rejectionDate;
+  public String adjustmentCode;
+  public String adjustmentCodeDesc;
   public MSPBill() {
 
     ut = new UtilDateUtilities();
@@ -548,6 +550,14 @@ public class MSPBill {
     return payeeNo;
   }
 
+  public String getAdjustmentCode() {
+    return adjustmentCode;
+  }
+
+  public String getAdjustmentCodeDesc() {
+    return adjustmentCodeDesc;
+  }
+
   public void setPaymentMethodName(String paymentMethodName) {
     this.paymentMethodName = paymentMethodName;
   }
@@ -562,6 +572,14 @@ public class MSPBill {
 
   public void setPayeeNo(String payeeNo) {
     this.payeeNo = payeeNo;
+  }
+
+  public void setAdjustmentCode(String adjustmentCode) {
+    this.adjustmentCode = adjustmentCode;
+  }
+
+  public void setAdjustmentCodeDesc(String adjustmentCodeDesc) {
+    this.adjustmentCodeDesc = adjustmentCodeDesc;
   }
 
 }
