@@ -244,7 +244,7 @@ function clearField(field){
                     while (rslocal.next()) {
                       proFirst = rslocal.getString("first_name");
                       proLast = rslocal.getString("last_name");
-                      proOHIP = rslocal.getString("provider_no");
+                      proOHIP = rslocal.getString("ohip_no");
                 %>
                   <option value="<%=proOHIP%>"><%=proLast%>                    ,
 <%=proFirst%>                  </option>
