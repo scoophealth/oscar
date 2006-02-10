@@ -3071,7 +3071,7 @@ CREATE TABLE formLabReq (
   paymentProgram varchar(4) default NULL,
   province varchar(15) default NULL,
   orn varchar(12) default NULL,
-  phoneNumber varchar(12) default NULL,
+  phoneNumber varchar(20) default NULL,
   patientName varchar(40) default NULL,
   sex varchar(6) default NULL,
   patientAddress varchar(20) default NULL,
