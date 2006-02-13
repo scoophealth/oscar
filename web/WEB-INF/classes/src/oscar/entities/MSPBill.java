@@ -73,10 +73,9 @@ public class MSPBill {
   public String rejectionDate;
   public String adjustmentCode;
   public String adjustmentCodeDesc;
+  public String amtOwing;
   public MSPBill() {
-
     ut = new UtilDateUtilities();
-
   }
 
   public boolean isWCB() {
@@ -558,6 +557,12 @@ public class MSPBill {
     return adjustmentCodeDesc;
   }
 
+  public String getAmtOwing() {
+    return amtOwing;
+  }
+
+
+
   public void setPaymentMethodName(String paymentMethodName) {
     this.paymentMethodName = paymentMethodName;
   }
@@ -582,4 +587,7 @@ public class MSPBill {
     this.adjustmentCodeDesc = adjustmentCodeDesc;
   }
 
+  public void setAmtOwing(String amtOwing) {
+    this.amtOwing = amtOwing;
+  }
 }
