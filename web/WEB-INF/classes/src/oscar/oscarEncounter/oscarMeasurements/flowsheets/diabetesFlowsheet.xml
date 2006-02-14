@@ -129,7 +129,7 @@
         graphable="no"
         value_name="Normal"/>    
     <item
-        measurement_type="FEET"
+        measurement_type="FETS"
         display_name="Test loss of Sensation"
         guideline="Check for peripheral anesthesia with 10g monofilament or 128 Hz tuning fork"
         graphable="no"
