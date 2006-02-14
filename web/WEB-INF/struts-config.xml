@@ -638,6 +638,11 @@
       <forward name="success" path="/oscarEncounter/oscarMeasurements/ProcessMeasurementsSubmission.jsp"/>
       <forward name="failure" path="/oscarEncounter/oscarMeasurements/Measurements.jsp"/>
     </action>
+
+    <action path="/oscarEncounter/Measurements2" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctMeasurementsAction" name="EctMeasurementsForm" scope="request" input="/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp">
+      <forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp"/>
+      <forward name="failure" path="/oscarEncounter/oscarMeasurements/AddMeasurementData.jsp"/>
+    </action>
     <action path="/oscarEncounter/oscarMeasurements/SetupAddMeasurementType" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasurementTypeAction" name="EctMeasurementsForm" scope="request">
       <forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasurementType.jsp"/>
     </action>
@@ -662,6 +667,9 @@
     </action>
     <action path="/oscarEncounter/oscarMeasurements/DeleteData" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction" name="EctDeleteDataForm" scope="request">
       <forward name="success" path="/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do"/>
+    </action>
+    <action path="/oscarEncounter/oscarMeasurements/DeleteData2" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctDeleteDataAction" name="EctDeleteDataForm" scope="request">
+      <forward name="success" path="/oscarEncounter/oscarMeasurements/close.jsp"/>
     </action>
     <action path="/oscarEncounter/oscarMeasurements/SetupAddMeasuringInstruction" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupAddMeasuringInstructionAction" scope="request">
       <forward name="continue" path="/oscarEncounter/oscarMeasurements/AddMeasuringInstruction.jsp"/>
@@ -1107,6 +1115,9 @@
       <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>
     </action>
     
+    <!--action path="/document/AddDocuments" type="oscar.util.AddDocumentAction" name="FrmForm" scope="request" input="/dms/documentReport.jsp">
+      <forward name="success" path="/dms/documentReport.jsp"/>
+    </action-->
     
   </action-mappings>
   <message-resources parameter="oscarResources"/>
