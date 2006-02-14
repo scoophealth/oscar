@@ -215,6 +215,27 @@ public class PreventionData {
    }
    
    
+   public String getPreventionComment(String id){
+       String comment = null;
+       try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "Select val from preventionsExt where  prevention_id = '"+id+"' and keyval = 'comments' " ;            
+            System.out.println(sql);            
+            rs = db.GetSQL(sql);
+            if (rs.next()){
+               comment = rs.getString("val");
+               if ( comment != null && comment.trim().length() == 0){
+                  comment = null;
+               }
+            }            
+            db.CloseConn();            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+       return comment;
+   }
+   
    public Prevention getPrevention(String demoNo){
       DemographicData dd = new DemographicData();
       java.util.Date dob = dd.getDemographicDOB(demoNo);
