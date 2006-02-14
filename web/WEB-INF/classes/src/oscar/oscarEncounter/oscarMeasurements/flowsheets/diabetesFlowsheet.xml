@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : diabetesFlowsheet.xml
+    Created on : February 8, 2006, 7:00 PM
+    Author     : Jay Gallagher
+    Description:
+        Define diabetes flowsheet
+-->
+
+<flowsheet name="diab" 
+           display_name="Diabetes Flowsheet" 
+           ds_rules="diab.drl" 
+           dxcode_triggers="icd9:250" 
+           warning_colour="red"
+           recommendation_colour="yellow">
+    <item
+        measurement_type="REBG"
+        display_name="Review Blood Glucose Records"
+        guideline="Fasting or pre-meal glucose level 4-7; 2hrs after meal 5-10"
+        graphable="no"
+        value_name="Reviewed"/>
+
+    <item
+        measurement_type="A1C"
+        display_name="A1C"
+        guideline="Target &lt; 7.0%"
+        graphable="yes"
+        value_name="A1C"/>    
+        
+    <item
+        measurement_type="DMED"
+        display_name="Diabetes Med Changes"
+        guideline=""
+        graphable="no"
+        value_name="Changed"/>    
+
+    <item
+        measurement_type="BP"
+        display_name="BP"
+        guideline="Target &lt; 130/80"
+        graphable="yes"
+        value_name="BP"/>    
+
+    <item
+        measurement_type="BMED"
+        display_name="BP Med Changes"
+        guideline=""
+        graphable="no"
+        value_name="Changed"/>    
+
+    <item
+        measurement_type="BMI"
+        display_name="BMI"
+        guideline="Target: 18.5 - 24.9 (kg/m&lt;sup&gt;2&lt;/sup&gt;)"
+        graphable="yes"
+        value_name="BMI"/> 
+   
+    <item
+        measurement_type="DIER"
+        display_name="Diet/ Exercise"
+        guideline="Proper diet; activity 2.5 hrs/wk"
+        graphable="no"
+        value_name="Reviewed"/>    
+    <item
+        measurement_type="NOSK"
+        display_name="Smoking"
+        guideline="Number of Cigarettes/ per day"
+        graphable="yes"
+        value_name="#/per day"/>    
+    <item
+        measurement_type="VMED"
+        display_name="Vascular Med Changes"
+        guideline=""
+        graphable="no"
+        value_name="Changed"/>    
+    <item
+        measurement_type="LDL"
+        display_name="LDL"
+        guideline="LDL &lt; 2.5"
+        graphable="yes"
+        value_name="LDL"/>    
+    <item
+        measurement_type="TCHD"
+        display_name="Ratio (TC/HCL)"
+        guideline="Ratio &lt; 4.0"
+        graphable="yes"
+        value_name="TC/HCL"/>    
+    <item
+        measurement_type="TRIG"
+        display_name="Triglycerides"
+        guideline="Target: &lt; 2.0 mmol/L"
+        graphable="yes"
+        value_name="TG"/>    
+    <item
+        measurement_type="LMED"
+        display_name="Lipid Lowering Meds"
+        guideline=""
+        graphable="no"
+        value_name="Changed"/>    
+    <item
+        measurement_type="FGLC"
+        display_name="Fasting glucose meter/lab comparison"
+        guideline="Meter within 20% of simultaneous lab values"
+        graphable="no"
+        value_name="Within 20%"/>    
+    <item
+        measurement_type="EYEE"
+        display_name="Opthalmologist/ Optometrist"
+        guideline="Dilated Eye Exam, comment if referred"
+        graphable="no"
+        value_name="Exam Done"/>    
+    <item
+        measurement_type="ACR"
+        display_name="Alb: creatinine ratio"
+        guideline="Target: &lt; 2.0 M : &lt;2.8 F"
+        graphable="yes"
+        value_name="ACR"/>    
+    <item
+        measurement_type="EGFR"
+        display_name="eGFR"
+        guideline=""
+        graphable="yes"
+        value_name="eGFR"/>     
+    <item
+        measurement_type="FOTE"
+        display_name="Lower Extremity Exam"
+        guideline="Foot Care"
+        graphable="no"
+        value_name="Normal"/>    
+    <item
+        measurement_type="FEET"
+        display_name="Test loss of Sensation"
+        guideline="Check for peripheral anesthesia with 10g monofilament or 128 Hz tuning fork"
+        graphable="no"
+        value_name="Normal"/>    
+        
+    <item
+        measurement_type="PANE"
+        display_name="Painful Neuropathy"
+        guideline=""
+        graphable="no"
+        value_name="Present"/>    
+    <item
+        measurement_type="EDGI"
+        display_name="Autonomic Neuropathy"
+        guideline="Erectile Dysfunction, gastrointestinal disturbance"
+        graphable="no"
+        value_name="Present"/>    
+    <item
+        measurement_type="DMME"
+        display_name="Diabetes Education"
+        guideline="Assess and discuss self-management challenges"
+        graphable="no"
+        value_name="Discussed"
+        possible_answer="Yes"/> 
+   
+    <item 
+        prevention_type="Flu"
+        display_name="Flu Vaccine"
+        guideline="Annually"
+        graphable="no"/>
+        
+    <item 
+        prevention_type="Pneumovax"
+        display_name="Pneumoccocal vaccine"
+        guideline=""
+        graphable="no"/>
+        
+        
+        
+        
+</flowsheet>
