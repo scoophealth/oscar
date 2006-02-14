@@ -123,7 +123,7 @@ public class EctMeasurementsDataBeanHandler {
                         "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
                         "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v," +
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
-                        "AND m.type = mt.type AND mt.validation = v.id GROUP BY m.id ORDER BY m.type ASC," +
+                        "AND m.type = mt.type AND mt.validation = v.id GROUP BY m.id ORDER BY m.dateObserved DESC," +
                         "m.dateEntered DESC";
             System.out.println("sql: " + sql);
             ResultSet rs;
@@ -158,17 +158,72 @@ public class EctMeasurementsDataBeanHandler {
         return measurementsDataVector;
     }
     
+    public static Hashtable getMeasurementDataById(String id){
+        String sql = "SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,  "
+                    +" m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last "
+                    +" FROM measurements m, provider p, measurementType mt "
+                    +" WHERE m.id = '"+id+"' AND m.providerNo= p.provider_no AND m.type = mt.type ";
+        return getHashfromSQL(sql);
+    }
+    
     public static Hashtable getLast(String demo, String type) {
+        String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+  
+                    "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " + 
+                    "FROM measurements m, provider p, measurementType mt " +
+                    "WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
+                    "AND m.type = mt.type GROUP BY m.id ORDER BY m.dateObserved DESC LIMIT 1";
+        return getHashfromSQL(sql);
+    }
+    
+//    public static Hashtable getLast(String demo, String type) {
+//        try {
+//            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+//            String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+  
+//                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " + 
+//                        "FROM measurements m, provider p, measurementType mt " +
+//                        "WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
+//                        "AND m.type = mt.type GROUP BY m.id ORDER BY m.dateObserved DESC LIMIT 1";
+//            ResultSet rs = db.GetSQL(sql); 
+//            if (rs.next()) {         
+//                Hashtable data = new Hashtable();
+//                data.put("type", rsGetString(rs, "typeDisplayName"));
+//                data.put("typeDisplayName", rsGetString(rs, "typeDisplayName"));
+//                data.put("typeDescription", rsGetString(rs, "typeDescription"));
+//                data.put("value", rsGetString(rs, "dataField"));
+//                data.put("measuringInstruction", rsGetString(rs, "measuringInstruction"));
+//                data.put("comments", rsGetString(rs, "comments"));
+//                data.put("dateObserved", rsGetString(rs, "dateObserved"));
+//                data.put("dateObserved_date", rs.getDate("dateObserved"));
+//                data.put("dateEntered", rsGetString(rs, "dateEntered"));
+//                data.put("dateEntered_date", rs.getDate("dateEntered"));
+//                data.put("provider_first", rsGetString(rs, "provider_first"));
+//                data.put("provider_last", rsGetString(rs, "provider_last"));
+//                rs.close();
+//                db.CloseConn();
+//                return data;
+//                
+//            } else {
+//                rs.close();
+//                db.CloseConn();
+//                return null;
+//            }
+//        }
+//        catch(SQLException e) {
+//            System.out.println(e.getMessage());
+//            return null;
+//        }
+//    }
+//    
+    
+    
+    private static Hashtable getHashfromSQL(String sql){       
+        Hashtable data = null;
+        System.out.println(sql);
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql ="SELECT mt.typeDisplayName, mt.typeDescription, m.dataField, m.measuringInstruction,"+  
-                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last " + 
-                        "FROM measurements m, provider p, measurementType mt " +
-                        "WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
-                        "AND m.type = mt.type GROUP BY m.id ORDER BY m.dateEntered DESC LIMIT 1";
             ResultSet rs = db.GetSQL(sql); 
             if (rs.next()) {         
-                Hashtable data = new Hashtable();
+                data = new Hashtable();
                 data.put("type", rsGetString(rs, "typeDisplayName"));
                 data.put("typeDisplayName", rsGetString(rs, "typeDisplayName"));
                 data.put("typeDescription", rsGetString(rs, "typeDescription"));
@@ -176,23 +231,19 @@ public class EctMeasurementsDataBeanHandler {
                 data.put("measuringInstruction", rsGetString(rs, "measuringInstruction"));
                 data.put("comments", rsGetString(rs, "comments"));
                 data.put("dateObserved", rsGetString(rs, "dateObserved"));
+                data.put("dateObserved_date", rs.getDate("dateObserved"));
                 data.put("dateEntered", rsGetString(rs, "dateEntered"));
+                data.put("dateEntered_date", rs.getDate("dateEntered"));
                 data.put("provider_first", rsGetString(rs, "provider_first"));
-                data.put("provider_last", rsGetString(rs, "provider_last"));
-                rs.close();
-                db.CloseConn();
-                return data;
-                
-            } else {
-                rs.close();
-                db.CloseConn();
-                return null;
-            }
+                data.put("provider_last", rsGetString(rs, "provider_last"));              
+            } 
+            rs.close();
+            db.CloseConn();
         }
         catch(SQLException e) {
             System.out.println(e.getMessage());
-            return null;
         }
+        return data;
     }
     
     private static String rsGetString(ResultSet rs, String column) throws SQLException {
