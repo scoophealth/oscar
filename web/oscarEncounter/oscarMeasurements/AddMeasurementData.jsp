@@ -1,0 +1,410 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+<%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarEncounter.oscarMeasurements.bean.*,oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+
+<%
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  String demographic_no = request.getParameter("demographic_no"); 
+  String id = request.getParameter("id");
+  String measurement = request.getParameter("measurement");
+ 
+  EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
+  EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
+  
+  Hashtable existingPrevention = null;
+  
+  String providerName ="";
+  String provider = (String) session.getValue("user");
+  String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd");
+  String completed = "0";
+  String nextDate = "";
+  boolean never = false;
+  Hashtable extraData = new Hashtable();
+  
+  ArrayList providers = ProviderData.getProviderList();  
+%>
+
+                         
+<html:html locale="true">
+
+<head>
+<title>
+oscarMeasurement
+</title><!--I18n-->
+<html:base/>
+<link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" type="text/css" media="all" href="../../share/calendar/calendar.css" title="win2k-cold-1" /> 
+     
+<script type="text/javascript" src="../../share/calendar/calendar.js" ></script>      
+<script type="text/javascript" src="../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
+<script type="text/javascript" src="../../share/calendar/calendar-setup.js" ></script>   
+<script type="text/javascript" src="../../share/javascript/prototype.js"></script>
+
+<style type="text/css">
+  div.ImmSet { background-color: #ffffff; }
+  div.ImmSet h2 {  }
+  div.ImmSet ul {  }
+  div.ImmSet li {  }
+  div.ImmSet li a { text-decoration:none; color:blue;}
+  div.ImmSet li a:hover { text-decoration:none; color:red; }
+  div.ImmSet li a:visited { text-decoration:none; color:blue;}  
+  
+  
+  ////////
+  div.prevention {  background-color: #999999; }
+  div.prevention fieldset {width:35em; font-weight:bold; }
+  div.prevention legend {font-weight:bold; }
+  
+  ////////
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+function showHideItem(id){ 
+    if(document.getElementById(id).style.display == 'none')
+        document.getElementById(id).style.display = ''; 
+    else
+        document.getElementById(id).style.display = 'none'; 
+}
+
+function showItem(id){
+        document.getElementById(id).style.display = ''; 
+}
+
+function hideItem(id){
+        document.getElementById(id).style.display = 'none'; 
+}
+
+function showHideNextDate(id,nextDate,nexerWarn){
+    if(document.getElementById(id).style.display == 'none'){
+        showItem(id);
+    }else{
+        hideItem(id);
+        document.getElementById(nextDate).value = "";
+        document.getElementById(nexerWarn).checked = false ;
+        
+    }        
+}
+
+function disableifchecked(ele,nextDate){        
+    if(ele.checked == true){       
+       document.getElementById(nextDate).disabled = true;       
+    }else{                      
+       document.getElementById(nextDate).disabled = false;              
+    }
+}
+</SCRIPT>
+
+<style type="text/css">
+	table.outline{
+	   margin-top:50px;
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	table.grid{
+	   border-bottom: 1pt solid #888888;
+	   border-left: 1pt solid #888888;
+	   border-top: 1pt solid #888888;
+	   border-right: 1pt solid #888888;
+	}
+	td.gridTitles{
+		border-bottom: 2pt solid #888888;
+		font-weight: bold;
+		text-align: center;
+	}
+        td.gridTitlesWOBottom{
+                font-weight: bold;
+                text-align: center;
+        }
+	td.middleGrid{
+	   border-left: 1pt solid #888888;	   
+	   border-right: 1pt solid #888888;
+           text-align: center;
+	}	
+	
+	
+label{
+float: left;
+width: 120px;
+font-weight: bold;
+}
+
+label.checkbox{
+float: left;
+width: 116px;
+font-weight: bold;
+}
+
+label.fields{
+float: left;
+width: 80px;
+font-weight: bold;
+}
+
+span.labelLook{
+font-weight:bold;
+
+}
+
+input, textarea,select{
+
+//margin-bottom: 5px;
+}
+
+textarea{
+width: 450px;
+height: 100px;
+}
+
+
+.boxes{
+width: 1em;
+}
+
+#submitbutton{
+margin-left: 120px;
+margin-top: 5px;
+width: 90px;
+}
+
+br{
+clear: left;
+}
+</style>
+
+<script type="text/javascript">
+  function hideExtraName(ele){ 
+   //alert(ele);
+    if (ele.options[ele.selectedIndex].value != -1){
+       hideItem('providerName');
+       //alert('hidding');
+    }else{                    
+       showItem('providerName');
+       document.getElementById('providerName').focus();
+       //alert('showing');
+    }                       
+  }
+</script>               
+</head>
+
+<body class="BodyStyle" vlink="#0000FF" onload="disableifchecked(document.getElementById('neverWarn'),'nextDate');">
+<!--  -->
+    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+        <tr class="MainTableTopRow">
+            <td class="MainTableTopRowLeftColumn" width="100" >
+               measurement
+            </td>
+            <td class="MainTableTopRowRightColumn">
+                <table class="TopStatusBar">
+                    <tr>
+                        <td >
+                            <oscar:nameage demographicNo="<%=demographic_no%>"/>
+                        </td>
+                        <td  >&nbsp;
+							
+                        </td>
+                        <td style="text-align:right">
+                                <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableLeftColumn" valign="top">
+               &nbsp;
+
+            </td>
+            <td valign="top" class="MainTableRightColumn">   
+               <html:errors/>
+               <% String val = "";
+                  String saveAction = "/oscarEncounter/Measurements2"; 
+                  String comment = "";
+                  Hashtable h = null;
+                  if ( id != null ) { 
+                     saveAction = "/oscarEncounter/oscarMeasurements/DeleteData2";
+                     h = EctMeasurementsDataBeanHandler.getMeasurementDataById(id);
+                     prevDate = ((Date) h.get("dateObserved_date")).toString();
+                     val = (String) h.get("value");
+                     comment = (String) h.get("comments");
+                  } 
+               %>
+               
+               <html:form action="<%=saveAction%>" styleId="measurementForm" >
+               
+               <%
+                int ctr = 0;
+                EctMeasurementsForm ectMeasurementsForm = (EctMeasurementsForm) request.getAttribute("EctMeasurementsForm");  
+                
+                if(ectMeasurementsForm != null && !ectMeasurementsForm.isEmpty()){
+                   //System.out.println("EcTMEasureMentsFoRms "+ectMeasurementsForm.values);
+                   h = new Hashtable(ectMeasurementsForm.values);
+                   //System.out.println("EcTMEasureMentsFoRms "+ectMeasurementsForm.getValue("date-"+ctr));
+                   prevDate = (String) h.get("date-"+ctr);
+                   val = (String) h.get("inputValue-" + ctr);
+                   comment = (String) h.get("comments-" + ctr);
+                }else{
+                   System.out.println("EcTMEasureMentsFoRms was null or empty");
+                }
+                System.out.println("state of the hashtable "+h);
+                if (h != null){
+                    //prevDate = (String) h.get("date-"+ctr);
+                }
+                %>
+               
+               
+               
+               
+               
+               <input type="hidden" name="measurement" value="<%=measurement%>"/>
+               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/> 
+               <input type="hidden" name="inputFrom" value="AddMeasurementData"/>
+               
+               <input type="hidden" name="<%= "value(inputType-" + ctr + ")" %>" value="<%=mtypeBean.getType()%>"/>
+               <input type="hidden" name="<%= "value(inputTypeDisplayName-" + ctr + ")" %>" value="<%=mtypeBean.getTypeDisplayName()%>"/>                            
+               <input type="hidden" name="<%= "value(validation-" + ctr + ")" %>" value="<%=mtypeBean.getValidation()%>"/>
+               <input type="hidden" name="value(numType)" value="<%=ctr+1%>"/>                                                
+               <input type="hidden" name="value(groupName)" value=""/>                              
+               <input type="hidden" name="value(css)" value=""/>
+               <% if ( id != null ) { %>
+               <input type="hidden" name="id" value="<%=id%>"/>
+               <input type="hidden" name="deleteCheckbox" id="deleteCheck" value="<%=id%>"/>
+               <% } %>
+                     
+               <div class="prevention">                                      
+                   <fieldset>
+                      <legend>Measurement : <%=mtypeBean.getTypeDisplayName()%></legend>
+                         <div style="float:left;display:none;">
+                           <input type="radio" name="<%= "value(inputMInstrc-" + ctr + ")" %>" value="<%=mtypeBean.getMeasuringInstrc()%>" checked/>
+                         </div>
+                         <div style="float:left;margin-left:30px;">
+                            <label for="prevDate" class="fields" >Obs Date:</label>    
+                            <input type="text" name="<%= "value(date-" + ctr + ")" %>" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
+                                                               
+                            <label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=request.getParameter("value_name")%>:</label> 
+                            <% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
+                            <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
+                                <option value="Yes"  <%=sel("Yes", val)%>>Yes</option>
+                                <option value="No"   <%=sel("No", val)%>>No</option>
+                            </select>
+                            <%}else{%>
+                            <input type="text" id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" size="5" value="<%=val%>" /> <br/>
+                            <%}%>
+                         </div>
+                          <br/>
+                         <fieldset >
+                          <legend >Comments</legend>                   
+                           <textarea name="<%= "value(comments-" + ctr + ")" %>" ><%=comment%></textarea>                   
+                         </fieldset> 
+                   </fieldset>                                                                            
+                   
+                                     
+               </div>
+               <script type="text/javascript">
+                  hideExtraName(document.getElementById('providerDrop'));                                    
+               </script>
+               
+               <br/>
+               
+               <% if ( id != null ) { %>
+               <input type="submit" name="delete" value="Delete" id="deleteButton" disabled="false"/>               
+               <% }else{ %>
+               <input type="submit" value="Save">
+               <%}%>
+               </html:form>
+            </td>
+        </tr>
+        <tr>
+            <td class="MainTableBottomRowLeftColumn">
+            &nbsp;
+            </td>
+            <td class="MainTableBottomRowRightColumn" valign="top">
+            &nbsp;
+            </td>
+        </tr>
+    </table>
+<script type="text/javascript">
+    <% if ( id != null ) { %>
+        Form.disable('measurementForm'); 
+        document.getElementById('deleteButton').disabled = false;
+        document.getElementById('deleteCheck').disabled = false;
+        
+    <% } %>
+    
+Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
+//Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
+</script>    
+</body>
+</html:html>
+<%!
+
+String completed(boolean b){
+    String ret ="";
+    if(b){ret="checked";}
+    return ret;
+    }
+     
+String refused(boolean b){
+    String ret ="";
+    if(!b){ret="checked";}
+    return ret;
+    }
+        
+String str(String first,String second){
+    String ret = "";
+    if(first != null){
+       ret = first;    
+    }else if ( second != null){
+       ret = second;    
+    }
+    return ret;
+  }
+
+String checked(String first,String second){
+    String ret = "";
+    if(first != null && second != null){
+       if(first.equals(second)){
+           ret = "checked";
+       }
+    }
+    return ret;
+  }
+
+String sel(String first,String second){
+    String ret = "";
+    if(first != null && second != null){
+       if(first.equals(second)){
+           ret = "selected";
+       }
+    }
+    return ret;
+  }
+%>
