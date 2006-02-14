@@ -126,6 +126,9 @@
   <copy todir="${classes_web}/oscar/oscarPrevention/">
    <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarPrevention/" includes="*.drl,*.xml" />
   </copy>
+  <copy todir="${classes_web}/oscar/oscarEncounter/oscarMeasurements/flowsheets/">
+   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarEncounter/oscarMeasurements/flowsheets/" includes="*.drl,*.xml" />
+  </copy> 
   <copy todir="${classes_web}/oscar/eform/">
    <fileset dir="${webapp}/WEB-INF/classes/src/oscar/eform/" includes="*.xml" />
   </copy>  
