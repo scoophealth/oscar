@@ -60,7 +60,7 @@ You have no rights to access the data!
 
 <%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
-
+<%@page import="oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <%
@@ -929,6 +929,17 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
+                        <oscar:oscarPropertiesCheck property="TESTING" value="yes">
+                        <%
+                        dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
+                        Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
+                        ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
+                        for (int f = 0; f < flowsheets.size();f++){
+                            String flowsheetName = (String) flowsheets.get(f);
+                        %>
+                        <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>                    
+                        <%}%>    
+                        </oscar:oscarPropertiesCheck>
                         <form name="measurementGroupForm">
                         <select name="measurementGroupSelect" class="ControlSelect" onchange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
