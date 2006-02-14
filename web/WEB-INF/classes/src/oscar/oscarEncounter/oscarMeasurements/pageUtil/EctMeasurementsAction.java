@@ -70,7 +70,7 @@ public class EctMeasurementsAction extends Action {
         int iType = Integer.parseInt(numType);
          
         String demographicNo = null;
-        String providerNo = (String) session.getValue("user");
+        String providerNo = (String) session.getAttribute("user");
         if ( bean != null)
             demographicNo = bean.getDemographicNo();        
         
@@ -198,7 +198,8 @@ public class EctMeasurementsAction extends Action {
                             //Find if the same data has already been entered into the system
                             String sql = "SELECT * FROM measurements WHERE demographicNo='"+demographicNo+ "' AND dataField='"+inputValue
                                         +"' AND measuringInstruction='" + mInstrc + "' AND comments='" + comments
-                                        + "' AND dateObserved='" + dateObserved + "'";
+                                        + "' AND dateObserved='" + dateObserved + "' and type = '"+inputType+"'";
+                            //System.out.println(sql);
                             rs = db.GetSQL(sql);
                             if(!rs.next()){
                                 //Write to the Dababase if all input values are valid                        
@@ -206,6 +207,7 @@ public class EctMeasurementsAction extends Action {
                                         +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
                                         +" VALUES ('"+str.q(inputType)+"','"+str.q(demographicNo)+"','"+str.q(providerNo)+"','"+str.q(inputValue)+"','"
                                         + str.q(mInstrc)+"','"+str.q(comments)+"','"+str.q(dateObserved)+"','"+str.q(dateEntered)+"')";                           
+                                //System.out.println(sql);
                                 db.RunSQL(sql);
                                 //prepare input values for writing to the encounter form
                                 textOnEncounter =  textOnEncounter + inputType + "    " + inputValue + " " + mInstrc + " " + comments + "\\n";
@@ -222,7 +224,7 @@ public class EctMeasurementsAction extends Action {
                     String css = (String) frm.getValue("css");
                     request.setAttribute("groupName", groupName);
                     request.setAttribute("css", css);
-                    return (new ActionForward(mapping.getInput()));
+                    return (new ActionForward(mapping.getInput()));                    
                 }
                 /* select the correct db specific command */
                 String db_type = OscarProperties.getInstance().getProperty("db_type").trim();
@@ -236,8 +238,7 @@ public class EctMeasurementsAction extends Action {
                 else
                     throw new SQLException("ERROR: Database " + db_type + " unrecognized.");
                                     
-                db.CloseConn();
-                
+                db.CloseConn();  
             }
             catch(SQLException e)
             {
@@ -246,7 +247,8 @@ public class EctMeasurementsAction extends Action {
             
         
         //put the inputvalue to the encounter form
-        session.setAttribute( "textOnEncounter", textOnEncounter );    
+        session.setAttribute( "textOnEncounter", textOnEncounter );  
+        
         return mapping.findForward("success");
     }
 
