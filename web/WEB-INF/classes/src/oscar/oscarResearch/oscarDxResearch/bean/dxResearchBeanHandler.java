@@ -91,5 +91,18 @@ public class dxResearchBeanHandler {
         }
         return v;
     }
+    
+    
+    public Vector getActiveCodeListWithCodingSystem(){ //TODO: NEED TO CHECK STATUS
+        Vector v = new Vector();
+        for (int i = 0; i < dxResearchBeanVector.size(); i++){
+            dxResearchBean dx = (dxResearchBean) dxResearchBeanVector.get(i);
+            if( !v.contains(dx.getDxSearchCode())){
+               v.add(dx.getType()+":"+dx.getDxSearchCode()); 
+            }
+        }
+        return v;
+    }
+    
 }
 
