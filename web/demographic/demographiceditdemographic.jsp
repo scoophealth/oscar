@@ -201,7 +201,7 @@ function checkDob() {
 	var dd = document.updatedelete.date_of_birth.value;
 
 	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
-        var check_date = new Date(yyyy,mm,dd);
+        var check_date = new Date(yyyy,(mm-1),dd);
 		var now = new Date();
 		var year=now.getFullYear();
 		var month=now.getMonth()+1;

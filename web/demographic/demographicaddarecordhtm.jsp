@@ -257,7 +257,9 @@ function checkDob() {
 	var dd = selectBox.options[selectBox.selectedIndex].value
 
 	if(checkTypeNum(yyyy) && checkTypeNum(mm) && checkTypeNum(dd) ){
-        var check_date = new Date(yyyy,mm,dd);
+        //alert(yyyy); alert(mm); alert(dd);
+        var check_date = new Date(yyyy,(mm-1),dd);
+        //alert(check_date);
 		var now = new Date();
 		var year=now.getFullYear();
 		var month=now.getMonth()+1;
@@ -269,6 +271,7 @@ function checkDob() {
 		//alert(check_date.getTime() + " | " + young.getTime() + " | " + old.getTime());
 		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
 		    typeInOK = true;
+		    //alert("failed in here 1");
 		}
 		if ( yyyy == "0000"){ 
         typeInOK = false;
