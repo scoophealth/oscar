@@ -77,7 +77,7 @@ public class MsgDemoMap {
             String sql = "";                               
             //sql = "select tbl.thedate, tbl.thesubject from msgDemoMap map, messagetbl tbl where demographic_no ='"+ demographic_no 
             //        + "' and tbl.messageid = map.messageID order by tbl.thedate";
-            sql = "select map.messageID from msgDemoMap map, messagetbl m where m.messageid=map.messageID and demographic_no='"+demographic_no+"' order by m.thedate desc";
+            sql = "select map.messageID from msgDemoMap map, messagetbl m where m.messageid=map.messageID and demographic_no='"+demographic_no+"' order by m.thedate desc , m.messageid desc ";
             
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
