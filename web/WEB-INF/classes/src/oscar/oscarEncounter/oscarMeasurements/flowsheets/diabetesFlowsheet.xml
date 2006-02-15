@@ -112,7 +112,7 @@
         value_name="Exam Done"/>    
     <item
         measurement_type="ACR"
-        display_name="Alb: creatinine ratio"
+        display_name="Alb: creat ratio"
         guideline="Target: &lt; 2.0 M : &lt;2.8 F"
         graphable="yes"
         value_name="ACR"/>    
@@ -123,13 +123,13 @@
         graphable="yes"
         value_name="eGFR"/>     
     <item
-        measurement_type="FOTE"
+        measurement_type="FTE"
         display_name="Lower Extremity Exam"
         guideline="Foot Care"
         graphable="no"
         value_name="Normal"/>    
     <item
-        measurement_type="FETS"
+        measurement_type="FTLS"
         display_name="Test loss of Sensation"
         guideline="Check for peripheral anesthesia with 10g monofilament or 128 Hz tuning fork"
         graphable="no"
