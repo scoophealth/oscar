@@ -193,18 +193,7 @@ function unlink(){
                                 <tr>
                                     <th bgcolor="#DDDDFF" width="75">
                                     &nbsp;
-                                    </th>
-                                    <th align="left" bgcolor="#DDDDFF">
-                                      <% if (moreMessages.equals("true")){%>
-                                        <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=status&moreMessages=true"   >
-                                        <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
-                                        </html:link>
-                                      <%}else{%>
-                                        <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=status&moreMessages=false"   >
-                                        <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
-                                        </html:link>
-                                      <%}%>
-                                    </th>
+                                    </th>                                    
                                     <th align="left" bgcolor="#DDDDFF">
                                       <% if (moreMessages.equals("true")){%>
                                             <html:link page="/oscarMessenger/DisplayDemographicMessages.jsp?orderby=from&moreMessages=true"  >
@@ -262,10 +251,7 @@ function unlink(){
                                     
                                         &nbsp;                                    
                                     </td>
-                                    <td bgcolor="#EEEEFF">
-                                    <% String key = "oscarMessenger.DisplayMessages.msgStatus"+dm.status.substring(0,1).toUpperCase()+dm.status.substring(1); %>
-                                    <bean:message key="<%= key %>"/>
-                                    </td>
+                                    
                                     <td bgcolor="#EEEEFF">
                                     <%= dm.sentby  %>
                                     </td>
