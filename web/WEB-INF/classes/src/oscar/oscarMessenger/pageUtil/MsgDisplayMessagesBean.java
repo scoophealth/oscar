@@ -264,7 +264,8 @@ public class MsgDisplayMessagesBean {
            orderBy = "message";
         }
         orderBy += desc + ", m.messageid desc";
-     }     
+     }   
+     System.out.println("order "+order+" orderby "+orderBy);
      return orderBy; 
   }
   
@@ -344,17 +345,23 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
-        +" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and m.messageid = map.messageID and ml.message=m.messageid order by "+getOrderBy(orderby));
-        System.out.println(sql);
+        //String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m, msgDemoMap map"
+        //+" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+getCurrentLocationId()+"' "
+        //+" and m.messageid = map.messageID and ml.message=m.messageid order by "+getOrderBy(orderby));
+        
+        String sql = "select m.messageid, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  " +
+              "from  messagetbl m, msgDemoMap map where map.demographic_no = '"+ demographic_no+"'  " +
+              "and m.messageid = map.messageID  order by "+getOrderBy(orderby);
+        
+        
+        System.out.println("this "+sql);
         rs = db.GetSQL(sql);
 
         while (rs.next()) {
 
            oscar.oscarMessenger.data.MsgDisplayMessage dm = new oscar.oscarMessenger.data.MsgDisplayMessage();
-           dm.status     = rs.getString("status");
-           dm.messageId  = rs.getString("message");
+           dm.status     = "    ";//rs.getString("status");
+           dm.messageId  = rs.getString("messageid");
            dm.messagePosition  = Integer.toString(index);
            dm.thesubject = rs.getString("thesubject");
            dm.thedate    = rs.getString("thedate");

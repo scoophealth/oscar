@@ -75,10 +75,16 @@ public class MsgViewMessageByPositionAction extends Action {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            java.sql.ResultSet rs;
            
-                String sql = new String("select m.messageid from messagelisttbl ml, messagetbl m, msgDemoMap map"
-                +" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+displayMsgBean.getCurrentLocationId()+"' "
-                +" and m.messageid = map.messageID and ml.message=m.messageid order by "+ displayMsgBean.getOrderBy(orderBy) + " limit " + messagePosition +", 1");
-                System.out.println(sql);
+                //String sql = new String("select m.messageid from messagelisttbl ml, messagetbl m, msgDemoMap map"
+                //+" where map.demographic_no = '"+ demographic_no+"' and remoteLocation = '"+displayMsgBean.getCurrentLocationId()+"' "
+                //+" and m.messageid = map.messageID and ml.message=m.messageid order by "+ displayMsgBean.getOrderBy(orderBy) + " limit " + messagePosition +", 1");
+       
+                String sql = "select m.messageid  " +
+                             "from  messagetbl m, msgDemoMap map where map.demographic_no = '"+ demographic_no+"'  " +
+                             "and m.messageid = map.messageID  order by "+ displayMsgBean.getOrderBy(orderBy) + " limit " + messagePosition +", 1";
+        
+                
+                System.out.println("this ="+sql);
                 rs = db.GetSQL(sql);
                 if (rs.next()) {                                                                   
                     actionforward.addParameter("messageID", rs.getString("messageid"));
