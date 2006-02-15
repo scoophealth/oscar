@@ -376,8 +376,8 @@ div.recommendations li{
                                 }
                                 
                             %>                            
-                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addMeasurementData')" >
-                                <p title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
+                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;value_name=<%= URLEncoder.encode((String) h2.get("value_name"),"UTF-8") %>','addMeasurementData')" >
+                                <p title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
                                 Date: <%=hdata.get("prevention_date")%>
                                 <%if (comb) {%>
                                 <span class="footnote"><%=comments.size()%></span>
