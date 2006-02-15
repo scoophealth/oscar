@@ -87,7 +87,7 @@
         graphable="yes"
         value_name="TC/HCL"/>    
     <item
-        measurement_type="TRIG"
+        measurement_type="TG"
         display_name="Triglycerides"
         guideline="Target: &lt; 2.0 mmol/L"
         graphable="yes"
