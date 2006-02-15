@@ -215,7 +215,7 @@ clear: left;
 </script>               
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="disableifchecked(document.getElementById('neverWarn'),'nextDate');">
+<body class="BodyStyle" vlink="#0000FF" onload="Field.focus('value(inputValue-0)');">
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
