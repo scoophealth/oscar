@@ -277,6 +277,7 @@ public class CMLLabTest {
                LabResult labRes = new LabResult();
                                              
                labRes.title = rs.getString("title");
+               if (labRes.title == null){ labRes.title = "" ;}
                labRes.notUsed1 = rs.getString("notUsed1");            
                labRes.locationId = rs.getString("location_id");
                labRes.last = rs.getString("last");
