@@ -384,6 +384,14 @@ function OtherScriptAttach() {
   awnd.focus();
 }
 
+function ReferralScriptAttach1(){
+    ReferralScriptAttach('xml_refer1');
+}
+
+function ReferralScriptAttach2(){
+    ReferralScriptAttach('xml_refer2');
+}
+
 
 function ReferralScriptAttach(elementName) {
      var d = elementName;
@@ -404,6 +412,14 @@ function ResearchScriptAttach() {
 
 function POP(n,h,v) {
   window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
+}
+
+
+function grabEnter(event,callb){
+  if( (window.event && window.event.keyCode == 13) || (event && event.which == 13) )  {
+     eval(callb);
+     return false;
+  }
 }
 
 </SCRIPT>
@@ -789,7 +805,7 @@ function showHideLayers() { //v3.0
                        <tr>
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer1" size="40" />
+                             <html:text property="xml_refer1" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach1()')"/>
                              </font>
                           </td>
                           <td>
@@ -810,7 +826,7 @@ function showHideLayers() { //v3.0
                        <tr>
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer2" size="40" />
+                             <html:text property="xml_refer2" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach2()')"/>
 					        </font>
                           </td>
                           <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
@@ -900,7 +916,7 @@ function showHideLayers() { //v3.0
                             <tr>
                               <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                               
-                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40"/>
+                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
                                 <input type="button" value=".5" onclick="$('xml_other1_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
@@ -910,7 +926,7 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" />
+                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
                                 <input type="button" value=".5" onclick="$('xml_other2_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
@@ -920,7 +936,7 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" />
+                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
                                 <input type="button" value=".5" onclick="$('xml_other3_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
@@ -999,25 +1015,25 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text  property="xml_diagnostic_detail1"  size="25" />
+                                <html:text  property="xml_diagnostic_detail1"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail2"  size="25" />
+                                <html:text property="xml_diagnostic_detail2"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail3"  size="25" />
+                                <html:text property="xml_diagnostic_detail3"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
-                            </tr>
+                            </tr> 
                             <tr>
                               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><a href="javascript:ScriptAttach()"><img src="../../../images/search_dx_code.jpg" border="0"></a></font>
                                 <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
