@@ -142,7 +142,7 @@ public class MeasurementFlowSheet {
         }
         
         if (!fileFound){                  
-         URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets"+string );  //TODO: change this so it is configurable;
+         URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/"+string );  //TODO: change this so it is configurable;
          System.out.println("loading from URL "+url.getFile());            
          ruleBase = RuleBaseLoader.loadFromUrl( url );
         }
