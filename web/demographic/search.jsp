@@ -24,15 +24,19 @@
  */
 -->
 
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+     
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <html:html locale="true">
     <head>
         <title> <bean:message key="demographic.search.title"/> </title>
         <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
         <meta http-equiv="Cache-Control" content="no-cache">
-        <script language="JavaScript">
+        <script type="text/javascript" >
 
         function setfocus() {
             document.titlesearch.keyword.focus();
@@ -70,11 +74,12 @@
             if (checkTypeIn()) document.titlesearch.submit();
         }
          
-        </SCRIPT>
+        </script>
         <style type="text/css">
     BODY{
-        FONT-SIZE: Normal;
-        FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+        font-size: medium;
+        font-family: Verdana, Tahoma, Arial, sans-serif;
+        margin:0px;
     }
     TABLE{
         font-family: Arial, Verdana, Tahoma, Helvetica, sans-serif;
@@ -98,39 +103,38 @@
         border-top:1px solid #AFC4D5;
         color:#000066;height:19px;
         text-decoration:none;
-        cursor: hand
+        cursor: hand;
     }
     .subject {
         background-color: #003399;
         color: #FFFFFF;  
         font-size: 14pt;
         font-weight: bold;
-        text-align: centre;        
+        text-align: center;        
     }
     .searchTitle {
         background-color: #6699CC;
         color: #000000;            
         font-weight: bold;
         text-align: left;
-        height="20px"
+        height:20px;
     }
     .title {
         background-color: #6699CC;
         color: #000000;            
         font-weight: bold;
         text-align: center;
-        height="20px"
+        height:20px;
     }
     
 </style>
     </head>
-    <body bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+    <body onload="setfocus()" >
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
             <tr bgcolor="#CCCCFF"><th NOWRAP><font face="Helvetica"><bean:message key="demographic.search.msgSearchPatient"/></font></th></tr>
         </table>
-
-        <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">
-            <form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="return checkTypeIn()">
+        <form method="post" name="titlesearch" action="demographiccontrol.jsp" onSubmit="return checkTypeIn()">
+        <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#EEEEFF">         
             <tr valign="top">
                 <td rowspan="2" ALIGN="right" valign="middle">
                     <font face="Verdana" color="#0000FF"><b><i><bean:message key="demographic.search.msgSearch"/></i></b></font>
@@ -181,9 +185,9 @@
                     <bean:message key="demographic.search.formChart"/></font>
                 </td>
             </tr>
-            </form>
         </table>
-			
+        </form>			
+
         <CENTER>
         <p> <br>
         </p>
