@@ -121,7 +121,7 @@ You have no rights to access the data!
 
 <html:html locale="true">
 <head>
-<title><bean:message key="oscarEncounter.Index.title"/></title>
+<title><bean:message key="oscarEncounter.Index.title"/> - <oscar:nameage demographicNo="<%=demoNo%>"/></title>
 <html:base/>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <style type="text/css">
