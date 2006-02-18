@@ -82,10 +82,10 @@
         value_name="LDL"/>    
     <item
         measurement_type="TCHD"
-        display_name="Ratio (TC/HCL)"
+        display_name="Ratio (TC/HDL)"
         guideline="Ratio &lt; 4.0"
         graphable="yes"
-        value_name="TC/HCL"/>    
+        value_name="TC/HDL"/>    
     <item
         measurement_type="TG"
         display_name="Triglycerides"
