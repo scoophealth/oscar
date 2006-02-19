@@ -76,6 +76,7 @@ order by billing.billingtype;]]></queryString>
 	<field name="paymentMethodName" class="java.lang.String"/>
 	<field name="adjustmentCode" class="java.lang.String"/>
 	<field name="adjustmentCodeDesc" class="java.lang.String"/>
+	<field name="adjustmentCodeAmt" class="java.lang.String"/>
 
 	<variable name="test" class="java.lang.String" resetType="None" calculation="Nothing">
 		<variableExpression><![CDATA["test"]]></variableExpression>
@@ -807,7 +808,7 @@ order by billing.billingtype;]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{adjustmentCodeDesc}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{adjustmentCodeAmt} + " " +  $F{adjustmentCodeDesc}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
