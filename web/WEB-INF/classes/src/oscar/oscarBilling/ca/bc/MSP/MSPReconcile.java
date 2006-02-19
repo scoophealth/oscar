@@ -118,52 +118,52 @@ public class MSPReconcile {
   public String getStatusDesc(String stat) {
     String statusDesc = "";
     if (stat.equals(REJECTED)) {
-      statusDesc = "Rejected";
+      statusDesc = "REJ";
     }
     else if (stat.equals(NOTSUBMITTED)) {
-      statusDesc = "Not Submitted";
+      statusDesc = "NOSUB";
     }
     else if (stat.equals(SUBMITTED)) {
-      statusDesc = "Submitted";
+      statusDesc = "SUB";
     }
     else if (stat.equals(SETTLED)) {
-      statusDesc = "Settled";
+      statusDesc = "SET";
     }
     else if (stat.equals(DELETED)) {
-      statusDesc = "Deleted";
+      statusDesc = "DEL";
     }
     else if (stat.equals(HELD)) {
-      statusDesc = "Held";
+      statusDesc = "HELD";
     }
     else if (stat.equals(DATACENTERCHANGED)) {
-      statusDesc = "Data Center Changed";
+      statusDesc = "DCC";
     }
     else if (stat.equals(PAIDWITHEXP)) {
-      statusDesc = "Paid With Explanation";
+      statusDesc = "PWE";
     }
     else if (stat.equals(REFUSED)) {
-      statusDesc = "Refused";
+      statusDesc = "REF";
     }
     else if (stat.equals(BADDEBT)) {
-      statusDesc = "Bad Debt";
+      statusDesc = "BAD";
     }
     else if (stat.equals(WCB)) {
       statusDesc = "WCB";
     }
     else if (stat.equals(CAPITATED)) {
-      statusDesc = "Capitated";
+      statusDesc = "CAP";
     }
     else if (stat.equals(DONOTBILL)) {
-      statusDesc = "Do Not Bill";
+      statusDesc = "DNB";
     }
     else if (stat.equals(BILLPATIENT)) {
-      statusDesc = "Bill Patient";
+      statusDesc = "BP";
     }
     else if (stat.equals(COLLECTION)) {
-      statusDesc = "Sent To Collection";
+      statusDesc = "COL";
     }
     else if (stat.equals(PAIDPRIVATE)) {
-      statusDesc = "Paid Private";
+      statusDesc = "PRIV";
     }
 
     return statusDesc;
@@ -247,13 +247,17 @@ public class MSPReconcile {
   }
 
   //
-  public String getS00String(String billingNo) {
+  public String getS00String(String billingMasterNo) {
     String s = "";
     int i = 0;
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      String sql = "select t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_exp7 teleplanS00 where t_mspctlno = '" +
-          forwardZero(billingNo, 7) + "'";
+
+      String sql =
+          "SELECT teleplanS00.t_exp1,teleplanS00.t_exp1,teleplanS00.t_exp2,teleplanS00.t_exp3,teleplanS00.t_exp4,teleplanS00.t_exp5,teleplanS00.t_exp6,teleplanS00.t_exp7 FROM teleplanS00, billingmaster " +
+          "where t_officeno = billingmaster_no " +
+          "and billingmaster_no  = '" + billingMasterNo + "'";
+
       ResultSet rs = db.GetSQL(sql);
       while (rs.next()) {
         String exp[] = new String[7];
@@ -274,7 +278,7 @@ public class MSPReconcile {
       e.printStackTrace();
     }
     if (i > 1) {
-      System.out.println(" billingNo " + billingNo + " had " + i +
+      System.out.println(" billingNo " + billingMasterNo + " had " + i +
                          "rows in the table");
     }
     return s;
@@ -899,8 +903,11 @@ public class MSPReconcile {
         b.serviceStartTime = rs.getString("service_start_time");
         b.serviceToDate = rs.getString("service_to_day");
         b.status = b.reason;
-        b.reason = this.getStatusDesc(b.reason) + "(" + b.reason + ")";
         b.billMasterNo = rs.getString("billingmaster_no");
+        String expStr = getS00String(b.billMasterNo);
+        b.expString = "".equals(expStr) ? expStr : "(" + expStr + ")";
+        b.reason = this.getStatusDesc(b.reason);
+
         b.amount = rs.getString("bill_amount");
         b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount);
         b.code = rs.getString("billing_code");
@@ -974,9 +981,9 @@ public class MSPReconcile {
 
         else if (this.REP_INVOICE.equals(type)) {
           if ("E".equals(b.status)) {
-            b.adjustmentCode = this.getAdjustmentCodeByBillNo(b.billMasterNo);
+            b.adjustmentCode = this.getS00String(b.billMasterNo);
           }
-          else{
+          else {
             b.adjustmentCode = "";
           }
         }
@@ -1002,7 +1009,6 @@ public class MSPReconcile {
           skipBill = false;
         }
       }
-
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1161,10 +1167,9 @@ public class MSPReconcile {
                                               excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
                                               this.REP_PAYREF);
-    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1" +
-        " FROM `teleplanS00`,billingmaster as bm,billing as b" +
-        " where teleplanS00.t_officeno = bm.billingmaster_no" +
-        " and b.billing_no = bm.billing_no "
+    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1,teleplanS00.t_aja1" +
+        " FROM teleplanS00 left join billingmaster as bm on teleplanS00.t_officeno = bm.billingmaster_no join billing as b" +
+        " on b.billing_no = bm.billing_no"
         + criteriaQry
         + " order by t_payment";
 
@@ -1196,9 +1201,19 @@ public class MSPReconcile {
         b.payeeNo = rs.getString("payee_no");
         b.adjustmentCode = rs.getString("teleplanS00.t_ajc1");
 
+        //should be empty string if there is no adjustment
+        b.adjustmentCodeAmt = "";
+        b.adjustmentCode=b.adjustmentCode == null?"":b.adjustmentCode;
+        b.adjustmentCodeDesc = "";
         if (!"".equals(b.adjustmentCode)) {
+          String adjCode1amt = rs.getString("teleplanS00.t_aja1");
+          b.adjustmentCodeAmt = this.convCurValue(adjCode1amt);
           b.adjustmentCodeDesc = getAdjustmentCodeDesc(b.adjustmentCode) + "(" +
               b.adjustmentCode + ")";
+          if (b.adjustmentCodeDesc.equals("")) {
+            System.out.println("no description for b.adjustmentCode:" +
+                               b.adjustmentCode);
+          }
         }
 
         b.accountName = this.getProvider(b.userno, 0).getFullName();
