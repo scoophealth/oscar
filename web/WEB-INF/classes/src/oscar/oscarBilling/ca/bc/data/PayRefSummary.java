@@ -59,28 +59,29 @@ public class PayRefSummary {
    * @param item String
    * @param strValue String
    */
-  public void addIncValue(String getPaymentMethod, String strValue) {
+  public void addIncValue(String paymentMethod, String strValue) {
+    paymentMethod = paymentMethod == null?"":paymentMethod;
     try{
       Double value = new Double(strValue);
-      if (getPaymentMethod.equals("1")) {
+      if (paymentMethod.equals("1")) {
         this.cash += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("2")) {
+      else if (paymentMethod.equals("2")) {
         this.cheque += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("3")) {
+      else if (paymentMethod.equals("3")) {
         this.visa += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("4")) {
+      else if (paymentMethod.equals("4")) {
         this.mc += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("5")) {
+      else if (paymentMethod.equals("5")) {
         this.amex += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("6")) {
+      else if (paymentMethod.equals("6")) {
         this.electronic += value.doubleValue();
       }
-      else if (getPaymentMethod.equals("7")) {
+      else if (paymentMethod.equals("7")) {
         this.debit += value.doubleValue();
       }
       else{
