@@ -89,13 +89,13 @@ public class BillingFormData {
       // SELECT b.service_code, b.description , b.value, b.percentage FROM billingservice b, ctl_billingservice c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
 
       sql = "SELECT DISTINCT b.service_code, b.description , b.value, b.percentage "
-          + "FROM billingservice b, ctl_billingservice c WHERE b.service_code="
-          + "c.service_code and b.region='" + billRegion +
+          + "FROM ctl_billingservice c left outer join billingservice b on b.service_code="
+          + "c.service_code where b.region='" + billRegion +
           "' and c.service_group='"
           + serviceGroup + "' and c.servicetype='" + serviceType +
           "' order by c.service_order";
 
-      //System.out.println("getServiceList "+sql);
+     // System.out.println("getServiceList "+sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
