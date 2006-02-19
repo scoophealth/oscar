@@ -431,6 +431,20 @@ function showHideLayers() { //v3.0
 </head>
 
 
+<%!
+/**
+Generates a string list of option tags in numeric order
+**/
+String generateNumericOptionList(int range){
+  StringBuffer buff = new StringBuffer();
+   for (int i = 0; i < range; i++) {
+     String prefix = i<10?"0":"";
+     String val = prefix+String.valueOf(i);
+   buff.append("<option value='" + val + "'>" + val+ "</option>");
+   }
+   return buff.toString();
+}
+%>
 
 
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide');CheckType();correspondenceNote();">
@@ -647,15 +661,38 @@ function showHideLayers() { //v3.0
                 </td>
                 <td >
                    <font size="-2" ><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
-                   <html:text property="xml_starttime" size="4" maxlength="4" />
+                   <table cellpadding="0" cellspacing="0" border="0">
+                     <tr>
+                       <td>
+                         <select name="xml_starttime_hr">
+                           <%=generateNumericOptionList(24)%>
+                         </select>
+                       </td>
+                       <td>
+                         <select name="xml_starttime_min">
+                           <%=generateNumericOptionList(61)%>
+                         </select>
+                       </td>
+                     </tr>
+                   </table>
                 </td>
                 <td >
                     <font size="-2"><strong><bean:message key="billing.servicedate.endtime"/></strong></font>
-                    <html:text property="xml_endtime" size="4" maxlength="4" />
+                   <table cellpadding="0" cellspacing="0" border="0">
+                     <tr>
+                       <td>
+                         <select name="xml_endtime_hr">
+                           <%=generateNumericOptionList(24)%>
+                         </select>
+                       </td>
+                       <td>
+                         <select name="xml_endtime_min">
+                           <%=generateNumericOptionList(61)%>
+                         </select>
+                       </td>
+                     </tr>
+                   </table>
                 </td>
-
-
-
                 <td>
                     Dependent:
                     <html:select property="dependent">
@@ -695,7 +732,7 @@ function showHideLayers() { //v3.0
                      </select>
                 </td>
                 <td nowrap>
-                <a href="javascript: function myFunction() {return false; }" onclick="checkFACILITY();"><font size="-2"><strong>Facility</strong></font></a>
+                <a href="javascript: function myFunction() {return false; }" onClick="checkFACILITY();"><font size="-2"><strong>Facility</strong></font></a>
                 <span style="display: none;" id="FACILITY">
                 <table>
                 <tr>
