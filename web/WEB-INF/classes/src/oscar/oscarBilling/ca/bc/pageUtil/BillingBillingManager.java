@@ -125,7 +125,6 @@ public class BillingBillingManager {
                while(rs.next()){
                    BillingItem billingItem = new BillingItem(rs.getString("billing_code"),rs.getString("billing_unit"));
                    billingItem.fill();
-                   billingItem.setLineNo(rs.getInt("billingmaster_no"));
                    billingItemsArray.add(billingItem);
 
                }
@@ -274,7 +273,6 @@ public class BillingBillingManager {
         double percentage  ;
         double units;
         double lineTotal;
-        int lineNo;
 
         public BillingItem(String service_code, String description, String price1, String percentage1, double units1) {
             this.service_code= service_code;
@@ -282,14 +280,6 @@ public class BillingBillingManager {
             this.price = Double.parseDouble(price1);
             this.percentage = Double.parseDouble(percentage1);
             this.units = units1;
-        }
-
-        public void setLineNo(int lineNo){
-          this.lineNo = lineNo;
-        }
-
-        public int getLineNo(){
-          return lineNo;
         }
 
         public BillingItem(String service_code, String units1) {
@@ -330,7 +320,6 @@ public class BillingBillingManager {
         public double getPercentage() {
             return percentage;
         }
-
 
         public void fill(){
             try{
