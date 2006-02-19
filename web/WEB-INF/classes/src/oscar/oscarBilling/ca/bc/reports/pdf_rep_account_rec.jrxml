@@ -18,9 +18,11 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+
 	<parameter name="startDate" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -42,6 +44,7 @@
 	<parameter name="account" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+
 	<field name="providerFirstName" class="java.lang.String"/>
 	<field name="providerLastName" class="java.lang.String"/>
 	<field name="billingtype" class="java.lang.String"/>
@@ -56,6 +59,8 @@
 	<field name="reason" class="java.lang.String"/>
 	<field name="serviceDateRange" class="java.lang.String"/>
 	<field name="accountName" class="java.lang.String"/>
+	<field name="expString" class="java.lang.String"/>
+
 	<variable name="four" class="java.lang.Double" resetType="Group" resetGroup="status" calculation="Sum">
 		<variableExpression><![CDATA[$F{serviceDateRange}.equals("4")?new Double($F{amount}):new Double(0)]]></variableExpression>
 	</variable>
@@ -83,7 +88,8 @@
 	<variable name="oneGtotal" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{serviceDateRange}.equals("1")?new Double($F{amount}):new Double(0)]]></variableExpression>
 	</variable>
-		<group  name="status" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+
+		<group  name="status" >
 			<groupExpression><![CDATA[$F{reason}]]></groupExpression>
 			<groupHeader>
 			<band height="30"  isSplitAllowed="true" >
@@ -134,7 +140,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="244"
+						x="247"
 						y="4"
 						width="38"
 						height="10"
@@ -156,7 +162,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="286"
+						x="293"
 						y="4"
 						width="38"
 						height="10"
@@ -421,7 +427,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="162"
+						x="143"
 						y="4"
 						width="36"
 						height="12"
@@ -443,7 +449,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="58"
+						x="39"
 						y="4"
 						width="48"
 						height="12"
@@ -465,9 +471,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="236"
+						x="242"
 						y="4"
-						width="47"
+						width="42"
 						height="12"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -531,7 +537,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="201"
+						x="204"
 						y="4"
 						width="33"
 						height="12"
@@ -623,9 +629,9 @@
 				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="162"
+						x="143"
 						y="1"
-						width="41"
+						width="56"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -662,14 +668,14 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{reason}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{reason} + $F{expString}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="1"
 						y="1"
-						width="56"
+						width="37"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -689,7 +695,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="57"
+						x="38"
 						y="1"
 						width="105"
 						height="10"
@@ -711,7 +717,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="244"
+						x="247"
 						y="1"
 						width="38"
 						height="10"
@@ -735,7 +741,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="286"
+						x="293"
 						y="1"
 						width="38"
 						height="10"
@@ -807,9 +813,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="204"
+						x="200"
 						y="1"
-						width="31"
+						width="47"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -925,7 +931,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="244"
+						x="247"
 						y="3"
 						width="38"
 						height="10"
@@ -947,7 +953,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="286"
+						x="293"
 						y="3"
 						width="38"
 						height="10"
