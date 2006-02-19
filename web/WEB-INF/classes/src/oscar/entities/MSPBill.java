@@ -74,6 +74,7 @@ public class MSPBill {
   public String adjustmentCode;
   public String adjustmentCodeDesc;
   public String amtOwing;
+  public String adjustmentCodeAmt;
   public MSPBill() {
     ut = new UtilDateUtilities();
   }
@@ -561,7 +562,9 @@ public class MSPBill {
     return amtOwing;
   }
 
-
+  public String getAdjustmentCodeAmt() {
+    return adjustmentCodeAmt;
+  }
 
   public void setPaymentMethodName(String paymentMethodName) {
     this.paymentMethodName = paymentMethodName;
@@ -589,5 +592,9 @@ public class MSPBill {
 
   public void setAmtOwing(String amtOwing) {
     this.amtOwing = amtOwing;
+  }
+
+  public void setAdjustmentCodeAmt(String adjustmentCodeAmt) {
+    this.adjustmentCodeAmt = adjustmentCodeAmt;
   }
 }
