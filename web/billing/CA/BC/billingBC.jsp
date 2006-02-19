@@ -27,13 +27,6 @@
  * Ontario, Canada
  */
 -->
-
-
-
-
-
-
-
 <%@ page language="java" contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -91,7 +84,7 @@ fillDxcodeList(billlist2, dxcodeList);
 fillDxcodeList(billlist3, dxcodeList);
 
   String frmType = request.getParameter("billType");
-  if(frmType != null && frmType.equals("PRIV")){
+  if(frmType != null && frmType.equals("Pri")){
    billform.setPrivateFees(billlist1);
    billform.setPrivateFees(billlist2);
    billform.setPrivateFees(billlist3);
@@ -112,7 +105,6 @@ if (request.getParameter("loadFromSession") == null ){
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
-<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <style type="text/css">
 	<!--
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
@@ -231,9 +223,9 @@ function CheckType(){
 }
 /*
 function gotoPrivate(){
-   if (document.BillingCreateBillingForm.xml_billtype.value == "PRIV"){
-      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRIV&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
-      //document.location.href = "../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRI&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
+   if (document.BillingCreateBillingForm.xml_billtype.value == "Pri"){
+      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=Pri&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=Pri";
+      //document.location.href = "../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRI&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=Pri";
    }
    if (document.BillingCreateBillingForm.xml_billtype.value == "MSP"){
       document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=OscarProperties.getInstance().getProperty("default_view")%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=MSP";
@@ -242,8 +234,8 @@ function gotoPrivate(){
 }
 */
 function gotoPrivate(){
-   if (document.BillingCreateBillingForm.xml_billtype.value == "PRIV"){
-      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=PRIV&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=PRIV";
+   if (document.BillingCreateBillingForm.xml_billtype.value == "Pri"){
+      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=Pri&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=Pri";
   }
    if (document.BillingCreateBillingForm.xml_billtype.value == "MSP"){
       document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=OscarProperties.getInstance().getProperty("default_view")%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=MSP";
@@ -384,14 +376,6 @@ function OtherScriptAttach() {
   awnd.focus();
 }
 
-function ReferralScriptAttach1(){
-    ReferralScriptAttach('xml_refer1');
-}
-
-function ReferralScriptAttach2(){
-    ReferralScriptAttach('xml_refer2');
-}
-
 
 function ReferralScriptAttach(elementName) {
      var d = elementName;
@@ -412,14 +396,6 @@ function ResearchScriptAttach() {
 
 function POP(n,h,v) {
   window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
-}
-
-
-function grabEnter(event,callb){
-  if( (window.event && window.event.keyCode == 13) || (event && event.which == 13) )  {
-     eval(callb);
-     return false;
-  }
 }
 
 </SCRIPT>
@@ -607,7 +583,7 @@ function showHideLayers() { //v3.0
                  <html:option value="MSP" >Bill MSP</html:option>
                  <html:option value="WCB" >Bill WCB</html:option>
                  <html:option value="ICBC" >Bill ICBC</html:option>
-                 <html:option value="PRIV" >Private</html:option>
+                 <html:option value="Pri" >Private</html:option>
                  <html:option value="DONOTBILL" >Do Not Bill</html:option>
               </html:select>
               </font>
@@ -805,7 +781,7 @@ function showHideLayers() { //v3.0
                        <tr>
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer1" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach1()')"/>
+                             <html:text property="xml_refer1" size="40" />
                              </font>
                           </td>
                           <td>
@@ -826,7 +802,7 @@ function showHideLayers() { //v3.0
                        <tr>
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer2" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach2()')"/>
+                             <html:text property="xml_refer2" size="40" />
 					        </font>
                           </td>
                           <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
@@ -904,8 +880,6 @@ function showHideLayers() { //v3.0
               </table>
               <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
                 <tr>
-                
-                
 
                   <td width="91%" valign="top">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
@@ -914,34 +888,30 @@ function showHideLayers() { //v3.0
                               <td width="15%"><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.service.unit"/></font></b></td>
                             </tr>
                             <tr>
-                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                              
-                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
-                                <input type="button" value=".5" onclick="$('xml_other1_unit').value = '0.5'"/>
-                                </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                              
-                        <html:text property="xml_other1_unit" size="5" maxlength="3" styleId="xml_other1_unit"/>
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
-                                <input type="button" value=".5" onclick="$('xml_other2_unit').value = '0.5'"/>
+                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other2_unit" size="5" maxlength="3" styleId="xml_other2_unit" />
+                        <html:text property="xml_other1_unit" size="5" maxlength="3" />
                                 </font></td>
                             </tr>
                             <tr>
-                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
-                                <input type="button" value=".5" onclick="$('xml_other3_unit').value = '0.5'"/>
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" />
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other3_unit" size="5" maxlength="3" styleId="xml_other3_unit"/>
+                        <html:text property="xml_other2_unit" size="5" maxlength="3" />
+                                </font></td>
+                            </tr>
+                            <tr>
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" />
+                                </font></td>
+                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+
+                        <html:text property="xml_other3_unit" size="5" maxlength="3" />
                                 </font></td>
                             </tr>
                             <tr>
@@ -1015,25 +985,25 @@ function showHideLayers() { //v3.0
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text  property="xml_diagnostic_detail1"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
+                                <html:text  property="xml_diagnostic_detail1"  size="25" />
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail2"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
+                                <html:text property="xml_diagnostic_detail2"  size="25" />
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail3"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
+                                <html:text property="xml_diagnostic_detail3"  size="25" />
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
-                            </tr> 
+                            </tr>
                             <tr>
                               <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><a href="javascript:ScriptAttach()"><img src="../../../images/search_dx_code.jpg" border="0"></a></font>
                                 <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
