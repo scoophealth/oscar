@@ -33,7 +33,7 @@ public final class BillingCreateBillingForm
 
   private String[] service;
   private String xml_provider, xml_location, xml_billtype;
-  private String xml_endtime, xml_starttime, xml_appointment_date;
+  private String xml_appointment_date;
   private String xml_visittype, xml_vdate;
   private String xml_other1, xml_other2, xml_other3;
   private String xml_other1_unit, xml_other2_unit, xml_other3_unit;
@@ -53,6 +53,10 @@ public final class BillingCreateBillingForm
   private String facilityNum = null;
   private String facilitySubNum = null;
   private String mode;
+  private String xml_endtime_hr;
+  private String xml_endtime_min;
+  private String xml_starttime_hr;
+  private String xml_starttime_min;
 
   /**
    * The get method for the message String
@@ -102,37 +106,6 @@ public final class BillingCreateBillingForm
     this.xml_billtype = xml_billtype;
   }
 
-  /**
-   * The get method for the message String
-   * @return String, this is the text of the message
-   */
-  public String getXml_endtime() {
-    return xml_endtime != null ? xml_endtime : "";
-  }
-
-  /**
-   *The set method for the message String
-   * @param msg String, The text of a message
-   */
-  public void setXml_endtime(String xml_endtime) {
-    this.xml_endtime = xml_endtime;
-  }
-
-  /**
-   * The get method for the message String
-   * @return String, this is the text of the message
-   */
-  public String getXml_starttime() {
-    return xml_starttime != null ? xml_starttime : "";
-  }
-
-  /**
-   *The set method for the message String
-   * @param msg String, The text of a message
-   */
-  public void setXml_starttime(String xml_starttime) {
-    this.xml_starttime = xml_starttime;
-  }
 
   /**
    * The get method for the message String
@@ -642,6 +615,22 @@ public final class BillingCreateBillingForm
     return mode;
   }
 
+  public String getXml_endtime_hr() {
+    return xml_endtime_hr;
+  }
+
+  public String getXml_endtime_min() {
+    return xml_endtime_min;
+  }
+
+  public String getXml_starttime_hr() {
+    return xml_starttime_hr;
+  }
+
+  public String getXml_starttime_min() {
+    return xml_starttime_min;
+  }
+
   /**
    * Setter for property facilitySubNum.
    * @param facilitySubNum New value of property facilitySubNum.
@@ -652,6 +641,22 @@ public final class BillingCreateBillingForm
 
   public void setMode(String mode) {
     this.mode = mode;
+  }
+
+  public void setXml_endtime_hr(String xml_endtime_hr) {
+    this.xml_endtime_hr = xml_endtime_hr;
+  }
+
+  public void setXml_endtime_min(String xml_endtime_min) {
+    this.xml_endtime_min = xml_endtime_min;
+  }
+
+  public void setXml_starttime_hr(String xml_starttime_hr) {
+    this.xml_starttime_hr = xml_starttime_hr;
+  }
+
+  public void setXml_starttime_min(String xml_starttime_min) {
+    this.xml_starttime_min = xml_starttime_min;
   }
 
   /**
@@ -714,6 +719,16 @@ public final class BillingCreateBillingForm
                        "oscar.billing.CA.BC.billingBC.error.nulldxcodes"));
       }
     }
+
+    int starttime = new Integer(this.xml_starttime_hr + this.xml_starttime_min).intValue();
+    int endtime = new Integer(this.xml_endtime_hr + this.xml_endtime_min).intValue();
+    if(starttime>endtime||starttime==endtime){
+      errors.add("",
+                   new ActionMessage(
+                       "oscar.billing.CA.BC.billingBC.error.invalidtimeselection"));
+
+    }
+
 
     return errors;
   }

@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
@@ -31,89 +31,89 @@ import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
 
 
-public class BillingBillingManager {      
-    
+public class BillingBillingManager {
+
     public BillingItem[] getBillingItem(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {
         BillingItem[] arr ={};
-        
-        
+
+
         try {
             String service_code;
             double units;
             ArrayList lst = new ArrayList();
             BillingItem billingitem;
-            
+
             lst = getDups2(service,service1,service2,service3,service1unit,service2unit,service3unit);
-            
+
             for (int i=0; i< lst.size(); i++) {
                 BillingItem bi = (BillingItem) lst.get(i);
                 service_code = bi.service_code;
                 units = bi.units;
-                
-                
-                
+
+
+
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs;
                 String sql = "SELECT b.service_code, b.description , b.value, b.percentage "
                            + "FROM billingservice b WHERE b.service_code='" + service_code + "'";
-                
+
                 rs = db.GetSQL(sql);
-                
+
                 while(rs.next()) {
                     billingitem = new BillingItem(rs.getString("service_code"), rs.getString("description"),
                     rs.getString("value"), rs.getString("percentage"), units);
                     lst.add(billingitem);
                 }
-                
+
                 rs.close();
                 db.CloseConn();
-                
+
             }
-            
+
             arr = (BillingItem[])lst.toArray(arr);
-            
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
-        
+
+
         return arr;
     }
-    
-    
-    
+
+
+
     public ArrayList getBillView(String billing_no) {
-        
+
         ArrayList billingItemsArray = new ArrayList();
-        
+
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;            
+            ResultSet rs;
             //oscar.oscarBilling.pageUtil.BillingBillingManager bbm = new oscar.oscarBilling.pageUtil.BillingBillingManager();
-            
+
             ///is msp or wcb?
-            
+
             rs = db.GetSQL("select billingtype from billing where billing_no = '"+ billing_no +"'");
-            
+
             String billingType = "";
-            
+
             if(rs.next()){
                billingType = rs.getString("billingType");
             }
             rs.close();
-            
+
             if (billingType.equals("WCB")){
                rs = db.GetSQL("select w_feeitem from wcb where billing_no = '"+ billing_no +"'");
-               
+
                while (rs.next()){
                   BillingItem billingItem = new BillingItem(rs.getString("w_feeitem"),""+1);
                   billingItem.fill();
-                  billingItemsArray.add(billingItem);                  
+                  billingItemsArray.add(billingItem);
                }
                rs.close();
-               
+
             }else{
-            
+
                String sql;
                sql = "select billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
                sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
@@ -125,28 +125,29 @@ public class BillingBillingManager {
                while(rs.next()){
                    BillingItem billingItem = new BillingItem(rs.getString("billing_code"),rs.getString("billing_unit"));
                    billingItem.fill();
+                   billingItem.setLineNo(rs.getInt("billingmaster_no"));
                    billingItemsArray.add(billingItem);
 
                }
                rs.close();
             }
-                        
+
             db.CloseConn();
-            
+
         } catch (SQLException e){ System.out.println(e.getMessage());  }
-        
+
         return billingItemsArray;
-        
+
     }
-    public ArrayList getDups(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {        
-        ArrayList lst = new ArrayList();               
+    public ArrayList getDups(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {
+        ArrayList lst = new ArrayList();
         for (int i =0 ; i < service.length ; i++){
-            lst.add(service[i]);            
-        }        
+            lst.add(service[i]);
+        }
         if (service1.compareTo("") != 0){
             if (service1unit.compareTo("")==0){
                 service1unit = "1";
-            }            
+            }
             for (int j=0; j < Integer.parseInt(service1unit); j++){
                 lst.add(service1);
             }
@@ -167,7 +168,7 @@ public class BillingBillingManager {
                 lst.add(service3);
             }
         }
-        
+
         ArrayList billingItemsArray = new ArrayList();
         for (int i = 0;i < lst.size() ;i++ ){
             String code = (String) lst.get(i);
@@ -180,11 +181,11 @@ public class BillingBillingManager {
                 b.addUnits(1);
             }
         }
-        
+
         return billingItemsArray;
-        
+
     }
-    
+
     private BillingItem isBilled(ArrayList ar,String code){
         for (int i = 0; i < ar.size() ;i++ ){
             BillingItem bi = (BillingItem) ar.get(i);
@@ -194,20 +195,20 @@ public class BillingBillingManager {
         }
         return null;
     }
-    
-    
-    public ArrayList getDups2(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {        
+
+
+    public ArrayList getDups2(String[] service, String service1, String service2, String service3, String service1unit, String service2unit, String service3unit) {
         ArrayList billingItemsArray = new ArrayList();
-        for (int i =0 ; i < service.length ; i++){           
+        for (int i =0 ; i < service.length ; i++){
             addBillItem(billingItemsArray,service[i],"1");
-        }        
+        }
         if (service1.compareTo("") != 0){
             if (service1unit.compareTo("")==0){
                 service1unit = "1";
-            }          
+            }
             //int numUnit = Integer.parseInt(service1unit);
             addBillItem(billingItemsArray,service1,service1unit);
-                        
+
         }
         if (service2.compareTo("") != 0){
             if (service2unit.compareTo("")==0){
@@ -215,23 +216,23 @@ public class BillingBillingManager {
             }
             //int numUnit = Integer.parseInt(service2unit);
             addBillItem(billingItemsArray,service2,service2unit);
-            
+
         }
         if (service3.compareTo("") != 0){
             if (service3unit.compareTo("")==0){
                 service3unit = "1";
             }
             //int numUnit = Integer.parseInt(service3unit);
-            addBillItem(billingItemsArray,service3,service3unit);            
+            addBillItem(billingItemsArray,service3,service3unit);
         }
-        
-       
-        
+
+
+
         return billingItemsArray;
-        
+
     }
-    
-    
+
+
     private BillingItem addBillItem(ArrayList ar,String code,String serviceUnits){
         boolean newCode = true;
         BillingItem bi = null;
@@ -250,8 +251,8 @@ public class BillingBillingManager {
         }
         return bi;
     }
-    
-    
+
+
     public String getGrandTotal(ArrayList ar){
         double grandtotal = 0.00;
         for (int i=0; i< ar.size(); i++){
@@ -261,19 +262,20 @@ public class BillingBillingManager {
         }
         BigDecimal bdFee = new BigDecimal(grandtotal).setScale(2, BigDecimal.ROUND_HALF_UP);
         return bdFee.toString();
-        
+
     }
 
-    
+
     public class BillingItem {
-        
+
         String service_code;
         String description;
         double price;
         double percentage  ;
         double units;
         double lineTotal;
-        
+        int lineNo;
+
         public BillingItem(String service_code, String description, String price1, String percentage1, double units1) {
             this.service_code= service_code;
             this.description = description;
@@ -281,7 +283,15 @@ public class BillingBillingManager {
             this.percentage = Double.parseDouble(percentage1);
             this.units = units1;
         }
-        
+
+        public void setLineNo(int lineNo){
+          this.lineNo = lineNo;
+        }
+
+        public int getLineNo(){
+          return lineNo;
+        }
+
         public BillingItem(String service_code, String units1) {
             this.service_code= service_code;
             this.units = Double.parseDouble(units1);
@@ -290,26 +300,26 @@ public class BillingBillingManager {
             this.service_code= service_code;
             this.units = units1;
         }
-        
+
         public void addUnits(int num){
-            units += num;            
+            units += num;
         }
-        
+
         public void addUnits(String num) {
             units += (num.compareTo("") != 0) ? Double.parseDouble(num) : 0;
         }
-        
+
         public String getServiceCode() {
             return service_code;
         }
         public String getDescription() {
             return description;
         }
-        
+
         public double getUnit() {
             return units;
         }
-        
+
         public String getDispPrice(){
             BigDecimal bdFee = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
             return bdFee.toString();
@@ -320,20 +330,21 @@ public class BillingBillingManager {
         public double getPercentage() {
             return percentage;
         }
-        
+
+
         public void fill(){
             try{
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs;
                 String sql;
-                
+
                 // SELECT b.service_code, b.description , b.value, b.percentage FROM billingservice b, ctl_billingservice c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
-                
+
                 sql = "SELECT b.service_code, b.description , b.value, b.percentage "
                 + "FROM billingservice b WHERE b.service_code='" + service_code + "'";
                 System.out.println(sql);
                 rs = db.GetSQL(sql);
-                
+
                 while(rs.next()){
                     this.description =  rs.getString("description");
                     this.price =  Double.parseDouble(rs.getString("value"));
@@ -341,15 +352,15 @@ public class BillingBillingManager {
                         this.percentage = Double.parseDouble(rs.getString("percentage"));
                     }catch (NumberFormatException eNum) { this.percentage = 100; }
                 }
-                
+
                 rs.close();
                 db.CloseConn();
-                
+
             } catch (SQLException e){ System.out.println(e.getMessage());  }
-            
+
         }
         public double getLineTotal() {
-            
+
             this.lineTotal = price * units;
             return lineTotal;
         }
@@ -357,7 +368,7 @@ public class BillingBillingManager {
             BigDecimal bdFee = new BigDecimal(lineTotal).setScale(2, BigDecimal.ROUND_HALF_UP);
             return bdFee.toString();
         }
-        
-        
+
+
     }
 }
