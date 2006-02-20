@@ -1015,8 +1015,12 @@ public class MSPReconcile {
     }
     finally {
       try {
-        db.CloseConn();
-        rs.close();
+        if(db!=null){
+          db.CloseConn();
+        }
+        if(rs!=null){
+          rs.close();
+        }
       }
       catch (SQLException ex1) {
         ex1.printStackTrace();
@@ -1294,7 +1298,7 @@ public class MSPReconcile {
                                       boolean exludeICBC, String repType) {
     String criteriaQry = "";
     String dateField = this.REP_PAYREF.equals(repType) ?
-        "teleplanS00.t_payment" : "servicedate";
+        "teleplanS00.t_payment" : "service_date";
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       criteriaQry += " and b.apptProvider_no = '" + providerNo + "'";
     }
