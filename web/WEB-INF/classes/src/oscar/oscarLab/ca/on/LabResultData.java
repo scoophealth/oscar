@@ -27,6 +27,7 @@
 
 package oscar.oscarLab.ca.on;
 
+import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
 
 /**
@@ -69,9 +70,19 @@ public class LabResultData {
       
    }
    
-   public boolean isMatchedToPatient() { return isMatchedToPatient; }
    
-   public boolean isAbnormal(){ return abn ; }
+   public boolean isAbnormal(){ 
+       if (EXCELLERIS.equals(this.labType)){
+          PathnetResultsData prd = new PathnetResultsData();
+          if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
+               this.abn= true;
+          }
+       }
+       
+       return abn ; 
+       
+       
+   }
    
    
    public boolean isFinal(){ return finalRes ;}
@@ -92,10 +103,68 @@ public class LabResultData {
        if (CML.equals(this.labType)){
          CMLLabTest cml = new CMLLabTest();  
          this.discipline = cml.getDiscipline(this.segmentID);
+       }else if (EXCELLERIS.equals(this.labType)){
+          PathnetResultsData prd = new PathnetResultsData();
+          this.discipline = prd.findPathnetDisipline(this.segmentID);
        }
        
        return this.discipline;
    }
+   
+   public String getPatientName(){
+       return this.patientName;
+   }
+   
+   public String getHealthNumber(){
+       return this.healthNumber;
+   }
+ 
+   public String getSex(){
+       return this.sex;
+   }
+   
+   public boolean isMatchedToPatient(){
+       if (EXCELLERIS.equals(this.labType)){
+          PathnetResultsData prd = new PathnetResultsData();
+          this.isMatchedToPatient = prd.isLabLinkedWithPatient(this.segmentID);
+      }
+       return this.isMatchedToPatient;
+   }
+    
+   
+   public String getDateTime(){  
+      if (EXCELLERIS.equals(this.labType)){
+          PathnetResultsData prd = new PathnetResultsData();
+          this.dateTime = prd.findPathnetObservationDate(this.segmentID);
+      }
+      return this.dateTime;
+   }
+   
+   
+   
+   public String getReportStatus(){
+      if (EXCELLERIS.equals(this.labType)){
+          PathnetResultsData prd = new PathnetResultsData();
+          this.reportStatus = prd.findPathnetStatus(this.segmentID);
+      }
+      return this.reportStatus;
+   }
+            
+   public String getPriority(){
+       return this.priority;
+   }
+     
+   public String getRequestingClient(){
+       if (EXCELLERIS.equals(this.labType)){
+          PathnetResultsData prd = new PathnetResultsData();
+          this.requestingClient = prd.findPathnetOrderingProvider(this.segmentID);
+      }
+       return this.requestingClient;
+   }
+                
+                   
+                   
+   
    
 }
 
