@@ -324,7 +324,7 @@ function checkSelected() {
                 String resultStatus     = (String) result.resultStatus; 
 
                 String bgcolor = i % 2 == 0 ? "#e0e0ff" : "#ccccff" ;
-                if (!result.isMatchedToPatient){
+                if (!result.isMatchedToPatient()){
                    bgcolor = "#FFCC00";    
                 }
                 %>
@@ -333,32 +333,32 @@ function checkSelected() {
                 <td nowrap>
                     <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>"> 
                     <input type="hidden" name="labType<%=segmentID%><%=result.labType%>" value="<%=result.labType%>"/>
-                    <%= ((String) result.healthNumber)/*.substring(1)*/ %>
+                    <%=result.getHealthNumber() %>
                 </td>
                 <td nowrap>                                    
                     <% if ( result.isMDS() ){ %>
-                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
+                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
                     <% }else if (result.isCML()){ %>
-                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
+                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <% }else {%>
-                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.patientName%></a>
+                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <!--a href="javascript:reportWindow('../lab/CA/BC/report.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')">2</a-->
                     <% }%>
                 </td>
                 <td nowrap>
-                    <center><%= (String) result.sex %></center>
+                    <center><%= (String) result.getSex() %></center>
                 </td>
                 <td nowrap>
                     <%= (result.isAbnormal() ? "Abnormal" : "" ) %>
                 </td>
                 <td nowrap>
-                    <%= (String) result.dateTime%>
+                    <%= (String) result.getDateTime()%>
                 </td>
                 <td nowrap>
-                    <%= (String) result.priority%>
+                    <%= (String) result.getPriority()%>
                 </td>
                 <td nowrap>
-                    <%= (String) result.requestingClient%>
+                    <%= (String) result.getRequestingClient()%>
                 </td>
                 <td nowrap>
                     <%= (String) result.getDiscipline()%>
