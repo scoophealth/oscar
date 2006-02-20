@@ -84,7 +84,7 @@ public class PathnetResultsData {
             lbData.labType = LabResultData.EXCELLERIS;            
             lbData.segmentID = rs.getString("message_id");
             
-            lbData.isMatchedToPatient = isLabLinkedWithPatient(lbData.segmentID);
+            //lbData.isMatchedToPatient = isLabLinkedWithPatient(lbData.segmentID);
             
             if (demographicNo == null && !providerNo.equals("0")) {
                lbData.acknowledgedStatus = rs.getString("status");
@@ -92,9 +92,9 @@ public class PathnetResultsData {
                lbData.acknowledgedStatus ="U";
             }
             
-            if (findPathnetAdnormalResults(lbData.segmentID) > 0){
-               lbData.abn= true;
-            }
+            ///if (findPathnetAdnormalResults(lbData.segmentID) > 0){
+            ///   lbData.abn= true;
+            ///}
             
             lbData.healthNumber = rs.getString("patient_health_num");
             lbData.patientName = rs.getString("patientName");
@@ -105,11 +105,11 @@ public class PathnetResultsData {
             lbData.resultStatus = "0"; //TODO                        
             // solve lbData.resultStatus.add(rs.getString("abnormalFlag"));
             
-            lbData.dateTime = findPathnetObservationDate(lbData.segmentID);
+            ///lbData.dateTime = findPathnetObservationDate(lbData.segmentID);
             
             //priority
             lbData.priority = "----";            
-            lbData.requestingClient = findPathnetOrderingProvider(lbData.segmentID); //rs.getString("doc_name");
+            ///lbData.requestingClient = findPathnetOrderingProvider(lbData.segmentID); //rs.getString("doc_name");
             lbData.reportStatus =  findPathnetStatus(lbData.segmentID);
             
             if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
@@ -118,7 +118,7 @@ public class PathnetResultsData {
                lbData.finalRes = false;
             }                                    
             //lbData.discipline = "Hem/Chem/Other";                        
-            lbData.discipline = findPathnetDisipline(lbData.segmentID);
+            ///lbData.discipline = findPathnetDisipline(lbData.segmentID);
             labResults.add(lbData);
          }
          rs.close();
