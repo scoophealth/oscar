@@ -719,7 +719,7 @@ public final class BillingCreateBillingForm
                        "oscar.billing.CA.BC.billingBC.error.nulldxcodes"));
       }
     }
-
+/**
     int starttime = new Integer(this.xml_starttime_hr + this.xml_starttime_min).intValue();
     int endtime = new Integer(this.xml_endtime_hr + this.xml_endtime_min).intValue();
     if(starttime>endtime||starttime==endtime){
@@ -728,7 +728,7 @@ public final class BillingCreateBillingForm
                        "oscar.billing.CA.BC.billingBC.error.invalidtimeselection"));
 
     }
-
+**/
 
     return errors;
   }
