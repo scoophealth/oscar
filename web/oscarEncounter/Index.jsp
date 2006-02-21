@@ -978,11 +978,11 @@ border-right: 2px solid #cfcfcf;
                                 for(int j=0; j<labs.size(); j++) {
                                     LabResultData result =  (LabResultData) labs.get(j);
                                     if ( result.isMDS() ){ %>
-                                        <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.reportStatus%>"><%=result.dateTime%> <%=result.discipline%></option>
+                                        <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.getReportStatus()%>"><%=result.getDateTime()%> <%=result.getDiscipline()%></option>
                                     <% }else if (result.isCML()){ %>
-                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.dateTime%> <%=result.discipline%></option>                                 
+                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.getDateTime()%> <%=result.getDiscipline()%></option>                                 
                                     <% }else {%>
-                                        <option value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>" ><%=result.dateTime%> <%=result.discipline%></option>                                 
+                                        <option value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>" ><%=result.getDateTime()%> <%=result.getDiscipline()%></option>                                 
                                     <% }%>
                                     
                             <% } %>
