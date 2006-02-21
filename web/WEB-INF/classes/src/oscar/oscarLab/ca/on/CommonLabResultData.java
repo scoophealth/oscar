@@ -229,6 +229,28 @@ public class CommonLabResultData {
       }
    }
   
+  ////
+  public static boolean fileLabs(ArrayList flaggedLabs, String provider) {
+      boolean result;    
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        
+         for (int i=0; i < flaggedLabs.size(); i++) {
+            String[] strarr = (String[]) flaggedLabs.get(i);
+            String lab = strarr[0];
+            String labType = strarr[1];      
+            String sql = "update providerLabRouting set status = 'F' where provider_no='"+provider+"' and lab_type= '"+labType+"' and lab_no = '"+lab+"'";
+            System.out.print(sql);
+            db.RunSQL(sql);    
+         }
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in CommonLabResultData.updateLabRouting():"+e);
+      }
+      return true;
+   }
+  ////
+  
   public String getDemographicNo(String labId,String labType){
       String demoNo = null;
       try{
