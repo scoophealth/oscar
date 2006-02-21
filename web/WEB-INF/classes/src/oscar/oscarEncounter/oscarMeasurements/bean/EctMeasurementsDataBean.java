@@ -24,11 +24,8 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.io.PrintStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Vector;
-import oscar.oscarDB.DBHandler;
+import java.util.Calendar;
+import java.util.Date;
 
 public class EctMeasurementsDataBean{
 
@@ -45,6 +42,8 @@ public class EctMeasurementsDataBean{
        String dateObserved = "";
        String dateEntered = "";
        String canPlot = null;
+       private Date dateObservedAsDate = null;
+       private Date dateEnteredAsDate = null;
        
        public EctMeasurementsDataBean(){
        }
@@ -66,6 +65,27 @@ public class EctMeasurementsDataBean{
             this.dateEntered = dateEntered;
             this.canPlot = canPlot;
        }
+       
+       public EctMeasurementsDataBean(int id, String type, String typeDisplayName, String typeDescription, String demo, String providerFirstName, String providerLastName, 
+                                      String dataField, String measuringInstrc, String comments, String dateObserved, 
+                                      String dateEntered, String canPlot, Date dateObservedAsDate, Date dateEnteredAsDate){
+            this.id = id;
+            this.type = type;
+            this.typeDisplayName = typeDisplayName;
+            this.typeDescription = typeDescription;
+            this.demo = demo;
+            this.providerFirstName = providerFirstName;
+            this.providerLastName = providerLastName;
+            this.dataField = dataField;
+            this.measuringInstrc = measuringInstrc;
+            this.comments = comments;
+            this.dateObserved = dateObserved;
+            this.dateEntered = dateEntered;
+            this.canPlot = canPlot;
+            this.setDateObservedAsDate(dateObservedAsDate);
+            this.setDateEnteredAsDate(dateEnteredAsDate);
+       }
+       
 
        public int getId(){
            return id;
@@ -148,4 +168,42 @@ public class EctMeasurementsDataBean{
        public void setCanPlot (String canPlot){
            this.canPlot = canPlot;
        }
+
+    public Date getDateObservedAsDate() {
+        return dateObservedAsDate;
+    }
+
+    public void setDateObservedAsDate(Date dateObservedAsDate) {
+        this.dateObservedAsDate = dateObservedAsDate;
+    }
+
+    public Date getDateEnteredAsDate() {
+        return dateEnteredAsDate;
+    }
+
+    public void setDateEnteredAsDate(Date dateEnteredAsDate) {
+        this.dateEnteredAsDate = dateEnteredAsDate;
+    }
+    
+    public int getNumMonthSinceObserved(){
+        return getNumMonths(dateObservedAsDate,Calendar.getInstance().getTime());
+    }
+    public int getNumMonthsSinceObserved(Date d){
+        return getNumMonths(dateObservedAsDate,d); 
+    }
+    
+    private int getNumMonths(Date dStart, Date dEnd) {
+        int i = 0;
+        System.out.println("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dStart);
+        while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
+            calendar.add(Calendar.MONTH, 1);
+            i++;
+        }
+        i--;
+        if (i < 0) { i = 0; }
+        return i;
+   }
+    
 }
