@@ -26,21 +26,14 @@ package oscar.oscarEncounter.oscarMeasurements.pageUtil;
 
 import java.io.*;
 import java.util.*;
-import java.lang.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
-import org.apache.struts.validator.*;
-import org.apache.commons.validator.*;
-import org.apache.struts.util.MessageResources;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarMessenger.util.MsgStringQuote;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.OscarProperties;
+import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 
 
 public class EctDeleteMeasurementTypesAction extends Action {
@@ -101,7 +94,8 @@ public class EctDeleteMeasurementTypesAction extends Action {
         {
             System.out.println(e.getMessage());
         }
- 
+        MeasurementTypes mt =  MeasurementTypes.getInstance();
+        mt.reInit();
         return mapping.findForward("success");
     }
      
