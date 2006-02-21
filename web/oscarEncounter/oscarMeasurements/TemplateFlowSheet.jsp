@@ -60,7 +60,16 @@
   long startTimeToGetM = System.currentTimeMillis();
   mi.getMeasurements(measurements);
   System.out.println("Getting measurements  took  "+ (System.currentTimeMillis() - startTimeToGetM) );  
+  
   mFlowsheet.getMessages(mi);
+  
+  
+  ArrayList recList = mi.getList();
+  StringBuffer recListBuffer = new StringBuffer();
+  for(int i = 0; i < recList.size(); i++){
+        recListBuffer.append("&amp;measurement="+response.encodeURL( (String) recList.get(i)));
+  }
+  
   String flowSheet = mFlowsheet.getDisplayName();
   
   ArrayList warnings = mi.getWarnings();     
@@ -83,7 +92,7 @@
 <html:html locale="true">
 
 <head>
-<title><%=flowSheet%></title><!--I18n-->
+<title><%=flowSheet%> - <oscar:nameage demographicNo="<%=demographic_no%>"/></title><!--I18n-->
 <link rel="stylesheet" type="text/css" href="../../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
 <script type="text/javascript" src="../../share/javascript/prototype.js"></script>
@@ -104,7 +113,7 @@
 <link rel="stylesheet" type="text/css" href="../../share/css/niftyCorners.css" />
 <link rel="stylesheet" type="text/css" href="../../share/css/niftyPrint.css" media="print" />
 <script type="text/javascript" src="../../share/javascript/nifty.js"></script>
-<script type="text/javascript" src="../../share/javascript/boxover.js"></script>
+
 <script type="text/javascript">
 window.onload=function(){
 if(!NiftyCheck())
@@ -282,6 +291,11 @@ div.recommendations li{
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
+                <% if (recList.size() > 0){ %>
+                <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?demographic_no=<%=demographic_no%><%=recListBuffer.toString()%>&amp;template=<%=temp%>','addMeasurementData<%=Math.abs( "ADDTHEMALL".hashCode() ) %>')">
+                ADD ALL
+                </a>
+                <%}%>
                 <div class="leftBox">
                     <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
                        <div class="wrapper" id="dxFullListing"  >
@@ -353,7 +367,7 @@ div.recommendations li{
                                <img src="img/chart.gif" alt="Plot"  onclick="window.open('../../servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet?type=<%=measure%>&amp;mInstrc=<%=mtypeBean.getMeasuringInstrc()%>')"/>
                                <%}%>
                                <% System.out.println(h2.get("display_name")+ " "+ h2.get("value_name")); %>
-                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;value_name=<%= URLEncoder.encode((String) h2.get("value_name"),"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
                                <span  style="font-weight:bold;"><%=h2.get("display_name")%></span>
                                </a>
                                
@@ -376,9 +390,9 @@ div.recommendations li{
                                 }
                                 
                             %>                            
-                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;value_name=<%= URLEncoder.encode((String) h2.get("value_name"),"UTF-8") %>','addMeasurementData')" >
+                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
                                 <p title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
-                                Date: <%=hdata.get("prevention_date")%>
+                                <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
                                 <%if (comb) {%>
                                 <span class="footnote"><%=comments.size()%></span>
                                 <%}%>
@@ -390,6 +404,7 @@ div.recommendations li{
                         String prevType = (String) h2.get("prevention_type");
                         long startPrevType = System.currentTimeMillis();                     
                         ArrayList alist = pd.getPreventionData(prevType, demographic_no); 
+                        System.out.println("Getting prev  "+prevType+" data took "+(System.currentTimeMillis() - startPrevType) );
                         
                         
                %>             
@@ -406,10 +421,11 @@ div.recommendations li{
                                <br/>                                 
                                </p>
                             </div>
-                            <%     
+                            <%   
+                            out.flush();
                             for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
-                                String com = pd.getPreventionComment(""+hdata.get("id"));
+                                String com = "";//pd.getPreventionComment(""+hdata.get("id"));
                                 boolean comb = false;
                                 System.out.println(com);
                                 if (com != null ){
@@ -461,6 +477,7 @@ div.recommendations li{
             </td>
         </tr>
     </table>
+    <script type="text/javascript" src="../../share/javascript/boxover.js"></script>
 </body>
 </html:html>
 <% System.out.println("Template took  "+ (System.currentTimeMillis() - startTime) +" to display"); %>
