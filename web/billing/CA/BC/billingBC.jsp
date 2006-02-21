@@ -105,6 +105,7 @@ if (request.getParameter("loadFromSession") == null ){
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <style type="text/css">
 	<!--
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
@@ -376,6 +377,14 @@ function OtherScriptAttach() {
   awnd.focus();
 }
 
+function ReferralScriptAttach1(){
+    ReferralScriptAttach('xml_refer1');
+}
+
+function ReferralScriptAttach2(){
+    ReferralScriptAttach('xml_refer2');
+}
+
 
 function ReferralScriptAttach(elementName) {
      var d = elementName;
@@ -396,6 +405,14 @@ function ResearchScriptAttach() {
 
 function POP(n,h,v) {
   window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
+}
+
+
+function grabEnter(event,callb){
+  if( (window.event && window.event.keyCode == 13) || (event && event.which == 13) )  {
+     eval(callb);
+     return false;
+  }
 }
 
 </SCRIPT>
@@ -818,7 +835,7 @@ String generateNumericOptionList(int range){
                        <tr>
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer1" size="40" />
+                             <html:text property="xml_refer1" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach1()')"/>
                              </font>
                           </td>
                           <td>
@@ -839,7 +856,7 @@ String generateNumericOptionList(int range){
                        <tr>
                           <td>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer2" size="40" />
+                             <html:text property="xml_refer2" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach2()')"/>
 					        </font>
                           </td>
                           <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
@@ -918,6 +935,8 @@ String generateNumericOptionList(int range){
               <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
                 <tr>
 
+                
+
                   <td width="91%" valign="top">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
                             <tr>
@@ -925,30 +944,34 @@ String generateNumericOptionList(int range){
                               <td width="15%"><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.service.unit"/></font></b></td>
                             </tr>
                             <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40"/>
+                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                              
+                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
+                                <input type="button" value=".5" onclick="$('xml_other1_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other1_unit" size="5" maxlength="3" />
+                        <html:text property="xml_other1_unit" size="5" maxlength="3" styleId="xml_other1_unit"/>
                                 </font></td>
                             </tr>
                             <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" />
+                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
+                                <input type="button" value=".5" onclick="$('xml_other2_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other2_unit" size="5" maxlength="3" />
+                        <html:text property="xml_other2_unit" size="5" maxlength="3" styleId="xml_other2_unit" />
                                 </font></td>
                             </tr>
                             <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" />
+                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
+                                <input type="button" value=".5" onclick="$('xml_other3_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
-                        <html:text property="xml_other3_unit" size="5" maxlength="3" />
+                        <html:text property="xml_other3_unit" size="5" maxlength="3" styleId="xml_other3_unit"/>
                                 </font></td>
                             </tr>
                             <tr>
@@ -1022,21 +1045,21 @@ String generateNumericOptionList(int range){
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text  property="xml_diagnostic_detail1"  size="25" />
+                                <html:text  property="xml_diagnostic_detail1"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail2"  size="25" />
+                                <html:text property="xml_diagnostic_detail2"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
                             </tr>
                             <tr>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail3"  size="25" />
+                                <html:text property="xml_diagnostic_detail3"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
                                 </font></td>
