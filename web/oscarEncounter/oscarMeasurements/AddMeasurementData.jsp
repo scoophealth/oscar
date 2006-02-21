@@ -33,9 +33,16 @@
   String demographic_no = request.getParameter("demographic_no"); 
   String id = request.getParameter("id");
   String measurement = request.getParameter("measurement");
+  String[] measurements = request.getParameterValues("measurement");
+  
+  System.out.println(measurements);
  
   EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
-  EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
+  
+  MeasurementTemplateFlowSheetConfig templateConfig = MeasurementTemplateFlowSheetConfig.getInstance();
+  
+  String temp = request.getParameter("template");
+  MeasurementFlowSheet mFlowsheet = templateConfig.getFlowSheet(temp);
   
   Hashtable existingPrevention = null;
   
@@ -260,10 +267,21 @@ clear: left;
                
                <html:form action="<%=saveAction%>" styleId="measurementForm" >
                
+               <input type="hidden" name="value(numType)" value="<%=measurements.length%>"/>                                                
+               <input type="hidden" name="value(groupName)" value=""/>                              
+               <input type="hidden" name="value(css)" value=""/>  
+               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/> 
+               <input type="hidden" name="inputFrom" value="AddMeasurementData"/>
+               
                <%
                 int ctr = 0;
                 EctMeasurementsForm ectMeasurementsForm = (EctMeasurementsForm) request.getAttribute("EctMeasurementsForm");  
                 
+                for (int i = 0; i < measurements.length; i++){
+                    measurement = measurements[i];
+                    Hashtable h2 = mFlowsheet.getMeasurementFlowSheetInfo(measurement);
+                
+                EctMeasurementTypesBean mtypeBean = mType.getMeasurementType(measurement);
                 if(ectMeasurementsForm != null && !ectMeasurementsForm.isEmpty()){
                    //System.out.println("EcTMEasureMentsFoRms "+ectMeasurementsForm.values);
                    h = new Hashtable(ectMeasurementsForm.values);
@@ -280,20 +298,13 @@ clear: left;
                 }
                 %>
                
-               
-               
-               
-               
+
                <input type="hidden" name="measurement" value="<%=measurement%>"/>
-               <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/> 
-               <input type="hidden" name="inputFrom" value="AddMeasurementData"/>
                
                <input type="hidden" name="<%= "value(inputType-" + ctr + ")" %>" value="<%=mtypeBean.getType()%>"/>
                <input type="hidden" name="<%= "value(inputTypeDisplayName-" + ctr + ")" %>" value="<%=mtypeBean.getTypeDisplayName()%>"/>                            
                <input type="hidden" name="<%= "value(validation-" + ctr + ")" %>" value="<%=mtypeBean.getValidation()%>"/>
-               <input type="hidden" name="value(numType)" value="<%=ctr+1%>"/>                                                
-               <input type="hidden" name="value(groupName)" value=""/>                              
-               <input type="hidden" name="value(css)" value=""/>
+               
                <% if ( id != null ) { %>
                <input type="hidden" name="id" value="<%=id%>"/>
                <input type="hidden" name="deleteCheckbox" id="deleteCheck" value="<%=id%>"/>
@@ -307,11 +318,14 @@ clear: left;
                          </div>
                          <div style="float:left;margin-left:30px;">
                             <label for="prevDate" class="fields" >Obs Date:</label>    
-                            <input type="text" name="<%= "value(date-" + ctr + ")" %>" id="prevDate" value="<%=prevDate%>" size="9" > <a id="date"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
+                            <input type="text" name="<%= "value(date-" + ctr + ")" %>" id="prevDate<%=ctr%>" value="<%=prevDate%>" size="9" > <a id="date<%=ctr%>"><img title="Calendar" src="../../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
                                                                
-                            <label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=request.getParameter("value_name")%>:</label> 
+                            <label for="<%="value(inputValue-"+ctr+")"%>" class="fields"><%=h2.get("value_name")%>:</label> 
                             <% if ( mtypeBean.getValidationName() != null && mtypeBean.getValidationName().equals("Yes/No")){ %>
                             <select  id="<%= "value(inputValue-" + ctr + ")" %>" name="<%= "value(inputValue-" + ctr + ")" %>" >
+                                <%if (measurements.length > 1){ %>
+                                <option value="" >Not Answered</option>
+                                <%}%>
                                 <option value="Yes"  <%=sel("Yes", val)%>>Yes</option>
                                 <option value="No"   <%=sel("No", val)%>>No</option>
                             </select>
@@ -328,6 +342,8 @@ clear: left;
                    
                                      
                </div>
+               <%ctr++;
+                }%>
                <script type="text/javascript">
                   hideExtraName(document.getElementById('providerDrop'));                                    
                </script>
@@ -358,8 +374,9 @@ clear: left;
         document.getElementById('deleteCheck').disabled = false;
         
     <% } %>
-    
-Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
+  <% for (int i =0; i < measurements.length; i++){ %>  
+Calendar.setup( { inputField : "prevDate<%=i%>", ifFormat : "%Y-%m-%d", showsTime :false, button : "date<%=i%>", singleClick : true, step : 1 } );
+  <%}%>
 //Calendar.setup( { inputField : "nextDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "nextDateCal", singleClick : true, step : 1 } );
 </script>    
 </body>
