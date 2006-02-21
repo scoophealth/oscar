@@ -31,6 +31,7 @@ package oscar.oscarEncounter.oscarMeasurements.bean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 
 /**
  *
@@ -44,30 +45,33 @@ public class EctMeasurementTypeBeanHandler {
     
     public EctMeasurementTypesBean getMeasurementType(String mType){
         System.out.println(" calling get MeasurementType");
-        EctMeasurementTypesBean ret = null;
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-
-            String sql = "SELECT * FROM measurementType where type = '"+mType+"'";   
-            //System.out.println(sql);
-            ResultSet rs = db.GetSQL(sql);        
-            while(rs.next()){                
-               System.out.println("validation "+rs.getString("validation"));  
-               ret = new EctMeasurementTypesBean(rs.getInt("id"), rs.getString("type"), 
-                                                 rs.getString("typeDisplayName"), 
-                                                 rs.getString("typeDescription"), 
-                                                 rs.getString("measuringInstruction"), 
-                                                 //getValidation(rs.getString("validation"))); 
-                                                 rs.getString("validation")); 
-               ret.setValidationName(getValidation(rs.getString("validation")));
-            }
-            rs.close();            
-            db.CloseConn();
-        }
-        catch(SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return ret;
+        MeasurementTypes mt =  MeasurementTypes.getInstance();
+        return mt.getByType(mType);
+        
+//        EctMeasurementTypesBean ret = null;
+//        try {
+//            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+//
+//            String sql = "SELECT * FROM measurementType where type = '"+mType+"'";   
+//            //System.out.println(sql);
+//            ResultSet rs = db.GetSQL(sql);        
+//            while(rs.next()){                
+//               System.out.println("validation "+rs.getString("validation"));  
+//               ret = new EctMeasurementTypesBean(rs.getInt("id"), rs.getString("type"), 
+//                                                 rs.getString("typeDisplayName"), 
+//                                                 rs.getString("typeDescription"), 
+//                                                 rs.getString("measuringInstruction"), 
+//                                                 //getValidation(rs.getString("validation"))); 
+//                                                 rs.getString("validation")); 
+//               ret.setValidationName(getValidation(rs.getString("validation")));
+//            }
+//            rs.close();            
+//            db.CloseConn();
+//        }
+//        catch(SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//        return ret;
     }
     
     public String getValidation(String val){
