@@ -24,13 +24,13 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
 import java.util.Hashtable;
+import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 
 public class EctMeasurementsDataBeanHandler {
     
@@ -115,7 +115,57 @@ public class EctMeasurementsDataBeanHandler {
         return verdict;
     }
     
+    
     public boolean init(String demo, String type) {
+        System.out.print("Getting type "+type+" for demograph "+demo);
+        boolean verdict = true;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            MeasurementTypes mt = MeasurementTypes.getInstance();
+            EctMeasurementTypesBean mBean = mt.getByType(type);
+            if ( mBean != null){
+                String sql ="SELECT m.id,m.type, m.demographicNo, m.providerNo, m.dataField, m.measuringInstruction,"+  
+                        "m.comments, m.dateObserved, m.dateEntered , p.first_name AS provider_first, p.last_name AS provider_last," + 
+                        "v.isNumeric AS numericValidation, v.name AS validationName FROM measurements m, provider p, validations v" +
+                        " WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
+                        "AND v.id = "+mBean.getValidation()+" GROUP BY m.id ORDER BY m.dateObserved DESC," +
+                        "m.dateEntered DESC";
+                System.out.println("sql: " + sql);
+                ResultSet rs;
+                String canPlot = null;
+                rs = db.GetSQL(sql);
+                while( rs.next() ){                               
+                        if (rs.getInt("numericValidation")==1 || rs.getString("validationName").compareTo("Blood Pressure")==0)
+                            canPlot = "true";
+                        else
+                            canPlot = null;
+                        //System.out.println("canPlot value: " + canPlot);
+                        EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), rs.getString("demographicNo"), 
+                                                                                   rs.getString("provider_first"), rs.getString("provider_last"), 
+                                                                                   rs.getString("dataField"), rs.getString("measuringInstruction"), 
+                                                                                   rs.getString("comments"), rs.getString("dateObserved"), 
+                                                                                   rs.getString("dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
+                        measurementsDataVector.add(data);      
+
+                }
+
+                rs.close();
+            }else{
+                
+                
+            }
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+    
+    
+    
+    public boolean init2(String demo, String type) {
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -139,7 +189,7 @@ public class EctMeasurementsDataBeanHandler {
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
                                                                                rs.getString("comments"), rs.getString("dateObserved"), 
-                                                                               rs.getString("dateEntered"), canPlot);
+                                                                               rs.getString("dateEntered"), canPlot,rs.getDate("dateObserved"),rs.getDate("dateEntered"));
                     measurementsDataVector.add(data);      
                     
             }
