@@ -2,38 +2,149 @@
 
 <!--
 3 month recommendations / 6 month warnings
-REBG
-A1C
-DMED
-BP
-BMED
-WT
-DIET
-EXE
-SMK
-VMED
+    measurement_type="REBG"
+    measurement_type="A1C"
+    measurement_type="DMED"
+    measurement_type="BP"
+    measurement_type="BMED"
+    measurement_type="BMI"
+    measurement_type="DIER"
+    measurement_type="NOSK"
+    measurement_type="VMED"
+Annually 10 month recommendation / 12 month warning
+    measurement_type="LDL"
+    measurement_type="TCHD"
+    measurement_type="TG"
+    measurement_type="LMED"
+    measurement_type="FGLC"
+    measurement_type="EYEE"
+    measurement_type="ACR"
+    measurement_type="EGFR"
+    measurement_type="FTE"
+    measurement_type="FTLS"
+    measurement_type="PANE"
+    measurement_type="EDGI"
+    measurement_type="DMME"
+    prevention_type="Flu"
+Once warn if not found
+ prevention_type="Pneumovax"
 
-Annually
-LDL
-TCHD
-LMED
-FGLC
-EYEE
-ACR
-EGFR
-FOTE
-FEET
-SEXF
-DMME
-FLUS
-Once
-PNEU
 
 should colour be in drools file or some other way
 -->
 <rule-set name="DiabetesFlowSheet"
           xmlns="http://drools.org/rules"
           xmlns:java="http://drools.org/semantics/java">
+
+    <rule name="REBG 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("REBG") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("REBG") &lt; 6</java:condition>
+        <java:consequence>              
+              System.out.println("REBG 1 getting called");
+              m.addRecommendation("REBG","Blood Glucose hasn't been reviewed in the last "+m.getLastDateRecordedInMonths("REBG")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="REBG 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("REBG") &gt;= 6</java:condition>        
+        <java:consequence>              
+              System.out.println("REBG 2 getting called");
+              m.addWarning("REBG","Blood Glucose hasn't been reviewed in the last "+m.getLastDateRecordedInMonths("REBG")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="REBG 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("REBG") ==  -1</java:condition>
+        <java:consequence>              
+              System.out.println("REBG 3 getting called");
+              m.addWarning("REBG","Blood Glucose hasn't been reviewed");
+        </java:consequence>
+    </rule>
+
+<!-- A1C -->
+
+<rule name="A1C 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("A1C") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("A1C") &lt; 6</java:condition>
+        <java:consequence>              
+              System.out.println("A1C 1 getting called");
+              m.addRecommendation("A1C","An A1C hasn't been recorded in the last "+m.getLastDateRecordedInMonths("A1C")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="A1C 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("A1C") &gt;= 6</java:condition>        
+        <java:consequence>              
+              System.out.println("A1C 2 getting called");
+              m.addWarning("A1C","An A1C hasn't been recorded in the last "+m.getLastDateRecordedInMonths("A1C")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="A1C 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("A1C") ==  -1</java:condition>
+        <java:consequence>              
+              System.out.println("A1C 3 getting called");
+              m.addWarning("A1C","no A1C values has been recorded");
+        </java:consequence>
+    </rule>
+
+<!-- DMED -->
+
+<rule name="DMED 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("DMED") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("DMED") &lt; 6</java:condition>
+        <java:consequence>              
+              System.out.println("DMED 1 getting called");
+              m.addRecommendation("DMED","DM Med changes haven't been recorded in the last "+m.getLastDateRecordedInMonths("DMED")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="DMED 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("DMED") &gt;= 6</java:condition>        
+        <java:consequence>              
+              System.out.println("DMED 2 getting called");
+              m.addWarning("DMED","DM Med changes haven't been recorded in the last "+m.getLastDateRecordedInMonths("DMED")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="DMED 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("DMED") ==  -1</java:condition>
+        <java:consequence>              
+              System.out.println("DMED 3 getting called");
+              m.addWarning("DMED","no DM Med changes have been recorded");
+        </java:consequence>
+    </rule>
+
+
+
+<!-- BP -->
 
     <rule name="BP 1">
         <parameter identifier="m">
@@ -65,7 +176,79 @@ should colour be in drools file or some other way
         <java:condition>m.getLastDateRecordedInMonths("BP") ==  -1</java:condition>
         <java:consequence>              
               System.out.println("BP 3 getting called");
-              m.addRecommendation("BP","no BP has been recorded");
+              m.addWarning("BP","no BP has been recorded");
+        </java:consequence>
+    </rule>
+
+<!-- BMED -->
+
+<rule name="BMED 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BMED") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("BMED") &lt; 6</java:condition>
+        <java:consequence>              
+              System.out.println("BMED 1 getting called");
+              m.addRecommendation("BMED","BP Meds hasn't been recorded in the last "+m.getLastDateRecordedInMonths("BMED")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="BMED 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BMED") &gt;= 6</java:condition>        
+        <java:consequence>              
+              System.out.println("BMED 2 getting called");
+              m.addWarning("BMED","BP Meds hasn't been recorded in the last "+m.getLastDateRecordedInMonths("BMED")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="BMED 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BMED") ==  -1</java:condition>
+        <java:consequence>              
+              System.out.println("BMED 3 getting called");
+              m.addWarning("BMED","no BP Meds changes have been recorded");
+        </java:consequence>
+    </rule>
+
+<!-- BMI -->
+
+<rule name="BMI 1">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BMI") &gt;= 3</java:condition>
+        <java:condition>m.getLastDateRecordedInMonths("BMI") &lt; 6</java:condition>
+        <java:consequence>              
+              System.out.println("BMI 1 getting called");
+              m.addRecommendation("BMI","BMI hasn't been recorded in the last "+m.getLastDateRecordedInMonths("BMI")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="BMI 2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BMI") &gt;= 6</java:condition>        
+        <java:consequence>              
+              System.out.println("BMI 2 getting called");
+              m.addWarning("BMI","BMI hasn't been recorded in the last "+m.getLastDateRecordedInMonths("BMI")+" months");
+        </java:consequence>
+    </rule>
+
+    <rule name="BMI 3">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.MeasurementInfo</class>
+        </parameter>
+        <java:condition>m.getLastDateRecordedInMonths("BMI") ==  -1</java:condition>
+        <java:consequence>              
+              System.out.println("BMI 3 getting called");
+              m.addWarning("BMI","no BMI has been recorded");
         </java:consequence>
     </rule>
 
