@@ -32,8 +32,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 
 /**
@@ -48,10 +49,27 @@ public class MeasurementInfo {
     
     ArrayList measurementList = new ArrayList();
     Hashtable measurementHash = new Hashtable();
+    ArrayList itemList = new ArrayList();
     String demographicNo = "";
     /** Creates a new instance of MeasurementInfo */
     public MeasurementInfo(String demographic) {
         demographicNo = demographic;
+    }
+    
+    public ArrayList getList(){
+        ArrayList list = new ArrayList();
+        
+        Enumeration e = warningHash.keys();
+        while (e.hasMoreElements()){
+            list.add(e.nextElement());
+        }
+        
+        e = recommendationHash.keys();
+        while (e.hasMoreElements()){
+            list.add(e.nextElement());
+        }
+        
+        return list;
     }
     
     public ArrayList getWarnings(){
@@ -139,14 +157,17 @@ public class MeasurementInfo {
         ArrayList list = getMeasurementData(measurement);       
         Hashtable h =  null;
         if ( list != null && list.size() > 0){
-            h = (Hashtable) list.get(0);
+            //h = (Hashtable) list.get(0);
+            EctMeasurementsDataBean mdata = (EctMeasurementsDataBean) list.get(0);
+            Date date = mdata.getDateObservedAsDate();
+            numMonths = getNumMonths(date, Calendar.getInstance().getTime());
         }
         
-        EctMeasurementsDataBeanHandler.getLast(demographicNo, measurement);
-        if (h != null ){
-           Date date = (Date) h.get("dateObserved_date");
-           numMonths = getNumMonths(date, Calendar.getInstance().getTime());
-        }
+        //EctMeasurementsDataBeanHandler.getLast(demographicNo, measurement);
+        //if (h != null ){
+        //   Date date = (Date) h.get("dateObserved_date");
+        //   numMonths = getNumMonths(date, Calendar.getInstance().getTime());
+        //}
         System.out.println("Returning the number of months "+numMonths);
         return numMonths;
     }
