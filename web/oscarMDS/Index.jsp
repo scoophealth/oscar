@@ -26,6 +26,39 @@
         pageNum = Integer.parseInt(request.getParameter("pageNum"));
     }
 %>
+
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+<html>
+<head>
+<title>
+<bean:message key="oscarMDS.index.title"/> Page <%=pageNum%>
+</title>
+<html:base/>
+
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 <style type="text/css">
 <!--
@@ -142,37 +175,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 .smallButton { font-size: 8pt; }
 -->
 </style>
-<!--  
-/*
- * 
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
- * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
- */
--->
-<html>
-<head>
-<title>
-<bean:message key="oscarMDS.index.title"/> Page <%=pageNum%>
-</title>
-</head>
+
 
 <script type="text/javascript" language=javascript>
 
@@ -212,10 +215,37 @@ function checkSelected() {
     }
 }
 
+function submitFile(){
+   aBoxIsChecked = false;    
+    if (document.reassignForm.flaggedLabs.length == undefined) {
+        if (document.reassignForm.flaggedLabs.checked == true) {
+            aBoxIsChecked = true;
+        }
+    } else {
+        for (i=0; i < document.reassignForm.flaggedLabs.length; i++) {
+            if (document.reassignForm.flaggedLabs[i].checked == true) {
+                aBoxIsChecked = true;
+            }
+        }
+    }
+    if (aBoxIsChecked) {
+       document.reassignForm.action = '../oscarLab/FileLabs.do';
+       document.reassignForm.submit();
+    }
+}
+
+function checkAll(formId){
+   var f = document.getElementById(formId);
+   var val = f.checkA.checked;
+   for (i =0; i < f.flaggedLabs.length; i++){
+      f.flaggedLabs[i].checked = val;
+   }
+}
 </script>
+</head>
 
 <body oldclass="BodyStyle" vlink="#0000FF" >
-    <form name="reassignForm" method="post" action="ReportReassign.do">
+    <form name="reassignForm" method="post" action="ReportReassign.do" id="lab_form">
         <table  oldclass="MainTable" id="scrollNumber1" border="0" name="encounterTable" cellspacing="0" cellpadding="3" width="100%">
             <tr oldclass="MainTableTopRow">
                 <td class="MainTableTopRowRightColumn" colspan="9" align="left">                       
@@ -239,6 +269,7 @@ function checkSelected() {
                                 <% if (demographicNo == null && labs.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
+                                    <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                 <% } %>
                             </td>                            
                             <td align="center" valign="center" width="40%" class="Nav">
@@ -272,7 +303,8 @@ function checkSelected() {
                 </td>
             </tr>
             <tr>
-                <th align="left" valign="bottom" class="cell">
+                <th align="left" valign="bottom" class="cell" nowrap>
+                    <input type="checkbox" onclick="checkAll('lab_form');" name="checkA"/>
                     <bean:message key="oscarMDS.index.msgHealthNumber"/>
                 </th>
                 <th align="left" valign="bottom" class="cell">
@@ -391,6 +423,7 @@ function checkSelected() {
                                 <% if (demographicNo == null && labs.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
+                                    <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
                                 <% } %>
                             </td>
                             <td align="center" valign="middle" width="40%">
