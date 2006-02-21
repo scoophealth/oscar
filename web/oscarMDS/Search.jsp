@@ -120,6 +120,7 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
                                         <input type="radio" name="status" value=""><bean:message key="oscarMDS.search.formReportStatusAll"/>
                                         <input type="radio" name="status" value="N" checked><bean:message key="oscarMDS.search.formReportStatusNew"/>
                                         <input type="radio" name="status" value="A"><bean:message key="oscarMDS.search.formReportStatusAcknowledged"/>
+                                        <input type="radio" name="status" value="F">Filed
                                     </center>
                                 </td>
                             </tr>
