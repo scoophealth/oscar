@@ -84,14 +84,16 @@ public class MeasurementFlowSheet {
         if ( measurementsInfo == null){
             measurementsInfo = new Hashtable();
         }
-        measurementsInfo.put(measurement,obj);
+        if(measurement!=null && obj!=null)
+        	measurementsInfo.put(measurement,obj) ;
     }
     
     public void addMeasurementFlowSheetInfo(String measurement,Object obj){
         if ( measurementsFlowSheetInfo == null){
             measurementsFlowSheetInfo = new Hashtable();
         }
-        measurementsFlowSheetInfo.put(measurement,obj);
+        if(measurement!=null && obj!=null)
+        	measurementsFlowSheetInfo.put(measurement,obj);
     }
     
     public Hashtable getMeasurementFlowSheetInfo(String measurement){
