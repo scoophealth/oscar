@@ -6133,7 +6133,7 @@ CREATE TABLE `fileUploadCheck` (
   `md5sum` varchar(255) default NULL,
   `date_time` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`id`)
-)
+);
 
 
 create index preventions_demographic_no on preventions (demographic_no);
