@@ -46,8 +46,8 @@ public class ExtractBean extends Object implements Serializable {
     private String batchCount = "";
     private String batchHeader;
     private int batchOrder = 0;
-    private BigDecimal bdFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-    private BigDecimal BigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private BigDecimal bdFee = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private BigDecimal BigTotal = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private String billingUnit;
     private String content;
     private int count = 0;
@@ -106,7 +106,7 @@ public class ExtractBean extends Object implements Serializable {
     private String patientHeader;
     private String patientHeader2;
     private String pCount = "";
-    private BigDecimal percent = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+    private BigDecimal percent = new BigDecimal((double) 0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private String providerNo;
     private String query;
     private String rCount = "";
@@ -392,7 +392,7 @@ public class ExtractBean extends Object implements Serializable {
                     count = 6 - fee.length();
                     apptDate = UtilDateUtilities.DateToString(rs2.getDate("appointment_date"), "yyyyMMdd");
                     dFee = Double.parseDouble(fee);
-                    bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+                    bdFee = new BigDecimal((double) dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
                     BigTotal = BigTotal.add(bdFee);
                     checkItem();
                     value += buildItem();
@@ -412,7 +412,7 @@ public class ExtractBean extends Object implements Serializable {
             flagOrder = 4 - pCount.length();
             secondFlag = 5 - rCount.length();
             thirdFlag = 4 - hcCount.length();
-            percent = new BigDecimal(0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
+            percent = new BigDecimal((double) 0.01).setScale(2, BigDecimal.ROUND_HALF_UP);
             BigTotal = BigTotal.multiply(percent);
             value += buildTrailer();
             htmlCode = buildHTMLContentTrailer();
