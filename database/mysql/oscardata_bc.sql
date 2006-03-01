@@ -1,4 +1,4 @@
-<div class="moz-text-flowed" style="font-family: -moz-fixed">-- MySQL dump 9.07
+-- MySQL dump 9.07
 --
 -- Host: localhost    Database: oscar_mcmaster
 ---------------------------------------------------------
