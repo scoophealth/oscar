@@ -1899,7 +1899,7 @@ CREATE TABLE `hl7_obr` (
   `escort_required` char(1) default NULL,
   `planned_patient_transport_comment` varchar(200) default NULL,
   `note` text,
-  PRIMARY KEY  (`obr_id`),
+  PRIMARY KEY  (`obr_id`)
 ) TYPE=MyISAM;
  
  
