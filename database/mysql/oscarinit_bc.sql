@@ -1960,7 +1960,7 @@ CREATE TABLE `hl7_orc` (
   `entering_organization` char(60) default NULL,
   `entering_device` char(60) default NULL,
   `action_by` char(120) default NULL,
-  PRIMARY KEY  (`orc_id`),
+  PRIMARY KEY  (`orc_id`)
 ) TYPE=MyISAM;
  
  
