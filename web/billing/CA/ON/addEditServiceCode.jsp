@@ -288,6 +288,10 @@ System.out.println(sqlMinMax);
 	        // All characters are numbers.
 	        return true;
 	    }
+	    function upCaseCtrl(ctrl) {
+			ctrl.value = ctrl.value.toUpperCase();
+		}
+	    
 //-->
 
       </script>
@@ -310,8 +314,8 @@ System.out.println(sqlMinMax);
         </tr>
       </table>
       </center>
+      <form method="post" name="baseurl" action="addEditServiceCode.jsp">
       <table width="100%" border="0" cellspacing="2" cellpadding="2">
-        <form method="post" name="baseurl" action="addEditServiceCode.jsp">
           <tr>
             <td>
               &nbsp;
@@ -322,7 +326,7 @@ System.out.println(sqlMinMax);
               <b>Service Code</b>
             </td>
             <td>
-              <input type="text" name="service_code" value="<%=prop.getProperty("service_code", "")%>" size='4' maxlength='5'>
+              <input type="text" name="service_code" value="<%=prop.getProperty("service_code", "")%>" size='4' maxlength='5' onblur="upCaseCtrl(this)" />
               (5 letters, e.g. A001A)
               <input type="submit" name="submit" value="Search" onclick="javascript:return onSearch();">
             </td>
@@ -362,7 +366,7 @@ System.out.println(sqlMinMax);
               <b>Issued Date</b>
             </td>
             <td>
-              <input type="text" name="billingservice_date" value="<%=prop.getProperty("billingservice_date", "")%>" size='10' maxlength='10' readonly>
+              <input type="text" name="billingservice_date" id="billingservice_date" value="<%=prop.getProperty("billingservice_date", "")%>" size='10' maxlength='10' readonly>
               (effective date)
               <img src="../../../images/cal.gif" id="billingservice_date_cal">
             </td>
@@ -382,8 +386,8 @@ System.out.println(sqlMinMax);
               <input type="button" name="Cancel" value="<bean:message key="admin.resourcebaseurl.btnExit"/>" onClick="window.close()">
             </td>
           </tr>
-        </form>
       </table>
+      </form>
     </body>
     <script type="text/javascript">
 Calendar.setup( { inputField : "billingservice_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "billingservice_date_cal", singleClick : true, step : 1 } );
