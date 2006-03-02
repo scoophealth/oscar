@@ -234,7 +234,7 @@
     <form-bean name="addGroup" type="oscar.eform.data.AddGroupForm"/>
     <form-bean name="addToGroup" type="oscar.eform.data.AddToGroupForm"/>
     <!--<form-bean name="deleteEForm" type="oscar.eform.actions.EFormBean"/>-->
-    
+    <form-bean name="billingReceivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingReceivePaymentActionForm" />
   </form-beans>
   <!--
     form-bean      name="AddDemographicKeyValueForm"
@@ -1118,7 +1118,9 @@
     <action path="/billing/CA/ON/benefitScheduleChange" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUpdateAction" name="FrmForm"  scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>
     </action>
-    
+    <action input="/billing/CA/BC/billReceipt.jsp" name="billingReceivePaymentActionForm" path="/billing/CA/BC/receivePaymentAction" type="oscar.oscarBilling.ca.bc.pageUtil.BillingReceivePaymentAction" validate="true">
+     <forward name="success" path="/billing/CA/BC/billReceipt.jsp" />
+    </action>
     <!--action path="/document/AddDocuments" type="oscar.util.AddDocumentAction" name="FrmForm" scope="request" input="/dms/documentReport.jsp">
       <forward name="success" path="/dms/documentReport.jsp"/>
     </action-->
