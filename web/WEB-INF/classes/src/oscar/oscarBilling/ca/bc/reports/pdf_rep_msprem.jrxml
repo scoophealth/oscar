@@ -18,14 +18,17 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+
 	<parameter name="payee" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["bays"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="payeeno" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="criteria" isForPrompting="false" class="java.lang.String"/>
+
 	<field name="first_name" class="java.lang.String"/>
 	<field name="last_name" class="java.lang.String"/>
 	<field name="t_practitionerno" class="java.lang.String"/>
@@ -44,6 +47,7 @@
 	<field name="t_exp5" class="java.lang.String"/>
 	<field name="t_exp6" class="java.lang.String"/>
 	<field name="billing_code" class="java.lang.String"/>
+
 	<variable name="test" class="java.lang.String" resetType="None" calculation="Nothing">
 		<variableExpression><![CDATA["test"]]></variableExpression>
 		<initialValueExpression><![CDATA["test"		]]></initialValueExpression>
@@ -66,7 +70,8 @@
 	<variable name="cnt00" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s00")?new Double($F{t_paidamt}):new Double(0)]]></variableExpression>
 	</variable>
-		<group  name="practitioner_no" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+
+		<group  name="practitioner_no" >
 			<groupExpression><![CDATA[$F{t_practitionerno}]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
@@ -135,7 +140,7 @@
 			</band>
 			</groupFooter>
 		</group>
-		<group  name="type" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+		<group  name="type" >
 			<groupExpression><![CDATA[$F{t_s00type}]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
@@ -604,7 +609,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_servicedate}.equals("")?"":new SimpleDateFormat("yyyymmdd").parse($F{t_servicedate}).toString()]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{t_servicedate}.equals("")?null:new SimpleDateFormat("yyyymmdd").parse($F{t_servicedate})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
