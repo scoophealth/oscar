@@ -146,7 +146,7 @@ public class BillingSaveBillingAction
     char paymentMode = (bean.getEncounter().equals("E") && !bean.getBillingType().equals("ICBC") && !bean.getBillingType().equals("WCB")) ? 'E' : '0';
 
     String billedAmount;
-    if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("PRIV")) {
+    if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri")) {
       for (int i = 0; i < billItem.size(); i++) {
         if (paymentMode == 'E') {
           billedAmount = "0000000";
