@@ -35,7 +35,6 @@
   String measurement = request.getParameter("measurement");
   String[] measurements = request.getParameterValues("measurement");
   
-  System.out.println(measurements);
  
   EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
   
@@ -272,6 +271,7 @@ clear: left;
                <input type="hidden" name="value(css)" value=""/>  
                <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/> 
                <input type="hidden" name="inputFrom" value="AddMeasurementData"/>
+               <input type="hidden" name="template" value="<%=temp%>"/>
                
                <%
                 int ctr = 0;
