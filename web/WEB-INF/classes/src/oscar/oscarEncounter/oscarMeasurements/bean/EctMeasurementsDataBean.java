@@ -44,6 +44,7 @@ public class EctMeasurementsDataBean{
        String canPlot = null;
        private Date dateObservedAsDate = null;
        private Date dateEnteredAsDate = null;
+       private String indicationColour = null;
        
        public EctMeasurementsDataBean(){
        }
@@ -205,5 +206,13 @@ public class EctMeasurementsDataBean{
         if (i < 0) { i = 0; }
         return i;
    }
+
+    public String getIndicationColour() {
+        return indicationColour;
+    }
+
+    public void setIndicationColour(String indicationColour) {
+        this.indicationColour = indicationColour;
+    }
     
 }
