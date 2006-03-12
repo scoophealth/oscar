@@ -137,7 +137,8 @@ public class EctFindMeasurementTypeUtil {
             String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' AND measuringInstruction='"
                          + mt.getMeasuringInstrc() + "'";
             ResultSet rs = db.GetSQL(sql);
-            if(!rs.next()){                  
+            if(!rs.next()){   
+                
                 verdict = false;
             }
             /*else{
@@ -153,6 +154,26 @@ public class EctFindMeasurementTypeUtil {
         }
         return verdict;
     }
+    
+    static public boolean measurementTypeKeyIsFound(EctMeasurementTypesBean mt){
+        boolean verdict = true;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT * from measurementType where type='"+ mt.getType() + "' ";
+            ResultSet rs = db.GetSQL(sql);
+            if(!rs.next()){                   
+                verdict = false;
+            }
+            rs.close();
+            db.CloseConn();
+        }
+        catch(SQLException e) {
+            System.out.println(e.getMessage());
+            verdict = false;
+        }
+        return verdict;
+    }
+    
     
     /*
     static public boolean measurementFrmIsAdded(String formName, String typeId){
