@@ -151,6 +151,16 @@ public class MeasurementInfo {
         return (String) warningHash.get(measurement);
     }
     
+//    public void setIndicationColour(String measurement,int threshold,String comparison){
+//        ArrayList list = getMeasurementData(measurement);
+//        if ( list != null){
+//            for (int i =0; i < list.size(); i++){
+//                EctMeasurementsDataBean mdata = (EctMeasurementsDataBean) list.get(i);
+//                String val = mdata.getDataField();
+//            }
+//        }
+//    }
+    
     public int getLastDateRecordedInMonths(String measurement){
         
         int numMonths = -1;
@@ -171,6 +181,24 @@ public class MeasurementInfo {
         System.out.println("Returning the number of months "+numMonths);
         return numMonths;
     }
+    
+    public int getLastValueAsInt(String measurement){
+        
+        int value = -1; //TODO not sure how to handle a non int value.
+        ArrayList list = getMeasurementData(measurement);       
+        Hashtable h =  null;
+        if ( list != null && list.size() > 0){
+            EctMeasurementsDataBean mdata = (EctMeasurementsDataBean) list.get(0);
+            try{ 
+             value = Integer.parseInt(mdata.getDataField());
+            }catch (Exception e ){
+               e.printStackTrace();    
+            } 
+        }
+        System.out.println("Returning the number of months "+value);
+        return value;
+    }
+    
     
     private int getNumMonths(Date dStart, Date dEnd) {
         int i = 0;
