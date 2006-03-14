@@ -376,6 +376,7 @@ div.recommendations li{
                             <%     
                             for (int k = 0; k < alist.size(); k++){
                                 EctMeasurementsDataBean mdb = (EctMeasurementsDataBean) alist.get(k);
+                                mFlowsheet.runRulesForMeasurement(mdb);
                                 Hashtable hdata = new Hashtable();//(Hashtable) alist.get(k);
                                 hdata.put("age",mdb.getDataField());           
                                 hdata.put("prevention_date",mdb.getDateObserved());
@@ -388,10 +389,19 @@ div.recommendations li{
                                 }else{
                                     com ="";
                                 }
+                                String hider = "";
+                                if ( k > 4){
+                                    hider = "style=\"display:none;\"";
+                                }
                                 
+                                String indColour = "";
+                                if ( mdb.getIndicationColour() != null ){                                
+                                System.out.println("INDICAT: "+mdb.getIndicationColour());
+                                indColour = "style=\"background-color:"+mFlowsheet.getIndicatorColour(mdb.getIndicationColour())+"\"";
+                                }
                             %>                            
-                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
-                                <p title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
+                            <div class="preventionProcedure" <%=hider%>  onclick="javascript:popup(465,635,'AddMeasurementData.jsp?measurement=<%= response.encodeURL( measure) %>&amp;id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>&amp;template=<%= URLEncoder.encode(temp,"UTF-8") %>','addMeasurementData')" >
+                                <p <%=indColour%> title="fade=[on] header=[<%=hdata.get("age")%> -- Date:<%=hdata.get("prevention_date")%>] body=[<%=com%>&lt;br/&gt;Entered By:<%=mdb.getProviderFirstName()%> <%=mdb.getProviderLastName()%>]"><%=h2.get("value_name")%>: <%=hdata.get("age")%> <br/>
                                 <%=hdata.get("prevention_date")%>&nbsp;<%=mdb.getNumMonthSinceObserved()%>M
                                 <%if (comb) {%>
                                 <span class="footnote"><%=comments.size()%></span>
@@ -403,7 +413,8 @@ div.recommendations li{
                    <%}else{ 
                         String prevType = (String) h2.get("prevention_type");
                         long startPrevType = System.currentTimeMillis();                     
-                        ArrayList alist = pd.getPreventionData(prevType, demographic_no); 
+                        ArrayList alist = pd.getPreventionData(prevType, demographic_no);
+                        
                         System.out.println("Getting prev  "+prevType+" data took "+(System.currentTimeMillis() - startPrevType) );
                         
                         
@@ -423,9 +434,9 @@ div.recommendations li{
                             </div>
                             <%   
                             out.flush();
-                            for (int k = 0; k < alist.size(); k++){
+                            for (int k = 0; k < alist.size(); k++){ 
                                 Hashtable hdata = (Hashtable) alist.get(k);
-                                String com = "";//pd.getPreventionComment(""+hdata.get("id"));
+                                String com = pd.getPreventionComment(""+hdata.get("id"));
                                 boolean comb = false;
                                 System.out.println(com);
                                 if (com != null ){
