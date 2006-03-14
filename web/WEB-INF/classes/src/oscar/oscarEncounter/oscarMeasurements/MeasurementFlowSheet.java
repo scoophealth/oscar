@@ -37,6 +37,8 @@ import org.drools.*;
 import org.drools.io.*;
 import oscar.OscarProperties;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
+import oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper;
 
 
 
@@ -53,10 +55,12 @@ public class MeasurementFlowSheet {
     boolean rulesLoaded = false;
     Hashtable measurementsInfo = null;
     Hashtable measurementsFlowSheetInfo = null;
+    Hashtable dsRulesHash = new Hashtable();
     String demographic = null;
     String[] dxTriggers = null;
     private String warningColour = null;
     private String recommendationColour = null;
+    Hashtable indicatorHash = new Hashtable();
     
     public void parseDxTriggers(String s){
         dxTriggers = s.split(","); //TODO: what do about different coding systems.
@@ -92,8 +96,13 @@ public class MeasurementFlowSheet {
         if ( measurementsFlowSheetInfo == null){
             measurementsFlowSheetInfo = new Hashtable();
         }
-        if(measurement!=null && obj!=null)
+        if(measurement!=null && obj!=null){
         	measurementsFlowSheetInfo.put(measurement,obj);
+                //SET UP DS now.
+                if ( ((Hashtable) obj).get("ds_rules") != null){
+                    addDSForMeasurement(measurement,(String) ((Hashtable) obj).get("ds_rules") );
+                }
+        }
     }
     
     public Hashtable getMeasurementFlowSheetInfo(String measurement){
@@ -154,23 +163,89 @@ public class MeasurementFlowSheet {
       rulesLoaded = true;             
    }
    
-   
-   public MeasurementInfo getMessages(MeasurementInfo mi) throws Exception{
-      if (!rulesLoaded){
-          throw new Exception("No Drools file loaded");
-          //loadRuleBase();
-      } 
-      try{
-         WorkingMemory workingMemory = ruleBase.newWorkingMemory();
-         workingMemory.assertObject(mi);
-         workingMemory.fireAllRules();
-      }catch(Exception e){
-          e.printStackTrace(); 
-          //throw new Exception("ERROR: Drools ",e);
+   public void loadRuleBase2(String string){                  
+      ruleBase = loadMeasurementRuleBase(string);
+      if(ruleBase != null){
+         rulesLoaded = true;  
       }
-      return mi;   
+   }   
+      
+      
+      public RuleBase loadMeasurementRuleBase(String string){
+        RuleBase measurementRuleBase = null;
+        try{
+            boolean fileFound = false;
+            String measurementDirPath = OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY");
+
+            if ( measurementDirPath != null){
+            //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
+            File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
+               if(file.isFile() || file.canRead()) {
+                   System.out.println("Loading from file "+file.getName());
+                   FileInputStream fis = new FileInputStream(file);
+                   ruleBase = RuleBaseLoader.loadFromInputStream(fis);
+                   fileFound = true;
+               }
+            }
+
+            if (!fileFound){                  
+             URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/"+string );  //TODO: change this so it is configurable;
+             System.out.println("loading from URL "+url.getFile());            
+             measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
+            }
+        }catch(Exception e){
+            e.printStackTrace();                
+        }
+        return measurementRuleBase;        
+   }
+      
+      
+   
+   private void addDSForMeasurement(String type,String dsRules){
+       RuleBase rb = loadMeasurementRuleBase(dsRules);
+       if (rb != null){
+          dsRulesHash.put(type,rb);
+       }
+   }    
+      
+   
+   public void runRulesForMeasurement(EctMeasurementsDataBean mdb) throws Exception{
+        
+      String type = mdb.getType() ;     
+      RuleBase rb = (RuleBase) dsRulesHash.get(type);
+      //Is there a rule base for this
+      if (rb != null){
+      
+          try{
+             WorkingMemory workingMemory = rb.newWorkingMemory();
+             workingMemory.assertObject(new MeasurementDSHelper(mdb));
+             workingMemory.fireAllRules();
+          }catch(Exception e){
+              e.printStackTrace(); 
+              //throw new Exception("ERROR: Drools ",e);
+          }
+      }   
    }
     /////
+   
+      public MeasurementInfo getMessages(MeasurementInfo mi) throws Exception{
+          if (!rulesLoaded){
+              throw new Exception("No Drools file loaded");
+              //loadRuleBase();
+          } 
+
+          try{
+             WorkingMemory workingMemory = ruleBase.newWorkingMemory();
+             workingMemory.assertObject(mi);
+             workingMemory.fireAllRules();
+          }catch(Exception e){
+              e.printStackTrace(); 
+              //throw new Exception("ERROR: Drools ",e);
+          }
+          return mi;   
+   }
+
+   
 
     public String getDisplayName() {
         return displayName;
@@ -194,6 +269,21 @@ public class MeasurementFlowSheet {
 
     public void setRecommendationColour(String recommendationColour) {
         this.recommendationColour = recommendationColour;
+    }
+
+    
+    void AddIndicator(String key, String value) {
+        if (key != null && value != null){
+              indicatorHash.put(key,value);                     
+        } 
+    }
+    
+    public String getIndicatorColour(String key){
+        String ret = null;
+        if (key != null){
+            ret = (String) indicatorHash.get(key);
+        }
+        return ret;
     }
 
   
