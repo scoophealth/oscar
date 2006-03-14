@@ -38,6 +38,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
+import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
 
 /**
  *
@@ -166,10 +169,47 @@ public class MeasurementTemplateFlowSheetConfig {
     private MeasurementFlowSheet createflowsheet(final EctMeasurementTypeBeanHandler mType,InputStream is) {
         MeasurementFlowSheet d = new MeasurementFlowSheet();
         
+        EctFindMeasurementTypeUtil fmtu = new EctFindMeasurementTypeUtil();
         try{              
            SAXBuilder parser = new SAXBuilder();
            Document doc = parser.build(is);        
-           Element root = doc.getRootElement();                  
+           Element root = doc.getRootElement();
+           
+           //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
+           List meas = root.getChildren("measurement");
+           for (int i = 0; i < meas.size(); i++){
+               Element e = (Element) meas.get(i);
+               EctMeasurementTypesBean mtb = new EctMeasurementTypesBean();
+               mtb.setType(e.getAttributeValue("type"));
+               mtb.setTypeDesc(e.getAttributeValue("typeDesc"));
+               mtb.setTypeDisplayName(e.getAttributeValue("typeDisplayName"));
+               mtb.setMeasuringInstrc(e.getAttributeValue("measuringInstrc"));
+               Element v = e.getChild("validationRule");
+               EctValidationsBean vb = new EctValidationsBean();
+               vb.setName(v.getAttributeValue("name"));
+               vb.setMaxValue(v.getAttributeValue("maxValue"));
+               vb.setMinValue(v.getAttributeValue("minValue"));
+               vb.setIsDate(v.getAttributeValue("isDate"));
+               vb.setIsNumeric(v.getAttributeValue("isNumeric"));
+               vb.setRegularExp(v.getAttributeValue("regularExp"));
+               vb.setMaxLength(v.getAttributeValue("maxLength"));
+               vb.setMinLength(v.getAttributeValue("minLength"));
+               mtb.addValidationRule(vb);
+               if(!fmtu.measurementTypeKeyIsFound(mtb)){
+                  System.out.println("Needed to add"+mtb.getType());
+                  //fmtu.addMeasurementType(mtb, "");
+               }else{
+                   System.out.println("Didn't Need to add"+mtb.getType());
+               }
+               //TODO: check about isTrue
+               
+           }           
+           
+           List indi = root.getChildren("indicator"); // key="LOW" colour="blue">
+           for (int i = 0; i < indi.size(); i++){           
+             Element e = (Element) indi.get(i);
+             d.AddIndicator(e.getAttributeValue("key"),e.getAttributeValue("colour"));
+           }
            List items = root.getChildren("item");                  
            for (int i = 0; i < items.size(); i++){           
              Element e = (Element) items.get(i);
