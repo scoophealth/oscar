@@ -38,7 +38,7 @@
   boolean bodd = false;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
 %>
-<%@ page import="java.util.*,oscar.*,java.io.*,java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*,oscar.*,java.io.*,java.net.*,oscar.util.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <html>
@@ -78,16 +78,18 @@
     session.setAttribute("backupfilepath", backuppath);
 
     File f = new File(backuppath);
-    String[] contents = f.list() ;
+    File[] contents = f.listFiles(); 
+    
+    Arrays.sort(contents,new FileSortByDate());
     if (contents == null) {
         Exception e = new Exception("Unable to find any files in the directory "+backuppath+".  (If this is the incorrect directory, please modify the value of backup_path in your properties file to reflect the correct directory).");
         throw e;
     }
     for(int i=0; i<contents.length; i++) {
       bodd = bodd?false:true ;
-      if((new File(backuppath+contents[i])).isDirectory() || contents[i].equals("BackupClient.class")  || contents[i].startsWith(".")) continue;
-      out.println("<tr bgcolor='"+ (bodd?weakcolor:"white") +"'><td><a HREF='../servlet/BackupDownload?filename="+URLEncoder.encode(contents[i])+"'>"+contents[i]+"</a></td>") ;
-      out.println("<td align='right'>"+(new File(backuppath+contents[i])).length()+"</td></tr>"); //+System.getProperty("file.separator")
+      if(contents[i].isDirectory() || contents[i].getName().equals("BackupClient.class")  || contents[i].getName().startsWith(".")) continue;
+      out.println("<tr bgcolor='"+ (bodd?weakcolor:"white") +"'><td><a HREF='../servlet/BackupDownload?filename="+URLEncoder.encode(contents[i].getName())+"'>"+contents[i].getName()+"</a></td>") ;
+      out.println("<td align='right'>"+contents[i].length()+"</td></tr>"); //+System.getProperty("file.separator")
     }
 %>
     </table>
