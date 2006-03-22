@@ -45,24 +45,17 @@
 
 package oscar.util;
 
-import org.apache.log4j.Category;
-
-import java.io.ByteArrayInputStream;
-
-import java.io.ByteArrayOutputStream;
-
-import java.io.IOException;
-
-import java.io.ObjectOutputStream;
-
+import java.io.*;
+import java.lang.reflect.*;
 import java.sql.*;
-
-import java.text.SimpleDateFormat;
-
-import java.util.ArrayList;
+import java.sql.Date;
+import java.text.*;
+import java.util.*;
+import java.util.Enumeration;
+import org.apache.log4j.*;
+import oscar.oscarDB.*;
 
 public class SqlUtils {
-
   static Category cat = Category.getInstance(SqlUtils.class.getName());
 
   Connection conn = null;
@@ -850,4 +843,126 @@ public class SqlUtils {
     }
 
   }
+
+  /**
+   * A simple and convenient method for retrieving object by criteria from the database.
+   * The ActiveRecord pattern is assumed whereby and object represents a row in the database.<p>
+   *
+   * @param qry String
+   * @param classType Class
+   * @return List
+   */
+  public static List getBeanList (String qry, Class classType) {
+    ArrayList rec = new ArrayList();
+    int colCount = 0;
+    ResultSet rs = null;
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = (ResultSet) db.GetSQL(qry);
+      ResultSetMetaData rsmd = rs.getMetaData();
+      colCount = rsmd.getColumnCount();
+
+      while (rs.next()) {
+        int recordCount = 0; //used to check if an objects methods have been determined
+        Object obj = null;
+        Method method[] = null;
+        Hashtable methodNameMap = new Hashtable(colCount);
+        obj = classType.newInstance();
+        Class cls = obj.getClass();
+        method = cls.getDeclaredMethods();
+        //iterate through each field in record and set data in the appropriate
+        //object field. Each matching method name is to be placed in a list of method names
+        //to be used in subsequent iterations. This will reduce the overhead in having to search those names needlessly
+        for (int i = 0; i < colCount; i++) {
+          String colName = rsmd.getColumnName(i+1);
+          Object value = getNewType(rs,i+1);
+
+          //if  this is the first record, get list of method names in object
+          // and perform method invocation
+
+          if (recordCount == 0) {
+            for (int j = 0; j < method.length; j++) {
+              String methodName = method[j].getName();
+              if (methodName.equalsIgnoreCase("set" + colName)) {
+                method[j].invoke(obj, new Object[] {value});
+                methodNameMap.put(new Integer(j), methodName);
+              }
+            }
+          }
+          //else method names have been determined so perform invocations based on list
+          else {
+            for (Enumeration keys = methodNameMap.keys(); keys.hasMoreElements(); ) {
+              Integer key = (Integer) keys.nextElement();
+              method[key.intValue()].invoke(obj,
+                                            new Object[] {value});
+            }
+          }
+        }
+        rec.add(obj);
+        recordCount++;
+      }
+    }
+    catch (SQLException e) {
+      e.printStackTrace();
+    }
+    catch (IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    catch (InvocationTargetException e) {
+      e.printStackTrace();
+    }
+    catch (InstantiationException e) {
+      e.printStackTrace();
+    }
+    finally{
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+
+    }
+    return rec;
+  }
+  private static Object getNewType(ResultSet rs, int colNum) {
+      int type = 0;
+      try {
+        type = rs.getMetaData().getColumnType(colNum);
+        switch (type) {
+          case Types.LONGVARCHAR:
+          case Types.CHAR:
+          case Types.VARCHAR:
+            return rs.getString(colNum);
+          case Types.TINYINT:
+          case Types.SMALLINT:
+          case Types.INTEGER:
+            return new Integer(rs.getInt(colNum));
+          case Types.BIGINT:
+            return new Long(rs.getLong(colNum));
+          case Types.FLOAT:
+          case Types.DECIMAL:
+          case Types.REAL:
+          case Types.DOUBLE:
+          case Types.NUMERIC:
+            return new Double(rs.getDouble(colNum));
+            // case Types.B
+          case Types.BIT:
+            return new Boolean(rs.getBoolean(colNum));
+          case Types.TIMESTAMP:
+          case Types.DATE:
+          case Types.TIME:
+            return rs.getDate(colNum);
+          default:
+            return rs.getObject(colNum);
+        }
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      return null;
+    }
 }
