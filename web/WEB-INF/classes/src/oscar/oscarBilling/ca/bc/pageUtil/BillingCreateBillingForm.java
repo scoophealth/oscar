@@ -57,6 +57,8 @@ public final class BillingCreateBillingForm
   private String xml_endtime_min;
   private String xml_starttime_hr;
   private String xml_starttime_min;
+  String requestId;
+
 
   /**
    * The get method for the message String
@@ -95,6 +97,7 @@ public final class BillingCreateBillingForm
    * @return String, this is the text of the message
    */
   public String getXml_billtype() {
+    System.out.println(this.hashCode());
     return xml_billtype != null ? xml_billtype : "";
   }
 
@@ -103,6 +106,7 @@ public final class BillingCreateBillingForm
    * @param msg String, The text of a message
    */
   public void setXml_billtype(String xml_billtype) {
+    System.out.println(this.hashCode());
     this.xml_billtype = xml_billtype;
   }
 
@@ -631,6 +635,10 @@ public final class BillingCreateBillingForm
     return xml_starttime_min;
   }
 
+  public String getRequestId() {
+    return requestId;
+  }
+
   /**
    * Setter for property facilitySubNum.
    * @param facilitySubNum New value of property facilitySubNum.
@@ -657,6 +665,10 @@ public final class BillingCreateBillingForm
 
   public void setXml_starttime_min(String xml_starttime_min) {
     this.xml_starttime_min = xml_starttime_min;
+  }
+
+  public void setRequestId(String requestId) {
+    this.requestId = requestId;
   }
 
   /**
@@ -729,7 +741,7 @@ public final class BillingCreateBillingForm
 
     }
 **/
-
+request.setAttribute("loadFromSession","y");
     return errors;
   }
   /**
