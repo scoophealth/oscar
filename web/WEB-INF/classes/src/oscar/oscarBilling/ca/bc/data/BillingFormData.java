@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import oscar.oscarDB.DBHandler;
 import oscar.entities.PaymentType;
+import java.util.List;
+import oscar.util.SqlUtils;
 
 public class BillingFormData {
   public ArrayList getPaymentTypes() {
@@ -652,13 +654,10 @@ public class BillingFormData {
         String sql = "SELECT value FROM billingservice WHERE service_code='A" +
             svc[i].getServiceCode() + "'";
         rs = db.GetSQL(sql);
-
         if (rs.next()) {
-
           svc[i].price = rs.getString(1);
           System.out.println("svc[i].service_code = rs.getString(1)=" + svc[i].service_code + " : "+ rs.getString(1));
         }
-
         rs.close();
         db.CloseConn();
       }
@@ -667,4 +666,11 @@ public class BillingFormData {
       System.out.println(e.getMessage());
     }
   }
+  /**
+  * Returns a list of InjuryLocation instances
+  * @return List
+  */
+ public List getInjuryLocationList() {
+  return SqlUtils.getBeanList("SELECT sidetype, sidedesc FROM wcb_side",InjuryLocation.class);
+ }
 }
