@@ -62,7 +62,7 @@ public class BillingCreateBillingAction
 
     BillingSessionBean bean = (BillingSessionBean) request.getSession().
         getAttribute("billingSessionBean");
-    DemographicData.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
+   DemographicData.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
 
     ArrayList billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
@@ -146,18 +146,23 @@ public class BillingCreateBillingAction
     //We want this alert to show up regardless
     //However we don't necessarily want it to force the user to enter a bill
     checkCDMStatus(request, errors, demo);
-    if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
-      WCBForm wcbForm = new WCBForm();
-      wcbForm.Set(bean);
-      request.getSession().putValue("WCBForm", wcbForm);
-      return (mapping.findForward("WCB"));
+
+    String newWCBClaim = request.getParameter("newWCBClaim");
+
+    //Basically if newWCBClaim == 1 we don't want to forward to the WCB form since the form was created already
+    if(!"1".equals(newWCBClaim)){
+      if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
+        WCBForm wcbForm = new WCBForm();
+        wcbForm.Set(bean);
+        request.setAttribute("WCBForm", wcbForm);
+        return (mapping.findForward("WCB"));
+      }
     }
-    //      System.out.println("Service count : "+ billItem.size());
     return mapping.findForward("success");
   }
 
   private void checkCDMStatus(HttpServletRequest request, ActionErrors errors,
-                              Demographic demo) {
+                              DemographicData.Demographic demo) {
     String[] cnlsCodes = OscarProperties.getInstance().getProperty(
         "COUNSELING_CODES").split(",");
     if (vldt.needsCDMCounselling(demo.getDemographicNo(), cnlsCodes)) {
@@ -199,7 +204,7 @@ public class BillingCreateBillingAction
    * @param demo Demographic
    * @param errors ActionErrors
    */
-  private void validateServiceCodeList(ArrayList billItems, Demographic demo,
+  private void validateServiceCodeList(ArrayList billItems, DemographicData.Demographic demo,
                                        ActionErrors errors) {
     BillingAssociationPersistence per = new BillingAssociationPersistence();
     for (int i = 0; i < billItems.size(); i++) {
@@ -237,7 +242,7 @@ public class BillingCreateBillingAction
     }
   }
 
-  private void validate00120(ActionErrors errors, Demographic demo,
+  private void validate00120(ActionErrors errors, DemographicData.Demographic demo,
                              ArrayList billItem,String serviceDate) {
     for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
       BillingItem item = (BillingItem) iter.next();
@@ -257,7 +262,7 @@ public class BillingCreateBillingAction
 
   }
 
-  private void verifyLast13050(ActionErrors errors, Demographic demo) {
+  private void verifyLast13050(ActionErrors errors, DemographicData.Demographic demo) {
     int last13050 = vldt.daysSinceLast13050(demo.getDemographicNo());
     if (last13050 > 365) {
       errors.add("",
