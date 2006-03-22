@@ -91,7 +91,11 @@ fillDxcodeList(billlist3, dxcodeList);
     System.out.println("request.getParameter(billForm)=" + request.getParameter("billType"));
   }
 
-if (request.getParameter("loadFromSession") == null ){
+String loadFromSession = request.getParameter("loadFromSession");
+if(request.getAttribute("loadFromSession")!=null){
+  loadFromSession="y";
+}
+if (loadFromSession== null ){
    System.out.println("RemovingAttribute from Session");
    request.getSession().removeAttribute("BillingCreateBillingForm");
 }
@@ -491,12 +495,6 @@ String generateNumericOptionList(int range){
 	  <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=diaglist[i].getDescription()%></font></td>
        </tr>
     <%}%>
-
-
-
-
-
-
   </table>
 </div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -537,7 +535,7 @@ String generateNumericOptionList(int range){
 </div>
  <h3> <html:errors /> </h1>
 <html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();" >
-
+<input type="hidden" name="newWCBClaim"  value="<%=(String)request.getAttribute("newWCBClaim")%>"/>
         <%
         BillingCreateBillingForm thisForm;
         thisForm = (BillingCreateBillingForm)request.getSession().getAttribute("BillingCreateBillingForm");
@@ -935,7 +933,7 @@ String generateNumericOptionList(int range){
               <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
                 <tr>
 
-                
+
 
                   <td width="91%" valign="top">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
@@ -945,9 +943,9 @@ String generateNumericOptionList(int range){
                             </tr>
                             <tr>
                               <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                              
+
                                 <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
-                                <input type="button" value=".5" onclick="$('xml_other1_unit').value = '0.5'"/>
+                                <input type="button" value=".5" onClick="$('xml_other1_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
@@ -957,7 +955,7 @@ String generateNumericOptionList(int range){
                             <tr>
                               <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
-                                <input type="button" value=".5" onclick="$('xml_other2_unit').value = '0.5'"/>
+                                <input type="button" value=".5" onClick="$('xml_other2_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
@@ -967,7 +965,7 @@ String generateNumericOptionList(int range){
                             <tr>
                               <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                                 <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
-                                <input type="button" value=".5" onclick="$('xml_other3_unit').value = '0.5'"/>
+                                <input type="button" value=".5" onClick="$('xml_other3_unit').value = '0.5'"/>
                                 </font></td>
                               <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
 
