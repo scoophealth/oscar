@@ -207,8 +207,8 @@ public class StringUtils {
     return ret;
   }
 
-  /**
-   * Retur
+ /**
+   * Returns true if the specified String represents a valid date
    *
    * @param string String
    * @return boolean
