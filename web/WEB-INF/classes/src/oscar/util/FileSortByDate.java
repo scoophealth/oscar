@@ -49,9 +49,9 @@ public class FileSortByDate implements Comparator{
         long f2LastMod = f2.lastModified();
   
         if (f1LastMod < f2LastMod) {
-            return -1;
-        } else if (f2LastMod < f1LastMod) {
             return 1;
+        } else if (f2LastMod < f1LastMod) {
+            return -1;
         } 
         return 0;
   
