@@ -23,12 +23,13 @@
  */
 package oscar.util;
 
-import org.apache.log4j.Category;
-
 import java.io.*;
-
 import java.util.*;
 import java.util.regex.*;
+
+import org.apache.log4j.Category;
+import java.text.SimpleDateFormat;
+import java.text.*;
 
 public class StringUtils {
   static Category cat = Category.getInstance(StringUtils.class.getName());
@@ -179,19 +180,50 @@ public class StringUtils {
    * @return boolean
    */
   public static boolean isNumeric(String str) {
-    return (str == null||str.equals("")) ? false :
-        org.apache.commons.lang.StringUtils.isNumeric(str);
+    boolean ret = false;
+    if (str != null && !str.equals("")) {
+      try {
+        new Double(str);
+        ret = true;
+      }
+      catch (NumberFormatException e) {
+        ret = false;
+      }
+      finally {
+        return ret;
+      }
+    }
+    return ret;
   }
 
-  
-  public static String returnStringToFirst(String str,String firstChar){
-     String ret = str;
-     if ( str != null ){
-        int i = str.indexOf(firstChar);
-        if (i != -1){
-           ret = str.substring(0,i);
-        }
-     }
-     return ret;
+  public static String returnStringToFirst(String str, String firstChar) {
+    String ret = str;
+    if (str != null) {
+      int i = str.indexOf(firstChar);
+      if (i != -1) {
+        ret = str.substring(0, i);
+      }
+    }
+    return ret;
+  }
+
+  /**
+   * Retur
+   *
+   * @param string String
+   * @return boolean
+   */
+  public static boolean isValidDate(String dateString,String format) {
+    boolean ret = false;
+    SimpleDateFormat fmt = new SimpleDateFormat(format);
+    try {
+      fmt.parse(dateString);
+      ret = true;
+    }
+    catch (ParseException ex) {
+    }
+    finally {
+      return ret;
+    }
   }
 }
