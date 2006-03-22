@@ -27,11 +27,12 @@ package oscar.oscarBilling.ca.bc.MSP;
 import java.math.*;
 import java.sql.*;
 import java.util.*;
+
 import oscar.*;
 import oscar.entities.*;
+import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
-import oscar.util.BeanUtilHlp;
-import oscar.util.UtilMisc;
+import oscar.util.*;
 
 /**
  *
@@ -79,7 +80,7 @@ public class MSPReconcile {
 
   private static Properties negValues = new Properties();
   private BeanUtilHlp beanut = new BeanUtilHlp();
-
+  private BillingHistoryDAO dao = new BillingHistoryDAO();
   public MSPReconcile() {
     initTeleplanMonetarySuffixes();
   }
@@ -709,6 +710,63 @@ public class MSPReconcile {
     return p;
   }
 
+  /**
+   * Saves a BillRecipient to database. If a record with the specified  billing number exists, an update is performed<p>
+   * otherwise, a new record is insterted
+   *
+   * @param recip BillReceipient - The BillRecipient instance to be persisted
+   */
+  public void saveOrUpdateBillRecipient(BillRecipient recip) {
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL("select count(*) from bill_recipients where billingNo = " +
+                     recip.getBillingNo());
+
+      PreparedStatement stmt = null;
+      //Record exists so perform an update
+      if (rs.next()) {
+        stmt = db.GetConnection().prepareStatement("update bill_recipients set name=?,address=?,city=?,province=?,postal=?,updateTime=now() where billingNo=?");
+        stmt.setString(1, recip.getName());
+        stmt.setString(2, recip.getAddress());
+        stmt.setString(3, recip.getCity());
+        stmt.setString(4, recip.getProvince());
+        stmt.setString(5, recip.getPostal());
+        stmt.setString(6, recip.getBillingNo());
+      }
+      else{
+        //create a new record
+       stmt = db.GetConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
+          "where values(?,?,?,?,?,now(),now(),?)");
+      stmt.setString(1,recip.getName());
+      stmt.setString(2,recip.getAddress());
+      stmt.setString(3,recip.getCity());
+      stmt.setString(4,recip.getProvince());
+      stmt.setString(5,recip.getPostal());
+      stmt.setString(6,recip.getBillingNo());
+
+      }
+      stmt.execute();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    finally {
+      try {
+        if (db != null) {
+          db.CloseConn();
+        }
+        if (rs != null) {
+          rs.close();
+        }
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
   public void updateBillingStatus(String billingNo, String stat) {
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -717,11 +775,44 @@ public class MSPReconcile {
       db.RunSQL("update billing set status = '" + stat +
                 "' where billing_no = '" + billingNo + "'");
       db.CloseConn();
+      /**
+       * Ensure that an audit of the currently modified bill is captured
+       * @todo Test this audit event
+       */
+
+      dao.createBillingHistoryArchiveByBillNo(billingNo, stat);
     }
     catch (Exception e) {
       e.printStackTrace();
     }
   }
+
+  /**
+   * Updates the paymentMethod of the specified bill with the supplied paymentMethod code
+   * @param billingNo String - The uid of the bill to be updated
+   * @param paymentMethod String - The paymentMethod code
+   */
+  public void updatePaymentMethod(String billingNo, String paymentMethod) {
+     DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL("update billingmaster set paymentMethod =  "+  paymentMethod + " where billing_no = " + billingNo + "");
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    finally{
+      try {
+        if(db!=null){
+          db.CloseConn();
+        }
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
+
 
   public void updateBillingMasterStatus(String billingMasterNo, String stat) {
     try {
@@ -729,6 +820,12 @@ public class MSPReconcile {
       db.RunSQL("update billingmaster set billingstatus = '" + stat +
                 "' where billingmaster_no = '" + billingMasterNo + "'");
       db.CloseConn();
+      /**
+       * Ensure that an audit of the currently modified bill is captured
+       * @todo Test this audit event
+       */
+
+      dao.createBillingHistoryArchive(billingMasterNo, stat);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -808,6 +905,12 @@ public class MSPReconcile {
         db.RunSQL("update billingmaster set billingstatus = '" + newStat +
                   "' where billingmaster_no = '" + billingNo + "'");
         db.CloseConn();
+        /**
+         * Ensure that an audit of the currently modified bill is captured
+         * @todo Test this audit event
+         */
+
+        dao.createBillingHistoryArchiveByBillNo(billingNo, newStat);
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -1015,10 +1118,10 @@ public class MSPReconcile {
     }
     finally {
       try {
-        if(db!=null){
+        if (db != null) {
           db.CloseConn();
         }
-        if(rs!=null){
+        if (rs != null) {
           rs.close();
         }
       }
@@ -1207,7 +1310,7 @@ public class MSPReconcile {
 
         //should be empty string if there is no adjustment
         b.adjustmentCodeAmt = "";
-        b.adjustmentCode=b.adjustmentCode == null?"":b.adjustmentCode;
+        b.adjustmentCode = b.adjustmentCode == null ? "" : b.adjustmentCode;
         b.adjustmentCodeDesc = "";
         if (!"".equals(b.adjustmentCode)) {
           String adjCode1amt = rs.getString("teleplanS00.t_aja1");
@@ -1648,4 +1751,5 @@ public class MSPReconcile {
     }
     return curValue.toString();
   }
+
 }
