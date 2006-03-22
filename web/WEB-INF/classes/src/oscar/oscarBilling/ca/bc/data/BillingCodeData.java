@@ -89,7 +89,7 @@ public final class BillingCodeData {
     return this;
   }
 
-  public boolean editBillingCode(String desc, String val, String codeId) {
+  public boolean editBillingCode(String servicecode,String desc, String val, String codeId) {
     boolean retval = true;
     DBHandler db = null;
     String str = null;
@@ -97,6 +97,7 @@ public final class BillingCodeData {
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       str = "update billingservice set " +
+          "service_code = '" + Misc.mysqlEscape(servicecode) + "', " +
           "description = '" + Misc.mysqlEscape(desc) + "', " +
           "value       = '" + Misc.mysqlEscape(val) + "' " +
           "where billingservice_no = '" + Misc.mysqlEscape(codeId) + "'";
