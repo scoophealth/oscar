@@ -205,7 +205,7 @@
     <!-- OscarBilling ON start-->
     <form-bean name="BillingDocumentErrorReportUploadForm" type="oscar.oscarBilling.ca.on.pageUtil.BillingDocumentErrorReportUploadForm"/>
     <form-bean name="AddReferralDocForm" type="oscar.oscarBilling.ca.bc.pageUtil.AddReferralDocForm"/>
-    
+
     <!-- OscarBilling ON stop -->
     <!-- OscarSurveillance ON start -->
     <form-bean name="CheckSurveillanceForm" type="oscar.oscarSurveillance.CheckSurveillanceForm"/>
@@ -221,13 +221,13 @@
 
 
     <form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm"/>
-    <form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm"/>        
-    <form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm"/>        
-        
+    <form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm"/>
+    <form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm"/>
+
     <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm"/>
 
     <form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm"/>
-    
+
     <!-- eForms -->
     <form-bean name="eFormHtmlUpload" type="oscar.eform.upload.HtmlUploadForm"/>
     <form-bean name="eFormImageUpload" type="oscar.eform.upload.ImageUploadForm"/>
@@ -292,7 +292,7 @@
 
    <action path="/oscarMessenger/Doc2PDF" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFAction" name="msgAttachPDFForm" scope="request" input="/oscarMessenger/generatePreviewPDF.jsp">
        <forward name="success" path="/oscarMessenger/selfCloseAndRefreshOpener.jsp"/>
-       <forward name="attaching" path="/oscarMessenger/generatePreviewPDF.jsp"/>       
+       <forward name="attaching" path="/oscarMessenger/generatePreviewPDF.jsp"/>
    </action>
 
    <action path="/oscarMessenger/ProcessDoc2PDF" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFAction" name="msgDoc2PDFForm" scope="request" input="/oscarMessenger/processPDF.jsp">
@@ -796,7 +796,7 @@
       <forward name="success" path="/provider/providerProperties.jsp"/>
     </action>
     -->
-    
+
     <!-- oscarProvider end   -->
     <!-- OscarDxResearch Start-->
     <action path="/oscarResearch/oscarDxResearch/setupDxResearch" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction" name="" scope="request" input="/oscarEncounter/Index.jsp">
@@ -878,7 +878,7 @@
       <forward name="success" path="/popup/cid.jsp"/>
     </action>
     <!-- oscarBilling start for BC -->
-    <action path="/billing" type="oscar.oscarBilling.ca.bc.pageUtil.BillingAction" name="BillingForm" scope="request" input="/billing/CA/BC/billingBC.jsp">
+    <action path="/billing" type="oscar.oscarBilling.ca.bc.pageUtil.BillingAction" name="BillingCreateBillingForm" scope="session" input="/billing/CA/BC/billingBC.jsp" validate="false">
       <forward name="BC" path="/billing/CA/BC/billingBC.jsp"/>
       <forward name="ON" path="/billing/CA/ON/billingOB.jsp" redirect="true"/>
       <!--<forward name="ON" path="/oscarBilling/billingON.jsp" />-->
@@ -896,9 +896,12 @@
       <forward name="ON" path="/billing/CA/ON/billingOB2.jsp"/>
       <forward name="private" path="/billing/CA/BC/billReceipt.jsp"/>
     </action>
-    <action path="/billing/CA/BC/formwcb" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction" name="WCBForm" scope="request" input="/billing/ca/bc/formwcb.jsp">
+    <action path="/billing/CA/BC/formwcb" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction" name="WCBForm" scope="request" input="/billing/CA/BC/formwcb.jsp">
       <forward name="success" path="/billing/CA/BC/billingCreated.jsp"/>
       <forward name="failure" path="/billing/CA/BC/formwcb.jsp"/>
+    </action>
+    <action path="/billing/CA/BC/newformwcb" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction" name="WCBForm" scope="request" input="/billing/CA/BC/formwcb.jsp" validate="false">
+      <forward name="success" path="/billing/CA/BC/formwcb.jsp"/>
     </action>
     <action path="/billing/CA/BC/billingTeleplanCorrectionWCB" type="oscar.oscarBilling.ca.bc.administration.TeleplanCorrectionActionWCB" name="TeleplanCorrectionFormWCB" scope="request" input="/billing/ca/bc/billingTeleplanCorrectionWCB.jsp">
       <forward name="success" path="/billing/CA/BC/billingTeleplanCorrectionWCB.jsp"/>
@@ -927,7 +930,7 @@
       <forward name="private" path="/billing/CA/BC/billingPrivateCodeAdjust.jsp"/>
       <forward name="privateCodeError" path="/billing/CA/BC/billingAddPrivateCode.jsp"/>
     </action>
-    <action path="/billing/CA/BC/UpdateBilling" type="oscar.oscarBilling.ca.bc.pageUtil.BillingUpdateBillingAction" name="BillingUpdateBillingForm" scope="request" input="/billing/CA/BC/billReceipt.jsp">
+    <action path="/billing/CA/BC/UpdateBilling" type="oscar.oscarBilling.ca.bc.pageUtil.BillingUpdateBillingAction" name="BillingViewForm" scope="request" input="/billing/CA/BC/billReceipt.jsp">
       <forward name="success" path="/billing/CA/BC/billReceipt.jsp"/>
       <forward name="successAndClose" path="/billing/CA/BC/billingSaved.jsp"/>
     </action>
@@ -981,14 +984,14 @@
     <action    path="/oscarPrevention/PreventionReport" type="oscar.oscarPrevention.pageUtil.PreventionReportAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionReporting.jsp">
        <forward name="success" path="/oscarPrevention/PreventionReporting.jsp"/>
 
-    </action>                       
- <!--   
-    <action    path="/oscarPrevention/PreventionCallBack" type="oscar.oscarPrevention.pageUtil.PreventionCallBackAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionCallBackup.jsp">  
-       <forward name="success" path="/oscarPrevention/PreventionCallBackup.jsp"/>  
-    </action>                       
+    </action>
+ <!--
+    <action    path="/oscarPrevention/PreventionCallBack" type="oscar.oscarPrevention.pageUtil.PreventionCallBackAction" name="PreventionReportForm" scope="request" input="/oscarPrevention/PreventionCallBackup.jsp">
+       <forward name="success" path="/oscarPrevention/PreventionCallBackup.jsp"/>
+    </action>
     -->
-    <!--Preventions- End-->   
-    
+    <!--Preventions- End-->
+
 
 
 
@@ -1001,45 +1004,45 @@
     </action>
     <action path="/form/importUpload" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataAction" name="ImportDemographicDataForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/demographic/demographicImport.jsp"/>
-    </action>                     
+    </action>
     <action path="/demographic/DemographicExport" type="oscar.oscarDemographic.pageUtil.DemographicExportAction" name="DemographicExportForm" scope="request" input="/demographic/demographicExport.jsp">
       <forward name="success" path="/demographic/demographicExport.jsp"/>
-    </action>                           
-    
+    </action>
+
     <action path="/report/DemographicSetEdit" type="oscar.oscarReport.pageUtil.DemographicSetEditAction" name="DemographicSetEditForm" scope="request" input="/oscarReport/demographicSetEdit.jsp">
       <forward name="success" path="/oscarReport/demographicSetEdit.jsp"/>
-    </action>                           
-    
+    </action>
+
     <action path="/report/SetEligibility" type="oscar.oscarReport.pageUtil.DemographicSetEligibilityAction" name="FrmForm" scope="request" input="/oscarReport/demographicSetEdit.jsp">
       <forward name="success" path="/oscarReport/demographicSetEdit.jsp"/>
     </action>
-    
+
     <action path="/tickler/ForwardDemographicTickler" type="oscar.oscarTickler.pageUtil.ForwardDemographicTicklerAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
       <forward name="success" path="/tickler/ticklerAdd.jsp"/>
     </action>
-    
+
     <action path="/tickler/AddTickler" type="oscar.oscarTickler.pageUtil.AddTicklerAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
       <forward name="close" path="/close.html"/>
     </action>
-                               
+
     <!--
     <action path="/oscarEncounter/SaveCPPAction" type="oscar.oscarEncounter.pageUtil.SaveCPPAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
       <forward name="success" path="/oscarEncounter/encounterCPP.jsp"/>
-    </action>        
-    
+    </action>
+
     <action path="/oscarEncounter/SaveCPPUserPrefAction" type="oscar.oscarEncounter.pageUtil.SaveCPPUserPrefAction" name="FrmForm" scope="request" input="/oscarEncounter/encounterCPP.jsp">
       <forward name="success" path="/oscarEncounter/encounterCPP.jsp"/>
-    </action>        
-            
+    </action>
+
     <action path="/oscarNote/AddNote" type="oscar.oscarNote.pageUtil.AddNoteAction" name="FrmForm" scope="request" input="/oscarNote/AddNote.jsp">
       <forward name="close" path="/close.html"/>
-    </action>        
-    
+    </action>
+
     <action path="/report/PrescriptionReport" type="oscar.oscarReport.pageUtil.PrescriptionReportAction" name="FrmForm" scope="request" input="/oscarReport/PrescriptionReport.jsp">
       <forward name="success" path="/oscarReport/PrescriptionReport.jsp"/>
-    </action>                           
+    </action>
     -->
-    
+
     <!-- Demographic Relations End-->
 
     <!-- eForms -->
@@ -1079,7 +1082,7 @@
     <action path="/eforms/delGroup" type="oscar.eform.actions.DeleteGroupAction" name="delGroup" scope="request" input="/eform/efmmanageformgroups.jsp">
       <forward name="success" path="/eform/efmmanageformgroups.jsp"/>
     </action>
-    
+
 
     <!-- Diagnostic code association -->
       <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/associateCodesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AssociateCodesAction">
@@ -1096,22 +1099,22 @@
         </action>
         <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/saveAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveAssocAction">
           <forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
-    </action>        
+    </action>
     <action input="billingManageReferralDoc.jsp" name="AddReferralDocForm" path="/billing/CA/BC/AddReferralDoc" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AddReferralDocAction">
           <forward name="success" path="/billing/CA/BC/billingManageReferralDoc.jsp" />
           <forward name="error" path="/billing/CA/BC/billingAddReferralDoc.jsp" />
-    </action>        
-    
+    </action>
+
     <!-- Diagnostic code association ends -->
-    
+
     <action path="/lab/labUpload" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/lab/CA/BC/LabUpload.jsp"/>
     </action>
-    
+
     <action path="/lab/CMLlabUpload" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadAction" name="CMLLabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/lab/CA/ON/uploadComplete.jsp"/>
     </action>
-        
+
     <action path="/billing/CA/ON/benefitScheduleUpload" type="oscar.oscarBilling.ca.on.OHIP.ScheduleOfBenefitsUploadAction" name="LabUploadForm" scope="request" input="/demographic/demographicImport.jsp">
       <forward name="success" path="/billing/CA/ON/ScheduleOfBenefitsUpload.jsp"/>
     </action>
@@ -1124,7 +1127,7 @@
     <!--action path="/document/AddDocuments" type="oscar.util.AddDocumentAction" name="FrmForm" scope="request" input="/dms/documentReport.jsp">
       <forward name="success" path="/dms/documentReport.jsp"/>
     </action-->
-    
+
   </action-mappings>
   <message-resources parameter="oscarResources"/>
 </struts-config>
