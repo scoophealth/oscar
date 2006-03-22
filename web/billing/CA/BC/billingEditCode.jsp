@@ -1,26 +1,26 @@
-<!--  
+<!--
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster Unviersity 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
  */
 -->
 
@@ -40,8 +40,8 @@ Edit Billing Code
 <script type="text/javascript">
 
 
-	
-	
+
+
 
 </script>
 
@@ -69,10 +69,10 @@ Edit Billing Code
                 text-align: center;
         }
 	td.middleGrid{
-	   border-left: 1pt solid #888888;	   
+	   border-left: 1pt solid #888888;
 	   border-right: 1pt solid #888888;
            text-align: center;
-	}	
+	}
 </style>
 </head>
 
@@ -90,7 +90,7 @@ Edit Billing Code
 						Edit Billing Code
                         </td>
                         <td  >&nbsp;
-							
+
                         </td>
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
@@ -103,19 +103,19 @@ Edit Billing Code
             <td class="MainTableLeftColumn" valign="top">&nbsp;
             &nbsp;
             </td>
-            <td class="MainTableRightColumn">                                 
+            <td class="MainTableRightColumn">
               <html:form action="/billing/CA/BC/billingEditCode" >
               <%
                 BillingEditCodeForm frm = (BillingEditCodeForm) request.getAttribute("BillingEditCodeForm");
-                                
-                if ( request.getParameter("codeId") != null){ 
+
+                if ( request.getParameter("codeId") != null){
                 System.out.println("codeId != null");
                     frm.setCodeId(request.getParameter("codeId"));
                     frm.setCode(request.getParameter("code"));
                     frm.setDesc(request.getParameter("desc"));
                     frm.setValue(request.getParameter("value"));
                     frm.setWhereTo(request.getParameter("whereTo"));
-                }   
+                }
               %>
                 <table>
                     <html:hidden property="whereTo"/>
@@ -126,8 +126,7 @@ Edit Billing Code
                     </tr>-->
                     <tr>
                         <td>Code</td>
-                        <td><%=request.getParameter("code")%>
-                            <html:hidden property="code"/>
+                        <td><html:text property="code"/>
                         </td>
                     </tr>
                     <tr>
@@ -143,7 +142,7 @@ Edit Billing Code
                         <td><html:submit property="submitButton" value="Edit"/><html:submit property="submitButton" value="Back"/>
                     </tr>
                 </table>
-              </html:form>  
+              </html:form>
 			   </td>
         </tr>
         <tr>
