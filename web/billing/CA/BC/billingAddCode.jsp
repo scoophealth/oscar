@@ -33,7 +33,7 @@
 
 
 <head>
-<title>Add Private Billing Code
+<title>Add Billing Code
 </title>
 <link rel="stylesheet" type="text/css" href="../../../oscarEncounter/encounterStyles.css">
 <script type="text/javascript">
