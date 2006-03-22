@@ -41,9 +41,7 @@ import oscar.oscarDemographic.data.*;
 import oscar.util.*;
 
 public class BillingReProcessBillAction extends Action {
-
    Misc misc = new Misc();
-
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
@@ -102,8 +100,10 @@ public class BillingReProcessBillAction extends Action {
         String dxCode2= frm.getDx2();//f
         String dxCode3= frm.getDx3();//f
         String dxExpansion ="";//f
-        String serviceLocation = frm.getServiceLocation().substring(0,1);//f
-
+        String serviceLocation  = "";
+        if(frm.getServiceLocation().length()>1){
+          serviceLocation = frm.getServiceLocation().substring(0, 1); //f
+        }
         String referralFlag1 = frm.getReferalPracCD1();//f
         String referralNo1 = frm.getReferalPrac1();//f
         String referralFlag2 = frm.getReferalPracCD2();//f
@@ -146,7 +146,7 @@ public class BillingReProcessBillAction extends Action {
         String submit = frm.getSubmit();
         String secondSQL = null;
 
-        if(submit.equals("Resubmit Bill") || billingStatus.equals("O")){
+        if((submit.equals("Resubmit Bill")||submit.equals("Reprocess and Resubmit Bill")) || billingStatus.equals("O")){
             billingStatus = "O";
             secondSQL = "update billing set status = 'O' where billing_no ='"+frm.getBillNumber()+"'";
         }else if (submit.equals("Settle Bill")){
@@ -193,7 +193,7 @@ public class BillingReProcessBillAction extends Action {
                         + "payee_no = '"+billingGroupNo+"', "
                         + "practitioner_no = '"+practitionerNo+"', "
                         + "phn = '"+hcNo+"', "
-                        + "name_verify = '"+name_verify+"', "
+                        + "name_verify = '"+UtilMisc.mysqlEscape(name_verify)+"', "
                         + "dependent_num = '"+dependentNo+"', "
                         + "billing_unit = '"+billingUnit+"', "
                         + "clarification_code = '"+clarificationCode+"', "
@@ -248,7 +248,8 @@ public class BillingReProcessBillAction extends Action {
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                db.RunSQL(sql);
                db.RunSQL(providerSQL);
-
+               BillingHistoryDAO dao = new BillingHistoryDAO();
+               dao.createBillingHistoryArchive(billingmasterNo,billingStatus);
                if (secondSQL != null){
                     System.out.println(secondSQL);
                     db.RunSQL(secondSQL);
@@ -274,7 +275,10 @@ public class BillingReProcessBillAction extends Action {
 
 
         request.setAttribute("billing_no", billingmasterNo);
-        return (mapping.findForward("success"));
+        if(submit.equals("Reprocess and Resubmit Bill")){
+         request.setAttribute("close","true");
+        }
+        return mapping.findForward("success");
     }
 
     public String convertDate8Char(String s){
