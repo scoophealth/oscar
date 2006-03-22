@@ -2071,4 +2071,39 @@ CREATE TABLE ctl_servicecodes_dxcodes (
   PRIMARY KEY  (id)
 ) TYPE=InnoDB;
 
+#Stores data about recipients of a private bill
+#Shares a 1 to 1 relation with bill table
+CREATE TABLE bill_recipients (
+  id int(10) unsigned NOT NULL auto_increment,
+  name varchar(100) default NULL,
+  address varchar(100) default NULL,
+  city varchar(100) default NULL,
+  province varchar(100) default NULL,
+  postal varchar(6) default NULL,
+  creationTime datetime NOT NULL default '0000-00-00 00:00:00',
+  updateTime datetime NOT NULL default '0000-00-00 00:00:00',
+  billingNo int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
 
+#Stores data about a modification to a specific line in a bill
+#Shares a many to one relation with the billingmaster table
+#There are zero to many billing_history records for a single billingmaster record
+CREATE TABLE billing_history (
+  id int(10) unsigned NOT NULL auto_increment,
+  billingmaster_no int(10) unsigned NOT NULL default '0',
+  billingstatus char(1) NOT NULL default '',
+  creation_date datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+#Serves as an audit trail for private bill financial transactions, both payments and refunds
+#Shares a many to one relation with the billing table
+#There are zero to many billing_private_transactions records for a single billing record
+CREATE TABLE billing_private_transactions (
+  id int(10) unsigned NOT NULL auto_increment,
+  billing_no int(10) unsigned NOT NULL default '0',
+  amount_received double NOT NULL default '0',
+  creation_date datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
