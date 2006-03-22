@@ -40,7 +40,7 @@ public final class WCBAction extends Action {
         throws IOException, ServletException {
             
         request.getSession().putValue("WCBForm", form);
-        if (null != form && ((WCBForm)form).Valid()) {
+        if (null != form) {
            request.setAttribute("GOBACKWCB", "true");
            return (mapping.findForward("success"));
         } else {
