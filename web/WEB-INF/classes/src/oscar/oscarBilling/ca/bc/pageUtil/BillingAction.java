@@ -61,8 +61,21 @@ public final class BillingAction
       return ON;
     }
     else {
+      BillingCreateBillingForm frm = (BillingCreateBillingForm)form;
       if (request.getParameter("demographic_no") != null &
           request.getParameter("appointment_no") != null) {
+        String newWCBClaim = request.getParameter("newWCBClaim");
+
+        //If newWCBClaim == 1, this action was invoked from the WCB form
+        //Therefore, we need to set the appropriate parameters to set up the subsequent bill
+        if("1".equals(newWCBClaim)){
+           WCBForm wcbForm = (WCBForm)request.getSession().getAttribute("WCBForm");
+          frm.setXml_billtype("WCB");
+          frm.setXml_other1(wcbForm.getW_extrafeeitem());
+          frm.setXml_diagnostic_detail1(wcbForm.getW_icd9());
+          request.setAttribute("newWCBClaim",request.getParameter("newWCBClaim"));
+          request.setAttribute("loadFromSession","y");
+        }
         bean = new oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean();
         bean.setApptProviderNo(request.getParameter("apptProvider_no"));
         bean.setPatientName(request.getParameter("demographic_name"));
@@ -75,6 +88,7 @@ public final class BillingAction
         bean.setApptDate(request.getParameter("appointment_date"));
         bean.setApptStart(request.getParameter("start_time"));
         bean.setApptStatus(request.getParameter("status"));
+
         request.getSession().setAttribute("billingSessionBean", bean);
         this.verifyLast13050(errors, request.getParameter("demographic_no"));
       }
