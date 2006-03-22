@@ -1,25 +1,25 @@
 /*
- * 
+ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License. 
- * This program is free software; you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation; either version 2 
- * of the License, or (at your option) any later version. * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
- * along with this program; if not, write to the Free Software 
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
- * 
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
  * <OSCAR TEAM>
- * 
- * This software was written for the 
- * Department of Family Medicine 
- * McMaster University 
- * Hamilton 
- * Ontario, Canada 
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
  */
 package oscar.oscarBilling.pageUtil;
 import oscar.oscarDB.DBHandler;
@@ -49,28 +49,29 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.util.MessageResources;
 import oscar.*;
+import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 
 public class BillingSaveBillingAction extends Action {
-    
-    
+
+
     public ActionForward execute(ActionMapping mapping,
     ActionForm form,
     HttpServletRequest request,
     HttpServletResponse response)
     throws IOException, ServletException {
-        
+
         if(request.getSession().getAttribute("user") == null  ){
             return (mapping.findForward("Logout"));
         }
-        
-        
+
+
         oscar.oscarBilling.pageUtil.BillingSessionBean bean;
         bean = (oscar.oscarBilling.pageUtil.BillingSessionBean)request.getSession().getAttribute("billingSessionBean");
         //  oscar.oscarBilling.data.BillingStoreData bsd = new oscar.oscarBilling.data.BillingStoreDate();
         //  bsd.storeBilling(bean);
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String billStatus = as.billStatus(bean.getApptStatus());
-        
+
         java.sql.ResultSet rs;
         GregorianCalendar now=new GregorianCalendar();
         int curYear = now.get(Calendar.YEAR);
@@ -79,20 +80,20 @@ public class BillingSaveBillingAction extends Action {
         String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) + "-" + String.valueOf(curDay);
         String billingid = "";
         String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
-        
+
         System.out.println("appointment_no: "+ bean.getApptNo());
         System.out.println("BillStatus:" + billStatus);
         String sql = "update appointment set status='" + billStatus + "' where appointment_no='" + bean.getApptNo() + "'";
-        
-        try {                        
+
+        try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
             db.CloseConn();
-            
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
+
         sql = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator)";
         sql = sql + " values('\\N','" + bean.getPatientNo() + "', '" + bean.getBillingProvider() + "', '" + bean.getApptNo() + "','" + bean.getPatientName() + "','" + bean.getPatientPHN() + "','" + curDate + "','" + bean.getServiceDate() + "','" + bean.getGrandtotal() + "','O','" + bean.getPatientDoB() + "','" + bean.getAdmissionDate() + "','" + oscar.util.UtilMisc.mysqlEscape(bean.getVisitType()) + "','" + bean.getBillingPracNo() + "','" + bean.getApptProviderNo() + "','" + bean.getCreator() + "')";
         try {
@@ -105,19 +106,19 @@ public class BillingSaveBillingAction extends Action {
             }
             rs.close();
             db.CloseConn();
-            
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
-        
-        
+
+
+
         ArrayList billItem = bean.getBillItem();
         for (int i=0; i < billItem.size(); i++){
             if( bean.getBillingType().compareTo("MSP")==0){
                 if (bean.getPatientHCType().trim().compareTo(bean.getBillRegion().trim()) == 0){
-                    
-                    
+
+
                     //			| billing_unit             | char(3)     | YES  |     | 000                  |                |
                     //			| clarification_code       | char(2)     | YES  |     | 00                   |                |
                     //			| anatomical_area          | char(2)     | YES  |     | NULL                 |                |
@@ -164,8 +165,8 @@ public class BillingSaveBillingAction extends Action {
                     //			| oin_address3             | varchar(25) | YES  |     |                      |                |
                     //			| oin_address4             | varchar(25) | YES  |     |                      |                |
                     //			| oin_postalcode           | varcha
-                    
-                    
+
+
                     sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,"
                         + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, "
                         + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment) "
@@ -182,7 +183,7 @@ public class BillingSaveBillingAction extends Action {
                         +"'" + bean.getPatientPHN() + "',"
                         +"'" + bean.getPatientFirstName().substring(0,1) + " " + bean.getPatientLastName().substring(0,2) + "',"
                         +"'" + "00" + "',"
-                        +"'" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getUnit() +"'," 
+                        +"'" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getUnit() +"',"
                         +"'" + bean.getVisitLocation().substring(0,2) + "',"
                         +"'00',"
                         +"'0',"
@@ -211,17 +212,29 @@ public class BillingSaveBillingAction extends Action {
                         +"'0',"
                         +"'')";
                     try {
-                        
-                        
+
+
                         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                         db.RunSQL(sql);
+                        rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+
+                        /**
+                         * @todo Don't forget to verify that this is the correct billingmaster_no
+                         */
+                        int billingMasterNo = -1;
+                        if (rs.next()){
+                          billingMasterNo = rs.getInt(1);
+                        }
+
+                        //ensure that this insert action is audited
+                        this.createBillArchive(String.valueOf(billingMasterNo++),"O");
                         db.CloseConn();
                     } catch (SQLException e) {
                         System.out.println(e.getMessage());
                     }
                     System.out.println(sql);
                 }else{
-                    
+
                     //			| oin_insurer_code         | char(2)     | YES  |     |                      |                |
                     //			| oin_registration_no      | varchar(12) | YES  |     |                      |                |
                     //			| oin_birthdate            | varchar(8)  | YES  |     |                      |                |
@@ -234,8 +247,8 @@ public class BillingSaveBillingAction extends Action {
                     //			| oin_address3             | varchar(25) | YES  |     |                      |                |
                     //			| oin_address4             | varchar(25) | YES  |     |                      |                |
                     //			| oin_postalcode           | varcha
-                    
-                    
+
+
                     sql = "insert into billingmaster (billingmaster_no, billing_no, createdate, billingstatus,demographic_no, appointment_no, claimcode, datacenter, payee_no, practitioner_no, phn, name_verify, dependent_num,billing_unit,";
                     sql = sql + "clarification_code, anatomical_area, after_hour, new_program, billing_code, bill_amount, payment_mode, service_date, service_to_day, submission_code, extended_submission_code, dx_code1, dx_code2, dx_code3, ";
                     sql = sql + "dx_expansion, service_location, referral_flag1, referral_no1, referral_flag2, referral_no2, time_call, service_start_time, service_end_time, birth_date, office_number, correspondence_code, claim_comment, ";
@@ -244,31 +257,43 @@ public class BillingSaveBillingAction extends Action {
                     sql = sql + "'" + bean.getVisitLocation().substring(0,2) + "','00','0','00','" +((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()  + "','" + ((oscar.oscarBilling.pageUtil.BillingBillingManager.BillingItem)billItem.get(i)).getDispLineTotal() + "','0','" +   convertDate8Char(bean.getServiceDate()) + "','" + "00" + "','" + "0" + "',' ','" + bean.getDx1() + "', '" + bean.getDx2() + "','" + bean.getDx3() + "',";
                     sql = sql + "' ','" + bean.getVisitType().substring(0,1) + "','" + bean.getReferType1() + "','" + bean.getReferral1() + "','" + bean.getReferType2() + "','" + bean.getReferral2() + "','0000', '" + bean.getStartTime() + "','" + bean.getEndTime() + "','" + "00000000" + "','', '0',''," ;
                     sql = sql + "'" + bean.getPatientHCType() + "', '" + bean.getPatientPHN() + "', '" + convertDate8Char(bean.getPatientDoB()) + "','" + bean.getPatientFirstName() + "', '" + " " + "','" + bean.getPatientLastName()  + "','" + bean.getPatientSex() + "', '" + bean.getPatientAddress1() + "', '" + bean.getPatientAddress2() + "', '', '', '" + bean.getPatientPostal()+ "')";
-                    
-                    try {                                                
+
+                    try {
                         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                         db.RunSQL(sql);
+                        rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+                        /**
+                        * @todo Don't forget to verify that this is the correct billingmaster_no
+                        */
+                       int billingMasterNo = -1;
+                       if (rs.next()){
+                         billingMasterNo = rs.getInt(1);
+                       }
+
+                       //ensure that this insert action is audited
+                       this.createBillArchive(String.valueOf(billingMasterNo++),"O");
+
                         db.CloseConn();
                     } catch (SQLException e) {
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(sql);                    
-                }                                
+                    System.out.println(sql);
+                }
             }
         }
-        
+
         //      System.out.println("Service count : "+ billItem.size());
-        
+
         return (mapping.findForward("success"));
     }
-    
+
     public String convertDate8Char(String s){
         String sdate = "00000000", syear="", smonth="", sday="";
         System.out.println("s=" + s);
         if (s != null){
-            
+
             if (s.indexOf("-") != -1){
-                
+
                 syear = s.substring(0, s.indexOf("-"));
                 s = s.substring(s.indexOf("-")+1);
                 smonth = s.substring(0, s.indexOf("-"));
@@ -280,21 +305,30 @@ public class BillingSaveBillingAction extends Action {
                 if (sday.length() == 1)  {
                     sday = "0" + sday;
                 }
-                
-                
+
+
                 System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
                 sdate = syear + smonth + sday;
-                
+
             }else{
                 sdate = s;
             }
             System.out.println("sdate:" + sdate);
         }else{
             sdate="00000000";
-            
+
         }
         return sdate;
     }
-    
+    /**
+     * Adds a new entry into the billing_history table
+     * @param newInvNo String
+     */
+    private void createBillArchive(String billingMasterNo,String status) {
+      BillingHistoryDAO dao = new BillingHistoryDAO();
+      dao.createBillingHistoryArchive(billingMasterNo,status);
+    }
+
+
 }
 
