@@ -62,7 +62,7 @@ public class BillingCreateBillingAction
 
     BillingSessionBean bean = (BillingSessionBean) request.getSession().
         getAttribute("billingSessionBean");
-    Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
+    DemographicData.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
 
     ArrayList billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
