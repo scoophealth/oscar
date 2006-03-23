@@ -197,7 +197,7 @@ public class MeasurementTemplateFlowSheetConfig {
                mtb.addValidationRule(vb);
                if(!fmtu.measurementTypeKeyIsFound(mtb)){
                   System.out.println("Needed to add"+mtb.getType());
-                  //fmtu.addMeasurementType(mtb, "");
+                  fmtu.addMeasurementType(mtb, "");
                }else{
                    System.out.println("Didn't Need to add"+mtb.getType());
                }
