@@ -133,7 +133,7 @@ public class BillingViewBean {
 
   public List getBillRecipient(String billingNo) {
     return SqlUtils.getBeanList(
-        "select * from bill_recipient where billingNo = " +
+        "select * from bill_recipients where billingNo = " +
         billingNo, BillRecipient.class);
 
   }
