@@ -460,7 +460,7 @@ public class BillingSaveBillingAction
            this.createBillArchive(billingMasterId,status);
 
            //Update patient echart with the clinical info from the WCB form
-           updatePatientChartWithWCBInfo(bean.getPatientNo(), wcb);
+           updatePatientChartWithWCBInfo(wcb);
 
           //Get fee amount of specified service code
           rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" + wcb.getW_extrafeeitem() + "'");
@@ -492,10 +492,18 @@ public class BillingSaveBillingAction
     return af; //(mapping.findForward("success"));
   }
 
-  private void updatePatientChartWithWCBInfo(String patientNo,
+  private void updatePatientChartWithWCBInfo(
                                              WCBForm wcb) {
     EChartDAO dao = new EChartDAO();
-    Echart echart = dao.getMostRecentEchart(patientNo);
+    Echart echart = dao.getMostRecentEchart(wcb.getDemographic());
+
+    //if the patient doesn't have an echart than create  a new one
+    if(echart==null){
+      echart = new Echart();
+      echart.setDemographicNo(wcb.getDemographic());
+      echart.setProviderNo(wcb.getW_pracno());
+    }
+
     String wcbEchartEntry = "\n\n[WCB Clinical Info - CLAIM# - " + wcb.getW_wcbno()+ " @ " + echart.getTimeStampToString() + "]\n" + wcb.getW_clinicinfo();
     echart.setEncounter(wcbEchartEntry);
     System.out.println("wcbEchartEntry=" + wcbEchartEntry);
