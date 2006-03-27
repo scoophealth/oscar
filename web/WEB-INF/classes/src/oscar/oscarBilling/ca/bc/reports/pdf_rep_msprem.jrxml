@@ -95,7 +95,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="1Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="1Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -113,7 +114,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="1Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="1Point" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -173,7 +175,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -191,7 +194,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
@@ -283,7 +287,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</rectangle>
 				<line direction="BottomUp">
 					<reportElement
@@ -301,7 +306,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<line direction="BottomUp">
 					<reportElement
@@ -319,7 +325,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
@@ -609,7 +616,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{t_servicedate}.equals("")?null:new SimpleDateFormat("yyyymmdd").parse($F{t_servicedate})]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{t_servicedate}.equals("")?null:new SimpleDateFormat("yyyyMMdd").parse($F{t_servicedate})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -833,7 +840,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
