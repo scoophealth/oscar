@@ -472,7 +472,7 @@ String fmtApptDate = fmt.format(new Date());
 
 		</td>
 	</tr>
-	<tr >
+	<tr id="thirdSection1">
 		<td>
 			Diagnosis:</td>
           <td><html:text maxlength="120" property="w_diagnosis" size="120" />
