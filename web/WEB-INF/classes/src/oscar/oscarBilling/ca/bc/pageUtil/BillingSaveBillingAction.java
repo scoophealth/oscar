@@ -266,9 +266,9 @@ public class BillingSaveBillingAction
             db.RunSQL(sql);
 
             //Store a record of this transaction
-            billingMasterId = getInsertId(db);
-            String status = new String(new char[]{billingAccountStatus});
-            this.createBillArchive(billingMasterId,status);
+            billingMasterId = getLastInsertId(db);
+            String status = new String(new char[] {billingAccountStatus});
+            this.createBillArchive(billingMasterId, status);
             db.CloseConn();
           }
           catch (SQLException e) {
@@ -366,10 +366,10 @@ public class BillingSaveBillingAction
           try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             db.RunSQL(sql);
-            billingMasterId = getInsertId(db);
-            String status = new String(new char[]{billingAccountStatus});
+            billingMasterId = getLastInsertId(db);
+            String status = new String(new char[] {billingAccountStatus});
 
-            this.createBillArchive(billingMasterId,status);
+            this.createBillArchive(billingMasterId, status);
             db.CloseConn();
           }
           catch (SQLException e) {
@@ -403,79 +403,86 @@ public class BillingSaveBillingAction
     }
     //////////////
     if (bean.getBillingType().equals("WCB")) {
+      //Keep in mind that the first billingId was set way up at the top
+      DBHandler db = null;
+      String status = new String(new char[] {billingAccountStatus});
       WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
-      String insertBillingMaster =
-          " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
-          " VALUES ('" + billingid + "',NOW(),'" + wcb.getW_payeeno() + "','" + billingAccountStatus + "','" + bean.getPatientNo() + "','" + bean.getApptNo() + "','" + convertDate8Char(bean.getServiceDate()) + "')";
       wcb.setW_demographic(bean.getPatientNo());
       wcb.setW_providerno(bean.getBillingProvider());
-
+      String insertBillingMaster = createBillingMasterInsertString(bean,
+          billingid, billingAccountStatus, wcb.getW_payeeno());
+      String amnt = getFeeByCode(wcb.getW_feeitem());
       try {
-
-        //STEP 1 - Save new bill in billingmaster table
-        String amnt = "0.00";
-        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        //Save new bill in billingmaster table
+        db = new DBHandler(DBHandler.OSCAR_DATA);
         db.RunSQL(insertBillingMaster);
 
-        //Step 2 - Store an archive of this transaction
-        billingMasterId = getInsertId(db);
-        String status = new String(new char[]{billingAccountStatus});
-        this.createBillArchive(billingMasterId,status);
+        //Store an archive of this transaction
+        billingMasterId = getLastInsertId(db);
+        this.createBillArchive(billingMasterId, status);
 
-        //Step 3 - Get the fees for the selected wcb fee items
-        rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" + wcb.getW_feeitem() + "'");
-        System.out.println("SELECT value FROM billingservice WHERE service_code='" + wcb.getW_feeitem() + "'");
-        if (rs.next()) {
-          amnt = rs.getString("value");
+        //save extra fee item entry in wcb table
+        if (wcb.isNotBilled()) {
+          //if processing an existing WCB form, update values for first fee item
+            String updateWCBSQL = createWCBUpdateSQL(billingid, amnt);
+            db.RunSQL(updateWCBSQL);
+        }
+        else {
+          //This form was created from the billing screen
+          //Store a new WCB entry for the first fee item
+          db.RunSQL(wcb.SQL(billingid, amnt));
         }
 
-        //Step 4 - Save the WCB form data in the wcb table
-        db.RunSQL(wcb.SQL(billingid, amnt));
-
-        //Step 5 - If an extra fee item was declared on the WCB form, save it in
+        //If an extra fee item was declared on the WCB form, save it in
         //The billingmaster table as well
         if (wcb.getW_extrafeeitem() != null &&
             wcb.getW_extrafeeitem().trim().length() != 0) {
           System.out.println("Adding Second billing item");
           String secondWCBBillingId = null;
-          String secondBillingAmt = "0.00";
-
+          String secondBillingAmt = this.getFeeByCode(wcb.getW_extrafeeitem());
           //save entry in billing table
           db.RunSQL(billingSQL);
-          rs = db.GetSQL("SELECT LAST_INSERT_ID()");
-          if (rs.next()) {
-            secondWCBBillingId = rs.getString(1);
-          }
-          rs.close();
-
+          secondWCBBillingId = this.getLastInsertId(db);
           //Link new billing record to billing line in billingmaster table
-          String secondBillingMaster = " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
-              " VALUES ('" + secondWCBBillingId + "',NOW(),'" + wcb.getW_payeeno() + "','" + billingAccountStatus + "','" + bean.getPatientNo() + "','" + bean.getApptNo() + "','" + convertDate8Char(bean.getServiceDate()) + "')";
-           db.RunSQL(secondBillingMaster);
-           //get most recent billingmaster id
-           billingMasterId = getInsertId(db);
+          String secondBillingMaster = createBillingMasterInsertString(bean,
+              secondWCBBillingId, billingAccountStatus, wcb.getW_payeeno());
+          db.RunSQL(secondBillingMaster);
+          //get most recent billingmaster id
+          billingMasterId = getLastInsertId(db);
 
-           //Store a record of this transaction
-           status = new String(new char[]{billingAccountStatus});
-           this.createBillArchive(billingMasterId,status);
-
-           //Update patient echart with the clinical info from the WCB form
-           updatePatientChartWithWCBInfo(wcb);
-
-          //Get fee amount of specified service code
-          rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" + wcb.getW_extrafeeitem() + "'");
-          if (rs.next()) {
-            secondBillingAmt = rs.getString("value");
-          }
+          //Store a record of this billingmaster Transaction
+          status = new String(new char[] {billingAccountStatus});
+          this.createBillArchive(billingMasterId, status);
 
           //save extra fee item entry in wcb table
-          db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, secondBillingAmt));
+          if (wcb.isNotBilled()) {
+            //if processing an existing WCB form, update values for second fee item
+            String updateWCBSQL = createWCBUpdateSQL(secondWCBBillingId, secondBillingAmt);
+            db.RunSQL(updateWCBSQL);
+          }
+          else {
+            //This form was created from the billing screen
+            //Store a new WCB entry for the second fee item
+            db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, secondBillingAmt));
+          }
 
+          //Update patient echart with the clinical info from the WCB form
+          updatePatientChartWithWCBInfo(wcb);
         }
-        db.CloseConn();
       }
-      catch (SQLException e) {
-        System.err.println(e.getMessage());
+
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+      finally {
+        if (db != null) {
+          try {
+            db.CloseConn();
+          }
+          catch (SQLException ex) {
+            ex.printStackTrace();
+          }
+        }
       }
       request.getSession().putValue("WCBForm", null);
     }
@@ -492,19 +499,72 @@ public class BillingSaveBillingAction
     return af; //(mapping.findForward("success"));
   }
 
+  private String createWCBUpdateSQL(String secondWCBBillingId,
+                                    String secondBillingAmt) {
+    String updateWCBSQL = "update wcb set billing_no = " + secondWCBBillingId + ", bill_amount = '" + secondBillingAmt + "'";
+    return updateWCBSQL;
+  }
+
+  private String createBillingMasterInsertString(BillingSessionBean bean,
+                                                 String billingid,
+                                                 char billingAccountStatus,
+                                                 String payeeNo) {
+    String insertBillingMaster =
+        " INSERT INTO billingmaster (billing_no, createdate, payee_no, billingstatus, demographic_no, appointment_no,service_date) " +
+        " VALUES ('" + billingid + "',NOW(),'" + payeeNo + "','" + billingAccountStatus + "','" + bean.getPatientNo() + "','" + bean.getApptNo() + "','" + convertDate8Char(bean.getServiceDate()) + "')";
+    return insertBillingMaster;
+  }
+
+  private String getFeeByCode(String feeitem) {
+    ResultSet rs = null;
+    DBHandler db = null;
+    String amnt = "0.00";
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL("SELECT value FROM billingservice WHERE service_code='" +
+                     feeitem + "'");
+      if (rs.next()) {
+        amnt = rs.getString("value");
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      if (db != null) {
+        try {
+          db.CloseConn();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
+      if (rs != null) {
+        try {
+          rs.close();
+        }
+        catch (SQLException ex2) {
+          ex2.printStackTrace();
+        }
+      }
+    }
+
+    return amnt;
+  }
+
   private void updatePatientChartWithWCBInfo(
-                                             WCBForm wcb) {
+      WCBForm wcb) {
     EChartDAO dao = new EChartDAO();
     Echart echart = dao.getMostRecentEchart(wcb.getDemographic());
 
     //if the patient doesn't have an echart than create  a new one
-    if(echart==null){
+    if (echart == null) {
       echart = new Echart();
       echart.setDemographicNo(wcb.getDemographic());
       echart.setProviderNo(wcb.getW_pracno());
     }
 
-    String wcbEchartEntry = "\n\n[WCB Clinical Info - CLAIM# - " + wcb.getW_wcbno()+ " @ " + echart.getTimeStampToString() + "]\n" + wcb.getW_clinicinfo();
+    String wcbEchartEntry = "\n\n[WCB Clinical Info - CLAIM# - " + wcb.getW_wcbno() + " @ " + echart.getTimeStampToString() + "]\n" + wcb.getW_clinicinfo();
     echart.setEncounter(wcbEchartEntry);
     System.out.println("wcbEchartEntry=" + wcbEchartEntry);
     dao.addEchartEntry(echart);
@@ -545,7 +605,7 @@ public class BillingSaveBillingAction
     return sdate;
   }
 
-  private String getInsertId(DBHandler db) throws SQLException {
+  private String getLastInsertId(DBHandler db) throws SQLException {
     ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID()");
     String id = null;
     if (rs.next()) {
@@ -565,12 +625,12 @@ public class BillingSaveBillingAction
   }
 
   /**
-    * Adds a new entry into the billing_history table
-    * @param newInvNo String
-    */
-   private void createBillArchive(String billingMasterNo,String status) {
-     BillingHistoryDAO dao = new BillingHistoryDAO();
-     dao.createBillingHistoryArchive(billingMasterNo,status);
-   }
+   * Adds a new entry into the billing_history table
+   * @param newInvNo String
+   */
+  private void createBillArchive(String billingMasterNo, String status) {
+    BillingHistoryDAO dao = new BillingHistoryDAO();
+    dao.createBillingHistoryArchive(billingMasterNo, status);
+  }
 
 }
