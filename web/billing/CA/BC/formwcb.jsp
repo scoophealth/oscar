@@ -33,20 +33,28 @@
 
 <%
    boolean readonly = false;
-   String readOnlyParam = request.getParameter("readonly");
+   String readOnlyParam = request.getAttribute("readonly")!=null?(String)request.getAttribute("readonly"):"";
    if(readOnlyParam != null && readOnlyParam.equals("true")){
       readonly = true;
    }
 
    oscar.oscarBilling.ca.bc.pageUtil.WCBForm form = (oscar.oscarBilling.ca.bc.pageUtil.WCBForm) request.getAttribute("WCBForm");
-   WcbHelper wcbHelper = new WcbHelper(form.getDemographic());
-   ArrayList claims = (ArrayList) wcbHelper.getClaimInfo(form.getDemographic());
-   ArrayList emps = (ArrayList) wcbHelper.getEmployers(form.getDemographic());
+   boolean haveClaims = false;
+   boolean haveEmps   = false;
+    ArrayList claims = new ArrayList();
+   ArrayList emps = new ArrayList();
+   if(form != null){
+     WcbHelper wcbHelper = new WcbHelper(form.getDemographic());
+      claims = (ArrayList) wcbHelper.getClaimInfo(form.getDemographic());
+   emps = (ArrayList) wcbHelper.getEmployers(form.getDemographic());
 
-   boolean haveClaims = isEmpty(claims);
-   boolean haveEmps   = isEmpty(emps);
+   haveClaims = isEmpty(claims);
+   haveEmps   = isEmpty(emps);
+   }
+
    oscar.oscarBilling.ca.bc.data.BillingFormData data = new oscar.oscarBilling.ca.bc.data.BillingFormData ();
    request.setAttribute("injuryLocations",data.getInjuryLocationList());
+   String fromBilling = request.getParameter("fromBilling");
 %>
 
 <html:html locale="true">
@@ -88,8 +96,6 @@ else{
   }else{
 		HideElementById('forthSection5')
   }
-
-
 }
 function popup( height, width, url, windowName){
   var page = url;
@@ -267,7 +273,7 @@ function isformNeeded(){
   }
 </script>
 </head>
-<body onLoad="setStateofConditionalElements()" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+<body onLoad="isformNeeded()" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <html:errors/>
 <html:form action="/billing/CA/BC/formwcb" >
 <html:hidden property="w_servicelocation"/>
@@ -285,7 +291,8 @@ function isformNeeded(){
 <input type="hidden" name="status" value="t"/>
 <input type="hidden" name="apptProvider_no" value="Get The Param"/>
 <input type="hidden" name="bNewForm" value="1"/>
-<input type="hidden" name="newWCBClaim" value="1"/>
+<input type="hidden" name="fromBilling" value="<%=fromBilling%>"/>
+
 <%
 java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd");
 String fmtApptDate = fmt.format(new Date());
@@ -512,9 +519,7 @@ String fmtApptDate = fmt.format(new Date());
 	<tr>
 		<td>
 			<b>Side:</b></td>
-          <td>a
-
-            <html:select property="w_side">
+          <td><html:select property="w_side">
               <html:options collection="injuryLocations" property="sidetype" labelProperty="sidedesc"/>
             </html:select>
 		</td>
@@ -620,10 +625,12 @@ String fmtApptDate = fmt.format(new Date());
     </tr>
     <tr>
     	<td colspan="2" align="center" valign="top" class="SectionHead">
-    	   <%if(!readonly){%><html:button value="Go Back" property="Submit3" onclick="location.href='billingBC.jsp?loadFromSession=yes'"/>|<%}%>
-			<html:button value="Cancel" property="Button" onclick="window.close();"/> |
-			<html:button value="Print" property="Button" onclick="window.print()"/> |
-         <%if(!readonly){%><html:submit value="Save" property=""/><%}%>
+          <input type="submit" name="save" value="Save" />|
+          <%if(readonly){%><input type="submit" name="bill" value="Bill"/>|<%}%>
+          <%if(!readonly&&!"true".equals(fromBilling)){%><input type="submit" name="saveandbill" value="Save and Bill"/>|<%}%>
+			<input type="button" value="Cancel" onClick="window.close();"/> |
+			<input type="button" value="Print" onClick="window.print()"/>
+
     	</td>
     </tr>
 </table>
