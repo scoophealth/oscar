@@ -53,14 +53,14 @@ public class BillingFormData {
       ex.printStackTrace();
     }
     finally {
-        try {
-          db.CloseConn();
-          rs.close();
-        }
-        catch (SQLException ex1) {
-          ex1.printStackTrace();
-        }
+      try {
+        db.CloseConn();
+        rs.close();
       }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
 
     return types;
   }
@@ -90,14 +90,16 @@ public class BillingFormData {
 
       // SELECT b.service_code, b.description , b.value, b.percentage FROM billingservice b, ctl_billingservice c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
 
-      sql = "SELECT DISTINCT b.service_code, b.description , b.value, b.percentage "
-          + "FROM ctl_billingservice c left outer join billingservice b on b.service_code="
+      sql =
+          "SELECT DISTINCT b.service_code, b.description , b.value, b.percentage "
+          +
+          "FROM ctl_billingservice c left outer join billingservice b on b.service_code="
           + "c.service_code where b.region='" + billRegion +
           "' and c.service_group='"
           + serviceGroup + "' and c.servicetype='" + serviceType +
           "' order by c.service_order";
 
-     // System.out.println("getServiceList "+sql);
+      // System.out.println("getServiceList "+sql);
       rs = db.GetSQL(sql);
 
       while (rs.next()) {
@@ -656,7 +658,8 @@ public class BillingFormData {
         rs = db.GetSQL(sql);
         if (rs.next()) {
           svc[i].price = rs.getString(1);
-          System.out.println("svc[i].service_code = rs.getString(1)=" + svc[i].service_code + " : "+ rs.getString(1));
+          System.out.println("svc[i].service_code = rs.getString(1)=" +
+                             svc[i].service_code + " : " + rs.getString(1));
         }
         rs.close();
         db.CloseConn();
@@ -666,11 +669,37 @@ public class BillingFormData {
       System.out.println(e.getMessage());
     }
   }
+
   /**
-  * Returns a list of InjuryLocation instances
-  * @return List
-  */
- public List getInjuryLocationList() {
-  return SqlUtils.getBeanList("SELECT sidetype, sidedesc FROM wcb_side",InjuryLocation.class);
- }
+   * Returns a list of InjuryLocation instances
+   * @return List
+   */
+  public List getInjuryLocationList() {
+    return SqlUtils.getBeanList("SELECT sidetype, sidedesc FROM wcb_side",
+                                InjuryLocation.class);
+  }
+
+  public ResultSet getWCBFromID(String formId) {
+    String qry = "SELECT * FROM billingmaster bm,demographic d, wcb w WHERE bm.demographic_no=d.demographic_no AND w.ID=" + formId;
+    ResultSet rs = null;
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(qry);
+    }
+    catch (SQLException e) {
+      e.printStackTrace();
+    }
+    finally {
+      if (db != null) {
+        try {
+          db.CloseConn();
+        }
+        catch (SQLException ex) {
+          ex.printStackTrace();
+        }
+      }
+    }
+    return rs;
+  }
 }
