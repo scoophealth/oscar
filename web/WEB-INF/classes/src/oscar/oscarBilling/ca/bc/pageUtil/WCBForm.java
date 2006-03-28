@@ -118,7 +118,7 @@ public final class WCBForm
   private String w_feeitem;
   private String w_extrafeeitem;
   private String w_servicelocation;
-  private String formNeeded = "1";
+  private String formNeeded;
   private List injuryLocations;
 
   /**
@@ -128,6 +128,9 @@ public final class WCBForm
 
       "INSERT INTO wcb (billing_no, demographic_no, provider_no, formCreated, formEdited, w_reporttype, w_fname, w_lname, w_mname, w_gender, w_dob, w_address, w_city, w_area, w_phone, w_phn, w_empname, w_wcbno, w_opaddress, w_opcity, w_rphysician, w_duration, w_ftreatment, w_problem, w_servicedate, w_diagnosis, w_icd9, w_bp, w_side, w_noi, w_work, w_workdate, w_clinicinfo, w_capability, w_capreason, w_estimate, w_rehab, w_rehabtype, w_estimatedate, w_tofollow, w_payeeno, w_pracno, w_empphone, w_emparea, w_postal, w_wcbadvisor, w_doi, w_feeitem, w_extrafeeitem, bill_amount, w_servicelocation,formNeeded) VALUES (";
   private String demographic;
+  private String w_demographic;
+  private String w_providerno;
+  private boolean notBilled;
 
   public WCBForm() {
 
@@ -627,11 +630,16 @@ public final class WCBForm
 
   }
 
+  /**
+   * Set the data from an existing WCB form entry in this ActionForm instance
+   *
+   * @param result ResultSet
+   */
   public void setWCBForms(ResultSet result) {
 
     try {
 
-      if (result.next()) {
+      if (result != null && result.next()) {
 
         demographic_no = result.getString("demographic_no");
 
@@ -734,18 +742,24 @@ public final class WCBForm
         w_extrafeeitem = result.getString("w_extrafeeitem");
 
         w_servicelocation = result.getString("w_servicelocation");
+        int intFormNeeded = result.getInt("formNeeded");
+        this.formNeeded = intFormNeeded==1?"true":"false";
 
       }
-
     }
     catch (java.lang.Exception ex) {
-
       System.err.println("Teleplan  Form WCB: (setWCBForms) " + ex.getMessage());
 
       ex.printStackTrace();
-
     }
-
+    finally{
+      try {
+        result.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
   }
 
   public void setW_feeitem(String fi) {
@@ -1339,6 +1353,35 @@ public final class WCBForm
     return demographic_no;
   }
 
+  public String getFormCreated() {
+    return formCreated;
+  }
+
+  public String getFormEdited() {
+    return formEdited;
+  }
+
+  public String getProvider_no() {
+    return provider_no;
+  }
+
+  public String getW_demographic() {
+    return w_demographic;
+  }
+
+  public String getW_providerno() {
+    return w_providerno;
+  }
+
+  public String getW_reportype() {
+    return w_reportype;
+  }
+
+  public boolean isNotBilled() {
+
+    return notBilled;
+  }
+
   /**
    * Setter for property formNeeded.
 
@@ -1362,6 +1405,26 @@ public final class WCBForm
 
   public void setDemographic_no(String demographic_no) {
     this.demographic_no = demographic_no;
+  }
+
+  public void setFormCreated(String formCreated) {
+    this.formCreated = formCreated;
+  }
+
+  public void setFormEdited(String formEdited) {
+    this.formEdited = formEdited;
+  }
+
+  public void setProvider_no(String provider_no) {
+    this.provider_no = provider_no;
+  }
+
+  public void setW_reportype(String w_reportype) {
+    this.w_reportype = w_reportype;
+  }
+
+  public void notBilled(boolean notBilled) {
+    this.notBilled = notBilled;
   }
 
   /**
