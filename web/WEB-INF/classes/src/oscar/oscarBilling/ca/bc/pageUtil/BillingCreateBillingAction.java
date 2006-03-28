@@ -155,6 +155,7 @@ public class BillingCreateBillingAction
         WCBForm wcbForm = new WCBForm();
         wcbForm.Set(bean);
         request.setAttribute("WCBForm", wcbForm);
+        wcbForm.setFormNeeded("1");
         return (mapping.findForward("WCB"));
       }
     }
