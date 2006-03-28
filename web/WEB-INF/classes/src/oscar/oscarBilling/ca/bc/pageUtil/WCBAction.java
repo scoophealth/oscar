@@ -21,6 +21,8 @@ import oscar.util.SqlUtils;
 import oscar.entities.Demographic;
 import oscar.Misc;
 import oscar.oscarBilling.ca.bc.data.BillingFormData;
+import oscar.oscarDB.DBHandler;
+import java.sql.*;
 
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
@@ -75,6 +77,7 @@ import oscar.oscarBilling.ca.bc.data.BillingFormData;
 
 public final class WCBAction
     extends Action {
+  String target = "success";
 
   public ActionForward execute(ActionMapping mapping, ActionForm form,
                                HttpServletRequest request,
@@ -83,49 +86,59 @@ public final class WCBAction
       throws IOException, ServletException {
     WCBForm frm = (WCBForm) form;
     request.setAttribute("WCBForm", frm);
-    String demoNo = request.getParameter("demographic_no");
+    String doBill = request.getParameter("bill");
+    String dosaveandbill = request.getParameter("saveandbill");
+    String dosave = request.getParameter("save");
+    String fromBilling = request.getParameter("fromBilling");
     if (null != form) {
-      if ("1".equals(request.getParameter("newform"))) {
-        List lst = SqlUtils.getBeanList(
-            "select * from demographic where demographic_no = " + demoNo,
-            Demographic.class);
-        if (!lst.isEmpty()) {
-          Demographic demo = (Demographic) lst.get(0);
-          BillingFormData data = new BillingFormData();
-
-          frm.setDemographic(demo.getDemographic_no().toString());
-          frm.setW_fname(demo.getFirst_name());
-          frm.setW_lname(demo.getLast_name());
-          frm.setW_gender(demo.getSex());
-          frm.setW_phone(demo.getPhone());
-          frm.setW_area(Misc.areaCode(demo.getPhone()));
-          String[] pc = demo.getPostal().split(" ");
-
-          String postal = "";
-          for (int i = 0; i < pc.length; i++) {
-            postal += pc[i];
-          }
-          frm.setW_postal(postal);
-
-          frm.setW_phn(demo.getHin());
-          String seperator = "-";
-          String dob = demo.getYear_of_birth() + seperator +
-              demo.getMonth_of_birth() + seperator + demo.getDate_of_birth();
-          frm.setW_dob(dob);
-          frm.setW_address(demo.getAddress());
-          frm.setW_opcity(demo.getCity());
-          frm.setW_city(demo.getCity());
-          frm.setInjuryLocations(data.getInjuryLocationList());
+      request.setAttribute("GOBACKWCB", "true");
+      request.getSession().setAttribute("WCBForm", frm);
+      if(doBill!=null){
+        //go to billing screen
+        frm.notBilled(true);
+        target = "newbill";
+      }
+      else if(dosaveandbill!=null){
+        //go to billing screen
+        target = "newbill";
+      }
+      else if(dosave!=null){
+        //save new wcb form
+        if(!"true".equals(fromBilling)){
+           createWCBEntry(frm);
+          target = "viewformwcb";
         }
       }
-      else {
-        request.setAttribute("GOBACKWCB", "true");
-        request.getSession().setAttribute("WCBForm",frm);
-      }
-      return (mapping.findForward("success"));
+      return (mapping.findForward(target));
     }
     else {
-      return (mapping.findForward("failure"));
+      return (mapping.getInputForward());
+    }
+  }
+
+  /**
+   * Inserts a new wcb form into db using a default value of '0' for billing_no
+   * and bill amount
+   * @param frm WCBForm
+   */
+  private void createWCBEntry(WCBForm frm) {
+    DBHandler db = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL(frm.SQL("0", "0"));
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally{
+      if(db!=null){
+        try {
+          db.CloseConn();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
     }
   }
 }
