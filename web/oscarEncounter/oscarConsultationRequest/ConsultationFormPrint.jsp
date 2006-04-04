@@ -457,7 +457,7 @@
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgBirth"/>:
                                         </td>
                                         <td class="fillLine">
-                                <%=reqFrm.patientDOB %>  (d/m/y)
+                                <%=reqFrm.patientDOB %>  <%=props.getProperty("billregion","").equals("ON")?"(y/m/d)":"(d/m/y)" %>  
                                         </td>
                                     </tr>
                                     <tr>
