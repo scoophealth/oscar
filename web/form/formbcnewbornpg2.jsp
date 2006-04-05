@@ -464,10 +464,10 @@ function onCheckSlave(a, masterName) {
   if (!bView) {
 %>
 
-        <td align="right"><b>View:</b> 
+        <td align="right"><!--  b>View:</b> 
             <a href="javascript: popupPage('formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part1 </a>
             <a href="javascript: popupPage('formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part2 <font size=-2>(pg.2)</font></a> |
-            &nbsp;
+            &nbsp;-->
         </td>
         <td align="right"><b>Edit:</b>
 			<a href="formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>">Part1</a> |
@@ -1040,10 +1040,10 @@ function onCheckSlave(a, masterName) {
   if (!bView) {
 %>
 
-        <td align="right"><b>View:</b> 
+        <td align="right"><!--  b>View:</b> 
             <a href="javascript: popupPage('formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part1 </a>
             <a href="javascript: popupPage('formbcnewbornpg3.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&view=1');">Part2 <font size=-2>(pg.2)</font></a> |
-            &nbsp;
+            &nbsp;-->
         </td>
         <td align="right"><b>Edit:</b>
 			<a href="formbcnewbornpg1.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>">Part1</a> |
