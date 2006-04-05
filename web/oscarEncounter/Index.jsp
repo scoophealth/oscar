@@ -58,14 +58,14 @@ You have no rights to access the data!
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
-<%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, oscar.oscarWaitingList.WaitingList, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
+<%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
 <%@page import="oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarResearch.oscarDxResearch.bean.*"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <%
 	String ip = request.getRemoteAddr();
-	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
+//	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
 %>
 <%
 
@@ -572,7 +572,7 @@ function popupOscarComm(vheight,vwidth,varpage) {
 
 function popUpMsg(vheight,vwidth,msgPosition) {
 
-  
+
   var page = "<rewrite:reWrite jspPage="../oscarMessenger/ViewMessageByPosition.do"/>?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(page, "<bean:message key="global.oscarRx"/>", windowprops);
@@ -752,11 +752,11 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
- 	            <%if (vLocale.getCountry().equals("BR")) {%>                        
-                        <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')" 
-                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>                    
+ 	            <%if (vLocale.getCountry().equals("BR")) {%>
+                        <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
+                        title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
 		    <%}else{%>
-                        <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')" 
+                        <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')"
                         title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
     		    <%}%><br>
              <%
@@ -866,12 +866,12 @@ border-right: 2px solid #cfcfcf;
             <form name="msgForm">
                 <tr class="Header">
                     <td style="font-weight:bold">
-                        oscarMessenger <a href="javascript: function myFunction() {return false; }" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Send Msg</a>
+                        oscarMessenger <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Send Msg</a>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <select name="msgSelect" class="ControlSelect" onchange="javascript:popUpMsg(600,900,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
+                        <select name="msgSelect" class="ControlSelect" onChange="javascript:popUpMsg(600,900,document.msgForm.msgSelect.options[document.msgForm.msgSelect.selectedIndex].value)">
                         <option value="null" selected>-Select Message-
                          <%
                             String msgId;
@@ -907,7 +907,7 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <select name="templateSelect" class="ControlSelect" onchange="javascript:popUpInsertTemplate(40,50,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
+                        <select name="templateSelect" class="ControlSelect" onChange="javascript:popUpInsertTemplate(40,50,document.insertTemplateForm.templateSelect.options[document.insertTemplateForm.templateSelect.selectedIndex].value)">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.insertTemplate"/>-
                          <%
                             String encounterTmp ="NONE";
@@ -937,11 +937,11 @@ border-right: 2px solid #cfcfcf;
                         for (int f = 0; f < flowsheets.size();f++){
                             String flowsheetName = (String) flowsheets.get(f);
                         %>
-                        <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>                    
-                        <%}%>    
+                        <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
+                        <%}%>
                         </oscar:oscarPropertiesCheck>
                         <form name="measurementGroupForm">
-                        <select name="measurementGroupSelect" class="ControlSelect" onchange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
+                        <select name="measurementGroupSelect" class="ControlSelect" onChange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
                          <%
                             for(int j=0; j<bean.measurementGroupNames.size(); j++) {
@@ -980,11 +980,11 @@ border-right: 2px solid #cfcfcf;
                                     if ( result.isMDS() ){ %>
                                         <option value="../oscarMDS/SegmentDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>&status=<%=result.getReportStatus()%>"><%=result.getDateTime()%> <%=result.getDiscipline()%></option>
                                     <% }else if (result.isCML()){ %>
-                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.getDateTime()%> <%=result.getDiscipline()%></option>                                 
+                                        <option value="../lab/CA/ON/CMLDisplay.jsp?providerNo=<%=provNo%>&segmentID=<%=result.segmentID%>" > <%=result.getDateTime()%> <%=result.getDiscipline()%></option>
                                     <% }else {%>
-                                        <option value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>" ><%=result.getDateTime()%> <%=result.getDiscipline()%></option>                                 
+                                        <option value="../lab/CA/BC/labDisplay.jsp?segmentID=<%=result.segmentID%>&providerNo=<%=provNo%>" ><%=result.getDateTime()%> <%=result.getDiscipline()%></option>
                                     <% }%>
-                                    
+
                             <% } %>
                         </select>
                  </td>
@@ -1039,7 +1039,7 @@ border-right: 2px solid #cfcfcf;
                                 </td>
                                 <td>
                                     <div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) { 
+                                    <% if(oscarVariables.getProperty("otherMedications", "").length() > 1) {
                                         out.print(oscarVariables.getProperty("otherMedications", ""));
                                     %>
                                     <% } else { %>
@@ -1048,7 +1048,7 @@ border-right: 2px solid #cfcfcf;
                                     </div>
                                 </td>
                                 <td><div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) { 
+                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
                                         out.print(oscarVariables.getProperty("medicalHistory", ""));
                                     %>
                                     <% } else { %>
@@ -1097,7 +1097,7 @@ border-right: 2px solid #cfcfcf;
                         <table bgcolor="#CCCCFF" id="rowTwo" width="100%">
                             <tr>
                                 <td><div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) { 
+                                    <% if(oscarVariables.getProperty("ongoingConcerns", "").length() > 1) {
                                         out.print(oscarVariables.getProperty("ongoingConcerns", ""));
                                     %>
                                     <% } else { %>
@@ -1281,7 +1281,7 @@ border-right: 2px solid #cfcfcf;
                                   encounterText = bean.encounter.substring(nEctLen-5120)+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
-                               }                                                              
+                               }
                                System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
@@ -1293,7 +1293,7 @@ border-right: 2px solid #cfcfcf;
                                }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
                                    //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
                                    encounterText +="\n__________________________________________________\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
-                               } 
+                               }
                                //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
                                if(!bean.oscarMsg.equals("")){
                                   encounterText +="\n\n"+bean.oscarMsg;
@@ -1327,6 +1327,8 @@ border-right: 2px solid #cfcfcf;
 					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
+<input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill'; document.forms['encForm'].submit();">
+									
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
 	</security:oscarSec>
@@ -1366,7 +1368,7 @@ border-right: 2px solid #cfcfcf;
       <tr class="LightBG">
          <td class="wcblayerTitle">Date</td>
          <td class="wcblayerTitle" align="right">
-            <a href="javascript: function myFunction() {return false; }" onclick="hidepic('splitChartLayer');" style="text-decoration: none;">X</a>
+            <a href="javascript: function myFunction() {return false; }" onClick="hidepic('splitChartLayer');" style="text-decoration: none;">X</a>
          </td>
       </tr>
       <% for (int i = 0 ; i < splitChart.size(); i++){
@@ -1377,14 +1379,14 @@ border-right: 2px solid #cfcfcf;
                <%=s[1]%>
             </a>
          </td>
-	      <td class="wcblayerItem" >
-            &nbsp;
+	      <td class="wcblayerItem" >&nbsp;
+            
 	      </td>
       </tr>
       <%}%>
    </table>
 </div>
-<%}%>
+<%}System.out.println("Session:" + session.getAttribute("user"));%>
 
 </body>
 </html:html>
