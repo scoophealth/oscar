@@ -2102,7 +2102,7 @@ CREATE TABLE billing_history (
 #There are zero to many billing_private_transactions records for a single billing record
 CREATE TABLE billing_private_transactions (
   id int(10) unsigned NOT NULL auto_increment,
-  billingmaster_no int(10) unsigned NOT NULL default '0',
+  billing_no int(10) unsigned NOT NULL default '0',
   amount_received double NOT NULL default '0',
   creation_date datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id)
