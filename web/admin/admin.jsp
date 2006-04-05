@@ -259,14 +259,14 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <oscar:oscarPropertiesCheck property="BC_BILLING_CODE_MANAGEMENT" value="yes">
           <li><a href="#" onclick ="popupPage(600,600,'../billing/CA/BC/billingCodeAdjust.jsp');return false;">Manage Billing Codes</a></li>
           </oscar:oscarPropertiesCheck>
-          <li><a href="#" onclick="popupPage(600,600,'../billing/CA/BC/showServiceCodeAssocs.do');return false;">Manage Service/Diagnostic Code Associations</a></li>
+          <li><a href="#" onClick="popupPage(600,600,'../billing/CA/BC/showServiceCodeAssocs.do');return false;">Manage Service/Diagnostic Code Associations</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingManageReferralDoc.jsp');return false;">Manage Referral Doc</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a></li>
           <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a></li>
           <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a></li>
-          <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">Billing Reconcilliation Reports</a></li>
-          <li><a href="#" onclick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Billing Account Reports</a></li>
-          <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Bill Status</a></li>
+          <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">MSP Reconcilliation Reports</a></li>
+          <li><a href="#" onClick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Accounting Reports</a></li>
+          <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Edit Invoices</a></li>
          <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a></li>
           <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Add/Edit Billing Service Code</a></li>
@@ -316,10 +316,10 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <% } else {%>
          <li><a href="#" onclick ="popupPage(600,750,'../report/reportactivepatientlist.jsp')" ><bean:message key="report.reportindex.btnActivePList"/></a></li>
          <% } %>
-         <li><a href="#" onclick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a></li>
-         <li><a href="#" onclick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a></li>
+         <li><a href="#" onClick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a></li>
+         <li><a href="#" onClick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a></li>
          <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
-         <li><a href="#" onclick="popupPage(600,900, 'oscarLogging.jsp')">Server Logging</a></li>
+         <li><a href="#" onClick="popupPage(600,900, 'oscarLogging.jsp')">Server Logging</a></li>
          </oscar:oscarPropertiesCheck>
       </ul>
   </div>
@@ -343,7 +343,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <h3>&nbsp;<bean:message key="admin.admin.oscarMessenger"/></h3>
       <ul>
          <li><a href="#" onclick ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>');return false;"><bean:message key="admin.admin.messages"/></a></li>
-         <li><a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>  
+         <li><a href="#" onClick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>  
       </ul>
   </div>
   </security:oscarSec>
@@ -377,7 +377,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
       <ul>
-        <li><a href="#" onclick="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">Demographic Export <!-- I18N --></a></li>
+        <li><a href="#" onClick="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">Demographic Export <!-- I18N --></a></li>
         <li><a href="#" onclick ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
         <li><a href="#" onclick ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></li>
         <% if (!country.equals("BR")) { %>
