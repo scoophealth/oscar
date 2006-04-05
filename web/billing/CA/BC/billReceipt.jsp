@@ -72,6 +72,19 @@
   <bean:message key="billing.bc.title"/>
 </title>
   <style type="text/css" media="print">
+
+  BODY
+{
+    background-color: white;
+    color: black;
+    width:600px;
+    font-size:7pt;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px
+}
+
     .detailHeader {
     font-weight: bold;
     text-decoration: underline;
@@ -90,23 +103,26 @@
     }
 
     input {
-    display:none;
+    border:none;
     }
     .totals_cell {
     text-align: right;
     }
 
-    .recPaymentSection{
+    .rcvPayment{
     display:none
     }
-</style>
+	
+	
+  </style>
   <style type="text/css">
     .detailHeader {
     font-weight: bold;
     text-decoration: underline;
     text-align: center;
     }
-
+	.payTo{border:solid black 1px;
+	}
     .secHead {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 12px;
@@ -125,91 +141,18 @@
 <script language="JavaScript">
 <!--
 
-function setfocus() {
-		  //document.serviceform.xml_diagnostic_code.focus();
-		  //document.serviceform.xml_diagnostic_code.select();
-		}
-
-function RecordAttachments(Files, File0, File1, File2) {
-  window.document.serviceform.elements["File0Data"].value = File0;
-  window.document.serviceform.elements["File1Data"].value = File1;
-  window.document.serviceform.elements["File2Data"].value = File2;
-    window.document.all.Atts.innerText = Files;
-  }
-
-var remote=null;
-
-function rs(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-  remote=window.open(u,n,args);
-  if (remote != null) {
-    if (remote.opener == null)
-      remote.opener = self;
-  }
-  if (x == 1) { return remote; }
-}
-
-
-var awnd=null;
-function ScriptAttach() {
-
-
-  t0 = escape(document.serviceform.xml_diagnostic_detail1.value);
-  t1 = escape(document.serviceform.xml_diagnostic_detail2.value);
-  t2 = escape(document.serviceform.xml_diagnostic_detail3.value);
-  awnd=rs('att','billingDigNewSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
-  awnd.focus();
-
-
+function printInvoice(){
+	window.print()
+	
 
 }
 
-
-
-function OtherScriptAttach() {
-  t0 = escape(document.serviceform.xml_other1.value);
-  t1 = escape(document.serviceform.xml_other2.value);
-  t2 = escape(document.serviceform.xml_other3.value);
- // f1 = document.serviceform.xml_dig_search1.value;
- // f2 = escape(document.serviceform.elements["File2Data"].value);
- // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
-  awnd.focus();
-}
-function ResearchScriptAttach() {
-  t0 = escape(document.serviceform.xml_research1.value);
-  t1 = escape(document.serviceform.xml_research2.value);
-  t2 = escape(document.serviceform.xml_research3.value);
- // f1 = document.serviceform.xml_dig_search1.value;
- // f2 = escape(document.serviceform.elements["File2Data"].value);
- // fname = escape(document.Compose.elements["FName"].value);
-  awnd=rs('att','billingResearchCodeSearch.jsp?name='+t0 + '&name1=' + t1 + '&name2=' + t2 + '&search=',600,600,1);
-  awnd.focus();
-}
-
-
-function ResearchScriptAttach() {
-  t0 = escape(document.serviceform.xml_referral1.value);
-  t1 = escape(document.serviceform.xml_referral2.value);
-
-  awnd=rs('att','billingReferralCodeSearch.jsp?name='+t0 + '&name1=' + t1 +  '&search=',600,600,1);
-  awnd.focus();
-}
-
-function POP(n,h,v) {
-  window.open(n,'OSCAR','toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable=yes,copyhistory=no,scrollbars=yes,width='+h+',height='+v+',top=100,left=200');
-}
-//-->
-</SCRIPT>  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script language="JavaScript">
-<!--
-<!--
 function reloadPage(init) {  //reloads the window if Nav4 resized
   if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
     document.pgW=innerWidth; document.pgH=innerHeight; onresize=reloadPage; }}
   else if (innerWidth!=document.pgW || innerHeight!=document.pgH) location.reload();
 }
-reloadPage(true);
+//reloadPage(true);
 // -->
 
 function findObj(n, d) { //v4.0
@@ -226,8 +169,35 @@ function showHideLayers() { //v3.0
     if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
     obj.visibility=v; }
 }
-//-->
-</script>  <link rel="stylesheet" href="../billing/billing.css" type="text/css">
+function popupPage(vheight,vwidth,varpage) {
+
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no";
+  var popup=window.open(page, "mywindow", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }
+  }
+}
+
+
+var remote=null;
+
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+  if (remote != null) {
+    if (remote.opener == null)
+      remote.opener = self;
+  }
+  if (x == 1) { return remote; }
+}
+
+
+var awnd=null;
+</script>
+<link rel="stylesheet" href="../billing/billing.css" type="text/css">
   <style type="text/css">
     <!--
       .style1 {
@@ -235,13 +205,16 @@ function showHideLayers() { //v3.0
       font-weight: bold;
       }
       .style2 {font-size: 12px}
+	  .tbBody{
+	  width:750;
+	  }
     -->
   </style>
 </head>
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide')" onUnload="self.opener.refresh();">
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0">
   <html:form action="/billing/CA/BC/UpdateBilling">
     <html:hidden property="billingNo"/>
-    <table width="755" border="0" align="center" style="border:black solid 1px ">
+    <table width="650" border="0" align="center" style="border:black solid 1px ">
       <tr>
         <td>
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -298,50 +271,41 @@ function showHideLayers() { //v3.0
                     <td valign="top">
                       <table width="100%" border="0" cellspacing="2" cellpadding="2">
                         <tr>
-                          <td colspan="6" class="secHead">Billing To</td>
+                          <td colspan="6" class="secHead">Billing To  </td>
                         </tr>
                         <tr>
                           <td colspan="6">
-                            <table width="100%" border="0" cellspacing="3" cellpadding="3">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              
                               <tr>
                                 <td>
-                                  <strong>Name:</strong>
-                                </td>
+                                  <strong>Name:</strong>                                </td>
                                 <td>
-                                  <html:text maxlength="100" property="recipientName" size="50"/>
-                                </td>
+                                  <html:text styleClass="billTo" maxlength="100" property="recipientName" size="50"/>                                </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <strong>Address:</strong>
-                                </td>
+                                  <strong>Address:</strong>                                </td>
                                 <td>
-                                  <html:text maxlength="100" property="recipientAddress" size="50"/>
-                                </td>
+                                  <html:text styleClass="billTo" maxlength="100" property="recipientAddress" size="50"/>                                </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <strong>City:</strong>
-                                </td>
+                                  <strong>City:</strong>                                </td>
                                 <td>
-                                  <html:text maxlength="100" property="recipientCity" size="50"/>
-                                </td>
+                                  <html:text styleClass="billTo" maxlength="100" property="recipientCity" size="50"/>                                </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <strong>Province:</strong>
-                                </td>
+                                  <strong>Province:</strong>                                </td>
                                 <td>
-                                  <html:text maxlength="100" property="recipientProvince" size="50"/>
-                                </td>
+                                  <html:text styleClass="billTo" maxlength="100" property="recipientProvince" size="50"/>                                </td>
                               </tr>
                               <tr>
                                 <td>
-                                  <strong>Postal:</strong>
-                                </td>
+                                  <strong>Postal:</strong>                                </td>
                                 <td>
-                                  <html:text maxlength="6" property="recipientPostal" size="50"/>
-                                </td>
+                                  <html:text styleClass="billTo" maxlength="6" property="recipientPostal" size="50"/>                                </td>
                               </tr>
                             </table>
                           </td>
@@ -412,10 +376,10 @@ function showHideLayers() { //v3.0
                     <td valign="top">
                       <table width="100%" border="0" cellspacing="1" cellpadding="1">
                         <tr class="detailHeader">
+                          <td class="rcvPayment">&nbsp;</td>
                           <td>Line#</td>
                           <td>
-                            <bean:message key="billing.service.desc"/>
-                          </td>
+                            <bean:message key="billing.service.desc"/>                          </td>
                           <td>Service Code</td>
                           <td>QTY</td>
                           <td>DX Codes</td>
@@ -423,6 +387,7 @@ function showHideLayers() { //v3.0
                         </tr>
                       <%for (int i = 0; i < billItem.size(); i++) {                      %>
                         <tr align="center">
+                          <td class="rcvPayment"><a href="#" onClick="popupPage(300,450,'viewReceivePaymentAction.do?lineNo=<%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo()%>&amp;billNo=<%=bean.getBillingNo()%> ')">Receive Payment</a></td>
                           <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo()%>                          </td>
                           <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getDescription()%>                          </td>
                           <td><%=((BillingBillingManager.BillingItem)billItem.get(i)).getServiceCode()%>                          </td>
@@ -432,23 +397,10 @@ function showHideLayers() { //v3.0
 <%=bean.getDx3()%>                          </td>
                           <td align="right"><%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineTotal()%>                          </td>
                         </tr>
-                      <%}                      %>
-                        <tr>
-                          <td colspan="6">&nbsp;</td>
-                        </tr>
-                        <tr>
-                          <td colspan="6" class="secHead">Transaction History</td>
-                        </tr>
-                        <tr>
-                          <td colspan="6" class="secHead">
-                            <table width="50%">
-                              <tr>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                              </tr>
-                            <%
-                              List trans = dao.getPrivateBillTransactionsByBillNo(bean.getBillingNo());
+						   <%
+						   	  String num = String.valueOf(((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo());
+                              List trans = dao.getPrivateBillTransactions(num);
+							  System.out.print(trans.size());
                               for (Iterator iter = trans.iterator(); iter.hasNext(); ) {
                                 oscar.entities.PrivateBillTransaction item = (oscar.entities.PrivateBillTransaction) iter.next();
                                 double amtReceived = item.getAmount_received();
@@ -463,59 +415,65 @@ function showHideLayers() { //v3.0
                                 }
                             %>
                               <tr align="center">
-                                <td><%=label%>                                </td>
-                                <td><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived).replace('$',' ')%>                                </td>
-                                <td><%=item.getCreation_date()%>                                </td>
+							  	 <td colspan="3">&nbsp;</td>
+                                <td><%=label%></td>
+								 <td colspan="2"><%=item.getCreation_date()%></td>
+								 
+                                <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
                               </tr>
-                            <%}                            %>
-                            </table>
-                          </td>
-                        </tr>
+                            <%}%>
+                      <%}                      %>
                         <tr>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
+                          <td colspan="7">&nbsp;</td>
+                        </tr>
+
+                        <tr>
+                          <td colspan="7" class="secHead">
+                            <table align="right" width="50%" cellpadding="1" cellspacing="1">
+                            </table>                          </td>
+                        </tr>
+                        <tr valign="top">
+                          <td colspan="5" rowspan="5"><table class="payTo" width="100%" border="0">
+                            <tr>
+                              <td align="right" colspan="2"></td>
+                            </tr>
+                            <tr class="secHead">
+                              <td height="14" colspan="2">Please Make Cheque Payable To: </td>
+                            </tr>
+                            <tr>
+                              <td class="title4"><%=billform.getProviderName(bean.getBillingProvider())%></td>
+                            </tr>
+                            <tr>
+                              <td class="address"><%=clinic.getClinicAddress()%> , <%=clinic.getClinicCity()%> , <%=clinic.getClinicProvince()%><%=clinic.getClinicPostal()%> </td>
+                            </tr>
+                            <tr>
+                              <td class="address" id="clinicPhone"> Telephone: <%=vecPhones.size()>=1?vecPhones.elementAt(0):clinic.getClinicPhone()%> </td>
+                            </tr>
+                            <tr>
+                              <td class="address" id="clinicFax"> Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%> </td>
+                            </tr>
+                          </table></td>
                           <td align="right">Total:</td>
                           <td align="right"><%=bean.getGrandtotal()%>                          </td>
                         </tr>
                         <tr>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
                           <td align="right">Payments:</td>
                           <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(totalPayments).replace('$',' ')%>                          </td>
                         </tr>
                         <tr>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
                           <td align="right">Refunds:</td>
                           <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(totalRefunds).replace('$',' ')%>                          </td>
                         </tr>
                         <tr>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
                           <td>
                             <div align="right" class="style2">
                               <strong>Balance</strong>
-                              :
-</div>
-                          </td>
+                              :</div>                          </td>
                         <%double gtotal = new Double(bean.getGrandtotal()).doubleValue() - totalPayments - totalRefunds;                        %>
                           <td align="right">
-                            <strong><%=java.text.NumberFormat.getCurrencyInstance().format(gtotal).replace('$',' ')%>                            </strong>
-                          </td>
+                            <strong><%=java.text.NumberFormat.getCurrencyInstance().format(gtotal).replace('$',' ')%>                            </strong>                          </td>
                         </tr>
                         <tr>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
-                          <td>&nbsp;</td>
                           <td>&nbsp;</td>
                           <td>&nbsp;</td>
                         </tr>
@@ -523,72 +481,28 @@ function showHideLayers() { //v3.0
                       <table width="100%" border="0" cellspacing="1" cellpadding="1">
                         <tr>
                           <td height="14" colspan="4" class="secHead">
-                            <table width="100%" border="0" cellspacing="3" cellpadding="3">
-                              <tr>
-                                <td><label>Receive Payment - $
-                                    <input type="text" maxlength="6" name="amountReceived"/>
-                                </label>
-                                  <br>
-                                  <label> Payment Method -
-                                  <html:select property="paymentMethod">
-                                   <html:options collection="paymentTypes" property="id" labelProperty="paymentType"/>
-                                  </html:select>
-                                  </label></td>
-                              </tr>
-                            </table>
                             <label></label>
                           <label></label></td>
                         </tr>
-                        <tr>
-                          <td width="105%" height="14" colspan="4" class="secHead">Notes</td>
-                        </tr>
-                        <tr>
-                          <td height="14" colspan="4"><%=bean.getMessageNotes()%>                          </td>
-                        </tr>
+       
                       </table>
-                      <table width="100%" border="0">
-                        <tr>
-                          <td align="right" colspan="3">                          </td>
-                        </tr>
-                        <tr class="secHead">
-                          <td height="14" colspan="3" class="header secHead">Update Bill</td>
-                        </tr>
-                        <tr>
-                          <td width="17%" class="header">Billing Notes:</td>
-                          <td colspan="2" class="header">                            &nbsp;
-                            Bill Status
-                            &nbsp;
-</td>
-                        </tr>
-                        <tr>
-                          <td rowspan="2">
-                            <html:textarea cols="60" styleClass="header" rows="5" property="messageNotes"></html:textarea>
-                          </td>
-                          <td width="81%" colspan="1" valign="top">
-                            <html:select styleClass="header" property="billStatus" style="font-size:110%;">
-                              <html:option value="O">O | Bill MSP</html:option>
-                              <html:option value="P">P | Bill Patient</html:option>
-                              <html:option value="N">N | Do Not Bill</html:option>
-                              <html:option value="X">X | Bad Debt</html:option>
-                              <html:option value="D">D | Deleted Bill</html:option>
-                              <html:option value="T">T | Transfer to Collection</html:option>
-                            </html:select>
-                          </td>
-                          <td width="2%">&nbsp;</td>
-                        </tr>
-                        <tr>
-                          <td colspan="2" align="right" valign="bottom">
-                            <html:submit styleClass="header" value="Update Bill" property=""/>
-                            <html:button styleClass="header" value="Print Bill" property="Submit" onclick="javascript:window.print()"/>
-                            <html:button styleClass="header" value="Cancel" property="Submit2" onclick="javascript:window.close()"/>
-                            &nbsp;
-                          </td>
-                        </tr>
-                      </table>
+                   
                       <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
-                          <td align="right">                          </td>
+                          <td align="right">    <table width="100%" border="0">
+                        <tr>
+                          <td align="right" colspan="2">                          </td>
                         </tr>
+                        
+                        <tr>
+                          <td colspan="2" align="left" valign="bottom">
+                            <html:submit styleClass="header" value="Update Invoice" property=""/>
+                            <html:button styleClass="header" value="Print" property="Submit" onclick="javascript:printInvoice()"/>
+                            <html:button styleClass="header" value="Cancel" property="Submit2" onclick="javascript:window.close()"/>
+&nbsp;                          </td>
+                        </tr>
+                      </table>                         </td>
+					  </tr>
                       </table>
                     </td>
                   </tr>
@@ -596,7 +510,8 @@ function showHideLayers() { //v3.0
               </td>
             </tr>
           </table>
-          <p>&nbsp;</p>
+        
+		  
         </td>
       </tr>
     </table>
