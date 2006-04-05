@@ -18,9 +18,11 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+
 	<parameter name="startDate" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -42,6 +44,7 @@
 	<parameter name="account" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+
 	<field name="providerFirstName" class="java.lang.String"/>
 	<field name="providerLastName" class="java.lang.String"/>
 	<field name="billingtype" class="java.lang.String"/>
@@ -71,10 +74,12 @@
 	<field name="expString" class="java.lang.String"/>
 	<field name="expSum" class="java.lang.String"/>
 	<field name="rejectionDate" class="java.lang.String"/>
+
 	<variable name="invTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{amount})]]></variableExpression>
 	</variable>
-		<group  name="demoName" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
+
+		<group  name="demoName" >
 			<groupExpression><![CDATA[$F{demoName}]]></groupExpression>
 			<groupHeader>
 			<band height="0"  isSplitAllowed="true" >
@@ -133,7 +138,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -151,7 +157,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -508,7 +515,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 			</band>
 		</columnHeader>
@@ -716,7 +724,7 @@
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="33"
+						y="27"
 						width="217"
 						height="12"
 						forecolor="#000000"
@@ -772,13 +780,14 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
 						x="217"
-						y="33"
+						y="27"
 						width="69"
 						height="12"
 						forecolor="#000000"
@@ -800,7 +809,7 @@
 					<reportElement
 						mode="Opaque"
 						x="470"
-						y="18"
+						y="14"
 						width="65"
 						height="12"
 						forecolor="#000000"
@@ -822,7 +831,7 @@
 					<reportElement
 						mode="Opaque"
 						x="104"
-						y="18"
+						y="14"
 						width="95"
 						height="12"
 						forecolor="#000000"
@@ -844,7 +853,7 @@
 					<reportElement
 						mode="Opaque"
 						x="199"
-						y="18"
+						y="14"
 						width="95"
 						height="12"
 						forecolor="#000000"
@@ -866,7 +875,7 @@
 					<reportElement
 						mode="Opaque"
 						x="68"
-						y="18"
+						y="14"
 						width="34"
 						height="12"
 						forecolor="#000000"
@@ -888,7 +897,7 @@
 					<reportElement
 						mode="Opaque"
 						x="30"
-						y="18"
+						y="14"
 						width="37"
 						height="12"
 						forecolor="#000000"
@@ -932,7 +941,7 @@
 					<reportElement
 						mode="Opaque"
 						x="370"
-						y="18"
+						y="14"
 						width="50"
 						height="12"
 						forecolor="#000000"
@@ -954,7 +963,7 @@
 					<reportElement
 						mode="Opaque"
 						x="320"
-						y="18"
+						y="14"
 						width="50"
 						height="12"
 						forecolor="#000000"
@@ -976,7 +985,7 @@
 					<reportElement
 						mode="Opaque"
 						x="420"
-						y="18"
+						y="14"
 						width="50"
 						height="12"
 						forecolor="#000000"
@@ -998,7 +1007,7 @@
 					<reportElement
 						mode="Opaque"
 						x="1"
-						y="47"
+						y="39"
 						width="532"
 						height="51"
 						forecolor="#000000"
@@ -1020,7 +1029,7 @@
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="18"
+						y="14"
 						width="30"
 						height="12"
 						forecolor="#000000"

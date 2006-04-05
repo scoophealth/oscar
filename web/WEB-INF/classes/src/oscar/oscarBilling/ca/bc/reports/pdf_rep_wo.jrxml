@@ -18,9 +18,11 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+
 	<parameter name="startDate" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -44,6 +46,7 @@
 	</parameter>
 	<parameter name="provider" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="payee" isForPrompting="false" class="java.lang.String"/>
+
 	<field name="providerFirstName" class="java.lang.String"/>
 	<field name="providerLastName" class="java.lang.String"/>
 	<field name="billingtype" class="java.lang.String"/>
@@ -58,6 +61,7 @@
 	<field name="reason" class="java.lang.String"/>
 	<field name="dx1" class="java.lang.String"/>
 	<field name="acctInit" class="java.lang.String"/>
+
 	<variable name="invTotal" class="java.lang.Double" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{amount})]]></variableExpression>
 	</variable>
@@ -110,7 +114,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -128,7 +133,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
@@ -304,7 +310,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</rectangle>
 				<staticText>
 					<reportElement
@@ -508,30 +515,12 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="15"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="14"
-						width="535"
-						height="0"
-						forecolor="#808080"
-						backcolor="#FFFFFF"
-						key="line"
-						stretchType="NoStretch"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
-				</line>
+			<band height="11"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="56"
-						y="1"
+						y="0"
 						width="19"
 						height="10"
 						forecolor="#000000"
@@ -553,7 +542,7 @@
 					<reportElement
 						mode="Transparent"
 						x="353"
-						y="1"
+						y="0"
 						width="48"
 						height="10"
 						forecolor="#000000"
@@ -575,7 +564,7 @@
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="1"
+						y="0"
 						width="56"
 						height="10"
 						forecolor="#000000"
@@ -597,7 +586,7 @@
 					<reportElement
 						mode="Transparent"
 						x="163"
-						y="1"
+						y="0"
 						width="100"
 						height="10"
 						forecolor="#000000"
@@ -619,7 +608,7 @@
 					<reportElement
 						mode="Transparent"
 						x="266"
-						y="1"
+						y="0"
 						width="26"
 						height="10"
 						forecolor="#000000"
@@ -641,7 +630,7 @@
 					<reportElement
 						mode="Transparent"
 						x="401"
-						y="1"
+						y="0"
 						width="53"
 						height="10"
 						forecolor="#000000"
@@ -663,7 +652,7 @@
 					<reportElement
 						mode="Transparent"
 						x="81"
-						y="1"
+						y="0"
 						width="32"
 						height="10"
 						forecolor="#000000"
@@ -687,7 +676,7 @@
 						x="293"
 						y="0"
 						width="59"
-						height="12"
+						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-32"
@@ -707,9 +696,9 @@
 					<reportElement
 						mode="Opaque"
 						x="117"
-						y="1"
+						y="0"
 						width="27"
-						height="12"
+						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-33"

@@ -103,7 +103,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" 
+/>
 				</rectangle>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -248,7 +249,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -266,7 +268,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -376,7 +379,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</rectangle>
 				<line direction="BottomUp">
 					<reportElement
@@ -394,7 +398,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<line direction="BottomUp">
 					<reportElement
@@ -412,7 +417,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
@@ -638,30 +644,12 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="15"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="13"
-						width="535"
-						height="0"
-						forecolor="#808080"
-						backcolor="#FFFFFF"
-						key="line"
-						stretchType="NoStretch"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
-				</line>
+			<band height="11"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="30"
-						y="1"
+						y="0"
 						width="25"
 						height="10"
 						forecolor="#000000"
@@ -683,7 +671,7 @@
 					<reportElement
 						mode="Transparent"
 						x="58"
-						y="1"
+						y="0"
 						width="48"
 						height="10"
 						forecolor="#000000"
@@ -705,7 +693,7 @@
 					<reportElement
 						mode="Transparent"
 						x="108"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -727,7 +715,7 @@
 					<reportElement
 						mode="Transparent"
 						x="155"
-						y="1"
+						y="0"
 						width="105"
 						height="10"
 						forecolor="#000000"
@@ -749,7 +737,7 @@
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="1"
+						y="0"
 						width="29"
 						height="10"
 						forecolor="#000000"
@@ -771,7 +759,7 @@
 					<reportElement
 						mode="Transparent"
 						x="261"
-						y="1"
+						y="0"
 						width="29"
 						height="10"
 						forecolor="#000000"
@@ -793,7 +781,7 @@
 					<reportElement
 						mode="Transparent"
 						x="291"
-						y="1"
+						y="0"
 						width="22"
 						height="10"
 						forecolor="#000000"
@@ -815,7 +803,7 @@
 					<reportElement
 						mode="Transparent"
 						x="315"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -837,7 +825,7 @@
 					<reportElement
 						mode="Transparent"
 						x="409"
-						y="1"
+						y="0"
 						width="121"
 						height="10"
 						forecolor="#000000"
@@ -859,7 +847,7 @@
 					<reportElement
 						mode="Transparent"
 						x="361"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -1081,7 +1069,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

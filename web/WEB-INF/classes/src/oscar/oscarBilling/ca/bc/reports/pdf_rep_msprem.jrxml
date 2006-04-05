@@ -22,6 +22,7 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="oscar.oscarBilling.ca.bc.MSP.MSPReconcile" />
 
 	<parameter name="payee" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["bays"]]></defaultValueExpression>
@@ -53,22 +54,22 @@
 		<initialValueExpression><![CDATA["test"		]]></initialValueExpression>
 	</variable>
 	<variable name="amtTotal" class="java.lang.Double" resetType="Group" resetGroup="practitioner_no" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{t_paidamt})]]></variableExpression>
+		<variableExpression><![CDATA[new Double(oscar.oscarBilling.ca.bc.MSP.MSPReconcile.convCurValue($F{t_paidamt}))]]></variableExpression>
 	</variable>
 	<variable name="cnt01" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s01")?new Double($F{t_paidamt}):new Double(0)]]></variableExpression>
+		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s01")?new Double(MSPReconcile.convCurValue($F{t_paidamt})):new Double(0)]]></variableExpression>
 	</variable>
 	<variable name="cnt02" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s02")?new Double($F{t_paidamt}):new Double(0)]]></variableExpression>
+		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s02")?new Double(MSPReconcile.convCurValue($F{t_paidamt})):new Double(0)]]></variableExpression>
 	</variable>
 	<variable name="cnt03" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s03")?new Double($F{t_paidamt}):new Double(0)]]></variableExpression>
+		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s03")?new Double(MSPReconcile.convCurValue($F{t_paidamt})):new Double(0)]]></variableExpression>
 	</variable>
 	<variable name="cnt04" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s04")?new Double($F{t_paidamt}):new Double(0)]]></variableExpression>
+		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s04")?new Double(MSPReconcile.convCurValue($F{t_paidamt})):new Double(0)]]></variableExpression>
 	</variable>
 	<variable name="cnt00" class="java.lang.Double" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s00")?new Double($F{t_paidamt}):new Double(0)]]></variableExpression>
+		<variableExpression><![CDATA[$F{t_s00type}.equalsIgnoreCase("s00")?new Double(MSPReconcile.convCurValue($F{t_paidamt})):new Double(0)]]></variableExpression>
 	</variable>
 
 		<group  name="practitioner_no" >
@@ -551,12 +552,12 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="14"  isSplitAllowed="true" >
+			<band height="11"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="66"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -578,7 +579,7 @@
 					<reportElement
 						mode="Transparent"
 						x="166"
-						y="1"
+						y="0"
 						width="47"
 						height="10"
 						forecolor="#000000"
@@ -600,7 +601,7 @@
 					<reportElement
 						mode="Transparent"
 						x="113"
-						y="1"
+						y="0"
 						width="52"
 						height="10"
 						forecolor="#000000"
@@ -622,7 +623,7 @@
 					<reportElement
 						mode="Transparent"
 						x="491"
-						y="1"
+						y="0"
 						width="42"
 						height="10"
 						forecolor="#000000"
@@ -644,7 +645,7 @@
 					<reportElement
 						mode="Transparent"
 						x="270"
-						y="1"
+						y="0"
 						width="95"
 						height="10"
 						forecolor="#000000"
@@ -666,7 +667,7 @@
 					<reportElement
 						mode="Transparent"
 						x="223"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -688,7 +689,7 @@
 					<reportElement
 						mode="Transparent"
 						x="455"
-						y="1"
+						y="0"
 						width="35"
 						height="10"
 						forecolor="#000000"
@@ -710,7 +711,7 @@
 					<reportElement
 						mode="Transparent"
 						x="365"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -726,13 +727,13 @@
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double($F{t_paidamt}))]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double(oscar.oscarBilling.ca.bc.MSP.MSPReconcile.convCurValue($F{t_paidamt})))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="410"
-						y="1"
+						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
@@ -754,7 +755,7 @@
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="1"
+						y="0"
 						width="56"
 						height="10"
 						forecolor="#000000"

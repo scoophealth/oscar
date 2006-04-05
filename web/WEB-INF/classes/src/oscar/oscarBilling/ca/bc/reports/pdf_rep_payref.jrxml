@@ -126,7 +126,8 @@ order by billing.billingtype;]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -144,7 +145,8 @@ order by billing.billingtype;]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
@@ -320,7 +322,8 @@ order by billing.billingtype;]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</rectangle>
 				<staticText>
 					<reportElement
@@ -567,12 +570,12 @@ order by billing.billingtype;]]></queryString>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="13"  isSplitAllowed="true" >
+			<band height="11"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="80"
-						y="1"
+						y="0"
 						width="35"
 						height="10"
 						forecolor="#000000"
@@ -594,7 +597,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="372"
-						y="1"
+						y="0"
 						width="48"
 						height="10"
 						forecolor="#000000"
@@ -616,7 +619,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="339"
-						y="1"
+						y="0"
 						width="31"
 						height="10"
 						forecolor="#000000"
@@ -638,7 +641,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="151"
-						y="1"
+						y="0"
 						width="105"
 						height="10"
 						forecolor="#000000"
@@ -660,7 +663,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="257"
-						y="1"
+						y="0"
 						width="32"
 						height="10"
 						forecolor="#000000"
@@ -682,7 +685,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="1"
+						y="0"
 						width="39"
 						height="10"
 						forecolor="#000000"
@@ -704,7 +707,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="115"
-						y="1"
+						y="0"
 						width="33"
 						height="10"
 						forecolor="#000000"
@@ -726,7 +729,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="422"
-						y="1"
+						y="0"
 						width="14"
 						height="10"
 						forecolor="#000000"
@@ -748,7 +751,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="41"
-						y="1"
+						y="0"
 						width="35"
 						height="10"
 						forecolor="#000000"
@@ -770,7 +773,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="291"
-						y="1"
+						y="0"
 						width="35"
 						height="10"
 						forecolor="#000000"
@@ -792,7 +795,7 @@ order by billing.billingtype;]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="439"
-						y="1"
+						y="0"
 						width="91"
 						height="10"
 						forecolor="#000000"
@@ -1630,7 +1633,8 @@ order by billing.billingtype;]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -1648,7 +1652,8 @@ order by billing.billingtype;]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -1666,7 +1671,8 @@ order by billing.billingtype;]]></queryString>
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -1754,7 +1760,7 @@ order by billing.billingtype;]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($P{sumPayed}.getRawTotal() - $P{sumRefunded}.getRawTotal())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($P{sumPayed}.getRawTotal() + $P{sumRefunded}.getRawTotal())]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>
