@@ -23,23 +23,13 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.io.IOException;
-import java.util.Locale;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic;
-import org.apache.struts.action.ActionError;
-import oscar.oscarDemographic.data.DemographicData;
-import oscar.oscarDemographic.data.DemographicData.Demographic;
-import oscar.OscarProperties;
+import org.apache.struts.action.*;
+import oscar.*;
+import oscar.oscarBilling.ca.bc.MSP.*;
 
 public final class BillingAction
     extends Action {
@@ -52,7 +42,10 @@ public final class BillingAction
     // Setup variables
     ActionErrors errors = new ActionErrors();
     oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean = null;
-    if (request.getParameter("billRegion").equals("ON")) {
+    String encounter = request.getAttribute("encounter") != null ?
+        (String) request.getAttribute("encounter") : "";
+ String region = request.getParameter("billRegion");
+    if ("ON".equals(region)) {
       String newURL = mapping.findForward("ON").getPath();
       newURL = newURL + "?" + request.getQueryString();
       ActionForward ON = new ActionForward();
@@ -61,44 +54,58 @@ public final class BillingAction
       return ON;
     }
     else {
-      BillingCreateBillingForm frm = (BillingCreateBillingForm)form;
+      BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
       if (request.getParameter("demographic_no") != null &
           request.getParameter("appointment_no") != null) {
         String newWCBClaim = request.getParameter("newWCBClaim");
-
         //If newWCBClaim == 1, this action was invoked from the WCB form
         //Therefore, we need to set the appropriate parameters to set up the subsequent bill
-        if("1".equals(newWCBClaim)){
-           WCBForm wcbForm = (WCBForm)request.getSession().getAttribute("WCBForm");
+        if ("1".equals(newWCBClaim)) {
+          WCBForm wcbForm = (WCBForm) request.getSession().getAttribute(
+              "WCBForm");
           frm.setXml_billtype("WCB");
           frm.setXml_other1(wcbForm.getW_extrafeeitem());
           frm.setXml_diagnostic_detail1(wcbForm.getW_icd9());
-          request.setAttribute("newWCBClaim",request.getParameter("newWCBClaim"));
-          request.setAttribute("loadFromSession","y");
+          request.setAttribute("newWCBClaim",
+                               request.getParameter("newWCBClaim"));
+          request.setAttribute("loadFromSession", "y");
         }
         bean = new oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean();
-        bean.setApptProviderNo(request.getParameter("apptProvider_no"));
-        bean.setPatientName(request.getParameter("demographic_name"));
-        bean.setProviderView(request.getParameter("providerview"));
-        bean.setBillRegion(request.getParameter("billRegion"));
-        bean.setBillForm(request.getParameter("billForm"));
-        bean.setCreator(request.getParameter("user_no"));
-        bean.setPatientNo(request.getParameter("demographic_no"));
-        bean.setApptNo(request.getParameter("appointment_no"));
-        bean.setApptDate(request.getParameter("appointment_date"));
-        bean.setApptStart(request.getParameter("start_time"));
-        bean.setApptStatus(request.getParameter("status"));
+        fillBean(request, bean);
 
         request.getSession().setAttribute("billingSessionBean", bean);
         this.verifyLast13050(errors, request.getParameter("demographic_no"));
       }
+      else if ("true".equals(encounter)) {
+        bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
+            getSession().getAttribute("billingSessionBean");
+        frm.setXml_provider(request.getParameter("user_no"));
+        region = bean.getBillRegion();
+      }
+      /**
+             * @todo Test this, it looks unnecessary
+       */
       else {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
             getSession().getAttribute("billingSessionBean");
       }
     }
     this.saveErrors(request, errors);
-    return (mapping.findForward(request.getParameter("billRegion")));
+    return (mapping.findForward(region));
+  }
+
+  private void fillBean(HttpServletRequest request, BillingSessionBean bean) {
+    bean.setApptProviderNo(request.getParameter("apptProvider_no"));
+    bean.setPatientName(request.getParameter("demographic_name"));
+    bean.setProviderView(request.getParameter("providerview"));
+    bean.setBillRegion(request.getParameter("billRegion"));
+    bean.setBillForm(request.getParameter("billForm"));
+    bean.setCreator(request.getParameter("user_no"));
+    bean.setPatientNo(request.getParameter("demographic_no"));
+    bean.setApptNo(request.getParameter("appointment_no"));
+    bean.setApptDate(request.getParameter("appointment_date"));
+    bean.setApptStart(request.getParameter("start_time"));
+    bean.setApptStatus(request.getParameter("status"));
   }
 
   /**
@@ -110,8 +117,8 @@ public final class BillingAction
   private void verifyLast13050(ActionErrors errors, String demo) {
     ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
     String[] cnlsCodes = OscarProperties.getInstance().getProperty(
-          "CDM_ALERTS").split(",");
-    if (vldt.needsCDMCounselling(demo,cnlsCodes)) {
+        "CDM_ALERTS").split(",");
+    if (vldt.needsCDMCounselling(demo, cnlsCodes)) {
       int last13050 = vldt.daysSinceLast13050(demo);
       if (last13050 > 365) {
         errors.add("",
@@ -127,7 +134,5 @@ public final class BillingAction
     }
 
   }
-
-
 
 }
