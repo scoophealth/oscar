@@ -720,15 +720,17 @@ public final class BillingCreateBillingForm
                          "oscar.billing.CA.BC.billingBC.error.nullservicecode"));
         }
       }
-      if ( (this.xml_diagnostic_detail1 == null ||
-            xml_diagnostic_detail1.equals("")) &&
-          (this.xml_diagnostic_detail2 == null ||
-           xml_diagnostic_detail2.equals("")) &&
-          (this.xml_diagnostic_detail3 == null ||
-           xml_diagnostic_detail3.equals(""))) {
-        errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.error.nulldxcodes"));
+      if(!"pri".equalsIgnoreCase(this.getXml_billtype())){
+        if ( (this.xml_diagnostic_detail1 == null ||
+              xml_diagnostic_detail1.equals("")) &&
+            (this.xml_diagnostic_detail2 == null ||
+             xml_diagnostic_detail2.equals("")) &&
+            (this.xml_diagnostic_detail3 == null ||
+             xml_diagnostic_detail3.equals(""))) {
+          errors.add("",
+                     new ActionMessage(
+                         "oscar.billing.CA.BC.billingBC.error.nulldxcodes"));
+        }
       }
     }
 /**
