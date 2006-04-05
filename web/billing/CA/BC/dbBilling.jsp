@@ -40,6 +40,7 @@
     {"search_provider_dt", "select * from provider where provider_type='doctor' and ohip_no != '' and provider_no like ? order by last_name"},
     {"search_provider_dt_checkstatus", "select * from provider where provider_type='doctor' and status='1' and ohip_no != '' and provider_no like ? order by last_name"},
     {"search_provider_ohip_dt", "select * from provider where provider_type='doctor' and ohip_no like ? and ohip_no != '' order by last_name"},
+    {"search_provider_ohip_dt_count", "select count(*) from provider where provider_type='doctor' and ohip_no like ? and ohip_no != '' order by last_name"},
     {"search_demographic_details", "select * from demographic where demographic_no=?"},
     {"search_provider_name", "select * from provider where provider_no=?"},
     {"search_visit_location", "select clinic_location_name from clinic_location where clinic_location_no=?"},
