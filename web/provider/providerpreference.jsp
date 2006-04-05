@@ -32,9 +32,9 @@
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--><head><title><bean:message key="provider.providerpreference.title"/></title></head>
+
 <html:html locale="true">
-<head><title><bean:message key="provider.providerpreference.title"/></title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
 
 <script language="javascript">
@@ -203,12 +203,17 @@ function isNumeric(strString){
       &nbsp;&nbsp;&nbsp; | <a href="#" ONCLICK ="popupPage(550,800,'http://oscar1.mcmaster.ca:8888/oscarResource/manage?username=oscarfp&pw=oscarfp');return false;" title="Resource Management" ><bean:message key="provider.btnManageClinicalResource"/></a--> </td>
   </tr>
   <tr>
-     <td bgcolor="#ffffff">
-        &nbsp;
+     <td bgcolor="#ffffff">&nbsp;
+        
      </td>
   </tr>
   <tr>
     <td align="center"><a href=# onClick ="popupPage(230,860,'providerSignature.jsp');return false;"><bean:message key="provider.btnEditSignature"/></a>
+    </td>
+  </tr>
+  
+  <tr>
+    <td align="center"><a href=# onClick ="popupPage(230,860,'../billing/CA/BC/viewBillingPreferencesAction.do?provider_no=<%=request.getParameter("provider_no")%>');return false;">Edit Billing Preferences</a>
     </td>
   </tr>
 
