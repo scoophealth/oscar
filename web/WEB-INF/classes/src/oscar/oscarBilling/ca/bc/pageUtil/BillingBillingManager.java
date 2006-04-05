@@ -32,6 +32,7 @@ import oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO;
 import oscar.entities.PrivateBillTransaction;
 
 public class BillingBillingManager {
+  private String billTtype;
 
   public BillingItem[] getBillingItem(String[] service, String service1,
                                       String service2, String service3,
@@ -111,8 +112,10 @@ public class BillingBillingManager {
       while (rs.next()) {
 
         if (billingType.equals("WCB")) {
-          ResultSet wcbrs = db.GetSQL("select w_feeitem from wcb where billing_no = '" + billing_no + "'");
-          if(wcbrs.next()){
+          ResultSet wcbrs = db.GetSQL(
+              "select w_feeitem from wcb where billing_no = '" + billing_no +
+              "'");
+          if (wcbrs.next()) {
             billingCode = wcbrs.getString("w_feeitem");
             billingUnit = "" + 1;
           }
@@ -123,7 +126,7 @@ public class BillingBillingManager {
           billingUnit = rs.getString("billing_unit");
         }
         BillingItem billingItem = new BillingItem(billingCode, billingUnit);
-        billingItem.fill();
+        billingItem.fill(this.billTtype);
         billingItem.price = rs.getDouble("bill_amount");
         billingItem.setLineNo(rs.getInt("billingmaster_no"));
 
@@ -178,7 +181,7 @@ public class BillingBillingManager {
       BillingItem b = isBilled(billingItemsArray, code);
       if (b == null) {
         BillingItem billingItem = new BillingItem(code, "1");
-        billingItem.fill();
+        billingItem.fill(this.billTtype);
         billingItemsArray.add(billingItem);
       }
       else {
@@ -249,7 +252,7 @@ public class BillingBillingManager {
     }
     if (newCode) {
       bi = new BillingItem(code, serviceUnits);
-      bi.fill();
+      bi.fill(this.billTtype);
       ar.add(bi);
     }
     return bi;
@@ -339,17 +342,22 @@ public class BillingBillingManager {
       return this.lineNo;
     }
 
-    public void fill() {
+    public void fill(String billType) {
       try {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         ResultSet rs;
         String sql;
 
-        // SELECT b.service_code, b.description , b.value, b.percentage FROM billingservice b, ctl_billingservice c WHERE b.service_code=c.service_code and b.region='BC' and c.service_group='Group1';
-
-        sql = "SELECT b.service_code, b.description , b.value, b.percentage "
-            + "FROM billingservice b WHERE b.service_code='" + service_code +
-            "'";
+        //make sure to load private fees if required
+        if ("pri".equalsIgnoreCase(billType)) {
+          sql = "select b.service_code, b.description , b.value, b.percentage FROM billingservice b WHERE service_code='A" +
+              service_code + "'";
+        }
+        else {
+          sql = "SELECT b.service_code, b.description , b.value, b.percentage "
+              + "FROM billingservice b WHERE b.service_code='" + service_code +
+              "'";
+        }
         System.out.println(sql);
         rs = db.GetSQL(sql);
 
@@ -357,7 +365,13 @@ public class BillingBillingManager {
           this.description = rs.getString("description");
           this.price = Double.parseDouble(rs.getString("value"));
           try {
-            this.percentage = Double.parseDouble(rs.getString("percentage"));
+            String percRes = rs.getString("percentage");
+            if (percRes != null && !"".equals(percRes)) {
+              this.percentage = Double.parseDouble(percRes);
+            }
+            else {
+              this.percentage = 100.00;
+            }
           }
           catch (NumberFormatException eNum) {
             this.percentage = 100;
@@ -394,7 +408,7 @@ public class BillingBillingManager {
      */
     public List getPaymentsAndRefundsByBill(String billing_no) {
       PrivateBillTransactionsDAO dao = new PrivateBillTransactionsDAO();
-      return dao.getPrivateBillTransactionsByBillNo(billing_no);
+      return dao.getPrivateBillTransactions(billing_no);
     }
 
     /**
@@ -411,5 +425,13 @@ public class BillingBillingManager {
       return ret;
     }
 
+  }
+
+  public void setBillTtype(String billTtype) {
+    this.billTtype = billTtype;
+  }
+
+  public String getBillTtype() {
+    return billTtype;
   }
 }
