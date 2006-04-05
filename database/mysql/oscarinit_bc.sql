@@ -91,7 +91,7 @@ CREATE TABLE billingmaster (
   oin_address3 varchar(25) default '',
   oin_address4 varchar(25) default '',
   oin_postalcode varchar(6) default '',
-  paymentMethod int(11) default '0',
+  paymentMethod int(11) default '6',
   PRIMARY KEY  (billingmaster_no)
 ) TYPE=MyISAM;
 
@@ -2107,3 +2107,5 @@ CREATE TABLE billing_private_transactions (
   creation_date datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
+
+ALTER TABLE billing_private_transactions CHANGE COLUMN `billing_no` `billingmaster_no` INTEGER UNSIGNED NOT NULL DEFAULT 0;
