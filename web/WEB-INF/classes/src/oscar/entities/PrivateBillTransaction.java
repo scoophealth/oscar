@@ -28,7 +28,7 @@ import java.util.*;
 
 public class PrivateBillTransaction {
   private int id;
-  private int billingMaster_No;
+  private int billingmaster_no;
   private double amount_received;
   private Date creation_date;
   public PrivateBillTransaction() {
@@ -38,8 +38,9 @@ public class PrivateBillTransaction {
     this.id = id;
   }
 
-  public void setBillingMaster_No(int billingMaster_No) {
-    this.billingMaster_No = billingMaster_No;
+  public void setBillingmaster_no(int billingmaster_no) {
+
+    this.billingmaster_no = billingmaster_no;
   }
 
   public void setAmount_received(double amount_received) {
@@ -54,8 +55,9 @@ public class PrivateBillTransaction {
     return id;
   }
 
-  public int getBillingMaster_No() {
-    return billingMaster_No;
+  public int getBillingmaster_no() {
+
+    return billingmaster_no;
   }
 
   public double getAmount_received() {

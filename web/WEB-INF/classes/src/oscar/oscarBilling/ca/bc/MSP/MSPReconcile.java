@@ -81,6 +81,10 @@ public class MSPReconcile {
   private static Properties negValues = new Properties();
   private BeanUtilHlp beanut = new BeanUtilHlp();
   private BillingHistoryDAO dao = new BillingHistoryDAO();
+  public static final String BILLTYPE_PRI = "PRI";
+  public static final String BILLTYPE_MSP = "MSP";
+  public static final String BILLTYPE_ICBC = "ICBC";
+  public static final String BILLTYPE_WCB = "WCB";
   public MSPReconcile() {
     initTeleplanMonetarySuffixes();
   }
@@ -403,7 +407,7 @@ public class MSPReconcile {
     String billingType = "";
 
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
-      providerQuery = " and provider_no = '" + providerNo + "'";
+      providerQuery = " and b.apptProvider_no = '" + providerNo + "'";
     }
 
     if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
@@ -420,19 +424,19 @@ public class MSPReconcile {
     }
 
     if (excludeWCB) {
-      billingType += " and b.billingType != 'WCB' ";
+      billingType += " and b.billingType != '" + this.BILLTYPE_WCB + "'";
     }
 
     if (excludeMSP) {
-      billingType += " and b.billingType != 'MSP' ";
+      billingType += " and b.billingType != '" + this.BILLTYPE_MSP + "'";
     }
 
     if (excludePrivate) {
-      billingType += " and b.billingType != 'PRIV' ";
+      billingType += " and b.billingType != '" + this.BILLTYPE_PRI + "'";
     }
 
     if (exludeICBC) {
-      billingType += " and b.billingType != 'ICBC' ";
+      billingType += " and b.billingType != '" + this.BILLTYPE_ICBC + "'";
     }
     //
     String p = " select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
@@ -440,8 +444,8 @@ public class MSPReconcile {
         +
         " bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
         +
-        " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no from billing b, "
-        + " billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus like '" +
+        " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no,p.first_name,p.last_name from billing b, "
+        + " billingmaster bm,provider p where p.provider_no = b.apptProvider_no and b.billing_no= bm.billing_no and bm.billingstatus like '" +
         statusType + "' "
         + providerQuery
         + startDateQuery
@@ -477,7 +481,8 @@ public class MSPReconcile {
         b.dx1 = rs.getString("dx_code1");
         b.dx2 = rs.getString("dx_code2");
         b.dx3 = rs.getString("dx_code3");
-
+        b.providerFirstName = rs.getString("first_name");
+        b.providerLastName = rs.getString("last_name");
         if (b.isWCB()) {
           ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
                                     b.billing_no + "'");
@@ -582,6 +587,8 @@ public class MSPReconcile {
     public String dx1 = "";
     public String dx2 = "";
     public String dx3 = "";
+    public String providerFirstName = "";
+    public String providerLastName = "";
 
     public boolean isWCB() {
       boolean retval = false;
@@ -625,15 +632,28 @@ public class MSPReconcile {
     return retval;
   }
 
-  public String getAmountPaid(String billingNo) {
+  /**
+   * Returns the amount paid to a specific line item(billingmaster_no) in a bill
+   * @param billingNo String
+   * @return String
+   */
+  public String getAmountPaid(String billingmaster_no, String billType) {
     String retval = "0.00";
+
+    String qry =
+        "select  sum(t_paidamt)  as sum from teleplanS00 where t_officeno =  '" +
+        forwardZero(billingmaster_no, 7) + "'";
+    if ("pri".equalsIgnoreCase(billType)) {
+      //need to multiply sum by 100 so that it gets returned in the same format as those payments made by MSP
+      qry = "select  sum(amount_received)*100 from billing_private_transactions where billingmaster_no = " +
+          billingmaster_no;
+    }
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      ResultSet rs = db.GetSQL(
-          "select  sum(t_paidamt)  as sum from teleplanS00 where t_officeno =  '" +
-          forwardZero(billingNo, 7) + "'");
+      ResultSet rs = db.GetSQL(qry);
+
       while (rs.next()) {
-        retval = rs.getString("sum");
+        retval = rs.getString(1);
       }
       rs.close();
       db.CloseConn();
@@ -735,16 +755,16 @@ public class MSPReconcile {
         stmt.setString(5, recip.getPostal());
         stmt.setString(6, recip.getBillingNo());
       }
-      else{
+      else {
         //create a new record
-       stmt = db.GetConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
-          "where values(?,?,?,?,?,now(),now(),?)");
-      stmt.setString(1,recip.getName());
-      stmt.setString(2,recip.getAddress());
-      stmt.setString(3,recip.getCity());
-      stmt.setString(4,recip.getProvince());
-      stmt.setString(5,recip.getPostal());
-      stmt.setString(6,recip.getBillingNo());
+        stmt = db.GetConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
+            "where values(?,?,?,?,?,now(),now(),?)");
+        stmt.setString(1, recip.getName());
+        stmt.setString(2, recip.getAddress());
+        stmt.setString(3, recip.getCity());
+        stmt.setString(4, recip.getProvince());
+        stmt.setString(5, recip.getPostal());
+        stmt.setString(6, recip.getBillingNo());
 
       }
       stmt.execute();
@@ -793,17 +813,21 @@ public class MSPReconcile {
    * @param paymentMethod String - The paymentMethod code
    */
   public void updatePaymentMethod(String billingNo, String paymentMethod) {
-     DBHandler db = null;
+    DBHandler db = null;
+    if (paymentMethod == null || "".equals(paymentMethod)) {
+      paymentMethod = "6";
+    }
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-      db.RunSQL("update billingmaster set paymentMethod =  "+  paymentMethod + " where billing_no = " + billingNo + "");
+      db.RunSQL("update billingmaster set paymentMethod =  " + paymentMethod +
+                " where billing_no = " + billingNo + "");
     }
     catch (Exception e) {
       e.printStackTrace();
     }
-    finally{
+    finally {
       try {
-        if(db!=null){
+        if (db != null) {
           db.CloseConn();
         }
       }
@@ -812,7 +836,6 @@ public class MSPReconcile {
       }
     }
   }
-
 
   public void updateBillingMasterStatus(String billingMasterNo, String stat) {
     try {
@@ -1012,7 +1035,8 @@ public class MSPReconcile {
         b.reason = this.getStatusDesc(b.reason);
 
         b.amount = rs.getString("bill_amount");
-        b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount);
+        b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
+                                         b.billingtype);
         b.code = rs.getString("billing_code");
         b.dx1 = rs.getString("dx_code1"); ;
         b.serviceDate = rs.getString("service_date").equals("") ? "00000000" :
@@ -1098,7 +1122,8 @@ public class MSPReconcile {
          **/
         if (type.equals(this.REP_ACCOUNT_REC)) {
           if ("E".equals(b.status)) {
-            b.amount = this.getAmountOwing(b.billMasterNo, b.amount);
+            b.amount = this.getAmountOwing(b.billMasterNo, b.amount,
+                                           b.billingtype);
           }
           skipBill = new Double(b.amount).doubleValue() == 0.0;
         }
@@ -1134,48 +1159,74 @@ public class MSPReconcile {
 
   /**
    * Returns the dollar amount owing on a specific bill number
-   * If the specified bill has an explanation code of 'HX'(Already paid) the amount is set to zero
+   * If the specified bill has an explanation code of 'HS'(Already paid) the amount is set to zero
    * @param billingMasterNo String - The UID of the bill in question
    * @param amountBilled String - The total amount of the bill
    * @return String
    */
-  private String getAmountOwing(String billingMasterNo, String amountBilled) {
-    String qry = "SELECT t_paidamt,t_exp1 from teleplanS00,billingmaster " +
-        " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
-        " and billingstatus = 'E'" +
-        " and billingmaster.billingmaster_no = " + billingMasterNo;
-    DBHandler db = null;
-    ResultSet rs = null;
+  private String getAmountOwing(String billingMasterNo, String amountBilled,
+                                String billingType) {
     String ret = "";
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL(qry);
-      double totalPaid = 0.0;
-      while (rs.next()) {
-        if (rs.getString(2).equals("HS")) {
-          totalPaid = Double.parseDouble(amountBilled);
-          break;
-        }
-        String paidAmount = rs.getString(1);
-        paidAmount = this.convCurValue(paidAmount);
-        Double dblAmtPaid = new Double(paidAmount);
-        totalPaid += dblAmtPaid.doubleValue();
-      }
-      amountBilled = (amountBilled != null && !amountBilled.equals("")) ?
-          amountBilled : "0.0";
-      Double dblAmtBilled = new Double(amountBilled);
-      ret = String.valueOf(dblAmtBilled.doubleValue() - totalPaid);
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally {
+    DBHandler db = null;
+      ResultSet rs = null;
+    if ("pri".equalsIgnoreCase(billingType)) {
+      String qry = "select sum(amount_received), bill_amount from billing_private_transactions,billingmaster " +
+          "where billingmaster.billingmaster_no = billing_private_transactions.billingmaster_no " +
+          "and billingmaster.billingmaster_no = " + billingMasterNo + " group by billingmaster.billingmaster_no";
       try {
-        db.CloseConn();
-        rs.close();
+        db = new DBHandler(DBHandler.OSCAR_DATA);
+        rs = db.GetSQL(qry);
+        if(rs.next()){
+          double amtPaid = rs.getDouble(1);
+          double billAmt = rs.getDouble(2);
+          double owing = billAmt - amtPaid;
+          ret = String.valueOf(owing);
+        }
+        else{
+          ret = "0.0";
+        }
       }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
+      catch (SQLException ex2) {
+        ex2.printStackTrace();
+      }
+    }
+    else {
+      String qry = "SELECT t_paidamt,t_exp1 from teleplanS00,billingmaster " +
+          " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
+          " and billingstatus = 'E'" +
+          " and billingmaster.billingmaster_no = " + billingMasterNo;
+
+
+      try {
+        db = new DBHandler(DBHandler.OSCAR_DATA);
+        rs = db.GetSQL(qry);
+        double totalPaid = 0.0;
+        while (rs.next()) {
+          if (rs.getString(2).equals("HS")) {
+            totalPaid = Double.parseDouble(amountBilled);
+            break;
+          }
+          String paidAmount = rs.getString(1);
+          paidAmount = this.convCurValue(paidAmount);
+          Double dblAmtPaid = new Double(paidAmount);
+          totalPaid += dblAmtPaid.doubleValue();
+        }
+        amountBilled = (amountBilled != null && !amountBilled.equals("")) ?
+            amountBilled : "0.0";
+        Double dblAmtBilled = new Double(amountBilled);
+        ret = String.valueOf(dblAmtBilled.doubleValue() - totalPaid);
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+      finally {
+        try {
+          db.CloseConn();
+          rs.close();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
       }
     }
     return ret;
@@ -1478,12 +1529,10 @@ public class MSPReconcile {
   }
 
   /**
-   * Returns the count of distinct values for the specified Bill field
-   * Really just a convenience method for selecting distinct values without hitting the database multiple times
-   * @todo This method should be generalized to count the fields of a collection of arbitrary beans
+   * Returns the total paid for a specific set of bill types
    * @param bills List
-   * @param fieldName String
-   * @return int
+   * @param status String
+   * @return Double
    */
   public Double getTotalPaidByStatus(List bills, String status) {
     int colSize = bills.size();
@@ -1530,7 +1579,7 @@ public class MSPReconcile {
     System.out.println(new java.util.Date() +
                        ":MSPReconcile.getMSPRemittanceQuery(payeeNo, s21Id)");
     String qry = "SELECT billing_code,provider.first_name,provider.last_name,t_practitionerno,t_s00type,billingmaster.service_date as 't_servicedate',t_payment," +
-        "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt * .01 as 't_paidamt',t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " +
+        "t_datacenter,billing.demographic_name,billing.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_exp3,t_exp4,t_exp5,t_exp6,t_dataseq " +
         " from teleplanS00,billing,billingmaster,provider " +
         " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
         " and teleplanS00.s21_id = " + s21Id +
@@ -1718,7 +1767,7 @@ public class MSPReconcile {
    * @param value String
    * @return String
    * @todo complete documentation
-   *
+   *oscar.oscarBilling.ca.bc.MSP.MSPReconcile.convCurValue(
    */
   public static String convCurValue(String value) {
     BigDecimal curValue = new BigDecimal(0.0);
@@ -1752,4 +1801,39 @@ public class MSPReconcile {
     return curValue.toString();
   }
 
+  public boolean patientHasOutstandingPrivateBill(String demographicNo) {
+    boolean ret = false;
+    String billingMasterQry =
+        "select billingmaster_no,bill_amount from billingmaster where demographic_no = " +
+        demographicNo;
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(billingMasterQry);
+      while (rs.next()) {
+        String billingmaster_no = rs.getString(1);
+        double amount = rs.getDouble(2);
+        double amountPaid = new Double(getAmountPaid(billingmaster_no,
+            BILLTYPE_PRI)).doubleValue();
+        if (amountPaid < amount) {
+          return true;
+        }
+
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+    return ret;
+  }
 }
