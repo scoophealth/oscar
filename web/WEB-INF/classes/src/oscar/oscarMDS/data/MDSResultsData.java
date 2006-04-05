@@ -84,7 +84,7 @@ public class MDSResultsData {
          }
          
          
-         
+         System.out.println(sql);
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
             LabResultData lbData = new LabResultData(LabResultData.CML);
@@ -99,9 +99,6 @@ public class MDSResultsData {
                lbData.acknowledgedStatus ="U";
             }
             
-            if (findCMLAdnormalResults(lbData.segmentID) > 0){
-               lbData.abn= true;
-            }
             
             lbData.healthNumber = rs.getString("patient_health_num");
             lbData.patientName = rs.getString("patientName");
