@@ -77,6 +77,11 @@ public class LabResultData {
           if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
                this.abn= true;
           }
+       }else if(CML.equals(this.labType)){
+          CMLLabTest cml = new CMLLabTest(); 
+          if (cml.findCMLAdnormalResults(this.segmentID) > 0){
+               this.abn= true;
+          }
        }
        
        return abn ; 
@@ -124,10 +129,12 @@ public class LabResultData {
    }
    
    public boolean isMatchedToPatient(){
-       if (EXCELLERIS.equals(this.labType)){
-          PathnetResultsData prd = new PathnetResultsData();
-          this.isMatchedToPatient = prd.isLabLinkedWithPatient(this.segmentID);
-      }
+//       if (EXCELLERIS.equals(this.labType)){
+//          PathnetResultsData prd = new PathnetResultsData();
+//          this.isMatchedToPatient = prd.isLabLinkedWithPatient(this.segmentID);
+//       }
+       CommonLabResultData commonLabResultData = new CommonLabResultData();
+       this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
        return this.isMatchedToPatient;
    }
     
