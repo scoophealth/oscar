@@ -84,6 +84,7 @@ public final class WCBAction
                                HttpServletResponse response)
 
       throws IOException, ServletException {
+
     WCBForm frm = (WCBForm) form;
     request.setAttribute("WCBForm", frm);
     String doBill = request.getParameter("bill");

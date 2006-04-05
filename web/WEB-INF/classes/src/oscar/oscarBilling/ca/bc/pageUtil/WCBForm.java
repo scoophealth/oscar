@@ -1452,12 +1452,6 @@ public final class WCBForm
                                HttpServletRequest request) {
     ActionErrors errors = new ActionErrors();
     BillingAssociationPersistence per = new BillingAssociationPersistence();
-    if (!StringUtils.isNumeric(w_wcbno)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.wcbnotnumeric"));
-    }
-
     if (w_lname == null || "".equals(w_lname)) {
       errors.add("",
                  new ActionMessage(
@@ -1490,30 +1484,11 @@ public final class WCBForm
                      "oscar.billing.CA.BC.billingBC.wcb.error.w_doi"));
     }
 
-    if (w_feeitem == null || "".equals(w_feeitem)) {
+    if ((w_feeitem == null || "".equals(w_feeitem)&&(w_extrafeeitem == null || "".equals(w_extrafeeitem)))) {
       errors.add("",
                  new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_feeitem"));
+                     "oscar.billing.CA.BC.billingBC.wcb.error.enterfee"));
     }
-    else if (!per.serviceCodeExists(w_feeitem)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.invalidsvccode",
-                     w_feeitem));
-    }
-
-    if (w_extrafeeitem == null || "".equals(w_extrafeeitem)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.wcb.error.w_extrafeeitem"));
-    }
-    else if (!per.serviceCodeExists(w_extrafeeitem)) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.invalidsvccode",
-                     w_extrafeeitem));
-    }
-
     if (w_icd9 == null || "".equals(w_icd9)) {
       errors.add("",
                  new ActionMessage(
