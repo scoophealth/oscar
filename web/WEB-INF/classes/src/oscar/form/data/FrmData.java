@@ -152,6 +152,7 @@ public class FrmData {
 
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         String sql = "SELECT form_value, form_table FROM encounterForm WHERE form_name='" + formName + "'";
+        System.out.println(sql);
         ResultSet rs = db.GetSQL(sql);
         while(rs.next()) {
             ret[0] = rs.getString("form_value");
@@ -168,19 +169,81 @@ public class FrmData {
             while(rs.next()) {
                 ret[1] = rs.getString("form_no");
             }
-            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
-                ret = getShortcutFormValue(demoNo, "AR");
+            String[] xmlForm = (String[]) ret.clone();
+             
+            if ( formName.equals("AR1")){
+                //First check to see if there are records for 2005
+                
+                ret = getShortcutFormValue(demoNo, "AR2005");
                 System.out.println("ret[0] is: " + ret[0]);                
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg1.jsp" + foo[1];
                 System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
-            }
-            if ( ret[1].equals("0") && formName.equals("AR2") ) { // ditto
+                String[] first_pick =  (String[]) ret.clone();
+                
+                //Check if AR has any forms
+                if (ret[1].equals("0")){ 
+                    ret = getShortcutFormValue(demoNo, "AR");
+                    System.out.println("ret[0] is: " + ret[0]);                
+                    foo = ret[0].split(".jsp");
+                    ret[0] = foo[0] + "pg1.jsp" + foo[1];
+                    System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+                    
+                    if(ret[1].equals("0") && !xmlForm[1].equals("0")) { // Nothing found in AR but there are records in the old xml form
+                        ret = xmlForm;
+                    }else if (ret[1].equals("0")) {  // Nothing in either old form Go with new one
+                        ret = first_pick;
+                    }
+                }
+                
+            }else if ( formName.equals("AR2")){
                 ret = getShortcutFormValue(demoNo, "AR");
                 String[] foo = ret[0].split(".jsp");
                 ret[0] = foo[0] + "pg2.jsp" + foo[1];
                 System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+                String[] first_pick =  (String[]) ret.clone();
+                if (ret[1].equals("0")){
+                   ret = getShortcutFormValue(demoNo, "AR");
+                   foo = ret[0].split(".jsp");
+                   ret[0] = foo[0] + "pg2.jsp" + foo[1];
+                   System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+                   if(ret[1].equals("0") && !xmlForm[1].equals("0")) { // Nothing found in AR but there are records in the old xml form
+                        ret = xmlForm;
+                   }else if (ret[1].equals("0")){  // Nothing in either old form Go with new one
+                        ret = first_pick;
+                   } 
+                }
             }
+            
+            ////////////////////////
+//            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
+//                ret = getShortcutFormValue(demoNo, "AR2005");
+//                System.out.println("ret[0] is: " + ret[0]);                
+//                String[] foo = ret[0].split(".jsp");
+//                ret[0] = foo[0] + "pg1.jsp" + foo[1];
+//                System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+//            }
+//            String[] ret_backup =  (String[]) ret.clone();
+//            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
+//                ret = getShortcutFormValue(demoNo, "AR");
+//                System.out.println("ret[0] is: " + ret[0]);                
+//                String[] foo = ret[0].split(".jsp");
+//                ret[0] = foo[0] + "pg1.jsp" + foo[1];
+//                System.out.println("getShortcutFormValue forwarding new AR1 to: " + ret[0]);
+//            }
+//            if ( ret[1].equals("0") && formName.equals("AR1") && !xmlForm[1].equals("0")) { // ditto
+//                ret = xmlForm;
+//            }
+//            if ( ret[1].equals("0") && formName.equals("AR1") ) { // ditto
+//                ret = ret_backup;
+//            }
+//            
+//            if ( ret[1].equals("0") && formName.equals("AR2") ) { // ditto
+//                ret = getShortcutFormValue(demoNo, "AR");
+//                String[] foo = ret[0].split(".jsp");
+//                ret[0] = foo[0] + "pg2.jsp" + foo[1];
+//                System.out.println("getShortcutFormValue forwarding new AR2 to: " + ret[0]);
+//            }
         } else {
             sql = "SELECT ID FROM " + table + " WHERE demographic_no=" + demoNo +" order by formEdited desc limit 0,1";
             rs = db.GetSQL(sql);
@@ -191,6 +254,7 @@ public class FrmData {
 
         rs.close();
         db.CloseConn();
+        System.out.println("RETURNING "+ret[0]+" = "+ret[1]);
         return ret;
     }
 
