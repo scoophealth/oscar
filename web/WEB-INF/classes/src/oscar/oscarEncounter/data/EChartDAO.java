@@ -63,7 +63,7 @@ public class EChartDAO {
   }
 
   public Echart getMostRecentEchart(String demographicNo) {
-    Echart echart = new Echart();
+    Echart echart = null;
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       ResultSet rs;
@@ -72,6 +72,7 @@ public class EChartDAO {
           + " ORDER BY eChartId DESC limit 1";
       rs = db.GetSQL(sql);
       if (rs.next()) {
+        echart = new Echart();
         echart.setTimeStamp(rs.getTimestamp("timeStamp"));
         echart.setSocialHistory(rs.getString("socialHistory"));
         echart.setFamilyHistory(rs.getString("familyHistory"));
