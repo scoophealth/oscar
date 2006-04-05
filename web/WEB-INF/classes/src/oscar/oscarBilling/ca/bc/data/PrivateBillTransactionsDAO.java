@@ -43,8 +43,8 @@ public class PrivateBillTransactionsDAO {
   public PrivateBillTransactionsDAO() {
   }
 
-  public List getPrivateBillTransactionsByBillNo(String billingNo) {
-   String qry = "select * from billing_private_transactions where billing_private_transactions.billing_no = " + billingNo;
+  public List getPrivateBillTransactions(String billingmaster_no) {
+   String qry = "select * from billing_private_transactions where billing_private_transactions.billingmaster_no = " + billingmaster_no;
    return SqlUtils.getBeanList(qry,oscar.entities.PrivateBillTransaction.class);
  }
 
@@ -54,8 +54,8 @@ public class PrivateBillTransactionsDAO {
    * @param billingMasterNo String
    * @param amount Double
    */
-  public void savePrivateBillTransaction(String billingNo, Double amount) {
-    String qry = "insert into billing_private_transactions(billing_no,amount_received,creation_date) values("+ billingNo + "," + amount.toString() +",now())";
+  public void savePrivateBillTransaction(int billingmaster_no, double amount) {
+    String qry = "insert into billing_private_transactions(billingmaster_no,amount_received,creation_date) values("+ String.valueOf(billingmaster_no) + "," + String.valueOf(amount) +",now())";
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
