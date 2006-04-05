@@ -234,6 +234,7 @@ public class CMLLabTest {
     
    }
    
+   
    public ArrayList getStatusArray(){
       CommonLabResultData comLab = new CommonLabResultData();
       return comLab.getStatusArray(labID,"CML");
@@ -307,6 +308,26 @@ public class CMLLabTest {
       }     
       return alist;
    }
+   
+   public int findCMLAdnormalResults(String labId){
+      int count = 0;
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                  
+         String sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
+         
+         ResultSet rs = db.GetSQL(sql);
+         while(rs.next()){
+         count++;
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in MDSResultsData:"+e);                  
+      }
+      return count;
+   }
+   
    
    public class LabResult{
       
