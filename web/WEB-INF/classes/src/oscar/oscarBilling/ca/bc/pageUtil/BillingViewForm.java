@@ -40,6 +40,7 @@ public final class BillingViewForm
   private String billStatus;
   private String billingNo;
   private String paymentMethod;
+  private String billPatient;
   public String getRequestId() {
     return requestId;
   }
@@ -84,6 +85,10 @@ public final class BillingViewForm
     return paymentMethod;
   }
 
+  public String getBillPatient() {
+    return billPatient;
+  }
+
   public void setRequestId(String id) {
     this.requestId = id;
   }
@@ -126,6 +131,10 @@ public final class BillingViewForm
 
   public void setPaymentMethod(String paymentMethod) {
     this.paymentMethod = paymentMethod;
+  }
+
+  public void setBillPatient(String billPatient) {
+    this.billPatient = billPatient;
   }
 
   public void reset(ActionMapping mapping, HttpServletRequest request) {
