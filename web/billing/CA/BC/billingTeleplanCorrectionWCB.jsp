@@ -513,6 +513,8 @@ function popFeeItemList(form,field){
                   <option value="D" <%=status.equals("D")?"selected=\"selected\"":""%>>D | Deleted Bill</option>
                   <option value="T" <%=status.equals("T")?"selected=\"selected\"":""%>>T | Transfer to Collection</option>
                   <option value="C" <%=status.equals("C")?"selected=\"selected\"":""%>>C | Data Center Changed</option>
+				  <option value="C" <%=status.equals("F")?"selected=\"selected\"":""%>>F | Refused</option>
+				  <option value="C" <%=status.equals("O")?"selected=\"selected\"":""%>>O | Bill MSP</option>
                 </select>
               </td>
             </tr>
