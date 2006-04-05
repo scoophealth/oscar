@@ -2109,3 +2109,27 @@ CREATE TABLE billing_private_transactions (
 ) TYPE=MyISAM;
 
 ALTER TABLE billing_private_transactions CHANGE COLUMN `billing_no` `billingmaster_no` INTEGER UNSIGNED NOT NULL DEFAULT 0;
+
+--
+-- Table structure for table `billing_preferences`
+--
+#Stores data about a users billing preferences
+#Shares a one to one relation with the provider table
+CREATE TABLE billing_preferences (
+  id int(10) unsigned NOT NULL auto_increment,
+  referral int(10) unsigned NOT NULL default '0',
+  providerNo int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `billing_msp_servicecode_times`
+--
+#Stores data about the start and end times for specific msp fee codes
+#Shares a one to one relation with the billingservice table
+CREATE TABLE billing_msp_servicecode_times (
+  id int(10) unsigned NOT NULL auto_increment,
+  billingservice_no int(10) unsigned NOT NULL default '0',
+  timeRange tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
