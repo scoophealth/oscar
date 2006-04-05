@@ -31,7 +31,7 @@ import oscar.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.util.*;
-
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -85,12 +85,17 @@ public class ViewWCBAction
         frm.setW_opcity(demo.getCity());
         frm.setW_city(demo.getCity());
         frm.setInjuryLocations(data.getInjuryLocationList());
+        frm.setW_pracno(request.getParameter("provNo"));
+
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
+        String fmtStrDate = fm.format(new Date());
+        frm.setW_servicedate(fmtStrDate);
       }
     }
     //If the incoming request is for an existing form, retrieve the WCB form data
     //for readonly viewing on the WCB Form Screen
-    else{
-      request.setAttribute("readonly","true");
+    else {
+      request.setAttribute("readonly", "true");
       frm.setWCBForms(data.getWCBFromID(formId));
     }
     return (mapping.findForward("success"));
