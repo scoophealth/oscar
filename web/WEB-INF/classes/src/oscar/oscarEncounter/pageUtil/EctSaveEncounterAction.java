@@ -41,89 +41,186 @@ import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 import oscar.util.UtilMisc;
-public class EctSaveEncounterAction extends Action {
+import oscar.OscarProperties;
 
-    public ActionForward execute(ActionMapping actionmapping, ActionForm actionform, HttpServletRequest httpservletrequest, HttpServletResponse httpservletresponse)
-    throws IOException, ServletException  {
-        //UtilDateUtilities dateutilities = new UtilDateUtilities();
-        EctSessionBean sessionbean = null;
-        sessionbean = (EctSessionBean)httpservletrequest.getSession().getAttribute("EctSessionBean");
-        sessionbean.socialHistory = httpservletrequest.getParameter("shTextarea");
-        sessionbean.familyHistory = httpservletrequest.getParameter("fhTextarea");
-        sessionbean.medicalHistory = httpservletrequest.getParameter("mhTextarea");
-        sessionbean.ongoingConcerns = httpservletrequest.getParameter("ocTextarea");
-        sessionbean.reminders = httpservletrequest.getParameter("reTextarea");
-        sessionbean.encounter = httpservletrequest.getParameter("enTextarea");
-        sessionbean.subject = httpservletrequest.getParameter("subject");
-        java.util.Date date = UtilDateUtilities.Today();
-        sessionbean.eChartTimeStamp = date;
+public class EctSaveEncounterAction
+    extends Action {
 
-        if(!httpservletrequest.getParameter("btnPressed").equals("Exit")) {
-            try {
-                ResourceBundle prop = ResourceBundle.getBundle("oscarResources", httpservletrequest.getLocale());
-                if(httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit"))
-                    sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
-                if(httpservletrequest.getParameter("btnPressed").equals("Verify and Sign"))
-                    sessionbean.encounter = sessionbean.encounter + "\n" + "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") + " " + UtilDateUtilities.DateToString(date, prop.getString("date.yyyyMMddHHmmss"), httpservletrequest.getLocale()) + " " + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + sessionbean.userName + "]";
-                if(httpservletrequest.getParameter("btnPressed").equals("Split Chart"))
-                    sessionbean.subject = prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSplitChart");
-                sessionbean.template = "";
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-                String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" + UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + "'," + sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +  UtilMisc.charEscape(sessionbean.subject, '\'') + "','" + UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" + UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" + UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" + UtilMisc.charEscape(sessionbean.encounter, '\'') + "')" ;
-                dbhandler.RunSQL(s);
-                // add log here
-                String ip = httpservletrequest.getRemoteAddr();
-                LogAction.addLog((String) httpservletrequest.getSession().getAttribute("user"), LogConst.ADD, LogConst.CON_ECHART, sessionbean.demographicNo, ip);
+  public ActionForward execute(ActionMapping actionmapping,
+                               ActionForm actionform,
+                               HttpServletRequest httpservletrequest,
+                               HttpServletResponse httpservletresponse) throws
+      IOException, ServletException {
 
-                //change the appt status
-                if (sessionbean.status != null && !sessionbean.status.equals("")) {
-                    oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-                    as.setApptStatus(sessionbean.status);
-                    if (httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit") ) {
-                        s = "update appointment set status='" + as.signStatus() + "' where appointment_no=" + sessionbean.appointmentNo;
-                        dbhandler.RunSQL(s);
-                    }
-                    if (httpservletrequest.getParameter("btnPressed").equals("Verify and Sign") ) {
-                        s = "update appointment set status='" + as.verifyStatus() + "' where appointment_no=" + sessionbean.appointmentNo;
-                        dbhandler.RunSQL(s);
-                    }
-                }
-                dbhandler.CloseConn();
-            } catch(SQLException sqlexception) {
-                System.out.println(sqlexception.getMessage());
-            }
+    //UtilDateUtilities dateutilities = new UtilDateUtilities();
+    EctSessionBean sessionbean = null;
+    sessionbean = (EctSessionBean) httpservletrequest.getSession().getAttribute(
+        "EctSessionBean");
+    sessionbean.socialHistory = httpservletrequest.getParameter("shTextarea");
+    sessionbean.familyHistory = httpservletrequest.getParameter("fhTextarea");
+    sessionbean.medicalHistory = httpservletrequest.getParameter("mhTextarea");
+    sessionbean.ongoingConcerns = httpservletrequest.getParameter("ocTextarea");
+    sessionbean.reminders = httpservletrequest.getParameter("reTextarea");
+    sessionbean.encounter = httpservletrequest.getParameter("enTextarea");
+    sessionbean.subject = httpservletrequest.getParameter("subject");
+    java.util.Date date = UtilDateUtilities.Today();
+    sessionbean.eChartTimeStamp = date;
+
+    if (!httpservletrequest.getParameter("btnPressed").equals("Exit")) {
+      try {
+        ResourceBundle prop = ResourceBundle.getBundle("oscarResources",
+            httpservletrequest.getLocale());
+        if (httpservletrequest.getParameter("btnPressed").equals(
+            "Sign,Save and Bill")) {
+          sessionbean.encounter = sessionbean.encounter + "\n" + "[" +
+              prop.
+              getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") +
+              " " +
+              UtilDateUtilities.DateToString(date,
+                                             prop.getString("date.yyyyMMddHHmmss"),
+                                             httpservletrequest.getLocale()) +
+              " " +
+              prop.getString(
+              "oscarEncounter.class.EctSaveEncounterAction.msgSigBy") +
+              " " + sessionbean.userName + "]";
         }
-
-        try {  // save enc. window sizes
-            DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-            String s = "delete from encounterWindow where provider_no='"+sessionbean.providerNo+"'";
-            dbhandler.RunSQL(s);
-            s = "insert into encounterWindow (provider_no, rowOneSize, rowTwoSize, presBoxSize, rowThreeSize) values ('"+
-            sessionbean.providerNo+"', '"+
-            httpservletrequest.getParameter("rowOneSize")+"', '"+
-            httpservletrequest.getParameter("rowTwoSize")+"', '"+
-            httpservletrequest.getParameter("presBoxSize")+"', '"+
-            httpservletrequest.getParameter("rowThreeSize")+"')";
-            dbhandler.RunSQL(s);
-            dbhandler.CloseConn();
-        } catch(Exception e) {
-            e.printStackTrace(System.out);
+        if (httpservletrequest.getParameter("btnPressed").equals(
+            "Sign,Save and Exit")) {
+          sessionbean.encounter = sessionbean.encounter + "\n" + "[" +
+              prop.
+              getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") +
+              " " +
+              UtilDateUtilities.DateToString(date,
+                                             prop.getString("date.yyyyMMddHHmmss"),
+                                             httpservletrequest.getLocale()) +
+              " " +
+              prop.getString(
+              "oscarEncounter.class.EctSaveEncounterAction.msgSigBy") +
+              " " + sessionbean.userName + "]";
         }
+        if (httpservletrequest.getParameter("btnPressed").equals(
+            "Verify and Sign")) {
+          sessionbean.encounter = sessionbean.encounter + "\n" + "[" +
+              prop.
+              getString(
+              "oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") +
+              " " +
+              UtilDateUtilities.DateToString(date,
+                                             prop.getString("date.yyyyMMddHHmmss"),
+                                             httpservletrequest.getLocale()) +
+              " " +
+              prop.getString(
+              "oscarEncounter.class.EctSaveEncounterAction.msgSigBy") +
+              " " + sessionbean.userName + "]";
+        }
+        if (httpservletrequest.getParameter("btnPressed").equals("Split Chart")) {
+          sessionbean.subject = prop.getString(
+              "oscarEncounter.class.EctSaveEncounterAction.msgSplitChart");
+        }
+        sessionbean.template = "";
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+      try {
+        DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+        String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" +
+            UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + "'," +
+            sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +
+            UtilMisc.charEscape(sessionbean.subject, '\'') + "','" +
+            UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" +
+            UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" +
+            UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" +
+            UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" +
+            UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" +
+            UtilMisc.charEscape(sessionbean.encounter, '\'') + "')";
+        dbhandler.RunSQL(s);
+        // add log here
+        String ip = httpservletrequest.getRemoteAddr();
+        LogAction.addLog( (String) httpservletrequest.getSession().getAttribute(
+            "user"), LogConst.ADD, LogConst.CON_ECHART,
+                         sessionbean.demographicNo, ip);
 
-        if(httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit")
-        || httpservletrequest.getParameter("btnPressed").equals("Verify and Sign"))
-            return actionmapping.findForward("success");
-        if(httpservletrequest.getParameter("btnPressed").equals("Save"))
-            return actionmapping.findForward("saveAndStay");
-        if(httpservletrequest.getParameter("btnPressed").equals("Split Chart"))
-            return actionmapping.findForward("splitchart");
-        if(httpservletrequest.getParameter("btnPressed").equals("Exit"))
-            return actionmapping.findForward("close");
-        else
-            return actionmapping.findForward("failure");
+        //change the appt status
+        if (sessionbean.status != null && !sessionbean.status.equals("")) {
+          oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+          as.setApptStatus(sessionbean.status);
+          if (httpservletrequest.getParameter("btnPressed").equals(
+              "Sign,Save and Exit")) {
+            s = "update appointment set status='" + as.signStatus() +
+                "' where appointment_no=" + sessionbean.appointmentNo;
+            dbhandler.RunSQL(s);
+          }
+          if (httpservletrequest.getParameter("btnPressed").equals(
+              "Verify and Sign")) {
+            s = "update appointment set status='" + as.verifyStatus() +
+                "' where appointment_no=" + sessionbean.appointmentNo;
+            dbhandler.RunSQL(s);
+          }
+        }
+        dbhandler.CloseConn();
+      }
+      catch (SQLException sqlexception) {
+        System.out.println(sqlexception.getMessage());
+      }
     }
+
+    try { // save enc. window sizes
+      DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+      String s = "delete from encounterWindow where provider_no='" +
+          sessionbean.providerNo + "'";
+      dbhandler.RunSQL(s);
+      s = "insert into encounterWindow (provider_no, rowOneSize, rowTwoSize, presBoxSize, rowThreeSize) values ('" +
+          sessionbean.providerNo + "', '" +
+          httpservletrequest.getParameter("rowOneSize") + "', '" +
+          httpservletrequest.getParameter("rowTwoSize") + "', '" +
+          httpservletrequest.getParameter("presBoxSize") + "', '" +
+          httpservletrequest.getParameter("rowThreeSize") + "')";
+      dbhandler.RunSQL(s);
+      dbhandler.CloseConn();
+    }
+    catch (Exception e) {
+      e.printStackTrace(System.out);
+    }
+
+    //billRegion=BC&billForm=GP&hotclick=&appointment_no=0&demographic_name=TEST%2CBILLING&demographic_no=10419&providerview=1&user_no=999998&apptProvider_no=none&appointment_date=2006-3-30&start_time=0:00&bNewForm=1&status=t')
+    if (httpservletrequest.getParameter("btnPressed").equals(
+        "Sign,Save and Bill")) {
+
+      String billRegion = OscarProperties.getInstance().getProperty(
+          "billregion");
+      //
+      oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean = new oscar.
+          oscarBilling.ca.bc.pageUtil.BillingSessionBean();
+      bean.setApptProviderNo(sessionbean.providerNo);
+      bean.setPatientName(sessionbean.getPatientFirstName() + " " +
+                          sessionbean.getPatientLastName());
+      bean.setBillRegion(billRegion);
+      bean.setBillForm("GP");
+      bean.setPatientNo(sessionbean.demographicNo);
+      bean.setApptNo(httpservletrequest.getParameter("appointment_no"));
+      bean.setApptDate(sessionbean.appointmentDate);
+      httpservletrequest.setAttribute("encounter", "true");
+      httpservletrequest.getSession().setAttribute("billingSessionBean",bean);
+      return actionmapping.findForward("bill");
+    }
+    if (httpservletrequest.getParameter("btnPressed").equals(
+        "Sign,Save and Exit")
+        ||
+        httpservletrequest.getParameter("btnPressed").equals("Verify and Sign")) {
+      return actionmapping.findForward("success");
+    }
+    if (httpservletrequest.getParameter("btnPressed").equals("Save")) {
+      return actionmapping.findForward("saveAndStay");
+    }
+    if (httpservletrequest.getParameter("btnPressed").equals("Split Chart")) {
+      return actionmapping.findForward("splitchart");
+    }
+    if (httpservletrequest.getParameter("btnPressed").equals("Exit")) {
+      return actionmapping.findForward("close");
+    }
+    else {
+      return actionmapping.findForward("failure");
+    }
+  }
 }
