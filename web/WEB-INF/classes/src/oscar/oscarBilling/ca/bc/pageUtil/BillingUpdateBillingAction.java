@@ -34,10 +34,10 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import org.apache.struts.action.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarBilling.ca.bc.data.*;
-import oscar.util.SqlUtils;
 
 /**
  *
@@ -52,8 +52,6 @@ public final class BillingUpdateBillingAction
                                HttpServletResponse response) throws IOException,
       ServletException {
     BillingViewForm frm = (BillingViewForm)form;
-    String creator = (String) request.getSession().getAttribute("user");
-
     BillRecipient recip = new BillRecipient();
     recip.setName(frm.getRecipientName());
     recip.setAddress(frm.getRecipientAddress());
@@ -64,28 +62,11 @@ public final class BillingUpdateBillingAction
     msprec.updateBillingStatus(frm.getBillingNo(), frm.getBillStatus());
     msprec.saveOrUpdateBillRecipient(recip);
     msprec.updatePaymentMethod(frm.getBillingNo(),frm.getPaymentMethod());
-    BillingNote n = new BillingNote();
-    try {
-      n.addNoteFromBillingNo(frm.getBillingNo(), creator, frm.getMessageNotes());
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    String amountReceived = frm.getAmountReceived();
-    if(amountReceived!=null&&!"".equals(amountReceived)){
-      Double dblAmt = new Double(amountReceived);
-      this.receivePayment(frm.getBillingNo(), dblAmt);
-    }
     return mapping.findForward("success");
   }
 
   /** Creates a new instance of BillingUpdateBillingAction */
   public BillingUpdateBillingAction() {
-  }
-
-  public void receivePayment(String billingMasterNo, Double amount) {
-    PrivateBillTransactionsDAO dao = new PrivateBillTransactionsDAO();
-    dao.savePrivateBillTransaction(billingMasterNo, amount);
   }
 
 }
