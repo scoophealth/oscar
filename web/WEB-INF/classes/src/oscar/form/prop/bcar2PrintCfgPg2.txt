@@ -17,6 +17,7 @@ c_hospital	: left, 50, 50, 0, BaseFont.HELVETICA, 8
   ar2_labSTS	: left, 220, 88, 0, BaseFont.HELVETICA, 8 
   ar2_labHivTestN	: left, 223, 108, 0, BaseFont.HELVETICA, 8  , X
   ar2_labHivTestY	: left, 256, 108, 0, BaseFont.HELVETICA, 8  , X
+  ar2_labHIV	: left, 286, 108, 0, BaseFont.HELVETICA, 8
 
   ar2_labHem1st	: left, 50, 135, 0, BaseFont.HELVETICA, 8
   ar2_labHem3rd	: left, 98, 135, 0, BaseFont.HELVETICA, 8
