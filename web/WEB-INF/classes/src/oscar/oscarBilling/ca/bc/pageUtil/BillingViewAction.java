@@ -102,6 +102,7 @@ public final class BillingViewAction
         frm.setRecipientName(rec.getName());
         frm.setRecipientPostal(rec.getPostal());
         frm.setRecipientProvince(rec.getProvince());
+        frm.setBillPatient("0");
       }
       else {
         frm.setRecipientName(demo.getFirstName() + " " + demo.getLastName());
@@ -109,6 +110,8 @@ public final class BillingViewAction
         frm.setRecipientAddress(demo.getAddress());
         frm.setRecipientPostal(demo.getPostal());
         frm.setRecipientProvince(demo.getProvince());
+        frm.setBillPatient("1");
+
       }
       frm.setMessageNotes(bean.getMessageNotes());
       frm.setBillStatus(bean.getBillingType());
