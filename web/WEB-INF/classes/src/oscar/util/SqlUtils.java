@@ -852,7 +852,7 @@ public class SqlUtils {
    * @param classType Class
    * @return List
    */
-  public static List getBeanList (String qry, Class classType) {
+  public static List getBeanList(String qry, Class classType) {
     ArrayList rec = new ArrayList();
     int colCount = 0;
     ResultSet rs = null;
@@ -875,8 +875,8 @@ public class SqlUtils {
         //object field. Each matching method name is to be placed in a list of method names
         //to be used in subsequent iterations. This will reduce the overhead in having to search those names needlessly
         for (int i = 0; i < colCount; i++) {
-          String colName = rsmd.getColumnName(i+1);
-          Object value = getNewType(rs,i+1);
+          String colName = rsmd.getColumnName(i + 1);
+          Object value = getNewType(rs, i + 1);
 
           //if  this is the first record, get list of method names in object
           // and perform method invocation
@@ -915,7 +915,7 @@ public class SqlUtils {
     catch (InstantiationException e) {
       e.printStackTrace();
     }
-    finally{
+    finally {
       try {
         db.CloseConn();
         rs.close();
@@ -927,42 +927,88 @@ public class SqlUtils {
     }
     return rec;
   }
+
   private static Object getNewType(ResultSet rs, int colNum) {
-      int type = 0;
-      try {
-        type = rs.getMetaData().getColumnType(colNum);
-        switch (type) {
-          case Types.LONGVARCHAR:
-          case Types.CHAR:
-          case Types.VARCHAR:
-            return rs.getString(colNum);
-          case Types.TINYINT:
-          case Types.SMALLINT:
-          case Types.INTEGER:
-            return new Integer(rs.getInt(colNum));
-          case Types.BIGINT:
-            return new Long(rs.getLong(colNum));
-          case Types.FLOAT:
-          case Types.DECIMAL:
-          case Types.REAL:
-          case Types.DOUBLE:
-          case Types.NUMERIC:
-            return new Double(rs.getDouble(colNum));
-            // case Types.B
-          case Types.BIT:
-            return new Boolean(rs.getBoolean(colNum));
-          case Types.TIMESTAMP:
-          case Types.DATE:
-          case Types.TIME:
-            return rs.getDate(colNum);
-          default:
-            return rs.getObject(colNum);
+    int type = 0;
+    try {
+      type = rs.getMetaData().getColumnType(colNum);
+      switch (type) {
+        case Types.LONGVARCHAR:
+        case Types.CHAR:
+        case Types.VARCHAR:
+          return rs.getString(colNum);
+        case Types.TINYINT:
+        case Types.SMALLINT:
+        case Types.INTEGER:
+          return new Integer(rs.getInt(colNum));
+        case Types.BIGINT:
+          return new Long(rs.getLong(colNum));
+        case Types.FLOAT:
+        case Types.DECIMAL:
+        case Types.REAL:
+        case Types.DOUBLE:
+        case Types.NUMERIC:
+          return new Double(rs.getDouble(colNum));
+          // case Types.B
+        case Types.BIT:
+          return new Boolean(rs.getBoolean(colNum));
+        case Types.TIMESTAMP:
+        case Types.DATE:
+        case Types.TIME:
+          return rs.getDate(colNum);
+        default:
+          return rs.getObject(colNum);
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
+   * Returns a List of String[] which contain the results of the specified arbitrary query
+   * @param qry String - The String SQL Query
+   * @return List - The List of Srting[] results
+   */
+  public static List getQueryResultsList(String qry) {
+    ArrayList records = null;
+    ResultSet rs = null;
+    DBHandler db = null;
+    try {
+      records = new ArrayList();
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = (ResultSet) db.GetSQL(qry);
+      int cols = rs.getMetaData().getColumnCount();
+      while (rs.next()) {
+        String[] record = new String[cols];
+        for (int i = 0; i < cols; i++) {
+          record[i] = rs.getString(i + 1);
+        }
+        records.add(record);
+      }
+    }
+    catch (SQLException e) {
+      e.printStackTrace();
+    }
+    finally {
+      if(db!=null){
+        try {
+          db.CloseConn();
+        }
+        catch (SQLException ex) {
+          ex.printStackTrace();
         }
       }
-      catch (Exception e) {
-        e.printStackTrace();
+      if(rs!=null){
+        try {
+          rs.close();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
       }
-
-      return null;
     }
+    return records;
+  }
 }
