@@ -21,12 +21,12 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 	{
 		java.util.Date infirm_date=new java.util.GregorianCalendar(Integer.valueOf(request.getParameter("year")).intValue(), Integer.valueOf(request.getParameter("month")).intValue()-1, Integer.valueOf(request.getParameter("day")).intValue()).getTime();
 		session.setAttribute("infirmaryView_date",infirm_date);
-		
+
 	}else
 	{
 		session.setAttribute("infirmaryView_date",null);
 	}
-session.setAttribute("infirmaryView_OscarQue",request.getQueryString()); 
+session.setAttribute("infirmaryView_OscarQue",request.getQueryString());
 String absurl="/infirm.do?action=showProgram";
 %>
 <plugin:include componentName="coreComp" absoluteUrl="<%=absurl%>"/>
@@ -54,7 +54,10 @@ Checks if the schedule day is patients birthday
 public boolean isBirthday(String schedDate,String demBday){
 	return schedDate.equals(demBday);
 }
-
+public boolean patientHasOutstandingPrivateBills(String demographicNo){
+	oscar.oscarBilling.ca.bc.MSP.MSPReconcile msp = new oscar.oscarBilling.ca.bc.MSP.MSPReconcile();
+	return msp.patientHasOutstandingPrivateBill(demographicNo);
+}
 %>
 <%
     if(session.getAttribute("user") == null )
@@ -392,22 +395,22 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
              <%
                 //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
                 if (vLocale.getCountry().equals("BR")) { %>
-               <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+               <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
              <% } else {%>
-				<a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+				<a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
              <% } %>
 
 <!-- doctor code block -->
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <!--MARK-->         
+         <!--MARK-->
          <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
          <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
-         </a>         
+         </a>
          <oscar:newUnclaimedLab>
          <a style="color: red;" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
          </oscar:newUnclaimedLab>
-        </font></td>         
+        </font></td>
 		</security:oscarSec>
 <!-- doctor code block -->
 <!-- oscarMessenger code block -->
@@ -448,7 +451,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
        FACE='VERDANA,ARIAL,HELVETICA' SIZE=2>&nbsp;<a href='<html:rewrite page="<%= pt.getLink() %>"/>'>
        <%= pt.getName() %></a>&nbsp;</font></td>
       <td></td>
-      
+
 </logic:iterate>
 <!-- caisi menu extension point add end-->
       </tr><tr>
@@ -480,7 +483,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 		</security:oscarSec>
 <!-- admin code block -->
 
-<!-- caisi menu extension point add begin-->        
+<!-- caisi menu extension point add begin-->
 <logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
 	<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
 </logic:iterate>
@@ -556,7 +559,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp;
 <% } %>
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
-         
+
 <!-- caisi infirmary view extension add fffffffffffff-->
 <plugin:hideWhenCompExists componentName="coreComp" reverse="true">
 </td></tr>
@@ -674,7 +677,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         %>
           <tr>
             <td align="RIGHT" bgcolor="<%=bColorHour?"#3EA4E1":"#00A488"%>" width="5%" NOWRAP><b><font face="verdana,arial,helvetica" size="2">
-             <a href=# onClick="confirmPopupPage(400,780,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>','<%= dateTimeCodeBean.get("confirm"+hourmin.toString()) %>');return false;" 
+             <a href=# onClick="confirmPopupPage(400,780,'../appointment/addappointment.jsp?provider_no=<%=curProvider_no[nProvider]%>&bFirstDisp=<%=true%>&year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&start_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+ (minuteCursor<10?"0":"") +minuteCursor %>&end_time=<%=(hourCursor>9?(""+hourCursor):("0"+hourCursor))+":"+(minuteCursor+depth-1)%>&duration=<%=dateTimeCodeBean.get("duration"+hourmin.toString())%>','<%= dateTimeCodeBean.get("confirm"+hourmin.toString()) %>');return false;"
   title='<%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+ (minuteCursor<10?"0":"")+minuteCursor)%> - <%=MyDateFormat.getTimeXX_XXampm(hourCursor +":"+((minuteCursor+depth-1)<10?"0":"")+(minuteCursor+depth-1))%>' class="adhour">
              <%=(hourCursor<10?"0":"") +hourCursor+ ":"%><%=(minuteCursor<10?"0":"")+minuteCursor%>&nbsp;</a></font></b></td>
             <td width='1%' <%=dateTimeCodeBean.get("color"+hourmin.toString())!=null?("bgcolor="+dateTimeCodeBean.get("color"+hourmin.toString()) ):""%> title='<%=dateTimeCodeBean.get("description"+hourmin.toString())%>'><font color='<%=(dateTimeCodeBean.get("color"+hourmin.toString())!=null && !dateTimeCodeBean.get("color"+hourmin.toString()).equals(bgcolordef) )?"black":"white" %>'><%=hourmin.toString() %></font>
@@ -781,14 +784,14 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         			if(demographic_no==0) {
         %>
         	<!--  caisi  -->
-        	<% if (tickler_no.compareTo("") != 0) {%>	
+        	<% if (tickler_no.compareTo("") != 0) {%>
 	        	<plugin:hideWhenCompExists componentName="ticklerComp">
         			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
     			</plugin:hideWhenCompExists>
     			<plugin:hideWhenCompExists componentName="ticklerComp" reverse="true">
     				<a href="../mod/ticklerComp/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
     			</plugin:hideWhenCompExists>
-    		<%} %>	    		
+    		<%} %>
 <a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
 <bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
@@ -852,20 +855,27 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <!-- billing code block -->
 
     <% if (vLocale.getCountry().equals("BR")) {%>
-    <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master')" 
+    <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}else{%>
-    <a href="javascript: function myFunction() {return false; }" onclick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master')" 
+    <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master')"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
 
       <% if (!vLocale.getCountry().equals("BR")) { %>
+
 <!-- doctor code block -->
+      <%
+	  if("bc".equalsIgnoreCase(prov)){
+	  if(patientHasOutstandingPrivateBills(String.valueOf(demographic_no))){
+	  %>
+	  |<b style="color:#FF0000">$</b>
+	  <%}}%>
+          <!-- doctor code block -->
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
       <a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curUser_no%>&demographicNo=<%=demographic_no%>')">|<bean:message key="global.rx"/></a><oscar:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes">| <b><%=reason%></b></oscar:oscarPropertiesCheck>
 	  </security:oscarSec>
-<!-- doctor code block -->
-      <%
+          <%
      //out.print(monthDay + " " + demBday);
       if(isBirthday(monthDay,demBday)){%>
       	| <img src="../images/cake.gif" height="20"/>
