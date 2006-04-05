@@ -65,7 +65,7 @@ You have no rights to access the data!
         ProvinceNames pNames = ProvinceNames.getInstance();
    DemographicExt ext = new DemographicExt();
    ArrayList arr = ext.getListOfValuesForDemo(demographic_no);
-   Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);    
+   Hashtable demoExt = ext.getAllValuesForDemo(demographic_no);
 %>
 
 
@@ -162,10 +162,10 @@ function popupS(varpage) {
 }
 function checkTypeIn() {
   var dob = document.titlesearch.keyword; typeInOK = false;
-  
+
   if (dob.value.indexOf('%b610054') == 0 && dob.value.length > 18){
      document.titlesearch.keyword.value = dob.value.substring(8,18);
-     document.titlesearch.search_mode[4].checked = true;             
+     document.titlesearch.search_mode[4].checked = true;
   }
 
   if(document.titlesearch.search_mode[2].checked) {
@@ -214,23 +214,23 @@ function checkDob() {
 		if (check_date.getTime() <= young.getTime() && check_date.getTime() >= old.getTime() && yyyy.length==4) {
 		    typeInOK = true;
 		}
-		if ( yyyy == "0000"){ 
+		if ( yyyy == "0000"){
         typeInOK = false;
       }
 	}
-	
-	
+
+
 
 	if (!typeInOK){
       alert ("You must type in the right DOB.");
    }
-   
+
    if (!isValidDate(dd,mm,yyyy)){
       alert ("DOB Date is an incorrect date");
       typeInOK = false;
    }
    //alert( isValidDate(dd,mm,yyyy) );
-   
+
 	return typeInOK;
 }
 
@@ -380,19 +380,19 @@ function showHideDetail(){
     showHideItem('swipeButton');
 }
 
-function showHideItem(id){ 
+function showHideItem(id){
     if(document.getElementById(id).style.display == 'none')
-        document.getElementById(id).style.display = 'inline'; 
+        document.getElementById(id).style.display = 'inline';
     else
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 function showItem(id){
-        document.getElementById(id).style.display = 'inline'; 
+        document.getElementById(id).style.display = 'inline';
 }
 
 function hideItem(id){
-        document.getElementById(id).style.display = 'none'; 
+        document.getElementById(id).style.display = 'none';
 }
 
 
@@ -412,8 +412,8 @@ div.demographicSection{
    float: left;
 }
 
-div.demographicSection h3 {  
-   background-color: #ccccff;    
+div.demographicSection h3 {
+   background-color: #ccccff;
    font-size: 8pt;
    font-variant:small-caps;
    font:bold;
@@ -423,17 +423,17 @@ div.demographicSection h3 {
    padding-bottom:0px;
 }
 
-div.demographicSection ul{        
-       
+div.demographicSection ul{
+
        list-style:none;
-       list-style-type:none; 
-       list-style-position:outside;       
+       list-style-type:none;
+       list-style-position:outside;
        padding-left:1px;
-       margin-left:1px;    
+       margin-left:1px;
        margin-top:0px;
        padding-top:1px;
        margin-bottom:0px;
-       padding-bottom:0px;	
+       padding-bottom:0px;
 }
 
 
@@ -444,7 +444,7 @@ white-space: nowrap;
 
 
 div.demographicWrapper {
-  background-color: #eeeeff;    
+  background-color: #eeeeff;
   margin-top: 5px;
   margin-left:1px;
   margin-right:1px;
@@ -517,7 +517,7 @@ div.demographicWrapper {
                         <%=rs.getString("last_name")%>, <%=rs.getString("first_name")%> <%=rs.getString("sex")%> <%=age%> years
                         <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=rs.getString("demographic_no")%>"/></i></span>
                         </td>
-                    </tr>  
+                    </tr>
                 </table>
             </td>
         </tr>
@@ -551,30 +551,31 @@ div.demographicWrapper {
                     <a href='../oscar/billing/consultaFaturamentoPaciente/init.do?demographic_no=<%=rs.getString("demographic_no")%>'>Hist&oacute;rico do Faturamento</a></th>
                     <% } else  { %>
                     <!--a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'../billing/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10')">Billing History</a-->
-                    <a href='../billing/CA/<%=prov%>/billinghistory.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=10'><bean:message key="demographic.demographiceditdemographic.btnBillingHist"/></a></th>
+                    <a href="#" onclick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp?lastName=<%=URLEncoder.encode(rs.getString("last_name"))%>&firstName=<%=URLEncoder.encode(rs.getString("first_name"))%>&filterPatient=true&demographicNo=<%=rs.getString("demographic_no")%>');return false;">Invoice List</a>
+                  </th>
                     <% } %>
                 </td></tr>
                 <% if (!vLocale.getCountry().equals("BR")) { %>
                 <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onclick="popupPage(700, 1000, '../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Add Billing</a>
+                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700, 1000, '../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Create Invoice</a>
                 </td></tr>
                 <%    if("ON".equals(prov)) {
                 	       String default_view = oscarVariables.getProperty("default_view", "");
                 %>
                    <%    if (!oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // part 2 of quick hack to make Dr. Hunter happy %>
                          <tr><td>
-                         <a href="javascript: function myFunction() {return false; }" onclick="window.open('../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&demo_sex=<%=URLEncoder.encode(rs.getString("sex"))%>&demo_hctype=<%=URLEncoder.encode(rs.getString("hc_type")==null?"null":rs.getString("hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=720,height=500');return false;" title='Add Flu Billing'>Flu Billing</a>
+                         <a href="javascript: function myFunction() {return false; }" onClick="window.open('../billing/CA/ON/specialtyBilling/fluBilling/addFluBilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&demo_sex=<%=URLEncoder.encode(rs.getString("sex"))%>&demo_hctype=<%=URLEncoder.encode(rs.getString("hc_type")==null?"null":rs.getString("hc_type"))%>&rd=<%=URLEncoder.encode(rd==null?"null":rd)%>&rdohip=<%=URLEncoder.encode(rdohip==null?"null":rdohip)%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=720,height=500');return false;" title='Add Flu Billing'>Flu Billing</a>
                          </td></tr>
-                      <% } %>                   
+                      <% } %>
                       <tr><td>
-                      <a href="javascript: function myFunction() {return false; }" onclick="popupS('../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("hospital_view", default_view))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Hospital Billing</a>
+                      <a href="javascript: function myFunction() {return false; }" onClick="popupS('../billing/CA/ON/billingShortcutPg1.jsp?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("hospital_view", default_view))%>&hotclick=&appointment_no=0&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&providerview=1&user_no=<%=curProvider_no%>&apptProvider_no=none&appointment_date=<%=dateString%>&start_time=0:00&bNewForm=1&status=t');return false;" title="bill a patient">Hospital Billing</a>
                       </td></tr>
-                
+
                       <tr><td>
-                      <a href="javascript: function myFunction() {return false; }" onclick="window.open('../billing/CA/ON/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
+                      <a href="javascript: function myFunction() {return false; }" onClick="window.open('../billing/CA/ON/inr/addINRbilling.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>&demographic_name=<%=URLEncoder.encode(rs.getString("last_name"))%>%2C<%=URLEncoder.encode(rs.getString("first_name"))%>&hin=<%=URLEncoder.encode(rs.getString("hin"))%><%=URLEncoder.encode(rs.getString("ver"))%>&dob=<%=MyDateFormat.getStandardDate(Integer.parseInt(rs.getString("year_of_birth")),Integer.parseInt(rs.getString("month_of_birth")),Integer.parseInt(rs.getString("date_of_birth")))%>','', 'scrollbars=yes,resizable=yes,width=600,height=400');return false;" title='Add INR Billing'>Add INR</a></th>
                       </td></tr>
                       <tr><td>
-                      <a href="javascript: function myFunction() {return false; }" onclick="window.open('../billing/CA/ON/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;" title='INR Billing'>Bill INR</a></th>
+                      <a href="javascript: function myFunction() {return false; }" onClick="window.open('../billing/CA/ON/inr/reportINR.jsp?provider_no=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600');return false;" title='INR Billing'>Bill INR</a></th>
                       </td></tr>
                   <%  } %>
                 <% } %>
@@ -584,7 +585,7 @@ div.demographicWrapper {
                     </td>
                 </tr>
                 <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onclick="popupPage(700,960,'../oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')"><bean:message key="demographic.demographiceditdemographic.btnConsultation"/></a>
+                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,960,'../oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=<%=rs.getString("demographic_no")%>&proNo=<%=rs.getString("provider_no")%>')"><bean:message key="demographic.demographiceditdemographic.btnConsultation"/></a>
                 </td></tr>
                 <% if (!vLocale.getCountry().equals("BR")) { %>
                 <tr><td>
@@ -601,7 +602,7 @@ div.demographicWrapper {
                     <bean:message key="global.tickler"/></a>
                 </td></tr>
                 <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onclick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=rs.getString("demographic_no")%>','msg')">Send a Message</a>
+                    <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=rs.getString("demographic_no")%>','msg')">Send a Message</a>
                 </td></tr>
                 <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy %>
                 <tr><td>
@@ -621,7 +622,7 @@ div.demographicWrapper {
                     <a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=rs.getString("demographic_no")%>&curUser=<%=curProvider_no%>')"><bean:message key="demographic.demographiceditdemographic.msgDocuments"/></a>
                 </td></tr>
                 <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onclick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300');return false;"><bean:message key="demographic.demographiceditdemographic.btnAddDocument"/></a>
+                    <a href="javascript: function myFunction() {return false; }" onClick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300');return false;"><bean:message key="demographic.demographiceditdemographic.btnAddDocument"/></a>
                 </td></tr>
                 <tr><td>
                     <a href="../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message key="demographic.demographiceditdemographic.btnEForm"/></a>
@@ -641,16 +642,16 @@ div.demographicWrapper {
                     </tr>
                     <tr>
                     <td>
-                    <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onsubmit="return checkTypeInEdit();">
+                    <form method="post" name="updatedelete" id="updatedelete" action="demographiccontrol.jsp" onSubmit="return checkTypeInEdit();">
                     <input type="hidden" name="demographic_no" value="<%=rs.getString("demographic_no")%>">
                     <tr><td>
                     <table width="100%" bgcolor="#CCCCFF" cellspacing="1" cellpadding="1">
                         <tr><td class="RowTop">
-                            <b>Record</b> (<%=rs.getString("demographic_no")%>) <a href="javascript: showHideDetail();">Edit</a> 
+                            <b>Record</b> (<%=rs.getString("demographic_no")%>) <a href="javascript: showHideDetail();">Edit</a>
                         </td></tr>
                         <tr><td bgcolor="#eeeeff">
-                                                                                          
-                        
+
+
                        <!---new-->
                        <div style="background-color: #EEEEFF;" id="viewDemographics2">
                           <div class="demographicWrapper" style="background-color: #EEEEFF;" >
@@ -658,15 +659,15 @@ div.demographicWrapper {
                                     <div class="demographicSection" style="margin-top: 2px;">
                                         <h3>&nbsp;Demographics</h3>
                                         <div style="background-color: #EEEEFF;" >
-                                        <ul>                                
+                                        <ul>
                                             <li>
-                                                <bean:message key="demographic.demographiceditdemographic.formLastName"/>: <b><%=rs.getString("last_name")%></b>                                        
+                                                <bean:message key="demographic.demographiceditdemographic.formLastName"/>: <b><%=rs.getString("last_name")%></b>
                                                 <bean:message key="demographic.demographiceditdemographic.formFirstName"/>: <b> <%=rs.getString("first_name")%></b>
                                             </li>
                                             <li>
                                                 Age:<b><%=age%></b> &nbsp;
-                                                <bean:message key="demographic.demographiceditdemographic.formDOB"/>:<b>(<%=rs.getString("year_of_birth")%>-<%=rs.getString("month_of_birth")%>-<%=rs.getString("date_of_birth")%>)</b> 
-                                            </li>                                        
+                                                <bean:message key="demographic.demographiceditdemographic.formDOB"/>:<b>(<%=rs.getString("year_of_birth")%>-<%=rs.getString("month_of_birth")%>-<%=rs.getString("date_of_birth")%>)</b>
+                                            </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formSex"/>:<b><%=rs.getString("sex")%></b>
                                             </li>
@@ -674,69 +675,69 @@ div.demographicWrapper {
                                                 Language: <b><%=s(demoExt.get("language"))%></b>
                                             </li>
                                         </ul>
-                                        </div>                                
+                                        </div>
                                     </div>
-                                    
+
                                     <div class="demographicSection">
-                                        <h3>&nbsp;Other Contacts: <b><a href="javascript: function myFunction() {return false; }" onclick="popup(700,960,'AddAlternateContact.jsp?demo=<%=rs.getString("demographic_no")%>','AddRelation')">Add Relation<!--i18n--></a></b></h3>
-                                        <div style="background-color: #EEEEFF;" >                                    
-                                        <ul>                                
+                                        <h3>&nbsp;Other Contacts: <b><a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'AddAlternateContact.jsp?demo=<%=rs.getString("demographic_no")%>','AddRelation')">Add Relation<!--i18n--></a></b></h3>
+                                        <div style="background-color: #EEEEFF;" >
+                                        <ul>
                                         <%DemographicRelationship demoRelation = new DemographicRelationship();
                                           ArrayList relList = demoRelation.getDemographicRelationshipsWithNamePhone(rs.getString("demographic_no"));
                                           for (int reCounter = 0; reCounter < relList.size(); reCounter++){
-                                             Hashtable relHash = (Hashtable) relList.get(reCounter);                                             
+                                             Hashtable relHash = (Hashtable) relList.get(reCounter);
                                              String sdb = relHash.get("subDecisionMaker") == null?"":((Boolean) relHash.get("subDecisionMaker")).booleanValue()?"<span title=\"SDM\" >/SDM</span>":"";
                                              String ec = relHash.get("emergencyContact") == null?"":((Boolean) relHash.get("emergencyContact")).booleanValue()?"<span title=\"Emergency Contact\">/EC</span>":"";
-                                             
+
                                           %>
                                             <li>
-                                            <b><%=relHash.get("relation")%><%=sdb%><%=ec%>: </b><%=relHash.get("lastName")%>, <%=relHash.get("firstName")%> ,<%=relHash.get("phone")%>                                        
+                                            <b><%=relHash.get("relation")%><%=sdb%><%=ec%>: </b><%=relHash.get("lastName")%>, <%=relHash.get("firstName")%> ,<%=relHash.get("phone")%>
                                             </li>
                                         <%}%>
-                                        
+
                                         </ul>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="demographicSection">
                                         <h3>&nbsp;Clinic Status</h3>
                                         <div style="background-color: #EEEEFF;" >
                                         <ul>
-                                            <li>                                                              
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: <b><%=rs.getString("roster_status")%></b>
                                                 <bean:message key="demographic.demographiceditdemographic.DateJoined"/>: <b><%=rs.getString("hc_renew_date")%></b>
-                                            </li>                                                                                                    
-                                            <li>                                                              
+                                            </li>
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=rs.getString("patient_status")%></b>
-                                            </li>                                                                                                    
-                                            <li>                                                              
+                                            </li>
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formChartNo"/>:<b><%=rs.getString("chart_no")%></b>
-                                            </li>                                                                                 
+                                            </li>
 
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: <b><%=rs.getString("date_joined")%></b>
                                                 <bean:message key="demographic.demographiceditdemographic.formEndDate"/>: <b><%=rs.getString("end_date")%></b>
-                                            </li>                                        
+                                            </li>
                                         </ul>
-                                        </div>                                
-                                    </div>                                                                
-                                    
+                                        </div>
+                                    </div>
+
                                     <div class="demographicSection">
                                         <h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.formAlert"/></h3>
                                         <div style="background-color: #EEEEFF;" >
                                         <%=alert%> &nbsp;
-                                    </div>                                
+                                    </div>
                                 </div>
-                                    
+
                              </div>
                              <div style="width:49%;float:left;margin-left:5px;">
                                 <div class="demographicSection" style="margin-top: 2px;">
                                     <h3>&nbsp;Contact Information</h3>
                                     <div style="background-color: #EEEEFF;" >
                                     <ul>
-                                        <li>                                                      
-                                            <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=rs.getString("phone")%> <%=s(demoExt.get("hPhoneExt"))%></b>                                            
-                                            <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=rs.getString("phone2")%> <%=s(demoExt.get("wPhoneExt"))%></b>                                                                                        
+                                        <li>
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=rs.getString("phone")%> <%=s(demoExt.get("hPhoneExt"))%></b>
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=rs.getString("phone2")%> <%=s(demoExt.get("wPhoneExt"))%></b>
                                         </li>
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formAddr"/>: <b><%=rs.getString("address")%></b>
@@ -745,101 +746,101 @@ div.demographicWrapper {
                                             <bean:message key="demographic.demographiceditdemographic.formCity"/>: <b><%=rs.getString("city")%></b>
                                         </li>
                                         <li>
-										<% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>                             
+										<% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
                                             <bean:message key="demographic.demographiceditdemographic.formProcvince"/>
-										<% } else { 
+										<% } else {
 			                                  out.print(oscarProps.getProperty("demographicLabelProvince"));
 										   } %>
 										   : <b> <%=rs.getString("province")%></b>
                                         </li>
                                         <li>
-										<% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>                             
+										<% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
                                             <bean:message key="demographic.demographiceditdemographic.formPostal"/>
-										<% } else { 
+										<% } else {
 			                                  out.print(oscarProps.getProperty("demographicLabelPostal"));
 										   } %>
 										   : <b> <%=rs.getString("postal")%></b>
-                                        </li>                                   
-                                        
+                                        </li>
+
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formEmail"/>: <b> <%=rs.getString("email")!=null? rs.getString("email") : ""%></b>
                                         </li>
                                     </ul>
                                     </div>
                                 </div>
-                                
+
                                 <div class="demographicSection">
                                     <h3>&nbsp;Health Insurance</h3>
                                     <div style="background-color: #EEEEFF;" >
-                                    <ul>                                
+                                    <ul>
                                         <li>
                                           <bean:message key="demographic.demographiceditdemographic.formHin"/>: <b><%=rs.getString("hin")%> &nbsp; <%=rs.getString("ver")%></b>
                                           <bean:message key="demographic.demographiceditdemographic.formHCType"/>:<b><%=rs.getString("hc_type")==null?"":rs.getString("hc_type") %></b>
-                                        </li>                                        
+                                        </li>
                                         <li>
                                           <bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:<b><%=rs.getString("eff_date")%></b>
-                                        </li>                                        
+                                        </li>
                                     </ul>
-                                    </div>                                
+                                    </div>
                                 </div>
-                                
+
                                 <div class="demographicSection">
                                         <h3>&nbsp;Patient Clinic Status</h3>
                                         <div style="background-color: #EEEEFF;" >
-                                        <ul>                                
+                                        <ul>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formDoctor"/>: <b><%=providerBean.getProperty(rs.getString("provider_no"),"")%></b>
-                                            </li>                                                                                                    
-                                            <li>                                                              
+                                            </li>
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formNurse"/>: <b><%=providerBean.getProperty(resident,"")%></b>
-                                            </li>                                                                                                    
-                                            <li>                                                              
+                                            </li>
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formMidwife"/>: <b><%=providerBean.getProperty(midwife,"")%></b>
-                                            </li>                                                                                                    
-                                            <li>                                                              
-                                                <bean:message key="demographic.demographiceditdemographic.formResident"/>:<b> <%=providerBean.getProperty(nurse,"")%></b> 
-                                            </li>                                                                                                    
-                                            <li>                                                              
+                                            </li>
+                                            <li>
+                                                <bean:message key="demographic.demographiceditdemographic.formResident"/>:<b> <%=providerBean.getProperty(nurse,"")%></b>
+                                            </li>
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formRefDoc"/>: <b><%=rd%></b>
-                                            </li>                                                                                                    
-                                            <li>                                                              
+                                            </li>
+                                            <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formRefDocNo"/>: <b><%=rdohip%></b>
-                                            </li>                                
+                                            </li>
                                         </ul>
                                         </div>
                                 </div>
-                                
-                                
+
+
                                 <div class="demographicSection">
                                     <h3>&nbsp;<bean:message key="demographic.demographiceditdemographic.formNotes"/></h3>
                                     <div style="background-color: #EEEEFF;" >
                                     <%=notes%> &nbsp;
-                                    </div>                                
-                                </div>                                                                                                                                    
+                                    </div>
+                                </div>
                              </div>
                             </div>
-                            
+
 <% // customized key
-if(oscarVariables.getProperty("demographicExt") != null) {    
+if(oscarVariables.getProperty("demographicExt") != null) {
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
-%>	
+%>
                                 <div class="demographicSection">
                                     <h3>&nbsp;Special</h3>
                                     <div style="background-color: #EEEEFF;" >
-<% 	for(int k=0; k<propDemoExt.length; k++) {%>	
+<% 	for(int k=0; k<propDemoExt.length; k++) {%>
                                     <%=propDemoExt[k]+": <b>" + s(demoExt.get(propDemoExt[k].replace(' ', '_')))%> </b>&nbsp;<%=((k+1)%4==0&&(k+1)<propDemoExt.length)?"<br>":"" %>
-<% 	} %>    
-                                    </div>                                
-                                </div>                                                                                                                                    
-<% } %>    
+<% 	} %>
+                                    </div>
+                                </div>
+<% } %>
 
                         </div>
 
-                                
+
 
 
                        <!--newEnd-->
-                        
+
                         <table width="100%" bgcolor="#EEEEFF" border=0 id="editDemographic" style="display:none;">
                             <tr>
                               <td align="right" title='<%=rs.getString("demographic_no")%>'> <b><bean:message key="demographic.demographiceditdemographic.formLastName"/>: </b></td>
@@ -929,9 +930,9 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                             <%}%>
                             <tr valign="top">
                               <td align="right"><b>
-							  <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>                             
-                              <bean:message key="demographic.demographiceditdemographic.formProcvince"/> 
-                              <% } else { 
+							  <% if(oscarProps.getProperty("demographicLabelProvince") == null) { %>
+                              <bean:message key="demographic.demographiceditdemographic.formProcvince"/>
+                              <% } else {
                                   out.print(oscarProps.getProperty("demographicLabelProvince"));
                               	 } %>
                               :
@@ -968,12 +969,12 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <% } %>
                               </td>
                               <td  align="right"><b>
-							  <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>                             
+							  <% if(oscarProps.getProperty("demographicLabelPostal") == null) { %>
                               <bean:message key="demographic.demographiceditdemographic.formPostal"/>
-                              <% } else { 
+                              <% } else {
                                   out.print(oscarProps.getProperty("demographicLabelPostal"));
                               	 } %>
-                              : 
+                              :
                               </b> </td>
                               <td  align="left">
                                 <input type="text" name="postal" size="30" value="<%=rs.getString("postal")%>" onBlur="upCaseCtrl(this)">
@@ -985,13 +986,13 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <%-- // <input type="text" name="phone" size="30" value="<%=rs.getString("phone")!=null && rs.getString("phone").length()==10?rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6):rs.getString("phone")%>">--%>
                                 <input type="text" name="phone"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=rs.getString("phone")%>">
                                 Ext:<input type="text" name="hPhoneExt" value="<%=s(demoExt.get("hPhoneExt"))%>"  size="4" />
-                                <input type="hidden" name="hPhoneExtOrig" value="<%=s(demoExt.get("hPhoneExt"))%>" />    
+                                <input type="hidden" name="hPhoneExtOrig" value="<%=s(demoExt.get("hPhoneExt"))%>" />
                               </td>
                               <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:</b> </td>
                               <td  align="left">
                                 <input type="text" name="phone2"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=rs.getString("phone2")%>">
                                 Ext:<input type="text" name="wPhoneExt" value="<%=s(demoExt.get("wPhoneExt"))%>"  style="display:inline" size="4" />
-                                <input type="hidden" name="wPhoneExtOrig" value="<%=s(demoExt.get("wPhoneExt"))%>" />    
+                                <input type="hidden" name="wPhoneExtOrig" value="<%=s(demoExt.get("wPhoneExt"))%>" />
                               </td>
                             </tr>
                             <tr valign="top">
@@ -1339,18 +1340,18 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                                 <input type="text" name="end_date_month" size="2" maxlength="2" value="<%= endMonth %>">
                                 <input type="text" name="end_date_date" size="2" maxlength="2" value="<%= endDay %>">
                               </td>
-                            </tr>  
+                            </tr>
 <% // customized key
 if(oscarVariables.getProperty("demographicExt") != null) {
     boolean bExtForm = oscarVariables.getProperty("demographicExtForm") != null ? true : false;
     String [] propDemoExtForm = bExtForm ? (oscarVariables.getProperty("demographicExtForm","").split("\\|") ) : null;
 	String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
 	for(int k=0; k<propDemoExt.length; k=k+2) {
-%>	
+%>
                             <tr valign="top" bgcolor="#CCCCFF">
                               <td align="right" nowrap><b><%=propDemoExt[k]%>: </b></td>
                               <td align="left" >
-                              <% if(bExtForm) { 
+                              <% if(bExtForm) {
                                   	if(propDemoExtForm[k].indexOf("<select")>=0) {
                                 		out.println(propDemoExtForm[k].replaceAll("value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" , "value=\""+s(demoExt.get(propDemoExt[k].replace(' ', '_')))+"\"" + " selected") );
                                   	} else {
@@ -1358,13 +1359,13 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                   	}
                               	 } else { %>
                                 <input type="text" name="<%=propDemoExt[k].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
-                              <% }  %>    
+                              <% }  %>
 								<input type="hidden" name="<%=propDemoExt[k].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
                               </td>
                               <% if((k+1)<propDemoExt.length) { %>
                               <td align="right" nowrap><b><%= propDemoExt[k+1]+":"%> </b></td>
                               <td align="left" >
-                              <% if(bExtForm) { 
+                              <% if(bExtForm) {
                                   	if(propDemoExtForm[k+1].indexOf("<select")>=0) {
                                 		out.println(propDemoExtForm[k+1].replaceAll("value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" , "value=\""+s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))+"\"" + " selected") );
                                   	} else {
@@ -1372,18 +1373,18 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                   	}
                               	 } else { %>
                                 <input type="text" name="<%=propDemoExt[k+1].replace(' ', '_')%>" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
-                              <% }  %>    
+                              <% }  %>
 								<input type="hidden" name="<%=propDemoExt[k+1].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k+1].replace(' ', '_')))%>" />
                               </td>
-                              <% } else {%>    
+                              <% } else {%>
                               <td>&nbsp;</td><td>&nbsp;</td>
-                              <% }  %>    
+                              <% }  %>
                             </tr>
-<% 	} 
+<% 	}
 }
 if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(oscarVariables.getProperty("demographicExtJScript")); }
-%>    
-                            
+%>
+
                             <tr valign="top">
                                <td nowrap colspan="4">
                                   <table width="100%" bgcolor="#EEEEFF">
@@ -1403,7 +1404,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                   </table>
                                </td>
                             </tr>
-                            
+
                         </table>
                         </td></tr>
                     <tr bgcolor="#CCCCFF">
