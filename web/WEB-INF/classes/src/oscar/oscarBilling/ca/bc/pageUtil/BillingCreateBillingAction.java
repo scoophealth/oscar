@@ -25,17 +25,19 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.*;
 import java.util.*;
+import java.util.ArrayList;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
+import org.apache.struts.action.ActionErrors;
+import oscar.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.oscarBilling.ca.bc.data.*;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.*;
 import oscar.oscarDemographic.data.*;
-import oscar.oscarDemographic.data.DemographicData.*;
-import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
-import oscar.oscarBilling.ca.bc.data.BillingFormData;
-import oscar.OscarProperties;
+import oscar.util.SqlUtils;
 
 public class BillingCreateBillingAction
     extends Action {
@@ -47,8 +49,10 @@ public class BillingCreateBillingAction
       ServletException {
     ActionErrors errors = new ActionErrors();
     BillingBillingManager bmanager = new BillingBillingManager();
-    BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
 
+
+    BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
+    bmanager.setBillTtype(frm.getXml_billtype());
     /**
      * This service list is not necessary
      */
@@ -62,7 +66,8 @@ public class BillingCreateBillingAction
 
     BillingSessionBean bean = (BillingSessionBean) request.getSession().
         getAttribute("billingSessionBean");
-   DemographicData.Demographic demo = new DemographicData().getDemographic(bean.getPatientNo());
+    DemographicData.Demographic demo = new DemographicData().getDemographic(
+        bean.getPatientNo());
 
     ArrayList billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
@@ -133,12 +138,13 @@ public class BillingCreateBillingAction
     }
     validateServiceCodeList(billItem, demo, errors);
     validateDxCodeList(bean, errors);
+    validateServiceCodeTimes(billItem, frm, errors);
 
     if (!errors.isEmpty()) {
       checkCDMStatus(request, errors, demo);
       return mapping.getInputForward();
     }
-    validate00120(errors, demo, billItem,bean.getServiceDate());
+    validate00120(errors, demo, billItem, bean.getServiceDate());
     if (!errors.isEmpty()) {
       checkCDMStatus(request, errors, demo);
       return mapping.getInputForward();
@@ -150,7 +156,7 @@ public class BillingCreateBillingAction
     String newWCBClaim = request.getParameter("newWCBClaim");
 
     //Basically if newWCBClaim == 1 we don't want to forward to the WCB form since the form was created already
-    if(!"1".equals(newWCBClaim)){
+    if (!"1".equals(newWCBClaim)) {
       if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
         WCBForm wcbForm = new WCBForm();
         wcbForm.Set(bean);
@@ -160,6 +166,64 @@ public class BillingCreateBillingAction
       }
     }
     return mapping.findForward("success");
+  }
+
+  /**
+   * validateServiceCodeTimes
+   *
+   * @param billItem ArrayList
+   * @param errors ActionErrors
+   */
+  private void validateServiceCodeTimes(ArrayList billItems,
+                                        BillingCreateBillingForm frm,
+                                        ActionErrors
+                                        errors) {
+
+    List results = SqlUtils.getQueryResultsList(
+        "select billingservice.service_code,billing_msp_servicecode_times.timeRange " +
+        "from billingservice,billing_msp_servicecode_times " +
+        "where billingservice.billingservice_no = billing_msp_servicecode_times.billingservice_no"
+        );
+
+    for (int i = 0; i < billItems.size(); i++) {
+      BillingItem item = (BillingItem) billItems.get(i);
+      boolean noStartHour = frm.getXml_starttime_hr() == null ||
+          "".equals(frm.getXml_starttime_hr());
+      boolean noStartMinute = (frm.getXml_starttime_min() == null ||
+                               "".equals(frm.getXml_starttime_min()));
+      boolean noStartTime = noStartHour && noStartMinute;
+
+      boolean noEndHour = frm.getXml_endtime_hr() == null ||
+          "".equals(frm.getXml_endtime_hr());
+      boolean noEndMinute = (frm.getXml_endtime_min() == null ||
+                             "".equals(frm.getXml_endtime_min()));
+      boolean noEndTime = noEndHour && noEndMinute;
+      String svcCode = item.getServiceCode();
+      for (Iterator iter = results.iterator(); iter.hasNext(); ) {
+        String[] elem = (String[]) iter.next();
+        String codeToCompare = elem[0];
+        if (codeToCompare.equals(svcCode)) {
+          //if the specified code requires a start time
+          if ("0".equals(elem[1])) {
+            if (noStartTime) {
+              errors.add("",
+                         new ActionMessage(
+                             "oscar.billing.CA.BC.billingBC.error.startTimeNeeded",
+                             item.getServiceCode()));
+
+            }
+          }
+          else if ("1".equals(elem[1])) {
+            if (noStartTime && noEndTime) {
+              errors.add("",
+                         new ActionMessage(
+                             "oscar.billing.CA.BC.billingBC.error.startTimeandEndNeeded",
+                             item.getServiceCode()));
+            }
+          }
+        }
+      }
+    }
   }
 
   private void checkCDMStatus(HttpServletRequest request, ActionErrors errors,
@@ -205,7 +269,8 @@ public class BillingCreateBillingAction
    * @param demo Demographic
    * @param errors ActionErrors
    */
-  private void validateServiceCodeList(ArrayList billItems, DemographicData.Demographic demo,
+  private void validateServiceCodeList(ArrayList billItems,
+                                       DemographicData.Demographic demo,
                                        ActionErrors errors) {
     BillingAssociationPersistence per = new BillingAssociationPersistence();
     for (int i = 0; i < billItems.size(); i++) {
@@ -243,8 +308,9 @@ public class BillingCreateBillingAction
     }
   }
 
-  private void validate00120(ActionErrors errors, DemographicData.Demographic demo,
-                             ArrayList billItem,String serviceDate) {
+  private void validate00120(ActionErrors errors,
+                             DemographicData.Demographic demo,
+                             ArrayList billItem, String serviceDate) {
     for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
       BillingItem item = (BillingItem) iter.next();
       String[] cnlsCodes = OscarProperties.getInstance().getProperty(
@@ -252,7 +318,7 @@ public class BillingCreateBillingAction
       Vector vCodes = new Vector(Arrays.asList(cnlsCodes));
       if (vCodes.contains(item.getServiceCode())) {
         if (!vldt.hasMore00120Codes(demo.getDemographicNo(),
-                                    item.getServiceCode(),serviceDate)) {
+                                    item.getServiceCode(), serviceDate)) {
           errors.add("",
                      new ActionMessage(
                          "oscar.billing.CA.BC.billingBC.error.noMore00120"));
@@ -263,7 +329,8 @@ public class BillingCreateBillingAction
 
   }
 
-  private void verifyLast13050(ActionErrors errors, DemographicData.Demographic demo) {
+  private void verifyLast13050(ActionErrors errors,
+                               DemographicData.Demographic demo) {
     int last13050 = vldt.daysSinceLast13050(demo.getDemographicNo());
     if (last13050 > 365) {
       errors.add("",
