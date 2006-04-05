@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <%
    boolean readonly = false;
@@ -218,7 +219,7 @@ function isformNeeded(){
      var width = 575;
      var height = 400;
      var str = document.forms[form].elements[field].value;
-     var url = "support/billingfeeitem.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;
+     var url = '<rewrite:reWrite jspPage="support/billingfeeitem.jsp"/>'+'?form=' +form+ '&field='+field+'&searchStr=' +str;
      var windowName = field;
      popup(height,width,url,windowName);
   }
@@ -227,7 +228,7 @@ function isformNeeded(){
      var width = 575;
      var height = 400;
      var str = document.forms[form].elements[field].value;
-     var url = "support/icd9.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;
+     var url = '<rewrite:reWrite jspPage="support/icd9.jsp"/>'+'?form=' +form+ '&field='+field+'&searchStr=' +str;
      var windowName = field;
      popup(height,width,url,windowName);
   }
@@ -236,7 +237,7 @@ function isformNeeded(){
      var width = 650;
      var height = 400;
      var str = document.forms[form].elements[field].value;
-     var url = "support/bodypart.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;
+     var url = '<rewrite:reWrite jspPage="support/bodypart.jsp"/>'+'?form=' +form+ '&field='+field+'&searchStr=' +str;
      var windowName = field;
      popup(height,width,url,windowName);
   }
@@ -245,7 +246,7 @@ function isformNeeded(){
      var width = 800;
      var height = 400;
      var str = document.forms[form].elements[field].value;
-     var url = "support/natureinjury.jsp?form=" +form+ "&field="+field+"&searchStr=" +str;
+     var url = '<rewrite:reWrite jspPage="support/natureinjury.jsp"/>'+'?form=' +form+ '&field='+field+'&searchStr=' +str;
      var windowName = field;
      popup(height,width,url,windowName);
   }
