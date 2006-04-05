@@ -458,6 +458,7 @@ Generates a string list of option tags in numeric order
 **/
 String generateNumericOptionList(int range){
   StringBuffer buff = new StringBuffer();
+  buff.append("<option value=''></option>");
    for (int i = 0; i < range; i++) {
      String prefix = i<10?"0":"";
      String val = prefix+String.valueOf(i);
@@ -540,6 +541,7 @@ String generateNumericOptionList(int range){
         BillingCreateBillingForm thisForm;
         thisForm = (BillingCreateBillingForm)request.getSession().getAttribute("BillingCreateBillingForm");
         if (thisForm != null){
+
             sxml_provider = ((String) thisForm.getXml_provider());
             sxml_location =((String) thisForm.getXml_location());
             sxml_visittype = ((String) thisForm.getXml_visittype());
@@ -566,6 +568,24 @@ String generateNumericOptionList(int range){
                thisForm.setDependent("66");
             }
             thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
+             oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
+             System.out.println("(String) thisForm.getXml_provider()=" + (String) thisForm.getXml_provider());
+          oscar.oscarBilling.ca.bc.data.BillingPreference pref = dao.getUserBillingPreference((String) thisForm.getXml_provider());
+          String userReferralPref = "";
+
+          if(pref!=null){
+          if(pref.getReferral() == 1){
+          userReferralPref = "T";
+          }
+          else if(pref.getReferral() == 2){
+          userReferralPref = "B";
+          }
+          thisForm.setRefertype1(userReferralPref);
+           thisForm.setRefertype2(userReferralPref);
+        }
+
+						  System.err.println("THEFORMNOW:" + thisForm.hashCode() + ":" + thisForm.getRefertype1());
+
 
         }
         %>
@@ -837,6 +857,9 @@ String generateNumericOptionList(int range){
                              </font>
                           </td>
                           <td>
+						  <%
+						  System.err.println("THEFORM:" + thisForm.hashCode() + ":" + thisForm.getRefertype1());
+						  %>
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                              <html:select property="refertype1">
                                 <html:option value="" >Select Type</html:option>
