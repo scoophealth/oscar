@@ -271,4 +271,27 @@ public class CommonLabResultData {
       }
       return demoNo;
    }
+  
+  public boolean isLabLinkedWithPatient(String labId,String labType){
+      boolean ret = false;
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                 
+         String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = '"+labType+"' ";
+         ResultSet rs = db.GetSQL(sql);
+         if(rs.next()){
+            String demo =  rs.getString("demographic_no");
+            if(demo != null && !demo.trim().equals("0") ){
+               ret = true;
+            }                                                  
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in isLabLinkedWithPatient:"+e);                  
+         
+      }
+      return ret;
+   }
+   
+  
 }
