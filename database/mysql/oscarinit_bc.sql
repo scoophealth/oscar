@@ -51,7 +51,7 @@ CREATE TABLE billingmaster (
   after_hour char(1) default '0',
   new_program char(2) default '00',
   billing_code varchar(10) default '00000',
-  bill_amount varchar(7) default '0000000',
+  bill_amount varchar(9) default '000000000',
   payment_mode char(1) default '0',
   service_date varchar(8) default '00000000',
   service_to_day char(2) default '00',
