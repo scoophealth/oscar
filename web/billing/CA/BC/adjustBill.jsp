@@ -234,6 +234,33 @@ function showRecord(){
    }
 }
 
+
+function validateNum(el){
+   var val = el.value;
+   var tval = ""+val;
+   if (isNaN(val)){   
+      alert("Item value must be numeric.");
+      el.select();
+      el.focus();
+      return false;
+   }
+   if ( val >= 99999.99 ){
+     alert("Item value must be below $100000");
+     el.select();
+     el.focus();
+     return false;
+   }
+   decLen = tval.indexOf(".");
+   if (decLen != -1  &&   ( tval.length - decLen ) > 3  ){
+      alert("Item value has a maximum of 2 decimal places");
+      el.select();
+      el.focus();
+      return false;
+   }  
+   return true;
+}
+
+
 function checkSubmitType(){
   if(document.forms[0].submit.value=="Reprocess and Resubmit Bill"){
     window.close()
@@ -605,7 +632,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
         <div align="right">
            <input type="button" onClick="javascript:GetPriceOfCode('ReProcessBilling','service_code','billingAmount')" value="$"/>
            <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
-           <input type="text" style="font-size:80%;" size="6" maxlength="6" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>">
+           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onchange="javascript:validateNum(this)">
         </div>
       </td>
     </tr>
