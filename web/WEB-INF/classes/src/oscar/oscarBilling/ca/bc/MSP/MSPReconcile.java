@@ -444,7 +444,7 @@ public class MSPReconcile {
         +
         " bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
         +
-        " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no,p.first_name,p.last_name from billing b, "
+        " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no,p.first_name,p.last_name,bm.billing_unit from billing b, "
         + " billingmaster bm,provider p where p.provider_no = b.apptProvider_no and b.billing_no= bm.billing_no and bm.billingstatus like '" +
         statusType + "' "
         + providerQuery
@@ -452,6 +452,7 @@ public class MSPReconcile {
         + endDateQuery
         + demoQuery
         + billingType;
+        //+ " order by b.visitdate";
 
     System.out.println(p);
     //String
@@ -483,6 +484,7 @@ public class MSPReconcile {
         b.dx3 = rs.getString("dx_code3");
         b.providerFirstName = rs.getString("first_name");
         b.providerLastName = rs.getString("last_name");
+        b.quantity = rs.getString("billing_unit");
         if (b.isWCB()) {
           ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
                                     b.billing_no + "'");
@@ -589,6 +591,7 @@ public class MSPReconcile {
     public String dx3 = "";
     public String providerFirstName = "";
     public String providerLastName = "";
+    public String quantity = "";
 
     public boolean isWCB() {
       boolean retval = false;
