@@ -32,6 +32,7 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
+import oscar.OscarProperties;
 
 /**
  *
@@ -128,7 +129,15 @@ public class ABCDParser {
          }
          
          int count =0 ;
-         try{                   
+         try{
+             
+            if( OscarProperties.getInstance().getBooleanProperty("LAB_NOMATCH_NAMES","yes") ){
+            sql = "select demographic_no from demographic where hin='"+hinMod+"' and " +     
+		  " year_of_birth like '"+dobYear+"' and " +
+                  " month_of_birth like '"+dobMonth+"' and "+
+                  " date_of_birth like '"+dobDay+"' and " +
+                  " sex like '"+sex+"%' ";      
+            }else{
             sql = "select demographic_no from demographic where hin='"+hinMod+"' and " +
                   " last_name like '"+lastName.substring(0,1)+"%' and " +
                   " first_name like '"+firstName.substring(0,1)+"%' and " +
@@ -136,6 +145,9 @@ public class ABCDParser {
                   " month_of_birth like '"+dobMonth+"' and "+
                   " date_of_birth like '"+dobDay+"' and " +
                   " sex like '"+sex+"%' ";
+            }
+            
+            
             System.out.println(sql);
             PreparedStatement pstmt = conn.prepareStatement(sql);                                                                
             ResultSet rs = pstmt.executeQuery();            
@@ -152,7 +164,7 @@ public class ABCDParser {
          try{ 
             if (count != 1){ 
                demo = "0";
-               logger.info("Could not find patient for lab: "+labId);
+               logger.info("Could not find patient for lab: "+labId+ "# of possible matches :"+count);
             }                                   
             sql = "insert into patientLabRouting (demographic_no, lab_no,lab_type) values ('"+demo+"', '"+labId+"','CML')";                                        
             PreparedStatement pstmt = conn.prepareStatement(sql);                                                                
