@@ -340,21 +340,22 @@ if (billTypes == null){
 <table class="tabular_list" width="100%" border="2"  valign="top">
 <thead>
 	<tr bgcolor="#CCCCFF">
-	<th align="center" class="bHeaderData" >INVOICE # </th>
-	<th align="center" class="bHeaderData" >LINE # </th>
-    <th align="center" class="bHeaderData" >APP. DATE</th>
-	<th align="center" class="bHeaderData" >TYPE </th>
+	<th align="center" class="bHeaderData" title="INVOICE #" >INVOICE # </th>
+	<th align="center" class="bHeaderData" title="LINE #" >LINE # </th>
+    <th align="center" class="bHeaderData" title="APP. DATE">APP. DATE</th>
+	<th align="center" class="bHeaderData" title="TYPE" >TYPE </th>
 	<%
 		if(!"true".equals(readonly)){
 		System.out.println("READ:"+readonly);
 	%>
-    <th align="center" class="bHeaderData" >PATIENT</th>
+    <th align="center" class="bHeaderData" title="PATIENT" >PATIENT</th>
 	<%}%>
-	 <th align="center" class="bHeaderData" >PRACT.</th>
+	 <th align="center" class="bHeaderData" title="PRACT" >PRACT.</th>
 	<th align="center" class="bHeaderData" title="Status">STAT</th>
 
 
-    <th align="center" class="bHeaderDate" title="Code Billed">FEE CODE</th>
+    <th align="center" class="bHeaderDate" title="Fee Code">FEE CODE</th>
+    <th align="center" class="bHeaderDate" title="QTY">QTY</th>
     <th align="center" class="bHeaderDate" title="Amount Billed">AMT</th>
     <th align="center" class="bHeaderDate" title="Amount Paid"  >PAID</th>
     <th align="center" class="bHeaderDate" >DX CODE </th>
@@ -428,8 +429,7 @@ if (billTypes == null){
 	 else{
 		%>
 	 	<%=b.billing_no%>
-		<%}%>
-		    </td>
+		<%}%>		    </td>
 		<%}%>
 
 	<td align="center" class="bCellData" ><%=b.billMasterNo%></td>
@@ -445,6 +445,7 @@ if (billTypes == null){
 
 
     <td align="center" class="bCellData" ><%=b.code%></td>
+    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.quantity%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.amount%> </td>
     <td align="center" class="bCellData" ><a href="javascript: function myFunction() {return false; }" onClick="popupPage2(500,1020,'genTAS00ByOfficeNo.jsp?officeNo=<%=b.billMasterNo%>','RecValues');"> <%=pAmount%> </a> </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
@@ -464,7 +465,7 @@ if (billTypes == null){
     if (rowCount == 0) {
     %>
   <tr bgcolor="<%=bodd?"ivory":"white"%>">
-    <td colspan="12" align="center" class="bCellData"> No bills </td>
+    <td colspan="13" align="center" class="bCellData"> No bills </td>
   </tr>
   <% }%>
   <tr>
