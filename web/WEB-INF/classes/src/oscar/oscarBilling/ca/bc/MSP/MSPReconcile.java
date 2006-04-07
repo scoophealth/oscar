@@ -452,7 +452,7 @@ public class MSPReconcile {
         + endDateQuery
         + demoQuery
         + billingType;
-        //+ " order by b.visitdate";
+    //+ " order by b.visitdate";
 
     System.out.println(p);
     //String
@@ -1171,21 +1171,22 @@ public class MSPReconcile {
                                 String billingType) {
     String ret = "";
     DBHandler db = null;
-      ResultSet rs = null;
+    ResultSet rs = null;
     if ("pri".equalsIgnoreCase(billingType)) {
       String qry = "select sum(amount_received), bill_amount from billing_private_transactions,billingmaster " +
           "where billingmaster.billingmaster_no = billing_private_transactions.billingmaster_no " +
-          "and billingmaster.billingmaster_no = " + billingMasterNo + " group by billingmaster.billingmaster_no";
+          "and billingmaster.billingmaster_no = " + billingMasterNo +
+          " group by billingmaster.billingmaster_no";
       try {
         db = new DBHandler(DBHandler.OSCAR_DATA);
         rs = db.GetSQL(qry);
-        if(rs.next()){
+        if (rs.next()) {
           double amtPaid = rs.getDouble(1);
           double billAmt = rs.getDouble(2);
           double owing = billAmt - amtPaid;
           ret = String.valueOf(owing);
         }
-        else{
+        else {
           ret = "0.0";
         }
       }
@@ -1198,7 +1199,6 @@ public class MSPReconcile {
           " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
           " and billingstatus = 'E'" +
           " and billingmaster.billingmaster_no = " + billingMasterNo;
-
 
       try {
         db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -1819,7 +1819,9 @@ public class MSPReconcile {
         double amount = rs.getDouble(2);
         double amountPaid = new Double(getAmountPaid(billingmaster_no,
             BILLTYPE_PRI)).doubleValue();
-       return amountPaid>=amount;
+        if (amountPaid >= amount) {
+          return true;
+        }
       }
     }
     catch (SQLException ex) {
