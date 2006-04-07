@@ -136,7 +136,23 @@
         link=""
         layout="injection"
         atc="J07AL02"
-        showIfMinRecordNum="1"/>        
+        showIfMinRecordNum="1"/> 
+       
+  <item        
+        desc="TdP"
+        name="TdP"
+        link=""
+        layout="injection"
+        atc="J07AJ52"
+        showIfMinRecordNum="1"/> 
+      
+  <item        
+        desc="IPV"
+        name="IPV"
+        link=""
+        layout="injection"
+        atc="J07BF03"
+        showIfMinRecordNum="1"/> 
 
   <item        
         desc="PAP="
@@ -173,7 +189,7 @@
         name="FOBT"
         link=""
         layout="PAPMAM"
-        minAge="50"
+        minAge="49"
         maxAge="80"
         showIfMinRecordNum="1"/>
 
