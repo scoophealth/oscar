@@ -1405,7 +1405,6 @@ public class MSPReconcile {
   }
 
   /**
-   * getPaymentMethodDesc
    * Returns a string description of a billing payment method
    * @param string String
    * @return String
@@ -1804,11 +1803,16 @@ public class MSPReconcile {
     return curValue.toString();
   }
 
+  /**
+   * Returns true if the specified demographic has any private bill where the amount paid is greater than or equal too the bill amount
+   * @param demographicNo String - The demographic number
+   * @return boolean - Tru
+   */
   public boolean patientHasOutstandingPrivateBill(String demographicNo) {
     boolean ret = false;
     String billingMasterQry =
         "select billingmaster_no,bill_amount from billingmaster where demographic_no = " +
-        demographicNo;
+        demographicNo + " and billingstatus not in('S','D','A')";
     DBHandler db = null;
     ResultSet rs = null;
     try {
@@ -1819,7 +1823,7 @@ public class MSPReconcile {
         double amount = rs.getDouble(2);
         double amountPaid = new Double(getAmountPaid(billingmaster_no,
             BILLTYPE_PRI)).doubleValue();
-        if (amountPaid >= amount) {
+        if (amount-amountPaid>0) {
           return true;
         }
       }
