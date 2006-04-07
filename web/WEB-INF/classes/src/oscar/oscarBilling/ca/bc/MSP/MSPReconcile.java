@@ -1819,10 +1819,7 @@ public class MSPReconcile {
         double amount = rs.getDouble(2);
         double amountPaid = new Double(getAmountPaid(billingmaster_no,
             BILLTYPE_PRI)).doubleValue();
-        if (amountPaid < amount) {
-          return true;
-        }
-
+       return amountPaid>=amount;
       }
     }
     catch (SQLException ex) {
