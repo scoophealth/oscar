@@ -570,7 +570,13 @@ String generateNumericOptionList(int range){
             thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
              oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
              System.out.println("(String) thisForm.getXml_provider()=" + (String) thisForm.getXml_provider());
-          oscar.oscarBilling.ca.bc.data.BillingPreference pref = dao.getUserBillingPreference((String) thisForm.getXml_provider());
+		  oscar.oscarBilling.ca.bc.data.BillingPreference pref = null;
+		  
+		  //checking for a bug where the passed in provider number is actually "none" rather than numeral 0
+		  if(oscar.util.StringUtils.isNumeric(thisForm.getXml_provider())){
+		   pref = dao.getUserBillingPreference((String) thisForm.getXml_provider());
+		  }
+         
           String userReferralPref = "";
 
           if(pref!=null){
@@ -583,8 +589,6 @@ String generateNumericOptionList(int range){
           thisForm.setRefertype1(userReferralPref);
            thisForm.setRefertype2(userReferralPref);
         }
-
-						  System.err.println("THEFORMNOW:" + thisForm.hashCode() + ":" + thisForm.getRefertype1());
 
 
         }
