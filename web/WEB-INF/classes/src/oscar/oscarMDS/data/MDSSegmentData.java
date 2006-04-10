@@ -44,7 +44,7 @@ public class MDSSegmentData
 
   public void populateMDSSegmentData(String SID) {
     this.segmentID=SID;    
-    String sql;
+    String sql =null;
     String associatedOBR = "";
     String queryString = "";
     String labID = "";
@@ -200,6 +200,7 @@ public class MDSSegmentData
         rs.close();
             
         sql = "select distinct mdsOBX.associatedOBR, mdsOBR.observationDateTime from mdsOBX, mdsOBR where mdsOBX.segmentID = mdsOBR.segmentID and mdsOBX.associatedOBR = mdsOBR.obrID and mdsOBX.segmentID='"+this.segmentID+"' and ("+queryString+") order by associatedOBR";
+        
         rs=db.GetSQL(sql);
         while(rs.next()){
           ((Headers)headersArray.get(i)).groupedReportsArray.add(new GroupedReports(rs.getString("associatedOBR"), rs.getString("observationDateTime"), queryString));
@@ -240,7 +241,7 @@ public class MDSSegmentData
       }
       db.CloseConn();
     }catch(SQLException e){
-      System.out.println("In MDS Segment Data::"+e);
+      System.out.println("In MDS Segment Data::"+e+" SQL: "+sql);
     }
   }
   
