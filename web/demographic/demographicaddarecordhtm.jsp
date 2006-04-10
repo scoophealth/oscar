@@ -710,7 +710,6 @@ function checkFormTypeIn() {
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDoctor"/>: </b></td>
       <td align="left" >
         <select name="staff">
-          <option value="" ></option>
           <%
   ResultSet rsdemo = addDemoBean.queryResults("search_provider");
   while (rsdemo.next()) {
@@ -720,6 +719,7 @@ function checkFormTypeIn() {
           <%
   }
 %>
+          <option value="" ></option>
         </select>
       </td>
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formNurse"/>: </b></td>
