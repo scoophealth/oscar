@@ -183,6 +183,10 @@ public class RxDrugRef {
          return vec;         
      }
      
+     /**
+     returns all matching search element names, ids and categoeis for the given searchString
+     Search is case insesnitive
+     */
      public Vector list_drug_element(String searchStr) throws Exception{
          Vector params = new Vector();
          params.addElement(searchStr);
@@ -288,6 +292,7 @@ public class RxDrugRef {
      }
      
      private Object callWebservice(String procedureName,Vector params) {
+        System.out.println("#CALLDRUGREF-"+procedureName);
          Object object = null;
          try{
             XmlRpcClient server = new XmlRpcClient(server_url);
@@ -310,6 +315,7 @@ public class RxDrugRef {
      }
      
      private Object callWebserviceLite(String procedureName,Vector params) throws Exception{
+        System.out.println("#CALLDRUGREF-"+procedureName);
          Object object = null;
          try{
             System.out.println("server_url :"+server_url);
@@ -687,9 +693,16 @@ public class RxDrugRef {
        }
        //////DRUGREF Second Gen API 
        
+       public static void removeNullFromVector(Vector v){
+          while(v != null && v.contains(null)){
+             v.remove(null);       
+          }
+       }
+       
        public Vector getInteractions(Vector drugs)throws Exception{
+         removeNullFromVector(drugs);
          Vector params = new Vector();
-         params.addElement("interactions_byATC");
+         params.addElement("interactions_byATC");         
          params.addElement(drugs);         
          //Vector vec = (Vector) callWebserviceLite("get",params); 
          Vector vec = new Vector();
