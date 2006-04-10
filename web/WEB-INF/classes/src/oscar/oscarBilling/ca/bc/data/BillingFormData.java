@@ -680,7 +680,9 @@ public class BillingFormData {
   }
 
   public ResultSet getWCBFromID(String formId) {
-    String qry = "SELECT * FROM billingmaster bm,demographic d, wcb w WHERE bm.demographic_no=d.demographic_no AND w.ID=" + formId;
+    String qry = "SELECT * FROM wcb w left join billingmaster bm on " +
+        "w.billing_no = bm.billing_no left join demographic d " +
+        "on w.demographic_no=d.demographic_no WHERE w.ID=" + formId;
     ResultSet rs = null;
     DBHandler db = null;
     try {
