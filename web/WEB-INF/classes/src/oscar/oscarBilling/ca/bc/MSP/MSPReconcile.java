@@ -1197,7 +1197,6 @@ public class MSPReconcile {
     else {
       String qry = "SELECT t_paidamt,t_exp1 from teleplanS00,billingmaster " +
           " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
-          " and billingstatus = 'E'" +
           " and billingmaster.billingmaster_no = " + billingMasterNo;
 
       try {
@@ -1804,7 +1803,7 @@ public class MSPReconcile {
   }
 
   /**
-   * Returns true if the specified demographic has any private bill where the amount paid is greater than or equal too the bill amount
+   * Returns true if the specified demographic has any private bill where the amount paid is less than the bill amount
    * @param demographicNo String - The demographic number
    * @return boolean - Tru
    */
