@@ -45,7 +45,7 @@ session.setAttribute("infirmaryView_OscarURL",request.getRequestURL());
 </security:oscarSec>
 
 
-<%@ page  import="java.util.*,java.net.*"  errorPage="errorpage.jsp"%>
+<%@ page  import="java.util.*,java.net.*"  %>
 <%
   if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.jsp");
