@@ -279,10 +279,15 @@ public class MDSResultsData {
             sql = "SELECT mdsMSH.segmentID, providerLabRouting.status, mdsPID.patientName, mdsPID.healthNumber, " +
             "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
-            "FROM mdsMSH,mdsPID,providerLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
-            "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=providerLabRouting.lab_no " +
-            "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
-            "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
+            "FROM " +    
+            "providerLabRouting "+
+            "LEFT JOIN mdsMSH on providerLabRouting.lab_no = mdsMSH.segmentID "+
+            "LEFT JOIN mdsPID on providerLabRouting.lab_no = mdsPID.segmentID "+
+            "LEFT JOIN mdsPV1 on providerLabRouting.lab_no = mdsPV1.segmentID "+
+            "LEFT JOIN mdsZFR on providerLabRouting.lab_no = mdsZFR.segmentID "+
+            "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+              
+  	    "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
+            "WHERE " +        
             "AND providerLabRouting.lab_type = 'MDS' " +
             "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
             "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
@@ -290,15 +295,22 @@ public class MDSResultsData {
             sql = "SELECT mdsMSH.segmentID, mdsPID.patientName, mdsPID.healthNumber, " +
             "mdsPID.sex, max(mdsZFR.abnormalFlag) as abnormalFlag, mdsMSH.dateTime, mdsOBR.quantityTiming, mdsPV1.refDoctor, " +
             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
-            "FROM mdsMSH,mdsPID,patientLabRouting,mdsPV1,mdsZFR,mdsOBR,mdsZRG where " +
-            "mdsMSH.segmentID=mdsPID.segmentID AND mdsMSH.segmentID=patientLabRouting.lab_no " +
-            "AND patientLabRouting.lab_type = 'MDS' " +
-            "AND mdsMSH.segmentID=mdsPV1.segmentID AND mdsMSH.segmentID=mdsZFR.segmentID " +
-            "AND mdsMSH.segmentID=mdsOBR.segmentID AND mdsMSH.segmentID=mdsZRG.segmentID " +
+            
+            "FROM " +    
+            "providerLabRouting "+
+            "LEFT JOIN mdsMSH on providerLabRouting.lab_no = mdsMSH.segmentID "+
+            "LEFT JOIN mdsPID on providerLabRouting.lab_no = mdsPID.segmentID "+
+            "LEFT JOIN mdsPV1 on providerLabRouting.lab_no = mdsPV1.segmentID "+
+            "LEFT JOIN mdsZFR on providerLabRouting.lab_no = mdsZFR.segmentID "+
+            "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+              
+  	    "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
+            "WHERE " +        
+            "AND providerLabRouting.lab_type = 'MDS' " +
             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
+            
          }
          
-         //System.out.println("sql "+sql);
+         System.out.println("sql "+sql);
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
             LabResultData lData = new LabResultData(LabResultData.MDS);
