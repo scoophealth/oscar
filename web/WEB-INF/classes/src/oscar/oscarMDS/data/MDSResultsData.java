@@ -297,15 +297,15 @@ public class MDSResultsData {
             "min(mdsZFR.reportFormStatus) as reportFormStatus, mdsZRG.reportGroupDesc " +
             
             "FROM " +    
-            "providerLabRouting "+
-            "LEFT JOIN mdsMSH on providerLabRouting.lab_no = mdsMSH.segmentID "+
-            "LEFT JOIN mdsPID on providerLabRouting.lab_no = mdsPID.segmentID "+
-            "LEFT JOIN mdsPV1 on providerLabRouting.lab_no = mdsPV1.segmentID "+
-            "LEFT JOIN mdsZFR on providerLabRouting.lab_no = mdsZFR.segmentID "+
-            "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+              
-  	    "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
+            "patientLabRouting "+
+            "LEFT JOIN mdsMSH on patientLabRouting.lab_no = mdsMSH.segmentID "+
+            "LEFT JOIN mdsPID on patientLabRouting.lab_no = mdsPID.segmentID "+
+            "LEFT JOIN mdsPV1 on patientLabRouting.lab_no = mdsPV1.segmentID "+
+            "LEFT JOIN mdsZFR on patientLabRouting.lab_no = mdsZFR.segmentID "+
+            "LEFT JOIN mdsOBR on patientLabRouting.lab_no = mdsOBR.segmentID "+              
+  	    "LEFT JOIN mdsZRG on patientLabRouting.lab_no = mdsZRG.segmentID "+
             "WHERE " +        
-            "providerLabRouting.lab_type = 'MDS' " +
+            "patientLabRouting.lab_type = 'MDS' " +
             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
             
          }
