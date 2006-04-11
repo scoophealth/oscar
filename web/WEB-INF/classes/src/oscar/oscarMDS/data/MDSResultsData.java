@@ -288,7 +288,7 @@ public class MDSResultsData {
             "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+              
   	    "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
             "WHERE " +        
-            "AND providerLabRouting.lab_type = 'MDS' " +
+            "providerLabRouting.lab_type = 'MDS' " +
             "AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
             "AND mdsPID.patientName like '"+patientLastName+"%^"+patientFirstName+"%^%' AND mdsPID.healthNumber like '%"+patientHealthNumber+"%' group by mdsMSH.segmentID";
          } else {
@@ -305,7 +305,7 @@ public class MDSResultsData {
             "LEFT JOIN mdsOBR on providerLabRouting.lab_no = mdsOBR.segmentID "+              
   	    "LEFT JOIN mdsZRG on providerLabRouting.lab_no = mdsZRG.segmentID "+
             "WHERE " +        
-            "AND providerLabRouting.lab_type = 'MDS' " +
+            "providerLabRouting.lab_type = 'MDS' " +
             "AND patientLabRouting.demographic_no='"+demographicNo+"' group by mdsMSH.segmentID";
             
          }
