@@ -269,6 +269,7 @@ public class MDSResultsData {
       
       labResults = new ArrayList();            
       String sql = "";
+      String seqId = null;  //for debugging purposes
       
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -315,6 +316,7 @@ public class MDSResultsData {
          while(rs.next()){
             LabResultData lData = new LabResultData(LabResultData.MDS);
             lData.segmentID = Integer.toString(rs.getInt("segmentID"));
+            seqId = lData.segmentID;
             
             if (demographicNo == null && !providerNo.equals("0")) {
                lData.acknowledgedStatus = rs.getString("status");
@@ -326,19 +328,27 @@ public class MDSResultsData {
             lData.patientName = beautifyName(rs.getString("patientName"));
             lData.sex = rs.getString("sex");
             lData.resultStatus = rs.getString("abnormalFlag");
+            if(lData.resultStatus == null){
+                lData.resultStatus = "0";
+            }
             lData.dateTime = rs.getString("dateTime");
             
-            switch ( rs.getString("quantityTiming").charAt(0) ) {
-               case 'C' : lData.priority = "Critical"; break;
-               case 'S' : lData.priority = "Stat\\Urgent"; break;
-               case 'U' : lData.priority = "Unclaimed"; break;
-               case 'A' : if ( rs.getString("quantityTiming").startsWith("AL") ) {
-                  lData.priority = "Alert";
-               } else {
-                  lData.priority = "ASAP";
-               }
-               break;
-               default: lData.priority = "Routine"; break;
+            String quantityTimimg = rs.getString("quantityTiming");
+            if(quantityTimimg != null){
+                switch ( quantityTimimg.charAt(0) ) {
+                   case 'C' : lData.priority = "Critical"; break;
+                   case 'S' : lData.priority = "Stat\\Urgent"; break;
+                   case 'U' : lData.priority = "Unclaimed"; break;
+                   case 'A' : if ( quantityTimimg.startsWith("AL") ) {
+                      lData.priority = "Alert";
+                   } else {
+                      lData.priority = "ASAP";
+                   }
+                   break;
+                   default: lData.priority = "Routine"; break;
+                }
+            }else{
+               lData.priority = "Routine"; 
             }
             
             lData.requestingClient = ProviderData.beautifyProviderName(rs.getString("refDoctor"));
@@ -351,13 +361,14 @@ public class MDSResultsData {
             }
             
             
-            if ( !lData.resultStatus.equals("0") ){
+            if (  !lData.resultStatus.equals("0") ){
                lData.abn = true;
             }
+            String reportGroupDesc = rs.getString("reportGroupDesc");
             
-            if ( rs.getString("reportGroupDesc").startsWith("MICRO") ) {
+            if ( reportGroupDesc != null && reportGroupDesc.startsWith("MICRO") ) {
                lData.discipline = "Microbiology";
-            } else if ( rs.getString("reportGroupDesc").startsWith("DIAGNOSTIC IMAGING") ) {
+            } else if ( reportGroupDesc != null && reportGroupDesc.startsWith("DIAGNOSTIC IMAGING") ) {
                lData.discipline = "Diagnostic Imaging";
             } else {
                lData.discipline = "Hem/Chem/Other";
@@ -367,6 +378,7 @@ public class MDSResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
+         System.out.println("Error processing MDS lab, segment # "+seqId); 
          System.out.println("exception in MDSResultsData:"+e);
          e.printStackTrace();
       }
