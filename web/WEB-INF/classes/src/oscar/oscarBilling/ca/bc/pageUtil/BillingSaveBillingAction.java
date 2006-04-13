@@ -425,7 +425,7 @@ public class BillingSaveBillingAction
         if (wcb.isNotBilled()) {
           //if processing an existing WCB form, update values for first fee item
             String updateWCBSQL = createWCBUpdateSQL(billingid, amnt);
-            db.RunSQL(updateWCBSQL);
+         //   db.RunSQL(updateWCBSQL);
         }
         else {
           //This form was created from the billing screen
@@ -458,7 +458,7 @@ public class BillingSaveBillingAction
           if (wcb.isNotBilled()) {
             //if processing an existing WCB form, update values for second fee item
             String updateWCBSQL = createWCBUpdateSQL(secondWCBBillingId, secondBillingAmt);
-            db.RunSQL(updateWCBSQL);
+        //    db.RunSQL(updateWCBSQL);
           }
           else {
             //This form was created from the billing screen
