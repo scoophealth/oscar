@@ -714,10 +714,12 @@ public final class BillingCreateBillingForm
     oscar.util.StringUtils ut = new oscar.util.StringUtils();
     if (this.xml_refer1.equals("") && this.xml_refer2.equals("")) {
       if (this.xml_other1 == null || xml_other1.equals("")) {
-        if (this.service == null || service.length == 0) {
-          errors.add("",
-                     new ActionMessage(
-                         "oscar.billing.CA.BC.billingBC.error.nullservicecode"));
+        if(!"WCB".equals(xml_billtype)){
+          if (this.service == null || service.length == 0) {
+            errors.add("",
+                       new ActionMessage(
+                           "oscar.billing.CA.BC.billingBC.error.nullservicecode"));
+          }
         }
       }
       if(!"pri".equalsIgnoreCase(this.getXml_billtype())){
