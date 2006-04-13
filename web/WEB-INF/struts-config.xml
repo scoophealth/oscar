@@ -16,7 +16,7 @@
     <form-bean name="msgViewPDFAttachmentForm" type="oscar.oscarMessenger.pageUtil.MsgViewPDFAttachmentForm" />
     <form-bean name="msgDemographicSearchForm" type="oscar.oscarMessenger.pageUtil.MsgDemographicSearchForm" />
     <form-bean name="msgProceedForm" type="oscar.oscarMessenger.pageUtil.MsgProceedForm" />
-    <form-bean name="msgClearMessageForm" type="oscar.oscarMessenger.pageUtil.ClearMessageForm" />
+    <form-bean name="msgClearMessageForm" type="oscar.oscarMessenger.pageUtil.MsgClearMessageForm" />
     <form-bean name="msgDoc2PDFForm" type="oscar.oscarMessenger.pageUtil.MsgDoc2PDFForm" />
     <form-bean name="msgAttachPDFForm" type="oscar.oscarMessenger.pageUtil.MsgAttachPDFForm" />
     <form-bean name="RxChoosePatientForm" type="oscar.oscarRx.pageUtil.RxChoosePatientForm" />
