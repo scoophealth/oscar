@@ -28,10 +28,22 @@ import java.sql.*;
 import oscar.oscarDB.*;
 import oscar.util.*;
 
+/**
+ *
+ * <p>Description: </p>
+ * Performs CRUD operations on an Echart instance
+ *
+ * @author not attributable
+ * @version 1.0
+ */
 public class EChartDAO {
   public EChartDAO() {
   }
 
+  /**
+   * Creates a new echart entry for the specified Echart instance
+   * @param echart Echart
+   */
   public void addEchartEntry(Echart echart) {
     String qry = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('"
         + echart.getTimeStampToString() + "'," + echart.getDemographicNo() +
@@ -62,8 +74,14 @@ public class EChartDAO {
     }
   }
 
+  /**
+   * Retrieve the most recent Echart entry for the specified demographic number
+   * @param demographicNo String
+   * @return Echart
+   */
   public Echart getMostRecentEchart(String demographicNo) {
     Echart echart = null;
+
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       ResultSet rs;
@@ -88,7 +106,7 @@ public class EChartDAO {
       db.CloseConn();
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
+      e.printStackTrace();
     }
     return echart;
   }
