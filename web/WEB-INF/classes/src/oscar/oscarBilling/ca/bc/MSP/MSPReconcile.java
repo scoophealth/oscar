@@ -1588,7 +1588,6 @@ public class MSPReconcile {
         " and provider.ohip_no= teleplanS00.t_practitionerno " +
         " and teleplanS00.t_payeeno = " + payeeNo +
         " order by provider.first_name,t_servicedate,billing.demographic_name";
-
     System.err.println(qry);
     DBHandler db = null;
     ResultSet rs = null;
@@ -1598,6 +1597,24 @@ public class MSPReconcile {
     }
     catch (SQLException ex) {
       ex.printStackTrace();
+    }
+    finally{
+      if(db!=null){
+        try {
+          db.CloseConn();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
+      if(rs!=null){
+        try {
+          rs.close();
+        }
+        catch (SQLException ex2) {
+          ex2.printStackTrace();
+        }
+      }
     }
     return rs;
   }
