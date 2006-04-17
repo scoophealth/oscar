@@ -162,6 +162,7 @@ public class BillingCreateBillingAction
         wcbForm.Set(bean);
         request.setAttribute("WCBForm", wcbForm);
         wcbForm.setFormNeeded("1");
+        wcbForm.setProvider_no(bean.getApptProviderNo());
         return (mapping.findForward("WCB"));
       }
     }
