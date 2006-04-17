@@ -967,9 +967,10 @@ public class SqlUtils {
   }
 
   /**
-   * Returns a List of String[] which contain the results of the specified arbitrary query
+   * Returns a List of String[] which contain the results of the specified arbitrary query.
+   *
    * @param qry String - The String SQL Query
-   * @return List - The List of Srting[] results
+   * @return List - The List of Srting[] results or null if no results were yielded
    */
   public static List getQueryResultsList(String qry) {
     ArrayList records = null;
@@ -989,6 +990,7 @@ public class SqlUtils {
       }
     }
     catch (SQLException e) {
+      records = null;
       e.printStackTrace();
     }
     finally {
@@ -1008,7 +1010,9 @@ public class SqlUtils {
           ex1.printStackTrace();
         }
       }
+
+       return records;
     }
-    return records;
+
   }
 }
