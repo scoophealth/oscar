@@ -54,7 +54,9 @@ public class ViewWCBAction
     String demoNo = request.getParameter("demographic_no");
     BillingFormData data = new BillingFormData();
     String formId = request.getParameter("formId");
+    frm.setWcbFormId(formId);
     //if the formId is zero, this is a new form
+
     if ("0".equals(formId)) {
       frm.setFormNeeded("1");
       List lst = SqlUtils.getBeanList(
@@ -85,7 +87,15 @@ public class ViewWCBAction
         frm.setW_opcity(demo.getCity());
         frm.setW_city(demo.getCity());
         frm.setInjuryLocations(data.getInjuryLocationList());
-        frm.setW_pracno(request.getParameter("provNo"));
+
+        //Retrieve provider ohip number and payee number
+
+        List lstResults = SqlUtils.getQueryResultsList("select ohip_no,billing_no from provider where provider_no = " + request.getParameter("provNo"));
+        if(lstResults!=null){
+          String[] providerData = (String[])lstResults.get(0);
+          frm.setW_pracno(providerData[0]);
+          frm.setW_payeeno(providerData[1]);
+        }
 
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         String fmtStrDate = fm.format(new Date());
