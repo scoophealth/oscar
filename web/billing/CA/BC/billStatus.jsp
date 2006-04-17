@@ -180,7 +180,6 @@ function fillEndDate(d){
 
 }
 function setDemographic(demoNo){
-alert(demoNo);
     document.serviceform.demographicNo.value = demoNo;
 }
 
