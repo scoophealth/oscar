@@ -4934,7 +4934,7 @@ CREATE TABLE `formGrowth0_36` (
   `demographic_no` int(10) NOT NULL default '0',
   `provider_no` int(10) default NULL,
   `formCreated` date default NULL,
-  `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `formEdited` timestamp,
   `patientName` varchar(80) default NULL,
   `recordNo` varchar(10) default NULL,
   `motherStature` varchar(80) default NULL,
