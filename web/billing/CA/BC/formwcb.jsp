@@ -171,6 +171,7 @@ function isformNeeded(){
   }
   }
 
+
   function HideElementById(ele){
      document.getElementById(ele).style.display='none';
   }
@@ -287,12 +288,13 @@ function isformNeeded(){
 <input type="hidden" name="demographic_name" value="<%=form.getW_lname() + " " + form.getW_fname()%>"/>
 <input type="hidden" name="demographic_no" value="<%=form.getDemographic()%>"/>
 <input type="hidden" name="appointment_no" value="0"/>
-<input type="hidden" name="providerview" value="Get The Param"/>
-<input type="hidden" name="user_no" value="Get The Param"/>
+<input type="hidden" name="providerview" value="<%=form.getProvider_no()%>"/>
+<input type="hidden" name="user_no" value="<%=(String) session.getAttribute("user")%>"/>
 <input type="hidden" name="status" value="t"/>
-<input type="hidden" name="apptProvider_no" value="Get The Param"/>
+<input type="hidden" name="apptProvider_no" value="<%=form.getProvider_no()%>"/>
 <input type="hidden" name="bNewForm" value="1"/>
 <input type="hidden" name="fromBilling" value="<%=fromBilling%>"/>
+<html:hidden property="wcbFormId"/>
 
 <%
 java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("yyyy-MM-dd");
