@@ -131,6 +131,7 @@ public final class WCBForm
   private String w_demographic;
   private String w_providerno;
   private boolean notBilled;
+  private String wcbFormId;
 
   public WCBForm() {
 
@@ -1382,6 +1383,10 @@ public final class WCBForm
     return notBilled;
   }
 
+  public String getWcbFormId() {
+    return wcbFormId;
+  }
+
   /**
    * Setter for property formNeeded.
 
@@ -1421,6 +1426,10 @@ public final class WCBForm
 
   public void setW_reportype(String w_reportype) {
     this.w_reportype = w_reportype;
+  }
+
+  public void setWcbFormId(String wcbFormId) {
+    this.wcbFormId = wcbFormId;
   }
 
   public void notBilled(boolean notBilled) {
