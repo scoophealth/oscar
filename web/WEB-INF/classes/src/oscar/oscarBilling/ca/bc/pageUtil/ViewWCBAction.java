@@ -52,6 +52,7 @@ public class ViewWCBAction
     WCBForm frm = (WCBForm) form;
     request.setAttribute("WCBForm", frm);
     String demoNo = request.getParameter("demographic_no");
+    String providerNo = request.getParameter("provNo");
     BillingFormData data = new BillingFormData();
     String formId = request.getParameter("formId");
     frm.setWcbFormId(formId);
@@ -90,12 +91,14 @@ public class ViewWCBAction
 
         //Retrieve provider ohip number and payee number
 
-        List lstResults = SqlUtils.getQueryResultsList("select ohip_no,billing_no from provider where provider_no = " + request.getParameter("provNo"));
+        List lstResults = SqlUtils.getQueryResultsList("select ohip_no,billing_no from provider where provider_no = " + providerNo);
         if(lstResults!=null){
           String[] providerData = (String[])lstResults.get(0);
           frm.setW_pracno(providerData[0]);
           frm.setW_payeeno(providerData[1]);
         }
+
+        frm.setProvider_no(providerNo);
 
         SimpleDateFormat fm = new SimpleDateFormat("yyyy-MM-dd");
         String fmtStrDate = fm.format(new Date());
