@@ -424,8 +424,8 @@ public class BillingSaveBillingAction
         //save extra fee item entry in wcb table
         if (wcb.isNotBilled()) {
           //if processing an existing WCB form, update values for first fee item
-            String updateWCBSQL = createWCBUpdateSQL(billingid, amnt);
-         //   db.RunSQL(updateWCBSQL);
+            String updateWCBSQL = createWCBUpdateSQL(billingid, amnt,wcb.getWcbFormId());
+           db.RunSQL(updateWCBSQL);
         }
         else {
           //This form was created from the billing screen
@@ -457,8 +457,8 @@ public class BillingSaveBillingAction
           //save extra fee item entry in wcb table
           if (wcb.isNotBilled()) {
             //if processing an existing WCB form, update values for second fee item
-            String updateWCBSQL = createWCBUpdateSQL(secondWCBBillingId, secondBillingAmt);
-        //    db.RunSQL(updateWCBSQL);
+            String updateWCBSQL = createWCBUpdateSQL(secondWCBBillingId, secondBillingAmt,wcb.getWcbFormId());
+         db.RunSQL(updateWCBSQL);
           }
           else {
             //This form was created from the billing screen
@@ -470,10 +470,10 @@ public class BillingSaveBillingAction
           updatePatientChartWithWCBInfo(wcb);
         }
       }
-
-      catch (Exception e) {
-        e.printStackTrace();
+      catch (SQLException e) {
+            e.printStackTrace();
       }
+
       finally {
         if (db != null) {
           try {
@@ -500,8 +500,13 @@ public class BillingSaveBillingAction
   }
 
   private String createWCBUpdateSQL(String secondWCBBillingId,
-                                    String secondBillingAmt) {
-    String updateWCBSQL = "update wcb set billing_no = " + secondWCBBillingId + ", bill_amount = '" + secondBillingAmt + "'";
+                                    String secondBillingAmt,String wcbFormId){
+
+    if(wcbFormId == null){
+      throw new RuntimeException("Could not create WCB update query, WCB Form ID Not Assigned");
+    }
+    String updateWCBSQL = "update wcb set billing_no = " + secondWCBBillingId + ", bill_amount = '" + secondBillingAmt + "'" +
+        " where ID = " + wcbFormId;
     return updateWCBSQL;
   }
 
