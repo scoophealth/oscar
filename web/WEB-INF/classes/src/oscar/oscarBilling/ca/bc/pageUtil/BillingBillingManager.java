@@ -348,10 +348,10 @@ public class BillingBillingManager {
         ResultSet rs;
         String sql;
 
-        //make sure to load private fees if required
+        //make sure to load private fee if required,but defaqult to MSP fee if Private fee unavailable
         if ("pri".equalsIgnoreCase(billType)) {
           sql = "select b.service_code, b.description , b.value, b.percentage FROM billingservice b WHERE service_code='A" +
-              service_code + "'";
+              service_code + "' or service_code = '" + service_code + "'";
         }
         else {
           sql = "SELECT b.service_code, b.description , b.value, b.percentage "
