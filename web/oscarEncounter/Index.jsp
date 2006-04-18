@@ -972,6 +972,8 @@ border-right: 2px solid #cfcfcf;
                         <a href="#" onClick="popupPage(500,950, '../eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a><br>
                  	<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a><br>
                         <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a><br>
+                        <!--a href="#" onClick="popupPage(700,1000, '../lab/CumulativeLabValues.jsp?demographic_no=<%=bean.demographicNo%>');return false;">Cumulative Labs</a><br-->
+                        
                         <select name="selectCurrentForms" onChange="javascript:selectBox(this)" class="ControlSelect" onMouseOver="javascript:window.status='View <%=patientName%>\'s lab results'; return true;">
                             <option value="null" selected>-lab results-</option>
                             <%
@@ -1327,8 +1329,9 @@ border-right: 2px solid #cfcfcf;
 					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
-<input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill'; document.forms['encForm'].submit();">
-									
+                                    <oscar:oscarPropertiesCheck property="billregion" value="yes">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill'; document.forms['encForm'].submit();">
+                                    </oscar:oscarPropertiesCheck>					
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
 	</security:oscarSec>
