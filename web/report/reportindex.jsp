@@ -82,6 +82,16 @@ function ogo() {
   else  u = 'reportnewedblist.jsp?startDate=' + s + '&endDate=' + e;
 	popupPage(700,900,u);
 }
+
+function ogo2() {
+  var s = document.report.startDate.value.replace('/', '-');
+  s = s.replace('/', '-');
+  var e = document.report.endDate.value.replace('/', '-');
+  e = e.replace('/', '-');
+  var u = 'reportonedblist.jsp?startDate=' + s + '&endDate=' + e;
+  popupPage(700,900,u);
+}
+
 function go(r) {
 //s.options[s.selectedIndex].value
   var s = document.report.provider_no.value ;
@@ -164,6 +174,7 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
                 <a HREF="#" ONCLICK ="ogo()"><bean:message key="report.reportindex.btnEDDList"/></a>
             <% } else { %>
                 <a HREF="#" ONCLICK ="ogo()"><bean:message key="report.reportindex.btnEDBList"/></a>
+                &nbsp;<a HREF="#" ONCLICK ="ogo2()">05</a>    
             <% } %>
         </td>
         <td>
