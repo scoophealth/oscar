@@ -47,8 +47,8 @@
   String [][] dbQueries=new String[][] {
 {"select_maxformar_id", "select max(ID) from formAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no"  },
 {"select_formar", "select ID, demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  },
-{"select_backwardscompatible", "(select demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ?) union " +
-                               "(select demographic_no, edb as c_finalEDB, patient_name as c_pName, age as pg1_age, gravida as c_gravida, term as c_term, phone as pg1_homePhone, provider_no from edbrept where edb >= ? and edb <= ?) order by c_finalEDB desc limit ? offset ?"  },
+{"select_backwardscompatible", "(select ID, demographic_no, c_finalEDB, c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formAR where c_finalEDB >= ? and c_finalEDB <= ?) union " +
+                               "(select id as ID,demographic_no, edb as c_finalEDB, patient_name as c_pName, age as pg1_age, gravida as c_gravida, term as c_term, phone as pg1_homePhone, provider_no from edbrept where edb >= ? and edb <= ?) order by c_finalEDB desc limit ? offset ?"  },
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
 {"select_patientStatus", "select patient_status from demographic where demographic_no = ?"  },
   };
