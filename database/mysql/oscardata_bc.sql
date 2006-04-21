@@ -23345,3 +23345,12 @@ INSERT INTO billingstatus_types VALUES ('N','DNB',7);
 INSERT INTO billingstatus_types VALUES ('P','BILLPAT',2);
 INSERT INTO billingstatus_types VALUES ('T','COLL',4);
 INSERT INTO billingstatus_types VALUES ('A','PAIDPRIV',9);
+
+--
+-- Dumping data for table `billingtypes`
+--
+
+INSERT INTO billingtypes VALUES ('MSP',1);
+INSERT INTO billingtypes VALUES ('ICBC',2);
+INSERT INTO billingtypes VALUES ('Pri',3);
+INSERT INTO billingtypes VALUES ('WCB',4);
