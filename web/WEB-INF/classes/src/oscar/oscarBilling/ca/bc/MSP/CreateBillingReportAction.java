@@ -148,16 +148,16 @@ public class CreateBillingReportAction
         oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
         oscar.entities.Provider provProv = msp.getProvider(provider, 0);
         reportParams.put("provider",
-                         provider.equals("all") ? "ALL" : payeeProv.getFullName());
+                         provider.equals("ALL") ? "ALL" : payeeProv.getFullName());
         reportParams.put("payee",
-                         payee.equals("all") ? "ALL" : provProv.getFullName());
+                         payee.equals("ALL") ? "ALL" : provProv.getFullName());
       }
 
       oscar.entities.Provider acctProv = msp.getProvider(account, 0);
       reportParams.put("billCnt", billCnt);
       reportParams.put("demNoCnt", demNoCnt);
       reportParams.put("account",
-                       account.equals("all") ? "ALL" :
+                       account.equals("ALL") ? "ALL" :
                        acctProv.getFullName());
 
       //Fill document with report parameter data
@@ -181,7 +181,7 @@ public class CreateBillingReportAction
       reportParams.put("mspBean", msp);
       //set parameters for payee of provider
       reportParams.put("provider",
-                       payeeProv.equals("all") ? "ALL" : payeeProv.getInitials());
+                       payeeProv.equals("ALL") ? "ALL" : payeeProv.getInitials());
       reportParams.put("providerNo", payeeProv.getProviderNo());
       //set parameters for S21 report header
       reportParams.put("payeeName", s21.getPayeeName());
@@ -240,14 +240,14 @@ public class CreateBillingReportAction
                        sumRefunded);
 
       reportParams.put("account",
-                       account.equals("all") ? "ALL" :
+                       account.equals("ALL") ? "ALL" :
                        acctProv.getFullName());
 
       reportParams.put("provider",
-                       provider.equals("all") ? "ALL" :
+                       provider.equals("ALL") ? "ALL" :
                        provProv.getInitials());
       reportParams.put("payee",
-                       payee.equals("all") ? "ALL" : payeeProv.getInitials());
+                       payee.equals("ALL") ? "ALL" : payeeProv.getInitials());
       reportParams.put("startDate", startDate);
       reportParams.put("endDate", endDate);
 
@@ -270,7 +270,7 @@ public class CreateBillingReportAction
       }
       oscar.entities.Provider payProv = msp.getProvider(payee, 1);
       reportParams.put("account",
-                       account.equals("all") ? "ALL" :
+                       account.equals("ALL") ? "ALL" :
                        payProv.getFullName());
       //Fill document with report parameter data
       osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,

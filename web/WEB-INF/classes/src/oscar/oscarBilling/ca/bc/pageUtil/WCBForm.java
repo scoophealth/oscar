@@ -132,7 +132,6 @@ public final class WCBForm
   private String w_providerno;
   private boolean notBilled;
   private String wcbFormId;
-
   public WCBForm() {
 
   }
@@ -1386,7 +1385,6 @@ public final class WCBForm
   public String getWcbFormId() {
     return wcbFormId;
   }
-
   /**
    * Setter for property formNeeded.
 

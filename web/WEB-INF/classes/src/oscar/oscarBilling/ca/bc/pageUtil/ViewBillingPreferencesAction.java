@@ -47,7 +47,6 @@ public class ViewBillingPreferencesAction
     BillingPreferencesActionForm frm = (
         BillingPreferencesActionForm) actionForm;
     BillingPreferencesDAO dao = new BillingPreferencesDAO();
-
     BillingPreference pref = dao.getUserBillingPreference(providerNo);
     //If the user doesn't have a BillingPreference record create one
     if(pref==null){
