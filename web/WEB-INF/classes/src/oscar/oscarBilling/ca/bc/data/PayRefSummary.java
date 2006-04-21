@@ -24,7 +24,7 @@
 
 package oscar.oscarBilling.ca.bc.data;
 
-import java.text.NumberFormat;
+import java.text.*;
 
 /**
  * <p>Title: PayRefSummary</p>
@@ -50,6 +50,7 @@ public class PayRefSummary {
   private double electronic=0.0;
   private double debit=0.0;
   private double other=0.0;
+  private double adjustmentAmountTotal=0.0;
   public PayRefSummary() {
   }
 
@@ -132,5 +133,30 @@ public class PayRefSummary {
     return cash+cheque+visa+mc+amex+electronic+debit+other;
   }
 
+  /**
+   * addAdjsutmentAmount
+   *
+   * @param string String
+   */
+  public void addAdjustmentAmount(String adjAmt) {
+
+    try{
+      if(adjAmt!=null&&!"".equals(adjAmt)){
+        Double amt = new Double(adjAmt);
+        this.electronic += amt.doubleValue();
+      }
+    }
+    catch(NumberFormatException e){
+      e.printStackTrace();
+    }
+  }
+
+  public void setAdjustmentAmountTotal(double adjustmentAmountTotal) {
+    this.adjustmentAmountTotal = adjustmentAmountTotal;
+  }
+
+  public double getAdjustmentAmountTotal() {
+    return adjustmentAmountTotal;
+  }
 
 }
