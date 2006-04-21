@@ -23325,4 +23325,23 @@ INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALU
 INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALUES (113,0,130,'19940');
 INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALUES (114,0,130,'19941');
 
-</div>
+--
+-- Dumping data for table `billingstatus_types`
+--
+
+INSERT INTO billingstatus_types VALUES ('R','REJ',12);
+INSERT INTO billingstatus_types VALUES ('O','NOSUB',16);
+INSERT INTO billingstatus_types VALUES ('B','SUB',14);
+INSERT INTO billingstatus_types VALUES ('S','SET',13);
+INSERT INTO billingstatus_types VALUES ('D','DEL',6);
+INSERT INTO billingstatus_types VALUES ('Z','HELD',8);
+INSERT INTO billingstatus_types VALUES ('C','DCC',5);
+INSERT INTO billingstatus_types VALUES ('E','PWE',10);
+INSERT INTO billingstatus_types VALUES ('F','REF',11);
+INSERT INTO billingstatus_types VALUES ('X','BAD',1);
+INSERT INTO billingstatus_types VALUES ('W','WCB',15);
+INSERT INTO billingstatus_types VALUES ('H','CAP',3);
+INSERT INTO billingstatus_types VALUES ('N','DNB',7);
+INSERT INTO billingstatus_types VALUES ('P','BILLPAT',2);
+INSERT INTO billingstatus_types VALUES ('T','COLL',4);
+INSERT INTO billingstatus_types VALUES ('A','PAIDPRIV',9);
