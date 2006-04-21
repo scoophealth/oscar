@@ -220,7 +220,7 @@
 						key="line"/>
 					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
 				</line>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="1"
@@ -440,7 +440,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="315"
+						x="319"
 						y="4"
 						width="44"
 						height="12"
@@ -456,7 +456,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="409"
+						x="412"
 						y="4"
 						width="44"
 						height="12"
@@ -472,7 +472,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="361"
+						x="365"
 						y="4"
 						width="44"
 						height="12"
@@ -590,7 +590,7 @@
 						mode="Transparent"
 						x="291"
 						y="0"
-						width="22"
+						width="27"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -604,7 +604,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="315"
+						x="319"
 						y="0"
 						width="44"
 						height="10"
@@ -620,7 +620,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="409"
+						x="412"
 						y="0"
 						width="121"
 						height="10"
@@ -636,7 +636,7 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="361"
+						x="365"
 						y="0"
 						width="44"
 						height="10"
