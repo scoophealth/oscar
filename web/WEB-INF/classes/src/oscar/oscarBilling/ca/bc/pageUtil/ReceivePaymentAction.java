@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.Action;
 import oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public class ReceivePaymentAction
     extends Action {
@@ -22,7 +23,12 @@ public class ReceivePaymentAction
     frm.setAmountReceived(String.valueOf(amount*-1.0));
     }
     this.receivePayment(billingmasterNo,amount);
+    MSPReconcile rec = new MSPReconcile();
+    if(!rec.isPrivateBillItemOutstanding(frm.getBillingmasterNo(),amount)){
+      rec.updateBillingMasterStatus(frm.getBillingmasterNo(),rec.PAIDPRIVATE);
+    }
     frm.setPaymentReceived(true);
+
     return actionMapping.findForward("success");
   }
 
