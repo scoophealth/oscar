@@ -42,7 +42,7 @@
   String strLimit2="5";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
-  String providerview = request.getParameter("providerview")==null?"all":request.getParameter("providerview") ;
+  String providerview = request.getParameter("providerview")==null?"ALL":request.getParameter("providerview") ;
   BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 
@@ -248,7 +248,7 @@ if("true".equals(readonly)){
       </table></td>
     <td colspan=2><div align="center"> <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333"><b>Select provider </b></font>
         <select name="providerview">
-          <option value="all">All Providers</option>
+          <option value="ALL">All Providers</option>
           <%  String proFirst="";
                         String proLast="";
                         String proOHIP="";
