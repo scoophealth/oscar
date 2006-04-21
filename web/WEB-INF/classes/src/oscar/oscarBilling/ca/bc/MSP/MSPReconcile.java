@@ -495,8 +495,6 @@ public class MSPReconcile {
           }
           rs2.close();
         }
-
-        billSearch.justBillingMaster.add(b.billMasterNo);
         billSearch.list.add(b);
         billSearch.count++;
       }
@@ -664,7 +662,8 @@ public class MSPReconcile {
     catch (Exception e) {
       e.printStackTrace();
     }
-    return Misc.moneyFormat(retval);
+    retval = Misc.moneyFormat(retval);
+    return retval;
   }
 
   public ArrayList getAllS00Records(String billingNo) {
@@ -995,7 +994,8 @@ public class MSPReconcile {
           "order by bs.sortOrder,bm.paymentMethod,b.demographic_name,bm.service_date";
     }
     else if (this.REP_INVOICE.equals(type)) {
-      orderByClause = "order by b.provider_no,bt.sortOrder,bm.service_date,b.demographic_name";
+      orderByClause =
+          "order by b.provider_no,bt.sortOrder,bm.service_date,b.demographic_name";
     }
     String p = "select provider.first_name,provider.last_name,b.billingtype, b.update_date, bm.billingmaster_no,b.billing_no, "
         + " b.demographic_name,b.demographic_no,bm.billing_unit,bm.billing_code,bm.bill_amount,bm.billingstatus,bm.mva_claim_code,bm.service_location,"
@@ -1123,7 +1123,8 @@ public class MSPReconcile {
          * we need to get the difference between what was billed and what was paid
          **/
         if (type.equals(this.REP_ACCOUNT_REC)) {
-          if (this.PAIDWITHEXP.equals(b.status)||("pri".equalsIgnoreCase(b.billingtype))){
+          if (this.PAIDWITHEXP.equals(b.status) ||
+              ("pri".equalsIgnoreCase(b.billingtype))) {
             b.amount = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
           }
@@ -1167,7 +1168,7 @@ public class MSPReconcile {
    * @return String
    */
   public String getAmountOwing(String billingMasterNo, String amountBilled,
-                                String billingType) {
+                               String billingType) {
     String ret = "";
     DBHandler db = null;
     ResultSet rs = null;
@@ -1309,15 +1310,14 @@ public class MSPReconcile {
    * @param insurerList HashMap
    * @return BillSearch
    */
-  public MSPReconcile.BillSearch getMSPPayments(String account, String
-                                                payeeNo, String providerNo,
-                                                String startDate,
-                                                String endDate,
-                                                boolean excludeWCB,
-                                                boolean excludeMSP,
-                                                boolean excludePrivate,
-                                                boolean exludeICBC,
-                                                String status) {
+  public MSPReconcile.BillSearch getPayments(String account, String
+                                             payeeNo, String providerNo,
+                                             String startDate,
+                                             String endDate,
+                                             boolean excludeWCB,
+                                             boolean excludeMSP,
+                                             boolean excludePrivate,
+                                             boolean exludeICBC) {
     BillSearch billSearch = new BillSearch();
     String criteriaQry = createCriteriaString(account, payeeNo, providerNo,
                                               UtilMisc.replace(startDate, "-",
@@ -1326,11 +1326,13 @@ public class MSPReconcile {
                                               excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
                                               this.REP_PAYREF);
-    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1,teleplanS00.t_aja1" +
-        " FROM teleplanS00 left join billingmaster as bm on teleplanS00.t_officeno = bm.billingmaster_no join billing as b" +
-        " on b.billing_no = bm.billing_no"
-        + criteriaQry
-        + " order by t_payment";
+    String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1," +
+        " teleplanS00.t_aja1,teleplanS00.t_aja2,teleplanS00.t_aja3,teleplanS00.t_aja4,teleplanS00.t_aja5,teleplanS00.t_aja6,teleplanS00.t_aja7,bm.billingmaster_no" +
+        " FROM teleplanS00 left join billingmaster as bm on teleplanS00.t_officeno = bm.billingmaster_no,billing as b" +
+        " where b.billing_no = bm.billing_no"
+        + criteriaQry +
+        " and bm.billingstatus != 'D'" +
+        " order by t_payment";
 
     System.err.println(p);
     billSearch.list = new ArrayList();
@@ -1349,7 +1351,20 @@ public class MSPReconcile {
         b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
         b.demoNo = rs.getString("demographic_no");
         b.demoName = rs.getString("demographic_name");
-        b.amount = this.convCurValue(rs.getString("t_paidamt"));
+
+        if (!"pri".equalsIgnoreCase(b.billingtype)) {
+          b.amount = this.convCurValue(rs.getString("t_paidamt"));
+        }
+        else {
+          b.amount = this.getAmountPaid(rs.getString("bm.billingmaster_no"),
+                                        this.BILLTYPE_PRI);
+
+          if (!StringUtils.isNumeric(b.amount)) {
+
+            throw new RuntimeException("Amount not a number");
+            //     b.amount = this.convCurValue(rs.getString("t_paidamt"));
+          }
+        }
         b.status = b.reason;
         b.serviceDate = rs.getString("service_date");
         b.seqNum = rs.getString("t_dataseq");
@@ -1365,8 +1380,34 @@ public class MSPReconcile {
         b.adjustmentCode = b.adjustmentCode == null ? "" : b.adjustmentCode;
         b.adjustmentCodeDesc = "";
         if (!"".equals(b.adjustmentCode)) {
-          String adjCode1amt = rs.getString("teleplanS00.t_aja1");
-          b.adjustmentCodeAmt = this.convCurValue(adjCode1amt);
+          String adjCode1amt1Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja1"));
+          String adjCode1amt2Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja2"));
+          String adjCode1amt3Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja3"));
+          String adjCode1amt4Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja4"));
+          String adjCode1amt5Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja5"));
+          String adjCode1amt6Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja6"));
+          String adjCode1amt7Str = convCurValue(rs.getString(
+              "teleplanS00.t_aja7"));
+
+          double adjCode1amt1 = Double.parseDouble(adjCode1amt1Str);
+          double adjCode1amt2 = Double.parseDouble(adjCode1amt2Str);
+          double adjCode1amt3 = Double.parseDouble(adjCode1amt3Str);
+          double adjCode1amt4 = Double.parseDouble(adjCode1amt4Str);
+          double adjCode1amt5 = Double.parseDouble(adjCode1amt5Str);
+          double adjCode1amt6 = Double.parseDouble(adjCode1amt6Str);
+          double adjCode1amt7 = Double.parseDouble(adjCode1amt7Str);
+
+          String adjCodeAmt = String.valueOf(adjCode1amt1 + adjCode1amt2 +
+                                             adjCode1amt3 + adjCode1amt4 +
+                                             adjCode1amt5 + adjCode1amt6 +
+                                             adjCode1amt7);
+          b.adjustmentCodeAmt = adjCodeAmt;
           b.adjustmentCodeDesc = getAdjustmentCodeDesc(b.adjustmentCode) + "(" +
               b.adjustmentCode + ")";
           if (b.adjustmentCodeDesc.equals("")) {
@@ -1384,6 +1425,103 @@ public class MSPReconcile {
         billSearch.justBillingMaster.add(b.billMasterNo);
         billSearch.list.add(b);
         billSearch.count++;
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    finally {
+      try {
+        rs.close();
+        db.CloseConn();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+
+    }
+
+    //Now we need to get the Private Payments
+    if(!excludePrivate){
+      List privatePayments = this.getPrivatePayments(account, payeeNo, providerNo,
+                                                     startDate, endDate, true).list;
+      if(privatePayments!=null && !privatePayments.isEmpty()){
+        billSearch.list.addAll(privatePayments);
+      }
+    }
+    return billSearch;
+  }
+
+  /**
+   *
+   * Retrieves a list of all bills that were Paid by Privately
+   * @param payee String
+   * @param provider String
+   * @param startDate String
+   * @param endDate String
+   * @param insurerList HashMap
+   * @return BillSearch
+   */
+  public MSPReconcile.BillSearch getPrivatePayments(String account, String
+      payeeNo, String providerNo,
+      String startDate,
+      String endDate,
+      boolean excludePrivate) {
+
+    startDate = UtilMisc.replace(startDate, "-",
+                                 "");
+
+    endDate = UtilMisc.replace(endDate, "-",
+                               "");
+    BillSearch billSearch = new BillSearch();
+    String criteriaQry = createCriteriaString(account, payeeNo, providerNo,
+                                              startDate,
+                                              endDate,
+                                              false, false,
+                                              !excludePrivate, false,
+                                              "");
+    String p = "SELECT b.billingtype,bm.billingmaster_no,bm.paymentMethod,b.demographic_no,demographic_name,service_date,apptProvider_no ,provider_no,payee_no,sum(amount_received) as 'amt',max(creation_date) as 't_payment'" +
+        " FROM billing_private_transactions bp join billingmaster bm on bm.billingmaster_no = bp.billingmaster_no,billing b" +
+        " where bm.billing_no = b.billing_no " +
+        criteriaQry +
+        " and bm.billingstatus != 'D'" +
+        " group by billingmaster_no" +
+        " order by t_payment";
+
+
+    billSearch.list = new ArrayList();
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(p);
+      while (rs.next()) {
+        MSPBill b = new MSPBill();
+        b.paymentDate = rs.getString("t_payment");
+        b.billMasterNo = rs.getString("bm.billingmaster_no");
+        b.billingtype = rs.getString("b.billingtype");
+        b.paymentMethod = rs.getString("paymentMethod");
+        b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
+        b.demoNo = rs.getString("demographic_no");
+        b.demoName = rs.getString("demographic_name");
+        b.status = b.reason;
+        b.serviceDate = rs.getString("service_date");
+        b.apptDoctorNo = rs.getString("apptProvider_no");
+        b.userno = rs.getString("provider_no");
+        b.payeeNo = rs.getString("payee_no");
+        b.accountName = this.getProvider(b.userno, 0).getFullName();
+        b.acctInit = this.getProvider(b.userno, 0).getInitials();
+        b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
+        b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
+
+        b.accountName = this.getProvider(b.userno, 0).getFullName();
+        b.acctInit = this.getProvider(b.userno, 0).getInitials();
+        b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
+        b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
+
+        b.amount = rs.getString("amt");
+        b.type = new Double(b.amount).doubleValue() > 0 ? "PMT" : "RFD";
+        billSearch.list.add(b);
       }
     }
     catch (Exception e) {
@@ -1452,7 +1590,7 @@ public class MSPReconcile {
                                       boolean exludeICBC, String repType) {
     String criteriaQry = "";
     String dateField = this.REP_PAYREF.equals(repType) ?
-        "teleplanS00.t_payment" : "service_date";
+        "t_payment" : "service_date";
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       criteriaQry += " and b.apptProvider_no = '" + providerNo + "'";
     }
@@ -1483,7 +1621,7 @@ public class MSPReconcile {
     }
 
     if (excludePrivate) {
-      criteriaQry += " and b.billingType != 'PRIV' ";
+      criteriaQry += " and b.billingType != 'Pri' ";
     }
 
     if (exludeICBC) {
@@ -1597,8 +1735,8 @@ public class MSPReconcile {
     catch (SQLException ex) {
       ex.printStackTrace();
     }
-    finally{
-      if(db!=null){
+    finally {
+      if (db != null) {
         try {
           db.CloseConn();
         }
@@ -1828,7 +1966,7 @@ public class MSPReconcile {
       while (rs.next()) {
         String billingmaster_no = rs.getString(1);
         double amount = rs.getDouble(2);
-       return isPrivateBillItemOutstanding(billingmaster_no,amount);
+        return isPrivateBillItemOutstanding(billingmaster_no, amount);
       }
     }
     catch (SQLException ex) {
@@ -1846,16 +1984,16 @@ public class MSPReconcile {
     return ret;
   }
 
-/**
- * Returns true if the specified bill item(billingmaster record) has an amount owing;
- * @param billingmaster_no String
- * @return boolean
- */
-public boolean isPrivateBillItemOutstanding(String billingmaster_no,double amount) {
-     double amountPaid = new Double(getAmountPaid(billingmaster_no,
-         BILLTYPE_PRI)).doubleValue();
+  /**
+   * Returns true if the specified bill item(billingmaster record) has an amount owing;
+   * @param billingmaster_no String
+   * @return boolean
+   */
+  public boolean isPrivateBillItemOutstanding(String billingmaster_no,
+                                              double amount) {
+    double amountPaid = new Double(getAmountPaid(billingmaster_no,
+                                                 BILLTYPE_PRI)).doubleValue();
     return amountPaid < amount;
-}
-
+  }
 
 }
