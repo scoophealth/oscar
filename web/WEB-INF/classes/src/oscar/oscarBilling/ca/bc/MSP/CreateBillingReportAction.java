@@ -213,10 +213,9 @@ public class CreateBillingReportAction
     }
 
     else if (repType.equals(msp.REP_PAYREF)) {
-      billSearch = msp.getMSPPayments(account, payee, provider, startDate,
+      billSearch = msp.getPayments(account, payee, provider, startDate,
                                       endDate,
-                                      !showWCB, !showMSP, !showPriv, !showICBC,
-                                      "");
+                                      !showWCB, !showMSP, !showPriv, !showICBC);
       oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
       oscar.entities.Provider acctProv = msp.getProvider(account, 0);
       oscar.entities.Provider provProv = msp.getProvider(provider, 0);
@@ -228,10 +227,13 @@ public class CreateBillingReportAction
         double dblValue = Double.parseDouble(item.getAmount());
         if (dblValue > 0) {
           sumPayed.addIncValue(item.getPaymentMethod(), item.getAmount());
+
         }
         else {
           sumRefunded.addIncValue(item.getPaymentMethod(), item.getAmount());
         }
+
+        sumPayed.addAdjustmentAmount(item.getAdjustmentCodeAmt());
       }
 
       reportParams.put("sumPayed",
