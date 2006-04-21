@@ -1,21 +1,33 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster University
+ * Hamilton
+ * Ontario, Canada
+ */
+
 package oscar.entities;
 
 import java.util.*;
 
 import oscar.util.*;
 
-/**
- * <p>Title: </p>
- *
- * <p>Description: </p>
- *
- * <p>Copyright: Copyright (c) 2005</p>
- *
- * <p>Company: </p>
- * @todo Must fix this name
- * @author not attributable
- * @version 1.0
- */
 public class MSPBill {
   public String serviceDateRange = "";
   public String billing_no = "";
@@ -35,11 +47,11 @@ public class MSPBill {
   public String dx1 = "";
   public String dx2 = "";
   public String dx3 = "";
-  public String providerFirstName;
-  public String providerLastName;
-  public String updateDate;
-  public String billingUnit;
-  public String serviceDate;
+  public String providerFirstName="";
+  public String providerLastName="";
+  public String updateDate="";
+  public String billingUnit="";
+  public String serviceDate="";
   public boolean WCB;
   private UtilDateUtilities ut;
   public String mvaCode;
@@ -54,8 +66,8 @@ public class MSPBill {
   public String serviceStartDate;
   public String status;
   public String paymentDate;
-  public String exp1;
-  public String exp2;
+  public String exp1="";
+  public String exp2="";
   public String accountName;
   public String payeeName;
   public String provName;
@@ -71,10 +83,10 @@ public class MSPBill {
   public String paymentMethodName;
   public Date serviceDateDate;
   public String rejectionDate;
-  public String adjustmentCode;
-  public String adjustmentCodeDesc;
+  public String adjustmentCode="";
+  public String adjustmentCodeDesc="";
   public String amtOwing;
-  public String adjustmentCodeAmt;
+  public String adjustmentCodeAmt="";
   public MSPBill() {
     ut = new UtilDateUtilities();
   }
