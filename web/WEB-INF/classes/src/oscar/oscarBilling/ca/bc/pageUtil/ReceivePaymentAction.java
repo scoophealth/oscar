@@ -1,3 +1,27 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import org.apache.struts.action.ActionMapping;
@@ -9,6 +33,13 @@ import org.apache.struts.action.Action;
 import oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
+
+/**
+ * <p>Responible for executing logic for receiving a private payment</p>
+ * <p>When a payment is recieved the method of payment is updated and the staus is set to paidprivate
+ * <p>if the entire balance owing is recovered</p>
+ * @version 1.0
+ */
 public class ReceivePaymentAction
     extends Action {
   public ActionForward execute(ActionMapping actionMapping,
@@ -23,12 +54,14 @@ public class ReceivePaymentAction
     frm.setAmountReceived(String.valueOf(amount*-1.0));
     }
     this.receivePayment(billingmasterNo,amount);
+
+    //Updates status and payment method of private bill in question
     MSPReconcile rec = new MSPReconcile();
     if(!rec.isPrivateBillItemOutstanding(frm.getBillingmasterNo(),amount)){
       rec.updateBillingMasterStatus(frm.getBillingmasterNo(),rec.PAIDPRIVATE);
+      rec.updatePaymentMethod(frm.getBillNo(),frm.getPaymentMethod());
     }
     frm.setPaymentReceived(true);
-
     return actionMapping.findForward("success");
   }
 
