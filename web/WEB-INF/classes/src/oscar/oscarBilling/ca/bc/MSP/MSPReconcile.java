@@ -992,15 +992,15 @@ public class MSPReconcile {
 
     if (REP_ACCOUNT_REC.equals(type)) {
       orderByClause =
-          "order by billingstatus,bm.paymentMethod,b.demographic_name,bm.service_date";
+          "order by bs.sortOrder,bm.paymentMethod,b.demographic_name,bm.service_date";
     }
     else if (this.REP_INVOICE.equals(type)) {
-      orderByClause = "order by b.provider_no,billingstatus";
+      orderByClause = "order by b.provider_no,bt.sortOrder,bm.service_date,b.demographic_name";
     }
     String p = "select provider.first_name,provider.last_name,b.billingtype, b.update_date, bm.billingmaster_no,b.billing_no, "
         + " b.demographic_name,b.demographic_no,bm.billing_unit,bm.billing_code,bm.bill_amount,bm.billingstatus,bm.mva_claim_code,bm.service_location,"
-        + " bm.phn,bm.service_end_time,service_start_time,bm.service_to_day,bm.service_date,bm.oin_sex_code,b.dob,dx_code1,b.provider_no,apptProvider_no "
-        + " from demographic,provider,billing as b,billingmaster as bm "
+        + " bm.phn,bm.service_end_time,service_start_time,bm.service_to_day,bm.service_date,bm.oin_sex_code,b.dob,dx_code1,b.provider_no,apptProvider_no,bt.sortOrder "
+        + " from demographic,provider,billing as b left join billingtypes bt on b.billingtype = bt.billingtype ,billingmaster as bm left join billingstatus_types bs on bm.billingstatus = bs.billingstatus"
         + " where bm.billing_no=b.billing_no "
         + " and b.provider_no = provider.provider_no "
         + " and demographic.demographic_no = b.demographic_no "
@@ -1038,8 +1038,7 @@ public class MSPReconcile {
         b.reason = this.getStatusDesc(b.reason);
 
         b.amount = rs.getString("bill_amount");
-        b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
-                                         b.billingtype);
+
         b.code = rs.getString("billing_code");
         b.dx1 = rs.getString("dx_code1"); ;
         b.serviceDate = rs.getString("service_date").equals("") ? "00000000" :
@@ -1120,11 +1119,11 @@ public class MSPReconcile {
 
         // AR SECTION ---------------------------------------------------------
         /**
-         * If the bill is of type AR and it was paid with an explanation
+         * If the report is of type AR and it was paid with an explanation or is private
          * we need to get the difference between what was billed and what was paid
          **/
         if (type.equals(this.REP_ACCOUNT_REC)) {
-          if ("E".equals(b.status)) {
+          if (this.PAIDWITHEXP.equals(b.status)||("pri".equalsIgnoreCase(b.billingtype))){
             b.amount = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
           }
@@ -1167,7 +1166,7 @@ public class MSPReconcile {
    * @param amountBilled String - The total amount of the bill
    * @return String
    */
-  private String getAmountOwing(String billingMasterNo, String amountBilled,
+  public String getAmountOwing(String billingMasterNo, String amountBilled,
                                 String billingType) {
     String ret = "";
     DBHandler db = null;
@@ -1187,7 +1186,7 @@ public class MSPReconcile {
           ret = String.valueOf(owing);
         }
         else {
-          ret = "0.0";
+          ret = amountBilled;
         }
       }
       catch (SQLException ex2) {
@@ -1502,7 +1501,7 @@ public class MSPReconcile {
     }
     else if (repType.equals(this.REP_ACCOUNT_REC)) {
       criteriaQry +=
-          " and bm.billingstatus in ('R','O','Z','F','X','H','T','B','E')";
+          " and bm.billingstatus in ('R','O','Z','F','X','H','T','B','E','P')";
     }
     return criteriaQry;
   }
@@ -1605,14 +1604,6 @@ public class MSPReconcile {
         }
         catch (SQLException ex1) {
           ex1.printStackTrace();
-        }
-      }
-      if(rs!=null){
-        try {
-          rs.close();
-        }
-        catch (SQLException ex2) {
-          ex2.printStackTrace();
         }
       }
     }
@@ -1837,11 +1828,7 @@ public class MSPReconcile {
       while (rs.next()) {
         String billingmaster_no = rs.getString(1);
         double amount = rs.getDouble(2);
-        double amountPaid = new Double(getAmountPaid(billingmaster_no,
-            BILLTYPE_PRI)).doubleValue();
-        if (amount-amountPaid>0) {
-          return true;
-        }
+       return isPrivateBillItemOutstanding(billingmaster_no,amount);
       }
     }
     catch (SQLException ex) {
@@ -1858,4 +1845,17 @@ public class MSPReconcile {
     }
     return ret;
   }
+
+/**
+ * Returns true if the specified bill item(billingmaster record) has an amount owing;
+ * @param billingmaster_no String
+ * @return boolean
+ */
+public boolean isPrivateBillItemOutstanding(String billingmaster_no,double amount) {
+     double amountPaid = new Double(getAmountPaid(billingmaster_no,
+         BILLTYPE_PRI)).doubleValue();
+    return amountPaid < amount;
+}
+
+
 }
