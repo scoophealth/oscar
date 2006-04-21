@@ -28,7 +28,7 @@
 	<parameter name="s21id" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="subS23" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
 	<parameter name="adj" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
-	<queryString><![CDATA[select t_payment,t_practitionerno,t_practitionername,t_amtbilled,t_amtpaid from teleplanS22 where s21_id=$P{s21id}  and t_s22type<>'D' order by s22_id]]></queryString>
+	<queryString><![CDATA[select t_payment,t_practitionerno,t_practitionername,t_amtbilled,t_amtpaid from teleplanS22 where t_payeeno = $P{payeeNo} and s21_id=$P{s21id}  and t_s22type<>'D' order by s22_id]]></queryString>
 
 	<field name="t_payment" class="java.lang.String"/>
 	<field name="t_practitionerno" class="java.lang.String"/>

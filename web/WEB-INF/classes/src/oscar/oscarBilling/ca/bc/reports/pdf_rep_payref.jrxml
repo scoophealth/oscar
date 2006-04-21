@@ -324,7 +324,7 @@ order by billing.billingtype;]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="" pdfFontName="Times-Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Line#]]></text>
+				<text><![CDATA[Seq#]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
