@@ -2307,3 +2307,21 @@ CREATE TABLE billing_msp_servicecode_times (
   timeRange tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
+
+#Stores data about the types of bills that are used in OSCAR BC billing module
+CREATE TABLE billingtypes (
+  billingtype varchar(10) NOT NULL default '',
+  sortOrder int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (billingtype)
+) TYPE=MyISAM;
+
+
+#Stores data about the various MSP bill status types
+
+
+CREATE TABLE billingstatus_types (
+  billingstatus char(1) NOT NULL default '',
+  displayName varchar(20) default '',
+  sortOrder int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (billingstatus)
+) TYPE=MyISAM;
