@@ -495,6 +495,8 @@ public class MSPReconcile {
           }
           rs2.close();
         }
+
+        billSearch.justBillingMaster.add(b.billMasterNo);
         billSearch.list.add(b);
         billSearch.count++;
       }
@@ -1002,7 +1004,7 @@ public class MSPReconcile {
         + " bm.phn,bm.service_end_time,service_start_time,bm.service_to_day,bm.service_date,bm.oin_sex_code,b.dob,dx_code1,b.provider_no,apptProvider_no,bt.sortOrder "
         + " from demographic,provider,billing as b left join billingtypes bt on b.billingtype = bt.billingtype ,billingmaster as bm left join billingstatus_types bs on bm.billingstatus = bs.billingstatus"
         + " where bm.billing_no=b.billing_no "
-        + " and b.provider_no = provider.provider_no "
+        + " and b.apptProvider_no = provider.provider_no "
         + " and demographic.demographic_no = b.demographic_no "
         + criteriaQry + " "
         + orderByClause;
@@ -1038,6 +1040,7 @@ public class MSPReconcile {
         b.reason = this.getStatusDesc(b.reason);
 
         b.amount = rs.getString("bill_amount");
+
 
         b.code = rs.getString("billing_code");
         b.dx1 = rs.getString("dx_code1"); ;
@@ -1109,6 +1112,7 @@ public class MSPReconcile {
         }
 
         else if (this.REP_INVOICE.equals(type)) {
+           b.amtOwing = this.getAmountOwing(b.billMasterNo,b.amount,b.billingtype);
           if ("E".equals(b.status)) {
             b.adjustmentCode = this.getS00String(b.billMasterNo);
           }
