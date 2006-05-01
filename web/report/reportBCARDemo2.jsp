@@ -369,11 +369,12 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
     		Properties prop = (Properties) vecFieldValue.get(j);
     		strDemoNo += (strDemoNo.length()<1? "" : ",") + prop.getProperty("demographic_no");
     	}
+
     	temp = sSpecSelect.replaceAll("demographicExt.","").split(",");
     	for(int i=0; i<temp.length; i++) {
     	    vecSpecCaption.add(propSpecSelect.getProperty(temp[i].trim()));
     		sql = "select demographic_no,value from demographicExt where key_val='" + temp[i] + "' and demographic_no in (";
-    		sql += strDemoNo + ") order by date_time desc limit 1";
+    		sql += strDemoNo + ") order by date_time ";
     		rs = dbObj.searchDBRecord(sql);
 			while (rs.next()) {
     			propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
