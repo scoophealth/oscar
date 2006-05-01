@@ -143,6 +143,14 @@
           </tr>
           <tr bgcolor="#EEEEFF">
             <td align="right">
+              <b><input type="checkbox" name="city" ></b>
+            </td>
+            <td>
+              City
+            </td>
+          </tr>
+          <tr bgcolor="#EEEEFF">
+            <td align="right">
               <b><input type="checkbox" name="postal" ></b>
             </td>
             <td>
