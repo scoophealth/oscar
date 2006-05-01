@@ -202,9 +202,8 @@ function setfocus() {
   <tr> 
       <td colspan="2">
           <div align="center"> 
-			<input type="hidden" name="displaymode" value="Provider_Update_Record">
-			<input type="submit" name="subbutton" value="<bean:message key="admin.providerupdateprovider.btnSubmit"/>">
-                        <input type="button" value="<bean:message key="admin.providerupdateprovider.btnDelete"/>" onclick="window.location='admincontrol.jsp?keyword=<%=rs.getString("provider_no")%>&displaymode=Provider_Delete&dboperation=provider_delete'">
+	     <input type="hidden" name="displaymode" value="Provider_Update_Record">
+             <input type="submit" name="subbutton" value="<bean:message key="admin.providerupdateprovider.btnSubmit"/>">
           </div>
       </td>
   </tr>
