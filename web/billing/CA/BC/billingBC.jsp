@@ -115,6 +115,23 @@ if (loadFromSession== null ){
 	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
 
 	-->
+
+    .popUp{
+		visibility: hidden;
+		background-color:#ffffcc;
+    }
+
+   .odd{
+    background-color:#EEEEFF;
+   }
+   .even{
+    background-color:#FFFFFF;
+   }
+
+   .popupHeader{
+    background-color:#ccccff;
+    font-size:10pt;
+   }
 </style>
 <script language="JavaScript">
 
@@ -439,12 +456,45 @@ function findObj(n, d) { //v4.0
   for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=findObj(n,d.layers[i].document);
   if(!x && document.getElementById) x=document.getElementById(n); return x;
 }
+function getOffsetLeft (el) {
+	var ol=el.offsetLeft;
+	while ((el=el.offsetParent) != null) { ol += el.offsetLeft; }
+	return ol;
+	}
 
-function showHideLayers() { //v3.0
-  var i,p,v,obj,args=showHideLayers.arguments;
-  for (i=0; i<(args.length-2); i+=3) if ((obj=findObj(args[i]))!=null) { v=args[i+2];
-    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
-    obj.visibility=v; }
+function getOffsetTop (el) {
+	var ot=el.offsetTop;
+	while((el=el.offsetParent) != null) { ot += el.offsetTop; }
+	return ot;
+	}
+var objPopup = null;
+var shim = null;
+function formPopup(event,objectId){
+  objPopTrig = document.getElementById(event);
+  objPopup = document.getElementById(objectId);
+  shim = document.getElementById('DivShim');
+ xPos = getOffsetLeft(objPopTrig);
+  yPos = getOffsetTop(objPopTrig) + objPopTrig.offsetHeight;
+//  objPopup.style.left = xPos + 'px' ;
+//  objPopup.style.top = yPos + 'px' ;
+  objPopup.style.zIndex = 9999;
+
+  shim.style.width = objPopup.offsetWidth + 2;
+  shim.style.height = objPopup.offsetHeight;
+  shim.style.top = objPopup.style.top;
+  shim.style.left = objPopup.style.left;
+  shim.style.zIndex = objPopup.style.zIndex - 1;
+  shim.style.display = "block";
+  objPopup.style.display = "block";
+  shim.style.visibility = 'visible';
+  objPopup.style.visibility = 'visible';
+}
+
+function formPopupHide(){
+  objPopup.style.visibility = 'hidden';
+  shim.style.visibility = 'hidden';
+  objPopup = null;
+  shim = null;
 }
 //-->
 </script>
@@ -469,31 +519,34 @@ String generateNumericOptionList(int range){
 %>
 
 
-<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();showHideLayers('Layer1','','hide');CheckType();correspondenceNote();">
-<div id="Layer2" style="position:absolute; left:298px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
-  <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
-    <tr>
-      <td width="18%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Dx Code</font></b></td>
-      <td width="76%"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">Description</font></b></td>
-      <td width="6%"><a href="#" onClick="showHideLayers('Layer2','','hide'); return false;">X</a></td>
+<body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();CheckType();correspondenceNote();">
+<iframe
+  id="DivShim"
+  src="javascript:false;"
+  scrolling="no"
+  frameborder="0"
+  style="position:absolute; top:0px; left:0px; display:none;">
+ </iframe>
+<div id="Layer2" class="popUp" style="position:absolute; left:298px; top:26px; width:332px; height:600px;">
+  <table width="100%">
+     <tr class="popupHeader">
+      <th>Dx Code</th>
+      <th>Description</th>
+      <th><a href="#" onClick="formPopupHide();return false; return false;">X</a></th>
     </tr>
-   <% for (int i=0; i< diaglist.length; i++){
-
-         if (colorflag.compareTo("1")==0) {
-            color = "#EEEEFF";
-            colorflag = "0";
-         }else{
-	    color = "#FFFFFF";
-	    colorflag = "1";
-	 }
+   <%
+   boolean flag = false;
+   for (int i=0; i< diaglist.length; i++){
+      flag = !flag;
+      String rowClass = flag?"odd":"even";
     %>
-       <tr bgcolor=<%=color%>>
-          <td width="18%"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
-               <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');showHideLayers('Layer2','','hide');return false;">
+       <tr class="<%=rowClass%>">
+          <td><b>
+               <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');formPopupHide();return false;return false;">
                                 <%=diaglist[i].getDiagnosticCode()%>
-               </a></font></b>
+               </a></b>
           </td>
-	  <td colspan="2"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D"><%=diaglist[i].getDescription()%></font></td>
+	  <td colspan="2"><%=diaglist[i].getDescription()%></td>
        </tr>
     <%}%>
   </table>
@@ -507,26 +560,23 @@ String generateNumericOptionList(int range){
     </td>
   </tr>
 </table>
-<div id="Layer1" style="position:absolute; left:1px; top:159px; width:410px; height:300px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
-  <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
-    <tr bgcolor="#393764">
-      <td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif" color="#000000">Billing
-        Form</font></b></font></td>
-      <td width="3%" bgcolor="#FFCC00" height="7"><font face="Verdana, Arial, Helvetica, sans-serif" ><b><a href="#" onClick="showHideLayers('Layer1','','hide');return false;">x</a></b></font></td>
+<div id="Layer1" class="popUp" style="position:absolute; left:1px; top:159px; width:410px; height:300px;">
+  <table width="100%">
+    <tr class="popupHeader">
+      <th>Billing
+        Form</th>
+      <th><a href="#" onClick="formPopupHide();return false;">x</a></th>
     </tr>
-     <% for (int i=0; i< billformlist.length; i++){
-            if (colorflag.compareTo("1")==0) {
-                color = "#EEEEFF";
-    	        colorflag = "0";
-    	    }else{
-    	        color = "#FFFFFF";
-    	      	colorflag = "1";
-    	    }
+
+     <%
+     flag = false;
+     for (int i=0; i< billformlist.length; i++){
+           flag = !flag;
+           String rowClass = flag?"odd":"even";
      %>
-            <tr bgcolor=<%=color%>>
-               <td colspan="2"><b><font size="-2" face="Verdana, Arial, Helvetica, sans-serif" color="#7A388D">
+            <tr class="<%=rowClass%>">
+               <td colspan="2">
                   <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=<%=bean.getBillForm()%>" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
-                  </font></b>
                </td>
             </tr>
      <%}%>
@@ -571,12 +621,12 @@ String generateNumericOptionList(int range){
              oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
              System.out.println("(String) thisForm.getXml_provider()=" + (String) thisForm.getXml_provider());
 		  oscar.oscarBilling.ca.bc.data.BillingPreference pref = null;
-		  
+
 		  //checking for a bug where the passed in provider number is actually "none" rather than numeral 0
 		  if(oscar.util.StringUtils.isNumeric(thisForm.getXml_provider())){
 		   pref = dao.getUserBillingPreference((String) thisForm.getXml_provider());
 		  }
-         
+
           String userReferralPref = "";
 
           if(pref!=null){
@@ -610,7 +660,7 @@ String generateNumericOptionList(int range){
             <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><bean:message key="billing.patient.age"/>:</font></b><br>
               </font></td>
             <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getAge()%></font></b></td>
-            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer1','','show');return false;">
+            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" id="pop1" onClick="formPopup(this.id,'Layer1');return false;">
                     <bean:message key="billing.billingform"/></a>:</font></b>
                 <%=billform.getBillingFormDesc(billformlist,bean.getBillForm())%>
               </font></td>
@@ -1065,7 +1115,7 @@ String generateNumericOptionList(int range){
                         <td width="91%" height="103" valign="top">
                           <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
                             <tr>
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="#" onClick="showHideLayers('Layer2','','show','Layer1','','hide');return false;"><bean:message key="billing.diagnostic.code"/></a></font></b></td>
+                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="#" id="pop2" onClick="formPopup(this.id,'Layer2');return false;"><bean:message key="billing.diagnostic.code"/></a></font></b></td>
                               <td><b></b></td>
                             </tr>
                             <tr>
