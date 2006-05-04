@@ -45,7 +45,7 @@
   String strLimit2 = "5";
   if (request.getParameter("limit1") != null) strLimit1 = request.getParameter("limit1");
   if (request.getParameter("limit2") != null) strLimit2 = request.getParameter("limit2");
-  String providerview = request.getParameter("providerview") == null ? "all" : request.getParameter("providerview");
+  String providerview = request.getParameter("providerview") == null ? "ALL" : request.getParameter("providerview");
   BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   MSPReconcile msp = new MSPReconcile();
@@ -229,7 +229,7 @@ function clearField(field){
             <font face="Verdana, Arial, Helvetica, sans-serif" size="2" color="#333333">
               <b>
                 <select name="selPayee" size="1" id="selPayee">
-                  <option value="all">All Payees</option>
+                  <option value="ALL">All Payees</option>
                 <%
                   {
                     String proFirst = "";
@@ -262,7 +262,7 @@ function clearField(field){
           </td>
           <td class="bCellData">
             <select name="selProv" id="select">
-              <option value="all">All Providers</option>
+              <option value="ALL">All Providers</option>
             <%
               {
                 String proFirst = "";
@@ -293,7 +293,7 @@ function clearField(field){
           </td>
           <td class="bCellData">
             <select name="selAccount" id="select2">
-              <option value="all">All Accounts</option>
+              <option value="ALL">All Accounts</option>
             <%
               String proFirst = "";
               String proLast = "";
@@ -314,6 +314,7 @@ function clearField(field){
             <%}            %>
             </select>
           </td>
+
         </tr>
         <tr>
           <td>
@@ -328,6 +329,7 @@ function clearField(field){
               <option value="REP_ACCOUNT_REC">Accounts Receivable</option>
               <option value="REP_WO">Write-Off</option>
               <option value="REP_PAYREF">Payments and Refunds(Cash)</option>
+              <option value="REP_PAYREF_SUM">Payments and Refunds Summary</option>
             </select>
           </td>
         </tr>
