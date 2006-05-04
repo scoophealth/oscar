@@ -212,7 +212,7 @@ public class CreateBillingReportAction
 
     }
 
-    else if (repType.equals(msp.REP_PAYREF)) {
+    else if (repType.equals(msp.REP_PAYREF)||repType.equals(msp.REP_PAYREF_SUM)) {
       billSearch = msp.getPayments(account, payee, provider, startDate,
                                       endDate,
                                       !showWCB, !showMSP, !showPriv, !showICBC);
@@ -317,6 +317,7 @@ public class CreateBillingReportAction
   public void cfgReports() {
     this.reportCfg.setProperty(MSPReconcile.REP_INVOICE, "rep_invoice.jrxml");
     this.reportCfg.setProperty(MSPReconcile.REP_PAYREF, "rep_payref.jrxml");
+    this.reportCfg.setProperty(MSPReconcile.REP_PAYREF_SUM, "rep_payref_sum.jrxml");
     this.reportCfg.setProperty(MSPReconcile.REP_ACCOUNT_REC, "rep_account_rec.jrxml");
     this.reportCfg.setProperty(MSPReconcile.REP_REJ, "rep_rej.jrxml");
 
