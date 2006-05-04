@@ -294,6 +294,9 @@ System.out.println("billTypes" + billTypes);
 if (billTypes == null){
     billTypes = MSPReconcile.REJECTED;
 }
+if("true".equals(readonly)){
+billTypes = "%";
+}
 
 %>
 <table>
@@ -385,16 +388,6 @@ if (billTypes == null){
       paidinCorrectval = false;
       MSPReconcile.Bill b = (MSPReconcile.Bill) list.get(i);
 
-
-	  /** Getting the number of lines per bill **/
-	   ResultSet rsbillingmaster_count = apptMainBean.queryResults(new String[] {b.billing_no}, "search_billingmaster_count");
-     int billingmaster_count = 0;
-     if (rsbillingmaster_count.next()) {
-          billingmaster_count = rsbillingmaster_count.getInt(1);
-     }
-     rsbillingmaster_count.close();
-
-
       bodd=currentBillingNo.equals(b.billing_no) ? !bodd : bodd; //for the color of rows
       nItems++; //to calculate if it is the end of records
       String rejected = isRejected(b.billMasterNo,p,b.isWCB());
@@ -419,9 +412,7 @@ if (billTypes == null){
 
    %>
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
-
-    <%if (!currentBillingNo.equals(b.billing_no)) {    %>
-      <td align="center" class="bCellData" rowspan="<%=billingmaster_count%>">
+      <td align="center" class="bCellData">
         <%if("Pri".equals(b.billingtype)){%>
 	 	<a href="javascript:popupPage(800,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=b.billing_no%>&receipt=yes')"><%=b.billing_no%>       </a>
 		<%}
@@ -429,7 +420,7 @@ if (billTypes == null){
 		%>
 	 	<%=b.billing_no%>
 		<%}%>		    </td>
-		<%}%>
+
 
 	<td align="center" class="bCellData" ><%=b.billMasterNo%></td>
 	<td align="center" class="bCellData" ><%=b.apptDate%></td>
@@ -469,7 +460,7 @@ if (billTypes == null){
   <% }%>
   <tr>
   <%
-	String colspan = !"true".equals(readonly)?"4":"3";
+	String colspan = !"true".equals(readonly)?"5":"4";
  %>
   <td colspan="<%=colspan%>" align="center" class="bCellData">&nbsp;</td>
     <td align="center" class="bCellData" >Count:</td>
