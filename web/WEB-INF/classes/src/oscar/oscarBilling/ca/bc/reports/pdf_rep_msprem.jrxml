@@ -180,7 +180,7 @@
 					</textElement>
 				<text><![CDATA[MSP Remittance Report]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy 'at' h:mm aaa" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="0"
@@ -259,7 +259,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="490"
+						x="495"
 						y="4"
 						width="23"
 						height="12"
@@ -275,7 +275,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="452"
+						x="443"
 						y="4"
 						width="35"
 						height="12"
@@ -291,7 +291,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="407"
+						x="395"
 						y="4"
 						width="44"
 						height="12"
@@ -307,7 +307,7 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="362"
+						x="356"
 						y="4"
 						width="38"
 						height="12"
@@ -373,7 +373,7 @@
 						mode="Transparent"
 						x="78"
 						y="4"
-						width="48"
+						width="50"
 						height="12"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -389,7 +389,7 @@
 						mode="Transparent"
 						x="32"
 						y="4"
-						width="21"
+						width="36"
 						height="12"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -419,20 +419,21 @@
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="11"  isSplitAllowed="true" >
+			<band height="10"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="31"
 						y="0"
-						width="44"
+						width="47"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_s00type}]]></textFieldExpression>
 				</textField>
@@ -441,14 +442,15 @@
 						mode="Transparent"
 						x="133"
 						y="0"
-						width="47"
+						width="49"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new SimpleDateFormat("yyyyMMdd").parse($F{t_payment})]]></textFieldExpression>
 				</textField>
@@ -457,46 +459,49 @@
 						mode="Transparent"
 						x="78"
 						y="0"
-						width="52"
+						width="54"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{t_servicedate}.equals("")?null:new SimpleDateFormat("yyyyMMdd").parse($F{t_servicedate})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="489"
+						x="494"
 						y="0"
-						width="42"
+						width="41"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{billing_code}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="230"
+						x="227"
 						y="0"
 						width="122"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{demographic_name} + "(" + $F{demographic_no} + ")"]]></textFieldExpression>
 				</textField>
@@ -509,58 +514,62 @@
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_datacenter}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="449"
+						x="439"
 						y="0"
-						width="43"
+						width="55"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_dataseq}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="355"
+						x="351"
 						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Right" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double(oscar.oscarBilling.ca.bc.MSP.MSPReconcile.convCurValue($F{t_paidamt})))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="402"
+						x="395"
 						y="0"
 						width="44"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField"/>
+						key="textField"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_exp1}]]></textFieldExpression>
 				</textField>
@@ -569,14 +578,15 @@
 						mode="Transparent"
 						x="0"
 						y="0"
-						width="28"
+						width="30"
 						height="10"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
-						key="textField-1"/>
+						key="textField-1"
+						isPrintWhenDetailOverflows="true"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Left" rotation="None">
-						<font fontName="Arial" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="true" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[String.valueOf($F{first_name}).substring(0,1) +  String.valueOf($F{last_name}).substring(0,1)]]></textFieldExpression>
 				</textField>
@@ -587,7 +597,7 @@
 			</band>
 		</columnFooter>
 		<pageFooter>
-			<band height="27"  isSplitAllowed="true" >
+			<band height="37"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
@@ -638,7 +648,7 @@
 						x="0"
 						y="3"
 						width="119"
-						height="24"
+						height="32"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="staticText-1"/>
@@ -646,7 +656,8 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[S01=Paid as billed
+				<text><![CDATA[S00 = Other data center #
+S01= Paid as billed
 S02 = Paid with explanation ]]></text>
 				</staticText>
 				<staticText>
@@ -669,12 +680,12 @@ S04 = In hold process]]></text>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="48"  isSplitAllowed="true" >
+			<band height="113"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="0"
+						y="17"
 						width="118"
 						height="12"
 						forecolor="#000000"
@@ -690,7 +701,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="12"
+						y="29"
 						width="118"
 						height="12"
 						forecolor="#000000"
@@ -706,7 +717,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="24"
+						y="41"
 						width="118"
 						height="12"
 						forecolor="#000000"
@@ -723,7 +734,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="0"
-						y="36"
+						y="53"
 						width="118"
 						height="12"
 						forecolor="#000000"
@@ -739,7 +750,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="120"
-						y="0"
+						y="17"
 						width="52"
 						height="12"
 						forecolor="#000000"
@@ -755,7 +766,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="120"
-						y="12"
+						y="29"
 						width="52"
 						height="12"
 						forecolor="#000000"
@@ -771,7 +782,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="120"
-						y="24"
+						y="41"
 						width="52"
 						height="12"
 						forecolor="#000000"
@@ -787,7 +798,7 @@ S04 = In hold process]]></text>
 					<reportElement
 						mode="Transparent"
 						x="120"
-						y="36"
+						y="53"
 						width="52"
 						height="12"
 						forecolor="#000000"
@@ -818,9 +829,9 @@ S04 = In hold process]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="306"
+						x="284"
 						y="1"
-						width="59"
+						width="81"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -831,6 +842,38 @@ S04 = In hold process]]></text>
 					</textElement>
 				<text><![CDATA[PAYEE TOTAL:]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="0"
+						y="3"
+						width="118"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="element-106"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="" pdfFontName="Times-Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[S00 - Other data centre #:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						mode="Transparent"
+						x="120"
+						y="3"
+						width="52"
+						height="12"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-12"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#FFFFFF" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format($V{cnt00})]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>

@@ -254,7 +254,7 @@
 						key="line"/>
 					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
 				</line>
-				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy 'at' h:mm aaa" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="1"
