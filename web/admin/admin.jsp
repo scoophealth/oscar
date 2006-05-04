@@ -260,6 +260,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ="popupPage(600,600,'../billing/CA/BC/billingCodeAdjust.jsp');return false;">Manage Billing Codes</a></li>
           </oscar:oscarPropertiesCheck>
           <li><a href="#" onClick="popupPage(600,600,'../billing/CA/BC/showServiceCodeAssocs.do');return false;">Manage Service/Diagnostic Code Associations</a></li>
+		  <li><a href="#" onClick="popupPage(600,500,'../billing/CA/BC/supServiceCodeAssocAction.do');return false;">Manage Procedure/Fee Code Associations</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingManageReferralDoc.jsp');return false;">Manage Referral Doc</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a></li>
           <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a></li>

@@ -39,7 +39,7 @@ You have no rights to access the data!
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
-<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames, oscar.oscarWaitingList.WaitingList" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, java.net.*,java.text.DecimalFormat, oscar.*, oscar.oscarDemographic.data.ProvinceNames" errorPage="../appointment/errorpage.jsp" %>
 <%@page  import="oscar.oscarDemographic.data.*"%>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -532,14 +532,7 @@ div.demographicWrapper {
                 <tr><td>
                     <a href='demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message key="demographic.demographiceditdemographic.btnApptHist"/></a>
                 </td></tr>
-                <%
-                    WaitingList wL = WaitingList.getInstance();
-                    if(wL.getFound()){
-                %>
-                <tr><td>
-                    <a href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=rs.getString("demographic_no")%>">Waiting List</a>
-                </td></tr>
-                <%}%>
+
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="admin.admin.billing"/>
@@ -1280,37 +1273,7 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                               </td>
                             </tr>
                             <%}%>
-                            <%if(wL.getFound()){%>
-                            <tr valign="top">
-                              <td align="right" nowrap><b>Waiting List: </b></td>
-                              <td align="left" >
-                              <%
-                                ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
-                                String listID = "", wlnote="";
-                                if (rsWLStatus.next()){
-                                    listID = rsWLStatus.getString("listID");
-                                    wlnote = rsWLStatus.getString("note");
-                                }
-                               %>
-                                <select name="list_id">
-                                  <option value="0" >--Select Waiting List--</option>
-                                  <%
-                                      ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
-                                      while (rsWL.next()) {
-                                    %>
-                                              <option value="<%=rsWL.getString("ID")%>" <%=rsWL.getString("ID").equals(listID)?" selected":""%>>
-                                              <%=rsWL.getString("name")%></option>
-                                              <%
-                                      }
-                                    %>
-                                </select>
-                              </td>
-                              <td align="right" nowrap><b>Waiting List Note: </b></td>
-                              <td align="left">
-                                <input type="text" name="waiting_list_note" value="<%=wlnote%>" >
-                              </td>
-                            </tr>
-                            <%}%>
+
                             <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
                               <td align="left" >
