@@ -112,8 +112,8 @@
     .rcvPayment{
     display:none
     }
-	
-	
+
+
   </style>
   <style type="text/css">
     .detailHeader {
@@ -143,7 +143,7 @@
 
 function printInvoice(){
 	window.print()
-	
+
 
 }
 
@@ -276,7 +276,7 @@ var awnd=null;
                         <tr>
                           <td colspan="6">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                              
+
                               <tr>
                                 <td>
                                   <strong>Name:</strong>                                </td>
@@ -418,7 +418,7 @@ var awnd=null;
 							  	 <td colspan="3">&nbsp;</td>
                                 <td><%=label%></td>
 								 <td colspan="2"><%=item.getCreation_date()%></td>
-								 
+
                                 <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
                               </tr>
                             <%}%>
@@ -480,20 +480,23 @@ var awnd=null;
                       </table>
                       <table width="100%" border="0" cellspacing="1" cellpadding="1">
                         <tr>
-                          <td height="14" colspan="4" class="secHead">
-                            <label></label>
-                          <label></label></td>
+                          <td width="17%" class="header">Billing Notes:</td>
                         </tr>
-       
+                        <tr>
+                          <td rowspan="2">
+                            <html:textarea cols="60" styleClass="header" rows="5" property="messageNotes"></html:textarea>
+                          </td>
+                        </tr>
+
                       </table>
-                   
+
                       <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr>
                           <td align="right">    <table width="100%" border="0">
                         <tr>
                           <td align="right" colspan="2">                          </td>
                         </tr>
-                        
+
                         <tr>
                           <td colspan="2" align="left" valign="bottom">
                             <html:submit styleClass="header" value="Update Invoice" property=""/>
@@ -510,8 +513,8 @@ var awnd=null;
               </td>
             </tr>
           </table>
-        
-		  
+
+
         </td>
       </tr>
     </table>
