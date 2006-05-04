@@ -52,15 +52,20 @@ public class SupServiceCodeAssocDAO {
     //select billingServiceNo,billingServiceTrayNo,billingServiceNo as associationStatus from billing_trayfees");
    List list = SqlUtils.getQueryResultsList("select id,billingServiceNo,billingServiceTrayNo from billing_trayfees");
    List ret = new ArrayList();
-   for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-     String[] item = (String[]) iter.next();
-     if(item!= null && item.length > 0){
-       HashMap map = new HashMap();
-       map.put("id",item[0]);
-       map.put("billingServiceNo",this.getBillingServiceValue(item[1],this.VALUE_BY_ID));
-       map.put("billingServiceTrayNo",this.getBillingServiceValue(item[2],this.VALUE_BY_ID));
-       map.put("associationStatus","");
-       ret.add(map);
+
+   if(list != null){
+     for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+       String[] item = (String[]) iter.next();
+       if (item != null && item.length > 0) {
+         HashMap map = new HashMap();
+         map.put("id", item[0]);
+         map.put("billingServiceNo",
+                 this.getBillingServiceValue(item[1], this.VALUE_BY_ID));
+         map.put("billingServiceTrayNo",
+                 this.getBillingServiceValue(item[2], this.VALUE_BY_ID));
+         map.put("associationStatus", "");
+         ret.add(map);
+       }
      }
    }
    return ret;
