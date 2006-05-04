@@ -92,7 +92,6 @@ function editAssociation(primary,secondary){
 function deleteAssociation(id){
   var frm = document.forms[0];
   if(confirm("Do you really want to delete this entry?")){
-    alert("hello");
     frm.actionMode.value = "delete";
     frm.id.value = id;
     frm.submit();
