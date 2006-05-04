@@ -26,6 +26,7 @@
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@page import="java.util.*,oscar.oscarBilling.ca.bc.data.BillingCodeData,oscar.oscarBilling.ca.bc.pageUtil.*"%>
+<%@ taglib uri="http://displaytag.sf.net" prefix="display" %>
 <html:html locale="true">
 <head>
 <title>Adjust Private Billing Codes</title>
@@ -64,6 +65,10 @@
     border-left: 1pt solid #888888;
     border-right: 1pt solid #888888;
     text-align: center;
+    }
+
+    .odd{
+      background-color:#EEEEFF;
     }
 </style>
 </head>
@@ -114,27 +119,40 @@
              arrow = "&darr;";
           }
       %>
-      <table border=1 width="50%">
-        <tr>
-          <th>Service Code<a href="billingPrivateCodeAdjust.jsp?sortOrder=<%=newOrder%>"><%=arrow%></a></th>
-          <th>Description</th>
-          <th>Price</th>
-          <th>Options</th>
-        </tr>
-        <%
-          for (int i = 0; i < list.size(); i++) {
-            BillingCodeData bcd = (BillingCodeData) list.get(i);
-        %>
-        <tr align="center">
-          <td><strong><%=bcd.getServiceCode()%> </strong></td>
-          <td><%=bcd.getDescription()%> </td>
-          <td><%=bcd.getValue()%></td>
-          <td><a href="billingEditCode.jsp?codeId=<%=bcd.getBillingserviceNo()%>&code=<%=bcd.getServiceCode()%>&desc=<%=bcd.getDescription()%>&value=<%=bcd.getValue()%>&whereTo=private">Edit</a> <br>
-            <a href="deletePrivateCode.jsp?code=<%=bcd.getBillingserviceNo()%>">Delete</a></td>
-        </tr>
-        <%}        %>
-      </table>
-      <%}      %>
+
+      <% request.setAttribute( "test", list); %>
+<pre>
+<![CDATA[
+	public String getLink1()
+	{
+		ListObject lObject= (ListObject)getCurrentRowObject();
+		int lIndex= getListIndex();
+		return "&lt;a href=\"details.jsp?index=" + lIndex + "\">" + lObject.getId() + "&lt;/a>";
+	}
+
+
+	public String getLink2()
+	{
+		ListObject lObject= (ListObject)getCurrentRowObject();
+		int lId= lObject.getId();
+
+		return "&lt;a href=\"details.jsp?id=" + lId
+			+ "&amp;action=view\">View&lt;/a> | "
+			+ "&lt;a href=\"details.jsp?id=" + lId
+			+ "&amp;action=edit\">Edit&lt;/a> | "
+			+ "&lt;a href=\"details.jsp?id=" + lId
+			+ "&amp;action=delete\">Delete&lt;/a>";
+	}
+]]>
+</pre>
+
+<display:table name="test" pagesize="50" defaultsort="1" defaultorder="descending" decorator="oscar.oscarBilling.ca.bc.pageUtil.BillCodesTableWrapper">
+  <display:column property="serviceCode" title="Service Code" sortable="true" headerClass="sortable" />
+  <display:column property="description" title="Description" sortable="true" headerClass="sortable"  />
+  <display:column property="value" title="Price" sortable="true" headerClass="sortable"  />
+   <display:column property="billingserviceNo" title="Options" />
+</display:table>
+      <%}%>
     </td>
   </tr>
   <tr>
