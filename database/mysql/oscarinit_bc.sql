@@ -2317,11 +2317,19 @@ CREATE TABLE billingtypes (
 
 
 #Stores data about the various MSP bill status types
-
-
 CREATE TABLE billingstatus_types (
   billingstatus char(1) NOT NULL default '',
   displayName varchar(20) default '',
   sortOrder int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (billingstatus)
+) TYPE=MyISAM;
+
+
+#Stores data about service codes/tray fee associations
+#One service code may be associated with a single tray fee code
+CREATE TABLE  billing_trayfees (
+  id int(10) unsigned NOT NULL auto_increment,
+  billingServiceNo varchar(10) NOT NULL default '0',
+  billingServiceTrayNo varchar(10) NOT NULL default '0',
+  PRIMARY KEY  (id)
 ) TYPE=MyISAM;
