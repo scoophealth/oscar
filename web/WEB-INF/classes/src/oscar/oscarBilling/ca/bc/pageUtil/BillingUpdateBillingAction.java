@@ -52,6 +52,8 @@ public final class BillingUpdateBillingAction
                                HttpServletResponse response) throws IOException,
       ServletException {
     BillingViewForm frm = (BillingViewForm)form;
+    String creator = (String) request.getSession().getAttribute("user");
+
     BillRecipient recip = new BillRecipient();
     recip.setName(frm.getRecipientName());
     recip.setAddress(frm.getRecipientAddress());
@@ -62,6 +64,14 @@ public final class BillingUpdateBillingAction
     msprec.updateBillingStatus(frm.getBillingNo(), frm.getBillStatus());
     msprec.saveOrUpdateBillRecipient(recip);
     msprec.updatePaymentMethod(frm.getBillingNo(),frm.getPaymentMethod());
+    BillingNote n = new BillingNote();
+    try {
+      n.addNoteFromBillingNo(frm.getBillingNo(), creator, frm.getMessageNotes());
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    
     return mapping.findForward("success");
   }
 
