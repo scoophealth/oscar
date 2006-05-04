@@ -155,6 +155,7 @@
     <form-bean name="billingReceivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingReceivePaymentActionForm" />
     <form-bean name="receivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.ReceivePaymentActionForm" />
     <form-bean name="billingPreferencesActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingPreferencesActionForm" />
+    <form-bean name="supServiceCodeAssocActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocActionForm" />
   </form-beans>
   <global-forwards>
     <forward name="Logout" path="/logout.jsp" redirect="true" />
@@ -754,7 +755,7 @@
     <action input="/billing/CA/BC/billingView.jsp" name="BillingViewForm" path="/billing/CA/BC/billingView" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.BillingViewAction">
       <forward name="success" path="/billing/CA/BC/billingView.jsp" />
       <forward name="ON" path="/billing/CA/ON/billingOB2.jsp" />
-      <forward name="private" path="/billing/CA/BC/billReceipt.jsp" redirect="true" />
+      <forward name="private" path="/billing/CA/BC/billReceipt.jsp"/>
     </action>
     <action input="/billing/CA/BC/formwcb.jsp" name="WCBForm" path="/billing/CA/BC/formwcb" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.WCBAction">
       <forward name="success" path="/billing/CA/BC/billingCreated.jsp" />
@@ -918,8 +919,12 @@
     <action name="billingPreferencesActionForm" path="/billing/CA/BC/saveBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveBillingPreferencesAction" validate="false">
       <forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
     </action>
-    <action input="/billing/CA/BC/billingPreferences.jsp" name="billingPreferencesActionForm" path="/billing/CA/BC/viewBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewBillingPreferencesAction" validate="false" >
+    <action input="/billing/CA/BC/billingPreferences.jsp" name="billingPreferencesActionForm" path="/billing/CA/BC/viewBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewBillingPreferencesAction" validate="false">
       <forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
+    </action>
+    <action input="/billing/CA/BC/billingSVCTrayAssoc.jsp" name="supServiceCodeAssocActionForm" path="/billing/CA/BC/supServiceCodeAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocAction" validate="false">
+      <forward name="success" path="/billing/CA/BC/billingSVCTrayAssoc.jsp">
+      </forward>
     </action>
 
   </action-mappings>
