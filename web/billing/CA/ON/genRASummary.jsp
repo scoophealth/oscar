@@ -27,7 +27,7 @@
 if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat" errorPage="errorpage.jsp" %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, java.net.*,oscar.*, oscar.util.*, oscar.MyDateFormat,oscar.oscarDB.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <jsp:useBean id="billingLocalInvNoBean" class="java.util.Properties" scope="page" /> 
@@ -60,7 +60,7 @@ String transactiontype="", providerno="", specialty="", account="", patient_last
 String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
 String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime="", checkAccount="", proName="";
 String sqlRACO="",sqlRAOB="", OBflag="0",COflag="0", amountOB="", amountCO="";
-String demo_name ="",demo_hin="", demo_docname="";
+String demo_name ="",demo_hin="", demo_docname="",providerOhipNo = "";
 int accountno=0 ;
 
 raNo = request.getParameter("rano");
@@ -245,8 +245,8 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			localServiceDate = localServiceDate.replaceAll("-*", "");
 			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
 		}
-
-		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
+                providerOhipNo = rsdemo.getString("providerohip_no");
+		proName = propProvierName.getProperty(providerOhipNo);
 		servicecode = rsdemo.getString("service_code");
 		servicedate = rsdemo.getString("service_date");
 		serviceno = rsdemo.getString("service_count");
@@ -334,8 +334,9 @@ if (raNo.compareTo("") == 0 || raNo == null){
 
 
 <%
-		} else { // clinic && local clinic
-			if (location.compareTo("00") == 0 && billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
+		} else { // clinic && local clinic   providerOhipNo
+                    
+			if (location.compareTo("00") == 0 && wasBilledLocal(account,providerOhipNo,servicedate,servicecode)){ //billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
 				dFee = Double.parseDouble(amountpay);
 				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigTotal = BigTotal.add(bdFee);
@@ -430,7 +431,8 @@ if (raNo.compareTo("") == 0 || raNo == null){
 			demo_docname = propProvierName.getProperty(("no_" + rsdemo3.getString("provider_no")), "");
 		}
 
-		proName = propProvierName.getProperty(rsdemo.getString("providerohip_no"));
+                providerOhipNo = rsdemo.getString("providerohip_no");
+		proName = propProvierName.getProperty(providerOhipNo);
 		servicecode = rsdemo.getString("service_code");
 		servicedate = rsdemo.getString("service_date");
 		serviceno = rsdemo.getString("service_count");
@@ -515,7 +517,7 @@ if (raNo.compareTo("") == 0 || raNo == null){
 
 <%
 		} else {     
-			if (location.compareTo("00") == 0 && billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
+			if (location.compareTo("00") == 0 && wasBilledLocal(account,providerOhipNo,servicedate,servicecode)){ //billingLocalInvNoBean.getProperty(account, "").equals(localClinicNo)) {
 				dFee = Double.parseDouble(amountpay);
 				bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigTotal = BigTotal.add(bdFee);
@@ -614,3 +616,34 @@ input.close();
 
 </body>
 </html>
+<%!
+//Before the system used the location code coming back from the ministry to find out whether the billing was billed locally or not.
+//
+//This has now stopped so we have come up with a new method.
+//For an invoice number. Does it exist for this physician with that date and billing code in the system.  If so its local if not its not!
+//
+//Not sure whether to check a if the code being billed for is applied to the same hin insurance number.  
+
+boolean wasBilledLocal(String account,String provider,String billing_date, String code){
+   boolean wasbilledlocal = false; 
+   java.util.Date date = UtilDateUtilities.getDateFromString(billing_date, "yyyyMMdd");
+   String sql = "select count(*) as cou from billing b, billingdetail bd where b.billing_no= '"+account+"' and b.billing_date = '"+UtilDateUtilities.DateToString(date)+"' and b.provider_ohip_no = '"+provider+"' and bd.billing_no = b.billing_no  and bd.service_code = '"+code+"'";
+   System.out.println(sql);
+   try{
+       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA); 
+       ResultSet rs  = db.GetSQL(sql);
+       if(rs.next()){          
+             int ret = rs.getInt("cou");
+             if(ret >= 1){
+                 wasbilledlocal = true;
+             }
+       }
+        
+       rs.close();
+       db.CloseConn(); 
+   }catch(Exception wasbilled){
+       wasbilled.printStackTrace();
+   }
+   return wasbilledlocal;
+}
+%>
