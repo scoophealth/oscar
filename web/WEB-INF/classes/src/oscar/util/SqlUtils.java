@@ -994,7 +994,7 @@ public class SqlUtils {
       e.printStackTrace();
     }
     finally {
-      if(db!=null){
+      if (db != null) {
         try {
           db.CloseConn();
         }
@@ -1002,7 +1002,7 @@ public class SqlUtils {
           ex.printStackTrace();
         }
       }
-      if(rs!=null){
+      if (rs != null) {
         try {
           rs.close();
         }
@@ -1011,7 +1011,59 @@ public class SqlUtils {
         }
       }
 
-       return records;
+      return records;
+    }
+
+  }
+
+  /**
+   * Returns a List of Map objects which contain the results of the specified arbitrary query.
+   *The key contains the field names of the table and the value, the field value of the record
+   * @param qry String - The String SQL Query
+   * @return List - The List of String Map results or null if no results were yielded
+   */
+  public static List getQueryResultsMapList(String qry) {
+    List records = null;
+    ResultSet rs = null;
+    DBHandler db = null;
+    try {
+      records = new ArrayList();
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = (ResultSet) db.GetSQL(qry);
+      int cols = rs.getMetaData().getColumnCount();
+      while (rs.next()) {
+        HashMap record = new HashMap();
+        for (int i = 0; i < cols; i++) {
+          String columnName = rs.getMetaData().getColumnName(i + 1);
+          String cellValue = rs.getString(i + 1);
+          record.put(columnName, cellValue);
+        }
+        records.add(record);
+      }
+    }
+    catch (SQLException e) {
+      records = null;
+      e.printStackTrace();
+    }
+    finally {
+      if (db != null) {
+        try {
+          db.CloseConn();
+        }
+        catch (SQLException ex) {
+          ex.printStackTrace();
+        }
+      }
+      if (rs != null) {
+        try {
+          rs.close();
+        }
+        catch (SQLException ex1) {
+          ex1.printStackTrace();
+        }
+      }
+
+      return records;
     }
 
   }
