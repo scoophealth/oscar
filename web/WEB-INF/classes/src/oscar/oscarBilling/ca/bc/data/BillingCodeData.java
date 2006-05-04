@@ -32,12 +32,13 @@ import java.sql.*;
 import java.util.*;
 import oscar.*;
 import oscar.oscarDB.*;
+import oscar.util.SqlUtils;
 
 /**
  *
  * @author  root
  */
-public final class BillingCodeData {
+public final class BillingCodeData implements Comparable      {
 
   /*
    +-----------------------+-------------+------+-----+---------+----------------+
@@ -222,6 +223,10 @@ public final class BillingCodeData {
                       Misc.mysqlEscape(desc) + "%' ");
   }
 
+  public List getBillingCodesLookup(String searchTerm){
+    return  SqlUtils.getQueryResultsList("select service_code,description from billingservice where description like '" + Misc.mysqlEscape(searchTerm) + "%'");
+  }
+
   /**
    * Getter for property billingserviceNo.
    * @return Value of property billingserviceNo.
@@ -380,6 +385,10 @@ public final class BillingCodeData {
    */
   public void setAnaesthesia(java.lang.String anaesthesia) {
     this.anaesthesia = anaesthesia;
+  }
+
+  public int compareTo(Object o) {
+    return 0;
   }
 
 }
