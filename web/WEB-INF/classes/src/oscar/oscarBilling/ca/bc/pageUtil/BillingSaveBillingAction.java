@@ -495,6 +495,7 @@ public class BillingSaveBillingAction
     }
     else if (frm.getSubmit().equals("Save & Print Receipt")) {
       af = new ActionForward("/billing/CA/BC/billingView.do?billing_no=" + billingid + "&receipt=yes");
+      af.setRedirect(true);
     }
     return af; //(mapping.findForward("success"));
   }
