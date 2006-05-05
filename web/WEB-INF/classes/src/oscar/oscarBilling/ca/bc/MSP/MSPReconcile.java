@@ -33,20 +33,8 @@ import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.util.*;
+import java.text.SimpleDateFormat;
 
-/**
- *
- * <p>Title: </p>
- *
- * <p>Description: </p>
- *
- * <p>Copyright: Copyright (c) 2005</p>
- *
- * <p>Company: </p>
- *
- * @author not attributable
- * @version 1.0
- */
 public class MSPReconcile {
 
   //Accounting Report Types
@@ -86,8 +74,12 @@ public class MSPReconcile {
   public static final String BILLTYPE_MSP = "MSP";
   public static final String BILLTYPE_ICBC = "ICBC";
   public static final String BILLTYPE_WCB = "WCB";
+
+  public static final String DATE_FORMAT = "yyyyMMdd";
+  private SimpleDateFormat fmt = null;
   public MSPReconcile() {
     initTeleplanMonetarySuffixes();
+    fmt = new SimpleDateFormat(DATE_FORMAT);
   }
 
   /**
@@ -1083,7 +1075,7 @@ public class MSPReconcile {
           }
         }
         // REJECTED SECTION ---------------------------------------------------------
-        else if (type.equals(REP_REJ)) {
+        if (type.equals(REP_REJ)) {
           if (rejDetails.containsKey(b.billMasterNo)) {
             Vector dets = (Vector) rejDetails.get(b.billMasterNo);
             String[] exps = new String[7];
@@ -1500,7 +1492,8 @@ public class MSPReconcile {
       rs = db.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
-        b.paymentDate = rs.getString("t_payment");
+        java.util.Date paymentDate = rs.getDate("t_payment");
+        b.paymentDate = this.fmt.format(paymentDate);
         b.billMasterNo = rs.getString("bm.billingmaster_no");
         b.billingtype = rs.getString("b.billingtype");
         b.paymentMethod = rs.getString("paymentMethod");
