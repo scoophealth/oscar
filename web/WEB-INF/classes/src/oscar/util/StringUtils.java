@@ -34,6 +34,32 @@ import java.text.*;
 public class StringUtils {
   static Category cat = Category.getInstance(StringUtils.class.getName());
 
+  
+  /**
+    * use to have a maximum string length view 
+    * ie "hello world !!!" would be "hello wor..."
+    *
+    *  with maxlength 13 and shorted 8 and added "..."
+    * 
+    * BENZOICUM ACIDUM 1CH - 30CH
+    *
+    *  would equal
+    *
+    * BENZOIC ...
+    * @param maxlength The maximum string length before truncating the string
+    * @param shorted length the string will be truncated to if maxlength is met
+    * @param added string added to original string if maxlength is met.  ie ...
+    * @return either full description if its less than maxlength or shortened string if its not
+    */         
+    public static String maxLenString(String str, int maxlength, int shorted, String added){                            
+        String ret = str;
+        if( (str != null && maxlength > shorted) && (str.length() > maxlength) ){
+            ret = str.substring(0, shorted) + added ;
+        }           
+        return ret;
+    }
+
+  
   public static Vector splitString(String str, String delimeter) {
     Vector result = new Vector();
     StringTokenizer st = new StringTokenizer(str, delimeter);
@@ -44,6 +70,9 @@ public class StringUtils {
     }
     return result;
   }
+  
+  
+  
 
   public static boolean existsStrInVector(String str, String delimiter,
                                           String arrayStr) {
