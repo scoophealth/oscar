@@ -457,7 +457,7 @@
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgBirth"/>:
                                         </td>
                                         <td class="fillLine">
-                                <%=reqFrm.patientDOB %>  <%=props.getProperty("billregion","").equals("ON")?"(y/m/d)":"(d/m/y)" %>  
+                                <%=reqFrm.patientDOB %>  (y/m/d)  
                                         </td>
                                     </tr>
                                     <tr>
@@ -474,7 +474,7 @@
                                         </td>
                                         <td class="fillLine">
                             <%if (Integer.parseInt(reqFrm.status) > 2 ){%>
-                                <%=reqFrm.appointmentDay %>/<%=reqFrm.appointmentMonth %>/<%=reqFrm.appointmentYear %>  (d/m/y)
+                             <%=reqFrm.appointmentYear %>/<%=reqFrm.appointmentMonth %>/<%=reqFrm.appointmentDay %>  (y/m/d)
                             <%}else{%>
                                             &nbsp;
                 			    <%}%>
