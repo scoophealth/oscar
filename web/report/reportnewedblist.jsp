@@ -31,7 +31,7 @@
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
 
   String strLimit1="0";
-  String strLimit2="1500";
+  String strLimit2="15000";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
 
