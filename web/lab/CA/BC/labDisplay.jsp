@@ -516,6 +516,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         System.out.println("before getLabResults");
                         ArrayList labs = gResults.getLabResults();
                         System.out.println("is labs null "+labs);
+                        String currentService = "";
                         for ( int l =0 ; l < labs.size() ; l++){
                             PathnetLabTest.LabResult thisResult = (PathnetLabTest.LabResult) labs.get(l);
                             System.out.println("got lab result");
@@ -526,11 +527,20 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                 lineClass = "HiLoRes";
                             }
                             System.out.println("after abn check");
-                            if (thisResult.isLabResult()){
-                        %>
+                            if (thisResult.isLabResult()){                               
+                               if(!currentService.equals(thisResult.service_name)){%>
+                               
+                               <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
+                               <td valign="top" align="left"><%=thisResult.service_name%></td>
+                               <td colspan="7">&nbsp;</td>
+                               </tr>
+                             <%currentService = thisResult.service_name;
+                               if (currentService == null) { currentService = ""; }
+                               }%>
+                            
                         
                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                <td valign="top" align="left"><a href="labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=BCP"><%=thisResult.testName %></a></td>                                         
+                                <td valign="top" align="left">&nbsp; &nbsp; <a href="../ON/labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=BCP"><%=thisResult.testName %></a></td>                                         
                                 <td align="right"><%=thisResult.result %></td>
                                 <td align="center"><%=thisResult.abn %></td>
                                 <td align="left"><%=thisResult.getReferenceRange()%></td>
