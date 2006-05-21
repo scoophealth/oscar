@@ -65,10 +65,12 @@
   
   
   ArrayList recList = mi.getList();
+  mFlowsheet.sortToCurrentOrder(recList);
   StringBuffer recListBuffer = new StringBuffer();
   for(int i = 0; i < recList.size(); i++){
         recListBuffer.append("&amp;measurement="+response.encodeURL( (String) recList.get(i)));
   }
+  
   
   String flowSheet = mFlowsheet.getDisplayName();
   
@@ -297,7 +299,7 @@ div.recommendations li{
                 </a>
                 <%}%>
                 <div class="leftBox">
-                    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
+                    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
                        <div class="wrapper" id="dxFullListing"  >
                        <jsp:include page="../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
                           <jsp:param name="demographicNo" value="<%=demographic_no%>"/>
@@ -309,8 +311,9 @@ div.recommendations li{
             <td valign="top" class="MainTableRightColumn">
             <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
                <div class="recommendations">
-               <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>               
-               <ul >                                        
+               <span style="font-size:larger;"><%=flowSheet%> Recommendations</span>
+               <a href="#" onclick="Element.toggle('recomList'); return false;" style="font-size:x-small;" >show/hide</a>               
+               <ul id="recomList" style="display:none;">                                        
                     <% for (int i = 0 ;i < warnings.size(); i++){ 
                        String warn = (String) warnings.get(i);%>
                         <li style="color: red;"><%=warn%></li>     
