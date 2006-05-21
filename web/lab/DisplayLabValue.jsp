@@ -1,0 +1,114 @@
+<%  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+%>
+
+<%@page pageEncoding="UTF-8"%>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*"  %>
+<%
+    if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+
+    String ran = ""+Math.random();
+    
+    String demoNo = request.getParameter("demographicNo");
+    String labType = request.getParameter("labType");
+    String testName = request.getParameter("testName");
+   
+   
+    CommonLabTestValues labTests = new CommonLabTestValues();
+   
+    ArrayList list   = labTests.findValuesForTest(labType, demoNo, testName);
+             
+    %>                   
+      <div class="preventionSection"  id="preventionSection<%=ran%>" >
+            <div class="headPrevention" id="headPrevention<%=ran%>">
+               <p > 
+               <a id="ahead<%=ran%>" title="fade=[on] header=[<%=testName%>] body=[]" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'')">
+               <span title="<%=""%>" style="font-weight:bold;">
+                <%=StringUtils.maxLenString(testName, 13, 8, "...")%>
+                <%=""/*testName*/%>
+               </span>
+               </a>
+               <!--&nbsp;
+               <a href="">#</a-->                              
+               <br/>                                 
+               </p>
+            </div>
+            <%     
+            for (int k = 0; k < list.size(); k++){
+                Hashtable hdata = (Hashtable) list.get(k);
+            %>                            
+            <div style="text-align:justify;" title="fade=[on] header=[<%=hdata.get("result")%>] body=[<%=hdata.get("units")%> <%=hdata.get("range")%>]"  class="preventionProcedure" id="preventionProcedure<%=""+k+""+ran%>" onclick="javascript:popup(465,635,'','addPreventionData')" >
+                <p <%=r(hdata.get("abn"))%>><%=hdata.get("result")%> &nbsp;&nbsp;&nbsp;
+                   <%=hdata.get("collDate")%>
+                </p>
+            </div>
+           <%}%>                           
+      </div> 
+      
+      
+ 
+                                                                     
+      <script type="text/javascript">
+          ///alert("HI");
+          //var ele = document.getElementById("preventionSection<%=ran%>");
+          //alert(ele);
+          <%for (int k =0; k < list.size(); k++){ %>
+          Rounded("div#preventionProcedure<%=""+k+""+ran%>","all","#CCF","#efeadc","small border blue");
+          scanDOM(document.getElementById("preventionProcedure<%=""+k+""+ran%>"));
+          <%}%>
+          Rounded("div#headPrevention<%=ran%>","all","transparent","#F0F0E7","small border #999");
+          
+          scanDOM(document.getElementById("ahead<%=ran%>"));
+      </script>
+      
+
+<%!
+String r(Object re){ 
+        String ret = "";
+        if (re instanceof java.lang.String){                
+           if (re != null && re.equals("A")){
+              ret = "style=\"background: #FFDDDD;\"";
+           }else if(re !=null && re.equals("2")){
+              ret = "style=\"background: #FFCC24;\""; 
+           }
+        }
+        return ret;
+    }
+/*
+//first field is testName, 
+//second field is abn : abnormal or normal, A or N
+//third field is result
+//fourth field is units
+//fifth field is range
+//sixth field is date : collection Date 
+ *
+ *h.put("testName", testNam);
+               h.put("abn",abn);
+               h.put("result",result);
+               h.put("range",range);
+               h.put("units",units);
+               h.put("collDate",collDate); 
+ */
+%>
