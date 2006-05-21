@@ -286,12 +286,16 @@ public String getDemographicNo(){
             }     
             gr.addHeaderResults(rs.getString("note"));
             String obrId = rs.getString("obr_id");      
-            ResultSet rs2 = db.GetSQL("select set_id, observation_date_time,observation_result_status, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
-            System.out.println("select set_id, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
+            ResultSet rs2 = db.GetSQL("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
+                   System.out.println("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
             while(rs2.next()){
                LabResult l = new LabResult();
+               l.service_name = rs2.getString("universal_service_id").substring(rs2.getString("universal_service_id").indexOf("^")+1);
                l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
                l.result = rs2.getString("observation_results");
+               if( l.result != null ){
+                  l.result = l.result.replaceAll("\\\\\\.br\\\\", "<br/>");
+               }
                l.abn = rs2.getString("abnormal_flags");
                l.minimum = rs2.getString("reference_range");
                l.maximum =rs2.getString("reference_range");
@@ -314,6 +318,7 @@ public String getDemographicNo(){
       }
    
    /////////
+      
    
    public class LabResult{
       
@@ -323,7 +328,8 @@ public String getDemographicNo(){
       public boolean isLabResultComment(){ return labResult ;}
      
       
-      ///      
+      ///   
+      public String service_name = null;
       public String title = null;       //  2. Title
       public String notUsed1 = null;    //  3. Not used ?
       public String notUsed2 = null;    //  4. Not used ?
