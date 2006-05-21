@@ -102,7 +102,10 @@
                                      </tr>
                                     <logic:iterate id="measurementType" name="measurementTypes" property="measurementTypeVector" indexId = "ctr" >
                                     <tr class="data">
-                                        <td width="5"><bean:write name="measurementType" property="type" /></td>
+                                        <td width="5"><a href="exportMeasurement.jsp?mType=<bean:write name="measurementType" property="type" />" target="_blank" >
+                                                      <bean:write name="measurementType" property="type" />
+                                                      </a>
+                                        </td>
                                         <td width="20"><bean:write name="measurementType" property="typeDisplayName" /></td>                            
                                         <td width="10"><bean:write name="measurementType" property="typeDesc" /></td>
                                         <td width="300"><bean:write name="measurementType" property="measuringInstrc" /></td>
