@@ -30,7 +30,9 @@ package oscar.oscarLab.ca.on;
 
 import java.sql.*;
 import java.util.*;
+import oscar.OscarProperties;
 import oscar.oscarDB.*;
+import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.util.*;
 
 /**
@@ -55,6 +57,146 @@ public class CommonLabTestValues {
          }
       }
       return retval;
+   }
+   
+   
+   
+   
+   public ArrayList findUniqueLabsForPatient(String demographic){
+      OscarProperties op = OscarProperties.getInstance();
+      String cml = op.getProperty("CML_LABS");
+      String mds = op.getProperty("MDS_LABS");
+      String pathnet = op.getProperty("PATHNET_LABS");
+      ArrayList labs = new ArrayList();
+      if( cml != null && cml.trim().equals("yes")){
+         ArrayList cmlLabs = findUniqueLabsForPatientCML(demographic);
+         labs.addAll(cmlLabs);
+      }
+      if (mds != null && mds.trim().equals("yes")){
+         ArrayList mdsLabs = findUniqueLabsForPatientMDS(demographic);
+         labs.addAll(mdsLabs);            
+      }
+      if (pathnet != null && pathnet.trim().equals("yes")){
+         ArrayList pathLabs = findUniqueLabsForPatientExcelleris(demographic);
+         labs.addAll(pathLabs);
+      }
+      return labs;
+   }
+   
+   //Method returns unique test names for a patient
+   //List is used to compile a cummalitive lab profile
+   //Hashtable return in list
+   //"testName" : Name of test eg. CHOL/HDL RATIO, CHOLESTEROL, CREATININE      
+   //"labType" : Vendor of lab eg. MDS, CML, BCP(Excelleris)
+   //"title" : Heading of lab group eg. CHEMISTRY, HEMATOLOGY
+   public ArrayList findUniqueLabsForPatientCML(String demographic){
+      //Need to check which labs are active
+         ArrayList labList = new ArrayList();   
+         String sql = "select  distinct p.lab_type, ltr.title, ltr.test_name "+
+                      "from "+ 
+                      "patientLabRouting p , "+
+                      "labTestResults ltr, "+
+                      "labPatientPhysicianInfo lpp "+            
+                      "where p.lab_type = 'CML' "+ 
+                      "and p.demographic_no = '"+demographic+"' "+ 
+                      "and p.lab_no = ltr.labPatientPhysicianInfo_id "+
+                      "and ltr.labPatientPhysicianInfo_id = lpp.id and  ltr.test_name is not null  and ltr.test_name != '' "+
+                      "order by title,test_name ";
+        
+         System.out.println(sql);
+      
+         try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
+            ResultSet rs = db.GetSQL(sql);      
+            while(rs.next()){
+               String testNam = rs.getString("test_name");
+               String labType = rs.getString("lab_type"); 
+               String title = rs.getString("title");
+               Hashtable h = new Hashtable();
+               h.put("testName", testNam);
+               h.put("labType",labType);
+               h.put("title",title);
+               labList.add(h);
+            }
+            rs.close();
+            db.CloseConn();        
+         }catch(Exception e){
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+         } 
+       
+       return labList;
+   }
+   
+   //Method returns unique test names for a patient
+   //List is used to compile a cummalitive lab profile
+   //Hashtable return in list
+   //"testName" : Name of test eg. CHOL/HDL RATIO, CHOLESTEROL, CREATININE      
+   //"labType" : Vendor of lab eg. MDS, CML, BCP(Excelleris)
+   //"title" : Heading of lab group eg. CHEMISTRY, HEMATOLOGY
+   public ArrayList findUniqueLabsForPatientMDS(String demographic){
+      //Need to check which labs are active
+         ArrayList labList = new ArrayList();   
+         String sql = "select p.lab_type, x.observationIden " +
+                      "from mdsOBX x, mdsMSH m, patientLabRouting p, " +
+                      " where p.demographic_no = '"+demographic+"' " +
+                      "and m.segmentID = p.lab_no " +
+                      "and x.segmentID = m.segmentID  "; 
+                      
+         System.out.println(sql);
+      
+         try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
+            ResultSet rs = db.GetSQL(sql);      
+            while(rs.next()){
+               String testNam = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));
+               String labType = rs.getString("lab_type"); 
+               String title = "";//TODO:rs.getString("title");
+               Hashtable h = new Hashtable();
+               h.put("testName", testNam);
+               h.put("labType",labType);
+               h.put("title",title);
+               labList.add(h);
+            }
+            rs.close();
+            db.CloseConn();        
+         }catch(Exception e){
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+         } 
+       
+       return labList;
+   }
+   public ArrayList findUniqueLabsForPatientExcelleris(String demographic){
+       ArrayList labList = new ArrayList();   
+         String sql = "select distinct p.lab_type,x.observation_identifier "+
+                      "from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  " +
+                      "where p.demographic_no = '"+demographic+"' " +
+                      "and p.lab_no = m.message_id " +
+                      "and pi.message_id = m.message_id " +
+                      "and r.pid_id = pi.pid_id " +
+                      "and r.obr_id = x.obr_id";
+         
+         System.out.println(sql);
+      
+         try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
+            ResultSet rs = db.GetSQL(sql);      
+            while(rs.next()){
+               String testNam = rs.getString("observation_identifier").substring(1+rs.getString("observation_identifier").indexOf('^'));
+               String labType = rs.getString("lab_type"); 
+               String title = "";//TODO:rs.getString("title");
+               Hashtable h = new Hashtable();
+               h.put("testName", testNam);
+               h.put("labType",labType);
+               h.put("title",title);
+               labList.add(h);
+            }
+            rs.close();
+            db.CloseConn();        
+         }catch(Exception e){
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+         } 
+       
+       return labList;
    }
    
    /**Returns hashtable with the following characteristics
@@ -144,6 +286,39 @@ public class CommonLabTestValues {
          }catch(Exception e){
             System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
          }
+      }else if ( labType != null && labType.equals("BCP")){
+          String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id";
+          
+          try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
+            ResultSet rs = db.GetSQL(sql);      
+            while(rs.next()){
+                // |   |  | 
+               String testNam = rs.getString("observation_identifier").substring(rs.getString("observation_identifier").indexOf('^')+1);
+               System.out.println("testNam "+testNam);
+               String abn = rs.getString("abnormal_flags");            //abnormalFlags from mdsOBX
+               String result = rs.getString("observation_results");     //mdsOBX observationValue
+               String segId = rs.getString("lab_no");
+               String range = rs.getString("reference_range");
+               String units = rs.getString("units");
+               String collDate = rs.getString("observation_date_time");
+                
+                
+               Hashtable h = new Hashtable();
+               h.put("testName", testNam);
+               h.put("abn",abn);
+               h.put("result",result);
+               h.put("range",range);
+               h.put("units",units);
+               h.put("collDate",collDate);
+               labList.add(h);
+            }
+            rs.close();
+            db.CloseConn();        
+         }catch(Exception e){
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+         }     
+          
       }
    return labList;
    }
