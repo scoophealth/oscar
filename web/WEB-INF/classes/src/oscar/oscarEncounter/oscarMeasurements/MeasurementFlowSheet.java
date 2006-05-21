@@ -32,6 +32,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.net.*;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import org.drools.*;
 import org.drools.io.*;
@@ -211,7 +213,7 @@ public class MeasurementFlowSheet {
    
    public void runRulesForMeasurement(EctMeasurementsDataBean mdb) throws Exception{
         
-      String type = mdb.getType() ;     
+      String type = mdb.getType() ;  
       RuleBase rb = (RuleBase) dsRulesHash.get(type);
       //Is there a rule base for this
       if (rb != null){
@@ -286,6 +288,36 @@ public class MeasurementFlowSheet {
         return ret;
     }
 
-  
     
+    public ArrayList sortToCurrentOrder(ArrayList nonOrderedList){
+        Collections.sort(nonOrderedList,new FlowSheetSort(list));
+        return nonOrderedList;
+    }
+  
+      
+    
+    class FlowSheetSort implements Comparator {
+        ArrayList list = null;
+        public FlowSheetSort(){     
+        }
+        
+        public FlowSheetSort(ArrayList sortedList){
+            list = sortedList;
+        }
+        
+        public int compare(Object o1, Object o2){
+            int n1 = list.indexOf(o1);
+            int n2 = list.indexOf(o2);
+             // If this < o, return a negative 
+            if ( n1 < n2 )
+                return -1;          
+            else if (n1 == n2 )    // If this = o, return 0
+                return 0;
+            else     // If this > o, return a positive value
+                return 1;
+            
+        }
+        
+        
+    }
 }
