@@ -24,11 +24,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.oscarMeasurements.bean;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
+import org.apache.commons.lang.StringEscapeUtils;
 import oscar.oscarDB.DBHandler;
 
 public class EctValidationsBeanHandler {
@@ -183,6 +183,33 @@ public class EctValidationsBeanHandler {
         }
         
         return validationId;
+    }
+    
+    public EctValidationsBean getValidation(String val){   
+        EctValidationsBean validation = new EctValidationsBean();
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+
+            String sql ="SELECT * FROM  validations WHERE name = '"+StringEscapeUtils.escapeSql(val)+"'";             
+            ResultSet rs = db.GetSQL(sql);
+            
+            if (rs.next()){
+                validation.setName(val);
+                validation.setRegularExp(rs.getString("regularExp")); 
+                validation.setMinValue(rs.getString("minValue"));
+                validation.setMaxValue(rs.getString("maxValue"));
+                validation.setMinLength(rs.getString("minLength"));
+                validation.setMaxLength(rs.getString("maxLength"));
+                validation.setIsNumeric(rs.getString("isNumeric"));
+                validation.setIsDate(rs.getString("isDate"));
+            }
+            
+            db.CloseConn();
+        }catch(SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return validation;
     }
 }
 
