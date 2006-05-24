@@ -1,3 +1,4 @@
+
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -31,6 +32,7 @@ import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.util.*;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 
 public class BillingViewBean {
   private String apptProviderNo = null;
@@ -592,4 +594,15 @@ public class BillingViewBean {
     return types;
   }
 
+  /**
+   * calculateSubtotal
+   */
+  public double calculateSubtotal() {
+    double ret = 0.0;
+    for (Iterator iter = this.billitem.iterator(); iter.hasNext(); ) {
+      BillingItem billingItem  = (BillingItem) iter.next();
+      ret += billingItem.price;
+    }
+    return ret;
+  }
 }
