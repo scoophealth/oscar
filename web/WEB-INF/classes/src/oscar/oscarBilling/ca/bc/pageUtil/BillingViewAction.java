@@ -27,9 +27,7 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import org.apache.struts.action.*;
-import org.apache.struts.util.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDemographic.data.*;
 
@@ -42,15 +40,6 @@ public final class BillingViewAction
                                HttpServletResponse response) throws IOException,
       ServletException {
 
-    if (request.getSession().getAttribute("user") == null) {
-      return (mapping.findForward("Logout"));
-    }
-    // Extract attributes we will need
-    Locale locale = getLocale(request);
-    MessageResources messages = getResources(request);
-
-    // Setup variables
-    ActionErrors errors = new ActionErrors();
     Properties oscarVars = (Properties) request.getSession().getAttribute(
         "oscarVariables");
 
@@ -72,7 +61,7 @@ public final class BillingViewAction
       bean.setBillItem(billItem);
 
       // bean.setSubTotal(bmanager.getSubTotal(billItem));
-      bean.setGrandtotal(bmanager.getGrandTotal(billItem));
+      bean.calculateSubtotal();
       System.out.println("GrandTotal" + bmanager.getGrandTotal(billItem));
       oscar.oscarDemographic.data.DemographicData demoData = new oscar.
           oscarDemographic.data.DemographicData();
