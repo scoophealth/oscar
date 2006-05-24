@@ -53,22 +53,15 @@ public class ReceivePaymentAction
     if("true".equals(frm.getIsRefund())){
     frm.setAmountReceived(String.valueOf(amount*-1.0));
     }
-    this.receivePayment(billingmasterNo,amount);
-
-    //Updates status and payment method of private bill in question
-    MSPReconcile rec = new MSPReconcile();
-    if(!rec.isPrivateBillItemOutstanding(frm.getBillingmasterNo(),amount)){
-      rec.updateBillingMasterStatus(frm.getBillingmasterNo(),rec.PAIDPRIVATE);
-      rec.updatePaymentMethod(frm.getBillNo(),frm.getPaymentMethod());
-    }
+    int paymentType = new Integer(frm.getPaymentMethod()).intValue();
+    this.receivePayment(billingmasterNo,amount,paymentType);
     frm.setPaymentReceived(true);
     return actionMapping.findForward("success");
   }
 
-  public void receivePayment(int billingMasterNo, double amount) {
-
+public void receivePayment(int billingMasterNo, double amount,int paymentType) {
    PrivateBillTransactionsDAO dao = new PrivateBillTransactionsDAO();
-   dao.savePrivateBillTransaction(billingMasterNo,amount);
+   dao.savePrivateBillTransaction(billingMasterNo,amount,paymentType);
  }
 
 }
