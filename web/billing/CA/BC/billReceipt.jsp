@@ -395,7 +395,11 @@ var awnd=null;
                           <td align="right"><%=bean.getDx1()%>                            &nbsp;
 <%=bean.getDx2()%>                            &nbsp;
 <%=bean.getDx3()%>                          </td>
-                          <td align="right"><%=((BillingBillingManager.BillingItem)billItem.get(i)).getLineTotal()%>                          </td>
+<%
+double lnTotal = ((BillingBillingManager.BillingItem)billItem.get(i)).getPrice();
+System.out.println(lnTotal);
+ %>
+                          <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(lnTotal).replace('$',' ')%>                         </td>
                         </tr>
 						   <%
 						   	  String num = String.valueOf(((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo());
@@ -416,7 +420,7 @@ var awnd=null;
                             %>
                               <tr align="center">
 							  	 <td colspan="3">&nbsp;</td>
-                                <td><%=label%></td>
+                                <td><%=label%>(<%=item.getPayment_type_desc()%>)</td>
 								 <td colspan="2"><%=item.getCreation_date()%></td>
 
                                 <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
@@ -454,7 +458,7 @@ var awnd=null;
                             </tr>
                           </table></td>
                           <td align="right">Total:</td>
-                          <td align="right"><%=bean.getGrandtotal()%>                          </td>
+                          <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(bean.calculateSubtotal()).replace('$',' ')%>                          </td>
                         </tr>
                         <tr>
                           <td align="right">Payments:</td>
@@ -469,7 +473,7 @@ var awnd=null;
                             <div align="right" class="style2">
                               <strong>Balance</strong>
                               :</div>                          </td>
-                        <%double gtotal = new Double(bean.getGrandtotal()).doubleValue() - totalPayments - totalRefunds;                        %>
+                        <%double gtotal = bean.calculateSubtotal() - totalPayments - totalRefunds;                        %>
                           <td align="right">
                             <strong><%=java.text.NumberFormat.getCurrencyInstance().format(gtotal).replace('$',' ')%>                            </strong>                          </td>
                         </tr>
