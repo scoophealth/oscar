@@ -226,6 +226,10 @@ function showHideLayers() { //v6.0
                   <tr>
                     <td nowrap><a href="#" onClick="generateResult('formInternetAccess');">Internet Access</a></td>
                   </tr>
+                  <tr>
+                    <td nowrap><a href="#" onClick="generateResult('formSatisfactionScale');">Satisfaction Scale</a></td>
+                  </tr>
+
                   
                 </table>
             </td>
