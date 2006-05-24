@@ -327,7 +327,7 @@ public class BillingBillingManager {
     }
 
     public double getPrice() {
-      return price * units;
+      return price;
     }
 
     public double getPercentage() {
