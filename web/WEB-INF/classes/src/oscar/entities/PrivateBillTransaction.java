@@ -25,12 +25,15 @@
 package oscar.entities;
 
 import java.util.*;
+import java.math.BigDecimal;
 
 public class PrivateBillTransaction {
   private int id;
   private int billingmaster_no;
   private double amount_received;
   private Date creation_date;
+  private int payment_type;
+  private String payment_type_desc;
   public PrivateBillTransaction() {
   }
 
@@ -44,11 +47,22 @@ public class PrivateBillTransaction {
   }
 
   public void setAmount_received(double amount_received) {
-    this.amount_received = amount_received;
+    BigDecimal bdFee = new BigDecimal(amount_received).setScale(2,
+        BigDecimal.ROUND_HALF_UP);
+    this.amount_received = bdFee.doubleValue();
   }
 
   public void setCreation_date(Date creation_date) {
     this.creation_date = creation_date;
+  }
+
+  public void setPayment_type(int payment_type) {
+    this.payment_type = payment_type;
+  }
+
+  public void setPayment_type_desc(String payment_type_desc) {
+
+    this.payment_type_desc = payment_type_desc;
   }
 
   public int getId() {
@@ -66,5 +80,14 @@ public class PrivateBillTransaction {
 
   public Date getCreation_date() {
     return creation_date;
+  }
+
+  public int getPayment_type() {
+    return payment_type;
+  }
+
+  public String getPayment_type_desc() {
+
+    return payment_type_desc;
   }
 }
