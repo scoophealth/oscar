@@ -75,9 +75,11 @@
    String field=request.getParameter("field");
 
    String info=request.getParameter("info");
-
+   
+   String feeField = request.getParameter("feeField");
+ 
    String searchStr = request.getParameter("searchStr");
-
+   System.out.println(searchStr);	
    if (searchStr == null){
 
      searchStr = "%";
@@ -101,14 +103,21 @@ function posttoText(index){
    self.close();
 
 	opener.document.<%=form%>.<%=field%>.value = index;
+	opener.document.focus();
 
+}
+
+function updateFeeCodeValues(code,description,fee){
+   self.close();
+	opener.document.<%=form%>.<%=field%>.value = code;
+	opener.document.<%=form%>.<%=feeField%>.value = fee;
 	opener.document.focus();
 
 }
 
 </script
 
-<body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
+><body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#D3D3D3">
 
@@ -156,8 +165,7 @@ function posttoText(index){
 
 	//java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description FROM billingservice " + ((null == info) ? "WHERE service_code IN ('19937', '19938', '19939', '19940', '19941', '19943', '19944')" : "") + " ORDER BY service_code, description");
 
-   java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description FROM billingservice WHERE description like '"+searchStr+"' or service_code like '"+searchStr+"'  ORDER BY service_code, description");
-
+   java.sql.ResultSet rs = db.GetSQL("SELECT service_code, description,value FROM billingservice WHERE description like '"+searchStr+"' or service_code like '"+searchStr+"'  ORDER BY service_code, description");
 	while (rs.next()){
 
 %>
@@ -165,8 +173,17 @@ function posttoText(index){
 	<tr <%=((color) ? "bgcolor=\"#F6F6F6\"" : "")%> align="left" valign="top">
 
 		<td class="SmallerText">
-
+			<%
+				if(request.getParameter("corrections") == null){
+			%>
 			<a href=# onClick="posttoText('<%=rs.getString("service_code")%>');"><%=rs.getString("service_code")%></a>
+			<%}
+			  else{
+			%>
+			<a href=# onClick="updateFeeCodeValues('<%=rs.getString("service_code")%>',' ','<%=rs.getString("value")%>');"><%=rs.getString("service_code")%></a>
+			<%
+			}
+			%>
 
 		</td>
 
