@@ -376,6 +376,34 @@ public class MSPReconcile {
     return retval;
   }
 
+  /**
+ * Returns a map of values from the teleplanS00 table for quick lookup of
+ * teleplan data(solves a performance problem related to joing the teleplanS00 table with the billingmaster table
+ * due to the fact that related fields teleplanS00.t_officeno and billingmaster.billingmaster_no are of a different type
+ * The resultant map currently returns a key/value pair containing the t_officeno and t_dataseq respectiveley
+ * @return Map
+ */
+public Map getS00Map() {
+  HashMap map = new HashMap();
+  try {
+    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+    ResultSet rs = db.GetSQL(
+        "SELECT t_dataseq,CAST(t_officeno as SIGNED INTEGER) FROM teleplans00");
+    while (rs.next()) {
+      String value = rs.getString(1) != null ? rs.getString(1) : "";
+      String key = rs.getString(2);
+      map.put(key, value);
+    }
+    rs.close();
+    db.CloseConn();
+  }
+  catch (Exception e) {
+    e.printStackTrace();
+  }
+  return map;
+}
+
+
   public BillSearch getBills(String statusType, String providerNo,
                              String startDate, String endDate) {
     return getBills(statusType, providerNo, startDate, endDate, null, false, false, false, false);
@@ -398,7 +426,7 @@ public class MSPReconcile {
     String endDateQuery = "";
     String demoQuery = "";
     String billingType = "";
-
+  //  Map s00Map = getS00Map();
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       providerQuery = " and b.apptProvider_no = '" + providerNo + "'";
     }
@@ -478,6 +506,14 @@ public class MSPReconcile {
         b.providerFirstName = rs.getString("first_name");
         b.providerLastName = rs.getString("last_name");
         b.quantity = rs.getString("billing_unit");
+
+        Object[] seqNumsArray = (Object[])getSequenceNumbers(b.billMasterNo).toArray();
+        Arrays.sort(seqNumsArray);
+        //Assign the geatest sequence number to this field
+         b.seqNum = "";
+        if(seqNumsArray.length > 0){
+          b.seqNum = seqNumsArray[seqNumsArray.length - 1].toString();
+        }
         if (b.isWCB()) {
           ResultSet rs2 = db.GetSQL("select * from wcb where billing_no = '" +
                                     b.billing_no + "'");
@@ -585,6 +621,22 @@ public class MSPReconcile {
     public String providerFirstName = "";
     public String providerLastName = "";
     public String quantity = "";
+    private boolean WCB;
+    public double amountPaid;
+    public String seqNum;
+    public void setAmountPaid(String paid) {
+      try {
+        Double dbl = new Double(paid);
+        this.amountPaid = dbl.doubleValue();
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+
+    public double getAmountPaid(){
+      return this.amountPaid;
+    }
 
     public boolean isWCB() {
       boolean retval = false;
@@ -592,6 +644,171 @@ public class MSPReconcile {
         retval = true;
       }
       return retval;
+    }
+
+    public double getAmount() {
+      double ret = 0;
+      try {
+        Double dbl = new Double(this.amount);
+        ret = dbl.doubleValue();
+      }
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
+      return ret;
+
+    }
+
+    public String getApptDate() {
+      return apptDate;
+    }
+
+    public String getApptDoctorNo() {
+      return apptDoctorNo;
+    }
+
+    public String getApptNo() {
+      return apptNo;
+    }
+
+    public String getApptTime() {
+      return apptTime;
+    }
+
+    public String getUserno() {
+      return userno;
+    }
+
+    public String getReason() {
+      return reason;
+    }
+
+    public String getQuantity() {
+      return quantity;
+    }
+
+    public String getProviderLastName() {
+      return providerLastName;
+    }
+
+    public String getProviderFirstName() {
+      return providerFirstName;
+    }
+
+    public String getDx3() {
+      return dx3;
+    }
+
+    public String getDx2() {
+      return dx2;
+    }
+
+    public String getDx1() {
+      return dx1;
+    }
+
+    public String getDemoNo() {
+      return demoNo;
+    }
+
+    public String getDemoName() {
+      return demoName;
+    }
+
+    public String getCode() {
+      return code;
+    }
+
+    public String getBillMasterNo() {
+      return billMasterNo;
+    }
+
+    public String getBillingtype() {
+      return billingtype;
+    }
+
+    public String getBilling_no() {
+      return billing_no;
+    }
+
+    public void setAmount(String amount) {
+      this.amount = amount;
+    }
+
+    public void setApptDate(String apptDate) {
+      this.apptDate = apptDate;
+    }
+
+    public void setApptDoctorNo(String apptDoctorNo) {
+      this.apptDoctorNo = apptDoctorNo;
+    }
+
+    public void setApptNo(String apptNo) {
+      this.apptNo = apptNo;
+    }
+
+    public void setApptTime(String apptTime) {
+      this.apptTime = apptTime;
+    }
+
+    public void setBilling_no(String billing_no) {
+      this.billing_no = billing_no;
+    }
+
+    public void setBillingtype(String billingtype) {
+      this.billingtype = billingtype;
+    }
+
+    public void setBillMasterNo(String billMasterNo) {
+      this.billMasterNo = billMasterNo;
+    }
+
+    public void setCode(String code) {
+      this.code = code;
+    }
+
+    public void setDemoName(String demoName) {
+      this.demoName = demoName;
+    }
+
+    public void setDemoNo(String demoNo) {
+      this.demoNo = demoNo;
+    }
+
+    public void setDx1(String dx1) {
+      this.dx1 = dx1;
+    }
+
+    public void setDx2(String dx2) {
+      this.dx2 = dx2;
+    }
+
+    public void setDx3(String dx3) {
+      this.dx3 = dx3;
+    }
+
+    public void setProviderFirstName(String providerFirstName) {
+      this.providerFirstName = providerFirstName;
+    }
+
+    public void setProviderLastName(String providerLastName) {
+      this.providerLastName = providerLastName;
+    }
+
+    public void setQuantity(String quantity) {
+      this.quantity = quantity;
+    }
+
+    public void setReason(String reason) {
+      this.reason = reason;
+    }
+
+    public void setUserno(String userno) {
+      this.userno = userno;
+    }
+
+    public void setWCB(boolean WCB) {
+      this.WCB = WCB;
     }
   }
 
@@ -809,7 +1026,7 @@ public class MSPReconcile {
    * @param billingNo String - The uid of the bill to be updated
    * @param paymentMethod String - The paymentMethod code
    */
-  public void updatePaymentMethod(String billingNo, String paymentMethod) {
+  public void updatePaymentMethod(String billingMasterNo, String paymentMethod) {
     DBHandler db = null;
     if (paymentMethod == null || "".equals(paymentMethod)) {
       paymentMethod = "6";
@@ -817,7 +1034,7 @@ public class MSPReconcile {
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL("update billingmaster set paymentMethod =  " + paymentMethod +
-                " where billing_no = " + billingNo + "");
+                " where billingmaster_no = " + billingMasterNo + "");
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1035,7 +1252,6 @@ public class MSPReconcile {
 
         b.amount = rs.getString("bill_amount");
 
-
         b.code = rs.getString("billing_code");
         b.dx1 = rs.getString("dx_code1"); ;
         b.serviceDate = rs.getString("service_date").equals("") ? "00000000" :
@@ -1106,7 +1322,8 @@ public class MSPReconcile {
         }
 
         else if (this.REP_INVOICE.equals(type)) {
-           b.amtOwing = this.getAmountOwing(b.billMasterNo,b.amount,b.billingtype);
+          b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
+                                           b.billingtype);
           if ("E".equals(b.status)) {
             b.adjustmentCode = this.getS00String(b.billMasterNo);
           }
@@ -1122,7 +1339,7 @@ public class MSPReconcile {
          **/
         if (type.equals(this.REP_ACCOUNT_REC)) {
           b.amount = this.getAmountOwing(b.billMasterNo, b.amount,
-                                           b.billingtype);
+                                         b.billingtype);
           skipBill = new Double(b.amount).doubleValue() == 0.0;
         }
 
@@ -1437,10 +1654,11 @@ public class MSPReconcile {
     }
 
     //Now we need to get the Private Payments
-    if(!excludePrivate){
-      List privatePayments = this.getPrivatePayments(account, payeeNo, providerNo,
-                                                     startDate, endDate, true).list;
-      if(privatePayments!=null && !privatePayments.isEmpty()){
+    if (!excludePrivate) {
+      List privatePayments = this.getPrivatePayments(account, payeeNo,
+          providerNo,
+          startDate, endDate, true).list;
+      if (privatePayments != null && !privatePayments.isEmpty()) {
         billSearch.list.addAll(privatePayments);
       }
     }
@@ -1482,7 +1700,6 @@ public class MSPReconcile {
         " and bm.billingstatus != 'D'" +
         " group by billingmaster_no" +
         " order by t_payment";
-
 
     billSearch.list = new ArrayList();
     DBHandler db = null;
@@ -1630,8 +1847,9 @@ public class MSPReconcile {
     else if (repType.equals(this.REP_INVOICE)) {
       criteriaQry += " and bm.billingstatus != '" + this.DELETED + "'";
     }
-    else if(repType.equals(this.REP_ACCOUNT_REC)){
-      criteriaQry += " and bm.billingstatus not in('" + this.DELETED + "','" + this.BADDEBT + "')";
+    else if (repType.equals(this.REP_ACCOUNT_REC)) {
+      criteriaQry += " and bm.billingstatus not in('" + this.DELETED + "','" +
+          this.BADDEBT + "')";
     }
 
     else if (repType.equals(this.REP_WO)) {
@@ -1953,7 +2171,8 @@ public class MSPReconcile {
     boolean ret = false;
     String billingMasterQry =
         "select billingmaster_no,bill_amount from billingmaster bm,billing b where bm.billing_no = b.billing_no  and b.demographic_no = " +
-        demographicNo + " and bm.billingstatus not in('S','D','A') and b.billingtype = 'Pri'";
+        demographicNo +
+        " and bm.billingstatus not in('S','D','A') and b.billingtype = 'Pri'";
     DBHandler db = null;
     ResultSet rs = null;
     try {
