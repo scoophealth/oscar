@@ -2283,6 +2283,7 @@ CREATE TABLE billing_private_transactions (
 ) TYPE=MyISAM;
 
 ALTER TABLE billing_private_transactions CHANGE COLUMN `billing_no` `billingmaster_no` INTEGER UNSIGNED NOT NULL DEFAULT 0;
+ALTER TABLE `billing_private_transactions` ADD COLUMN `payment_type_id` INTEGER UNSIGNED NOT NULL DEFAULT 0 AFTER `creation_date`;
 
 --
 -- Table structure for table `billing_preferences`
