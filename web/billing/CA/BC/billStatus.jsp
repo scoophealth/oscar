@@ -45,7 +45,7 @@
   String providerview = request.getParameter("providerview")==null?"ALL":request.getParameter("providerview") ;
   BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
   BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
-
+  BigDecimal owedTotal = new BigDecimal(0).setScale(2,BigDecimal.ROUND_HALF_UP);
   MSPReconcile msp = new MSPReconcile();
 
   GregorianCalendar now=new GregorianCalendar();
@@ -76,11 +76,205 @@ String demographicNo = request.getParameter("demographicNo")!=null?request.getPa
 <html:base/>
 <title>Invoice List</title>
 <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+
+<!--<script type="text/javascript" src="../../../share/javascript/sorttable.js"></script>-->
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>
 ">
 </script>
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+
+<script>
+addEvent(window, "load", sortables_init);
+
+var SORT_COLUMN_INDEX;
+
+function sortables_init() {
+    // Find all tables with class sortable and make them sortable
+    if (!document.getElementsByTagName) return;
+    tbls = document.getElementsByTagName("table");
+    for (ti=0;ti<tbls.length;ti++) {
+        thisTbl = tbls[ti];
+        if (((' '+thisTbl.className+' ').indexOf("sortable") != -1) && (thisTbl.id)) {
+            //initTable(thisTbl.id);
+            ts_makeSortable(thisTbl);
+        }
+    }
+}
+
+function ts_makeSortable(table) {
+    if (table.rows && table.rows.length > 0) {
+        var firstRow = table.rows[0];
+    }
+    if (!firstRow) return;
+
+    // We have a first row: assume it's the header, and make its contents clickable links
+    for (var i=0;i<firstRow.cells.length;i++) {
+        var cell = firstRow.cells[i];
+        var txt = ts_getInnerText(cell);
+        cell.innerHTML = '<a href="#" class="sortheader" '+
+        'onclick="ts_resortTable(this, '+i+');return false;">' +
+        txt+'<span class="sortarrow">&nbsp;&nbsp;&nbsp;</span></a>';
+    }
+}
+
+function ts_getInnerText(el) {
+	if (typeof el == "string") return el;
+	if (typeof el == "undefined") { return el };
+	if (el.innerText) return el.innerText;	//Not needed but it is faster
+	var str = "";
+
+	var cs = el.childNodes;
+	var l = cs.length;
+	for (var i = 0; i < l; i++) {
+		switch (cs[i].nodeType) {
+			case 1: //ELEMENT_NODE
+				str += ts_getInnerText(cs[i]);
+				break;
+			case 3:	//TEXT_NODE
+				str += cs[i].nodeValue;
+				break;
+		}
+	}
+	return str;
+}
+
+function ts_resortTable(lnk,clid) {
+    // get the span
+    var span;
+    for (var ci=0;ci<lnk.childNodes.length;ci++) {
+        if (lnk.childNodes[ci].tagName && lnk.childNodes[ci].tagName.toLowerCase() == 'span') span = lnk.childNodes[ci];
+    }
+    var spantext = ts_getInnerText(span);
+    var td = lnk.parentNode;
+    var column = clid;
+    var table = getParent(td,'TABLE');
+
+    // Work out a type for the column
+    if (table.rows.length <= 1) return;
+
+
+    var itm = ts_getInnerText(table.rows[1].cells[column]);
+    sortfn = ts_sort_caseinsensitive;
+    if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d\d\d$/)) sortfn = ts_sort_date;
+    if (itm.match(/^\d\d[\/-]\d\d[\/-]\d\d$/)) sortfn = ts_sort_date;
+    if (itm.match(/^[£$]/)) sortfn = ts_sort_currency;
+    if (itm.match(/^[\d\.]+$/)) sortfn = ts_sort_numeric;
+    SORT_COLUMN_INDEX = column;
+    var firstRow = new Array();
+    var newRows = new Array();
+    for (i=0;i<table.rows[0].length;i++) { firstRow[i] = table.rows[0][i]; }
+    for (j=1;j<table.rows.length;j++) { newRows[j-1] = table.rows[j]; }
+
+    newRows.sort(sortfn);
+
+    if (span.getAttribute("sortdir") == 'down') {
+        ARROW = '&nbsp;&nbsp;&uarr;';
+        newRows.reverse();
+        span.setAttribute('sortdir','up');
+    } else {
+        ARROW = '&nbsp;&nbsp;&darr;';
+        span.setAttribute('sortdir','down');
+    }
+
+    // We appendChild rows that already exist to the tbody, so it moves them rather than creating new ones
+    // don't do sortbottom rows
+    for (i=0;i<newRows.length;i++) { if (!newRows[i].className || (newRows[i].className && (newRows[i].className.indexOf('sortbottom') == -1))) table.tBodies[0].appendChild(newRows[i]);}
+    // do sortbottom rows only
+    for (i=0;i<newRows.length;i++) { if (newRows[i].className && (newRows[i].className.indexOf('sortbottom') != -1)) table.tBodies[0].appendChild(newRows[i]);}
+
+    // Delete any other arrows there may be showing
+    var allspans = document.getElementsByTagName("span");
+    for (var ci=0;ci<allspans.length;ci++) {
+        if (allspans[ci].className == 'sortarrow') {
+            if (getParent(allspans[ci],"table") == getParent(lnk,"table")) { // in the same table as us?
+                allspans[ci].innerHTML = '&nbsp;&nbsp;&nbsp;';
+            }
+        }
+    }
+
+    span.innerHTML = ARROW;
+}
+
+function getParent(el, pTagName) {
+	if (el == null) return null;
+	else if (el.nodeType == 1 && el.tagName.toLowerCase() == pTagName.toLowerCase())	// Gecko bug, supposed to be uppercase
+		return el;
+	else
+		return getParent(el.parentNode, pTagName);
+}
+function ts_sort_date(a,b) {
+    // y2k notes: two digit years less than 50 are treated as 20XX, greater than 50 are treated as 19XX
+    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);
+    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]);
+    if (aa.length == 10) {
+        dt1 = aa.substr(6,4)+aa.substr(3,2)+aa.substr(0,2);
+    } else {
+        yr = aa.substr(6,2);
+        if (parseInt(yr) < 50) { yr = '20'+yr; } else { yr = '19'+yr; }
+        dt1 = yr+aa.substr(3,2)+aa.substr(0,2);
+    }
+    if (bb.length == 10) {
+        dt2 = bb.substr(6,4)+bb.substr(3,2)+bb.substr(0,2);
+    } else {
+        yr = bb.substr(6,2);
+        if (parseInt(yr) < 50) { yr = '20'+yr; } else { yr = '19'+yr; }
+        dt2 = yr+bb.substr(3,2)+bb.substr(0,2);
+    }
+    if (dt1==dt2) return 0;
+    if (dt1<dt2) return -1;
+    return 1;
+}
+
+function ts_sort_currency(a,b) {
+    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
+    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).replace(/[^0-9.]/g,'');
+    return parseFloat(aa) - parseFloat(bb);
+}
+
+function ts_sort_numeric(a,b) {
+    aa = parseFloat(ts_getInnerText(a.cells[SORT_COLUMN_INDEX]));
+    if (isNaN(aa)) aa = 0;
+    bb = parseFloat(ts_getInnerText(b.cells[SORT_COLUMN_INDEX]));
+    if (isNaN(bb)) bb = 0;
+    return aa-bb;
+}
+
+function ts_sort_caseinsensitive(a,b) {
+    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]).toLowerCase();
+    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]).toLowerCase();
+    if (aa==bb) return 0;
+    if (aa<bb) return -1;
+    return 1;
+}
+
+function ts_sort_default(a,b) {
+    aa = ts_getInnerText(a.cells[SORT_COLUMN_INDEX]);
+    bb = ts_getInnerText(b.cells[SORT_COLUMN_INDEX]);
+    if (aa==bb) return 0;
+    if (aa<bb) return -1;
+    return 1;
+}
+
+
+function addEvent(elm, evType, fn, useCapture)
+// addEvent and removeEvent
+// cross-browser event handling for IE5+,  NS6 and Mozilla
+// By Scott Andrew
+{
+  if (elm.addEventListener){
+    elm.addEventListener(evType, fn, useCapture);
+    return true;
+  } else if (elm.attachEvent){
+    var r = elm.attachEvent("on"+evType, fn);
+    return r;
+  } else {
+    alert("Handler could not be removed");
+  }
+}
+
+
+</script>
 <style type="text/css">
 	<!--
 	BODY                  {                     font-size: 8pt ; font-family: verdana,arial,helvetica; color: #000000; background-color: #FFFFFF;}
@@ -339,11 +533,11 @@ billTypes = "%";
   </tr>
 </table>
 </form>
-<table class="tabular_list" width="100%" border="2"  valign="top">
+<table class="sortable" id="table-1" width="100%" border="2"  valign="top">
 <thead>
 	<tr bgcolor="#CCCCFF">
 	<th align="center" class="bHeaderData" title="INVOICE #" >INVOICE # </th>
-	<th align="center" class="bHeaderData" title="LINE #" >LINE # </th>
+	<th align="center" class="bHeaderData" title="LINE #" >SEQ # </th>
     <th align="center" class="bHeaderData" title="APP. DATE">APP. DATE</th>
 	<th align="center" class="bHeaderData" title="TYPE" >TYPE </th>
 	<%
@@ -360,11 +554,12 @@ billTypes = "%";
     <th align="center" class="bHeaderDate" title="QTY">QTY</th>
     <th align="center" class="bHeaderDate" title="Amount Billed">AMT</th>
     <th align="center" class="bHeaderDate" title="Amount Paid"  >PAID</th>
+    <th align="center" class="bHeaderDate" >OWED</th>
     <th align="center" class="bHeaderDate" >DX CODE </th>
     <th align="center" class="bHeaderData" >MSGS</th>
   </tr>
 </thead>
-
+   <tbody>
   <%
 
     String dateBegin = request.getParameter("xml_vdate");
@@ -411,6 +606,7 @@ billTypes = "%";
       paidTotal = paidTotal.add(valueToPaidAdd);
 
    %>
+
   <tr bgcolor="<%=bodd?"#EEEEFF":"white"%>">
       <td align="center" class="bCellData">
         <%if("Pri".equals(b.billingtype)){%>
@@ -422,7 +618,7 @@ billTypes = "%";
 		<%}%>		    </td>
 
 
-	<td align="center" class="bCellData" ><%=b.billMasterNo%></td>
+	<td align="center" class="bCellData" ><a href="javascript: function myFunction() {return false; }" onClick="popupPage2(500,1020,'genTAS00ByOfficeNo.jsp?officeNo=<%=b.billMasterNo%>','RecValues');"> <%=b.seqNum%> </a></td>
 	<td align="center" class="bCellData" ><%=b.apptDate%></td>
 	<td align="center" class="bCellData" ><%=b.billingtype%></td>
 	<%
@@ -437,7 +633,15 @@ billTypes = "%";
     <td align="center" class="bCellData" ><%=b.code%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.quantity%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.amount%> </td>
-    <td align="center" class="bCellData" ><a href="javascript: function myFunction() {return false; }" onClick="popupPage2(500,1020,'genTAS00ByOfficeNo.jsp?officeNo=<%=b.billMasterNo%>','RecValues');"> <%=pAmount%> </a> </td>
+    <td align="center" class="bCellData" ><%=pAmount%> </td>
+    <%
+    double dblAmtOwed = new Double(b.amount).doubleValue()-new Double(pAmount).doubleValue();
+    BigDecimal amtOwed = new BigDecimal(dblAmtOwed).setScale(2, BigDecimal.ROUND_HALF_UP);
+    owedTotal = owedTotal.add(amtOwed);
+    System.err.println("Owed:" + owedTotal.toString());
+
+    %>
+    <td align="center" class="bCellData" ><%=amtOwed%> </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
 
     <td><%if (!b.isWCB()){%>
@@ -447,6 +651,7 @@ billTypes = "%";
       <%}%>
       <%=rejected%><%=rejected2%> </td>
   </tr>
+
   <%  //}
     rowCount = rowCount + 1;
      currentBillingNo = b.billing_no;
@@ -455,10 +660,12 @@ billTypes = "%";
     if (rowCount == 0) {
     %>
   <tr bgcolor="<%=bodd?"ivory":"white"%>">
-    <td colspan="13" align="center" class="bCellData"> No bills </td>
+    <td colspan="14" align="center" class="bCellData"> No bills </td>
   </tr>
   <% }%>
-  <tr>
+    </tbody>
+  <tfoot>
+  <tr class="sortbottom">
   <%
 	String colspan = !"true".equals(readonly)?"5":"4";
  %>
@@ -470,8 +677,9 @@ billTypes = "%";
     <td align="center" class="bCellData" >Total:</td>
     <td align="center" class="bCellData" ><%=total.toString()%></td>
     <td align="center" class="bCellData" ><%=paidTotal.toString()%></td>
-    <td align="center" class="bCellData" >&nbsp;</td>
+    <td align="center" class="bCellData" ><%=owedTotal.toString()%></td>
   </tr>
+  </tfoot>
 </table>
 <script language='javascript'>
        Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
