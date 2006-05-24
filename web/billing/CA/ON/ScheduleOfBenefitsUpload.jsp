@@ -34,6 +34,7 @@
 <%@page  import="oscar.oscarDemographic.data.*,java.util.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 
 <html:html locale="true">
@@ -46,13 +47,21 @@ Schedule Of Benefits Upload Utility
 <link rel="stylesheet" type="text/css" href="../../../share/css/OscarStandardLayout.css">
 <script type="text/javascript" src="../../../share/javascript/Oscar.js"></script>
 
-<SCRIPT LANGUAGE="JavaScript">
+<script type="text/javascript" LANGUAGE="JavaScript">
 function displayAndDisable(){
    document.forms[0].Submit.disabled = true;
    showHideItem('waitingMessage');
    return true;
 }
-</SCRIPT>
+
+function checkAll(formId){
+   var f = document.getElementById(formId);
+   var val = f.checkA.checked;
+   for (i =0; i < f.change.length; i++){
+      f.change[i].checked = val;
+   }
+}
+</script>
 
 
 <style type="text/css">
@@ -155,10 +164,15 @@ function displayAndDisable(){
             
             <%
                if ( warnings != null) {          %>
-               <html:form action="/billing/CA/ON/benefitScheduleChange" method="POST" >                
+               <html:form action="/billing/CA/ON/benefitScheduleChange" method="POST" styleId="sbForm">                
                <table class="ele">
                     <tr>
-                       <th>Update</th>
+                       <th nowrap>
+                           <oscar:oscarPropertiesCheck property="SOB_CHECKALL" value="yes">
+                           <input type="checkbox" name="checkAll2" onclick="checkAll('sbForm')" id="checkA" />
+                           </oscar:oscarPropertiesCheck>
+                           Update
+                       </th>
                        <th>Fee Code</th>
                        <th>Current Price</th>
                        <th>New Price</th>
