@@ -266,6 +266,27 @@ function checkSubmitType(){
     window.close()
   }
 }
+function popup( height, width, url, windowName){
+  var page = url;
+  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+  var popup=window.open(url, windowName, windowprops);
+  if (popup != null){
+    if (popup.opener == null){
+      popup.opener = self;
+    }
+  }
+  popup.focus();
+  return false;
+}
+function popFeeItemList(form,field){
+     var width = 575;
+     var height = 400;
+	 
+     var str = document.forms[form].elements[field].value;
+     var url = '<rewrite:reWrite jspPage="support/billingfeeitem.jsp"/>'+'?form=' +form+ '&field='+field+'&feeField=billingAmount&corrections=1&searchStr=' +str;
+     var windowName = field;
+     popup(height,width,url,windowName);
+}
 
     </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -618,7 +639,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
     <tr>
       <td  class="bCellData">
-        <input type="button" onClick="javascript:OtherScriptAttach()" value="Search"/>
+        <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search"/>
         <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billing_code")%>" size="10" >
       </td>
       <td width="50%"  class="bCellData">
@@ -630,9 +651,8 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
       </td>
       <td   class="bCellData" nowrap>
         <div align="right">
-           <input type="button" onClick="javascript:GetPriceOfCode('ReProcessBilling','service_code','billingAmount')" value="$"/>
            <input type="hidden" name="billing_amount" value="<%=allFields.getProperty("bill_amount")%>">
-           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onchange="javascript:validateNum(this)">
+           <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onChange="javascript:validateNum(this)">
         </div>
       </td>
     </tr>
