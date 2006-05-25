@@ -485,7 +485,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
                 <option value="N" <%=BillType.equals("N")?"selected":""%>>N | Do Not Bill</option>
                 <!--<option value="W" <%=BillType.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>-->
                 <option value="X" <%=BillType.equals("X")?"selected":""%>>X | Bad Debt</option>
-                <option value="D" <%=BillType.equals("D")?"selected":""%>>D | Deleted Bill</option>
+        
                 <option value="T" <%=BillType.equals("T")?"selected":""%>>T | Transfer to Collection</option>
 
                 
