@@ -23354,3 +23354,13 @@ INSERT INTO billingtypes VALUES ('MSP',1);
 INSERT INTO billingtypes VALUES ('ICBC',2);
 INSERT INTO billingtypes VALUES ('Pri',3);
 INSERT INTO billingtypes VALUES ('WCB',4);
+
+INSERT INTO billing_msp_servicecode_times VALUES (1,13327,0);
+INSERT INTO billing_msp_servicecode_times VALUES (2,13906,0);
+INSERT INTO billing_msp_servicecode_times VALUES (3,13907,0);
+INSERT INTO billing_msp_servicecode_times VALUES (4,13909,1);
+INSERT INTO billing_msp_servicecode_times VALUES (5,13910,1);
+INSERT INTO billing_msp_servicecode_times VALUES (6,13911,1);
+INSERT INTO billing_msp_servicecode_times VALUES (7,13912,0);
+INSERT INTO billing_msp_servicecode_times VALUES (8,13913,0);
+
