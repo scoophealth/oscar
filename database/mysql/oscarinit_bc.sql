@@ -1791,7 +1791,7 @@ CREATE TABLE `formBCINR` (
   `demographic_no` int(10) NOT NULL default '0',
   `provider_no` int(10) default NULL,
   `formCreated` date default NULL,
-  `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `formEdited` timestamp,
   `c_lastName` varchar(80) default NULL,
   `c_firstName` varchar(80) default NULL,
   `c_address` varchar(80) default NULL,
@@ -1956,7 +1956,7 @@ CREATE TABLE `formBCINR` (
   `notified20` tinyint(1) default NULL,
   `bill20` varchar(20) default NULL,
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 
  
  
