@@ -121,30 +121,7 @@
       %>
 
       <% request.setAttribute( "test", list); %>
-<pre>
-<![CDATA[
-	public String getLink1()
-	{
-		ListObject lObject= (ListObject)getCurrentRowObject();
-		int lIndex= getListIndex();
-		return "&lt;a href=\"details.jsp?index=" + lIndex + "\">" + lObject.getId() + "&lt;/a>";
-	}
 
-
-	public String getLink2()
-	{
-		ListObject lObject= (ListObject)getCurrentRowObject();
-		int lId= lObject.getId();
-
-		return "&lt;a href=\"details.jsp?id=" + lId
-			+ "&amp;action=view\">View&lt;/a> | "
-			+ "&lt;a href=\"details.jsp?id=" + lId
-			+ "&amp;action=edit\">Edit&lt;/a> | "
-			+ "&lt;a href=\"details.jsp?id=" + lId
-			+ "&amp;action=delete\">Delete&lt;/a>";
-	}
-]]>
-</pre>
 
 <display:table name="test" defaultsort="1" defaultorder="descending" decorator="oscar.oscarBilling.ca.bc.pageUtil.BillCodesTableWrapper">
   <display:column property="serviceCode" title="Service Code" sortable="true" headerClass="sortable" />
