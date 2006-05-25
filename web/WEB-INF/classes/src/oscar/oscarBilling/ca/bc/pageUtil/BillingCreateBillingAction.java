@@ -215,7 +215,7 @@ public class BillingCreateBillingAction
             }
           }
           else if ("1".equals(elem[1])) {
-            if (noStartTime && noEndTime) {
+            if (noStartTime || noEndTime) {
               errors.add("",
                          new ActionMessage(
                              "oscar.billing.CA.BC.billingBC.error.startTimeandEndNeeded",
