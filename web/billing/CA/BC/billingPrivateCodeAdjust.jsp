@@ -146,7 +146,7 @@
 ]]>
 </pre>
 
-<display:table name="test" pagesize="50" defaultsort="1" defaultorder="descending" decorator="oscar.oscarBilling.ca.bc.pageUtil.BillCodesTableWrapper">
+<display:table name="test" defaultsort="1" defaultorder="descending" decorator="oscar.oscarBilling.ca.bc.pageUtil.BillCodesTableWrapper">
   <display:column property="serviceCode" title="Service Code" sortable="true" headerClass="sortable" />
   <display:column property="description" title="Description" sortable="true" headerClass="sortable"  />
   <display:column property="value" title="Price" sortable="true" headerClass="sortable"  />
