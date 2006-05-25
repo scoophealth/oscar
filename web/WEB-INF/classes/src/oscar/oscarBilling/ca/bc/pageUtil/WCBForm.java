@@ -1459,6 +1459,14 @@ public final class WCBForm
                                HttpServletRequest request) {
     ActionErrors errors = new ActionErrors();
     BillingAssociationPersistence per = new BillingAssociationPersistence();
+
+    /**
+     * Disable validation of fields if this is a preliminary save
+     * Validation isn't required until it is time to bill and submit this particular claim
+     */
+    if(request.getParameter("save")!=null){
+      return errors;
+    }
     if (w_lname == null || "".equals(w_lname)) {
       errors.add("",
                  new ActionMessage(
