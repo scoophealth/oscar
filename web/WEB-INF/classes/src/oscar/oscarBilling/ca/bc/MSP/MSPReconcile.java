@@ -1198,7 +1198,7 @@ public Map getS00Map() {
                                               endDate, excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
                                               type);
-
+    Properties c12 = new Properties();
     String orderByClause = "order by billingstatus";
 
     if (REP_ACCOUNT_REC.equals(type)) {
@@ -1208,6 +1208,7 @@ public Map getS00Map() {
     else if (this.REP_INVOICE.equals(type)) {
       orderByClause =
           "order by b.provider_no,bt.sortOrder,bm.service_date,b.demographic_name";
+      c12= currentC12Records();
     }
     String p = "select provider.first_name,provider.last_name,b.billingtype, b.update_date, bm.billingmaster_no,b.billing_no, "
         + " b.demographic_name,b.demographic_no,bm.billing_unit,bm.billing_code,bm.bill_amount,bm.billingstatus,bm.mva_claim_code,bm.service_location,"
@@ -1324,6 +1325,9 @@ public Map getS00Map() {
         else if (this.REP_INVOICE.equals(type)) {
           b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
+          //append the explanatory code to end of reason field
+          String expString = c12.getProperty(b.billing_no)!=null?c12.getProperty(b.billing_no):"";
+          b.reason+=" " + expString;
           if ("E".equals(b.status)) {
             b.adjustmentCode = this.getS00String(b.billMasterNo);
           }
