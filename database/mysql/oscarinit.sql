@@ -5063,7 +5063,7 @@ CREATE TABLE `formGrowth0_36` (
   `comment_20` varchar(25) default NULL,
   PRIMARY KEY  (`ID`),
   KEY `demographic_no` (`demographic_no`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+);
 
 
 --
