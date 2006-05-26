@@ -671,7 +671,14 @@ function popFeeItemList(form,field){
           |
           <input type="button" name="Button" value="Print" onClick="window.print();">
           |
+		   <%
+		 if(!status.equals("S")){
+ 			%>
           <html:submit/>
+		  <%
+		  }
+		  %>
+		  
         </td>
       </tr>
     </table>
