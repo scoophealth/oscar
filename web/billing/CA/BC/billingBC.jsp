@@ -62,6 +62,11 @@
 String sxml_location="", sxml_provider="", sxml_visittype="";
 String color = "", colorflag ="";
 BillingSessionBean bean = (BillingSessionBean)pageContext.findAttribute("billingSessionBean");
+
+if(!"Pri".equals(request.getParameter("billType")) ){
+      bean.setBillForm("GP");
+  }
+
 oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
 oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
 oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic lgc = new oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic();
@@ -89,6 +94,9 @@ fillDxcodeList(billlist3, dxcodeList);
    billform.setPrivateFees(billlist2);
    billform.setPrivateFees(billlist3);
     System.out.println("request.getParameter(billForm)=" + request.getParameter("billType"));
+  }
+  else{
+    bean.setBillForm("GP");
   }
 
 String loadFromSession = request.getParameter("loadFromSession");
@@ -610,8 +618,10 @@ String generateNumericOptionList(int range){
                 thisForm.setXml_appointment_date(bean.getApptDate());
             }
             System.out.println("app date "+thisForm.getXml_appointment_date());
-
-            if(request.getParameter("billType") != null){
+            if(bean != null && bean.getBillType() != null){
+            thisForm.setXml_billtype(bean.getBillType());
+            }
+            else if(request.getParameter("billType") != null){
                thisForm.setXml_billtype(request.getParameter("billType"));
             }
             if ( demo != null && demo.getVersionCode() != null && demo.getVersionCode().equals("66")){
@@ -806,19 +816,34 @@ String generateNumericOptionList(int range){
                 <td>
 
                   <font  size="-2"><b>Payment Method:</b></font>
-                     <select name="xml_encounter">
-                       <%
-                          ArrayList types = billform.getPaymentTypes();
-                          for (int i = 0; i <types.size(); i++) {
-                             PaymentType tp = (PaymentType)types.get(i);
-                             String chk = tp.getId().equals("6")?"selected":"";
-                      %>
-                    	<option value="<%=tp.getId()%>" <%=chk%>><%=tp.getPaymentType()%></option>
-                      <%
-                          }
-                      %>
+                  <%
+                  ArrayList types = billform.getPaymentTypes();
+                  if("Pri".equalsIgnoreCase(thisForm.getXml_billtype())){
+                    for (int i = 0; i < types.size(); i++) {
+                      PaymentType item = (PaymentType) types.get(i);
+                      if(item.getId().equals("6") ){
+                        types.remove(i);
+                        break;
+                      }
+                    }
+                  }
+                  else{
+                    for (int i = 0; i < types.size(); i++) {
+                      PaymentType item = (PaymentType) types.get(i);
+                      if(!item.getId().equals("6")&&!item.getId().equals("8") ){
+                        types.remove(i);
+                    i=i-1;
+                      }
+                    }
+                  }
+                  request.setAttribute("paymentMethodList",types);
+                  %>
 
-                     </select>
+
+                   <html:select property="xml_encounter">
+                     <html:options collection="paymentMethodList" property="id" labelProperty="paymentType"/>
+                   </html:select>
+
                 </td>
                 <td nowrap>
                 <a href="javascript: function myFunction() {return false; }" onClick="checkFACILITY();"><font size="-2"><strong>Facility</strong></font></a>
