@@ -929,7 +929,6 @@ border-right: 2px solid #cfcfcf;
                 </tr>
                 <tr>
                     <td>
-                        <oscar:oscarPropertiesCheck property="TESTING" value="yes">
                         <%
                         dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
                         Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
@@ -939,7 +938,7 @@ border-right: 2px solid #cfcfcf;
                         %>
                         <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
                         <%}%>
-                        </oscar:oscarPropertiesCheck>
+                        
                         <form name="measurementGroupForm">
                         <select name="measurementGroupSelect" class="ControlSelect" onChange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
