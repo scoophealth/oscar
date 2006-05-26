@@ -528,7 +528,14 @@ billTypes = "%";
       Collection
       <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/>
       All
+	  
+	  <input type="radio" name="billTypes" value="?"                              <%=billTypes.equals("?")?"checked":""%>/>
+      Fixable Receivables
+	  
+	  <input type="radio" name="billTypes" value="$"                              <%=billTypes.equals("$")?"checked":""%>/>
+	  Paid Bills
       <input type="hidden" name="submitted" value="yes"/>
+	  
     </td>
   </tr>
 </table>
