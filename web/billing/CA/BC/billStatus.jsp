@@ -528,19 +528,19 @@ billTypes = "%";
       Collection
       <input type="radio" name="billTypes" value="%"                              <%=billTypes.equals("%")?"checked":""%>/>
       All
-	  
+
 	  <input type="radio" name="billTypes" value="?"                              <%=billTypes.equals("?")?"checked":""%>/>
       Fixable Receivables
-	  
+
 	  <input type="radio" name="billTypes" value="$"                              <%=billTypes.equals("$")?"checked":""%>/>
 	  Paid Bills
       <input type="hidden" name="submitted" value="yes"/>
-	  
+
     </td>
   </tr>
 </table>
 </form>
-<table class="sortable" id="table-1" width="100%" border="2"  valign="top">
+<table class="sortable tabular_list" id="table-1" width="100%" border="2"  valign="top">
 <thead>
 	<tr bgcolor="#CCCCFF">
 	<th align="center" class="bHeaderData" title="INVOICE #" >INVOICE # </th>
@@ -639,8 +639,8 @@ billTypes = "%";
 
     <td align="center" class="bCellData" ><%=b.code%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.quantity%></td>
-    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.amount%> </td>
-    <td align="center" class="bCellData" ><%=pAmount%> </td>
+    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> >$<%=b.amount%> </td>
+    <td align="center" class="bCellData" >$<%=pAmount%> </td>
     <%
     double dblAmtOwed = new Double(b.amount).doubleValue()-new Double(pAmount).doubleValue();
     BigDecimal amtOwed = new BigDecimal(dblAmtOwed).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -648,7 +648,7 @@ billTypes = "%";
     System.err.println("Owed:" + owedTotal.toString());
 
     %>
-    <td align="center" class="bCellData" ><%=amtOwed%> </td>
+    <td align="center" class="bCellData" >$<%=amtOwed%> </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
 
     <td><%if (!b.isWCB()){%>
@@ -676,15 +676,21 @@ billTypes = "%";
   <%
 	String colspan = !"true".equals(readonly)?"5":"4";
  %>
-  <td colspan="<%=colspan%>" align="center" class="bCellData">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
     <td align="center" class="bCellData" >Count:</td>
 
     <td align="center" class="bCellData" ><%=list.size()%></td>
     <td align="center" class="bCellData" >&nbsp;</td>
     <td align="center" class="bCellData" >Total:</td>
-    <td align="center" class="bCellData" ><%=total.toString()%></td>
-    <td align="center" class="bCellData" ><%=paidTotal.toString()%></td>
-    <td align="center" class="bCellData" ><%=owedTotal.toString()%></td>
+    <td align="center" class="bCellData" >$<%=total.toString()%></td>
+    <td align="center" class="bCellData" >$<%=paidTotal.toString()%></td>
+    <td align="center" class="bCellData" >$<%=owedTotal.toString()%></td>
+      <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
   </tr>
   </tfoot>
 </table>
