@@ -426,6 +426,7 @@ public Map getS00Map() {
     String endDateQuery = "";
     String demoQuery = "";
     String billingType = "";
+
   //  Map s00Map = getS00Map();
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       providerQuery = " and b.apptProvider_no = '" + providerNo + "'";
@@ -459,6 +460,14 @@ public Map getS00Map() {
     if (exludeICBC) {
       billingType += " and b.billingType != '" + this.BILLTYPE_ICBC + "'";
     }
+    String statusTypeClause =  "('" + statusType + "')";
+    if("?".equals(statusType)){
+      statusTypeClause = "('" + this.PAIDWITHEXP + "','" + this.REJECTED + "','" + this.HELD + "')";
+    }
+    else if("$".equals(statusType)){
+      statusTypeClause = "('" + this.PAIDWITHEXP + "','" + this.PAIDPRIVATE + "','" + this.SETTLED + "')";
+    }
+
     //
     String p = " select b.billing_no, b.demographic_no, b.demographic_name, b.update_date, b.billingtype,"
         + " b.status, b.apptProvider_no,b.appointment_no, b.billing_date,b.billing_time, bm.billingstatus, "
@@ -466,8 +475,8 @@ public Map getS00Map() {
         " bm.bill_amount, bm.billing_code, bm.dx_code1, bm.dx_code2, bm.dx_code3,"
         +
         " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no,p.first_name,p.last_name,bm.billing_unit from billing b left join provider p on p.provider_no = b.provider_no, "
-        + " billingmaster bm where b.billing_no= bm.billing_no and bm.billingstatus like '" +
-        statusType + "' "
+        + " billingmaster bm where b.billing_no= bm.billing_no "
+        + " and bm.billingstatus in " + statusTypeClause + " "
         + providerQuery
         + startDateQuery
         + endDateQuery
