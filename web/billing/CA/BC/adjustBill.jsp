@@ -908,6 +908,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
 
 <input type="hidden" value="0" name="saveandclose"/>
+
+ <%
+ if(!BillType.equals("S")){
+ %>
         <tr>
           <td colspan="4"  class="bCellData">
             <input type="submit" name="submit" value="Reprocess Bill">
@@ -917,7 +921,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
           </td>
        </tr>
-
+<%
+}
+%>
 
 
   </table>
