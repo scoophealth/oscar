@@ -821,7 +821,7 @@ String generateNumericOptionList(int range){
                   if("Pri".equalsIgnoreCase(thisForm.getXml_billtype())){
                     for (int i = 0; i < types.size(); i++) {
                       PaymentType item = (PaymentType) types.get(i);
-                      if(item.getId().equals("6") ){
+                      if(item.getId().equals("6") || item.getId().equals("8") ){
                         types.remove(i);
                         break;
                       }
@@ -936,9 +936,7 @@ String generateNumericOptionList(int range){
                              </font>
                           </td>
                           <td>
-						  <%
-						  System.err.println("THEFORM:" + thisForm.hashCode() + ":" + thisForm.getRefertype1());
-						  %>
+
                              <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                              <html:select property="refertype1">
                                 <html:option value="" >Select Type</html:option>
