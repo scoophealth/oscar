@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="csv_rep_mspremsum"
+		 name="pdf_rep_mspremsum"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -22,10 +22,14 @@
 	<import value="java.util.*" />
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
+	<import value="oscar.oscarBilling.ca.bc.MSP.MSPReconcile" />
 
-	<parameter name="s21id" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="providerNo" isForPrompting="false" class="java.lang.String"/>
-	<queryString><![CDATA[select t_payment,t_payeeno,t_payeename,t_amtbilled,t_amtpaid,t_cheque from teleplanS21 where status <> 'D' and s21_id order by t_payment desc]]></queryString>
+	<parameter name="s21id" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="providerNo" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="msgs" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="practSum" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="adj" isForPrompting="false" class="net.sf.jasperreports.engine.JasperReport"/>
+	<queryString><![CDATA[select t_payment,t_payeeno,t_payeename,t_amtbilled ,t_amtpaid ,t_cheque from teleplanS21 where status <> 'D' and s21_id = $P{s21id} order by t_payment desc]]></queryString>
 
 	<field name="t_payment" class="java.lang.String"/>
 	<field name="t_payeeno" class="java.lang.String"/>
@@ -60,7 +64,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
 				<line direction="TopDown">
 					<reportElement
@@ -78,9 +83,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="2Point" fill="Solid" 
+/>
 				</line>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy 'at' h:mm aaa" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="0"
@@ -118,7 +124,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -147,7 +154,7 @@
 						mode="Transparent"
 						x="89"
 						y="74"
-						width="89"
+						width="37"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -167,9 +174,9 @@
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
-						x="178"
+						x="130"
 						y="74"
-						width="89"
+						width="135"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -186,7 +193,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{t_payeename}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="267"
@@ -206,9 +213,9 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double($F{t_amtbilled}))]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_amtbilled})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="356"
@@ -228,9 +235,9 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double($F{t_amtpaid}))]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_amtpaid})]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Transparent"
 						x="445"
@@ -250,7 +257,7 @@
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[NumberFormat.getCurrencyInstance().format(new Double($F{t_cheque}))]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["$"+MSPReconcile.convCurValue($F{t_cheque})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
@@ -268,7 +275,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</rectangle>
 				<line direction="BottomUp">
 					<reportElement
@@ -286,25 +294,8 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
-				</line>
-				<line direction="BottomUp">
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="73"
-						width="535"
-						height="0"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="element-89"
-						stretchType="NoStretch"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
+					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" 
+/>
 				</line>
 				<staticText>
 					<reportElement
@@ -333,7 +324,7 @@
 						mode="Transparent"
 						x="89"
 						y="55"
-						width="89"
+						width="37"
 						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -353,9 +344,9 @@
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="178"
+						x="130"
 						y="55"
-						width="89"
+						width="135"
 						height="16"
 						forecolor="#FFFFFF"
 						backcolor="#FFFFFF"
@@ -477,7 +468,7 @@
 						mode="Opaque"
 						x="0"
 						y="0"
-						width="368"
+						width="516"
 						height="115"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -494,8 +485,11 @@
 					<subreportParameter  name="payeeNo">
 						<subreportParameterExpression><![CDATA[$F{t_payeeno}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter  name="adj">
+						<subreportParameterExpression><![CDATA[$P{adj}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.io.InputStream"><![CDATA[$P{practSum}]]></subreportExpression>
+					<subreportExpression  class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{practSum}]]></subreportExpression>
 				</subreport>
 			</band>
 		</detail>
@@ -552,7 +546,29 @@
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="36"  isSplitAllowed="true" >
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="0"
+						width="533"
+						height="36"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="subreport-2"
+						stretchType="NoStretch"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<subreportParameter  name="s21id">
+						<subreportParameterExpression><![CDATA[$P{s21id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="net.sf.jasperreports.engine.JasperReport"><![CDATA[$P{msgs}]]></subreportExpression>
+				</subreport>
 			</band>
 		</summary>
 </jasperReport>
