@@ -639,8 +639,9 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
     <tr>
       <td  class="bCellData">
-        <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search"/>
+       
         <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billing_code")%>" size="10" >
+		 <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search/Update"/>
       </td>
       <td width="50%"  class="bCellData">
         <%=billform.getServiceDesc(allFields.getProperty("billing_code"),billRegion)%>
