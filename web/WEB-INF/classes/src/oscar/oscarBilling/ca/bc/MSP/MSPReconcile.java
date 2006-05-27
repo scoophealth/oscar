@@ -377,32 +377,31 @@ public class MSPReconcile {
   }
 
   /**
- * Returns a map of values from the teleplanS00 table for quick lookup of
- * teleplan data(solves a performance problem related to joing the teleplanS00 table with the billingmaster table
- * due to the fact that related fields teleplanS00.t_officeno and billingmaster.billingmaster_no are of a different type
- * The resultant map currently returns a key/value pair containing the t_officeno and t_dataseq respectiveley
- * @return Map
- */
-public Map getS00Map() {
-  HashMap map = new HashMap();
-  try {
-    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-    ResultSet rs = db.GetSQL(
-        "SELECT t_dataseq,CAST(t_officeno as SIGNED INTEGER) FROM teleplans00");
-    while (rs.next()) {
-      String value = rs.getString(1) != null ? rs.getString(1) : "";
-      String key = rs.getString(2);
-      map.put(key, value);
+   * Returns a map of values from the teleplanS00 table for quick lookup of
+   * teleplan data(solves a performance problem related to joing the teleplanS00 table with the billingmaster table
+   * due to the fact that related fields teleplanS00.t_officeno and billingmaster.billingmaster_no are of a different type
+   * The resultant map currently returns a key/value pair containing the t_officeno and t_dataseq respectiveley
+   * @return Map
+   */
+  public Map getS00Map() {
+    HashMap map = new HashMap();
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs = db.GetSQL(
+          "SELECT t_dataseq,CAST(t_officeno as SIGNED INTEGER) FROM teleplans00");
+      while (rs.next()) {
+        String value = rs.getString(1) != null ? rs.getString(1) : "";
+        String key = rs.getString(2);
+        map.put(key, value);
+      }
+      rs.close();
+      db.CloseConn();
     }
-    rs.close();
-    db.CloseConn();
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return map;
   }
-  catch (Exception e) {
-    e.printStackTrace();
-  }
-  return map;
-}
-
 
   public BillSearch getBills(String statusType, String providerNo,
                              String startDate, String endDate) {
@@ -427,7 +426,7 @@ public Map getS00Map() {
     String demoQuery = "";
     String billingType = "";
 
-  //  Map s00Map = getS00Map();
+    //  Map s00Map = getS00Map();
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       providerQuery = " and b.apptProvider_no = '" + providerNo + "'";
     }
@@ -460,12 +459,20 @@ public Map getS00Map() {
     if (exludeICBC) {
       billingType += " and b.billingType != '" + this.BILLTYPE_ICBC + "'";
     }
-    String statusTypeClause =  "('" + statusType + "')";
-    if("?".equals(statusType)){
-      statusTypeClause = "('" + this.PAIDWITHEXP + "','" + this.REJECTED + "','" + this.HELD + "')";
+
+    String statusTypeClause = " and bm.billingstatus";
+    if ("?".equals(statusType) || "$".equals(statusType)) {
+      if ("?".equals(statusType)) {
+        statusTypeClause += " in ('" + this.PAIDWITHEXP + "','" + this.REJECTED +
+            "','" + this.HELD + "')";
+      }
+      else if ("$".equals(statusType)) {
+        statusTypeClause += " in ('" + this.PAIDWITHEXP + "','" + this.PAIDPRIVATE +
+            "','" + this.SETTLED + "')";
+      }
     }
-    else if("$".equals(statusType)){
-      statusTypeClause = "('" + this.PAIDWITHEXP + "','" + this.PAIDPRIVATE + "','" + this.SETTLED + "')";
+    else {
+      statusTypeClause += " like '" + statusType + "'";
     }
 
     //
@@ -476,7 +483,8 @@ public Map getS00Map() {
         +
         " b.provider_no, b.visitdate, b.visittype,bm.billingmaster_no,p.first_name,p.last_name,bm.billing_unit from billing b left join provider p on p.provider_no = b.provider_no, "
         + " billingmaster bm where b.billing_no= bm.billing_no "
-        + " and bm.billingstatus in " + statusTypeClause + " "
+
+        + statusTypeClause
         + providerQuery
         + startDateQuery
         + endDateQuery
@@ -516,11 +524,12 @@ public Map getS00Map() {
         b.providerLastName = rs.getString("last_name");
         b.quantity = rs.getString("billing_unit");
 
-        Object[] seqNumsArray = (Object[])getSequenceNumbers(b.billMasterNo).toArray();
+        Object[] seqNumsArray = (Object[]) getSequenceNumbers(b.billMasterNo).
+            toArray();
         Arrays.sort(seqNumsArray);
         //Assign the geatest sequence number to this field
-         b.seqNum = "";
-        if(seqNumsArray.length > 0){
+        b.seqNum = "";
+        if (seqNumsArray.length > 0) {
           b.seqNum = seqNumsArray[seqNumsArray.length - 1].toString();
         }
         if (b.isWCB()) {
@@ -643,7 +652,7 @@ public Map getS00Map() {
       }
     }
 
-    public double getAmountPaid(){
+    public double getAmountPaid() {
       return this.amountPaid;
     }
 
@@ -1217,7 +1226,7 @@ public Map getS00Map() {
     else if (this.REP_INVOICE.equals(type)) {
       orderByClause =
           "order by b.provider_no,bt.sortOrder,bm.service_date,b.demographic_name";
-      c12= currentC12Records();
+      c12 = currentC12Records();
     }
     String p = "select provider.first_name,provider.last_name,b.billingtype, b.update_date, bm.billingmaster_no,b.billing_no, "
         + " b.demographic_name,b.demographic_no,bm.billing_unit,bm.billing_code,bm.bill_amount,bm.billingstatus,bm.mva_claim_code,bm.service_location,"
@@ -1335,8 +1344,9 @@ public Map getS00Map() {
           b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
           //append the explanatory code to end of reason field
-          String expString = c12.getProperty(b.billing_no)!=null?c12.getProperty(b.billing_no):"";
-          b.reason+=" " + expString;
+          String expString = c12.getProperty(b.billing_no) != null ?
+              c12.getProperty(b.billing_no) : "";
+          b.reason += " " + expString;
           if ("E".equals(b.status)) {
             b.adjustmentCode = this.getS00String(b.billMasterNo);
           }
