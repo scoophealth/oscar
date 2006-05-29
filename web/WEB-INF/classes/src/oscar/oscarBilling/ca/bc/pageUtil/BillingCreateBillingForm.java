@@ -40,7 +40,8 @@ public final class BillingCreateBillingForm
   private String xml_refer1="", xml_refer2="", refertype1, refertype2;
   private String xml_diagnostic_detail1, xml_diagnostic_detail2,
       xml_diagnostic_detail3;
-  private String xml_encounter, notes = "", icbc_claim_no;
+  private String xml_encounter = "9";
+  private String notes = "", icbc_claim_no;
   private String correspondenceCode;
   private String dependent = null;
   private String afterHours = null;
