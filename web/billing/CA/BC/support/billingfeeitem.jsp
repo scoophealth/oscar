@@ -97,7 +97,6 @@
 %>
 
 <script language="JavaScript">
-
 function posttoText(index){
 
    self.close();
@@ -106,7 +105,9 @@ function posttoText(index){
 	opener.document.focus();
 
 }
-
+<%
+if(request.getParameter("corrections") != null){
+%>
 function updateFeeCodeValues(code,description,fee){
    self.close();
 	opener.document.<%=form%>.<%=field%>.value = code;
@@ -114,6 +115,10 @@ function updateFeeCodeValues(code,description,fee){
 	opener.document.focus();
 
 }
+
+<%
+}
+%>
 
 </script
 
