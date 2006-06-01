@@ -574,7 +574,7 @@ function calToday(field) {
 	<input type="text" name="changeto<%=i %>" style="width:100%" size="10" maxlength="20" value="<%= props.getProperty("changeto"+i, "") %>" @oscar.formDB />
 	</td>
 	<td>
-      <input type="text" name="repeat<%=i %>" id="repeat<%=i %>" size="10" maxlength="10" <%= props.getProperty("repeat"+i, "") %>  @oscar.formDB dbType="date"/>
+      <input type="text" name="repeat<%=i %>" id="repeat<%=i %>" size="10" maxlength="10" value="<%= props.getProperty("repeat"+i, "") %>"  @oscar.formDB dbType="date"/>
 		<img src="../images/cal.gif" id="repeat<%=i %>_cal">
 	</td>
 	<td>
