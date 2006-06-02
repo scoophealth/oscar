@@ -108,6 +108,9 @@ public final class WCBAction
         if(!"true".equals(fromBilling)){
            createWCBEntry(frm);
           target = "viewformwcb";
+          String actionPath = "/billing/CA/BC/viewformwcb.do?formId="+frm.getWcbFormId()+"&demographic_no="+frm.getDemographic_no();
+          ActionForward forward = new ActionForward(actionPath);
+          return forward;
         }
       }
       return (mapping.findForward(target));
@@ -127,6 +130,12 @@ public final class WCBAction
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(frm.SQL("0", "0"));
+      List idList = SqlUtils.getQueryResultsList("SELECT max(ID) from wcb");
+      if(idList!=null){
+        String[] id = (String[])idList.get(0);
+        frm.setWcbFormId(id[0]);
+      }
+
     }
     catch (SQLException ex) {
       ex.printStackTrace();
