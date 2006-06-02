@@ -41,20 +41,23 @@
 %>
 <html:html>
 <head>
-  <html:base/>
+ <html:base/>
 <title>OSCAR oscarBilling - Correction</title>
-  <link rel="stylesheet" href="../../../share/css/oscar.css">
-  <link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1"/>
-<script src="../../../share/javascript/Oscar.js"></script><script src="../../../share/calendar/calendar.js"></script><script src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>
+
 <style type="text/css">
 <!--
 .style1 {color: #FFFFFF}
 -->
 </style>
-" type="text/javascript"></script><script src="../../../share/calendar/calendar-setup.js" type="text/javascript"></script><script type="text/javascript">
 
+<link rel="stylesheet" href="../../../share/css/oscar.css">
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1"/>
+<script src="../../../share/javascript/Oscar.js"></script>
+<script src="../../../share/calendar/calendar.js"></script>
+<script src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" type="text/javascript"></script>
+<script src="../../../share/calendar/calendar-setup.js" type="text/javascript"></script>
 
-
+<script type="text/javascript">
 function popFeeItemList(form,field){
 
      var width = 575;
@@ -127,7 +130,8 @@ function popFeeItemList(form,field){
 
 
 
-</script></head>
+</script>
+</head>
 <body>
   <html:form action="billing/CA/BC/billingTeleplanCorrectionWCB">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
