@@ -420,7 +420,7 @@ public class BillingSaveBillingAction
         //Store an archive of this transaction
         billingMasterId = getLastInsertId(db);
         this.createBillArchive(billingMasterId, status);
-
+/**
         //save extra fee item entry in wcb table
         if (wcb.isNotBilled()) {
           //if processing an existing WCB form, update values for first fee item
@@ -432,6 +432,8 @@ public class BillingSaveBillingAction
           //Store a new WCB entry for the first fee item
           db.RunSQL(wcb.SQL(billingid, amnt));
         }
+      **/
+         db.RunSQL(wcb.SQL(billingid, amnt));
 
         //If an extra fee item was declared on the WCB form, save it in
         //The billingmaster table as well
@@ -453,7 +455,7 @@ public class BillingSaveBillingAction
           //Store a record of this billingmaster Transaction
           status = new String(new char[] {billingAccountStatus});
           this.createBillArchive(billingMasterId, status);
-
+/**
           //save extra fee item entry in wcb table
           if (wcb.isNotBilled()) {
             //if processing an existing WCB form, update values for second fee item
@@ -464,7 +466,8 @@ public class BillingSaveBillingAction
             //This form was created from the billing screen
             //Store a new WCB entry for the second fee item
             db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, secondBillingAmt));
-          }
+          }**/
+          db.RunSQL(wcb.secondSQLItem(secondWCBBillingId, secondBillingAmt));
 
           //Update patient echart with the clinical info from the WCB form
           updatePatientChartWithWCBInfo(wcb);
