@@ -1,4 +1,4 @@
-<!--
+<%-- !--
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -22,15 +22,15 @@
  * Hamilton
  * Ontario, Canada
  */
--->
+--%>
 
  <%
-  if(session.getValue("user") == null)
+  if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no;
   user_no = (String) session.getAttribute("user");
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="../errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %>
@@ -53,6 +53,8 @@
 
 
 %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <html:html locale="true">
@@ -70,18 +72,24 @@ function CodeAttach(File2) {
       self.opener.document.serviceform.xml_diagnostic_detail.value = File2;
       <%}%>
 }
+function setfocus() {
+  this.focus();
+  document.forms[0].codedesc.focus();
+  document.forms[0].codedesc.select();
+}
 -->
+
 </script>
 
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" onLoad="window.setTimeout('Refresh()',3000)" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#FFFFFF" text="#000000" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
   <tr bgcolor="#486ebd">
     <th align=CENTER NOWRAP bgcolor="#CCCCFF"><font face="Helvetica" color="#000000"><bean:message key="billing.billingDigSearch.msgDiagnostic"/> </font><font face="Arial, Helvetica, sans-serif" color="#FF0000"><bean:message key="billing.billingDigSearch.msgMaxSelections"/></font></th>
   </tr>
 </table>
-<pre><% String coderange=request.getParameter("coderange");
+<% String coderange=request.getParameter("coderange");
 	String codedesc =request.getParameter("codedesc");
         if (codedesc != null){
         if (codedesc.compareTo("") == 0) {
@@ -89,20 +97,17 @@ function CodeAttach(File2) {
    		codeName = coderange;
    		// search = "search_diagnostic_code";
 
-        } else
-        {
+        } else {
            codeName =  codedesc;
      //   search = "search_diagnostic_text";
 
+   		}
    }
-   }
-   %></pre>
+   %>
 
-
-<h3><font face="Arial, Helvetica, sans-serif"></font></h3>
-<form name="codesearch" method=POST action="billingDigSearch.jsp">
+<form name="codesearch" id="codesearch" method="post" action="billingDigSearch.jsp">
 <%if(request.getParameter("name2")!=null) {%>
-<input type="hidden" name="name2" value="<%=request.getParameter("name2")%>">
+<input type="hidden" name="name2" value="<%=request.getParameter("name2")%>"/>
 <%}%>
 <p><font face="Arial, Helvetica, sans-serif" size="2"><b><bean:message key="billing.billingDigSearch.msgRefine"/></b><br><bean:message key="billing.billingDigSearch.msgCodeRange"/>:
 <select name="coderange">
@@ -116,8 +121,12 @@ function CodeAttach(File2) {
 <option value="7">700-799</option>
 <option value="8">800-899</option>
 <option value="9">900-999</option>
-</select> <bean:message key="billing.billingDigSearch.msgOR"/> <br><bean:message key="billing.billingDigSearch.msgDescription"/>: <input type="text" name="codedesc" value="" size="30"></font><input type=submit name=search value="<bean:message key="billing.billingDigSearch.btnSearch"/>"></p>
+</select> <bean:message key="billing.billingDigSearch.msgOR"/> <br/><bean:message key="billing.billingDigSearch.msgDescription"/>: 
+<input type="text" name="codedesc" value="" size="30"/></font>
+<input type="submit" name="search1" value="<bean:message key="billing.billingDigSearch.btnSearch"/>"/></p>
+<input type="hidden" name="search" value="<bean:message key="billing.billingDigSearch.btnSearch"/>"/>
 </form>
+
 <form name="diagcode" id="diagcode" method="post" action="billingDigUpdate.jsp">
 <table width="600" border="1">
 
@@ -197,7 +206,7 @@ textCode = sBuffer.toString();
  while(rslocal.next()){
  intCount = intCount + 1;
  Dcode = rslocal.getString("diagnostic_code");
-  DcodeDesc = rslocal.getString("description");
+  DcodeDesc = rslocal.getString("description").trim();
  if (Count == 0){
  Count = 1;
  color = "#FFFFFF";
@@ -220,7 +229,7 @@ textCode = sBuffer.toString();
  while(rslocal.next()){
  intCount = intCount + 1;
  Dcode = rslocal.getString("diagnostic_code");
-  DcodeDesc = rslocal.getString("description");
+  DcodeDesc = rslocal.getString("description").trim();
  if (Count == 0){
  Count = 1;
  color = "#FFFFFF";
@@ -277,7 +286,7 @@ textCode = sBuffer.toString();
 </script>
 <% } %>
 </table>
-<form>
+</form>
 <p>&nbsp; </p>
 <p>&nbsp;</p>
 <h3>&nbsp;</h3>
