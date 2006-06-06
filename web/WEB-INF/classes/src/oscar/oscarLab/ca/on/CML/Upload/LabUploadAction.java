@@ -29,7 +29,6 @@
 package oscar.oscarLab.ca.on.CML.Upload;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
 import org.apache.log4j.*;
@@ -38,11 +37,7 @@ import org.apache.struts.upload.*;
 import oscar.*;
 import oscar.oscarDB.*;
 import oscar.oscarLab.*;
-import oscar.oscarLab.ca.bc.PathNet.*;
-import oscar.oscarLab.ca.bc.PathNet.HL7.*;
 import oscar.oscarLab.ca.on.CML.*;
-import oscar.util.*;
-
 
 /**
  *
@@ -65,43 +60,49 @@ public class LabUploadAction extends Action {
        System.out.println("key="+key);
        String outcome = "";
        
+       //Checks to verify key is matched and file should be saved locally.
        if (key != null && keyToMatch != null && keyToMatch.equals(key)){
-        
+           
           try{  
+              
              System.out.println("Lab Upload content type = "+importFile.getContentType());
              InputStream is = importFile.getInputStream();
              filename = importFile.getFileName();
 
-             FileUploadCheck fileC = new FileUploadCheck();
+             String localFileName = saveFile(is, filename);
+             is.close();
+             
+             
+             
              boolean fileUploadedSuccessfully = false;
-             try{
-                fileUploadedSuccessfully = fileC.addFile(filename,is,proNo);
-                if (!fileUploadedSuccessfully){
-                   outcome = "uploadedPreviously";
-                }
-             }catch(Exception addFileEx){
+             if (localFileName != null){
+                InputStream  fis = new FileInputStream(localFileName); 
+                FileUploadCheck fileC = new FileUploadCheck();               
+                try{
+                    fileUploadedSuccessfully = fileC.addFile(filename,fis,proNo);
+                    if (!fileUploadedSuccessfully){
+                        outcome = "uploadedPreviously";
+                    }
+                }catch(Exception addFileEx){
+                   addFileEx.printStackTrace();
                    outcome = "databaseNotStarted";
+                }    
+                System.out.println("Was file uploaded successfully ?"+fileUploadedSuccessfully);
+                fis.close();     
+                if (fileUploadedSuccessfully){
+                    BufferedReader in = new BufferedReader(new FileReader(localFileName));                                       
+                    ABCDParser abc = new ABCDParser();     
+                    abc.parse(in);              
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);             
+                    abc.save(db.GetConnection());
+                    db.CloseConn();
+                    outcome = "uploaded";
+                }
+             }else{
+                outcome="accessDenied";  //file could not save    
+                System.out.println("Could not save file :"+filename+" to disk");
              }
-             is.reset();
-
-             System.out.println("Was file uploaded successfully ?"+fileUploadedSuccessfully);
-             if (fileUploadedSuccessfully){
-
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader in = new BufferedReader(isr);                                       
-
-                ABCDParser abc = new ABCDParser();     
-                abc.parse(in);              
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);             
-                abc.save(db.GetConnection());
-                db.CloseConn();
-
-                //conn.close(); 
-                //SAVE FILE TO DISK
-                is.reset();
-                saveFile(is, filename);             
-                outcome = "uploaded";
-             }
+             
           }catch(Exception e){ 
              e.printStackTrace(); 
              outcome = "exception";
@@ -127,7 +128,7 @@ public class LabUploadAction extends Action {
      * @param file
      * @return
      */
-   public static boolean saveFile(InputStream stream,String filename ){
+   public static String saveFile(InputStream stream,String filename ){
       String retVal = null;        
       boolean isAdded = true;
         
@@ -155,13 +156,13 @@ public class LabUploadAction extends Action {
 
          System.out.println("File not found");
          fnfe.printStackTrace();            
-         return isAdded=false;
+         return retVal;
 
       }catch (IOException ioe) {
          ioe.printStackTrace();
-         return isAdded=false;
+         return retVal;
       }   
-      return isAdded;
+      return retVal;
    }
    
 }
