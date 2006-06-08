@@ -2271,6 +2271,11 @@ CREATE TABLE billing_history (
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
+ALTER TABLE `billing_history` ADD COLUMN `practitioner_no` VARCHAR(10) NOT NULL DEFAULT '' AFTER `creation_date`,
+ADD COLUMN `billingtype` VARCHAR(4) NOT NULL DEFAULT '' AFTER `practitioner_no`,
+ADD COLUMN `seqNum` VARCHAR(10) NOT NULL DEFAULT '' AFTER `billingtype`,
+ADD COLUMN `amount` VARCHAR(7) NOT NULL DEFAULT '' AFTER `seqNum`, ROW_FORMAT = DYNAMIC;
+
 #Serves as an audit trail for private bill financial transactions, both payments and refunds
 #Shares a many to one relation with the billing table
 #There are zero to many billing_private_transactions records for a single billing record
