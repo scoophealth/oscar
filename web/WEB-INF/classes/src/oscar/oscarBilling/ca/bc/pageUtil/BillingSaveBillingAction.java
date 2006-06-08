@@ -47,6 +47,7 @@ import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
 import oscar.oscarEncounter.data.EctPatientData;
 import oscar.oscarEncounter.data.EChartDAO;
 import oscar.oscarEncounter.data.Echart;
+import oscar.entities.BillHistory;
 
 public class BillingSaveBillingAction
     extends Action {
@@ -268,7 +269,7 @@ public class BillingSaveBillingAction
             //Store a record of this transaction
             billingMasterId = getLastInsertId(db);
             String status = new String(new char[] {billingAccountStatus});
-            this.createBillArchive(billingMasterId, status);
+            this.createBillArchive(billingMasterId);
             db.CloseConn();
           }
           catch (SQLException e) {
@@ -368,8 +369,8 @@ public class BillingSaveBillingAction
             db.RunSQL(sql);
             billingMasterId = getLastInsertId(db);
             String status = new String(new char[] {billingAccountStatus});
+        this.createBillArchive(billingMasterId);
 
-            this.createBillArchive(billingMasterId, status);
             db.CloseConn();
           }
           catch (SQLException e) {
@@ -419,13 +420,15 @@ public class BillingSaveBillingAction
 
         //Store an archive of this transaction
         billingMasterId = getLastInsertId(db);
-        this.createBillArchive(billingMasterId, status);
+         this.createBillArchive(billingMasterId);
+      //  this.createBillArchive(billingMasterId, status);
 /**
         //save extra fee item entry in wcb table
         if (wcb.isNotBilled()) {
           //if processing an existing WCB form, update values for first fee item
-            String updateWCBSQL = createWCBUpdateSQL(billingid, amnt,wcb.getWcbFormId());
-           db.RunSQL(updateWCBSQL);
+          String updateWCBSQL = createWCBUpdateSQL(billingid, amnt,
+              wcb.getWcbFormId());
+          db.RunSQL(updateWCBSQL);
         }
         else {
           //This form was created from the billing screen
@@ -454,13 +457,16 @@ public class BillingSaveBillingAction
 
           //Store a record of this billingmaster Transaction
           status = new String(new char[] {billingAccountStatus});
-          this.createBillArchive(billingMasterId, status);
-/**
+           this.createBillArchive(billingMasterId);
+          //this.createBillArchive(billingMasterId, status);
+
           //save extra fee item entry in wcb table
+          /**
           if (wcb.isNotBilled()) {
             //if processing an existing WCB form, update values for second fee item
-            String updateWCBSQL = createWCBUpdateSQL(secondWCBBillingId, secondBillingAmt,wcb.getWcbFormId());
-         db.RunSQL(updateWCBSQL);
+            String updateWCBSQL = createWCBUpdateSQL(secondWCBBillingId,
+                secondBillingAmt, wcb.getWcbFormId());
+            db.RunSQL(updateWCBSQL);
           }
           else {
             //This form was created from the billing screen
@@ -474,7 +480,7 @@ public class BillingSaveBillingAction
         }
       }
       catch (SQLException e) {
-            e.printStackTrace();
+        e.printStackTrace();
       }
 
       finally {
@@ -504,9 +510,9 @@ public class BillingSaveBillingAction
   }
 
   private String createWCBUpdateSQL(String secondWCBBillingId,
-                                    String secondBillingAmt,String wcbFormId){
+                                    String secondBillingAmt, String wcbFormId) {
 
-    if(wcbFormId == null){
+    if (wcbFormId == null||"".equals(wcbFormId)) {
       throw new RuntimeException("Could not create WCB update query, WCB Form ID Not Assigned");
     }
     String updateWCBSQL = "update wcb set billing_no = " + secondWCBBillingId + ", bill_amount = '" + secondBillingAmt + "'" +
@@ -637,9 +643,9 @@ public class BillingSaveBillingAction
    * Adds a new entry into the billing_history table
    * @param newInvNo String
    */
-  private void createBillArchive(String billingMasterNo, String status) {
+  private void createBillArchive(String billingMasterNo) {
     BillingHistoryDAO dao = new BillingHistoryDAO();
-    dao.createBillingHistoryArchive(billingMasterNo, status);
+    dao.createBillingHistoryArchive(billingMasterNo);
   }
 
 }
