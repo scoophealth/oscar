@@ -70,7 +70,7 @@ public class MSPReconcile {
   private static Properties negValues = new Properties();
   private BeanUtilHlp beanut = new BeanUtilHlp();
   private BillingHistoryDAO dao = new BillingHistoryDAO();
-  public static final String BILLTYPE_PRI = "PRI";
+  public static final String BILLTYPE_PRI = "Pri";
   public static final String BILLTYPE_MSP = "MSP";
   public static final String BILLTYPE_ICBC = "ICBC";
   public static final String BILLTYPE_WCB = "WCB";
@@ -351,6 +351,15 @@ public class MSPReconcile {
     }
   }
 
+  public String getMaxSeqNum(String billingMasterNo){
+    String maxNum = "";
+    ArrayList seqNums = getSequenceNumbers(billingMasterNo);
+     if(!seqNums.isEmpty()){
+       Arrays.sort(seqNums.toArray());
+       maxNum = (String) seqNums.get(seqNums.size() - 1);
+     }
+     return maxNum;
+  }
   public ArrayList getSequenceNumbers(String billingNo) {
     ArrayList retval = new ArrayList();
     try {
@@ -1043,6 +1052,7 @@ public class MSPReconcile {
    * Updates the paymentMethod of the specified bill with the supplied paymentMethod code
    * @param billingNo String - The uid of the bill to be updated
    * @param paymentMethod String - The paymentMethod code
+   * @todo Move to BillingViewBean
    */
   public void updatePaymentMethod(String billingMasterNo, String paymentMethod) {
     DBHandler db = null;
@@ -1165,7 +1175,7 @@ public class MSPReconcile {
          * @todo Test this audit event
          */
 
-        dao.createBillingHistoryArchiveByBillNo(billingNo, newStat);
+        dao.createBillingHistoryArchive(billingNo);
       }
       catch (Exception e) {
         e.printStackTrace();
