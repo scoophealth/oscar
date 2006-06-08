@@ -288,6 +288,18 @@ function popFeeItemList(form,field){
      popup(height,width,url,windowName);
 }
 
+function popupPage(vheight,vwidth,varpage) { //open a new popup window
+  var page = "" + varpage;
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+  var popup=window.open(page, "attachment", windowprops);
+  if (popup != null) {
+    if (popup.opener == null) {
+      popup.opener = self;
+    }
+   popup.focus();
+  }
+}
+
     </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
@@ -410,7 +422,16 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 <input type="hidden" name="billNumber" value="<%=allFields.getProperty("billing_no")%>"/>
 <table width="100%" border="0">
   <tr bgcolor="#CCCCFF">
-     <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" value="<%=billNo%>" /></td>
+     <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" value="<%=billNo%>" />
+	 
+	 <%
+ if(BillType.equals("A")||BillType.equals("P")){
+ %>
+	 <a href="#" onClick="popupPage(800,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=billNo%>&receipt=yes')">View Invoice</a>
+<%
+}
+%>
+	 </td>
 
   </tr>
   <tr>
