@@ -34,9 +34,12 @@ import java.util.*;
 public class BillHistory {
   private int id;
   private int billingMasterNo;
-  private int providerNo;
-  private String billingStatus;
+  private String practitioner_no = "";
+  private String billingStatus = "";
   private Date archiveDate;
+  private String billingtype = "";
+  private String seqNum = "";
+  private String amount = "";
   public BillHistory() {
   }
 
@@ -56,8 +59,9 @@ public class BillHistory {
    * Sets the number of the provider who is responsible for initiating this audit event
    * @param providerNo int
    */
-  public void setProviderNo(int providerNo) {
-    this.providerNo = providerNo;
+  public void setPractitioner_no(String practitioner_no) {
+
+    this.practitioner_no = practitioner_no;
   }
 
   /**
@@ -76,6 +80,20 @@ public class BillHistory {
     this.archiveDate = archiveDate;
   }
 
+  public void setBillingtype(String billingtype) {
+
+    this.billingtype = billingtype;
+  }
+
+  public void setSeqNum(String seqNum) {
+
+    this.seqNum = seqNum;
+  }
+
+  public void setAmount(String amount) {
+    this.amount = amount;
+  }
+
   public int getId() {
     return id;
   }
@@ -84,8 +102,9 @@ public class BillHistory {
     return billingMasterNo;
   }
 
-  public int getProviderNo() {
-    return providerNo;
+  public String getPractitioner_no() {
+
+    return practitioner_no;
   }
 
   public String getBillingStatus() {
@@ -94,6 +113,20 @@ public class BillHistory {
 
   public Date getArchiveDate() {
     return archiveDate;
+  }
+
+  public String getBillingtype() {
+
+    return billingtype;
+  }
+
+  public String getSeqNum() {
+
+    return seqNum;
+  }
+
+  public String getAmount() {
+    return amount;
   }
 
 }
