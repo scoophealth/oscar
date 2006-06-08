@@ -115,8 +115,7 @@ public class TeleplanCorrectionActionWCB
       /**
        * Ensure that an audit of the currently modified bill is captured
        */
-      dao.createBillingHistoryArchiveByBillNo(data.getBillingNo(),
-                                              data.getStatus());
+      dao.createBillingHistoryArchiveByBillNo(data.getBillingNo());
       bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
 
       bean.queryExecuteUpdate(data.getWcb(this.GetFeeItemAmount(data.
