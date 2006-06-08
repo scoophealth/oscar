@@ -1,3 +1,4 @@
+
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -26,10 +27,10 @@ package oscar.oscarBilling.ca.bc.data;
 
 import java.sql.*;
 import java.util.*;
-
-import com.mysql.jdbc.ResultSet;
 import oscar.entities.*;
 import oscar.oscarDB.*;
+import oscar.util.SqlUtils;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 /**
  * BillingHistoryDAO is responsible for providing database CRUD operations
@@ -72,6 +73,10 @@ public class BillingHistoryDAO {
         bh.setBillingMasterNo(rs.getInt(2));
         bh.setBillingStatus(rs.getString(3));
         bh.setArchiveDate(rs.getDate(4));
+        bh.setPractitioner_no(rs.getString(5));
+        bh.setBillingtype(rs.getString(6));
+        bh.setSeqNum(rs.getString(7));
+        bh.setAmount(rs.getString(8));
         list.add(bh);
       }
     }
@@ -106,10 +111,13 @@ public class BillingHistoryDAO {
    * @param billMasterNo String - The BillingMaster record that the archive is associated with
    * @param status String - The status of the BillingMaster  record
    */
-  public void createBillingHistoryArchive(String billMasterNo, String status) {
+  public void createBillingHistoryArchive(BillHistory history) {
     DBHandler db = null;
-    String qry = "insert into billing_history(billingmaster_no,billingstatus,creation_date) values(" +
-        billMasterNo + ",'" + status + "',now())";
+
+    String qry = "insert into billing_history(billingmaster_no,billingstatus,creation_date,practitioner_no,billingtype,seqNum,amount) values(" +
+        history.getBillingMasterNo() + ",'" + history.getBillingStatus() +
+        "',now(),'" + history.getPractitioner_no() + "','" + history.getBillingtype() +
+        "','" + history.getSeqNum() + "','" + history.getAmount() + "')";
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
@@ -127,12 +135,39 @@ public class BillingHistoryDAO {
     }
   }
 
+
+
+  /**
+   * Saves a new new billing history instance, associated with the specified billingMaster Number
+   * @param billMasterNo String - The BillingMaster record that the archive is associated with
+   * @param status String - The status of the BillingMaster  record
+   */
+  public void createBillingHistoryArchive(String billMasterNo) {
+    String bmQuery = "SELECT b.provider_no, b.billingtype,bm.billingstatus, bm.bill_amount FROM billing b, billingmaster bm " +
+" WHERE b.billing_no=bm.billing_no AND bm.billingmaster_no = " + billMasterNo;
+   List billValues =  SqlUtils.getQueryResultsList(bmQuery);
+
+   if(billValues!=null){
+     BillHistory history = new BillHistory();
+     String[] values = (String[])billValues.get(0);
+     history.setBillingMasterNo(new Integer(billMasterNo).intValue());
+     history.setPractitioner_no(values[0]);
+     history.setBillingtype(values[1]);
+     history.setBillingStatus(values[2]);
+     history.setAmount(values[3]);
+     MSPReconcile rec = new MSPReconcile();
+     String maxSeqNum = rec.getMaxSeqNum(billMasterNo);
+     history.setSeqNum(maxSeqNum);
+     this.createBillingHistoryArchive(history);
+   }
+  }
+
   /**
    *  Saves a new new billing history instance, associated with the specified billing number
    * @param billingNo String - The billing number which will be used to determine the underlying billingMaster numbers
    * @param stat String - The status of the billingMaster records that will be archived
    */
-  public void createBillingHistoryArchiveByBillNo(String billingNo, String status) {
+  public void createBillingHistoryArchiveByBillNo(String billingNo) {
     DBHandler db = null;
     ResultSet rs = null;
     String qry =
@@ -143,7 +178,7 @@ public class BillingHistoryDAO {
       rs = (ResultSet) db.GetSQL(qry);
       while (rs.next()) {
         String billMasterNo = rs.getString(1);
-        this.createBillingHistoryArchive(billMasterNo, status);
+        this.createBillingHistoryArchive(billMasterNo);
       }
     }
     catch (SQLException ex) {
