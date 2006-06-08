@@ -1041,7 +1041,7 @@ public class MSPReconcile {
        * @todo Test this audit event
        */
 
-      dao.createBillingHistoryArchiveByBillNo(billingNo, stat);
+      dao.createBillingHistoryArchiveByBillNo(billingNo);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -1090,7 +1090,7 @@ public class MSPReconcile {
        * @todo Test this audit event
        */
 
-      dao.createBillingHistoryArchive(billingMasterNo, stat);
+      dao.createBillingHistoryArchive(billingMasterNo);
     }
     catch (Exception e) {
       e.printStackTrace();
