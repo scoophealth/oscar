@@ -39,6 +39,7 @@ import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.oscarDemographic.data.*;
 import oscar.util.*;
+import oscar.entities.BillHistory;
 
 public class BillingReProcessBillAction extends Action {
    Misc misc = new Misc();
@@ -248,8 +249,16 @@ public class BillingReProcessBillAction extends Action {
                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                db.RunSQL(sql);
                db.RunSQL(providerSQL);
+               //If the bill status was changed to Paid Private or Bill Patient
+               //Update the bill type to 'Pri'
+               if("A".equals(billingStatus)||"P".equals(billingStatus)){
+                 String privUpdateSQL = "update billing set billingtype = '" + MSPReconcile.BILLTYPE_PRI + "' where billing_no ='"+frm.getBillNumber()+"'";
+                 db.RunSQL(privUpdateSQL);
+               }
+
                BillingHistoryDAO dao = new BillingHistoryDAO();
-               dao.createBillingHistoryArchive(billingmasterNo,billingStatus);
+               dao.createBillingHistoryArchive(billingmasterNo);
+
                if (secondSQL != null){
                     System.out.println(secondSQL);
                     db.RunSQL(secondSQL);
