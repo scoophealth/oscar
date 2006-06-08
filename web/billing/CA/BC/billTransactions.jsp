@@ -6,7 +6,6 @@
   oscar.oscarBilling.ca.bc.MSP.MSPReconcile rec= new oscar.oscarBilling.ca.bc.MSP.MSPReconcile();
   oscar.oscarBilling.ca.bc.data.BillingHistoryDAO dao = new oscar.oscarBilling.ca.bc.data.BillingHistoryDAO();
   List billingTransactions = new ArrayList();
-
   if(billNo!=null){
   	 billingTransactions = dao.getBillHistoryByBillNo(billNo);
   }
@@ -24,10 +23,14 @@
 </style>
 <table width="100%">
   <tr class="SectionHead">
-    <td colspan="2" class="bCellData">Bill Transaction History</td>
+    <td colspan="6" class="bCellData">Bill Transaction History</td>
   </tr>
   <tr  class="ColHead">
     <td>Bill Status</td>
+    <td>Seq # </td>
+    <td>INS</td>
+    <td>PRACT</td>
+    <td>AMT</td>
     <td>Update Date</td>
   </tr>
 <%
@@ -36,6 +39,10 @@
 %>
   <tr align="center">
     <td><%=rec.getStatusDesc(item.getBillingStatus())%>    </td>
+    <td><%=item.getSeqNum()%></td>
+    <td><%=item.getBillingtype()%></td>
+    <td><%=item.getPractitioner_no()%></td>
+    <td><%=item.getAmount()%></td>
     <td><%=item.getArchiveDate()%>    </td>
   </tr>
 <%}%>
