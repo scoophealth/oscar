@@ -10130,6 +10130,10 @@ INSERT INTO diagnosticcode VALUES (525,'977','Of drugs and medications - includi
 INSERT INTO diagnosticcode VALUES (526,'989','Of other chemicals, e.g., lead, pesticides and venomous bites                                       ','A','ON');
 INSERT INTO diagnosticcode VALUES (527,'994','Of physical factors, e.g., heat, cold, frostbite, pressure                                          ','A','ON');
 INSERT INTO diagnosticcode VALUES (528,'998','Of surgical and medical care, e.g., wound infection, wound disruption, other iatrogenic disease     ','A','ON');
+INSERT INTO diagnosticcode VALUES (529,'042','AIDS                                                                                                ','A','ON');
+INSERT INTO diagnosticcode VALUES (530,'043','AIDS-related complex (ARC)                                                                          ','A','ON');
+INSERT INTO diagnosticcode VALUES (531,'044','Other human immunodeficiency virus infection                                                        ','A','ON');
+INSERT INTO diagnosticcode VALUES (532,'721','Other Seronegative Spondyloarthropathies                                                            ','A','ON');
 
 --
 -- Dumping data for table 'diseases'
