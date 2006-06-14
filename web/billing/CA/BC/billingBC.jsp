@@ -63,10 +63,6 @@ String sxml_location="", sxml_provider="", sxml_visittype="";
 String color = "", colorflag ="";
 BillingSessionBean bean = (BillingSessionBean)pageContext.findAttribute("billingSessionBean");
 
-if(!"Pri".equals(request.getParameter("billType")) ){
-      bean.setBillForm("GP");
-  }
-
 oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
 oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
 oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic lgc = new oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic();
@@ -94,9 +90,6 @@ fillDxcodeList(billlist3, dxcodeList);
    billform.setPrivateFees(billlist2);
    billform.setPrivateFees(billlist3);
     System.out.println("request.getParameter(billForm)=" + request.getParameter("billType"));
-  }
-  else{
-    bean.setBillForm("GP");
   }
 
 String loadFromSession = request.getParameter("loadFromSession");
