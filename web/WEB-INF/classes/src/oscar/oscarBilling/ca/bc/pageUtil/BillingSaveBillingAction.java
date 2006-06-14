@@ -500,24 +500,15 @@ public class BillingSaveBillingAction
     //      System.out.println("Service count : "+ billItem.size());
     ActionForward af = mapping.findForward("success");
     if (frm.getSubmit().equals("Another Bill")) {
+      bean.setBillForm("GP");
       af = mapping.findForward("anotherBill");
+
     }
     else if (frm.getSubmit().equals("Save & Print Receipt")) {
       af = new ActionForward("/billing/CA/BC/billingView.do?billing_no=" + billingid + "&receipt=yes");
       af.setRedirect(true);
     }
     return af; //(mapping.findForward("success"));
-  }
-
-  private String createWCBUpdateSQL(String secondWCBBillingId,
-                                    String secondBillingAmt, String wcbFormId) {
-
-    if (wcbFormId == null||"".equals(wcbFormId)) {
-      throw new RuntimeException("Could not create WCB update query, WCB Form ID Not Assigned");
-    }
-    String updateWCBSQL = "update wcb set billing_no = " + secondWCBBillingId + ", bill_amount = '" + secondBillingAmt + "'" +
-        " where ID = " + wcbFormId;
-    return updateWCBSQL;
   }
 
   private String createBillingMasterInsertString(BillingSessionBean bean,
