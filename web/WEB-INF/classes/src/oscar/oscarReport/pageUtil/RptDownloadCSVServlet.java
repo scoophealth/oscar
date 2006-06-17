@@ -221,6 +221,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
         propDemoSelect.setProperty("hin", "Health Ins.");
         propDemoSelect.setProperty("hc_type", "HC Type");
         propDemoSelect.setProperty("address", "Address");
+        propDemoSelect.setProperty("city", "City");
         propDemoSelect.setProperty("postal", "Postal Code");
         propDemoSelect.setProperty("phone", "Phone (H)");
         propDemoSelect.setProperty("phone2", "Phone (W)");
@@ -232,6 +233,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
         vecSeqDemoSelect.add("hin");
         vecSeqDemoSelect.add("hc_type");
         vecSeqDemoSelect.add("address");
+        vecSeqDemoSelect.add("city");
         vecSeqDemoSelect.add("postal");
         vecSeqDemoSelect.add("phone");
         vecSeqDemoSelect.add("phone2");
@@ -574,8 +576,8 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 for(int i=0; i<temp.length; i++) {
                     vecSpecCaption.add(propSpecSelect.getProperty(temp[i].trim()));
                     sql = "select demographic_no,value from demographicExt where key_val='" + temp[i] + "' and demographic_no in (";
-                    sql += strDemoNo + ") order by date_time desc limit 1";
-                    rs = dbObj.searchDBRecord(sql);
+               		sql += strDemoNo + ") order by date_time ";
+               		rs = dbObj.searchDBRecord(sql);
                     while (rs.next()) {
                         propSpecValue.setProperty(rs.getString("demographic_no")+temp[i], rs.getString("value"));
                     }
