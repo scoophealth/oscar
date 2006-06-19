@@ -131,6 +131,13 @@
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, intparam,  request.getParameter("dboperation"));
   if (rowsAffected ==1) {
     //find the democust record for update
+    try{  
+    DemographicNameAgeString nameAgeString  = DemographicNameAgeString.getInstance();
+    nameAgeString.resetDemographic(request.getParameter("demographic_no"));   
+    }catch(Exception nameAgeEx){
+        nameAgeEx.printStackTrace();
+        System.out.println("ERROR RESETTING NAME AGE ");
+    }
     rs = apptMainBean.queryResults(request.getParameter("demographic_no"), "search_custrecordno");
     if(rs.next() ) { //update
       String[] param1 =new String[6];
