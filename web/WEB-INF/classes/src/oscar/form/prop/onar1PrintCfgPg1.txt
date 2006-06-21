@@ -251,12 +251,12 @@ pg1_labHIVCounsel	: left, 488, 483, 0, BaseFont.HELVETICA, 7 , X
 pg1_labABO	: left, 448, 496, 0, BaseFont.HELVETICA, 8
 pg1_labLastPapDate	: left, 489, 509, 0, BaseFont.HELVETICA, 8
 pg1_labLastPap	: left, 555, 496, 0, BaseFont.HELVETICA, 8
-pg1_labRh	: left, 448, 497, 0, BaseFont.HELVETICA, 8
+pg1_labRh	: left, 448, 510, 0, BaseFont.HELVETICA, 8
 pg1_labAntiScr	: left, 448, 521, 0, BaseFont.HELVETICA, 8
 pg1_labGC	: left, 555, 521, 0, BaseFont.HELVETICA, 8
 pg1_labRubella	: left, 448, 535, 0, BaseFont.HELVETICA, 8
 pg1_labUrine	: left, 555, 535, 0, BaseFont.HELVETICA, 8
-pg1_labHBsAg	: left, 448, 535, 0, BaseFont.HELVETICA, 8
+pg1_labHBsAg	: left, 448, 548, 0, BaseFont.HELVETICA, 8
 pg1_labVDRL	: left, 448, 561, 0, BaseFont.HELVETICA, 8
 pg1_labSickle	: left, 448, 575, 0, BaseFont.HELVETICA, 8
 
