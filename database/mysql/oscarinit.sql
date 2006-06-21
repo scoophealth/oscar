@@ -5374,7 +5374,7 @@ CREATE TABLE measurementsDeleted(
 DROP TABLE IF EXISTS measurementGroup;
 CREATE TABLE measurementGroup(
   name varchar(100) NOT NULL,
-  typeDisplayName varchar(20), 
+  typeDisplayName varchar(255), 
   KEY name (name)
 ) TYPE =MyISAM;
 
