@@ -14839,6 +14839,15 @@ INSERT INTO billingservice VALUES (17837,'','36062','Supervision of 5 full cours
 INSERT INTO billingservice VALUES (17838,'','36063','Supervision of 6-10 full courses of care','7746.63','','2005-02-16','','BC','00');
 INSERT INTO billingservice VALUES (17839,'','36064','Supervision of 11-15 full courses of care','10328.84','','2005-02-16','','BC','00');
 INSERT INTO billingservice VALUES (17840,'','36065','Supervision of 16-30 full courses of care','12911.05','','2005-02-16','','BC','00');
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14004','Obstetrical Care Bonus','256.33','','2006-06-05','','BC','00');
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14009','Obstetrical Care Bonus','215.17','','2006-06-05','','BC','00');
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14010','Maternity Network Bonus','1250.00','','2006-06-05','','BC','00');
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14015','GP Patient Management Conference','40.00',NULL,'2006-04-01',NULL,'BC',NULL);
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14016','Complex Clinical Action Plan','40.00',NULL,'2006-04-01',NULL,'BC',NULL);
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14020','GP Bonus','2500.00','','2006-06-05','','BC','00');
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14051','Congestive Heart Failure Care Bonus','125.00',NULL,'2006-04-01',NULL,'BC',NULL);
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14052','Hypertension Chronic Care Bonus','50.00',NULL,'2006-04-01',NULL,'BC',NULL);
+INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14050','Diabetes Chronic Care Bonus','125.00',NULL,'2006-04-01',NULL,'BC',NULL);
 
 
 INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
