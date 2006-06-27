@@ -480,23 +480,24 @@ function popupSearchPage(vheight,vwidth,varpage) { //open a new popup window
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 document.onmouseup = getActiveText;
 
-function getActiveText(e) {
+var encTextareaFocus = false;
 
+function getActiveText(e) {
   //text = (document.all) ? document.selection.createRange().text : document.getSelection();
   //document.ksearch.keyword.value = text;
  if(document.all) {
     //alert("one");
     text = document.selection.createRange().text;
-    if(text != "" && document.ksearch.keyword.value=="") {
-      document.ksearch.keyword.value += text;
+    if(text != "" && document.forms['ksearch'].keyword.value=="") {
+      document.forms['ksearch'].keyword.value += text;
     }
-    if(text != "" && document.ksearch.keyword.value!="") {
-      document.ksearch.keyword.value = text;
+    if(text != "" && document.forms['ksearch'].keyword.value!="") {
+      document.forms['ksearch'].keyword.value = text;
     }
   } else {
     text = window.getSelection();
 
-    if (text.toString().length == 0){  //for firefox
+    if ((text.toString().length == 0) && (encTextareaFocus == true)) {  //for firefox
        var txtarea = document.encForm.enTextarea;
        var selLength = txtarea.textLength;
        var selStart = txtarea.selectionStart;
@@ -504,11 +505,15 @@ function getActiveText(e) {
        if (selEnd==1 || selEnd==2) selEnd=selLength;
        text = (txtarea.value).substring(selStart, selEnd);
     }
-    //
-    document.ksearch.keyword.value = text;
+    if (text != '') {
+        document.forms['ksearch'].keyword.value = text;
+        text = '';
+    }
   }
   return true;
 }
+
+
 
 function tryAnother(){
 ////
@@ -1000,10 +1005,10 @@ border-right: 2px solid #cfcfcf;
                         </td>
                     </tr>
                     <tr>
-                        <td><bean:message key="oscarEncounter.Index.searchFor"/></td>
+                        <td><bean:message key="oscarEncounter.Index.searchFor"/><%= request.getParameter("userName")%></td>
                     </tr>
                     <tr>
-                        <td><input type="text" name="keyword" class="ControlSelect" value=""  onkeypress="return grabEnter(event)"/></td>
+                        <td><input type="text" name="keyword" class="ControlSelect" onkeypress="return grabEnter(event)"/></td>
                     </tr>
                     <tr>
                         <td><bean:message key="oscarEncounter.Index.using"/></td>
@@ -1304,7 +1309,7 @@ border-right: 2px solid #cfcfcf;
                             %>
                             <tr>
                                 <td colspan="2" valign="top" style="text-align:left">
-                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><%=encounterText%></textarea>
+                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto" onfocus="javascript: encTextareaFocus=true;" onblur="javascript: encTextareaFocus=false;"><%=encounterText%></textarea>
                                 </td>
                             </tr>
                         </table>
