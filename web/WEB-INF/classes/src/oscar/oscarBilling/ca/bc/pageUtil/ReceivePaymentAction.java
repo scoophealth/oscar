@@ -24,14 +24,10 @@
 
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForm;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.Action;
-import oscar.oscarBilling.ca.bc.data.PrivateBillTransactionsDAO;
-import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+import oscar.entities.*;
+import oscar.oscarBilling.ca.bc.data.*;
 
 
 /**
@@ -48,20 +44,18 @@ public class ReceivePaymentAction
                                HttpServletResponse servletResponse) {
     ReceivePaymentActionForm frm = (
         ReceivePaymentActionForm) actionForm;
-    int billingmasterNo = new Integer(frm.getBillingmasterNo()).intValue();
-    double amount = new Double(frm.getAmountReceived()).doubleValue();
+    double dblAmount = new Double(frm.getAmountReceived()).doubleValue();
     if("true".equals(frm.getIsRefund())){
-    frm.setAmountReceived(String.valueOf(amount*-1.0));
+
+    frm.setAmountReceived(String.valueOf(dblAmount*-1.0));
     }
-    int paymentType = new Integer(frm.getPaymentMethod()).intValue();
-    this.receivePayment(billingmasterNo,amount,paymentType);
+    this.receivePayment(frm.getBillingmasterNo(),dblAmount,frm.getPaymentMethod());
     frm.setPaymentReceived(true);
     return actionMapping.findForward("success");
   }
 
-public void receivePayment(int billingMasterNo, double amount,int paymentType) {
-   PrivateBillTransactionsDAO dao = new PrivateBillTransactionsDAO();
-   dao.savePrivateBillTransaction(billingMasterNo,amount,paymentType);
+public void receivePayment(String billingMasterNo, double amount,String paymentType) {
+   BillingHistoryDAO dao = new BillingHistoryDAO();
+   dao.createBillingHistoryArchive(billingMasterNo,amount,paymentType);
  }
-
 }
