@@ -399,32 +399,6 @@ public class BillingBillingManager {
           BigDecimal.ROUND_HALF_UP);
       return bdFee.toString();
     }
-
-    /**
-     * Returns a List of PrivateBillTransaction instances according to the specified billing_no<p>
-     *
-     * @param billing_no String - The unique bill number
-     * @return List - A List of PrivateBillTransaction instances
-     */
-    public List getPaymentsAndRefundsByBill(String billing_no) {
-      PrivateBillTransactionsDAO dao = new PrivateBillTransactionsDAO();
-      return dao.getPrivateBillTransactions(billing_no);
-    }
-
-    /**
-     * Returns the sum total of PrivateBillTransaction payments and refunds
-     * @param billTransactions List - The List PrivateBillTransaction inatnces
-     * @return double
-     */
-    private double getTotalOfPaymentsAndRefunds(List billTransactions) {
-      double ret = 0.0;
-      for (Iterator iter = billTransactions.iterator(); iter.hasNext(); ) {
-        PrivateBillTransaction item = (PrivateBillTransaction) iter.next();
-        ret += item.getAmount_received();
-      }
-      return ret;
-    }
-
   }
 
   public void setBillTtype(String billTtype) {
