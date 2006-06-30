@@ -25,7 +25,6 @@
 package oscar.util;
 
 import java.util.*;
-import oscar.OscarProperties;
 
 /**
  *
@@ -46,9 +45,8 @@ public class AlertTimer {
     timer = new Timer(true);
     alertCodes =codes;
     hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
-    //triggers alerts 5 seconds after instantiation and every 120 second interval
+    //triggers alerts 5 seconds after instantiation
     timer.scheduleAtFixedRate(new ReminderClass(),5000,interval);
-    System.err.println("Loaded Alerts Object");
   }
 
   public static AlertTimer getInstance(String[] codes,long interval) {
@@ -64,15 +62,12 @@ public class AlertTimer {
   class ReminderClass
       extends TimerTask {
     public void run() {
-      long loadAlerts = System.currentTimeMillis();
       try {
         hlp.manageCDMTicklers(alertCodes);
       }
       catch (Exception e) {
         e.printStackTrace();
       }
-      long finloadAlerts = System.currentTimeMillis();
-      System.out.println("LOADED ALERTS" + (finloadAlerts - loadAlerts) * .001);
     }
   }
 
