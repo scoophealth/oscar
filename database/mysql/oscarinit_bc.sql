@@ -2308,6 +2308,8 @@ CREATE TABLE billing_preferences (
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
+ALTER TABLE `billing_preferences` ADD COLUMN `defaultPayeeNo` INTEGER UNSIGNED NOT NULL DEFAULT 0 AFTER `providerNo`; 
+
 --
 -- Table structure for table `billing_msp_servicecode_times`
 --
