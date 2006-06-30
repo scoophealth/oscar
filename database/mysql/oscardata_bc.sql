@@ -23356,6 +23356,23 @@ INSERT INTO billingstatus_types VALUES ('P','BILLPAT',2);
 INSERT INTO billingstatus_types VALUES ('T','COLL',4);
 INSERT INTO billingstatus_types VALUES ('A','PAIDPRIV',9);
 
+update billingstatus_types set displayNameExt = 'Rejected' where displayName = 'REJ';
+update billingstatus_types set displayNameExt = 'Bill MSP - Not Submitted' where displayName = 'NOSUB';
+update billingstatus_types set displayNameExt = 'Submitted' where displayName = 'SUB';
+update billingstatus_types set displayNameExt = 'Settled' where displayName = 'SET';
+update billingstatus_types set displayNameExt = 'Deleted' where displayName = 'DEL';
+update billingstatus_types set displayNameExt = 'Held' where displayName = 'HELD';
+update billingstatus_types set displayNameExt = 'Data Centre Changed' where displayName = 'DCC';
+update billingstatus_types set displayNameExt = 'Paid With Explanation' where displayName = 'PWE';
+update billingstatus_types set displayNameExt = 'Bad Debt' where displayName = 'BAD';
+update billingstatus_types set displayNameExt = 'WCB' where displayName = 'WCB';
+update billingstatus_types set displayNameExt = 'Capitated' where displayName = 'CAP';
+update billingstatus_types set displayNameExt = 'Bill Patient' where displayName = 'BILLPAT';
+update billingstatus_types set displayNameExt = 'Transfer to Collection' where displayName = 'COLL';
+update billingstatus_types set displayNameExt = 'Paid Private' where displayName = 'PAIDPRIV';
+update billingstatus_types set displayNameExt = 'Do Not Bill' where displayName = 'DNB';
+update billingstatus_types set displayNameExt = 'Refused' where displayName = 'REF';
+
 --
 -- Dumping data for table `billingtypes`
 --
