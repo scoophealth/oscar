@@ -1,4 +1,3 @@
-
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 /*
@@ -39,296 +38,311 @@ import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.oscarDemographic.data.*;
 import oscar.util.*;
-import oscar.entities.BillHistory;
 
-public class BillingReProcessBillAction extends Action {
-   Misc misc = new Misc();
-    public ActionForward execute(ActionMapping mapping,
-    ActionForm form,
-    HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException, ServletException {
-        System.out.print("BillingReProcessBillAction Jackson");
-        if(request.getSession().getAttribute("user") == null  ){
-            return (mapping.findForward("Logout"));
-        }
-
-        BillingReProcessBillForm frm = (BillingReProcessBillForm) form;
-
-        GregorianCalendar now=new GregorianCalendar();
-        int curYear = now.get(Calendar.YEAR);
-        int curMonth = (now.get(Calendar.MONTH)+1);
-        int curDay = now.get(Calendar.DAY_OF_MONTH);
-        String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) + "-" + String.valueOf(curDay);
-        String billingid = "";
-        String dataCenterId = OscarProperties.getInstance().getProperty("dataCenterId");
-
-        String billingmasterNo = frm.getBillingmasterNo();
-
-        String demographicNo = frm.getDemoNo();
-        DemographicData demoD = new DemographicData();
-        DemographicData.Demographic demo = demoD.getDemographic(demographicNo);
-
-
-        oscar.oscarBilling.ca.bc.data.BillingFormData billform = new oscar.oscarBilling.ca.bc.data.BillingFormData();
-
-
-        ///
-        String providerNo = frm.getProvider_no();//f
-        String demographicFirstName =demo.getFirstName(); //d
-        String demographicLastName =demo.getLastName();  //d
-        String name_verify  = demographicFirstName.substring(0,1) + " " + demographicLastName.substring(0,2);  //d
-        String billingGroupNo=billform.getGroupNo(providerNo);
-        String practitionerNo=billform.getPracNo(providerNo);//p
-
-        String hcNo = demo.getHIN().trim();//d
-        String dependentNo = frm.getDependentNo();//f
-
-        String visitLocation = frm.getLocationVisit();//f
-        String clarificationCode = visitLocation.substring(0,2);//f
-        String anatomicalArea = frm.getAnatomicalArea();//f
-        String afterHour = frm.getAfterHours();//f
-        String newProgram = frm.getNewProgram();//f
-        String billingUnit = frm.getBillingUnit();///f
-        String billingServiceCode = frm.getService_code();//f
-        String billingServicePrice =frm.getBillingAmount();//f
-        String payment_mode = frm.getPaymentMode();//f
-        String serviceDate = frm.getServiceDate();//f
-        String serviceToDate = frm.getServiceToDay();//f
-        String submissionCode = frm.getSubmissionCode();//f
-        String exSubmissionCode ="";//f
-        String dxCode1 = frm.getDx1();//f
-        String dxCode2= frm.getDx2();//f
-        String dxCode3= frm.getDx3();//f
-        String dxExpansion ="";//f
-        String serviceLocation  = "";
-        if(frm.getServiceLocation().length()>1){
-          serviceLocation = frm.getServiceLocation().substring(0, 1); //f
-        }
-        String referralFlag1 = frm.getReferalPracCD1();//f
-        String referralNo1 = frm.getReferalPrac1();//f
-        String referralFlag2 = frm.getReferalPracCD2();//f
-        String referralNo2 =frm.getReferalPrac2();//f
-        String timeCall =frm.getTimeCallRec();//f
-        String serviceStartTime =frm.getStartTime();//f
-        String serviceEndTime = frm.getFinishTime();//f
-        String birthDate = demo.getDob();//d
-        String office_number = "";
-        String correspondenceCode = frm.getCorrespondenceCode();//f
-        String claimComment = frm.getShortComment();//f
-
-        String billingStatus =frm.getStatus();//f
-
-        String facilityNum = frm.getFacilityNum();
-        String facilitySubNum= frm.getFacilitySubNum();
-
-        String originalMSPNumber = misc.forwardZero("", 20);
-
-        String oinInsurerCode = frm.getInsurerCode();//f
-        String oinRegistrationNo = demo.getHIN();//d
-        String oinBirthdate =demo.getDob();//d
-        String oinFirstName = demo.getFirstName();//d
-        String oinSecondName = "";//d
-        String oinSurname  = demo.getLastName();//d
-        String oinSexCode = demo.getSex() ;//d
-        String oinAddress = demo.getAddress();//d
-        String oinAddress2 = demo.getCity();//d
-        String oinAddress3 = "";//d
-        String oinAddress4 = "";//d
-        String oinPostalcode = demo.getPostal();//d
-
-        String hcType = demo.getHCType(); //d
-
-        String messageNotes = frm.getMessageNotes();
-        String billRegion =OscarProperties.getInstance().getProperty("billregion");
-        ////
-            String billType = request.getParameter("billType");
-
-        String submit = frm.getSubmit();
-        String secondSQL = null;
-
-        if((submit.equals("Resubmit Bill")||submit.equals("Reprocess and Resubmit Bill")) || billingStatus.equals("O")){
-            billingStatus = "O";
-            secondSQL = "update billing set status = 'O' where billing_no ='"+frm.getBillNumber()+"'";
-        }else if (submit.equals("Settle Bill")){
-            billingStatus = "S";
-        }
-
-        if (hcType.equals(billRegion) ){   //if its bc go on
-            oinInsurerCode = "";
-            oinRegistrationNo = "";
-            oinBirthdate = "";
-            oinFirstName = "";
-            oinSecondName = "";
-            oinSurname = "";
-            oinSexCode = "";
-            oinAddress = "";
-            oinAddress2 = "";
-            oinAddress3 = "";
-            oinAddress4 = "";
-            oinPostalcode = "";
-
-        }else{  //other provinces
-            oinInsurerCode = hcType;
-            hcNo = "000000000";
-            name_verify = "0000";
-        }
-
-        if (submissionCode.equals("E")){
-           String seqNum = frm.getDebitRequestSeqNum();
-           String dateRecieved = frm.getDebitRequestDate();
-           try{
-              dateRecieved = dateRecieved.trim();
-              Integer.parseInt(dateRecieved);
-           }catch (Exception e){
-              dateRecieved = "";
-           }
-
-           originalMSPNumber = constructOriginalMSPNumber(dataCenterId, seqNum, dateRecieved);
-        }
-
-            String sql = "update billingmaster set "
-                        + "billingstatus = '"+billingStatus+"', "
-                        + "datacenter = '"+dataCenterId+"', "
-                        //TODO
-                        + "payee_no = '"+billingGroupNo+"', "
-                        + "practitioner_no = '"+practitionerNo+"', "
-                        + "phn = '"+hcNo+"', "
-                        + "name_verify = '"+UtilMisc.mysqlEscape(name_verify)+"', "
-                        + "dependent_num = '"+dependentNo+"', "
-                        + "billing_unit = '"+billingUnit+"', "
-                        + "clarification_code = '"+clarificationCode+"', "
-                        + "anatomical_area = '"+anatomicalArea+"', "
-                        + "after_hour = '"+afterHour+"', "
-                        + "new_program = '"+newProgram+"', "
-                        + "billing_code = '"+billingServiceCode+"', "
-                        + "bill_amount = '"+billingServicePrice+"', "
-                        +" payment_mode = '"+payment_mode+"', "
-                        +" service_date = '"+convertDate8Char(serviceDate)+"', "
-                        +" service_to_day = '"+serviceToDate+"', "
-                        + "submission_code = '"+submissionCode+"', "
-                        + "extended_submission_code = '"+exSubmissionCode+"', "
-                        + "dx_code1 = '"+dxCode1+"', "
-                        + "dx_code2 = '"+dxCode2+"', "
-                        + "dx_code3 = '"+dxCode3+"', "
-                        + "dx_expansion = '"+dxExpansion+"', "
-                        + "service_location = '"+serviceLocation+"', "
-                        + "referral_flag1 = '"+referralFlag1+"', "
-                        + "referral_no1 = '"+referralNo1+"', "
-                        + "referral_flag2 = '"+referralFlag2+"', "
-                        + "referral_no2 = '"+referralNo2+"', "
-                        + "time_call = '"+timeCall+"', "
-                        + "service_start_time = '"+serviceStartTime+"', "
-                        + "service_end_time = '"+serviceEndTime+"', "
-                        + "birth_date = '"+birthDate+"', "
-                        + "correspondence_code = '"+correspondenceCode+"', "
-                        + "claim_comment = '"+claimComment+"', "
-                        + "original_claim = '"+originalMSPNumber+"',"
-                        + "facility_no = '"+facilityNum+"',"
-                        + "facility_sub_no = '"+facilitySubNum+"',"
-
-
-                        + "oin_insurer_code = '"+oinInsurerCode+"', "
-                        + "oin_registration_no = '"+UtilMisc.mysqlEscape(oinRegistrationNo)+"', "
-                        + "oin_birthdate = '"+UtilMisc.mysqlEscape(oinBirthdate)+"', "
-                        + "oin_first_name = '"+UtilMisc.mysqlEscape(oinFirstName)+"', "
-                        + "oin_second_name = '"+UtilMisc.mysqlEscape(oinSecondName)+"', "
-                        + "oin_surname = '"+UtilMisc.mysqlEscape(oinSurname)+"', "
-                        + "oin_sex_code = '"+UtilMisc.mysqlEscape(oinSexCode)+"', "
-                        + "oin_address = '"+UtilMisc.mysqlEscape(oinAddress)+"', "
-                        + "oin_address2 = '"+UtilMisc.mysqlEscape(oinAddress2)+"', "
-                        + "oin_address3 = '"+UtilMisc.mysqlEscape(oinAddress3)+"', "
-                        + "oin_address4 = '"+UtilMisc.mysqlEscape(oinAddress4)+"', "
-                        + "oin_postalcode = '"+UtilMisc.mysqlEscape(oinPostalcode)+"'  "
-                        +" where billingmaster_no  = '"+billingmasterNo+"'";
-
-            String providerSQL = "update billing set provider_no = '"+providerNo+"' where billing_no ='"+frm.getBillNumber()+"'";
-
-            System.out.println("\n"+sql+"\n");
-            try {
-               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-               db.RunSQL(sql);
-               db.RunSQL(providerSQL);
-               //If the bill status was changed to Paid Private or Bill Patient
-               //Update the bill type to 'Pri'
-               if("A".equals(billingStatus)||"P".equals(billingStatus)){
-                 String privUpdateSQL = "update billing set billingtype = '" + MSPReconcile.BILLTYPE_PRI + "' where billing_no ='"+frm.getBillNumber()+"'";
-                 db.RunSQL(privUpdateSQL);
-               }
-
-               BillingHistoryDAO dao = new BillingHistoryDAO();
-               dao.createBillingHistoryArchive(billingmasterNo);
-
-               if (secondSQL != null){
-                    System.out.println(secondSQL);
-                    db.RunSQL(secondSQL);
-               }
-
-               if (correspondenceCode.equals("N") || correspondenceCode.equals("B")){
-                 MSPBillingNote n = new MSPBillingNote();
-                 n.addNote(billingmasterNo,(String) request.getSession().getAttribute("user"),frm.getNotes());
-               }
-
-               if(messageNotes != null ){
-                  BillingNote n = new BillingNote();
-                  if (n.hasNote(billingmasterNo) || !messageNotes.trim().equals("")){
-                     n.addNote(billingmasterNo, (String) request.getSession().getAttribute("user"),messageNotes);
-                  }
-               }
-
-               db.CloseConn();
-            } catch (SQLException e3) {
-               System.out.println(e3.getMessage());
-            }
-
-
-
-        request.setAttribute("billing_no", billingmasterNo);
-        if(submit.equals("Reprocess and Resubmit Bill")){
-         request.setAttribute("close","true");
-        }
-        return mapping.findForward("success");
+public class BillingReProcessBillAction
+    extends Action {
+  Misc misc = new Misc();
+  MSPReconcile msp = new MSPReconcile();
+  public ActionForward execute(ActionMapping mapping,
+                               ActionForm form,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws IOException,
+      ServletException {
+    System.out.print("BillingReProcessBillAction Jackson");
+    if (request.getSession().getAttribute("user") == null) {
+      return (mapping.findForward("Logout"));
     }
 
-    public String convertDate8Char(String s){
-        String sdate = "00000000", syear="", smonth="", sday="";
-        System.out.println("s=" + s);
-        if (s != null){
+    BillingReProcessBillForm frm = (BillingReProcessBillForm) form;
+    String dataCenterId = OscarProperties.getInstance().getProperty(
+        "dataCenterId");
+    String billingmasterNo = frm.getBillingmasterNo();
+    String demographicNo = frm.getDemoNo();
+    DemographicData demoD = new DemographicData();
+    DemographicData.Demographic demo = demoD.getDemographic(demographicNo);
 
-            if (s.indexOf("-") != -1){
+    oscar.oscarBilling.ca.bc.data.BillingFormData billform = new oscar.
+        oscarBilling.ca.bc.data.BillingFormData();
 
-                syear = s.substring(0, s.indexOf("-"));
-                s = s.substring(s.indexOf("-")+1);
-                smonth = s.substring(0, s.indexOf("-"));
-                if (smonth.length() == 1)  {
-                    smonth = "0" + smonth;
-                }
-                s = s.substring(s.indexOf("-")+1);
-                sday = s;
-                if (sday.length() == 1)  {
-                    sday = "0" + sday;
-                }
+    ///
+    String providerNo = frm.getProvider_no(); //f
+    String demographicFirstName = demo.getFirstName(); //d
+    String demographicLastName = demo.getLastName(); //d
+    String name_verify = demographicFirstName.substring(0, 1) + " " +
+        demographicLastName.substring(0, 2); //d
+    String billingGroupNo = billform.getGroupNo(providerNo);
+    String practitionerNo = billform.getPracNo(providerNo); //p
 
+    String hcNo = demo.getHIN().trim(); //d
+    String dependentNo = frm.getDependentNo(); //f
 
-                System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
-                sdate = syear + smonth + sday;
+    String visitLocation = frm.getLocationVisit(); //f
+    String clarificationCode = visitLocation.substring(0, 2); //f
+    String anatomicalArea = frm.getAnatomicalArea(); //f
+    String afterHour = frm.getAfterHours(); //f
+    String newProgram = frm.getNewProgram(); //f
+    String billingUnit = frm.getBillingUnit(); ///f
+    String billingServiceCode = frm.getService_code(); //f
+    String billingServicePrice = frm.getBillingAmount(); //f
+    String payment_mode = frm.getPaymentMode(); //f
+    String serviceDate = frm.getServiceDate(); //f
+    String serviceToDate = frm.getServiceToDay(); //f
+    String submissionCode = frm.getSubmissionCode(); //f
+    String exSubmissionCode = ""; //f
+    String dxCode1 = frm.getDx1(); //f
+    String dxCode2 = frm.getDx2(); //f
+    String dxCode3 = frm.getDx3(); //f
+    String dxExpansion = ""; //f
+    String serviceLocation = "";
+    if (frm.getServiceLocation().length() > 1) {
+      serviceLocation = frm.getServiceLocation().substring(0, 1); //f
+    }
+    String referralFlag1 = frm.getReferalPracCD1(); //f
+    String referralNo1 = frm.getReferalPrac1(); //f
+    String referralFlag2 = frm.getReferalPracCD2(); //f
+    String referralNo2 = frm.getReferalPrac2(); //f
+    String timeCall = frm.getTimeCallRec(); //f
+    String serviceStartTime = frm.getStartTime(); //f
+    String serviceEndTime = frm.getFinishTime(); //f
+    String birthDate = demo.getDob(); //d
+    String correspondenceCode = frm.getCorrespondenceCode(); //f
+    String claimComment = frm.getShortComment(); //f
 
-            }else{
-                sdate = s;
-            }
-            System.out.println("sdate:" + sdate);
-        }else{
-            sdate="00000000";
+    String billingStatus = frm.getStatus(); //f
 
+    String facilityNum = frm.getFacilityNum();
+    String facilitySubNum = frm.getFacilitySubNum();
+
+    String originalMSPNumber = misc.forwardZero("", 20);
+
+    String oinInsurerCode = frm.getInsurerCode(); //f
+    String oinRegistrationNo = demo.getHIN(); //d
+    String oinBirthdate = demo.getDob(); //d
+    String oinFirstName = demo.getFirstName(); //d
+    String oinSecondName = ""; //d
+    String oinSurname = demo.getLastName(); //d
+    String oinSexCode = demo.getSex(); //d
+    String oinAddress = demo.getAddress(); //d
+    String oinAddress2 = demo.getCity(); //d
+    String oinAddress3 = ""; //d
+    String oinAddress4 = ""; //d
+    String oinPostalcode = demo.getPostal(); //d
+
+    String hcType = demo.getHCType(); //d
+
+    String messageNotes = frm.getMessageNotes();
+    String billRegion = OscarProperties.getInstance().getProperty("billregion");
+    String submit = frm.getSubmit();
+    String secondSQL = null;
+
+    if ( (submit.equals("Resubmit Bill") ||
+          submit.equals("Reprocess and Resubmit Bill")) ||
+        billingStatus.equals("O")) {
+      billingStatus = "O";
+      secondSQL = "update billing set status = 'O' where billing_no ='" +
+          frm.getBillNumber() + "'";
+    }
+    else if (submit.equals("Settle Bill")) {
+      billingStatus = "S";
+    }
+
+    if (hcType.equals(billRegion)) { //if its bc go on
+      oinInsurerCode = "";
+      oinRegistrationNo = "";
+      oinBirthdate = "";
+      oinFirstName = "";
+      oinSecondName = "";
+      oinSurname = "";
+      oinSexCode = "";
+      oinAddress = "";
+      oinAddress2 = "";
+      oinAddress3 = "";
+      oinAddress4 = "";
+      oinPostalcode = "";
+
+    }
+    else { //other provinces
+      oinInsurerCode = hcType;
+      hcNo = "000000000";
+      name_verify = "0000";
+    }
+
+    if (submissionCode.equals("E")) {
+      String seqNum = frm.getDebitRequestSeqNum();
+      String dateRecieved = frm.getDebitRequestDate();
+      try {
+        dateRecieved = dateRecieved.trim();
+        Integer.parseInt(dateRecieved);
+      }
+      catch (Exception e) {
+        e.printStackTrace();
+        dateRecieved = "";
+      }
+
+      originalMSPNumber = constructOriginalMSPNumber(dataCenterId, seqNum,
+          dateRecieved);
+    }
+
+    String sql = "update billingmaster set "
+        + "datacenter = '" + dataCenterId + "', "
+        //TODO
+        + "payee_no = '" + billingGroupNo + "', "
+        + "practitioner_no = '" + practitionerNo + "', "
+        + "phn = '" + hcNo + "', "
+        + "name_verify = '" + UtilMisc.mysqlEscape(name_verify) + "', "
+        + "dependent_num = '" + dependentNo + "', "
+        + "billing_unit = '" + billingUnit + "', "
+        + "clarification_code = '" + clarificationCode + "', "
+        + "anatomical_area = '" + anatomicalArea + "', "
+        + "after_hour = '" + afterHour + "', "
+        + "new_program = '" + newProgram + "', "
+        + "billing_code = '" + billingServiceCode + "', "
+        + "bill_amount = '" + billingServicePrice + "', "
+        + " payment_mode = '" + payment_mode + "', "
+        + " service_date = '" + convertDate8Char(serviceDate) + "', "
+        + " service_to_day = '" + serviceToDate + "', "
+        + "submission_code = '" + submissionCode + "', "
+        + "extended_submission_code = '" + exSubmissionCode + "', "
+        + "dx_code1 = '" + dxCode1 + "', "
+        + "dx_code2 = '" + dxCode2 + "', "
+        + "dx_code3 = '" + dxCode3 + "', "
+        + "dx_expansion = '" + dxExpansion + "', "
+        + "service_location = '" + serviceLocation + "', "
+        + "referral_flag1 = '" + referralFlag1 + "', "
+        + "referral_no1 = '" + referralNo1 + "', "
+        + "referral_flag2 = '" + referralFlag2 + "', "
+        + "referral_no2 = '" + referralNo2 + "', "
+        + "time_call = '" + timeCall + "', "
+        + "service_start_time = '" + serviceStartTime + "', "
+        + "service_end_time = '" + serviceEndTime + "', "
+        + "birth_date = '" + birthDate + "', "
+        + "correspondence_code = '" + correspondenceCode + "', "
+        + "claim_comment = '" + claimComment + "', "
+        + "original_claim = '" + originalMSPNumber + "',"
+        + "facility_no = '" + facilityNum + "',"
+        + "facility_sub_no = '" + facilitySubNum + "',"
+
+        + "oin_insurer_code = '" + oinInsurerCode + "', "
+        + "oin_registration_no = '" + UtilMisc.mysqlEscape(oinRegistrationNo) +
+        "', "
+        + "oin_birthdate = '" + UtilMisc.mysqlEscape(oinBirthdate) + "', "
+        + "oin_first_name = '" + UtilMisc.mysqlEscape(oinFirstName) + "', "
+        + "oin_second_name = '" + UtilMisc.mysqlEscape(oinSecondName) + "', "
+        + "oin_surname = '" + UtilMisc.mysqlEscape(oinSurname) + "', "
+        + "oin_sex_code = '" + UtilMisc.mysqlEscape(oinSexCode) + "', "
+        + "oin_address = '" + UtilMisc.mysqlEscape(oinAddress) + "', "
+        + "oin_address2 = '" + UtilMisc.mysqlEscape(oinAddress2) + "', "
+        + "oin_address3 = '" + UtilMisc.mysqlEscape(oinAddress3) + "', "
+        + "oin_address4 = '" + UtilMisc.mysqlEscape(oinAddress4) + "', "
+        + "oin_postalcode = '" + UtilMisc.mysqlEscape(oinPostalcode) + "'  "
+        + " where billingmaster_no  = '" + billingmasterNo + "'";
+
+    String providerSQL = "update billing set provider_no = '" + providerNo +
+        "' where billing_no ='" + frm.getBillNumber() + "'";
+
+    System.out.println("\n" + sql + "\n");
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL(sql);
+      db.RunSQL(providerSQL);
+
+      if(billingStatus!=null&&!"".equals(billingStatus)){
+        msp.updateBillingStatus(frm.getBillNumber(), billingStatus);
+      }
+      BillingHistoryDAO dao = new BillingHistoryDAO();
+      //If the adjustment amount field isn't empty, create an archive of the adjustment
+      if (frm.getAdjAmount() != null && !"".equals(frm.getAdjAmount())) {
+        double dblAdj = Math.abs(new Double(frm.getAdjAmount()).doubleValue());
+        //if 1 this adjustment is a debit
+        if("1".equals(frm.getAdjType())){
+          dblAdj = dblAdj*-1.0;
         }
-        return sdate;
-    }
-    public String constructOriginalMSPNumber(String dataCenterNum, String seqNum, String dateRecieved){
-       String retval = "";
+        dao.createBillingHistoryArchive(frm.getBillingmasterNo(), dblAdj, MSPReconcile.PAYTYPE_IA);
+      }
+      else {
+        dao.createBillingHistoryArchive(billingmasterNo);
+      }
+      if (secondSQL != null) {
+        System.out.println(secondSQL);
+        db.RunSQL(secondSQL);
+      }
 
-       retval = misc.forwardZero(dataCenterNum, 5)+misc.forwardZero(seqNum,7)+misc.forwardZero(dateRecieved, 8);
-       return retval;
+      if (correspondenceCode.equals("N") || correspondenceCode.equals("B")) {
+        MSPBillingNote n = new MSPBillingNote();
+        n.addNote(billingmasterNo,
+                  (String) request.getSession().getAttribute("user"),
+                  frm.getNotes());
+      }
+
+      if (messageNotes != null) {
+        BillingNote n = new BillingNote();
+        if (n.hasNote(billingmasterNo) || !messageNotes.trim().equals("")) {
+          n.addNote(billingmasterNo,
+                    (String) request.getSession().getAttribute("user"),
+                    messageNotes);
+        }
+      }
+
+      db.CloseConn();
     }
+    catch (SQLException e3) {
+      System.out.println(e3.getMessage());
+    }
+
+    request.setAttribute("billing_no", billingmasterNo);
+    if (submit.equals("Reprocess and Resubmit Bill")) {
+      request.setAttribute("close", "true");
+    }
+    return mapping.findForward("success");
+  }
+
+  /**
+   * @todo THis belongs in a utility class
+   * @param s String
+   * @return String
+   */
+  public String convertDate8Char(String s) {
+    String sdate = "00000000", syear = "", smonth = "", sday = "";
+    System.out.println("s=" + s);
+    if (s != null) {
+
+      if (s.indexOf("-") != -1) {
+
+        syear = s.substring(0, s.indexOf("-"));
+        s = s.substring(s.indexOf("-") + 1);
+        smonth = s.substring(0, s.indexOf("-"));
+        if (smonth.length() == 1) {
+          smonth = "0" + smonth;
+        }
+        s = s.substring(s.indexOf("-") + 1);
+        sday = s;
+        if (sday.length() == 1) {
+          sday = "0" + sday;
+        }
+
+        System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+        sdate = syear + smonth + sday;
+
+      }
+      else {
+        sdate = s;
+      }
+      System.out.println("sdate:" + sdate);
+    }
+    else {
+      sdate = "00000000";
+
+    }
+    return sdate;
+  }
+
+  public String constructOriginalMSPNumber(String dataCenterNum, String seqNum,
+                                           String dateRecieved) {
+    String retval = "";
+
+    retval = misc.forwardZero(dataCenterNum, 5) + misc.forwardZero(seqNum, 7) +
+        misc.forwardZero(dateRecieved, 8);
+    return retval;
+  }
 
 }
-
