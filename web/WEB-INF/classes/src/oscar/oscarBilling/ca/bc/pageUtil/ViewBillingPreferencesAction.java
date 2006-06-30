@@ -32,6 +32,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.Action;
 import oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO;
 import oscar.oscarBilling.ca.bc.data.BillingPreference;
+import java.util.*;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 /**
  * Forwards flow of control to Billing Preferences Screen
@@ -43,19 +45,28 @@ public class ViewBillingPreferencesAction
                                ActionForm actionForm,
                                HttpServletRequest servletRequest,
                                HttpServletResponse servletResponse) {
-    String providerNo = servletRequest.getParameter("provider_no");
     BillingPreferencesActionForm frm = (
         BillingPreferencesActionForm) actionForm;
     BillingPreferencesDAO dao = new BillingPreferencesDAO();
-    BillingPreference pref = dao.getUserBillingPreference(providerNo);
+    BillingPreference pref = dao.getUserBillingPreference(frm.getProviderNo());
     //If the user doesn't have a BillingPreference record create one
-    if(pref==null){
+    if (pref == null) {
       pref = new BillingPreference();
-      pref.setProviderNo(new Integer(providerNo).intValue());
+      pref.setProviderNo(Integer.parseInt(frm.getProviderNo()));
       dao.saveUserPreferences(pref);
     }
     frm.setReferral(String.valueOf(pref.getReferral()));
-    frm.setProviderNo(providerNo);
+    frm.setPayeeProviderNo(String.valueOf(pref.getDefaultPayeeNo()));
+    servletRequest.setAttribute("providerList",this.getPayeeProviderList());
     return actionMapping.findForward("success");
+  }
+
+  /**
+   * Returns a List of Provider instances
+   * @return List
+   */
+  public List getPayeeProviderList() {
+    MSPReconcile rec = new MSPReconcile();
+    return rec.getAllProviders();
   }
 }
