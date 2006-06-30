@@ -36,6 +36,7 @@ public class BillingPreference {
    */
   private int referral = 1;
   private int providerNo;
+  private int defaultPayeeNo = 0;
   public BillingPreference() {
   }
 
@@ -49,13 +50,22 @@ public class BillingPreference {
     this.providerNo = providerNo;
   }
 
+  public void setDefaultPayeeNo(int defaultPayeeNo) {
+
+    this.defaultPayeeNo = defaultPayeeNo;
+  }
+
   public int getReferral() {
 
     return referral;
   }
 
   public int getProviderNo() {
-
     return providerNo;
+  }
+
+  public int getDefaultPayeeNo() {
+
+    return defaultPayeeNo;
   }
 }
