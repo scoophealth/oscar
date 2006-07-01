@@ -72,7 +72,7 @@ public class BillingPreferencesDAO {
       }
       else {
         String insertSQL =
-            "insert into billing_preferences(referral,providerNo,defaultProviderNo) values(" +
+            "insert into billing_preferences(referral,providerNo,defaultPayeeNo) values(" +
             pref.getReferral() + "," + pref.getProviderNo() + "," + pref.getDefaultPayeeNo() + ")";
         db.RunSQL(insertSQL);
       }
