@@ -297,15 +297,12 @@ public class MSPReconcile {
   //
   public String getS00String(String billingMasterNo) {
     String s = "";
-    int i = 0;
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
       String sql =
-          "SELECT teleplanS00.t_exp1,teleplanS00.t_exp1,teleplanS00.t_exp2,teleplanS00.t_exp3,teleplanS00.t_exp4,teleplanS00.t_exp5,teleplanS00.t_exp6,teleplanS00.t_exp7 FROM teleplanS00, billingmaster " +
-          "where t_officeno = billingmaster_no " +
-          "and billingmaster_no  = '" + billingMasterNo + "'";
-
+          "SELECT teleplanS00.t_exp1,teleplanS00.t_exp1,teleplanS00.t_exp2,teleplanS00.t_exp3,teleplanS00.t_exp4,teleplanS00.t_exp5,teleplanS00.t_exp6,teleplanS00.t_exp7 FROM teleplanS00 " +
+          "where t_officeno = '" + forwardZero(billingMasterNo,7) + "'";
       ResultSet rs = db.GetSQL(sql);
       while (rs.next()) {
         String exp[] = new String[7];
@@ -317,17 +314,12 @@ public class MSPReconcile {
         exp[5] = rs.getString("t_exp6");
         exp[6] = rs.getString("t_exp7");
         s = createCorrectionsString(exp);
-        i++;
       }
       rs.close();
       db.CloseConn();
     }
     catch (Exception e) {
       e.printStackTrace();
-    }
-    if (i > 1) {
-      System.out.println(" billingNo " + billingMasterNo + " had " + i +
-                         "rows in the table");
     }
     return s;
   }
@@ -976,12 +968,11 @@ public class MSPReconcile {
     String historyQry =
         "select  sum(amount_received) from billing_history where billingmaster_no = " +
         billingmaster_no;
-    List historyAmounts = SqlUtils.getQueryResultsList(historyQry);
-    if (historyAmounts != null && !historyAmounts.isEmpty()) {
-      String[] histAmount = (String[]) historyAmounts.get(0);
+    String[] histAmount = SqlUtils.getRow(historyQry);
+    if (histAmount != null && histAmount.length > 0) {
       if (StringUtils.isNumeric(histAmount[0])) {
         double dblHistAmt = new Double(histAmount[0]).doubleValue();
-        retval += dblHistAmt;
+        retval = dblHistAmt;
       }
     }
     return retval;
@@ -1506,7 +1497,9 @@ public class MSPReconcile {
     System.out.println("p=" + p);
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
+
       rs = db.GetSQL(p);
+
       while (rs.next()) {
         MSPBill b = new MSPBill();
         b.billingtype = rs.getString("b.billingtype");
@@ -1539,30 +1532,24 @@ public class MSPReconcile {
         b.apptDoctorNo = rs.getString("apptProvider_no");
         b.accountNo = rs.getString("b.provider_no");
         b.updateDate = rs.getString("update_date");
-        b.accountName = this.getProvider(b.accountNo, 0).getFullName();
-        b.acctInit = this.getProvider(b.accountNo, 0).getInitials();
-        b.payeeName = this.getProvider(b.payeeNo, 0).getInitials();
+
+        oscar.entities.Provider accountProvider = this.getProvider(b.accountNo,0);
+        b.accountName = accountProvider.getFullName();
+        b.payeeName = accountProvider.getInitials();
         b.providerFirstName = rs.getString("first_name");
         b.providerLastName = rs.getString("last_name");
         b.provName = this.getProvider(b.apptDoctorNo, 1).getInitials();
 
         // WCB SECTION ---------------------------------------------------------
         if (b.isWCB()) {
-          ResultSet rs2 = null;
-          try {
-            rs2 = db.GetSQL("select * from wcb where billing_no = '" +
-                            b.billing_no + "'");
-            if (rs2.next()) {
-              b.amount = rs2.getString("bill_amount");
-              b.code = rs2.getString("w_feeitem");
-              b.dx1 = rs2.getString("w_icd9");
-            }
-          }
-          catch (SQLException ex) {
-            ex.printStackTrace();
-          }
-          finally {
-            rs2.close();
+          String wcbQry =
+              "select bill_amount,w_feeitem,w_icd9 from wcb where billing_no = '" +
+              b.billing_no + "'";
+          String[] wcbRow = SqlUtils.getRow(wcbQry);
+          if (wcbRow != null) {
+            b.amount = wcbRow[0];
+            b.code = wcbRow[1];
+            b.dx1 = wcbRow[2];
           }
         }
         // REJECTED SECTION ---------------------------------------------------------
@@ -1604,7 +1591,7 @@ public class MSPReconcile {
               c12.getProperty(b.billing_no) : "";
           b.reason += " " + expString;
           if ("E".equals(b.status)) {
-            b.adjustmentCode = this.getS00String(b.billMasterNo);
+            b.adjustmentCode = b.expString;
           }
           else {
             b.adjustmentCode = "";
@@ -1662,6 +1649,7 @@ public class MSPReconcile {
    */
   public String getAmountOwing(String billingMasterNo, String amountBilled,
                                String billingType) {
+
     DBHandler db = null;
     ResultSet rs = null;
     amountBilled = (amountBilled != null && !amountBilled.equals("")) ?
@@ -1672,9 +1660,9 @@ public class MSPReconcile {
     double totalPaidFromS00 = 0.0;
     if (!this.BILLTYPE_PRI.equalsIgnoreCase(billingType)) {
       //bills of type msp,icbc,wcb
-      String qry = "SELECT t_paidamt,t_exp1 from teleplanS00,billingmaster " +
-          " where teleplanS00.t_officeno = billingmaster.billingmaster_no " +
-          " and billingmaster.billingmaster_no = " + billingMasterNo;
+      String qry = "SELECT t_paidamt,t_exp1 from teleplanS00" +
+          " where teleplanS00.t_officeno =  '" +
+          this.forwardZero(billingMasterNo, 7) + "'";
       try {
         db = new DBHandler(DBHandler.OSCAR_DATA);
         rs = db.GetSQL(qry);
