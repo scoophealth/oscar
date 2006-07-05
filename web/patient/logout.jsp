@@ -33,7 +33,6 @@
       //System.out.println("user : " +user);
       //hash.remove(user);
       session.invalidate();
-      request.getSession();
     }
   }
   response.sendRedirect("../oscar_pts.html");

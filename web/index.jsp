@@ -28,13 +28,15 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<caisi:isModuleLoad moduleName="ticklerplus"><%
-if(session.getValue("user") != null) {
+
+<%@ taglib uri="/WEB-INF/plugin-tag.tld" prefix="plugin" %>
+<plugin:hideWhenCompExists componentName="ticklerComp" reverse="true">
+<%	if(session.getValue("user") != null) {
 		response.sendRedirect("provider/providercontrol.jsp");
 	}
-%></caisi:isModuleLoad><%
+%>
+</plugin:hideWhenCompExists>
+<%
     String propFile = request.getContextPath().substring(1)+".properties";
     String sep = System.getProperty("file.separator");
     String propFileName = System.getProperty("user.home")+sep+propFile;
@@ -108,11 +110,7 @@ if(session.getValue("user") != null) {
           </tr>
 	  <tr>
             <td align="left">
-              <bean:message key="loginApplication.formUserName"/><%
-              if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled() && !net.sf.cookierevolver.CRFactory.getManager().isMachineIdentified(request)){
-				%><img src="gatekeeper/appid/?act=image&/empty<%=System.currentTimeMillis() %>.gif" width='1' height='1'><%
-				}
-			  %><br/>
+              <bean:message key="loginApplication.formUserName"/><br/>
               <html:text property="username" size="15" maxlength="15"/>
             </td>
 	  </tr>
@@ -143,7 +141,7 @@ if(session.getValue("user") != null) {
           </tr>
 		  <input type=hidden name='propname' value='<bean:message key="loginApplication.propertyFile"/>' />
         </html:form>
-   </table>
+      </table>
   <p>
       <hr width="100%" color="navy">
   <table border="0" width="100%">
@@ -159,18 +157,8 @@ if(session.getValue("user") != null) {
     <td align="center">
       <!--right column-->
       <table border=0 width='100%' cellpadding="3">
-      <tr>
-      <td align="right">
-<%if (org.caisi.common.IsPropertiesOn.isCaisiEnable()) { %>
-<%
- String verno=org.caisi.comp.FrameworkFactory.getFramework().getComponent("rootComp").getComponent().getVersion();
-%>
-<font size="-2" color="#C0C0C0">CAISI-OSCAR version <%=verno %></font>&nbsp&nbsp&nbsp&nbsp
-          <html:link page="/versionDetail.jsp" target="_blank"><font size="-2" color="#C0C0C0">build version</font></html:link>
-<%}else{ %>
-
+      <tr><td align="right">
           <font size="-2" color="#C0C0C0">build date: <%= buildDate %></font>
-<%} %>
       </td></tr>
       <tr bgcolor='gold'><td>
       <center><font size="+1"><b><%=props.getProperty("logintitle", "")%>

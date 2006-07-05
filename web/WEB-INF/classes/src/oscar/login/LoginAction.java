@@ -30,7 +30,6 @@ import org.apache.struts.action.ActionMapping;
 import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
-import oscar.oscarSecurity.CRHelper;
 import oscar.util.AlertTimer;
 import oscar.OscarProperties;
 
@@ -133,10 +132,6 @@ public final class LoginAction
         session.setAttribute("endhour", strPreferAuth[1]);
         session.setAttribute("everymin", strPreferAuth[2]);
         session.setAttribute("groupno", strPreferAuth[3]);
-        if (org.caisi.common.IsPropertiesOn.isCaisiEnable())
-        	session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
-        
-        
       }
 
       if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view
@@ -160,7 +155,6 @@ public final class LoginAction
           AlertTimer.getInstance(alertCodes,longFreq.longValue());
        }
       }
-      CRHelper.recordLoginSuccess(userName,strAuth[0],request);
 
       // expired password
     }
@@ -176,7 +170,6 @@ public final class LoginAction
       //request.setAttribute("login", "failed");
       //LogAction.addLog(userName, "failed", LogConst.CON_LOGIN, "", ip);
       cl.updateLoginList(ip, userName);
-      CRHelper.recordLoginFailure(userName,request);
       return mapping.findForward(where);
     }
 

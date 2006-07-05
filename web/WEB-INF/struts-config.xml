@@ -2,19 +2,6 @@
 <!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
 <struts-config>
   <form-beans>
-  	<!-- caisi core -->
-  	<form-bean name="systemMessageForm"
-			type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="system_message"
-				type="org.caisi.model.SystemMessage" />
-		</form-bean>
-		<form-bean name="roleForm"
-			type="org.apache.struts.validator.DynaValidatorForm">
-		</form-bean>
-		<form-bean name="inputForm"
-			type="org.apache.struts.validator.LazyValidatorForm">
-		</form-bean>
-    <!-- login form bean -->
     <form-bean name="loginForm" type="oscar.login.LoginForm" />
     <form-bean name="msgSendMessageForm" type="oscar.oscarMessenger.pageUtil.MsgSendMessageForm" />
     <form-bean name="msgCreateMessageForm" type="oscar.oscarMessenger.pageUtil.MsgCreateMessageForm" />
@@ -169,15 +156,6 @@
     <form-bean name="receivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.ReceivePaymentActionForm" />
     <form-bean name="billingPreferencesActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingPreferencesActionForm" />
     <form-bean name="supServiceCodeAssocActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocActionForm" />
-		<form-bean name="ticklerForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="tickler" type="org.caisi.model.Tickler"/>
-			<form-property name="filter" type="org.caisi.model.CustomFilter"/>
-		</form-bean>
-		<form-bean name="customFilterForm" type="org.apache.struts.validator.DynaValidatorForm">
-			<form-property name="filter" type="org.caisi.model.CustomFilter"/>
-		</form-bean>
-		<form-bean name="unreadTicklerForm"
-			type="org.apache.struts.validator.LazyValidatorForm" />
   </form-beans>
   <global-forwards>
     <forward name="Logout" path="/logout.jsp" redirect="true" />
@@ -185,32 +163,6 @@
     <forward name="failure" path="/failure.jsp" redirect="true" />
   </global-forwards>
   <action-mappings>
-  	<!-- caisi core action -->
-  	<action path="/SystemMessage"
-			type="org.springframework.web.struts.DelegatingActionProxy"
-			parameter="method" scope="request" name="systemMessageForm"
-			input="/caisicore/SystemMessageForm.jsp" validate="false">
-			<forward name="view" path="/caisicore/SystemMessage.jsp" />
-			<forward name="list" path="/caisicore/SystemMessageList.jsp" />
-			<forward name="edit" path="/caisicore/SystemMessageForm.jsp" />
-		</action>
-
-		<!-- action path="/CaisiRoleAssigner"
-			type="org.springframework.web.struts.DelegatingActionProxy"
-			parameter="method" scope="request">
-			<forward name="list" path="/caisicore/CaisiRoleList.jsp" />
-		</action-->
-
-		<action path="/CaisiRole"
-			type="org.springframework.web.struts.DelegatingActionProxy"
-			parameter="method" scope="session" name="inputForm">
-			<forward name="edit" path="/caisicore/CaisiRoleForm.jsp" />
-		</action>
-
-		<action path="/infirm" type="org.caisi.core.web.InfirmAction"
-			name="inputForm" scope="request" parameter="action">
-		</action>
-    <!-- Login -->
     <action input="/login.jsp" name="loginForm" path="/login" scope="request" type="oscar.login.LoginAction" validate="true">
       <forward name="receptionist" path="/receptionist/receptionistcontrol.jsp" redirect="true" />
       <forward name="provider" path="/provider/providercontrol.jsp" redirect="true" />
@@ -967,7 +919,7 @@
       <forward name="success" path="/billing/CA/BC/receivePayment.jsp" />
     </action>
     <action name="billingPreferencesActionForm" path="/billing/CA/BC/saveBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveBillingPreferencesAction" validate="false">
-      <forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
+      <forward name="success" path="/billing/CA/BC/viewBillingPreferencesAction.do" />
     </action>
     <action input="/billing/CA/BC/billingPreferences.jsp" name="billingPreferencesActionForm" path="/billing/CA/BC/viewBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewBillingPreferencesAction" validate="false">
       <forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
@@ -976,66 +928,7 @@
       <forward name="success" path="/billing/CA/BC/billingSVCTrayAssoc.jsp">
       </forward>
     </action>
- 			<action path="/Tickler"
-				type="org.springframework.web.struts.DelegatingActionProxy"
-				parameter="method"
-				scope="session"
-				name="ticklerForm"
-				input="/ticklerPlus/ticklerForm.jsp"
-				validate="false"
-			>
-				<forward name="list" path="/ticklerPlus/ticklerList.jsp"/>
-				<forward name="view" path="/ticklerPlus/ticklerView.jsp"/>
-				<forward name="edit" path="/ticklerPlus/ticklerForm.jsp"/>
-				<forward name="preparedTicklerList" path="/ticklerPlus/preparedTicklerList.jsp"/>
-			</action>
-			
-			<action path="/CustomFilter"
-				type="org.springframework.web.struts.DelegatingActionProxy"
-				parameter="method"
-				scope="request"
-				name="customFilterForm"
-				input="/ticklerPlus/customFilterForm.jsp"
-				validate="false"
-			>
-				<forward name="customFilterList" path="/ticklerPlus/customFilterList.jsp"/>
-				<forward name="customFilterForm" path="/ticklerPlus/customFilterForm.jsp"/>
-			</action>  
 
- 			<action path="/UnreadTickler"
-				type="org.springframework.web.struts.DelegatingActionProxy"
-				parameter="method"
-				scope="request"
-				name="unreadTicklerForm"
-				input="/ticklerPlus/loginUnreadTickler.jsp"
-				validate="false"
-			>
-				<forward name="error" path="/loginfailed.jsp"/>
-				<forward name="view" path="/ticklerPlus/viewUnreadTicklers.jsp"/>
-				<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp"/>
-			</action>
   </action-mappings>
-  <controller
-		processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
   <message-resources parameter="oscarResources" />
-  	<plug-in className="org.apache.struts.tiles.TilesPlugin">
-
-		<!-- Path to XML definition file -->
-		<set-property property="definitions-config"
-			value="/WEB-INF/tiles-defs.xml" />
-		<!-- Set Module-awareness to true -->
-		<set-property property="moduleAware" value="true" />
-	</plug-in>
-	
-  	<plug-in className="org.caisi.common.web.CaisiSpringPlugin">
-		<set-property property="contextConfigLocation"
-			value="/WEB-INF/applicationContext.xml,/WEB-INF/action-servlet.xml"/>
-	</plug-in>
-	
-	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
-		<set-property property="pathnames"
-			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
-	</plug-in>
-	
-	
 </struts-config>

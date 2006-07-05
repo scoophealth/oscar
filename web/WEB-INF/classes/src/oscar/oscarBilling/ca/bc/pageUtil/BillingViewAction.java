@@ -1,3 +1,4 @@
+
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -27,9 +28,13 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import org.apache.struts.action.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDemographic.data.*;
+import oscar.util.*;
+import oscar.entities.Provider;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public final class BillingViewAction
     extends Action {
@@ -107,15 +112,35 @@ public final class BillingViewAction
       frm.setPaymentMethod(bean.getPaymentMethod());
       request.getSession().setAttribute("billingViewBean", bean);
       ActionForward actionForward = mapping.findForward("success");
-
       String receipt = request.getParameter("receipt");
       if (receipt != null && receipt.equals("yes")) {
-        System.out.println("forwarding to receipt");
+        Provider p = getPreferredPayeeProvider(bean.getBillingProvider());
+        bean.setDefaultPayeeFirstName(p.getFirstName());
+        bean.setDefaultPayeeLastName(p.getLastName());
         actionForward = mapping.findForward("private");
       }
+
 
       return actionForward;
     }
   }
 
+  /**
+   * Returns a Provider instance which represents the default payee for a providers bills
+   * according to the specified user preference. If the user doesn't have a default payee
+   * an instance with empty fields is returned
+   * @param userProviderNo String
+   * @return Provider
+   */
+  public Provider getPreferredPayeeProvider(String userProviderNo){
+    Provider p = new Provider();
+    BillingPreferencesDAO dao = new BillingPreferencesDAO();
+    BillingPreference pref = dao.getUserBillingPreference(userProviderNo);
+
+    if(pref != null){
+      MSPReconcile msp = new MSPReconcile();
+      p = msp.getProvider(String.valueOf(pref.getDefaultPayeeNo()),0);
+    }
+    return p;
+  }
 }

@@ -81,8 +81,23 @@
   int curMonth = (now.get(Calendar.MONTH)+1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
 
-%>
+  String codes[] = {"O","P","N","X","T"};
+  List statusTypes = billform.getStatusTypes(codes);
+  request.setAttribute("statusTypes",statusTypes);
+  Properties statusTypeProps = getStatusProperties(billform.getStatusTypes(null));
 
+%>
+<%!
+public Properties getStatusProperties(List statusType){
+  Properties p = new Properties();
+  for (Iterator iter = statusType.iterator(); iter.hasNext(); ) {
+    oscar.entities.BillingStatusType item = (oscar.entities.BillingStatusType) iter.next();
+    p.setProperty(item.getBillingstatus(),item.getDisplayNameExt());
+  }
+  return p;
+}
+
+%>
 <!--
 /*
  *
@@ -238,7 +253,7 @@ function showRecord(){
 function validateNum(el){
    var val = el.value;
    var tval = ""+val;
-   if (isNaN(val)){   
+   if (isNaN(val)){
       alert("Item value must be numeric.");
       el.select();
       el.focus();
@@ -256,7 +271,7 @@ function validateNum(el){
       el.select();
       el.focus();
       return false;
-   }  
+   }
    return true;
 }
 
@@ -281,7 +296,7 @@ function popup( height, width, url, windowName){
 function popFeeItemList(form,field){
      var width = 575;
      var height = 400;
-	 
+
      var str = document.forms[form].elements[field].value;
      var url = '<rewrite:reWrite jspPage="support/billingfeeitem.jsp"/>'+'?form=' +form+ '&field='+field+'&feeField=billingAmount&corrections=1&searchStr=' +str;
      var windowName = field;
@@ -300,7 +315,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   }
 }
 
-    </script>
+
+</script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
 <style type="text/css">
@@ -423,7 +439,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 <table width="100%" border="0">
   <tr bgcolor="#CCCCFF">
      <td height="21" colspan="2" class="bCellData">Patient Information<input type="hidden" name ="billingmasterNo" value="<%=billNo%>" />
-	 
+
 	 <%
  if(BillType.equals("A")||BillType.equals("P")){
  %>
@@ -496,23 +512,21 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
   <tr>
     <td   class="bCellData">
-       Billing Type:
-      <input type="hidden" name="xml_status" value="<%=BillType%>">
-      <select style="font-size:80%;" name="status">
-                <option value="">--- Select Bill Type ---</option>
-      		<!--<option value="H" <%=BillType.equals("H")?"selected":""%>>H | Capitated</option>-->
-                <option value="O" <%=BillType.equals("O")?"selected":""%>>O | Bill MSP</option>
-                <option value="P" <%=BillType.equals("P")?"selected":""%>>P | Bill Patient</option>
-                <option value="N" <%=BillType.equals("N")?"selected":""%>>N | Do Not Bill</option>
-                <!--<option value="W" <%=BillType.equals("W")?"selected":""%>>W | Bill Worker's Compensation Board</option>-->
-                <option value="X" <%=BillType.equals("X")?"selected":""%>>X | Bad Debt</option>
-        
-                <option value="T" <%=BillType.equals("T")?"selected":""%>>T | Transfer to Collection</option>
 
-                
-     
-            
-      </select>
+      <input type="hidden" name="xml_status" value="<%=BillType%>">
+      <label>
+      Billing Type:
+     <%=statusTypeProps.getProperty(BillType)%>
+      </label>
+      <br />
+      <!-- This hardcoded section needs to go -->
+      <label>
+       Change Type:
+       <html:select styleId="status"  property="status" onchange="javascript:document.forms[0].xml_status.value = this.value;">
+              <html:options collection="statusTypes" property="billingstatus" labelProperty="displayNameExt"/>
+       </html:select>
+      </label>
+
     </td>
     <td   class="bCellData">
         <table>
@@ -650,17 +664,18 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
 <table width="100%" border=1>
   <tr bgcolor="#CCCCFF">
-    <td width="25%"  class="bCellData">Service Code</td>
+    <td class="bCellData">Service Code</td>
     <td width="50%"  class="bCellData">Description</td>
-    <td width="12%"  class="bCellData">Unit</td>
-    <td width="13%"  class="bCellData">
+    <td class="bCellData">Unit</td>
+    <td class="bCellData">
       <div align="right">$ Fee</div>
     </td>
+	<td class="bCellData">Internal Adj.</td>
   </tr>
 
     <tr>
       <td  class="bCellData">
-       
+
         <input type="text" style="font-size:80%;" name="service_code" value="<%=allFields.getProperty("billing_code")%>" size="10" >
 		 <input type="button" onClick="javascript:popFeeItemList('ReProcessBilling','service_code');return false;" value="Search/Update"/>
       </td>
@@ -677,6 +692,16 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
            <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingAmount" value="<%=allFields.getProperty("bill_amount")%>" onChange="javascript:validateNum(this)">
         </div>
       </td>
+	  <td>
+			<label>
+				Amount:
+			    <input name="adjAmount" type="text" size="7" maxlength="7">
+			</label>
+                        <label>
+                          <input type="checkbox"  name="adjType" value="1"/>
+                          debit
+                        </label>
+	  </td>
     </tr>
  </table>
  <table width="100%" border=1>
@@ -1321,4 +1346,6 @@ public String getDebitRequestDate (String str){
     String retval = str.substring(13);
     return retval;
 }
+
+
 %>

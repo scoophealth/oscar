@@ -26,7 +26,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 
 <%
@@ -56,10 +55,6 @@
   int startHour=Integer.parseInt(strStartHour.trim());
   int endHour=Integer.parseInt(strEndHour.trim());
   int everyMin=Integer.parseInt(strEveryMin.trim());
-  String n_t_w_w=null;
-  if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-  	n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
-  }
   boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
 %>
 <html>
@@ -73,11 +68,7 @@ function setfocus() {
 }
 function selectProvider(p,pn) {
 	  newGroupNo = p;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
-}else{
 	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
-}
 }
 
 function selectProviderCaisi(p,pn) {
@@ -144,9 +135,6 @@ function selectProviderCaisi(p,pn) {
 	  <%} %>
       <td><%=spnl%></td>
       <td><%=spnf%></td>
-<caisi:isModuleLoad moduleName="ticklerplus">
-      <input type="hidden" name="<%=sp%>_name" id="<%=sp%>_name" value="<%=new String(spnl+","+ spnf)%>"/>
-</caisi:IsModuleLoad>
     </tr>
 <%
     nItems++;
@@ -178,12 +166,7 @@ function selectProviderCaisi(p,pn) {
 <script language="JavaScript">
 <!--
   <%if(caisi) {%>
-  	var nodes = document.getElementsByName("<%=sp%>_name");
-  	var name = '';
-  	if(nodes.length == 1) {
-  		name = nodes[0].value;
-  	}
-  	selectProviderCaisi('<%=sp%>',name) ;
+  	selectProviderCaisi('<%=sp%>','') ;
   <%} else {%>
   selectProvider('<%=sp%>','') ;
   <%}%>

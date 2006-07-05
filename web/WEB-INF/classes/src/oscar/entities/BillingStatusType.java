@@ -22,50 +22,68 @@
  * Ontario, Canada
  */
 
-package oscar.oscarBilling.ca.bc.data;
+package oscar.entities;
 
 /**
- * Represents a user preferences in the Billing Module
+ * <p>Title:BillingStatusType </p>
+ *
+ * <p>Description: Represents a bill status type as defined by MSP</p>
+ *
  * @author not attributable
  * @version 1.0
  */
-public class BillingPreference {
+public class BillingStatusType {
+
   /**
-   * indicates the default display value in the Billing Screen
-   * May be one of thre values refer to = 1, refer from = 2 or neither = 3
+   * Single char MSP status code
    */
-  private int referral = 1;
-  private int providerNo;
-  private int defaultPayeeNo = 0;
-  public BillingPreference() {
+  private String billingstatus;
+
+  /**
+   * The textual description to be displayed in the view
+   */
+  private String displayName;
+
+  /**
+   * The rank number indicating the correct location of this instance in a sorted list
+   */
+  private Integer sortOrder;
+  private String displayNameExt;
+
+  public BillingStatusType() {
   }
 
-  public void setReferral(int referral) {
+  public void setBillingstatus(String billingstatus) {
 
-    this.referral = referral;
+    this.billingstatus = billingstatus;
   }
 
-  public void setProviderNo(int providerNo) {
-
-    this.providerNo = providerNo;
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
   }
 
-  public void setDefaultPayeeNo(int defaultPayeeNo) {
-
-    this.defaultPayeeNo = defaultPayeeNo;
+  public void setSortOrder(Integer sortOrder) {
+    this.sortOrder = sortOrder;
   }
 
-  public int getReferral() {
-
-    return referral;
+  public void setDisplayNameExt(String displayNameExt) {
+    this.displayNameExt = displayNameExt;
   }
 
-  public int getProviderNo() {
-    return providerNo;
+  public String getBillingstatus() {
+
+    return billingstatus;
   }
 
-  public int getDefaultPayeeNo() {
+  public String getDisplayName() {
+    return displayName;
+  }
 
-    return defaultPayeeNo;
+  public Integer getSortOrder() {
+    return sortOrder;
+  }
+
+  public String getDisplayNameExt() {
+    return displayNameExt;
   }
 }

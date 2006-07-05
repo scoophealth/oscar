@@ -53,6 +53,7 @@ public class BillingCreateBillingAction
 
     BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
     bmanager.setBillTtype(frm.getXml_billtype());
+
     /**
      * This service list is not necessary
      */

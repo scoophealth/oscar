@@ -26,7 +26,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 
 <%
@@ -56,11 +55,6 @@
   int startHour=Integer.parseInt(strStartHour.trim());
   int endHour=Integer.parseInt(strEndHour.trim());
   int everyMin=Integer.parseInt(strEveryMin.trim());
-  String n_t_w_w=null;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-  n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
-}
-  boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
 %>
 <html>
 <head>
@@ -73,15 +67,7 @@ function setfocus() {
 }
 function selectProvider(p,pn) {
 	  newGroupNo = p;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
-}else this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
-}
-
-function selectProviderCaisi(p,pn) {
-	opener.document.ticklerForm.elements['tickler.task_assigned_to_name'].value=pn;
-	opener.document.ticklerForm.elements['tickler.task_assigned_to'].value=p;
-	self.close();
+	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
 }
 
 </SCRIPT>
@@ -136,11 +122,7 @@ function selectProviderCaisi(p,pn) {
 %>    
     <tr bgcolor="<%=bColor?bgcolordef:"white"%>"> 
       <td>
-      <%if(caisi) { %>
-	      <a href=# onClick="selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>')"><%=sp%></a></td>
-	  <%} else { %>
       <a href=# onClick="selectProvider('<%=sp%>','<%=URLEncoder.encode(spnl+", "+spnf)%>')"><%=sp%></a></td>
-	  <%} %>
       <td><%=spnl%></td>
       <td><%=spnf%></td>
     </tr>
@@ -156,11 +138,7 @@ function selectProviderCaisi(p,pn) {
 %>    
     <tr bgcolor="#CCCCFF"> 
       <td colspan='3'>
-      <%if(caisi) { %>
-      <a href=# onClick="selectProviderCaisi('<%=sp%>','')"><%=sp%></a></td>
-      <%} else { %>
       <a href=# onClick="selectProvider('<%=sp%>','')"><%=sp%></a></td>
-      <%} %>
     </tr>
 <%
       nItems++;
@@ -173,11 +151,7 @@ function selectProviderCaisi(p,pn) {
 %> 
 <script language="JavaScript">
 <!--
-  <%if(caisi) {%>
-  	selectProviderCaisi('<%=sp%>','<%=spnl+", "+spnf%>') ;
-  <%} else {%>
   selectProvider('<%=sp%>','') ;
-  <%}%>
 //-->
 </SCRIPT>
 <%

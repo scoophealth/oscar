@@ -24,7 +24,6 @@
  */
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -51,40 +50,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 
 <%
-String [][] dbOperation=null;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-  dbOperation=new String[][] {
-   {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
-  {"searchappointmentday", "select appointment_no, provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "},
-    {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
-    {"searchmygroupsubcount", "select count(provider_no) from mygroup where mygroup_no=? and vieworder like ?"},
-    {"searchmygroupprovider", "select provider_no, last_name, first_name, vieworder from mygroup where mygroup_no=? order by vieworder, first_name"},
-    {"searchmygroupsubprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? and vieworder like ? order by vieworder, first_name"},
-    {"searchmygroupall", "select * from mygroup order by mygroup_no"},
-//    {"searchmygroupsub", "select * from mygroup order by ? and vieworder like ?"},
-    {"searchmygroupno", "select mygroup_no from mygroup group by mygroup_no order by mygroup_no"},
-    {"upgradegroupmember", "update mygroup set vieworder = ? where mygroup_no=? and provider_no=?"},
-    {"deletegroupmember", "delete from mygroup where mygroup_no=? and provider_no=?"},
-    {"savemygroup", "insert into mygroup (mygroup_no,provider_no,last_name,first_name) values(?,?,?,?)" },
-    {"searchprovider", "select provider_no, last_name, first_name from provider where provider_type='doctor' and status='1' order by last_name"},
-    {"searchallprovider", "select * from provider where status='1' order by last_name"},
-    {"updateapptstatus", "update appointment set status=? where appointment_no=? "},
-    {"updatepreference", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, color_template=?,new_tickler_warning_window=? where provider_no=? "},
-    {"add_preference", "insert into preference (provider_no, start_hour, end_hour, every_min, mygroup_no, color_template, new_tickler_warning_window) values (?, ?, ?, ?, ?, ?, ?)"},
-
-    {"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },
-    {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? order by sdate, reason" },
-    {"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? order by sdate" },
-    {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" },
-
-    {"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
-    {"search_timecode", "select * from scheduletemplatecode order by code"},
-    {"search_resource_baseurl", "select * from property where name = ?"},
-
-    {"search_numgrpscheduledate", "select count(scheduledate.provider_no) from mygroup, scheduledate where mygroup_no = ? and scheduledate.sdate=? and mygroup.provider_no=scheduledate.provider_no and scheduledate.available = '1' "},
-  };
-}else{
-	dbOperation=new String[][] {
+  String [][] dbOperation=new String[][] {
    {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
   {"searchappointmentday", "select appointment_no, provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "},
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
@@ -115,7 +81,6 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     {"search_numgrpscheduledate", "select count(scheduledate.provider_no) from mygroup, scheduledate where mygroup_no = ? and scheduledate.sdate=? and mygroup.provider_no=scheduledate.provider_no and scheduledate.available = '1' "},
   };
 
-}
   //associate each operation with an output JSP file -- displaymode
   String[][] toFile=new String[][] {
     {"day" , "appointmentreceptionistadminday.jsp"},

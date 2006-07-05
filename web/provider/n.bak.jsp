@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 -->
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+
 <%
   if(session.getValue("user") == null || !((String) session.getValue("userprofession")).equalsIgnoreCase("doctor"))
     response.sendRedirect("../logout.jsp");
@@ -31,7 +31,7 @@
 	//if(request.getHeader("User-Agent").indexOf("MSIE")==-1) //not IE, see different pages
 	//	response.sendRedirect("../hlp.html");
 
-  String curUser_no,userfirstname,userlastname, userprofession, mygroupno, n_t_w_w="";
+  String curUser_no,userfirstname,userlastname, userprofession, mygroupno;
   curUser_no = (String) session.getAttribute("user");
   mygroupno = (String) session.getAttribute("groupno");  
   userfirstname = (String) session.getAttribute("userfirstname");
@@ -40,10 +40,6 @@
   int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
   int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
   int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-  n_t_w_w= (String) session.getAttribute("newticklerwarningwindow");
-  System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+n_t_w_w);
-}
   int view=0;
   int lenLimitedL=11, lenLimitedS=3;
   int len = lenLimitedL;
@@ -126,9 +122,7 @@ function onUnbilled(url) {
 }
 function changeGroup(s) {
 	var newGroupNo = s.options[s.selectedIndex].value;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
-}else popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 }
 function ts1(s) {
   popupPage(360,680,('../appointment/addappointment.jsp?'+s));
@@ -197,9 +191,7 @@ function tsr(s) {
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../lab/lablinks.htm');return false;" TITLE='View lab reports'>Lab</a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-<caisi:isModuleLoad moduleName="ticklerplus">
-         <a href=# onClick ="popupPage(200,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=n_t_w_w%>');return false;" TITLE='Edit your personal setting' OnMouseOver="window.status='Edit your personal setting' ; return true">Preference</a></font></td>
-</caisi:isModuleLoad>
+         <a href=# onClick ="popupPage(200,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='Edit your personal setting' OnMouseOver="window.status='Edit your personal setting' ; return true">Preference</a></font></td>
         <td></td>
       </tr><tr>
         <td valign="bottom"><img src="../images/tabs_l_active_end_alone.gif" width="14" height="20" border="0"></td>

@@ -27,21 +27,17 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/msg-tag.tld" prefix="oscarmessage" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.sql.*,oscar.*" errorPage="errorpage.jsp" %>
 
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
-  String curUser_no, curProvider_no,userfirstname,userlastname, mygroupno,n_t_w_w="";
+  String curUser_no, curProvider_no,userfirstname,userlastname, mygroupno;
   curProvider_no = (String) session.getAttribute("user");
 
   curUser_no = (String) session.getAttribute("user");
   userfirstname = (String) session.getAttribute("userfirstname");
   userlastname = (String) session.getAttribute("userlastname");
   mygroupno = (String) session.getAttribute("groupno");  
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-  n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
-}
   int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
   int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
   int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
@@ -185,14 +181,10 @@ window.open(page, "Popup", windowprops);
 function selectprovider(s) {
   if(s.options[s.selectedIndex].value.indexOf("_grp_")!=-1 ) {
 	  var newGroupNo = s.options[s.selectedIndex].value.substring(5) ;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
-}else popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+	  popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
   } else {
 	  var newGroupNo = s.options[s.selectedIndex].value ;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
-}else popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+	  popupPage(10,10, "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 	}
 
 }
@@ -233,12 +225,7 @@ function refresh1() {
          <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=userfirstname%>%20<%=userlastname%>')">
          <oscarmessage:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-		<caisi:isModuleLoad moduleName="ticklerplus">
-         <a href=# onClick ="popupPage(200,680,'receptionistpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=n_t_w_w%>');return false;"><bean:message key="receptionist.appointmentrecepcionistmonth.btnPref"/></a></font></td>
-		</caisi:IsModuleLoad>
-		<caisi:isModuleLoad moduleName="ticklerplus"  reverse="true">
          <a href=# onClick ="popupPage(200,680,'receptionistpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;"><bean:message key="receptionist.appointmentrecepcionistmonth.btnPref"/></a></font></td>
-		</caisi:IsModuleLoad>
         <td></td>
       </tr><tr>
         <td valign="bottom"><img src="../images/tabs_l_inactive_end.gif" width="14" height="20" border="0"></td>

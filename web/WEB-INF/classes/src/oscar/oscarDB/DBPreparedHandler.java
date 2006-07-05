@@ -161,37 +161,6 @@ public class DBPreparedHandler  {
     rs = preparedStmt.executeQuery();
     return (rs);
   }
- 
-  synchronized public Object[] queryResultsCaisi(String preparedSQL, int param) throws SQLException {
-	    preparedStmt = conn.prepareStatement(preparedSQL);
-	    preparedStmt.setInt(1, param);
-	    rs=preparedStmt.executeQuery();
-	    return new Object[] {rs, preparedStmt};
-  }
-  
-  synchronized public Object[] queryResultsCaisi(String preparedSQL, String param) throws SQLException {
-	    preparedStmt = conn.prepareStatement(preparedSQL);
-	    preparedStmt.setString(1, param);
-	    rs=preparedStmt.executeQuery();
-	    return new Object[]{rs, preparedStmt};
-  }
-  
-  synchronized public Object[] queryResultsCaisi(String preparedSQL, String[] param) throws SQLException {
-	    preparedStmt = conn.prepareStatement(preparedSQL);
-	    for(int i=0;i<param.length;i++) {
-	      preparedStmt.setString((i+1), param[i]);
-	    }
-	    rs = preparedStmt.executeQuery();
-	    return new Object[]{rs,preparedStmt};
-  }
-	    
-  synchronized public Object[] queryResultsCaisi(String preparedSQL) throws SQLException {
-	        stmt = conn.createStatement();
-	        rs=stmt.executeQuery(preparedSQL);
-	        return new Object[] {rs,stmt};
-  }
-
-
   synchronized public ResultSet queryResults(String preparedSQL) throws SQLException {
     stmt = conn.createStatement();
     rs=stmt.executeQuery(preparedSQL);

@@ -136,10 +136,8 @@ function closeit() {
 %>
   <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
-    if (self.opener.document.inputForm)
-		self.opener.document.inputForm.elements["caseNote.billing_code"].value="<%=nBillNo%>";
-	self.close();
-	if (!self.opener.document.inputForm) self.opener.refresh();
+      self.close();
+      self.opener.refresh();
 </script>
 <%
             break; //get only one billing_no

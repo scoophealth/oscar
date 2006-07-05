@@ -26,7 +26,6 @@
 
 <%@ page language="java" import="java.util.HashMap, oscar.log.*"  errorPage="errorpage.jsp"%>
 <%
-  if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()) net.sf.cookierevolver.CRFactory.getManager().recordLogout(request);
   if(session != null) {
     Object user = session.getAttribute("user");
     if (user != null) {
@@ -34,7 +33,6 @@
       //System.out.println("user : " +user);
       //hash.remove(user);
       session.invalidate();
-      request.getSession();
       String ip = request.getRemoteAddr();
 	  LogAction.addLog((String)user, LogConst.LOGOUT, LogConst.CON_LOGIN, "", ip);
     }

@@ -25,11 +25,7 @@
 -->
 
 <%@ page language="java" %>
-<!-- add by caisi -->
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<!-- add by caisi end<style>* {border:1px solid black;}</style> -->
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -58,20 +54,6 @@ ProSignatureData sig = new ProSignatureData();
 </head>
 
 <body class="BodyStyle" vlink="#0000FF" >
-<!-- add by caisi -->
-<caisi:isModuleLoad moduleName="program">
-
-<iframe id="hiddenFrame" src="javascript:void(0)" style="display:none"></iframe>
-<script>
-function toggleSig(n) {
-	var fr=document.getElementById("hiddenFrame");
-	var baseURL="/"+"<%=application.getServletContextName()%>";
-	fr.src=baseURL+"/infirm.do?action=toggleSig&demoNo="+n;
-}
-</script>
-
-</caisi:isModuleLoad>
-<!-- add by caisi end-->
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -107,25 +89,10 @@ function toggleSig(n) {
             %>
                <bean:message key="provider.editSignature.msgEdit"/> <br>
                <html:text property="signature" size="40"/><br>
-               
-               <!-- add by caisi -->
-               <caisi:isModuleLoad moduleName="program">
-               <c:import url="/infirm.do?action=getSig" />
-               
-               <INPUT TYPE="checkbox" <%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%> onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
-               </caisi:isModuleLoad>
-               <!-- add by caisi end-->
-               
                <input type="submit" value="<bean:message key="provider.editSignature.btnUpdate"/>" />               
             <% }else{%>
                <bean:message key="provider.editSignature.msgNew"/><br>
                <html:text property="signature" size="40"/><br>
-               <!-- add by caisi -->
-               <caisi:isModuleLoad moduleName="program">
-               <c:import url="/infirm.do?action=getSig" />
-               <INPUT TYPE="checkbox" <%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%> onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
-               </caisi:isModuleLoad>
-               <!-- add by caisi end-->
                <input type="submit" value="<bean:message key="provider.editSignature.btnSubmit"/>" />
             <%}%>
             </html:form> 

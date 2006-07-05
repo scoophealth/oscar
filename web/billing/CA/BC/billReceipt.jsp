@@ -38,7 +38,7 @@
   double totalPayments = 0;
   double totalRefunds = 0;
   String color = "", colorflag = "";
-  PrivateBillTransactionsDAO dao = new PrivateBillTransactionsDAO();
+  BillingHistoryDAO dao = new BillingHistoryDAO();
   BillingViewBean bean = (BillingViewBean) pageContext.findAttribute("billingViewBean");
   request.setAttribute("paymentTypes",bean.getPaymentTypes());
   oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
@@ -103,6 +103,9 @@
     }
 
     input {
+    border:none;
+    }
+     select {
     border:none;
     }
     .totals_cell {
@@ -403,11 +406,14 @@ System.out.println(lnTotal);
                         </tr>
 						   <%
 						   	  String num = String.valueOf(((BillingBillingManager.BillingItem)billItem.get(i)).getLineNo());
-                              List trans = dao.getPrivateBillTransactions(num);
+                              List trans = dao.getBillHistory(num);
 							  System.out.print(trans.size());
                               for (Iterator iter = trans.iterator(); iter.hasNext(); ) {
-                                oscar.entities.PrivateBillTransaction item = (oscar.entities.PrivateBillTransaction) iter.next();
-                                double amtReceived = item.getAmount_received();
+                                oscar.entities.BillHistory item = (oscar.entities.BillHistory) iter.next();
+
+                                double amtReceived = item.getAmountReceived();
+
+                                if(amtReceived != 0){
                                 String label = "";
                                 if (amtReceived < 0) {
                                   label = "Refund";
@@ -420,12 +426,12 @@ System.out.println(lnTotal);
                             %>
                               <tr align="center">
 							  	 <td colspan="3">&nbsp;</td>
-                                <td><%=label%>(<%=item.getPayment_type_desc()%>)</td>
-								 <td colspan="2"><%=item.getCreation_date()%></td>
+                                <td><%=label%>(<%=item.getPaymentTypeDesc()%>)</td>
+								 <td colspan="2"><%=item.getArchiveDate()%></td>
 
                                 <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
                               </tr>
-                            <%}%>
+                            <%}}%>
                       <%}                      %>
                         <tr>
                           <td colspan="7">&nbsp;</td>
@@ -445,7 +451,14 @@ System.out.println(lnTotal);
                               <td height="14" colspan="2">Please Make Cheque Payable To: </td>
                             </tr>
                             <tr>
-                              <td class="title4"><%=billform.getProviderName(bean.getBillingProvider())%></td>
+                             <td class="title4">
+                              <%=bean.getDefaultPayeeFirstName() + " " + bean.getDefaultPayeeLastName() %>
+                            </td>
+                            </tr>
+                             <tr>
+                             <td class="title4">
+                              <%=clinic.getClinicName()%>
+                            </td>
                             </tr>
                             <tr>
                               <td class="address"><%=clinic.getClinicAddress()%> , <%=clinic.getClinicCity()%> , <%=clinic.getClinicProvince()%><%=clinic.getClinicPostal()%> </td>

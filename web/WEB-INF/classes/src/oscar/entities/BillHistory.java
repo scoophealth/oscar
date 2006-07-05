@@ -39,7 +39,10 @@ public class BillHistory {
   private Date archiveDate;
   private String billingtype = "";
   private String seqNum = "";
-  private String amount = "";
+  private double amount;
+  private double amountReceived;
+  private String paymentTypeId;
+  private String paymentTypeDesc;
   public BillHistory() {
   }
 
@@ -90,8 +93,20 @@ public class BillHistory {
     this.seqNum = seqNum;
   }
 
-  public void setAmount(String amount) {
+  public void setAmount(double amount) {
     this.amount = amount;
+  }
+
+  public void setAmountReceived(double amountReceived) {
+    this.amountReceived = amountReceived;
+  }
+
+  public void setPaymentTypeId(String paymentTypeId) {
+    this.paymentTypeId = paymentTypeId;
+  }
+
+  public void setPaymentTypeDesc(String paymentTypeDesc) {
+    this.paymentTypeDesc = paymentTypeDesc;
   }
 
   public int getId() {
@@ -125,8 +140,20 @@ public class BillHistory {
     return seqNum;
   }
 
-  public String getAmount() {
+  public double getAmount() {
     return amount;
+  }
+
+  public double getAmountReceived() {
+    return amountReceived;
+  }
+
+  public String getPaymentTypeId() {
+    return paymentTypeId;
+  }
+
+  public String getPaymentTypeDesc() {
+    return paymentTypeDesc;
   }
 
 }

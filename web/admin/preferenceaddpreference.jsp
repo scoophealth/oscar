@@ -26,7 +26,6 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <html:html locale="true">
@@ -41,30 +40,20 @@
       </tr>
     </table>
 <%
-String[] param=null;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-    param =new String[7];
-}else {
-	param =new String[6];
-}
+    String[] param =new String[6];
 	  param[0]=request.getParameter("start_hour");
 	  param[1]=request.getParameter("end_hour");
 	  param[2]=request.getParameter("every_min");
 	  param[3]=request.getParameter("mygroup_no");
 	  param[4]=request.getParameter("color_template");
 	  param[5]=request.getParameter("provider_no");
-	if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  param[6]=request.getParameter("new_tickler_warning_window");
-	}  
+
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, "preference_addupdate_record");
   if (rowsAffected >=1) { //Successful Update of a Preference Record.
     session.setAttribute("starthour", param[0]);
     session.setAttribute("endhour", param[1]);
     session.setAttribute("everymin", param[2]);
-    session.setAttribute("groupno", param[3]);
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-    session.setAttribute("newticklerwarningwindow", param[6]);
-}
+    session.setAttribute("groupno", param[3]);  
 %>
   <h1><bean:message key="admin.preferenceaddarecord.msgSuccessful"/>
   </h1>
@@ -77,19 +66,12 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
 	param[3]=request.getParameter("every_min");
 	param[4]=request.getParameter("mygroup_no");
 	param[5]=request.getParameter("color_template");
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	param[6]=request.getParameter("new_tickler_warning_window");
-}
-	
   rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected ==1) { //Successful add of a Preference Record.
     session.setAttribute("starthour", param[1]);
     session.setAttribute("endhour", param[2]);
     session.setAttribute("everymin", param[3]);
     session.setAttribute("groupno", param[4]);  
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-    session.setAttribute("newticklerwarningwindow", param[6]);
-}
 %>
   <h1><bean:message key="admin.preferenceaddpreference.msgAdditionSuccess"/></h1>
 <%  

@@ -66,13 +66,14 @@ public class BillingPreferencesDAO {
       rs = (ResultSet) db.GetSQL(recordExistsQRY);
       if (rs.next()) {
         String updateSQL = "update billing_preferences set referral = " +
-            pref.getReferral();
+            pref.getReferral() + ",defaultPayeeNo = " + pref.getDefaultPayeeNo() +
+            " where providerNo = " + pref.getProviderNo();
         db.RunSQL(updateSQL);
       }
       else {
         String insertSQL =
-            "insert into billing_preferences(referral,providerNo) values(" +
-            pref.getReferral() + "," + pref.getProviderNo() + ")";
+            "insert into billing_preferences(referral,providerNo,defaultPayeeNo) values(" +
+            pref.getReferral() + "," + pref.getProviderNo() + "," + pref.getDefaultPayeeNo() + ")";
         db.RunSQL(insertSQL);
       }
     }
