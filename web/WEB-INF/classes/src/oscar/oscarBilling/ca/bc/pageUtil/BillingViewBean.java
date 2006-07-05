@@ -1,3 +1,4 @@
+
 /*
  *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -29,9 +30,9 @@ import java.util.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarBilling.ca.bc.data.*;
-import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.*;
 import oscar.oscarDB.*;
 import oscar.util.*;
+import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.BillingItem;
 
 public class BillingViewBean {
   private String apptProviderNo = null;
@@ -81,15 +82,13 @@ public class BillingViewBean {
   private String billStatus;
   private String billNotes;
   private String paymentMethod;
-  private String defaultPayeeFirstName;
-  private String defaultPayeeLastName;
   public void loadBilling(String billing_no) {
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       ResultSet rs;
       String sql;
 
-      sql = "select bi.billing_date, bi.visitdate, bi.apptProvider_no, bi.creator, bi.provider_no,bi.provider_ohip_no, b.billingmaster_no, b.billing_no, b.createdate, b.billingstatus,b.demographic_no, b.appointment_no, b.claimcode, b.datacenter, b.payee_no, b.practitioner_no, b.phn, b.name_verify, b.dependent_num,b.billing_unit,";
+      sql = "select bi.billing_date, bi.visitdate, bi.apptProvider_no, bi.creator, bi.provider_no, b.billingmaster_no, b.billing_no, b.createdate, b.billingstatus,b.demographic_no, b.appointment_no, b.claimcode, b.datacenter, b.payee_no, b.practitioner_no, b.phn, b.name_verify, b.dependent_num,b.billing_unit,";
       sql = sql + "b.clarification_code, b.anatomical_area, b.after_hour, b.new_program, b.billing_code, b.bill_amount, b.payment_mode, b.service_date, b.service_to_day, b.submission_code, b.extended_submission_code, b.dx_code1, b.dx_code2, b.dx_code3, ";
       sql = sql + "b.dx_expansion, b.service_location, b.referral_flag1, b.referral_no1, b.referral_flag2, b.referral_no2, b.time_call, b.service_start_time, b.service_end_time, b.birth_date, b.office_number, b.correspondence_code, b.claim_comment,b.paymentMethod ";
       sql = sql + "from billingmaster b, billing bi where bi.billing_no=b.billing_no and b.billing_no='" +
@@ -122,8 +121,6 @@ public class BillingViewBean {
         this.billingMasterNo = rs.getString("billingmaster_no");
         this.billingNo = rs.getString("billing_no");
         this.paymentMethod = rs.getString("paymentMethod");
-        this.billingPracNo = rs.getString("payee_no");
-
       }
       //setBillItem(billingItemsArray);
       rs.close();
@@ -141,44 +138,6 @@ public class BillingViewBean {
         "select * from bill_recipients where billingNo = " +
         billingNo, BillRecipient.class);
 
-  }
-
-  /**
-   * Updates the paymentMethod of the specified bill with the supplied paymentMethod code and payee number
-   * @param billingNo String - The uid of the bill to be updated
-   * @param paymentMethod String - The paymentMethod code
-   */
-  public void updateBill(String billingNo,String payeeNo) {
-    DBHandler db = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      List billingMasterNos = SqlUtils.getQueryResultsList(
-          "select billingmaster_no from billingmaster where billing_no = " +
-          billingNo);
-
-      if (billingMasterNos != null) {
-        for (int i = 0; i < billingMasterNos.size(); i++) {
-          String[] values = (String[]) billingMasterNos.get(i);
-          String billingMasternum = values[0];
-          db.RunSQL("update billingmaster set payee_no = '" + payeeNo + "' " +
-                    " where billingmaster_no = " + billingMasternum + "");
-
-        }
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-    finally {
-      try {
-        if (db != null) {
-          db.CloseConn();
-        }
-      }
-      catch (SQLException ex) {
-        ex.printStackTrace();
-      }
-    }
   }
 
   public String getMessageNotes() {
@@ -579,14 +538,6 @@ public class BillingViewBean {
     return paymentMethod;
   }
 
-  public String getDefaultPayeeFirstName() {
-    return defaultPayeeFirstName;
-  }
-
-  public String getDefaultPayeeLastName() {
-    return defaultPayeeLastName;
-  }
-
   /**
    * Setter for property billingNo.
    * @param billingNo New value of property billingNo.
@@ -609,14 +560,6 @@ public class BillingViewBean {
 
   public void setPaymentMethod(String paymentMethod) {
     this.paymentMethod = paymentMethod;
-  }
-
-  public void setDefaultPayeeFirstName(String defaultPayeeFirstName) {
-    this.defaultPayeeFirstName = defaultPayeeFirstName;
-  }
-
-  public void setDefaultPayeeLastName(String defaultPayeeLastName) {
-    this.defaultPayeeLastName = defaultPayeeLastName;
   }
 
   public List getPaymentTypes() {
@@ -657,7 +600,7 @@ public class BillingViewBean {
   public double calculateSubtotal() {
     double ret = 0.0;
     for (Iterator iter = this.billitem.iterator(); iter.hasNext(); ) {
-      BillingItem billingItem = (BillingItem) iter.next();
+      BillingItem billingItem  = (BillingItem) iter.next();
       ret += billingItem.price;
     }
     return ret;

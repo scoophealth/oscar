@@ -36,97 +36,74 @@ import org.apache.commons.lang.StringEscapeUtils;
 import oscar.oscarDB.DBHandler;
 
 /**
- * 
+ *
  * @author jay
  */
 public class RAData {
-
-	/** Creates a new instance of RAData */
-	public RAData() {
-	}
-
-	// select * from radetail limit 100,10;
-	// radetail_no | raheader_no | providerohip_no | billing_no | service_code |
-	// service_count | hin | amountclaim | amountpay | service_date | error_code
-	// | billtype |
-
-	public ArrayList getRAData(String billingNo) {
-		ArrayList list = new ArrayList();
-		String sql = "Select * from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
-		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-			ResultSet rs = db.GetSQL(sql);
-			while (rs.next()) {
-				Hashtable h = new Hashtable();
-				h.put("radetail_no", rs.getString("radetail_no"));
-				h.put("raheader_no", rs.getString("raheader_no"));
-				h.put("providerohip_no", rs.getString("providerohip_no"));
-				h.put("billing_no", rs.getString("billing_no"));
-				h.put("service_code", rs.getString("service_code"));
-				h.put("service_count", rs.getString("service_count"));
-				h.put("hin", rs.getString("hin"));
-				h.put("amountclaim", rs.getString("amountclaim"));
-				h.put("amountpay", rs.getString("amountpay"));
-				h.put("service_date", rs.getString("service_date"));
-				h.put("error_code", rs.getString("error_code"));
-				h.put("billtype", rs.getString("billtype"));
-				list.add(h);
-			}
-			rs.close();
-			db.CloseConn();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public String getErrorCodes(ArrayList a) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < a.size(); i++) {
-			Hashtable h = (Hashtable) a.get(i);
-			sb.append(h.get("error_code"));
-			sb.append(" ");
-		}
-		return sb.toString();
-	}
-
-	public String getAmountPaid(ArrayList a) {
-		BigDecimal total = new BigDecimal("0.00").setScale(2, BigDecimal.ROUND_HALF_UP);
-		for (int i = 0; i < a.size(); i++) {
-			Hashtable h = (Hashtable) a.get(i);
-			BigDecimal valueToAdd = new BigDecimal("0.00");
-			try {
-				String amount = "" + h.get("amountpay");
-				amount = amount.trim();
-				valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);
-			} catch (Exception badValueException) {
-				System.out.println(" Error calculating value for " + h.get("billing_no"));
-				badValueException.printStackTrace();
-			}
-			total = total.add(valueToAdd);
-		}
-		return total.toString();
-	}
-
-	public boolean isErrorCode(String billingNo, String errorCode) {
-		boolean ret = false;
-		String sql = "Select error_code from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo)
-				+ "'";
-		try {
-			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-			ResultSet rs = db.GetSQL(sql);
-			while (rs.next()) {
-				if (errorCode.equals(rs.getString("error_code"))) {
-					ret = true;
-					break;
-				}
-			}
-			rs.close();
-			db.CloseConn();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
+    
+    /** Creates a new instance of RAData */
+    public RAData() {
+    }
+   //select * from radetail limit 100,10;
+   //radetail_no | raheader_no | providerohip_no | billing_no | service_code | service_count | hin        | amountclaim | amountpay | service_date | error_code | billtype |
+     
+    
+    public ArrayList getRAData(String billingNo){
+        ArrayList list = new ArrayList();
+        String sql = "Select * from radetail where billing_no = '"+StringEscapeUtils.escapeSql(billingNo)+"'";
+        try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           ResultSet rs = db.GetSQL(sql);
+           while (rs.next()) {
+              Hashtable h = new Hashtable();
+              h.put("radetail_no", rs.getString("radetail_no"));
+              h.put("raheader_no", rs.getString("raheader_no"));
+              h.put("providerohip_no",rs.getString("providerohip_no"));
+              h.put("billing_no", rs.getString("billing_no"));
+              h.put("service_code", rs.getString("service_code"));
+              h.put("service_count", rs.getString("service_count"));
+              h.put("hin", rs.getString("hin"));
+              h.put("amountclaim", rs.getString("amountclaim"));
+              h.put("amountpay", rs.getString("amountpay"));
+              h.put("service_date", rs.getString("service_date"));
+              h.put("error_code", rs.getString("error_code"));
+              h.put("billtype", rs.getString("billtype"));
+              list.add(h);
+           }
+           rs.close();
+           db.CloseConn();
+        }catch (Exception e) {
+           e.printStackTrace();
+        }
+        return list;
+    }
+    
+    public String getErrorCodes(ArrayList a){
+        StringBuffer sb = new StringBuffer();
+        for (int i =0; i < a.size(); i++){
+            Hashtable h = (Hashtable) a.get(i);
+            sb.append(h.get("error_code"));
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
+    
+    public String getAmountPaid(ArrayList a){
+        BigDecimal total = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        for (int i =0; i < a.size(); i++){
+           Hashtable h = (Hashtable) a.get(i);
+           BigDecimal valueToAdd = new BigDecimal("0.00");
+           try{
+              String amount = ""+h.get("amountpay");
+              amount = amount.trim();
+              valueToAdd = new BigDecimal(amount).setScale(2, BigDecimal.ROUND_HALF_UP);  
+           }catch(Exception badValueException){ 
+              System.out.println(" Error calculating value for "+h.get("billing_no")); 
+              badValueException.printStackTrace();
+           }
+           total = total.add(valueToAdd);
+        }
+        return total.toString();
+    }
+    
 }

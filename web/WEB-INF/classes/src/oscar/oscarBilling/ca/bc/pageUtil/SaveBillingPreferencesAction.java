@@ -42,9 +42,8 @@ public class SaveBillingPreferencesAction
         BillingPreferencesActionForm) actionForm;
     BillingPreferencesDAO dao = new BillingPreferencesDAO();
     BillingPreference pref = new BillingPreference();
-    pref.setProviderNo(Integer.parseInt(frm.getProviderNo()));
-    pref.setReferral(Integer.parseInt(frm.getProviderNo()));
-    pref.setDefaultPayeeNo(Integer.parseInt(frm.getPayeeProviderNo()));
+    pref.setProviderNo(new Integer(frm.getProviderNo()).intValue());
+    pref.setReferral(new Integer(frm.getReferral()).intValue());
     dao.saveUserPreferences(pref);
     return actionMapping.findForward("success");
 

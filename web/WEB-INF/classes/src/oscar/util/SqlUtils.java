@@ -917,17 +917,13 @@ public class SqlUtils {
     }
     finally {
       try {
-        if(db!=null){
-          db.CloseConn();
-        }
-
-        if(rs!=null){
-          rs.close();
-        }
+        db.CloseConn();
+        rs.close();
       }
       catch (SQLException ex) {
         ex.printStackTrace();
       }
+
     }
     return rec;
   }
@@ -1017,24 +1013,8 @@ public class SqlUtils {
 
       return records;
     }
-  }
 
-  /**
-   * Returns a single row(the first row) from a quesry result
-   * Generally should only be used with queries that return a single result
-   * Returns null if there is no result
-   * @param qry String
-   * @return String[]
-   */
-  public static String[] getRow(String qry){
-    String ret[] = null;
-    List list = getQueryResultsList(qry);
-    if(list!=null){
-      ret = (String[])list.get(0);
-    }
-    return ret;
   }
-
 
   /**
    * Returns a List of Map objects which contain the results of the specified arbitrary query.
@@ -1085,28 +1065,6 @@ public class SqlUtils {
 
       return records;
     }
-  }
 
-  /**
-   * Creates an 'in' clause segment of an sql query.
-   * This is handy in cases where the criteria of a query is dynamic/unknown
-   * @param criteria String[] - he string array of criteria used to construct the query segment
-   * @param type int - a value of true indicates that the clause components are enclosed in quotes
-   * @return String - The constructed sql 'in' clause String
-   */
-  public static String constructInClauseString(String[] criteria,boolean useQuotes){
-    StringBuffer ret = new StringBuffer();
-    String quote = useQuotes==true?"'":"";
-    if (criteria.length != 0) {
-      ret.append("in (");
-      for (int i = 0; i < criteria.length; i++) {
-        ret.append(quote + criteria[i] + quote);
-        if (i < criteria.length - 1) {
-          ret.append(",");
-        }
-      }
-    }
-    ret.append(")");
-    return ret.toString();
   }
 }

@@ -35,7 +35,6 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /><jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" /><%@ include file="../../../admin/dbconnection.jsp" %>
 <%@ include file="dbBilling.jsp" %>
 <%
-  java.text.NumberFormat nf = java.text.NumberFormat.getCurrencyInstance();
   String user_no;
   user_no = (String) session.getAttribute("user");
   int  nItems=0;
@@ -575,6 +574,7 @@ billTypes = "%";
     String demoNo = request.getParameter("demographicNo");
 
     ArrayList list;
+
     MSPReconcile.BillSearch bSearch = msp.getBills(billTypes, providerview, dateBegin ,dateEnd,demoNo,!showWCB,!showMSP,!showPRIV,!showICBC);
     list = bSearch.list;
     Properties p2 = bSearch.getCurrentErrorMessages();
@@ -602,7 +602,7 @@ billTypes = "%";
         incorrectVal = true;
       }
       total = total.add(valueToAdd);
-      double pAmount = msp.getAmountPaid(b.billMasterNo,b.billingtype);
+      String pAmount = msp.getAmountPaid(b.billMasterNo,b.billingtype);
         BigDecimal valueToPaidAdd = new BigDecimal("0.00");
       try{
         valueToPaidAdd = new BigDecimal(pAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -639,17 +639,16 @@ billTypes = "%";
 
     <td align="center" class="bCellData" ><%=b.code%></td>
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=b.quantity%></td>
-    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=nf.format(Double.parseDouble(b.amount))%> </td>
-    <td align="center" class="bCellData" ><%=nf.format(pAmount)%> </td>
+    <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> >$<%=b.amount%> </td>
+    <td align="center" class="bCellData" >$<%=pAmount%> </td>
     <%
-    String amountOwing = msp.getAmountOwing(b.billMasterNo,b.amount,b.billingtype);
-    double dblAmtOwed = Double.parseDouble(amountOwing);
+    double dblAmtOwed = new Double(b.amount).doubleValue()-new Double(pAmount).doubleValue();
     BigDecimal amtOwed = new BigDecimal(dblAmtOwed).setScale(2, BigDecimal.ROUND_HALF_UP);
     owedTotal = owedTotal.add(amtOwed);
     System.err.println("Owed:" + owedTotal.toString());
 
     %>
-    <td align="center" class="bCellData" ><%=nf.format(amtOwed)%> </td>
+    <td align="center" class="bCellData" >$<%=amtOwed%> </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
 
     <td><%if (!b.isWCB()){%>
@@ -674,23 +673,24 @@ billTypes = "%";
     </tbody>
   <tfoot>
   <tr class="sortbottom">
-    <logic:notEqual parameter="filterPatient" value="true">
-      <td class="bCellData" align="center">&nbsp;</td>
-    </logic:notEqual>
-    <td class="bCellData" align="center">&nbsp;</td>
-    <td class="bCellData" align="center">&nbsp;</td>
-    <td class="bCellData" align="center">&nbsp;</td>
-    <td class="bCellData" align="center">&nbsp;</td>
+  <%
+	String colspan = !"true".equals(readonly)?"5":"4";
+ %>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
     <td align="center" class="bCellData" >Count:</td>
+
     <td align="center" class="bCellData" ><%=list.size()%></td>
     <td align="center" class="bCellData" >&nbsp;</td>
     <td align="center" class="bCellData" >Total:</td>
-    <td align="center" class="bCellData" ><%=nf.format(total.doubleValue())%></td>
-    <td align="center" class="bCellData" ><%=nf.format(paidTotal.doubleValue())%></td>
-    <td align="center" class="bCellData" ><%=nf.format(owedTotal.doubleValue())%></td>
-    <td class="bCellData" align="center">&nbsp;</td>
-    <td class="bCellData" align="center">&nbsp;</td>
-
+    <td align="center" class="bCellData" >$<%=total.toString()%></td>
+    <td align="center" class="bCellData" >$<%=paidTotal.toString()%></td>
+    <td align="center" class="bCellData" >$<%=owedTotal.toString()%></td>
+      <td class="bCellData" align="center">&nbsp;</td>
+  <td class="bCellData" align="center">&nbsp;</td>
   </tr>
   </tfoot>
 </table>

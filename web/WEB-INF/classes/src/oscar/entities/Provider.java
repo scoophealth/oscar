@@ -47,7 +47,6 @@ public class Provider {
   private String status= "";
   private String comments= "";
   private String providerActivity= "";
-  private String fullName = "";
 
   /**
    * Class constructor with no arguments.

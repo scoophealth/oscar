@@ -44,6 +44,7 @@ public class TicklerCreator {
    * @param reason String
    */
   public void createTickler(String demoNo, String provNo, String message) {
+    long crtTick = System.currentTimeMillis();
     if (!ticklerExists(demoNo, message)) {
       GregorianCalendar now = new GregorianCalendar();
       int curYear = now.get(Calendar.YEAR);
@@ -56,6 +57,7 @@ public class TicklerCreator {
       String sql = "insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) " +
           " values(" + demoNo + " ,'" + message + "','A','" + nowDate +
           "',now(),'" + provNo + "','4','" + provNo + "')";
+      System.out.println("insert tickler qry=" + sql);
       DBHandler db = null;
       try {
         db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -73,6 +75,9 @@ public class TicklerCreator {
         }
       }
     }
+    long endTick = System.currentTimeMillis();
+    System.out.println("created a TICKLER" + (endTick - crtTick) * .001 + " " +
+                       new java.util.Date());
   }
 
   /**

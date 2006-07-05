@@ -1,7 +1,6 @@
 <%@page import="java.util.*"%>
 
 <%
-  java.text.NumberFormat nf = java.text.NumberFormat.getCurrencyInstance();
   String billNo = request.getParameter("billNo");
   String billMasterNo = request.getParameter("billMasterNo");
   oscar.oscarBilling.ca.bc.MSP.MSPReconcile rec= new oscar.oscarBilling.ca.bc.MSP.MSPReconcile();
@@ -24,38 +23,26 @@
 </style>
 <table width="100%">
   <tr class="SectionHead">
-    <td colspan="8" class="bCellData">Bill Transaction History</td>
+    <td colspan="6" class="bCellData">Bill Transaction History</td>
   </tr>
   <tr  class="ColHead">
-    <td>STAT</td>
-    <td>SEQ # </td>
+    <td>Bill Status</td>
+    <td>Seq # </td>
     <td>INS</td>
     <td>PRACT</td>
-    <td>BILL AMT</td>
-    <td>TYPE</td>
-    <td>AMT ADJ.</td>
-    <td>UPDATED</td>
+    <td>AMT</td>
+    <td>Update Date</td>
   </tr>
 <%
   for (Iterator iter = billingTransactions.iterator(); iter.hasNext(); ) {
     oscar.entities.BillHistory item = (oscar.entities.BillHistory) iter.next();
-    oscar.entities.Provider provider= rec.getProvider(item.getPractitioner_no(), 0);
 %>
   <tr align="center">
     <td><%=rec.getStatusDesc(item.getBillingStatus())%>    </td>
     <td><%=item.getSeqNum()%></td>
     <td><%=item.getBillingtype()%></td>
-    <td><%=provider.getInitials()%></td>
-    <%
-    //for display purposes need to negate value so that
-    //a postive internal adjustment appears as a "debit"
-    if("10".equals(item.getPaymentTypeId())){
-      item.setAmountReceived(item.getAmountReceived()*-1);
-    }
-    %>
-    <td><%=nf.format(item.getAmount())%></td>
-    <td><%=item.getPaymentTypeDesc()%></td>
-    <td><%=nf.format(item.getAmountReceived())%></td>
+    <td><%=item.getPractitioner_no()%></td>
+    <td><%=item.getAmount()%></td>
     <td><%=item.getArchiveDate()%>    </td>
   </tr>
 <%}%>

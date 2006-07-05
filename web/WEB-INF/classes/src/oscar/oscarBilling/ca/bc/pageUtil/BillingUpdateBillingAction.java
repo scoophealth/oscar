@@ -61,9 +61,9 @@ public final class BillingUpdateBillingAction
     recip.setProvince(frm.getRecipientProvince());
     recip.setPostal(frm.getRecipientPostal());
     MSPReconcile msprec = new MSPReconcile();
-    BillingViewBean bean = new BillingViewBean();
-    bean.updateBill(frm.getBillingNo(),request.getParameter("billingProvider"));
+    msprec.updateBillingStatus(frm.getBillingNo(), frm.getBillStatus());
     msprec.saveOrUpdateBillRecipient(recip);
+    msprec.updatePaymentMethod(frm.getBillingNo(),frm.getPaymentMethod());
     BillingNote n = new BillingNote();
     try {
       n.addNoteFromBillingNo(frm.getBillingNo(), creator, frm.getMessageNotes());
@@ -71,7 +71,7 @@ public final class BillingUpdateBillingAction
     catch (Exception e) {
       e.printStackTrace();
     }
-
+    
     return mapping.findForward("success");
   }
 

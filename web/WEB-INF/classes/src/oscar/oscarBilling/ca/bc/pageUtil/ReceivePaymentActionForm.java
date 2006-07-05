@@ -28,7 +28,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
-import oscar.util.*;
+import oscar.util.StringUtils;
 
 public class ReceivePaymentActionForm
     extends ActionForm {
@@ -40,7 +40,6 @@ public class ReceivePaymentActionForm
   private String billNo;
   private boolean paymentReceived;
   private String isRefund;
-  private String payeeProviderNo;
   public String getAmountReceived() {
     return amountReceived;
   }
@@ -78,10 +77,6 @@ public class ReceivePaymentActionForm
     this.isRefund = isRefund;
   }
 
-  public void setPayeeProviderNo(String payeeProviderNo) {
-    this.payeeProviderNo = payeeProviderNo;
-  }
-
   public String getPayment() {
     return payment;
   }
@@ -108,10 +103,6 @@ public class ReceivePaymentActionForm
 
   public String getIsRefund() {
     return isRefund;
-  }
-
-  public String getPayeeProviderNo() {
-    return payeeProviderNo;
   }
 
   public ActionErrors validate(ActionMapping actionMapping,

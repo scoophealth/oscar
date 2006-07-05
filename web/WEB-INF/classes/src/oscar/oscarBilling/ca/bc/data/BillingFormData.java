@@ -31,8 +31,6 @@ import oscar.oscarDB.DBHandler;
 import oscar.entities.PaymentType;
 import java.util.List;
 import oscar.util.SqlUtils;
-import oscar.entities.BillingStatusType;
-
 
 public class BillingFormData {
   public ArrayList getPaymentTypes() {
@@ -65,27 +63,6 @@ public class BillingFormData {
     }
 
     return types;
-  }
-
-  /**
-   * Returns a list of status type instances according to the supplied String array of allowable status codes
-   * If the supplied array is null or empty, a full list is returned
-   * @return List
-   */
-  public List getStatusTypes(String[] codes){
-    String qry = "select * from billingstatus_types";
-    if(codes!=null && codes.length > 0){
-      qry+=" where billingstatus";
-      qry+= " " + SqlUtils.constructInClauseString(codes,true);
-    }
-    ArrayList head = new ArrayList();
-    // prepends a default empty bean to the list
-    BillingStatusType tp = new BillingStatusType();
-    tp.setBillingstatus("");
-    tp.setDisplayNameExt("");
-    head.add(tp);
-    head.addAll(SqlUtils.getBeanList(qry,BillingStatusType.class));
-    return head;
   }
 
   public String getBillingFormDesc(BillingForm[] billformlist, String billForm) {
