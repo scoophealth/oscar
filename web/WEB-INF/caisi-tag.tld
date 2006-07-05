@@ -14,5 +14,22 @@
 		<tagclass>oscar.caisi.MenuExtensionTag</tagclass>
 		<bodycontent>empty</bodycontent>
 		<info>Menu Extension JSP Tag</info> 
+	</tag>
+	<tag> 
+		<name>isModuleLoad</name> 
+		<tagclass>oscar.caisi.IsModuleLoadTag</tagclass>
+		<bodycontent>jsp</bodycontent>
+		<info>Module whether exist</info> 
+		<attribute>
+    		<name>moduleName</name>
+    		<required>true</required>
+    		<rtexprvalue>true</rtexprvalue>
+  		</attribute>
+  		<attribute>
+    		<name>reverse</name>
+    		<required>no</required>
+    		<rtexprvalue>true</rtexprvalue>
+  		</attribute>
+		
 	</tag> 
 </taglib>

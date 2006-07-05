@@ -46,6 +46,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <html:html locale="true">
 <head><title> <bean:message key="provider.providerchangemygroup.title"/></title></head>
 <meta http-equiv="Cache-Control" content="no-cache" >
@@ -115,6 +116,9 @@ function setfocus() {
               <INPUT TYPE="hidden" NAME="end_hour" VALUE='<%=(String) session.getAttribute("endhour")%>'>
               <INPUT TYPE="hidden" NAME="every_min" VALUE='<%=(String) session.getAttribute("everymin")%>'>
               <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=(String) session.getAttribute("user")%>'>
+<caisi:isModuleLoad moduleName="ticklerplus">
+              <INPUT TYPE="hidden" NAME="new_tickler_warning_window" VALUE='<%=(String) session.getAttribute("newticklerwarningwindow")%>'>
+</caisi:isModuleLoad>
               <INPUT TYPE="hidden" NAME="color_template" VALUE='deepblue'>
               <INPUT TYPE="hidden" NAME="dboperation" VALUE='updatepreference'>
               <INPUT TYPE="hidden" NAME="displaymode" VALUE='updatepreference'>

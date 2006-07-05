@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<consultations>
+	<processrequest>
+		<recipient>500</recipient>
+	</processrequest>
+	<notifyconsultation>
+		<recipient>903</recipient>
+	</notifyconsultation>
+</consultations>

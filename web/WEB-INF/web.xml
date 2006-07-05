@@ -27,8 +27,8 @@
  */
 -->
 
-<web-app>
-
+<web-app id="WebApp_ID">
+	<display-name>oscar_mcmaster</display-name>
   <!-- Login filter -->
   <filter>
     <filter-name>LoginFilter</filter-name>
@@ -36,11 +36,48 @@
   </filter>
 <!-- plugin filter -->
   <filter>
-		<filter-name>ComponentFilter</filter-name>
-		<filter-class>
-			org.caisi.comp.web.WebComponentFilter
-		</filter-class>
+	<filter-name>ComponentFilter</filter-name>
+	<filter-class>
+		org.caisi.comp.web.WebComponentFilter
+	</filter-class>
+  </filter>
+  <filter>
+    <filter-name>CRFilter</filter-name>
+    <display-name>CRFilter</display-name>
+    <filter-class>net.sf.cookierevolver.CRFilter</filter-class>
+    <init-param>
+     <param-name>cr.filter.ignore</param-name>
+     <param-value>/login.do /images/* /lab/CMLlabUpload.do /lab/CA/ON/uploadComplete.jsp</param-value>
+	</init-param>
+	<!--
+	<init-param><param-name>authStrategy</param-name><param-value>DATABASE</param-value></init-param>
+	-->
+		<init-param><param-name>cr.auth.method</param-name><param-value>CUSTOM</param-value></init-param>
+		<init-param><param-name>cr.auth.loginURL</param-name><param-value>index.jsp</param-value></init-param>
+		<init-param>
+			<param-name>cr.policy.default</param-name>
+			<param-value>REMOTE-ACCESS</param-value>
+		</init-param>
+		<init-param>
+			<param-name>cr.rolesProvider</param-name>
+			<param-value>oscar.oscarSecurity.CRHelper</param-value>
+		</init-param>
+		<init-param>
+			<param-name>cr.config.provider</param-name>
+			<param-value>oscar.oscarDB.OscarHibernateProperties</param-value>
+		</init-param>
+		<!-- Hibernate properties auto-propegate 
+		 to the hibernate session-factory configuration
+		 (all init-params that starts with 'hibernate')
+		 -->
+		<init-param><param-name>hibernate.connection.pool_size</param-name><param-value>10</param-value></init-param>
+		<!--  <init-param><param-name>hibernate.hbm2ddl.auto</param-name><param-value>update</param-value></init-param>-->
+		<init-param><param-name>hibernate.connection.autocommit</param-name><param-value>true</param-value></init-param>
 	</filter>
+	<filter-mapping>
+		<filter-name>CRFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	<filter-mapping>
 		<filter-name>ComponentFilter</filter-name>
 		<url-pattern>/mod/*</url-pattern>
@@ -53,6 +90,17 @@
 
   <listener>
     <listener-class>oscar.login.Startup</listener-class>
+  </listener>
+  <listener>
+	 <listener-class>
+	  org.caisi.common.web.OscarDbPropertiesListener
+	 </listener-class>
+  </listener>
+
+  <listener>
+    <listener-class>
+      org.caisi.common.web.CaisiSpringLoader
+    </listener-class>
   </listener>
 
   <!-- Action Servlet Configuration -->

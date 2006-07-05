@@ -219,4 +219,32 @@ public class LoginCheckLogin {
         return ret;
     }
 
+	/**
+	 * @return Returns the propFileFound.
+	 */
+	public boolean isPropFileFound() {
+		return propFileFound;
+	}
+
+	/**
+	 * @param propFileFound The propFileFound to set.
+	 */
+	public void setPropFileFound(boolean propFileFound) {
+		this.propFileFound = propFileFound;
+	}
+
+	/**
+	 * @return Returns the propFileName.
+	 */
+	public String getPropFileName() {
+		return propFileName;
+	}
+
+	/**
+	 * @param propFileName The propFileName to set.
+	 */
+	public void setPropFileName(String propFileName) {
+		this.propFileName = propFileName;
+	}
+
 }

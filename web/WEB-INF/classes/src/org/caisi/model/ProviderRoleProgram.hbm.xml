@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.model">
+	<class name="ProviderRoleProgram" table="provider_role_program">
+		<id
+			column="prp_id"
+			name="id"
+			type="java.lang.Long"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="provider_no"
+			length="11"
+			name="providerNo"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+		<property
+			column="program_id"
+			length="11"
+			name="programId"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+		<property
+			column="group_id"
+			length="11"
+			name="groupId"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+	</class>
+</hibernate-mapping>

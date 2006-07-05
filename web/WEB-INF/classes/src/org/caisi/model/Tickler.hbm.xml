@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.caisi.model.Tickler" table="tickler">
+        <id name="tickler_no" column="tickler_no" unsaved-value="0">
+            <generator class="increment"/>
+        </id>
+		<property name="demographic_no"/>
+		<property name="message"/>
+		<property name="status"/>
+		<property name="update_date" type="java.util.Date"/>
+		<property name="service_date" type="java.util.Date"/>
+		<property name="creator"/>
+		<property name="priority"/>
+		<property name="task_assigned_to"/>
+
+		<set name="comments" table="tickler_comments" cascade="save-update" lazy="false" order-by="update_date">
+		    <key column="tickler_no"/>
+		    <one-to-many class="org.caisi.model.TicklerComment"/>
+		</set>
+
+		<set name="updates" table="tickler_update" cascade="save-update" lazy="false" order-by="update_date">
+		    <key column="tickler_no"/>
+		    <one-to-many class="org.caisi.model.TicklerUpdate"/>
+		</set>
+
+		<many-to-one name="demographic" 
+			class="org.caisi.model.Demographic"
+			column="demographic_no"
+			update="false"
+			insert="false"
+			lazy="false"
+			not-found="ignore"
+		/>
+
+		<many-to-one name="provider" 
+			class="org.caisi.model.Provider"
+			column="creator"
+			update="false"
+			insert="false"
+			lazy="false"
+			not-found="ignore"
+		/>
+
+		<many-to-one name="assignee" 
+			class="org.caisi.model.Provider"
+			column="task_assigned_to"
+			update="false"
+			insert="false"
+			lazy="false"
+			not-found="ignore"
+		/>
+    </class>
+</hibernate-mapping>

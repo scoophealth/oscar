@@ -35,6 +35,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.cookierevolver.CRFactory;
+
 /**
  * @author Dennis Langdeau
  */
@@ -43,6 +45,9 @@ public class LoginFilter implements Filter {
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
    public void init(FilterConfig config) throws ServletException {
+	   if(!CRHelper.isCRFrameworkEnabled()){
+		   CRFactory.getConfig().setProperty("cr.disabled","true");
+	   }
    }
    
     /*
@@ -51,29 +56,31 @@ public class LoginFilter implements Filter {
      */
    public void doFilter(ServletRequest request, ServletResponse response,
    FilterChain chain) throws IOException, ServletException {
-      HttpServletRequest httpRequest = (HttpServletRequest) request;
-      HttpServletResponse httpResponse = (HttpServletResponse) response;
-      
-      if (httpRequest.getSession().getAttribute("user") == null) {
-         String requestURI = httpRequest.getRequestURI();
-         String contextPath = httpRequest.getContextPath();
-         int contextPathLength = contextPath.length();
-         
-            /*
-             * If the requested resource is in any subdirectory other than
-             * /images/ then redirect to the logout page.
-             */
-         //if (!requestURI.startsWith(contextPath + "/images/") && requestURI.indexOf("/", contextPathLength + 1) > 0) {
-         System.out.println((!inListOfExemptions(requestURI,contextPath) && requestURI.indexOf("/", contextPathLength + 1) > 0));
-         if (!inListOfExemptions(requestURI,contextPath) && requestURI.indexOf("/", contextPathLength + 1) > 0) {
-            System.out.println("Not logged in while accessing URL:");
-            System.out.println(requestURI);
-            
-            httpResponse.sendRedirect(contextPath + "/logout.jsp");
-            return;
-         }
+      if(!CRHelper.isCRFrameworkEnabled()){
+		  HttpServletRequest httpRequest = (HttpServletRequest) request;
+	      HttpServletResponse httpResponse = (HttpServletResponse) response;
+	      
+	      if (httpRequest.getSession().getAttribute("user") == null) {
+	         String requestURI = httpRequest.getRequestURI();
+	         String contextPath = httpRequest.getContextPath();
+	         int contextPathLength = contextPath.length();
+	         
+	            /*
+	             * If the requested resource is in any subdirectory other than
+	             * /images/ then redirect to the logout page.
+	             */
+	         //if (!requestURI.startsWith(contextPath + "/images/") && requestURI.indexOf("/", contextPathLength + 1) > 0) {
+	         //System.out.println((!inListOfExemptions(requestURI,contextPath) && requestURI.indexOf("/", contextPathLength + 1) > 0));
+	         if (!inListOfExemptions(requestURI,contextPath) && requestURI.indexOf("/", contextPathLength + 1) > 0) {
+	            System.out.println("Not logged in while accessing URL:");
+	            System.out.println(requestURI);
+	            
+	            httpResponse.sendRedirect(contextPath + "/logout.jsp");
+	            return;
+	         }
+	      }
       }
-      chain.doFilter(request, response);
+	  chain.doFilter(request, response);
    }
    
    boolean inListOfExemptions(String requestURI,String contextPath){

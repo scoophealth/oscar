@@ -160,8 +160,10 @@ if (nBillNo > 0) {
 %>
 <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
+	if (self.opener.document.caseManagementEntryForm) 
+		self.opener.document.caseManagementEntryForm.elements["caseNote.billing_code"].value="<%=nBillNo%>";
 	self.close();
-	self.opener.refresh();
+	if (!self.opener.document.caseManagementEntryForm) self.opener.refresh();
 </script>
 <%
             break; //get only one billing_no

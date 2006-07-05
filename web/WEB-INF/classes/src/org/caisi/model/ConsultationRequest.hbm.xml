@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.caisi.model.Consultation" table="consultationRequests">
+        <id name="requestId" column="requestId" unsaved-value="0">
+			<generator class="increment"/>
+		</id>
+		<property name="reason" />
+		<property name="demographic_no" column="demographicNo"/>
+		<property name="referalDate" column="referalDate" type="java.util.Date"/>
+		<property name="serviceId"/>
+		<property name="specId"/>
+		<property name="providerNo"/>
+		<property name="urgency"/>
+		<property name="status"/>
+		<property name="appointmentDate" column="appointmentDate" type="java.util.Date"/>
+		<property name="appointmentTime" column="appointmentTime" type="java.util.Date"/>
+		
+		<many-to-one name="professionalSpecialist"
+        	class="org.caisi.model.ProfessionalSpecialists"
+        	column="specId"
+        	update="false"
+        	insert="false"
+        	lazy="false"
+		/>
+		
+    </class>
+</hibernate-mapping>
