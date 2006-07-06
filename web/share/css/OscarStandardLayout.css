@@ -110,6 +110,14 @@ H3 {
         font-size: 80%;
         background-color:#6699cc;
 }
+
+font.warning {
+        color: #e26e6e;
+}
+input.warning {
+        border: 1px solid #e26e6e;
+}
+
 /*These are my additions************************/
 H4 {
     font-size: x-small;
