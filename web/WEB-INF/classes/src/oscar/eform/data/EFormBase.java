@@ -30,6 +30,7 @@ package oscar.eform.data;
 import oscar.util.*;
 import java.util.Properties;
 import oscar.OscarProperties;
+import oscar.util.UtilDateUtilities;
 
 public class EFormBase {
     protected final String imageMarker = "${oscar_image_path}";
@@ -38,10 +39,25 @@ public class EFormBase {
     protected String formName;
     protected String formSubject;
     protected String formHtml;
+    protected String formFileName;
     protected String demographicNo;
     protected String providerNo;
     protected String formDate;
     protected String formTime;
+    
+    public EFormBase() {
+        
+    }
+    
+    public EFormBase(String fid, String formName, String formSubject, 
+            String formFileName, String formHtml) {
+        this.fid = fid;
+        this.formName = formName;
+        this.formSubject = formSubject;
+        this.formHtml = formHtml;
+        this.formFileName = formFileName;
+        dateTimeStamp();
+    }
     
     public void setImagePath() {
         Properties prop = oscar.OscarProperties.getInstance();
@@ -108,6 +124,19 @@ public class EFormBase {
     
     public void setProviderNo(String providerNo) {
         this.providerNo = providerNo;
+    }
+    
+    public void setFormFileName(String formFileName) {
+        this.formFileName = formFileName;
+    }
+    
+    public String getFormFileName() {
+        return formFileName;
+    }
+    
+    private void dateTimeStamp() {
+       formDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
+       formTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
     }
     
 }

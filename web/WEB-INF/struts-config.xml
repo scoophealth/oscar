@@ -162,6 +162,7 @@
     <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm" />
     <form-bean name="DemographicSetEditForm" type="oscar.oscarReport.pageUtil.DemographicSetEditForm" />
     <form-bean name="eFormHtmlUpload" type="oscar.eform.upload.HtmlUploadForm" />
+    <form-bean name="eFormEdit" type="oscar.eform.data.HtmlEditForm" />
     <form-bean name="eFormImageUpload" type="oscar.eform.upload.ImageUploadForm" />
     <form-bean name="addGroup" type="oscar.eform.data.AddGroupForm" />
     <form-bean name="addToGroup" type="oscar.eform.data.AddToGroupForm" />
@@ -890,6 +891,10 @@
     </action>
     <action input="/eform/efmformmanager.jsp" name="eFormHtmlUpload" path="/eform/uploadHtml" scope="request" type="oscar.eform.upload.HtmlUploadAction" validate="true">
       <forward name="success" path="/eform/efmformmanager.jsp" />
+    </action>
+    <action input="/eform/efmformmanageredit.jsp" name="eFormEdit" path="/eform/editForm" scope="request" type="oscar.eform.actions.HtmlEditAction" validate="true">
+      <forward name="success" path="/eform/efmformmanageredit.jsp" />
+      <forward name="fail" path="/eform/efmformmanageredit.jsp" />
     </action>
     <action input="/eform/efmimagemanager.jsp" name="eFormImageUpload" path="/eform/imageUpload" scope="request" type="oscar.eform.upload.ImageUploadAction" validate="true">
       <forward name="success" path="/eform/efmimagemanager.jsp" />

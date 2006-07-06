@@ -1,0 +1,150 @@
+<%
+  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
+%>  
+<%@ page import = "oscar.eform.data.*, oscar.eform.*, java.util.*, oscar.util.*"%> 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+<%
+   Hashtable curform = new Hashtable();
+   Hashtable errors = new Hashtable();
+if (request.getAttribute("submitted") != null) {
+    curform = (Hashtable) request.getAttribute("submitted");
+    errors = (Hashtable) request.getAttribute("errors");
+} else if (request.getParameter("fid") != null) {
+    String curfid = request.getParameter("fid");
+    curform = EFormUtil.loadEForm(curfid);
+}
+   //remove "null" values
+   if (curform.get("fid") == null) curform.put("fid", "");
+   if (curform.get("formName") == null) curform.put("formName", "");
+   if (curform.get("formSubject") == null) curform.put("formSubject", "");
+   if (curform.get("formFileName") == null) curform.put("formFileName", "");
+   if (curform.get("formHtml") == null) curform.put("formHtml", "");
+   if (curform.get("formDate") == null) curform.put("formDate", "--");
+   if (curform.get("formTime") == null) curform.put("formTime", "--");
+   
+   String formHtmlRaw = (String) curform.get("formHtml");
+   String formHtml = "";
+   if (request.getAttribute("formHtml") != null) {
+       formHtml = (String) request.getAttribute("formHtml");
+   }
+   formHtml = UtilMisc.htmlEscape(formHtmlRaw);
+%>
+<html:html locale="true">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<title><bean:message key="eform.edithtml.msgEditEform"/></title>
+<link rel="stylesheet" href="../share/css/OscarStandardLayout.css">
+<link rel="stylesheet" href="../share/css/eformStyle.css">
+<style type="text/css">
+    table.maintable td {
+        text-align: left;
+    }
+    table.maintable th {
+        text-align: left;
+    }
+</style>
+
+<script type="text/javascript" language="JavaScript">
+function openLastSaved() {
+    window.open('efmshowform_data.jsp?fid=<%= curform.get("fid") %>', 'PreviewForm', 'toolbar=no, location=no, status=yes, menubar=no, scrollbars=yes, resizable=yes, width=700, height=600, left=300, top=100');   
+}
+function disablensubmit() {
+    document.forms['eFormEdit'].savebtn.disabled = true;
+    document.forms['eFormEdit'].submit();
+}
+
+function disablenupload() {
+    document.getElementById('uploadbtn').disabled = true;
+    document.getElementById('uploadMarker').value = "true";
+    document.forms['eFormEdit'].submit();
+}
+</script>
+</head>
+
+<body>
+  <html:form action="/eform/editForm" styleId="editform" method="POST" enctype="multipart/form-data">
+    <div style="background: #CCCCFF; width: 100%;">
+        <center><font face="Helvetica"><bean:message key="eform.edithtml.msgEditEform"/></font></center>
+    </div>
+    <center>
+        <% if ((request.getAttribute("success") != null) && (errors.size() == 0)) { %><font class="warning" style="font-size: 12px;"><bean:message key="eform.edithtml.msgChangesSaved"/></font><% } %>
+        <input type="hidden" name="fid" id="fid" value="<%= curform.get("fid")%>">
+        <table width="100%" height="85%" class="maintable"<% if ((request.getAttribute("success") == null) || (errors.size() != 0)) {%> style="margin-top: 19px;"<% } %>>
+            <tr class="highlight">
+                <th style="width: 150px;"><bean:message key="eform.uploadhtml.formName"/>:</th>
+                <td><input type="text" name="formName" value="<%= curform.get("formName") %>"<% if (errors.containsKey("formNameMissing") || (errors.containsKey("formNameExists"))) { %> class="warning"<% } %> size="30"/>
+                    <% if (errors.containsKey("formNameMissing")) { %>
+                    <font class="warning"><bean:message key="<%= (String) errors.get("formNameMissing")%>"/></font>
+                    <%} else if (errors.containsKey("formNameExists")) { %>
+                    <font class="warning"><bean:message key="<%= (String) errors.get("formNameExists")%>"/></font>
+                    <%} %>  
+                </td>
+            </tr>
+            <tr class="highlight">
+                <th style="width: 150px;"><bean:message key="eform.uploadhtml.formSubject"/>:</th>
+                <td><input type="text" name="formSubject" value="<%= curform.get("formSubject") %>" size="30"/></td>
+            </tr>
+            <tr class="highlight">
+                <th><bean:message key="eform.uploadhtml.formFileName"/> <sup>optional</sup>:</th>
+                <td><input type="text" name="formFileName" value="<%= curform.get("formFileName")%>" size="50"/>          
+                </td>
+            </tr>
+            <tr>
+                <th><bean:message key="eform.edithtml.msgLastModified"/>:</th>
+                <td><%= curform.get("formDate")%> <%= curform.get("formTime") %></td>
+            </tr>
+            <tr>
+                <th><bean:message key="eform.edithtml.frmUploadFile"/> <sup>optional</sup>:</th>
+                <td><input type="file" name="uploadFile" size="40"<% if (errors.containsKey("uploadError")) { %> class="warning"<% } %>>
+                    <input type="hidden" name="uploadMarker" id="uploadMarker" value="false">
+                    <input type="button" name="uploadbtn" id="uploadbtn" value="<bean:message key="eform.edithtml.frmUpload"/>" onclick="disablenupload()">
+                    <% if (errors.containsKey("uploadError")) { %><font class="warning"><bean:message key="<%= (String) errors.get("uploadError") %>"/></font><% } %>
+                </td>
+            </tr>
+            <tr height="100%">
+                <th valign="top"><bean:message key="eform.edithtml.msgEditHtml"/>:</th>
+                <td colspan="2"><textarea style="width: 100%; height: 100%;" wrap="off" name="formHtml"><%= formHtml%></textarea></td>
+            </tr>
+            <tr>
+                <th><bean:message key="eform.edithtml.frmSubmit"/>:</th>
+                <td><input type="button" value="<bean:message key="eform.edithtml.msgPreviewLast"/>"<% if (((String) curform.get("fid")).length() == 0) {%> disabled<%}%> name="previewlast" onclick="openLastSaved()">
+                    <input type="submit" value="<bean:message key="eform.edithtml.msgSave"/>" name="savebtn" onclick="disablensubmit()">
+                    <input type="button" value="<bean:message key="eform.edithtml.cancelChanges"/>" onclick="javascript: window.location='efmformmanageredit.jsp?fid=<%= curform.get("fid") %>'">
+                    <input type="button" value="<bean:message key="eform.edithtml.msgBackToForms"/>" onclick="javascript: window.location='efmformmanager.jsp'">
+                
+                </td>
+            </tr>
+        </table>
+    </center>
+  </html:form>
+</body>
+</html:html>
+
+  

@@ -30,6 +30,7 @@ import java.util.regex.*;
 import org.apache.log4j.Category;
 import java.text.SimpleDateFormat;
 import java.text.*;
+import org.apache.struts.upload.*;
 
 public class StringUtils {
   static Category cat = Category.getInstance(StringUtils.class.getName());
@@ -255,4 +256,19 @@ public class StringUtils {
       return ret;
     }
   }
+  
+      public static String readFileStream(FormFile file) {
+        try {
+            InputStream is = file.getInputStream();
+            int pointer;
+            StringBuffer strb = new StringBuffer(file.getFileSize());
+            while ((pointer = is.read()) != -1) {
+                strb.append((char) pointer);
+            }
+            return(strb.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return("");
+    }
 }

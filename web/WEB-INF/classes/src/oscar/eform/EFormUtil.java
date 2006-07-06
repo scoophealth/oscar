@@ -31,7 +31,7 @@ import java.util.*;
 import oscar.util.UtilMisc;
 import oscar.util.UtilDateUtilities;
 import oscar.OscarProperties;
-import oscar.eform.data.EForm;
+import oscar.eform.data.*;
 
 public class EFormUtil {
     //for sorting....
@@ -46,7 +46,7 @@ public class EFormUtil {
    
    
    private EFormUtil() {}
-   public static void saveEForm(String formName, String formSubject, String fileName, String htmlStr) {
+   public static String saveEForm(String formName, String formSubject, String fileName, String htmlStr) {
        //called by the upload action, puts the uploaded form into DB
        String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd");
        String nowTime = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
@@ -56,7 +56,7 @@ public class EFormUtil {
        fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(fileName);
        String sql = "INSERT INTO eform (form_name, file_name, subject, form_date, form_time, status, form_html) VALUES " +
              "('" + formName + "', '" + fileName + "', '" + formSubject + "', '" + nowDate + "', '" + nowTime + "', 1, '" + htmlStr + "')";
-       runSQL(sql);
+       return (runSQLinsert(sql));
    }
    
    public static ArrayList listEForms(String sortBy, String deleted) {
@@ -91,6 +91,7 @@ public class EFormUtil {
    
    public static ArrayList listImages() {
        String imagePath = OscarProperties.getInstance().getProperty("eform_image");
+       System.out.println("Img Path: " + imagePath);
        File dir = new File(imagePath);
        ArrayList fileList = new ArrayList(Arrays.asList(dir.list()));
        return fileList;
@@ -133,10 +134,12 @@ public class EFormUtil {
        try {
            rs.next();
            //must have FID and form_name otherwise throws null pointer on the hashtable
-           //curht.put("fid", rs.getString("fid"));  
-           curht.put("formName", rs.getString("form_name"));
-           //curht.put("formSubject", rs.getString("subject"));
-           //curht.put("formFileName", rs.getString("file_name"));
+           curht.put("fid", rsGetString(rs, "fid"));  
+           curht.put("formName", rsGetString(rs, "form_name"));
+           curht.put("formSubject", rsGetString(rs, "subject"));
+           curht.put("formFileName", rsGetString(rs, "file_name"));
+           curht.put("formDate", rsGetString(rs, "form_date"));
+           curht.put("formTime", rsGetString(rs, "form_time"));
            curht.put("formHtml", rsGetString(rs, "form_html"));
            rs.close();
        } catch (SQLException sqe) {
@@ -172,6 +175,60 @@ public class EFormUtil {
        return(curht);
    }
    
+   public static void updateEForm(EFormBase updatedForm) {
+       //Updates the form - used by editForm
+       String formHtml = "\n" + org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormHtml());
+       String formName = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormName());
+       String formSubject = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormSubject());
+       String fileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(updatedForm.getFormFileName());
+       String sql = "UPDATE eform SET " +
+           "form_name='" + formName + "', " +
+           "file_name='" + fileName + "', " +
+           "subject='" + formSubject + "', " +
+           "form_date='" + updatedForm.getFormDate() + "', " +
+           "form_time='" + updatedForm.getFormTime() + "', " +
+           "form_html='" + formHtml + "' " +
+           "WHERE fid=" + updatedForm.getFid() + ";";
+       runSQL(sql);
+   }
+
+/*
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| fid          | int(8)       |      | PRI | NULL    | auto_increment |
+| form_name    | varchar(255) | YES  |     | NULL    |                |
+| file_name    | varchar(255) | YES  |     | NULL    |                |
+| subject      | varchar(255) | YES  |     | NULL    |                |
+| form_date    | date         | YES  |     | NULL    |                |
+| form_time    | time         | YES  |     | NULL    |                |
+| form_creator | varchar(255) | YES  |     | NULL    |                |
+| status       | tinyint(1)   |      |     | 1       |                |
+| form_html    | text         | YES  |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+ */
+
+   public static String getEFormParameter(String fid, String Column) {
+       String dbColumn = "";
+       if (Column.equalsIgnoreCase("formName")) dbColumn = "form_name";
+       else if (Column.equalsIgnoreCase("formSubject")) dbColumn = "subject";
+       else if (Column.equalsIgnoreCase("formFileName")) dbColumn = "file_name";
+       else if (Column.equalsIgnoreCase("formDate")) dbColumn = "form_date";
+       else if (Column.equalsIgnoreCase("formTime")) dbColumn = "form_time";
+       else if (Column.equalsIgnoreCase("formStatus")) dbColumn = "status";
+       else if (Column.equalsIgnoreCase("formHtml")) dbColumn = "form_html";
+       String sql = "SELECT " + dbColumn + " FROM eform WHERE fid=" + fid;
+       ResultSet rs = getSQL(sql);
+       try {
+           while (rs.next()) {
+               return rsGetString(rs, dbColumn);
+           }
+       } catch (SQLException sqe) {
+           sqe.printStackTrace();
+       }
+       return null;
+   }
+
    public static void delEForm(String fid) {
        //deletes the form so no one can add it to the patient (sets status to deleted)
       String sql = "UPDATE eform SET status=0 WHERE fid=" + fid;
@@ -267,6 +324,20 @@ public class EFormUtil {
            }
        } catch (SQLException sqe) { sqe.printStackTrace(); }
        return false;
+   }
+   
+      public static int formExistsInDBn(String formName, String fid) {
+          //returns # of forms in the DB with that name other than itself
+       String sql = "SELECT count(*) AS count FROM eform WHERE status=1 AND form_name='" + formName + "' AND fid!=" + fid;
+       try {
+           ResultSet rs = getSQL(sql);
+           while (rs.next()) {
+               int numberRecords = rs.getInt("count");
+               rs.close();
+               return numberRecords;
+           }
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return 0;
    }
    
    //--------------eform groups---------
@@ -405,6 +476,21 @@ public class EFormUtil {
            sqe.printStackTrace();
        }
    }
+   
+   private static String runSQLinsert(String sql) {
+       try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           db.RunSQL(sql);
+           sql = "SELECT LAST_INSERT_ID()";
+           ResultSet rs = db.GetSQL(sql);
+           rs.next();
+           String lastID = rs.getString("LAST_INSERT_ID()");
+           rs.close();
+           return(lastID);
+       } catch (SQLException sqe) { sqe.printStackTrace(); }
+       return "";
+   }
+   
    private static ResultSet getSQL(String sql) {
        ResultSet rs = null;
        try {
@@ -416,6 +502,7 @@ public class EFormUtil {
        }
        return(rs);
    }
+   
    private static String rsGetString(ResultSet rs, String column) throws SQLException {
        //protects agianst null values;
        String thisStr = rs.getString(column);

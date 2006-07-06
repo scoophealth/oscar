@@ -25,27 +25,38 @@
  *
  * Created on July 28, 2005, 1:54 PM
  */
-package oscar.eform.upload;
+package oscar.eform.data;
 
 import org.apache.struts.action.*;
 import org.apache.struts.upload.*;
 import javax.servlet.http.*;
 import oscar.eform.EFormUtil;
 
-public class HtmlUploadForm extends ActionForm {
-    private FormFile formHtml = null;
-    private String formName;
-    private String subject;
+public class HtmlEditForm extends ActionForm {
+    private FormFile uploadFile = null;
+    private String fid = "";
+    private String formName = "";
+    private String formSubject = "";
+    private String formFileName = "";
+    private String formHtml = "";
     
-    public HtmlUploadForm() {
+    public HtmlEditForm() {
+    }
+    
+    public FormFile getUploadFile() {
+        return uploadFile;
     }
 
-    public FormFile getFormHtml() {
-        return formHtml;
+    public void setUploadFile(FormFile uploadFile) {
+        this.uploadFile = uploadFile;
+    }
+
+    public String getFid() {
+        return fid;
     }    
     
-    public void setFormHtml(FormFile formHtml) {
-        this.formHtml = formHtml;
+    public void setFid(String fid) {
+        this.fid = fid;
     }    
     
     public String getFormName() {
@@ -56,26 +67,29 @@ public class HtmlUploadForm extends ActionForm {
         this.formName = formName;
     }
     
-    public String getSubject() {
-        return subject;
+    public String getFormSubject() {
+        return formSubject;
     }
     
-    public void setFormSubject(String subject) {
-        this.subject = subject;
+    public void setFormSubject(String formSubject) {
+        this.formSubject = formSubject;
     }
     
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-        ActionErrors errors = new ActionErrors();
-        if ((formName == null) || (formName.length() == 0)) {
-            errors.add("form", new ActionError("eform.errors.file_name.missing"));
-        }
-        if (formHtml.getFileSize() == 0) {
-            errors.add("form", new ActionError("eform.errors.form_html.missing"));
-        }
-        if (EFormUtil.formExistsInDB(formName)) {
-            errors.add("form", new ActionError("eform.errors.form_name.exists", formName));
-        }
-        return(errors);
+    public void setFormFileName(String formFileName) {
+        this.formFileName = formFileName;
     }
+    
+    public String getFormFileName() {
+        return formFileName;
+    }
+    
+    public String getFormHtml() {
+        return formHtml;
+    }
+    
+    public void setFormHtml(String formHtml) {
+        this.formHtml = formHtml;
+    }
+    
     
 }
