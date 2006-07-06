@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.model">
+	<class name="Admission" table="admission">
+		<id
+			column="am_id"
+			name="id"
+			type="java.lang.Long"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="provider_no"
+			length="11"
+			name="providerNo"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="admission_status"
+			length="24"
+			name="admissionStatus"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="client_id"
+			length="11"
+			name="clientId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="admission_date"
+			length="19"
+			name="admissionDate"
+			not-null="false"
+			type="timestamp"
+		 />
+		<property
+			column="admission_notes"
+			length="255"
+			name="admissionNotes"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="temp_admission"
+			length="1"
+			name="tempAdmission"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="program_id"
+			length="11"
+			name="programId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="temp_admit_discharge"
+			length="1"
+			name="tempAdmitDischarge"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="discharge_notes"
+			length="255"
+			name="dischargeNotes"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="discharge_date"
+			length="19"
+			name="dischargeDate"
+			not-null="false"
+			type="timestamp"
+		 />
+	</class>
+</hibernate-mapping>

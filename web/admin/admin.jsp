@@ -1,4 +1,6 @@
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -231,11 +233,40 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="#" onclick ="popupPage(500,800,'logReport.jsp?keyword=admin');return false;">Security Log Report</a></li>
          <% if (oscarVariables.getProperty("login_lock", "").trim().equals("true")){ %>
          <li><a href="#" onclick ="popupPage(500,800,'unLock.jsp');return false;">Unlock Account</a></li>
-         <% } %>
-      </ul>
+		  <% } %>
+		 </ul>
   </div>
   </security:oscarSec>
   
+<% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
+		  <br/>
+		  <b>Cookie Revolver Security Administration</b><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/cert/?act=super');return false;">Set super certificate</a><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/supercert');return false;">Generate super certificate</a><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/clear');return false;">Clear user cookie and super-cert cookie</a><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/quest/adminQuestions');return false;">Administrate security questions</a><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/policyadmin/select');return false;">Administrate security policies</a><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/banremover/show');return false;">Remove bans</a><br/>
+          <a href=# onClick ="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate matrix cards</a><br/>
+<% } %>
+
+<%-- -add by caisi--%>
+<%String absurl= "/" + application.getServletContextName()+"/caisicore/index.jsp"; %>
+<caisi:isModuleLoad moduleName="program">
+<tr bgcolor="#CCCCFF">
+      <th>
+        <p>CAISI</p>
+      </th>
+    </tr>
+    <tr bgcolor="#EEEEFF">
+      <td>
+	      <a href="#" ONCLICK ="popupPage(550,800,'<%=absurl %>');return false;" title="CAISI Admin">CAISI Admin</a>
+
+        </td>
+    </tr>
+ </caisi:isModuleLoad>
+ <%-- -add by caisi end--%>
+
   
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>" >   
   <div class="adminBox">

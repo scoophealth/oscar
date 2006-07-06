@@ -24,6 +24,8 @@
  * Ontario, Canada
  */
 --%>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
@@ -79,7 +81,24 @@ You have no rights to access the data!
     return;
   }
 %>
+<!-- add by caisi  --> 
+<caisi:isModuleLoad moduleName="program">
+<plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+<%
+session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
+session.setAttribute("casemgmt_oscar_bean", bean);
+session.setAttribute("casemgmt_bean_flag", "true");
+String hrefurl=request.getContextPath()+"/mod/casemgmtComp/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+if (request.getParameter("casetoEncounter")==null)
+{
+	response.sendRedirect(hrefurl);
+    return;
+}
+%>
 
+</plugin:hideWhenCompExists>
+</caisi:isModuleLoad>
+<!-- add by caisi end--> 
 <%
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
@@ -513,8 +532,6 @@ function getActiveText(e) {
   return true;
 }
 
-
-
 function tryAnother(){
 ////
     var txt = "null";
@@ -577,7 +594,7 @@ function popupOscarComm(vheight,vwidth,varpage) {
 
 function popUpMsg(vheight,vwidth,msgPosition) {
 
-
+  
   var page = "<rewrite:reWrite jspPage="../oscarMessenger/ViewMessageByPosition.do"/>?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(page, "<bean:message key="global.oscarRx"/>", windowprops);
@@ -731,6 +748,12 @@ border-right: 2px solid #cfcfcf;
         <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
                 <table name="tileTable" style="vertical-align:middle;border-collapse:collapse;" >
                     <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
+                    <caisi:isModuleLoad moduleName="program">
+                    <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+					</plugin:hideWhenCompExists>
+					</caisi:isModuleLoad>
+                    
                     <tr>
                         <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
                             <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
@@ -750,6 +773,17 @@ border-right: 2px solid #cfcfcf;
     <tr style="height:100%">
         <td style="font-size:80%;border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <table class="LeftTable">
+            <caisi:isModuleLoad moduleName="program">
+            	<plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+       <%String hrefurl2=request.getContextPath()+"/mod/casemgmtComp/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+%>
+        		<tr>
+        			<td>
+        			<a href="<%=hrefurl2%>">Case Management Encounter</a>
+        			</td>
+        		</tr>
+        		</plugin:hideWhenCompExists>
+        	</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="oscarEncounter.Index.clinicalModules"/>
@@ -812,6 +846,11 @@ border-right: 2px solid #cfcfcf;
 
             <table class="LeftTable">
             <form name="leftColumnForm">
+            <caisi:isModuleLoad moduleName="program">
+            <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+			</plugin:hideWhenCompExists>
+			</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="oscarEncounter.Index.msgForms"/>
@@ -869,6 +908,11 @@ border-right: 2px solid #cfcfcf;
             </table>
             <table class="LeftTable">
             <form name="msgForm">
+            <caisi:isModuleLoad moduleName="program">
+            <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+			</plugin:hideWhenCompExists>
+			</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         oscarMessenger <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Send Msg</a>
@@ -905,6 +949,11 @@ border-right: 2px solid #cfcfcf;
             </table>
             <table class="LeftTable">
             <form name="insertTemplateForm">
+            <caisi:isModuleLoad moduleName="program">
+            <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+			</plugin:hideWhenCompExists>
+			</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="oscarEncounter.Index.encounterTemplate"/>
@@ -945,6 +994,11 @@ border-right: 2px solid #cfcfcf;
                         <%}%>
                         
                         <form name="measurementGroupForm">
+                        <caisi:isModuleLoad moduleName="program">
+                    <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+					</plugin:hideWhenCompExists>
+					</caisi:isModuleLoad>
                         <select name="measurementGroupSelect" class="ControlSelect" onChange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
                          <%
@@ -999,6 +1053,11 @@ border-right: 2px solid #cfcfcf;
             </table>
             <table class="LeftTable">
                 <form name="ksearch" >
+                <caisi:isModuleLoad moduleName="program">
+                <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+				</plugin:hideWhenCompExists>
+				</caisi:isModuleLoad>
                     <tr class="Header">
                         <td style="font-weight:bold">
                             <bean:message key="oscarEncounter.Index.internetResources"/>
@@ -1034,6 +1093,11 @@ border-right: 2px solid #cfcfcf;
         </td>
         <td valign="top">
         <form name="encForm" action="SaveEncounter.do" method="POST">
+        <caisi:isModuleLoad moduleName="program">
+        <plugin:hideWhenCompExists componentName="casemgmtComp" reverse="true">
+					<input type="hidden" name="casetoEncounter" value="true">
+		</plugin:hideWhenCompExists>
+		</caisi:isModuleLoad>
             <table  name="encounterTableRightCol" >
     <!-- social history row --><!-- start new rows here -->
                 <tr>

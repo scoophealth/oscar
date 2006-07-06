@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.caisi.model.CustomFilter" table="custom_filter">
+        <id name="id" column="id" unsaved-value="0">
+			<generator class="increment"/>
+		</id>
+		<property name="name" unique="true"/>
+		<property name="status"/>
+		<property name="provider_no"/>
+		<property name="start_date" column="start_date" type="java.util.Date"/>
+		<property name="end_date" column="end_date" type="java.util.Date"/>
+		
+		<set name="providers" table="custom_filter_providers" lazy="false">
+		    <key column="filter_id"/>
+		    <many-to-many column="provider_no" class="org.caisi.model.Provider"/>
+		</set>
+		
+		<set name="assignees" table="custom_filter_assignees" lazy="false">
+		    <key column="filter_id"/>
+		    <many-to-many column="provider_no" class="org.caisi.model.Provider"/>
+		</set>
+		
+		<property name="demographic_no"/>
+		<property name="priority"/>
+    </class>
+</hibernate-mapping>

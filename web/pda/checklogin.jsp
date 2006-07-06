@@ -99,6 +99,9 @@
       session.setAttribute("endhour", strPreferAuth[1]);
       session.setAttribute("everymin", strPreferAuth[2]);
       session.setAttribute("groupno", strPreferAuth[3]);
+	if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+      session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
+	}
     }
 
     if(strAuth[3].equalsIgnoreCase("receptionist")) { // go to receptionist directory

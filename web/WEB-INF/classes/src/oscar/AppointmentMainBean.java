@@ -120,6 +120,40 @@ public class AppointmentMainBean {
   	return rs;
   }
 
+  public Object[] queryResultsCaisi(String[] aKeyword, String dboperation) throws Exception{
+	String sqlQuery =null;
+	Object[] rs =null;
+	  if(aKeyword[0].equals("*")) {
+	  	sqlQuery = dbSQL.getDef("search*","");
+	  	rs = dbPH.queryResultsCaisi(sqlQuery);
+	  } else {
+	  	sqlQuery = dbSQL.getDef(dboperation,"");
+	  	rs = dbPH.queryResultsCaisi(sqlQuery, aKeyword);
+	  }
+	return rs;
+  }
+  public Object[] queryResultsCaisi(String aKeyword, String dboperation) throws Exception{
+	  String sqlQuery = null;
+	  Object[] rs =null;
+	  if(aKeyword.equals("*")) {
+	  	sqlQuery = dbSQL.getDef("search*","");
+    	rs = dbPH.queryResultsCaisi(sqlQuery);
+	  } else {
+	  	sqlQuery = dbSQL.getDef(dboperation,"");
+    	rs = dbPH.queryResultsCaisi(sqlQuery, aKeyword);
+	  }
+  	return rs;
+  }
+  public Object[] queryResultsCaisi(int aKeyword, String dboperation) throws Exception{
+	  String sqlQuery = null;
+  	sqlQuery = dbSQL.getDef(dboperation,"");
+  	return dbPH.queryResultsCaisi(sqlQuery, aKeyword);
+  }
+  public Object[] queryResultsCaisi(String dboperation) throws Exception {
+      String sqlQuery = dbSQL.getDef(dboperation);
+      return dbPH.queryResultsCaisi(sqlQuery);
+    }
+  
   public ResultSet queryResults(String aKeyword, String dboperation) throws Exception{
 	  String sqlQuery = null;
 	  ResultSet rs =null;
@@ -162,5 +196,5 @@ public class AppointmentMainBean {
     dbPH.closePstmt();
     dbPH.closeConn();
   }
-
+ 
 }

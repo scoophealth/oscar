@@ -1,7 +1,8 @@
 <!-- add by caisi -->
-<%@ taglib uri="/WEB-INF/plugin-tag.tld" prefix="plugin" %>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <!-- add by caisi end<style>* {border:1px solid black;}</style> -->
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -15,7 +16,7 @@
 </security:oscarSec>
 
 <!-- caisi infirmary view extension add ffffffffffffff-->
-<plugin:hideWhenCompExists componentName="coreComp" reverse="true">
+<caisi:isModuleLoad moduleName="program">
 <%
 if (request.getParameter("year")!=null && request.getParameter("month")!=null && request.getParameter("day")!=null)
 	{
@@ -26,11 +27,12 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 	{
 		session.setAttribute("infirmaryView_date",null);
 	}
-session.setAttribute("infirmaryView_OscarQue",request.getQueryString());
+session.setAttribute("infirmaryView_OscarQue",request.getQueryString()); 
 String absurl="/infirm.do?action=showProgram";
 %>
-<plugin:include componentName="coreComp" absoluteUrl="<%=absurl%>"/>
-</plugin:hideWhenCompExists>
+<!-- plugin:include componentName="coreComp" absoluteUrl="<%=absurl%>"/ -->
+<c:import url="/infirm.do?action=showProgram" />
+</caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
@@ -83,7 +85,10 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
     int startHour=Integer.parseInt(((String) session.getAttribute("starthour")).trim());
     int endHour=Integer.parseInt(((String) session.getAttribute("endhour")).trim());
     int everyMin=Integer.parseInt(((String) session.getAttribute("everymin")).trim());
-
+    String newticklerwarningwindow=null;
+if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+	newticklerwarningwindow = (String) session.getAttribute("newticklerwarningwindow");
+}   
     int lenLimitedL=11, lenLimitedS=3; //L - long, S - short
     int len = lenLimitedL;
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
@@ -105,11 +110,13 @@ public boolean patientHasOutstandingPrivateBills(String demographicNo){
 	String studySymbol = "#", studyColor = "red";
 
     String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
-    ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
+    Object[] rst=apptMainBean.queryResultsCaisi("resource_baseurl", "search_resource_baseurl");
+    ResultSet rsgroup1 =(ResultSet) rst[0];
     while (rsgroup1.next()) {
  	    resourcebaseurl = rsgroup1.getString("value");
     }
     rsgroup1 = null;
+    ((Statement) rst[1]).close();
 
     GregorianCalendar cal = new GregorianCalendar();
     int curYear = cal.get(Calendar.YEAR);
@@ -261,10 +268,14 @@ function changeGroup(s) {
 	var newGroupNo = s.options[s.selectedIndex].value;
 	if(newGroupNo.indexOf("_grp_") != -1) {
 	  newGroupNo = s.options[s.selectedIndex].value.substring(5);
-	  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+	  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+}else popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 	} else {
 	  newGroupNo = s.options[s.selectedIndex].value;
-	  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+	  popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=newticklerwarningwindow%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
+}else popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 	}
 }
 
@@ -283,10 +294,39 @@ function goZoomView(s, n) {
 function findProvider(p,m,d) {
   popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ document.findprovider.providername.value );
 }
+//popup a new tickler warning window
+function load()
+{
+
+if ("<%=newticklerwarningwindow%>"=="enabled")
+{
+if (IsPopupBlocker()) {
+		alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
+	} 
+var pu=window.open("../UnreadTickler.do",null,"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
+pu.focus();
+
+}
+
+}
+
+function IsPopupBlocker() {
+	var oWin = window.open("","testpopupblocker","width=100,height=50,top=5000,left=5000");
+	if (oWin==null || typeof(oWin)=="undefined") {
+		return true;
+	} else {
+		oWin.close();
+		return false;
+	}
+}
 
 </SCRIPT>
+<%if (org.caisi.common.IsPropertiesOn.isCaisiEnable()){%>
+<body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
+<c:import url="/SystemMessage.do?method=view" />
+<%}else{%>
 <body bgcolor="#EEEEFF" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-<plugin:include componentName="coreComp" absoluteUrl="/SystemMessage.do?method=view"/>
+<%}%>
 <%
    int numProvider=0, numAvailProvider=0;
    String [] curProvider_no;
@@ -294,10 +334,12 @@ function findProvider(p,m,d) {
    ResultSet rsgroup = null;
    //initial provider bean for all the application
    if(providerBean.isEmpty()) {
-     rsgroup = apptMainBean.queryResults("searchallprovider");
+	   rst= apptMainBean.queryResultsCaisi("searchallprovider");
+     rsgroup = (ResultSet) rst[0];
  	   while (rsgroup.next()) {
  	    providerBean.setProperty(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
  	   }
+ 	  ((Statement) rst[1]).close();
  	 }
 
 if(providerBean.get(mygroupno) != null) { //single appointed provider view
@@ -308,19 +350,22 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
      curProviderName[0]=providerBean.getProperty(mygroupno);
 } else {
 	if(view==0) { //multiple views
-		rsgroup = apptMainBean.queryResults(mygroupno, "searchmygroupcount");
+		rst=apptMainBean.queryResultsCaisi(mygroupno, "searchmygroupcount");
+		rsgroup = (ResultSet) rst[0];
 		while (rsgroup.next()) {
 			numProvider=rsgroup.getInt(1);
 		}
-
+		((Statement) rst[1]).close();
        String [] param3 = new String [2];
        param3[0] = mygroupno;
        param3[1] = strDate; //strYear +"-"+ strMonth +"-"+ strDay ;
-  	   rsgroup = apptMainBean.queryResults(param3, "search_numgrpscheduledate");
-		while (rsgroup.next()) {
+  	   rst= apptMainBean.queryResultsCaisi(param3, "search_numgrpscheduledate");
+  	 rsgroup=(ResultSet) rst[0];
+  	   while (rsgroup.next()) {
 			numAvailProvider = rsgroup.getInt(1);
 		}
-
+  	 ((Statement) rst[1]).close();
+  	 
      if(numProvider==0) {
        numProvider=1; //the login user
        curProvider_no = new String []{curUser_no};  //[numProvider];
@@ -336,13 +381,15 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
      curProvider_no = new String [numProvider];
      curProviderName = new String [numProvider];
 
-	   rsgroup = apptMainBean.queryResults(mygroupno, "searchmygroupprovider");
+		rst=apptMainBean.queryResultsCaisi(mygroupno, "searchmygroupprovider");
+	   rsgroup = (ResultSet) rst[0];
 	   int iTemp=0;
      while (rsgroup.next()) {
        curProvider_no[iTemp]=rsgroup.getString("provider_no");
        curProviderName[iTemp]=rsgroup.getString("first_name")+" "+rsgroup.getString("last_name");
        iTemp++;
      }
+     ((Statement)rst[1]).close();
      }
    } else { //single view
      numProvider=1;
@@ -358,18 +405,22 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
    param3[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
      param3[1] = curProvider_no[nProvider];
-	   rsgroup = apptMainBean.queryResults(param3, "search_appttimecode");
+     	rst=apptMainBean.queryResultsCaisi(param3, "search_appttimecode");
+	   rsgroup = (ResultSet)rst[0];
      while (rsgroup.next()) {
        dateTimeCodeBean.put(rsgroup.getString("provider_no"), rsgroup.getString("timecode"));
      }
    }
-	 rsgroup = apptMainBean.queryResults("search_timecode");
+   ((Statement)rst[1]).close();
+   	rst=apptMainBean.queryResultsCaisi("search_timecode");
+	 rsgroup = (ResultSet)rst[0];
    while (rsgroup.next()) {
      dateTimeCodeBean.put("description"+rsgroup.getString("code"), rsgroup.getString("description"));
      dateTimeCodeBean.put("duration"+rsgroup.getString("code"), rsgroup.getString("duration"));
      dateTimeCodeBean.put("color"+rsgroup.getString("code"), (rsgroup.getString("color")==null || rsgroup.getString("color").equals(""))?bgcolordef:rsgroup.getString("color") );
      dateTimeCodeBean.put("confirm" + rsgroup.getString("code"), rsgroup.getString("confirm"));
    }
+   ((Statement)rst[1]).close();
 
    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 %>
@@ -386,8 +437,13 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a></font></td>
+        <caisi:isModuleLoad moduleName="program">
+		<plugin:hideWhenCompExists componentName="casemgmtComp">
+        
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
+        </plugin:hideWhenCompExists>
+        </caisi:isModuleLoad>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -426,16 +482,25 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!--/oscarEcounter code block -->
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
+<caisi:isModuleLoad moduleName="ticklerplus">
+         <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font>
+</caisi:isModuleLoad>
+<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
          <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font>
+</caisi:isModuleLoad>
          <!--a href="toggleReason.jsp" target="_blank">R</a-->
         </td>
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a></font></td>
-         <plugin:hideWhenCompExists componentName="ticklerComp">
+         <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
    <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp');return false;" TITLE='<bean:message key="global.tickler"/>'><oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler></a></font></td>
-         </plugin:hideWhenCompExists>
+         </caisi:isModuleLoad>
+         <caisi:isModuleLoad moduleName="ticklerplus">
+         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
+         <a HREF="#" ONCLICK ="popupPage2('../Tickler.do');return false;" TITLE='Tickler+'><oscar:newTickler providerNo="<%=curUser_no%>">Tickler+</oscar:newTickler></a></font></td>
+         </caisi:isModuleLoad>
 <!-- admin code block -->
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -445,20 +510,32 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 
 <td></td>
 <!-- caisi menu extension point add -->
+<%int menuTagNumber=0; %> 
 <plugin:pageContextExtension serviceName="oscarMenuExtension" stemFromPrefix="Oscar"/>
 <logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
+<%if (org.caisi.common.IsPropertiesOn.propertiesOn(pt.getName().toLowerCase())) {
+	menuTagNumber++;
+%>
+
       <td rowspan=2 BGCOLOR='#C0C0C0' ALIGN='MIDDLE' nowrap><font
        FACE='VERDANA,ARIAL,HELVETICA' SIZE=2>&nbsp;<a href='<html:rewrite page="<%= pt.getLink() %>"/>'>
        <%= pt.getName() %></a>&nbsp;</font></td>
       <td></td>
-
+<%} %>      
 </logic:iterate>
+
 <!-- caisi menu extension point add end-->
       </tr><tr>
         <td valign="bottom"><img src="../images/tabs_l_active_end_alone.gif" width="14" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_r_active_end.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
+        
+        <caisi:isModuleLoad moduleName="program">
+    
+		<plugin:hideWhenCompExists componentName="casemgmtComp">
+		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
+		</plugin:hideWhenCompExists>        
+        </caisi:isModuleLoad>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
@@ -469,9 +546,9 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!-- oscarMessenger code block -->
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
 <!--/oscarMessenger code block -->
-<plugin:hideWhenCompExists componentName="ticklerComp">
+
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-</plugin:hideWhenCompExists>
+
 <!-- doctor code block -->
 		<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
@@ -483,10 +560,12 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 		</security:oscarSec>
 <!-- admin code block -->
 
-<!-- caisi menu extension point add begin-->
-<logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
+<!-- caisi menu extension point add begin--> 
+
+<%for (int i=0; i < menuTagNumber;i++){ %>
 	<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-</logic:iterate>
+<%} %>
+
 <!-- caisi menu extension point add end-->
         <td valign="bottom"><img src="../images/tabs_r_inactive_end.gif" width="17" height="20" border="0"></td>
       </tr>
@@ -529,28 +608,36 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	<% } %>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
 <!-- caisi infirmary view extension add ffffffffffff-->
-<plugin:hideWhenCompExists componentName="coreComp" reverse="true">
+<caisi:isModuleLoad moduleName="program">
 <table><tr><td>
-</plugin:hideWhenCompExists>
+</caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
+<logic:notEqual name="infirmaryView_isOscar" value="false">
+<%
+session.setAttribute("case_program_id", null);
+%>
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
   <select name="mygroup_no" onChange="changeGroup(this)">
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 <%
-   rsgroup = apptMainBean.queryResults( "searchmygroupno");
+	rst=apptMainBean.queryResultsCaisi( "searchmygroupno");
+   rsgroup = (ResultSet) rst[0];
  	 while (rsgroup.next()) {
 %>
   <option value="<%="_grp_"+rsgroup.getString("mygroup_no")%>" <%=mygroupno.equals(rsgroup.getString("mygroup_no"))?"selected":""%> ><%=rsgroup.getString("mygroup_no")%></option>
 <%
  	 }
+ 	((Statement)rst[1]).close();
 %>
 
-<% rsgroup = apptMainBean.queryResults("searchprovider");
+<% rst = apptMainBean.queryResultsCaisi("searchprovider");
+	rsgroup = (ResultSet) rst[0];
  	 while (rsgroup.next()) {
 %>
   <option value="<%=rsgroup.getString("provider_no")%>" <%=mygroupno.equals(rsgroup.getString("provider_no"))?"selected":""%> %> <%=rsgroup.getString("last_name")+", "+rsgroup.getString("first_name")%></option>
 <%
  	 }
+ 	((Statement)rst[1]).close();
 %>
 </select>
 <% if(request.getParameter("viewall")!=null && request.getParameter("viewall").equals("1") ) { %>
@@ -558,14 +645,21 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <% } else {  %>
          <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp;
 <% } %>
+</logic:notEqual>
+<logic:equal name="infirmaryView_isOscar" value="false">
+<%
+ //String verno=org.caisi.comp.FrameworkFactory.getFramework().getComponent("coreComp").getComponent().getVersion();
+%>
+<b style="color:blue">caisi core version 2.1.8</b>&nbsp&nbsp&nbsp&nbsp
+</logic:equal>
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
-
+         
 <!-- caisi infirmary view extension add fffffffffffff-->
-<plugin:hideWhenCompExists componentName="coreComp" reverse="true">
+<caisi:isModuleLoad moduleName="program">
 </td></tr>
 <tr><td>
 <%@ include file="infirmaryviewprogramlist.jsp" %>
-</plugin:hideWhenCompExists>
+</caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
 
       </td>
@@ -617,8 +711,9 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
      depth = bDispTemplatePeriod ? (24*60 / timecodeLength) : everyMin; // add function to display different time slot
      param1[0] = strDate; //strYear+"-"+strMonth+"-"+strDay;
      param1[1] = curProvider_no[nProvider];
-     rsgroup = apptMainBean.queryResults(param1, "search_scheduledate_single");
-
+     rst = apptMainBean.queryResultsCaisi(param1, "search_scheduledate_single");
+		
+     rsgroup=(ResultSet) rst[0];
      //viewall function
      if(request.getParameter("viewall")==null || request.getParameter("viewall").equals("0") ) {
        if(!rsgroup.next() || rsgroup.getString("available").equals("0")) {
@@ -626,6 +721,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
          else userAvail = false;
        }
      }
+     ((Statement)rst[1]).close();
      bColor=bColor?false:true;
  %>
             <td valign="top" width="<%=1*100/numProvider%>%"> <!-- for the first provider's schedule -->
@@ -635,22 +731,33 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
  <!-- caisi infirmary view extension modify ffffffffffff-->
   <logic:notEqual name="infirmaryView_isOscar" value="false">
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="Flip view"  >
- </logic:notEqual>
- <!-- caisi infirmary view extension modify end ffffffffffffffff-->
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperation=searchappointmentday" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>"-->
           <%=curProviderName[nProvider]%></a></b>
           <% if (!userAvail) {%>
           [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]
           <% } %>
+</logic:notEqual>
+<logic:equal name="infirmaryView_isOscar" value="false">
+	<%String prID="1"; %> 
+	<logic:present name="infirmaryView_programId">
+	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
+	</logic:present>
+	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
+	  	<%if (pb.getValue().equals(prID)) {%>
+  		<b><%=pb.getLabel()%></label></b>
+		<%} %>
+  	</logic:iterate>
+</logic:equal>
+<!-- caisi infirmary view extension modify end ffffffffffffffff-->
 </td></tr>
           <tr><td valign="top">
 
 <!-- caisi infirmary view exteion add -->
 <!--  fffffffffffffffffffffffffffffffffffffffffff-->
-<plugin:hideWhenCompExists componentName="coreComp" reverse="true">
+<caisi:isModuleLoad moduleName="program">
 <%@ include file="infirmarydemographiclist.jsp" %>
-</plugin:hideWhenCompExists>
+</caisi:isModuleLoad>
 <logic:notEqual name="infirmaryView_isOscar" value="false">
 <!-- caisi infirmary view exteion add end ffffffffffffffffff-->
 <!-- =============== following block is the original oscar code. -->
@@ -661,7 +768,9 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
           bFirstFirstR=true;
   				param[0]=curProvider_no[nProvider];
 	 				param[1]=year+"-"+month+"-"+day;//e.g."2001-02-02";
-   				rs = apptMainBean.queryResults(param, strsearchappointmentday);
+	 			
+	 			rst=apptMainBean.queryResultsCaisi(param, strsearchappointmentday);
+   				rs = (ResultSet)rst[0];
 
 			    for(ih=startHour*60; ih<=(endHour*60+(60/depth-1)*depth); ih+=depth) { // use minutes as base
             hourCursor = ih/60;
@@ -784,14 +893,14 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         			if(demographic_no==0) {
         %>
         	<!--  caisi  -->
-        	<% if (tickler_no.compareTo("") != 0) {%>
-	        	<plugin:hideWhenCompExists componentName="ticklerComp">
+        	<% if (tickler_no.compareTo("") != 0) {%>	
+	        	<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
         			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    			</plugin:hideWhenCompExists>
-    			<plugin:hideWhenCompExists componentName="ticklerComp" reverse="true">
-    				<a href="../mod/ticklerComp/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    			</plugin:hideWhenCompExists>
-    		<%} %>
+    			</caisi:isModuleLoad>>
+    			<caisi:isModuleLoad moduleName="ticklerplus">
+    				<a href="../ticklerPlus/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
+    			</caisi:isModuleLoad>
+    		<%} %>	    		
 <a href=# onClick ="popupPage(400,680,'../appointment/appointmentcontrol.jsp?appointment_no=<%=rs.getString("appointment_no")%>&provider_no=<%=curProvider_no[nProvider]%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&start_time=<%=iS+":"+iSm%>&demographic_no=0&displaymode=edit&dboperation=search');return false;" title="<%=iS+":"+(iSm>10?"":"0")+iSm%>-<%=iE+":"+iEm%>
 <%=name%>
 <bean:message key="provider.appointmentProviderAdminDay.reason"/>: <%=UtilMisc.htmlEscape(reason)%>
@@ -801,12 +910,13 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         			} else {
         			  //System.out.println(name+" / " +demographic_no);
 				%>	<% if (tickler_no.compareTo("") != 0) {%>
-			        	<plugin:hideWhenCompExists componentName="ticklerComp">
-    		    			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no %>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    					</plugin:hideWhenCompExists>
-    					<plugin:hideWhenCompExists componentName="ticklerComp" reverse="true">
-		    				<a href="../mod/ticklerComp/Tickler.do?method=filter&filter.client=<%=demographic_no %>" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    					</plugin:hideWhenCompExists>
+			        	<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
+    		    			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
+    					</caisi:isModuleLoad>
+    					<caisi:isModuleLoad moduleName="ticklerplus">
+		    				<!--  <a href="../Tickler.do?method=filter&filter.client=<%=demographic_no %>" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a> -->
+    						<a href="#" onClick="popupPage(700,1000, '../Tickler.do?method=filter&filter.client=<%=demographic_no %>');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a> 	
+    					</caisi:isModuleLoad>
 					<%} %>
 
 <!-- doctor code block -->
@@ -894,6 +1004,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
             //out.println("<td width='1'>&nbsp;</td></tr>"); give a grid display
             out.println("<td width='1'></td></tr>"); //no grid display
           }
+		  ((Statement)rst[1]).close();
     			//apptMainBean.closePstmtConn();
 				%>
 
@@ -907,14 +1018,25 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <!-- caisi infirmary view extension modify fffffffffffffffffff-->
 <logic:notEqual name="infirmaryView_isOscar" value="false">
           <b><input type='radio' name='flipview' onClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.flipView"/>"  >
-</logic:notEqual>
-<!-- caisi infirmary view extension modify end ffffffffffffffffff-->
           <a href=# onClick="goZoomView('<%=curProvider_no[nProvider]%>','<%=curProviderName[nProvider]%>')" onDblClick="goFilpView('<%=curProvider_no[nProvider]%>')" title="<bean:message key="provider.appointmentProviderAdminDay.zoomView"/>" >
           <!--a href="providercontrol.jsp?year=<%=strYear%>&month=<%=strMonth%>&day=<%=strDay%>&view=1&curProvider=<%=curProvider_no[nProvider]%>&curProviderName=<%=curProviderName[nProvider]%>&displaymode=day&dboperationhappo=searcintmentday" title="zoom view"-->
           <%=curProviderName[nProvider]%></a></b>
           <% if(!userAvail) { %>
           [<bean:message key="provider.appointmentProviderAdminDay.msgNotOnSched"/>]
           <% } %>
+</logic:notEqual>
+<logic:equal name="infirmaryView_isOscar" value="false">
+	<%String prID="1"; %> 
+	<logic:present name="infirmaryView_programId">
+	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
+	</logic:present>
+	<logic:iterate id="pb" name="infirmaryView_programBeans" type="org.apache.struts.util.LabelValueBean">
+	  	<%if (pb.getValue().equals(prID)) {%>
+  		<b><%=pb.getLabel()%></label></b>
+		<%} %>
+  	</logic:iterate>
+</logic:equal>
+<!-- caisi infirmary view extension modify end ffffffffffffffffff-->
           </td></tr>
 
        </table><!-- end table for each provider name -->

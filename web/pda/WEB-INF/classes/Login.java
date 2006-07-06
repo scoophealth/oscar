@@ -130,7 +130,10 @@ public class Login {
   }
 
   public String[] getPreferences() {
-  	String [] temp=new String[] {"8","18","15","a"};
+	  String [] temp=null;
+  if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+    	temp=new String[] {"8","18","15","a","disabled"};
+   }else temp=new String[] {"8","18","15","a"};
     ResultSet rs=null;
     try {
       String strSQL="select start_hour, end_hour, every_min, mygroup_no from preference where provider_no = '" + userid+"'";
@@ -140,6 +143,9 @@ public class Login {
         temp[1] = rs.getString("end_hour");
         temp[2] = rs.getString("every_min");
         temp[3] = rs.getString("mygroup_no");
+        if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+            temp[4] = rs.getString("new_tickler_warning_window");
+        }
       }
       //accessDB.closePstmt();
       accessDB.closeConn();
@@ -149,6 +155,9 @@ public class Login {
         temp[1] = "18";
         temp[2] = "15";
         temp[3] = "a";
+        if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+           temp[4] = "disabled";
+        }
       }
       return temp;
 

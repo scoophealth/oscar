@@ -1,0 +1,127 @@
+package org.caisi.tickler.prepared.runtime;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.caisi.model.Consultation;
+import org.caisi.model.ProfessionalSpecialists;
+import org.caisi.model.Tickler;
+import org.caisi.service.ConsultationManager;
+import org.caisi.service.ProviderManagerTickler;
+import org.caisi.service.TicklerManager;
+import org.caisi.tickler.prepared.PreparedTickler;
+import org.caisi.tickler.prepared.seaton.consultation.ConsultationConfiguration;
+import org.caisi.tickler.prepared.seaton.consultation.ConsultationsConfigBean;
+import org.caisi.tickler.prepared.seaton.consultation.ProcessConsultationBean;
+
+public class ProcessConsultationTickler extends AbstractPreparedTickler implements PreparedTickler {
+
+	private static Log log = LogFactory.getLog(ProcessConsultationTickler.class);
+	
+	private ConsultationManager consultationMgr;
+	private TicklerManager ticklerMgr;
+	private ProviderManagerTickler providerMgr;
+	
+	
+	public void setConsultationManager(ConsultationManager consultationMgr) {
+		this.consultationMgr = consultationMgr;
+	}
+	
+	public void setTicklerManager(TicklerManager ticklerMgr) {
+		this.ticklerMgr = ticklerMgr;
+	}
+	
+	public void setProviderManager(ProviderManagerTickler providerMgr) {
+		this.providerMgr = providerMgr;
+	}
+	
+	public String getName() {
+		return "Process Consultation Request";
+	}
+
+	public String getViewPath() {
+		return "/ticklerPlus/processConsultation.jsp";
+	}
+	
+	public ActionForward execute(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		ProcessConsultationBean formBean = null;
+		
+		String path = request.getSession().getServletContext().getRealPath("/");
+		ConsultationConfiguration config = new ConsultationConfiguration(path + File.separator + "WEB-INF/consultation.xml");
+		ConsultationsConfigBean configBean = config.loadConfig();
+		
+		String providerNo = (String)request.getSession().getAttribute("user");
+		
+		if(request.getParameter("action") == null) {
+			formBean = new ProcessConsultationBean();
+			formBean.setId("Process Consultation Request");
+			request.setAttribute("formHandler",formBean);
+			return new ActionForward(getViewPath());
+		}
+		
+		//populate the bean - better way to do this???
+		formBean = tearForm(request);
+		
+		
+		if(formBean.getDemographic_no() != null && formBean.getAction().equals("populate")) {
+			List consultationRequests = consultationMgr.getConsultations(formBean.getDemographic_no());
+			request.setAttribute("consultations",consultationRequests);
+			formBean.setAction("");
+			request.setAttribute("formBean",formBean);
+			return new ActionForward(this.getViewPath());
+		}
+		
+		if(formBean.getAction().equals("generate")) {
+			String requestId = request.getParameter("current_consultation");
+			Consultation consultation = consultationMgr.getConsultation(requestId);
+			ProfessionalSpecialists spec = consultation.getProfessionalSpecialist();
+			//Provider provider = providerMgr
+			//create a tickler here
+			Tickler tickler = new Tickler();
+			tickler.setStatus('A');
+			tickler.setCreator(providerNo);
+			tickler.setDemographic_no(formBean.getDemographic_no());
+			tickler.setPriority("Normal");
+			tickler.setService_date(new Date());
+			tickler.setTask_assigned_to(configBean.getProcessrequest().getRecipient());
+			tickler.setUpdate_date(new Date());
+			String contextName = request.getScheme()+ "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath().substring(0,request.getContextPath().indexOf("/",1));
+			tickler.setMessage("A consultation request has been made for <br/>"
+					+ formBean.getDemographic_name() + "<br/>to<br/>" +
+					spec.getFirstName() + " " + spec.getLastName() + 
+					" <br/>ADDRESS:" + spec.getAddress() + " <br/>PHONE:" + spec.getPhone()
+					+ " <br/>FAX:" + spec.getFax() + "<br/>Reason: " + consultation.getReason()
+					+ "<br/><br/>"
+					+ "Please obtain an appointment, and enter the information into the consultation form, and update"
+					+ " the status to 'Nothing'."
+					+ "<br/>"
+					+ "<br/><a target=\"consultation\" href=\"" +contextName + "/oscarEncounter/ViewRequest.do?requestId=" + consultation.getRequestId() + "\">Link to consultation</a>"
+					+ "<br/><a target=\"demographic\" href=\"" + contextName +  "/demographic/demographiccontrol.jsp?displaymode=edit&demographic_no=" + formBean.getDemographic_no() + "&dboperation=search_detail\">Link to patient</a>"
+				);
+			
+			ticklerMgr.addTickler(tickler);
+		}
+		return null;
+	}
+	
+	public ProcessConsultationBean tearForm(HttpServletRequest request) {
+		ProcessConsultationBean bean = new ProcessConsultationBean();
+		bean.setAction(request.getParameter("action"));
+		bean.setDemographic_name(request.getParameter("demographic_name"));
+		bean.setDemographic_no(request.getParameter("demographic_no"));
+		bean.setId(request.getParameter("id"));
+		bean.setMethod(request.getParameter("method"));
+		return bean;
+	}
+}
