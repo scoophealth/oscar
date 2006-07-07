@@ -53,6 +53,9 @@
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 
+<!-- RJ added 07/06/2006 -->
+<script src="../share/javascript/prototype.js" language="javascript" type="text/javascript"></script>
+
 <script  type="text/javascript">
 function setfocus() {
   this.focus();
@@ -71,13 +74,67 @@ function checkTotal() {
   return true;
 }
 
+<%-- RJ added code to copy text to clipboard in firefox 07/06/2006 --%>
 function ClipBoard1(spanId) {
-	document.getElementById("text1").innerText = document.getElementById(spanId).innerText;
-	//alert("cl ip");
-	Copied = document.getElementById("text1").createTextRange();
-	//alert("clip");
-	Copied.execCommand("RemoveFormat");
-	Copied.execCommand("Copy");
+
+	var browser = navigator.userAgent.toLowerCase();
+
+	if( browser.indexOf('msie') > -1 )
+	{			
+		document.getElementById("text1").innerText = document.getElementById(spanId).innerText;
+		//alert("cl ip");
+		Copied = document.getElementById("text1").createTextRange();
+		//alert("clip");
+		Copied.execCommand("RemoveFormat");
+		Copied.execCommand("Copy");
+	}
+	else if( browser.indexOf('safari') > -1 )
+	{
+		alert("Copy to clipboard is not supported in Safari");
+	}
+	else if( browser.indexOf('firefox') > -1 )
+	{
+
+		//need privelege to access clipboard
+		//We'll catch exception if security prevents access and tell user how to correct the problem
+		try
+		{
+			netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+		}
+		catch(ex)
+		{
+			alert("Your browser has restricted access to clipboard\n" + 
+			       "Please type \"about:config\" in location bar\n" + 
+			       "and search for \"signed.applets.codebase_principal_support\"\n" +
+			       "then set value to true.  You will then be able to copy to clipboard");
+			return;
+		}
+
+		var strText = document.getElementById(spanId).innerHTML;
+		
+		//we want to keep line format so replace <br> with \r\n
+		strText = strText.replace(/\t/g, "");
+		strText = strText.replace(/<br>/g,"\r\n");
+		
+		//get rid of html tags and &nbsp;
+		strText = strText.stripTags();
+		strText = strText.replace(/&nbsp;/g," ");
+
+		//object to hold copy of string 
+		var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+		str.data = strText;
+
+		//transfer object holds string. xfer obj is placed on clipboard
+		var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
+		trans.addDataFlavor("text/unicode");
+		trans.setTransferData("text/unicode",str,strText.length * 2); 
+
+		//xfer object to clipboard
+		var clipid = Components.interfaces.nsIClipboard;
+		var clip = Components.classes["@mozilla.org/widget/clipboard;1"].getService(clipid);
+		clip.setData(trans,null,clipid.kGlobalClipboard);
+
+	}
 }
 function ClipBoard2() {
 	document.getElementById("text1").innerText = document.getElementById("copytext").innerText;
@@ -103,6 +160,7 @@ function ClipBoard4() {
 	Copied.execCommand("RemoveFormat");
 	Copied.execCommand("Copy");
 }
+
 </SCRIPT>
 </head>
 <body  background="../images/gray_bg.jpg" bgcolor="white" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
@@ -218,7 +276,7 @@ function ClipBoard4() {
           <tr>
             <%--<td><%=label2%></td>--%>
             <td>
-            <font face="Courier New, Courier, mono" size="2"><SPAN ID="copytext2">
+            <font face="Courier New, Courier, mono" size="2"><span id="copytext2">
 			<b><%=last_name%>,&nbsp;<%=first_name%>&nbsp;<%=chart_no%></b><br><%=address%><br><%=city%>,&nbsp;<%=province%>,&nbsp;<%=postal%><br><bean:message key="demographic.demographiclabelprintsetting.msgHome"/>:&nbsp;<%=phone%><br><%=dob%>&nbsp;<%=sex%><br><%=hin%><br><bean:message key="demographic.demographiclabelprintsetting.msgBus"/>:<%=phone2%>&nbsp;<bean:message key="demographic.demographiclabelprintsetting.msgDr"/>&nbsp;<%=providername%><br></span></font>
             </td>
           </tr>
@@ -261,6 +319,7 @@ function ClipBoard4() {
       </td>
       <td align="center" bgcolor="#CCCCCC">
 		<TEXTAREA ID="text1" STYLE="display:none;">
+		
 		</TEXTAREA>
 		<input type="button" onClick="ClipBoard1('copytext4');" value="Copy to Clipboard" />
         <input type="checkbox" name="label3checkbox" value="checked" >
