@@ -31,6 +31,7 @@ import oscar.util.*;
 import java.util.Properties;
 import oscar.OscarProperties;
 import oscar.util.UtilDateUtilities;
+import oscar.util.StringBufferUtils;
 
 public class EFormBase {
     protected final String imageMarker = "${oscar_image_path}";
@@ -64,11 +65,12 @@ public class EFormBase {
         String projHome = prop.getProperty("project_home");
         String output = "../../OscarDocument/" + projHome + "/eform/images/";
         StringBuffer html = new StringBuffer(formHtml);
-        int pointer = html.indexOf(imageMarker);
-        if (pointer >= 0) {
+        int pointer = StringBufferUtils.indexOfIgnoreCase(html, imageMarker, 0);
+        while (pointer >= 0) {
             html = html.replace(pointer, pointer+imageMarker.length(), output);
-            formHtml = html.toString();
+            pointer = StringBufferUtils.indexOfIgnoreCase(html, imageMarker, 0);
         }
+        formHtml = html.toString();
     }
     
     //------------getters/setters----
