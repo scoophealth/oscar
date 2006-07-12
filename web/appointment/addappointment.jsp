@@ -3,6 +3,7 @@
   if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
 
   String curProvider_no = request.getParameter("provider_no");
+  String curDoctor_no = request.getParameter("doctor_no") != null ? request.getParameter("doctor_no") : "";
 
   String curUser_no = (String) session.getAttribute("user");
 
@@ -33,9 +34,11 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" /><%@ include file="../admin/dbconnection.jsp" %>
+<%--RJ 07/07/2006 --%>
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <% 
 
-  String [][] dbQueries=new String[][] { 
+String [][] dbQueries=new String[][] { 
 
     {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
 
@@ -476,8 +479,8 @@ String disabled="";
             <td width="20%"> <INPUT TYPE="TEXT" NAME="duration" VALUE="<%=duration%>" WIDTH="25" HEIGHT="20" border="0" hspace="2" > 
               <INPUT TYPE="hidden" NAME="end_time" VALUE="<%=request.getParameter("end_time")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"  onChange="checkTimeTypeIn(this)"> </td> 
             <td width="5%" ></td> 
-            <td width="20%"> <div align="right"></div></td> 
-            <td width="20%">&nbsp; </td> 
+            <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formDoctor"/>:</font></div></td> 
+            <td width="20%"><%--RJ 07/10/2006 --%><%=bFirstDisp ? "" : providerBean.getProperty(curDoctor_no,"")%></td> 
           </tr> 
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="appointment.addappointment.formSurName"/>:</font></div></td> 
