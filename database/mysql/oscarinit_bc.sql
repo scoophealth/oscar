@@ -2315,6 +2315,8 @@ ALTER TABLE `billing_preferences` ADD COLUMN `defaultPayeeNo` INTEGER UNSIGNED N
 --
 #Stores data about the start and end times for specific msp fee codes
 #Shares a one to one relation with the billingservice table
+#If the timeRange = 0, a start time is required for the specified code 
+#If the timeRange = 1, a start time and an end time is required for the specified code 
 CREATE TABLE billing_msp_servicecode_times (
   id int(10) unsigned NOT NULL auto_increment,
   billingservice_no int(10) unsigned NOT NULL default '0',
