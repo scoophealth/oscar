@@ -23213,7 +23213,7 @@ INSERT INTO billing_payment_type (id, payment_type) VALUES (5,'AMEX');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (6,'ELECTRONIC');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (7,'DEBIT');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (8,'OTHER');
-INSERT INTO billing_payment_type (id, payment_type) VALUES (9,'N/A');
+INSERT INTO billing_payment_type (id, payment_type) VALUES (9,'NYD');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (10,'INT. ADJ.');
 
 
@@ -23391,4 +23391,6 @@ INSERT INTO billing_msp_servicecode_times VALUES (5,13910,1);
 INSERT INTO billing_msp_servicecode_times VALUES (6,13911,1);
 INSERT INTO billing_msp_servicecode_times VALUES (7,13912,0);
 INSERT INTO billing_msp_servicecode_times VALUES (8,13913,0);
+INSERT INTO billing_msp_servicecode_times VALUES (9,14015,1);
+INSERT INTO billing_msp_servicecode_times VALUES (10,14016,1);
 
