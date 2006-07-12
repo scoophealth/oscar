@@ -34,7 +34,7 @@
       
   String strLimit1="0";
   String strLimit2="10";
-  StringBuffer bufChart = null, bufName = null, bufNo = null;
+  StringBuffer bufChart = null, bufName = null, bufNo = null, bufDoctorNo = null;
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   boolean caisi = Boolean.valueOf(request.getParameter("caisi")).booleanValue();
@@ -205,11 +205,12 @@ function searchAll() {
 <script language="JavaScript">
 
 var fullname="";
-function addName(demographic_no, lastname, firstname, chartno, messageID) {  
+<%-- RJ 07/10/2006 Need to pass doctor of patient back to referrer --%>
+function addName(demographic_no, lastname, firstname, chartno, messageID, doctorNo) {  
   fullname=lastname+","+firstname;
-  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID;  //+"\"" ;
-  document.addform.submit(); // 
-  //return;
+  document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID+"&doctor_no="+doctorNo;  //+"\"" ;
+  //document.addform.submit(); // 
+  return true;
 }
 
 <%if(caisi) {%>
@@ -241,10 +242,12 @@ String bgColor = bodd?"#EEEEFF":"white";
 %>
  
 <tr bgcolor="<%=bgColor%>" align="center" 
+<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
-onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"
+onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>','<%=rs.getString("provider_no")%>')"
 >
-      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>')"></td>
+<%-- 07/10/2006 RJ Added doctor provider_no to url --%>
+      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>','<%=rs.getString("provider_no")%>')"></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
       <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
       <td><%=age%></td>
@@ -257,6 +260,7 @@ onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no"
       bufName = new StringBuffer( (rs.getString("last_name")+ ","+ rs.getString("first_name")) );
       bufNo = new StringBuffer( (rs.getString("demographic_no")) );
       bufChart = new StringBuffer( (rs.getString("chart_no"))   );
+      bufDoctorNo = new StringBuffer( rs.getString("provider_no") ); 
     }
   }
 %> 
@@ -285,7 +289,7 @@ onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no"
 %> 
 <script language="JavaScript">
 <!--
-  document.addform.action="<%=request.getParameter("originalpage")%>?name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=bufNo.toString()%>&messageID=<%=request.getParameter("messageId")%>"; 
+  document.addform.action="<%=request.getParameter("originalpage")%>?name=<%=URLEncoder.encode(bufName.toString())%>&chart_no=<%=URLEncoder.encode(bufChart.toString())%>&bFirstDisp=false&demographic_no=<%=bufNo.toString()%>&messageID=<%=request.getParameter("messageId")%>&doctor_no=<%=bufDoctorNo.toString()%>";
   document.addform.submit();  
 //-->
 </SCRIPT>
