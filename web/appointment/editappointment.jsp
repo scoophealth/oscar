@@ -5,14 +5,16 @@
   String userfirstname = (String) session.getAttribute("userfirstname");
   String userlastname = (String) session.getAttribute("userlastname");
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF";
+  
 
   boolean bFirstDisp=true; //this is the first time to display the window
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
-<%@ page import="java.util.*, java.sql.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <!--  
 /*
  * 
@@ -217,7 +219,22 @@ function checkTimeTypeIn(obj) {
 		      alert = rsdemo.getString("cust3");
 		    }
 		  }
-    }	  
+    }	
+
+    //RJ 07/12/2006
+    //If page is loaded first time hit db for patient's family doctor
+    //Else if we are coming back from search this has been done for us
+    //Else how did we get here?
+    String doctorNo = null;
+    if( bFirstDisp ) {
+        DemographicData dd = new DemographicData();
+        DemographicData.Demographic demo = dd.getDemographic(rs.getString("demographic_no"));
+        doctorNo = demo.getProviderNo();
+    }
+    else if( !request.getParameter("doctor_no").equals(""))
+        doctorNo = request.getParameter("doctor_no");
+    else
+        doctorNo = "";
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="100%" >
   <tr><td width="100%">
@@ -276,6 +293,22 @@ function checkTimeTypeIn(obj) {
             </td>
             <td width="20%"  ALIGN="LEFT">
               <input type="TEXT" name="chart_no" readonly value="<%=bFirstDisp?chartno:request.getParameter("chart_no")%>" width="25" height="20" border="0" hspace="2">
+            </td>
+          </tr>
+	<%-- RJ 07/11/2006 Added Family Physician --%>
+          <tr valign="middle"> 
+            <td width="20%"  ALIGN="LEFT"> 
+              <div align="right">&nbsp;</div>
+            </td>
+            <td width="20%"  ALIGN="LEFT"> 
+              &nbsp; 
+            </td>
+            <td width="5%"  ></td>
+            <td width="20%"  ALIGN="LEFT"> 
+              <div align="right"><bean:message key="Appointment.formDoctor"/>:</div>
+            </td>
+            <td width="20%"  ALIGN="LEFT">
+		<%=providerBean.getProperty(doctorNo)%>
             </td>
           </tr>
           <tr valign="middle"> 
