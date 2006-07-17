@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+<issue issue_id="1" code="001" description="CHOLERA*" role="doctor" update_date="2005-11-08 12:49:39"/>
+<issue issue_id="2" code="0010" description="CHOLERA D/T VIB CHOLERAE" role="doctor" update_date="2005-11-08 12:49:39"/>
+</dataset>

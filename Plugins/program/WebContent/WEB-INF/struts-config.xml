@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<!--
+	This is a blank Struts configuration file with an example
+	welcome action/page and other commented sample elements.
+	
+	Tiles and the Struts Validator are configured using the factory defaults
+	and are ready-to-use.
+	
+	NOTE: If you have a generator tool to create the corresponding Java classes
+	for you, you could include the details in the "form-bean" declarations.
+	Otherwise, you would only define the "form-bean" element itself, with the
+	corresponding "name" and "type" attributes, as shown here.
+-->
+
+
+<struts-config>
+<!-- =================== Data Source Configuration ========================= -->
+
+<data-sources>
+</data-sources>
+
+	<!-- ================================================ Form Bean Definitions -->
+
+	<form-beans>
+		<form-bean name="inputForm"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+
+		<form-bean name="clientSearchForm"
+			       type="org.apache.struts.validator.LazyValidatorForm" />
+
+		<form-bean name="intakeAForm"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+
+		<form-bean name="intakeAReport1Form"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+
+		<form-bean name="intakeCForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="intake" type="org.caisi.PMmodule.model.Formintakec"/>
+			<form-property name="view" type="org.caisi.PMmodule.web.formbean.IntakeCFormBean"/>
+			<form-property name="addresses" type="org.caisi.PMmodule.web.formbean.IntakeCAddress[]" size="20"/>
+			<form-property name="contact" type="org.caisi.PMmodule.web.formbean.IntakeCContact[]" size="20"/>
+			<form-property name="identification" type="org.caisi.PMmodule.web.formbean.IntakeCIdentification[]" size="20"/>
+		</form-bean>
+
+		<form-bean name="demographicForm"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+
+		<form-bean name="programManagerViewForm" type="org.caisi.PMmodule.web.formbean.ProgramManagerViewFormBean"/>
+		
+		<form-bean name="programManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="program" type="org.caisi.PMmodule.model.Program"/>
+			<form-property name="provider" type="org.caisi.PMmodule.model.ProgramProvider"/>
+			<form-property name="admission" type="org.caisi.PMmodule.model.Admission"/>
+			<form-property name="function" type="org.caisi.PMmodule.model.ProgramFunctionalUser"/>
+			<form-property name="access" type="org.caisi.PMmodule.model.ProgramAccess"/>
+			<form-property name="team" type="org.caisi.PMmodule.model.ProgramTeam"/>
+			<form-property name="view" type="org.caisi.PMmodule.web.formbean.ProgramManagerViewFormBean"/>
+			<form-property name="queue" type="org.caisi.PMmodule.model.ProgramQueue"/>
+			<form-property name="bedlog" type="org.caisi.PMmodule.model.ProgramBedLog"/>
+		</form-bean>
+		
+		<form-bean name="agencyManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="agency" type="org.caisi.PMmodule.model.Agency"/>
+			<form-property name="view" type="org.caisi.PMmodule.web.formbean.AgencyManagerViewFormBean"/>
+		</form-bean>
+		
+		<form-bean name="clientSearchForm2" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="criteria" type="org.caisi.PMmodule.web.formbean.ClientSearchFormBean"/>
+		</form-bean>
+
+		<form-bean name="clientManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="program" type="org.caisi.PMmodule.model.Program"/>
+			<form-property name="client" type="org.caisi.PMmodule.model.Demographic"/>
+			<form-property name="referral" type="org.caisi.PMmodule.model.ClientReferral"/>
+			<form-property name="admission" type="org.caisi.PMmodule.model.Admission"/>
+			<form-property name="view" type="org.caisi.PMmodule.web.formbean.ClientManagerFormBean"/>
+		</form-bean>
+
+		<form-bean name="staffManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="provider" type="org.caisi.PMmodule.model.Provider"/>
+			<form-property name="program_provider" type="org.caisi.PMmodule.model.ProgramProvider"/>
+			<form-property name="view" type="org.caisi.PMmodule.web.formbean.StaffManagerViewFormBean"/>		
+		</form-bean>
+
+		<form-bean name="bedLogForm" type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property name="bedlog" type="org.caisi.PMmodule.model.BedLog"/>
+			<form-property name="sheet" type="org.caisi.PMmodule.model.BedLogSheet"/>
+		</form-bean>
+
+
+	</form-beans>
+
+
+	<!-- ========================================= Global Exception Definitions -->
+
+	<global-exceptions>
+		<!-- sample exception handler
+			<exception
+			key="expired.password"
+			type="app.ExpiredPasswordException"
+			path="/changePassword.jsp"/>
+			end sample -->
+	</global-exceptions>
+
+
+	<!-- =========================================== Global Forward Definitions -->
+
+	<global-forwards>
+		<forward name="timeout" path="/index.jsp" />
+	</global-forwards>
+
+
+	<!-- =========================================== Action Mapping Definitions -->
+
+	<action-mappings>
+	
+		<action path="/ratePage" type="org.caisi.PMmodule.web.ratePageAction"
+			name="inputForm" scope="request" validate="false">
+			<forward name="OK" path="/ratingStatics.do"></forward>
+		</action>
+		
+		<action path="/ratingStatics" type="org.caisi.PMmodule.web.ratingStaticsAction"
+			name="inputForm" scope="request" validate="false"
+			input="/index.jsp">
+			<forward name="RatingView" path="/ratingStatics.jsp"></forward>
+		</action>
+		
+		<action  path="/PMmodule/IntakeAReport1Action" 
+		         type="org.caisi.PMmodule.web.IntakeAReport1Action"
+				 name="intakeAReport1Form" 
+				 scope="request"
+				 input="/PMmodule/IntakeAReport1.jsp" >
+			 <forward  name="success"  path="/PMmodule/IntakeAReport1.jsp"  />
+			 <forward  name="error"  path="/PMmodule/IntakeAReport1.jsp"  />
+			 <forward  name="timeout"  path="/PMmodule/Timeout.jsp"  />
+		</action>
+
+		<action  path="/PMmodule/ProgramManager" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+    			 name="programManagerForm"
+    			 scope="session" >
+			 <forward  name="list"  path="page.pmm.admin.list"  />
+			 <forward  name="edit"  path="page.pmm.admin.edit"  />
+			 <forward  name="timeout"  path="/PMmodule/Timeout.jsp"  />
+			 
+		</action>
+		
+		<action  path="/PMmodule/ProgramManagerView" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+    			 name="programManagerViewForm"
+				 scope="request" >
+			<forward name="view" path="page.pmm.admin.view"/>
+		</action>
+
+		<action  path="/PMmodule/AgencyManager" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+				 name="agencyManagerForm"
+    			 scope="session" >
+			<forward name="view" path="page.pmm.admin.agency.view"/>
+			<forward name="edit" path="page.pmm.admin.agency.edit"/>
+		</action>		
+		
+		<action  path="/PMmodule/ProviderSearch" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+			>
+			<forward name="results" path="/PMmodule/ProviderSearch.jsp"/>
+		</action>	
+
+		<action  path="/PMmodule/ClientSearch2" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+				 name="clientSearchForm2"
+    			 scope="request" >
+			<forward name="form" path="page.pmm.client.searchform"/>
+			<forward name="search" path="page.pmm.client.searchresults"/>
+		</action>		
+		
+		<action  path="/PMmodule/ClientManager" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+				 name="clientManagerForm"
+    			 scope="session" >
+			<forward name="edit" path="page.pmm.client"/>
+			<forward name="search_programs" path="/PMmodule/ClientManager/ProgramSearch.jsp"/>
+		</action>	
+		
+		<action  path="/PMmodule/ProviderInfo" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+    			 scope="request" >
+			<forward name="view" path="page.pmm.provider.view"/>
+		</action>	
+
+		<action  path="/PMmodule/IntakeA" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"			 
+				 name="intakeAForm" 
+				 scope="request"
+				 input="/PMmodule/IntakeA.jsp" >
+			 <forward  name="form"  path="/PMmodule/IntakeA.jsp"  />
+			 <forward  name="success"  path="/PMmodule/ClientManager.do?method=edit"  />
+   		     <forward  name="error"  path="/PMmodule/ProviderInfo.do?method=view"  />
+		</action>
+		
+		<action  path="/PMmodule/IntakeC" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"			 
+				 scope="session"
+				 name="intakeCForm"
+				 input="/PMmodule/IntakeC.jsp" >
+			 <forward  name="form"  path="/PMmodule/IntakeC.jsp"  />
+			 <forward  name="success"  path="/PMmodule/ClientManager.do?method=edit"  />
+   		     <forward  name="error"  path="/PMmodule/ProviderInfo.do?method=view"  />
+		</action>
+
+		<action  path="/PMmodule/StaffManager" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+				 name="staffManagerForm"
+				 scope="request"
+    			>
+			 <forward  name="list"  path="page.pmm.staff.list"  />
+			 <forward  name="edit"  path="page.pmm.staff.edit"  />
+		</action>
+		
+		<action  path="/PMmodule/BedLog" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+				 name="bedLogForm"
+				 scope="request"
+    			>
+			 <forward  name="list"  path="page.pmm.bedlog.list"  />
+			  <forward  name="view"  path="page.pmm.bedlog.view"  />
+		</action>
+
+		<action  path="/PMmodule/Intake" 
+		         type="org.springframework.web.struts.DelegatingActionProxy"
+				 parameter="method"
+				 scope="request"
+    			>
+			 <forward  name="intakea"  path="/PMmodule/IntakeA.do"  />
+ 		  <forward  name="intakec"  path="/PMmodule/IntakeC.do"  />
+		</action>
+
+	</action-mappings>
+
+	<!-- ============================================= Controller Configuration -->
+
+	<controller
+		processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
+
+
+	<!-- ======================================== Message Resources Definitions -->
+
+	<message-resources  parameter="MessageResources_program" />
+	<message-resources  parameter="HelpResources" key="help"/>
+
+	<!-- =============================================== Plug Ins Configuration -->
+
+	<!-- ======================================================= Tiles plugin -->
+	<!--
+		This plugin initialize Tiles definition factory. This later can takes some
+		parameters explained here after. The plugin first read parameters from
+		web.xml, thenoverload them with parameters defined here. All parameters
+		are optional.
+		The plugin should be declared in each struts-config file.
+		- definitions-config: (optional)
+		Specify configuration file names. There can be several comma
+		separated file names (default: ?? )
+		- moduleAware: (optional - struts1.1)
+		Specify if the Tiles definition factory is module aware. If true
+		(default), there will be one factory for each Struts module.
+		If false, there will be one common factory for all module. In this
+		later case, it is still needed to declare one plugin per module.
+		The factory will be initialized with parameters found in the first
+		initialized plugin (generally the one associated with the default
+		module).
+		true : One factory per module. (default)
+		false : one single shared factory for all modules
+		- definitions-parser-validate: (optional)
+		Specify if xml parser should validate the Tiles configuration file.
+		true : validate. DTD should be specified in file header (default)
+		false : no validation
+		
+		Paths found in Tiles definitions are relative to the main context.
+	-->
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+
+		<!-- Path to XML definition file -->
+		<set-property property="definitions-config"
+			value="/WEB-INF/tiles-defs.xml" />
+		<!-- Set Module-awareness to true -->
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+
+
+	<!-- =================================================== Validator plugin -->
+
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+	</plug-in>
+	
+	 <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+		<set-property property="contextConfigLocation"
+			value="/WEB-INF/applicationContext.xml,/WEB-INF/action-servlet.xml"/>
+	</plug-in>
+
+</struts-config>
+

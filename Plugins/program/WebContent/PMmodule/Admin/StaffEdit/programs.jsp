@@ -1,0 +1,108 @@
+<%@ include file="/taglibs.jsp" %>
+<%@ page import="org.caisi.PMmodule.model.*" %>
+<%@ page import="java.util.*" %>
+<script>
+function assignTeam(id,selectBox) {
+	var team_id = selectBox.options[selectBox.selectedIndex].value;
+	document.staffManagerForm.elements['teamId'].value=team_id;	
+	document.staffManagerForm.elements['program_provider.programId'].value=id;
+	document.staffManagerForm.method.value='assign_team';
+	document.staffManagerForm.submit();
+
+}
+
+function removeTeam(id,team_id) {
+	document.staffManagerForm.elements['teamId'].value=team_id;	
+	document.staffManagerForm.elements['program_provider.programId'].value=id;
+	document.staffManagerForm.method.value='remove_team';
+	document.staffManagerForm.submit();
+
+}
+
+function assignRole(id,selectBox) {
+	var role_id = selectBox.options[selectBox.selectedIndex].value;
+	document.staffManagerForm.elements['program_provider.roleId'].value=role_id;	
+	document.staffManagerForm.elements['program_provider.programId'].value=id;
+	document.staffManagerForm.method.value='assign_role';
+	document.staffManagerForm.submit();
+
+}
+</script>
+<html:hidden property="program_provider.roleId"/>
+<html:hidden property="program_provider.programId"/>
+<input type="hidden" name="teamId" value=""/>
+
+		<div class="tabs" id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+				<tr>
+					<th title="Programs">Programs</th>
+				</tr>
+			</table>
+		</div>
+	<%ProgramProvider pp = null;%>
+		<!--  show current staff -->
+		<table class="b" border="1" cellspacing="2" cellpadding="3" width="100%" >
+			<tr>
+				<th style="color:black">Assigned To</th>
+				<th style="color:black">Program Name</th>
+				<th style="color:black">Role</th>
+				<th style="color:black">Team(s)</th>
+			</tr>
+			
+			<c:forEach var="program" items="${all_programs}">
+		  		<tr>
+		  			<td>
+		  	<%
+		  		String checked="";
+		  		pp = null;
+		  		List currentPrograms = (List)request.getAttribute("programs");
+		  		Program p = (Program)pageContext.getAttribute("program");
+		  		for(int x=0;x<currentPrograms.size();x++) {
+					 ProgramProvider pp1 = (ProgramProvider)currentPrograms.get(x);
+					if(pp1.getProgramId().longValue() == p.getId().intValue()) {
+						checked="checked";
+						pp = pp1;
+						break;
+					}
+				}
+		  		pageContext.setAttribute("pp",pp);
+		  	%>
+		  			
+				  	<input type="checkbox" <%=checked%> disabled/>
+				</td>
+		  		<td>
+		  			<a href="<html:rewrite action="/PMmodule/ProgramManager"/>?id=<c:out value="${program.id}"/>&view.tab=staff&method=edit"><c:out value="${program.name}"/></a>
+		  		</td>
+		  		<td>
+		  			<select name="x" onchange="assignRole('<c:out value="${program.id}"/>',this);">
+				  		<option value="0">&nbsp;</option>
+				  		<c:forEach var="role" items="${roles}">
+				  			<c:choose>
+				  			<c:when test="${pp.roleId == role.id }">
+					  			<option value="<c:out value="${role.id}"/>" selected><c:out value="${role.name}"/></option>
+				  			</c:when>
+				  			<c:otherwise>
+					  			<option value="<c:out value="${role.id}"/>"><c:out value="${role.name}"/></option>
+				  			</c:otherwise>
+				  			</c:choose>
+				  		</c:forEach>
+		 			</select>		  		  			
+		  		</td>
+				<td>
+				  	<table width="100%" cellspacing="2" cellpadding="2">
+					<c:forEach var="team" items="${pp.teams}">
+						<tr>
+						<td><c:out value="${team.name }"/></td>
+						<td><a href="javascript:void(0);return false;" onclick="removeTeam('<c:out value="${pp.programId}"/>','<c:out value="${team.id}"/>')">Remove</a>
+						</tr>
+					</c:forEach>
+					</table>
+					<select name="x" onchange="assignTeam('<c:out value="${pp.programId}"/>',this)">
+							<option value="" SELECTED></option>
+						<c:forEach var="team" items="${program.teamList}">
+							<option value="<c:out value="${team.id}"/>"><c:out value="${team.name}"/></option>
+						</c:forEach>
+					</select>	
+				</td>
+		  </c:forEach>
+		</table>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.PMmodule.model">
+	<class name="Agency" table="agency">
+		<id
+			column="id"
+			name="Id"
+			type="java.lang.Long"
+		>
+			<generator class="assigned" />
+		</id>
+		<property
+			column="name"
+			length="50"
+			name="Name"
+			not-null="true"
+			type="string"
+		 />
+		<property
+			column="description"
+			name="Descr"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="contact_name"
+			name="ContactName"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="contact_email"
+			name="ContactEmail"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="contact_phone"
+			name="ContactPhone"
+			not-null="false"
+			type="string"
+		 />
+		 
+		<property
+			column="local"
+			name="Local"
+			not-null="true"
+			type="boolean"
+		 />
+		 
+		<property
+			column="integrator_enabled"
+			name="IntegratorEnabled"
+			not-null="true"
+			type="boolean"
+		 />
+		 
+		<property
+			column="integrator_url"
+			name="IntegratorURL"
+			not-null="false"
+			type="string"
+		 />
+		 
+		<property
+			column="integrator_jms"
+			name="IntegratorJMS"
+			not-null="false"
+			type="string"
+		 />
+		 
+		 <property
+			column="integrator_username"
+			name="IntegratorUserName"
+			not-null="false"
+			type="string"
+		 />
+
+ 		<property
+			column="integrator_password"
+			name="IntegratorPassword"
+			not-null="false"
+			type="string"
+		 />
+	</class>
+</hibernate-mapping>

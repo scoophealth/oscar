@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<project name="casemgmt" basedir="." default="help">
+	<property file="${user.home}/build.properties" />
+	<property file="build.properties"/>
+
+    <property name="src.dir" value="JavaSource"/>
+    <property name="web.dir" value="WebContent"/>
+    <property name="test.src" value="TestSource"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="build.dir" value="build"/>
+    <property name="test.dir" value="build/test"/>
+    <property name="webapp.name" value="casemgmt"/>
+	<property name="oscar.dir" value="../../web"/>
+	<property name="pmm.dir" value="../program"/>
+	
+    <property environment="env"/>
+    <property name="tomcat.home" value="${env.CATALINA_HOME}"/>
+
+    <path id="classpath">
+    	<fileset dir="${oscar.dir}/dist">
+			<include name="*.jar"/>
+    	</fileset>
+    	<fileset dir="${pmm.dir}/dist">
+			<include name="program-lib.jar"/>
+    	</fileset>
+        <fileset dir="${web.dir}/WEB-INF/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${tomcat.home}/common/lib">
+            <include name="*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}/classes"/>
+    </path>
+
+    <target name="help">
+        <echo message=""/>
+        <echo message="${webapp.name} build file"/>
+        <echo message="-----------------------------------"/>
+        <echo message=""/>
+        <echo message="Available targets are:"/>
+        <echo message=""/>
+        <echo message="compile   --> Compile all Java files"/>
+        <echo message="test      --> Runs JUnit tests"/>
+        <echo message="war       --> Package as WAR file"/>
+        <echo message="deploy    --> Deploy application as directory"/>
+        <echo message="deploywar --> Deploy application as a WAR file"/>
+        <echo message=""/>
+        <echo message="install   --> Install application in Tomcat"/>
+        <echo message="remove    --> Remove application from Tomcat"/>
+        <echo message="reload    --> Reload application in Tomcat"/>
+        <echo message="start     --> Start Tomcat application"/>
+        <echo message="stop      --> Stop Tomcat application"/>
+        <echo message="list      --> List Tomcat applications"/>
+        <echo message=""/>
+        <echo message="clean     --> Deletes compiled classes and WAR"/>
+    </target>
+
+    <target name="cvs_update">
+        <cvs dest="." command="update"/>
+    </target>
+
+    <target name="compile" description="Compile main source tree java files">
+        <mkdir dir="${build.dir}/classes"/>
+        <javac destdir="${build.dir}/classes" source="1.4" target="1.4" debug="true"
+            deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.dir}"/>
+            <classpath refid="classpath"/>
+        </javac>
+        <!-- compile tests -->
+        <mkdir dir="${test.dir}/classes"/>
+        <javac destdir="${test.dir}/classes" source="1.4" target="1.4" debug="true"
+            deprecation="false" optimize="false" failonerror="true">
+            <src path="${test.src}"/>
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${build.dir}/classes"/>
+            </classpath>
+        </javac>
+        <!-- Copy hibernate mapping files to ${build.dir}/classes -->
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${src.dir}" includes="**/*.hbm.xml"/>
+        </copy>
+        <copy todir="${build.dir}/classes">
+            <fileset dir="${src.dir}" includes="*.properties"/>
+        </copy>
+    	<copy todir="${build.dir}/classes">
+    	    <fileset dir="${src.dir}" includes="*.0"/>
+    	</copy>
+    	
+    </target>
+
+    <target name="test" depends="compile" description="Runs JUnit tests">
+        <!-- Check that junit.jar is in $ANT_HOME/lib -->
+        <available classname="junit.framework.TestCase" property="junit.present"/>
+        <fail unless="junit.present" 
+            message="Please copy WebContent/WEB-INF/lib/junit.jar into ${env.ANT_HOME}/lib"/>
+            
+        <mkdir dir="${test.dir}/data"/>
+        <junit printsummary="no" fork="true"
+            errorProperty="test.failed" failureProperty="test.failed">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${build.dir}/classes"/>
+                <path location="${test.dir}/classes"/>
+                <path location="${web.dir}/WEB-INF/classes"/>
+                <path location="${web.dir}"/>
+            </classpath>
+            <formatter type="xml"/>
+            <formatter type="brief" usefile="false"/>
+            <batchtest todir="${test.dir}/data" if="testcase">
+                <fileset dir="${test.dir}/classes">
+                    <include name="**/*${testcase}*"/>
+                    <exclude name="**/*TestCase.class"/>
+                </fileset>
+            </batchtest>
+            <batchtest todir="${test.dir}/data" unless="testcase">
+                <fileset dir="${test.dir}/classes">
+                    <include name="**/*Test.class*"/>
+                </fileset>
+            </batchtest>
+        </junit>
+
+        <fail if="test.failed">
+          Unit tests failed. For error messages, check the log files in
+          ${test.dir}/data or run "ant test-reports"
+          to generate reports at ${test.dir}/reports.</fail>
+    </target>
+
+    <target name="test-reports" description="Generate test reports">
+        <mkdir dir="${test.dir}/reports"/>
+        <junitreport todir="${test.dir}">
+            <fileset dir="${test.dir}/data">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${test.dir}/reports"/>
+        </junitreport>
+    </target>
+
+    <target name="war" depends="compile" description="Packages app as WAR">
+        <mkdir dir="${dist.dir}"/>
+        <war destfile="${dist.dir}/${webapp.name}.war"
+            webxml="${web.dir}/WEB-INF/web.xml">
+            <classes dir="${build.dir}/classes"/>
+            <fileset dir="${web.dir}">
+                <include name="**/*.*"/>
+                <exclude name="**/web.xml"/>
+                <exclude name="**/junit.jar"/>
+                <exclude name="**/*mock.jar"/>
+                <exclude name="**/strutstestcase*.jar"/>
+            </fileset>
+        </war>
+    </target>
+
+    <target name="deploy" depends="compile" description="Deploy application">
+        <copy todir="${tomcat.home}/webapps/${webapp.name}" preservelastmodified="true">
+            <fileset dir="${web.dir}">
+                <include name="**/*.*"/>
+                <exclude name="**/junit.jar"/>
+                <exclude name="**/*mock.jar"/>
+                <exclude name="**/strutstestcase*.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${tomcat.home}/webapps/${webapp.name}/WEB-INF/classes"
+            preservelastmodified="true">
+            <fileset dir="${build.dir}/classes"/>
+        </copy>
+    </target>
+
+    <target name="deploywar" depends="war" description="Deploy application as a WAR file">
+        <copy todir="${tomcat.home}/webapps" preservelastmodified="true">
+            <fileset dir=".">
+                <include name="${dist.dir}/*.war"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean" description="Clean output directories">
+        <delete dir="build"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+
+    <!-- Tomcat Ant Tasks -->
+	
+    <taskdef file="tomcatTasks.properties">
+        <classpath>
+            <pathelement path="${tomcat.home}/server/lib/catalina-ant.jar"/>
+        </classpath>
+    </taskdef>
+
+    <target name="install" description="Install application in Tomcat"
+        depends="war">
+        <deploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${webapp.name}"
+            war="file:${dist.dir}/${webapp.name}.war"/>
+    </target>
+
+    <target name="remove" description="Remove application from Tomcat">
+        <undeploy url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="reload" description="Reload application in Tomcat">
+        <reload url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="start" description="Start Tomcat application">
+        <start url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="stop" description="Stop Tomcat application">
+        <stop url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"
+            path="/${webapp.name}"/>
+    </target>
+
+    <target name="list" description="List Tomcat applications">
+        <list url="${tomcat.manager.url}"
+            username="${tomcat.manager.username}"
+            password="${tomcat.manager.password}"/>
+    </target>
+
+    <!-- Creates release (source) distribution -->
+    <target name="dist" depends="clean"
+        description="create zip and tar.gz of ${webapp.name} for distribution">
+        <property name="archive.name"
+            value="${webapp.name}-${webapp.version}"/>
+        <mkdir dir="${dist.dir}"/>
+        <property name="archive.target" value="${dist.dir}/${archive.name}"/>
+        <zip zipfile="${archive.target}.zip">
+            <zipfileset prefix="${webapp.name}" dir="${basedir}">
+                <patternset id="srcfiles">
+                    <exclude name="*.log"/>
+                    <exclude name="junit*.properties"/>
+                    <exclude name="**/*~"/>
+                    <exclude name="**/*.bak"/>
+                    <exclude name="*/**.java.txt"/>
+                    <exclude name="${build.dir}/**"/>
+                    <exclude name="${dist.dir}/**"/>
+                    <exclude name="db/**"/>
+                    <exclude name="sandbox/**"/>
+                    <exclude name=".#**"/>
+                    <include name="**"/>
+                </patternset>
+            </zipfileset>
+        </zip>
+        <tar tarfile="${archive.target}.tar">
+            <tarfileset dir="${basedir}" mode="644"
+                prefix="${webapp.name}"
+                username="ant" group="ant">
+                <patternset refid="srcfiles"/>
+            </tarfileset>
+        </tar>
+        <gzip zipfile="${archive.target}.tar.gz" src="${archive.target}.tar"/>
+        <delete file="${archive.target}.tar"/>
+    </target>
+
+    <!-- browse the database -->
+    <target name="browse"
+        description="Graphical Database Editing Tool (hsqldb-gui)">
+        <echo level="info">Opening HSQL GUI...</echo>
+        <java classname="org.hsqldb.util.DatabaseManager" fork="yes"
+            failonerror="true">
+            <classpath refid="classpath"/>
+            <arg value="-url"/>
+            <arg value="jdbc:hsqldb:db/appfuse"/>
+        </java>
+    </target>
+
+       <target name="db-init" 
+        description="creates database tables">
+        
+        
+        <taskdef name="schemaexport"
+            classname="org.hibernate.tool.hbm2ddl.SchemaExportTask">
+            <classpath>
+            	<fileset dir="web/WEB-INF/lib" includes="**/*.jar"/>
+            	<pathelement location="build/classes"/>
+            </classpath>
+        </taskdef>
+      
+        
+        <schemaexport quiet="no" text="no" drop="no"
+           properties="database.properties"
+           >
+           <fileset dir="src">
+               <include name="**/*.hbm.xml"/>
+           </fileset>
+        </schemaexport>
+
+    </target>
+    
+    <target name="db-export" description="exports partial dataset for dbunit">
+	<java classname="org.caisi.test.DatabaseExportForDbUnit">
+            <classpath>
+                <path refid="classpath"/>
+                <path location="${build.dir}/classes"/>
+                <path location="${test.dir}/classes"/>
+                <path location="${web.dir}/WEB-INF/classes"/>
+                <path location="${web.dir}"/>
+            </classpath>
+	</java>
+        <copy todir="test/data" file="casemgmt.xml"/>
+	<delete file="casemgmt.xml"/>
+    </target>    
+
+   <target name="jar" depends="compile" description="Package classes as JAR">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/${webapp.name}.jar">
+                <fileset dir="${build.dir}/classes"/>
+        </jar>
+    </target>
+
+    <target name="all" description="compile,test,war">
+        <cvs command="up -d -P"/>
+        <ant target="compile"/>
+        <ant target="test"/>
+        <ant target="test-reports"/>
+        <ant target="war"/>
+    </target>
+
+	<target name="schema-update" depends="compile">
+	        <copy todir="${build.dir}" file="${src.dir}/log4j.xml"/>
+	         <taskdef name="schemaupdate"
+	                  classname="org.hibernate.tool.hbm2ddl.SchemaUpdateTask"
+	                  classpathref="classpath"/>
+	          <schemaupdate
+	                  properties="${web.dir}/WEB-INF/hibernate.properties"
+	                  quiet="no"
+	                  text="no">
+	                  <fileset dir="JavaSource">
+	                        <include name="**/*.hbm.xml"/>
+	                  </fileset>
+	                  <fileset dir="${oscar.dir}/WEB-INF/classes/src">
+	                        <include name="**/provider.hbm.xml"/>
+	                        <include name="**/Role.hbm.xml"/>
+	                        <include name="**/CaisiRole.hbm.xml"/>
+			  </fileset>
+	         </schemaupdate>
+	</target>
+
+
+</project>

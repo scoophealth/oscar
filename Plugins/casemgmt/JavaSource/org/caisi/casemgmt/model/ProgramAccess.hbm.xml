@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.PMmodule.model">
+	<class name="ProgramAccess" table="program_access">
+		<id
+			column="id"
+			name="Id"
+			type="java.lang.Long"
+			unsaved-value="0"
+		>
+			<generator class="native" />
+		</id>
+
+		<property
+			column="program_id"
+			length="11"
+			name="ProgramId"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+		 	 
+		<property
+			column="access_type_id"
+			name="AccessTypeId"
+			not-null="false"
+			type="string"
+		 />
+		 
+		<property
+			column="all_roles"
+			name="AllRoles"
+			not-null="false"		
+			type="boolean"
+		 />
+		 
+		 <many-to-one name="AccessType" 
+			class="org.caisi.PMmodule.model.AccessType"
+			column="access_type_id"
+			update="false"
+			insert="false"
+			lazy="false"
+		/>
+
+		<set name="roles" table="program_access_roles" lazy="false">
+			<key column="id"/>
+			<many-to-many column="role_id" class="org.caisi.model.Role"/>
+		</set>
+
+		
+	</class>
+</hibernate-mapping>

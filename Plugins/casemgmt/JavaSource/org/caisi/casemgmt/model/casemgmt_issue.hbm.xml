@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.caisi.casemgmt.model.CaseManagementIssue" table="casemgmt_issue">
+        <id name="id" column="id" unsaved-value="0">
+            <generator class="increment"/>
+        </id>
+        
+		<property name="demographic_no"/>
+		<property name="issue_id"/>
+		<property name="acute"/>
+		<property name="certain"/>
+		<property name="major"/>
+		<property name="resolved"/>
+		<property name="type"/>
+		<property name="update_date" type="java.util.Date"/>
+		
+		<set name="notes" table="casemgmt_issue_notes" inverse="true">
+		    <key column="id"/>
+		    <many-to-many column="note_id" class="org.caisi.casemgmt.model.CaseManagementNote"/>
+		</set>
+		
+		<many-to-one name="issue" 
+			class="org.caisi.casemgmt.model.Issue"
+			column="issue_id"
+			update="false"
+			insert="false"
+			lazy="false"
+		/>
+		
+    </class>
+</hibernate-mapping>

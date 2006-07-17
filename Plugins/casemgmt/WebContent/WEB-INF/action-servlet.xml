@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+    <!-- Define Struts Actions here -->
+	<bean name="/CaseManagementView" class="org.caisi.casemgmt.web.CaseManagementViewAction" singleton="false">
+		<property name="caseManagementManager">
+			<ref bean="CaseManagementManager"/>
+		</property>
+		<property name="ticklerManager">
+			<ref bean="ticklerManager"/>
+		</property>
+	</bean>
+
+	<bean name="/CaseManagementEntry" class="org.caisi.casemgmt.web.CaseManagementEntryAction" singleton="false">
+		<property name="caseManagementManager">
+			<ref bean="CaseManagementManager"/>
+		</property>
+	</bean>
+	
+</beans>

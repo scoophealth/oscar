@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.PMmodule.model">
+	<class name="ProgramTeam" table="program_team">
+		<id
+			column="team_id"
+			name="id"
+			type="java.lang.Long"
+			unsaved-value="0"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="name"
+			name="Name"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="program_id"
+			length="11"
+			name="ProgramId"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+	</class>
+</hibernate-mapping>

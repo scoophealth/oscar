@@ -1,0 +1,27 @@
+Case Management Plugin
+-----------------
+
+This plugin extends OSCAR to support issue based case management
+
+NOTE: Eclipse project is based on WTP plugin 
+(http://www.eclipse.org/webtools)
+
+install
+-------
+Run the latest sql files from the db/ subdirectory. This 
+will initiate all up to date database tables. 
+
+update the jdbc.properties files (WebContent/WEB-INF)
+
+default settings are to connect to a database called oscar_mcmaster
+using caisi/caisi as the username/password. You can change these 
+settings in the jdbc.properties file (WebContent/WEB-INF)
+
+Create the WAR file from Eclipse (Export->WAR). And drop into your oscar
+plugins directory (see plugin framework for more details).
+
+running tests
+------------
+tests are run against a database called oscar_mcmaster_test. This can be
+changed in the jdbc_test.properties file (WebContent/WEB-INF).
+

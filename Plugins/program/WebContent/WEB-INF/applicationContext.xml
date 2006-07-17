@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- ========================= RESOURCE DEFINITIONS ========================= -->
+
+	<!-- Configurer that replaces ${...} placeholders with values from a properties file -->
+	<!-- (in this case, JDBC-related settings for the dataSource definition below) -->
+	<bean id="propertyConfigurer"
+		class="org.caisi.common.OscarPropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/jdbc.properties</value>
+				
+			</list>
+		</property>
+		<property name="placeholderPrefix" value="$A{" />
+	</bean>
+	
+	<!-- bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/jdbc.properties" />
+		<property name="placeholderPrefix" value="$A{" />
+	</bean -->
+	
+
+	<!-- Local Apache Commons DBCP DataSource that refers to a combined database -->
+	<!-- (see dataAccessContext-jta.xml for an alternative) -->
+	<!-- The placeholders are resolved from jdbc.properties through -->
+	<!-- the PropertyPlaceholderConfigurer in applicationContext.xml -->
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="$A{oscar.db_driver}" />
+		<property name="url" value="$A{oscar.db_uri}$A{oscar.db_name}" />
+		<property name="username" value="$A{oscar.db_username}" />
+		<property name="password" value="$A{oscar.db_password}" />
+	</bean>
+	
+	<!-- bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName"
+			value="$A{jdbc.driverClassName}" />
+		<property name="url" value="$A{jdbc.url}" />
+		<property name="username" value="$A{jdbc.username}" />
+		<property name="password" value="$A{jdbc.password}" />
+	</bean -->
+
+	<!-- Hibernate SessionFactory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingDirectoryLocations">
+			<!-- only *.hbm.xml will be loaded -->
+			<list>
+				<value>classpath:/org/caisi/PMmodule/model</value>
+			</list>
+		</property>
+		<property name="mappingJarLocations">
+			<!-- only *.hbm.xml will be loaded -->
+			<list>
+				<value>WEB-INF/lib/caisi.jar</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					$A{hibernate.dialect}
+				</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+			</props>
+		</property>
+		<property name="eventListeners">
+			<map>
+				<entry key="merge">
+					<bean
+						class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+<!-- 
+	<bean id="securityDao" class="org.caisi.PMmodule.dao.HibernateSecurityDao"
+		autowire="byType" />
+-->	
+	 
+	<bean id="ratePageDao" class="org.caisi.PMmodule.dao.hibernate.HibernateRatePageDao"
+		autowire="byType" />
+
+	<bean id="clientDao" class="org.caisi.PMmodule.dao.hibernate.ClientDaoHibernate"
+		autowire="byType" />
+
+	<bean id="intakeADao" class="org.caisi.PMmodule.dao.hibernate.IntakeADaoHibernate"
+		autowire="byType" />
+
+	<bean id="intakeBDao" class="org.caisi.PMmodule.dao.hibernate.IntakeBDaoHibernate"
+		autowire="byType" />
+
+	<bean id="intakeCDao" class="org.caisi.PMmodule.dao.hibernate.IntakeCDaoHibernate"
+		autowire="byType" />
+
+	<bean id="providerDao" class="org.caisi.PMmodule.dao.hibernate.ProviderDaoHibernate"
+		autowire="byType" />
+
+	<bean id="programDao" class="org.caisi.PMmodule.dao.hibernate.ProgramDaoHibernate"
+		autowire="byType" />
+
+	<bean id="programQueueDao" class="org.caisi.PMmodule.dao.hibernate.ProgramQueueDaoHibernate"
+		autowire="byType" />
+
+	<bean id="admissionDao" class="org.caisi.PMmodule.dao.hibernate.AdmissionDaoHibernate"
+		autowire="byType" />
+
+	<bean id="agencyDao" class="org.caisi.PMmodule.dao.hibernate.AgencyDaoHibernate"
+		autowire="byType" />
+
+	<bean id="programProviderDAO" class="org.caisi.PMmodule.dao.hibernate.ProgramProviderDAOHibernate"
+		autowire="byType" />
+
+	<bean id="roleDAO" class="org.caisi.PMmodule.dao.hibernate.RoleDAOHibernate"
+		autowire="byType" />
+
+	<bean id="programFunctionalUserDAO" class="org.caisi.PMmodule.dao.hibernate.ProgramFunctionalUserDAOHibernate"
+		autowire="byType" />
+
+	<bean id="programTeamDAO" class="org.caisi.PMmodule.dao.hibernate.ProgramTeamDAOHibernate"
+		autowire="byType" />
+
+	<bean id="programAccessDAO" class="org.caisi.PMmodule.dao.hibernate.ProgramAccessDAOHibernate"
+		autowire="byType" />
+
+	<bean id="clientReferralDAO" class="org.caisi.PMmodule.dao.hibernate.ClientReferralDAOHibernate"
+		autowire="byType" />
+
+	<bean id="logDAO" class="org.caisi.PMmodule.dao.hibernate.LogDAOHibernate"
+		autowire="byType" />
+
+	<bean id="oscarSecurityDAO" class="org.caisi.PMmodule.dao.hibernate.OscarSecurityDAOHibernate"
+		autowire="byType" />
+	<bean id="programBedLogDAO" class="org.caisi.PMmodule.dao.hibernate.ProgramBedLogDAOHibernate"
+		autowire="byType" />
+	<bean id="bedLogDAO" class="org.caisi.PMmodule.dao.hibernate.BedLogDAOHibernate"
+		autowire="byType" />
+
+	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- ========================= BUSINESS OBJECT DEFINITIONS ========================= -->
+
+	<!--
+		- A parent bean definition which is a base definition for transaction proxies.
+		- It's marked as abstract, since it's not supposed to be instantiated itself.
+		- We set shared transaction attributes here, following our naming patterns.
+		- The attributes can still be overridden in child bean definitions.
+	-->
+	<bean id="baseTransactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+<!-- 
+	<property name="securityDao" ref="securityDao" />
+			</bean>
+		</property>
+	</bean>
+-->
+	 
+	<bean id="ratePageManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.RatePageManagerImpl">
+				<property name="ratePageDao" ref="ratePageDao" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="clientManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.ClientManagerImpl">
+				<property name="clientDao" ref="clientDao" />
+				<property name="clientReferralDAO" ref="clientReferralDAO" />
+				<property name="programQueueManager" ref="programQueueManager" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="intakeAManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.IntakeAManagerImpl">
+				<property name="intakeADao" ref="intakeADao" />
+				<property name="clientDao" ref="clientDao" />
+				<property name="enabled" value="$A{intakea.enabled}"/>
+				<property name="newClientForm" value="$A{intakea.newForm}"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="intakeBManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.IntakeBManagerImpl">
+				<property name="intakeBDao" ref="intakeBDao" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="intakeCManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.IntakeCManagerImpl">
+				<property name="intakeCDao" ref="intakeCDao" />
+				<property name="clientDao" ref="clientDao" />
+				<property name="enabled" value="$A{intakec.enabled}"/>
+				<property name="newClientForm" value="$A{intakec.newForm}"/>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="providerManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.ProviderManagerImpl">
+				<property name="providerDao" ref="providerDao" />
+				<property name="agencyDAO" ref="agencyDao" />
+				<property name="programProviderDAO" ref="programProviderDAO" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="programManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.ProgramManagerImpl">
+				<property name="programDao" ref="programDao" />
+				<property name="programProviderDAO" ref="programProviderDAO" />
+				<property name="programFunctionalUserDAO" ref="programFunctionalUserDAO"/>
+				<property name="programTeamDAO" ref="programTeamDAO"/>
+				<property name="programAccessDAO" ref="programAccessDAO"/>
+				<property name="admissionDAO" ref="admissionDao"/>
+				<property name="programBedLogDAO" ref="programBedLogDAO"/>
+			</bean>
+		</property>
+	</bean>
+	<bean id="programQueueManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.ProgramQueueManagerImpl">
+				<property name="programQueueDao" ref="programQueueDao" />
+				<property name="clientReferralDAO" ref="clientReferralDAO" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="admissionManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.AdmissionManagerImpl">
+				<property name="admissionDao" ref="admissionDao" />
+				<property name="programQueueDao" ref="programQueueDao" />
+				<property name="clientReferralDAO" ref="clientReferralDAO" />
+				
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="agencyManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.AgencyManagerImpl">
+				<property name="agencyDao" ref="agencyDao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="roleManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.RoleManagerImpl">
+				<property name="roleDAO" ref="roleDAO" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="logManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.LogManagerImpl">
+				<property name="logDAO" ref="logDAO" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="oscarSecurityManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.OscarSecurityManagerImpl">
+				<property name="oscarSecurityDAO" ref="oscarSecurityDAO" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="integratorManager" class="org.caisi.PMmodule.service.impl.IntegratorManagerImpl" init-method="init">
+		<property name="agencyDao" ref="agencyDao" /> 
+	</bean>
+	
+	<bean id="bedLogManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.PMmodule.service.impl.BedLogManagerImpl">
+				<property name="bedLogDAO" ref="bedLogDAO" />
+			</bean>
+		</property>
+	</bean>
+</beans>
+

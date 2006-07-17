@@ -1,0 +1,5 @@
+casemgmt 1.0.0
++ basic case management encounter
++ new and edit case management issue for demographic
++ role base access
++ work with PMMV2, OscarWAR_2_1B_10_20051119

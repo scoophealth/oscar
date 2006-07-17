@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.casemgmt.model">
+	<class name="Providerext" table="providerExt">
+		<id
+			column="provider_no"
+			length="6"
+			name="providerNo"
+			type="string"
+		 />
+		<property
+			column="signature"
+			length="255"
+			name="signature"
+			not-null="false"
+			type="string"
+		 />
+	</class>
+</hibernate-mapping>

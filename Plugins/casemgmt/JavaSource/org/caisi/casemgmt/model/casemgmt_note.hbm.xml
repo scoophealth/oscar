@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.caisi.casemgmt.model.CaseManagementNote" table="casemgmt_note">
+        <id name="id" column="note_id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <property name="update_date" type="java.util.Date"/>
+		<property name="demographic_no"/>
+		<property name="provider_no"/>
+		<property name="note"/>
+		<property name="signed"/>
+		<property name="includeissue" column="include_issue_innote"/>
+		<property name="signing_provider_no"/>
+		<property name="encounter_type"/>
+		<property name="billing_code"/>
+		<property name="program_no"/>
+		<property name="agency_no"/>
+		<property name="reporter_caisi_role"/>
+		<property name="reporter_program_team"/>
+		
+		<many-to-one name="provider" 
+			class="org.caisi.model.Provider"
+			column="provider_no"
+			update="false"
+			not-found='ignore'
+			insert="false"
+			lazy="false"
+		/>
+		
+		<set name="issues" table="casemgmt_issue_notes">
+		    <key column="note_id"/>
+		    <many-to-many column="id" class="org.caisi.casemgmt.model.CaseManagementIssue"/>
+		</set>
+		
+    </class>
+</hibernate-mapping>

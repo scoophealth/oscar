@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <demographic demographic_no="1" last_name="TEST" first_name="PATIENT" address="" city="" province="ON" postal="" phone="905-" phone2="" email="" pin="" year_of_birth="1998" month_of_birth="06" date_of_birth="15" hin="" ver="" roster_status="" patient_status="AC" date_joined="2003-06-04" chart_no="" provider_no="999998" sex="M" end_date="0001-01-01" eff_date="0001-01-01" hc_type="ON" hc_renew_date="0001-01-01" family_doctor="&lt;rdohip&gt;&lt;/rdohip&gt;&lt;rd&gt;&lt;/rd&gt;"/>
+  <provider provider_no="999998" last_name="oscardoc" first_name="doctor" provider_type="doctor" specialty="" team="" sex="" dob="0001-01-01" address="" phone="" work_phone="" ohip_no="" rma_no="" billing_no="" hso_no="" status="1" comments="" provider_activity=""/>
+  <casemgmt_note note_id="1" update_date="2005-11-05 17:27:15.0" demographic_no="1" provider_no="999998" note="this is a note about an encounter" signed="0" signing_provider_no="" encounter_type="clinic" billing_code="0010"/>
+  <casemgmt_note note_id="2" update_date="2005-11-05 17:27:41.0" demographic_no="1" provider_no="999998" note="this is a note about an encounter" signed="0" signing_provider_no="" encounter_type="clinic" billing_code="0010"/>
+  <casemgmt_note note_id="3" update_date="2005-11-05 17:27:59.0" demographic_no="1" provider_no="999998" note="this is a note about an encounter" signed="0" signing_provider_no="" encounter_type="clinic" billing_code="0010"/>
+  <casemgmt_issue/>
+  <issue/>
+</dataset>

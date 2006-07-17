@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+
+<!--
+     This is a blank Tiles definition file with a commented example.
+-->
+
+<tiles-definitions>
+       <!-- Base Tiles Definition -->
+        <definition name="page.casemgmt.view" path="/encounterLayout.jsp">
+                <put name="navigation" value="/navigation.jsp" />
+                <put name="body" value="/CaseManagementView.jsp" />
+        </definition>
+</tiles-definitions>

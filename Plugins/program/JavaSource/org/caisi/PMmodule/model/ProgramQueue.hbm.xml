@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.caisi.PMmodule.model">
+	<class name="ProgramQueue" table="program_queue">
+		<id
+			column="queue_id"
+			name="Id"
+			type="java.lang.Long"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="agency_id"
+			length="11"
+			name="AgencyId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="client_id"
+			length="11"
+			name="ClientId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="referral_date"
+			length="19"
+			name="ReferralDate"
+			not-null="false"
+			type="timestamp"
+		 />
+		<property
+			column="provider_no"
+			length="11"
+			name="ProviderNo"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="notes"
+			length="255"
+			name="Notes"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="program_id"
+			length="11"
+			name="ProgramId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="status"
+			length="30"
+			name="Status"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="referral_id"
+			length="11"
+			name="ReferralId"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+		 
+		  <property
+		 	name="ProgramName"
+		 	type="string"
+		 	formula="(select p.name from program p where p.program_id = program_id)"
+		 	/>
+		 	
+		<property
+		 	name="ProviderLastName"
+		 	type="string"
+		 	formula="(select p.last_name from provider p where p.provider_no = provider_no)"
+		 	/>
+		<property
+		 	name="ProviderFirstName"
+		 	type="string"
+		 	formula="(select p.first_name from provider p where p.provider_no = provider_no)"
+		 	/>
+		 	
+		<property
+		 	name="ClientLastName"
+		 	type="string"
+		 	formula="(select p.last_name from demographic p where p.demographic_no = client_id)"
+		 	/>
+		<property
+		 	name="ClientFirstName"
+		 	type="string"
+		 	formula="(select p.first_name from demographic p where p.demographic_no = client_id)"
+		 	/>
+	</class>
+</hibernate-mapping>
