@@ -244,7 +244,7 @@ function isNumeric(strString){
   </tr>
   
   <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,860,'../billing/CA/BC/viewBillingPreferencesAction.do?provider_no=<%=request.getParameter("provider_no")%>');return false;">Edit Billing Preferences</a>
+    <td align="center"><a href=# onClick ="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=request.getParameter("provider_no")%>');return false;">Edit Billing Preferences</a>
     </td>
   </tr>
 
