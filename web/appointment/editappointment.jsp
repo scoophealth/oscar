@@ -225,16 +225,14 @@ function checkTimeTypeIn(obj) {
     //If page is loaded first time hit db for patient's family doctor
     //Else if we are coming back from search this has been done for us
     //Else how did we get here?
-    String doctorNo = null;
+    String doctorNo = "";
     if( bFirstDisp ) {
         DemographicData dd = new DemographicData();
         DemographicData.Demographic demo = dd.getDemographic(rs.getString("demographic_no"));
-        doctorNo = demo.getProviderNo();
+        doctorNo = demo!=null? (demo.getProviderNo()) : "";
     }
     else if( !request.getParameter("doctor_no").equals(""))
         doctorNo = request.getParameter("doctor_no");
-    else
-        doctorNo = "";
 %>
 <table border="0" cellpadding="0" cellspacing="0" width="100%" >
   <tr><td width="100%">
@@ -295,7 +293,7 @@ function checkTimeTypeIn(obj) {
               <input type="TEXT" name="chart_no" readonly value="<%=bFirstDisp?chartno:request.getParameter("chart_no")%>" width="25" height="20" border="0" hspace="2">
             </td>
           </tr>
-	<%-- RJ 07/11/2006 Added Family Physician --%>
+	<% if(providerBean.getProperty(doctorNo)!=null) {%>
           <tr valign="middle"> 
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right">&nbsp;</div>
@@ -311,6 +309,7 @@ function checkTimeTypeIn(obj) {
 		<%=providerBean.getProperty(doctorNo)%>
             </td>
           </tr>
+          <% } %>
           <tr valign="middle"> 
             <td width="20%"  ALIGN="LEFT"> 
               <div align="right"><font face="arial"> <a href="#" onclick="demographicdetail(550,700)" ><bean:message key="Appointment.formName"/></a> :</font></div>
