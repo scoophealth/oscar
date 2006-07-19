@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -121,6 +122,9 @@ function upCaseCtrl(ctrl) {
             <option value="resident"><bean:message key="admin.provider.formType.optionResident"/></option>
             <option value="midwife"><bean:message key="admin.provider.formType.optionMidwife"/></option>
             <option value="admin"><bean:message key="admin.provider.formType.optionAdmin"/></option>
+		<caisi:isModuleLoad moduleName="survey">
+			<option value="er_clerk"><bean:message key="admin.provider.formType.optionErClerk"/></option>
+        </caisi:isModuleLoad>
           </select>
           <% } %>
         </td>
