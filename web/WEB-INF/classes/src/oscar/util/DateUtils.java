@@ -59,6 +59,7 @@ import java.util.Date;
 
 import java.util.GregorianCalendar;
 
+
 public class DateUtils {
 
   static Category cat = Category.getInstance(DateUtils.class.getName());
@@ -623,10 +624,40 @@ public class DateUtils {
    *Gets the difference between two dates, in days.
    *Takes two dates represented in milliseconds and returns the difference in days
    */
-  public int getDifDays(long greater, long lesser) {
-    double x = (greater - lesser) / 86400000;
-    int ret = (int) x;
-    return ret;
+  public static long getDifDays(Date greater, Date lesser) {
+    System.out.println(greater.toString());
+    System.out.println(lesser.toString());
+    Calendar calLesser = new GregorianCalendar();
+    calLesser.setTime(lesser);
+
+    Calendar calGreater = new GregorianCalendar();
+    calGreater.setTime(greater);
+
+    long differenceInMillis = calGreater.getTimeInMillis() - calLesser.getTimeInMillis();
+    long differenceInDays = differenceInMillis / (24 * 60 * 60 * 1000);
+    return differenceInDays;
   }
 
+  /**
+   * Converts a String date with the form 'yyyy-MM-dd'
+   * to a String date with the form 'yyyyMMdd'
+   * @param oldDateString String - The string to be converted
+   * @return String - The formatted date String
+   */
+  public static String convertDate8Char(String oldDateString) {
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    String sdate = "00000000";
+    try {
+      if (oldDateString != null) {
+        Date tempDate = fmt.parse(oldDateString);
+        sdate = new SimpleDateFormat("yyyyMMdd").format(tempDate);
+      }
+    }
+    catch (ParseException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      return sdate;
+    }
+  }
 }
