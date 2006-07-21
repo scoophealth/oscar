@@ -1052,11 +1052,18 @@ public class SqlUtils {
       rs = (ResultSet) db.GetSQL(qry);
       int cols = rs.getMetaData().getColumnCount();
       while (rs.next()) {
-        HashMap record = new HashMap();
+        Properties record = new Properties();
         for (int i = 0; i < cols; i++) {
           String columnName = rs.getMetaData().getColumnName(i + 1);
           String cellValue = rs.getString(i + 1);
-          record.put(columnName, cellValue);
+          if(columnName!=null && !"".equals(columnName)){
+
+            cellValue = cellValue==null?"":cellValue;
+            record.setProperty(columnName, cellValue);
+          }
+          else{
+            System.out.println("Empty key for value: " + cellValue);
+          }
         }
         records.add(record);
       }
