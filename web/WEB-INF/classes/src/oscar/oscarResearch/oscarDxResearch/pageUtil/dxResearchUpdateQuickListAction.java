@@ -49,6 +49,7 @@ public class dxResearchUpdateQuickListAction extends Action {
         dxResearchUpdateQuickListForm frm = (dxResearchUpdateQuickListForm) form;
         String quickListName = frm.getQuickListName();
         String forward = frm.getForward(); 
+        String codingSystem = frm.getSelectedCodingSystem();        
         String curUser = (String) request.getSession().getAttribute("user");
         dxResearchLoadQuickListItemsForm qLItemsFrm = (dxResearchLoadQuickListItemsForm) request.getSession().getAttribute("dxResearchLoadQuickListItemsFrm");
         qLItemsFrm.setQuickListName(quickListName);
@@ -57,9 +58,7 @@ public class dxResearchUpdateQuickListAction extends Action {
         try{
             
             
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-            String codingSystem = codingSys.getCodingSystem();        
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
             String sql;
             
             if(forward.equals("add")){
@@ -78,7 +77,7 @@ public class dxResearchUpdateQuickListAction extends Action {
 
                         //need to validate the dxresearch code before write to the database
                         sql = "select * from "+codingSystem+" where "+codingSystem+" like '" + xml_research[i] +"'";
-                        //System.out.println("Validate: " + sql);
+                        
                         ResultSet rsCode = db.GetSQL(sql);
 
                         if(!rsCode.next() || rsCode==null){
@@ -88,7 +87,7 @@ public class dxResearchUpdateQuickListAction extends Action {
                             saveErrors(request, errors);   
                         }
                         else{
-                            sql = "select * from quickList where quickListName = '" + quickListName + "' AND dxResearchCode='"+xml_research[i]+"'";
+                            sql = "select * from quickList where quickListName = '" + quickListName + "' AND dxResearchCode='"+xml_research[i]+"' AND codingSystem='"+codingSystem+"'";
                             ResultSet rs = db.GetSQL(sql);                            
                             if(!rs.next()){                                                            
                                 sql = "insert into quickList (quickListName, dxResearchCode, createdByProvider, codingSystem) values('"
@@ -96,6 +95,7 @@ public class dxResearchUpdateQuickListAction extends Action {
                                 db.RunSQL(sql);
                             }
                         }
+                        
                     }
 
                     db.CloseConn();
@@ -103,16 +103,18 @@ public class dxResearchUpdateQuickListAction extends Action {
             }
             else if(forward.equals("remove")){
                 String[] removedItems = frm.getQuickListItems();
+                String[] itemValues;
                 if(removedItems!=null){
                     for(int i=0; i<removedItems.length; i++){
-                        sql = "Delete from quickList where quickListName = '"+ quickListName + "' AND dxResearchCode = '"+removedItems[i]+"'";
+                        itemValues = removedItems[i].split(",");
+                        sql = "Delete from quickList where quickListName = '"+ quickListName + "' AND dxResearchCode = '"+itemValues[1]+"' AND codingSystem = '" + itemValues[0] + "'";
                         db.RunSQL(sql);
                     }
                 }
             }
             
             HttpSession session = request.getSession();
-            session.setAttribute("codingSystem", codingSystem);
+            //session.setAttribute("codingSystem", codingSystem);
         }
         catch(SQLException e)
         {

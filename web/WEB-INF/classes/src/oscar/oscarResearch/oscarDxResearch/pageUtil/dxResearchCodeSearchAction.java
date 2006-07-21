@@ -47,10 +47,12 @@ public final class dxResearchCodeSearchAction extends Action {
         xml_research[2] = request.getParameter("xml_research3");
         xml_research[3] = request.getParameter("xml_research4");
         xml_research[4] = request.getParameter("xml_research5");
+        String codeType = request.getParameter("codeType");
                 
-        dxCodeSearchBeanHandler hd = new dxCodeSearchBeanHandler(xml_research);
-        HttpSession session = request.getSession();
-        session.setAttribute("allMatchedCodes", hd);                
+        dxCodeSearchBeanHandler hd = new dxCodeSearchBeanHandler(codeType,xml_research);
+        HttpSession session = request.getSession();      
+        session.setAttribute("allMatchedCodes", hd);
+        session.setAttribute("codeType", codeType);
         
         return mapping.findForward("success");
     }

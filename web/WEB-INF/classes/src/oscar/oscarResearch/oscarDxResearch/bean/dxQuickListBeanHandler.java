@@ -77,8 +77,7 @@ public class dxQuickListBeanHandler {
                 lastUsed = "default";
             }
            
-            sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";
-            //System.out.println(sql);
+            sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
             rs = db.GetSQL(sql);
             while(rs.next()){                
                 dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"),

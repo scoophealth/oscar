@@ -36,13 +36,13 @@ public class dxCodeSearchBeanHandler {
     
     Vector dxCodeSearchBeanVector = new Vector();
  
-    public dxCodeSearchBeanHandler(String[] keywords) {
-        init(keywords);
+    public dxCodeSearchBeanHandler(String codeType, String[] keywords) {
+        init(codeType,keywords);
     }
     
-    public boolean init(String[] keywords) {
-        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-        String codingSystem = codingSys.getCodingSystem();        
+    public boolean init(String codingSystem,String[] keywords) {
+        //dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
+        //String codingSystem = codingSys.getCodingSystem();        
         boolean verdict = true;
         try {
             ResultSet rs;
@@ -59,7 +59,7 @@ public class dxCodeSearchBeanHandler {
                         sql = sql + "or "+codingSystem+" like '%" + keywords[i] + "%' or description like '%" + keywords[i] +"%' ";
                 }
             }
-            System.out.println("Sql Statement: " + sql);  
+            //System.out.println("Sql Statement: " + sql);  
             rs = db.GetSQL(sql);
             while(rs.next()){
                 dxCodeSearchBean bean = new dxCodeSearchBean(rs.getString("description"),                                                                 
