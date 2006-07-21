@@ -807,7 +807,7 @@ border-right: 2px solid #cfcfcf;
 						<a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(province)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=bean.appointmentNo%>&demographic_name=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&demographic_no=<%=bean.demographicNo%>&providerview=<%=bean.curProviderNo%>&user_no=<%=bean.providerNo%>&apptProvider_no=<%=bean.curProviderNo%>&appointment_date=<%=bean.appointmentDate%>&start_time=<%=bean.startTime%>&bNewForm=1&status=t");return false;' title="<bean:message key="global.billing"/>"><bean:message key="global.billing"/></a>
                    <% } else {%>
                         <!--a href=# onClick='onUnbilled("../billing/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a-->
-						<a href=# onClick='onUnbilled("../billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a>
+                                                <a href=# onClick='onUnbilled("../billing/CA/<%=province%>/billingDeleteWithoutNo.jsp?status=<%=bean.status%>&appointment_no=<%=bean.appointmentNo%>");return false;' title="<bean:message key="global.unbil"/>">-<bean:message key="global.billing"/></a>
                    <% } %>
              <% } %>
                 <br>
