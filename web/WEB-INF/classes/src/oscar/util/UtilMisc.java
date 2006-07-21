@@ -188,6 +188,23 @@ public class UtilMisc {
 	public static float StringToFloat(String value) {
 		return Float.parseFloat(value);
 	}
+
+        /**
+         * This method attempts to parse the provided String to a double value
+         * If the value is non-numeric a value of 0.0 is returned.
+         * @param value String
+         * @return double
+         */
+        public static double safeParseDouble(String value){
+          double ret = 0.0;
+          try {
+            ret = Double.parseDouble(value);
+          }
+          catch (Exception ex) {ex.printStackTrace();}
+          finally {
+            return ret;
+          }
+        }
 	public static Object IIf(boolean Expression, Object TruePart,
 			Object FalsePart) {
 		if (Expression)
