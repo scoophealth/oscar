@@ -76,4 +76,13 @@ public class dxCodeSearchBean{
            this.exactMatch = exactMatch;
        }
        
+       public boolean equals( Object o ) {
+           if( o instanceof dxResearchBean ) {
+                dxResearchBean bean = (dxResearchBean)o;           
+                return (dxSearchCode.equals(bean.getDxSearchCode()) && type.equals(bean.getType()));
+           }
+           else 
+               return super.equals(o);
+       }
+       
 }
