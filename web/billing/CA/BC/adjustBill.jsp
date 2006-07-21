@@ -82,21 +82,7 @@
   int curDay = now.get(Calendar.DAY_OF_MONTH);
 
   String codes[] = {"O","P","N","X","T"};
-  List statusTypes = billform.getStatusTypes(codes);
-  request.setAttribute("statusTypes",statusTypes);
-  Properties statusTypeProps = getStatusProperties(billform.getStatusTypes(null));
-
-%>
-<%!
-public Properties getStatusProperties(List statusType){
-  Properties p = new Properties();
-  for (Iterator iter = statusType.iterator(); iter.hasNext(); ) {
-    oscar.entities.BillingStatusType item = (oscar.entities.BillingStatusType) iter.next();
-    p.setProperty(item.getBillingstatus(),item.getDisplayNameExt());
-  }
-  return p;
-}
-
+  request.setAttribute("codes",codes);
 %>
 <!--
 /*
@@ -443,7 +429,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 	 <%
  if(BillType.equals("A")||BillType.equals("P")){
  %>
-	 <a href="#" onClick="popupPage(800,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=billNo%>&receipt=yes')">View Invoice</a>
+	 <a href="#" onClick="popupPage(800,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=request.getParameter("invoiceNo")%>&receipt=yes')">View Invoice</a>
 <%
 }
 %>
@@ -512,21 +498,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
   <tr>
     <td   class="bCellData">
-
-      <input type="hidden" name="xml_status" value="<%=BillType%>">
-      <label>
-      Billing Type:
-     <%=statusTypeProps.getProperty(BillType)%>
-      </label>
-      <br />
-      <!-- This hardcoded section needs to go -->
-      <label>
-       Change Type:
-       <html:select styleId="status"  property="status" onchange="javascript:document.forms[0].xml_status.value = this.value;">
-              <html:options collection="statusTypes" property="billingstatus" labelProperty="displayNameExt"/>
-       </html:select>
-      </label>
-
+    <!-- includes the Billing Type Drop Down List -->
+      <jsp:include flush="false" page="billType_frag.jsp">
+        <jsp:param name="BillType" value="<%=BillType%>"/>
+      </jsp:include>
     </td>
     <td   class="bCellData">
         <table>
