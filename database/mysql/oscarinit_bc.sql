@@ -2324,7 +2324,7 @@ CREATE TABLE billing_msp_servicecode_times (
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
-ALTER `billing_msp_servicecode_times` MODIFY COLUMN `billingservice_no` VARCHAR(10) NOT NULL DEFAULT '0';
+ALTER table `billing_msp_servicecode_times` MODIFY COLUMN `billingservice_no` VARCHAR(10) NOT NULL DEFAULT '0';
 
 #Stores data about the types of bills that are used in OSCAR BC billing module
 CREATE TABLE billingtypes (
