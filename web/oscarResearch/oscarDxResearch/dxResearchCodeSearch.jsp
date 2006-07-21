@@ -43,7 +43,7 @@
 <script LANGUAGE="JavaScript">
 <!--
 function CodeAttach(File0) {
-      
+     
     self.close();
     self.opener.document.forms[0].xml_research1.value = File0;
     self.opener.document.forms[0].xml_research2.value = '';
@@ -124,7 +124,8 @@ function CodesAttach() {
 
 <table width="600" cellspacing="1">
   <tr>
-    <td class="subject" colspan="2"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch"/></td>
+    <td class="subject"><%=session.getAttribute("codeType")%></td>
+    <td class="subject"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCodeSearch"/></td>
   </tr>
   <tr class="heading"> 
     <td width="12%"><bean:message key="oscarResearch.oscarDxResearch.dxResearchCodeSearch.msgCode"/></td>
@@ -160,6 +161,7 @@ function CodesAttach() {
   </tr>
   <%  }%>
   
+  <%--
   <% if (intCount == 1) { %>
   <logic:iterate id="code" name="allMatchedCodes" property="dxCodeSearchBeanVector">  
       <script LANGUAGE="JavaScript">
@@ -167,6 +169,7 @@ function CodesAttach() {
       </script>
   </logic:iterate>
 <% } %>
+--%>
 </table>
 <input type="button" name="confirm" value="Confirm" onclick="javascript:CodesAttach();"><input type="button" name="<bean:message key="global.btnCancel"/>" value="Cancel" onclick="javascript:window.close()">
 
