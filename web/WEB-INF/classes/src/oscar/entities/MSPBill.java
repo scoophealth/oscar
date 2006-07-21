@@ -389,7 +389,6 @@ public class MSPBill {
    */
   public String getServiceDateRange() {
     String ret = "0";
-    long now = System.currentTimeMillis();
     java.util.Date dt = null;
     try {
       java.text.DateFormat formatter = new java.text.SimpleDateFormat(
@@ -400,7 +399,7 @@ public class MSPBill {
       e.printStackTrace();
     }
     oscar.util.DateUtils ut = new oscar.util.DateUtils();
-    int daysOld = ut.getDifDays(now, dt.getTime());
+    long daysOld = ut.getDifDays(new Date(), dt);
     if (daysOld >= 0 && daysOld <= 30) {
       ret = "1";
     }
