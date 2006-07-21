@@ -109,4 +109,12 @@ public class dxResearchBean{
            this.type = type;
        }
        
+       public boolean equals( Object o ) {
+           if( o instanceof dxCodeSearchBean ) {
+                dxCodeSearchBean bean = (dxCodeSearchBean)o;                
+                return (dxSearchCode.equals(bean.getDxSearchCode()) && type.equals(bean.getType()));
+           }
+           else
+               return super.equals(o);
+       }
 }
