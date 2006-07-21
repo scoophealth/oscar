@@ -32,6 +32,8 @@ import oscar.entities.PaymentType;
 import java.util.List;
 import oscar.util.SqlUtils;
 import oscar.entities.BillingStatusType;
+import java.util.Properties;
+import java.util.Iterator;
 
 
 public class BillingFormData {
@@ -727,4 +729,21 @@ public class BillingFormData {
     }
     return rs;
   }
+
+  /**
+   * Returns a Properties instance that contains the followign key/value pair
+   * * key = A Billing Status Type Code
+   * * value =  A Billing Status Type Extended Description
+   * @param statusType List
+   * @return Properties
+   */
+  public Properties getStatusProperties(List statusType){
+  Properties p = new Properties();
+  for (Iterator iter = statusType.iterator(); iter.hasNext(); ) {
+    oscar.entities.BillingStatusType item = (oscar.entities.BillingStatusType) iter.next();
+    p.setProperty(item.getBillingstatus(),item.getDisplayNameExt());
+  }
+  return p;
+}
+
 }
