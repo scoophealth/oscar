@@ -46,14 +46,13 @@ public class dxResearchLoadQuickListItemsAction extends Action {
         request.getSession().setAttribute("dxResearchLoadQuickListItemsFrm", frm);
         String quickListName = frm.getQuickListName();
         
-        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-        String codingSystem = codingSys.getCodingSystem();        
+        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();        
         
         //System.out.println("the quick list Name in loadQuicListItem Action: " + quickListName);
         dxQuickListItemsHandler quicklistItemsHd = new dxQuickListItemsHandler(quickListName);
         
         HttpSession session = request.getSession();        
-        session.setAttribute("codingSystem", codingSystem);
+        session.setAttribute("codingSystem", codingSys);
         session.setAttribute("allQuickListItems", quicklistItemsHd);
         session.setAttribute("quickListName", quickListName);
         
