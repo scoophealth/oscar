@@ -1,157 +1,156 @@
+
 <%
-  if(session.getValue("user") == null)
+  if (session.getValue("user") == null)
     response.sendRedirect("../../../logout.jsp");
 %>
- <!--
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster Unviersity
- * Hamilton
- * Ontario, Canada
- */
+<!--
+  /*
+  *
+  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+  * This software is published under the GPL GNU General Public License.
+  * This program is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU General Public License
+  * as published by the Free Software Foundation; either version 2
+  * of the License, or (at your option) any later version. *
+  * This program is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+  * along with this program; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+  *
+  * <OSCAR TEAM>
+  *
+  * This software was written for the
+  * Department of Family Medicine
+  * McMaster Unviersity
+  * Hamilton
+  * Ontario, Canada
+  */
 -->
-<%@ page language="java" contentType="text/html" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
-<%@ page import="oscar.oscarDemographic.data.*" %>
-<%@ page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*" %>
+<%@page language="java" contentType="text/html"%>
+<%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
+<%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
+<%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@page import="oscar.oscarDemographic.data.*"%>
+<%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
 <%!
-  public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Hashtable dxcodeList) {
-    System.err.println("The Length: " + servicelist.length);
+  public void fillDxcodeList(BillingFormData.BillingService[] servicelist, Map dxcodeList) {
     for (int i = 0; i < servicelist.length; i++) {
       BillingAssociationPersistence per = new BillingAssociationPersistence();
       ServiceCodeAssociation assoc = per.getServiceCodeAssocByCode(servicelist[i].getServiceCode());
       List dxcodes = assoc.getDxCodes();
       if (!dxcodes.isEmpty()) {
         dxcodeList.put(servicelist[i].getServiceCode(), (String) dxcodes.get(0));
-        System.err.println(servicelist[i].getServiceCode() + " " + (String) dxcodes.get(0));
       }
     }
   }
+  public String createAssociationJS(Map assocCodeMap,String assocArrayName) {
+
+    Set e = assocCodeMap.keySet();
+    StringBuffer out = new StringBuffer();
+    out.append("var " + assocArrayName + "  = new Array();");
+    out.append("\n");
+    int index = 0;
+    for (Iterator iter = e.iterator(); iter.hasNext(); ) {
+      String key = (String) iter.next();
+      String value = (String) assocCodeMap.get(key);
+      String rowName = assocArrayName + "row";
+      out.append("var " + rowName + index + " = new Array(2);\n");
+      out.append(rowName + index + "[0]='" + key + "'; ");
+      out.append(rowName + index + "[1]='" + value + "';\n");
+      out.append(assocArrayName + "[" + index + "]=" + rowName  + index + ";\n");
+      index++;
+    }
+    return out.toString();
+  }
 %>
 <%
-
- int year = 0;//Integer.parseInt(request.getParameter("year"));
+  int year = 0; //Integer.parseInt(request.getParameter("year"));
   int month = 0; //Integer.parseInt(request.getParameter("month"));
   //int day = now.get(Calendar.DATE);
   int delta = 0; //request.getParameter("delta")==null?0:Integer.parseInt(request.getParameter("delta")); //add or minus month
   GregorianCalendar now = new GregorianCalendar();
-
-
   year = now.get(Calendar.YEAR);
-  month = now.get(Calendar.MONTH)+1;
-String sxml_location="", sxml_provider="", sxml_visittype="";
-String color = "", colorflag ="";
-BillingSessionBean bean = (BillingSessionBean)pageContext.findAttribute("billingSessionBean");
-
-oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
-oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
-oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic lgc = new oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic();
-BillingFormData billform = new BillingFormData();
-BillingFormData.BillingService[] billlist1 = lgc.filterServiceCodeList(billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion()), demo);
-BillingFormData.BillingService[] billlist2 = lgc.filterServiceCodeList(billform.getServiceList("Group2", bean.getBillForm(), bean.getBillRegion()), demo);
-BillingFormData.BillingService[] billlist3 = lgc.filterServiceCodeList(billform.getServiceList("Group3", bean.getBillForm(), bean.getBillRegion()), demo);
-String group1Header = billform.getServiceGroupName("Group1",bean.getBillForm());
-String group2Header = billform.getServiceGroupName("Group2",bean.getBillForm());
-String group3Header = billform.getServiceGroupName("Group3",bean.getBillForm());
-
-BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
-BillingFormData.BillingVisit[] billvisit = billform.getVisitType(bean.getBillRegion());
-BillingFormData.Location[] billlocation = billform.getLocationList(bean.getBillRegion());
-BillingFormData.Diagnostic[] diaglist = billform.getDiagnosticList( bean.getBillForm(), bean.getBillRegion());
-BillingFormData.BillingForm[] billformlist = billform.getFormList();
-Hashtable dxcodeList = new Hashtable();
-fillDxcodeList(billlist1, dxcodeList);
-fillDxcodeList(billlist2, dxcodeList);
-fillDxcodeList(billlist3, dxcodeList);
-
+  month = now.get(Calendar.MONTH) + 1;
+  String sxml_location = "", sxml_provider = "", sxml_visittype = "";
+  String color = "", colorflag = "";
+  BillingSessionBean bean = (BillingSessionBean) pageContext.findAttribute("billingSessionBean");
+  oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
+  oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.getDemographic(bean.getPatientNo());
+  oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic lgc = new oscar.oscarBilling.ca.bc.MSP.ServiceCodeValidationLogic();
+  BillingFormData billform = new BillingFormData();
+  BillingFormData.BillingService[] billlist1 = lgc.filterServiceCodeList(billform.getServiceList("Group1", bean.getBillForm(), bean.getBillRegion()), demo);
+  BillingFormData.BillingService[] billlist2 = lgc.filterServiceCodeList(billform.getServiceList("Group2", bean.getBillForm(), bean.getBillRegion()), demo);
+  BillingFormData.BillingService[] billlist3 = lgc.filterServiceCodeList(billform.getServiceList("Group3", bean.getBillForm(), bean.getBillRegion()), demo);
+  String group1Header = billform.getServiceGroupName("Group1", bean.getBillForm());
+  String group2Header = billform.getServiceGroupName("Group2", bean.getBillForm());
+  String group3Header = billform.getServiceGroupName("Group3", bean.getBillForm());
+  BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
+  BillingFormData.BillingVisit[] billvisit = billform.getVisitType(bean.getBillRegion());
+  BillingFormData.Location[] billlocation = billform.getLocationList(bean.getBillRegion());
+  BillingFormData.Diagnostic[] diaglist = billform.getDiagnosticList(bean.getBillForm(), bean.getBillRegion());
+  BillingFormData.BillingForm[] billformlist = billform.getFormList();
+  SupServiceCodeAssocDAO supDao = new SupServiceCodeAssocDAO();
+  HashMap assocCodeMap = new HashMap();
+  fillDxcodeList(billlist1, assocCodeMap);
+  fillDxcodeList(billlist2, assocCodeMap);
+  fillDxcodeList(billlist3, assocCodeMap);
   String frmType = request.getParameter("billType");
-  if(frmType != null && frmType.equals("Pri")){
-   billform.setPrivateFees(billlist1);
-   billform.setPrivateFees(billlist2);
-   billform.setPrivateFees(billlist3);
-    System.out.println("request.getParameter(billForm)=" + request.getParameter("billType"));
+  if (frmType != null && frmType.equals("Pri")) {
+    billform.setPrivateFees(billlist1);
+    billform.setPrivateFees(billlist2);
+    billform.setPrivateFees(billlist3);
   }
-
-String loadFromSession = request.getParameter("loadFromSession");
-if(request.getAttribute("loadFromSession")!=null){
-  loadFromSession="y";
-}
-if (loadFromSession== null ){
-   System.out.println("RemovingAttribute from Session");
-   request.getSession().removeAttribute("BillingCreateBillingForm");
-}
+  String loadFromSession = request.getParameter("loadFromSession");
+  if (request.getAttribute("loadFromSession") != null) {
+    loadFromSession = "y";
+  }
+  if (loadFromSession == null) {
+    System.out.println("RemovingAttribute from Session");
+    request.getSession().removeAttribute("BillingCreateBillingForm");
+  }
 %>
-
 <html>
 <head>
-<title><bean:message key="billing.bc.title"/></title>
+<title>
+<bean:message key="billing.bc.title"/>
+</title>
 <html:base/>
-<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
+<link rel="stylesheet" type="text/css" media="all" href="../../../share/calendar/calendar.css" title="win2k-cold-1"/>
 <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
 <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 <script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <style type="text/css">
-	<!--
-	A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
+  <!--
+    A, BODY, INPUT, OPTION ,SELECT , TABLE, TEXTAREA, TD, TR {font-family:tahoma,sans-serif; font-size:10px;}
+  -->
 
-	-->
+  .popUp{
+  visibility: hidden;
+  background-color:#ffffcc;
+  }
 
-    .popUp{
-		visibility: hidden;
-		background-color:#ffffcc;
-    }
+  .odd{
+  background-color:#EEEEFF;
+  }
+  .even{
+  background-color:#FFFFFF;
+  }
 
-   .odd{
-    background-color:#EEEEFF;
-   }
-   .even{
-    background-color:#FFFFFF;
-   }
-
-   .popupHeader{
-    background-color:#ccccff;
-    font-size:10pt;
-   }
+  .popupHeader{
+  background-color:#ccccff;
+  font-size:10pt;
+  }
 </style>
 <script language="JavaScript">
 
-//create dxcode java script array
-var dxcodes = new Array();
-<%
-Enumeration e = dxcodeList.keys();
-int index = 0;
-while(e.hasMoreElements()){
-  String key = (String)e.nextElement();
-  String value = (String)dxcodeList.get(key);
-  out.print("var row" + index + " = new Array(2);\n");
-  out.print("row" + index + "[0]='" + key + "'; ");
-  out.print("row" + index + "[1]='" + value + "';\n");
-  out.print("dxcodes[" + index + "]=row" + index + ";\n");
-  //out.print("dxcodes[" + index + "][" + index + "]=" + key +"; " +  "dxcodes[" + index + "][" + index+1 + "]=" + value +";");
-  index++;
-}
-%>
+//creates a javaspt array of associated dx codes
+<%=createAssociationJS(assocCodeMap,"jsAssocCodes")%>
+<%=createAssociationJS(supDao.getAssociationKeyValues(),"trayAssocCodes")%>
+
 
 
 function codeEntered(svcCode){
@@ -165,15 +164,23 @@ function addSvcCode(svcCode) {
         if (myform.service[i].checked) {
           if (myform.xml_other1.value == "") {
             myform.xml_other1.value = svcCode;
-            myform.xml_diagnostic_detail1.value = getAssocDxCode(svcCode);
+            var trayCode =  getAssocCode(svcCode,trayAssocCodes);
+            if(trayCode!=''){
+              myform.xml_other2.value = trayCode;
+            }
+            myform.xml_diagnostic_detail1.value = getAssocCode(svcCode,jsAssocCodes);
           }
           else if (myform.xml_other2.value == "") {
             myform.xml_other2.value = svcCode;
-            myform.xml_diagnostic_detail2.value = getAssocDxCode(svcCode);
+            var trayCode =  getAssocCode(svcCode,trayAssocCodes);
+            if(trayCode!=''){
+              myform.xml_other3.value = trayCode;
+            }
+            myform.xml_diagnostic_detail2.value = getAssocCode(svcCode,jsAssocCodes);
           }
           else if (myform.xml_other3.value == "") {
             myform.xml_other3.value = svcCode;
-            myform.xml_diagnostic_detail3.value = getAssocDxCode(svcCode);
+            myform.xml_diagnostic_detail3.value = getAssocCode(svcCode,jsAssocCodes);
           }
           else {
             alert("There are already three service codes entered");
@@ -184,6 +191,7 @@ function addSvcCode(svcCode) {
         else {
           if (myform.xml_other1.value == svcCode) {
             myform.xml_other1.value = "";
+            myform.xml_other2.value = "";
             myform.xml_diagnostic_detail1.value = "";
           }
           else if (myform.xml_other2.value == svcCode) {
@@ -198,16 +206,16 @@ function addSvcCode(svcCode) {
       }
     }
   }
-function getAssocDxCode(svcCode){
-  var dxcode = ""
-  for (var i = 0; i < dxcodes.length; i++) {
-    var row = dxcodes[i];
+function getAssocCode(svcCode,assocCodes){
+  var retcode = ""
+  for (var i = 0; i < assocCodes.length; i++) {
+    var row = assocCodes[i];
 
     if(row[0] == svcCode){
       return row[1];
     }
   }
-  return dxcode;
+  return retcode;
 }
 function checkSelectedCodes(){
 	myform = document.forms[0];
@@ -501,62 +509,63 @@ function formPopupHide(){
 </script>
 <link rel="stylesheet" href="../billing/billing.css" type="text/css">
 </head>
-
-
 <%!
-/**
-Generates a string list of option tags in numeric order
-**/
-String generateNumericOptionList(int range){
-  StringBuffer buff = new StringBuffer();
-  buff.append("<option value=''></option>");
-   for (int i = 0; i < range; i++) {
-     String prefix = i<10?"0":"";
-     String val = prefix+String.valueOf(i);
-   buff.append("<option value='" + val + "'>" + val+ "</option>");
-   }
-   return buff.toString();
-}
+  /**
+   Generates a string list of option tags in numeric order
+   **/
+  String generateNumericOptionList(int range) {
+    StringBuffer buff = new StringBuffer();
+    buff.append("<option value=''></option>");
+    for (int i = 0; i < range; i++) {
+      String prefix = i < 10 ? "0" : "";
+      String val = prefix + String.valueOf(i);
+      buff.append("<option value='" + val + "'>" + val + "</option>");
+    }
+    return buff.toString();
+  }
 %>
-
-
 <body bgcolor="#FFFFFF" text="#000000" rightmargin="0" leftmargin="0" topmargin="10" marginwidth="0" marginheight="0" onLoad="setfocus();CheckType();correspondenceNote();">
-<iframe
-  id="DivShim"
-  src="javascript:false;"
-  scrolling="no"
-  frameborder="0"
-  style="position:absolute; top:0px; left:0px; display:none;">
- </iframe>
+<iframe id="DivShim" src="javascript:false;" scrolling="no" frameborder="0" style="position:absolute; top:0px; left:0px; display:none;"></iframe>
 <div id="Layer2" class="popUp" style="position:absolute; left:298px; top:26px; width:332px; height:600px;">
   <table width="100%">
-     <tr class="popupHeader">
+    <tr class="popupHeader">
       <th>Dx Code</th>
       <th>Description</th>
-      <th><a href="#" onClick="formPopupHide();return false; return false;">X</a></th>
+      <th>
+        <a href="#" onClick="formPopupHide();return false; return false;">X</a>
+      </th>
     </tr>
-   <%
-   boolean flag = false;
-   for (int i=0; i< diaglist.length; i++){
+  <%
+    boolean flag = false;
+    for (int i = 0; i < diaglist.length; i++) {
       flag = !flag;
-      String rowClass = flag?"odd":"even";
-    %>
-       <tr class="<%=rowClass%>">
-          <td><b>
-               <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');formPopupHide();return false;return false;">
-                                <%=diaglist[i].getDiagnosticCode()%>
-               </a></b>
-          </td>
-	  <td colspan="2"><%=diaglist[i].getDescription()%></td>
-       </tr>
-    <%}%>
+      String rowClass = flag ? "odd" : "even";
+  %>
+    <tr class="<%=rowClass%>">
+      <td>
+        <b>
+          <a href="#" onClick="quickPickDiagnostic('<%=diaglist[i].getDiagnosticCode()%>');formPopupHide();return false;return false;"><%=diaglist[i].getDiagnosticCode()%>          </a>
+        </b>
+      </td>
+      <td colspan="2"><%=diaglist[i].getDescription()%>      </td>
+    </tr>
+  <%}  %>
   </table>
 </div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000">
-    <td height="40" width="10%"> </td>
+    <td height="40" width="10%">    </td>
     <td width="90%" align="left">
-      <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3"><bean:message key="billing.bc.title"/></font></font></b></font>
+      <p>
+        <font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF">
+          <b>
+            <font face="Arial, Helvetica, sans-serif" size="4">              oscar
+              <font size="3">
+                <bean:message key="billing.bc.title"/>
+              </font>
+            </font>
+          </b>
+        </font>
       </p>
     </td>
   </tr>
@@ -564,659 +573,893 @@ String generateNumericOptionList(int range){
 <div id="Layer1" class="popUp" style="position:absolute; left:1px; top:159px; width:410px; height:300px;">
   <table width="100%">
     <tr class="popupHeader">
-      <th>Billing
-        Form</th>
-      <th><a href="#" onClick="formPopupHide();return false;">x</a></th>
+      <th>
+        Billing
+        Form
+</th>
+      <th>
+        <a href="#" onClick="formPopupHide();return false;">x</a>
+      </th>
     </tr>
-
-     <%
-     flag = false;
-     for (int i=0; i< billformlist.length; i++){
-           flag = !flag;
-           String rowClass = flag?"odd":"even";
-     %>
-            <tr class="<%=rowClass%>">
-               <td colspan="2">
-                  <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=<%=bean.getBillForm()%>" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%></a>
-               </td>
-            </tr>
-     <%}%>
-
-
-     </table>
+  <%
+    flag = false;
+    for (int i = 0; i < billformlist.length; i++) {
+      flag = !flag;
+      String rowClass = flag ? "odd" : "even";
+  %>
+    <tr class="<%=rowClass%>">
+      <td colspan="2">
+        <a href="../../../billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=billformlist[i].getFormCode()%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=<%=bean.getBillForm()%>" onClick="showHideLayers('Layer1','','hide')"><%=billformlist[i].getDescription()%>        </a>
+      </td>
+    </tr>
+  <%}  %>
+  </table>
 </div>
- <h3> <html:errors /> </h1>
-<html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();" >
-<input type="hidden" name="newWCBClaim"  value="<%=(String)request.getAttribute("newWCBClaim")%>"/>
-        <%
-        BillingCreateBillingForm thisForm;
-        thisForm = (BillingCreateBillingForm)request.getSession().getAttribute("BillingCreateBillingForm");
-        if (thisForm != null){
-
-            sxml_provider = ((String) thisForm.getXml_provider());
-            sxml_location =((String) thisForm.getXml_location());
-            sxml_visittype = ((String) thisForm.getXml_visittype());
-            if (sxml_location.compareTo("")==0){
-                sxml_location  = OscarProperties.getInstance().getProperty("visitlocation");
-                sxml_visittype = OscarProperties.getInstance().getProperty("visittype");
-                sxml_provider  = bean.getApptProviderNo();
-
-                thisForm.setXml_location(sxml_location);
-                thisForm.setXml_provider( sxml_provider);
-                thisForm.setXml_visittype(sxml_visittype);
-            }
-
-            String apDate = thisForm.getXml_appointment_date();
-            if ( apDate != null && apDate.trim().length() == 0 ){
-                thisForm.setXml_appointment_date(bean.getApptDate());
-            }
-            System.out.println("app date "+thisForm.getXml_appointment_date());
-            if(bean != null && bean.getBillType() != null){
-            thisForm.setXml_billtype(bean.getBillType());
-            }
-            else if(request.getParameter("billType") != null){
-               thisForm.setXml_billtype(request.getParameter("billType"));
-            }
-            if ( demo != null && demo.getVersionCode() != null && demo.getVersionCode().equals("66")){
-               thisForm.setDependent("66");
-            }
-            thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
-             oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
-             System.out.println("(String) thisForm.getXml_provider()=" + (String) thisForm.getXml_provider());
-		  oscar.oscarBilling.ca.bc.data.BillingPreference pref = null;
-
-		  //checking for a bug where the passed in provider number is actually "none" rather than numeral 0
-		  if(oscar.util.StringUtils.isNumeric(thisForm.getXml_provider())){
-		   pref = dao.getUserBillingPreference((String) thisForm.getXml_provider());
-		  }
-
-          String userReferralPref = "";
-
-          if(pref!=null){
-          if(pref.getReferral() == 1){
-          userReferralPref = "T";
-          }
-          else if(pref.getReferral() == 2){
-          userReferralPref = "B";
-          }
-          thisForm.setRefertype1(userReferralPref);
-           thisForm.setRefertype2(userReferralPref);
-        }
-
-
-        }
-        %>
-
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+<h3>
+<html:errors/>
+</h1><html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();">
+  <input type="hidden" name="newWCBClaim" value="<%=(String)request.getAttribute("newWCBClaim")%>"/>
+<%
+  BillingCreateBillingForm thisForm;
+  thisForm = (BillingCreateBillingForm) request.getSession().getAttribute("BillingCreateBillingForm");
+  if (thisForm != null) {
+    sxml_provider = ((String) thisForm.getXml_provider());
+    sxml_location = ((String) thisForm.getXml_location());
+    sxml_visittype = ((String) thisForm.getXml_visittype());
+    if (sxml_location.compareTo("") == 0) {
+      sxml_location = OscarProperties.getInstance().getProperty("visitlocation");
+      sxml_visittype = OscarProperties.getInstance().getProperty("visittype");
+      sxml_provider = bean.getApptProviderNo();
+      thisForm.setXml_location(sxml_location);
+      thisForm.setXml_provider(sxml_provider);
+      thisForm.setXml_visittype(sxml_visittype);
+    }
+    String apDate = thisForm.getXml_appointment_date();
+    if (apDate != null && apDate.trim().length() == 0) {
+      thisForm.setXml_appointment_date(bean.getApptDate());
+    }
+    System.out.println("app date " + thisForm.getXml_appointment_date());
+    if (bean != null && bean.getBillType() != null) {
+      thisForm.setXml_billtype(bean.getBillType());
+    }
+    else if (request.getParameter("billType") != null) {
+      thisForm.setXml_billtype(request.getParameter("billType"));
+    }
+    if (demo != null && demo.getVersionCode() != null && demo.getVersionCode().equals("66")) {
+      thisForm.setDependent("66");
+    }
+    thisForm.setCorrespondenceCode(bean.getCorrespondenceCode());
+    oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO dao = new oscar.oscarBilling.ca.bc.data.BillingPreferencesDAO();
+    System.out.println("(String) thisForm.getXml_provider()=" + (String) thisForm.getXml_provider());
+    oscar.oscarBilling.ca.bc.data.BillingPreference pref = null;
+    //checking for a bug where the passed in provider number is actually "none" rather than numeral 0
+    if (oscar.util.StringUtils.isNumeric(thisForm.getXml_provider())) {
+      pref = dao.getUserBillingPreference((String) thisForm.getXml_provider());
+    }
+    String userReferralPref = "";
+    if (pref != null) {
+      if (pref.getReferral() == 1) {
+        userReferralPref = "T";
+      }
+      else if (pref.getReferral() == 2) {
+        userReferralPref = "B";
+      }
+      thisForm.setRefertype1(userReferralPref);
+      thisForm.setRefertype2(userReferralPref);
+    }
+  }
+%>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td valign="top" height="221">
         <table width="107%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.patient"/></b>:</font></td>
-            <td><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><u><%=demo.getLastName()%>, <%=demo.getFirstName()%></u></font></td>
-            <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.patient.status"/></b>:</font><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getPatientStatus()%>
-              &nbsp;&nbsp;&nbsp;&nbsp; <b><bean:message key="billing.patient.roster"/>: <%=demo.getRosterStatus()%></b></font></b></td>
-            <td width="14%"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong><bean:message key="billing.provider.assignedProvider"/></strong></font></td>
-            <td width="29%"><%=billform.getProviderName(demo.getProviderNo())%></td>
-          </tr>
-          <tr>
-            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><bean:message key="billing.patient.age"/>:</font></b><br>
-              </font></td>
-            <td><b><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getAge()%></font></b></td>
-            <td><font size="1" face="Arial, Helvetica, sans-serif"><b><font face="Verdana, Arial, Helvetica, sans-serif"><a href="#" id="pop1" onClick="formPopup(this.id,'Layer1');return false;">
-                    <bean:message key="billing.billingform"/></a>:</font></b>
-                <%=billform.getBillingFormDesc(billformlist,bean.getBillForm())%>
-              </font></td>
-            <td width="14%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
-
-              <!-- 2003-9-21
-              13:21 -->
-
-              <b><bean:message key="billing.provider.billProvider"/></b> </font></td>
-            <td width="29%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
-              <html:select property="xml_provider"  value="<%=sxml_provider%>">
-                <html:option value="000000" ><b>Select Provider</b></html:option>
-                     <% for (int j=0; j< billphysician.length; j++){ %>
-	             <html:option value="<%=billphysician[j].getProviderNo()%>"><%=billphysician[j].getProviderName()%></html:option>
-               <%}%>
-              </html:select>
-              </font></td>
-          </tr>
-          <tr>
-            <td ><font face="Verdana, Arial, Helvetica, sans-serif" size="-2"><b><bean:message key="billing.billingtype"/></b> </font></td>
-            <td width="12%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
-              <html:select property="xml_billtype"  onchange="CheckType();gotoPrivate();" >
-                 <html:option value="MSP" >Bill MSP</html:option>
-                 <html:option value="WCB" >Bill WCB</html:option>
-                 <html:option value="ICBC" >Bill ICBC</html:option>
-                 <html:option value="Pri" >Private</html:option>
-                 <html:option value="DONOTBILL" >Do Not Bill</html:option>
-              </html:select>
+            <td>
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <b>
+                  <bean:message key="billing.patient"/>
+                </b>
+                :
               </font>
-
             </td>
-            <td width="33%"><font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
-              <b>Clarification Code:</b>
-
-              <html:select property="xml_location" >
-
-                  <% for (int i=0; i< billlocation.length; i++){
-                     String locationDescription = billlocation[i].getBillingLocation()+"|"+billlocation[i].getDescription();
-                  %>
-
-                    <html:option value="<%=locationDescription%>"><%=billlocation[i].getDescription()%></html:option>
-               <%}%>
-
-
-                   </html:select>
-              </font></td>
-            <td width="14%"><font size="-2" face="Verdana, Arial, Helvetica, sans-serif"><b>Service Location</b> </font></td>
-            <td width="29%"> <font size="-2" face="Verdana, Arial, Helvetica, sans-serif">
-              <html:select property="xml_visittype" >
-                        <% for (int i=0; i< billvisit.length; i++){
-                        String visitTypeDescription = billvisit[i].getVisitType()+"|"+billvisit[i].getDescription();
-                        %>
-                    <html:option value="<%=visitTypeDescription%>"><%=billvisit[i].getDescription()%></html:option>
-                   <%}%>
-              </html:select>
-              </font></td>
+            <td>
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <u><%=demo.getLastName()%>                  ,
+<%=demo.getFirstName()%>                </u>
+              </font>
+            </td>
+            <td>
+              <b>
+                <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                  <b>
+                    <bean:message key="billing.patient.status"/>
+                  </b>
+                  :
+                </font>
+                <font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getPatientStatus()%>                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <b>
+                    <bean:message key="billing.patient.roster"/>
+                    :
+<%=demo.getRosterStatus()%>                  </b>
+                </font>
+              </b>
+            </td>
+            <td width="14%">
+              <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                <strong>
+                  <bean:message key="billing.provider.assignedProvider"/>
+                </strong>
+              </font>
+            </td>
+            <td width="29%"><%=billform.getProviderName(demo.getProviderNo())%>            </td>
           </tr>
-          </table>
-          <!--<table>
+          <tr>
+            <td>
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <b>
+                  <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                    <bean:message key="billing.patient.age"/>
+                    :
+                  </font>
+                </b>
+                <br>
+              </font>
+            </td>
+            <td>
+              <b>
+                <font face="Verdana, Arial, Helvetica, sans-serif" size="1"><%=demo.getAge()%>                </font>
+              </b>
+            </td>
+            <td>
+              <font size="1" face="Arial, Helvetica, sans-serif">
+                <b>
+                  <font face="Verdana, Arial, Helvetica, sans-serif">
+                    <a href="#" id="pop1" onClick="formPopup(this.id,'Layer1');return false;">
+                      <bean:message key="billing.billingform"/>
+                    </a>
+                    :
+                  </font>
+                </b>
+<%=billform.getBillingFormDesc(billformlist,bean.getBillForm())%>              </font>
+            </td>
+            <td width="14%">
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <!--
+                  2003-9-21
+                  13:21
+                -->
+                <b>
+                  <bean:message key="billing.provider.billProvider"/>
+                </b>
+              </font>
+            </td>
+            <td width="29%">
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <html:select property="xml_provider" value="<%=sxml_provider%>">
+                  <html:option value="000000">
+                    <b>Select Provider</b>
+                  </html:option>
+                <%for (int j = 0; j < billphysician.length; j++) {                %>
+                  <html:option value="<%=billphysician[j].getProviderNo()%>"><%=billphysician[j].getProviderName()%>                  </html:option>
+                <%}                %>
+                </html:select>
+              </font>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <b>
+                  <bean:message key="billing.billingtype"/>
+                </b>
+              </font>
+            </td>
+            <td width="12%">
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <html:select property="xml_billtype" onchange="CheckType();gotoPrivate();">
+                  <html:option value="MSP">Bill MSP</html:option>
+                  <html:option value="WCB">Bill WCB</html:option>
+                  <html:option value="ICBC">Bill ICBC</html:option>
+                  <html:option value="Pri">Private</html:option>
+                  <html:option value="DONOTBILL">Do Not Bill</html:option>
+                </html:select>
+              </font>
+            </td>
+            <td width="33%">
+              <font face="Verdana, Arial, Helvetica, sans-serif" size="-2">
+                <b>Clarification Code:</b>
+                <html:select property="xml_location">
+                <%
+                  for (int i = 0; i < billlocation.length; i++) {
+                    String locationDescription = billlocation[i].getBillingLocation() + "|" + billlocation[i].getDescription();
+                %>
+                  <html:option value="<%=locationDescription%>"><%=billlocation[i].getDescription()%>                  </html:option>
+                <%}                %>
+                </html:select>
+              </font>
+            </td>
+            <td width="14%">
+              <font size="-2" face="Verdana, Arial, Helvetica, sans-serif">
+                <b>Service Location</b>
+              </font>
+            </td>
+            <td width="29%">
+              <font size="-2" face="Verdana, Arial, Helvetica, sans-serif">
+                <html:select property="xml_visittype">
+                <%
+                  for (int i = 0; i < billvisit.length; i++) {
+                    String visitTypeDescription = billvisit[i].getVisitType() + "|" + billvisit[i].getDescription();
+                %>
+                  <html:option value="<%=visitTypeDescription%>"><%=billvisit[i].getDescription()%>                  </html:option>
+                <%}                %>
+                </html:select>
+              </font>
+            </td>
+          </tr>
+        </table>
+        <!--
+          <table>
           <tr>
           <td>Service Date:</td>    <td>	 Service to date: </td>  <td> 	 After Hours: </td>  <td>	 Time Call (HHMM 24hr): </td>  <td> 	 Start (HHMM 24hr): </td>  <td> 	 End (HHMM 24hr): </td>   <td>	 Dependent: </td>  <td>	 Sub Code: </td>  <td>	 Alt. Payment:</td>
           </tr>
-          </table>-->
-          <table width="100%" border=0>
-             <tr>
-                <td >
-                    <a href="javascript: function myFunction() {return false; }" id="hlSDate"><font size="-2"><strong><bean:message key="billing.servicedate"/>:</strong></font></a>
-                    <html:text property="xml_appointment_date"  size="10" readonly="true" styleId="xml_appointment_date"/>
-                    <!--<a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>-->
-                </td>
-                <td >
-                   <a href="javascript: function myFunction() {return false; }" id="serviceToDate"><font size="-2"><strong>Service to date:</strong></font></a>
-                   <html:text property="service_to_date" size="2" maxlength="2" styleId="service_to_date" />
-                </td>
-                <td >
-                    After Hours:
-                    <html:select property="afterHours">
-                        <html:option value="0">No</html:option>
-                        <html:option value="E">Evening</html:option>
-                        <html:option value="N">Night</html:option>
-                        <html:option value="W">Weekend</html:option>
-                    </html:select>
-                </td>
-                <td title="(HHMM 24hr):">
-                   <font size="-2"><strong>Time Call:</strong></font>
-                   <html:text property="timeCall" size="4" maxlength="4" />
-                </td>
-                <td >
-                   <font size="-2" ><strong><bean:message key="billing.servicedate.starttime"/></strong></font>
-                   <table cellpadding="0" cellspacing="0" border="0">
-                     <tr>
-                       <td>
-                         <select name="xml_starttime_hr">
-                           <%=generateNumericOptionList(24)%>
-                         </select>
-                       </td>
-                       <td>
-                         <select name="xml_starttime_min">
-                           <%=generateNumericOptionList(61)%>
-                         </select>
-                       </td>
-                     </tr>
-                   </table>
-                </td>
-                <td >
-                    <font size="-2"><strong><bean:message key="billing.servicedate.endtime"/></strong></font>
-                   <table cellpadding="0" cellspacing="0" border="0">
-                     <tr>
-                       <td>
-                         <select name="xml_endtime_hr">
-                           <%=generateNumericOptionList(24)%>
-                         </select>
-                       </td>
-                       <td>
-                         <select name="xml_endtime_min">
-                           <%=generateNumericOptionList(61)%>
-                         </select>
-                       </td>
-                     </tr>
-                   </table>
-                </td>
-                <td>
-                    Dependent:
-                    <html:select property="dependent">
-                        <html:option value="00">No</html:option>
-                        <html:option value="66">Yes</html:option>
-                    </html:select>
-                </td>
-                <td title="Submission Code">
-                    Sub Code:
-                    <html:select property="submissionCode">
-                        <html:option value="0">O - Normal</html:option>
-                        <html:option value="D">D - Duplicate</html:option>
-						<html:option value="E" >E - Debit</html:option>
-						<html:option value="C" >C - Subscriber Coverage</html:option>
-						<html:option value="R" >R - Resubmitted</html:option>
-						<html:option value="I" >I - ICBC Claim > 90 Days</html:option>
-						<html:option value="A" >A - Requested Preapproval</html:option>
-						<html:option value="W" >W - WCB Rejected Claim</html:option>
-						<html:option value="X" >X - Resubmitting Refused / Partially Paid Claim</html:option>
-                    </html:select>
-                </td>
-                <td>
-
-                  <font  size="-2"><b>Payment Method:</b></font>
-                  <%
-                  ArrayList types = billform.getPaymentTypes();
-                  if("Pri".equalsIgnoreCase(thisForm.getXml_billtype())){
-                    for (int i = 0; i < types.size(); i++) {
-                      PaymentType item = (PaymentType) types.get(i);
-                      if(item.getId().equals("6") || item.getId().equals("8") ){
-                        types.remove(i);
-                        break;
-                      }
-                    }
-                  }
-                  else{
-                    for (int i = 0; i < types.size(); i++) {
-                      PaymentType item = (PaymentType) types.get(i);
-                      if(!item.getId().equals("6")&&!item.getId().equals("8") ){
-                        types.remove(i);
-                    i=i-1;
-                      }
-                    }
-                  }
-                  request.setAttribute("paymentMethodList",types);
-                  %>
-
-
-                   <html:select property="xml_encounter">
-                     <html:options collection="paymentMethodList" property="id" labelProperty="paymentType"/>
-                   </html:select>
-
-                </td>
-                <td nowrap>
-                <a href="javascript: function myFunction() {return false; }" onClick="checkFACILITY();"><font size="-2"><strong>Facility</strong></font></a>
-                <span style="display: none;" id="FACILITY">
-                <table>
-                <tr>
-
-                   <td title="Facilty Num">
-                      Fac Num
-                      <html:text property="facilityNum" size="5" maxlength="5"/>
-                   </td>
-
-                   <td title="Facilty Sub Num">
-                      Fac Sub Num
-                      <html:text property="facilitySubNum" size="5" maxlength="5"/>
-                   </td>
-                </tr>
-                </table>
-                </span>
-                </td>
-           </tr>
           </table>
-         <div style="display: none">
-         <table>
-           <tr>
-
-                <td>
-                    <bean:message  key="billing.admissiondate"/>: <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate" />
-                    <a id="hlADate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>
-                </td>
-           </tr>
+        -->
+        <table width="100%" border=0>
+          <tr>
+            <td>
+              <a href="javascript: function myFunction() {return false; }" id="hlSDate">
+                <font size="-2">
+                  <strong>
+                    <bean:message key="billing.servicedate"/>
+                    :
+                  </strong>
+                </font>
+              </a>
+              <html:text property="xml_appointment_date" size="10" readonly="true" styleId="xml_appointment_date"/>
+              <!--<a id="hlSDate"><img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0" /></a>-->
+            </td>
+            <td>
+              <a href="javascript: function myFunction() {return false; }" id="serviceToDate">
+                <font size="-2">
+                  <strong>Service to date:</strong>
+                </font>
+              </a>
+              <html:text property="service_to_date" size="2" maxlength="2" styleId="service_to_date"/>
+            </td>
+            <td>              After Hours:
+              <html:select property="afterHours">
+                <html:option value="0">No</html:option>
+                <html:option value="E">Evening</html:option>
+                <html:option value="N">Night</html:option>
+                <html:option value="W">Weekend</html:option>
+              </html:select>
+            </td>
+            <td title="(HHMM 24hr):">
+              <font size="-2">
+                <strong>Time Call:</strong>
+              </font>
+              <html:text property="timeCall" size="4" maxlength="4"/>
+            </td>
+            <td>
+              <font size="-2">
+                <strong>
+                  <bean:message key="billing.servicedate.starttime"/>
+                </strong>
+              </font>
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <select name="xml_starttime_hr"><%=generateNumericOptionList(24)%>                    </select>
+                  </td>
+                  <td>
+                    <select name="xml_starttime_min"><%=generateNumericOptionList(61)%>                    </select>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <font size="-2">
+                <strong>
+                  <bean:message key="billing.servicedate.endtime"/>
+                </strong>
+              </font>
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <select name="xml_endtime_hr"><%=generateNumericOptionList(24)%>                    </select>
+                  </td>
+                  <td>
+                    <select name="xml_endtime_min"><%=generateNumericOptionList(61)%>                    </select>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>              Dependent:
+              <html:select property="dependent">
+                <html:option value="00">No</html:option>
+                <html:option value="66">Yes</html:option>
+              </html:select>
+            </td>
+            <td title="Submission Code">              Sub Code:
+              <html:select property="submissionCode">
+                <html:option value="0">O - Normal</html:option>
+                <html:option value="D">D - Duplicate</html:option>
+                <html:option value="E">E - Debit</html:option>
+                <html:option value="C">C - Subscriber Coverage</html:option>
+                <html:option value="R">R - Resubmitted</html:option>
+                <html:option value="I">I - ICBC Claim > 90 Days</html:option>
+                <html:option value="A">A - Requested Preapproval</html:option>
+                <html:option value="W">W - WCB Rejected Claim</html:option>
+                <html:option value="X">X - Resubmitting Refused / Partially Paid Claim</html:option>
+              </html:select>
+            </td>
+            <td>
+              <font size="-2">
+                <b>Payment Method:</b>
+              </font>
+            <%
+              ArrayList types = billform.getPaymentTypes();
+              if ("Pri".equalsIgnoreCase(thisForm.getXml_billtype())) {
+                for (int i = 0; i < types.size(); i++) {
+                  PaymentType item = (PaymentType) types.get(i);
+                  if (item.getId().equals("6") || item.getId().equals("8")) {
+                    types.remove(i);
+                    break;
+                  }
+                }
+              }
+              else {
+                for (int i = 0; i < types.size(); i++) {
+                  PaymentType item = (PaymentType) types.get(i);
+                  if (!item.getId().equals("6") && !item.getId().equals("8")) {
+                    types.remove(i);
+                    i = i - 1;
+                  }
+                }
+              }
+              request.setAttribute("paymentMethodList", types);
+            %>
+              <html:select property="xml_encounter">
+                <html:options collection="paymentMethodList" property="id" labelProperty="paymentType"/>
+              </html:select>
+            </td>
+            <td nowrap>
+              <a href="javascript: function myFunction() {return false; }" onClick="checkFACILITY();">
+                <font size="-2">
+                  <strong>Facility</strong>
+                </font>
+              </a>
+              <span style="display: none;" id="FACILITY">  <table>  <tr>   <td title="Facilty Num">  Fac Num <html:text property="facilityNum" size="5" maxlength="5"/>  </td>   <td title="Facilty Sub Num">  Fac Sub Num <html:text property="facilitySubNum" size="5" maxlength="5"/>  </td>  </tr>  </table>  </span>
+            </td>
+          </tr>
         </table>
-         </div>
-        <script language='javascript'>
+        <div style="display: none">
+          <table>
+            <tr>
+              <td>
+                <bean:message key="billing.admissiondate"/>
+                :
+                <html:text property="xml_vdate" readonly="true" value="" size="10" styleId="xml_vdate"/>
+                <a id="hlADate">
+                  <img title="Calendar" src="../../../images/cal.gif" alt="Calendar" border="0"/>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+<script language='javascript'>
            Calendar.setup({inputField:"xml_appointment_date",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlSDate",singleClick:true,step:1});
            //Calendar.setup({inputField:"xml_appointment_date", ifFormat:""%d/%m/%Y",",button:"hlSDate", align:"Bl", singleClick:true});
            Calendar.setup({inputField:"xml_vdate",ifFormat:"%Y-%m-%d",showsTime:false,button:"hlADate",singleClick:true,step:1});
            Calendar.setup({inputField:"service_to_date", ifFormat:"%d",button:"serviceToDate", align:"Bl", singleClick:true});
 
         </script>
-
-        <div align="left"></div>
+        <div align="left">        </div>
         <div id="ICBC">
-           <table width="100%">
-	           <tr>
-	              <td>ICBC Claim No: <html:text property="icbc_claim_no" maxlength="8"  />
-
-	              MVA: <html:select property="mva_claim_code">
-                            <html:option value="N" >No</html:option>
-                            <html:option value="Y" >Yes</html:option>
-	                       </html:select>
-
-	              </td>
-	           </tr>
-           </table>
+          <table width="100%">
+            <tr>
+              <td>                ICBC Claim No:
+                <html:text property="icbc_claim_no" maxlength="8"/>
+                MVA:
+                <html:select property="mva_claim_code">
+                  <html:option value="N">No</html:option>
+                  <html:option value="Y">Yes</html:option>
+                </html:select>
+              </td>
+            </tr>
+          </table>
         </div>
         <table width="100%" border="0" cellspacing="0" cellpadding="0" height="137">
-
           <tr>
             <td valign="top" width="33%">
               <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
                 <tr bgcolor="#CCCCFF">
-                  <td width="25%"><b> </b>
-                      <div align="left"> <font face="Verdana, Arial, Helvetica, sans-serif"> <b> <font size="1" color="#000000"><%=group1Header%> </font> </b> </font> </div></td>
-                  <td width="61%" bgcolor="#CCCCFF"><b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> <bean:message key="billing.service.desc"/> </font> </b> </td>
-                  <td width="14%"><div align="right"> <b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> $ <bean:message key="billing.service.fee"/> </font> </b> </div></td>
+                  <td width="25%">
+                    <b>                    </b>
+                    <div align="left">
+                      <font face="Verdana, Arial, Helvetica, sans-serif">
+                        <b>
+                          <font size="1" color="#000000"><%=group1Header%>                          </font>
+                        </b>
+                      </font>
+                    </div>
+                  </td>
+                  <td width="61%" bgcolor="#CCCCFF">
+                    <b>
+                      <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">
+                        <bean:message key="billing.service.desc"/>
+                      </font>
+                    </b>
+                  </td>
+                  <td width="14%">
+                    <div align="right">
+                      <b>
+                        <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">                          $
+                          <bean:message key="billing.service.fee"/>
+                        </font>
+                      </b>
+                    </div>
+                  </td>
                 </tr>
-                <%for (int i = 0; i < billlist1.length; i++) {              %>
+              <%for (int i = 0; i < billlist1.length; i++) {              %>
                 <tr bgcolor>
-                  <%String svcCall = "addSvcCode('" + billlist1[i].getServiceCode() + "')";                %>
-                  <td width="25%" height="14"><b> </b> <font face="Verdana, Arial, Helvetica, sans-serif"> <html:multibox property="service" value="<%=billlist1[i].getServiceCode()%>" onclick="<%=svcCall%>"/> <font size="1"><%=billlist1[i].getServiceCode()%> </font> </font> </td>
-                  <td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getDescription()%> </font> </td>
-                  <td width="14%" height="14"><div align="right"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getPrice()%> </font> </div></td>
+                <%String svcCall = "addSvcCode('" + billlist1[i].getServiceCode() + "')";                %>
+                  <td width="25%" height="14">
+                    <b>                    </b>
+                    <font face="Verdana, Arial, Helvetica, sans-serif">
+                      <html:multibox property="service" value="<%=billlist1[i].getServiceCode()%>" onclick="<%=svcCall%>"/>
+                      <font size="1"><%=billlist1[i].getServiceCode()%>                      </font>
+                    </font>
+                  </td>
+                  <td width="61%" height="14">
+                    <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getDescription()%>                    </font>
+                  </td>
+                  <td width="14%" height="14">
+                    <div align="right">
+                      <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist1[i].getPrice()%>                      </font>
+                    </div>
+                  </td>
                 </tr>
-                <%}              %>
+              <%}              %>
               </table>
               <table width="100%" border="0" cellpadding="2" cellspacing="2" bgcolor="#CC0000">
                 <tr>
-
                   <td width="91%" valign="top">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
-                       <tr>
-                          <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.referral.doctor"/></font></b></td>
-                          <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.referral.type"/> </font></b></td>
-                       </tr>
-                       <tr>
-                          <td>
-                             <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer1" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach1()')"/>
-                             </font>
-                          </td>
-                          <td>
-
-                             <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:select property="refertype1">
-                                <html:option value="" >Select Type</html:option>
-                                <html:option value="T">Refer To</html:option>
-                                <html:option value="B">Refer By</html:option>
-                             </html:select>
-                             </font>
-                          </td>
-                       </tr>
-                       <tr>
-                          <td colspan="2">
-                             <a href="javascript:ReferralScriptAttach('xml_refer1')"><img src="../../../images/search_code.jpg" border="0"></a>
-                          </td>
-                       </tr>
-                       <tr>
-                          <td>
-                             <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:text property="xml_refer2" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach2()')"/>
-					        </font>
-                          </td>
-                          <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                             <html:select property="refertype2">
-                                <html:option value="" >Select Type</html:option>
-                                <html:option value="T">Refer To</html:option>
-                                <html:option value="B">Refer By</html:option>
-                             </html:select>
-                             </font>
-                          </td>
-                       </tr>
-                       <tr>
-                          <td colspan="2">
-                             <a href="javascript:ReferralScriptAttach('xml_refer2')"><img src="../../../images/search_code.jpg" border="0"></a>
-                          </td>
-                       </tr>
+                      <tr>
+                        <td>
+                          <b>
+                            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                              <bean:message key="billing.referral.doctor"/>
+                            </font>
+                          </b>
+                        </td>
+                        <td>
+                          <b>
+                            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                              <bean:message key="billing.referral.type"/>
+                            </font>
+                          </b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_refer1" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach1()')"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:select property="refertype1">
+                              <html:option value="">Select Type</html:option>
+                              <html:option value="T">Refer To</html:option>
+                              <html:option value="B">Refer By</html:option>
+                            </html:select>
+                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a href="javascript:ReferralScriptAttach('xml_refer1')">
+                            <img src="../../../images/search_code.jpg" border="0">
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_refer2" size="40" onkeypress="return grabEnter(event,'ReferralScriptAttach2()')"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:select property="refertype2">
+                              <html:option value="">Select Type</html:option>
+                              <html:option value="T">Refer To</html:option>
+                              <html:option value="B">Refer By</html:option>
+                            </html:select>
+                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a href="javascript:ReferralScriptAttach('xml_refer2')">
+                            <img src="../../../images/search_code.jpg" border="0">
+                          </a>
+                        </td>
+                      </tr>
                     </table>
                   </td>
-                        <td width="9%">
-                          <!--
-                          <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
-                            <tr>
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
-                                <font color="#FF0000">(optional)</font></font></b></td>
-                              <td><b></b></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
-                              </td>
-                            </tr>
-                          </table> -->
-                        </td>
+                  <td width="9%">
+                    <!--
+                      <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
+                      <tr>
+                      <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
+                      <font color="#FF0000">(optional)</font></font></b></td>
+                      <td><b></b></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
+                      </td>
+                      </tr>
+                      </table>
+                    -->
+                  </td>
                 </tr>
               </table>
               <p>&nbsp;</p>
             </td>
-
             <td valign="top" width="31%">
               <table width="100%" border="1" cellspacing="0" cellpadding="0">
                 <tr bgcolor="#CCCCFF">
-                  <td width="21%"><b> </b>
-                      <div align="left"> <font face="Verdana, Arial, Helvetica, sans-serif"> <b> <font size="1" color="#000000"><%=group2Header%> </font> </b> </font> </div></td>
-                  <td width="60%" bgcolor="#CCCCFF"><b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> <bean:message key="billing.service.desc"/> </font> </b> </td>
-                  <td width="19%"><div align="right"> <b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> $ <bean:message key="billing.service.fee"/> </font> </b> </div></td>
+                  <td width="21%">
+                    <b>                    </b>
+                    <div align="left">
+                      <font face="Verdana, Arial, Helvetica, sans-serif">
+                        <b>
+                          <font size="1" color="#000000"><%=group2Header%>                          </font>
+                        </b>
+                      </font>
+                    </div>
+                  </td>
+                  <td width="60%" bgcolor="#CCCCFF">
+                    <b>
+                      <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">
+                        <bean:message key="billing.service.desc"/>
+                      </font>
+                    </b>
+                  </td>
+                  <td width="19%">
+                    <div align="right">
+                      <b>
+                        <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">                          $
+                          <bean:message key="billing.service.fee"/>
+                        </font>
+                      </b>
+                    </div>
+                  </td>
                 </tr>
-                <%for (int i = 0; i < billlist2.length; i++) {              %>
+              <%for (int i = 0; i < billlist2.length; i++) {              %>
                 <tr bgcolor>
-                  <%String svcCall = "addSvcCode('" + billlist2[i].getServiceCode() + "')";                %>
-                  <td width="21%" height="14"><b> </b> <font face="Verdana, Arial, Helvetica, sans-serif"> <html:multibox property="service" value="<%=billlist2[i].getServiceCode()%>" onclick="<%=svcCall%>"/> <font size="1"><%=billlist2[i].getServiceCode()%> </font> </font> </td>
-                  <td width="60%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getDescription()%> </font> </td>
-                  <td width="19%" height="14"><div align="right"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getPrice()%> </font> </div></td>
+                <%String svcCall = "addSvcCode('" + billlist2[i].getServiceCode() + "')";                %>
+                  <td width="21%" height="14">
+                    <b>                    </b>
+                    <font face="Verdana, Arial, Helvetica, sans-serif">
+                      <html:multibox property="service" value="<%=billlist2[i].getServiceCode()%>" onclick="<%=svcCall%>"/>
+                      <font size="1"><%=billlist2[i].getServiceCode()%>                      </font>
+                    </font>
+                  </td>
+                  <td width="60%" height="14">
+                    <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getDescription()%>                    </font>
+                  </td>
+                  <td width="19%" height="14">
+                    <div align="right">
+                      <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist2[i].getPrice()%>                      </font>
+                    </div>
+                  </td>
                 </tr>
-                <%}              %>
+              <%}              %>
               </table>
               <table width="100%" height="105" border="0" cellpadding="2" cellspacing="2" bgcolor="#999900">
                 <tr>
-
-
-
                   <td width="91%" valign="top">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
-                            <tr>
-                              <td width="85%"><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.service.otherservice"/></font></b></td>
-                              <td width="15%"><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="billing.service.unit"/></font></b></td>
-                            </tr>
-                            <tr>
-                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-
-                                <html:text  property="xml_other1" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
-                                <input type="button" value=".5" onClick="$('xml_other1_unit').value = '0.5'"/>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-
-                        <html:text property="xml_other1_unit" size="5" maxlength="3" styleId="xml_other1_unit"/>
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
-                                <input type="button" value=".5" onClick="$('xml_other2_unit').value = '0.5'"/>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-
-                        <html:text property="xml_other2_unit" size="5" maxlength="3" styleId="xml_other2_unit" />
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td nowrap><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')" />
-                                <input type="button" value=".5" onClick="$('xml_other3_unit').value = '0.5'"/>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-
-                        <html:text property="xml_other3_unit" size="5" maxlength="3" styleId="xml_other3_unit"/>
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td colspan="2"><a href="javascript:OtherScriptAttach()"><img src="../../../images/search_code.jpg" border="0"></a>
-                              </td>
-                            </tr>
+                      <tr>
+                        <td width="85%">
+                          <b>
+                            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                              <bean:message key="billing.service.otherservice"/>
+                            </font>
+                          </b>
+                        </td>
+                        <td width="15%">
+                          <b>
+                            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                              <bean:message key="billing.service.unit"/>
+                            </font>
+                          </b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td nowrap>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_other1" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
+                            <input type="button" value=".5" onClick="$('xml_other1_unit').value = '0.5'"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_other1_unit" size="5" maxlength="3" styleId="xml_other1_unit"/>
+                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td nowrap>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_other2" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
+                            <input type="button" value=".5" onClick="$('xml_other2_unit').value = '0.5'"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_other2_unit" size="5" maxlength="3" styleId="xml_other2_unit"/>
+                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td nowrap>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_other3" onblur="checkSelectedCodes()" size="40" onkeypress="return grabEnter(event,'OtherScriptAttach()')"/>
+                            <input type="button" value=".5" onClick="$('xml_other3_unit').value = '0.5'"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_other3_unit" size="5" maxlength="3" styleId="xml_other3_unit"/>
+                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <a href="javascript:OtherScriptAttach()">
+                            <img src="../../../images/search_code.jpg" border="0">
+                          </a>
+                        </td>
+                      </tr>
                     </table>
                   </td>
-                        <td width="9%">
-                          <!--
-                          <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
-                            <tr>
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
-                                <font color="#FF0000">(optional)</font></font></b></td>
-                              <td><b></b></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
-                              </td>
-                            </tr>
-                          </table> -->
-                        </td>
+                  <td width="9%">
+                    <!--
+                      <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
+                      <tr>
+                      <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
+                      <font color="#FF0000">(optional)</font></font></b></td>
+                      <td><b></b></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
+                      </td>
+                      </tr>
+                      </table>
+                    -->
+                  </td>
                 </tr>
-            </table></td>
+              </table>
+            </td>
             <td valign="top" width="36%">
-
               <table width="100%" border="1" cellspacing="0" cellpadding="0" height="0">
                 <tr bgcolor="#CCCCFF">
-                  <td width="25%"><b> </b>
-                      <div align="left"> <font face="Verdana, Arial, Helvetica, sans-serif"> <b> <font size="1" color="#000000"><%=group3Header%> </font> </b> </font> </div></td>
-                  <td width="61%" bgcolor="#CCCCFF"><b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> <bean:message key="billing.service.desc"/> </font> </b> </td>
-                  <td width="14%"><div align="right"> <b> <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000"> $ <bean:message key="billing.service.fee"/> </font> </b> </div></td>
+                  <td width="25%">
+                    <b>                    </b>
+                    <div align="left">
+                      <font face="Verdana, Arial, Helvetica, sans-serif">
+                        <b>
+                          <font size="1" color="#000000"><%=group3Header%>                          </font>
+                        </b>
+                      </font>
+                    </div>
+                  </td>
+                  <td width="61%" bgcolor="#CCCCFF">
+                    <b>
+                      <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">
+                        <bean:message key="billing.service.desc"/>
+                      </font>
+                    </b>
+                  </td>
+                  <td width="14%">
+                    <div align="right">
+                      <b>
+                        <font face="Verdana, Arial, Helvetica, sans-serif" size="1" color="#000000">                          $
+                          <bean:message key="billing.service.fee"/>
+                        </font>
+                      </b>
+                    </div>
+                  </td>
                 </tr>
-                <%for (int i = 0; i < billlist3.length; i++) {              %>
+              <%for (int i = 0; i < billlist3.length; i++) {              %>
                 <tr bgcolor>
-                  <%String svcCall = "addSvcCode('" + billlist3[i].getServiceCode() + "')";                %>
-                  <td width="25%" height="14"><b> </b> <font face="Verdana, Arial, Helvetica, sans-serif"> <html:multibox property="service" value="<%=billlist3[i].getServiceCode()%>" onclick="<%=svcCall%>"/> <font size="1"><%=billlist3[i].getServiceCode()%> </font> </font> </td>
-                  <td width="61%" height="14"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getDescription()%> </font> </td>
-                  <td width="14%" height="14"><div align="right"> <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getPrice()%> </font> </div></td>
+                <%String svcCall = "addSvcCode('" + billlist3[i].getServiceCode() + "')";                %>
+                  <td width="25%" height="14">
+                    <b>                    </b>
+                    <font face="Verdana, Arial, Helvetica, sans-serif">
+                      <html:multibox property="service" value="<%=billlist3[i].getServiceCode()%>" onclick="<%=svcCall%>"/>
+                      <font size="1"><%=billlist3[i].getServiceCode()%>                      </font>
+                    </font>
+                  </td>
+                  <td width="61%" height="14">
+                    <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getDescription()%>                    </font>
+                  </td>
+                  <td width="14%" height="14">
+                    <div align="right">
+                      <font size="1" face="Verdana, Arial, Helvetica, sans-serif"><%=billlist3[i].getPrice()%>                      </font>
+                    </div>
+                  </td>
                 </tr>
-                <%}              %>
+              <%}              %>
               </table>
               <table width="100%" border="0" cellpadding="2" cellspacing="2" bgcolor="#CCCCFF">
                 <tr>
-                        <td width="91%" height="103" valign="top">
-                          <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
-                            <tr>
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><a href="#" id="pop2" onClick="formPopup(this.id,'Layer2');return false;"><bean:message key="billing.diagnostic.code"/></a></font></b></td>
-                              <td><b></b></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text  property="xml_diagnostic_detail1"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail2"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <html:text property="xml_diagnostic_detail3"  size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td colspan="2"><font face="Verdana, Arial, Helvetica, sans-serif" size="1"><a href="javascript:ScriptAttach()"><img src="../../../images/search_dx_code.jpg" border="0"></a></font>
-                                <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;
-                                </font> </td>
-                            </tr>
-                          </table>
+                  <td width="91%" height="103" valign="top">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
+                      <tr>
+                        <td>
+                          <b>
+                            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                              <a href="#" id="pop2" onClick="formPopup(this.id,'Layer2');return false;">
+                                <bean:message key="billing.diagnostic.code"/>
+                              </a>
+                            </font>
+                          </b>
                         </td>
-                        <td width="9%">
-                          <!--
-                          <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
-                            <tr>
-                              <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
-                                <font color="#FF0000">(optional)</font></font></b></td>
-                              <td><b></b></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
-                                </font></td>
-                              <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                                </font></td>
-                            </tr>
-                            <tr>
-                              <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
-                              </td>
-                            </tr>
-                          </table> -->
+                        <td>
+                          <b>                          </b>
                         </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_diagnostic_detail1" size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_diagnostic_detail2" size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <html:text property="xml_diagnostic_detail3" size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
+                          </font>
+                        </td>
+                        <td>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                            <a href="javascript:ScriptAttach()">
+                              <img src="../../../images/search_dx_code.jpg" border="0">
+                            </a>
+                          </font>
+                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="9%">
+                    <!--
+                      <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
+                      <tr>
+                      <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
+                      <font color="#FF0000">(optional)</font></font></b></td>
+                      <td><b></b></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
+                      </font></td>
+                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
+                      </font></td>
+                      </tr>
+                      <tr>
+                      <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
+                      </td>
+                      </tr>
+                      </table>
+                    -->
+                  </td>
                 </tr>
               </table>
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td colspan="2" >
-                        <font size="-2"><strong>Short Claim Note:&nbsp;</strong></font>
-
-                        <html:text property="shortClaimNote" size="23" maxlength="20" />
-                    </td>
+                  <td colspan="2">
+                    <font size="-2">
+                      <strong>                        Short Claim Note:
+                        &nbsp;
+                      </strong>
+                    </font>
+                    <html:text property="shortClaimNote" size="23" maxlength="20"/>
+                  </td>
                 </tr>
-                <!--<tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>-->
+                <!--
+                  <tr>
+                  <td colspan="2">&nbsp;</td>
+                  </tr>
+                -->
                 <tr>
                   <td align="left">
                     <html:select property="correspondenceCode" onchange="correspondenceNote();">
-                        <html:option value="0">No Correspondence</html:option>
-                        <html:option value="N">Electronic Correspondence</html:option>
-                        <html:option value="C">Paper Correspondence</html:option>
-                        <html:option value="B">Both</html:option>
+                      <html:option value="0">No Correspondence</html:option>
+                      <html:option value="N">Electronic Correspondence</html:option>
+                      <html:option value="C">Paper Correspondence</html:option>
+                      <html:option value="B">Both</html:option>
                     </html:select>
                   </td>
                   <td align="right">
@@ -1225,23 +1468,23 @@ String generateNumericOptionList(int range){
                   </td>
                 </tr>
                 <tr>
-                    <td colspan="2">
-                    <div id="CORRESPONDENCENOTE">
-                        &nbsp;<html:textarea cols="60" rows="5" property="notes" onkeyup="checkTextLimit(this.form.notes,400);" ></html:textarea>
-                        <br>
-
-                        &nbsp;400 characters max.
+                  <td colspan="2">
+                    <div id="CORRESPONDENCENOTE">                      &nbsp;
+                      <html:textarea cols="60" rows="5" property="notes" onkeyup="checkTextLimit(this.form.notes,400);">                      </html:textarea>
+                      <br>
+                      &nbsp;
+                      400 characters max.
                     </div>
                     <br/>
                     <hr/>
                     <br/>
                     <br/>
                     <div style="background-color: #CCCCFF;">
-                       <div style="background-color : #EEEEFF;">Billing Notes (Notes are for internal use and will not be sent to MSP)</div>
-
-                       &nbsp;<html:textarea cols="60" rows="5" property="messageNotes"></html:textarea>
+                      <div style="background-color : #EEEEFF;">Billing Notes (Notes are for internal use and will not be sent to MSP)</div>
+                      &nbsp;
+                      <html:textarea cols="60" rows="5" property="messageNotes">                      </html:textarea>
                     </div>
-                    </td>
+                  </td>
                 </tr>
               </table>
             </td>
@@ -1251,6 +1494,7 @@ String generateNumericOptionList(int range){
     </tr>
   </table>
 </html:form>
-<p>&nbsp; </p>
+<p>&nbsp;</p>
+
 </body>
 </html>
