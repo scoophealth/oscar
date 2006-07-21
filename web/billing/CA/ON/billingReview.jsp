@@ -1121,20 +1121,19 @@ function addToDiseaseRegistry(){
     }
 }
 
-function validateItems(form){
-    dxChecks = document.forms['dxForm'].xml_research
-    var ret = false;
-    try{
-      var len = dxChecks.length
-    }catch(e){
-       return ret;
-    }
-  
-    for (i=0;i<dxChecks.length;++ i){
-      if (dxChecks[i].checked){
-         ret = true;
-      }
-    }
+function validateItems(form){    
+    var dxChecks;
+    var ret = false;    
+        
+    dxChecks = document.getElementsByName("xml_research");            
+     
+     for( idx = 0; idx < dxChecks.length; ++idx ) {   
+        if( dxChecks[idx].checked ) {
+            ret = true;
+            break;
+        }
+     }             
+    
     return ret;
 }
 
