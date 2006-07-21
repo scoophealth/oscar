@@ -1939,8 +1939,8 @@ public class MSPReconcile {
                                               false, false,
                                               !excludePrivate, false,
                                               "");
-    String p = "SELECT b.billingtype,bm.billingmaster_no,bm.paymentMethod,b.demographic_no,demographic_name,service_date,apptProvider_no ,provider_no,payee_no,sum(amount_received) as 'amt',max(creation_date) as 't_payment'" +
-        " FROM billing_private_transactions bp join billingmaster bm on bm.billingmaster_no = bp.billingmaster_no,billing b" +
+    String p = "SELECT b.billingtype,bm.billingmaster_no,bh.payment_type_id,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no,sum(bh.amount_received) as 'amt',max(creation_date) as 't_payment'" +
+        " FROM billing_history bh join billingmaster bm on bm.billingmaster_no = bh.billingmaster_no,billing b" +
         " where bm.billing_no = b.billing_no " +
         criteriaQry +
         " and bm.billingstatus != 'D'" +
@@ -1959,7 +1959,7 @@ public class MSPReconcile {
         b.paymentDate = this.fmt.format(paymentDate);
         b.billMasterNo = rs.getString("bm.billingmaster_no");
         b.billingtype = rs.getString("b.billingtype");
-        b.paymentMethod = rs.getString("paymentMethod");
+        b.paymentMethod = rs.getString("payment_type_id");
         b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
         b.demoNo = rs.getString("demographic_no");
         b.demoName = rs.getString("demographic_name");
