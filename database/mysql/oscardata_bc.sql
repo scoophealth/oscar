@@ -23383,14 +23383,12 @@ INSERT INTO billingtypes VALUES ('ICBC',2);
 INSERT INTO billingtypes VALUES ('Pri',3);
 INSERT INTO billingtypes VALUES ('WCB',4);
 
-INSERT INTO billing_msp_servicecode_times VALUES (1,13327,0);
-INSERT INTO billing_msp_servicecode_times VALUES (2,13906,0);
-INSERT INTO billing_msp_servicecode_times VALUES (3,13907,0);
-INSERT INTO billing_msp_servicecode_times VALUES (4,13909,1);
-INSERT INTO billing_msp_servicecode_times VALUES (5,13910,1);
-INSERT INTO billing_msp_servicecode_times VALUES (6,13911,1);
-INSERT INTO billing_msp_servicecode_times VALUES (7,13912,0);
-INSERT INTO billing_msp_servicecode_times VALUES (8,13913,0);
-INSERT INTO billing_msp_servicecode_times VALUES (9,14015,1);
-INSERT INTO billing_msp_servicecode_times VALUES (10,14016,1);
+update billing_msp_servicecode_times set billingservice_no = '00112' where id = '13327';
+update billing_msp_servicecode_times set billingservice_no = '01200' where id = '13906';
+update billing_msp_servicecode_times set billingservice_no = '01201' where id = '13907';
+update billing_msp_servicecode_times set billingservice_no = '01205' where id = '13909';
+update billing_msp_servicecode_times set billingservice_no = '01206' where id = '13910';
+update billing_msp_servicecode_times set billingservice_no = '01207' where id = '13911';
+update billing_msp_servicecode_times set billingservice_no = '01210' where id = '13912';
+update billing_msp_servicecode_times set billingservice_no = '01211' where id = '13913';
 
