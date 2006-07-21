@@ -48,19 +48,33 @@ public class dxResearchAction extends Action {
         dxResearchForm frm = (dxResearchForm) form; 
         request.getSession().setAttribute("dxResearchForm", frm);
         String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
-        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-        String codingSystem = codingSys.getCodingSystem();
+        String codingSystem = frm.getSelectedCodingSystem();        
         String demographicNo = frm.getDemographicNo();
         String providerNo = frm.getProviderNo();
         String forward = frm.getForward();
         String [] xml_research = null;
+        String [] codingSystems = null;
+        boolean multipleCodes = false;
                 
         if(!forward.equals("")){
             xml_research = new String[1];
             xml_research[0] = forward;
+            //We` have to split codingSystem from actual code value
         }else if ( request.getParameterValues("xml_research") != null ){
-            xml_research = request.getParameterValues("xml_research");   
-        } else{   
+            String[] values = request.getParameterValues("xml_research");
+            String[] code;
+            xml_research = new String[values.length];
+            codingSystems = new String[values.length];
+            for( int idx = 0; idx < values.length; ++idx ) {
+                code = values[idx].split(",");
+                xml_research[idx] = code[1];
+                codingSystems[idx] = code[0];
+            }
+            
+            if( values.length > 0 )
+                multipleCodes = true;
+                
+        } else{           
             xml_research = new String[5];
             xml_research[0] = frm.getXml_research1();
             xml_research[1] = frm.getXml_research2();
@@ -73,9 +87,12 @@ public class dxResearchAction extends Action {
         
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql;
-            for(int i=0; i<xml_research.length; i++){
+            String sql = null;
+            for(int i=0; i<xml_research.length; i++){ 
                 int Count = 0;
+                if( multipleCodes )
+                    codingSystem = codingSystems[i];
+                
                 if (xml_research[i].compareTo("")!=0){
                         ResultSet rsdemo2 = null;
 
@@ -96,9 +113,9 @@ public class dxResearchAction extends Action {
                         if (Count == 0){
                                 //need to validate the dxresearch code before write to the database
                                 sql = "select * from "+ codingSystem +" where "+ codingSystem + " like '" + xml_research[i] +"'";
-                                //System.out.println("Validate: " + sql);
+                                
                                 ResultSet rsCode = db.GetSQL(sql);
-                               
+                          
                                 if(!rsCode.next() || rsCode==null){
                                     valid = false;
                                     errors.add(errors.GLOBAL_ERROR,
@@ -113,6 +130,7 @@ public class dxResearchAction extends Action {
                                 }
                         }	    
                 }
+                
             }
 
             db.CloseConn();
@@ -130,11 +148,11 @@ public class dxResearchAction extends Action {
         if (request.getParameter("forwardTo") != null){
             forwardTo = request.getParameter("forwardTo");
         }
-        
+                
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward(forwardTo));
         actionforward.addParameter("demographicNo", demographicNo);
         actionforward.addParameter("providerNo", providerNo);
-        actionforward.addParameter("quickList", "");
+        actionforward.addParameter("quickList", "");        
                 
         return actionforward;
     }     
