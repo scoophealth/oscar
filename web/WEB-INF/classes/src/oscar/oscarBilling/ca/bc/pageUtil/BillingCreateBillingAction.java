@@ -38,6 +38,7 @@ import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager.*;
 import oscar.oscarDemographic.data.*;
 import oscar.util.SqlUtils;
+import java.math.BigDecimal;
 
 public class BillingCreateBillingAction
     extends Action {
@@ -49,7 +50,6 @@ public class BillingCreateBillingAction
       ServletException {
     ActionErrors errors = new ActionErrors();
     BillingBillingManager bmanager = new BillingBillingManager();
-
 
     BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
     bmanager.setBillTtype(frm.getXml_billtype());
@@ -150,6 +150,13 @@ public class BillingCreateBillingAction
       checkCDMStatus(request, errors, demo);
       return mapping.getInputForward();
     }
+    this.validatePatientManagementCodes(errors, demo, billItem,
+                                        bean.getServiceDate());
+    if (!errors.isEmpty()) {
+      checkCDMStatus(request, errors, demo);
+      return mapping.getInputForward();
+    }
+
     //We want this alert to show up regardless
     //However we don't necessarily want it to force the user to enter a bill
     checkCDMStatus(request, errors, demo);
@@ -180,12 +187,10 @@ public class BillingCreateBillingAction
                                         BillingCreateBillingForm frm,
                                         ActionErrors
                                         errors) {
+    String qry = "select bt.billingservice_no,bt.timeRange " +
+        "from billing_msp_servicecode_times bt";
 
-    List results = SqlUtils.getQueryResultsList(
-        "select billingservice.service_code,billing_msp_servicecode_times.timeRange " +
-        "from billingservice,billing_msp_servicecode_times " +
-        "where billingservice.billingservice_no = billing_msp_servicecode_times.billingservice_no"
-        );
+    List results = SqlUtils.getQueryResultsList(qry);
 
     for (int i = 0; i < billItems.size(); i++) {
       BillingItem item = (BillingItem) billItems.get(i);
@@ -328,7 +333,67 @@ public class BillingCreateBillingAction
         break;
       }
     }
+  }
 
+  /**
+   * The rules for the 145015  code are as follows:
+   * A maximum of 6 units may be billed per calendar year
+   * A maximum of 4 units may be billed on any given day
+   * @param demoNo String - The uid of the patient
+   * @param code String - The service code to be evaluated
+   * @param serviceDate String - The date of service
+   * @return boolean -  true if the specified service is billable
+   */
+  private void validatePatientManagementCodes(ActionErrors errors,
+                                              DemographicData.Demographic demo,
+                                              ArrayList billItem,
+                                              String serviceDate) {
+    HashMap mgmCodeCount = new HashMap();
+    mgmCodeCount.put("14015", new Double(0));
+    mgmCodeCount.put("14016", new Double(0));
+    for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
+      BillingItem item = (BillingItem) iter.next();
+      if (mgmCodeCount.containsKey(item.getServiceCode())) {
+        //Increments the service code count by the number of units for
+        //the current bill item
+        Double svcCodeUnitCount = new Double(item.getUnit());
+        Double unitCount = (Double) mgmCodeCount.get(item.getServiceCode());
+        unitCount = new Double(unitCount.doubleValue() +
+                               svcCodeUnitCount.doubleValue());
+        mgmCodeCount.remove(item.getServiceCode());
+        mgmCodeCount.put(item.getServiceCode(), unitCount);
+      }
+    }
+    for (Iterator iter = mgmCodeCount.keySet().iterator(); iter.hasNext(); ) {
+      String key = (String) iter.next();
+      double count = ( (Double) mgmCodeCount.get(key)).doubleValue();
+      if (count > 0) {
+        Map availableUnits = vldt.getCountAvailablePatientManagementUnits(demo.
+            getDemographicNo(), key, serviceDate);
+        double dailyAvail = ( (Double) availableUnits.get(vldt.
+            DAILY_AVAILABLE_UNITS)).doubleValue();
+        double yearAvail = ( (Double) availableUnits.get(vldt.
+            ANNUAL_AVAILABLE_UNITS)).doubleValue();
+
+        if ( (count > dailyAvail)) {
+          String dayMsg =
+              "oscar.billing.CA.BC.billingBC.error.patientManagementCodesDayUsed";
+          errors.add("",
+                     new ActionMessage(
+                         dayMsg, new String[] {key, String.valueOf(count),
+                         String.valueOf(dailyAvail)}));
+        }
+        else if (count > yearAvail) {
+          String yearMsg =
+              "oscar.billing.CA.BC.billingBC.error.patientManagementCodesYearUsed";
+          errors.add("",
+                     new ActionMessage(yearMsg, new String[] {key,
+                                       String.valueOf(count),
+                                       String.valueOf(yearAvail)}));
+
+        }
+      }
+    }
   }
 
   private void verifyLast13050(ActionErrors errors,
@@ -345,6 +410,5 @@ public class BillingCreateBillingAction
                  new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.neverBilled13050"));
     }
-
   }
 }
