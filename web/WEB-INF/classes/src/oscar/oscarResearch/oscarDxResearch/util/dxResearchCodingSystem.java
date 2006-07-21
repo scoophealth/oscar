@@ -25,15 +25,23 @@
 package oscar.oscarResearch.oscarDxResearch.util;
 
 import oscar.OscarProperties;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class dxResearchCodingSystem{
 
-    private String codingSystem = OscarProperties.getInstance().getProperty("dxResearch_coding_sys","ichppccode");
+    private String codingSystem;
+    private String[] arrCodingSystems;
+
     public dxResearchCodingSystem(){
+        codingSystem = OscarProperties.getInstance().getProperty("dxResearch_coding_sys","icd9,ichppccode");
+        arrCodingSystems = codingSystem.split(",");
+                    
     }
     
-    public String getCodingSystem(){        
-        return codingSystem;
+    public String[] getCodingSystems(){        
+        return arrCodingSystems;
     }
     
 }
