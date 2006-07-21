@@ -42,9 +42,7 @@ public final class dxSetupResearchAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
             
-        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
-        String codingSystem = codingSys.getCodingSystem();          
-        
+        dxResearchCodingSystem codingSys = new dxResearchCodingSystem();        
         String demographicNo = request.getParameter("demographicNo");
         String providerNo = request.getParameter("providerNo");
         String selectedQuickList = request.getParameter("quickList");          
@@ -52,19 +50,18 @@ public final class dxSetupResearchAction extends Action {
         
         dxQuickListBeanHandler quicklistHd = null;
         dxQuickListItemsHandler quicklistItemsHd = null;
-        
-        //System.out.println("Quick List: " + selectedQuickList);
+                
         if (selectedQuickList.equals("")||selectedQuickList==null){
-            quicklistHd = new dxQuickListBeanHandler(providerNo, codingSystem);
+            quicklistHd = new dxQuickListBeanHandler(providerNo);
             quicklistItemsHd = new dxQuickListItemsHandler(quicklistHd.getLastUsedQuickList(),providerNo);
         }
         else{
             quicklistItemsHd = new dxQuickListItemsHandler(selectedQuickList,providerNo);
-            quicklistHd = new dxQuickListBeanHandler(providerNo,codingSystem);
+            quicklistHd = new dxQuickListBeanHandler(providerNo);
         }
         
         HttpSession session = request.getSession();
-        session.setAttribute("codingSystem", codingSystem);
+        session.setAttribute("codingSystem", codingSys);
         session.setAttribute("allQuickLists", quicklistHd);
         session.setAttribute("allQuickListItems", quicklistItemsHd);
         session.setAttribute("allDiagnostics", hd );
