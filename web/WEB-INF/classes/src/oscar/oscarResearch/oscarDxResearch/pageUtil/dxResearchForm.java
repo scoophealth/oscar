@@ -54,6 +54,7 @@ public final class dxResearchForm extends ActionForm {
     private String quickList;
     private String[] quickListItems;
     private String forward;
+    private String curCodingSystem;
     
     public String getDemographicNo() {
         return demographicNo;
@@ -124,4 +125,13 @@ public final class dxResearchForm extends ActionForm {
     public void setForward(String forward) {
         this.forward = forward;
     }
+    
+    public String getSelectedCodingSystem() {
+        return curCodingSystem;
+    }
+    
+    public void setSelectedCodingSystem( String cs ) {
+        curCodingSystem = cs;
+    }
+    
 }
