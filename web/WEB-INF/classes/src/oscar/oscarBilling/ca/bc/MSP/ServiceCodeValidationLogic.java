@@ -31,6 +31,12 @@ import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarBilling.ca.bc.data.BillingFormData.*;
 import oscar.oscarDB.*;
 import oscar.oscarDemographic.data.DemographicData.*;
+import oscar.util.DateUtils;
+import oscar.util.SqlUtils;
+import java.text.SimpleDateFormat;
+import java.text.*;
+import oscar.util.UtilMisc;
+import java.math.BigDecimal;
 
 /**
  *
@@ -41,6 +47,14 @@ import oscar.oscarDemographic.data.DemographicData.*;
  * @version 1.0
  */
 public class ServiceCodeValidationLogic {
+  private String demographicNo;
+  private String serviceCode;
+  private SimpleDateFormat fmt;
+  public static final int DAILY_CODES_USED = 2;
+  public static final int YEARLY_CODES_USED = 1;
+  public static final String ANNUAL_AVAILABLE_UNITS = "ANNUAL_AVAILABLE_UNITS";
+  public static final String DAILY_AVAILABLE_UNITS = "DAILY_AVAILABLE_UNITS";
+
   /**
    * Create a new ServiceCodeValidationLogic object
    */
@@ -155,7 +169,6 @@ public class ServiceCodeValidationLogic {
           "where demographic_no = '" + demoNo + "' " +
           "and billing_code = '13050'" +
           " and billingstatus not in ('D','R','F')";
-      System.out.println("13050 qry =" + qry);
       rs = db.GetSQL(qry);
       int index = 0;
       while (rs.next()) {
@@ -172,7 +185,42 @@ public class ServiceCodeValidationLogic {
       ex.printStackTrace();
     }
     return ret;
+  }
 
+  /**
+   * Returns the number of days since a 13050 code was billed to a patient
+   * if no record is found the return value is -1
+   * @param demoNo String
+   * @return int
+   */
+  public int daysSinceCodeLastBilled() {
+    int ret = 0;
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      String qry =
+          "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
+          "from billingmaster " +
+          "where demographic_no = '" + this.demographicNo + "' " +
+          "and billing_code = '" + this.serviceCode + "'" +
+          " and billingstatus not in ('D','R','F')";
+      rs = db.GetSQL(qry);
+      int index = 0;
+      while (rs.next()) {
+        ret = rs.getInt(1);
+        index++;
+      }
+      if (index == 0) {
+        ret = -1;
+      }
+      db.CloseConn();
+      rs.close();
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    return ret;
   }
 
   /**
@@ -181,7 +229,8 @@ public class ServiceCodeValidationLogic {
    * @param demoNo String
    * @return boolean
    */
-  public boolean hasMore00120Codes(String demoNo, String cnslCode,String serviceDate) {
+  public boolean hasMore00120Codes(String demoNo, String cnslCode,
+                                   String serviceDate) {
     boolean ret = false;
     DBHandler db = null;
     ResultSet rs = null;
@@ -190,9 +239,10 @@ public class ServiceCodeValidationLogic {
       String qry = "SELECT COUNT(*) " +
           "FROM billingmaster " +
           "WHERE demographic_no = '" + demoNo + "'" +
-          "AND billing_code = " + cnslCode +
-          " AND YEAR(service_date) = YEAR('"+convertDate8Char(serviceDate) +"') and billingstatus != 'D'";
-      System.out.println("qry=" + qry);
+          " AND billing_code = " + cnslCode +
+          " AND YEAR(service_date) = YEAR('" +
+          DateUtils.convertDate8Char(serviceDate) +
+          "') and billingstatus != 'D'";
       rs = db.GetSQL(qry);
       if (rs.next()) {
         int numCodes = rs.getInt(1);
@@ -208,44 +258,123 @@ public class ServiceCodeValidationLogic {
   }
 
   /**
-   * @todo Move this to utility class!
-   * @param s String
-   * @return String
+   * Returns true if the 14015 code is billable
+   * for the specified demographic number.
+   * The rules are as follows:
+   * A maximum of 6 units may be billed per calendar year
+   * A maximum of 4 units may be billed on any given day
+   * @param demoNo String - The uid of the patient
+   * @param code String - The service code to be evaluated
+   * @param serviceDate String - The date of service
+   * @param currentUnitAllotment int - Sum of service units to be added to the existing sum
+   * @return 0 if more service units available, 1 if annual max units consumed, 2 if daily max units consumed
    */
-  public String convertDate8Char(String s){
-        String sdate = "00000000", syear="", smonth="", sday="";
-        System.out.println("s=" + s);
-        if (s != null){
+  public int getPatientManagementStatus(String demoNo, String code,
+                                        String serviceDate) {
+    int ret = 0;
 
-            if (s.indexOf("-") != -1){
+    //Number of units billed for the current year
+    double currentYearCount = 0;
 
-                syear = s.substring(0, s.indexOf("-"));
-                s = s.substring(s.indexOf("-")+1);
-                smonth = s.substring(0, s.indexOf("-"));
-                if (smonth.length() == 1)  {
-                    smonth = "0" + smonth;
-                }
-                s = s.substring(s.indexOf("-")+1);
-                sday = s;
-                if (sday.length() == 1)  {
-                    sday = "0" + sday;
-                }
+    // Number of units billed for the current day
+    double currentDayCount = 0;
 
-
-                System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
-                sdate = syear + smonth + sday;
-
-            }else{
-                sdate = s;
-            }
-            System.out.println("sdate:" + sdate);
-        }else{
-            sdate="00000000";
-
+    java.util.Date currentDate = new java.util.Date();
+    DateUtils ut = new DateUtils();
+    String qry = "SELECT * " +
+        "FROM billingmaster " +
+        "WHERE demographic_no = '" + demoNo + "'" +
+        " AND billing_code = " + code +
+        " AND YEAR(service_date) = YEAR('" +
+        DateUtils.convertDate8Char(serviceDate) +
+        "') and billingstatus != 'D' order by service_date";
+    List serviceCodeList = SqlUtils.getQueryResultsMapList(qry);
+    try {
+      if (serviceCodeList != null && !serviceCodeList.isEmpty()) {
+        for (Iterator iter = serviceCodeList.iterator(); iter.hasNext(); ) {
+          Properties item = (Properties) iter.next();
+          String svcDate = item.getProperty("service_date");
+          String unit = item.getProperty("billing_unit");
+          fmt = new SimpleDateFormat("yyyyMMdd");
+          java.util.Date dateSvcDate = fmt.parse(svcDate);
+          double dblUnit = UtilMisc.safeParseDouble(unit);
+          currentYearCount += dblUnit;
+          if (ut.getDifDays(currentDate, dateSvcDate) == 0) {
+            currentDayCount += dblUnit;
+          }
+          if (currentYearCount >= 6) {
+            ret = YEARLY_CODES_USED;
+            break;
+          }
+          else if (currentDayCount >= 4) {
+            ret = DAILY_CODES_USED;
+            break;
+          }
         }
-        return sdate;
+      }
     }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      return ret;
+    }
+  }
 
+  /**
+   *
+   * @param demoNo String
+   * @param code String
+   * @param serviceDate String
+   * @return double
+   */
+  public Map getCountAvailablePatientManagementUnits(String demoNo, String code,
+                                         String serviceDate) {
+
+     //Number of units billed for the current year
+     double currentYearAvailable = 6.0;
+
+     // Number of units billed for the current day
+     double currentDayAvailable = 4.0;
+
+
+     DateUtils ut = new DateUtils();
+     String qry = "SELECT * " +
+         "FROM billingmaster " +
+         "WHERE demographic_no = '" + demoNo + "'" +
+         " AND billing_code = " + code +
+         " AND YEAR(service_date) = YEAR('" +
+         DateUtils.convertDate8Char(serviceDate) +
+         "') and billingstatus != 'D' order by service_date";
+     List serviceCodeList = SqlUtils.getQueryResultsMapList(qry);
+     try {
+       if (serviceCodeList != null && !serviceCodeList.isEmpty()) {
+         for (Iterator iter = serviceCodeList.iterator(); iter.hasNext(); ) {
+           Properties item = (Properties) iter.next();
+           String svcDate = item.getProperty("service_date");
+           String unit = item.getProperty("billing_unit");
+           fmt = new SimpleDateFormat("yyyyMMdd");
+           java.util.Date dateSvcDate = fmt.parse(svcDate);
+           fmt = new SimpleDateFormat("yy-MM-dd");
+           java.util.Date currentDate = fmt.parse(serviceDate);
+           double dblUnit = UtilMisc.safeParseDouble(unit);
+           currentYearAvailable -= dblUnit;
+           if (ut.getDifDays(currentDate, dateSvcDate) == 0) {
+             currentDayAvailable -= dblUnit;
+           }
+         }
+       }
+     }
+     catch (Exception ex) {
+       ex.printStackTrace();
+     }
+     finally {
+       HashMap availableUnits = new HashMap();
+       availableUnits.put(DAILY_AVAILABLE_UNITS,new Double(currentDayAvailable));
+       availableUnits.put(ANNUAL_AVAILABLE_UNITS,new Double(currentYearAvailable));
+       return availableUnits;
+     }
+   }
 
   /**
    * Returns true if the patient state satisfies the following criteria:
@@ -256,12 +385,13 @@ public class ServiceCodeValidationLogic {
    */
   public boolean needsCDMCounselling(String demoNo, String[] codes) {
     boolean ret = false;
-    String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " + demoNo +" and dxresearch_code in(";
+    String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " +
+        demoNo + " and dxresearch_code in(";
 
     for (int i = 0; i < codes.length; i++) {
-      qry+=codes[i];
-      if(i<codes.length-1){
-        qry+=",";
+      qry += codes[i];
+      if (i < codes.length - 1) {
+        qry += ",";
       }
     }
     qry += ") and status = 'A'";
@@ -295,6 +425,16 @@ public class ServiceCodeValidationLogic {
   }
 
   /**
+   * Returns a List
+   * @param demographic_no String
+   * @return List
+   */
+  public List getServiceCodeUnitCountByDemoNo(String demographic_no) {
+    ArrayList list = new ArrayList();
+    return list;
+  }
+
+  /**
    * Returns the date of the last time that Service Code 13050 was billed
    *
    * @param demoNo String
@@ -316,7 +456,7 @@ public class ServiceCodeValidationLogic {
       if (rs.next()) {
         ret = rs.getString(1);
       }
-      else{
+      else {
         ret = "";
       }
     }
@@ -333,5 +473,21 @@ public class ServiceCodeValidationLogic {
       }
     }
     return ret;
+  }
+
+  public void setDemographicNo(String demographicNo) {
+    this.demographicNo = demographicNo;
+  }
+
+  public void setServiceCode(String serviceCode) {
+    this.serviceCode = serviceCode;
+  }
+
+  public String getDemographicNo() {
+    return demographicNo;
+  }
+
+  public String getServiceCode() {
+    return serviceCode;
   }
 }
