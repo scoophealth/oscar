@@ -646,14 +646,13 @@ billTypes = "%";
     double dblAmtOwed = Double.parseDouble(amountOwing);
     BigDecimal amtOwed = new BigDecimal(dblAmtOwed).setScale(2, BigDecimal.ROUND_HALF_UP);
     owedTotal = owedTotal.add(amtOwed);
-    System.err.println("Owed:" + owedTotal.toString());
 
     %>
     <td align="center" class="bCellData" ><%=nf.format(amtOwed)%> </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
 
     <td><%if (!b.isWCB()){%>
-      <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
+      <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>&invoiceNo=<%=b.billing_no%>')" >Edit </a>
       <%}else{%>
       <a href="javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
       <%}%>
