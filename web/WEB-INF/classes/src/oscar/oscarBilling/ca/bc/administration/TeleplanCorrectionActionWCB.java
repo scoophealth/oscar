@@ -25,6 +25,8 @@ import oscar.AppointmentMainBean;
 
 import oscar.oscarProvider.data.*;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
+import oscar.util.StringUtils;
 
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
@@ -82,7 +84,6 @@ public class TeleplanCorrectionActionWCB
 
   private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
 
-      sql_billingmaster = "update_wcb_billingmaster", // set it to be billed again in billingmaster
 
       sql_demographic = "update_wcb_demographic", //update demographic information
 
@@ -109,13 +110,32 @@ public class TeleplanCorrectionActionWCB
 
       //bean.queryExecuteUpdate(data.getDemographic(), sql_demographic);
 
-      bean.queryExecuteUpdate(data.getBillingForStatus(), sql_billingmaster);
-      BillingHistoryDAO dao = new BillingHistoryDAO();
+      MSPReconcile msp = new MSPReconcile();
 
-      /**
-       * Ensure that an audit of the currently modified bill is captured
-       */
-      dao.createBillingHistoryArchiveByBillNo(data.getBillingNo());
+      if(!StringUtils.isNullOrEmpty(data.getStatus())){
+          msp.updateBillingStatus(data.getBillingNo(),data.getStatus());
+      }
+
+
+      BillingHistoryDAO dao = new BillingHistoryDAO();
+      //If the adjustment amount field isn't empty, create an archive of the adjustment
+     if (data.getAdjAmount() != null && !"".equals(data.getAdjAmount())) {
+       double dblAdj = Math.abs(new Double(data.getAdjAmount()).doubleValue());
+       //if 1 this adjustment is a debit
+       if("1".equals(data.getAdjType())){
+         dblAdj = dblAdj*-1.0;
+       }
+       dao.createBillingHistoryArchive(data.getId(), dblAdj, MSPReconcile.PAYTYPE_IA);
+     }
+     else {
+       /**
+      * Ensure that an audit of the currently modified bill is captured
+      */
+     dao.createBillingHistoryArchive(data.getId());
+
+     }
+
+
       bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
 
       bean.queryExecuteUpdate(data.getWcb(this.GetFeeItemAmount(data.
