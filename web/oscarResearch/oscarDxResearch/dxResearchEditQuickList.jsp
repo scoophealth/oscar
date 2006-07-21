@@ -76,7 +76,8 @@ function ResearchScriptAttach() {
 	var t2 = escape(document.forms[0].xml_research3.value);
 	var t3 = escape(document.forms[0].xml_research4.value);
 	var t4 = escape(document.forms[0].xml_research5.value);
-	awnd=rs('att','dxResearchCodeSearch.do?xml_research1='+t0 + '&xml_research2=' + t1 + '&xml_research3=' + t2 + '&xml_research4=' + t3 + '&xml_research5=' + t4 +'&demographicNo=',600,600,1);
+        var codeType = document.forms[0].selectedCodingSystem.value;
+	awnd=rs('att','dxResearchCodeSearch.do?codeType='+codeType + '&xml_research1='+t0 + '&xml_research2=' + t1 + '&xml_research3=' + t2 + '&xml_research4=' + t3 + '&xml_research5=' + t4 +'&demographicNo=',600,600,1);
 	awnd.focus();
 }
 
@@ -119,7 +120,12 @@ function openNewPage(vheight,vwidth,varpage) {
         <html:form action="/oscarResearch/oscarDxResearch/dxResearchUpdateQuickList.do">
         <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#EEEEFF" height="200">
         <tr>
-            <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: <bean:write name="codingSystem"/>
+            <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: <%-- <bean:write name="codingSystem"/> --%>
+                <html:select property="selectedCodingSystem">
+                    <logic:iterate id="codingSys" name="codingSystem" property="codingSystems">
+                        <option value="<bean:write name="codingSys"/>"><bean:write name="codingSys" /></option>
+                    </logic:iterate>                                
+                </html:select>
             </td>
             <td class="heading"></td>
             <td class="heading">
@@ -166,7 +172,7 @@ function openNewPage(vheight,vwidth,varpage) {
                         <td>
                             <html:select property="quickListItems" style="width:200px" size="10" multiple="true">
                                 <logic:iterate id="qlItems" name="allQuickListItems" property="dxQuickListItemsVector">
-                                    <option value="<bean:write name="qlItems" property="dxSearchCode" />" ><bean:write name="qlItems" property="description" /></option>
+                                    <option value="<bean:write name="qlItems" property="type" />,<bean:write name="qlItems" property="dxSearchCode" />" ><bean:write name="qlItems" property="description" /></option>
                                 </logic:iterate>
                             </html:select>
                         </td>
