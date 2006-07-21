@@ -24,6 +24,7 @@
  */
 --%>
 <%@ page language="java" %>
+<%@ page import="oscar.oscarResearch.oscarDxResearch.util.dxResearchCodingSystem" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -75,13 +76,19 @@ function ResearchScriptAttach() {
 	var t2 = escape(document.forms[0].xml_research3.value);
 	var t3 = escape(document.forms[0].xml_research4.value);
 	var t4 = escape(document.forms[0].xml_research5.value);
+        var codeType = document.forms[0].selectedCodingSystem.value;
         var demographicNo = escape(document.forms[0].demographicNo.value);
-	awnd=rs('att','dxResearchCodeSearch.do?xml_research1='+t0 + '&xml_research2=' + t1 + '&xml_research3=' + t2 + '&xml_research4=' + t3 + '&xml_research5=' + t4 +'&demographicNo=' + demographicNo,600,600,1);
+        
+	awnd=rs('att','dxResearchCodeSearch.do?codeType=' + codeType + '&xml_research1='+t0 + '&xml_research2=' + t1 + '&xml_research3=' + t2 + '&xml_research4=' + t3 + '&xml_research5=' + t4 +'&demographicNo=' + demographicNo,600,600,1);
 	awnd.focus();
 }
 
-function submitform(target){	
+function submitform(target,sysCode){	
         document.forms[0].forward.value = target;
+        
+        if( sysCode != '' )
+            document.forms[0].selectedCodingSystem.value = sysCode;
+            
 	document.forms[0].submit()
 }
 
@@ -133,7 +140,14 @@ function openNewPage(vheight,vwidth,varpage) {
 
                 <table width="100%" border="0" cellspacing="0" cellpadding="2" height="500" bgcolor="#FFFFFF">
                     <tr> 
-                        <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: <bean:write name="codingSystem"/>
+                        <td class="heading"><bean:message key="oscarResearch.oscarDxResearch.codingSystem"/>: 
+
+                            <html:select property="selectedCodingSystem">
+                                <logic:iterate id="codingSys" name="codingSystem" property="codingSystems">
+                                    <option value="<bean:write name="codingSys"/>"><bean:write name="codingSys" /></option>
+                                </logic:iterate>
+                                
+                            </html:select>                                                       
                         </td>
                     </tr>                                        
                     <tr> 
@@ -151,7 +165,7 @@ function openNewPage(vheight,vwidth,varpage) {
                         <td> 
                             <input type="hidden" name="forward" value="none"/>
                             <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnCodeSearch"/>" onClick="javascript: ResearchScriptAttach();")>
-                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>" onClick="javascript: submitform('');">
+                            <input type="button" name="button" class=mbttn value="<bean:message key="oscarResearch.oscarDxResearch.btnAdd"/>" onClick="javascript: submitform('','');">
                         </td>
                     </tr>
                     <tr>
@@ -161,6 +175,7 @@ function openNewPage(vheight,vwidth,varpage) {
                     </tr>
                     <tr>
                         <td>
+                        <%-- RJ --%>
                             <html:select property="quickList" style="width:200px" onchange="javascript:changeList();">
                                 <logic:iterate id="quickLists" name="allQuickLists" property="dxQuickListBeanVector">
                                     <option value="<bean:write name="quickLists" property="quickListName" />" <bean:write name="quickLists" property="lastUsed" />><bean:write name="quickLists" property="quickListName" /></option>
@@ -172,7 +187,7 @@ function openNewPage(vheight,vwidth,varpage) {
                     <logic:iterate id="item" name="allQuickListItems" property="dxQuickListItemsVector">
                     <tr>
                         <td class="quickList">
-                            <a href="#" title='<bean:write name="item" property="dxSearchCode"/>' onclick="javascript:submitform('<bean:write name="item" property="dxSearchCode"/>');"><bean:write name="item" property="description"/></a>
+                            <a href="#" title='<bean:write name="item" property="dxSearchCode"/>' onclick="javascript:submitform('<bean:write name="item" property="dxSearchCode"/>','<bean:write name="item" property="type"/>');"><bean:write name="item" property="description"/></a>
                         </td>
                     </tr>
                     </logic:iterate>            
