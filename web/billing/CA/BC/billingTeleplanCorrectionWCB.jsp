@@ -357,8 +357,7 @@ function popFeeItemList(form,field){
             <tr>
               <td class="FormLabel">WCB Claim No:</td>
               <td>
-                <html:text property="w_wcbno" value="<%=form.getW_wcbno()%>"/>
-              </td>
+                <html:text property="w_wcbno" value="<%=form.getW_wcbno()%>"/>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Billing Physician</td>
@@ -376,8 +375,7 @@ function popFeeItemList(form,field){
 <%=proLast%>                    ,
 <%=proFirst%>                  </html:option>
                 <%}                %>
-                </html:select>
-              </td>
+                </html:select>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Practioner Num:</td>
@@ -393,8 +391,7 @@ function popFeeItemList(form,field){
                 <html:select name="w_rphysician" value="<%=form.getW_rphysician()%>" property="w_rphysician">
                   <html:option value="Y">Yes</html:option>
                   <html:option value="N">No</html:option>
-                </html:select>
-              </td>
+                </html:select>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Duration:</td>
@@ -403,16 +400,13 @@ function popFeeItemList(form,field){
                   <html:option value="1">0-6 months</html:option>
                   <html:option value="2">7-12 months</html:option>
                   <html:option value="9">                    &gt;
-                    12 months
-</html:option>
-                </html:select>
-              </td>
+                    12 months</html:option>
+                </html:select>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Billing Unit:</td>
               <td>
-                <html:text property="billingUnit" value="<%=form.getBillingUnit()%>"/>
-              </td>
+                <html:text property="billingUnit" value="<%=form.getBillingUnit()%>"/>              </td>
             </tr>
 <!--<tr>
 
@@ -427,22 +421,32 @@ function popFeeItemList(form,field){
 				</tr>-->            <tr>
               <td class="FormLabel">Bill Amount:</td>
               <td>
-                <html:text property="billingAmount" value="<%=form.getBillingAmount()%>"/>
-              </td>
+                <html:text property="billingAmount" value="<%=form.getBillingAmount()%>"/>              </td>
+            </tr>
+            <tr>
+              <td class="FormLabel" title="Internal Adjustment">Int. Adj. </td>
+              <td>
+			  	<label>
+					Amount:
+			    	<input name="adjAmount" type="text" size="7" maxlength="7">
+				</label>
+            	<label>
+               		<input type="checkbox"  name="adjType" value="1"/>
+                 	debit
+            	</label>
+			  </td>
             </tr>
             <tr>
               <td class="FormLabel">ICD 9:</td>
               <td>
                 <html:text property="w_icd9" value="<%=form.getW_icd9()%>"/>
-                <a onClick="popICD9List('TeleplanCorrectionFormWCB','w_icd9');">Codes</a>
-              </td>
+                <a onClick="popICD9List('TeleplanCorrectionFormWCB','w_icd9');">Codes</a>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Body Part:</td>
               <td>
                 <html:text property="w_bp" value="<%=form.getW_bp()%>"/>
-                <a onClick="popBodyPartList('TeleplanCorrectionFormWCB','w_bp');">Codes</a>
-              </td>
+                <a onClick="popBodyPartList('TeleplanCorrectionFormWCB','w_bp');">Codes</a>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Side:</td>
@@ -452,22 +456,19 @@ function popFeeItemList(form,field){
                   <html:option value="L">Left</html:option>
                   <html:option value="N">Not Applicable</html:option>
                   <html:option value="R">Right</html:option>
-                </html:select>
-              </td>
+                </html:select>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Nature Of Injury:</td>
               <td>
                 <html:text property="w_noi" value="<%=form.getW_noi()%>"/>
-                <a onClick="popNOIList('TeleplanCorrectionFormWCB','w_noi');">Codes</a>
-              </td>
+                <a onClick="popNOIList('TeleplanCorrectionFormWCB','w_noi');">Codes</a>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Fee Item:</td>
               <td>
                 <html:text property="w_feeitem" value="<%=form.getW_feeitem()%>"/>
-                <a onClick="popFeeItemList('TeleplanCorrectionFormWCB','w_feeitem');">Codes</a>
-              </td>
+                <a onClick="popFeeItemList('TeleplanCorrectionFormWCB','w_feeitem');">Codes</a>              </td>
             </tr>
 <!--<tr>
 
@@ -485,8 +486,7 @@ function popFeeItemList(form,field){
                   <html:option value="D">Diagnostic Facility</html:option>
                   <html:option value="E">                    Hospital Emerg. / Diag.
                     &amp;
-                    Treatment Centre
-</html:option>
+                    Treatment Centre</html:option>
                   <html:option value="H">Hospital</html:option>
                   <html:option value="I">Hospital Inpatient</html:option>
                   <html:option value="O">Physician's office</html:option>
@@ -494,32 +494,24 @@ function popFeeItemList(form,field){
                   <html:option value="R">Patient's residence</html:option>
                   <html:option value="S">Future Use</html:option>
                   <html:option value="Z">None of the above</html:option>
-                </html:select>
-              </td>
+                </html:select>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Report Type:</td>
               <td>
-                <html:text property="w_reporttype" value="<%=form.getW_reporttype()%>"/>
-              </td>
+                <html:text property="w_reporttype" value="<%=form.getW_reporttype()%>"/>              </td>
             </tr>
             <tr>
-              <td class="FormLabel">Bill Type:</td>
+
               <td>
               <%String status = form.getStatus()!=null?form.getStatus():"";
+              String statusCodes[] = {"O","P","N","B","X","T","C"};
+              request.setAttribute("codes",statusCodes);
               %>
-                <select style="font-size:80%;" name="status">
-                  <option value="O" <%=status.equals("O")?"selected=\"selected\"":""%>>O | Bill WCB</option>
-                  <option value="P" <%=status.equals("P")?"selected=\"selected\"":""%>>P | Bill Patient</option>
-                  <option value="N" <%=status.equals("N")?"selected=\"selected\"":""%>>N | Do Not Bill</option>
-                  <option value="B" <%=status.equals("B")?"selected=\"selected\"":""%>>B | Submitted MSP</option>
-                  <option value="X" <%=status.equals("X")?"selected=\"selected\"":""%>>X | Bad Debt</option>
-                  <option value="T" <%=status.equals("T")?"selected=\"selected\"":""%>>T | Transfer to Collection</option>
-                  <option value="C" <%=status.equals("C")?"selected=\"selected\"":""%>>C | Data Center Changed</option>
-				  <option value="C" <%=status.equals("F")?"selected=\"selected\"":""%>>F | Refused</option>
-				  <option value="C" <%=status.equals("O")?"selected=\"selected\"":""%>>O | Bill MSP</option>
-                </select>
-              </td>
+                 <!-- includes the Billing Type Drop Down List -->
+                 <jsp:include flush="false" page="billType_frag.jsp">
+                    <jsp:param name="BillType" value="<%=status%>"/>                 </jsp:include>              </td>
+              <td></td>
             </tr>
           </table>
         </td>
@@ -682,7 +674,7 @@ function popFeeItemList(form,field){
 		  <%
 		  }
 		  %>
-		  
+
         </td>
       </tr>
     </table>
