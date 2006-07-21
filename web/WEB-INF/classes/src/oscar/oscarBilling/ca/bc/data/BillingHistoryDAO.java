@@ -104,7 +104,7 @@ public class BillingHistoryDAO {
    * @return List - The List of BillHistory instances
    */
   public List getBillHistoryByBillNo(String billingNo) {
-    String qry = "select bh.id,bm.billingmaster_no,bm.billingstatus,bh.creation_date,bh.practitioner_no,bh.billingtype,bh.seqnum,bh.amount,bh.amount_received,bh.payment_type_id,bt.payment_type" +
+    String qry = "select bh.id,bm.billingmaster_no,bh.billingstatus,bh.creation_date,bh.practitioner_no,bh.billingtype,bh.seqnum,bh.amount,bh.amount_received,bh.payment_type_id,bt.payment_type" +
         " from billingmaster bm,billing_history bh left join billing_payment_type bt on bh.payment_type_id = bt.id" +
         " where bh.billingmaster_no = bm.billingmaster_no" +
         " and bm.billing_no = " + billingNo;
