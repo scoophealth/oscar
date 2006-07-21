@@ -245,8 +245,7 @@ public class BillingReProcessBillAction
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
       db.RunSQL(providerSQL);
-
-      if(billingStatus!=null&&!"".equals(billingStatus)){
+       if(!StringUtils.isNullOrEmpty(billingStatus)){
         msp.updateBillingStatus(frm.getBillNumber(), billingStatus);
       }
       BillingHistoryDAO dao = new BillingHistoryDAO();
