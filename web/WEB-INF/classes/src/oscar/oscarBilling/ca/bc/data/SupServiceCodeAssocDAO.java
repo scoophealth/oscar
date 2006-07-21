@@ -50,25 +50,48 @@ public class SupServiceCodeAssocDAO {
    */
   public List getServiceCodeAssociactions() {
     //select billingServiceNo,billingServiceTrayNo,billingServiceNo as associationStatus from billing_trayfees");
-   List list = SqlUtils.getQueryResultsList("select id,billingServiceNo,billingServiceTrayNo from billing_trayfees");
-   List ret = new ArrayList();
+    List list = SqlUtils.getQueryResultsList(
+        "select id,billingServiceNo,billingServiceTrayNo from billing_trayfees");
+    List ret = new ArrayList();
 
-   if(list != null){
-     for (Iterator iter = list.iterator(); iter.hasNext(); ) {
-       String[] item = (String[]) iter.next();
-       if (item != null && item.length > 0) {
-         HashMap map = new HashMap();
-         map.put("id", item[0]);
-         map.put("billingServiceNo",
-                 this.getBillingServiceValue(item[1], this.VALUE_BY_ID));
-         map.put("billingServiceTrayNo",
-                 this.getBillingServiceValue(item[2], this.VALUE_BY_ID));
-         map.put("associationStatus", "");
-         ret.add(map);
-       }
-     }
-   }
-   return ret;
+    if (list != null) {
+      for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+        String[] item = (String[]) iter.next();
+        if (item != null && item.length > 0) {
+          HashMap map = new HashMap();
+          map.put("id", item[0]);
+          map.put("billingServiceNo",
+                  this.getBillingServiceValue(item[1], this.VALUE_BY_ID));
+          map.put("billingServiceTrayNo",
+                  this.getBillingServiceValue(item[2], this.VALUE_BY_ID));
+          map.put("associationStatus", "");
+          ret.add(map);
+        }
+      }
+    }
+    return ret;
+  }
+
+  /**
+   * Returns a Map of ServiceCode associations
+   * Key = Service Code
+   * Value = Tray Fee
+   * @return Map
+   */
+  public Map getAssociationKeyValues() {
+    //
+    List list = SqlUtils.getQueryResultsList(
+        "select billingServiceNo,billingServiceTrayNo from billing_trayfees");
+    HashMap ret = new HashMap();
+    if (list != null) {
+      for (Iterator iter = list.iterator(); iter.hasNext(); ) {
+        String[] item = (String[]) iter.next();
+        if (item != null && item.length > 0) {
+          ret.put(this.getBillingServiceValue(item[0], this.VALUE_BY_ID),this.getBillingServiceValue(item[1], this.VALUE_BY_ID));
+        }
+      }
+    }
+    return ret;
   }
 
   /**
@@ -80,8 +103,10 @@ public class SupServiceCodeAssocDAO {
                                                  String secondaryCode) {
     DBHandler db = null;
     ResultSet rs = null;
-    String primaryCodeId = this.getBillingServiceValue(primaryCode,this.VALUE_BY_CODE);
-    String secondaryCodeId = this.getBillingServiceValue(secondaryCode,this.VALUE_BY_CODE);
+    String primaryCodeId = this.getBillingServiceValue(primaryCode,
+        this.VALUE_BY_CODE);
+    String secondaryCodeId = this.getBillingServiceValue(secondaryCode,
+        this.VALUE_BY_CODE);
 
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -133,12 +158,14 @@ public class SupServiceCodeAssocDAO {
    * as criterion for searching the code value
    * @return String
    */
-  private String getBillingServiceValue(String code,int type) {
+  private String getBillingServiceValue(String code, int type) {
     String ret = "";
-    String criteria = type==this.VALUE_BY_CODE?"service_code":"billingservice_no";
-    String select = type==this.VALUE_BY_CODE?"billingservice_no":"service_code";
+    String criteria = type == this.VALUE_BY_CODE ? "service_code" :
+        "billingservice_no";
+    String select = type == this.VALUE_BY_CODE ? "billingservice_no" :
+        "service_code";
     List results = SqlUtils.getQueryResultsList(
-        "select " + select + " from billingservice where " + criteria  + "= '" +
+        "select " + select + " from billingservice where " + criteria + "= '" +
         code + "'");
     if (results != null && !results.isEmpty()) {
       String[] strArr = (String[]) results.get(0);
@@ -148,7 +175,6 @@ public class SupServiceCodeAssocDAO {
     }
     return ret;
   }
-
 
   /**
    * Removes a service code association
