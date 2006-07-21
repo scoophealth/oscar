@@ -43,14 +43,14 @@ import java.text.*;
  */
 public class PayRefSummary {
   private double cash = 0.0;
-  private double cheque=0.0;
-  private double visa=0.0;
-  private double mc=0.0;
-  private double amex=0.0;
-  private double electronic=0.0;
-  private double debit=0.0;
-  private double other=0.0;
-  private double adjustmentAmountTotal=0.0;
+  private double cheque = 0.0;
+  private double visa = 0.0;
+  private double mc = 0.0;
+  private double amex = 0.0;
+  private double electronic = 0.0;
+  private double debit = 0.0;
+  private double other = 0.0;
+  private double adjustmentAmountTotal = 0.0;
   public PayRefSummary() {
   }
 
@@ -61,8 +61,8 @@ public class PayRefSummary {
    * @param strValue String
    */
   public void addIncValue(String paymentMethod, String strValue) {
-    paymentMethod = paymentMethod == null?"":paymentMethod;
-    try{
+    paymentMethod = paymentMethod == null ? "" : paymentMethod;
+    try {
       Double value = new Double(strValue);
       if (paymentMethod.equals("1")) {
         this.cash += value.doubleValue();
@@ -85,10 +85,14 @@ public class PayRefSummary {
       else if (paymentMethod.equals("7")) {
         this.debit += value.doubleValue();
       }
+      else if (paymentMethod.equals("8")) {
+        this.other += value.doubleValue();
+      }
       else{
         this.other += value.doubleValue();
       }
-    }catch(Exception e){
+    }
+    catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -130,23 +134,22 @@ public class PayRefSummary {
   }
 
   public double getRawTotal() {
-    return cash+cheque+visa+mc+amex+electronic+debit+other;
+    return cash + cheque + visa + mc + amex + electronic + debit + other;
   }
 
   /**
-   * addAdjsutmentAmount
    *
-   * @param string String
+   * @param adjAmt String
    */
   public void addAdjustmentAmount(String adjAmt) {
 
-    try{
-      if(adjAmt!=null&&!"".equals(adjAmt)){
+    try {
+      if (adjAmt != null && !"".equals(adjAmt)) {
         Double amt = new Double(adjAmt);
         this.electronic += amt.doubleValue();
       }
     }
-    catch(NumberFormatException e){
+    catch (NumberFormatException e) {
       e.printStackTrace();
     }
   }
