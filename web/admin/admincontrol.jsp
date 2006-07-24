@@ -60,13 +60,45 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     if(request.getParameter("search_mode").equals("search_providerno")) fieldname="provider_no";
     if(request.getParameter("search_mode").equals("search_preferenceno")) fieldname="preference_no";
     if(request.getParameter("search_mode").equals("search_username")) fieldname="user_name";
-    if(request.getParameter("search_mode").equals("search_dob")) fieldname="year_of_birth "+regularexp+" ?"+" and month_of_birth "+regularexp+" ?"+" and date_of_birth ";
+    if(request.getParameter("search_mode").equals("search_dob")) fieldname="year_of_birth "+regularexp+" ?"+" and month_of_birth "+regularexp+" ?"+" and date_of_birth ";    
     if(request.getParameter("search_mode").equals("search_name")) {
       if(request.getParameter("keyword").indexOf(",")==-1)  fieldname="last_name";
       else if(request.getParameter("keyword").trim().indexOf(",")==(request.getParameter("keyword").trim().length()-1)) fieldname="last_name";
       else fieldname="last_name "+regularexp+" ?"+" and first_name ";
     }
+    
+
   }
+    //We find out if search is limited to active or inactive providers
+    String[] status = request.getParameterValues("search_status");
+    String inactive = "0";
+    String active = "0";
+    
+    if( status != null ) {
+        int numConditions = status.length;        
+        String sql = new String();
+        if( status.length == 1 ) {
+            if( status[0].equals("0") ) {
+                sql = "status = 0 and "; 
+                inactive = "1";
+            }
+            else if( status[0].equals("1") ) {
+                sql = "status = 1 and ";      
+                active = "1";
+            }
+        }
+        else if( status.length == 2 ) {
+            inactive = "1";
+            active = "1";
+        }
+        fieldname = sql + fieldname;
+        
+    }
+    //we save results in request to maintain state of form        
+    request.setAttribute("inactive",inactive);
+    request.setAttribute("active",active);
+    
+    
   //operation available to the client - dboperation
   String [][] dbQueries=null;
   if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
@@ -109,7 +141,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
 	}else{
 	dbQueries=new String[][] {
     {"provider_add_record", "insert into provider (provider_no,last_name,first_name,provider_type,specialty,team,sex,dob,address,phone,work_phone,ohip_no,rma_no,billing_no,hso_no,status,comments,provider_activity) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?, ?)" },
-    {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
+    {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone,status from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"provider_search_detail", "select * from provider where provider_no=?"},
     {"provider_delete", "delete from provider where provider_no=? and provider_no!='super'"},
     {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex =?,dob=?, address=?,phone=?,work_phone=?,ohip_no =?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity = ? where provider_no=? and provider_no!='super'"},
@@ -176,7 +208,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
   apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
   if(true) {
     out.clear();
-    pageContext.forward(apptMainBean.whereTo()); //forward request&response to the target page
+    pageContext.forward(apptMainBean.whereTo()); //forward request&response to the target page    
     return;
   }
 %>
