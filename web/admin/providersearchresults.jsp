@@ -31,6 +31,8 @@
     response.sendRedirect("../logout.jsp");
   String orderby = request.getParameter("orderby")!=null?request.getParameter("orderby"):"last_name" ;
   String deepcolor = "#CCCCFF", weakcolor = "#EEEEFF" ;
+  
+  
 %>
 <%@ page import="java.sql.*, java.util.*, oscar.*" buffer="none" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -65,9 +67,13 @@
   	<tr valign="top">
       <td rowspan="2" align="right" valign="middle"> <font face="Verdana" color="#0000FF"><b><i><bean:message key="admin.search.formSearchCriteria"/></i></b></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-      <input type="radio" checked name="search_mode" value="search_name"><bean:message key="admin.providersearch.formName"/></font></td>
+      <input type="radio" <%=request.getParameter("search_mode").equals("search_name")?"checked":""%>  name="search_mode" value="search_name" onclick="document.forms['searchprovider'].keyword.focus();"><bean:message key="admin.providersearch.formName"/></font></td>
       <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
-          <input type="radio" name="search_mode" value="search_providerno"><bean:message key="admin.provider.formProviderNo"/></font></td>
+          <input type="radio" <%=request.getParameter("search_mode").equals("search_providerno")?"checked":""%> name="search_mode" value="search_providerno" onclick="document.forms['searchprovider'].keyword.focus();"><bean:message key="admin.provider.formProviderNo"/></font></td>
+          <td nowrap><font size="1" face="Verdana" color="#0000FF"> 
+          <input type="checkbox" name="search_status" value="1" <%=request.getAttribute("active").equals("1")?"checked":""%> ><bean:message key="admin.providersearch.formActiveStatus"/><br/>
+          <input type="checkbox" name="search_status" value="0" <%=request.getAttribute("inactive").equals("1")?"checked":""%>><bean:message key="admin.providersearch.formInactiveStatus"/>
+          </font></td>
       <td valign="middle" rowspan="2" ALIGN="left"><input type="text" NAME="keyword" SIZE="17"  MAXLENGTH="100">
 				<INPUT TYPE="hidden" NAME="orderby" VALUE="last_name" >
 				<INPUT TYPE="hidden" NAME="dboperation" VALUE="provider_search_titlename" >
@@ -75,10 +81,10 @@
 				<INPUT TYPE="hidden" NAME="limit2" VALUE="10" >
 				<INPUT TYPE="hidden" NAME="displaymode" VALUE="Provider_Search" >
 				<INPUT TYPE="SUBMIT" NAME="button" VALUE=<bean:message key="admin.providersearchresults.btnSubmit"/> SIZE="17"></td>
-    </tr><tr> 
+    </tr><!-- <tr> 
        <td nowrap><font size="1" face="Verdana" color="#0000FF"><bean:message key="admin.providersearchresults.reserved"/></font></td>
        <td nowrap><font size="1" face="Verdana" color="#0000FF"> </font></td>
-    </tr>
+    </tr> -->
   </form>
   </table>
 
@@ -95,11 +101,12 @@
   <TH align="center" width="9%"><b><bean:message key="admin.provider.formTeam"/></b></TH>
   <TH align="center" width="2%"><b><bean:message key="admin.provider.formSex"/></B></TH>
   <TH align="center" width="15%"><b><bean:message key="admin.providersearchresults.phone"/></B></TH>
+  <TH align="center" width="15%"><b><bean:message key="admin.provider.formStatus"/></B></TH>
   </tr>
 <%
   ResultSet rs = null;
   String dboperation = request.getParameter("dboperation");
-  String keyword=request.getParameter("keyword").trim();
+  String keyword=request.getParameter("keyword").trim();  
   //keyword.replace('*', '%').trim();
   if(request.getParameter("search_mode").equals("search_name")) {
     keyword=request.getParameter("keyword")+"%";
@@ -120,7 +127,10 @@
 	  		param[2]=""+MyDateFormat.getDayFromStandardDate(keyword)+"%";  
 	      //System.out.println("1111111111111111111 "+param[0]+param[1]+param[2]);
     		rs = apptMainBean.queryResults(param, dboperation);
-  } else {
+  } else if(request.getParameter("search_mode").equals("search_status")) {
+      rs = apptMainBean.queryResults(keyword, dboperation);
+  }
+  else {
     keyword=request.getParameter("keyword")+"%";
     rs = apptMainBean.queryResults(keyword, dboperation);
   }
@@ -142,10 +152,11 @@
         <td > <%= rs.getString("first_name") %></td>
         <td > <%= rs.getString("last_name") %></td>
         <td ><%= rs.getString("specialty") %></td>
-        <td ><%= rs.getString("team") %></td>
+        <td ><%= rs.getString("team") %></td>        
         
       <td align="center" ><%= rs.getString("sex") %></td>
         <td ><%= rs.getString("phone") %></td>
+        <td ><%= rs.getString("status").equals("1")?"Active":"Inactive" %></td>
         
       <!--td align="center" valign="middle" -->
         <!--img src="../images/buttondetail.gif" width="75" height="30" border="0" valign="middle"-->
