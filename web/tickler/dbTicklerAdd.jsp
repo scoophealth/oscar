@@ -59,16 +59,11 @@ docassigned =request.getParameter("task_assigned_to");
 	  param[7]=docassigned;
 
  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_tickler");
-	           
-	    
-	    
-
-
-
+	        
 if (rowsAffected == 1){
 %>
 <script LANGUAGE="JavaScript">
       self.close();
-      self.opener.refresh();
+      self.opener.location.reload();
 </script>
 <%}%>
