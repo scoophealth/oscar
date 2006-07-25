@@ -342,7 +342,7 @@ div.recommendations li{
                                <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
                                </a>
                                &nbsp;
-                               <a href="<%=h.get("link")%>">#</a>                              
+                               <a href="#" onclick="popup(465,635,'<%=h.get("link")%>')">#</a>                              
                                <br/>                                 
                                </p>
                             </div>
@@ -375,7 +375,7 @@ div.recommendations li{
                                <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
                                </a>
                                &nbsp;
-                               <a href="<%=h.get("link")%>">#</a>                              
+                               <a href="#" onclick="popup(465,635,'<%=h.get("link")%>');">#</a>                              
                                <br/>                                 
                                </p>
                             </div>
