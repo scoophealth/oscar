@@ -430,6 +430,7 @@ var beginD = "0001-01-01"
 <TD width="17%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDemographicName"/></B></FONT></TD>
 <TD width="17%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDoctorName"/></B></FONT></TD>
 <TD width="9%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgDate"/></B></FONT></TD>
+<TD width="9%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.msgCreationDate"/></B></FONT></TD>
 <TD width="6%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.Priority"/></B></FONT></TD>
 <TD width="12%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B><bean:message key="tickler.ticklerMain.taskAssignedTo"/></B></FONT></TD>
 
@@ -501,6 +502,14 @@ if (daysDifference > 0){
 		out.print(service_date_str);
 	%> 
 </TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>">
+	<%
+		service_date = rs.getDate("update_date");
+		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("priority")%></TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=taskAssignedTo%></TD>
 <TD ROWSPAN="1" class="<%=bodd?"lilacRed":"whiteRed"%>"><%=rs.getString("status").equals("A")?stActive:rs.getString("status").equals("C")?stComplete:rs.getString("status").equals("D")?stDeleted:rs.getString("status")%></TD>
@@ -523,6 +532,14 @@ if (daysDifference > 0){
 		java.util.Date service_date = rs.getDate("service_date");
 		SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 		String service_date_str = dateFormat2.format(service_date);
+		out.print(service_date_str);
+	%> 
+</TD>
+<TD ROWSPAN="1" class="<%=bodd?"lilac":"white"%>">
+	<%
+		service_date = rs.getDate("update_date");
+		dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+		service_date_str = dateFormat2.format(service_date);
 		out.print(service_date_str);
 	%> 
 </TD>
