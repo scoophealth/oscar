@@ -72,6 +72,22 @@ OscarProperties props = OscarProperties.getInstance();
 </title>
 <html:base/>
 <style type="text/css">
+ 
+/* Used for "import from enctounter" button */
+input.btn{
+   color:black;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:84%;
+   font-weight:bold;
+   background-color:#B8B8FF;
+   border:1px solid;
+   border-top-color:#696;
+   border-left-color:#696;
+   border-right-color:#363;
+   border-bottom-color:#363;
+}
+    
+
 td.tite {
 
 background-color: #bbbbFF;
@@ -397,6 +413,88 @@ function checkForm(submissionVal,formName){
   document.forms[formName].submit();
   return true;
 }
+
+//enable import from encounter
+function importFromEnct(reqInfo,txtArea) 
+{
+    if( txtArea.value.length > 0 )
+        txtArea.value += '\n';
+                    
+    switch( reqInfo )
+    {
+        case "MedicalHistory":
+            <%
+                String value = "";                                
+                if( demo != null )
+                {                 
+                    value = demographic.EctInfo.getMedicalHistory();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                }
+             %>  
+             break;
+          case "ongoingConcerns":                
+             <%
+                 if( demo != null )
+                 {
+                    value = demographic.EctInfo.getOngoingConcerns();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                 }
+             %>
+             break;
+           case "FamilyHistory":
+              <%
+                 if( demo != null )
+                 {
+                    value = demographic.EctInfo.getSocialHistory();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                 }
+              %>  
+              break;
+            case "Allergies":                
+              <%
+                 if( demo != null )
+                 {
+                    value = demographic.RxInfo.getAllergies();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                 }
+              %>                
+                break;
+            case "Prescriptions":                
+              <%
+                 if( demo != null )
+                 {
+                    value = demographic.RxInfo.getCurrentMedication();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                 }
+              %>                
+                break;
+            case "OtherMeds":                
+              <%
+                 if( demo != null )
+                 {
+                    value = demographic.EctInfo.getFamilyHistory();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                 }
+              %>                
+                break;
+            case "Reminders":                
+              <%
+                 if( demo != null )
+                 {
+                    value = demographic.EctInfo.getReminders();
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    out.println("txtArea.value += '" + value + "'");
+                 }
+              %>                
+    } //end switch
+                
+}
 </script>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();disableDateFields()">
@@ -409,7 +507,7 @@ function checkForm(submissionVal,formName){
         <%
         oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm thisForm;
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
-        System.out.println("Requested ID :"+requestId);
+        //System.out.println("Requested ID :"+requestId);
         if (requestId !=null ){
                 consultUtil.estRequestFromId(requestId);
                 thisForm.setAllergies(consultUtil.allergies);
@@ -436,20 +534,24 @@ function checkForm(submissionVal,formName){
 
 
         }else if(request.getAttribute("validateError") == null){
-            //  new request
-                thisForm.setAllergies(demographic.RxInfo.getAllergies());
+            //  new request            
+                /*thisForm.setAllergies(demographic.RxInfo.getAllergies());
+                
 			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
                 thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
 			} else {
 				thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
 			}
+                */
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
-                thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
+                //thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
         	thisForm.setAppointmentYear(year);
 
 	}
+        
         %>
+
 
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
@@ -800,6 +902,19 @@ function checkForm(submissionVal,formName){
                     </html:select>
                 </td>
             </tr>
+            <tr>
+                <td class="tite4">                                        
+                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes"/>:
+                </td>
+                <td style="background-color: #B8B8FF;">   
+                    &nbsp;
+                </td>               
+            </tr>  
+            <tr>
+                <td colspan=2 class="tite3">
+                    <html:textarea cols="50" rows="3" property="appointmentNotes"></html:textarea>
+                </td>
+            </tr>
 
             </table>
         </td>
@@ -810,8 +925,8 @@ function checkForm(submissionVal,formName){
             <td>
        </tr>
        <tr>
-            <td colspan=2 class="tite4">
-            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formReason"/>:
+            <td colspan="2" class="tite4">
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formReason"/>                
             </td>
        </tr>
        <tr>
@@ -821,8 +936,22 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf"/>:
-            </td>
+                <table width="100%">
+                    <tr>
+                        <td width="30%" class="tite4">
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formClinInf"/>:
+                        </td>
+                        <td>
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].clinicalInformation);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].clinicalInformation);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
+                        </td>
+                    </tr>
+                </table>
        </tr>
        <tr>
             <td colspan=2>
@@ -831,11 +960,27 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
-                out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
-             } else { %>
-            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems"/>:
-            <% } %>
+            <table width="100%">
+                    <tr>
+                        <td width="30%" class="tite4">
+                            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
+                                    out.print(props.getProperty("significantConcurrentProblemsTitle", ""));
+                                } else { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSignificantProblems"/>:
+                             <% } %>
+                        </td>
+                        <td>
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].concurrentProblems);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].concurrentProblems);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
+                        </td>
+                    </tr>
+                </table>
+            
             </td>
        </tr>
        <tr>
@@ -845,11 +990,26 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
-                out.print(props.getProperty("currentMedicationsTitle", ""));
-             } else { %>
-            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
-            <% } %>
+                <table width="100%">
+                    <tr>
+                        <td width="30%" class="tite4">
+                            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+                                    out.print(props.getProperty("currentMedicationsTitle", ""));
+                                } else { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
+                             <% } %>
+                        </td>
+                        <td>
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].currentMedications);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].currentMedications);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].currentMedications);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].currentMedications);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].currentMedications);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].currentMedications);" />&nbsp;
+                        </td>
+                    </tr>
+                </table>
             </td>
        </tr>
        <tr>
@@ -859,7 +1019,22 @@ function checkForm(submissionVal,formName){
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies"/>:
+                <table width="100%">
+                    <tr>
+                        <td width="30%" class="tite4">
+                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies"/>:
+                        </td>
+                        <td>
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].allergies);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].allergies);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].allergies);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].allergies);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].allergies);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].allergies);" />&nbsp;
+                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].allergies);" />&nbsp;
+                        </td>
+                    </tr>
+                </table>            
             </td>
        </tr>
        <tr>
@@ -867,16 +1042,7 @@ function checkForm(submissionVal,formName){
                 <html:textarea cols="90" rows="3" property="allergies"></html:textarea>
             </td>
        </tr>
-       <tr>
-            <td colspan=2 class="tite4">
-            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes"/>
-            </td>
-       </tr>
-       <tr>
-            <td colspan=2>
-                <html:textarea cols="90" rows="3" property="appointmentNotes"></html:textarea>
-            </td>
-       </tr>
+            
        <tr>
             <td colspan=2>
 	        <input type="hidden" name="submission" value="">
