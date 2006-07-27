@@ -214,7 +214,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                                    <% } %>
                                     </td>
                                     <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?requestId=<%=id%>')">                                    
+                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?de=<%=demo%>&requestId=<%=id%>')">                                    
                                     <%=patient%>
                                     </a>
                                     </td>
@@ -222,7 +222,7 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
                                     <%=provide%>
                                     </td>
                                     <td class="stat<%=status%>">
-                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
+                                    <a href="javascript:popupOscarRx(700,960,'../../oscarEncounter/ViewRequest.do?de=<%=demo%>&requestId=<%=id%>')">
                                     <%=service%>
                                     </a>
 
