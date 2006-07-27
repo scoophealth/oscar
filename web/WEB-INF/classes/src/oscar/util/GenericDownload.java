@@ -28,10 +28,7 @@
 
 package oscar.util;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +68,8 @@ public class GenericDownload extends HttpServlet {
             throws IOException {
         if (bDownload) {
             ServletOutputStream stream = res.getOutputStream();
-            transferFile(res, stream, dir, filename, contentType);
+            //if problem with the "transferFile2" streaming method, use "transferFile" method
+            transferFile2(res, stream, dir, filename, contentType);
             stream.close();
         } else {
             res.setContentType("text/html");
@@ -85,6 +83,7 @@ public class GenericDownload extends HttpServlet {
 
     public void transferFile(HttpServletResponse res, ServletOutputStream stream, String dir, String filename,
             String contentType) throws IOException {
+        //too slow (16-20kB/s on the network transfer over SSL and 170kB/s over a non-SSL layer)
         String setContentType = "application/octet-stream";
         if (contentType != null) {
             setContentType = contentType;
@@ -93,12 +92,44 @@ public class GenericDownload extends HttpServlet {
         res.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
         BufferedInputStream bfis = new BufferedInputStream(new FileInputStream(dir + filename));
         int data;
+        //int incrementor = 0;
         while ((data = bfis.read()) != -1) {
             stream.write(data);
             stream.flush();
+            //incrementor++;
+            //System.out.println("buffer cycle--------" + incrementor);
         }
         bfis.close();
     }
+    
+        public void transferFile2(HttpServletResponse res, ServletOutputStream stream, String dir, String filename,
+            String contentType) throws IOException {
+            //faster than "transferFile" method - clocked at 1.1MB/s on a 10Mbps switch
+        int BUFFER_SIZE = 2048;
+        String setContentType = "application/octet-stream";
+        if (contentType != null) {
+            setContentType = contentType;
+        }
+        res.setContentType(setContentType);
+        res.setHeader("Content-Disposition", "attachment;filename=\"" + filename + "\"");
+         File curfile = new File(dir + filename);
+         FileInputStream fis = new FileInputStream(curfile);                  
+         int bufferSize;
+         byte[] buffer = new byte[BUFFER_SIZE];
+         long incrementor = 0;
+         while(( bufferSize = fis.read(buffer)) != -1) {
+             stream.write(buffer, 0, bufferSize);
+             //System.out.println("Prebuffer size: " + bufferSize);
+             //incrementor++;
+             //System.out.println("Buffer Cycle -----------" + incrementor + "bytes loaded");
+         }
+         fis.close();
+         stream.flush();
+         stream.close();
+    }
+ 
+        
+        
 }
 
 // /
