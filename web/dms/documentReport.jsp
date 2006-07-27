@@ -1,64 +1,210 @@
 <%
 if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
-String curUser_no = (String) session.getAttribute("user");
+String user_no = (String) session.getAttribute("user");
 String userfirstname = (String) session.getAttribute("userfirstname");
 String userlastname = (String) session.getAttribute("userlastname");
 %>
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ include file="../admin/dbconnection.jsp" %>
-<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
-<%@ include file="dbDMS.jsp" %>
+
 <%
-String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd HH:mm:ss");
-String function = request.getParameter("function");
-String functionid = request.getParameter("functionid");
-String doctype = request.getParameter("doctype");
+//if delete request is made
+if (request.getParameter("delDocumentNo") != null) {
+    EDocUtil.deleteDocument(request.getParameter("delDocumentNo"));
+}
 
+//preliminary JSP code
 
-String creator="%", docfilename="", docdesc="", dispDesc="", dispType="", dispDocNo="", dispFunction="", dispCreator="", dispUpdatedate="", dispFilename="", dispStatus="";
-String proFirst="", proLast="", proOHIP="", proNo="";
+// "Module" and "function" is the same thing
+String module = "";
+String moduleid = "";
+if (request.getParameter("function") != null) {
+    module = request.getParameter("function");
+    moduleid = request.getParameter("functionid");
+} else if (request.getAttribute("function") != null) {
+    module = (String) request.getAttribute("function");
+    moduleid = (String) request.getAttribute("functionid");
+}
+String moduleName = EDocUtil.getModuleName(module, moduleid);
 
-String functionString = getFullName(apptMainBean, function, functionid);
+String nowDate = EDocUtil.getDmsDateTime();
 
-//String functionString = function.substring(0,1).toUpperCase()+function.substring(1);
+OscarProperties props = OscarProperties.getInstance();
+
+AddEditDocumentForm formdata = new AddEditDocumentForm();
+String defaultType = (String) props.getProperty("eDocAddTypeDefault", "");
+String defaultDesc = "Enter Document Title"; //if defaultType isn't defined, this value is used for the title/description
+
+Hashtable errors = new Hashtable();
+if (request.getAttribute("errors") != null) {
+    errors = (Hashtable) request.getAttribute("errors");
+}
+
+String mode = "";
+if (request.getAttribute("mode") != null) {
+    mode = (String) request.getAttribute("mode");
+} else {
+    mode = (String) request.getParameter("mode");
+}
+
+String editDocumentNo = "";
+if (request.getAttribute("editDocumentNo") != null) {
+    editDocumentNo = (String) request.getAttribute("editDocumentNo");
+} else {
+    editDocumentNo = (String) request.getParameter("editDocumentNo");
+}
+
+if (request.getAttribute("completedForm") != null) {
+    formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
+} else if (editDocumentNo != null) {
+    EDoc currentDoc = EDocUtil.getDoc(editDocumentNo);
+    formdata.setFunction(currentDoc.getModule());
+    formdata.setFunctionId(currentDoc.getModuleId());
+    formdata.setDocType(currentDoc.getType());
+    formdata.setDocDesc(currentDoc.getDescription());
+    formdata.setDocCreator(user_no);
+} else {
+    formdata.setFunction(module);  //"module" and "function" are the same
+    formdata.setFunctionId(moduleid);
+    formdata.setDocType((String) props.getProperty("eDocAddTypeDefault", ""));
+    formdata.setDocDesc(defaultType.equals("")?defaultDesc:defaultType);
+    formdata.setDocCreator(user_no);
+}
+ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 %>
-<!--
-/*
- *
- * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
- * This software is published under the GPL GNU General Public License.
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version. *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- *
- * <OSCAR TEAM>
- *
- * This software was written for the
- * Department of Family Medicine
- * McMaster Unviersity
- * Hamilton
- * Ontario, Canada
- */
--->
 <html:html locale="true">
 <head>
 <title><bean:message key="dms.documentReport.title"/></title>
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
+
+<link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
+<script type="text/javascript" src="../share/javascript/nifty.js"></script>
+<script type="text/javascript">
+window.onload=function(){
+if(!NiftyCheck())
+    return;
+
+Rounded("div.topplane","top","transparent","#d1d5bd","small border #d1d5bd");
+Rounded("div.topplane","bottom","transparent","#f2f7ff","small border #d1d5bd");
+
+Rounded("div.doclist","top","transparent", "#ccccd7", "small border #ccccd7");
+Rounded("div.doclist","bottom","transparent", "#e0ecff", "small border #ccccd7");
+Rounded("div.leftplane","top", "transparent", "#CCCCFF","small border #ccccff");
+Rounded("div.leftplane","bottom","transparent","#EEEEFF","small border #ccccff");
+<%--request attribute "errors" is used to check if a document was just submitted --%>
+<% if ((request.getAttribute("errors") != null) || (mode != null) || (editDocumentNo != null)) { %> 
+showhide('addDocDiv', 'plusminusAddDocA')
+<%}%>
+}
+</script>
+
+<style type="text/css">
+div.leftplane {
+    width: 90%;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 3px;
+}
+
+div.leftplane h3 {
+    background-color: #ccccff;
+    font-variant: small-caps;
+    font-weight: bold;
+    font-size: 11px;
+    margin: 0px;
+    padding-left: 10px;
+}
+
+
+div.leftplane ul {
+    list-style: none;
+    list-style-type: none;
+    list-style-position: outside;
+    font-size: 12px;
+    padding: 0px;
+    margin: 0px;
+}
+    
+div.leftplane li {
+    padding-left: 5px;
+    white-space: nowrap;
+}
+
+div.doclist {
+    padding: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+div.documentLists {
+    padding-bottom: 2px;
+}
+table.docTable {
+    border: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+table.docTable td {
+    border-bottom: solid 1px #afafaf;
+    font-size: 12px;
+    margin-top: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+div.plusminus {
+    font-size: 10px; 
+    font-weight: bold;
+    padding-left: 5px;
+    padding-top: 0px;
+    height: 20px;
+}
+
+div.docheading {
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: 13px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+div.headerline {
+    background-color: #ccccd7;
+    vertial-align: middle;
+}
+
+div.topplane {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+/* Global */
+a { 
+    text-decoration: none; color: #7552ca;
+}
+a:hover {
+    text-decoration: none; color: #bd528e;
+}
+
+input {
+    border: 1px solid #7682b1;
+}
+
+</style>
+
 <script language="JavaScript">
-<!--
 var remote=null;
 function refresh() {
   document.location.reload();
@@ -80,15 +226,11 @@ function popPage(url) {
 }
 
 
-function checkDelete(url, c, u,n){
+function checkDelete(url, docDescription){
 // revision Apr 05 2004 - we now allow anyone to delete documents
-	// if (c == u || n == '<%=oscarVariables.getProperty("SUPERUSER")%>'){
-		if(confirm("<bean:message key="dms.documentReport.msgDelete"/>")) {
-			popPage(url);
-		}
-	//}else{
-	//	alert("<bean:message key="dms.documentReport.msgNotAllowed"/>");
-	//}
+	if(confirm("<bean:message key="dms.documentReport.msgDelete"/> " + docDescription)) {
+		window.location = url;
+	}
 }
 
 
@@ -96,168 +238,221 @@ function checkDelete(url, c, u,n){
 function setfocus() {
 	this.focus();
 }
-//-->
+
+function showhide(hideelement, button) {
+    var plus = "+";
+    var minus = "--";
+    if (document.getElementById) { // DOM3 = IE5, NS6
+        if (document.getElementById(hideelement).style.display == 'none') {
+              document.getElementById(hideelement).style.display = 'block';
+              document.getElementById(button).innerHTML = document.getElementById(button).innerHTML.replace(plus, minus);
+        }
+        else {
+              document.getElementById(hideelement).style.display = 'none';
+              document.getElementById(button).innerHTML = document.getElementById(button).innerHTML.replace(minus, plus);;
+        }
+    }
+}
+
+function checkSel(sel){
+  theForm = sel.form;
+  if ((theForm.docDesc.value == "") || (theForm.docDesc.value == "<%= defaultDesc%>")) {
+       theForm.docDesc.value = theForm.docType.value;
+       theForm.docDesc.focus();
+       theForm.docDesc.select();
+  }
+}
+
+function checkDefaultValue(object) {
+  //selectBoxType = object.form.docType
+  //var selectedType = selectBoxType.options[selectBoxType.selectedIndex].value;
+  if ((object.value == "<%= defaultDesc%>") || (object.value == "<%= defaultType%>")) {
+      object.value = "";
+  }
+}
+
 </script>
-<link rel="stylesheet" href="dms.css" />
+
 </head>
-<body  onLoad="setfocus()" background="../images/gray_bg.jpg" bgproperties="fixed" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
-   <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-      <tr bgcolor="#486ebd">
-         <th align='LEFT'><input type='button' name='print' value='<bean:message key="global.btnPrint"/>' onClick='window.print()'></th>
-         <th align='RIGHT'  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF"><bean:message key="dms.documentReport.msgDocReport"/> &nbsp;&nbsp;&nbsp;&nbsp;</font></th>
-         <th align='RIGHT'><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";><input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddDoc"/>" onclick="window.open('../dms/adddocument.jsp?function=<%=function%>&functionid=<%=functionid%>&creator=<%=request.getParameter("curUser")%>','', 'scrollbars=yes,resizable=yes,width=600,height=300')";><input type='button' name='close' value='<bean:message key="global.btnClose"/>' onClick='window.close()'></th>
+
+<body class="bodystyle">
+   
+  <table class="MainTable" id="scrollNumber1" name="encounterTable" style="margin: 0px;">
+      <tr class="MainTableRowTop">
+          <td class="MainTableTopRowLeftColumn" width="60px">
+             eDocs
+          </td>
+          <td class="MainTableTopRowRightColumn">
+              <table class="TopStatusBar">
+                  <tr>
+                     <td>Documents</td>
+                     <td>&nbsp;</td>
+                     <td style="text-align: right;">
+                         <a href="javascript: popupStart(300, 400, 'Help.jsp')">Help</a> | 
+                         <a href="javascript: popupStart(300, 400, 'About.jsp')">About</a> |
+                         <a href="javascript: popupStart(300, 400, 'License.jsp')">License</a>
+                     </td>
+                  </tr>
+              </table>
+          </td>
       </tr>
-   </table>
+      <tr>
+      <%--
+         <td class="MainTableLeftColumn" valign="top">
+             <div class="leftplane">
+                  <h3>&nbsp; Tags</h3>
+                  <div style="background-color: #EEEEFF;">
+                      <ul>
+                         <li>Tag 1</li>
+                         <li>Tag 2</li>
+                         <li>Tag 3</li>
+                      </ul>
+                  </div>
+             </div>
+         </td>
+         --%>
+         <td class="MainTableRightColumn" colspan="2" valign="top">
+             <html:form action="/dms/addEditDocument" method="POST" enctype="multipart/form-data">
+                <div class="topplane">
+                    <div class="docHeading" style="background-color: #d1d5bd;">
+                        <a id="plusminusAddDocA" href="javascript: showhide('addDocDiv', 'plusminusAddDocA');">
+                         + Add Document
+                        </a>
+                    </div>
+                    <div id="addDocDiv" class="addDocDiv" style="background-color: #f2f5e3; display: none;">
+                            <%-- Lists Errors --%>
+                            <% for (Enumeration errorkeys = errors.keys(); errorkeys.hasMoreElements();) {%>
+                            <font class="warning">Error: <bean:message key="<%=(String) errors.get(errorkeys.nextElement())%>"/></font><br/>
+                            <% } %>
+                            <input type="hidden" name="function" value="<%=formdata.getFunction()%>" size="20">
+                            <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
+                            <select name="docType" onchange="checkSel(this)"<% if (errors.containsKey("typemissing")) {%> class="warning"<%}%>>
+                               <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
+                               <%
+                               for (int i=0; i<doctypes.size(); i++) {
+                                  String doctype = (String) doctypes.get(i); %>
+                              <option value="<%= doctype%>"<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
+                             <%}%>
+                            </select>
 
+                            <input type="text" name="docDesc" size="30" value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"<% if (errors.containsKey("descmissing")) {%> class="warning"<%}%>>
+                            <input type="hidden" name="docCreator" value="<%=formdata.getDocCreator()%>" size="20">
+                            <input type="file" name="docFile" size="20"<% if (errors.containsKey("uploaderror")) {%> class="warning"<%}%>>
+                            <br/>
+                            <input type="hidden" name="mode" value="<% if (editDocumentNo != null) {out.print(editDocumentNo);} else {%>add<% } %>">
+                            <input type="SUBMIT" name="Submit" value="<% if (editDocumentNo != null) {%>Update<%} else {%>Add<%}%>" onclick="javascript: this.disabled=true">
+                            <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="javascript: window.location='?function=<%=module%>&functionid=<%=moduleid%>'">
+                            <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&creator=<%=user_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";>
+                    </div>
+               </div>
+             </html:form>
+           
+           <div class="documentLists">  
+              <div class="doclist">
+                   <div class="headerline">
+                         <div class="docHeading">
+                                <a id="plusminusPrivateA" href="javascript: showhide('privateDocsDiv', 'plusminusPrivateA');">
+                                  -- <%=moduleName%>'s Private Documents
+                                </a>
+                         </div>
+                   </div>
+                 <div id="privateDocsDiv" style="background-color: #f2f7ff;">
+                        <table id="privateDocs" class="docTable">
+                           <tr>
+                               <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
+                               <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
+                               <td width="17%"><b><bean:message key="dms.documentReport.msgCreator"/></b></td>
+                               <td width="21%"><b>Last Modified</b></td>
+                               <td width="13%"><b><bean:message key="dms.documentReport.msgAction"/></b></td>
+                           </tr>
 
+              <%
+                ArrayList privatedocs = EDocUtil.listDocs(module, moduleid, EDocUtil.PRIVATE);
 
+                for (int i=0; i<privatedocs.size(); i++) {
+                    EDoc curdoc = (EDoc) privatedocs.get(i);
+                    String dStatus = "";
+                    if ((curdoc.getStatus() + "").compareTo("A") == 0) dStatus="active";
+                    else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
+            %>
+                           <tr>
+                              <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(curdoc.getFileName())%>&type=<%=dStatus%>&doc_no=<%=curdoc.getDocId()%>', 480,480,1)"><%=curdoc.getDescription()%></td>
+                              <td width="15%"><%=curdoc.getType()%></td>
+                              <td width="17%"><%=curdoc.getCreatorName()%></td>
+                              <td width="21%"><%=curdoc.getDateTimeStamp()%></td>
+                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
+                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
+                           </tr>
 
-   <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7">
-      <tr valign="top">
-         <td rowspan="2" ALIGN="center" valign="middle">
+            <%   }
+                 if (privatedocs.size() == 0) { %>
+                           <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
+               <%}%>
+                        </table>
+                 </div>
+              </div>
+            <% if (module.compareTo("provider") == 0) { %>
+              <div class="doclist">
+                   <div class="headerline">
+                         <div class="docHeading">
+                                <a id="plusminusPublicA" href="javascript: showhide('publicDocs', 'plusminusPublicA');">
+                                  -- <bean:message key="dms.documentReport.msgShareFolder"/>
+                                </a>
+                         </div>
+                   </div>
 
-            <table width="100%" border="1" cellspacing="0" cellpadding="0">
-               <tr><td colspan='5'><b><%=functionString%>'s folder</b></td></td>
-               <tr>
-                   <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-                   <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-                   <td width="17%"><b><bean:message key="dms.documentReport.msgCreator"/></b></td>
-                   <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate" /></b></td>
-                   <td width="13%"><b><bean:message key="dms.documentReport.msgAction" /></b></td>
-               </tr>
+                   <div id="publicDocsDiv" style="background-color: #f2f7ff;">
+                        <table id="publicDocs" class="docTable">
+                            <tr>
+                              <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
+                              <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
+                              <td width="17%"><b><%=module.substring(0,1).toUpperCase()%><%=module.substring(1)%></b></td>
+                              <td width="21%"><b>Last Modified</b></td>
+                              <td width="13%"><b><bean:message key="dms.documentReport.msgActive"/></b></td>
+                            </tr>
+            <%
 
-  <%
+                ArrayList publicdocs = EDocUtil.listDocs(module, moduleid, EDocUtil.PUBLIC);
 
-    int count0 = 0;
-    if(request.getParameter("creator") != null) creator= request.getParameter("creator") ;
-    if(request.getParameter("docfilename") != null) docfilename= request.getParameter("docfilename") ;
-    if(request.getParameter("doctype") != null) doctype= request.getParameter("doctype") ;
-    if(request.getParameter("docdesc") != null) docdesc= request.getParameter("docdesc") ;
+                for (int i=0; i<publicdocs.size(); i++) {
+                    EDoc curdoc = (EDoc) publicdocs.get(i);
+                    String dStatus = "";
+                    if ((curdoc.getStatus() + "").compareTo("A") == 0) dStatus="active";
+                    else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
+              %>
+                           <tr>
+                              <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(curdoc.getFileName())%>&type=<%=dStatus%>&doc_no=<%=curdoc.getDocId()%>', 480,480,1)"><%=curdoc.getDescription()%></td>
+                              <td width="15%"><%=curdoc.getType()%></td>
+                              <td width="17%"><%=curdoc.getCreatorName()%></td>
+                              <td width="21%"><%=curdoc.getDateTimeStamp()%></td>
+                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
+                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
+                           </tr>
 
-
-    String[] param0 = new String[3];
-             param0[0] = function;
-             param0[1] = functionid;
-             param0[2] = "%"; // doctype;
-
-
-     ResultSet rslocal2 = null;
- 	  rslocal2 = apptMainBean.queryResults(param0, "match_document");
- 	  while(rslocal2.next()){
- 	     dispDesc = rslocal2.getString("docdesc");
- 	     dispFilename = rslocal2.getString("docfilename");
- 	     dispType = rslocal2.getString("doctype");
- 	     dispCreator = rslocal2.getString("doccreator");
- 	     dispDocNo = rslocal2.getString("document_no");
-        dispUpdatedate = rslocal2.getString("updatedatetime");
-        dispStatus = rslocal2.getString("status");
-        count0 = count0 + 1;
-
-        if (dispStatus.compareTo("A") == 0) dispStatus="active";
-        if (dispStatus.compareTo("H") == 0) dispStatus="html";
-   //   if (function.compareTo("demographic") == 0){
-
-
-        String creatorName = getFullName(apptMainBean,"provider",dispCreator);
-//  }
-%>
-               <tr>
-                  <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(dispFilename)%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></td>
-                  <td width="15%"><%=dispType%></td>
-                  <td width="17%"><%=creatorName%></td>
-                  <td width="21%"><%=dispUpdatedate%></td>
-                  <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>','<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; <a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a></td>
-               </tr>
-
-<%   }
-     if (count0 == 0) { %>
-               <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
-   <%}%>
+            <%   }
+                 if (publicdocs.size() == 0) { %>
+                            <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
+            <% } %>
             </table>
+           <%}%>
+               
+                        
+                   </div>
+              </div>
+
+            </div>
+            <div style="float: left; clear: left;">
+              <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
+              <input type="button" name="print" value='<bean:message key="global.btnPrint"/>' onClick="window.print()">
+            </div>
          </td>
       </tr>
-   </table>
-
-<%if (function.compareTo("provider") == 0){ %>
-   <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4E9E7">
-      <tr valign="top">
-         <td rowspan="2" ALIGN="center" valign="middle">
-            <table width="100%" border="1" cellspacing="0" cellpadding="0" >
-                <tr><td colspan='5'><b><bean:message key="dms.documentReport.msgShareFolder"/></b></td></tr>
-                <tr>
-                  <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-                  <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-                  <td width="17%"><b><%=function.substring(0,1).toUpperCase()%><%=function.substring(1)%></b></td>
-                  <td width="21%"><b><bean:message key="dms.documentReport.msgUpdate"/></b></td>
-                  <td width="13%"><b><bean:message key="dms.documentReport.msgActive"/></b></td>
-                </tr>
-   <% creator="%"; docfilename="";docdesc="";dispDesc=""; dispType=""; dispFunction=""; dispCreator=""; dispUpdatedate=""; dispFilename=""; dispStatus="";
-
-      int count = 0;
-      String[] param1 = new String[1];
-               param1[0] = function;
-
-
-      rslocal2 = null;
-   	rslocal2 = apptMainBean.queryResults(param1, "share_document");
-   	while(rslocal2.next()){
-   	   dispDesc = rslocal2.getString("docdesc");
-   	   dispFilename = rslocal2.getString("docfilename");
-   	   dispType = rslocal2.getString("doctype");
-         dispCreator = rslocal2.getString("doccreator");
-         dispUpdatedate = rslocal2.getString("updatedatetime");
-         dispDocNo = rslocal2.getString("document_no");
-         dispStatus = rslocal2.getString("status");
-         count = count + 1;
-
-         if (dispStatus.compareTo("A") == 0) dispStatus="active";
-         if (dispStatus.compareTo("H") == 0) dispStatus="html";
-
-	      ResultSet    rslocal = null;
-	      rslocal = apptMainBean.queryResults(dispCreator, "search_"+function+"_details");
-	     	while(rslocal.next()){
-	         proFirst = rslocal.getString("first_name");
-	         proLast = rslocal.getString("last_name");
-	    //   proOHIP = rslocal.getString("provider_no");
-         }
-
-  %>
-                <tr>
-                    <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(dispFilename)%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></td>
-                    <td width="15%"><%=dispType%></td>
-                    <td width="17%"><%=proLast%>, <%=proFirst%></td>
-                    <td width="21%"><%=dispUpdatedate%></td>
-                    <td width="13%"><a href=# onClick="checkDelete('documentDelete.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&functionid=<%=functionid%>','<%=dispCreator%>','<%=curUser_no%>', '<%=userlastname%>')"><bean:message key="dms.documentReport.btnDelete"/></a>&nbsp; &nbsp;<a href=# onClick="popPage('documentEdit.jsp?document_no=<%=dispDocNo%>&function=<%=function%>&doctype=<%=URLEncoder.encode(dispType)%>&desc=<%=URLEncoder.encode(dispDesc)%>')"><bean:message key="dms.documentReport.btnEdit"/></a>&nbsp; &nbsp;</td>
-                </tr>
-
-<%	   }
-	   if (count == 0) { %>
-
-                <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></td>
-<%	   }%>
-            </table>
-        </td>
-    </tr>
-</table>
-<%}
-apptMainBean.closePstmtConn(); %>
-
-<br>
-<form>
-  <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
-</form>
+      <tr>
+         <td colspan="2" class="MainTableBottomRowRightColumn">
+         </td>
+      </tr>
+  </table>
+   
+  
 </body>
 </html:html>
-<%!
-
-public String getFullName(oscar.AppointmentMainBean apptMainBean, String function, String functionid) throws Exception{
-    ResultSet rslocal = apptMainBean.queryResults(functionid, "search_"+function+"_details");
-    String proFirst = "";
-    String proLast = "";
-    if(rslocal.next()){
-       proFirst = rslocal.getString("first_name");
-       proLast = rslocal.getString("last_name");
-    }
-    return proLast+", "+proFirst ;
-}
-%>

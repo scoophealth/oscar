@@ -108,13 +108,7 @@ GregorianCalendar now=new GregorianCalendar();
 		 	           
 	     recordAffected = apptMainBean.queryExecuteUpdate(param2,"save_ctl_document");
    %>
-        <jsp:forward page='documentList.jsp' >
-           <jsp:param name="orderby" value='updatedatetime desc' />
-           <jsp:param name="creator" value='<%=doccreator%>' />
-           <jsp:param name="doctype" value='' />
-           <jsp:param name="docdesc" value='' />
-           <jsp:param name="docfilename" value='' />
-        </jsp:forward>
+        <jsp:forward page='closeWindow.html' />
    <%}
  }%> 
 </html:html>
