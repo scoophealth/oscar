@@ -170,6 +170,7 @@
     <form-bean name="receivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.ReceivePaymentActionForm" />
     <form-bean name="billingPreferencesActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingPreferencesActionForm" />
     <form-bean name="supServiceCodeAssocActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocActionForm" />
+    <form-bean name="eDocsAddEditDocument" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="ticklerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="tickler" type="org.caisi.model.Tickler"/>
 			<form-property name="filter" type="org.caisi.model.CustomFilter"/>
@@ -980,6 +981,9 @@
     <action input="/billing/CA/BC/billingSVCTrayAssoc.jsp" name="supServiceCodeAssocActionForm" path="/billing/CA/BC/supServiceCodeAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocAction" validate="false">
       <forward name="success" path="/billing/CA/BC/billingSVCTrayAssoc.jsp">
       </forward>
+    </action>
+    <action input="/dms/addeditdocument.jsp" name="eDocsAddEditDocument" path="/dms/addEditDocument" type="oscar.dms.actions.AddEditDocumentAction" scope="request" validate="false">
+        <forward name="finished" path="/dms/documentReport.jsp"></forward>
     </action>
  			<action path="/Tickler"
 				type="org.springframework.web.struts.DelegatingActionProxy"
