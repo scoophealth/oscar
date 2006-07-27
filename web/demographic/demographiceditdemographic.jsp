@@ -619,10 +619,10 @@ div.demographicWrapper {
                 </tr>
                 <tr><td>
                     <!--th><a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'demographicsummary.jsp?demographic_no=<%=rs.getString("demographic_no")%>')">Patient Summary</a> </th-->
-                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=rs.getString("demographic_no")%>&curUser=<%=curProvider_no%>')"><bean:message key="demographic.demographiceditdemographic.msgDocuments"/></a>
+                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(710,970,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=rs.getString("demographic_no")%>&curUser=<%=curProvider_no%>')"><bean:message key="demographic.demographiceditdemographic.msgDocuments"/></a>
                 </td></tr>
                 <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onClick="window.open('../dms/adddocument.jsp?function=demographic&functionid=<%=rs.getString("demographic_no")%>&creator=<%=curProvider_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=300');return false;"><bean:message key="demographic.demographiceditdemographic.btnAddDocument"/></a>
+                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(710,970,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=rs.getString("demographic_no")%>&curUser=<%=curProvider_no%>&mode=add')"><bean:message key="demographic.demographiceditdemographic.btnAddDocument"/></a>
                 </td></tr>
                 <tr><td>
                     <a href="../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message key="demographic.demographiceditdemographic.btnEForm"/></a>
