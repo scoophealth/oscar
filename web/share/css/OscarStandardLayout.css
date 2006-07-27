@@ -114,11 +114,11 @@ H3 {
 font.warning {
         color: #e26e6e;
 }
-input.warning {
+input.warning, select.warning, file.warning {
         border: 1px solid #e26e6e;
 }
 
-/*These are my additions************************/
+/*These are my additions*********************** */
 H4 {
     font-size: x-small;
     font-weight: bold;
@@ -259,7 +259,7 @@ TH {
 }
 .fieldBox {
     font-family: tahoma, helvetica;
-    background-color:"#ddddff";
+    background-color: #ddddff;
 }
 .note {
     font-size:80%; 
