@@ -446,7 +446,6 @@ public class EFormUtil {
            sql = "SELECT * FROM eform_data, eform_groups WHERE eform_data.demographic_no=" + demographic_no +
                  " AND eform_data.fid=eform_groups.fid AND eform_groups.group_name='" + groupName + "' ORDER BY " + sortBy;
        }
-       System.out.println("SQL ====" + sql);
        ResultSet rs = getSQL(sql);
        ArrayList results = new ArrayList();
        try {
