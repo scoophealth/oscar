@@ -686,6 +686,7 @@ CREATE TABLE document (
   doccreator varchar(30) NOT NULL DEFAULT '',
   updatedatetime TIMESTAMP DEFAULT NULL,
   status char(1) NOT NULL DEFAULT '',
+  contenttype varchar(60) NOT NULL DEFAULT '',
   PRIMARY KEY (document_no)
 
 );

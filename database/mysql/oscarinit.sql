@@ -530,6 +530,7 @@ CREATE TABLE document (
   doccreator varchar(30) NOT NULL default '',
   updatedatetime datetime default NULL,
   status char(1) NOT NULL default '',
+  contenttype varchar(60) NOT NULL default '',
   PRIMARY KEY  (document_no)
 ) TYPE=MyISAM;
 
