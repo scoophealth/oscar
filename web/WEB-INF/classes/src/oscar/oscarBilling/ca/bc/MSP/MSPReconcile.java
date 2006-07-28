@@ -1982,7 +1982,8 @@ public class MSPReconcile {
         if(historyRow!= null && historyRow.length > 1){
           b.amount = historyRow[0];
           String paymentDate = historyRow[1];
-          java.util.Date tempDate = this.fmt.parse(paymentDate);
+          SimpleDateFormat tempfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          java.util.Date tempDate = tempfmt.parse(paymentDate);
           b.paymentDate = this.fmt.format(tempDate);
         }
 
