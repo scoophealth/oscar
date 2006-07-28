@@ -28,8 +28,10 @@
 
 package oscar.oscarEncounter.oscarMeasurements.util;
 
+import java.util.Collection;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 
 /**
  *
@@ -41,9 +43,21 @@ public class MeasurementDSHelper {
     EctMeasurementsDataBean mdb = null;
     java.util.Date dob = null;
     String sex = null;
+    String demographic_no = null;
     boolean problem = false;
+    private boolean inRange =false;
     /** Creates a new instance of MeasurementDSHelper */
     public MeasurementDSHelper() {
+    }
+    
+    public MeasurementDSHelper(String demo){
+        System.out.println("sdfsdf ==" +demo);
+        demographic_no = demo;
+        DemographicData dd = new DemographicData();
+        dob = dd.getDemographicDOB(demo);
+        sex = dd.getDemographicSex(demo);
+   
+        System.out.println("goin out");
     }
     
     public MeasurementDSHelper(EctMeasurementsDataBean mdb) {
@@ -52,6 +66,20 @@ public class MeasurementDSHelper {
         dob = dd.getDemographicDOB(mdb.getDemo());
         sex = dd.getDemographicSex(mdb.getDemo());
         
+    }
+    
+    public boolean setMeasurement(String measurementType){
+        boolean setM = false;
+        System.out.println("demo "+this.demographic_no+" type "+measurementType);
+        EctMeasurementsDataBeanHandler mdbh = new  EctMeasurementsDataBeanHandler(this.demographic_no, measurementType);
+        Collection col = mdbh.getMeasurementsDataVector();
+        if (col.size() >0){
+            this.mdb = (EctMeasurementsDataBean) col.iterator().next();
+            setM = true;
+        }
+    
+        
+        return setM;
     }
     
     public boolean hasProblem(){
@@ -86,6 +114,7 @@ public class MeasurementDSHelper {
     }
     
     public double getDataAsDouble() {
+        System.out.println("dataAsDouble");
         double ret = -1;
         try{
            ret = Double.parseDouble(mdb.getDataField());
@@ -113,6 +142,14 @@ public class MeasurementDSHelper {
     public void setIndicationColor(String c){
         //System.out.println("SETTING COLOUR TO "+c);
         mdb.setIndicationColour(c);
+    }
+
+    public boolean isInRange() {
+        return inRange;
+    }
+
+    public void setInRange(boolean inRange) {
+        this.inRange = inRange;
     }
     
     
