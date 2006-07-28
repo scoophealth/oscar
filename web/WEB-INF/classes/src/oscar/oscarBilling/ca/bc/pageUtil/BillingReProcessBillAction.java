@@ -257,6 +257,7 @@ public class BillingReProcessBillAction
           dblAdj = dblAdj*-1.0;
         }
         dao.createBillingHistoryArchive(frm.getBillingmasterNo(), dblAdj, MSPReconcile.PAYTYPE_IA);
+        msp.settleIfBalanced(frm.getBillingmasterNo());
       }
       else {
         dao.createBillingHistoryArchive(billingmasterNo);
