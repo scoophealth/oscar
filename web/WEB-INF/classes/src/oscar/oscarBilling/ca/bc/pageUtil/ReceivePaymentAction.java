@@ -28,6 +28,7 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.data.*;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 
 /**
@@ -56,6 +57,8 @@ public class ReceivePaymentAction
 
 public void receivePayment(String billingMasterNo, double amount,String paymentType) {
    BillingHistoryDAO dao = new BillingHistoryDAO();
+   MSPReconcile msp = new MSPReconcile();
    dao.createBillingHistoryArchive(billingMasterNo,amount,paymentType);
+   msp.settleIfBalanced(billingMasterNo);
  }
 }

@@ -126,6 +126,7 @@ public class TeleplanCorrectionActionWCB
          dblAdj = dblAdj*-1.0;
        }
        dao.createBillingHistoryArchive(data.getId(), dblAdj, MSPReconcile.PAYTYPE_IA);
+       msp.settleIfBalanced(data.getId());
      }
      else {
        /**
