@@ -84,6 +84,10 @@ public class BillingSessionBean {
   private String facilitySubNum = "";
   private String paymentType;
   private String paymentTypeName;
+  private String endTimeHr;
+  private String endTimeMin;
+  private String startTimeHr;
+  private String startTimeMin;
 
   public String getIcbc_claim_no() {
     this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
@@ -635,8 +639,41 @@ public class BillingSessionBean {
   public String getPaymentTypeName() {
     return paymentTypeName;
   }
+
+  public String getEndTimeHr() {
+    return endTimeHr;
+  }
+
+  public String getEndTimeMin() {
+    return endTimeMin;
+  }
+
+  public String getStartTimeHr() {
+    return startTimeHr;
+  }
+
+  public String getStartTimeMin() {
+    return startTimeMin;
+  }
+
   public void setPaymentTypeName(String paymentTypeName) {
     this.paymentTypeName = paymentTypeName;
+  }
+
+  public void setEndTimeHr(String endTimeHr) {
+    this.endTimeHr = endTimeHr;
+  }
+
+  public void setEndTimeMin(String endTimeMin) {
+    this.endTimeMin = endTimeMin;
+  }
+
+  public void setStartTimeHr(String startTimeHr) {
+    this.startTimeHr = startTimeHr;
+  }
+
+  public void setStartTimeMin(String startTimeMin) {
+    this.startTimeMin = startTimeMin;
   }
 
   // public void estUserName(){
