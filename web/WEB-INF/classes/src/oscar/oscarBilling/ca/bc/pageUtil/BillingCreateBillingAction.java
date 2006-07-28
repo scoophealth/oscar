@@ -101,8 +101,11 @@ public class BillingCreateBillingAction
     bean.setVisitType(frm.getXml_visittype());
     bean.setVisitLocation(frm.getXml_location());
     bean.setServiceDate(frm.getXml_appointment_date());
-    bean.setStartTime(frm.getXml_starttime_hr() + frm.getXml_starttime_min());
-    bean.setEndTime(frm.getXml_endtime_hr() + frm.getXml_endtime_min());
+    bean.setStartTimeHr(frm.getXml_starttime_hr());
+    bean.setStartTimeMin(frm.getXml_starttime_min());
+    bean.setEndTimeHr(frm.getXml_endtime_hr());
+    bean.setEndTimeMin(frm.getXml_endtime_min());
+
     bean.setAdmissionDate(frm.getXml_vdate());
     bean.setBillingProvider(frm.getXml_provider());
     bean.setBillingPracNo(billform.getPracNo(frm.getXml_provider()));
