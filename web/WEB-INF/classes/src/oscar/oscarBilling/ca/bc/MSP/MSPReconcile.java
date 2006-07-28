@@ -92,7 +92,11 @@ public class MSPReconcile {
   public MSPReconcile() {
     initTeleplanMonetarySuffixes();
     fmt = new SimpleDateFormat(DATE_FORMAT);
-
+    if (!patchApplied()) {
+      migratePrivateTransactions();
+      updatePrivateBillState();
+      setPatched();
+    }
   }
 
   String propFile = "patch.properties";
