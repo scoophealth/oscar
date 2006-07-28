@@ -83,6 +83,14 @@
 
   String codes[] = {"O","P","N","X","T"};
   request.setAttribute("codes",codes);
+
+  //fixes bug where invoice number is null when
+  //bill changed to Private
+String[] billNoRow =  oscar.util.SqlUtils.getRow("select billing_no from billingmaster where billingmaster_no = " + billNo);
+if(billNoRow != null && billNoRow.length > 0){
+  request.setAttribute("invoiceNo",billNoRow[0]);
+}
+
 %>
 <!--
 /*
@@ -429,7 +437,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 	 <%
  if(BillType.equals("A")||BillType.equals("P")){
  %>
-	 <a href="#" onClick="popupPage(800,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=request.getParameter("invoiceNo")%>&receipt=yes')">View Invoice</a>
+	 <a href="#" onClick="popupPage(800,800, '../../../billing/CA/BC/billingView.do?billing_no=<%=request.getAttribute("invoiceNo")%>&receipt=yes')">View Invoice</a>
 <%
 }
 %>
