@@ -315,8 +315,8 @@ clear: left;
                    <fieldset >
                       <legend >Result</legend>
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str(((String)extraData.get("location")),"")%>"/> <br/>
+                         <label for="route">Route:</label> <input type="text" name="route"   value="<%=str(((String)extraData.get("route")),"")%>"/><br/>                                               
                          <label for="lot">Lot:</label> <input type="text" name="lot"  value="<%=str(((String)extraData.get("lot")),"")%>"/><br/>
-                         <label for="route">Route:</label> <input type="text" name="route"   value="<%=str(((String)extraData.get("route")),"")%>"/><br/>                      
                          <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str(((String)extraData.get("manufacture")),"")%>"/><br/>                      
                    </fieldset>
                    <fieldset >
