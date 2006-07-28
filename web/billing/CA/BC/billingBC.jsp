@@ -266,7 +266,7 @@ function gotoPrivate(){
 */
 function gotoPrivate(){
    if (document.BillingCreateBillingForm.xml_billtype.value == "Pri"){
-      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=Pri&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=Pri";
+      document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=Pri&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=oscar.util.UtilMisc.htmlEscape(bean.getPatientName())%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=Pri";
   }
    if (document.BillingCreateBillingForm.xml_billtype.value == "MSP"){
       document.location.href = "<%=request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/" %>billing.do?billRegion=<%=bean.getBillRegion()%>&billForm=<%=OscarProperties.getInstance().getProperty("default_view")%>&hotclick=&appointment_no=<%=bean.getApptNo()%>&demographic_name=<%=bean.getPatientName()%>&demographic_no=<%=bean.getPatientNo()%>&user_no=<%=bean.getCreator()%>&apptProvider_no=<%=bean.getApptProviderNo()%>&providerview=<%=bean.getProviderView()%>&appointment_date=<%=bean.getApptDate()%>&status=<%=bean.getApptStatus()%>&start_time=<%=bean.getApptStart()%>&bNewForm=1&billType=MSP";
@@ -513,13 +513,18 @@ function formPopupHide(){
   /**
    Generates a string list of option tags in numeric order
    **/
-  String generateNumericOptionList(int range) {
+  String generateNumericOptionList(int range,String selected) {
+    selected = selected == null?"":selected;
     StringBuffer buff = new StringBuffer();
     buff.append("<option value=''></option>");
     for (int i = 0; i < range; i++) {
       String prefix = i < 10 ? "0" : "";
       String val = prefix + String.valueOf(i);
-      buff.append("<option value='" + val + "'>" + val + "</option>");
+      String sel = "";
+      if(val.equals(selected)){
+        sel = "selected";
+      }
+      buff.append("<option value='" + val + "' " + sel + ">" + val + "</option>");
     }
     return buff.toString();
   }
@@ -849,10 +854,10 @@ function formPopupHide(){
               <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td>
-                    <select name="xml_starttime_hr"><%=generateNumericOptionList(24)%>                    </select>
+                    <select name="xml_starttime_hr"><%=generateNumericOptionList(24, bean.getStartTimeHr())%>                    </select>
                   </td>
                   <td>
-                    <select name="xml_starttime_min"><%=generateNumericOptionList(61)%>                    </select>
+                    <select name="xml_starttime_min"><%=generateNumericOptionList(61,bean.getStartTimeMin())%>                    </select>
                   </td>
                 </tr>
               </table>
@@ -866,10 +871,10 @@ function formPopupHide(){
               <table cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td>
-                    <select name="xml_endtime_hr"><%=generateNumericOptionList(24)%>                    </select>
+                    <select name="xml_endtime_hr"><%=generateNumericOptionList(24,bean.getEndTimeHr())%>                    </select>
                   </td>
                   <td>
-                    <select name="xml_endtime_min"><%=generateNumericOptionList(61)%>                    </select>
+                    <select name="xml_endtime_min"><%=generateNumericOptionList(61,bean.getEndTimeMin())%>                    </select>
                   </td>
                 </tr>
               </table>
