@@ -1,0 +1,141 @@
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version. *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ *  Jason Gallagher
+ *
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada   Creates a new instance of ReportEvaluator
+ *
+ * ReportEvaluator.java
+ *
+ * Created on June 17, 2006, 2:36 PM
+ *
+ */
+
+package oscar.oscarReport.ClinicalReports;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
+/**
+ *
+ * @author Jay
+ */
+public class ReportEvaluator {
+    
+    /** Creates a new instance of ReportEvaluator */
+    int denominatorCount = 0;
+    int numeratorCount = 0;
+    Denominator denominator = null;
+    Numerator numerator = null;
+    private ArrayList reportResultList = null;
+            
+    
+    public ReportEvaluator() {
+    }
+    
+    public void evaluate(Denominator deno, Numerator numer){
+        denominator = deno;
+        numerator = numer;
+        List demoList = deno.getDenominatorList();
+        denominatorCount = demoList.size();
+        setReportResultList(new ArrayList());
+        for (int i = 0; i < demoList.size(); i++){
+            String demo = (String) demoList.get(i);
+            boolean bool = numer.evaluate(demo);
+            //Object obj = numer.getOutputValues();  // PROBLEM IS THAT THIS WILL ALWAYS HAVE A VALUE
+            Hashtable h = new Hashtable();
+            h.put("_demographic_no",demo);
+            h.put("_report_result",new Boolean(bool));
+            getReportResultList().add(h);
+//            if (obj != null){
+//                getReportResultList().add(obj);
+//            }
+            if (bool){
+                numeratorCount++;
+            }
+            
+        }
+        
+    }
+    
+    public int getDenominatorCount(){
+        return denominatorCount;
+    }
+    
+    public int getNumeratorCount(){
+        return numeratorCount;
+    }
+    
+    public float getPercentage(){
+        float percentage = 0;
+        try{
+           percentage = ( (float) getNumeratorCount() / (float) getDenominatorCount() ) * 100;
+        }catch(java.lang.ArithmeticException arithEx){
+            arithEx.printStackTrace();
+            //request.setAttribute("divisionByZero",denominatorId);
+            percentage = 0;
+        }
+        return percentage;
+    }
+    
+    public int getPercentageInt(){
+        return new Float(getPercentage()).intValue();
+    }
+    
+    
+    //TODO:HACK for now! replace with something more flexible
+    public  String getCSV(){
+        String csv = null;
+        if (denominator.hasReplaceableValues()){
+            String providerNo = (String) denominator.getReplaceableValues().get("provider_no");
+            csv = "'"+providerNo+"','"+getNumeratorCount()+"','"+getDenominatorCount()+"','"+getPercentageInt()+"'";
+        }else{
+            csv ="'"+getNumeratorCount()+"','"+getDenominatorCount()+"','"+getPercentageInt()+"'";
+        }
+        
+        return csv;
+    }
+    
+    
+    public String getName(){
+        StringBuffer  name = new StringBuffer();
+        name.append(numerator.getNumeratorName());
+        name.append("/");
+        name.append(denominator.getDenominatorName());
+        if ( denominator.hasReplaceableValues()){
+           name.append(" (");          
+           String[] repKeys = denominator.getReplaceableKeys();
+           Hashtable repVals = denominator.getReplaceableValues();
+           for (int i = 0; i < repKeys.length;i++){
+               name.append(repKeys[i]+":"+repVals.get(repKeys[i]));
+           }
+           name.append(")");
+        }
+        
+        return  name.toString();
+    }
+
+    public ArrayList getReportResultList() {
+        return reportResultList;
+    }
+
+    public void setReportResultList(ArrayList reportResultList) {
+        this.reportResultList = reportResultList;
+    }
+}

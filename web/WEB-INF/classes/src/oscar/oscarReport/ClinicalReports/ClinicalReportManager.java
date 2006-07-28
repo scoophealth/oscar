@@ -1,0 +1,221 @@
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version. *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ *  Jason Gallagher
+ *
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada   Creates a new instance of Prevention
+ *
+ * ClinicalReportManager.java
+ *
+ * Created on June 17, 2006, 5:27 PM
+ *
+ */
+
+package oscar.oscarReport.ClinicalReports;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
+
+/**
+ *
+ * @author jay
+ */
+public class ClinicalReportManager {
+    
+    static ClinicalReportManager clinicalReportManager = new ClinicalReportManager();
+    
+    List numeratorList = null ; //new ArrayList();
+    List denominatorList = null ;// new ArrayList();
+    
+    Hashtable numeratorHash = null; // new Hashtable();
+    Hashtable denominatorHash = null; //new Hashtable();
+    
+    boolean loaded = false;
+    
+    /** Creates a new instance of ClinicalReportManager */
+    private ClinicalReportManager() {
+        
+    }
+    
+    static public ClinicalReportManager getInstance(){
+        
+        clinicalReportManager.loadReportsFromFile();
+        
+        return clinicalReportManager;
+    }
+    
+    public void addNumerator(Numerator n){
+        
+        if(!numeratorList.contains(n)){
+            numeratorList.add(n);
+        }
+        //if(!numeratorHash.contains(n)){
+        //    numeratorHash.put(n.getId(),n);
+        //}
+    }
+    
+    public void addNumerator(Hashtable n,String id){
+        
+        //if(!numeratorList.contains(n)){
+        //    numeratorList.add(n);
+        //}
+        if(!numeratorHash.contains(n)){
+            numeratorHash.put(id,n);
+        }
+    }
+   
+    public void addDenominator(Denominator d){
+        if(!denominatorList.contains(d)){
+            denominatorList.add(d);
+        }
+        if(!denominatorHash.contains(d)){
+            denominatorHash.put(d.getId(),d);
+        }
+    }
+    
+    
+    public List getDenominatorList(){
+        return denominatorList;
+    }
+    
+    public List getNumeratorList(){
+        return numeratorList;
+    }
+    
+    public Numerator getNumeratorById(String id){
+       //return (Numerator) numeratorHash.get(id);
+       Hashtable numerHash = (Hashtable) numeratorHash.get(id);
+       String type = (String) numerHash.get("type");
+       if (type != null && type.equals("SQL")){
+          SQLNumerator sqlN = new SQLNumerator();
+                            
+            sqlN.setNumeratorName((String) numerHash.get("numeratorName"));
+            sqlN.setId((String) numerHash.get("id"));
+            sqlN.setSQL((String) numerHash.get("sql"));
+            sqlN.parseOutputFields((String) numerHash.get("outputfields"));
+            System.out.println("output fields "+(String) numerHash.get("outputfields"));
+            System.out.println("create new sqlNumerator object");
+            return sqlN;
+       }
+       if (type != null && type.equals("DROOLS")){
+            DroolsNumerator droolsN = new DroolsNumerator();
+            droolsN.setNumeratorName((String) numerHash.get("numeratorName"));
+            droolsN.setId((String) numerHash.get("id"));
+            droolsN.setFile((String) numerHash.get("file"));
+            System.out.println("create new DroolsNumerator object");
+            return droolsN;
+       }
+       return null;
+    }
+    
+    public Denominator getDenominatorById(String id){
+        return (Denominator) denominatorHash.get(id);
+    }
+    
+    private void loadReportsFromFile(){
+        
+        if(!loaded){
+            
+            numeratorList = new ArrayList();
+            denominatorList = new ArrayList();
+            numeratorHash = new Hashtable();
+            denominatorHash = new Hashtable();
+        
+            
+            String[] flowsheetsArray = {"oscar/oscarReport/ClinicalReports/ClinicalReports.xml"
+                                        };             
+
+            for ( int i = 0; i < flowsheetsArray.length;i++){        
+                InputStream is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);
+
+                try{              
+                    SAXBuilder parser = new SAXBuilder();
+                    Document doc = parser.build(is);        
+                    Element root = doc.getRootElement();
+
+
+                    List meas = root.getChildren("Numerator");
+                    for (int j = 0; j < meas.size(); j++){
+                        Element e = (Element) meas.get(j);
+                        String type = e.getAttributeValue("type");
+                        if (type != null && type.equals("SQL")){
+                            SQLNumerator sqlN = new SQLNumerator();
+                            //TODO: What if one of the values is null;
+                            Hashtable h = new Hashtable();
+                            h.put("type",type);
+                            h.put("numeratorName",e.getAttributeValue("name"));
+                            h.put("id",e.getAttributeValue("id"));
+                            h.put("sql",e.getText());
+                            if(e.getAttributeValue("outputfields") != null){
+                            h.put("outputfields",e.getAttributeValue("outputfields"));
+                            }
+                            addNumerator(h,e.getAttributeValue("id"));
+                            
+                            
+                            sqlN.setNumeratorName(e.getAttributeValue("name"));
+                            sqlN.setId(e.getAttributeValue("id"));
+                            sqlN.setSQL(e.getText());
+                            sqlN.parseOutputFields(e.getAttributeValue("outputfields"));
+                            addNumerator(sqlN);
+                       }
+                       if (type != null && type.equals("DROOLS")){
+                            DroolsNumerator droolsN = new DroolsNumerator();
+                            droolsN.setNumeratorName(e.getAttributeValue("name"));
+                            droolsN.setId(e.getAttributeValue("id"));
+                            droolsN.setFile(e.getAttributeValue("file"));
+                            
+                            Hashtable h = new Hashtable();
+                            h.put("type",type);
+                            h.put("numeratorName",e.getAttributeValue("name"));
+                            h.put("id",e.getAttributeValue("id"));
+                            h.put("file",e.getAttributeValue("file"));
+                            addNumerator(h,e.getAttributeValue("id"));
+                            
+                            addNumerator(droolsN);
+                       }
+                   }
+
+
+                   meas = root.getChildren("Denominator");
+                   for (int j = 0; j < meas.size(); j++){
+                        Element e = (Element) meas.get(j);
+                        String type = e.getAttributeValue("type");
+                        if (type != null && type.equals("SQL")){
+                            SQLDenominator sqlD = new SQLDenominator();
+                            sqlD.setDenominatorName(e.getAttributeValue("name"));
+                            sqlD.setId(e.getAttributeValue("id"));
+                            sqlD.setSQL(e.getText());
+                            sqlD.parseReplaceValues(e.getAttributeValue("replaceKeys"));
+                            addDenominator(sqlD);
+                       }
+                   } 
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                loaded = true;
+            }
+        }
+    }
+    
+    
+}
