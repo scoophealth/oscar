@@ -52,12 +52,14 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
   //String providerview = request.getParameter("providerview")==null?curProvider_no:request.getParameter("providerview") ;
 %>
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.net.*,java.sql.*,oscar.*" errorPage="errorpage.jsp" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleHolidayBean" class="java.util.Hashtable" scope="session" />
 <jsp:useBean id="providerNameBean" class="oscar.Dict" scope="page" />
 <jsp:useBean id="myGrpBean" class="java.util.Properties" scope="page" />
 
 <%
+  String prov= ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   String resourcebaseurl = "http://resource.oscarmcmaster.org/oscarResource/";
   ResultSet rsgroup1 = apptMainBean.queryResults("resource_baseurl", "search_resource_baseurl");
   while (rsgroup1.next()) { 
@@ -245,7 +247,7 @@ function refresh1() {
                 if (vLocale.getCountry().equals("BR")) { %>  
                <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onmouseover="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
              <% } else {%>  
-				<a HREF="#" ONCLICK ="popupPage2('../billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>' onmouseover="window.status='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>';return true"><bean:message key="provider.appointmentprovideradminmonth.btnBilling"/></a></font></td>
+				<a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>' onmouseover="window.status='<bean:message key="provider.appointmentprovideradminmonth.msgGenBilling"/>';return true"><bean:message key="provider.appointmentprovideradminmonth.btnBilling"/></a></font></td>
              <% } %>
 
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
