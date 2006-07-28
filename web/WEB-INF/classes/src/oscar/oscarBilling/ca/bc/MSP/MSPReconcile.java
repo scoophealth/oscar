@@ -24,17 +24,16 @@ package oscar.oscarBilling.ca.bc.MSP;
  * Ontario, Canada
  */
 
+import java.io.*;
 import java.math.*;
 import java.sql.*;
+import java.text.*;
 import java.util.*;
 
-import oscar.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.util.*;
-import java.text.SimpleDateFormat;
-import java.io.*;
 
 public class MSPReconcile {
 
@@ -93,11 +92,7 @@ public class MSPReconcile {
   public MSPReconcile() {
     initTeleplanMonetarySuffixes();
     fmt = new SimpleDateFormat(DATE_FORMAT);
-    if (!patchApplied()) {
-      migratePrivateTransactions();
-      updatePrivateBillState();
-      setPatched();
-    }
+
   }
 
   String propFile = "patch.properties";
@@ -302,7 +297,7 @@ public class MSPReconcile {
 
       String sql =
           "SELECT teleplanS00.t_exp1,teleplanS00.t_exp1,teleplanS00.t_exp2,teleplanS00.t_exp3,teleplanS00.t_exp4,teleplanS00.t_exp5,teleplanS00.t_exp6,teleplanS00.t_exp7 FROM teleplanS00 " +
-          "where t_officeno = '" + forwardZero(billingMasterNo,7) + "'";
+          "where t_officeno = '" + forwardZero(billingMasterNo, 7) + "'";
       ResultSet rs = db.GetSQL(sql);
       while (rs.next()) {
         String exp[] = new String[7];
@@ -1271,7 +1266,7 @@ public class MSPReconcile {
   }
 
   /**
-   *
+   * Updates the specified bill with the
    * @param billingNo String
    * @param type String
    */
@@ -1533,7 +1528,8 @@ public class MSPReconcile {
         b.accountNo = rs.getString("b.provider_no");
         b.updateDate = rs.getString("update_date");
 
-        oscar.entities.Provider accountProvider = this.getProvider(b.accountNo,0);
+        oscar.entities.Provider accountProvider = this.getProvider(b.accountNo,
+            0);
         b.accountName = accountProvider.getFullName();
         b.payeeName = accountProvider.getInitials();
         b.providerFirstName = rs.getString("first_name");
@@ -1878,11 +1874,17 @@ public class MSPReconcile {
         b.acctInit = this.getProvider(b.userno, 0).getInitials();
         b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
         b.provName = this.getProvider(b.apptDoctorNo, 1).getInitials();
-        b.type = new Double(b.amount).doubleValue() > 0 ? "PMT" : "RFD";
 
-        billSearch.justBillingMaster.add(b.billMasterNo);
-        billSearch.list.add(b);
-        billSearch.count++;
+        double dblAmount =  new Double(b.amount).doubleValue();
+        b.type = dblAmount > 0 ? "PMT" : "RFD";
+        /**
+         * Ignore bill If the amount is 0
+         */
+        if(dblAmount != 0 ){
+          billSearch.justBillingMaster.add(b.billMasterNo);
+          billSearch.list.add(b);
+          billSearch.count++;
+        }
       }
     }
     catch (Exception e) {
@@ -1936,16 +1938,15 @@ public class MSPReconcile {
     String criteriaQry = createCriteriaString(account, payeeNo, providerNo,
                                               startDate,
                                               endDate,
-                                              false, false,
-                                              !excludePrivate, false,
+                                              true, true,
+                                              false, true,
                                               "");
-    String p = "SELECT b.billingtype,bm.billingmaster_no,bh.payment_type_id,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no,sum(bh.amount_received) as 'amt',max(creation_date) as 't_payment'" +
-        " FROM billing_history bh join billingmaster bm on bm.billingmaster_no = bh.billingmaster_no,billing b" +
+    String p = "SELECT b.billingtype,bm.billingmaster_no,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no" +
+        " FROM billingmaster bm,billing b" +
         " where bm.billing_no = b.billing_no " +
         criteriaQry +
         " and bm.billingstatus != 'D'" +
-        " group by billingmaster_no" +
-        " order by t_payment";
+        " group by billingmaster_no";
 
     billSearch.list = new ArrayList();
     DBHandler db = null;
@@ -1955,12 +1956,8 @@ public class MSPReconcile {
       rs = db.GetSQL(p);
       while (rs.next()) {
         MSPBill b = new MSPBill();
-        java.util.Date paymentDate = rs.getDate("t_payment");
-        b.paymentDate = this.fmt.format(paymentDate);
         b.billMasterNo = rs.getString("bm.billingmaster_no");
         b.billingtype = rs.getString("b.billingtype");
-        b.paymentMethod = rs.getString("payment_type_id");
-        b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
         b.demoNo = rs.getString("demographic_no");
         b.demoName = rs.getString("demographic_name");
         b.status = b.reason;
@@ -1968,17 +1965,34 @@ public class MSPReconcile {
         b.apptDoctorNo = rs.getString("apptProvider_no");
         b.userno = rs.getString("provider_no");
         b.payeeNo = rs.getString("payee_no");
-        b.accountName = this.getProvider(b.userno, 0).getFullName();
-        b.acctInit = this.getProvider(b.userno, 0).getInitials();
+
+        Provider actProv = this.getProvider(b.userno, 0);
+        b.accountName = actProv.getFullName();
+        b.acctInit = actProv.getInitials();
+
         b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
         b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
-        b.accountName = this.getProvider(b.userno, 0).getFullName();
-        b.acctInit = this.getProvider(b.userno, 0).getInitials();
-        b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
-        b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
-        b.amount = rs.getString("amt");
-        b.type = new Double(b.amount).doubleValue() > 0 ? "PMT" : "RFD";
-        billSearch.list.add(b);
+
+
+        String[] historyRow = SqlUtils.getRow("select sum(bh.amount_received) as 'amt',max(creation_date) as 'creation_date' from billing_history bh where billingmaster_no = " + b.billMasterNo);
+        if(historyRow!= null && historyRow.length > 1){
+          b.amount = historyRow[0];
+          String paymentDate = historyRow[1];
+          java.util.Date tempDate = this.fmt.parse(paymentDate);
+          b.paymentDate = this.fmt.format(tempDate);
+        }
+
+        String[] currStatus = SqlUtils.getRow("select payment_type_id from billing_history where billingmaster_no = " + b.billMasterNo + " order by creation_date desc limit 1" );
+        if(currStatus!=null && currStatus.length > 0){
+          b.paymentMethod = currStatus[0];
+          b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
+        }
+
+        double dblAmount = new Double(b.amount).doubleValue();
+        b.type = dblAmount > 0 ? "PMT" : "RFD";
+        if(dblAmount != 0){
+          billSearch.list.add(b);
+        }
       }
     }
     catch (Exception e) {
@@ -2456,4 +2470,27 @@ public class MSPReconcile {
     return amountPaid < amount;
   }
 
+  /**
+   * Sets the billmaster record status to SETTLED if an amount isn't owing and the bill.
+   * NOTE: Private bills are set to PAIDPRIVATE
+   *
+   * @param string String
+   */
+  public void settleIfBalanced(String billingmasterNo) {
+    String[] row = SqlUtils.getRow("SELECT b1.billingtype, b.bill_amount " +
+                                   "FROM billingmaster b, billing b1 " +
+                                   "WHERE b1.billing_no=b.billing_no " +
+                                   "AND billingmaster_no = " + billingmasterNo);
+    if (row != null && row.length > 0) {
+      double amountOwing = Double.parseDouble(this.getAmountOwing(billingmasterNo,row[1],row[0]));
+      if (amountOwing <= 0) {
+        if(this.BILLTYPE_PRI.equals(row[0])){
+          this.updateBillingMasterStatus(billingmasterNo,this.PAIDPRIVATE);
+        }
+        else{
+          this.updateBillingMasterStatus(billingmasterNo,this.SETTLED);
+        }
+      }
+    }
+  }
 }
