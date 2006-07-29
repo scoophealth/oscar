@@ -153,11 +153,11 @@ Clinical Reports
                 if (arrList != null){
                %>
                <a href="ClinicalReports.jsp?clear=yes">Clear</a>
-               <ul>
+               <ul style="list-style-type:square; margin-left:1px;padding-left:4px;padding-top:2px;margin-top:2px;">
                <%     for (int i = 0; i < arrList.size(); i++){
                         ReportEvaluator re = (ReportEvaluator) arrList.get(i);
                %>
-                    <li title="<%=re.getName()%>"><%=re.getNumeratorCount()%> / <%=re.getDenominatorCount()%></li>
+                    <li title="<%=re.getName()%>"><%=re.getNumeratorCount()%> / <%=re.getDenominatorCount()%>&nbsp;<a style="text-decoration:none;" target="_blank" href="reportExport.jsp?id=<%=i%>" >csv</a></li>
                <%   } %>
                </ul>
                <%}%>    
