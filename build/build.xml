@@ -108,7 +108,9 @@
      excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java"
      destdir="${classes_web}"
 	 deprecation="on"
-	 debug="on">
+	 debug="on"
+         target="1.4"
+         source="1.4">
    <classpath>
       <pathelement path="${classes_web}/"/>
       <path refid="classpath.path"/>
@@ -143,6 +145,9 @@
   </copy>  
   <copy todir="${classes_web}/oscar/oscarBilling/ca/bc/reports">
      <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarBilling/ca/bc/reports" includes="*.*" />
+  </copy>
+  <copy todir="${classes_web}/oscar/oscarReports/ClinicalReports">
+     <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarReport/ClinicalReports" includes="*.xml" />
   </copy>
  </target>
 
