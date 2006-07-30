@@ -139,5 +139,13 @@ public class EDoc extends TagObject {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-    
+    /**
+     *Returns true if document a PDF.
+     */
+    public boolean isPDF(){
+        if ( this.contentType != null && this.contentType.equalsIgnoreCase("application/pdf")){
+            return true;
+        }
+        return false;
+    }
 }
