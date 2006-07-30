@@ -202,6 +202,11 @@ input {
     border: 1px solid #7682b1;
 }
 
+input.tightCheckbox{
+    margin:0px;
+    padding:0px;
+}
+
 </style>
 
 <script language="JavaScript">
@@ -271,8 +276,17 @@ function checkDefaultValue(object) {
   }
 }
 
-</script>
+function checkAll(checkboxId,parentEle){
+   var f = document.getElementById(checkboxId);
+   var val = f.checked;
+   var chkList = document.getElementsByClassName('tightCheckbox',parentEle);
+   for (i =0; i < chkList.length; i++){
+      chkList[i].checked = val;
+   }
+}
 
+</script>
+<script src="../share/javascript/prototype.js" type="text/javascript"></script>
 </head>
 
 <body class="bodystyle">
@@ -346,6 +360,8 @@ function checkDefaultValue(object) {
                     </div>
                </div>
              </html:form>
+         
+           <html:form action="/dms/combinePDFs">
            
            <div class="documentLists">  
               <div class="doclist">
@@ -359,6 +375,7 @@ function checkDefaultValue(object) {
                  <div id="privateDocsDiv" style="background-color: #f2f7ff;">
                         <table id="privateDocs" class="docTable">
                            <tr>
+                               <td><input class="tightCheckbox" type="checkbox" id="pdfCheck1" onclick="checkAll('pdfCheck1','privateDocsDiv');"/></td>
                                <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
                                <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
                                <td width="17%"><b><bean:message key="dms.documentReport.msgCreator"/></b></td>
@@ -376,6 +393,13 @@ function checkDefaultValue(object) {
                     else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
             %>
                            <tr>
+                              <td>
+                                  <% if (curdoc.isPDF()){%>
+                                        <input class="tightCheckbox" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getDocId()%>"/>
+                                  <%}else{%>
+                                        &nbsp;
+                                  <%}%>
+                              </td>
                               <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(curdoc.getFileName())%>&type=<%=dStatus%>&doc_no=<%=curdoc.getDocId()%>', 480,480,1)"><%=curdoc.getDescription()%></td>
                               <td width="15%"><%=curdoc.getType()%></td>
                               <td width="17%"><%=curdoc.getCreatorName()%></td>
@@ -404,6 +428,7 @@ function checkDefaultValue(object) {
                    <div id="publicDocsDiv" style="background-color: #f2f7ff;">
                         <table id="publicDocs" class="docTable">
                             <tr>
+                              <td><input class="tightCheckbox" type="checkbox" id="pdfCheck2" onclick="checkAll('pdfCheck2','publicDocsDiv');"/></td>
                               <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
                               <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
                               <td width="17%"><b><%=module.substring(0,1).toUpperCase()%><%=module.substring(1)%></b></td>
@@ -421,6 +446,13 @@ function checkDefaultValue(object) {
                     else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
               %>
                            <tr>
+                              <td><%
+                                   if (curdoc.isPDF()){%>
+                                        <input class="tightCheckbox" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getDocId()%>"/>
+                                  <%}else{%>
+                                        &nbsp;
+                                  <%}%>
+                              </td>
                               <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(curdoc.getFileName())%>&type=<%=dStatus%>&doc_no=<%=curdoc.getDocId()%>', 480,480,1)"><%=curdoc.getDescription()%></td>
                               <td width="15%"><%=curdoc.getType()%></td>
                               <td width="17%"><%=curdoc.getCreatorName()%></td>
@@ -444,7 +476,9 @@ function checkDefaultValue(object) {
             <div style="float: left; clear: left;">
               <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
               <input type="button" name="print" value='<bean:message key="global.btnPrint"/>' onClick="window.print()">
+              <input type="submit" value="Combine PDFs"/>
             </div>
+           </html:form>
          </td>
       </tr>
       <tr>
