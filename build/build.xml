@@ -146,7 +146,7 @@
   <copy todir="${classes_web}/oscar/oscarBilling/ca/bc/reports">
      <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarBilling/ca/bc/reports" includes="*.*" />
   </copy>
-  <copy todir="${classes_web}/oscar/oscarReports/ClinicalReports">
+  <copy todir="${classes_web}/oscar/oscarReport/ClinicalReports">
      <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarReport/ClinicalReports" includes="*.xml" />
   </copy>
  </target>
