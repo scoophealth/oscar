@@ -99,7 +99,7 @@ public class EDocUtil extends SqlUtilBase {
     
     public static ArrayList listDocs(String module, String moduleid, String typeCondition) {
         //type condition (i.e. "='share'" or "!='share'", etc...
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no and c.module='" + module + "' AND c.module_id='" + moduleid + "' AND d.doctype" + typeCondition + " ORDER BY d.updatedatetime DESC";
+        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no and c.module='" + module + "' AND c.module_id='" + moduleid + "' AND d.doctype" + typeCondition + " ORDER BY d.updatedatetime DESC";
         ResultSet rs = getSQL(sql);
         ArrayList resultDocs = new ArrayList();
         try {
@@ -114,6 +114,7 @@ public class EDocUtil extends SqlUtilBase {
                 currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
+                currentdoc.setContentType(rsGetString(rs,"contenttype"));
                 resultDocs.add(currentdoc);
             }
             rs.close();
@@ -146,6 +147,25 @@ public class EDocUtil extends SqlUtilBase {
         }
         return currentdoc;
     }
+        
+    public  String getDocumentName(String id){
+       String filename = null;
+       try {
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          String sql = "select docfilename from document where document_no = '"+id+"'";
+          ResultSet rs = db.GetSQL(sql);
+          if (rs.next()){
+              filename = rs.getString("docfilename");
+          }
+          rs.close();
+          db.CloseConn();
+       }catch(SQLException e) { 
+           e.printStackTrace(); 
+       }
+       return filename;
+    }
+        
+        
     
     public static void deleteDocument(String documentNo) {
         String nowDate = getDmsDateTime();
