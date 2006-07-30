@@ -285,6 +285,25 @@ function checkAll(checkboxId,parentEle){
    }
 }
 
+function verifyChecks(t){
+   if ( t.docNo == null ){ 
+         alert("No documents selected");
+         return false;
+   }else{
+      var oneChecked = 0;
+      for ( i=0; i < t.docNo.length; i++){
+         if(t.docNo[i].checked){
+            oneChecked = oneChecked + 1;
+         }
+      }
+      if ( oneChecked == 0 ){
+         alert("No documents selected");
+         return false;   
+      }
+   }
+   return true;
+}
+
 </script>
 <script src="../share/javascript/prototype.js" type="text/javascript"></script>
 </head>
@@ -361,7 +380,7 @@ function checkAll(checkboxId,parentEle){
                </div>
              </html:form>
          
-           <html:form action="/dms/combinePDFs">
+           <html:form action="/dms/combinePDFs" onsubmit="return verifyChecks(this);">
            
            <div class="documentLists">  
               <div class="doclist">
