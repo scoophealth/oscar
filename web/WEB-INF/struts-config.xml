@@ -1000,6 +1000,11 @@
     <action input="/dms/addeditdocument.jsp" name="eDocsAddEditDocument" path="/dms/addEditDocument" type="oscar.dms.actions.AddEditDocumentAction" scope="request" validate="false">
         <forward name="finished" path="/dms/documentReport.jsp"></forward>
     </action>
+    <action input="/dms/addeditdocument.jsp" name="FrmForm" path="/dms/combinePDFs" type="oscar.dms.actions.CombinePDFAction" scope="request" validate="false">
+        <forward name="success" path="/dms/documentReport.jsp"></forward>
+    </action>
+ 
+    
  			<action path="/Tickler"
 				type="org.springframework.web.struts.DelegatingActionProxy"
 				parameter="method"
