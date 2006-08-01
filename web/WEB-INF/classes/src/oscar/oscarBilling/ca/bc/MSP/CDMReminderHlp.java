@@ -32,9 +32,20 @@ import oscar.oscarTickler.*;
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.text.*;
+import oscar.util.DateUtils;
+import oscar.util.SqlUtils;
 
 public class CDMReminderHlp {
   public CDMReminderHlp() {
+  }
+
+  private String[] createCDMCodeArray(List codes) {
+    String[] ret = new String[codes.size()];
+    for (int i = 0; i < codes.size(); i++) {
+      String[] row = (String[]) codes.get(i);
+      ret[i] = row[0];
+    }
+    return ret;
   }
 
   /**
@@ -44,57 +55,57 @@ public class CDMReminderHlp {
    */
   public void manageCDMTicklers(String[] alertCodes) throws Exception {
     //get all demographics with a problem that falls within CDM category
-    long getPatients = System.currentTimeMillis();
-    Hashtable cdms = (Hashtable)this.getCDMPatients(alertCodes);
-    long gotPatients = System.currentTimeMillis();
-    System.out.println("GET CDM PATIENTS" + (gotPatients - getPatients) * .001 +
-                       " " + new java.util.Date());
-    Enumeration demoNos = cdms.keys();
     TicklerCreator crt = new TicklerCreator();
-    String remString = "SERVICE CODE: 13050 Reminder";
     ServiceCodeValidationLogic lgc = new ServiceCodeValidationLogic();
-    DateFormat formatter = null;
-    long crtTick = System.currentTimeMillis();
+    List cdmServiceCodes = lgc.getCDMCodes();
+    alertCodes = createCDMCodeArray(cdmServiceCodes);
 
-    Vector cdmPatientNos = getCDMDemoNos(cdms.keys());
+    final String remString = "SERVICE CODE";
+    List cdmPatients = (List)this.getCDMPatients(alertCodes);
+    List cdmPatientNos = extractPatientNos(cdmPatients);
     crt.resolveTicklers(cdmPatientNos, remString);
-    while (demoNos.hasMoreElements()) {
-      String demoNo = (String) demoNos.nextElement();
-      String provNo = (String) cdms.get(demoNo);
-      String oldfmt = lgc.getDateofLast13050(demoNo);
-      java.util.Date last13050 = null;
-      long daysPast = -1;
-      if (oldfmt != "") {
-        formatter = new SimpleDateFormat("yyyyMMdd");
-        try {
-          last13050 = formatter.parse(oldfmt);
-          double differenceInseconds = ( (System.currentTimeMillis() -
-                                          last13050.getTime()) * .001);
 
-          daysPast = (long) differenceInseconds / 86400;
+    for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
+      String[] dxRecord = (String[]) iter.next();
+      String demoNo = dxRecord[0];
+      String provNo = dxRecord[1];
+      String dxcode = dxRecord[2];
+      for (Iterator iterb = cdmServiceCodes.iterator(); iterb.hasNext(); ) {
+        String[] cdmRecord = (String[]) iterb.next();
+        String cdmCode = cdmRecord[0]; //A declared cdm code
+        String cdmServiceCode = cdmRecord[1]; //The associated service code for the specified cdm
+        //if the specified patient has one one the specified chronic diseases
+        if (cdmCode.equals(dxcode)) {
+          /**
+           * Check If the associated service code was billed in the past calendar year
+           */
+          int daysPast = lgc.daysSinceCodeLastBilled(demoNo, cdmServiceCode);
+          if (daysPast > 365) {
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.add(cal.DAY_OF_YEAR,-daysPast);
+            java.util.Date dateLastBilled = cal.getTime();
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy");
+            String newfmt = formatter.format(dateLastBilled);
+            String message = remString + " " + cdmServiceCode + " - Last Billed On: " + newfmt;
+            crt.createTickler(demoNo, provNo, message);
+          }
+          else if (daysPast < 0) {
+            String message =
+                remString + " " + cdmServiceCode + " - Never billed for this patient";
+            crt.createTickler(demoNo, provNo, message);
+          }
         }
-        catch (ParseException ex) {
-          ex.printStackTrace();
-          throw new Exception();
-        }
-      }
-
-      if (daysPast > 365) {
-        String newfmt = "";
-        formatter = new SimpleDateFormat("dd-MMM-yy");
-        newfmt = formatter.format(last13050);
-        String message = remString + " - Last Billed On: " + newfmt;
-        crt.createTickler(demoNo, provNo, message);
-      }
-      else if (daysPast < 0) {
-        String message =
-            remString + " - Never billed for this patient";
-        crt.createTickler(demoNo, provNo, message);
       }
     }
-    long endTick = System.currentTimeMillis();
-    System.out.println("created tICKLERS" + (endTick - crtTick) * .001 + " " +
-                       new java.util.Date());
+  }
+
+  private List extractPatientNos(List cdmPatients) {
+    ArrayList cdmPatientNos = new ArrayList();
+    for (Iterator iter = cdmPatients.iterator(); iter.hasNext(); ) {
+      String[] item = (String[]) iter.next();
+      cdmPatientNos.add(item[0]);
+    }
+    return cdmPatientNos;
   }
 
   private Vector getCDMDemoNos(Enumeration demoNos) {
@@ -111,39 +122,15 @@ public class CDMReminderHlp {
    * @param provNo String
    * @return ArrayList
    */
-  private Map getCDMPatients(String[] codes) {
-    Hashtable lst = new Hashtable();
-    String qry = "SELECT distinct de.demographic_no,de.provider_no FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no " +
-        " and d.dxresearch_code in(";
-    for (int i = 0; i < codes.length; i++) {
-      qry += codes[i];
-      if (i < codes.length - 1) {
-        qry += ",";
-      }
-    }
-    qry += ") and status = 'A' and patient_status = 'AC'";
-    System.out.println("CDM Patients QRY=" + qry);
-    DBHandler db = null;
-    ResultSet rs = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL(qry);
-      while (rs.next()) {
-        lst.put(rs.getString(1), rs.getString(2));
-      }
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-        rs.close();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
-    }
-    return lst;
+  private List getCDMPatients(String[] codes) {
+    SqlUtils ut = new SqlUtils();
+
+    String qry = "SELECT de.demographic_no,de.provider_no,dxresearch_code FROM dxresearch d, demographic de WHERE de.demographic_no=d.demographic_no " +
+        " and d.dxresearch_code ";
+    qry += ut.constructInClauseString(codes, true);
+    qry +=
+        " and status = 'A' and patient_status = 'AC' order by de.demographic_no";
+    List lst = ut.getQueryResultsList(qry);
+    return lst == null ? new ArrayList() : lst;
   }
 }
