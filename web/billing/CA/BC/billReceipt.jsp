@@ -410,7 +410,8 @@ System.out.println(lnTotal);
 							  System.out.print(trans.size());
                               for (Iterator iter = trans.iterator(); iter.hasNext(); ) {
                                 oscar.entities.BillHistory item = (oscar.entities.BillHistory) iter.next();
-
+                                int paymentType = Integer.parseInt(item.getPaymentTypeId());
+                                if(paymentType!=10){
                                 double amtReceived = item.getAmountReceived();
 
                                 if(amtReceived != 0){
@@ -431,7 +432,7 @@ System.out.println(lnTotal);
 
                                 <td align="right"><%=java.text.NumberFormat.getCurrencyInstance().format(amtReceived*-1.0).replace('$',' ')%></td>
                               </tr>
-                            <%}}%>
+                            <%}}}%>
                       <%}                      %>
                         <tr>
                           <td colspan="7">&nbsp;</td>
