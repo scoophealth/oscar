@@ -128,6 +128,9 @@ public class BillingHistoryDAO {
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(qry);
+      if(null == history.getPaymentTypeId()){
+        throw new RuntimeException("Bill History: " + history.getBillingMasterNo() + " Payment type is '0'");
+      }
     }
     catch (SQLException ex) {
       ex.printStackTrace();
