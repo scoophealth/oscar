@@ -30,10 +30,13 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import oscar.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
+import oscar.util.SqlUtils;
+import java.util.List;
+import java.util.ArrayList;
 
 public final class BillingAction
     extends Action {
-
+  private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
                                HttpServletRequest request,
@@ -74,7 +77,7 @@ public final class BillingAction
         fillBean(request, bean);
 
         request.getSession().setAttribute("billingSessionBean", bean);
-        this.verifyLast13050(errors, request.getParameter("demographic_no"));
+        this.validateCodeLastBilled(request,errors, request.getParameter("demographic_no"));
       }
       else if ("true".equals(encounter)) {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
@@ -109,30 +112,42 @@ public final class BillingAction
   }
 
   /**
-   * Verifies if the specified patient requires CDM Counselling
-   * Adds a message to the ActionErrors object if the Patient requires counselling
-   * @param errors ActionErrors
-   * @param demo String
-   */
-  private void verifyLast13050(ActionErrors errors, String demo) {
-    ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
-    String[] cnlsCodes = OscarProperties.getInstance().getProperty(
-        "CDM_ALERTS").split(",");
-    if (vldt.needsCDMCounselling(demo, cnlsCodes)) {
-      int last13050 = vldt.daysSinceLast13050(demo);
-      if (last13050 > 365) {
-        errors.add("",
-                   new ActionError(
-                       "oscar.billing.CA.BC.billingBC.error.last13050",
-                       String.valueOf(last13050)));
-      }
-      else if (last13050 == -1) {
-        errors.add("",
-                   new ActionError(
-                       "oscar.billing.CA.BC.billingBC.error.neverBilled13050"));
-      }
-    }
+    * @todo Document Me
+    * @param errors ActionErrors
+    * @param demo Demographic
+    */
+   private void validateCodeLastBilled(HttpServletRequest request,ActionErrors errors, String demoNo) {
+     ArrayList patientDX = vldt.getPatientDxCodes(demoNo);
+     if (patientDX.contains("250")) {
+       validateCodeLastBilledHlp(errors, demoNo, "14050");
+     }
+     //if patient has HT
+     if (patientDX.contains("428")) {
+       validateCodeLastBilledHlp(errors, demoNo, "14051");
 
-  }
+     }
+     //if patient has chf
+     if (patientDX.contains("401")) {
+       validateCodeLastBilledHlp(errors, demoNo, "14052");
+     }
+     this.saveErrors(request,errors);
+   }
+   private void validateCodeLastBilledHlp(ActionErrors errors,
+                                         String demoNo, String code) {
+     int codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, code);
+     if (codeLastBilled > 365) {
+       errors.add("",
+                  new ActionMessage(
+                      "oscar.billing.CA.BC.billingBC.error.codeLastBilled",
+                      new String[] {String.valueOf(codeLastBilled), code}));
+     }
+     else if (codeLastBilled == -1) {
+       errors.add("",
+                  new ActionMessage(
+                      "oscar.billing.CA.BC.billingBC.error.codeNeverBilled",
+                      new String[] {code}));
+     }
+   }
+
 
 }
