@@ -926,7 +926,7 @@ public class MSPReconcile {
       retval = getTotalPaidFromS00(billingmaster_no);
     }
     else {
-      retval = getTotalPaidFromHistory(billingmaster_no);
+      retval = getTotalPaidFromHistory(billingmaster_no,true);
     }
     return retval;
   }
@@ -958,15 +958,19 @@ public class MSPReconcile {
   /**
    * Returns the sum total of payments that were received for the specified billingmaster record
    * from the billinghistory table.
-   * @param billingmaster_no String
+   * @param billingmaster_no String - The uid of the billingmaster record in question
+   * @param ignoreIA - Flag to ignore Internal Adjustments if set to true
    * @return double
    */
-  private double getTotalPaidFromHistory(String billingmaster_no) {
+  private double getTotalPaidFromHistory(String billingmaster_no,boolean ignoreIA) {
     //for private payments
     double retval = 0.0;
     String historyQry =
         "select  sum(amount_received) from billing_history where billingmaster_no = " +
         billingmaster_no;
+    if(ignoreIA){
+      historyQry += " and payment_type_id != " + this.PAYTYPE_IA;
+    }
     String[] histAmount = SqlUtils.getRow(historyQry);
     if (histAmount != null && histAmount.length > 0) {
       if (StringUtils.isNumeric(histAmount[0])) {
@@ -1656,7 +1660,7 @@ public class MSPReconcile {
         amountBilled : "0.0";
     double dbltBilled = new Double(amountBilled).doubleValue();
     //Gets the total 'paid' or adjusted for any type of bill from billinghistory
-    double totalPaidFromHistory = getTotalPaidFromHistory(billingMasterNo);
+    double totalPaidFromHistory = getTotalPaidFromHistory(billingMasterNo,false);
     double totalPaidFromS00 = 0.0;
     if (!this.BILLTYPE_PRI.equalsIgnoreCase(billingType)) {
       //bills of type msp,icbc,wcb
@@ -1945,13 +1949,14 @@ public class MSPReconcile {
                                               true, true,
                                               false, true,
                                               "");
-    String p = "SELECT b.billingtype,bm.billingmaster_no,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no" +
-        " FROM billingmaster bm,billing b" +
+    String p = "SELECT b.billingtype,bm.billingmaster_no,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no," +
+        " bh.creation_date,bh.amount_received,payment_type_id" +
+        " FROM billing_history bh left join billingmaster bm on bh.billingmaster_no = bm.billingmaster_no ,billing b" +
         " where bm.billing_no = b.billing_no " +
+        " and bh.payment_type_id != " + this.PAYTYPE_IA +  " " +
         criteriaQry +
-        " and bm.billingstatus != 'D'" +
-        " group by billingmaster_no";
-
+        " and bm.billingstatus != '" + this.DELETED + "'" ;
+    System.out.println(p);
     billSearch.list = new ArrayList();
     DBHandler db = null;
     ResultSet rs = null;
@@ -1977,23 +1982,11 @@ public class MSPReconcile {
         b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
         b.provName = this.getProvider(b.apptDoctorNo, 0).getInitials();
 
-
-        String[] historyRow = SqlUtils.getRow("select sum(bh.amount_received) as 'amt',max(creation_date) as 'creation_date' from billing_history bh where billingmaster_no = " + b.billMasterNo);
-        if(historyRow!= null && historyRow.length > 1){
-          b.amount = historyRow[0];
-          String paymentDate = historyRow[1];
-          SimpleDateFormat tempfmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          java.util.Date tempDate = tempfmt.parse(paymentDate);
-          b.paymentDate = this.fmt.format(tempDate);
-        }
-
-        String[] currStatus = SqlUtils.getRow("select payment_type_id from billing_history where billingmaster_no = " + b.billMasterNo + " order by creation_date desc limit 1" );
-        if(currStatus!=null && currStatus.length > 0){
-          b.paymentMethod = currStatus[0];
-          b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
-        }
-
-        double dblAmount = new Double(b.amount).doubleValue();
+        b.amount = rs.getString("amount_received");
+        b.paymentDate = this.fmt.format(rs.getDate("creation_date"));
+        b.paymentMethod = rs.getString("payment_type_id");
+        b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
+        double dblAmount = UtilMisc.safeParseDouble(b.amount);
         b.type = dblAmount > 0 ? "PMT" : "RFD";
         if(dblAmount != 0){
           billSearch.list.add(b);
@@ -2018,6 +2011,7 @@ public class MSPReconcile {
 
   /**
    * Returns a string description of a billing payment method
+   * @todo This should actually be a cached lookup map to improve performance
    * @param string String
    * @return String
    */
