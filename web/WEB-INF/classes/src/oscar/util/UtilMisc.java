@@ -26,221 +26,323 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.util;
+
 import java.io.IOException;
 import java.text.NumberFormat;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-public class UtilMisc {
-	public static String htmlEscape(String S) {
-		if (null == S)
-			return S;
-		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (c == '&')
-				sb.append("&amp;");
-			else if (c == '"')
-				sb.append("&quot;");
-			else if (c == '<')
-				sb.append("&lt;");
-			else if (c == '>')
-				sb.append("&gt;");
-			else if (c == '\'')
-				sb.append("&#39;");
-			else
-				sb.append(c);
-		}
-		return sb.toString();
-	}
-	public static String charEscape(String S, char a) {
-		if (null == S)
-			return S;
-		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (c == '\\')
-				sb.append("\\");
-			else if (c == a)
-				sb.append("\\" + a);
-			else
-				sb.append(c);
-		}
-		return sb.toString();
-	}
-	public static String htmlJsEscape(String S) {
-		if (null == S)
-			return S;
-		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (c == '&')
-				sb.append("&amp;");
-			else if (c == '"')
-				sb.append("&quot;");
-			else if (c == '<')
-				sb.append("&lt;");
-			else if (c == '>')
-				sb.append("&gt;");
-			else if (c == '\'')
-				sb.append("&#39;");
-			else if (c == '\n')
-				sb.append("<br>");
-			else
-				sb.append(c);
-		}
-		return sb.toString();
-	}
-	public static String nullMySQLEscape(String S) {
-		if (null == S)
-			return S;
-		else
-			return "'" + mysqlEscape(S) + "'";
-	}
-	public static String mysqlEscape(String S) {
-		if (null == S)
-			return S;
-		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (c == '\\')
-				sb.append("\\");
-			else if (c == '\'')
-				sb.append("\\'");
-			else if (c == '\n')
-				sb.append("\\r\\n");
-			else
-				sb.append(c);
-		}
-		return sb.toString();
-	}
-	public static String JSEscape(String S) {
-		if (null == S)
-			return S;
-		int N = S.length();
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (c == '"')
-				sb.append("&quot;");
-			else if (c == '\'')
-				sb.append("&#39;");
-			else if (c == '\n')
-				sb.append("<br>");
-			else
-				sb.append(c);
-		}
-		return sb.toString();
-	}
-	public static String toUpperLowerCase(String S) {
-		if (S == null)
-			return S;
-		S = S.trim().toLowerCase();
-		int N = S.length();
-		boolean bUpper = false;
-		StringBuffer sb = new StringBuffer(N);
-		for (int i = 0; i < N; i++) {
-			char c = S.charAt(i);
-			if (i == 0 || bUpper) {
-				sb.append(Character.toUpperCase(c));
-				bUpper = false;
-			} else {
-				sb.append(c);
-			}
-			if (c == ' ' || c == ',') {
-				bUpper = true;
-			}
-		}
-		return sb.toString();
-	}
-	public static String getShortStr(String s, String dflt, int nLimit) {
-		if (s == null)
-			s = dflt;
-		int nLength = s.length();
-		if (nLength > nLimit) {
-			s = s.substring(0, nLimit);
-		}
-		return s;
-	}
-	public static String encode64(String plainText) {
-		BASE64Encoder enc = new BASE64Encoder();
-		return enc.encode(plainText.getBytes());
-	}
-	public static String decode64(String encodedText) throws IOException {
-		BASE64Decoder decoder = new BASE64Decoder();
-		return new String(decoder.decodeBuffer(encodedText));
-	}
-	public static int BoolToInt(boolean Expression) {
-		return !Expression ? 0 : 1;
-	}
-	public static boolean IntToBool(int Expression) {
-		return Expression != 0;
-	}
-	public static String FloatToString(float value) {
-		Float f = new Float(value);
-		NumberFormat fmt = NumberFormat.getNumberInstance();
-		String s = fmt.format(f.doubleValue());
-		return s;
-	}
-	public static float StringToFloat(String value) {
-		return Float.parseFloat(value);
-	}
+import java.util.List;
+import java.util.ArrayList;
 
-        /**
-         * This method attempts to parse the provided String to a double value
-         * If the value is non-numeric a value of 0.0 is returned.
-         * @param value String
-         * @return double
-         */
-        public static double safeParseDouble(String value){
-          double ret = 0.0;
-          try {
-            ret = Double.parseDouble(value);
-          }
-          catch (Exception ex) {ex.printStackTrace();}
-          finally {
-            return ret;
-          }
+public class UtilMisc {
+  public static String htmlEscape(String S) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      if (c == '&') {
+        sb.append("&amp;");
+      }
+      else if (c == '"') {
+        sb.append("&quot;");
+      }
+      else if (c == '<') {
+        sb.append("&lt;");
+      }
+      else if (c == '>') {
+        sb.append("&gt;");
+      }
+      else if (c == '\'') {
+        sb.append("&#39;");
+      }
+      else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String charEscape(String S, char a) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      if (c == '\\') {
+        sb.append("\\");
+      }
+      else if (c == a) {
+        sb.append("\\" + a);
+      }
+      else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String htmlJsEscape(String S) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      if (c == '&') {
+        sb.append("&amp;");
+      }
+      else if (c == '"') {
+        sb.append("&quot;");
+      }
+      else if (c == '<') {
+        sb.append("&lt;");
+      }
+      else if (c == '>') {
+        sb.append("&gt;");
+      }
+      else if (c == '\'') {
+        sb.append("&#39;");
+      }
+      else if (c == '\n') {
+        sb.append("<br>");
+      }
+      else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String nullMySQLEscape(String S) {
+    if (null == S) {
+      return S;
+    }
+    else {
+      return "'" + mysqlEscape(S) + "'";
+    }
+  }
+
+  public static String mysqlEscape(String S) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      if (c == '\\') {
+        sb.append("\\");
+      }
+      else if (c == '\'') {
+        sb.append("\\'");
+      }
+      else if (c == '\n') {
+        sb.append("\\r\\n");
+      }
+      else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String JSEscape(String S) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      if (c == '"') {
+        sb.append("&quot;");
+      }
+      else if (c == '\'') {
+        sb.append("&#39;");
+      }
+      else if (c == '\n') {
+        sb.append("<br>");
+      }
+      else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String toUpperLowerCase(String S) {
+    if (S == null) {
+      return S;
+    }
+    S = S.trim().toLowerCase();
+    int N = S.length();
+    boolean bUpper = false;
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      if (i == 0 || bUpper) {
+        sb.append(Character.toUpperCase(c));
+        bUpper = false;
+      }
+      else {
+        sb.append(c);
+      }
+      if (c == ' ' || c == ',') {
+        bUpper = true;
+      }
+    }
+    return sb.toString();
+  }
+
+  public static String getShortStr(String s, String dflt, int nLimit) {
+    if (s == null) {
+      s = dflt;
+    }
+    int nLength = s.length();
+    if (nLength > nLimit) {
+      s = s.substring(0, nLimit);
+    }
+    return s;
+  }
+
+  public static String encode64(String plainText) {
+    BASE64Encoder enc = new BASE64Encoder();
+    return enc.encode(plainText.getBytes());
+  }
+
+  public static String decode64(String encodedText) throws IOException {
+    BASE64Decoder decoder = new BASE64Decoder();
+    return new String(decoder.decodeBuffer(encodedText));
+  }
+
+  public static int BoolToInt(boolean Expression) {
+    return!Expression ? 0 : 1;
+  }
+
+  public static boolean IntToBool(int Expression) {
+    return Expression != 0;
+  }
+
+  public static String FloatToString(float value) {
+    Float f = new Float(value);
+    NumberFormat fmt = NumberFormat.getNumberInstance();
+    String s = fmt.format(f.doubleValue());
+    return s;
+  }
+
+  public static float StringToFloat(String value) {
+    return Float.parseFloat(value);
+  }
+
+  /**
+   * This method attempts to parse the provided String to a double value
+   * If the value is non-numeric a value of 0.0 is returned.
+   * @param value String
+   * @return double
+   */
+  public static double safeParseDouble(String value) {
+    double ret = 0.0;
+    try {
+      ret = Double.parseDouble(value);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      return ret;
+    }
+  }
+
+  public static Object IIf(boolean Expression, Object TruePart,
+                           Object FalsePart) {
+    if (Expression) {
+      return TruePart;
+    }
+    else {
+      return FalsePart;
+    }
+  }
+
+  public static String joinArray(Object array[]) {
+    String ret = "";
+    for (int i = 0; i < array.length; i++) {
+      ret = String.valueOf(ret)
+          + String.valueOf(String.valueOf(String
+                                          .valueOf( (new StringBuffer("'")).
+          append(
+              String.valueOf(array[i])).append("'"))));
+      if (i < array.length - 1) {
+        ret = String.valueOf(String.valueOf(ret)).concat(", ");
+      }
+    }
+    return ret;
+  }
+
+  public static String replace(String expression, String searchFor,
+                               String replaceWith) {
+    if (expression != null) {
+      StringBuffer buf = new StringBuffer(expression);
+      int pos = -1;
+      do {
+        pos = buf.indexOf(searchFor, pos);
+        if (pos > -1) {
+          buf.delete(pos, pos + searchFor.length());
+          buf.insert(pos, replaceWith);
+          pos += replaceWith.length();
         }
-	public static Object IIf(boolean Expression, Object TruePart,
-			Object FalsePart) {
-		if (Expression)
-			return TruePart;
-		else
-			return FalsePart;
-	}
-	public static String joinArray(Object array[]) {
-		String ret = "";
-		for (int i = 0; i < array.length; i++) {
-			ret = String.valueOf(ret)
-					+ String.valueOf(String.valueOf(String
-							.valueOf((new StringBuffer("'")).append(
-									String.valueOf(array[i])).append("'"))));
-			if (i < array.length - 1)
-				ret = String.valueOf(String.valueOf(ret)).concat(", ");
-		}
-		return ret;
-	}
-	public static String replace(String expression, String searchFor,
-			String replaceWith) {
-		if (expression != null) {
-			StringBuffer buf = new StringBuffer(expression);
-			int pos = -1;
-			do {
-				pos = buf.indexOf(searchFor, pos);
-				if (pos > -1) {
-					buf.delete(pos, pos + searchFor.length());
-					buf.insert(pos, replaceWith);
-					pos += replaceWith.length();
-				} else {
-					return buf.toString();
-				}
-			} while (true);
-		} else {
-			return null;
-		}
-	}
+        else {
+          return buf.toString();
+        }
+      }
+      while (true);
+    }
+    else {
+      return null;
+    }
+  }
+
+/**
+   * not quite qorking yet
+  public static int[] range(int start, int stop, int step) {
+    stop = stop < step ? start : step++;
+    step = step < 1 ? 1 : step;
+    int arrayLen = (stop - start) / step + (stop - start) % step;
+    System.out.println(arrayLen);
+    int[] rangeArray = new int[arrayLen];
+    for (int i = 0; i < arrayLen; i++) {
+      if (i == 0) {
+        rangeArray[i] = start;
+      }
+      else {
+        rangeArray[i] = rangeArray[i - 1] + step;
+      }
+    }
+    return rangeArray;
+  }
+
+  public static int[] range(int start, int stop) {
+    return range(start, stop, 1);
+  }
+ }
+
+**/
+/**
+ * Returns an int array with the specified number of elements in
+ * @param length int
+ * @return int[]
+ */
+public static int[] range(int length) {
+    int[] rangeArray = new int[length];
+    for (int i = 0; i < length; i++) {
+      rangeArray[i] = i;
+    }
+    return rangeArray;
+  }
+
 }
