@@ -43,6 +43,7 @@ import java.math.BigDecimal;
 public class BillingCreateBillingAction
     extends Action {
   private ServiceCodeValidationLogic vldt = new ServiceCodeValidationLogic();
+  private ArrayList patientDX = new ArrayList(); //List of disease codes for current patient
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
                                HttpServletRequest request,
@@ -69,7 +70,7 @@ public class BillingCreateBillingAction
         getAttribute("billingSessionBean");
     DemographicData.Demographic demo = new DemographicData().getDemographic(
         bean.getPatientNo());
-
+    this.patientDX = vldt.getPatientDxCodes(demo.getDemographicNo());
     ArrayList billItem = bmanager.getDups2(service, other_service1,
                                            other_service2, other_service3,
                                            other_service1_unit,
@@ -144,25 +145,31 @@ public class BillingCreateBillingAction
     validateDxCodeList(bean, errors);
     validateServiceCodeTimes(billItem, frm, errors);
 
+    for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
+      BillingItem item = (BillingItem) iter.next();
+      validateCDMCodeConditions(errors, demo.getDemographicNo(),
+                                item.getServiceCode());
+    }
+
     if (!errors.isEmpty()) {
-      checkCDMStatus(request, errors, demo);
+      validateCodeLastBilled(request, errors, demo.getDemographicNo());
       return mapping.getInputForward();
     }
     validate00120(errors, demo, billItem, bean.getServiceDate());
     if (!errors.isEmpty()) {
-      checkCDMStatus(request, errors, demo);
+      validateCodeLastBilled(request, errors, demo.getDemographicNo());
       return mapping.getInputForward();
     }
     this.validatePatientManagementCodes(errors, demo, billItem,
                                         bean.getServiceDate());
     if (!errors.isEmpty()) {
-      checkCDMStatus(request, errors, demo);
+      validateCodeLastBilled(request, errors, demo.getDemographicNo());
       return mapping.getInputForward();
     }
 
     //We want this alert to show up regardless
     //However we don't necessarily want it to force the user to enter a bill
-    checkCDMStatus(request, errors, demo);
+    validateCodeLastBilled(request, errors, demo.getDemographicNo());
 
     String newWCBClaim = request.getParameter("newWCBClaim");
 
@@ -234,16 +241,6 @@ public class BillingCreateBillingAction
         }
       }
     }
-  }
-
-  private void checkCDMStatus(HttpServletRequest request, ActionErrors errors,
-                              DemographicData.Demographic demo) {
-    String[] cnlsCodes = OscarProperties.getInstance().getProperty(
-        "COUNSELING_CODES").split(",");
-    if (vldt.needsCDMCounselling(demo.getDemographicNo(), cnlsCodes)) {
-      verifyLast13050(errors, demo);
-    }
-    this.saveErrors(request, errors);
   }
 
   /**
@@ -399,19 +396,73 @@ public class BillingCreateBillingAction
     }
   }
 
-  private void verifyLast13050(ActionErrors errors,
-                               DemographicData.Demographic demo) {
-    int last13050 = vldt.daysSinceLast13050(demo.getDemographicNo());
-    if (last13050 > 365) {
-      errors.add("",
-                 new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.last13050",
-                     String.valueOf(last13050)));
+  private void validateCDMCodeConditions(ActionErrors errors, String demoNo,
+                                         String serviceCode) {
+    String cdmRulesQry =
+        "SELECT serviceCode,conditionCode FROM billing_service_code_conditions";
+    List cdmRules = SqlUtils.getQueryResultsList(cdmRulesQry);
+    List cdmSvcCodes =  vldt.getCDMCodes();
+    for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
+      String[] item = (String[]) iter.next();
+      if (patientDX.contains(item[0])) {
+        if(serviceCode.equals(item[1])){
+          validateCDMCodeConditionsHlp(errors, demoNo, cdmRules, item[1]);
+        }
+      }
     }
-    else if (last13050 == -1) {
+  }
+
+  private void validateCDMCodeConditionsHlp(ActionErrors errors, String demoNo,
+                                            List cdmRules, String code) {
+    for (Iterator iter = cdmRules.iterator(); iter.hasNext(); ) {
+      String[] item = (String[]) iter.next();
+      if (code.equals(item[0])) {
+        int days = vldt.daysSinceCodeLastBilled(demoNo, item[1]);
+        if (days >= 0 && days < 365) {
+          errors.add("",
+                     new ActionMessage(
+                         "oscar.billing.CA.BC.billingBC.error.codeCond",
+                         new String[] {item[0], item[1]}));
+
+        }
+      }
+    }
+  }
+
+  /**
+   * @todo Document Me
+   * @param errors ActionErrors
+   * @param demo Demographic
+   */
+  private void validateCodeLastBilled(HttpServletRequest request,
+                                      ActionErrors errors, String demoNo) {
+    List cdmSvcCodes = vldt.getCDMCodes();
+    for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
+      String[] item = (String[]) iter.next();
+      if (patientDX.contains(item[0])) {
+        validateCodeLastBilledHlp(errors, demoNo, item[1]);
+      }
+    }
+
+    this.saveErrors(request, errors);
+  }
+
+
+
+  private void validateCodeLastBilledHlp(ActionErrors errors,
+                                         String demoNo, String code) {
+    int codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, code);
+    if (codeLastBilled > 365) {
       errors.add("",
                  new ActionMessage(
-                     "oscar.billing.CA.BC.billingBC.error.neverBilled13050"));
+                     "oscar.billing.CA.BC.billingBC.error.codeLastBilled",
+                     new String[] {String.valueOf(codeLastBilled), code}));
+    }
+    else if (codeLastBilled == -1) {
+      errors.add("",
+                 new ActionMessage(
+                     "oscar.billing.CA.BC.billingBC.error.codeNeverBilled",
+                     new String[] {code}));
     }
   }
 }

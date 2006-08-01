@@ -48,6 +48,7 @@ import oscar.oscarEncounter.data.EctPatientData;
 import oscar.oscarEncounter.data.EChartDAO;
 import oscar.oscarEncounter.data.Echart;
 import oscar.entities.BillHistory;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public class BillingSaveBillingAction
     extends Action {
@@ -109,6 +110,9 @@ public class BillingSaveBillingAction
     }
     else if (bean.getBillingType().equals("WCB")) {
       billingAccountStatus = 'O';
+    }
+    else if(MSPReconcile.BILLTYPE_PRI.equals(bean.getBillingType())){
+     billingAccountStatus = 'P';
     }
 
     //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type

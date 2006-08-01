@@ -41,6 +41,7 @@ import java.math.BigDecimal;
 /**
  *
  * <p>Title:ServiceCodeValidationLogic </p>
+ * @todo Should be renamed to something more appropriate eg ServiceCodeDAO
  * <p>Description: </p>
  * <p>Responsible for service code validation
  * @author Joel Legris
@@ -193,7 +194,7 @@ public class ServiceCodeValidationLogic {
    * @param demoNo String
    * @return int
    */
-  public int daysSinceCodeLastBilled() {
+  public int daysSinceCodeLastBilled(String demoNo,String code) {
     int ret = 0;
     DBHandler db = null;
     ResultSet rs = null;
@@ -202,8 +203,8 @@ public class ServiceCodeValidationLogic {
       String qry =
           "select TO_DAYS(CURDATE()) - TO_DAYS(CAST(service_date as DATE)) " +
           "from billingmaster " +
-          "where demographic_no = '" + this.demographicNo + "' " +
-          "and billing_code = '" + this.serviceCode + "'" +
+          "where demographic_no = '" + demoNo + "' " +
+          "and billing_code = '" + code + "'" +
           " and billingstatus not in ('D','R','F')";
       rs = db.GetSQL(qry);
       int index = 0;
@@ -376,53 +377,6 @@ public class ServiceCodeValidationLogic {
      }
    }
 
-  /**
-   * Returns true if the patient state satisfies the following criteria:
-   * <p>   Patient is diagnosed with a chronic disease </p>
-   * <p>   Counselling has never been provided or the last time that counselling occurred exceeds 365 days </p>
-   * @param demoNo String
-   * @return boolean
-   */
-  public boolean needsCDMCounselling(String demoNo, String[] codes) {
-    boolean ret = false;
-    String qry = "SELECT * FROM dxresearch d WHERE d.demographic_no = " +
-        demoNo + " and dxresearch_code in(";
-
-    for (int i = 0; i < codes.length; i++) {
-      qry += codes[i];
-      if (i < codes.length - 1) {
-        qry += ",";
-      }
-    }
-    qry += ") and status = 'A'";
-    DBHandler db = null;
-    ResultSet rs = null;
-    try {
-      db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL(qry);
-      //If the patient has a Chronic Disease
-      if (rs.next()) {
-        int last13050 = daysSinceLast13050(demoNo);
-        if (last13050 > 365 || last13050 == -1) {
-          ret = true;
-        }
-      }
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    finally {
-      try {
-        db.CloseConn();
-        rs.close();
-      }
-      catch (SQLException ex1) {
-        ex1.printStackTrace();
-      }
-    }
-    return ret;
-
-  }
 
   /**
    * Returns a List
@@ -489,5 +443,25 @@ public class ServiceCodeValidationLogic {
 
   public String getServiceCode() {
     return serviceCode;
+  }
+
+  public ArrayList getPatientDxCodes(String demoNo) {
+    ArrayList codes = new ArrayList();
+    String qry =
+        "SELECT dxresearch_code FROM dxresearch d WHERE d.demographic_no = " +
+        demoNo + " and status = 'A'";
+    List patientDx = SqlUtils.getQueryResultsList(qry);
+    if (patientDx != null) {
+      for (Iterator iter = patientDx.iterator(); iter.hasNext(); ) {
+        String[] item = (String[]) iter.next();
+       codes.add(item[0]);
+      }
+    }
+    return codes;
+  }
+  public List getCDMCodes() {
+     List cdmSvcCodes = SqlUtils.getQueryResultsList(
+         "select cdmCode,serviceCode from billing_cdm_service_codes");
+     return cdmSvcCodes == null ? new ArrayList() : cdmSvcCodes;
   }
 }
