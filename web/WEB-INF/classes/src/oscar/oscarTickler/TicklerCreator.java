@@ -111,7 +111,6 @@ public class TicklerCreator {
   }
 
   public void resolveTickler(String demoNo, String remString) {
-    long crtTick = System.currentTimeMillis();
     String sql = "delete from tickler where demographic_no = '" +
         demoNo + "'" +
         " and message like '%" + remString + "%'" +
@@ -132,9 +131,6 @@ public class TicklerCreator {
         ex1.printStackTrace();
       }
     }
-    long endTick = System.currentTimeMillis();
-    System.out.println("Resolved a TICKLER" + (endTick - crtTick) * .001 + " " +
-                       new java.util.Date());
   }
 
   /**
@@ -143,8 +139,7 @@ public class TicklerCreator {
    * @param cdmPatientNos Vector
    * @param remString String
    */
-  public void resolveTicklers(Vector cdmPatientNos, String remString) {
-    long crtTick = System.currentTimeMillis();
+  public void resolveTicklers(List cdmPatientNos, String remString) {
     String qry = "delete from tickler where demographic_no in(";
     for (int i = 0; i < cdmPatientNos.size(); i++) {
       qry += cdmPatientNos.get(i);
@@ -172,9 +167,5 @@ public class TicklerCreator {
         ex1.printStackTrace();
       }
     }
-    long endTick = System.currentTimeMillis();
-    System.out.println("Resolved TICKLERS" + (endTick - crtTick) * .001 + " " +
-                       new java.util.Date());
-
   }
 }
