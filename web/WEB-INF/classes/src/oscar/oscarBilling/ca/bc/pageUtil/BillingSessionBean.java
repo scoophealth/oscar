@@ -84,10 +84,10 @@ public class BillingSessionBean {
   private String facilitySubNum = "";
   private String paymentType;
   private String paymentTypeName;
-  private String endTimeHr;
-  private String endTimeMin;
-  private String startTimeHr;
-  private String startTimeMin;
+  private String endTimeHr = "";
+  private String endTimeMin = "";
+  private String startTimeHr = "";
+  private String startTimeMin = "";
 
   public String getIcbc_claim_no() {
     this.icbc_claim_no = (null != this.icbc_claim_no) ? this.icbc_claim_no : "";
@@ -313,7 +313,7 @@ public class BillingSessionBean {
   }
 
   public String getStartTime() {
-    return this.xml_starttime;
+    return this.startTimeHr + this.startTimeMin;
   }
 
   public void setStartTime(String RHS) {
@@ -321,7 +321,7 @@ public class BillingSessionBean {
   }
 
   public String getEndTime() {
-    return this.xml_endtime;
+    return this.endTimeHr + this.endTimeMin;
   }
 
   public void setEndTime(String RHS) {

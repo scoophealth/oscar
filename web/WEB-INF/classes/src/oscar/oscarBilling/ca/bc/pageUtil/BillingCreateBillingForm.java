@@ -37,9 +37,9 @@ public final class BillingCreateBillingForm
   private String xml_visittype, xml_vdate;
   private String xml_other1, xml_other2, xml_other3;
   private String xml_other1_unit, xml_other2_unit, xml_other3_unit;
-  private String xml_refer1="", xml_refer2="", refertype1, refertype2;
+  private String xml_refer1 = "", xml_refer2 = "", refertype1, refertype2;
   private String xml_diagnostic_detail1, xml_diagnostic_detail2,
-      xml_diagnostic_detail3;
+  xml_diagnostic_detail3;
   private String xml_encounter = "9";
   private String notes = "", icbc_claim_no;
   private String correspondenceCode;
@@ -54,12 +54,11 @@ public final class BillingCreateBillingForm
   private String facilityNum = null;
   private String facilitySubNum = null;
   private String mode;
-  private String xml_endtime_hr;
-  private String xml_endtime_min;
-  private String xml_starttime_hr;
-  private String xml_starttime_min;
+  private String xml_endtime_hr = "";
+  private String xml_endtime_min = "";
+  private String xml_starttime_hr = "";
+  private String xml_starttime_min = "";
   String requestId;
-
 
   /**
    * The get method for the message String
@@ -110,7 +109,6 @@ public final class BillingCreateBillingForm
     System.out.println(this.hashCode());
     this.xml_billtype = xml_billtype;
   }
-
 
   /**
    * The get method for the message String
@@ -715,7 +713,7 @@ public final class BillingCreateBillingForm
     oscar.util.StringUtils ut = new oscar.util.StringUtils();
     if (this.xml_refer1.equals("") && this.xml_refer2.equals("")) {
       if (this.xml_other1 == null || xml_other1.equals("")) {
-        if(!"WCB".equals(xml_billtype)){
+        if (!"WCB".equals(xml_billtype)) {
           if (this.service == null || service.length == 0) {
             errors.add("",
                        new ActionMessage(
@@ -723,7 +721,7 @@ public final class BillingCreateBillingForm
           }
         }
       }
-      if(!"pri".equalsIgnoreCase(this.getXml_billtype())){
+      if (!"pri".equalsIgnoreCase(this.getXml_billtype())) {
         if ( (this.xml_diagnostic_detail1 == null ||
               xml_diagnostic_detail1.equals("")) &&
             (this.xml_diagnostic_detail2 == null ||
@@ -736,17 +734,23 @@ public final class BillingCreateBillingForm
         }
       }
     }
-/**
-    int starttime = new Integer(this.xml_starttime_hr + this.xml_starttime_min).intValue();
-    int endtime = new Integer(this.xml_endtime_hr + this.xml_endtime_min).intValue();
-    if(starttime>endtime||starttime==endtime){
-      errors.add("",
-                   new ActionMessage(
-                       "oscar.billing.CA.BC.billingBC.error.invalidtimeselection"));
+    /**
+        int starttime = new Integer(this.xml_starttime_hr + this.xml_starttime_min).intValue();
+        int endtime = new Integer(this.xml_endtime_hr + this.xml_endtime_min).intValue();
+        if(starttime>endtime||starttime==endtime){
+          errors.add("",
+                       new ActionMessage(
+     "oscar.billing.CA.BC.billingBC.error.invalidtimeselection"));
 
-    }
-**/
-request.setAttribute("loadFromSession","y");
+        }
+     **/
+    BillingSessionBean bean = (BillingSessionBean) request.getSession().
+        getAttribute("billingSessionBean");
+    bean.setStartTimeHr(this.getXml_starttime_hr());
+    bean.setStartTimeMin(this.getXml_starttime_min());
+    bean.setEndTimeHr(this.getXml_endtime_hr());
+    bean.setEndTimeMin(this.getXml_endtime_min());
+    request.setAttribute("loadFromSession", "y");
     return errors;
   }
   /**
