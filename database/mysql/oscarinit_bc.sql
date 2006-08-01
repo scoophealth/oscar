@@ -2355,3 +2355,30 @@ CREATE TABLE  billing_trayfees (
   billingServiceTrayNo varchar(10) NOT NULL default '0',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
+
+--
+-- Table structure for table `billing_service_code_conditions`
+--
+#defines basic conditions governing when a service code can be billed
+#The serviceCode can't be billed if the conditionCode was billed within 
+#the range specified by the conditionInterval
+#ATM, the conditionInterval defaults to the current year(0)
+CREATE TABLE billing_service_code_conditions (
+  id int(10) unsigned NOT NULL auto_increment,
+  serviceCode varchar(10) NOT NULL default '',
+  conditionCode varchar(10) NOT NULL default '',
+  conditionInterval int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+
+--
+-- Table structure for table `billing_cdm_service_codes`
+--
+#defines an association between a disease code and a corresponding service code
+CREATE TABLE billing_cdm_service_codes (
+  id int(10) unsigned NOT NULL auto_increment,
+  cdmCode varchar(5) NOT NULL default '',
+  serviceCode varchar(10) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;

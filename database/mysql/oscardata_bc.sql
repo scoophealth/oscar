@@ -23392,3 +23392,23 @@ update billing_msp_servicecode_times set billingservice_no = '01207' where id = 
 update billing_msp_servicecode_times set billingservice_no = '01210' where id = '13912';
 update billing_msp_servicecode_times set billingservice_no = '01211' where id = '13913';
 
+--
+-- Dumping data for table `billing_service_code_conditions`
+--
+
+INSERT INTO billing_service_code_conditions VALUES (1,'14050','13050',0);
+INSERT INTO billing_service_code_conditions VALUES (2,'14052','13050',0);
+INSERT INTO billing_service_code_conditions VALUES (3,'14052','14050',0);
+INSERT INTO billing_service_code_conditions VALUES (4,'14052','14051',0);
+INSERT INTO billing_service_code_conditions VALUES (5,'14051','13050',0);
+INSERT INTO billing_service_code_conditions VALUES (6,'14050','14050',0);
+INSERT INTO billing_service_code_conditions VALUES (7,'14051','14051',0);
+INSERT INTO billing_service_code_conditions VALUES (8,'14052','14052',0);
+
+--
+-- Dumping data for table `billing_cdm_service_codes`
+--
+
+INSERT INTO billing_cdm_service_codes VALUES (1,'401','14052');
+INSERT INTO billing_cdm_service_codes VALUES (2,'250','14050');
+INSERT INTO billing_cdm_service_codes VALUES (3,'428','14051');
