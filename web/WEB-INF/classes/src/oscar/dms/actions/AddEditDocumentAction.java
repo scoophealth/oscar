@@ -50,14 +50,14 @@ public class AddEditDocumentAction extends Action {
         } catch (Exception e) {
             request.setAttribute("errors", errors);
             request.setAttribute("completedForm", fm);
-            request.setAttribute("function", fm.getFunction());
-            request.setAttribute("functionid", fm.getFunctionId());
+            request.setAttribute("function", request.getParameter("function"));
+            request.setAttribute("functionid", request.getParameter("functionid"));
             e.printStackTrace();
             return;
         }
         request.setAttribute("errors", errors);  //Allows the JSP to check if the document was just submitted
-        request.setAttribute("function", fm.getFunction());
-        request.setAttribute("functionid", fm.getFunctionId());
+        request.setAttribute("function", request.getParameter("function"));
+        request.setAttribute("functionid", request.getParameter("functionid"));
     }
     
     private void editDocument(AddEditDocumentForm fm, HttpServletRequest request) {
@@ -90,14 +90,14 @@ public class AddEditDocumentAction extends Action {
         } catch (Exception e) {
             request.setAttribute("errors", errors);
             request.setAttribute("completedForm", fm);
-            request.setAttribute("function", fm.getFunction());
-            request.setAttribute("functionid", fm.getFunctionId());
+            request.setAttribute("function", request.getParameter("function"));
+            request.setAttribute("functionid", request.getParameter("functionid"));
             request.setAttribute("editDocumentNo", fm.getMode());
             e.printStackTrace();
             return;
         }
-        request.setAttribute("function", fm.getFunction());
-        request.setAttribute("functionid", fm.getFunctionId());
+        request.setAttribute("function", request.getParameter("function"));
+        request.setAttribute("functionid", request.getParameter("functionid"));
     }
     
     private void writeLocalFile(FormFile docFile, String fileName) throws Exception {

@@ -8,8 +8,8 @@ import oscar.util.*;
 import oscar.oscarTags.*;
 //all SQL statements here
 public class EDocUtil extends SqlUtilBase {
-    public static final String PUBLIC = "='share'";
-    public static final String PRIVATE = "!='share'";
+    public static final String PUBLIC = "public";
+    public static final String PRIVATE = "private";
     
     public static ArrayList getCurrentDocs(String tag) {
         //return TagUtil.getObjects(tag, "EDoc");
@@ -99,7 +99,13 @@ public class EDocUtil extends SqlUtilBase {
     
     public static ArrayList listDocs(String module, String moduleid, String typeCondition) {
         //type condition (i.e. "='share'" or "!='share'", etc...
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no and c.module='" + module + "' AND c.module_id='" + moduleid + "' AND d.doctype" + typeCondition + " ORDER BY d.updatedatetime DESC";
+        String sql = "";
+        System.out.println("condition: " + typeCondition);
+        if (typeCondition.equals(PUBLIC)) {
+            sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no and c.module='" + module + "' AND d.doctype='share' ORDER BY d.updatedatetime DESC";
+        } else {
+            sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no and c.module='" + module + "' AND c.module_id='" + moduleid + "' AND d.doctype!='share' ORDER BY d.updatedatetime DESC";
+        }
         ResultSet rs = getSQL(sql);
         ArrayList resultDocs = new ArrayList();
         try {

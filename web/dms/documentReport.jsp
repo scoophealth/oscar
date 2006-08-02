@@ -298,7 +298,9 @@ function verifyChecks(t){
       }
       if ( oneChecked == 0 ){
          alert("No documents selected");
-         return false;   
+         return false
+            request.setAttribute("functionid", request.getParameter("functionid"));
+            e.printStackTrace();;   
       }
    }
    return true;
@@ -359,6 +361,7 @@ function verifyChecks(t){
                             <% } %>
                             <input type="hidden" name="function" value="<%=formdata.getFunction()%>" size="20">
                             <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
+                            <input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
                             <select name="docType" onchange="checkSel(this)"<% if (errors.containsKey("typemissing")) {%> class="warning"<%}%>>
                                <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
                                <%
@@ -374,7 +377,7 @@ function verifyChecks(t){
                             <br/>
                             <input type="hidden" name="mode" value="<% if (editDocumentNo != null) {out.print(editDocumentNo);} else {%>add<% } %>">
                             <input type="SUBMIT" name="Submit" value="<% if (editDocumentNo != null) {%>Update<%} else {%>Add<%}%>" onclick="javascript: this.disabled=true">
-                            <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="javascript: window.location='?function=<%=module%>&functionid=<%=moduleid%>'">
+                            <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="javascript: window.location='documentReport.jsp?function=<%=module%>&functionid=<%=moduleid%>'">
                             <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&creator=<%=user_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";>
                     </div>
                </div>
@@ -423,8 +426,8 @@ function verifyChecks(t){
                               <td width="15%"><%=curdoc.getType()%></td>
                               <td width="17%"><%=curdoc.getCreatorName()%></td>
                               <td width="21%"><%=curdoc.getDateTimeStamp()%></td>
-                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
-                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
+                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
+                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
                            </tr>
 
             <%   }
@@ -476,8 +479,8 @@ function verifyChecks(t){
                               <td width="15%"><%=curdoc.getType()%></td>
                               <td width="17%"><%=curdoc.getCreatorName()%></td>
                               <td width="21%"><%=curdoc.getDateTimeStamp()%></td>
-                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
-                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=curdoc.getModule()%>&functionid=<%=curdoc.getModuleId()%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
+                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
+                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
                            </tr>
 
             <%   }
