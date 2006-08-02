@@ -36,8 +36,10 @@ public class EDoc extends TagObject {
     
     private void preliminaryProcessing() {
         this.dateTimeStamp = EDocUtil.getDmsDateTime();
-        String filenamePrefix = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyyMMdd") + UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HHmmss");
-        this.fileName = filenamePrefix + fileName;
+        if (fileName.length() != 0) {
+            String filenamePrefix = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyyMMdd") + UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HHmmss");
+            this.fileName = filenamePrefix + fileName;
+        }
     }
     
     //Getter/Setter methods...
