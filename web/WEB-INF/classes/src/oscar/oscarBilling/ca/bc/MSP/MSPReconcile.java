@@ -1646,7 +1646,7 @@ public class MSPReconcile {
    * Returns the dollar amount owing on a specific bill number
    * If the specified bill has an explanation code of 'HS'(Already paid) the amount is set to zero
    * If the bill is not private,"Internal Adjustments" are deducted from the total amount owing.
-   *
+   * @todo Refactor to return a double
    * @param billingMasterNo String - The UID of the bill in question
    * @param amountBilled String - The total amount of the bill
    * @return String
@@ -1694,7 +1694,9 @@ public class MSPReconcile {
         }
       }
     }
-    return String.valueOf(dbltBilled - totalPaidFromHistory - totalPaidFromS00);
+    double amtPaid = totalPaidFromHistory + totalPaidFromS00;
+    double dblAmountOwing = amtPaid < 0 ? dbltBilled + amtPaid : dbltBilled - amtPaid;
+    return new Double(dblAmountOwing).toString();
   }
 
   public String getAdjustmentCodeByBillNo(String billNo) {
@@ -2481,7 +2483,8 @@ public class MSPReconcile {
                                    "WHERE b1.billing_no=b.billing_no " +
                                    "AND billingmaster_no = " + billingmasterNo);
     if (row != null && row.length > 0) {
-      double amountOwing = Double.parseDouble(this.getAmountOwing(billingmasterNo,row[1],row[0]));
+      String strOwing = this.getAmountOwing(billingmasterNo,row[1],row[0]);
+      double amountOwing = Double.parseDouble(strOwing);
       if (amountOwing <= 0) {
         if(this.BILLTYPE_PRI.equals(row[0])){
           this.updateBillingMasterStatus(billingmasterNo,this.PAIDPRIVATE);
