@@ -34,8 +34,8 @@
 
 BODY
 {
-    FONT-SIZE: Normal;
-    FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+    font-size: medium;
+    font-family: Verdana, Tahoma, Arial, sans-serif;
 }
 
 TABLE
@@ -93,9 +93,9 @@ H3 {
 
 .RowTop
 {
-    font-size:8pt;
-    font-variant:small-caps;
-    font:bold;
+    font-size: 8pt;
+    font-variant: small-caps;
+    font-weight: bold;
 }
 
 .ControlPushButton
@@ -138,7 +138,7 @@ TH {
 
 .doctorInfo {
     font-size: x-small;
-    text-decoration: bold;
+    font-weight: bold;
     background-color: #A39FC4;
 }
 
@@ -149,9 +149,9 @@ TH {
 
 .patientInfo {
     font-size: small;
-    text-decoration: bold;
+    font-weight: bold;
     background-color: #CBC9E0;
-    //#CBC9E0;
+    /*#CBC9E0;*/
 }
 
 .ControlTextarea
