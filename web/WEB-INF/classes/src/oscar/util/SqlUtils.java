@@ -1014,7 +1014,9 @@ public class SqlUtils {
           ex1.printStackTrace();
         }
       }
-
+      if(records!=null){
+        records = records.isEmpty()?null:records;
+      }
       return records;
     }
   }
