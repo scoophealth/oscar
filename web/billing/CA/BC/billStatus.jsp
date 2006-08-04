@@ -642,8 +642,7 @@ billTypes = "%";
     <td align="center" class="bCellData" <%=isBadVal(incorrectVal)%> ><%=nf.format(Double.parseDouble(b.amount))%> </td>
     <td align="center" class="bCellData" ><%=nf.format(pAmount)%> </td>
     <%
-    String amountOwing = msp.getAmountOwing(b.billMasterNo,b.amount,b.billingtype);
-    double dblAmtOwed = Double.parseDouble(amountOwing);
+    double dblAmtOwed = msp.getAmountOwing(b.billMasterNo,b.amount,b.billingtype);
     BigDecimal amtOwed = new BigDecimal(dblAmtOwed).setScale(2, BigDecimal.ROUND_HALF_UP);
     owedTotal = owedTotal.add(amtOwed);
 
