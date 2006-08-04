@@ -25,6 +25,8 @@
 package oscar.entities;
 
 import java.util.*;
+import java.math.BigDecimal;
+import oscar.util.UtilMisc;
 
 /**
  * BillHistory  represents an archive of a modification event on a specific line(BillingMaster Record) of a Bill
@@ -94,11 +96,11 @@ public class BillHistory {
   }
 
   public void setAmount(double amount) {
-    this.amount = amount;
+    this.amount = UtilMisc.toCurrencyDouble(amount);
   }
 
   public void setAmountReceived(double amountReceived) {
-    this.amountReceived = amountReceived;
+    this.amountReceived = UtilMisc.toCurrencyDouble(amountReceived);
   }
 
   public void setPaymentTypeId(String paymentTypeId) {
