@@ -926,7 +926,7 @@ public class MSPReconcile {
       retval = getTotalPaidFromS00(billingmaster_no);
     }
     else {
-      retval = getTotalPaidFromHistory(billingmaster_no,true);
+      retval = getTotalPaidFromHistory(billingmaster_no, true);
     }
     return retval;
   }
@@ -962,13 +962,14 @@ public class MSPReconcile {
    * @param ignoreIA - Flag to ignore Internal Adjustments if set to true
    * @return double
    */
-  private double getTotalPaidFromHistory(String billingmaster_no,boolean ignoreIA) {
+  private double getTotalPaidFromHistory(String billingmaster_no,
+                                         boolean ignoreIA) {
     //for private payments
     double retval = 0.0;
     String historyQry =
         "select  sum(amount_received) from billing_history where billingmaster_no = " +
         billingmaster_no;
-    if(ignoreIA){
+    if (ignoreIA) {
       historyQry += " and payment_type_id != " + this.PAYTYPE_IA;
     }
     String[] histAmount = SqlUtils.getRow(historyQry);
@@ -1588,8 +1589,9 @@ public class MSPReconcile {
         }
 
         else if (this.REP_INVOICE.equals(type)) {
-          b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
+          double dblAmtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
+          b.amtOwing = String.valueOf(dblAmtOwing);
           //append the explanatory code to end of reason field
           String expString = c12.getProperty(b.billing_no) != null ?
               c12.getProperty(b.billing_no) : "";
@@ -1608,8 +1610,9 @@ public class MSPReconcile {
          * we need to get the difference between what was billed and what was paid
          **/
         if (type.equals(this.REP_ACCOUNT_REC)) {
-          b.amtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
+          double dblAmtOwing = this.getAmountOwing(b.billMasterNo, b.amount,
                                            b.billingtype);
+          b.amtOwing = String.valueOf(dblAmtOwing);
           skipBill = new Double(b.amtOwing).doubleValue() == 0.0;
         }
 
@@ -1651,7 +1654,7 @@ public class MSPReconcile {
    * @param amountBilled String - The total amount of the bill
    * @return String
    */
-  public String getAmountOwing(String billingMasterNo, String amountBilled,
+  public double getAmountOwing(String billingMasterNo, String amountBilled,
                                String billingType) {
 
     DBHandler db = null;
@@ -1660,7 +1663,7 @@ public class MSPReconcile {
         amountBilled : "0.0";
     double dbltBilled = new Double(amountBilled).doubleValue();
     //Gets the total 'paid' or adjusted for any type of bill from billinghistory
-    double totalPaidFromHistory = getTotalPaidFromHistory(billingMasterNo,false);
+    double totalPaidFromHistory = getTotalPaidFromHistory(billingMasterNo, false);
     double totalPaidFromS00 = 0.0;
     if (!this.BILLTYPE_PRI.equalsIgnoreCase(billingType)) {
       //bills of type msp,icbc,wcb
@@ -1695,8 +1698,10 @@ public class MSPReconcile {
       }
     }
     double amtPaid = totalPaidFromHistory + totalPaidFromS00;
-    double dblAmountOwing = amtPaid < 0 ? dbltBilled + amtPaid : dbltBilled - amtPaid;
-    return new Double(dblAmountOwing).toString();
+    double dblAmountOwing = amtPaid < 0 ? dbltBilled + amtPaid :
+        dbltBilled - amtPaid;
+    dblAmountOwing = UtilMisc.toCurrencyDouble(dblAmountOwing);
+    return dblAmountOwing;
   }
 
   public String getAdjustmentCodeByBillNo(String billNo) {
@@ -1885,12 +1890,15 @@ public class MSPReconcile {
         b.payeeName = this.getProvider(b.payeeNo, 1).getInitials();
         b.provName = this.getProvider(b.apptDoctorNo, 1).getInitials();
 
-        double dblAmount =  new Double(b.amount).doubleValue();
+        double dblAmount = new Double(b.amount).doubleValue();
+        /**
+         * @todo Get rid of hard coded strings
+         */
         b.type = dblAmount > 0 ? "PMT" : "RFD";
         /**
          * Ignore bill If the amount is 0
          */
-        if(dblAmount != 0 ){
+        if (dblAmount != 0) {
           billSearch.justBillingMaster.add(b.billMasterNo);
           billSearch.list.add(b);
           billSearch.count++;
@@ -1955,9 +1963,9 @@ public class MSPReconcile {
         " bh.creation_date,bh.amount_received,payment_type_id" +
         " FROM billing_history bh left join billingmaster bm on bh.billingmaster_no = bm.billingmaster_no ,billing b" +
         " where bm.billing_no = b.billing_no " +
-        " and bh.payment_type_id != " + this.PAYTYPE_IA +  " " +
+        " and bh.payment_type_id != " + this.PAYTYPE_IA + " " +
         criteriaQry +
-        " and bm.billingstatus != '" + this.DELETED + "'" ;
+        " and bm.billingstatus != '" + this.DELETED + "'";
     System.out.println(p);
     billSearch.list = new ArrayList();
     DBHandler db = null;
@@ -1990,7 +1998,7 @@ public class MSPReconcile {
         b.setPaymentMethodName(this.getPaymentMethodDesc(b.paymentMethod));
         double dblAmount = UtilMisc.safeParseDouble(b.amount);
         b.type = dblAmount > 0 ? "PMT" : "RFD";
-        if(dblAmount != 0){
+        if (dblAmount != 0) {
           billSearch.list.add(b);
         }
       }
@@ -2483,14 +2491,53 @@ public class MSPReconcile {
                                    "WHERE b1.billing_no=b.billing_no " +
                                    "AND billingmaster_no = " + billingmasterNo);
     if (row != null && row.length > 0) {
-      String strOwing = this.getAmountOwing(billingmasterNo,row[1],row[0]);
+      double dblAmtOwing = this.getAmountOwing(billingmasterNo, row[1], row[0]);
+      String strOwing = String.valueOf(dblAmtOwing);
       double amountOwing = Double.parseDouble(strOwing);
       if (amountOwing <= 0) {
-        if(this.BILLTYPE_PRI.equals(row[0])){
-          this.updateBillingMasterStatus(billingmasterNo,this.PAIDPRIVATE);
+        if (this.BILLTYPE_PRI.equals(row[0])) {
+          this.updateBillingMasterStatus(billingmasterNo, this.PAIDPRIVATE);
         }
-        else{
-          this.updateBillingMasterStatus(billingmasterNo,this.SETTLED);
+        else {
+          this.updateBillingMasterStatus(billingmasterNo, this.SETTLED);
+        }
+      }
+    }
+  }
+
+  /**
+   * Settles all bills paid by MSP that have an explanatory code of 'BG'
+   * Bills of this type were paid an amount that was different from the original bill amount.
+   * Therefore, an 'Internal Adjustment' is applied to the difference in order to ensure that the
+   * amount owing is $0.00.
+   */
+  public void settleBGBills() {
+    BillingHistoryDAO dao = new BillingHistoryDAO();
+    //get all bills with explanation of type 'BG'
+    String bgqry = "SELECT t_officeno,t_billamt FROM teleplanS00 t " +
+        " WHERE t.t_exp1 = 'BG' " +
+        " or t.t_exp2 = 'BG' " +
+        " or t.t_exp3 = 'BG' " +
+        " or t.t_exp4 = 'BG' " +
+        " or t.t_exp5 = 'BG' " +
+        " or t.t_exp6 = 'BG' " +
+        " or t.t_exp7 = 'BG' ";
+
+    List bgrows = SqlUtils.getQueryResultsList(bgqry);
+    //for each bill, get amount owing
+    for (Iterator iter = bgrows.iterator(); iter.hasNext(); ) {
+      String[] item = (String[]) iter.next();
+      int billingmaster_no = UtilMisc.safeParseInt(item[0]);
+      //if billingmaster_no = 0 indicates corrupt record id
+      if (billingmaster_no != 0) {
+        String strBmNo = String.valueOf(billingmaster_no);
+        double parseAmt = UtilMisc.safeParseDouble(item[1])*.01;//ensure correct decimal position
+        double amountOwing = this.getAmountOwing(strBmNo, String.valueOf(parseAmt), "");
+        //if the the amount owing is not zero
+        if(amountOwing != 0){
+          //then apply an adjustment that is equal to the difference
+          dao.createBillingHistoryArchive(strBmNo, amountOwing, MSPReconcile.PAYTYPE_IA);
+          settleIfBalanced(strBmNo);
         }
       }
     }
