@@ -29,7 +29,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 
  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-      
+
 
 <!--
 /*
@@ -138,20 +138,20 @@ function popUpBillStatus(vheight,vwidth,varpage) {
         background-color: #000000;
         color:#FFFFFF;
     }
-    
+
     div.adminBox {
 
        width:90%;
        background-color: #eeeeff;
        margin-top: 2px;
        margin-left:auto;
-       margin-right:auto;   
+       margin-right:auto;
        margin-bottom:0px;
        padding-bottom:0px;
 
     }
 
-    div.adminBox h3 { 
+    div.adminBox h3 {
        color : #ffffff;
        font-size:14pt;
        font-weight: bold;
@@ -166,14 +166,14 @@ function popUpBillStatus(vheight,vwidth,varpage) {
     div.adminBox ul{
       text-align: left;
       list-style:none;
-      list-style-type:none; 
-      list-style-position:outside;       
+      list-style-type:none;
+      list-style-position:outside;
       padding-left:1px;
-      margin-left:1px;    
+      margin-left:1px;
       margin-top:0px;
       padding-top:1px;
       margin-bottom:0px;
-      padding-bottom:0px;	
+      padding-bottom:0px;
 
     }
 
@@ -183,7 +183,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 
 
 </style>
-    
+
 </head>
 
 <body class="BodyStyle" >
@@ -194,9 +194,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 
   <div class="logoutBox">
      <% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a>&nbsp;<% }%>
-  </div>   
-       
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>" >   
+  </div>
+
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.provider"/></h3>
       <ul>
@@ -204,7 +204,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="providersearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchProvider"/></a></li>
       </ul>
   </div>
-  
+
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.groupNo"/></h3>
       <ul>
@@ -212,7 +212,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="#" onclick ="popupPage(360,600,'admincontrol.jsp?displaymode=displaymygroup&amp;dboperation=searchmygroupall')"><bean:message key="admin.admin.btnSearchGroupNoRecords"/></a></li>
       </ul>
   </div>
-  
+
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.preference"/></h3>
       <ul>
@@ -220,8 +220,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="preferencesearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchPreference"/></a></li>
       </ul>
   </div>
-  
-  
+
+
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.security"/></h3>
       <ul>
@@ -237,7 +237,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 		 </ul>
   </div>
   </security:oscarSec>
-  
+
 <% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
 		  <br/>
 		  <b>Cookie Revolver Security Administration</b><br/>
@@ -267,23 +267,23 @@ function popUpBillStatus(vheight,vwidth,varpage) {
  </caisi:isModuleLoad>
  <%-- -add by caisi end--%>
 
-  
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>" >   
+
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.schedule"/></h3>
       <ul>
          <li><a href="#" onclick ="popupPage(550,800,'../schedule/scheduletemplatesetting.jsp');return false;" title="<bean:message key="admin.admin.scheduleSettingTitle"/>"><bean:message key="admin.admin.scheduleSetting"/></a></li>
       </ul>
   </div>
-  </security:oscarSec>  
-   
+  </security:oscarSec>
+
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>" >
   <%-- This links doesnt make sense on Brazil. There are other billing engines that we must use for billing --%>
   <% if (!country.equals("BR")) { %>
    <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.billing"/></h3>
       <ul>
-          
+
          <% if (oscarVariables.getProperty("billregion","").equals("BC")){ %>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/manageBillingform.jsp');return false;">Manage Billing Form</a></li>
           <li><a href="#" onclick ="popupPage(600,600,'../billing/CA/BC/billingPrivateCodeAdjust.jsp');return false;">Manage Private Bill</a></li>
@@ -299,6 +299,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">MSP Reconcilliation Reports</a></li>
           <li><a href="#" onClick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Accounting Reports</a></li>
           <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/BC/billStatus.jsp');return false;">Edit Invoices</a></li>
+          <li><a href="#" onclick ="popupPage(200,300,'../billing/CA/BC/settleBG.jsp');return false;">Settle Over/Under paid Claims</a></li>
          <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a></li>
           <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Add/Edit Billing Service Code</a></li>
@@ -319,8 +320,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   <% } %>
   </security:oscarSec>
 
-  
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.resource" rights="r" reverse="<%=false%>" >  
+
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.resource" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.resource"/></h3>
       <ul>
@@ -328,9 +329,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
   </security:oscarSec>
-   
+
   <!--oscarReport Code block -->
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>" >  
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.reporting" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.oscarReport"/></h3>
       <ul>
@@ -355,8 +356,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          </oscar:oscarPropertiesCheck>
       </ul>
   </div>
-  </security:oscarSec> 
-  
+  </security:oscarSec>
+
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>" >
   <%-- This links doesnt make sense on Brazil. Hide then --%>
   <% if (!country.equals("BR")) { %>
@@ -368,18 +369,18 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </div>
   <% } %>
   </security:oscarSec>
-      
+
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.messenger" rights="r" reverse="<%=false%>" >
   <!--oscarMessenger Code block -->
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.oscarMessenger"/></h3>
       <ul>
          <li><a href="#" onclick ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>');return false;"><bean:message key="admin.admin.messages"/></a></li>
-         <li><a href="#" onClick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>  
+         <li><a href="#" onClick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>
       </ul>
   </div>
   </security:oscarSec>
-     
+
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>" >
   <!--e forms block -->
   <div class="adminBox">
@@ -391,7 +392,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
   </security:oscarSec>
-    
+
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>" >
   <!--// start oscarEncounter block-->
   <div class="adminBox">
@@ -404,7 +405,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
   </security:oscarSec>
-  
+
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
@@ -424,8 +425,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
         <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
       </ul>
   </div>
-  </security:oscarSec>  
-  
+  </security:oscarSec>
+
   <hr style=" color: black;"/>
   <div class="logoutBox">
      <% if(roleName$.equals("admin"+ "," +curProvider_no)) {%><a href="../logout.jsp"><bean:message key="global.btnLogout"/></a>&nbsp;<% }%>
