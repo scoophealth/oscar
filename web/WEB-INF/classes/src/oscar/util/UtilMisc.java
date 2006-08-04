@@ -27,12 +27,11 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.util;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-import java.util.List;
-import java.util.ArrayList;
+import java.io.*;
+import java.text.*;
+
+import sun.misc.*;
+import java.math.BigDecimal;
 
 public class UtilMisc {
   public static String htmlEscape(String S) {
@@ -307,37 +306,37 @@ public class UtilMisc {
     }
   }
 
-/**
+  /**
    * not quite qorking yet
-  public static int[] range(int start, int stop, int step) {
-    stop = stop < step ? start : step++;
-    step = step < 1 ? 1 : step;
-    int arrayLen = (stop - start) / step + (stop - start) % step;
-    System.out.println(arrayLen);
-    int[] rangeArray = new int[arrayLen];
-    for (int i = 0; i < arrayLen; i++) {
-      if (i == 0) {
-        rangeArray[i] = start;
+    public static int[] range(int start, int stop, int step) {
+      stop = stop < step ? start : step++;
+      step = step < 1 ? 1 : step;
+      int arrayLen = (stop - start) / step + (stop - start) % step;
+      System.out.println(arrayLen);
+      int[] rangeArray = new int[arrayLen];
+      for (int i = 0; i < arrayLen; i++) {
+        if (i == 0) {
+          rangeArray[i] = start;
+        }
+        else {
+          rangeArray[i] = rangeArray[i - 1] + step;
+        }
       }
-      else {
-        rangeArray[i] = rangeArray[i - 1] + step;
-      }
+      return rangeArray;
     }
-    return rangeArray;
-  }
 
-  public static int[] range(int start, int stop) {
-    return range(start, stop, 1);
-  }
- }
+    public static int[] range(int start, int stop) {
+      return range(start, stop, 1);
+    }
+   }
 
-**/
-/**
- * Returns an int array with the specified number of elements in
- * @param length int
- * @return int[]
- */
-public static int[] range(int length) {
+   **/
+  /**
+   * Returns an int array with the specified number of elements in
+   * @param length int
+   * @return int[]
+   */
+  public static int[] range(int length) {
     int[] rangeArray = new int[length];
     for (int i = 0; i < length; i++) {
       rangeArray[i] = i;
@@ -345,4 +344,34 @@ public static int[] range(int length) {
     return rangeArray;
   }
 
+  /**
+   * This method attempts to parse the provided String to an int value
+   * If the value is non-numeric a value of 0 is returned.
+   * @param value String
+   * @return int
+   */
+
+  public static int safeParseInt(String value) {
+    int ret = 0;
+    try {
+      ret = Integer.parseInt(value);
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      return ret;
+    }
+  }
+
+  /**
+   * Returns the provided double value rounded up to 2 decimal places
+   * @param value double
+   * @return double
+   */
+  public static double toCurrencyDouble(double value){
+    BigDecimal bd = new BigDecimal(value );
+    bd = bd.setScale(2,BigDecimal.ROUND_HALF_UP);
+    return bd.doubleValue();
+  }
 }
