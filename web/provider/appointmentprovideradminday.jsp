@@ -540,6 +540,11 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
 		</plugin:hideWhenCompExists>        
         </caisi:isModuleLoad>
+        
+        <caisi:isModuleLoad moduleName="program" reverse="true">
+    		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>    
+        </caisi:isModuleLoad>
+        
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
