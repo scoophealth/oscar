@@ -36,6 +36,7 @@ if(session.getValue("user") != null) {
 	}
 %></caisi:isModuleLoad><%
     String propFile = request.getContextPath().substring(1)+".properties";
+	session.setAttribute("oscarContextPath",request.getContextPath());
     String sep = System.getProperty("file.separator");
     String propFileName = System.getProperty("user.home")+sep+propFile;
     OscarProperties props = OscarProperties.getInstance();
