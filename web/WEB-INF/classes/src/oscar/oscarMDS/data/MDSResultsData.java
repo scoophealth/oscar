@@ -24,10 +24,10 @@
 package oscar.oscarMDS.data;
 
 import oscar.oscarDB.*;
-import oscar.oscarMDS.data.ProviderData;
 import java.util.*;
 import java.sql.*;
 import oscar.oscarLab.ca.on.*;
+import oscar.util.UtilDateUtilities;
 
 
 public class MDSResultsData {
@@ -109,6 +109,7 @@ public class MDSResultsData {
             // solve lbData.resultStatus.add(rs.getString("abnormalFlag"));
             
             lbData.dateTime = rs.getString("collection_date");
+            lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );
             
             //priority
             lbData.priority = "----";
@@ -332,6 +333,7 @@ public class MDSResultsData {
                 lData.resultStatus = "0";
             }
             lData.dateTime = rs.getString("dateTime");
+            lData.setDateObj(UtilDateUtilities.getDateFromString(lData.dateTime, "yyyy-MM-dd HH:mm:ss"));
             
             String quantityTimimg = rs.getString("quantityTiming");
             if(quantityTimimg != null){
