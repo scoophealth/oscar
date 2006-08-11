@@ -216,7 +216,7 @@ public class CommonLabTestValues {
                 " and p.demographic_no = '"+demographicNo+"' " +
                 " and p.lab_no = ltr.labPatientPhysicianInfo_id " +
                 " and ltr.test_name = '"+testName+"' " +
-                " and ltr.labPatientPhysicianInfo_id = lpp.id ";
+                " and ltr.labPatientPhysicianInfo_id = lpp.id order by lpp.collection_date";
          
          System.out.println(sql);
       
@@ -237,6 +237,7 @@ public class CommonLabTestValues {
                h.put("range",range);
                h.put("units",units);
                h.put("collDate",collDate);
+               h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "dd-MMM-yy"));
                labList.add(h);
             }
             rs.close();
@@ -246,7 +247,7 @@ public class CommonLabTestValues {
          }
       } else if ( labType != null && labType.equals("MDS")){
          //String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no";
-         String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no";       
+         String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no order by dateTime";       
          System.out.println(sql);
       
          try {
@@ -279,6 +280,7 @@ public class CommonLabTestValues {
                h.put("range",range);
                h.put("units",units);
                h.put("collDate",collDate);
+               h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
                labList.add(h);
             }
             rs.close();
@@ -287,8 +289,8 @@ public class CommonLabTestValues {
             System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
          }
       }else if ( labType != null && labType.equals("BCP")){
-          String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id";
-          
+          String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
+          System.out.println(sql);
           try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
             ResultSet rs = db.GetSQL(sql);      
@@ -303,7 +305,6 @@ public class CommonLabTestValues {
                String units = rs.getString("units");
                String collDate = rs.getString("observation_date_time");
                 
-                
                Hashtable h = new Hashtable();
                h.put("testName", testNam);
                h.put("abn",abn);
@@ -311,6 +312,7 @@ public class CommonLabTestValues {
                h.put("range",range);
                h.put("units",units);
                h.put("collDate",collDate);
+               h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
                labList.add(h);
             }
             rs.close();
