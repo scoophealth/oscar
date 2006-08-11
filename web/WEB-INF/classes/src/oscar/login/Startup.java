@@ -28,8 +28,6 @@
 
 package oscar.login;
 
-import java.io.*;
-import java.sql.*;
 import java.util.*;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -71,7 +69,18 @@ public class Startup implements ServletContextListener {
             
             if (!DBHandler.isInit())
                DBHandler.init(p.getProperty("db_name"), p.getProperty("db_driver"),p.getProperty("db_uri"),p.getProperty("db_username"),p.getProperty("db_password"));
-                                    
+                 
+            
+            
+            ///Temporary Testing of new ECHART
+            ///To be removed 
+               String newDocs = p.getProperty("DOCS_NEW_ECHART");
+               if (newDocs != null){
+                   String[] newDocArr = newDocs.split(",");
+                   Arrays.sort(newDocArr);
+                   sc.getServletContext().setAttribute("newDocArr",newDocArr);
+               }
+            ///
         } catch (Exception e) {
             System.out.println("*** No Property File ***");
             System.out.println("Property file not found at:");
@@ -79,7 +88,7 @@ public class Startup implements ServletContextListener {
             // e.printStackTrace();
             propFileFound = false;
         }
-                                
+         System.out.println("LAST LINE IN contextInitialized");                       
     }
                                                                                                                                                                                                      
     public void contextDestroyed(ServletContextEvent arg0) {}
