@@ -23,25 +23,16 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarEncounter.pageUtil;
-import oscar.oscarDB.DBHandler;
 import oscar.util.*;
 import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Locale;
-import javax.servlet.RequestDispatcher;
+import java.util.Arrays;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionServlet;
-import org.apache.struts.util.MessageResources;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -103,6 +94,14 @@ public class EctIncomingEncounterAction extends Action {
         else{
             return (mapping.findForward("failure"));
         }
-        return (mapping.findForward("success"));
-    }
+        String[] newDocArr = (String[]) request.getSession().getServletContext().getAttribute("newDocArr");
+        
+        System.out.println(newDocArr);
+        String proNo = (String) request.getSession().getAttribute("user");
+        if (proNo != null  && newDocArr != null && Arrays.binarySearch(newDocArr,proNo) != -1){
+            return (mapping.findForward("success2"));
+        }else{
+           return (mapping.findForward("success"));
+        }
+  }
 }
