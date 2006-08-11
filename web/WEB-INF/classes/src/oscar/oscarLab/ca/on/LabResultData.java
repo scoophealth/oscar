@@ -27,14 +27,16 @@
 
 package oscar.oscarLab.ca.on;
 
+import java.util.Date;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
  * @author Jay Gallagher
  */
-public class LabResultData {
+public class LabResultData implements Comparable{
    
    public static String CML = "CML";
    public static String MDS = "MDS";
@@ -47,6 +49,7 @@ public class LabResultData {
    public String sex;
    public String resultStatus;
    public String dateTime;
+   private Date dateTimeObr;
    public String priority;
    public String requestingClient;
    public String discipline;
@@ -160,6 +163,8 @@ public class LabResultData {
    public String getPriority(){
        return this.priority;
    }
+   
+   
      
    public String getRequestingClient(){
        if (EXCELLERIS.equals(this.labType)){
@@ -168,6 +173,30 @@ public class LabResultData {
       }
        return this.requestingClient;
    }
+
+   public Date getDateObj(){
+       if (EXCELLERIS.equals(this.labType)){    
+          this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
+       }
+     
+      return this.dateTimeObr;
+   }
+   
+   public void setDateObj(Date d){
+       this.dateTimeObr = d;
+   }
+   
+    public int compareTo(Object object) {
+        int ret = 0;
+        if (this.dateTimeObr != null){
+            if (this.dateTimeObr.after( ((LabResultData) object).getDateObj() )){
+                ret = -1;
+            }else if(this.dateTimeObr.before( ((LabResultData) object).getDateObj() )){
+                ret = 1;
+            }
+        }
+        return ret;
+    }
                 
                    
                    
