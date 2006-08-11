@@ -122,7 +122,7 @@ function checkTypeIn() {
 	//keyword.replace('*', '%').trim();
 
 	if(request.getParameter("search_mode").equals("search_name")) {
-		keyword="^"+request.getParameter("keyword");
+		keyword="^"+keyword;
 		if(keyword.indexOf(",")==-1)  rs = apptMainBean.queryResults(keyword, dboperation) ; //lastname
 		else if(keyword.indexOf(",")==(keyword.length()-1))  rs = apptMainBean.queryResults(keyword.substring(0,(keyword.length()-1)), dboperation);//lastname
 		else { //lastname,firstname
