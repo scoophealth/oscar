@@ -1400,7 +1400,7 @@ border-right: 2px solid #cfcfcf;
 					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
-                                    <oscar:oscarPropertiesCheck property="billregion" value="yes">
+                                    <oscar:oscarPropertiesCheck property="billregion" value="BC">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill'; document.forms['encForm'].submit();">
                                     </oscar:oscarPropertiesCheck>					
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
