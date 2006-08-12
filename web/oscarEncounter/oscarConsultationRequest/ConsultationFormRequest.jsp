@@ -428,7 +428,7 @@ function importFromEnct(reqInfo,txtArea)
                 if( demo != null )
                 {                 
                     value = demographic.EctInfo.getMedicalHistory();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                 }
              %>  
@@ -438,7 +438,7 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.EctInfo.getOngoingConcerns();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                  }
              %>
@@ -448,7 +448,7 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.EctInfo.getSocialHistory();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                  }
               %>  
@@ -458,7 +458,7 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.RxInfo.getAllergies();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                  }
               %>                
@@ -468,7 +468,7 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.RxInfo.getCurrentMedication();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                  }
               %>                
@@ -478,7 +478,7 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.EctInfo.getFamilyHistory();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                  }
               %>                
@@ -488,7 +488,7 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.EctInfo.getReminders();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJava(value);
+                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
                     out.println("txtArea.value += '" + value + "'");
                  }
               %>                
@@ -902,8 +902,9 @@ function importFromEnct(reqInfo,txtArea)
                     </html:select>
                 </td>
             </tr>
+
             <tr>
-                <td class="tite4">                                        
+                <td colspan=2 class="tite4">                                        
                     <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAppointmentNotes"/>:
                 </td>
                 <td style="background-color: #B8B8FF;">   
@@ -915,6 +916,7 @@ function importFromEnct(reqInfo,txtArea)
                     <html:textarea cols="50" rows="3" property="appointmentNotes"></html:textarea>
                 </td>
             </tr>
+
 
             </table>
         </td>
@@ -1042,7 +1044,7 @@ function importFromEnct(reqInfo,txtArea)
                 <html:textarea cols="90" rows="3" property="allergies"></html:textarea>
             </td>
        </tr>
-            
+
        <tr>
             <td colspan=2>
 	        <input type="hidden" name="submission" value="">
