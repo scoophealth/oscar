@@ -6,7 +6,7 @@
           xmlns="http://drools.org/rules"
           xmlns:java="http://drools.org/semantics/java">
 
-    <rule name="A1C">
+    <rule name="A1C_1">
         <parameter identifier="m">
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>
@@ -18,7 +18,7 @@
         </java:consequence>
     </rule>
 
-     <rule name="A1C">
+     <rule name="A1C_2">
         <parameter identifier="m">
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>
