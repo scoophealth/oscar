@@ -95,7 +95,7 @@ public class RunClinicalReportAction extends Action {
         request.getSession().setAttribute("ClinicalReports",arrList);
         
         
-                
+        request.setAttribute("name",re.getName());
         request.setAttribute("numerator",Integer.toString(num));
         request.setAttribute("denominator",Integer.toString(denom));
         request.setAttribute("numeratorId",numeratorId);
