@@ -109,11 +109,15 @@ Clinical Reports
        for (  i = 0 ; i < denominator_fields.length; i++) {
           document.getElementById(denominator_fields[i]).style.display = 'none'; 
        }
-       var fields_to_turn_on = denom_xtras[currentDenom];
-      
-       //get list of extra 
-       for (  i = 0 ; i < fields_to_turn_on.length; i++) {
-          document.getElementById(fields_to_turn_on[i]).style.display = ''; 
+       try{
+           var fields_to_turn_on = denom_xtras[currentDenom];
+
+           //get list of extra 
+           for (  i = 0 ; i < fields_to_turn_on.length; i++) {
+              document.getElementById(fields_to_turn_on[i]).style.display = ''; 
+           }
+       }catch(e){
+        e.printStackTrace();
        }
           
     
@@ -133,7 +137,7 @@ Clinical Reports
                 <table class="TopStatusBar">
                     <tr>
                         <td >
-                            could put current report being run here
+                            <%=  request.getAttribute("name") != null ?request.getAttribute("name"):""%>                       
                         </td>
                         <td  >&nbsp;
 							
@@ -238,14 +242,54 @@ Clinical Reports
                    System.out.println(outputfields);
                    
                    if (request.getAttribute("list") != null){
+                     DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
+                     DemographicData demoData= new DemographicData();
+                         
+                         
+                            
                        
                 %>
-                  <table>
+                  <style type="text/css">
+                      
+                      table.results{
+                           /*border-bottom: 1pt solid #888888;
+                           border-left: 1pt solid #888888;
+                           border-top: 1pt solid #888888;
+                           border-right: 1pt solid #888888;*/
+                           border: 1pt solid #888888;
+                           border-collapse:collapse;
+                      }
+                      
+                      table.results th{
+                          border:1pt solid grey;
+                          padding:2px;    
+                      }
+                      table.results td{
+                         border:1px solid lightgrey;
+                         padding-left:2px;
+                         padding-right:2px;
+                      }
+                      
+                      tr.red td {
+                      background-color: red;
+                      padding-left:2px;
+                         padding-right:2px;
+                      }
+                  </style>
+                  <table class="sortable tabular_list results" id="results_table">
+                      <thead>
                       <tr>
+                         <th>Last Name</th>
+                         <th>First Name</th>
+                         <th>Sex</th>
+                         <th>Phone #</th>
+                         <th>Address</th>
+                          
                       <%for( int i= 0; i < outputfields.length; i++){%>
                          <th><%=outputfields[i]%></th>
                       <%}%>
                       </tr>
+                      </thead>
                 <%       ArrayList list = (ArrayList) request.getAttribute("list");
                        for (int j = 0; j < list.size(); j++){
                           Hashtable h = (Hashtable) list.get(j);
@@ -254,11 +298,23 @@ Clinical Reports
                           while (en.hasMoreElements()){
                               String ssss = (String) en.nextElement();
                              System.out.println(ssss+" "+h.get(ssss)); 
+                          }      
+                          Hashtable demoHash = deName.getNameAgeSexHashtable(""+h.get("_demographic_no"));
+                          DemographicData.Demographic demoObj = demoData.getDemographic(""+h.get("_demographic_no")); 
+                          
+                          String colour = "";
+                          if ( h.get("_report_result") != null && (""+h.get("_report_result")).equals("false")){
+                              colour = "class=red";
                           }
-                          
-                          
                 %>
-                      <tr>
+                      <tr <%=colour%> >
+                          
+                          <td><%=demoHash.get("lastName")%></td>
+                          <td><%=demoHash.get("firstName")%></td>
+                          <td><%=demoHash.get("sex")%></td>
+                          <td><%=demoObj.getPhone()%> </td>
+                          <td><%=demoObj.getAddress()+" "+demoObj.getCity()+" "+demoObj.getProvince()+" "+demoObj.getPostal()%> </td>  
+                      
                 <%
                           for( int i= 0; i < outputfields.length; i++){%>
                           <td><%=h.get(outputfields[i])%></td>
@@ -302,7 +358,10 @@ denom_xtras = new Array();
 processExtraFields(document.getElementById('denominator'));
 
 
-</script>    
+</script>  
+<script language="javascript" src="../commons/scripts/sort_table/css.js">
+<script language="javascript" src="../commons/scripts/sort_table/common.js">
+<script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js">
 </body>
 </html:html>
 <%!
