@@ -156,44 +156,44 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
     
 <Denominator id="DMReg" name="Diabetes Registry"
 description="Number of patients in DM reg"
-type="SQL">select distinct demographic_no from dxresearch where dxresearch_code in ('250') and coding_system = 'icd9'
+type="SQL">select distinct demographic_no from dxresearch where dxresearch_code in ('250') and coding_system = 'icd9' and status = 'A'
 </Denominator>
 
 <Denominator id="DMRegbyP" name="Diabetes Registry by practice"
 description="Number of patient in DM reg by practice" replaceKeys="provider_no"
-type="SQL">select distinct dxresearch.demographic_no from dxresearch, demographic where dxresearch_code in ('250') and coding_system = 'icd9' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}'
+type="SQL">select distinct dxresearch.demographic_no from dxresearch, demographic where dxresearch_code in ('250') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}'
 </Denominator>
 
 <Denominator id="DMRega1c6m" name="Diabetes Registry having HbA1c in last 6m"
 description="Number of patient in the DM reg that have a HbA1c in the testing range"
-type="SQL">select distinct d.demographic_no from dxresearch d, measurements m where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.demographic_no = m.demographicNo and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month) 
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month) 
 </Denominator>
 
 <Denominator id="DMRega1c6mbyP" name="Diabetes Registry having HbA1c in last 6m by practice"
 description="Number of patient in the DM reg that have a HbA1c in the testing range by practice" replaceKeys="provider_no"
-type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.demographic_no = m.demographicNo and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'A1C' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}'
 </Denominator>
 
 <Denominator id="DMRegbp6m" name="Diabetes Registry having BP in last 6m"
 description="Number of patient in the DM reg that have a BP in the testing range"
-type="SQL">select distinct d.demographic_no from dxresearch d, measurements m where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.demographic_no = m.demographicNo and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
 </Denominator>
     
 <Denominator id="DMRegbp6mbyP" name="Diabetes Registry having BP in last 6m by practice"
 description="Number of patient in the DM reg that have a BP in the testing range by practice" replaceKeys="provider_no"
-type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.demographic_no = m.demographicNo and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}'
 </Denominator>
 
 <Denominator id="DMRegLDL12m" name="Diabetes Registry having LDL in last 12m"
 description="Number of patient in the DM reg that have a LDL in the testing range"
-type="SQL">select distinct d.demographic_no from dxresearch d, measurements m where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.demographic_no = m.demographicNo and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)
 </Denominator>
 
 <Denominator id="DMRegLDL12mbyP" name="Diabetes Registry having LDL in last 12m by practice"
 description="Number of patient in the DM reg that have a LDL in the testing range by practice" replaceKeys="provider_no"
-type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de  where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.demographic_no = m.demographicNo and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)
+type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,demographic de  where d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' and d.demographic_no = m.demographicNo and m.type = 'LDL' and  dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}'
 </Denominator>
 
@@ -202,7 +202,8 @@ description="And a combined one above (Triple Whammy)"
 type="SQL">select distinct d.demographic_no  from measurements m,measurements m2,measurements m3,dxresearch d 
      where   m.demographicNo = d.demographic_no  and  m.type = 'BP'  and  m.dateObserved  &gt;=  DATE_SUB(now(),INTERVAL 6 Month)    
      and  m2.demographicNo   = d.demographic_no  and m2.type = 'LDL' and  m2.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 12 Month)     
-     and  m3.demographicNo   = d.demographic_no  and m3.type = 'A1C' and  m3.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 12 Month)  
+     and  m3.demographicNo   = d.demographic_no  and m3.type = 'A1C' and  m3.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 6 Month) 
+     and  d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' 
 </Denominator>
     
 <Denominator id="TripWhambyP" name="Triple Whammy by practice"
@@ -210,8 +211,8 @@ description="And a combined one above (Triple Whammy) by practice" replaceKeys="
 type="SQL">select distinct d.demographic_no from measurements m,measurements m2,measurements m3,dxresearch d,demographic de 
      where   m.demographicNo = d.demographic_no  and m.type = 'BP'   and  m.dateObserved  &gt;=  DATE_SUB(now(),INTERVAL 6 Month)    
      and    m2.demographicNo = d.demographic_no  and m2.type = 'LDL' and  m2.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 12 Month)     
-     and    m3.demographicNo = d.demographic_no  and m3.type = 'A1C' and  m3.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 12 Month)  
-     and  d.dxresearch_code in ('250') and d.coding_system = 'icd9'  
+     and    m3.demographicNo = d.demographic_no  and m3.type = 'A1C' and  m3.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 6 Month)  
+     and  d.dxresearch_code in ('250') and d.coding_system = 'icd9' and d.status = 'A' 
      and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}'
 </Denominator>
      
@@ -227,23 +228,23 @@ type="SQL">select distinct demographic_no from demographic  where patient_status
     
 <Denominator id="CHFReg" name="Congestive Heart Failure Registry"
 description="Number of patients in the Congestive heart failure" 
-type="SQL">select distinct demographic_no from dxresearch where dxresearch_code in ('428') and coding_system = 'icd9'
+type="SQL">select distinct demographic_no from dxresearch where dxresearch_code in ('428') and coding_system = 'icd9' and status = 'A'
 </Denominator>
     
 <Denominator id="CHFRegbyP" name="Congestive Heart Failure Registry by practice"
 description="Number of patients in the Congestive heart failure by provider" replaceKeys="provider_no"
-type="SQL">select distinct demographic_no from dxresearch,demographic where dxresearch_code in ('428') and coding_system = 'icd9' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}'
+type="SQL">select distinct demographic_no from dxresearch,demographic where dxresearch_code in ('428') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}'
 </Denominator>
     
 <Denominator id="HYPReg" name="Hypertension Registry"
 description="Number of patient in the Hypertension reg"
-type="SQL">select distinct demographic_no from dxresearch where dxresearch_code in ('401') and coding_system = 'icd9'
+type="SQL">select distinct demographic_no from dxresearch where dxresearch_code in ('401') and coding_system = 'icd9' and status = 'A'
 </Denominator>
 
 
 <Denominator id="HYPRegbyP" name="Hypertension Registry by practice"
 description="Number of patient in the Hypertension reg by provider" replaceKeys="provider_no"
-type="SQL">select distinct demographic_no from dxresearch,demographic where dxresearch_code in ('401') and coding_system = 'icd9' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}'
+type="SQL">select distinct demographic_no from dxresearch,demographic where dxresearch_code in ('401') and coding_system = 'icd9' and dxresearch.status = 'A' and dxresearch.demographic_no = demographic.demographic_no and demographic.provider_no = '${provider_no}'
 </Denominator>
     
 <Denominator id="W50pl" name="Women 50 and over"
