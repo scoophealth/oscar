@@ -98,7 +98,7 @@ public class EctIncomingEncounterAction extends Action {
         
         System.out.println(newDocArr);
         String proNo = (String) request.getSession().getAttribute("user");
-        if (proNo != null  && newDocArr != null && Arrays.binarySearch(newDocArr,proNo) != -1){
+        if (proNo != null  && newDocArr != null && Arrays.binarySearch(newDocArr,proNo) >= 0){
             return (mapping.findForward("success2"));
         }else{
            return (mapping.findForward("success"));
