@@ -14849,17 +14849,18 @@ INSERT INTO billingservice (service_compositecode, service_code, description, va
 INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14052','Hypertension Chronic Care Bonus','50.00',NULL,'2006-04-01',NULL,'BC',NULL);
 INSERT INTO billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date, specialty, region, anaesthesia) VALUES (NULL,'14050','Diabetes Chronic Care Bonus','125.00',NULL,'2006-04-01',NULL,'BC',NULL);
 
-
-INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
-INSERT INTO billingvisit VALUES ('O','Physician\'s office','BC');
 INSERT INTO billingvisit VALUES ('C','Continuing Care facility','BC');
-INSERT INTO billingvisit VALUES ('H','Hospital','BC');
-INSERT INTO billingvisit VALUES ('I','Hospital Inpatient','BC');
-INSERT INTO billingvisit VALUES ('E','Hospital Emergency Depart. or Diagnostic & Treatment Centre','BC');
-INSERT INTO billingvisit VALUES ('P','Outpatient','BC');
 INSERT INTO billingvisit VALUES ('D','Diagnostic Facility','BC');
-INSERT INTO billingvisit VALUES ('S','Community Location','BC');
+INSERT INTO billingvisit VALUES ('E','Hospital Emergency Depart. or Diagnostic & Treatment Centre','BC');
+INSERT INTO billingvisit VALUES ('I','Hospital Inpatient','BC');
+INSERT INTO billingvisit VALUES ('P','Outpatient','BC');
+INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
 INSERT INTO billingvisit VALUES ('Z','None of the above','BC');
+INSERT INTO billingvisit VALUES ('M','Mental Health Centre','BC');
+INSERT INTO billingvisit VALUES ('T','Practitioner’s Office - In Publicly Administered Facility','BC');
+INSERT INTO billingvisit VALUES ('G','Hospital - Day Care (Surgery) ','BC');
+INSERT INTO billingvisit VALUES ('F','Private Medical / Surgical Facility','BC');
+INSERT INTO billingvisit VALUES ('A','Practitioner’s Office - In Community ','BC');
 
 
 --
