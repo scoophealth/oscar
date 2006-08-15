@@ -409,7 +409,7 @@ var maxYear=3100;
         <td colspan="3" valign="top">
             <table height="100%">
                 <tr align="center">
-                    <td colspan="2"><input type="text" class="wide" name="p1_nutrition1m" value="<%= props.getProperty("p1_nutrition2m", "") %>" /></td>
+                    <td colspan="2"><input type="text" class="wide" name="p1_nutrition1m" value="<%= props.getProperty("p1_nutrition1m", "") %>" /></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p1_breastFeeding1m" <%= props.getProperty("p1_breastFeeding1m", "") %>></td>
