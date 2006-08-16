@@ -14857,10 +14857,10 @@ INSERT INTO billingvisit VALUES ('P','Outpatient','BC');
 INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
 INSERT INTO billingvisit VALUES ('Z','None of the above','BC');
 INSERT INTO billingvisit VALUES ('M','Mental Health Centre','BC');
-INSERT INTO billingvisit VALUES ('T','Practitioner’s Office - In Publicly Administered Facility','BC');
+INSERT INTO billingvisit VALUES ('T','Practitioner\’s Office - In Publicly Administered Facility','BC');
 INSERT INTO billingvisit VALUES ('G','Hospital - Day Care (Surgery) ','BC');
 INSERT INTO billingvisit VALUES ('F','Private Medical / Surgical Facility','BC');
-INSERT INTO billingvisit VALUES ('A','Practitioner’s Office - In Community ','BC');
+INSERT INTO billingvisit VALUES ('A','Practitioner\’s Office - In Community ','BC');
 
 
 --
