@@ -687,6 +687,8 @@ CREATE TABLE document (
   updatedatetime TIMESTAMP DEFAULT NULL,
   status char(1) NOT NULL DEFAULT '',
   contenttype varchar(60) NOT NULL DEFAULT '',
+  public int(1) NOT NULL DEFAULT '0',
+  observationdate DATE DEFAULT NULL,
   PRIMARY KEY (document_no)
 
 );
