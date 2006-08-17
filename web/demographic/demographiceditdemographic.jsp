@@ -217,7 +217,7 @@ function checkDob() {
 		if ( yyyy == "0000"){
         typeInOK = false;
       }
-	}
+}
 
 
 
