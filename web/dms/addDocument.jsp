@@ -166,7 +166,7 @@ function checkDefaultDate(object, defaultValue) {
                         <a id="plusminusLinkA" href="javascript: showhide('addLinkDiv', 'plusminusLinkA')">
                          + Add Link
                         </a>
-                        <a href="javascript:;" onclick="popup(400, 600, 'addedithtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&mode=addHtml', 'addhtml')">
+                        <a href="javascript:;" onclick="popup(450, 600, 'addedithtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&mode=addHtml', 'addhtml')">
                          + Add HTML
                         </a>
                     </div>

@@ -282,7 +282,7 @@ function popup1(height, width, url, windowName){
                               <td><%=curdoc.getObservationDate()%></td>
                               <td><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
                               <% if (curdoc.getStatus() == 'H') { %>
-                                <a href="#" onclick="popup(420, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+                                <a href="#" onclick="popup(450, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
                               <% } else { %>
                                 <a href="#" onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
                               <% } %>
