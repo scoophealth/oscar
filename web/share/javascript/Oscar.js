@@ -22,7 +22,7 @@
  * Ontario, Canada 
  */
 
-function popup( height, width, url, windowName){   
+function popup(height, width, url, windowName){   
   var page = url;  
   windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";  
   var popup=window.open(url, windowName, windowprops);  
@@ -52,4 +52,18 @@ function hideItem(id){
 }
 
 
-
+function validDate(id) {
+   //checks if the <input type="text"> has a valid date format yyyy/mm/dd
+   var completeRawDate = document.getElementById(id).value;
+   var delimiter = '/';
+   if (completeRawDate.indexOf('/') == -1)
+       delimiter = '-';
+   var dateArray = completeRawDate.split(delimiter);
+   if (dateArray.length != 3) return false;
+   year = (dateArray[0] - 0);
+   month = (dateArray[1] - 1);
+   day = (dateArray[2] - 0);
+   //alert("year: " + year + ", " + month + ", " + day);
+   dateObject = new Date(year,month,day);
+   return ((day==dateObject.getDate()) && (month==dateObject.getMonth()) && (year==dateObject.getFullYear()));
+}
