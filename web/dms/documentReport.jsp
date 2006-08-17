@@ -17,9 +17,16 @@ if (request.getParameter("delDocumentNo") != null) {
     EDocUtil.deleteDocument(request.getParameter("delDocumentNo"));
 }
 
+//view  - tabs
+String view = "all";
+if (request.getParameter("view") != null) {
+    view = (String) request.getParameter("view");
+} else if (request.getAttribute("view") != null) {
+    view = (String) request.getAttribute("view");
+}
 //preliminary JSP code
 
-// "Module" and "function" is the same thing
+// "Module" and "function" is the same thing (old dms module)
 String module = "";
 String moduleid = "";
 if (request.getParameter("function") != null) {
@@ -31,50 +38,20 @@ if (request.getParameter("function") != null) {
 }
 String moduleName = EDocUtil.getModuleName(module, moduleid);
 
-String nowDate = EDocUtil.getDmsDateTime();
-
-OscarProperties props = OscarProperties.getInstance();
-
-AddEditDocumentForm formdata = new AddEditDocumentForm();
-String defaultType = (String) props.getProperty("eDocAddTypeDefault", "");
-String defaultDesc = "Enter Document Title"; //if defaultType isn't defined, this value is used for the title/description
-
-Hashtable errors = new Hashtable();
-if (request.getAttribute("errors") != null) {
-    errors = (Hashtable) request.getAttribute("errors");
+//sorting
+String sort = EDocUtil.SORT_OBSERVATIONDATE;
+String sortRequest = request.getParameter("sort");
+if (sortRequest != null) {
+    if (sortRequest.equals("description")) sort = EDocUtil.SORT_DESCRIPTION;
+    else if (sortRequest.equals("type")) sort = EDocUtil.SORT_DOCTYPE;
+    else if (sortRequest.equals("contenttype")) sort = EDocUtil.SORT_CONTENTTYPE;
+    else if (sortRequest.equals("creator")) sort = EDocUtil.SORT_CREATOR;
+    else if (sortRequest.equals("uploaddate")) sort = EDocUtil.SORT_DATE;
+    else if (sortRequest.equals("observationdate")) sort = EDocUtil.SORT_OBSERVATIONDATE;
 }
 
-String mode = "";
-if (request.getAttribute("mode") != null) {
-    mode = (String) request.getAttribute("mode");
-} else {
-    mode = (String) request.getParameter("mode");
-}
+ArrayList doctypes = EDocUtil.getDoctypes(module);
 
-String editDocumentNo = "";
-if (request.getAttribute("editDocumentNo") != null) {
-    editDocumentNo = (String) request.getAttribute("editDocumentNo");
-} else {
-    editDocumentNo = (String) request.getParameter("editDocumentNo");
-}
-
-if (request.getAttribute("completedForm") != null) {
-    formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
-} else if (editDocumentNo != null) {
-    EDoc currentDoc = EDocUtil.getDoc(editDocumentNo);
-    formdata.setFunction(currentDoc.getModule());
-    formdata.setFunctionId(currentDoc.getModuleId());
-    formdata.setDocType(currentDoc.getType());
-    formdata.setDocDesc(currentDoc.getDescription());
-    formdata.setDocCreator(user_no);
-} else {
-    formdata.setFunction(module);  //"module" and "function" are the same
-    formdata.setFunctionId(moduleid);
-    formdata.setDocType((String) props.getProperty("eDocAddTypeDefault", ""));
-    formdata.setDocDesc(defaultType.equals("")?defaultDesc:defaultType);
-    formdata.setDocCreator(user_no);
-}
-ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 %>
 <html:html locale="true">
 <head>
@@ -87,6 +64,7 @@ ArrayList doctypes = EDocUtil.getDoctypes(formdata.getFunction());
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
 <link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
+<link rel="stylesheet" type="text/css" href="dms.css"/>
 <link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
 <script type="text/javascript">
@@ -94,135 +72,13 @@ window.onload=function(){
 if(!NiftyCheck())
     return;
 
-Rounded("div.topplane","top","transparent","#d1d5bd","small border #d1d5bd");
-Rounded("div.topplane","bottom","transparent","#f2f7ff","small border #d1d5bd");
-
 Rounded("div.doclist","top","transparent", "#ccccd7", "small border #ccccd7");
 Rounded("div.doclist","bottom","transparent", "#e0ecff", "small border #ccccd7");
 Rounded("div.leftplane","top", "transparent", "#CCCCFF","small border #ccccff");
 Rounded("div.leftplane","bottom","transparent","#EEEEFF","small border #ccccff");
-<%--request attribute "errors" is used to check if a document was just submitted --%>
-<% if ((request.getAttribute("errors") != null) || (mode != null) || (editDocumentNo != null)) { %> 
-showhide('addDocDiv', 'plusminusAddDocA')
-<%}%>
-}
-</script>
-
-<style type="text/css">
-div.leftplane {
-    width: 90%;
-    margin-left: 3px;
-    margin-right: 3px;
-    margin-top: 3px;
+onloadfunction();
 }
 
-div.leftplane h3 {
-    background-color: #ccccff;
-    font-variant: small-caps;
-    font-weight: bold;
-    font-size: 11px;
-    margin: 0px;
-    padding-left: 10px;
-}
-
-
-div.leftplane ul {
-    list-style: none;
-    list-style-type: none;
-    list-style-position: outside;
-    font-size: 12px;
-    padding: 0px;
-    margin: 0px;
-}
-    
-div.leftplane li {
-    padding-left: 5px;
-    white-space: nowrap;
-}
-
-div.doclist {
-    padding: 0px;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-}
-
-div.documentLists {
-    padding-bottom: 2px;
-}
-table.docTable {
-    border: 0px;
-    padding: 0px;
-    width: 100%;
-}
-
-table.docTable td {
-    border-bottom: solid 1px #afafaf;
-    font-size: 12px;
-    margin-top: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-
-div.plusminus {
-    font-size: 10px; 
-    font-weight: bold;
-    padding-left: 5px;
-    padding-top: 0px;
-    height: 20px;
-}
-
-div.docheading {
-    padding-left: 20px;
-    font-weight: bold;
-    font-size: 13px;
-    margin-top: 0px;
-    padding-top: 0px;
-}
-
-div.headerline {
-    background-color: #ccccd7;
-    vertial-align: middle;
-}
-
-div.topplane {
-    margin-right: 5px;
-    margin-left: 5px;
-}
-
-/* Global */
-a { 
-    text-decoration: none; color: #7552ca;
-}
-a:hover {
-    text-decoration: none; color: #bd528e;
-}
-
-input {
-    border: 1px solid #7682b1;
-}
-
-input.tightCheckbox{
-    margin:0px;
-    padding:0px;
-}
-
-</style>
-
-<script language="JavaScript">
-var remote=null;
-function refresh() {
-  document.location.reload();
-}
-function rs(n,u,w,h,x) {
-	args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-	remote=window.open(u,n,args);
-	if (remote != null) {
-		if (remote.opener == null)
-		remote.opener = self;
-	}
-	if (x == 1) { return remote; }
-}
 
 var awnd=null;
 function popPage(url) {
@@ -236,12 +92,6 @@ function checkDelete(url, docDescription){
 	if(confirm("<bean:message key="dms.documentReport.msgDelete"/> " + docDescription)) {
 		window.location = url;
 	}
-}
-
-
-
-function setfocus() {
-	this.focus();
 }
 
 function showhide(hideelement, button) {
@@ -259,27 +109,11 @@ function showhide(hideelement, button) {
     }
 }
 
-function checkSel(sel){
-  theForm = sel.form;
-  if ((theForm.docDesc.value == "") || (theForm.docDesc.value == "<%= defaultDesc%>")) {
-       theForm.docDesc.value = theForm.docType.value;
-       theForm.docDesc.focus();
-       theForm.docDesc.select();
-  }
-}
 
-function checkDefaultValue(object) {
-  //selectBoxType = object.form.docType
-  //var selectedType = selectBoxType.options[selectBoxType.selectedIndex].value;
-  if ((object.value == "<%= defaultDesc%>") || (object.value == "<%= defaultType%>")) {
-      object.value = "";
-  }
-}
-
-function checkAll(checkboxId,parentEle){
+function checkAll(checkboxId,parentEle, className){
    var f = document.getElementById(checkboxId);
    var val = f.checked;
-   var chkList = document.getElementsByClassName('tightCheckbox',parentEle);
+   var chkList = document.getElementsByClassName(className, parentEle);
    for (i =0; i < chkList.length; i++){
       chkList[i].checked = val;
    }
@@ -300,15 +134,26 @@ function verifyChecks(t){
          alert("No documents selected");
          return false
             request.setAttribute("functionid", request.getParameter("functionid"));
-            e.printStackTrace();;   
+            e.printStackTrace();
       }
    }
    return true;
 }
 
+function popup1(height, width, url, windowName){   
+  var page = url;  
+  windowprops = "height="+height+",width="+width+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";  
+  var popup=window.open(url, windowName, windowprops);  
+  if (popup != null){  
+    if (popup.opener == null){  
+      popup.opener = self;  
+    }  
+  }  
+  popup.focus();  
+}
 </script>
+
 <script src="../share/javascript/prototype.js" type="text/javascript"></script>
-</head>
 
 <body class="bodystyle">
    
@@ -347,69 +192,68 @@ function verifyChecks(t){
          </td>
          --%>
          <td class="MainTableRightColumn" colspan="2" valign="top">
-             <html:form action="/dms/addEditDocument" method="POST" enctype="multipart/form-data">
-                <div class="topplane">
-                    <div class="docHeading" style="background-color: #d1d5bd;">
-                        <a id="plusminusAddDocA" href="javascript: showhide('addDocDiv', 'plusminusAddDocA');">
-                         + Add Document
-                        </a>
-                    </div>
-                    <div id="addDocDiv" class="addDocDiv" style="background-color: #f2f5e3; display: none;">
-                            <%-- Lists Errors --%>
-                            <% for (Enumeration errorkeys = errors.keys(); errorkeys.hasMoreElements();) {%>
-                            <font class="warning">Error: <bean:message key="<%=(String) errors.get(errorkeys.nextElement())%>"/></font><br/>
-                            <% } %>
-                            <input type="hidden" name="function" value="<%=formdata.getFunction()%>" size="20">
-                            <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
-                            <input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
-                            <select name="docType" onchange="checkSel(this)"<% if (errors.containsKey("typemissing")) {%> class="warning"<%}%>>
-                               <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
-                               <%
-                               for (int i=0; i<doctypes.size(); i++) {
-                                  String doctype = (String) doctypes.get(i); %>
-                              <option value="<%= doctype%>"<%=(formdata.getDocType().equals(doctype))?" selected":""%>><%= doctype%></option>
-                             <%}%>
-                            </select>
-
-                            <input type="text" name="docDesc" size="30" value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"<% if (errors.containsKey("descmissing")) {%> class="warning"<%}%>>
-                            <input type="hidden" name="docCreator" value="<%=formdata.getDocCreator()%>" size="20">
-                            <input type="file" name="docFile" size="20"<% if (errors.containsKey("uploaderror")) {%> class="warning"<%}%>>
-                            <br/>
-                            <input type="hidden" name="mode" value="<% if (editDocumentNo != null) {out.print(editDocumentNo);} else {%>add<% } %>">
-                            <input type="SUBMIT" name="Submit" value="<% if (editDocumentNo != null) {%>Update<%} else {%>Add<%}%>" onclick="javascript: this.disabled=true">
-                            <input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onclick="javascript: window.location='documentReport.jsp?function=<%=module%>&functionid=<%=moduleid%>'">
-                            <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnAddHTML"/>" onclick="window.open('../dms/addhtmldocument.jsp?function=<%=module%>&functionid=<%=moduleid%>&creator=<%=user_no%>','', 'scrollbars=yes,resizable=yes,width=600,height=600')";>
-                    </div>
-               </div>
-             </html:form>
-         
+           <jsp:include page="addDocument.jsp"/>
+           
            <html:form action="/dms/combinePDFs" onsubmit="return verifyChecks(this);">
            
-           <div class="documentLists">  
+           <div class="documentLists">
+               <%-- STUFF TO DISPLAY --%>
+             <%
+                ArrayList categories = new ArrayList();
+                ArrayList categoryKeys = new ArrayList();
+                ArrayList privatedocs = new ArrayList();
+                privatedocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PRIVATE, sort);
+
+                categories.add(privatedocs);
+                categoryKeys.add(moduleName + "'s Private Documents");
+                if (module.equals("provider")) {
+                    ArrayList publicdocs = new ArrayList();
+                    publicdocs = EDocUtil.listDocs(module, moduleid, view, EDocUtil.PUBLIC, sort);
+                    categories.add(publicdocs);
+                    categoryKeys.add("Public Documents");
+                }
+                
+                
+                for (int i=0; i<categories.size();i++) {
+                    String currentkey = (String) categoryKeys.get(i);
+                    ArrayList category = (ArrayList) categories.get(i);
+             %>
               <div class="doclist">
                    <div class="headerline">
                          <div class="docHeading">
-                                <a id="plusminusPrivateA" href="javascript: showhide('privateDocsDiv', 'plusminusPrivateA');">
-                                  -- <%=moduleName%>'s Private Documents
+                                <a id="plusminus<%=i%>" href="javascript: showhide('documentsInnerDiv<%=i%>', 'plusminus<%=i%>');">
+                                  -- <%= currentkey%> 
                                 </a>
+                                <span class="tabs">
+                                     View: <a href="?function=<%=module%>&functionid=<%=moduleid%>">All</a>
+                                     <% for (int i3=0; i3<doctypes.size(); i3++) { %>
+                                        | <a href="?function=<%=module%>&functionid=<%=moduleid%>&view=<%=(String) doctypes.get(i3)%>"><%=(String) doctypes.get(i3)%></a>
+                                     <%}%>
+                                </span>
+                                
                          </div>
                    </div>
-                 <div id="privateDocsDiv" style="background-color: #f2f7ff;">
+                 <div id="documentsInnerDiv<%=i%>" style="background-color: #f2f7ff;">
                         <table id="privateDocs" class="docTable">
                            <tr>
-                               <td><input class="tightCheckbox" type="checkbox" id="pdfCheck1" onclick="checkAll('pdfCheck1','privateDocsDiv');"/></td>
-                               <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-                               <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-                               <td width="17%"><b><bean:message key="dms.documentReport.msgCreator"/></b></td>
-                               <td width="21%"><b>Last Modified</b></td>
-                               <td width="13%"><b><bean:message key="dms.documentReport.msgAction"/></b></td>
+                               <td><input class="tightCheckbox" type="checkbox" id="pdfCheck<%=i%>" onclick="checkAll('pdfCheck<%=i%>','privateDocsDiv', 'tightCheckbox<%=i%>');"/></td>
+                               <td width="30%"><b><a href="?sort=description&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocDesc"/></b></a></td>
+                               <td width="10%"><b><a href="?sort=contenttype&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>">Content Type</b></a></td>
+                               <td width="15%"><b><a href="?sort=type&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgDocType"/></b></a></td>
+                               <td width="20%"><b><a href="?sort=creator&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><bean:message key="dms.documentReport.msgCreator"/></b></a></td>
+                               <td width="15%"><a href="?sort=observationdate&function=<%=module%>&functionid=<%=moduleid%>&view=<%=view%>"><b>Observation Date</b></a></td>
+                               <td width="10%"><b><bean:message key="dms.documentReport.msgAction"/></b></td>
                            </tr>
 
               <%
-                ArrayList privatedocs = EDocUtil.listDocs(module, moduleid, EDocUtil.PRIVATE);
-
-                for (int i=0; i<privatedocs.size(); i++) {
-                    EDoc curdoc = (EDoc) privatedocs.get(i);
+                for (int i2=0; i2<category.size(); i2++) {
+                    EDoc curdoc = (EDoc) category.get(i2);
+                    //content type (take everything following '/')
+                    int slash = 0;
+                    String contentType = "";
+                    if ((slash = curdoc.getContentType().indexOf('/')) != -1) {
+                        contentType = curdoc.getContentType().substring(slash+1);
+                    }
                     String dStatus = "";
                     if ((curdoc.getStatus() + "").compareTo("A") == 0) dStatus="active";
                     else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
@@ -417,85 +261,46 @@ function verifyChecks(t){
                            <tr>
                               <td>
                                   <% if (curdoc.isPDF()){%>
-                                        <input class="tightCheckbox" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getDocId()%>"/>
+                                        <input class="tightCheckbox<%=i%>" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getDocId()%>" style="margin:0px; padding:0px;"/>
                                   <%}else{%>
                                         &nbsp;
                                   <%}%>
                               </td>
-                              <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(curdoc.getFileName())%>&type=<%=dStatus%>&doc_no=<%=curdoc.getDocId()%>', 480,480,1)"><%=curdoc.getDescription()%></td>
-                              <td width="15%"><%=curdoc.getType()%></td>
-                              <td width="17%"><%=curdoc.getCreatorName()%></td>
-                              <td width="21%"><%=curdoc.getDateTimeStamp()%></td>
-                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
-                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
+                              <td>
+                              <% 
+                              String url = "documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(curdoc.getFileName()) + "&type=" + dStatus + "&doc_no=" + curdoc.getDocId();
+                              if (curdoc.getStatus() == 'H') { %>
+                                 <a href="<%=url%>" target="_blank">
+                              <% } else { %>
+                                 <a href="javascript:popup1(480, 480, '<%=url%>', 'edoc<%=i2%>')">
+                              <% } %>
+                                 <%=curdoc.getDescription()%>
+                              </td>
+                              <td><%=contentType%></td>
+                              <td><%=curdoc.getType()%></td>
+                              <td><%=curdoc.getCreatorName()%></td>
+                              <td><%=curdoc.getObservationDate()%></td>
+                              <td><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
+                              <% if (curdoc.getStatus() == 'H') { %>
+                                <a href="#" onclick="popup(420, 600, 'addedithtmldocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+                              <% } else { %>
+                                <a href="#" onclick="popup(300, 500, 'editDocument.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>', 'EditDoc')">
+                              <% } %>
+                              <bean:message key="dms.documentReport.btnEdit"/></a></td>
                            </tr>
 
-            <%   }
-                 if (privatedocs.size() == 0) { %>
-                           <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
-               <%}%>
+            <%}
+            if (category.size() == 0) {%>
+            <tr><td colspan="6">No documents to display</td></tr>
+            <%}%>
                         </table>
-                 </div>
-              </div>
-            <% if (module.compareTo("provider") == 0) { %>
-              <div class="doclist">
-                   <div class="headerline">
-                         <div class="docHeading">
-                                <a id="plusminusPublicA" href="javascript: showhide('publicDocs', 'plusminusPublicA');">
-                                  -- <bean:message key="dms.documentReport.msgShareFolder"/>
-                                </a>
-                         </div>
-                   </div>
-
-                   <div id="publicDocsDiv" style="background-color: #f2f7ff;">
-                        <table id="publicDocs" class="docTable">
-                            <tr>
-                              <td><input class="tightCheckbox" type="checkbox" id="pdfCheck2" onclick="checkAll('pdfCheck2','publicDocsDiv');"/></td>
-                              <td width="34%"><b><bean:message key="dms.documentReport.msgDocDesc"/></b></td>
-                              <td width="15%"><b><bean:message key="dms.documentReport.msgDocType"/></b></td>
-                              <td width="17%"><b><%=module.substring(0,1).toUpperCase()%><%=module.substring(1)%></b></td>
-                              <td width="21%"><b>Last Modified</b></td>
-                              <td width="13%"><b><bean:message key="dms.documentReport.msgActive"/></b></td>
-                            </tr>
-            <%
-
-                ArrayList publicdocs = EDocUtil.listDocs(module, moduleid, EDocUtil.PUBLIC);
-
-                for (int i=0; i<publicdocs.size(); i++) {
-                    EDoc curdoc = (EDoc) publicdocs.get(i);
-                    String dStatus = "";
-                    if ((curdoc.getStatus() + "").compareTo("A") == 0) dStatus="active";
-                    else if ((curdoc.getStatus() + "").compareTo("H") == 0) dStatus="html";
-              %>
-                           <tr>
-                              <td><%
-                                   if (curdoc.isPDF()){%>
-                                        <input class="tightCheckbox" type="checkbox" name="docNo" id="docNo<%=curdoc.getDocId()%>" value="<%=curdoc.getDocId()%>"/>
-                                  <%}else{%>
-                                        &nbsp;
-                                  <%}%>
-                              </td>
-                              <td width="34%"><a href=# onClick="javascript:rs('new','documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(curdoc.getFileName())%>&type=<%=dStatus%>&doc_no=<%=curdoc.getDocId()%>', 480,480,1)"><%=curdoc.getDescription()%></td>
-                              <td width="15%"><%=curdoc.getType()%></td>
-                              <td width="17%"><%=curdoc.getCreatorName()%></td>
-                              <td width="21%"><%=curdoc.getDateTimeStamp()%></td>
-                              <td width="13%"><a href="javascript: checkDelete('documentReport.jsp?delDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>','<%=curdoc.getDescription()%>')"><bean:message key="dms.documentReport.btnDelete"/></a> &nbsp; &nbsp; 
-                                              <a href="javascript: window.location='documentReport.jsp?editDocumentNo=<%=curdoc.getDocId()%>&function=<%=module%>&functionid=<%=moduleid%>'"><bean:message key="dms.documentReport.btnEdit"/></a></td>
-                           </tr>
-
-            <%   }
-                 if (publicdocs.size() == 0) { %>
-                            <tr><td colspan='5'><bean:message key="dms.documentReport.msgNoMatch"/></td></tr>
-            <% } %>
-            </table>
-           <%}%>
-               
                         
                    </div>
               </div>
+              <%}%>
 
             </div>
-            <div style="float: left; clear: left;">
+            <div>
               <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
               <input type="button" name="print" value='<bean:message key="global.btnPrint"/>' onClick="window.print()">
               <input type="submit" value="Combine PDFs"/>
