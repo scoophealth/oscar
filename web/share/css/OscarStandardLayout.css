@@ -69,8 +69,8 @@ H3 {
 
 .ControlTextarea
 {
-    font-family:Verdana,Tahoma,Arial,sans-serif;
-    font-size:100%;
+    font-family: Verdana,Tahoma,Arial,sans-serif;
+    font-size: 100%;
 }
 
 .FakeLink
@@ -117,6 +117,10 @@ font.warning {
 input.warning, select.warning, file.warning {
         border: 1px solid #e26e6e;
 }
+font.comment {
+        font-size:10px;
+        vertical-align: super;
+}
 
 /*These are my additions*********************** */
 H4 {
@@ -156,38 +160,38 @@ TH {
 
 .ControlTextarea
 {
-    font-family:Verdana,Tahoma,Arial,sans-serif;
-    font-size:100%;
+    font-family: Verdana,Tahoma,Arial,sans-serif;
+    font-size: 100%;
 }
 
 .ControlSelect {
     font-family: Verdana, Tahoma, Arial, sans-serif;
-    font-size:80%;
-    width:100%;
+    font-size: 80%;
+    width: 100%;
 }
 .LeftTable
 {
-    width:100%;
+    width: 100%;
 }
 
 .BodyStyle
 {
-    margin-left:0;
-    margin-right:0;
-    margin-top:0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
 }
 
 .MainTable
 {
     border-collapse: collapse;
-    border-color:#111111;
-    border-width:0;
-    padding-bottom:0;
-    padding-top:0;
-    padding-left:0;
-    padding-right:0;
-    width:100%;
-    font-size:80%;
+    border-color: #111111;
+    border-width: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    font-size: 80%;
 }
 .MainTableTopRowLeftColumn
 {
@@ -237,19 +241,19 @@ TH {
 }
 .TopStatusBar
 {
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:800;
+    font-weight: bold;
+    background-color: #6699cc;
+    color: black;
+    height: 23px;
+    width: 800px;
 }
 .TopStatusBarShort
 {
-    font-weight:bold;
-    background-color:#6699cc;
-    color:black;
-    height:23px;
-    width:500;
+    font-weight: bold;
+    background-color: #6699cc;
+    color: black;
+    height: 23px;
+    width: 500px;
 }
 .Title
 {
