@@ -1,4 +1,3 @@
-
 package oscar.dms.data;
 
 import org.apache.struts.action.*;
@@ -12,7 +11,10 @@ public class AddEditDocumentForm extends ActionForm {
     private String docDesc = "";
     private String docCreator = "";
     private FormFile docFile;
+    private String docPublic = "";
     private String mode = "";
+    private String observationDate = "";
+    private String html = "";
     
     public AddEditDocumentForm() {
     }
@@ -71,6 +73,30 @@ public class AddEditDocumentForm extends ActionForm {
 
     public void setMode(String mode) {
         this.mode = mode;
+    }
+
+    public String getDocPublic() {
+        return docPublic;
+    }
+
+    public void setDocPublic(String docPublic) {
+        this.docPublic = docPublic;
+    }
+
+    public String getObservationDate() {
+        return observationDate;
+    }
+
+    public void setObservationDate(String observationDate) {
+        this.observationDate = observationDate;
+    }
+
+    public String getHtml() {
+        return html;
+    }
+
+    public void setHtml(String html) {
+        this.html = html;
     }
     
 }

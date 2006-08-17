@@ -3,6 +3,7 @@ package oscar.dms;
 
 import oscar.oscarTags.*;
 import oscar.util.*;
+import java.util.Date;
 
 public class EDoc extends TagObject {
     private String docId;
@@ -10,26 +11,29 @@ public class EDoc extends TagObject {
     private String dateTimeStamp = "";
     private String type = "";
     private String fileName = "";
-    private String xml = "";
+    private String html = "";
     private String creatorId = "";
     private char status;
     private String module = "";
     private String moduleId = "";
+    private String docPublic = "0";
     private String contentType = "";
+    private String observationDate = "";
     
     /** Creates a new instance of EDoc */
     public EDoc() {
     }
     
-    public EDoc(String description, String type, String fileName, String xml, String creatorId, char status, String module, String moduleId) {
-        this.description = description.trim();
-        this.type = type.trim();
-        this.fileName = fileName.trim();
-        this.xml = xml;
-        this.creatorId = creatorId.trim();
-        this.status = status;
-        this.module = module.trim();
-        this.moduleId = moduleId.trim();
+    public EDoc(String description, String type, String fileName, String html, String creatorId, char status, String observationDate, String module, String moduleId) {
+        this.setDescription(description.trim());
+        this.setType(type.trim());
+        this.setFileName(fileName.trim());
+        this.setHtml(html);
+        this.setCreatorId(creatorId.trim());
+        this.setStatus(status);
+        this.setModule(module.trim());
+        this.setModuleId(moduleId.trim());
+        this.setObservationDate(observationDate);
         preliminaryProcessing();
     }
     
@@ -105,12 +109,12 @@ public class EDoc extends TagObject {
         this.fileName = fileName;
     }
 
-    public String getXml() {
-        return xml;
+    public String getHtml() {
+        return html;
     }
 
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setHtml(String html) {
+        this.html = html;
     }
 
     public String getCreatorId() {
@@ -141,6 +145,21 @@ public class EDoc extends TagObject {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
+
+    public String getDocPublic() {
+        return docPublic;
+    }
+
+    //docPublic = "checked" for the edoc to be public
+    public void setDocPublic(String docPublic) {
+        if (docPublic.equalsIgnoreCase("checked"))
+            this.docPublic = "1";
+        else if ((docPublic == null || docPublic.equals(""))) 
+            this.docPublic = "0";
+        else 
+            this.docPublic = docPublic;
+    }
+    
     /**
      *Returns true if document a PDF.
      */
@@ -149,5 +168,18 @@ public class EDoc extends TagObject {
             return true;
         }
         return false;
+    }
+
+    public String getObservationDate() {
+        return observationDate;
+    }
+
+    public void setObservationDate(String observationDate) {
+        this.observationDate = observationDate;
+    }
+    
+    public void setObservationDate(Date observationDate) {
+        String formattedDate = UtilDateUtilities.DateToString(observationDate, EDocUtil.DMS_DATE_FORMAT);
+        this.observationDate = formattedDate;
     }
 }
