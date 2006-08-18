@@ -27,7 +27,6 @@ package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.*;
 import java.sql.*;
-import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -82,6 +81,7 @@ public class BillingReProcessBillAction
     String afterHour = frm.getAfterHours(); //f
     String newProgram = frm.getNewProgram(); //f
     String billingUnit = frm.getBillingUnit(); ///f
+
     String billingServiceCode = frm.getService_code(); //f
     String billingServicePrice = frm.getBillingAmount(); //f
     String payment_mode = frm.getPaymentMode(); //f
@@ -182,6 +182,37 @@ public class BillingReProcessBillAction
       originalMSPNumber = constructOriginalMSPNumber(dataCenterId, seqNum,
           dateRecieved);
     }
+    /**
+     * Check the bill type, if it has been changed by the user
+     * we need to ensure that the correct fee code is associated
+     * e.g. If bill is changed from MSP to Private, the correct private fee must be retrieved
+     *
+     */
+
+    String persistedBillType = this.getPersistedBillType(billingmasterNo);
+    if (persistedBillType != null) {
+      if (!persistedBillType.equals(billingStatus)) {
+        //if the bill status was chamged to "Bill Patient
+        //And the persisted bill status is anything but private
+        if (msp.BILLPATIENT.equals(billingStatus) &&
+            !msp.PAIDPRIVATE.equals(persistedBillType)) {
+          //get the correct the Private code representation
+          //and correct code amount if applicable
+          //yes, this is lame. Private codes are simply the standard msp
+          //code with the letter 'A' prepended. The current db design should really
+          //have a 'fees' associative table
+          //get the private fee data if it exists
+          String[] privateCodeRecord = SqlUtils.getRow(
+              "select value from billingservice where service_code = 'A" +
+              billingServiceCode + "'");
+          if (privateCodeRecord != null && privateCodeRecord.length == 1) {
+            billingServiceCode = "A" + billingServiceCode;
+            billingServicePrice = privateCodeRecord[0];
+
+          }
+        }
+      }
+    }
 
     String sql = "update billingmaster set "
         + "datacenter = '" + dataCenterId + "', "
@@ -245,7 +276,7 @@ public class BillingReProcessBillAction
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
       db.RunSQL(providerSQL);
-       if(!StringUtils.isNullOrEmpty(billingStatus)){
+      if (!StringUtils.isNullOrEmpty(billingStatus)) {
         msp.updateBillingStatus(frm.getBillNumber(), billingStatus);
       }
       BillingHistoryDAO dao = new BillingHistoryDAO();
@@ -253,10 +284,11 @@ public class BillingReProcessBillAction
       if (frm.getAdjAmount() != null && !"".equals(frm.getAdjAmount())) {
         double dblAdj = Math.abs(new Double(frm.getAdjAmount()).doubleValue());
         //if 1 this adjustment is a debit
-        if("1".equals(frm.getAdjType())){
-          dblAdj = dblAdj*-1.0;
+        if ("1".equals(frm.getAdjType())) {
+          dblAdj = dblAdj * -1.0;
         }
-        dao.createBillingHistoryArchive(frm.getBillingmasterNo(), dblAdj, MSPReconcile.PAYTYPE_IA);
+        dao.createBillingHistoryArchive(frm.getBillingmasterNo(), dblAdj,
+                                        MSPReconcile.PAYTYPE_IA);
         msp.settleIfBalanced(frm.getBillingmasterNo());
       }
       else {
@@ -294,6 +326,23 @@ public class BillingReProcessBillAction
       request.setAttribute("close", "true");
     }
     return mapping.findForward("success");
+  }
+
+  /**
+   * getPersistedBillType
+   *
+   * @param billingmasterNo String
+   * @return String
+   */
+  private String getPersistedBillType(String billingmasterNo) {
+    String qry = "select billingstatus from billingmaster where billingmaster.billingmaster_no = " +
+        billingmasterNo;
+    String row[] = SqlUtils.getRow(qry);
+    String ret = null;
+    if (row != null) {
+      ret = row[0];
+    }
+    return "";
   }
 
   /**
