@@ -84,14 +84,13 @@ public class TeleplanCorrectionActionWCB
 
   private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
 
+  sql_demographic = "update_wcb_demographic", //update demographic information
 
-      sql_demographic = "update_wcb_demographic", //update demographic information
+  sql_wcb = "update_wcb_wcb", //updates wcb form
 
-      sql_wcb = "update_wcb_wcb", //updates wcb form
+  provider_wcb = "update_provider_wcb",
 
-      provider_wcb = "update_provider_wcb",
-
-      CLOSE_RECONCILIATION = "close_reconciliation"; //closes c12 record
+  CLOSE_RECONCILIATION = "close_reconciliation"; //closes c12 record
 
   public ActionForward execute(ActionMapping mapping, ActionForm form,
                                HttpServletRequest request,
@@ -107,35 +106,31 @@ public class TeleplanCorrectionActionWCB
 
       AppointmentMainBean bean = (AppointmentMainBean) request.getSession().
           getAttribute("apptMainBean");
-
-      //bean.queryExecuteUpdate(data.getDemographic(), sql_demographic);
-
       MSPReconcile msp = new MSPReconcile();
-
-      if(!StringUtils.isNullOrEmpty(data.getStatus())){
-          msp.updateBillingStatus(data.getBillingNo(),data.getStatus());
+      String status = data.getStatus();
+      if (!StringUtils.isNullOrEmpty(status)) {
+        status = msp.NOTSUBMITTED.equals(data.getStatus())?msp.WCB:status;
+        msp.updateBillingStatus(data.getBillingNo(), status);
       }
-
-
       BillingHistoryDAO dao = new BillingHistoryDAO();
       //If the adjustment amount field isn't empty, create an archive of the adjustment
-     if (data.getAdjAmount() != null && !"".equals(data.getAdjAmount())) {
-       double dblAdj = Math.abs(new Double(data.getAdjAmount()).doubleValue());
-       //if 1 this adjustment is a debit
-       if("1".equals(data.getAdjType())){
-         dblAdj = dblAdj*-1.0;
-       }
-       dao.createBillingHistoryArchive(data.getId(), dblAdj, MSPReconcile.PAYTYPE_IA);
-       msp.settleIfBalanced(data.getId());
-     }
-     else {
-       /**
-      * Ensure that an audit of the currently modified bill is captured
-      */
-     dao.createBillingHistoryArchive(data.getId());
+      if (data.getAdjAmount() != null && !"".equals(data.getAdjAmount())) {
+        double dblAdj = Math.abs(new Double(data.getAdjAmount()).doubleValue());
+        //if 1 this adjustment is a debit
+        if ("1".equals(data.getAdjType())) {
+          dblAdj = dblAdj * -1.0;
+        }
+        dao.createBillingHistoryArchive(data.getId(), dblAdj,
+                                        MSPReconcile.PAYTYPE_IA);
+        msp.settleIfBalanced(data.getId());
+      }
+      else {
+        /**
+         * Ensure that an audit of the currently modified bill is captured
+         */
+        dao.createBillingHistoryArchive(data.getId());
 
-     }
-
+      }
 
       bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
 
