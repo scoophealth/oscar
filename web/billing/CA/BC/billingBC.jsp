@@ -603,7 +603,11 @@ function formPopupHide(){
 <h3>
 <html:errors/>
 </h1><html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();">
-  <input type="hidden" name="newWCBClaim" value="<%=(String)request.getAttribute("newWCBClaim")%>"/>
+  <input type="hidden" name="newWCBClaim" value="<%=newWCBClaim%>"/>
+  
+  
+  
+  
 <%
   BillingCreateBillingForm thisForm;
   thisForm = (BillingCreateBillingForm) request.getSession().getAttribute("BillingCreateBillingForm");
@@ -795,7 +799,7 @@ function formPopupHide(){
                   for (int i = 0; i < billvisit.length; i++) {
                     String visitTypeDescription = billvisit[i].getVisitType() + "|" + billvisit[i].getDescription();
                 %>
-                  <html:option value="<%=visitTypeDescription%>"><%=billvisit[i].getDescription()%>                  </html:option>
+                  <html:option value="<%=visitTypeDescription%>"><%=visitTypeDescription%>                  </html:option>
                 <%}                %>
                 </html:select>
               </font>
