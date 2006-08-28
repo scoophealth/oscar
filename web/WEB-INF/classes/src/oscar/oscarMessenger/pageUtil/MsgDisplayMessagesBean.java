@@ -42,6 +42,48 @@ public class MsgDisplayMessagesBean {
   private int counter;
   private String currentLocationId;
 
+ /*
+ * edit 2006-0811-01 by wreby
+ */
+  private String filter;
+  
+  //Just sets the filter keyword after ensuring that the user is not trying to
+  // insert any stray single quotes, since that is the escape character in SQL
+  public void setFilter(String filter){
+      if (filter == null || filter.equals("")) {
+          this.filter = null;
+      }
+      else {
+          //get rid of the stray single quotes, since that is the SQL escape character
+          filter.replaceAll("'", "''");
+          this.filter = filter;
+      }
+  }
+  public void clearFilter(){
+      filter = null;
+  }
+  public String getFilter() {
+      if (filter == null ) {
+          filter = "";
+      }
+      
+      return filter;
+  }
+  public String getSQLSearchFilter(String[] colsToSearch) {
+      if ( filter==null || colsToSearch.length == 0) {
+          return "";
+      }
+      else {
+          String search = " and (";
+          int numOfCols = colsToSearch.length;
+          for (int i = 0; i < numOfCols-1; i++) {
+              search = search + colsToSearch[i] + " like '%" + filter + "%' or ";
+          }
+          search = search + colsToSearch[numOfCols-1] + " like '%" + filter + "%') ";
+          return search;
+      }
+  }
+  // end edit 2006-08011-01 by wreby
 
 
   public java.util.Vector getAttach (){
@@ -279,7 +321,7 @@ public class MsgDisplayMessagesBean {
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
     
-
+     String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -291,7 +333,7 @@ public class MsgDisplayMessagesBean {
         
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status not like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid order by "+getOrderBy(orderby)+messageLimit);
+        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby)+messageLimit);
                 
         rs = db.GetSQL(sql);
 
@@ -340,6 +382,8 @@ public java.util.Vector estDemographicInbox(){
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
      int index = 0;
+     
+     String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -351,7 +395,7 @@ public java.util.Vector estDemographicInbox(){
         
         String sql = "select m.messageid, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  " +
               "from  messagetbl m, msgDemoMap map where map.demographic_no = '"+ demographic_no+"'  " +
-              "and m.messageid = map.messageID  order by "+getOrderBy(orderby);
+              "and m.messageid = map.messageID " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby);
         
         
         System.out.println("this "+sql);
@@ -416,7 +460,7 @@ public java.util.Vector estDemographicInbox(){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
-
+     String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -424,7 +468,7 @@ public java.util.Vector estDemographicInbox(){
 
         String sql = new String("select ml.message, ml.status, m.thesubject, m.thedate, m.attachment, m.pdfattachment, m.sentby  from messagelisttbl ml, messagetbl m "
         +" where provider_no = '"+ providerNo+"' and status like \'del\' and remoteLocation = '"+getCurrentLocationId()+"' "
-        +" and ml.message = m.messageid order by "+getOrderBy(orderby));
+        +" and ml.message = m.messageid " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));
                 
         rs = db.GetSQL(sql);
 
@@ -544,13 +588,14 @@ public java.util.Vector estDemographicInbox(){
 
      String providerNo= this.getProviderNo();
      java.util.Vector msg = new java.util.Vector();
+     String[] searchCols = {"m.thesubject", "m.themessage", "m.sentby", "m.sentto"};
 
 
      try{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, attachment, pdfattachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"' order by "+getOrderBy(orderby));                
+        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, attachment, pdfattachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'  " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));                
 
         rs = db.GetSQL(sql);
 
