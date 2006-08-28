@@ -61,7 +61,7 @@ You have no rights to access the data!
 <%@page import="oscar.log.*,oscar.util.UtilMisc,oscar.oscarEncounter.data.*, java.net.*,java.util.*,oscar.util.UtilDateUtilities"%>
 <%@page import="oscar.oscarMDS.data.MDSResultsData,oscar.oscarLab.ca.on.*, oscar.oscarMessenger.util.MsgDemoMap, oscar.oscarMessenger.data.MsgMessageData"%>
 <%@page import="oscar.oscarEncounter.oscarMeasurements.*,oscar.oscarResearch.oscarDxResearch.bean.*,oscar.util.*"%>
-<%@page import="oscar.eform.*,oscar.oscarDocument.data.*,org.apache.commons.lang.StringEscapeUtils" %> 
+<%@page import="oscar.eform.*, oscar.dms.*, org.apache.commons.lang.StringEscapeUtils" %> 
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
@@ -1170,14 +1170,14 @@ white-space: nowrap;
                 </h3>
                 <ul>
                 <% 
-                DocumentData docData = new DocumentData();
-                ArrayList docList = docData.getDocumentListForDemographic(bean.demographicNo);
+                
+                ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE);
                 for (int i=0; i< docList.size(); i++) {
-                    Hashtable curDoc = (Hashtable) docList.get(i);
-                    String dispFilename = (String) curDoc.get("docfilename");
-                    String dispStatus   = (String) curDoc.get("status");
-                    String dispDocNo    = (String) curDoc.get("document_no");
-                    String dispDesc     = (String) curDoc.get("docdesc");
+                    EDoc curDoc = (EDoc) docList.get(i);
+                    String dispFilename = curDoc.getFileName();
+                    String dispStatus   = curDoc.getStatus() + "";
+                    String dispDocNo    = curDoc.getDocId();
+                    String dispDesc     = curDoc.getDescription();
                    
                 %>
                    <li >
