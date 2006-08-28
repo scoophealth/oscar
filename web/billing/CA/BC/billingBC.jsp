@@ -603,11 +603,7 @@ function formPopupHide(){
 <h3>
 <html:errors/>
 </h1><html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();">
-  <input type="hidden" name="newWCBClaim" value="<%=newWCBClaim%>"/>
-  
-  
-  
-  
+  <input type="hidden" name="newWCBClaim" value="<%=(String)request.getAttribute("newWCBClaim")%>"/>
 <%
   BillingCreateBillingForm thisForm;
   thisForm = (BillingCreateBillingForm) request.getSession().getAttribute("BillingCreateBillingForm");
