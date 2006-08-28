@@ -146,7 +146,7 @@ function selectProviderCaisi(p,pn) {
       <td><%=spnf%></td>
 <caisi:isModuleLoad moduleName="ticklerplus">
       <input type="hidden" name="<%=sp%>_name" id="<%=sp%>_name" value="<%=new String(spnl+","+ spnf)%>"/>
-</caisi:IsModuleLoad>
+</caisi:isModuleLoad>
     </tr>
 <%
     nItems++;
