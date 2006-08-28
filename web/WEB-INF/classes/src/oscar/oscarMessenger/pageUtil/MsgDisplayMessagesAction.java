@@ -1,3 +1,4 @@
+
 // -----------------------------------------------------------------------------------------------------------------------
 // *
 // *
@@ -80,19 +81,39 @@ public class MsgDisplayMessagesAction extends Action {
             }//else
             
             
-            //This will go through the array of message Numbers and set them
-            //to del.which stands for deleted. but you prolly could have figured that out
-            
-            providerNo= bean.getProviderNo();
-            for (int i =0 ; i < messageNo.length ; i++){
-              try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                java.sql.ResultSet rs;
-                String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
-                db.RunSQL(sql);
-                db.CloseConn();
-              }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
-            }//for
+            /*
+             *edit 2006-0811-01 by wreby
+             *  Adding a search and clear search action to the DisplayMessages JSP
+             */
+            if (request.getParameter("btnSearch") != null) {
+                oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean displayMsgBean 
+                        = (oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean)request.getSession().getAttribute("DisplayMessagesBeanId");
+                
+                displayMsgBean.setFilter(request.getParameter("searchString"));
+            }
+            else if (request.getParameter("btnClearSearch") != null) {
+                oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean displayMsgBean 
+                        = (oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean)request.getSession().getAttribute("DisplayMessagesBeanId");
+                displayMsgBean.clearFilter();
+            }
+            else if (request.getParameter("btnDelete")!=null) {
+                //This will go through the array of message Numbers and set them
+                //to del.which stands for deleted. but you prolly could have figured that out
+
+                providerNo= bean.getProviderNo();
+                for (int i =0 ; i < messageNo.length ; i++){
+                  try{
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    java.sql.ResultSet rs;
+                    String sql = new String("update messagelisttbl set status = \'del\' where provider_no = \'"+providerNo+"\' and message = \'"+messageNo[i]+"\'");
+                    db.RunSQL(sql);
+                    db.CloseConn();
+                  }catch (java.sql.SQLException e){ e.printStackTrace(System.out); }
+                }//for
+            }
+            else {
+                System.out.println("Unexpected action in MsgDisplayMessagesBean.java");
+            }
            
             //System.out.println("findFoward: " + findForward);
     return (mapping.findForward(findForward));
