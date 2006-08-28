@@ -71,6 +71,21 @@ public  class MsgHandleMessagesAction extends Action {
         HttpSession session = request.getSession(true);
         java.util.Enumeration ty = session.getAttributeNames();
 
+        /*
+         *edit 2006-0801-01 by wreby
+         *This will search the database to determine if any demographic was
+         *associated with the parent message.  If so, it will now set the
+         *demographic_no attribute so that the demographic is associated with
+         *the child message too.
+         */
+        oscar.oscarMessenger.util.MsgDemoMap msgDemoMap = new oscar.oscarMessenger.util.MsgDemoMap();
+        java.util.Hashtable demoMap = msgDemoMap.getDemoMap( messageNo );
+        java.util.Enumeration demoKeys = demoMap.keys();
+        if (demoKeys.hasMoreElements()) {
+            demographicNo = demoKeys.nextElement().toString();
+        }
+        // end edit 2006-0801-01 by wreby
+        
         //Set Demographic_no attribute if there's any
         if(demographicNo != null){
             request.setAttribute("demographic_no", demographicNo);
