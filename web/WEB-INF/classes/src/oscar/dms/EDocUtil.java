@@ -111,17 +111,17 @@ public class EDocUtil extends SqlUtilBase {
     public static ArrayList listDocs(String module, String moduleid, String docType, String publicDoc, String sort) {
         //sort must be not null
         //docType = null or = "all"  to show all doctypes
-        
+        //select publicDoc and sorting from static variables for this class i.e. sort=EDocUtil.SORT_OBSERVATIONDATE
         //sql base (prefix) to avoid repetition in the if-statements
         String sql = "SELECT DISTINCT c.module, c.module_id, d.doccreator, d.status, d.docdesc, d.docfilename, d.doctype, d.document_no, d.updatedatetime, d.contenttype, d.observationdate FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND c.module='" + module + "'";
         //if-statements to select the where condition (suffix)
         if (publicDoc.equals(PUBLIC)) {
-            if ((docType.equals("all")) || (docType == null) || (docType.equals("")))
+            if ((docType == null) || (docType.equals("all")) || (docType.equals("")))
                 sql = sql + " AND d.public=1";
             else
                 sql = sql + " AND d.public=1 AND d.doctype='" + docType + "'";
         } else {
-            if ((docType.equals("all")) || (docType == null) || (docType.equals("")))
+            if ((docType == null) || (docType.equals("all")) || (docType.equals("")))
                 sql = sql + " AND c.module_id='" + moduleid + "' AND d.public=0";
             else
                 sql = sql + " AND c.module_id='" + moduleid + "' AND d.public=0 AND d.doctype='" + docType + "'";
