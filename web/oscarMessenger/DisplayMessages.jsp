@@ -60,7 +60,6 @@ if ( demographic_no != null ) {
 
 pageContext.setAttribute("pageType",""+pageType);
 
-
 if (request.getParameter("orderby") != null){
     String orderby = request.getParameter("orderby");
     String sessionOrderby = (String) session.getAttribute("orderby");     
@@ -92,7 +91,8 @@ oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUt
 %>
 <jsp:useBean id="DisplayMessagesBeanId" scope="session" class="oscar.oscarMessenger.pageUtil.MsgDisplayMessagesBean" />
 <% DisplayMessagesBeanId.setProviderNo(bean.getProviderNo());
-bean.nullAttachment();%>
+bean.nullAttachment();
+%>
 <jsp:setProperty name="DisplayMessagesBeanId" property="*" />
 <jsp:useBean id="ViewMessageForm" scope="session" class="oscar.oscarMessenger.pageUtil.MsgViewMessageForm"/>
 
@@ -183,7 +183,15 @@ function BackToOscar()
                         }%>
                         </td>
                         <td  >
-
+                            <!-- edit 2006-0811-01 by wreby -->
+                            <html:form action="/oscarMessenger/DisplayMessages">
+                            <input name="boxType" type="hidden" value="<%=pageType%>">
+                            <input name="moreMessages" type="hidden" value="<%=moreMessages%>">
+                            <input name="searchString" type="text" size="20" value="<jsp:getProperty name="DisplayMessagesBeanId" property="filter"/>">
+                            <input name="btnSearch" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.btnSearch"/>">
+                            <input name="btnClearSearch" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.btnClearSearch"/>">
+                            </html:form>
+                            <!-- end edit 2006-0811-01 by wreby -->
                         </td>
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about"/></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license"/></a>
@@ -371,7 +379,7 @@ function BackToOscar()
                                 <tr>
                                     <td>
                                          <%if (pageType == 0){%>
-                                            <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
+                                            <input name="btnDelete" type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formDelete"/>">
                                              <%}else if (pageType == 2){%>
                                             <input type="submit" value="<bean:message key="oscarMessenger.DisplayMessages.formUndelete"/>">
                                             <%}%>  
