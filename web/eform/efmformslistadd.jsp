@@ -123,7 +123,7 @@ function checkSelectBox() {
             <form action="../eform/efmformslistadd.jsp" method="get" onsubmit="return checkSelectBox()">
             <td align="center">
                 <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
-                <select name="group_view">
+                View Group: <select name="group_view" onchange="this.form.submit()">
                       <option value="default"><bean:message key="eform.groups.page.selectDefault"/></option>
 <%                    for (int i=0; i<groups.size(); i++) {        
                           String selected = "";
@@ -135,11 +135,7 @@ function checkSelectBox() {
                               <option value="<%=group%>"<%=selected%>><%=group%> (<%=size%>)</option>
                         <% } %>
                 </select>
-            </td><td>
-                <input type="submit" value="<bean:message key="eform.groups.page.view"/>">
-            </td></form><td>
-                <input type="button" value="<bean:message key="eform.groups.page.viewAll"/>" onclick="javascript:window.location='../eform/efmformslistadd.jsp?demographic_no=<%=demographic_no%>'">
-            </td>
+            </td></form>
     </tr>
      </table>
      
@@ -154,7 +150,7 @@ function checkSelectBox() {
       
 <%
   ArrayList eForms;
-  if (groupView.equals("")) {
+  if (groupView.equals("") || groupView.equals("default")) {
       eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT);
   } else {
       eForms = EFormUtil.listEForms(orderBy, EFormUtil.CURRENT, groupView);

@@ -105,7 +105,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                
                <form action="../eform/efmmanageformgroups.jsp" name="groupSelect" method="get">
                    <tr><td nowrap align='right' nowrap><strong><bean:message key="eform.groups.selectViewGroup"/></strong></td>
-                       <td nowrap><select name="group_view">
+                       <td nowrap><select name="group_view" onchange="this.form.submit()">
 <%                              for (int i=0; i<groups.size(); i++) { 
                                    Hashtable curhash = (Hashtable) groups.get(i);
                                    String selected = "";
@@ -116,7 +116,7 @@ else if (orderByRequest.equals("file_name")) orderBy = EFormUtil.FILE_NAME;
                            <option value="<%= (String) curhash.get("groupName")%>"<%= selected%>><%= (String) curhash.get("groupName")%> (<%= (String) curhash.get("count") %>)</option>
                              <% } %>
                            </select></td>
-                        <td nowrap><input type="submit" name="subm" value="<bean:message key="eform.groups.selectGroup"/>">
+                        <td nowrap>
                             <input type="button" name="del" value="<bean:message key="eform.groups.delGroup"/>" onclick="delGroup()"></td>
                    </tr>
                </form>
