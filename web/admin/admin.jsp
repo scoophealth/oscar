@@ -381,7 +381,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </div>
   </security:oscarSec>
 
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>" >
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
   <!--e forms block -->
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.eForms"/></h3>
@@ -393,7 +393,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </div>
   </security:oscarSec>
 
-  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.misc" rights="r" reverse="<%=false%>" >
+  <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>" >
   <!--// start oscarEncounter block-->
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.oscarEncounter"/></h3>
