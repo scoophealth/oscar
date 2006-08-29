@@ -67,7 +67,7 @@ You have no rights to access the data!
 
 <%
 	String ip = request.getRemoteAddr();
-//	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
+ 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
 %>
 <%
 
