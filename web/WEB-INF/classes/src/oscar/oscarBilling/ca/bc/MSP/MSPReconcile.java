@@ -479,7 +479,7 @@ public class MSPReconcile {
 
     //  Map s00Map = getS00Map();
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
-      providerQuery = " and b.apptProvider_no = '" + providerNo + "'";
+      providerQuery = " and b.provider_no = '" + providerNo + "'";
     }
 
     if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
