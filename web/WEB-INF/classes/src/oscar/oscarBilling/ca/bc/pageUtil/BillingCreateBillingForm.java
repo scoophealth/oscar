@@ -751,6 +751,12 @@ public final class BillingCreateBillingForm
     bean.setEndTimeHr(this.getXml_endtime_hr());
     bean.setEndTimeMin(this.getXml_endtime_min());
     request.setAttribute("loadFromSession", "y");
+
+    //fixes bug where redirection to wcb form was occurring
+    //when billing form in error
+    if("WCB".equals(xml_billtype)){
+      request.setAttribute("newWCBClaim","1");
+    }
     return errors;
   }
   /**
