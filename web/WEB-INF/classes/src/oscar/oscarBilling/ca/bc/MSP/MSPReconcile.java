@@ -1466,7 +1466,7 @@ public class MSPReconcile {
                                               startDate,
                                               endDate, excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
-                                              type);
+                                              type,"");
     Properties c12 = new Properties();
     String orderByClause = "order by billingstatus";
 
@@ -1795,7 +1795,7 @@ public class MSPReconcile {
                                               UtilMisc.replace(endDate, "-", ""),
                                               excludeWCB, excludeMSP,
                                               excludePrivate, exludeICBC,
-                                              this.REP_PAYREF);
+                                              this.REP_PAYREF,"");
     String p = "SELECT teleplanS00.t_payment,b.billingtype,b.demographic_name,apptProvider_no,provider_no,payee_no,b.demographic_no,teleplanS00.t_paidamt,t_exp1,t_exp2,t_dataseq,bm.service_date,bm.paymentMethod,teleplanS00.t_ajc1," +
         " teleplanS00.t_aja1,teleplanS00.t_aja2,teleplanS00.t_aja3,teleplanS00.t_aja4,teleplanS00.t_aja5,teleplanS00.t_aja6,teleplanS00.t_aja7,bm.billingmaster_no,teleplanS00.t_practitionerno" +
         " FROM teleplanS00 left join billingmaster as bm on teleplanS00.t_officeno = bm.billingmaster_no,billing as b" +
@@ -1958,7 +1958,7 @@ public class MSPReconcile {
                                               endDate,
                                               true, true,
                                               false, true,
-                                              "");
+                                              "","creation_date");
     String p = "SELECT b.billingtype,bm.billingmaster_no,b.demographic_no,b.demographic_name,bm.service_date,b.apptProvider_no ,b.provider_no,bm.payee_no," +
         " bh.creation_date,bh.amount_received,payment_type_id" +
         " FROM billing_history bh left join billingmaster bm on bh.billingmaster_no = bm.billingmaster_no ,billing b" +
@@ -2067,10 +2067,17 @@ public class MSPReconcile {
                                       String startDate, String endDate,
                                       boolean excludeWCB, boolean excludeMSP,
                                       boolean excludePrivate,
-                                      boolean exludeICBC, String repType) {
+                                      boolean exludeICBC, String repType,String dateFieldOption) {
     String criteriaQry = "";
     String dateField = this.REP_PAYREF.equals(repType) ?
         "t_payment" : "service_date";
+
+    //This class in need of significant refactoring, this is a quick patch to solve a problem where
+    //wrong date being selected for payments and refunds report
+
+    if("creation_date".equals(dateFieldOption)){
+      dateField = "creation_date";
+    }
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
       criteriaQry += " and b.apptProvider_no = '" + providerNo + "'";
     }
