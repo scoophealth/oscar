@@ -1,4 +1,4 @@
-/* A NON-STATIC VERSION OF SqlUtilBaseS (attempting to convert static to a non-static utility framework)
+/*
  * SqlUtilBase.java
  *
  * Created on July 11, 2006, 1:28 PM
@@ -13,9 +13,9 @@ import oscar.oscarDB.DBHandler;
 import java.util.*;
 import java.sql.*;
 
-public class SqlUtilBase {
+public class SqlUtilBaseS {
            //------------------private
-   protected void runSQL(String sql) {
+   protected static void runSQL(String sql) {
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
@@ -25,7 +25,7 @@ public class SqlUtilBase {
        }
    }
    
-   protected String runSQLinsert(String sql) {
+   protected static String runSQLinsert(String sql) {
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
@@ -39,7 +39,7 @@ public class SqlUtilBase {
        return "";
    }
    
-   protected ResultSet getSQL(String sql) {
+   protected static ResultSet getSQL(String sql) {
        ResultSet rs = null;
        try {
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -51,7 +51,7 @@ public class SqlUtilBase {
        return(rs);
    }
    
-   protected String rsGetString(ResultSet rs, String column) throws SQLException {
+   protected static String rsGetString(ResultSet rs, String column) throws SQLException {
        //protects agianst null values;
        String thisStr = rs.getString(column);
        if (thisStr == null) return "";
