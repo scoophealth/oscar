@@ -5,7 +5,7 @@ import oscar.util.*;
 import java.util.*;
 import java.sql.*;
 
-public class TagUtil extends SqlUtilBase {
+public class TagUtil extends SqlUtilBaseS {
     
     public static ArrayList getIds(String tagName, String className) {
         ArrayList ids = new ArrayList();
