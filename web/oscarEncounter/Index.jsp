@@ -1401,8 +1401,8 @@ border-right: 2px solid #cfcfcf;
 				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
                                     <oscar:oscarPropertiesCheck property="billregion" value="BC">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill'; document.forms['encForm'].submit();">
-                                    </oscar:oscarPropertiesCheck>					
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; document.forms['encForm'].submit(); ">
+                                    </oscar:oscarPropertiesCheck>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
 	</security:oscarSec>
@@ -1415,6 +1415,8 @@ border-right: 2px solid #cfcfcf;
                                     <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
                                     <input type="hidden" name="presBoxSize" value="<%=windowSizes.getProperty("presBoxSize")%>">
                                     <input type="hidden" name="rowThreeSize" value="<%=windowSizes.getProperty("rowThreeSize")%>">
+                                    <input type="hidden" name="status" value="t" />
+                                    <input type="hidden" name="appointment_no" value="<%=bean.appointmentNo%>"/>
                                 </td>
                             </tr>
                         </table>
