@@ -200,6 +200,7 @@ public class EctSaveEncounterAction
       bean.setPatientNo(sessionbean.demographicNo);
       bean.setApptNo(httpservletrequest.getParameter("appointment_no"));
       bean.setApptDate(sessionbean.appointmentDate);
+      bean.setApptStatus(httpservletrequest.getParameter("status"));
       httpservletrequest.setAttribute("encounter", "true");
       httpservletrequest.getSession().setAttribute("billingSessionBean",bean);
       return actionmapping.findForward("bill");
