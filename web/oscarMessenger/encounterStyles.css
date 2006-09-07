@@ -104,7 +104,7 @@ H3 {
         font-weight:bold;
         background-color:#6699cc;
 }
-/*These are my additions************************/
+/*These are my additions*********************** */
 H4 {
     font-size: x-small;
     font-weight: bold;
@@ -137,7 +137,7 @@ TH {
     font-size: small;
     text-decoration: bold;
     background-color: #CBC9E0;
-    //#CBC9E0;
+    /* //#CBC9E0; */
 }
 
 .ControlTextarea
@@ -241,4 +241,35 @@ TH {
     font-size:110%;
     color:white;
 
+}
+
+td.messengerButtonsA{
+    /*background-color: #6666ff;*/
+    /*background-color: #6699cc;*/
+    background-color: #003399;
+}
+td.messengerButtonsD{
+    /*background-color: #84c0f4;*/
+    background-color: #555599;
+}
+a.messengerButtons{
+    color: #ffffff;
+    font-size: 9pt;
+    text-decoration: none;
+}
+table.messButtonsA{
+border-top: 2px solid #cfcfcf;
+border-left: 2px solid #cfcfcf;
+border-bottom: 2px solid #333333;
+border-right: 2px solid #333333;
+}
+
+table.messButtonsD{
+border-top: 2px solid #333333;
+border-left: 2px solid #333333;
+border-bottom: 2px solid #cfcfcf;
+border-right: 2px solid #cfcfcf;
+}
+.NotDisplayable {
+display: none;
 }
