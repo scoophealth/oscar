@@ -2073,7 +2073,10 @@ CREATE TABLE `hl7_obr` (
   `escort_required` char(1) default NULL,
   `planned_patient_transport_comment` varchar(200) default NULL,
   `note` text,
-  PRIMARY KEY  (`obr_id`)
+  PRIMARY KEY  (`obr_id`),
+  KEY `hl7_obr_pid_id` (`pid_id`),
+  KEY `hl7_obr_result_status` (`result_status`),
+  KEY `hl7_obr_observation_date_time` (`observation_date_time`)
 ) TYPE=MyISAM;
  
  
@@ -2103,7 +2106,9 @@ CREATE TABLE `hl7_obx` (
   `responsible_observer` varchar(80) default NULL,
   `observation_method` varchar(60) default NULL,
   `note` text,
-  PRIMARY KEY  (`obx_id`)
+  PRIMARY KEY  (`obx_id`),
+  KEY `hl7_obx_obr_id` (`obr_id`),
+  KEY `hl7_obx_abnormal_flags` (`abnormal_flags`)
 ) TYPE=MyISAM;
  
  
@@ -2134,7 +2139,8 @@ CREATE TABLE `hl7_orc` (
   `entering_organization` char(60) default NULL,
   `entering_device` char(60) default NULL,
   `action_by` char(120) default NULL,
-  PRIMARY KEY  (`orc_id`)
+  PRIMARY KEY  (`orc_id`),
+  KEY `hl7_orc_pid_id` (`pid_id`)
 ) TYPE=MyISAM;
  
  
@@ -2177,7 +2183,10 @@ CREATE TABLE `hl7_pid` (
   `patient_death_date_time` datetime default NULL,
   `patient_death_indicator` char(1) default NULL,
   `note` text,
-  PRIMARY KEY  (`pid_id`)
+  PRIMARY KEY  (`pid_id`),
+  KEY `hl7_pid_patient_name` (`patient_name`),
+  KEY `hl7_pid_external_id` (`external_id`),
+  KEY `hl7_pid_message_id` (`message_id`)
 ) TYPE=MyISAM;
  
  
