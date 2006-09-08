@@ -26,7 +26,7 @@
 <title>
 Demographic Report tool
 </title>
-
+<html:base/>
 <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
      
 <script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
@@ -78,6 +78,7 @@ Demographic Report tool
                             <%}%>
                             </html:select>
                             <input type="submit" value="Load Query" name="query"/>
+                            <a  href="ManageDemographicQueryFavourites.jsp">manage</a>
                         </td>
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  >Help</a> | <a href="javascript:popupStart(300,400,'About.jsp')" >About</a> | <a href="javascript:popupStart(300,400,'License.jsp')" >License</a>
