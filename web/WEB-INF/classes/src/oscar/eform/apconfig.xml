@@ -12,7 +12,7 @@
 	</databaseap>
 	<databaseap>
 		<ap-name>patient_nameF</ap-name>
-		<ap-sql>SELECT last_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+		<ap-sql>SELECT first_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
