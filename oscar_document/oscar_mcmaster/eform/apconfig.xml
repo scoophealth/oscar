@@ -12,8 +12,8 @@
 	</databaseap>
 	<databaseap>
 		<ap-name>patient_nameF</ap-name>
-		<ap-sql>SELECT last_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${last_name}</ap-output>
+		<ap-sql>SELECT first_name FROM demographic WHERE demographic_no=${demographic}</ap-sql>
+		<ap-output>${first_name}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>today</ap-name>
@@ -81,11 +81,6 @@
 		<ap-name>phone</ap-name>
 		<ap-sql>SELECT phone FROM demographic WHERE demographic_no=${demographic}</ap-sql>
 		<ap-output>${phone}</ap-output>
-	</databaseap>
-	<databaseap>
-		<ap-name>phone2</ap-name>
-		<ap-sql>SELECT phone2 FROM demographic WHERE demographic_no=${demographic}</ap-sql>
-		<ap-output>${phone2}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>phone2</ap-name>
