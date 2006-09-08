@@ -114,6 +114,16 @@ public class RptSearchData {
             return retval;
     }
 
+    
+    public void deleteQueryFavourite(String id){
+       try{
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          db.RunSQL("update demographicQueryFavourites set archived = '0' where favId = '"+id+"'");
+       }catch (java.sql.SQLException e){ 
+           e.printStackTrace();
+       }
+    }
+    
 
 ////////////////////////////////////////////////////////////////////////////////
 public class Demographic {
