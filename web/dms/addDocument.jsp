@@ -1,4 +1,6 @@
-<!--  
+<%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
+<%--
 /*
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -18,23 +20,22 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity test2
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
--->
+--%>
 
-<%@page contentType="text/html"%>
-<%@page pageEncoding="UTF-8"%>
-<%--This is included in documentReport.jsp - wasn't meant to be displayed as a separate page --%>
-<%
-String user_no = (String) session.getAttribute("user");
-%>
+
+
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page import="java.util.*, oscar.util.*, oscar.OscarProperties, oscar.dms.*, oscar.dms.data.*" %>
+<%--This is included in documentReport.jsp - wasn't meant to be displayed as a separate page --%>
 <%
+String user_no = (String) session.getAttribute("user");
+
 String module = "";
 String moduleid = "";
 if (request.getParameter("function") != null) {
