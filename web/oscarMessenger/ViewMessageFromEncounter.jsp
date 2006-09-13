@@ -34,7 +34,8 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="encounterStyles.css">
+<link rel="stylesheet" type="text/css" href="encounterStyles.css" media="screen">
+<link rel="stylesheet" type="text/css" href="printable.css" media="print">
 <html:html locale="true">
 <head>
 
@@ -75,41 +76,6 @@ if(msgCount!=null){
 <title>
 <bean:message key="oscarMessenger.ViewMessage.title"/>
 </title>
-
-
-<style type="text/css">
-td.messengerButtonsA{
-    /*background-color: #6666ff;*/
-    /*background-color: #6699cc;*/
-    background-color: #003399;
-}
-td.messengerButtonsD{
-    /*background-color: #84c0f4;*/
-    background-color: #555599;
-}
-a.messengerButtons{
-    color: #ffffff;
-    font-size: 9pt;
-    text-decoration: none;
-}
-
-
-table.messButtonsA{
-border-top: 2px solid #cfcfcf;
-border-left: 2px solid #cfcfcf;
-border-bottom: 2px solid #333333;
-border-right: 2px solid #333333;
-}
-
-table.messButtonsD{
-border-top: 2px solid #333333;
-border-left: 2px solid #333333;
-border-bottom: 2px solid #cfcfcf;
-border-right: 2px solid #cfcfcf;
-}
-
-
-</style>
 
 <script type="text/javascript">
 function BackToOscar()
@@ -178,7 +144,7 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
             <td class="MainTableLeftColumn">
                 &nbsp;
             </td>
-            <td class="MainTableRightColumn">
+            <td class="MainTableRightColumn Printable">
                 <table>
                     <tr>
                         <td>
@@ -189,6 +155,11 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                                             <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnExit"/></a>
                                         </td></tr></table>
                                     </td>
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
+                                            <a href="javascript:window.print()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnPrint"/></a>
+                                        </td></tr></table>
+                                    </td>        
                                     <td><%if(iPrevMsg>=0){%>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <a class="messengerButtons" href="<%=request.getContextPath()%>/oscarMessenger/ViewMessageByPosition.do?from=encounter&msgCount=<%=msgCount%>&orderBy=<%=orderBy%>&demographic_no=<%=request.getParameter("demographic_no")%>&messagePosition=<%=Integer.toString(iPrevMsg)%>">
@@ -210,38 +181,38 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <td class="Printable">
                             <table  cellspacing="1" valign="top">
                                 <tr>
-                                    <td bgcolor="#DDDDFF">
+                                    <td class="Printable" bgcolor="#DDDDFF">
                                     <bean:message key="oscarMessenger.ViewMessage.msgFrom"/>:
                                     </td>
-                                    <td bgcolor="#CCCCFF">
+                                    <td class="Printable" bgcolor="#CCCCFF">
                                     <%= request.getAttribute("viewMessageSentby") %>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td bgcolor="#DDDDFF">
+                                    <td class="Printable" bgcolor="#DDDDFF">
                                     <bean:message key="oscarMessenger.ViewMessage.msgTo"/>:
                                     </td>
-                                    <td bgcolor="#BFBFFF">
+                                    <td class="Printable" bgcolor="#BFBFFF">
                                     <%= request.getAttribute("viewMessageSentto") %>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td bgcolor="#DDDDFF">
+                                    <td class="Printable" bgcolor="#DDDDFF">
                                         <bean:message key="oscarMessenger.ViewMessage.msgSubject"/>:
                                     </td>
-                                    <td bgcolor="#BBBBFF">
+                                    <td class="Printable" bgcolor="#BBBBFF">
                                         <%= request.getAttribute("viewMessageSubject") %>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                  <td bgcolor="#DDDDFF">
+                                  <td class="Printable" bgcolor="#DDDDFF">
                                       <bean:message key="oscarMessenger.ViewMessage.msgDate"/>:
                                   </td>
-                                  <td bgcolor="#B8B8FF">
+                                  <td class="Printable" bgcolor="#B8B8FF">
                                       <%= request.getAttribute("viewMessageDate") %>&nbsp;&nbsp;
                                       <%= request.getAttribute("viewMessageTime") %>
                                   </td>
@@ -321,6 +292,11 @@ function popup(demographicNo, msgId, providerNo) { //open a new popup window
 
             </td>
         </tr>
-    </table>   
+    </table> 
+<!-- I don't like this next part, but it is a working hack for printing long messages.  A prefered solution would
+ move away from textboxes entirely, so that there is more programmatic formating control. -->
+<%  String bodyTextAsHTML = (String) request.getAttribute("viewMessageMessage");
+    bodyTextAsHTML = bodyTextAsHTML.replaceAll("\n|\r\n?","<br/>"); %>
+<p class="NotDisplayable Printable"><%= bodyTextAsHTML %></p>
 </body>
 </html:html>
