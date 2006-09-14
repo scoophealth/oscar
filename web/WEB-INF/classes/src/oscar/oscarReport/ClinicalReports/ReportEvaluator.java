@@ -31,6 +31,7 @@ package oscar.oscarReport.ClinicalReports;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import oscar.oscarMDS.data.ProviderData;
 
 /**
  *
@@ -123,12 +124,22 @@ public class ReportEvaluator {
            String[] repKeys = denominator.getReplaceableKeys();
            Hashtable repVals = denominator.getReplaceableValues();
            for (int i = 0; i < repKeys.length;i++){
-               name.append(repKeys[i]+":"+repVals.get(repKeys[i]));
+               //provider_no:999998  if key is provider_no look up provider name
+               System.out.println("repKeys "+repKeys[i]);
+               if (repKeys[i] != null && repKeys[i].equals("provider_no")){
+                  name.append(getProviderStringName(""+repVals.get(repKeys[i])));        
+               }else{
+                  name.append(repKeys[i]+":"+repVals.get(repKeys[i]));
+               }
            }
            name.append(")");
         }
         
         return  name.toString();
+    }
+    
+    private String getProviderStringName(String providerNo){
+        return "Provider: "+ ProviderData.getProviderName(providerNo);
     }
 
     public ArrayList getReportResultList() {
