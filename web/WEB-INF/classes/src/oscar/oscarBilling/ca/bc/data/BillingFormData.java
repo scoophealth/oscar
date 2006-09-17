@@ -422,12 +422,14 @@ public class BillingFormData {
   }
 
   public class BillingVisit {
-    String billingvisit;
-    String description;
+    String billingvisit = "";
+    String description = "";
+    String displayName = "";
 
     public BillingVisit(String billingvisit, String description) {
       this.billingvisit = billingvisit;
       this.description = description;
+
 
     }
 
@@ -437,6 +439,10 @@ public class BillingFormData {
 
     public String getDescription() {
       return description;
+    }
+
+    public String getDisplayName(){
+      return billingvisit + "|" + description;
     }
 
   }
