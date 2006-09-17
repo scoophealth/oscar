@@ -162,6 +162,11 @@ public class MSPReconcile {
     negValues.setProperty("R", "9");
   }
 
+  /**
+   * @todo This needs to go , the data is defined in the database
+   * @param stat String
+   * @return String
+   */
   public String getStatusDesc(String stat) {
     String statusDesc = "";
     if (stat.equals(REJECTED)) {
@@ -429,7 +434,7 @@ public class MSPReconcile {
 
   /**
    * Returns a map of values from the teleplanS00 table for quick lookup of
-   * teleplan data(solves a performance problem related to joing the teleplanS00 table with the billingmaster table
+   * teleplan data(solves a performance problem related to joining the teleplanS00 table with the billingmaster table
    * due to the fact that related fields teleplanS00.t_officeno and billingmaster.billingmaster_no are of a different type
    * The resultant map currently returns a key/value pair containing the t_officeno and t_dataseq respectiveley
    * @return Map
@@ -1048,7 +1053,7 @@ public class MSPReconcile {
 
   /**
    * Saves a BillRecipient to database. If a record with the specified  billing number exists, an update is performed<p>
-   * otherwise, a new record is insterted
+   * otherwise, a new record is inserted
    *
    * @param recip BillReceipient - The BillRecipient instance to be persisted
    */
