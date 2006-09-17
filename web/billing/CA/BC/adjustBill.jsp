@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
 <%@page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*,oscar.oscarBilling.ca.bc.MSP.*" %>
 
@@ -61,6 +62,7 @@
   BillingFormData billform = new BillingFormData();
   BillingFormData.BillingPhysician[] billphysician = billform.getProviderList();
   BillingFormData.BillingVisit[] billvisit = billform.getVisitType(billRegion);
+  request.setAttribute("billvisit",billvisit);
   BillingFormData.Location[] billlocation = billform.getLocationList(billRegion);
   BillingFormData.BillingForm[] billformlist = billform.getFormList();
   int bFlag = 0;
@@ -568,18 +570,10 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     <td width="54%"  class="bCellData">
         Visit Type:
         <input type="hidden" name="xml_visittype" value="<%=visittype%>">
-            <select style="font-size:80%;" name="serviceLocation">
-                 <option value="">--- Select Visit Type ---</option>
-      		 <option value="O|Physician's office" <%=visittype.equals("O")?"selected":""%>>Physician's office</option>
-		 <option value="C|Continuing Care facility" <%=visittype.equals("C")?"selected":""%>>Continuing Care facility</option>
-		 <option value="H|Hospital" <%=visittype.equals("H")?"selected":""%>>Hospital</option>
-		 <option value="I|Hospital Inpatient" <%=visittype.equals("I")?"selected":""%>>Hospital Inpatient</option>
-		 <option value="E|Hospital Emergency Depart. or Diagnostic & Treatment Centre" <%=visittype.equals("E")?"selected":""%>>Hospital Emergency Depart. or Diagnostic & Treatment Centre</option>
-		 <option value="P|Outpatient" <%=visittype.equals("P")?"selected":""%>>Outpatient</option>
-		 <option value="D|Diagnostic Facility" <%=visittype.equals("D")?"selected":""%>>Diagnostic Facility</option>
-		 <option value="S|Future Use" <%=visittype.equals("S")?"selected":""%>>Future Use</option>
-		 <option value="Z|None of the above" <%=visittype.equals("Z")?"selected":""%>>None of the above</option>
-      	    </select>
+              <html:select property="serviceLocation" style="font-size:80%;">
+              <html:options collection="billvisit" property="visitType" labelProperty="description"/>
+             </html:select>
+
     </td>
     <td width="46%"  class="bCellData">
         <input type="hidden" name="xml_visitdate" value="<%=visitdate%>">

@@ -29,6 +29,7 @@
   * EMR System
   */
 -->
+<%@page import="oscar.oscarBilling.ca.bc.data.*,oscar.*"%>
 <%@page import="java.util.*,java.io.*,oscar.oscarBilling.ca.bc.MSP.*,oscar.oscarBilling.ca.bc.administration.*,java.sql.*"%>
 <%@taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
@@ -38,6 +39,10 @@
 <%
   TeleplanCorrectionFormWCB form = new TeleplanCorrectionFormWCB(apptMainBean.queryResults(request.getParameter("billing_no"), "select_user_bill_report_wcb"));
   Properties codes = new MspErrorCodes();
+  BillingFormData billform = new BillingFormData();
+  String billRegion = OscarProperties.getInstance().getProperty("billRegion","BC");
+  BillingFormData.BillingVisit[] billvisit = billform.getVisitType(billRegion);
+  request.setAttribute("billvisit",billvisit);
 %>
 <html:html>
 <head>
@@ -481,20 +486,9 @@ function popFeeItemList(form,field){
 				</tr>-->            <tr>
               <td class="FormLabel">Service Location:</td>
               <td>
-                <html:select name="serviceLocation" value="<%=form.getServiceLocation()%>" property="serviceLocation">
-                  <html:option value="C">Continuing Care facility</html:option>
-                  <html:option value="D">Diagnostic Facility</html:option>
-                  <html:option value="E">                    Hospital Emerg. / Diag.
-                    &amp;
-                    Treatment Centre</html:option>
-                  <html:option value="H">Hospital</html:option>
-                  <html:option value="I">Hospital Inpatient</html:option>
-                  <html:option value="O">Physician's office</html:option>
-                  <html:option value="P">Outpatient</html:option>
-                  <html:option value="R">Patient's residence</html:option>
-                  <html:option value="S">Future Use</html:option>
-                  <html:option value="Z">None of the above</html:option>
-                </html:select>              </td>
+                 <html:select property="serviceLocation" style="font-size:80%;">
+              <html:options collection="billvisit" property="visitType" labelProperty="description"/>
+             </html:select>              </td>
             </tr>
             <tr>
               <td class="FormLabel">Report Type:</td>
