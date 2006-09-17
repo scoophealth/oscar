@@ -32,6 +32,9 @@ package oscar.oscarBilling.ca.bc.MSP;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import oscar.util.SqlUtils;
+import java.util.List;
+import java.util.*;
 
 public class CheckBillingData {
 
@@ -203,13 +206,22 @@ public class CheckBillingData {
 
     public String checkSrvLocation(String m) {
         String ret = "C02:P40 Service Location CD Wrong! ";
-        if (m != null && m.matches("[ROCHIEPDSZ]")) {
+        String pattern = "ROCHIEPDSZ";
+        List rows = SqlUtils.getQueryResultsList("select visittype from billingvisit");
+        if(rows != null){
+          pattern = "";
+          for (Iterator iter = rows.iterator(); iter.hasNext(); ) {
+            String[] item = (String[]) iter.next();
+            pattern += item[0];
+          }
+        }
+        if (m != null && m.matches("[" + pattern + "]")) {
             ret = "";
         }
         return ret;
     }
-    
-    
+
+
 
     public String checkReferral(String m1, String m2, String m3) {
         String ret = "C02:[P41P42|P44P46] " + m3 + " Wrong! ";
