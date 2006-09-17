@@ -38,8 +38,8 @@
 <html:html locale="true"> 
 <head></head>
 
-<body> 
-  <center>  
+<body>
+  <center>
     <table border="0" cellspacing="0" cellpadding="0" width="100%" >
       <tr bgcolor="#486ebd"> 
             <th align="CENTER"><font face="Helvetica" color="#FFFFFF">
@@ -87,6 +87,7 @@
      DemographicExt dExt = new DemographicExt();
      String proNo = (String) session.getValue("user");
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"language",request.getParameter("language"),request.getParameter("languageOrig") );
+     dExt.addKey(proNo,request.getParameter("demographic_no") ,"demo_cell",request.getParameter("demo_cell"),request.getParameter("demo_cellOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"hPhoneExt",request.getParameter("hPhoneExt"),request.getParameter("hPhoneExtOrig") );
      dExt.addKey(proNo,request.getParameter("demographic_no") ,"wPhoneExt",request.getParameter("wPhoneExt"),request.getParameter("wPhoneExtOrig") );
      // customized key
@@ -98,7 +99,8 @@
 	       }
      }
      // customized key
-  //DemographicExt   
+  //DemographicExt
+
 
      
      // added check to see if patient has a bc health card and has a version code of 66, in this case you are aloud to have dup hin

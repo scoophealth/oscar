@@ -995,6 +995,14 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <input type="hidden" name="wPhoneExtOrig" value="<%=s(demoExt.get("wPhoneExt"))%>" />
                               </td>
                             </tr>
+                             <tr valign="top">
+                              <td  align="right"><b>Mobile Phone: </b> </td>
+                              <td align="left" >
+                                <%-- // <input type="text" name="phone" size="30" value="<%=rs.getString("phone")!=null && rs.getString("phone").length()==10?rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6):rs.getString("phone")%>">--%>
+                                <input type="text" name="demo_cell"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=s(demoExt.get("demo_cell"))%>">
+                                <input type="hidden" name="demo_cellOrig" value="<%=s(demoExt.get("demo_cell"))%>" />
+                              </td>
+                            </tr>
                             <tr valign="top">
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formEmail"/>: </b> </td>
                               <td  align="left">
