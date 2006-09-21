@@ -126,6 +126,7 @@ public class FrmRecordHelp {
 
     public ResultSet updateResultSet(Properties props, ResultSet rs, boolean bInsert) throws SQLException {
         ResultSetMetaData md = rs.getMetaData();
+        
         for (int i = 1; i <= md.getColumnCount(); i++) {
             String name = md.getColumnName(i);
             if (name.equalsIgnoreCase("ID")) {
@@ -135,10 +136,11 @@ public class FrmRecordHelp {
             }
 
             String value = props.getProperty(name, null);
-            if (md.getColumnTypeName(i).startsWith("TINY")) {
+            
+            if (md.getColumnTypeName(i).startsWith("TINY")) {                
                 if (value != null) {
                     if (value.equalsIgnoreCase("on") || value.equalsIgnoreCase("checked='checked'")) {
-                        rs.updateInt(name, 1);
+                        rs.updateInt(name, 1);   
                         //System.out.println(name + "   - " + md.getColumnTypeName(i) + value);
                     } else {
                         rs.updateInt(name, 0);
@@ -182,6 +184,7 @@ public class FrmRecordHelp {
             else
                 rs.updateString(name, value);
         }
+        
         return rs;
     }
 
@@ -237,6 +240,10 @@ public class FrmRecordHelp {
             return "save";
         } else if (submit != null && submit.equalsIgnoreCase("exit")) {
             return "exit";
+        } else if (submit != null && submit.equalsIgnoreCase("graph")) {
+            return "graph";
+        } else if (submit != null && submit.equalsIgnoreCase("printall")) {
+            return "printAll";
         } else {
             return "failure";
         }
