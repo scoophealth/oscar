@@ -1,0 +1,26 @@
+c_length        :       c_birthWeight
+p1_ht1w         :       p1_wt1w
+p1_ht2w         :       p1_wt2w
+p1_ht1m         :       p1_wt1m
+
+p2_ht2m         :       p2_wt2m
+p2_ht4m         :       p2_wt4m
+p2_ht6m         :       p2_wt6m
+
+p3_ht9m         :       p3_wt9m
+p3_ht12m        :       p3_wt12m
+p3_ht15m        :       p3_wt15m
+
+p4_ht18m        :       p4_wt18m
+p4_ht24m        :       p4_wt24m
+
+__origX		:	107
+__origY		:	703
+__nMaxPixX	:	372
+__nMaxPixY	:	389
+__fStartX	:	45
+__fEndX		:	105
+__fStartY	:	0   
+__fEndY		:	23
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
