@@ -36,55 +36,80 @@ public final class FrmAction extends Action {
             HttpServletResponse response) throws ServletException, IOException {
         int newID = 0;
         FrmRecord rec = null;
-        String where = "";
+        String where = "";                
 
         try {
             FrmRecordFactory recorder = new FrmRecordFactory();
             rec = recorder.factory(request.getParameter("form_class"));
             Properties props = new Properties();
-
-            boolean bMulPage = request.getParameter("c_lastVisited") != null ? true : false;
-            String name;
-
-            if (bMulPage) {
-                String curPageNum = request.getParameter("c_lastVisited");
-                String commonField = request.getParameter("commonField") != null ? request
-                        .getParameter("commonField") : "&'";
-                curPageNum = curPageNum.length() > 3 ? ("" + curPageNum.charAt(0)) : curPageNum;
-
-                //copy an old record
-                props = rec.getFormRecord(Integer.parseInt(request.getParameter("demographic_no")), Integer
-                        .parseInt(request.getParameter("formId")));
-
-                //empty the current page
-                Properties currentParam = new Properties();
-                for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
-                    name = (String) varEnum.nextElement();
-                    currentParam.setProperty(name, "");
+               
+            //if we are graphing, we need to grab info from db and add it to request object
+            if( request.getParameter("submit").equals("graph") )
+            {                
+               props = rec.getGraph(Integer.parseInt(request.getParameter("demographic_no")), 
+                       Integer.parseInt(request.getParameter("formId")));
+               
+               for( Enumeration e = props.propertyNames(); e.hasMoreElements(); ) {
+                   String name = (String)e.nextElement();                   
+                   request.setAttribute(name,props.getProperty(name));                   
+               }
+            }
+            //if we are printing all pages of form, grab info from db and merge with current page info
+            else if( request.getParameter("submit").equals("printAll") ) {
+                props = rec.getFormRecord(Integer.parseInt(request.getParameter("demographic_no")),
+                        Integer.parseInt(request.getParameter("formId")));
+                
+                String name;
+                for( Enumeration e = props.propertyNames(); e.hasMoreElements();) {
+                    name = (String)e.nextElement();
+                    if( request.getParameter(name) == null )
+                        request.setAttribute(name,props.getProperty(name));
                 }
-                for (Enumeration varEnum = props.propertyNames(); varEnum.hasMoreElements();) {
-                    name = (String) varEnum.nextElement();
-                    // kick off the current page elements, commonField on the current page
-                    if (name.startsWith(curPageNum + "_")
-                            || (name.startsWith(commonField) && currentParam.containsKey(name))) {
-                        props.remove(name);
+            }
+            else {
+                boolean bMulPage = request.getParameter("c_lastVisited") != null ? true : false;
+                String name;
+
+                if (bMulPage) {
+                    String curPageNum = request.getParameter("c_lastVisited");
+                    String commonField = request.getParameter("commonField") != null ? request
+                            .getParameter("commonField") : "&'";
+                    curPageNum = curPageNum.length() > 3 ? ("" + curPageNum.charAt(0)) : curPageNum;
+
+                    //copy an old record
+                    props = rec.getFormRecord(Integer.parseInt(request.getParameter("demographic_no")), Integer
+                            .parseInt(request.getParameter("formId")));
+
+                    //empty the current page
+                    Properties currentParam = new Properties();
+                    for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
+                        name = (String) varEnum.nextElement();
+                        currentParam.setProperty(name, "");
+                    }
+                    for (Enumeration varEnum = props.propertyNames(); varEnum.hasMoreElements();) {
+                        name = (String) varEnum.nextElement();
+                        // kick off the current page elements, commonField on the current page
+                        if (name.startsWith(curPageNum + "_")
+                                || (name.startsWith(commonField) && currentParam.containsKey(name))) {
+                            props.remove(name);
+                        }
                     }
                 }
+
+                //update the current record
+                for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
+                    name = (String) varEnum.nextElement();                    
+                    props.setProperty(name, request.getParameter(name));                    
+                }
+
+                props.setProperty("provider_no", (String) request.getSession().getAttribute("user"));
+                newID = rec.saveFormRecord(props);
+                String ip = request.getRemoteAddr();
+                LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, request
+                        .getParameter("form_class"), "" + newID, ip);
+
             }
-
-            //update the current record
-            for (Enumeration varEnum = request.getParameterNames(); varEnum.hasMoreElements();) {
-                name = (String) varEnum.nextElement();
-                props.setProperty(name, request.getParameter(name));
-            }
-
-            props.setProperty("provider_no", (String) request.getSession().getAttribute("user"));
-            newID = rec.saveFormRecord(props);
-            String ip = request.getRemoteAddr();
-            LogAction.addLog((String) request.getSession().getAttribute("user"), LogConst.ADD, request
-                    .getParameter("form_class"), "" + newID, ip);
-
-            String strAction = rec.findActionValue(request.getParameter("submit"));
+            String strAction = rec.findActionValue(request.getParameter("submit"));            
             ActionForward af = mapping.findForward(strAction);
             where = af.getPath();
             where = rec.createActionURL(where, strAction, request.getParameter("demographic_no"), "" + newID);
@@ -93,7 +118,7 @@ public final class FrmAction extends Action {
             throw new ServletException(ex);
         }
 
-        return new ActionForward(where);
+        return new ActionForward(where); 
     }
 
 }
