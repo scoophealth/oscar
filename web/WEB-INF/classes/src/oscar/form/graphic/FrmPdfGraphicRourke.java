@@ -1,0 +1,202 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * This software was written for the
+ * Department of Family Medicine
+ * McMaster Unviersity
+ * Hamilton
+ * Ontario, Canada
+ */
+
+package oscar.form.graphic;
+
+import java.util.Properties;
+import java.util.Vector;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+
+import oscar.util.UtilDateUtilities;
+
+/**
+ *
+ * Generates x,y co-ordinates for Rourke 2006 Growth Chart
+ */
+public class FrmPdfGraphicRourke extends FrmPdfGraphic {
+    
+    private final static String DATEFORMAT = new String("dd/MM/yyyy");    
+    
+    int nMaxPixX;
+    int nMaxPixY;
+    float fStartX;
+    float fEndX;
+    float fStartY;
+    float fEndY;
+    float deltaX;
+    float deltaY;
+    String dateFormat_;
+    GregorianCalendar startDate;
+    Properties xyProp;
+    
+    public void init( Properties prop ) {
+                String str = prop.getProperty("__nMaxPixX");
+                nMaxPixX = toInt(str);
+                
+                str = prop.getProperty("__nMaxPixY");
+                nMaxPixY = toInt(str);
+		
+		str = prop.getProperty("__fStartX");
+                fStartX = toFloat(str);
+		
+                str = prop.getProperty("__fEndX");
+                fEndX = toFloat(str);
+                
+                float range = fEndX - fStartX;
+                if( range == 0 || range < 0 )
+                    range = 1;
+                
+                deltaX = nMaxPixX / range;
+                System.out.println("deltaX " + deltaX);
+                
+                str = prop.getProperty("__fStartY");
+                fStartY = toFloat(str);
+                
+		str = prop.getProperty("__fEndY");
+                fEndY = toFloat(str);
+                
+                range = fEndY - fStartY;
+                if( range == 0 || range < 0 )
+                    range = 1;
+                
+                deltaY = nMaxPixY / range;
+                System.out.println("deltaY " + deltaY);
+                
+                dateFormat_ = prop.getProperty("__dateFormat");
+                
+                //use __finalEDB as place holder for start date
+                str = prop.getProperty("__finalEDB");
+                str = makeDateStr(str);                
+                startDate = createCalendar(str);
+    }        
+    
+    private GregorianCalendar createCalendar( String strDate ) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATEFORMAT);
+        Date date;
+        try {
+            date = dateFormat.parse(strDate);
+        }
+        catch( ParseException ex ) {
+            System.out.println("FrmPdfGraphicRourke: Error creating calendar " + ex.getMessage());
+            date = new Date();
+        }
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        return cal;
+    }
+    
+    public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {
+        xyProp = new Properties();
+	for (int i = 0; i < xDate.size(); i++) {
+            if (xDate.get(i) != null && yHeight.get(i) != null)
+                getGraphicXYProp( (String) xDate.get(i), (String) yHeight.get(i));
+			
+	}
+
+	return xyProp;
+    }
+    
+    private void getGraphicXYProp(String xDate, String yHeight) {
+        float xcoord,ycoord,smonth,emonth;
+        float sday,eday;
+        GregorianCalendar curDate;
+        xDate = makeDateStr(xDate);
+        
+        System.out.println("xDate: " + xDate);
+        System.out.println("yHeight = " + yHeight );
+        if( (ycoord = toFloat(yHeight)) > -1 ) {
+            System.out.println("ycoord = " + ycoord );
+            //calc diff between start date and current date
+            curDate = createCalendar(xDate);                        
+            
+            //what months are we dealing with?
+            smonth = (float)startDate.get(Calendar.MONTH);
+            emonth = (float)curDate.get(Calendar.MONTH);
+            
+            //what fraction of each month do we have?
+            sday = (float)startDate.get(Calendar.DAY_OF_MONTH);
+            eday = (float)curDate.get(Calendar.DAY_OF_MONTH);
+            
+            System.out.println("sday, eday " + sday + ", " + eday);
+            
+            smonth += (sday / (float)startDate.getActualMaximum(Calendar.DAY_OF_MONTH));
+            emonth += (eday / (float)curDate.getActualMaximum(Calendar.DAY_OF_MONTH));                        
+            
+            //don't forget to add years
+            smonth += (float)startDate.get(Calendar.YEAR) * 12.0;
+            emonth += (float)curDate.get(Calendar.YEAR) * 12.0;
+            
+            System.out.println("emonth - smonth " + emonth + " - " + smonth);
+            
+            //calc xcoord and ycoord
+            xcoord = deltaX * (emonth - smonth);
+            ycoord = deltaY * (ycoord - fStartY);
+            
+            System.out.println("Graphic x y: " + xcoord + ", " + ycoord );
+            xyProp.setProperty(String.valueOf(xcoord), String.valueOf(ycoord));
+        }
+    }
+    
+    private String makeDateStr( String str ) {                        
+        
+        str = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(str, dateFormat_), DATEFORMAT);                        
+        if( str.equals("") )            
+            System.out.println("FrmPdfGraphicRourke: bad date format " + str);            
+        
+        return str;
+    } 
+    
+    private float toFloat(String str) {
+        float num = 0f;
+        
+        try {
+            num = Float.parseFloat(str);
+        }
+        catch( NumberFormatException ex) {
+            num = -1f;
+            System.out.println("FrmPdfGraphicRourke class: error parsing float " + ex.getMessage() );
+        }
+        
+        return num;
+        
+    }
+    
+    private int toInt(String str) {        
+        int num = 0;
+        
+        try {
+            num = Integer.parseInt(str);
+        }
+        catch( NumberFormatException ex) {
+            num = 0;
+            System.out.println("FrmPdfGraphicRourke class: error parsing integer " + ex.getMessage());
+        }
+        
+        return num;
+    }
+}
