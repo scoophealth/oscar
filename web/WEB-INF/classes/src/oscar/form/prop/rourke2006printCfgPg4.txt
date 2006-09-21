@@ -1,0 +1,283 @@
+c_riskFactors : left, 18, 129, 0, BaseFont.HELVETICA;italic, 6, _, 122, 96, 10
+c_famHistory : left, 122, 129, 0, BaseFont.HELVETICA;italic, 6, _, 218, 96, 10
+c_pName	: left, 362, 114, 0, BaseFont.HELVETICA, 8
+c_birthDate : left, 230, 114, 0, BaseFont.HELVETICA, 8
+c_male : left, 238, 125, 0, BaseFont.HELVETICA, 8, x
+c_female : left, 258, 125, 0, BaseFont.HELVETICA, 8, x
+
+p4_date18m : centre, 131, 158, 0, BaseFont.HELVETICA, 8, _, 288, 142, 10
+p4_date24m : centre, 288, 158, 0, BaseFont.HELVETICA, 8, _, 459, 142, 10
+p4_date48m : centre, 459, 158, 0, BaseFont.HELVETICA, 8, _, 568, 142, 10
+
+p4_ht18m : centre, 131, 182, 0, BaseFont.HELVETICA, 8, _, 183, 166, 10
+p4_wt18m : centre, 183, 182, 0, BaseFont.HELVETICA, 8, _, 234, 166, 10
+p4_hc18m : centre, 234, 182, 0, BaseFont.HELVETICA, 8, _, 288, 166, 10
+
+p4_ht24m : centre, 288, 182, 0, BaseFont.HELVETICA, 8, _, 349, 166, 10
+p4_wt24m : centre, 349, 182, 0, BaseFont.HELVETICA, 8, _, 393, 166, 10
+p4_hc24m : centre, 393, 182, 0, BaseFont.HELVETICA, 8, _, 459, 173, 8
+
+p4_ht48m : centre, 459, 182, 0, BaseFont.HELVETICA, 8, _, 525, 166, 10
+p4_wt48m : centre, 525, 182, 0, BaseFont.HELVETICA, 8, _, 568, 166, 10
+
+p4_pConcern18m : left, 131, 233, 0, BaseFont.HELVETICA;italic, 6, _, 288, 182, 10
+p4_pConcern24m : left, 290, 233, 0, BaseFont.HELVETICA;italic, 6, _, 459, 182, 10
+p4_pConcern48m : left, 462, 233, 0, BaseFont.HELVETICA;italic, 6, _, 568, 182, 10
+
+p4_breastFeeding18m : left, 138, 243, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_homoMilk : left, 138, 250, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_bottle18m : left, 138, 257, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p4_homo2percent24m : left, 296, 243, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_lowerfatdiet24m : left, 296, 250, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_foodguide24m : left, 296, 257, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p4_2pMilk48m : left, 467, 243, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_foodguide48m : left, 467, 250, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p4_carSeat18mOk : left, 138, 289, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_carSeat18mNo : left, 136, 291, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_bathSafetyOk : left, 138, 296, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_bathSafetyNo : left, 136, 298, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_safeToysOk : left, 138, 305, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_safeToysNo : left, 136, 307, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_parentChild18mOk : left, 138, 319, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_parentChild18mNo : left, 136, 321, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_discipline18mOk : left, 138, 326, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_discipline18mNo : left, 136, 328, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_pFatigue18mOk : left, 138, 337, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_pFatigue18mNo : left, 136, 339, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_highRisk18mOk : left, 138, 345, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_highRisk18mNo : left, 136, 347, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_socializing18mOk : left, 138, 361, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_socializing18mNo : left, 136, 363, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_dentalCareOk : left, 138, 369, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_dentalCareNo : left, 136, 371, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_toiletLearning18mOk : left, 138, 377, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_toiletLearning18mNo : left, 136, 379, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_carSeat24mOk : left, 296, 290, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_carSeat24mNo : left, 294, 292, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_bikeHelmetsOk : left, 410, 290, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_bikeHelmetsNo : left, 408, 292, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_firearmSafetyOk : left, 467, 290, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_firearmSafetyNo : left, 465, 292, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_smokeSafetyOk : left, 296, 298, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_smokeSafetyNo : left, 294, 300, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_matchesOk : left, 411, 298, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_matchesNo : left, 409, 300, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_waterSafetyOk : left, 467, 298, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_waterSafetyNo : left, 465, 300, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_parentChild24mOk : left, 296, 317, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_parentChild24mNo : left, 294, 319, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_discipline24mOk : left, 393, 317, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_discipline24mNo : left, 391, 319, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_highRisk24mOk : left, 480, 317, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_highRisk24mNo : left, 478, 319, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_pFatigue24mOk : left, 296, 325, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_pFatigue24mNo : left, 294, 327, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_famConflictOk : left, 392, 325, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_famConflictNo : left, 390, 327, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_siblingsOk : left, 480, 325, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_siblingsNo : left, 478, 327, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_2ndSmokeOk : left, 296, 336, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_2ndSmokeNo : left, 294, 338, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_dentalCleaningOk : left, 415, 336, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_dentalCleaningNo : left, 413, 338, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_altMedOk : left, 296, 344, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_altMedNo : left, 294, 346, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_toiletLearning24mOk : left, 415, 344, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_toiletLearning24mNo : left, 413, 346, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_activeOk : left, 296, 351, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_activeNo : left, 294, 353, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_socializing24mOk : left, 415, 351, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_socializing24mNo : left, 413, 353, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_readingOk : left, 493, 351, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_readingNo : left, 491, 353, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_dayCareOk : left, 296, 359, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_dayCareNo : left, 294, 361, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_sunExposureOk : left, 296, 375, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_sunExposureNo : left, 294, 377, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_pesticidesOk : left, 426, 375, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_pesticidesNo : left, 424, 377, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_checkSerumOk : left, 296, 383, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_checkSerumNo : left, 294, 385, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_manageableOk : left, 139, 421, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_manageableNo : left, 136, 423, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_soothabilityOk : left, 139, 429, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_soothabilityNo : left, 136, 431, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_comfortOk : left, 139, 437, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_comfortNo : left, 136, 439, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_pointsOk : left, 139, 456, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_pointsNo : left, 136, 458, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_getAttnOk : left, 139, 464, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_getAttnNo : left, 136, 466, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_pretendPlayOk : left, 139, 480, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_pretendPlayNo : left, 136, 482, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_recsNameOk : left, 139, 495, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_recsNameNo : left, 136, 497, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_initSpeechOk : left, 139, 503, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_initSpeechNo : left, 136, 505, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_3consonantsOk : left, 139, 512, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_3consonantsNo : left, 136, 514, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_walksbackOk : left, 139, 531, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_walksbackNo : left, 136, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_feedsSelfOk : left, 139, 539, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_feedsSelfNo : left, 136, 541, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_removesHatOk : left, 139, 558, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_removesHatNo : left, 136, 560, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_noParentsConcerns18mOk : left, 139, 566, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_noParentsConcerns18mNo : left, 136, 568, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_newWordsOk : left, 296, 406, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_newWordsNo : left, 294, 408, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_2wSentenceOk : left, 296, 414, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_2wSentenceNo : left, 294, 416, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_runsOk : left, 296, 421, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_runsNo : left, 294, 423, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_smallContainerOk : left, 296, 429, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_smallContainerNo : left, 294, 431, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_copiesActionsOk : left, 296, 437, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_copiesActionsNo : left, 294, 439, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_newSkillsOk : left, 296, 445, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_newSkillsNo : left, 294, 447, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_noParentsConcerns24mOk : left, 296, 453, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_noParentsConcerns24mNo : left, 294, 455, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_3directionsOk : left, 436, 406, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_3directionsNo : left, 434, 408, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_asksQuestionsOk : left, 436, 414, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_asksQuestionsNo : left, 434, 416, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_stands1footOk : left, 436, 421, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_stands1footNo : left, 434, 423, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_drawsOk : left, 436, 429, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_drawsNo : left, 434, 431, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_toiletTrainedOk : left, 436, 437, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_toiletTrainedNo : left, 434, 439, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_tries2comfortOk : left, 436, 445, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_tries2comfortNo : left, 434, 447, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_noParentsConcerns48mOk : left, 436, 453, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_noParentsConcerns48mNo : left, 434, 455, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_2directionsOk : left, 296, 476, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_2directionsNo : left, 294, 478, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_twistslidsOk : left, 296, 482, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_twistslidsNo : left, 294, 485, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_turnsPagesOk : left, 296, 491, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_turnsPagesNo : left, 294, 493, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_sharesSometimeOk : left, 296, 499, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_sharesSometimeNo : left, 294, 501, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_listenMusikOk : left, 296, 507, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_listenMusikNo : left, 294, 509, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_noParentsConcerns36mOk : left, 296, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_noParentsConcerns36mNo : left, 294, 525, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_counts2tenOk : left, 436, 476, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_counts2tenNo : left, 434, 478, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_speaksClearlyOk : left, 436, 491, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_speaksClearlyNo : left, 434, 493, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_throwsCatchesOk : left, 436, 499, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_throwsCatchesNo : left, 434, 501, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_hops1footOk : left, 436, 507, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_hops1footNo : left, 434, 509, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_sharesWillinglyOk : left, 436, 515, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_sharesWillinglyNo : left, 434, 517, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_worksAloneOk : left, 436, 523, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_worksAloneNo : left, 434, 525, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_separatesOk : left, 436, 538, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_separatesNo : left, 434, 540, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_noParentsConcerns60mOk : left, 436, 546, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_noParentsConcerns60mNo : left, 434, 548, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+p4_eyes18m : left, 139, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_corneal18m : left, 139, 588, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_hearing18m : left, 139, 604, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_tonsil18m : left, 139, 612, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p4_bloodpressure24m : left, 296, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_eyes24m : left, 296, 588, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_corneal24m : left, 296, 596, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_hearing24m : left, 296, 612, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_tonsil24m : left, 296, 620, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p4_bloodpressure48m : left, 436, 581, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_eyes48m : left, 436, 588, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_corneal48m : left, 436, 596, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_hearing48m : left, 436, 612, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+p4_tonsil48m : left, 436, 620, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+p4_problems18m : left, 131, 695, 0, BaseFont.HELVETICA;italic, 6, _, 288, 639, 10
+p4_problems24m : left, 291, 695, 0, BaseFont.HELVETICA;italic, 6, _, 428, 639, 10
+p4_problems48m : left, 431, 695, 0, BaseFont.HELVETICA;italic, 6, _, 567, 639, 10
+
+p4_signature18m : center, 131, 721, 0, BaseFont.HELVETICA;italic, 6, _, 288, 702, 10
+p4_signature24m : center, 288, 721, 0, BaseFont.HELVETICA;italic, 6, _, 428, 702, 10
+p4_signature48m : center, 428, 721, 0, BaseFont.HELVETICA;italic, 6, _, 567, 702, 10
