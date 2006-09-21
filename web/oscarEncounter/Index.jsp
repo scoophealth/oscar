@@ -104,7 +104,7 @@ if (request.getParameter("casetoEncounter")==null)
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
   String provNo = bean.providerNo;
-  EctFormData.Form[] forms = new EctFormData().getForms();
+  EctFormData.Form[] forms = new EctFormData().getForms();  
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
   EctProviderData.Provider prov = new EctProviderData().getProvider(provNo);
   String patientName = pd.getFirstName()+" "+pd.getSurname();
@@ -550,7 +550,7 @@ function tryAnother(){
     ////
 }
 function popupPageK(page) {
-    windowprops = "height=700,width=960,location=no,"
+    windowprops = "height=700,width=1024,location=no,"
     + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
     var popup = window.open(page, "<bean:message key="oscarEncounter.Index.popupPageKWindow"/>", windowprops);
     popup.focus();
@@ -864,7 +864,7 @@ border-right: 2px solid #cfcfcf;
                             for(int j=0; j<forms.length; j++) {
                                 EctFormData.Form frm = forms[j];
                                 String table = frm.getFormTable();
-                                if(!table.equalsIgnoreCase("")){
+                                if(!table.equalsIgnoreCase("")){                                    
                                     EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
                                     if(pforms.length>0) {
                                         EctFormData.PatientForm pfrm = pforms[0];
