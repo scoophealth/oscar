@@ -713,7 +713,9 @@ div.demographicWrapper {
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formChartNo"/>:<b><%=rs.getString("chart_no")%></b>
                                             </li>
-
+                                             <li>
+                                                <bean:message key="demographic.demographiceditdemographic.cytolNum"/>: <b> <%=s(demoExt.get("cytolNum"))%></b>
+                                            </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: <b><%=rs.getString("date_joined")%></b>
                                                 <bean:message key="demographic.demographiceditdemographic.formEndDate"/>: <b><%=rs.getString("end_date")%></b>
@@ -738,6 +740,8 @@ div.demographicWrapper {
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=rs.getString("phone")%> <%=s(demoExt.get("hPhoneExt"))%></b>
                                             <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=rs.getString("phone2")%> <%=s(demoExt.get("wPhoneExt"))%></b>
+                                            <bean:message key="demographic.demographiceditdemographic.formPhoneC"/>:<b> <%=s(demoExt.get("demo_cell"))%></b>
+
                                         </li>
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formAddr"/>: <b><%=rs.getString("address")%></b>
@@ -996,7 +1000,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               </td>
                             </tr>
                              <tr valign="top">
-                              <td  align="right"><b>Mobile Phone: </b> </td>
+                              <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneC"/>: </b> </td>
                               <td align="left" >
                                 <%-- // <input type="text" name="phone" size="30" value="<%=rs.getString("phone")!=null && rs.getString("phone").length()==10?rs.getString("phone").substring(0,3) + "-" + rs.getString("phone").substring(3,6) +"-"+  rs.getString("phone").substring(6):rs.getString("phone")%>">--%>
                                 <input type="text" name="demo_cell"  onblur="formatPhoneNum();" style="display:inline;width:auto;" value="<%=s(demoExt.get("demo_cell"))%>">
@@ -1089,8 +1093,13 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 </select>
                                 <% }%>
                               </td>
-                              <td>&nbsp;</td>
-                              <td>&nbsp;</td>
+                              <td align="right" nowrap><b>
+                               <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b>
+                              </td>
+                              <td>
+                                <input type="text" name="cytolNum" style="display:inline;width:auto;" value="<%=s(demoExt.get("cytolNum"))%>">
+                                <input type="hidden" name="cytolNumOrig" value="<%=s(demoExt.get("cytolNum"))%>" />
+                              </td>
                             </tr>
                             <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDoctor"/>: </b></td>
