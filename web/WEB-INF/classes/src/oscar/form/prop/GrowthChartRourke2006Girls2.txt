@@ -1,0 +1,25 @@
+c_pName	: left, 387, 80, 0, BaseFont.HELVETICA, 8 
+
+c_birthDate : center, 221, 693, 0, BaseFont.HELVETICA, 6, _, 258, 683, 8
+__ageBirth : center, 276, 693, 0, BaseFont.HELVETICA, 6, Birth
+c_birthWeight : center, 294, 693, 0, BaseFont.HELVETICA, 6, _, 338, 683, 8
+c_length :  center, 338, 693, 0, BaseFont.HELVETICA, 6, _, 379, 683, 8
+c_headCirc : center, 379, 693, 0, BaseFont.HELVETICA, 6, _, 435, 683, 8
+
+p1_date1w : center, 221, 704, 0, BaseFont.HELVETICA, 6, _, 258, 693, 8
+__age1w : center, 276, 704, 0, BaseFont.HELVETICA, 6, 1 week
+p1_wt1w : center, 294, 704, 0, BaseFont.HELVETICA, 6, _, 338, 693, 8
+p1_ht1w : center, 338, 704, 0, BaseFont.HELVETICA, 6, _, 379, 693, 8
+p1_hc1w : center, 379, 704, 0, BaseFont.HELVETICA, 6, _, 435, 693, 8
+
+p1_date2w : center, 221, 714, 0, BaseFont.HELVETICA, 6, _, 258, 704, 8
+__age2w : center, 276, 714, 0, BaseFont.HELVETICA, 6, 2 weeks
+p1_wt2w : center, 294, 714, 0, BaseFont.HELVETICA, 6, _, 338, 704, 8
+p1_ht2w : center, 338, 714, 0, BaseFont.HELVETICA, 6, _, 379, 704, 8
+p1_hc2w : center, 379, 714, 0, BaseFont.HELVETICA, 6, _, 435, 704, 8
+
+p1_date1m : center, 221, 724, 0, BaseFont.HELVETICA, 6, _, 258, 714, 8
+__age1m : center, 276, 724, 0, BaseFont.HELVETICA, 6, 1 month
+p1_wt1m : center, 294, 724, 0, BaseFont.HELVETICA, 6, _, 338, 714, 8
+p1_ht1m : center, 338, 724, 0, BaseFont.HELVETICA, 6, _, 379, 714, 8
+p1_hc1m : center, 379, 724, 0, BaseFont.HELVETICA, 6, _, 435, 714, 8
