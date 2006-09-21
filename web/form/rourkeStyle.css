@@ -27,7 +27,7 @@ BODY {
 	font-size:10pt;
     background-color:#DAEBFC;
 	font-family:"Times New Roman", Times, serif;
-//    #c1ddf9;
+/*   #c1ddf9; */
 }
 
 html,TABLE {
@@ -42,7 +42,7 @@ A:link
 .Header {
     padding-top:3px;
     padding-bottom:3px;
-//    width:937px;
+/*    width:937px; */
     width:100%;
 }
 
@@ -51,7 +51,7 @@ A:link
 }
 
 .column {
-//    background-color:#FFF0FF;
+/*   background-color:#FFF0FF; */
     width:15%;
     background-color:#486EBD;
     color:#FFFFFF;
@@ -103,7 +103,27 @@ A:link
 	font-family:"Times New Roman", Times, serif;
 }
 tr{vertical-align:top;}
-input {
-		margin: 0px;
-	padding: 0px;
+
+textarea { 
+    font-size: 8pt;
+}
+input, select, textarea { 
+  background-color: #F4EaD7; 
+  border: 1px solid #0097cf;  
+}
+
+.edcol {
+    font-size: 8pt;
+    padding-right: 5pt;
+    padding-left: 5pt;    
+}
+
+.delete {  
+  font-size: 8pt;
+}
+
+table.division {
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
 }
