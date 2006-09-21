@@ -25,13 +25,7 @@ import java.util.Vector;
 /**
  * Class FrmPdfGraphicGrowthChart : all pdf class files are temp. Need OO design
  */
-public final class FrmPdfGraphicGrowthChart {
-
-    public static void main(String[] arg) {
-        FrmPdfGraphicGrowthChart test = new FrmPdfGraphicGrowthChart();
-        test.init(50, 50, 20, 40, 15, 40);
-        test.getGraphicXYProp("12/08/2004", "18.5");
-    }
+public final class FrmPdfGraphicGrowthChart extends FrmPdfGraphic {   
 
     float fEndX = 0f;
     float fEndY = 0f;
@@ -41,7 +35,7 @@ public final class FrmPdfGraphicGrowthChart {
     int nMaxPixY = 0;
     Properties prop = new Properties();
 
-    public String[] getGraphicXYProp(String xDate, String yHeight) {
+    private String[] getGraphicXYProp(String xDate, String yHeight) {
         String[] ret = new String[2];
         float xNum = Float.parseFloat(xDate);
         float yNum = Float.parseFloat(yHeight);
@@ -56,17 +50,17 @@ public final class FrmPdfGraphicGrowthChart {
 
         ret[0] = "" + xNum;
         ret[1] = "" + yNum;
-        System.out.println(xNum + " : " + yNum + "|" + deltaX + ":" + deltaY);
+        
         return ret;
     }
 
     public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {
         prop = new Properties();
         for (int i = 0; i < xDate.size(); i++) {
-            System.out.println(i );
+            //System.out.println(i );
             if (xDate.get(i) != null && yHeight.get(i) != null && !"".equals((String) xDate.get(i))
                     && !"".equals((String) yHeight.get(i))) {
-                System.out.println(i + " " + xDate.get(i) + " | " + yHeight.get(i));
+                //System.out.println(i + " " + xDate.get(i) + " | " + yHeight.get(i));
                 String[] xy = getGraphicXYProp((String) xDate.get(i), (String) yHeight.get(i));
                 if (xy != null)
                     prop.setProperty(xy[0], xy[1]);
@@ -75,25 +69,25 @@ public final class FrmPdfGraphicGrowthChart {
         return prop;
     }
 
-    public void init(int mx, int my, float fsx, float fex, float fsy, float fey) {
-        nMaxPixX = mx;
-        nMaxPixY = my;
-        fStartX = fsx;
-        fEndX = fex;
-        fStartY = fsy;
-        fEndY = fey;
-    }
-
-    public void init(String mx, String my, String fsx, String fex, String fsy, String fey) {
-        int tmx = isDigitNum(mx) ? Integer.parseInt(mx) : 0;
-        int tmy = isDigitNum(my) ? Integer.parseInt(my) : 0;
-        float tfsx = isDigitNum(fsx) ? Float.parseFloat(fsx) : 0f;
-        float tfex = isDigitNum(fex) ? Float.parseFloat(fex) : 0f;
-        float tfsy = isDigitNum(fsy) ? Float.parseFloat(fsy) : 0f;
-        float tfey = isDigitNum(fey) ? Float.parseFloat(fey) : 0f;
-
-        init(tmx, tmy, tfsx, tfex, tfsy, tfey);
-    }
+    public void init(Properties prop) {
+        String str = prop.getProperty("__nMaxPixX");
+        nMaxPixX = isDigitNum(str) ? Integer.parseInt(str) : 0;
+        
+        str = prop.getProperty("__nMaxPixY");
+        nMaxPixY = isDigitNum(str) ? Integer.parseInt(str) : 0;
+        
+        str = prop.getProperty("__fStartX");
+        fStartX = isDigitNum(str) ? Float.parseFloat(str) : 0f;
+        
+        str = prop.getProperty("__fEndX");
+        fEndX = isDigitNum(str) ? Float.parseFloat(str) : 0f;
+        
+        str = prop.getProperty("__fStartY");
+        fStartY = isDigitNum(str) ? Float.parseFloat(str) : 0f;
+        
+        str = prop.getProperty("__fEndY");
+        fEndY = isDigitNum(str) ? Float.parseFloat(str) : 0f;
+    }   
 
     private boolean isDigit(String str) {
         boolean ret = true;
