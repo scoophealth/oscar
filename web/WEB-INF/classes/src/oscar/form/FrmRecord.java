@@ -37,5 +37,6 @@ public abstract class FrmRecord {
     public abstract int saveFormRecord(Properties props) throws SQLException ;
     public abstract String findActionValue(String submit) throws SQLException ;
     public abstract String createActionURL(String where, String action, String demoId, String formId) throws SQLException ;
+    public Properties getGraph(int demographicNo, int existingID)  throws SQLException { return new Properties(); }
     //public abstract String createActionURL(String where, String action, String demoId, String formId, String studyId, String studyName) throws SQLException ;
 }
