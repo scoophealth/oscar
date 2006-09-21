@@ -256,6 +256,7 @@ INSERT INTO encounterForm VALUES ('Annual','../form/formannual.jsp?demographic_n
 INSERT INTO encounterForm VALUES ('Annual V2','../form/formannualV2.jsp?demographic_no=','formAnnualV2', '0');
 INSERT INTO encounterForm VALUES ('ALPHA','../form/formalpha.jsp?demographic_no=','formAlpha', '0');
 INSERT INTO encounterForm VALUES ('Rourke','../form/formrourke.jsp?demographic_no=','formRourke', '0');
+INSERT INTO encounterForm VALUES ('Rourke2006','../form/formrourke2006.jsp?demographic_no=','formRourke2006', '0');
 INSERT INTO encounterForm VALUES ('T2Diabetes','../form/formtype2diabete.jsp?demographic_no=','formType2Diabetes', '0');
 INSERT INTO encounterForm VALUES ('Mental Health','../form/formmentalhealth.jsp?demographic_no=','formMentalHealth', '0');
 INSERT INTO encounterForm VALUES ('PeriMenopausal','../form/formperimenopausal.jsp?demographic_no=','formPeriMenopausal', '0');
