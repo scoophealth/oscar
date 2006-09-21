@@ -1,0 +1,29 @@
+c_birthDate     :       c_birthWeight
+p1_date1w       :       p1_wt1w
+p1_date2w       :       p1_wt2w
+p1_date1m       :       p1_wt1m
+
+p2_date2m       :       p2_wt2m
+p2_date4m       :       p2_wt4m
+p2_date6m       :       p2_wt6m
+
+p3_date9m        :      p3_wt9m
+p3_date12m       :      p3_wt12m
+p3_date15m       :      p3_wt15m
+
+p4_date18m       :      p4_wt18m
+p4_date24m       :      p4_wt24m
+
+__origX		:	114
+__origY		:	723
+__nMaxPixX	:	358
+__nMaxPixY	:	465
+__fStartX	:	0
+__fEndX		:	36
+__fStartY	:	1.4   
+__fEndY		:	18
+
+__finalEDB	:	c_birthDate
+__dateFormat	:	dd/MM/yyyy
+
+__className	:	oscar.form.graphic.FrmPdfGraphicRourke
