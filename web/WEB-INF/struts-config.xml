@@ -398,7 +398,9 @@
     <action input="/form/forwardname.jsp" name="FrmForm" path="/form/formname" scope="request" type="oscar.form.FrmAction">
       <forward name="exit" path="/oscarEncounter/close.jsp" />
       <forward name="print" path="/form/forwardprint.jsp" />
+      <forward name="printAll" path="/form/createpdf" />
       <forward name="save" path="/form/forwardname.jsp" />
+      <forward name="graph" path="/form/createpdf" />
       <forward name="failure" path="/oscarEncounter/error.jsp" />
     </action>
     <action name="FrmFormForm" path="/form/SetupForm" scope="request" type="oscar.form.pageUtil.FrmSetupFormAction" />
@@ -1015,15 +1017,15 @@
     <action input="/dms/addedithtmldocument.jsp" name="addEditHtmlDoc" path="/dms/addEditHtml" type="oscar.dms.actions.AddEditHtmlAction" scope="request" validate="false">
         <forward name="success" path="/dms/closeWindow.html"/>
         <forward name="failed" path="/dms/addedithtmldocument.jsp"/>
-    </action>
- 
     <!--action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
       <forward name="success" path="/scratch/index.jsp" />
     </action-->
-    
+    </action>
     <action input="/oscarReport/ManageDemographicQueryFavourites.jsp" name="FrmForm" path="/report/DeleteDemographicReport" scope="request" type="oscar.oscarReport.pageUtil.RptDemographQueryFavouriteDeleteAction">
       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
     </action>
+ 
+    
  			<action path="/Tickler"
 				type="org.springframework.web.struts.DelegatingActionProxy"
 				parameter="method"
