@@ -401,11 +401,11 @@ public class BillingCreateBillingAction
     String cdmRulesQry =
         "SELECT serviceCode,conditionCode FROM billing_service_code_conditions";
     List cdmRules = SqlUtils.getQueryResultsList(cdmRulesQry);
-    List cdmSvcCodes =  vldt.getCDMCodes();
+    List cdmSvcCodes = vldt.getCDMCodes();
     for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
       String[] item = (String[]) iter.next();
       if (patientDX.contains(item[0])) {
-        if(serviceCode.equals(item[1])){
+        if (serviceCode.equals(item[1])) {
           validateCDMCodeConditionsHlp(errors, demoNo, cdmRules, item[1]);
         }
       }
@@ -447,11 +447,20 @@ public class BillingCreateBillingAction
     this.saveErrors(request, errors);
   }
 
-
-
   private void validateCodeLastBilledHlp(ActionErrors errors,
                                          String demoNo, String code) {
-    int codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, code);
+    int codeLastBilled = -1;
+    String conditionCodeQuery = "select conditionCode from billing_service_code_conditions where serviceCode = '" +
+        code + "'";
+    List conditions = SqlUtils.getQueryResultsList(conditionCodeQuery);
+
+    for (Iterator iter = conditions.iterator(); iter.hasNext(); ) {
+      String[] row = (String[]) iter.next();
+      codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, row[0]);
+      if (codeLastBilled < 365 && codeLastBilled > -1) {
+        break;
+      }
+    }
     if (codeLastBilled > 365) {
       errors.add("",
                  new ActionMessage(
@@ -465,4 +474,5 @@ public class BillingCreateBillingAction
                      new String[] {code}));
     }
   }
+
 }

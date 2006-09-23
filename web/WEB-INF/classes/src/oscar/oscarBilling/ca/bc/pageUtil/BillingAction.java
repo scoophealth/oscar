@@ -24,15 +24,13 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
 import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
-import oscar.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.util.SqlUtils;
-import java.util.List;
-import java.util.ArrayList;
 
 public final class BillingAction
     extends Action {
@@ -47,7 +45,7 @@ public final class BillingAction
     oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean = null;
     String encounter = request.getAttribute("encounter") != null ?
         (String) request.getAttribute("encounter") : "";
- String region = request.getParameter("billRegion");
+    String region = request.getParameter("billRegion");
     if ("ON".equals(region)) {
       String newURL = mapping.findForward("ON").getPath();
       newURL = newURL + "?" + request.getQueryString();
@@ -77,7 +75,8 @@ public final class BillingAction
         fillBean(request, bean);
 
         request.getSession().setAttribute("billingSessionBean", bean);
-        this.validateCodeLastBilled(request,errors, request.getParameter("demographic_no"));
+        this.validateCodeLastBilled(request, errors,
+                                    request.getParameter("demographic_no"));
       }
       else if ("true".equals(encounter)) {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
@@ -86,7 +85,7 @@ public final class BillingAction
         region = bean.getBillRegion();
       }
       /**
-             * @todo Test this, it looks unnecessary
+       * @todo Test this, it looks unnecessary
        */
       else {
         bean = (oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean) request.
@@ -112,42 +111,55 @@ public final class BillingAction
   }
 
   /**
-    * @todo Document Me
-    * @param errors ActionErrors
-    * @param demo Demographic
-    */
-   private void validateCodeLastBilled(HttpServletRequest request,ActionErrors errors, String demoNo) {
-     ArrayList patientDX = vldt.getPatientDxCodes(demoNo);
-     if (patientDX.contains("250")) {
-       validateCodeLastBilledHlp(errors, demoNo, "14050");
-     }
-     //if patient has HT
-     if (patientDX.contains("428")) {
-       validateCodeLastBilledHlp(errors, demoNo, "14051");
+   * Determines if the specified demographic number fits the following criteria and generates
+   * a message if true:
+   * * Has one of the predefined chronic diseases
+   * * A service was performed within the last Calendar year
+   *
+   * @param request HttpServletRequest
+   * @param errors ActionErrors
+   * @param demoNo String
+   */
+  private void validateCodeLastBilled(HttpServletRequest request,
+                                      ActionErrors errors, String demoNo) {
+    List patientDX = vldt.getPatientDxCodes(demoNo);
+    List cdmSvcCodes = vldt.getCDMCodes();
+    for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
+      String[] item = (String[]) iter.next();
+      if (patientDX.contains(item[0])) {
+        validateCodeLastBilledHlp(errors, demoNo, item[1]);
+      }
+    }
 
-     }
-     //if patient has chf
-     if (patientDX.contains("401")) {
-       validateCodeLastBilledHlp(errors, demoNo, "14052");
-     }
-     this.saveErrors(request,errors);
-   }
-   private void validateCodeLastBilledHlp(ActionErrors errors,
+    this.saveErrors(request, errors);
+  }
+
+  private void validateCodeLastBilledHlp(ActionErrors errors,
                                          String demoNo, String code) {
-     int codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, code);
-     if (codeLastBilled > 365) {
-       errors.add("",
-                  new ActionMessage(
-                      "oscar.billing.CA.BC.billingBC.error.codeLastBilled",
-                      new String[] {String.valueOf(codeLastBilled), code}));
-     }
-     else if (codeLastBilled == -1) {
-       errors.add("",
-                  new ActionMessage(
-                      "oscar.billing.CA.BC.billingBC.error.codeNeverBilled",
-                      new String[] {code}));
-     }
-   }
+    int codeLastBilled = -1;
+    String conditionCodeQuery = "select conditionCode from billing_service_code_conditions where serviceCode = '" +
+        code + "'";
+    List conditions = SqlUtils.getQueryResultsList(conditionCodeQuery);
 
+    for (Iterator iter = conditions.iterator(); iter.hasNext(); ) {
+      String[] row = (String[]) iter.next();
+      codeLastBilled = vldt.daysSinceCodeLastBilled(demoNo, row[0]);
+      if (codeLastBilled < 365 && codeLastBilled > -1) {
+        break;
+      }
+    }
+    if (codeLastBilled > 365) {
+      errors.add("",
+                 new ActionMessage(
+                     "oscar.billing.CA.BC.billingBC.error.codeLastBilled",
+                     new String[] {String.valueOf(codeLastBilled), code}));
+    }
+    else if (codeLastBilled == -1) {
+      errors.add("",
+                 new ActionMessage(
+                     "oscar.billing.CA.BC.billingBC.error.codeNeverBilled",
+                     new String[] {code}));
+    }
+  }
 
 }

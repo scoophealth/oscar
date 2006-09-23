@@ -711,6 +711,10 @@ public final class BillingCreateBillingForm
                                HttpServletRequest request) {
     ActionErrors errors = new ActionErrors();
     oscar.util.StringUtils ut = new oscar.util.StringUtils();
+
+   this.refertype1 = this.xml_refer1.equals("")?"":this.refertype1;
+   this.refertype2 = this.xml_refer2.equals("")?"":this.refertype2;
+
     if (this.xml_refer1.equals("") && this.xml_refer2.equals("")) {
       if (this.xml_other1 == null || xml_other1.equals("")) {
         if (!"WCB".equals(xml_billtype)) {
