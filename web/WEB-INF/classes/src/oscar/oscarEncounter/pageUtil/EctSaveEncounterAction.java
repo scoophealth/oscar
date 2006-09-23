@@ -24,6 +24,7 @@
 package oscar.oscarEncounter.pageUtil;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -40,7 +41,6 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
-import oscar.util.UtilMisc;
 import oscar.OscarProperties;
 
 public class EctSaveEncounterAction
@@ -122,20 +122,24 @@ public class EctSaveEncounterAction
       catch (Exception e) {
         e.printStackTrace();
       }
+      DBHandler dbhandler = null;
       try {
-        DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-        String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values ('" +
-            UtilDateUtilities.DateToString(date, "yyyy-MM-dd HH:mm:ss") + "'," +
-            sessionbean.demographicNo + ",'" + sessionbean.providerNo + "','" +
-            UtilMisc.charEscape(sessionbean.subject, '\'') + "','" +
-            UtilMisc.charEscape(sessionbean.socialHistory, '\'') + "','" +
-            UtilMisc.charEscape(sessionbean.familyHistory, '\'') + "','" +
-            UtilMisc.charEscape(sessionbean.medicalHistory, '\'') + "','" +
-            UtilMisc.charEscape(sessionbean.ongoingConcerns, '\'') + "','" +
-            UtilMisc.charEscape(sessionbean.reminders, '\'') + "','" +
-            UtilMisc.charEscape(sessionbean.encounter, '\'') + "')";
-        dbhandler.RunSQL(s);
-        // add log here
+        dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+        String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
+        PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+            pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
+            pstmt.setString(2,sessionbean.demographicNo);  
+            pstmt.setString(3,sessionbean.providerNo); 
+            pstmt.setString(4,sessionbean.subject); 
+            pstmt.setString(5,sessionbean.socialHistory); 
+            pstmt.setString(6,sessionbean.familyHistory); 
+            pstmt.setString(7,sessionbean.medicalHistory); 
+            pstmt.setString(8,sessionbean.ongoingConcerns); 
+            pstmt.setString(9,sessionbean.reminders);
+            pstmt.setString(10,sessionbean.encounter);                                                               
+            pstmt.executeUpdate();                                       
+            pstmt.close();                                     
+        
         String ip = httpservletrequest.getRemoteAddr();
         LogAction.addLog( (String) httpservletrequest.getSession().getAttribute(
             "user"), LogConst.ADD, LogConst.CON_ECHART,
@@ -163,6 +167,7 @@ public class EctSaveEncounterAction
       catch (SQLException sqlexception) {
         System.out.println(sqlexception.getMessage());
       }
+      
     }
 
     try { // save enc. window sizes
