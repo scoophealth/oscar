@@ -214,6 +214,19 @@ public class BillingReProcessBillAction
       }
     }
 
+    //Multiply the bill amount by the units - Fixes bug where wrong amount being sent to MSP
+
+    try{
+      double dblBillAmount = Double.parseDouble(billingServicePrice);
+      double dblUnit = Double.parseDouble(billingUnit);
+      billingServicePrice = String.valueOf(dblBillAmount * dblUnit);
+    }
+    catch(NumberFormatException e){
+      throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
+    }
+
+
+
     String sql = "update billingmaster set "
         + "datacenter = '" + dataCenterId + "', "
         //TODO
