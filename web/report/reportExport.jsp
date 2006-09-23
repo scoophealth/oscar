@@ -27,14 +27,16 @@
  * Created on May 4, 2005, 11:15 AM
  */
  %><%@page contentType="application/octet-stream"%><%@page  import="oscar.oscarDemographic.data.*,java.util.*,oscar.oscarPrevention.*,oscar.oscarProvider.data.*,oscar.util.*,oscar.oscarReport.ClinicalReports.*"%><%
-   String filename = "report.txt";
-
-     response.addHeader("Content-Disposition", "attachment;filename=" + filename);  
+     
    
      ArrayList arrList = (ArrayList) session.getAttribute("ClinicalReports"); 
      if (arrList != null){
         String id = request.getParameter("id");
         ReportEvaluator re = (ReportEvaluator) arrList.get(Integer.parseInt(id));
+        
+        String filename = re.getName().replaceAll("/","---").replaceAll(" ","_"); // "report.txt";
+        response.addHeader("Content-Disposition", "attachment;filename=" + filename);
+        
         out.write(re.getCSV());
      }else{
         out.write("ERROR:No report found.");
