@@ -57,7 +57,7 @@ public class RptDemographicQueryBuilder {
     }
 
     public java.util.ArrayList buildQuery(RptDemographicReportForm frm){
-
+      System.out.println("in buildQuery");
 
         String[] select = frm.getSelect();
         stringBuffer =  new StringBuffer("select " );
@@ -70,15 +70,19 @@ public class RptDemographicQueryBuilder {
         String[] patientStatus  = frm.getPatientStatus();
         String[] providers      = frm.getProviderNo();
 
+        
         String firstName        = frm.getFirstName();
         String lastName         = frm.getLastName();
         String sex              = frm.getSex();
         String queryName        = frm.getQueryName();
+        
 
         String orderBy          = frm.getOrderBy();
         String limit            = frm.getResultNum();
         
+        
         String asofDate         = frm.getAsofDate();
+
         
         if (UtilDateUtilities.getDateFromString(asofDate,"yyyy-MM-dd") == null){
            asofDate = "CURRENT_DATE";
@@ -86,7 +90,6 @@ public class RptDemographicQueryBuilder {
            asofDate = "'"+asofDate+"'";
         }
         
-       
 
         RptDemographicColumnNames demoCols = new RptDemographicColumnNames();
 
@@ -107,7 +110,6 @@ public class RptDemographicQueryBuilder {
         theFirstFlag = 0;
 
 
-
         for (int i = 0; i < select.length ; i++){
             if (i == (select.length - 1)){
                 stringBuffer.append(" "+select[i]+" ");
@@ -123,6 +125,7 @@ public class RptDemographicQueryBuilder {
             yStyle = Integer.parseInt(yearStyle);
         }catch (Exception e){}
 
+        
        // value="0"> nothing specified
        // value="1">born before
        // value="2">born after
@@ -157,7 +160,7 @@ public class RptDemographicQueryBuilder {
        // value="3">born in
        // value="4">born between
 
-
+       System.out.println("date style"+yStyle);
         switch (yStyle){
             case 1:
                 whereClause();
@@ -188,8 +191,25 @@ public class RptDemographicQueryBuilder {
                 break;
             case 4:
                 whereClause();
-                if (ageStyle.equals("1")){
-                  stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
+                System.out.println("age style "+ageStyle);
+                if (!ageStyle.equals("2")){
+                  // stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" and ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
+                  System.out.println("VERIFYING INT"+startYear);
+                  //check to see if its a number 
+                  if ( verifyInt (startYear) ){
+                     stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) >  "+startYear+" ) ");
+                  }else{
+                     String interval = getInterval(startYear);
+                     stringBuffer.append(" ( date_sub("+asofDate+",interval "+interval+") > DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d')   ) ");                   
+                  }
+                  stringBuffer.append(" and ");
+                  if ( verifyInt (endYear) ){
+                    stringBuffer.append(" ( ( YEAR("+asofDate+") -YEAR (DATE_FORMAT(CONCAT((year_of_birth), '-', (month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'))) - (RIGHT("+asofDate+",5)<RIGHT(DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d'),5)) <  "+endYear+"  ) ");
+                  }else{
+                      ///
+                    String interval = getInterval(endYear);
+                    stringBuffer.append(" ( date_sub("+asofDate+",interval "+interval+") < DATE_FORMAT(CONCAT((year_of_birth),'-',(month_of_birth),'-',(date_of_birth)),'%Y-%m-%d')   ) ");                        
+                  }
                 }else{
                   stringBuffer.append(" ( YEAR("+asofDate+") - year_of_birth > "+startYear+"  and YEAR("+asofDate+") - year_of_birth < "+endYear+"  ) ");
                 }
@@ -306,6 +326,7 @@ public class RptDemographicQueryBuilder {
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
               rs = db.GetSQL(stringBuffer.toString());
+              System.out.println(stringBuffer.toString());
 
               while (rs.next()) {
 
@@ -327,5 +348,23 @@ public class RptDemographicQueryBuilder {
     return searchedArray;
     }
 
-
+   boolean verifyInt(String str){
+      boolean verify = true;
+      try{
+         Integer.parseInt(str);
+      }catch(Exception e){
+         verify = false;
+      }
+      return verify;
+   }
+   
+   String  getInterval(String startYear){
+      System.out.println("in getInterval startYear "+startYear); 
+      String str = "";
+      if (startYear.charAt(startYear.length()-1) == 'm' ){
+         str = startYear.substring(0,(startYear.length()-1)) + " month";
+      }
+      System.out.println(str);
+      return str;
+   }
 }
