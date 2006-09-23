@@ -740,8 +740,11 @@ div.demographicWrapper {
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formPhoneH"/>:<b><%=rs.getString("phone")%> <%=s(demoExt.get("hPhoneExt"))%></b>
                                             <bean:message key="demographic.demographiceditdemographic.formPhoneW"/>:<b> <%=rs.getString("phone2")%> <%=s(demoExt.get("wPhoneExt"))%></b>
-                                            <bean:message key="demographic.demographiceditdemographic.formPhoneC"/>:<b> <%=s(demoExt.get("demo_cell"))%></b>
 
+
+                                        </li>
+                                        <li>
+                                        <bean:message key="demographic.demographiceditdemographic.formPhoneC"/>:<b> <%=s(demoExt.get("demo_cell"))%></b>
                                         </li>
                                         <li>
                                             <bean:message key="demographic.demographiceditdemographic.formAddr"/>: <b><%=rs.getString("address")%></b>
