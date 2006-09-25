@@ -978,24 +978,11 @@ function importFromEnct(reqInfo,txtArea)
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-                <table width="100%">
-                    <tr>
-                        <td width="30%" class="tite4">
-                            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
-                                    out.print(props.getProperty("currentMedicationsTitle", ""));
-                                } else { %>
-                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
-                             <% } %>
-                        </td>
-                        <td>
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].currentMedications);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].currentMedications);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].currentMedications);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].currentMedications);" />&nbsp;
-                        </td>
-                    </tr>
-                </table>
+                <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+                        out.print(props.getProperty("currentMedicationsTitle", ""));
+                   } else { %>
+                        <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
+                <% } %>                
             </td>
        </tr>
        <tr>
@@ -1005,20 +992,7 @@ function importFromEnct(reqInfo,txtArea)
        </tr>
        <tr>
             <td colspan=2 class="tite4">
-                <table width="100%">
-                    <tr>
-                        <td width="30%" class="tite4">
-                            <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies"/>:
-                        </td>
-                        <td>
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].allergies);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].allergies);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].allergies);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].allergies);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].allergies);" />&nbsp;
-                        </td>
-                    </tr>
-                </table>            
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formAllergies"/>:               
             </td>
        </tr>
        <tr>
