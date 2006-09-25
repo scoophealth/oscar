@@ -416,9 +416,8 @@ function checkForm(submissionVal,formName){
 
 //enable import from encounter
 function importFromEnct(reqInfo,txtArea) 
-{
-    if( txtArea.value.length > 0 )
-        txtArea.value += '\n';
+{    
+    var info = "";
                     
     switch( reqInfo )
     {
@@ -429,7 +428,7 @@ function importFromEnct(reqInfo,txtArea)
                 {                 
                     value = demographic.EctInfo.getMedicalHistory();
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
+                    out.println("info = '" + value + "'");
                 }
              %>  
              break;
@@ -439,7 +438,7 @@ function importFromEnct(reqInfo,txtArea)
                  {
                     value = demographic.EctInfo.getOngoingConcerns();
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
+                    out.println("info = '" + value + "'");
                  }
              %>
              break;
@@ -449,37 +448,17 @@ function importFromEnct(reqInfo,txtArea)
                  {
                     value = demographic.EctInfo.getSocialHistory();
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
+                    out.println("info = '" + value + "'");
                  }
               %>  
-              break;
-            case "Allergies":                
-              <%
-                 if( demo != null )
-                 {
-                    value = demographic.RxInfo.getAllergies();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
-                 }
-              %>                
-                break;
-            case "Prescriptions":                
-              <%
-                 if( demo != null )
-                 {
-                    value = demographic.RxInfo.getCurrentMedication();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
-                 }
-              %>                
-                break;
+              break;            
             case "OtherMeds":                
               <%
                  if( demo != null )
                  {
                     value = demographic.EctInfo.getFamilyHistory();
                     value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
+                    out.println("info = '" + value + "'");
                  }
               %>                
                 break;
@@ -488,11 +467,18 @@ function importFromEnct(reqInfo,txtArea)
                  if( demo != null )
                  {
                     value = demographic.EctInfo.getReminders();
-                    value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
-                    out.println("txtArea.value += '" + value + "'");
+                    if( !value.equals("") ) {
+                        value = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value);
+                        out.println("info = '" + value + "'");
+                    }
                  }
               %>                
     } //end switch
+    
+    if( txtArea.value.length > 0 && info.length > 0 )
+        txtArea.value += '\n';
+        
+    txtArea.value += info;
                 
 }
 </script>
@@ -534,15 +520,17 @@ function importFromEnct(reqInfo,txtArea)
 
 
         }else if(request.getAttribute("validateError") == null){
-            //  new request            
-                /*thisForm.setAllergies(demographic.RxInfo.getAllergies());
+            //  new request      
+            if( demo != null ) {
+                        thisForm.setAllergies(demographic.RxInfo.getAllergies());
                 
 			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
-                thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
+                            thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
 			} else {
-				thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+                            thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
 			}
-                */
+            }
+                
                 thisForm.setStatus("1");
                 thisForm.setSendTo(team);
                 //thisForm.setConcurrentProblems(demographic.EctInfo.getOngoingConcerns());
@@ -947,8 +935,6 @@ function importFromEnct(reqInfo,txtArea)
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].clinicalInformation);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].clinicalInformation);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].clinicalInformation);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].clinicalInformation);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].clinicalInformation);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].clinicalInformation);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].clinicalInformation);" />&nbsp;
                         </td>
@@ -975,8 +961,6 @@ function importFromEnct(reqInfo,txtArea)
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].concurrentProblems);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].concurrentProblems);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].concurrentProblems);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].concurrentProblems);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].concurrentProblems);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].concurrentProblems);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].concurrentProblems);" />&nbsp;
                         </td>
@@ -987,7 +971,9 @@ function importFromEnct(reqInfo,txtArea)
        </tr>
        <tr>
             <td colspan=2>
-                <html:textarea cols="90" rows="3" property="concurrentProblems"></html:textarea>
+                <html:textarea cols="90" rows="3" property="concurrentProblems">
+             
+                </html:textarea>
             </td>
        </tr>
        <tr>
@@ -1005,8 +991,6 @@ function importFromEnct(reqInfo,txtArea)
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].currentMedications);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].currentMedications);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].currentMedications);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].currentMedications);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].currentMedications);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].currentMedications);" />&nbsp;
                         </td>
@@ -1030,8 +1014,6 @@ function importFromEnct(reqInfo,txtArea)
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportFamHistory"/>" onclick="importFromEnct('FamilyHistory',document.forms[0].allergies);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMedHistory"/>" onclick="importFromEnct('MedicalHistory',document.forms[0].allergies);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportConcerns"/>" onclick="importFromEnct('ongoingConcerns',document.forms[0].allergies);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportAllergies"/>" onclick="importFromEnct('Allergies',document.forms[0].allergies);" />&nbsp;
-                            <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportMeds"/>" onclick="importFromEnct('Prescriptions',document.forms[0].allergies);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].allergies);" />&nbsp;
                             <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportReminders"/>" onclick="importFromEnct('Reminders',document.forms[0].allergies);" />&nbsp;
                         </td>
