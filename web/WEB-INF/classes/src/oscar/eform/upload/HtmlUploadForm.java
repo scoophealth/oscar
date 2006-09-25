@@ -67,13 +67,13 @@ public class HtmlUploadForm extends ActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         if ((formName == null) || (formName.length() == 0)) {
-            errors.add("form", new ActionError("eform.errors.file_name.missing"));
+            errors.add("form", new ActionMessage("eform.errors.file_name.missing"));
         }
         if (formHtml.getFileSize() == 0) {
-            errors.add("form", new ActionError("eform.errors.form_html.missing"));
+            errors.add("form", new ActionMessage("eform.errors.form_html.missing"));
         }
         if (EFormUtil.formExistsInDB(formName)) {
-            errors.add("form", new ActionError("eform.errors.form_name.exists", formName));
+            errors.add("form", new ActionMessage("eform.errors.form_name.exists", formName));
         }
         return(errors);
     }
