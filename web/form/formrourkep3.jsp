@@ -890,7 +890,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_bath18m" <%= props.getProperty("p3_bath18m", "") %>></td>
 
-                    <td width="100%"><i><a href="<%=resource%>s_drowning"><bean:message key="oscarEncounter.formRourke3.btnbathSafety"/></a>*</i></td>
+                    <td width="100%"><i><a href="#" onclick="popup('<%=resource%>s_drowning');return false;"><bean:message key="oscarEncounter.formRourke3.btnbathSafety"/></a>*</i></td>
 
                 </tr>
 
@@ -898,7 +898,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_choking18m" <%= props.getProperty("p3_choking18m", "") %>></td>
 
-                    <td><a href="<%=resource%>s_choking"><bean:message key="oscarEncounter.formRourke3.btnChokngSafeToys"/></a>*</td>
+                    <td><a href="#" onclick="popup('<%=resource%>s_choking');return false;"><bean:message key="oscarEncounter.formRourke3.btnChokngSafeToys"/></a>*</td>
 
                 </tr>
 
@@ -948,7 +948,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_dental18m" <%= props.getProperty("p3_dental18m", "") %>></td>
 
-                    <td><b><a href="<%=resource%>o_dentalCare"><bean:message key="oscarEncounter.formRourke3.formDentalCare"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>o_dentalCare');return false;"><bean:message key="oscarEncounter.formRourke3.formDentalCare"/></a>*</b></td>
 
                 </tr>
 
@@ -978,7 +978,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_bike2y" <%= props.getProperty("p3_bike2y", "") %>></td>
 
-                    <td width="100%"><i><a href="<%=resource%>s_falls"><bean:message key="oscarEncounter.formRourke3.formBikeHelmets"/></a>*</i></td>
+                    <td width="100%"><i><a href="#" onclick="popup('<%=resource%>s_falls');return false;"><bean:message key="oscarEncounter.formRourke3.formBikeHelmets"/></a>*</i></td>
 
                 </tr>
 
@@ -994,7 +994,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_carbon2y" <%= props.getProperty("p3_carbon2y", "") %>></td>
 
-                    <td><bean:message key="oscarEncounter.formRourke3.formCarbonMonoxide"/>/ <i><a href="<%=resource%>s_burns"><bean:message key="oscarEncounter.formRourke3.formSmokeDetectors"/></a>*</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke3.formCarbonMonoxide"/>/ <i><a href="#" onclick="popup('<%=resource%>s_burns');return false;"><bean:message key="oscarEncounter.formRourke3.formSmokeDetectors"/></a>*</i></td>
 
                 </tr>
 
@@ -1030,7 +1030,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_dayCare2y" <%= props.getProperty("p3_dayCare2y", "") %>></td>
 
-                    <td><b><a href="<%=resource%>hri_dayCare"><bean:message key="oscarEncounter.formRourke3.formAssessDayCare"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>hri_dayCare');return false;"><bean:message key="oscarEncounter.formRourke3.formAssessDayCare"/></a>*</b></td>
 
                 </tr>
 
@@ -1038,7 +1038,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_dental2y" <%= props.getProperty("p3_dental2y", "") %>></td>
 
-                    <td><b><a href="<%=resource%>o_dentalCare"><bean:message key="oscarEncounter.formRourke3.formDentalCareCheckUp"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>o_dentalCare');return false;"><bean:message key="oscarEncounter.formRourke3.formDentalCareCheckUp"/></a>*</b></td>
 
                 </tr>
 
@@ -1068,7 +1068,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_bike4y" <%= props.getProperty("p3_bike4y", "") %>></td>
 
-                    <td width="100%"><i><a href="<%=resource%>s_falls"><bean:message key="oscarEncounter.formRourke3.formBikeHelmets"/></a>*</i></td>
+                    <td width="100%"><i><a href="#" onclick="popup('<%=resource%>s_falls');return false;"><bean:message key="oscarEncounter.formRourke3.formBikeHelmets"/></a>*</i></td>
 
                 </tr>
 
@@ -1084,7 +1084,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_carbon4y" <%= props.getProperty("p3_carbon4y", "") %>></td>
 
-                    <td><bean:message key="oscarEncounter.formRourke3.formCarbonMonoxide"/>/ <i><a href="<%=resource%>s_burns"><bean:message key="oscarEncounter.formRourke3.formSmokeDetectors"/></a>*</i></td>
+                    <td><bean:message key="oscarEncounter.formRourke3.formCarbonMonoxide"/>/ <i><a href="#" onclick="popup('<%=resource%>s_burns');return false;"><bean:message key="oscarEncounter.formRourke3.formSmokeDetectors"/></a>*</i></td>
 
                 </tr>
 
@@ -1092,7 +1092,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_water4y" <%= props.getProperty("p3_water4y", "") %>></td>
 
-                    <td><a href="<%=resource%>s_drowning"><bean:message key="oscarEncounter.formRourke3.formWaterSafety"/></a></td>
+                    <td><a href="#" onclick="popup('<%=resource%>s_drowning');return false;"><bean:message key="oscarEncounter.formRourke3.formWaterSafety"/></a></td>
 
                 </tr>
 
@@ -1126,7 +1126,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_dental4y" <%= props.getProperty("p3_dental4y", "") %>></td>
 
-                    <td><b><a href="<%=resource%>o_dentalCare"><bean:message key="oscarEncounter.formRourke3.formDentalCareCheckUp"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>o_dentalCare');return false;"><bean:message key="oscarEncounter.formRourke3.formDentalCareCheckUp"/></a>*</b></td>
 
                 </tr>
 
@@ -1572,7 +1572,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_cover18m" <%= props.getProperty("p3_cover18m", "") %>></td>
 
-                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke3.btnCoverTest"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>pe_cover');return false;"><bean:message key="oscarEncounter.formRourke3.btnCoverTest"/></a>*</b></td>
 
                 </tr>
 
@@ -1610,7 +1610,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_cover2y" <%= props.getProperty("p3_cover2y", "") %>></td>
 
-                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke3.btnCoverTest"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>pe_cover');return false;"><bean:message key="oscarEncounter.formRourke3.btnCoverTest"/></a>*</b></td>
 
                 </tr>
 
@@ -1648,7 +1648,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_cover4y" <%= props.getProperty("p3_cover4y", "") %>></td>
 
-                    <td><b><a href="<%=resource%>pe_cover"><bean:message key="oscarEncounter.formRourke3.btnCoverTest"/></a>*</b></td>
+                    <td><b><a href="#" onclick="popup('<%=resource%>pe_cover');return false;"><bean:message key="oscarEncounter.formRourke3.btnCoverTest"/></a>*</b></td>
 
                 </tr>
 
@@ -1710,7 +1710,7 @@ var maxYear=3100;
 
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_serum2y" <%= props.getProperty("p3_serum2y", "") %>></td>
 
-                    <td width="100%"><i><a href="<%=resource%>pp_leadScreening"><bean:message key="oscarEncounter.formRourke3.msgSerumLead"/></a>*</i></td>
+                    <td width="100%"><i><a href="#" onclick="popup('<%=resource%>pp_leadScreening');return false;"><bean:message key="oscarEncounter.formRourke3.msgSerumLead"/></a>*</i></td>
 
                 </tr>
 
