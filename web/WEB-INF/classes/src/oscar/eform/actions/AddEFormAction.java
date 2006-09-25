@@ -57,7 +57,7 @@ public class AddEFormAction extends Action {
          }
          //----names parsed
          EForm curForm = new EForm(fid, demographic_no, provider_no);
-         ActionErrors errors = curForm.setMeasurements(paramNames, paramValues);
+         ActionMessages errors = curForm.setMeasurements(paramNames, paramValues);
          curForm.setFormSubject(subject);
          curForm.setValues(paramNames, paramValues);
          curForm.setImagePath();
