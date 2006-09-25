@@ -81,7 +81,7 @@ public final class FrmSetupFormAction extends Action {
         String formId = request.getParameter("formId");
         frm.setValue("formId", formId==null?"0":formId);
         String demo = request.getParameter("demographic_no");
-        String providerNo = (String) session.getValue("user");
+        String providerNo = (String) session.getAttribute("user");
         if (demo == null || bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
             demo = (String) bean.getDemographicNo();
