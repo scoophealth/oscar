@@ -389,7 +389,7 @@ pop up description layer
              <table cellpadding="0" cellspacing="0" width="100%"  >                
                   <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_breastFeeding9m" <%= props.getProperty("p3_breastFeeding9m", "") %>/></td>
-                    <td><b><a href="#" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popup('<%=resource%>n_breastFeeding');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/><br/></a><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
+                    <td><b><a href="#" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popPage('<%=resource%>n_breastFeeding');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/><br/></a><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_formulaFeeding9m" <%= props.getProperty("p3_formulaFeeding9m", "") %>/></td>
@@ -429,7 +429,7 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_breastFeeding12m" <%= props.getProperty("p3_breastFeeding12m", "") %>></td>
-                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popup('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
+                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_homoMilk12m" <%= props.getProperty("p3_homoMilk12m", "") %>></td>
@@ -456,7 +456,7 @@ pop up description layer
                 </tr>
                <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_breastFeeding15m" <%= props.getProperty("p3_breastFeeding15m", "") %>></td>
-                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popup('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
+                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_homoMilk15m" <%= props.getProperty("p3_homoMilk15m", "") %>></td>
@@ -999,10 +999,10 @@ pop up description layer
         <td style="text-align:center" colspan="3" valign="top">            
             <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b>                           
         </td>
-        <td colspan="3" valign="top">
+        <td style="text-align:center" colspan="3" valign="top">
             <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b></td>
         </td>
-        <td colspan="3" valign="top">
+        <td style="text-align:center" colspan="3" valign="top">
             <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b>
         </td>        
     </tr>

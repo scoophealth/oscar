@@ -394,7 +394,7 @@ pop up description layer
              <table cellpadding="0" cellspacing="0" width="100%"  >                
                   <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding1w" <%= props.getProperty("p1_breastFeeding1w", "") %>/></td>
-                    <td><b><a href="#" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popup('<%=resource%>n_breastFeeding');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/><br/></a><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
+                    <td><b><a href="#" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popPage('<%=resource%>n_breastFeeding','about');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/><br/></a><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding1w" <%= props.getProperty("p1_formulaFeeding1w", "") %>/></td>
@@ -411,7 +411,7 @@ pop up description layer
             <table cellpadding="0" cellspacing="0" width="100%"  >                
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding2w" <%= props.getProperty("p1_breastFeeding2w", "") %>></td>
-                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popup('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/></a><br/><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
+                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>n_breastFeeding','about')"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/></a><br/><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding2w" <%= props.getProperty("p1_formulaFeeding2w", "") %>></td>
@@ -427,7 +427,7 @@ pop up description layer
             <table cellpadding="0" cellspacing="0" width="100%" height="100%"  >                
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_breastFeeding1m" <%= props.getProperty("p1_breastFeeding1m", "") %>></td>
-                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popup('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/></a><br/><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
+                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>n_breastFeeding','about')"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/></a><br/><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_formulaFeeding1m" <%= props.getProperty("p1_formulaFeeding1m", "") %>></td>
@@ -796,7 +796,7 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p1_hemoScreen1w" <%= props.getProperty("p1_hemoScreen1w", "") %>></td>
-                    <td><b><a href="javascript:popup('<%=resource%>pp_hemoglobinopathyScreening')"><bean:message key="oscarEncounter.formRourke1.formHemoglobinopathy"/></a> (if at risk)*</b></td>
+                    <td><b><a href="javascript:popPage('<%=resource%>pp_hemoglobinopathyScreening','about')"><bean:message key="oscarEncounter.formRourke1.formHemoglobinopathy"/></a> (if at risk)*</b></td>
                 </tr>
           </table>
         </td>
@@ -822,7 +822,7 @@ pop up description layer
         <td colspan="3" valign="top">
             <table cellpadding="0" cellspacing="0"   width="100%">
                 <tr>
-                    <td colspan="2">
+                    <td style="text-align:center" colspan="2">
                         <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b><br/>
                            <bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationHepatitis"/>
                     </td>
@@ -836,14 +836,14 @@ pop up description layer
         <td colspan="3" valign="top">
             <table cellpadding="0" cellspacing="0"   width="100%">                
                 <tr>
-                    <td><b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b></td>
+                    <td style="text-align:center" ><b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b></td>
                 </tr>
             </table>
         </td>
         <td colspan="3" valign="top">
             <table cellpadding="0" cellspacing="0"   width="100%">                
                 <tr>
-                    <td colspan="2"><b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b><br/>
+                    <td style="text-align:center" colspan="2"><b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b><br/>
                         <bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationHepatitis"/>
                     </td>
                 </tr>

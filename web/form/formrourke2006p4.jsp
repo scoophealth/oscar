@@ -383,7 +383,7 @@ pop up description layer
              <table cellpadding="0" cellspacing="0" width="100%"  >                
                   <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p4_breastFeeding18m" <%= props.getProperty("p4_breastFeeding18m", "") %>/></td>
-                    <td><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popup('<%=resource%>n_breastFeeding');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/></span></b></td>
+                    <td><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popPage('<%=resource%>n_breastFeeding');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/></span></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p4_homoMilk" <%= props.getProperty("p4_homoMilk", "") %>/></td>
@@ -1097,10 +1097,10 @@ pop up description layer
         <td style="text-align:center" colspan="3" valign="top">            
             <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b>                           
         </td>
-        <td colspan="3" valign="top">
+        <td style="text-align:center" colspan="3" valign="top">
             <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b></td>
         </td>
-        <td colspan="2" valign="top">
+        <td style="text-align:center" colspan="2" valign="top">
             <b><bean:message key="oscarEncounter.formRourke2006_1.msgImmunizationColTitle"/></b>
         </td>        
     </tr>
