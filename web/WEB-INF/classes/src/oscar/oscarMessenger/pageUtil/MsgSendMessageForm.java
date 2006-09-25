@@ -25,8 +25,8 @@
 package oscar.oscarMessenger.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
@@ -99,9 +99,9 @@ public final class MsgSendMessageForm extends ActionForm {
  //             errors.add("message32",new ActionError("error.message.missing"));
               //errors.add("message32",new ActionError("index.heading"));
               String str = "supperdooper";
-              ActionError actionError = new ActionError("index.heading");
+              ActionMessage actionError = new ActionMessage("index.heading");
               // System.out.println(actionError.getKey());
-              errors.add("message", new ActionError("index.heading"));
+              errors.add("message", new ActionMessage("index.heading"));
               // System.out.println("igethere");
         }
 
