@@ -28,7 +28,7 @@
 
 package oscar.oscarPrevention.pageUtil;
 
-import java.lang.*;
+import java.util.Date;
 
 /**
  *
@@ -44,6 +44,12 @@ public class PreventionReportDisplay implements Comparable{
    public String color = null;   
    public String numShots = null;
    public String bonusStatus= null;
+   
+   //FollowUp Data
+   public Date lastFollowup = null;
+   public String lastFollupProcedure =null;
+   public String nextSuggestedProcedure=null;
+   
    public PreventionReportDisplay() {
    }
    
