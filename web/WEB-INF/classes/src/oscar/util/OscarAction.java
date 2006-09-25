@@ -49,32 +49,32 @@ public abstract class OscarAction extends Action {
 
     protected void generalError(HttpServletRequest request, Exception e,
         String error) {
-        ActionErrors aes = new ActionErrors();
-        aes.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError(error, e.getMessage()));
+        ActionMessages aes = new ActionMessages();
+        aes.add(ActionMessages.GLOBAL_MESSAGE,
+            new ActionMessage(error, e.getMessage()));
         saveErrors(request, aes);
         e.printStackTrace();
         cat.error("Erro - ", e);
     }
 
     protected void generalError(HttpServletRequest request, String error) {
-        ActionErrors aes = new ActionErrors();
-        aes.add(ActionErrors.GLOBAL_ERROR, new ActionError(error));
+        ActionMessages aes = new ActionMessages();
+        aes.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(error));
         saveErrors(request, aes);
         cat.error("Erro - " + error);
     }
 
 	protected void generalError(HttpServletRequest request, String error, String errorMsg) {
-		ActionErrors aes = new ActionErrors();
-		aes.add(ActionErrors.GLOBAL_ERROR, new ActionError(error, errorMsg));
+		ActionMessages aes = new ActionMessages();
+		aes.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(error, errorMsg));
 		saveErrors(request, aes);
 		cat.error("Erro - " + error);
 	}
 	
 
     protected void generalError(HttpServletRequest request, String error, Object[] params) {
-        ActionErrors aes = new ActionErrors();
-        aes.add(ActionErrors.GLOBAL_ERROR, new ActionError(error, params));
+        ActionMessages aes = new ActionMessages();
+        aes.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(error, params));
         saveErrors(request, aes);
         cat.error("Erro - " + error);
     }
@@ -82,17 +82,17 @@ public abstract class OscarAction extends Action {
 
     protected void generalError(HttpServletRequest request, String error,
         String param1, String param2) {
-        ActionErrors aes = new ActionErrors();
-        aes.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError(error, param1, param2));
+        ActionMessages aes = new ActionMessages();
+        aes.add(ActionMessages.GLOBAL_MESSAGE,
+            new ActionMessage(error, param1, param2));
         saveErrors(request, aes);
         cat.error("Erro - " + error);
     }
 
     protected void generalError(HttpServletRequest request, Exception e) {
-        ActionErrors aes = new ActionErrors();
-        aes.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError("erro.geral", e.getMessage()));
+        ActionMessages aes = new ActionMessages();
+        aes.add(ActionMessages.GLOBAL_MESSAGE,
+            new ActionMessage("erro.geral", e.getMessage()));
         saveErrors(request, aes);
         e.printStackTrace();
         cat.error("Erro - " + e.getMessage());
@@ -100,9 +100,9 @@ public abstract class OscarAction extends Action {
 
     protected void generalError(HttpServletRequest request, Exception e,
         String error, String param) {
-        ActionErrors aes = new ActionErrors();
-        aes.add(ActionErrors.GLOBAL_ERROR,
-            new ActionError(error, e.getMessage(), param));
+        ActionMessages aes = new ActionMessages();
+        aes.add(ActionMessages.GLOBAL_MESSAGE,
+            new ActionMessage(error, e.getMessage(), param));
         saveErrors(request, aes);
         e.printStackTrace();
         cat.error("Erro - " + e.getMessage());
