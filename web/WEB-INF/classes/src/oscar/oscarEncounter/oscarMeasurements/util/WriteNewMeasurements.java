@@ -24,14 +24,13 @@ package oscar.oscarEncounter.oscarMeasurements.util;
 //used by eforms for writing measurements
 import org.apache.struts.action.*;
 import oscar.oscarEncounter.oscarMeasurements.pageUtil.*;
-import oscar.oscarEncounter.oscarMeasurements.bean.*;
 import oscar.oscarDB.DBHandler;
 import java.sql.*;
 import java.util.*;
 import oscar.util.*;
 
 public class WriteNewMeasurements {
-    public static ActionErrors addMeasurements(ArrayList names, ArrayList values, String demographicNo, String providerNo) {
+    public static ActionMessages addMeasurements(ArrayList names, ArrayList values, String demographicNo, String providerNo) {
             //must be called on the same eform object because it retrieves some of its properties
         Vector measures = new Vector();
         for (int i=0; i<names.size(); i++) {
@@ -62,7 +61,7 @@ public class WriteNewMeasurements {
         //--------All measurement values are organized in Hashtables in an arraylist
         //--------validation......
         preProcess(measures);
-        ActionErrors errors = new ActionErrors();
+        ActionMessages errors = new ActionMessages();
         //errors.add("value",
            //new ActionError("errors.range", "value", "2", "3"));
         errors = validate(measures, demographicNo);
@@ -121,8 +120,8 @@ public class WriteNewMeasurements {
         } catch (SQLException sqe) { sqe.printStackTrace(); }
     }
     
-    static private ActionErrors validate(Vector measures, String demographicNo) {
-        ActionErrors errors = new ActionErrors();
+    static private ActionMessages validate(Vector measures, String demographicNo) {
+        ActionMessages errors = new ActionMessages();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             EctValidation ectValidation = new EctValidation();
@@ -161,7 +160,7 @@ public class WriteNewMeasurements {
                 else {
                     //if type with instruction does not exist
                     errors.add(inputType, 
-                    new ActionError("errors.oscarEncounter.Measurements.cannotFindType", inputType, mInstrc));
+                    new ActionMessage("errors.oscarEncounter.Measurements.cannotFindType", inputType, mInstrc));
                     valid=false;
                     continue;
                 }
@@ -169,32 +168,32 @@ public class WriteNewMeasurements {
 
                 if(!ectValidation.isInRange(dMax, dMin, inputValue)){
                     errors.add(inputType,
-                    new ActionError("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
+                    new ActionMessage("errors.range", inputType, Double.toString(dMin), Double.toString(dMax)));
                     valid=false;
                 }
                 if(!ectValidation.maxLength(iMax, inputValue)){
                     errors.add(inputType,
-                    new ActionError("errors.maxlength", inputType, Integer.toString(iMax)));
+                    new ActionMessage("errors.maxlength", inputType, Integer.toString(iMax)));
                     valid=false;
                 }
                 if(!ectValidation.minLength(iMin, inputValue)){
                     errors.add(inputType,
-                    new ActionError("errors.minlength", inputType, Integer.toString(iMin)));
+                    new ActionMessage("errors.minlength", inputType, Integer.toString(iMin)));
                     valid=false;
                 }
                 if(!ectValidation.matchRegExp(regExp, inputValue)){
                     errors.add(inputType,
-                    new ActionError("errors.invalid", inputType));
+                    new ActionMessage("errors.invalid", inputType));
                     valid=false;
                 }
                 if(!ectValidation.isValidBloodPressure(regExp, inputValue)){
                     errors.add(inputType,
-                    new ActionError("error.bloodPressure"));
+                    new ActionMessage("error.bloodPressure"));
                     valid=false;
                 }
                 if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){
                     errors.add(inputType,
-                    new ActionError("errors.invalidDate", inputType));
+                    new ActionMessage("errors.invalidDate", inputType));
                     valid=false;
                 }
                 

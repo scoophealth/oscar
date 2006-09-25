@@ -91,7 +91,7 @@ public class EctMeasurementsAction extends Action {
             {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 EctValidation ectValidation = new EctValidation();
-                ActionErrors errors = new ActionErrors();
+                ActionMessages errors = new ActionMessages();
 
                 String inputValueName, inputTypeName, inputTypeDisplayName, mInstrcName, commentsName;
                 String dateName,validationName, inputValue, inputType, inputTypeDisplay, mInstrc;
@@ -140,35 +140,35 @@ public class EctMeasurementsAction extends Action {
                     rs.close();
 
                     if(!ectValidation.isInRange(dMax, dMin, inputValue)){
-                        errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
+                        errors.add(inputValueName, new ActionMessage("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
                         saveErrors(request, errors);
                         valid = false;
                     }
                     if(!ectValidation.maxLength(iMax, inputValue)){
-                        errors.add(inputValueName, new ActionError("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
+                        errors.add(inputValueName, new ActionMessage("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
                         saveErrors(request, errors);
                         valid = false;
                     }
                     if(!ectValidation.minLength(iMin, inputValue)){
-                        errors.add(inputValueName, new ActionError("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
+                        errors.add(inputValueName, new ActionMessage("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
                         saveErrors(request, errors);
                         valid = false;
                     }
                     if(!ectValidation.matchRegExp(regExp, inputValue)){
                         errors.add(inputValueName,
-                        new ActionError("errors.invalid", inputTypeDisplay));
+                        new ActionMessage("errors.invalid", inputTypeDisplay));
                         saveErrors(request, errors);
                         valid = false;
                     }
                     if(!ectValidation.isValidBloodPressure(regExp, inputValue)){
                         errors.add(inputValueName,
-                        new ActionError("error.bloodPressure"));
+                        new ActionMessage("error.bloodPressure"));
                         saveErrors(request, errors);
                         valid = false;
                     }
                     if(!ectValidation.isDate(dateObserved)&&inputValue.compareTo("")!=0){
                         errors.add(dateName,
-                        new ActionError("errors.invalidDate", inputTypeDisplay));
+                        new ActionMessage("errors.invalidDate", inputTypeDisplay));
                         saveErrors(request, errors);
                         valid = false;
                     }
