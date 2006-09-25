@@ -997,6 +997,11 @@
         <forward name="success" path="/report/ClinicalReports.jsp"/>
     </action>
 
+    <action input="/report/ClinicalReports.jsp" name="FrmForm" path="/report/RemoveClinicalReport" type="oscar.oscarReport.ClinicalReports.pageUtil.RemoveClinicalReportFromHistoryAction">
+        <forward name="success" path="/report/ClinicalReports.jsp"/>                                                                                
+    </action>
+
+    
     <action input="/billing/CA/BC/billingSVCTrayAssoc.jsp" name="supServiceCodeAssocActionForm" path="/billing/CA/BC/supServiceCodeAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocAction" validate="false">
       <forward name="success" path="/billing/CA/BC/billingSVCTrayAssoc.jsp">
       </forward>
@@ -1017,15 +1022,21 @@
     <action input="/dms/addedithtmldocument.jsp" name="addEditHtmlDoc" path="/dms/addEditHtml" type="oscar.dms.actions.AddEditHtmlAction" scope="request" validate="false">
         <forward name="success" path="/dms/closeWindow.html"/>
         <forward name="failed" path="/dms/addedithtmldocument.jsp"/>
-    <!--action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
-      <forward name="success" path="/scratch/index.jsp" />
-    </action-->
+
     </action>
+ 
+    <!-- action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
+      <forward name="success" path="/scratch/index.jsp" />
+    </action -->
+
     <action input="/oscarReport/ManageDemographicQueryFavourites.jsp" name="FrmForm" path="/report/DeleteDemographicReport" scope="request" type="oscar.oscarReport.pageUtil.RptDemographQueryFavouriteDeleteAction">
       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
     </action>
- 
-    
+
+    <action input="/oscarReport/ManageDemographicQueryFavourites.jsp" name="FrmForm" path="/report/GenerateEnvelopes" scope="request" type="oscar.oscarReport.pageUtil.GenerateEnvelopesAction">
+      <forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
+    </action>
+
  			<action path="/Tickler"
 				type="org.springframework.web.struts.DelegatingActionProxy"
 				parameter="method"
