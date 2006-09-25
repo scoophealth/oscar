@@ -96,7 +96,7 @@ public class FrmFormAction extends Action {
         Vector measurementTypes = formProp.getMeasurementTypes();
         System.out.println("num measurements "+measurementTypes.size());
         String demographicNo = null;
-        String providerNo = (String) session.getValue("user");
+        String providerNo = (String) session.getAttribute("user");
         if ( bean != null)
             demographicNo = bean.getDemographicNo();                        
         
@@ -291,7 +291,7 @@ public class FrmFormAction extends Action {
     
     
     
-    private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request,ActionErrors errors ){
+    private boolean validate(String inputValue, String observationDate, EctMeasurementTypesBean mt, EctValidationsBean validation, HttpServletRequest request,ActionMessages errors ){
         EctValidation ectValidation = new EctValidation();    
         boolean valid = true;
         
@@ -311,41 +311,41 @@ public class FrmFormAction extends Action {
         
         if(!GenericValidator.isBlankOrNull(inputValue)){            
             if(iIsNumeric==1 && !ectValidation.isInRange(dMax, dMin, inputValue)){                       
-                errors.add(inputValueName, new ActionError("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
+                errors.add(inputValueName, new ActionMessage("errors.range", inputTypeDisplay, Double.toString(dMin), Double.toString(dMax)));
                 saveErrors(request, errors);            
                 valid = false;
             }
             if(!ectValidation.maxLength(iMax, inputValue)){                       
-                errors.add(inputValueName, new ActionError("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
+                errors.add(inputValueName, new ActionMessage("errors.maxlength", inputTypeDisplay, Integer.toString(iMax)));
                 saveErrors(request, errors);
                 valid = false;
             }
             if(!ectValidation.minLength(iMin, inputValue)){                       
-                errors.add(inputValueName, new ActionError("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
+                errors.add(inputValueName, new ActionMessage("errors.minlength", inputTypeDisplay, Integer.toString(iMin)));
                 saveErrors(request, errors);
                 valid = false;
             }
             if(!ectValidation.matchRegExp(regExp, inputValue)){                        
                 errors.add(inputValueName,
-                new ActionError("errors.invalid", inputTypeDisplay));
+                new ActionMessage("errors.invalid", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
             }
             if(mt.getType().equalsIgnoreCase("BP")&&!ectValidation.isValidBloodPressure(regExp, inputValue)){                        
                 errors.add(inputValueName,
-                new ActionError("error.bloodPressure"));
+                new ActionMessage("error.bloodPressure"));
                 saveErrors(request, errors);
                 valid = false;
             }
             if(iIsDate==1 && !ectValidation.isDate(inputValue)){                        
                 errors.add(inputValueName,
-                new ActionError("errors.invalidDate", inputTypeDisplay));
+                new ActionMessage("errors.invalidDate", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
             }        
             if(!ectValidation.isDate(observationDate)){                        
                 errors.add(inputDateName,
-                new ActionError("errors.invalidDate", inputTypeDisplay));
+                new ActionMessage("errors.invalidDate", inputTypeDisplay));
                 saveErrors(request, errors);
                 valid = false;
             }
