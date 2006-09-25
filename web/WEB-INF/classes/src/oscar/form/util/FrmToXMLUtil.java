@@ -321,7 +321,8 @@ public class FrmToXMLUtil{
          Method setValueMethod = cls.getMethod("setValue",new Class[] {Date.class});
          i = 5;
          if(value!=null){
-            Date date = new Date(value);
+            DateFormat df = DateFormat.getDateInstance();
+            Date date = df.parse(value);
             setValueMethod.invoke(obj, new Object[] {date});       
          }
          
