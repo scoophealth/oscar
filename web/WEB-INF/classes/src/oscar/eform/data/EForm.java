@@ -344,7 +344,7 @@ public class EForm extends EFormBase {
         return curAP;
     }
     
-    public ActionErrors setMeasurements(ArrayList names, ArrayList values) {
+    public ActionMessages setMeasurements(ArrayList names, ArrayList values) {
         return(WriteNewMeasurements.addMeasurements(names, values, demographicNo, providerNo));
     }
     
