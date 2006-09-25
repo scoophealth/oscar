@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -56,7 +55,7 @@ public class MsgWriteToEncounterAction extends Action {
             int curMonth = (now.get(Calendar.MONTH)+1);
             int curDay = now.get(Calendar.DAY_OF_MONTH);
             String dateString = curYear+"-"+curMonth+"-"+curDay;
-            String provider = (String) request.getSession().getValue("user");
+            String provider = (String) request.getSession().getAttribute("user");
             // System.out.println("In MsgWriteToEncounterAction: provider is "+provider);
                         
             String msgId = request.getParameter("msgId");
