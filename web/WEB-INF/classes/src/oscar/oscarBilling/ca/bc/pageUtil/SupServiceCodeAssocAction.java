@@ -41,7 +41,7 @@ public class SupServiceCodeAssocAction
     SupServiceCodeAssocDAO dao = new SupServiceCodeAssocDAO();
     ActionForward fwd = actionMapping.findForward("success");
     if (!frm.MODE_VIEW.equals(frm.getActionMode())) {
-      ActionErrors errors = frm.validate(actionMapping, servletRequest);
+      ActionMessages errors = frm.validate(actionMapping, servletRequest);
       if (!errors.isEmpty()) {
         this.saveErrors(servletRequest,errors);
         fwd = actionMapping.getInputForward();
