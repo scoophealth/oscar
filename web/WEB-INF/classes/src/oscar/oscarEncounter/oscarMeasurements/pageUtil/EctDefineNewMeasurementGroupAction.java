@@ -56,13 +56,13 @@ public class EctDefineNewMeasurementGroupAction extends Action {
         String groupName = (String) frm.getGroupName();
         String styleSheet = (String) frm.getStyleSheet();
         
-        ActionErrors errors = new ActionErrors();  
+        ActionMessages errors = new ActionMessages();  
         EctValidation validate = new EctValidation();
         String regExp = validate.getRegCharacterExp();
         
         if(!validate.matchRegExp(regExp, groupName)){
             errors.add(groupName,
-            new ActionError("errors.invalid", groupName));
+            new ActionMessage("errors.invalid", groupName));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
@@ -70,7 +70,7 @@ public class EctDefineNewMeasurementGroupAction extends Action {
         //Write the new groupName to the database if there's no duplication
         if(!write2Database(groupName, styleSheet)){
             errors.add(groupName,
-            new ActionError("error.oscarEncounter.addNewMeasurementGroup.duplicateGroupName", groupName));
+            new ActionMessage("error.oscarEncounter.addNewMeasurementGroup.duplicateGroupName", groupName));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }

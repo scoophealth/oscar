@@ -66,9 +66,9 @@ public class EctDeleteMeasurementStyleSheetAction extends Action {
                         sql = "SELECT * FROM measurementCSSLocation WHERE cssID ='" + deleteCheckbox[i] + "'";
                         rs = db.GetSQL(sql);
                         if(rs.next()){
-                            ActionErrors errors = new ActionErrors();  
+                            ActionMessages errors = new ActionMessages();  
                             errors.add(deleteCheckbox[i],
-                            new ActionError("error.oscarEncounter.Measurements.cannotDeleteStyleSheet", rs.getString("location")));
+                            new ActionMessage("error.oscarEncounter.Measurements.cannotDeleteStyleSheet", rs.getString("location")));
                             saveErrors(request, errors);
                             return (new ActionForward(mapping.getInput()));
                         }
