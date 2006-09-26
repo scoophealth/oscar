@@ -501,7 +501,7 @@ public final class EctConsultationFormRequestForm
 
     if (service == null || service.length() == 0) {
 
-      errors.add("service", new ActionError("Errors.service.null"));
+      errors.add("service", new ActionMessage("Errors.service.null"));
 
     }
     try {
@@ -511,14 +511,14 @@ public final class EctConsultationFormRequestForm
       if (temp < 0) {
 
         errors.add("service",
-                   new ActionError("Errors.service.noServiceSelected"));
+                   new ActionMessage("Errors.service.noServiceSelected"));
 
       }
     }
 
     catch (Exception e) {
 
-      errors.add("fName", new ActionError("Errors.service.notNum"));
+      errors.add("fName", new ActionMessage("Errors.service.notNum"));
 
     }
 
