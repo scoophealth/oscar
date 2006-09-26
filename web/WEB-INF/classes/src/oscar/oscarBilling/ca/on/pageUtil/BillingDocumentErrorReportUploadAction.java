@@ -302,31 +302,38 @@ public class BillingDocumentErrorReportUploadAction extends Action {
                 BillingEDTOBECOutputSpecificationBean bean = (BillingEDTOBECOutputSpecificationBean) outputSpecVector.elementAt(i);
                 String hin = bean.getHealthNo();
                 String responseCode = bean.getResponseCode();
-                String sql = "SELECT * FROM batchEligibility where responseCode='" + responseCode + "'";
-                ResultSet rs = db.GetSQL(sql);                    
+                int responseCodeNum = -1;
+                try{
+                    responseCodeNum = Integer.parseInt(responseCode);
+                }catch(Exception e){}
                 
-                String sqlDemo = "SELECT * FROM demographic WHERE hin='" + hin + "'";
-                ResultSet rsDemo = db.GetSQL(sqlDemo);
-                
-                if (rsDemo.next()){
-                    if(rsDemo.getString("ver").compareTo(bean.getVersion())==0){
-                        String sqlVer = "UPDATE demographic SET ver ='##' WHERE hin='" + hin + "'";
-                        db.RunSQL(sqlVer);
-                        String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='" + rsDemo.getString("demographic_no") + "'";
-                        System.out.println("Select Demo sql: " + sqlAlert);
-                        ResultSet rsAlert = db.GetSQL(sqlAlert);
-                        if(rsAlert.next() && rs.next()){
-                            String newAlert = rsAlert.getString("cust3") + "\n" + "Invalid old version code: " + bean.getVersion() + "\nReason: " + rs.getString("MOHResponse") + "- " + rs.getString("reason");
-                            String newAlertSql = "UPDATE demographiccust SET cust3 = '" + newAlert + "' where demographic_no='" + rsDemo.getString("demographic_no") + "'";
-                            System.out.println("Update alert msg: " + newAlertSql);
-                            db.RunSQL(newAlertSql);
+                if (responseCodeNum <50 || responseCodeNum > 59){
+                    
+                    String sql = "SELECT * FROM batchEligibility where responseCode='" + responseCode + "'";
+                    ResultSet rs = db.GetSQL(sql);                    
+
+                    String sqlDemo = "SELECT * FROM demographic WHERE hin='" + hin + "'";
+                    ResultSet rsDemo = db.GetSQL(sqlDemo);
+
+                    if (rsDemo.next()){
+                        if(rsDemo.getString("ver").compareTo(bean.getVersion())==0){
+                            String sqlVer = "UPDATE demographic SET ver ='##' WHERE hin='" + hin + "'";
+                            db.RunSQL(sqlVer);
+                            String sqlAlert = "SELECT * FROM demographiccust where demographic_no ='" + rsDemo.getString("demographic_no") + "'";
+                            System.out.println("Select Demo sql: " + sqlAlert);
+                            ResultSet rsAlert = db.GetSQL(sqlAlert);
+                            if(rsAlert.next() && rs.next()){
+                                String newAlert = rsAlert.getString("cust3") + "\n" + "Invalid old version code: " + bean.getVersion() + "\nReason: " + rs.getString("MOHResponse") + "- " + rs.getString("reason");
+                                String newAlertSql = "UPDATE demographiccust SET cust3 = '" + newAlert + "' where demographic_no='" + rsDemo.getString("demographic_no") + "'";
+                                System.out.println("Update alert msg: " + newAlertSql);
+                                db.RunSQL(newAlertSql);
+                            }
+                            rsAlert.close();   
                         }
-                        rsAlert.close();   
+                        rs.close();                    
+                        rsDemo.close();
                     }
-                    rs.close();                    
-                    rsDemo.close();
-                }
-                         
+                }                  
             }
             db.CloseConn();
         }
