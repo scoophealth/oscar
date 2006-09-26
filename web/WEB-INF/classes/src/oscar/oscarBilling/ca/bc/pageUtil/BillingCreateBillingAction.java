@@ -30,7 +30,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessages;
 import oscar.*;
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
@@ -49,7 +49,7 @@ public class BillingCreateBillingAction
                                HttpServletRequest request,
                                HttpServletResponse response) throws IOException,
       ServletException {
-    ActionErrors errors = new ActionErrors();
+    ActionMessages errors = new ActionMessages();
     BillingBillingManager bmanager = new BillingBillingManager();
 
     BillingCreateBillingForm frm = (BillingCreateBillingForm) form;
@@ -191,11 +191,11 @@ public class BillingCreateBillingAction
    * validateServiceCodeTimes
    *
    * @param billItem ArrayList
-   * @param errors ActionErrors
+   * @param errors ActionMessages
    */
   private void validateServiceCodeTimes(ArrayList billItems,
                                         BillingCreateBillingForm frm,
-                                        ActionErrors
+                                        ActionMessages
                                         errors) {
     String qry = "select bt.billingservice_no,bt.timeRange " +
         "from billing_msp_servicecode_times bt";
@@ -249,11 +249,11 @@ public class BillingCreateBillingAction
    * successfully
    * @param service String[]
    * @param demo Demographic
-   * @param errors ActionErrors
+   * @param errors ActionMessages
    */
 
   private void validateDxCodeList(BillingSessionBean bean,
-                                  ActionErrors errors) {
+                                  ActionMessages errors) {
     BillingAssociationPersistence per = new BillingAssociationPersistence();
     String[] dxcodes = {
         bean.getDx1(), bean.getDx2(), bean.getDx3()};
@@ -270,15 +270,15 @@ public class BillingCreateBillingAction
 
   /**
    * Validates a String array of service codes and adds and ActionMessage
-   * to the ActionErrors object, for any of the codes that don't validate
+   * to the ActionMessages object, for any of the codes that don't validate
    * successfully
    * @param service String[]
    * @param demo Demographic
-   * @param errors ActionErrors
+   * @param errors ActionMessages
    */
   private void validateServiceCodeList(ArrayList billItems,
                                        DemographicData.Demographic demo,
-                                       ActionErrors errors) {
+                                       ActionMessages errors) {
     BillingAssociationPersistence per = new BillingAssociationPersistence();
     for (int i = 0; i < billItems.size(); i++) {
       BillingItem item = (BillingItem) billItems.get(i);
@@ -315,7 +315,7 @@ public class BillingCreateBillingAction
     }
   }
 
-  private void validate00120(ActionErrors errors,
+  private void validate00120(ActionMessages errors,
                              DemographicData.Demographic demo,
                              ArrayList billItem, String serviceDate) {
     for (Iterator iter = billItem.iterator(); iter.hasNext(); ) {
@@ -344,7 +344,7 @@ public class BillingCreateBillingAction
    * @param serviceDate String - The date of service
    * @return boolean -  true if the specified service is billable
    */
-  private void validatePatientManagementCodes(ActionErrors errors,
+  private void validatePatientManagementCodes(ActionMessages errors,
                                               DemographicData.Demographic demo,
                                               ArrayList billItem,
                                               String serviceDate) {
@@ -396,7 +396,7 @@ public class BillingCreateBillingAction
     }
   }
 
-  private void validateCDMCodeConditions(ActionErrors errors, String demoNo,
+  private void validateCDMCodeConditions(ActionMessages errors, String demoNo,
                                          String serviceCode) {
     String cdmRulesQry =
         "SELECT serviceCode,conditionCode FROM billing_service_code_conditions";
@@ -412,7 +412,7 @@ public class BillingCreateBillingAction
     }
   }
 
-  private void validateCDMCodeConditionsHlp(ActionErrors errors, String demoNo,
+  private void validateCDMCodeConditionsHlp(ActionMessages errors, String demoNo,
                                             List cdmRules, String code) {
     for (Iterator iter = cdmRules.iterator(); iter.hasNext(); ) {
       String[] item = (String[]) iter.next();
@@ -431,11 +431,11 @@ public class BillingCreateBillingAction
 
   /**
    * @todo Document Me
-   * @param errors ActionErrors
+   * @param errors ActionMessages
    * @param demo Demographic
    */
   private void validateCodeLastBilled(HttpServletRequest request,
-                                      ActionErrors errors, String demoNo) {
+                                      ActionMessages errors, String demoNo) {
     List cdmSvcCodes = vldt.getCDMCodes();
     for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
       String[] item = (String[]) iter.next();
@@ -447,7 +447,7 @@ public class BillingCreateBillingAction
     this.saveErrors(request, errors);
   }
 
-  private void validateCodeLastBilledHlp(ActionErrors errors,
+  private void validateCodeLastBilledHlp(ActionMessages errors,
                                          String demoNo, String code) {
     int codeLastBilled = -1;
     String conditionCodeQuery = "select conditionCode from billing_service_code_conditions where serviceCode = '" +
