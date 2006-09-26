@@ -69,7 +69,7 @@ public class SurveillanceAnswerAction extends Action {
       System.out.println("Survey: "+surveyId+" answer "+answer);
       
       String proceed = frm.getProceed();
-      String proceedURL = URLDecoder.decode(proceed);      
+      String proceedURL = URLDecoder.decode(proceed, "UTF-8");      
       
       ActionForward forward = new ActionForward();
                     forward.setPath(proceedURL);
@@ -81,7 +81,7 @@ public class SurveillanceAnswerAction extends Action {
             if (num < sir.numSurveys() ){
                request.setAttribute("currentSurveyNum",  currentSurveyNum);
                forward = mapping.findForward("survey");
-               String newURL = forward.getPath()+"?demographicNo="+demographic+"&proceed="+URLEncoder.encode(proceed);  
+               String newURL = forward.getPath()+"?demographicNo="+demographic+"&proceed="+URLEncoder.encode(proceed, "UTF-8");  
                System.out.println("sending to: "+newURL);
                forward.setPath(newURL);                                 
                forward.setRedirect(true);
