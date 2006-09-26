@@ -114,7 +114,7 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
      ******************************************************************************************/ 
     private boolean validate(RptInitializePatientsMetGuidelineCDMReportForm frm, HttpServletRequest request){
         EctValidation ectValidation = new EctValidation();                    
-        ActionErrors errors = new ActionErrors();        
+        ActionMessages errors = new ActionMessages();        
         String[] startDateB = frm.getStartDateB();
         String[] endDateB = frm.getEndDateB(); 
         String[] idB = frm.getIdB();
@@ -134,12 +134,12 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                 int iNumMInstrc = Integer.parseInt(sNumMInstrc);                     
                 
                 if(!ectValidation.isDate(startDate)){                       
-                    errors.add(startDate, new ActionError("errors.invalidDate", measurementType));
+                    errors.add(startDate, new ActionMessage("errors.invalidDate", measurementType));
                     saveErrors(request, errors);
                     valid = false;
                 }
                 if(!ectValidation.isDate(endDate)){                       
-                    errors.add(endDate, new ActionError("errors.invalidDate", measurementType));
+                    errors.add(endDate, new ActionMessage("errors.invalidDate", measurementType));
                     saveErrors(request, errors);
                     valid = false;
                 }
@@ -159,20 +159,20 @@ public class RptInitializePatientsMetGuidelineCDMReportAction extends Action {
                             }
                             
                             if(!ectValidation.isInRange(dMax, dMin, guideline)){                       
-                                errors.add(guideline, new ActionError("errors.range", measurementType, 
+                                errors.add(guideline, new ActionMessage("errors.range", measurementType, 
                                            Double.toString(dMin), Double.toString(dMax)));
                                 saveErrors(request, errors);
                                 valid = false;                               
                             }                            
                             else if(!ectValidation.matchRegExp(regExp, guideline)){                        
                                 errors.add(guideline,
-                                new ActionError("errors.invalid", measurementType));
+                                new ActionMessage("errors.invalid", measurementType));
                                 saveErrors(request, errors);
                                 valid = false;
                             }
                             else if(!ectValidation.isValidBloodPressure(regExp, guideline)){                        
                                 errors.add(guideline,
-                                new ActionError("error.bloodPressure"));
+                                new ActionMessage("error.bloodPressure"));
                                 saveErrors(request, errors);
                                 valid = false;
                             }

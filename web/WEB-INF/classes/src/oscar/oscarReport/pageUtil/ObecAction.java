@@ -49,13 +49,13 @@ public class ObecAction extends Action {
       ObecData obecData1 = new ObecData();
       DateUtils dateUtils = new DateUtils();
       EctValidation validation = new EctValidation();
-      ActionErrors errors = new ActionErrors();
+      ActionMessages errors = new ActionMessages();
       
       String startDate = frm.getXml_vdate()==null?"":frm.getXml_vdate();
       if(!validation.isDate(startDate)){
          System.out.println("Invalid date format!");
          errors.add(startDate,
-         new ActionError("errors.invalid", "StartDate"));
+         new ActionMessage("errors.invalid", "StartDate"));
          saveErrors(request, errors);
          return (new ActionForward(mapping.getInput()));
       }

@@ -69,7 +69,7 @@ public class dxResearchUpdateQuickListAction extends Action {
                 xml_research[3] = frm.getXml_research4();
                 xml_research[4] = frm.getXml_research5();
                 
-                ActionErrors errors = new ActionErrors();  
+                ActionMessages errors = new ActionMessages();  
 
                 for(int i=0; i<xml_research.length; i++){
                     int Count = 0;
@@ -82,8 +82,8 @@ public class dxResearchUpdateQuickListAction extends Action {
 
                         if(!rsCode.next() || rsCode==null){
                             valid = false;
-                            errors.add(errors.GLOBAL_ERROR,
-                            new ActionError("errors.codeNotFound", xml_research[i], codingSystem));
+                            errors.add(ActionMessages.GLOBAL_MESSAGE,
+                            new ActionMessage("errors.codeNotFound", xml_research[i], codingSystem));
                             saveErrors(request, errors);   
                         }
                         else{

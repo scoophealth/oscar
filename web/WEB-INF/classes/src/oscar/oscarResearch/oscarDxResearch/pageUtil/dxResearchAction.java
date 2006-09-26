@@ -83,7 +83,7 @@ public class dxResearchAction extends Action {
             xml_research[4] = frm.getXml_research5();
         }
         boolean valid = true;
-        ActionErrors errors = new ActionErrors();  
+        ActionMessages errors = new ActionMessages();  
         
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -118,8 +118,8 @@ public class dxResearchAction extends Action {
                           
                                 if(!rsCode.next() || rsCode==null){
                                     valid = false;
-                                    errors.add(errors.GLOBAL_ERROR,
-                                    new ActionError("errors.codeNotFound", xml_research[i], codingSystem));
+                                    errors.add(ActionMessages.GLOBAL_MESSAGE,
+                                    new ActionMessage("errors.codeNotFound", xml_research[i], codingSystem));
                                     saveErrors(request, errors);   
                                 }
                                 else{
