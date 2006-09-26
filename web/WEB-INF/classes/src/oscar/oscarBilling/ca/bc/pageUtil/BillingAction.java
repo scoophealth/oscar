@@ -41,7 +41,7 @@ public final class BillingAction
                                HttpServletResponse response) throws IOException,
       ServletException {
     // Setup variables
-    ActionErrors errors = new ActionErrors();
+    ActionMessages errors = new ActionMessages();
     oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean = null;
     String encounter = request.getAttribute("encounter") != null ?
         (String) request.getAttribute("encounter") : "";
@@ -121,7 +121,7 @@ public final class BillingAction
    * @param demoNo String
    */
   private void validateCodeLastBilled(HttpServletRequest request,
-                                      ActionErrors errors, String demoNo) {
+                                      ActionMessages errors, String demoNo) {
     List patientDX = vldt.getPatientDxCodes(demoNo);
     List cdmSvcCodes = vldt.getCDMCodes();
     for (Iterator iter = cdmSvcCodes.iterator(); iter.hasNext(); ) {
@@ -134,7 +134,7 @@ public final class BillingAction
     this.saveErrors(request, errors);
   }
 
-  private void validateCodeLastBilledHlp(ActionErrors errors,
+  private void validateCodeLastBilledHlp(ActionMessages errors,
                                          String demoNo, String code) {
     int codeLastBilled = -1;
     String conditionCodeQuery = "select conditionCode from billing_service_code_conditions where serviceCode = '" +
