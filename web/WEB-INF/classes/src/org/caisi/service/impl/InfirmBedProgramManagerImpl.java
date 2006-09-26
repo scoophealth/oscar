@@ -98,10 +98,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	public List getDemographicByBedProgramIdBeans(int programId,Date dt)
 	{
 		/*default time is Oscar default null time 0001-01-01.*/
-		Date defdt=new GregorianCalendar(1,0,1).getTime();
-		dt.setHours(23);
-		dt.setMinutes(59);
-		dt.setSeconds(59);
+		Date defdt=new GregorianCalendar(1,0,1,23,59,59).getTime();
 		Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
 		ArrayList demographicList=new ArrayList();
 		Demographic de=null;
