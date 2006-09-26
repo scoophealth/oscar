@@ -87,10 +87,16 @@ public class DemographicDAOHibernate extends HibernateDaoSupport implements
 				+ "(a.dischargeDate>=? or (a.dischargeDate is null) or a.dischargeDate=?)";
 		/*default time is Oscar default null time 0001-01-01.*/
 		Date defdt=new GregorianCalendar(1,0,1).getTime();
-		Date dt=new Date();
-		dt.setHours(23);
+                GregorianCalendar cal = new GregorianCalendar();
+                cal.set(GregorianCalendar.HOUR_OF_DAY, 23);
+                cal.set(GregorianCalendar.MINUTE, 59);
+                cal.set(GregorianCalendar.SECOND, 59);
+		Date dt= cal.getTime();                
+		/*
+                dt.setHours(23);
 		dt.setMinutes(59);
 		dt.setSeconds(59);
+                 */
 		List rs = (List) getHibernateTemplate().find(q, new Object[]
 		{demoNo, dt, dt, defdt});
 		return rs;
