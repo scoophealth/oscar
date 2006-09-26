@@ -59,7 +59,7 @@ public class SearchPatientAction extends Action {
          System.out.println("exception in SearchPatientAction:"+e);
          newURL = mapping.findForward("failure").getPath();
       }
-      newURL = newURL + "&labNo="+labNo+"&labType="+labType+"&keyword="+java.net.URLEncoder.encode(name);
+      newURL = newURL + "&labNo="+labNo+"&labType="+labType+"&keyword="+java.net.URLEncoder.encode(name,"UTF-8");
       //System.out.println("url "+newURL);
       return new ActionForward(newURL);
    }
