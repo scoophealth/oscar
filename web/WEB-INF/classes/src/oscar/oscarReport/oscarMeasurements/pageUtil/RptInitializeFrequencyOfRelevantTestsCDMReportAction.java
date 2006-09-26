@@ -139,7 +139,7 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
      ******************************************************************************************/ 
     private boolean validate(RptInitializeFrequencyOfRelevantTestsCDMReportForm frm, HttpServletRequest request){
         EctValidation ectValidation = new EctValidation();                    
-        ActionErrors errors = new ActionErrors();        
+        ActionMessages errors = new ActionMessages();        
         String[] startDateD = frm.getStartDateD();
         String[] endDateD = frm.getEndDateD();         
         int[] exactly = frm.getExactly(); 
@@ -157,12 +157,12 @@ public class RptInitializeFrequencyOfRelevantTestsCDMReportAction extends Action
                 String measurementType = (String) frm.getValue("measurementTypeD"+ctr);                                    
                 
                 if(!ectValidation.isDate(startDate)){                       
-                    errors.add(startDate, new ActionError("errors.invalidDate", measurementType));
+                    errors.add(startDate, new ActionMessage("errors.invalidDate", measurementType));
                     saveErrors(request, errors);
                     valid = false;
                 }
                 if(!ectValidation.isDate(endDate)){                       
-                    errors.add(endDate, new ActionError("errors.invalidDate", measurementType));
+                    errors.add(endDate, new ActionMessage("errors.invalidDate", measurementType));
                     saveErrors(request, errors);
                     valid = false;
                 }
