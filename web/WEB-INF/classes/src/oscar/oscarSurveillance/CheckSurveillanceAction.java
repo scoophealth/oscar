@@ -60,7 +60,7 @@ public class CheckSurveillanceAction extends Action {
       CheckSurveillanceForm frm = (CheckSurveillanceForm) form;
                                    
       String proceed = frm.getProceed();
-      String proceedURL = URLDecoder.decode(proceed);
+      String proceedURL = URLDecoder.decode(proceed, "UTF-8");
       
       ActionForward forward = new ActionForward();
                     forward.setPath(proceedURL);
