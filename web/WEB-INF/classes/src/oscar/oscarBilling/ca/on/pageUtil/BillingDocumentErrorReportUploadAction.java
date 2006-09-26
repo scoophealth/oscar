@@ -54,11 +54,11 @@ public class BillingDocumentErrorReportUploadAction extends Action {
         request.getSession().setAttribute("BillingDocumentErrorReportUploadForm", frm);
         FormFile file1 = frm.getFile1();
         ArrayList messages = new ArrayList();
-        ActionErrors errors = new ActionErrors();  
+        ActionMessages errors = new ActionMessages();  
         
         if(!saveFile(file1)){
-            errors.add(errors.GLOBAL_ERROR,
-            new ActionError("errors.fileNotAdded"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+            new ActionMessage("errors.fileNotAdded"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
@@ -66,8 +66,8 @@ public class BillingDocumentErrorReportUploadAction extends Action {
             if(getData(file1.getFileName(), request))
                 return mapping.findForward("success");
             else{
-                errors.add(errors.GLOBAL_ERROR,
-                new ActionError("errors.incorrectFileFormat"));
+                errors.add(ActionMessages.GLOBAL_MESSAGE,
+                new ActionMessage("errors.incorrectFileFormat"));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));
             }
@@ -260,7 +260,7 @@ public class BillingDocumentErrorReportUploadAction extends Action {
                     String filler=nextline.substring(32,39);
                     String error=nextline.substring(39,76);
                     String explain=nextline.substring(3,23);
-                    String msg = "M01 | " +explain+"   " + recordLength + "   " + msgType+"   "+filler+"   "+URLEncoder.encode(error);
+                    String msg = "M01 | " +explain+"   " + recordLength + "   " + msgType+"   "+filler+"   "+URLEncoder.encode(error, "UTF-8");
                     messages.add(msg);
 
                 }
