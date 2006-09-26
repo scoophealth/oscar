@@ -91,7 +91,7 @@ public class EctAddMeasurementTypeAction extends Action {
     
     private boolean allInputIsValid(HttpServletRequest request, String type, String typeDesc, String typeDisplayName, String measuringInstrc){
         
-        ActionErrors errors = new ActionErrors();  
+        ActionMessages errors = new ActionMessages();  
         EctValidation validate = new EctValidation();
         String regExp = validate.getRegCharacterExp();
         boolean isValid = true;
@@ -102,7 +102,7 @@ public class EctAddMeasurementTypeAction extends Action {
             rs.next();
             if(rs.getRow()>0){
                 errors.add(type,
-                new ActionError("error.oscarEncounter.Measurements.duplicateTypeName"));
+                new ActionMessage("error.oscarEncounter.Measurements.duplicateTypeName"));
                 saveErrors(request, errors);
                 isValid = false;                
             }
@@ -116,13 +116,13 @@ public class EctAddMeasurementTypeAction extends Action {
         String errorField = "The type " + type;
         if(!validate.matchRegExp(regExp, type)){
             errors.add(type,
-            new ActionError("errors.invalid", errorField));
+            new ActionMessage("errors.invalid", errorField));
             saveErrors(request, errors);
             isValid = false;
         }
         if(!validate.maxLength(4, type)){
             errors.add(type,
-            new ActionError("errors.maxlength", errorField, "4"));
+            new ActionMessage("errors.maxlength", errorField, "4"));
             saveErrors(request, errors);
             isValid = false;
         }
@@ -130,13 +130,13 @@ public class EctAddMeasurementTypeAction extends Action {
         errorField = "The type description " + typeDesc;
         if(!validate.matchRegExp(regExp, typeDesc)){
             errors.add(typeDesc,
-            new ActionError("errors.invalid", errorField));
+            new ActionMessage("errors.invalid", errorField));
             saveErrors(request, errors);
             isValid = false;
         }
         if(!validate.maxLength(255, type)){
             errors.add(type,
-            new ActionError("errors.maxlength", errorField, "255"));
+            new ActionMessage("errors.maxlength", errorField, "255"));
             saveErrors(request, errors);
             isValid = false;
         }
@@ -144,13 +144,13 @@ public class EctAddMeasurementTypeAction extends Action {
         errorField = "The type description " + typeDisplayName;
         if(!validate.matchRegExp(regExp, typeDisplayName)){
             errors.add(typeDisplayName,
-            new ActionError("errors.invalid", errorField));
+            new ActionMessage("errors.invalid", errorField));
             saveErrors(request, errors);
             isValid = false;
         }
         if(!validate.maxLength(255, type)){
             errors.add(type,
-            new ActionError("errors.maxlength", errorField, "255"));
+            new ActionMessage("errors.maxlength", errorField, "255"));
             saveErrors(request, errors);
             isValid = false;
         }
@@ -158,13 +158,13 @@ public class EctAddMeasurementTypeAction extends Action {
         errorField = "The measuring instruction " + measuringInstrc;
         if(!validate.matchRegExp(regExp, measuringInstrc)){
             errors.add(measuringInstrc,
-            new ActionError("errors.invalid", errorField));
+            new ActionMessage("errors.invalid", errorField));
             saveErrors(request, errors);
             isValid = false;
         }
         if(!validate.maxLength(255, type)){
             errors.add(type,
-            new ActionError("errors.maxlength", errorField, "255"));
+            new ActionMessage("errors.maxlength", errorField, "255"));
             saveErrors(request, errors);
             isValid = false;
         }

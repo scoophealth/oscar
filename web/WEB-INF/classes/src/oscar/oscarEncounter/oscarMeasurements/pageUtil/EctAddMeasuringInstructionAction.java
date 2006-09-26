@@ -65,19 +65,19 @@ public class EctAddMeasuringInstructionAction extends Action {
             String validation = frm.getValidation();
             boolean isValid = true;
             
-            ActionErrors errors = new ActionErrors();  
+            ActionMessages errors = new ActionMessages();  
             EctValidation validate = new EctValidation();
             String regExp = validate.getRegCharacterExp();
             String errorField = "The measuring instruction " + measuringInstrc;
             if(!validate.matchRegExp(regExp, measuringInstrc)){
                 errors.add(measuringInstrc,
-                new ActionError("errors.invalid", errorField));
+                new ActionMessage("errors.invalid", errorField));
                 saveErrors(request, errors);
                 isValid = false;                
             }
             if(!validate.maxLength(255, measuringInstrc)){
                 errors.add(measuringInstrc,
-                new ActionError("errors.maxlength", errorField, "255"));
+                new ActionMessage("errors.maxlength", errorField, "255"));
                 saveErrors(request, errors);
                 isValid = false;
             } 
@@ -90,7 +90,7 @@ public class EctAddMeasuringInstructionAction extends Action {
             
             if(rs.getRow()>0){
                 errors.add(measuringInstrc,
-                new ActionError("error.oscarEncounter.Measurements.duplicateTypeName"));
+                new ActionMessage("error.oscarEncounter.Measurements.duplicateTypeName"));
                 saveErrors(request, errors);
                 return (new ActionForward(mapping.getInput()));                
             }

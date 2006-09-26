@@ -53,11 +53,11 @@ public class EctAddMeasurementStyleSheetAction extends Action {
         request.getSession().setAttribute("EctAddMeasurementStyleSheetForm", frm);
         FormFile fileName = frm.getFile();
         ArrayList messages = new ArrayList();
-        ActionErrors errors = new ActionErrors();  
+        ActionMessages errors = new ActionErrors();  
         
         if(!saveFile(fileName)){
-            errors.add(errors.GLOBAL_ERROR,
-            new ActionError("errors.fileNotAdded"));
+            errors.add(ActionMessages.GLOBAL_MESSAGE,
+            new ActionMessage("errors.fileNotAdded"));
             saveErrors(request, errors);
             return (new ActionForward(mapping.getInput()));
         }
