@@ -112,14 +112,14 @@ public class AssociateCodesActionForm
     oscar.util.StringUtils ut = new oscar.util.StringUtils();
     if (!ut.isNumeric(this.xml_other1)) {
       errors.add("",
-                 new ActionError(
+                 new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.nullservicecode"));
     }
     if (!ut.isNumeric(this.xml_diagnostic_detail1) &&
         !ut.isNumeric(this.xml_diagnostic_detail2) &&
         !ut.isNumeric(this.xml_diagnostic_detail3)) {
       errors.add("",
-                 new ActionError(
+                 new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.nulldxcodes"));
     }
     return errors;
