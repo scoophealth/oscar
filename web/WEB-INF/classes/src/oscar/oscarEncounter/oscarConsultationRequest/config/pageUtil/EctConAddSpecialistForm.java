@@ -168,13 +168,13 @@ public final class EctConAddSpecialistForm extends ActionForm {
       System.out.println("Validating Add Spec Form");
       ActionErrors errors = new ActionErrors();
       if(fName == null || fName.length() == 0)
-         errors.add("fName", new ActionError("Errors.Firstname"));
+         errors.add("fName", new ActionMessage("Errors.Firstname"));
       if(lName == null || lName.length() == 0)
-         errors.add("lName", new ActionError("Errors.Lastname"));
+         errors.add("lName", new ActionMessage("Errors.Lastname"));
       if(phone == null || phone.length() == 0)
-         errors.add("phone", new ActionError("Errors.Phone"));
+         errors.add("phone", new ActionMessage("Errors.Phone"));
       if(address == null || address.length() == 0)
-         errors.add("address", new ActionError("Errors.Address"));
+         errors.add("address", new ActionMessage("Errors.Address"));
       if(!errors.isEmpty() && whichType == 2)
          request.setAttribute("upd", "getterUpdating");
       return errors;
