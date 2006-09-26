@@ -497,7 +497,7 @@ public class BillingSaveBillingAction
           }
         }
       }
-      request.getSession().putValue("WCBForm", null);
+      request.getSession().setAttribute("WCBForm", null);
     }
 
     ////////////////////

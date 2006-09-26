@@ -31,7 +31,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.Action;
 import java.util.List;
 import java.util.*;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessages;
 
 /**
  *
@@ -57,18 +57,18 @@ public class SaveAssocAction
         BillingCreateBillingForm) actionForm;
     ServiceCodeAssociation assoc = frm.getSvcAssoc();
     BillingAssociationPersistence per = new BillingAssociationPersistence();
-    ActionErrors errors = new ActionErrors();
+    ActionMessages errors = new ActionMessages();
     if(!frm.getMode().equals("edit")){
       if (per.assocExists(assoc.getServiceCode())) {
         errors.add("",
-                   new org.apache.struts.action.ActionError(
+                   new org.apache.struts.action.ActionMessage(
                        "oscar.billing.CA.BC.billingBC.error.assocexists",
                        assoc.getServiceCode()));
       }
     }
     if (!per.serviceCodeExists(assoc.getServiceCode())) {
       errors.add("",
-                 new org.apache.struts.action.ActionError(
+                 new org.apache.struts.action.ActionMessage(
                      "oscar.billing.CA.BC.billingBC.error.invalidsvccode",
                      assoc.getServiceCode()));
     }
@@ -77,7 +77,7 @@ public class SaveAssocAction
       String code = (String) iter.next();
       if (!per.dxcodeExists(code)) {
         errors.add("",
-                   new org.apache.struts.action.ActionError(
+                   new org.apache.struts.action.ActionMessage(
                        "oscar.billing.CA.BC.billingBC.error.invaliddxcode",
                        code));
       }
