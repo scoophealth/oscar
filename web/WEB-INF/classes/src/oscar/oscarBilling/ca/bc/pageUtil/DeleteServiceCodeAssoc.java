@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForward;
 import oscar.OscarAction;
-import org.apache.struts.action.ActionErrors;
 
 public class DeleteServiceCodeAssoc
     extends OscarAction {
