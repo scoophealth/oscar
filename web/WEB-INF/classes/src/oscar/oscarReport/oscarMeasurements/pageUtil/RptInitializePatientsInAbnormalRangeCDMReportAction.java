@@ -112,7 +112,7 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
      ******************************************************************************************/ 
     private boolean validate(RptInitializePatientsInAbnormalRangeCDMReportForm frm, HttpServletRequest request){
         EctValidation ectValidation = new EctValidation();                    
-        ActionErrors errors = new ActionErrors();        
+        ActionMessages errors = new ActionMessages();        
         String[] startDateC = frm.getStartDateC();
         String[] endDateC = frm.getEndDateC();         
         String[] upperBound = frm.getUpperBound(); 
@@ -135,12 +135,12 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                 String lowerMsg = "The lower bound value of " + measurementType;
                 
                 if(!ectValidation.isDate(startDate)){                       
-                    errors.add(startDate, new ActionError("errors.invalidDate", measurementType));
+                    errors.add(startDate, new ActionMessage("errors.invalidDate", measurementType));
                     saveErrors(request, errors);
                     valid = false;
                 }
                 if(!ectValidation.isDate(endDate)){                       
-                    errors.add(endDate, new ActionError("errors.invalidDate", measurementType));
+                    errors.add(endDate, new ActionMessage("errors.invalidDate", measurementType));
                     saveErrors(request, errors);
                     valid = false;
                 }
@@ -161,38 +161,38 @@ public class RptInitializePatientsInAbnormalRangeCDMReportAction extends Action 
                             }
                             
                             if(!ectValidation.isInRange(dMax, dMin, upper)){                       
-                                errors.add(upper, new ActionError("errors.range", upperMsg, 
+                                errors.add(upper, new ActionMessage("errors.range", upperMsg, 
                                            Double.toString(dMin), Double.toString(dMax)));
                                 saveErrors(request, errors);
                                 valid = false;                               
                             }
                             else if(!ectValidation.isInRange(dMax, dMin, lower)){                       
-                                errors.add(lower, new ActionError("errors.range", lowerMsg, 
+                                errors.add(lower, new ActionMessage("errors.range", lowerMsg, 
                                            Double.toString(dMin), Double.toString(dMax)));
                                 saveErrors(request, errors);
                                 valid = false;
                             }
                             else if(!ectValidation.matchRegExp(regExp, upper)){                        
                                 errors.add(upper,
-                                new ActionError("errors.invalid", upperMsg));
+                                new ActionMessage("errors.invalid", upperMsg));
                                 saveErrors(request, errors);
                                 valid = false;
                             }
                             else if(!ectValidation.matchRegExp(regExp, lower)){                        
                                 errors.add(lower,
-                                new ActionError("errors.invalid", lowerMsg));
+                                new ActionMessage("errors.invalid", lowerMsg));
                                 saveErrors(request, errors);
                                 valid = false;
                             }
                             else if(!ectValidation.isValidBloodPressure(regExp, upper)){                        
                                 errors.add(upper,
-                                new ActionError("error.bloodPressure"));
+                                new ActionMessage("error.bloodPressure"));
                                 saveErrors(request, errors);
                                 valid = false;
                             }
                             else if(!ectValidation.isValidBloodPressure(regExp, lower)){                        
                                 errors.add(lower,
-                                new ActionError("error.bloodPressure"));
+                                new ActionMessage("error.bloodPressure"));
                                 saveErrors(request, errors);
                                 valid = false;
                             }
