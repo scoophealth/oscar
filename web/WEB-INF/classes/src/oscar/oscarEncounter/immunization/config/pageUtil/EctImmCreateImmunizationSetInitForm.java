@@ -61,27 +61,27 @@ public final class EctImmCreateImmunizationSetInitForm extends ActionForm {
    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
       ActionErrors errors = new ActionErrors();
       if(setName == null || setName.length() == 0)
-         errors.add("setName", new ActionError("Error.setName.missing"));
+         errors.add("setName", new ActionMessage("Error.setName.missing"));
       if(numRows == null || numRows.length() == 0)
-         errors.add("numRows", new ActionError("Error.numRows.missing"));
+         errors.add("numRows", new ActionMessage("Error.numRows.missing"));
       if(numCols == null || numCols.length() == 0)
-         errors.add("numCols", new ActionError("Error.numCols.missing"));
+         errors.add("numCols", new ActionMessage("Error.numCols.missing"));
       if(errors.isEmpty()) {
          try {
             int cols = Integer.parseInt(numCols);
             if(cols <= 0)
-               errors.add("numCols2", new ActionError("Error.numCols.below.zero"));
+               errors.add("numCols2", new ActionMessage("Error.numCols.below.zero"));
          }
          catch(Exception e) {
-            errors.add("numCols3", new ActionError("Error.numCols.non.numeric"));
+            errors.add("numCols3", new ActionMessage("Error.numCols.non.numeric"));
          }
          try {
             int rows = Integer.parseInt(numRows);
             if(rows <= 0)
-               errors.add("numRows2", new ActionError("Error.numRows.below.zero"));
+               errors.add("numRows2", new ActionMessage("Error.numRows.below.zero"));
          }
          catch(Exception e) {
-            errors.add("numRows3", new ActionError("Error.numRows.non.numeric"));
+            errors.add("numRows3", new ActionMessage("Error.numRows.non.numeric"));
          }
       }
       return errors;
