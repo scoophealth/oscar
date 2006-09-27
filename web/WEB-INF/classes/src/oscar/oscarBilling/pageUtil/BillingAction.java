@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -51,7 +50,6 @@ public final class BillingAction extends Action {
         }
         
         // Setup variables
-        ActionErrors errors = new ActionErrors();
         oscar.oscarBilling.pageUtil.BillingSessionBean bean = null;
         if(request.getParameter("billRegion").equals("ON")){                        
             String newURL = mapping.findForward("ON").getPath();
