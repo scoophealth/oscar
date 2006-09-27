@@ -36,8 +36,7 @@ public final class EctImmInitConfigAction extends Action {
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
    throws ServletException, IOException {
       Locale locale = getLocale(request);
-      MessageResources messages = getResources(request);
-      ActionErrors errors = new ActionErrors();
+      MessageResources messages = getResources(request);      
       return mapping.findForward("success");
    }
 }

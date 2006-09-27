@@ -50,8 +50,7 @@ public final class EctImmSaveScheduleAction extends Action {
       }
             
       Locale locale = getLocale(request);
-      MessageResources messages = getResources(request);
-      ActionErrors errors = new ActionErrors();
+      MessageResources messages = getResources(request);      
       EctSessionBean bean = null;
       bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
       try {
