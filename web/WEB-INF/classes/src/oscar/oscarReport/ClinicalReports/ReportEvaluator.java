@@ -105,7 +105,7 @@ public class ReportEvaluator {
         String csv = null;
         if (denominator.hasReplaceableValues()){
             String providerNo = (String) denominator.getReplaceableValues().get("provider_no");
-            csv = "'"+providerNo+"','"+getNumeratorCount()+"','"+getDenominatorCount()+"','"+getPercentageInt()+"'";
+            csv = "'"+getProviderStringName(providerNo)+"','"+getNumeratorCount()+"','"+getDenominatorCount()+"','"+getPercentageInt()+"'";
         }else{
             csv ="'"+getNumeratorCount()+"','"+getDenominatorCount()+"','"+getPercentageInt()+"'";
         }
@@ -127,7 +127,7 @@ public class ReportEvaluator {
                //provider_no:999998  if key is provider_no look up provider name
                System.out.println("repKeys "+repKeys[i]);
                if (repKeys[i] != null && repKeys[i].equals("provider_no")){
-                  name.append(getProviderStringName(""+repVals.get(repKeys[i])));        
+                  name.append("Provider: "+getProviderStringName(""+repVals.get(repKeys[i])));        
                }else{
                   name.append(repKeys[i]+":"+repVals.get(repKeys[i]));
                }
@@ -139,8 +139,10 @@ public class ReportEvaluator {
     }
     
     private String getProviderStringName(String providerNo){
-        return "Provider: "+ ProviderData.getProviderName(providerNo);
+        return  ProviderData.getProviderName(providerNo);
     }
+    
+    //private String getProvider
 
     public ArrayList getReportResultList() {
         return reportResultList;
