@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -57,7 +56,6 @@ public final class RxSearchAllergyAction extends Action {
         MessageResources messages = getResources(request);
         
         // Setup variables
-        ActionErrors errors = new ActionErrors();
         
         // execute search
         
