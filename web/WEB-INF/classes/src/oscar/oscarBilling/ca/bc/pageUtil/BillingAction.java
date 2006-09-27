@@ -117,7 +117,7 @@ public final class BillingAction
    * * A service was performed within the last Calendar year
    *
    * @param request HttpServletRequest
-   * @param errors ActionErrors
+   * @param errors ActionMessages
    * @param demoNo String
    */
   private void validateCodeLastBilled(HttpServletRequest request,
