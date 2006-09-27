@@ -70,7 +70,7 @@ public class FrmFormAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
                              
-        ActionErrors errors = new ActionErrors();    
+        ActionMessages errors = new ActionMessages();    
         boolean valid = true;          
         System.out.println("FrmFormAction is called "+currentMem());        
         
