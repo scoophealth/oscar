@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -83,12 +82,7 @@ public final class RxDrugInfoAction extends Action {
             if(GN == null && BN == null){
                 //Need to return to just the search page on oscarResource
             }
-            
-            
-
-            // Setup variables
-            ActionErrors errors = new ActionErrors();
-
+                                    
             return null;
     }
 }
