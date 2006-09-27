@@ -32,13 +32,25 @@
      ArrayList arrList = (ArrayList) session.getAttribute("ClinicalReports"); 
      if (arrList != null){
         String id = request.getParameter("id");
+        
+        if (id != null){
         ReportEvaluator re = (ReportEvaluator) arrList.get(Integer.parseInt(id));
         
         String filename = re.getName().replaceAll("/","---").replaceAll(" ","_"); // "report.txt";
         response.addHeader("Content-Disposition", "attachment;filename=" + filename);
         
         out.write(re.getCSV());
+        }else{
+            response.addHeader("Content-Disposition", "attachment;filename=report.txt" );   
+            for (int i = 0; i < arrList.size();i++){
+               ReportEvaluator re = (ReportEvaluator) arrList.get(i);     
+               String filename = re.getName().replaceAll("/","---").replaceAll(" ","_"); // "report.txt";
+                 
+               out.write("'"+filename+"',"+re.getCSV()+'\n');
+            }
+        }
      }else{
+        response.addHeader("Content-Disposition", "attachment;filename=error.txt" ); 
         out.write("ERROR:No report found.");
      }
      
