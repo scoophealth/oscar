@@ -50,6 +50,13 @@ public class RxProviderData {
                 providerClinicPhone = rs.getString("work_phone");
             }
 
+            sql = "SELECT value FROM property WHERE name = 'faxnumber' AND provider_no = '" + providerNo + "'";
+            rs = db.GetSQL(sql);
+            
+            if( rs.next() ) {
+                clinicFax = rs.getString("value");
+            }
+            
             sql = "SELECT * FROM clinic";
             rs = db.GetSQL(sql);
 
@@ -59,7 +66,9 @@ public class RxProviderData {
                 clinicCity = rs.getString("clinic_city");
                 clinicPostal = rs.getString("clinic_postal");
                 clinicPhone = rs.getString("clinic_phone");
-                clinicFax = rs.getString("clinic_fax");
+                
+                if( clinicFax == null )
+                    clinicFax = rs.getString("clinic_fax");
             }
 
             if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;
