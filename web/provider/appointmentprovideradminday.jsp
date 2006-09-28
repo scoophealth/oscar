@@ -1,3 +1,4 @@
+<% response.setHeader("Cache-Control","no-cache");%>
 <!-- add by caisi -->
 <%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
@@ -92,11 +93,12 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     int lenLimitedL=11, lenLimitedS=3; //L - long, S - short
     int len = lenLimitedL;
     int view = request.getParameter("view")!=null ? Integer.parseInt(request.getParameter("view")) : 0; //0-multiple views, 1-single view
+    //// THIS IS THE VALUE I HAVE BEEN LOOKING FOR!!!!!
 	boolean bDispTemplatePeriod = ( oscarVariables.getProperty("receptionist_alt_view") != null && oscarVariables.getProperty("receptionist_alt_view").equals("yes") ); // true - display as schedule template period, false - display as preference
-
 
 %>
 <%
+   
     ResultSet rsTickler = null;
     ResultSet rsStudy = null;
     ResultSet rsDemo = null;
@@ -146,7 +148,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     }
     String strYear=""+year;
     String strMonth=month>9?(""+month):("0"+month);
-    String strDay=day>9?(""+day):("0"+day);
+    String strDay=day>9?(""+day):("0"+day);    
 %>
 <!--
 /*
@@ -177,7 +179,6 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
 <head>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
-<% response.setHeader("Cache-Control","no-cache");%>
 <meta http-equiv="refresh" content="180;">
 </head>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
@@ -449,7 +450,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
         </caisi:isModuleLoad>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','<bean:message key="global.genReport"/>');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
+         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
 
              <%
@@ -591,7 +592,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
   <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
   &nbsp;&nbsp;
 </security:oscarSec>
-<!-- a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')">S</a -->
+<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')">S</a>
   </td></form>
 <!-- doctor code block -->
 </tr>
@@ -712,7 +713,6 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 		me = nProvider; break;
 	}
 }
-
    StringBuffer hourmin = null;
    String [] param1 = new String[2];
    for(int nProvider=0;nProvider<numProvider;nProvider++) {
@@ -825,7 +825,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
          	    //get time format: 00:00am/pm
          	    //String startTime = (iS>12?("0"+(iS-12)):rs.getString("start_time").substring(0,2))+":"+rs.getString("start_time").substring(3,5)+am_pm ;
          	    //String endTime   = (iE>12?("0"+(iE-12)):rs.getString("end_time").substring(0,2))  +":"+rs.getString("end_time").substring(3,5)+(iE<12?"am":"pm");
-          	  String name = UtilMisc.toUpperLowerCase(rs.getString("name"));
+                    String name = UtilMisc.toUpperLowerCase(rs.getString("name"));
           	  int demographic_no = rs.getInt("demographic_no");
                   paramTickler[0]=String.valueOf(demographic_no);
                   paramTickler[1]=strDate; //year+"-"+month+"-"+day;//e.g."2001-02-02";
@@ -837,7 +837,6 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
                       tickler_no = rsTickler.getString("tickler_no");
                       tickler_note = rsTickler.getString("message")==null?tickler_note:tickler_note + "\n" + rsTickler.getString("message");
                   }
-
                   rsDemo = null;
                   ver = "";
                   roster = "";
@@ -1053,8 +1052,9 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 
             </td>
  <%
-   } //end of display team a, etc.
+   } //end of display team a, etc.   
    apptMainBean.closePstmtConn();
+   
  %>
 
 
