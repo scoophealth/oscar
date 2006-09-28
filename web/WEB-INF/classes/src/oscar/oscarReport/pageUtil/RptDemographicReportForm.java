@@ -24,13 +24,13 @@ package oscar.oscarReport.pageUtil;
 
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForward;
-
-
 
 public final class RptDemographicReportForm extends ActionForm {
         public String[] select         = null;
@@ -85,6 +85,18 @@ public final class RptDemographicReportForm extends ActionForm {
             return select;
         }
 
+        public void addDemoIfNotPresent(){
+            if (select != null){
+                List list = Arrays.asList(select);
+                if (!list.contains("demographic_no")){
+                    ArrayList aList = new ArrayList(list);
+                    aList.add(0,"demographic_no");
+                    select = (String[]) aList.toArray(select);
+                }
+                
+            }
+        }
+        
         public void setSelect( String[] str){
             select = str;
         }
