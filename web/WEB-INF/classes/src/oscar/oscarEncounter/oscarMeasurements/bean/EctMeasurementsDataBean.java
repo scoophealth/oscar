@@ -215,4 +215,23 @@ public class EctMeasurementsDataBean{
         this.indicationColour = indicationColour;
     }
     
+    
+    public String toString(){
+        return " id " +id+ " type: " +type+  
+            " typeDisplayName: "+typeDisplayName+
+            "typeDescription: "+typeDescription+
+            "demo: "+demo+
+            "providerFirstName: "+providerFirstName+
+            "providerLastName: "+providerLastName +
+            "dataField: "+dataField +
+            "measuringInstrc: "+measuringInstrc +
+            "comments: "+comments +
+            "dateObserved: "+dateObserved +
+            "dateEntered: "+dateEntered +
+            "canPlot: "+canPlot  +
+            "dateObservedAsDate: "+dateObservedAsDate  +
+            "dateEnteredAsDate: "+dateEnteredAsDate  +
+            "indicationColour: "+indicationColour  ;
+    }
+    
 }
