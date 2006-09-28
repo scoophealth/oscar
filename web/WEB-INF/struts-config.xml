@@ -182,6 +182,10 @@
 		</form-bean>
 		<form-bean name="unreadTicklerForm"
 			type="org.apache.struts.validator.LazyValidatorForm" />
+                        
+     <form-bean name="editProviderFaxForm" type="org.apache.struts.action.DynaActionForm">
+         <form-property name="faxNumber" type="java.lang.String" />
+     </form-bean>
   </form-beans>
   <global-forwards>
     <forward name="Logout" path="/logout.jsp" redirect="true" />
@@ -734,6 +738,11 @@
     </action>
     <action input="/provider/editSignature.jsp" name="ProEditSignatureForm" path="/EnterSignature" scope="request" type="oscar.oscarProvider.pageUtil.ProEditSignatureAction">
       <forward name="success" path="/provider/providerSignature.jsp" />
+    </action>
+    <action input="/provider/providerFax.jsp" name="editProviderFaxForm" path="/EditFaxNum" scope="request" type="oscar.oscarProvider.pageUtil.ProEditFaxNumAction">
+      <forward name="success" path="/provider/providerFax.jsp" />
+      <forward name="error" path="/provider/providerFaxErr.jsp" />
+      <forward name="eject" path="/index.jsp" />
     </action>
     <action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
       <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
