@@ -218,7 +218,7 @@ public class WriteNewMeasurements {
         return errors;   
     }
 
-    static private void write(Vector measures, String demographicNo, String providerNo) {
+    static public void write(Vector measures, String demographicNo, String providerNo) {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             for (int i=0; i<measures.size(); i++) {
@@ -242,4 +242,27 @@ public class WriteNewMeasurements {
         }
         catch(SQLException e) { e.printStackTrace(); }
     }
+    
+    static public void write(Hashtable measure, String demographicNo, String providerNo) {
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String inputValue = (String) measure.get("value");
+            String inputType = (String) measure.get("type");
+            String mInstrc = (String) measure.get("measuringInstruction");
+            String comments = (String) measure.get("comments");
+            String dateObserved = (String) measure.get("dateObserved");
+            String dateEntered = (String) measure.get("dateEntered");
+            //write....
+            String sql = "INSERT INTO measurements"
+            +"(type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered)"
+            +" VALUES ('"+inputType+"','"+demographicNo+"','"+providerNo+"','"+inputValue+"','"
+            + mInstrc+"','"+comments+"','"+dateObserved+"','"+dateEntered+"')";
+            System.out.println("SQL measure ====" + sql);
+            db.RunSQL(sql);
+           
+            db.CloseConn();
+        }
+        catch(SQLException e) { e.printStackTrace(); }
+    }
+    
 }
