@@ -1025,9 +1025,9 @@
 
     </action>
  
-    <!-- action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
+    <action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
       <forward name="success" path="/scratch/index.jsp" />
-    </action -->
+    </action>
 
     <action input="/oscarReport/ManageDemographicQueryFavourites.jsp" name="FrmForm" path="/report/DeleteDemographicReport" scope="request" type="oscar.oscarReport.pageUtil.RptDemographQueryFavouriteDeleteAction">
       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
@@ -1037,6 +1037,14 @@
       <forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
     </action>
 
+    <action input="/oscarReport/ManageDemographicQueryFavourites.jsp" name="FrmForm" path="/report/GenerateSpreadsheet" scope="request" type="oscar.oscarReport.pageUtil.GeneratePatientSpreadSheetListAction">
+      <forward name="success" path="/oscarReport/ReportDemographicReport.jsp" />
+    </action>
+
+    <action input="/oscarPrevention/PreventionReporting.jsp" name="FrmForm" path="/oscarMeasurement/AddShortMeasurement" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddShortMeasurementAction">
+        <forward name="success" path="/oscarPrevention/PreventionReporting.jsp" />
+        </action>
+    
  			<action path="/Tickler"
 				type="org.springframework.web.struts.DelegatingActionProxy"
 				parameter="method"
