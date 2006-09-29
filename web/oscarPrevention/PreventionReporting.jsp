@@ -56,6 +56,7 @@
 <script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
 <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 
 <style type="text/css">
   div.ImmSet { background-color: #ffffff; }
@@ -105,6 +106,38 @@ function disableifchecked(ele,nextDate){
 
 </SCRIPT>
 
+
+<script type="text/javascript">
+                        
+                        
+                        
+    //Function sends AJAX request to action
+    function completedProcedure(idval,followUpType,procedure,demographic){
+       var comment = prompt('Are you sure you want to added this to patients record \n\nAdd Comment Below ','');
+       if (comment != null){
+          var params = "id="+idval+"&followupType="+followUpType+"&followupValue="+procedure+"&demos="+demographic+"&message="+comment;
+          var url = "../oscarMeasurement/AddShortMeasurement.do";
+
+          new Ajax.Request(url, {method: 'get',parameters:params,asynchronous:true,onComplete: followUp}); 
+       }
+       return false;
+    }
+
+    function followUp(origRequest){
+        //alert(origRequest.responseText);
+        var hash = origRequest.responseText.parseQuery();
+        //alert( hash['id'] + " " + hash['followupValue']+" "+hash['Date'] );
+        //("id="+id+"&followupValue="+followUpValue+"&Date=
+        var lastFollowupTD = $(hash['id']+'lastFollowup');
+        var nextProcedureTD = $(hash['id']+'nextSuggestedProcedure');
+        //alert(nextProcedureTD);
+        nextProcedureTD.innerHTML = "----";
+        lastFollowupTD.innerHTML = hash['followupValue']+" "+hash['Date'];
+
+        //alert(nextProcedureTD.innerText);
+
+    }
+</script>  
 
 
 
@@ -248,7 +281,8 @@ table.ele td{
                       <html:option value="PAP" >PAP</html:option>
                       <html:option value="Mammogram" >Mammogram</html:option>
                       <html:option value="Flu" >Flu</html:option>
-                      <html:option value="ChildImmunizations" >Child Immunizations</html:option>                                                             
+                      <html:option value="ChildImmunizations" >Child Immunizations</html:option>  
+                      <html:option value="FOBT" >FOBT</html:option>  
                   </html:select>                  
                </div>
                <div>
@@ -276,16 +310,22 @@ table.ele td{
     
     <div>
                 <%ArrayList overDueList = new ArrayList();
+                  ArrayList firstLetter = new ArrayList();
+                  ArrayList secondLetter = new ArrayList();
+                  ArrayList phoneCall = new ArrayList();
                   String type = (String) request.getAttribute("ReportType");
                   String ineligible = (String) request.getAttribute("inEligible");
                   String done = (String) request.getAttribute("up2date");
                   String percentage = (String) request.getAttribute("precent");
+                  String followUpType = (String) request.getAttribute("followUpType");
                   ArrayList list = (ArrayList) request.getAttribute("returnReport");
                   Date asDate = (Date) request.getAttribute("asDate");
                   if (asDate == null){ asDate = Calendar.getInstance().getTime(); }
+                  
                   if (list != null ){ %>
               <table class="ele" width="80%">
                        <tr>
+                       <td>&nbsp;</td>
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
                        <td colspan="3">Up to date: <%=done%> = <%=percentage %> %</td>
                        <%if (type != null ){ %>
@@ -295,6 +335,7 @@ table.ele td{
                        <%}%>
                        </tr>
                        <tr>
+                          <td>&nbsp;</td>
                           <td>DemoNo</td>
                           <td>Age as of <br/><%=UtilDateUtilities.DateToString(asDate)%></td>
                           <td>Sex</td>
@@ -313,6 +354,7 @@ table.ele td{
                           <td>Since Last Procedure Date</td>
                           <td>Last Procedure Date</td>
                           <td>Last Contact Method</td>
+                          <td>Next Contact Method</td>
                           <td>Roster Physician</td>
                        </tr>
                        <%DemographicNameAgeString deName = DemographicNameAgeString.getInstance();                       
@@ -320,18 +362,31 @@ table.ele td{
                          
                          
                          for (int i = 0; i < list.size(); i++){
+                             System.out.println("for # "+i); 
+                             
                             PreventionReportDisplay dis = (PreventionReportDisplay) list.get(i);
                             Hashtable h = deName.getNameAgeSexHashtable(dis.demographicNo);
                             DemographicData.Demographic demo = demoData.getDemographic(dis.demographicNo);
-                            Hashtable efHash = efData.getLastEformDate(eformSearch,dis.demographicNo);
-                            if (efHash == null){ System.out.println("efhash was null"); }
-                            if (efHash != null){ System.out.println("efhash wasn't null"); }
                             
+                            System.out.println("next suggested Procedure "+dis.nextSuggestedProcedure);
+                            if ( dis.nextSuggestedProcedure != null ){
+                                if (dis.nextSuggestedProcedure.equals("L1")){
+                                    firstLetter.add(dis.demographicNo);
+                                }else if (dis.nextSuggestedProcedure.equals("L2")){
+                                    secondLetter.add(dis.demographicNo);
+                                }else if (dis.nextSuggestedProcedure.equals("P1")){
+                                    phoneCall.add(dis.demographicNo);
+                                }
+                            }
+                          
+                  
+                                    
                             if (dis.state != null && dis.state.equals("Overdue")){
                                overDueList.add(dis.demographicNo);
                             }
                             %>
                        <tr>
+                          <td><%=i+1%></td>
                           <td>
                               <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&displaymode=edit&dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
                           </td>
@@ -348,6 +403,7 @@ table.ele td{
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
                           
+                          
                           <% }else {
                               DemographicData.Demographic demoSDM = demoData.getSubstituteDecisionMaker(dis.demographicNo);%>                                                                 
                           <td><%=demo.getAgeAsOf(asDate)%></td>
@@ -363,36 +419,61 @@ table.ele td{
                           <td bgcolor="<%=dis.color%>"><%=dis.bonusStatus%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.numMonths%></td>
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
+                          
                           <%}%>                          
-                          <td bgcolor="<%=dis.color%>">
-                             <% if (efHash != null ){ %>
-                                 <%=efHash.get("formName")%>
-                                 <%=efHash.get("date")%>                                 
+                          <td bgcolor="<%=dis.color%>" id="<%=i+1%>lastFollowup">
+                             <% if (dis.lastFollowup != null ){ %>                                 
+                                 <%=dis.lastFollupProcedure%>
+                                 <%=UtilDateUtilities.DateToString(dis.lastFollowup)%> 
+                                 <%=UtilDateUtilities.getNumMonths(dis.lastFollowup,UtilDateUtilities.now())%>M                           
                              <% }else{ %>
                                 ----
                              <% } %>                                 
+                          </td>
+                          <td bgcolor="<%=dis.color%>" id="<%=i+1%>nextSuggestedProcedure">
+                              <%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
+                                 <a href="javascript: return false;" onclick="return completedProcedure('<%=i+1%>','<%=followUpType%>','<%=dis.nextSuggestedProcedure%>','<%=dis.demographicNo%>');"><%=dis.nextSuggestedProcedure%></a>
+                              <%}else{%>
+                                    <%=dis.nextSuggestedProcedure%>
+                              <%}%>
                           </td>
                           <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
                           
                        </tr>                                                         
                       <%}%>
                     </table>   
+                    
+                    
                   
                   <%}%>
                   
                   <% if ( overDueList.size() > 0 ) { 
-                        String queryStr = "";
-                        for (int i = 0; i < overDueList.size(); i++){
-                            String demo = (String) overDueList.get(i);
-                            if (i == 0){
-                              queryStr += "demo="+demo;
-                            }else{
-                              queryStr += "&demo="+demo;  
-                            }
-                        }
+                        String queryStr = getUrlParamList(overDueList, "demo");            
                         %>                        
-                        <a target="_blank" href="../tickler/AddTickler.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
+                        <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
                   <%}%>
+                  
+                  
+                 <% if ( firstLetter.size() > 0 ) { 
+                        String queryStr = getUrlParamList(firstLetter, "demo"); 
+                        %>                        
+                    <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&followupType=<%=followUpType%>&followupValue=L1">Generate First Letter</a>
+                  <%}%>
+                  
+                  <% if ( secondLetter.size() > 0 ) { 
+                        String queryStr = getUrlParamList(secondLetter, "demo"); 
+                        %>                        
+                        <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&followupType=<%=followUpType%>&followupValue=L2">Generate Second Letter</a>
+                  <%}%>
+                  <% if ( phoneCall.size() > 0 ) { 
+                        String queryStr = getUrlParamList(phoneCall, "demo");                      
+                        %>                        
+                        <a target="_blank" href="../report/GenerateSpreadsheet.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Phone call 1 made for : "+request.getAttribute("prevType"),"UTF-8")%>followupType=<%=followUpType%>&followupValue=P1">Generate Phone Call list</a>
+                  <%}%>
+                               
+                                    
+                                
+           
                </div>
     
 <script type="text/javascript">
@@ -401,3 +482,18 @@ table.ele td{
 
 </body>
 </html:html>
+
+<%!
+    String getUrlParamList(ArrayList list,String paramName){
+        String queryStr = "";
+        for (int i = 0; i < list.size(); i++){
+            String demo = (String) list.get(i);
+            if (i == 0){
+              queryStr += paramName+"="+demo;
+            }else{
+              queryStr += "&"+paramName+"="+demo;  
+            }
+        }
+        return queryStr;
+  } 
+%>
