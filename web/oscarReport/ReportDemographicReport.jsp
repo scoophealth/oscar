@@ -50,6 +50,30 @@ Demographic Report tool
 
 </style>
 
+<style type="text/css">
+     #provider{
+        margin-top: 0;
+        margin-left: 0;
+        margin-bottom: 3px;
+        padding: 0;
+     }
+
+     #provider li{                            
+        display: inline;
+        list-style-type: none;
+        //padding-left: 30px;
+        padding: 4px;
+        padding-top: 6px;
+        border-bottom: 1px solid #666;
+        border-right: 1px solid #666;
+        border-top: 1px solid #666;
+        border-left: 1px solid #666;
+        margin-right: 2px;
+     }
+
+ </style>
+                    
+
 </head>
 
 <body class="BodyStyle" vlink="#0000FF" >
@@ -436,24 +460,16 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                     Provider No
                 </td>
                 <td colspan="3">
-                     <table border=1>
-                        <tr>
-
+                    <ul id="provider">
 
                     <%
                     for (int i =0 ; i < providerArray.size(); i++){
                     String pro = (String) providerArray.get(i);%>
-                    <td> <%=providerBean.getProperty(pro,"")%><br>
-                    <html:multibox property="providerNo" value="<%=pro%>"/>
-                    </td>
-                    <%}
-                    //System.out.println(rosterStatus.size());
-                    %>
-
-
-                        </tr>
-                    </table>
-
+                     <li > <%=providerBean.getProperty(pro,"")%>
+                       <html:multibox property="providerNo" value="<%=pro%>"/>
+                     </li>
+                    <%}%>
+                    </ul>
                 </td>                
             </tr>
         <tr>
