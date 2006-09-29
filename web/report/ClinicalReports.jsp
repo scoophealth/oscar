@@ -126,7 +126,7 @@ Clinical Reports
 	
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" ">
+<body class="BodyStyle" vlink="#0000FF" >
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -161,18 +161,23 @@ Clinical Reports
                <%     for (int i = 0; i < arrList.size(); i++){
                         ReportEvaluator re = (ReportEvaluator) arrList.get(i);
                %>
-                    <li title="<%=re.getName()%>"><%=re.getNumeratorCount()%> / <%=re.getDenominatorCount()%>&nbsp;<a style="text-decoration:none;" target="_blank" href="reportExport.jsp?id=<%=i%>" >csv</a></li>
+                    <li title="<%=re.getName()%>"><%=re.getNumeratorCount()%> / <%=re.getDenominatorCount()%>&nbsp;
+                       <a style="text-decoration:none;" target="_blank" href="reportExport.jsp?id=<%=i%>" >csv</a>&nbsp;
+                       <a style="text-decoration:none;" href="RemoveClinicalReport.do?id=<%=i%>" >del</a>
+                    </li>
                <%   } %>
                </ul>
-               <%}%>    
+               <a style="text-decoration:none;" target="_blank" href="reportExport.jsp" >csv</a>
+               <%}%>  
+               
             </td>
             <td valign="top" class="MainTableRightColumn">
                 <div>
                     <fieldset>
                      <html:form action="RunClinicalReport">
-                         
+                         <!--
                            <label for="asOfDate"  >As Of Date:</label><input type="text" name="asOfDate" id="asOfDate" value="<%=""%>" size="9" > <a id="date"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a> <br>                        
-                           
+                           -->
                          <fieldset>
                              <legend>Numerator</legend>
                        
@@ -252,6 +257,8 @@ Clinical Reports
                   <style type="text/css">
                       
                       table.results{
+                           margin-top: 3px;
+                           margin-left: 3px;
                            /*border-bottom: 1pt solid #888888;
                            border-left: 1pt solid #888888;
                            border-top: 1pt solid #888888;
@@ -261,8 +268,9 @@ Clinical Reports
                       }
                       
                       table.results th{
-                          border:1pt solid grey;
+                          border:1px solid grey;
                           padding:2px;    
+                          text-decoration: none;
                       }
                       table.results td{
                          border:1px solid lightgrey;
@@ -286,7 +294,7 @@ Clinical Reports
                          <th>Address</th>
                           
                       <%for( int i= 0; i < outputfields.length; i++){%>
-                         <th><%=outputfields[i]%></th>
+                         <th><%=replaceHeading(outputfields[i])%></th>
                       <%}%>
                       </tr>
                       </thead>
@@ -340,8 +348,16 @@ Clinical Reports
             </td>
         </tr>
     </table>
+    <!-- div>
+       ToDos
+       <ul>
+          <li>-Show values of values in question.  ie Date of last BP measurement. Value of last A1C</li>
+          <li>-export PDF pretty version</li>
+          
+       </ul>
+    </div  -->
 <script type="text/javascript">
-Calendar.setup( { inputField : "asOfDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
+//Calendar.setup( { inputField : "asOfDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
 denom_xtras = new Array();
 <% Enumeration e = rep.keys();
    while(e.hasMoreElements()){
@@ -408,5 +424,13 @@ String sel(String s1,String s2){
      return ret;  
   } 
 
+String replaceHeading(String s){
+    if ( s != null && s.equals("_demographic_no") ){
+        return "Demographic #";    	 
+    }else if (s.equals("_report_result")){
+        return "Report Result";
+    }
+    return s;
+}
 
 %>
