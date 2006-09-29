@@ -61,7 +61,7 @@ public class ScratchAction extends Action {
         System.out.println("pro "+providerNo+" id "+id+" dirty "+dirty+" scatchPad "+scratchPad);
         ScratchData scratch = new ScratchData();
         Hashtable h = scratch.getLatest(providerNo);
-        returnText = (String) h.get("text");
+        
         
         if (h == null){  //FIRST TIME USE
            if(dirty != null && dirty.equals("1")){
@@ -69,6 +69,7 @@ public class ScratchAction extends Action {
                returnText = scratchPad;
            }               
         }else{
+           returnText = (String) h.get("text");  
         //Get current Id in scratch table
            int databaseId = Integer.parseInt( (String) h.get("id"));
            returnId = ""+databaseId;
