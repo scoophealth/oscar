@@ -44,6 +44,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import oscar.oscarDemographic.data.DemographicData.Demographic;
 import oscar.oscarDemographic.data.DemographicData;
+import oscar.oscarPrevention.reports.FollowupManagement;
 import oscar.util.UtilDateUtilities;
 
 /**
@@ -55,6 +56,7 @@ public class GenerateEnvelopesAction  extends Action {
    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
        
     String[] demos = request.getParameterValues("demo");
+    String providerNo = (String) request.getSession().getAttribute("user");
        
     System.out.println("Printing PDF file ..");
     
@@ -82,6 +84,14 @@ public class GenerateEnvelopesAction  extends Action {
          document.newPage();
       }
       
+      //MARK IN MEASUREMENTS????
+      String followUpType =  request.getParameter("followupType");//"FLUF";
+      String followUpValue = request.getParameter("followupValue"); //"L1";
+      String comment = request.getParameter("message");
+      if ( followUpType != null && followUpValue != null){
+          FollowupManagement fup = new FollowupManagement();
+          fup.markFollowupProcedure(followUpType,followUpValue,demos,providerNo,UtilDateUtilities.now(),comment);
+      }
     }
     catch(DocumentException de) {
       System.err.println(de.getMessage());
