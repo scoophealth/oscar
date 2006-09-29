@@ -104,7 +104,7 @@
     ///this function submits the data to the action using ajax. OnComplete the function followUp will be called 
     function checkScratch(){
 	var url = "../Scratch.do";
-	var data = Form.serialize(scratch); 
+	var data = Form.serialize('scratch'); 
         new Ajax.Request(url, {method: 'post',postBody: data,asynchronous:true,onComplete: followUp}); 
     }
 
