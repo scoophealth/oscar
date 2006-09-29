@@ -50,7 +50,7 @@ if(session.getValue("user") == null)
 
 <script type="text/javascript">
     function validate() {        
-        var msg = "Format for phone number is ###-###-####";      
+        var msg = "<bean:message key="provider.editRxFax.msgPhoneFormat" />";
         var strnum = document.forms[0].elements[0].value;
         
         if( !strnum.match(/^\d{3}-\d{3}-\d{4}$/) ) {
