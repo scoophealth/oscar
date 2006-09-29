@@ -35,7 +35,7 @@ import oscar.oscarDB.DBHandler;
 
 /**
  create table scratch_pad (
-           id int(10) not nullll auto_increment primary key,
+           id int(10) not null auto_increment primary key,
            provider_no varchar(6),
            date_time datetime,
            scratch_text text
