@@ -187,6 +187,7 @@ if (request.getParameter("casetoEncounter")==null)
     var textValue1;
     var textValue2;
     var textValue3;
+    var measurementWindows = "";
 
     function closeEncounterWindow() {
         return window.confirm("<bean:message key="oscarEncounter.Index.closeEncounterWindowConfirm"/>");
@@ -212,10 +213,10 @@ if (request.getParameter("casetoEncounter")==null)
           document.measurementGroupForm.measurementGroupSelect.options[0].selected = true;
           var page = "<rewrite:reWrite jspPage="oscarMeasurements/SetupMeasurements.do"/>?groupName=" + varpage;
           windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-          var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-          if (popup != null) {
-            if (popup.opener == null) {
-              popup.opener = self;
+          measurementWindows = window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+          if (measurementWindows != null) {
+            if (measurementWindows.opener == null) {
+              measurementWindows.opener = self;
               alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
             }
           }
@@ -639,6 +640,11 @@ function loader(){
     //tmp = document.encForm.enTextarea.value; // these two lines cause the enTextarea to scroll to the bottom (only works in IE)
     //document.encForm.enTextarea.value = tmp; // another option is to use window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  (also only works in IE)
 }
+
+function notifyChildren() {
+    if( !measurementWindows.closed )
+        measurementWindows.parentChanged = true;   
+}
 </script>
 <script language="javascript">
 
@@ -734,7 +740,7 @@ border-right: 2px solid #cfcfcf;
 
 </head>
 
-<body  onload="javascript:loader();"  topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
+<body  onload="javascript:loader();"  onUnload="notifyChildren();" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
 <html:errors/>
 
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;width:100%;height:680" bordercolor="#111111" id="scrollNumber1" name="<bean:message key="oscarEncounter.Index.encounterTable"/>">
