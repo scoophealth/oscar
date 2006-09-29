@@ -52,10 +52,10 @@ public class EctMeasurementsAction extends Action {
         EctMeasurementsForm frm = (EctMeasurementsForm) form;
 
         HttpSession session = request.getSession();
-        request.getSession().setAttribute("EctMeasurementsForm", frm);
+        //request.getSession().setAttribute("EctMeasurementsForm", frm);
 
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-        request.getSession().setAttribute("EctSessionBean", bean);
+        //request.getSession().setAttribute("EctSessionBean", bean);
 
         java.util.Calendar calender = java.util.Calendar.getInstance();
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
@@ -71,8 +71,12 @@ public class EctMeasurementsAction extends Action {
 
         String demographicNo = null;
         String providerNo = (String) session.getAttribute("user");
-        if ( bean != null)
-            demographicNo = bean.getDemographicNo();
+        
+        //if form has demo use it since session bean could have been overwritten
+        if( (demographicNo = (String)frm.getValue("demographicNo")) == null ) {
+            if ( bean != null)
+                demographicNo = bean.getDemographicNo();
+        }
 
         MsgStringQuote str = new MsgStringQuote();
 
@@ -85,6 +89,11 @@ public class EctMeasurementsAction extends Action {
         }
 
         String textOnEncounter = "**"+StringUtils.rightPad(by,80,"*")+"\\n";
+        
+        //if parent window content has changed then we need to propagate change so
+        //we do not write to parent
+        String parentChanged = (String)frm.getValue("parentChanged");        
+        request.setAttribute("parentChanged", parentChanged);
 
         boolean valid = true;
         try
@@ -217,7 +226,7 @@ public class EctMeasurementsAction extends Action {
 
                     }
                     textOnEncounter = textOnEncounter + "**********************************************************************************\\n";
-                    System.out.println(textOnEncounter);
+                    //System.out.println(textOnEncounter);
                 }
                 else{
                     String groupName = (String) frm.getValue("groupName");
