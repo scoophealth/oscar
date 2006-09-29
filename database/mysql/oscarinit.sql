@@ -6906,6 +6906,13 @@ CREATE TABLE `fileUploadCheck` (
   PRIMARY KEY  (`id`)
 );
 
+create table scratch_pad (
+   id int(10) not null auto_increment primary key,
+   provider_no varchar(6),
+   date_time datetime,
+   scratch_text text
+);
+
 
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
