@@ -68,6 +68,21 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(page, "blah", windowprops);  
 }
+
+parentChanged = false;
+
+function check() {
+    var ret = true;
+    
+    if( parentChanged ) {
+        document.forms[0].elements["value(parentChanged)"].value = "true";
+        
+        if( !confirm("<bean:message key="oscarEncounter.oscarMeasurements.Measurements.msgParentChanged"/> <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/>, <bean:write name="EctSessionBean" property="patientFirstName"/></logic:present>") ) 
+            ret = false;        
+    }
+    
+    return ret;
+}
 </script>
 <body class="BodyStyle" vlink="#0000FF" onload="window.focus();">
 <!--  -->
@@ -163,6 +178,8 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                                                 </logic:iterate>                        
                                                 <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>                                                
                                                 <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
+                                                <input type="hidden" name="value(parentChanged)" value="false" />
+                                                <input type="hidden" name="value(demographicNo)" value="<bean:write name="EctSessionBean" property="demographicNo"/>"/>
                                                 <logic:present name="css"> 
                                                     <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
                                                 </logic:present>
@@ -175,7 +192,7 @@ function popupPage(vheight,vwidth,page) { //open a new popup window
                                     <table>
                                     <tr>
                                         <td><input type="button" name="Button" value="<bean:message key="global.btnCancel"/>" onClick="window.close()"></td>
-                                        <td><input type="button" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="document.forms['EctMeasurementsForm'].submit();"/></td>
+                                        <td><input type="submit" name="Button" value="<bean:message key="global.btnSubmit"/>" onclick="return check();"/></td>
                                     </tr>
                                     </table>
                                 </td>   
