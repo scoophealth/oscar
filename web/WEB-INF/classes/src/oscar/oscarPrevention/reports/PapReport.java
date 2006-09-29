@@ -33,10 +33,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
+import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarPrevention.PreventionData;
 import oscar.oscarPrevention.pageUtil.PreventionReportDisplay;
 import oscar.util.UtilDateUtilities;
@@ -163,7 +166,7 @@ public class PapReport implements PreventionReport {
                    //done++;
                 }
              }
-             
+             letterProcessing( prd,"PAPF",asofDate);
              returnReport.add(prd);
              
           }
@@ -190,6 +193,7 @@ public class PapReport implements PreventionReport {
           h.put("returnReport",returnReport);
           h.put("inEligible", ""+inList);
           h.put("eformSearch","Mam");
+          h.put("followUpType","PAPF");
           System.out.println("set returnReport "+returnReport);
           return h;
     }
@@ -201,5 +205,125 @@ public class PapReport implements PreventionReport {
        }
        return ret;
    }
+
+    
+    //TODO: THIS MAY NEED TO BE REFACTORED AT SOME POINT IF MAM and PAP are exactly the same  
+   //If they don't have a MAM Test with guidelines
+                //Get last contact method?
+                    //NO contact
+                        //Send letter
+                    //Was it in longer than a year ago
+                        //NO
+                            //Send Letter 1
+                        //YES
+                              //Was it atleast 3months ago?
+                                    //WAS is L1
+                                        //SEnd L2
+                                    //Was is L2
+                                        //P1
+    
+   //Measurement Type will be 1 per Prevention report, with the dataField holding method ie L1, L2, P1 (letter 1 , letter 2, phone call 1) 
+   String LETTER1 = "L1";
+   String LETTER2 = "L2";
+   String PHONE1 = "P1";
+  
+   private String letterProcessing(PreventionReportDisplay prd,String measurementType,Date asofDate){
+       if (prd != null){
+          if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
+              // Get LAST contact method
+              EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
+              System.out.println("getting followup data for "+prd.demographicNo);
+              
+              Collection followupData = measurementDataHandler.getMeasurementsDataVector();
+              //NO Contact
+              System.out.print("fluFollowupData size = "+followupData.size());
+              if ( followupData.size() == 0 ){
+                  prd.nextSuggestedProcedure = this.LETTER1;
+                  return this.LETTER1;
+              }else{ //There has been contact
+                  EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
+                  System.out.println("fluData "+measurementData.getDataField());
+                  System.out.println("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
+                  System.out.println("toString: "+measurementData.toString());
+                  prd.lastFollowup = measurementData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = measurementData.getDataField();
+                  
+                  
+                  Calendar oneyear = Calendar.getInstance();
+                  oneyear.setTime(asofDate);                
+                  oneyear.add(Calendar.YEAR,-1);
+                  
+                  if ( measurementData.getDateObservedAsDate().before(oneyear.getTime())){
+                      prd.nextSuggestedProcedure = this.LETTER1;
+                      return this.LETTER1;
+                  }else{ //AFTER CUTOFF DATE
+                      
+                      Calendar threemonth = Calendar.getInstance();
+                      threemonth.setTime(asofDate);                
+                      threemonth.add(Calendar.MONTH,-3);
+                          if ( measurementData.getDateObservedAsDate().before(threemonth.getTime())){
+                              if (prd.lastFollupProcedure.equals(this.LETTER1)){
+                                    prd.nextSuggestedProcedure = this.LETTER2;
+                                    return this.LETTER2;
+                              }else if(prd.lastFollupProcedure.equals(this.LETTER1)){
+                                    prd.nextSuggestedProcedure = this.PHONE1;
+                                    return this.PHONE1;
+                              }else{
+                                  prd.nextSuggestedProcedure = "----";
+                                  return "----";
+                              }
+                          
+                          }
+                  }
+
+
+                  
+              }
+          
+          
+          
+          
+          }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
+                //prd.lastDate = "-----";  
+              prd.nextSuggestedProcedure = "----";
+                //prd.numMonths ;
+          }else if(prd.state.equals("Ineligible")){
+                // Do nothing   
+                prd.nextSuggestedProcedure = "----"; 
+          }else if(prd.state.equals("Up to date")){
+                //Do nothing
+              prd.nextSuggestedProcedure = "----";
+          }else{
+               System.out.println("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+          }
+       }
+       return null;         
+   }
     
 }
+
+
+
+
+
+//                  Calendar today = Calendar.getInstance();
+//                  today.setTime(asofDate); 
+//                  int num = UtilDateUtilities.getNumMonths(measurementData.getDateObservedAsDate(),today.getTime());
+//                  if (num > 12){
+//                        prd.nextSuggestedProcedure = this.LETTER1;
+//                        return this.LETTER1;
+//                  }else{ //AFTER CUTOFF DATE    
+//                      if ( num > 3 ){
+//                          if (prd.lastFollupProcedure.equals(this.LETTER1)){
+//                                prd.nextSuggestedProcedure = this.LETTER2;
+//                                return this.LETTER2;
+//                          }else if(prd.lastFollupProcedure.equals(this.LETTER1)){
+//                                prd.nextSuggestedProcedure = this.PHONE1;
+//                                return this.PHONE1;
+//                          }else{
+//                              prd.nextSuggestedProcedure = "----";
+//                              return "----";
+//                          }
+//                          
+//                        }
+// 
