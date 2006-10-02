@@ -163,8 +163,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 <script language="JavaScript">
 function getComment() {
-    this.acknowledgeForm.comment.value = prompt("<bean:message key="oscarMDS.segmentDisplay.msgComment"/>", "");
-    return true;
+    var ret = true;
+    var commentval = prompt("<bean:message key="oscarMDS.segmentDisplay.msgComment"/>", "");
+    
+    if( commentval == null )
+        ret = false;
+    else
+        document.acknowledgeForm.comment.value = commentval;
+        
+    return ret;
 }
 
 function popupStart(vheight,vwidth,varpage,windowname) {
@@ -189,7 +196,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <input type="hidden" name="comment" value="">
                         <input type="hidden" name="labType" value="MDS"/>
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
-                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
+                        <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return getComment();">
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">

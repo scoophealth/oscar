@@ -168,9 +168,15 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 <script language="JavaScript">
 function getComment() {    
+    var ret = true;
     var commentVal = prompt('<bean:message key="oscarMDS.segmentDisplay.msgComment"/>', '');
-    document.acknowledgeForm.comment.value = commentVal;    
-    return true;
+    
+    if( commentVal == null )
+        ret = false;
+    else
+        document.acknowledgeForm.comment.value = commentVal;
+    
+    return ret;
 }
 
 function popupStart(vheight,vwidth,varpage,windowname) {
