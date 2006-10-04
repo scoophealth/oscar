@@ -85,6 +85,8 @@
 
   String codes[] = {"O","P","N","X","T"};
   request.setAttribute("codes",codes);
+  String serviceLocation = allFields.getProperty("service_location");
+
 
   //fixes bug where invoice number is null when
   //bill changed to Private
@@ -570,9 +572,18 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
     <td width="54%"  class="bCellData">
         Visit Type:
         <input type="hidden" name="xml_visittype" value="<%=visittype%>">
-              <html:select property="serviceLocation" style="font-size:80%;">
-              <html:options collection="billvisit" property="visitType" labelProperty="description"/>
-             </html:select>
+              <select name="serviceLocation" style="font-size:80%;">
+              <%
+              for (int i = 0; i < billvisit.length; i++) {
+                oscar.oscarBilling.ca.bc.data.BillingFormData.BillingVisit visit = (oscar.oscarBilling.ca.bc.data.BillingFormData.BillingVisit)billvisit[i];
+                String selected = (serviceLocation != visit.getVisitType())?"selected":"";
+              %>
+              <option value="<%=visit.getVisitType()%>" <%=selected%>><%=visit.getDescription()%> </option>
+              <%
+              }
+              %>
+
+             </select>
 
     </td>
     <td width="46%"  class="bCellData">
