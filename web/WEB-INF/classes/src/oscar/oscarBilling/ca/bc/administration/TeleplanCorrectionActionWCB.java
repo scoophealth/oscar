@@ -133,9 +133,11 @@ public class TeleplanCorrectionActionWCB
       }
 
       bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
-
-      bean.queryExecuteUpdate(data.getWcb(this.GetFeeItemAmount(data.
-          getW_feeitem(), data.getW_extrafeeitem())), sql_wcb);
+      String feeItem = data.getW_feeitem();
+      String extraFeeItem = data.getW_extrafeeitem();
+      String getItemAmt = this.GetFeeItemAmount(feeItem, extraFeeItem);
+      String[] wcbParams = data.getWcb(getItemAmt);
+      bean.queryExecuteUpdate(wcbParams, sql_wcb);
 
       String providerNo = data.getProviderNo();
 
@@ -163,7 +165,7 @@ public class TeleplanCorrectionActionWCB
     }
 
     catch (Exception ex) {
-
+      ex.printStackTrace();
       System.err.println("WCB Teleplan Correction Query Error: " +
                          ex.getMessage() + " - " + ex.getStackTrace());
 
