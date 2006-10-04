@@ -158,7 +158,6 @@
     function setClean(){
         $('dirty').value = 0;
         dirty = 0;
-        $('savebutton').blur();
         $('savebutton').disabled = 'true';
         document.title = 'clean';
     }
