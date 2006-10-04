@@ -486,7 +486,7 @@ function popFeeItemList(form,field){
 				</tr>-->            <tr>
               <td class="FormLabel">Service Location:</td>
               <td>
-                 <html:select property="serviceLocation" style="font-size:80%;">
+                 <html:select property="serviceLocation" style="font-size:80%;" value="<%=form.getServiceLocation()%>">
               <html:options collection="billvisit" property="visitType" labelProperty="description"/>
              </html:select>              </td>
             </tr>
