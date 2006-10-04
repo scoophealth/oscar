@@ -576,7 +576,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
               <%
               for (int i = 0; i < billvisit.length; i++) {
                 oscar.oscarBilling.ca.bc.data.BillingFormData.BillingVisit visit = (oscar.oscarBilling.ca.bc.data.BillingFormData.BillingVisit)billvisit[i];
-                String selected = (serviceLocation != visit.getVisitType())?"selected":"";
+                String selected = serviceLocation.equals(visit.getVisitType())?"selected":"";
               %>
               <option value="<%=visit.getVisitType()%>" <%=selected%>><%=visit.getDescription()%> </option>
               <%
