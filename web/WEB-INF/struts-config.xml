@@ -995,13 +995,13 @@
       <forward name="success" path="/billing/CA/BC/receivePayment.jsp" />
     </action>
     <action name="billingPreferencesActionForm" path="/billing/CA/BC/saveBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SaveBillingPreferencesAction" validate="false">
-      <forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
+      <forward name="success" path="/billing/CA/BC/viewBillingPreferencesAction.do" />
     </action>
     <action input="/billing/CA/BC/billingPreferences.jsp" name="billingPreferencesActionForm" path="/billing/CA/BC/viewBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewBillingPreferencesAction" validate="false">
       <forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
     </action>
 
-    
+
     <action input="/report/ClinicalReports.jsp" name="FrmForm" path="/RunClinicalReport" type="oscar.oscarReport.ClinicalReports.pageUtil.RunClinicalReportAction">
         <forward name="success" path="/report/ClinicalReports.jsp"/>
     </action>
@@ -1067,7 +1067,7 @@
 				<forward name="edit" path="/ticklerPlus/ticklerForm.jsp"/>
 				<forward name="preparedTicklerList" path="/ticklerPlus/preparedTicklerList.jsp"/>
 			</action>
-			
+
 			<action path="/CustomFilter"
 				type="org.springframework.web.struts.DelegatingActionProxy"
 				parameter="method"
@@ -1078,7 +1078,7 @@
 			>
 				<forward name="customFilterList" path="/ticklerPlus/customFilterList.jsp"/>
 				<forward name="customFilterForm" path="/ticklerPlus/customFilterForm.jsp"/>
-			</action>  
+			</action>
 
 
  			<action path="/UnreadTickler"
@@ -1105,16 +1105,16 @@
 		<!-- Set Module-awareness to true -->
 		<set-property property="moduleAware" value="true" />
 	</plug-in>
-	
+
   	<plug-in className="org.caisi.common.web.CaisiSpringPlugin">
 		<set-property property="contextConfigLocation"
 			value="/WEB-INF/applicationContext.xml,/WEB-INF/action-servlet.xml"/>
 	</plug-in>
-	
+
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames"
 			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
 	</plug-in>
-	
-	
+
+
 </struts-config>
