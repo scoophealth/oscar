@@ -93,10 +93,7 @@ public class BillingReProcessBillAction
     String dxCode2 = frm.getDx2(); //f
     String dxCode3 = frm.getDx3(); //f
     String dxExpansion = ""; //f
-    String serviceLocation = "";
-    if (frm.getServiceLocation().length() > 1) {
-      serviceLocation = frm.getServiceLocation().substring(0, 1); //f
-    }
+    String serviceLocation = frm.getServiceLocation().substring(0, 1);
     String referralFlag1 = frm.getReferalPracCD1(); //f
     String referralNo1 = frm.getReferalPrac1(); //f
     String referralFlag2 = frm.getReferalPracCD2(); //f
