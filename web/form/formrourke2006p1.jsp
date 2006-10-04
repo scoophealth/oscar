@@ -143,7 +143,7 @@
     
     function reset() {        
         document.forms[0].target = "";
-        document.forms[0].action = "/oscar/form/formname.do" ;
+        document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
     }
     
     function onPrint() {
