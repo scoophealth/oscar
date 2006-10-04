@@ -47,7 +47,6 @@ public class BillingReProcessBillAction
                                HttpServletRequest request,
                                HttpServletResponse response) throws IOException,
       ServletException {
-    System.out.print("BillingReProcessBillAction Jackson");
     if (request.getSession().getAttribute("user") == null) {
       return (mapping.findForward("Logout"));
     }
@@ -93,7 +92,7 @@ public class BillingReProcessBillAction
     String dxCode2 = frm.getDx2(); //f
     String dxCode3 = frm.getDx3(); //f
     String dxExpansion = ""; //f
-    String serviceLocation = frm.getServiceLocation().substring(0, 1);
+    String serviceLocation = frm.getServiceLocation();
     String referralFlag1 = frm.getReferalPracCD1(); //f
     String referralNo1 = frm.getReferalPrac1(); //f
     String referralFlag2 = frm.getReferalPracCD2(); //f
@@ -189,7 +188,7 @@ public class BillingReProcessBillAction
     String persistedBillType = this.getPersistedBillType(billingmasterNo);
     if (persistedBillType != null) {
       if (!persistedBillType.equals(billingStatus)) {
-        //if the bill status was chamged to "Bill Patient
+        //if the bill status was changed to "Bill Patient
         //And the persisted bill status is anything but private
         if (msp.BILLPATIENT.equals(billingStatus) &&
             !msp.PAIDPRIVATE.equals(persistedBillType)) {
@@ -199,9 +198,7 @@ public class BillingReProcessBillAction
           //code with the letter 'A' prepended. The current db design should really
           //have a 'fees' associative table
           //get the private fee data if it exists
-          String[] privateCodeRecord = SqlUtils.getRow(
-              "select value from billingservice where service_code = 'A" +
-              billingServiceCode + "'");
+          String[] privateCodeRecord = getServiceCodePrice(billingServiceCode,true);
           if (privateCodeRecord != null && privateCodeRecord.length == 1) {
             billingServiceCode = "A" + billingServiceCode;
             billingServicePrice = privateCodeRecord[0];
@@ -210,18 +207,28 @@ public class BillingReProcessBillAction
         }
       }
     }
+    else{
+      throw new RuntimeException("BILLING BC - " + new java.util.Date().toString() + " - billingmaster_no " + billingmasterNo + " doesnt't seem to have a type");
+    }
 
     //Multiply the bill amount by the units - Fixes bug where wrong amount being sent to MSP
-
+/**
     try{
-      double dblBillAmount = Double.parseDouble(billingServicePrice);
+
+      String[] codeRecord = getServiceCodePrice(billingServiceCode,msp.BILLPATIENT.equals(billingStatus));
+      String codePrice = "";
+      if (codeRecord != null && codeRecord.length > 0) {
+          codePrice = codeRecord[0];
+          System.out.println("codePrice=" + codePrice);
+      }
+      double dblBillAmount = Double.parseDouble(codePrice);
       double dblUnit = Double.parseDouble(billingUnit);
       billingServicePrice = String.valueOf(dblBillAmount * dblUnit);
     }
     catch(NumberFormatException e){
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
     }
-
+**/
 
 
     String sql = "update billingmaster set "
@@ -338,6 +345,13 @@ public class BillingReProcessBillAction
     return mapping.findForward("success");
   }
 
+  private String[] getServiceCodePrice(String billingServiceCode,boolean isPrivate) {
+    String prepend = isPrivate?"A":"";
+    String[] privateCodeRecord = SqlUtils.getRow(
+        "select value from billingservice where service_code = '" + prepend + billingServiceCode + "'");
+    return privateCodeRecord;
+  }
+
   /**
    * getPersistedBillType
    *
@@ -352,7 +366,7 @@ public class BillingReProcessBillAction
     if (row != null) {
       ret = row[0];
     }
-    return "";
+    return ret;
   }
 
   /**
