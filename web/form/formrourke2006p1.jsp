@@ -23,7 +23,7 @@
  * Ontario, Canada 
  */
 --%>
-
+<%@ page contentType="text/html; charset=UTF-8" %> 
 <%@ page language="java"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -67,6 +67,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+    <meta  content="text/html;  charset=UTF-8"  http-equiv="Content-Type">
     <title>Rourke2006 Record 1</title>
     <link rel="stylesheet" type="text/css" href="rourkeStyle.css" >
   <!-- calendar stylesheet -->
@@ -444,7 +445,7 @@ pop up description layer
         <td class="column">
             
             <a><bean:message key="oscarEncounter.formRourke1.msgEducational"/></a><br/><br/>
-               <bean:message key="oscarEncounter.formRourke1.msgEducationalLegend"/>
+               <img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message key="oscarEncounter.formRourke2006.msgEducationalLegend"/>               
         </td>
         <td colspan="9" valign="top">
             <table style="font-size:9pt;" cellpadding="0" cellspacing="0" width="100%"  >
@@ -455,13 +456,13 @@ pop up description layer
                     <td valign="top" colspan="12"><bean:message key="oscarEncounter.formRourke2006_1.formInjuryPrev"/></td>
                 </tr>
                 <tr>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
@@ -585,7 +586,8 @@ pop up description layer
     </tr>
     <tr>
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDevelopment"/>**</a><br>
-                <bean:message key="oscarEncounter.formRourke2006_1.msgDevelopmentDesc"/>
+                <bean:message key="oscarEncounter.formRourke2006_1.msgDevelopmentDesc"/><br/>
+                <img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message key="oscarEncounter.formRourke2006_1.msgDevelopmentLegend"/>                
         </td>
         <td colspan="3" valign="top" align="center">
             <table cellpadding="0" cellspacing="0"   width="100%">
@@ -607,7 +609,7 @@ pop up description layer
                     <td colspan="2"><textarea id="p1_development1m" name="p1_development1m" rows="5" cols="25" class="wide"><%= props.getProperty("p1_development1m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td class="edcol" valign="top">&#x2713;<td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="radio" id="p1_focusGaze1mOk" name="p1_focusGaze1mOk" onclick="onCheck(this,'p1_focusGaze1m')" <%= props.getProperty("p1_focusGaze1mOk", "") %>></td>

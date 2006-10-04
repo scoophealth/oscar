@@ -24,6 +24,7 @@
  */
 --%>
 
+<%@ page contentType="text/html; charset=UTF-8" %> 
 <%@ page language="java"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -67,6 +68,7 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <head>
+    <meta  content="text/html;  charset=UTF-8"  http-equiv="Content-Type">
     <title>Rourke2006 Record 3</title>
     <link rel="stylesheet" type="text/css" href="rourkeStyle.css" >
   <!-- calendar stylesheet -->
@@ -477,7 +479,7 @@ pop up description layer
         <td class="column">
             
             <a><bean:message key="oscarEncounter.formRourke1.msgEducational"/></a><br/><br/>
-               <bean:message key="oscarEncounter.formRourke1.msgEducationalLegend"/>
+               <img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message key="oscarEncounter.formRourke2006.msgEducationalLegend"/>
         </td>
         <td colspan="9" valign="top">
             <table style="font-size:8pt;" cellpadding="0" cellspacing="0" width="100%"  >
@@ -488,13 +490,13 @@ pop up description layer
                     <td valign="top" colspan="15"><bean:message key="oscarEncounter.formRourke2006_1.formInjuryPrev"/></td>
                 </tr>
                 <tr>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
-                    <td class="edcol" valign="top">&#x2713;</td><td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td colspan="4">&nbsp;</td>                    
                 </tr>
                 <tr>
@@ -636,8 +638,8 @@ pop up description layer
         </td>
     </tr>
     <tr>
-        <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDevelopment"/>**</a><br>
-                <bean:message key="oscarEncounter.formRourke2006_1.msgDevelopmentDesc"/>
+        <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDevelopment"/>**</a><br/>
+                <img height="15" width="20" src="graphics/Checkmark_Lwhite.gif"><bean:message key="oscarEncounter.formRourke2006_1.msgDevelopmentLegend"/>
         </td>
         <td colspan="3" valign="top" align="center">
             <table cellpadding="0" cellspacing="0"   width="100%">
@@ -645,7 +647,7 @@ pop up description layer
                     <td colspan="3"><textarea id="p3_development9m" name="p3_development9m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_development9m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td class="edcol" valign="top">&#x2713;<td class="edcol" valign="top">X</td><td>&nbsp;</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td><td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="radio" id="p3_hiddenToyOk" name="p3_hiddenToyOk" onclick="onCheck(this,'p3_hiddenToy')" <%= props.getProperty("p3_hiddenToyOk", "") %>></td>
@@ -727,7 +729,7 @@ pop up description layer
                     <td colspan="3"><textarea id="p3_development12m" name="p3_development12m" rows="5" cols="25" class="wide"><%= props.getProperty("p3_development12m", "") %></textarea></td>
                 </tr>
                 <tr>
-                    <td class="edcol" valign="top">&#x2713;<td class="edcol" valign="top">X</td><td>&nbsp;</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td><td>&nbsp;</td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="radio" id="p3_respondsOk" name="p3_respondsOk" onclick="onCheck(this,'p3_responds')" <%= props.getProperty("p3_respondsOk", "") %>></td>
@@ -797,7 +799,7 @@ pop up description layer
         <td colspan="3" valign="top">
             <table cellpadding="0" cellspacing="0" width="100%"  >                
                 <tr>
-                    <td class="edcol" valign="top">&#x2713;<td class="edcol" valign="top">X</td>
+                    <td style="padding-right:5pt" valign="top"><img height="15" width="20" src="graphics/Checkmark_L.gif"></td><td class="edcol" valign="top">X</td>
                     <td>&nbsp;</td>
                 </tr>
                 <tr>
