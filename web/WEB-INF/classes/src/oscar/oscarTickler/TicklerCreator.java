@@ -31,6 +31,9 @@ import java.sql.*;
 import java.util.*;
 
 import oscar.oscarDB.*;
+import oscar.util.DateUtils;
+import java.text.SimpleDateFormat;
+import oscar.util.UtilDateUtilities;
 
 public class TicklerCreator {
   public TicklerCreator() {
@@ -45,17 +48,11 @@ public class TicklerCreator {
    */
   public void createTickler(String demoNo, String provNo, String message) {
     if (!ticklerExists(demoNo, message)) {
-      GregorianCalendar now = new GregorianCalendar();
-      int curYear = now.get(Calendar.YEAR);
-      int curMonth = (now.get(Calendar.MONTH) + 1);
-      int curDay = now.get(Calendar.DAY_OF_MONTH);
-      String nowDate = String.valueOf(curYear) + "/" + String.valueOf(curMonth) +
-          "/" + String.valueOf(curDay) + " " + now.get(Calendar.HOUR_OF_DAY) +
-          ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
-
+      SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+      String nowDate = fmt.format(new java.util.Date());
       String sql = "insert into tickler (demographic_no, message, status, update_date, service_date, creator, priority, task_assigned_to) " +
-          " values(" + demoNo + " ,'" + message + "','A','" + nowDate +
-          "',now(),'" + provNo + "','4','" + provNo + "')";
+          " values(" + demoNo + " ,'" + message + "','A',now(),'" + nowDate +
+          "','" + provNo + "','4','" + provNo + "')";
       DBHandler db = null;
       try {
         db = new DBHandler(DBHandler.OSCAR_DATA);
