@@ -35,7 +35,7 @@ import oscar.util.UtilDateUtilities;
 /**
  * Class FrmPdfGraphicAR : bcar2 week-height plot data 2004-01-30
  */
-public final class FrmPdfGraphicAR {
+public final class FrmPdfGraphicAR extends FrmPdfGraphic {
 
 	public static void main(String[] arg) {
 		FrmPdfGraphicAR test = new FrmPdfGraphicAR();
@@ -145,6 +145,21 @@ public final class FrmPdfGraphicAR {
 				: "0000-00-00";
 	}
 
+        
+        public void init(Properties prop){
+              init(prop.getProperty("__nMaxPixX"),
+                   prop.getProperty("__nMaxPixY"),
+                   prop.getProperty("__fStartX"),
+                   prop.getProperty("__fEndX"),
+                   prop.getProperty("__fStartY"),
+                   prop.getProperty("__fEndY"),
+                   prop.getProperty("__dateFormat"),
+                   prop.getProperty("__finalEDB"));
+             
+        }
+        
+        
+        
 	public void init(
 		String mx,
 		String my,
