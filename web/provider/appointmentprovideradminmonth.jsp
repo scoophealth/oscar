@@ -50,6 +50,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
   int view=0;
   String providerview = request.getParameter("providerview")==null?(mygroupno.equals(".default")?curProvider_no:("_grp_"+mygroupno)):request.getParameter("providerview") ;
   //String providerview = request.getParameter("providerview")==null?curProvider_no:request.getParameter("providerview") ;
+  int NameMaxLen = 15;
 %>
 <%@ page import="java.lang.*, java.util.*, java.text.*,java.net.*,java.sql.*,oscar.*" errorPage="errorpage.jsp" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
@@ -326,7 +327,7 @@ function refresh1() {
  	 while (rsgroup.next()) { 
  	   providerNameBean.setDef(rsgroup.getString("provider_no"), new String( rsgroup.getString("last_name")+","+rsgroup.getString("first_name") ));
 %>
-  <option value="<%=rsgroup.getString("provider_no")%>" <%=providerview.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=providerNameBean.getShortDef(rsgroup.getString("provider_no"), "", 11)%></option>
+  <option value="<%=rsgroup.getString("provider_no")%>" <%=providerview.equals(rsgroup.getString("provider_no"))?"selected":""%> ><%=providerNameBean.getShortDef(rsgroup.getString("provider_no"), "", NameMaxLen)%></option>
 <%
  	 }
 %>
@@ -398,7 +399,7 @@ function refresh1() {
     }
     if(!providerview.startsWith("_grp_",0) || myGrpBean.containsKey(rsgroup.getString("provider_no")) ) {
 %>                        
-                        <br><span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(rsgroup.getString("provider_no"),"",11 )%></span><span class='datephour'><%=rsgroup.getString("hour") %></span><span class='datepreason'><%=rsgroup.getString("reason") %></span>
+                        <br><span class='datepname'>&nbsp;<%=providerNameBean.getShortDef(rsgroup.getString("provider_no"),"",NameMaxLen )%></span><span class='datephour'><%=rsgroup.getString("hour") %></span><span class='datepreason'><%=rsgroup.getString("reason") %></span>
 <%  }  } %>                        
                         </a></font></td>
             <%
