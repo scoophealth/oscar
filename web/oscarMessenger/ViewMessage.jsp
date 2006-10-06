@@ -34,11 +34,13 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<link rel="stylesheet" type="text/css" href="encounterStyles.css" media="screen">
-<link rel="stylesheet" type="text/css" href="printable.css" media="print">
+
 <html:html locale="true">
 <head>
 
+<link rel="stylesheet" type="text/css" href="encounterStyles.css" media="screen">
+<link rel="stylesheet" type="text/css" href="printable.css" media="print">    
+    
 <logic:notPresent name="msgSessionBean" scope="session">
     <logic:redirect href="index.jsp" />
 </logic:notPresent>
