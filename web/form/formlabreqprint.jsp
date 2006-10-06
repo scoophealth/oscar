@@ -65,7 +65,7 @@
 </script>
 
 <body >
-<html:form action="/oscarEncounter/LabReq">
+
 
 <!-- class="TableWithBorder" -->
 <table class="Head" class="hidePrint">
@@ -692,6 +692,5 @@
 </table>
 
 
-</html:form>
 </body>
 </html:html>
