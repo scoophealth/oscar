@@ -75,12 +75,24 @@ public class EctIncomingEncounterAction extends Action {
             } else {
                 bean = new EctSessionBean();
                 bean.currentDate = UtilDateUtilities.StringToDate(request.getParameter("curDate"));
+                
+                if (bean.currentDate == null){
+                    bean.currentDate = UtilDateUtilities.Today();
+                }
+                
                 bean.providerNo=request.getParameter("providerNo");
+                if(bean.providerNo == null){
+                    bean.providerNo = (String) request.getSession().getAttribute("user");
+                }
                 bean.demographicNo=request.getParameter("demographicNo");
                 bean.appointmentNo=request.getParameter("appointmentNo");
                 bean.curProviderNo=request.getParameter("curProviderNo");
                 bean.reason=request.getParameter("reason");
                 bean.userName=request.getParameter("userName");
+                if (bean.userName == null){
+                     bean.userName =  ( (String) request.getSession().getAttribute("userfirstname") ) + " " + ( (String) request.getSession().getAttribute("userlastname") );
+                }
+                
                 bean.appointmentDate=request.getParameter("appointmentDate");
                 bean.startTime=request.getParameter("startTime");
                 bean.status=request.getParameter("status");
