@@ -235,6 +235,8 @@
     </title>
     </head>
     <body>
+        <html:form action="/oscarEncounter/oscarConsultation/printAttached">
+            <input type="hidden" name="reqId" value="<%=request.getAttribute("reqId")%>"/>
         <table class="header" >
             <tr>
             <td align="center">
@@ -246,8 +248,11 @@
             <td align="center">
                 <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
             </td>
+            <td align="center">               
+                <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrintAttached"/>" />
+            </td>
 
-            <td align="center">
+            <td align="center">                
                 <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
             </td>
 		<% if(vecPhones.size() > 0) { %>            
@@ -288,6 +293,7 @@
 		<% } %>
             </tr>
         </table>
+        </html:form>
         <table class="printTable" name="headerTable">
             <!--header-->
             <tr>
