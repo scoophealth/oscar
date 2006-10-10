@@ -539,6 +539,14 @@ public final class EctConsultationFormRequestForm
     this.patientWillBook = str;
 
   }
+  
+  public String getDocuments() {
+    return documents;
+  }
+  
+  public void setDocuments(String doc) {
+      documents = doc;
+  }
 
   String providerNo;
 
@@ -588,5 +596,8 @@ public final class EctConsultationFormRequestForm
   String urgency;
   //Patient Will Book Field, can be either "1" or "0"
   String patientWillBook;
+  
+  //Documents attached to this consultation
+  String documents;
 
 }
