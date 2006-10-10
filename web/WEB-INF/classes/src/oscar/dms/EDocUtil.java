@@ -38,6 +38,8 @@ public class EDocUtil extends SqlUtilBaseS {
     public static final String SORT_CREATOR = "d.doccreator, d.updatedatetime DESC";
     public static final String SORT_OBSERVATIONDATE = "d.observationdate DESC, d.updatedatetime DESC";
     public static final String SORT_CONTENTTYPE = "d.contenttype, d.updatedatetime DESC";
+    public static final boolean ATTACHED = true;
+    public static final boolean UNATTACHED = false;
     
     public static final String DMS_DATE_FORMAT = "yyyy/MM/dd";
 
@@ -88,7 +90,19 @@ public class EDocUtil extends SqlUtilBaseS {
         runSQL(ctlDocumentSql);
     }
     
-   public static void editDocumentSQL(EDoc newDocument) {
+    public static void detachDocConsult(String docNo) {
+        String sql = "UPDATE document set consultation_no = 0 WHERE document_no = " + docNo;
+        System.out.println("detachDoc: " + sql);
+        runSQL(sql);
+    }
+    
+    public static void attachDocConsult(String docNo, String consultId) {
+        String sql = "UPDATE document set consultation_no = " + consultId + " WHERE document_no = " + docNo;
+        System.out.println("attachDoc: " + sql);
+        runSQL(sql);
+    }
+    
+    public static void editDocumentSQL(EDoc newDocument) {
        String doctype = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getType());
        String docDescription = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getDescription());
        String docFileName = org.apache.commons.lang.StringEscapeUtils.escapeSql(newDocument.getFileName());
@@ -129,6 +143,39 @@ public class EDocUtil extends SqlUtilBaseS {
 | status      | char(1)     | YES  |     | NULL    |       |
 +-------------+-------------+------+-----+---------+-------+ 
  */
+   
+   /**
+    *Fetches all consult docs attached to specific consultation
+    */
+    public static ArrayList listDocs(String consultationId, boolean attached) {
+        String sql = "SELECT DISTINCT d.document_no, d.docdesc, d.docfilename, d.contenttype FROM document d WHERE d.status != 'D'";
+        
+        if( attached )
+            sql +=  " AND d.consultation_no = " + consultationId;
+        else
+            sql +=  " AND d.consultation_no = 0";
+        
+        sql += " ORDER BY d.docdesc";
+        System.out.println("sql list: " + sql);
+        ResultSet rs = getSQL(sql);
+        ArrayList resultDocs = new ArrayList();
+        
+        try {
+            while (rs.next()) {
+                EDoc currentdoc = new EDoc();
+                currentdoc.setDocId(rsGetString(rs, "document_no"));
+                currentdoc.setDescription(rsGetString(rs, "docdesc"));
+                currentdoc.setFileName(rsGetString(rs, "docfilename"));
+                currentdoc.setContentType(rsGetString(rs,"contenttype"));
+                resultDocs.add(currentdoc);
+            }
+            rs.close();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }
+        
+        return resultDocs;
+    }
     
     public static ArrayList listDocs(String module, String moduleid, String docType, String publicDoc, String sort) {
         //sort must be not null
