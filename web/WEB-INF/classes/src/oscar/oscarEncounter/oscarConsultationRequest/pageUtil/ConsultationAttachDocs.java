@@ -1,0 +1,106 @@
+/*
+ *
+
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+
+ * This software is published under the GPL GNU General Public License.
+
+ * This program is free software; you can redistribute it and/or
+
+ * modify it under the terms of the GNU General Public License
+
+ * as published by the Free Software Foundation; either version 2
+
+ * of the License, or (at your option) any later version. *
+
+ * This program is distributed in the hope that it will be useful,
+
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+
+ * along with this program; if not, write to the Free Software
+
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+
+ *
+
+ * <OSCAR TEAM>
+
+ *
+
+ * This software was written for the
+
+ * Department of Family Medicine
+
+ * McMaster University
+
+ * Hamilton
+
+ * Ontario, Canada
+
+ */
+
+package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
+
+import java.util.ArrayList;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
+
+/**
+ *
+ * Handles logic of attaching documents to a specified consultation
+ */
+public class ConsultationAttachDocs {
+    private String reqId; //consultation id
+    private ArrayList docs;  //document ids        
+    
+    /** Creates a new instance of ConsultationAttachDocs */
+    public ConsultationAttachDocs(String req, String[] d) {
+        reqId = req;
+        docs = new ArrayList(d.length);
+        
+        //if dummy entry skip
+        if( !d[0].equals("0") ) {
+            for(int idx = 0; idx < d.length; ++idx )
+                docs.add(d[idx]);
+        }            
+    }
+    
+    public void attach() {
+        
+        //first we get a list of currently attached docs
+        ArrayList oldlist = EDocUtil.listDocs(reqId,EDocUtil.ATTACHED);
+        ArrayList newlist = new ArrayList();
+        ArrayList keeplist = new ArrayList();
+        boolean alreadyAttached;
+        //add new documents to list and get ids of docs to keep attached
+        for(int i = 0; i < docs.size(); ++i) {
+            alreadyAttached = false;
+            for(int j = 0; j < oldlist.size(); ++j) {                
+                if( ((EDoc)oldlist.get(j)).getDocId().equals((String)docs.get(i)) ) {                    
+                    alreadyAttached = true;
+                    keeplist.add((EDoc)oldlist.get(j));
+                    break;
+                }
+            }
+            if( !alreadyAttached )
+                newlist.add((String)docs.get(i));
+        }
+        
+        //now compare what we need to keep with what we have and remove association
+        for(int i = 0; i < oldlist.size(); ++i) {
+            if( keeplist.contains(oldlist.get(i)))                
+                continue;
+                        
+            EDocUtil.detachDocConsult(((EDoc)oldlist.get(i)).getDocId());
+        }
+        
+        //now we can add association to new list
+        for(int i = 0; i < newlist.size(); ++i)
+            EDocUtil.attachDocConsult((String)newlist.get(i),reqId);
+        
+    } //end attach
+}
