@@ -522,9 +522,7 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
             proLast = rslocal.getString("last_name");
             proOHIP = rslocal.getString("provider_no");
         %>
-          <option value="<%=proOHIP%>"><%=proOHIP%>            |
-<%=proLast%>            ,
-<%=proFirst%>          </option>
+          <option value="<%=proOHIP%>" <%=Provider.equals(proOHIP)?"selected":""%>> <%=proOHIP%> | <%=proLast%>, <%=proFirst%></option>
         <%}        %>
           <input type="hidden" name="xml_provider_no" value="<%=Provider%>">
 
