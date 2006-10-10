@@ -209,6 +209,16 @@ public class EctConsultationFormRequestAction
         if (rs.next()) {
 
           requestId = Integer.toString(rs.getInt(1));
+          
+          //now that we have consultation id we can save any attached docs as well
+          String[] docs = frm.getDocuments().split("\\|");
+          
+          for(int idx = 0; idx < docs.length; ++idx ) {
+              if( docs[idx].length() > 0 ) {
+                System.out.println("Attaching docs =>" + docs[idx]);
+                oscar.dms.EDocUtil.attachDocConsult(docs[idx], requestId);
+              }
+          }              
 
         }
         db.CloseConn();
