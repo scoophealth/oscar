@@ -1,0 +1,265 @@
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity test2
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+<%
+if(session.getValue("user") == null) response.sendRedirect("../logout.htm");
+String user_no = (String) session.getAttribute("user");
+String userfirstname = (String) session.getAttribute("userfirstname");
+String userlastname = (String) session.getAttribute("userlastname");
+%>
+
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page contentType="text/html; charset=UTF-8" %> 
+<%
+
+
+//view  - tabs
+String view = "all";
+
+//preliminary JSP code
+
+// "Module" and "function" is the same thing (old dms module)
+String module = "demographic";
+String moduleid = request.getParameter("demo");
+String requestId = request.getParameter("requestId");
+
+String moduleName = EDocUtil.getModuleName(module, moduleid);
+
+//sorting
+String sort = EDocUtil.SORT_OBSERVATIONDATE;
+
+ArrayList doctypes = EDocUtil.getDoctypes(module);
+
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html:html locale="true">
+<head>
+<meta  content="text/html;  charset=UTF-8"  http-equiv="Content-Type">
+<title><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.title"/></title>
+<meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
+<meta http-equiv="Cache-Control" content="no-cache">
+
+<style type="text/css">
+ input.btn{
+   color:black;
+   font-family:'trebuchet ms',helvetica,sans-serif;
+   font-size:84%;
+   font-weight:bold;
+   background-color:#B8B8FF;
+   border:1px solid;
+   border-top-color:#696;
+   border-left-color:#696;
+   border-right-color:#363;
+   border-bottom-color:#363;
+}
+</style>
+
+<script type="text/javascript">
+//<!--   
+function setEmpty(selectbox) {
+    var emptyTxt = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.empty"/>";
+    var emptyVal = "0";  
+    var op = document.createElement("option");
+    try {
+        selectbox.add(op);
+    }catch(e) {
+        selectbox.add(op,null);
+    }
+    selectbox.options[0].text = emptyTxt;
+    selectbox.options[0].value = emptyVal;    
+}
+    
+function swap(srcName,dstName) {
+    var src = document.getElementsByName(srcName)[0];
+    var dst = document.getElementsByName(dstName)[0];            
+    var opt;
+    
+    //if dummy is being transfered do nothing
+    if( src.options[0].value == "0" )
+        return;
+        
+    //if dst has dummy clobber it with new options 
+    if( dst.options[0].value == "0" )
+        dst.remove(0);
+     
+    for( var idx = src.options.length - 1; idx >= 0; --idx ) {
+
+        if( src.options[idx].selected ) {
+            opt = document.createElement("option");            
+            try {  //ie method of adding option
+                dst.add(opt);
+                dst.options[dst.options.length-1].text = src.options[idx].text;
+                dst.options[dst.options.length-1].value = src.options[idx].value;
+                src.remove(idx);
+            }catch(e) { //firefox method of adding option
+                dst.add(src.options[idx],null);
+            }
+                        
+        }
+    
+    } //end for
+    
+    if( src.options.length == 0 )
+        setEmpty(src);
+            
+}
+
+//if consultation has not been saved, load existing docs into proper select boxes
+function init() {
+    var attached = document.getElementsByName("attachedDocs")[0]; 
+    var available = document.getElementsByName("documents")[0]; 
+    
+    if( document.forms[0].requestId.value == "null" ) {        
+        var docs = window.opener.document.EctConsultationFormRequestForm.documents.value.split("|");
+        var opt;
+        
+        for( var idx = 0; idx < docs.length; ++idx ) {
+            for( var i = available.options.length - 1; i >= 0; --i ) {
+                if( docs[idx] == available.options[i].value ) {
+                    opt = document.createElement("option");
+                    try {  //ie method of adding option
+                        attached.add(opt);
+                        attached.options[attached.options.length-1].text = available.options[i].text;
+                        attached.options[attached.options.length-1].value = available.options[i].value;
+                        available.remove(i);
+                    }catch(e) { //firefox method of adding option
+                        attached.add(available.options[i],null);
+                    }                    
+                    break;
+                }
+            
+            } //end for
+    
+        } //end for                            
+    } //end if    
+    
+    if( attached.options.length == 0 )
+        setEmpty(attached);
+                
+    if( available.options.length == 0 )
+        setEmpty(available);            
+
+}
+
+function save() {
+    var ret;
+    var ops = document.getElementsByName("attachedDocs")[0];        
+    
+    if( document.forms[0].requestId.value == "null" ) {                       
+       var saved = "";       
+       
+       //we don't want to initially save dummy
+       if( ops.options.length == 1 && ops.options[0].value == "0" )
+        ops.options.length = 0;
+       
+       for( var idx = 0; idx < ops.options.length; ++idx ) {
+            saved += ops.options[idx].value;
+            
+            if( idx < ops.options.length - 1 )
+                saved += "|";       
+       }
+                   
+       window.opener.document.EctConsultationFormRequestForm.documents.value = saved;       
+       ret = false;
+    }    
+    else {        
+        //but we will use dummy in updating an empty list
+        for( var idx = 0; idx < ops.options.length; ++idx )
+            ops.options[idx].selected = true;
+            
+        ret = true;
+    }
+    window.close();
+    return ret;
+}
+//-->
+</script>
+</head>
+<body onload="init()" style="background-color:#ddddff">
+   
+  <h3 style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header"/> <%=moduleName%></h3>
+  <html:form action="/oscarConsultationRequest/attachDoc">
+  <table>
+      <tr>
+         <th style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.available"/></th>
+         <th>&nbsp;</th>
+         <th style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.attached"/></th>
+      </tr>
+      <tr>
+         <td style="width:33%;text-align:left" valign="top">                                 
+           <html:hidden property="requestId" value="<%=requestId%>"/>
+               <html:select style="width=100%" property="documents" multiple="1" size="10">                           
+             <%                
+                ArrayList privatedocs = new ArrayList();
+                privatedocs = EDocUtil.listDocs(requestId, EDocUtil.UNATTACHED);
+                EDoc curDoc;                
+                for(int idx = 0; idx < privatedocs.size(); ++idx)
+                {
+                    
+                    curDoc = (EDoc)privatedocs.get(idx);
+             %>
+                    <html:option value="<%=curDoc.getDocId()%>"><%=curDoc.getDescription()%></html:option>
+             <%
+                }
+             %>
+               </html:select>
+         </td>
+         <td style="width:33%;text-align:center"><input type="button" class="btn" onclick="swap('documents','attachedDocs')" value=">>"/><br/><input type="button" class="btn" onclick="swap('attachedDocs','documents')" value="<<"/></td>
+         <td style="width:33%;text-align:right">
+           <html:select style="width=100%" property="attachedDocs" multiple="1" size="10">
+               <%                
+                ArrayList privatedocs = new ArrayList();
+                privatedocs = EDocUtil.listDocs(requestId, EDocUtil.ATTACHED);
+                EDoc curDoc;                
+                for(int idx = 0; idx < privatedocs.size(); ++idx)
+                {
+                    
+                    curDoc = (EDoc)privatedocs.get(idx);
+             %>
+                    <html:option value="<%=curDoc.getDocId()%>"><%=curDoc.getDescription()%></html:option>
+             <%
+                }
+                
+             %>             
+           </html:select>
+         </td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td style="text-align:center">
+            <input type="submit" class="btn" name="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.submit"/>" onclick="return save();"/> 
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+ </html:form>
+</body>
+</html:html>
