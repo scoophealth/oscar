@@ -387,6 +387,17 @@ function rs(n,u,w,h,x){
 	if ( x == 1 ) { return remote; }
 }
 
+var DocPopup = null;
+function popup(location) {
+    DocPopup = window.open(location,"_blank","height=320,width=580");
+    
+    if (DocPopup != null) {
+        if (DocPopup.opener == null) {
+            DocPopup.opener = self;
+        }
+    }
+}
+
 function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
   var page = varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=20,left=20";
@@ -400,6 +411,11 @@ function popupOscarCal(vheight,vwidth,varpage) { //open a new popup window
 }
 
 function checkForm(submissionVal,formName){
+    //if document attach to consultation is still active user needs to close before submitting
+    if( DocPopup != null && !DocPopup.closed ) {        
+        alert("Please close Consultation Documents window before proceeding");        
+        return false;
+    }    
 
    var msg = "<bean:message key="Errors.service.noServiceSelected"/>";
    msg  = msg.replace('<li>','');
@@ -490,6 +506,7 @@ function importFromEnct(reqInfo,txtArea)
         <input type="hidden" name="providerNo" value="<%=providerNo%>">
         <input type="hidden" name="demographicNo" value="<%=demo%>">
         <input type="hidden" name="requestId" value="<%=requestId%>">
+        <input type="hidden" name="documents" value="">
         <%
         oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm thisForm;
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
@@ -637,7 +654,18 @@ function importFromEnct(reqInfo,txtArea)
                       </table>
                     </td>
                 </tr>
-                
+                <tr>
+                    <td class="tite4" colspan="2">
+                        <table>
+                            <tr>
+                                <td class="stat">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('/oscar/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
+                            </tr>
+                        </table>
+                    </td>                    
+                </tr>                
             </table>            
             </td>
             <td class="MainTableRightColumn">
