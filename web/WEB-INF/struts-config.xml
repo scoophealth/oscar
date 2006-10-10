@@ -186,6 +186,13 @@
      <form-bean name="editProviderFaxForm" type="org.apache.struts.action.DynaActionForm">
          <form-property name="faxNumber" type="java.lang.String" />
      </form-bean>
+     
+     <form-bean name="attachConsultation" type="org.apache.struts.action.DynaActionForm">
+         <form-property name="documents" type="java.lang.String[]"/>                 
+         <form-property name="attachedDocs" type="java.lang.String[]"/>
+         <form-property name="requestId" type="java.lang.String"/>
+     </form-bean>
+
   </form-beans>
   <global-forwards>
     <forward name="Logout" path="/logout.jsp" redirect="true" />
@@ -496,6 +503,8 @@
     <action input=" " name="EctIncomingConsultationForm" path="/oscarEncounter/IncomingConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctIncomingConsultationAction">
       <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp" />
     </action>
+    <action input="/oscarConsultationRequest/attachConsultation.jsp" name="attachConsultation" path="/oscarConsultationRequest/attachDoc" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocsAction">
+    </action>    
     <action input="/oscarConsultationRequest/ViewConsultationRequests.jsp" name="EctViewConsultationRequestsForm" path="/oscarEncounter/ViewConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsAction">
       <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ViewConsultationRequests.jsp" />
     </action>
@@ -506,6 +515,9 @@
       <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConfirmConsultationRequest.jsp" />
       <forward name="print" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" />
       <forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
+    </action>
+    <action input="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
+        <forward name="noprint" path="/oscarEncounter/oscarConsultationRequest/nothingtoPrint.jsp" />
     </action>
     <action input="/oscarConsultationRequest/config/AddService.jsp" name="EctConAddServiceForm" path="/oscarEncounter/AddService" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddServiceAction">
       <forward name="success" path="/oscarEncounter/oscarConsultationRequest/config/AddService.jsp" />
