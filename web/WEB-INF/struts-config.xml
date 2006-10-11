@@ -191,6 +191,7 @@
          <form-property name="documents" type="java.lang.String[]"/>                 
          <form-property name="attachedDocs" type="java.lang.String[]"/>
          <form-property name="requestId" type="java.lang.String"/>
+         <form-property name="demoNo" type="java.lang.String"/>
      </form-bean>
 
   </form-beans>
