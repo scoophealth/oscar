@@ -90,14 +90,14 @@ public class EDocUtil extends SqlUtilBaseS {
         runSQL(ctlDocumentSql);
     }
     
-    public static void detachDocConsult(String docNo) {
-        String sql = "UPDATE document set consultation_no = 0 WHERE document_no = " + docNo;
+    public static void detachDocConsult(String docNo, String consultId) {
+        String sql = "DELETE FROM consultdocs WHERE requestId = " + consultId + " AND document_no = " + docNo;
         System.out.println("detachDoc: " + sql);
         runSQL(sql);
     }
     
     public static void attachDocConsult(String docNo, String consultId) {
-        String sql = "UPDATE document set consultation_no = " + consultId + " WHERE document_no = " + docNo;
+        String sql = "INSERT INTO consultdocs (requestId,document_no) VALUES(" + consultId + "," + docNo + ")";
         System.out.println("attachDoc: " + sql);
         runSQL(sql);
     }
@@ -147,15 +147,22 @@ public class EDocUtil extends SqlUtilBaseS {
    /**
     *Fetches all consult docs attached to specific consultation
     */
-    public static ArrayList listDocs(String consultationId, boolean attached) {
-        String sql = "SELECT DISTINCT d.document_no, d.docdesc, d.docfilename, d.contenttype FROM document d WHERE d.status != 'D'";
+    public static ArrayList listDocs(String demoNo, String consultationId, boolean attached) {
+        String sql = "SELECT DISTINCT d.document_no, d.docdesc, d.docfilename, d.contenttype FROM document d, ctl_document c " + 
+                  "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + 
+                  "c.module='demographic' AND c.module_id = " + demoNo +  " AND d.document_no";
         
+        String subquery = "(SELECT document_no FROM consultdocs WHERE d.document_no = consultdocs.document_no AND " +
+                            "consultdocs.requestId = " + consultationId + ")";
+        
+        String qualifier;
         if( attached )
-            sql +=  " AND d.consultation_no = " + consultationId;
+            qualifier = " IN ";
         else
-            sql +=  " AND d.consultation_no = 0";
+            qualifier = " NOT IN ";                                  
         
-        sql += " ORDER BY d.docdesc";
+        sql += qualifier + subquery + " ORDER BY d.docdesc";
+        
         System.out.println("sql list: " + sql);
         ResultSet rs = getSQL(sql);
         ArrayList resultDocs = new ArrayList();
