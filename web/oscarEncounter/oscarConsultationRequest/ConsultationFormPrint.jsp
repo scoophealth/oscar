@@ -237,6 +237,7 @@
     <body>
         <html:form action="/oscarEncounter/oscarConsultation/printAttached">
             <input type="hidden" name="reqId" value="<%=request.getAttribute("reqId")%>"/>
+            <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographicNo")%>"/>
         <table class="header" >
             <tr>
             <td align="center">
