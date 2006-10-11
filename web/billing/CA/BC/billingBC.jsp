@@ -111,6 +111,8 @@
     System.out.println("RemovingAttribute from Session");
     request.getSession().removeAttribute("BillingCreateBillingForm");
   }
+
+  String newWCBClaim = (String)request.getAttribute("newWCBClaim");
 %>
 <html>
 <head>
@@ -248,8 +250,25 @@ function CheckType(){
 		HideElementById('ICBC');
 		document.BillingCreateBillingForm.mva_claim_code.options[0].selected = true;
 	}
+         toggleWCB();
 
 
+
+
+}
+
+function toggleWCB(){
+        <%
+        if(!"1".equals(newWCBClaim)){
+        %>
+       if (document.BillingCreateBillingForm.xml_billtype.value == "WCB"){
+        document.BillingCreateBillingForm.fromBilling.value = "true";
+       }
+       else{
+          document.BillingCreateBillingForm.fromBilling.value = "false";
+       }
+        <%}
+        %>
 
 }
 /*
@@ -602,8 +621,9 @@ function formPopupHide(){
 </div>
 <h3>
 <html:errors/>
-</h1><html:form action="/billing/CA/BC/CreateBilling" onsubmit="return checkUnits();">
-  <input type="hidden" name="newWCBClaim" value="<%=(String)request.getAttribute("newWCBClaim")%>"/>
+</h1><html:form action="/billing/CA/BC/CreateBilling" onsubmit="toggleWCB();return checkUnits();">
+  <input type="hidden" name="fromBilling" value=""/>
+
 <%
   BillingCreateBillingForm thisForm;
   thisForm = (BillingCreateBillingForm) request.getSession().getAttribute("BillingCreateBillingForm");

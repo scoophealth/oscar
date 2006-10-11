@@ -227,7 +227,7 @@ function showHideLayers() { //v3.0
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
-        </tr> 
+        </tr>
       </table>
 
       <table width="107%" border="0" cellspacing="2" cellpadding="2">
@@ -346,8 +346,9 @@ function showHideLayers() { //v3.0
             <table width="100%" border="0">
               <tr>
               	<td colspan="4">
-               <%if (bean.getBillingType().compareTo("WCB") == 0){
-						WCBForm wcb =(WCBForm) request.getSession().getAttribute("WCBForm");
+               <%
+               if (bean.getBillingType().compareTo("WCB") == 0){
+                 WCBForm wcb =(WCBForm) request.getSession().getAttribute("WCBForm");
                 %>
 						<%=wcb.getW_fname()%>
                <%}%>
@@ -411,7 +412,7 @@ function showHideLayers() { //v3.0
      }catch(Exception ahEx){}
      return retval;
   }
-  
+
   String addBrackets(String str){
       String ret = "";
       if (str != null && str.trim().length() != 0){
