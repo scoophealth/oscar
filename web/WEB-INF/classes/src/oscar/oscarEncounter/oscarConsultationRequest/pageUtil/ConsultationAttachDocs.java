@@ -55,10 +55,12 @@ import oscar.dms.EDocUtil;
  */
 public class ConsultationAttachDocs {
     private String reqId; //consultation id
+    private String demoNo;
     private ArrayList docs;  //document ids        
     
     /** Creates a new instance of ConsultationAttachDocs */
-    public ConsultationAttachDocs(String req, String[] d) {
+    public ConsultationAttachDocs(String demo, String req, String[] d) {
+        demoNo = demo;
         reqId = req;
         docs = new ArrayList(d.length);
         
@@ -72,7 +74,7 @@ public class ConsultationAttachDocs {
     public void attach() {
         
         //first we get a list of currently attached docs
-        ArrayList oldlist = EDocUtil.listDocs(reqId,EDocUtil.ATTACHED);
+        ArrayList oldlist = EDocUtil.listDocs(demoNo,reqId,EDocUtil.ATTACHED);
         ArrayList newlist = new ArrayList();
         ArrayList keeplist = new ArrayList();
         boolean alreadyAttached;
@@ -95,7 +97,7 @@ public class ConsultationAttachDocs {
             if( keeplist.contains(oldlist.get(i)))                
                 continue;
                         
-            EDocUtil.detachDocConsult(((EDoc)oldlist.get(i)).getDocId());
+            EDocUtil.detachDocConsult(((EDoc)oldlist.get(i)).getDocId(),reqId);
         }
         
         //now we can add association to new list
