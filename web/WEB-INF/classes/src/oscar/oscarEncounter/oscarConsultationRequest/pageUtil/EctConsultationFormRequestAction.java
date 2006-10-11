@@ -214,8 +214,7 @@ public class EctConsultationFormRequestAction
           String[] docs = frm.getDocuments().split("\\|");
           
           for(int idx = 0; idx < docs.length; ++idx ) {
-              if( docs[idx].length() > 0 ) {
-                System.out.println("Attaching docs =>" + docs[idx]);
+              if( docs[idx].length() > 0 ) {                
                 oscar.dms.EDocUtil.attachDocConsult(docs[idx], requestId);
               }
           }              
