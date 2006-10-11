@@ -171,10 +171,10 @@ public class BillingCreateBillingAction
     //However we don't necessarily want it to force the user to enter a bill
     validateCodeLastBilled(request, errors, demo.getDemographicNo());
 
-    String newWCBClaim = request.getParameter("newWCBClaim");
+    String fromBilling = request.getParameter("fromBilling");
 
-    //Basically if newWCBClaim == 1 we don't want to forward to the WCB form since the form was created already
-    if (!"1".equals(newWCBClaim)) {
+    //if fromBilling is true set forward to WCB Form
+    if ("true".equals(fromBilling)) {
       if (frm.getXml_billtype().equalsIgnoreCase("WCB")) {
         WCBForm wcbForm = new WCBForm();
         wcbForm.Set(bean);

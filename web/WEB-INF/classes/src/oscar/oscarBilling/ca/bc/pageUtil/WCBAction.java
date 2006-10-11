@@ -1,28 +1,14 @@
 package oscar.oscarBilling.ca.bc.pageUtil;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.Action;
-
-import org.apache.struts.action.ActionForm;
-
-import org.apache.struts.action.ActionForward;
-
-import org.apache.struts.action.ActionMapping;
-import java.util.List;
-import oscar.util.StringUtils;
-import oscar.util.SqlUtils;
-import oscar.entities.Demographic;
-import oscar.Misc;
-import oscar.oscarBilling.ca.bc.data.BillingFormData;
-import oscar.oscarDB.DBHandler;
+import java.io.*;
 import java.sql.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+import org.apache.struts.action.*;
+import oscar.oscarDB.*;
+import oscar.util.*;
 
 /*
  * Copyright (c) 2001-2002. Andromedia. All Rights Reserved. *
