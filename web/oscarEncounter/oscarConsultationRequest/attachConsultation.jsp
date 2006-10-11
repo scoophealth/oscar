@@ -39,23 +39,14 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ page contentType="text/html; charset=UTF-8" %> 
 <%
 
-
-//view  - tabs
-String view = "all";
-
 //preliminary JSP code
 
 // "Module" and "function" is the same thing (old dms module)
 String module = "demographic";
-String moduleid = request.getParameter("demo");
+String demoNo = request.getParameter("demo");
 String requestId = request.getParameter("requestId");
 
-String moduleName = EDocUtil.getModuleName(module, moduleid);
-
-//sorting
-String sort = EDocUtil.SORT_OBSERVATIONDATE;
-
-ArrayList doctypes = EDocUtil.getDoctypes(module);
+String moduleName = EDocUtil.getModuleName(module, demoNo);
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -216,10 +207,11 @@ function save() {
       <tr>
          <td style="width:33%;text-align:left" valign="top">                                 
            <html:hidden property="requestId" value="<%=requestId%>"/>
+           <html:hidden property="demoNo" value="<%=demoNo%>"/>
                <html:select style="width=100%" property="documents" multiple="1" size="10">                           
              <%                
                 ArrayList privatedocs = new ArrayList();
-                privatedocs = EDocUtil.listDocs(requestId, EDocUtil.UNATTACHED);
+                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED);
                 EDoc curDoc;                
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
@@ -237,7 +229,7 @@ function save() {
            <html:select style="width=100%" property="attachedDocs" multiple="1" size="10">
                <%                
                 ArrayList privatedocs = new ArrayList();
-                privatedocs = EDocUtil.listDocs(requestId, EDocUtil.ATTACHED);
+                privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
                 EDoc curDoc;                
                 for(int idx = 0; idx < privatedocs.size(); ++idx)
                 {
