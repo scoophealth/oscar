@@ -51,7 +51,8 @@ public class ConsultationPrintDocsAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         
         String reqId = request.getParameter("reqId");
-        ArrayList docs = EDocUtil.listDocs( reqId, EDocUtil.ATTACHED);        
+        String demoNo = request.getParameter("demographicNo");
+        ArrayList docs = EDocUtil.listDocs( demoNo, reqId, EDocUtil.ATTACHED);        
         ArrayList alist = new ArrayList();
         String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");        
         EDoc doc;

@@ -63,9 +63,10 @@ public class ConsultationAttachDocsAction
         DynaActionForm frm = (DynaActionForm)form;
 
         String requestId = frm.getString("requestId");
+        String demoNo = frm.getString("demoNo");
         String[] arrDocs = frm.getStrings("attachedDocs");
                 
-        ConsultationAttachDocs Doc = new ConsultationAttachDocs(requestId,arrDocs);
+        ConsultationAttachDocs Doc = new ConsultationAttachDocs(demoNo,requestId,arrDocs);
         Doc.attach();
         
         return null;
