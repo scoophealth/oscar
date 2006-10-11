@@ -533,9 +533,18 @@ CREATE TABLE document (
   contenttype varchar(60) NOT NULL default '',
   public int(1) NOT NULL default '0',
   observationdate date default NULL,
-  consultation_no int(10) NOT NULL default '0',
   PRIMARY KEY  (document_no)
 ) TYPE=MyISAM;
+
+--
+-- Table structure for table `consultdocs`
+--
+
+CREATE TABLE consultdocs (
+  requestId int(10) NOT NULL,
+  document_no int(10) NOT NULL,
+  PRIMARY KEY (requestId,document_no)
+) TYPE=MyISAM; 
 
 --
 -- Table structure for table `drugs`
