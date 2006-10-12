@@ -26,6 +26,7 @@ package oscar.oscarEncounter.pageUtil;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -41,21 +42,68 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
+import oscar.util.UtilMisc;
 import oscar.OscarProperties;
 
 public class EctSaveEncounterAction
     extends Action {
+  
+  private String getLatestID(String tablename, String colname) throws
+    SQLException  {
+      DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+      String sql = "select MAX(" + colname + ") as maxID from " + tablename;
+      ResultSet rs = dbhandler.GetSQL(sql);
+      String latestID = null;
+      
+      if (rs.next()) {
+          latestID = rs.getString("maxID");
+      }
+      rs.close();
 
-  public ActionForward execute(ActionMapping actionmapping,
+      dbhandler.CloseConn();
+            
+      return latestID;
+  }
+  
+  
+  //This function will compare the most current id in the echart with the 
+  // id that is stored in the session variable.  If the ID in the echart is 
+  // newer, then the user is working with a old (aka dirty) copy of the encounter
+  private boolean isDirtyEncounter(EctSessionBean bean)  {
+      try  {
+        String latestID = getLatestID("eChart", "eChartId");
+        String usrCopyID = bean.eChartId;        
+        if ( (new Integer(latestID)).intValue() > (new Integer(usrCopyID)).intValue())  {
+            return true;
+        }    
+        else  {
+            return false;
+        }
+      }
+      catch (SQLException sqlexception) {
+        System.out.println(sqlexception.getMessage());
+        return true;
+      }
+ }
+  
+  public synchronized ActionForward execute(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest httpservletrequest,
                                HttpServletResponse httpservletresponse) throws
-      IOException, ServletException {
-
+      IOException, ServletException {    
     //UtilDateUtilities dateutilities = new UtilDateUtilities();
     EctSessionBean sessionbean = null;
     sessionbean = (EctSessionBean) httpservletrequest.getSession().getAttribute(
         "EctSessionBean");
+
+    //make sure that user is trying to save the latest version of the encounter
+    if ( isDirtyEncounter(sessionbean) )
+    {
+        httpservletresponse.sendError(httpservletresponse.SC_PRECONDITION_FAILED, 
+                "Somebody else is currently modifying this encounter");
+        return actionmapping.findForward("failure");
+    }
+        
     sessionbean.socialHistory = httpservletrequest.getParameter("shTextarea");
     sessionbean.familyHistory = httpservletrequest.getParameter("fhTextarea");
     sessionbean.medicalHistory = httpservletrequest.getParameter("mhTextarea");
@@ -138,8 +186,10 @@ public class EctSaveEncounterAction
             pstmt.setString(9,sessionbean.reminders);
             pstmt.setString(10,sessionbean.encounter);                                                               
             pstmt.executeUpdate();                                       
-            pstmt.close();                                     
-        
+            pstmt.close();  
+        sessionbean.eChartId = getLatestID("eChart", "eChartId");
+                
+        // add log here
         String ip = httpservletrequest.getRemoteAddr();
         LogAction.addLog( (String) httpservletrequest.getSession().getAttribute(
             "user"), LogConst.ADD, LogConst.CON_ECHART,
@@ -167,7 +217,6 @@ public class EctSaveEncounterAction
       catch (SQLException sqlexception) {
         System.out.println(sqlexception.getMessage());
       }
-      
     }
 
     try { // save enc. window sizes
@@ -188,6 +237,8 @@ public class EctSaveEncounterAction
       e.printStackTrace(System.out);
     }
 
+    String forward = null;
+    
     //billRegion=BC&billForm=GP&hotclick=&appointment_no=0&demographic_name=TEST%2CBILLING&demographic_no=10419&providerview=1&user_no=999998&apptProvider_no=none&appointment_date=2006-3-30&start_time=0:00&bNewForm=1&status=t')
     if (httpservletrequest.getParameter("btnPressed").equals(
         "Sign,Save and Bill")) {
@@ -208,25 +259,27 @@ public class EctSaveEncounterAction
       bean.setApptStatus(httpservletrequest.getParameter("status"));
       httpservletrequest.setAttribute("encounter", "true");
       httpservletrequest.getSession().setAttribute("billingSessionBean",bean);
-      return actionmapping.findForward("bill");
+      forward = "bill";
     }
-    if (httpservletrequest.getParameter("btnPressed").equals(
+
+    else if (httpservletrequest.getParameter("btnPressed").equals(
         "Sign,Save and Exit")
         ||
         httpservletrequest.getParameter("btnPressed").equals("Verify and Sign")) {
-      return actionmapping.findForward("success");
+      forward = "success";
     }
-    if (httpservletrequest.getParameter("btnPressed").equals("Save")) {
-      return actionmapping.findForward("saveAndStay");
+    else if (httpservletrequest.getParameter("btnPressed").equals("Save") || httpservletrequest.getParameter("btnPressed").equals("AutoSave")) {
+      forward = "saveAndStay";
     }
-    if (httpservletrequest.getParameter("btnPressed").equals("Split Chart")) {
-      return actionmapping.findForward("splitchart");
+    else if (httpservletrequest.getParameter("btnPressed").equals("Split Chart")) {
+      forward = "splitchart";
     }
-    if (httpservletrequest.getParameter("btnPressed").equals("Exit")) {
-      return actionmapping.findForward("close");
+    else if (httpservletrequest.getParameter("btnPressed").equals("Exit")) {
+      forward = "close";
     }
     else {
-      return actionmapping.findForward("failure");
+      forward = "failure";
     }
+    return actionmapping.findForward(forward);
   }
 }
