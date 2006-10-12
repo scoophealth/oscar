@@ -48,10 +48,10 @@ import oscar.OscarProperties;
 public class EctSaveEncounterAction
     extends Action {
   
-  private String getLatestID(String tablename, String colname) throws
+  private String getLatestID(String demoNo) throws
     SQLException  {
       DBHandler dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-      String sql = "select MAX(" + colname + ") as maxID from " + tablename;
+      String sql = "select MAX(eChartId) as maxID from eChart where demographicNo = " + demoNo;
       ResultSet rs = dbhandler.GetSQL(sql);
       String latestID = null;
       
@@ -71,7 +71,7 @@ public class EctSaveEncounterAction
   // newer, then the user is working with a old (aka dirty) copy of the encounter
   private boolean isDirtyEncounter(EctSessionBean bean)  {
       try  {
-        String latestID = getLatestID("eChart", "eChartId");
+        String latestID = getLatestID(bean.demographicNo);
         String usrCopyID = bean.eChartId;        
         if ( (new Integer(latestID)).intValue() > (new Integer(usrCopyID)).intValue())  {
             return true;
@@ -187,7 +187,7 @@ public class EctSaveEncounterAction
             pstmt.setString(10,sessionbean.encounter);                                                               
             pstmt.executeUpdate();                                       
             pstmt.close();  
-        sessionbean.eChartId = getLatestID("eChart", "eChartId");
+        sessionbean.eChartId = getLatestID(sessionbean.demographicNo);
                 
         // add log here
         String ip = httpservletrequest.getRemoteAddr();
