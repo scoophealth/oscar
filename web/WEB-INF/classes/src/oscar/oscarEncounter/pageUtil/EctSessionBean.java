@@ -25,6 +25,7 @@ public class EctSessionBean {
     //data passed from the oscar appointment screen these members are constant for the duration of
     // a session
     public Date currentDate;
+    public String eChartId;
     public Date eChartTimeStamp;
     public String providerNo;
     public String userName;
@@ -76,6 +77,7 @@ public class EctSessionBean {
 
     public void resetAll() {
         eChartTimeStamp = null;
+        eChartId = "";
         patientLastName = "";
         patientFirstName = "";
         yearOfBirth = "";
@@ -180,6 +182,7 @@ public class EctSessionBean {
             sql = "select * from eChart where demographicNo=" + demographicNo + " ORDER BY eChartId DESC limit 1";
             rs = db.GetSQL(sql);
             if (rs.next()) {
+                eChartId = rs.getString("eChartId");
                 eChartTimeStamp = rs.getTimestamp("timeStamp");
                 socialHistory = rs.getString("socialHistory");
                 familyHistory = rs.getString("familyHistory");
@@ -284,6 +287,7 @@ public class EctSessionBean {
             rs = db.GetSQL(sql);
             ;
             if (rs.next()) {
+                eChartId = rs.getString("eChartId");
                 eChartTimeStamp = rs.getTimestamp("timeStamp");
                 socialHistory = rs.getString("socialHistory");
                 familyHistory = rs.getString("familyHistory");
@@ -365,6 +369,7 @@ public class EctSessionBean {
             rs = db.GetSQL(sql);
             ;
             if (rs.next()) {
+                eChartId = echartid;
                 eChartTimeStamp = rs.getTimestamp("timeStamp");
                 socialHistory = rs.getString("socialHistory");
                 familyHistory = rs.getString("familyHistory");
