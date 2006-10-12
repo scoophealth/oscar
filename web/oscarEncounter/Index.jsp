@@ -710,6 +710,129 @@ function grabEnter(event){
 }
 </script>
 
+<script language="javascript" type="text/javascript" src="../share/javascript/prototype.js" ></script> 
+<script type="text/javascript" language=javascript>
+// Written by wreby
+// This code supports the autosave function
+//autoSaveTimer is in milliseconds
+var autoSaveTimerLength = <%= oscar.OscarProperties.getInstance().getProperty("ECT_AUTOSAVE_TIMER","60*1000") %>;
+var request = null;
+var autoSaveTimer = setTimeout("AutoSaveEncounter()", autoSaveTimerLength);
+
+// disable all elements of type "button" on the passed in form
+function disableButtons(formContainingButtons)  {
+    for (i = 0; i < formContainingButtons.elements.length; i++)  {
+        if (formContainingButtons.elements[i].type == "button")  {
+            formContainingButtons.elements[i].disabled = true;
+        }
+    }
+}
+
+// enable all elements of type "button" on the passed in form
+function enableButtons(formContainingButtons)  {
+    for (i = 0; i < formContainingButtons.elements.length; i++)  {
+        if (formContainingButtons.elements[i].type == "button")  {
+            formContainingButtons.elements[i].disabled = false;
+        }
+    }
+}
+
+//gather up all of the data in the form to generate the post data
+function generatePostData(formContainingData)  {
+    var pars=formContainingData.elements[0].name + '=' + formContainingData.elements[0].value;
+    for (i = 1; i < formContainingData.elements.length; i++)
+    {
+        pars = pars + '&' + formContainingData.elements[i].name + '=' + formContainingData.elements[i].value;
+    }
+    return pars;
+}
+
+
+// This is an asynchronous function that automatically saves the encounter when
+// the timer goes off.
+function AutoSaveEncounter() {
+    var form = document.forms['encForm'];
+    disableButtons(form);
+    form.btnPressed.value='AutoSave';
+    var pars = generatePostData(form);
+    //send off the request
+    request = new Ajax.Request('SaveEncounter.do', {method: 'post', 
+                                                  postBody: pars,
+                                                  asynchronous:  true,
+                                                  onSuccess: AutoSaveSuccess,
+                                                  onFailure: AjaxSubmitFailure});              
+}
+
+function AutoSaveSuccess(request)  {
+    AjaxSubmitSuccess(request);
+}
+
+// This function will submit a form synchronously.
+// The nice thing about using ajax to submit the form is
+// that we can now programmatically decide what to do with the
+// results
+function AjaxSubmit(formToSubmit)  {
+    clearTimeout(autoSaveTimer);
+    disableButtons(formToSubmit);
+    var pars = generatePostData(formToSubmit);
+     //send off the request
+    request = new Ajax.Request('SaveEncounter.do', {method: 'post', 
+                                                  postBody: pars,
+                                                  asynchronous:  true,
+                                                  onSuccess: AjaxSubmitSuccess,
+                                                  onFailure: AjaxSubmitFailure});
+}
+
+// request was successful, so display the returned page
+function AjaxSubmitSuccess(request)  {
+    enableButtons(document.forms['encForm']);
+    autoSaveTimer=setTimeout("AutoSaveEncounter()", autoSaveTimerLength);
+}
+
+// The request was not successfully handled
+function AjaxSubmitFailure(request)  {
+    alert("Somebody else is working with the same encounter.  Copy your work into a text editor, close OSCAR, and restart it when nobody else is working with the encounter.  Then copy your work back into the encounter");
+}
+
+function PrintEncounter(formToSubmit)  {
+    clearTimeout(autoSaveTimer);
+    disableButtons(formToSubmit);
+    formToSubmit.btnPressed.value='Save';
+    var pars = generatePostData(formToSubmit);
+     //send off the request
+    request = new Ajax.Request('SaveEncounter.do', {method: 'post', 
+                                                  postBody: pars,
+                                                  asynchronous:  true,
+                                                  onSuccess: PrintEncounterSuccess,
+                                                  onFailure: AjaxSubmitFailure});
+}
+
+function PrintEncounterSuccess(request)  {
+    AjaxSubmitSuccess(request);
+    popupPageK('encounterPrint.jsp');
+}
+
+
+function EncounterCPP(formToSubmit)  {
+    clearTimeout(autoSaveTimer);
+    disableButtons(formToSubmit);
+    formToSubmit.btnPressed.value='Save';
+    var pars = generatePostData(formToSubmit);
+     //send off the request
+    request = new Ajax.Request('SaveEncounter.do', {method: 'post', 
+                                                  postBody: pars,
+                                                  asynchronous:  true,
+                                                  onSuccess: EncounterCPPSuccess,
+                                                  onFailure: AjaxSubmitFailure});
+}
+
+function EncounterCPPSuccess(request)  {
+    AjaxSubmitSuccess(request);
+    popupPageK('encounterCPP.jsp');
+}
+
+</script>
+
 <style type="text/css">
 td.menuLayer{
         background-color: #ccccff;
@@ -1393,29 +1516,29 @@ border-right: 2px solid #cfcfcf;
 								</td>
                                 <td style="text-align:right" nowrap>
                                 <oscar:oscarPropertiesCheck property="CPP" value="yes">
-                                <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');"/>
+                                <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="EncounterCPP(document.forms['encForm'];"/>
                                 </oscar:oscarPropertiesCheck>
                                 <oscar:oscarPropertiesCheck property="encPrintOnly" value="yes">
 				    <input type="button" style="height:20px;" class="ControlPushButton" value="Print Only" onClick="javascript:popupPageK('encounterPrint.jsp');"/>
                                 </oscar:oscarPropertiesCheck>
-				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');"/>
+				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="PrintEncounter(document.forms['encForm']);"/>
 				    <input type="hidden"  name="btnPressed" value="">
 
 <!-- security code block -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="w">
 					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
-				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
+				    <input id="saveBtn" type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; AjaxSubmit(document.forms['encForm']);">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; AjaxSubmit(document.forms['encForm']);">
                                     <oscar:oscarPropertiesCheck property="billregion" value="BC">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; document.forms['encForm'].submit(); ">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; AjaxSubmit(document.forms['encForm']); ">
                                     </oscar:oscarPropertiesCheck>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; AjaxSubmit(document.forms['encForm']);">
 	</security:oscarSec>
 					<% } %>
 	</security:oscarSec>
 <!-- security code block -->
-                                    <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
+                                    <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {AjaxSubmit(document.forms['encForm']);}">
                                     <!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
                                     <input type="hidden" name="rowOneSize" value="<%=windowSizes.getProperty("rowOneSize")%>">
                                     <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
@@ -1430,7 +1553,7 @@ border-right: 2px solid #cfcfcf;
                             if(bSplit){%>
                             <script>
                                 document.forms['encForm'].btnPressed.value='Save';
-                                document.forms['encForm'].submit();
+                                AjaxSubmit(document.forms['encForm']);
                             </script>
                             <%}
                         %>
