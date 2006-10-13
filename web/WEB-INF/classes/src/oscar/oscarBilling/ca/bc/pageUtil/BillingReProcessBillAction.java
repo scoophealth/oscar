@@ -212,7 +212,7 @@ public class BillingReProcessBillAction
     }
 
     //Multiply the bill amount by the units - Fixes bug where wrong amount being sent to MSP
-/**
+
     try{
 
       String[] codeRecord = getServiceCodePrice(billingServiceCode,msp.BILLPATIENT.equals(billingStatus));
@@ -228,7 +228,6 @@ public class BillingReProcessBillAction
     catch(NumberFormatException e){
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
     }
-**/
 
 
     String sql = "update billingmaster set "
