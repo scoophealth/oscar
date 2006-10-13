@@ -565,6 +565,13 @@ function checkFormTypeIn() {
         Ext:<input type="text" name="wPhoneExt" value=""  style="display:inline" size="4" />
       </td>
     </tr>
+     <tr valign="top">
+      <td  align="right"><b><bean:message key="demographic.demographiceditdemographic.formPhoneC"/>: </b> </td>
+      <td align="left" colspan="3" >
+        <input type="text" name="cellphone" onBlur="formatPhoneNum()" >
+
+      </td>
+    </tr>
     <tr valign="top">
       <td  align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formEMail"/>: </b> </td>
       <td align="left" >
@@ -702,8 +709,16 @@ function checkFormTypeIn() {
       <td align="right">    
          <b>Language:</b>          
       </td>
-      <td>        
-         <input type="text" name="language" value="" onBlur="upCaseCtrl(this)" size="19" />          
+      <td>
+         <input type="text" name="language" value="" onBlur="upCaseCtrl(this)" size="19" />
+      </td>
+    </tr>
+     </tr>
+     <tr valign="top">
+      <td  align="right"><b>  <bean:message key="demographic.demographiceditdemographic.cytolNum"/>:</b> </td>
+      <td align="left" colspan="3" >
+        <input type="text" name="cytolNum">
+
       </td>
     </tr>
     <tr valign="top">

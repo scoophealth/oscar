@@ -226,6 +226,8 @@ String curUser_no = (String)session.getAttribute("user");
        dExt.addKey(proNo,dem,"language",request.getParameter("language"),"" );
        dExt.addKey(proNo,dem,"hPhoneExt",request.getParameter("hPhoneExt"),"");
        dExt.addKey(proNo,dem,"wPhoneExt",request.getParameter("wPhoneExt"),"");
+       dExt.addKey(proNo,dem,"demo_cell",request.getParameter("cellphone"),"");
+       dExt.addKey(proNo,dem,"cytolNum",request.getParameter("cytolNum"),"");
        // customized key
        if(oscarVariables.getProperty("demographicExt") != null) {
 	       String [] propDemoExt = oscarVariables.getProperty("demographicExt","").split("\\|");
