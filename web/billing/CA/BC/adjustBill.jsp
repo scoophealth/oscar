@@ -72,7 +72,7 @@
   int curMonth = (now.get(Calendar.MONTH) + 1);
   int curDay = now.get(Calendar.DAY_OF_MONTH);
   String codes[] = {
-      "O", "P", "N", "X", "T"};
+      "O", "P", "N", "X", "T","D"};
   request.setAttribute("codes", codes);
   String serviceLocation = allFields.getProperty("service_location");
   //fixes bug where invoice number is null when

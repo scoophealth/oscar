@@ -499,7 +499,7 @@ function popFeeItemList(form,field){
 
               <td>
               <%String status = form.getStatus()!=null?form.getStatus():"";
-              String statusCodes[] = {"O","P","N","B","X","T","C"};
+              String statusCodes[] = {"O","P","N","B","X","T","C","D"};
               request.setAttribute("codes",statusCodes);
               %>
                  <!-- includes the Billing Type Drop Down List -->
