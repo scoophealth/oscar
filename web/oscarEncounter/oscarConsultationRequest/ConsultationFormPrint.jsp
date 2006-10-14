@@ -249,10 +249,11 @@
             <td align="center">
                 <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
             </td>
+            <%--
             <td align="center">               
                 <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrintAttached"/>" />
             </td>
-
+            --%>
             <td align="center">                
                 <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
             </td>

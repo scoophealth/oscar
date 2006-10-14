@@ -46,6 +46,8 @@ String providerNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData = null;
 oscar.oscarDemographic.data.DemographicData.Demographic demographic = null;
 
+if( demo == null )
+    System.out.println("ConsultationFormReq demo is null");
 if (demo != null ){
     demoData = new oscar.oscarDemographic.data.DemographicData();
     demographic = demoData.getDemographic(demo);
@@ -389,7 +391,7 @@ function rs(n,u,w,h,x){
 
 var DocPopup = null;
 function popup(location) {
-    DocPopup = window.open(location,"_blank","height=320,width=580");
+    DocPopup = window.open(location,"_blank","height=380,width=580");
     
     if (DocPopup != null) {
         if (DocPopup.opener == null) {
@@ -416,7 +418,7 @@ function checkForm(submissionVal,formName){
         alert("Please close Consultation Documents window before proceeding");        
         return false;
     }    
-
+   
    var msg = "<bean:message key="Errors.service.noServiceSelected"/>";
    msg  = msg.replace('<li>','');
    msg  = msg.replace('</li>','');
@@ -660,9 +662,11 @@ function importFromEnct(reqInfo,txtArea)
                             <tr>
                                 <td class="stat">&nbsp;</td>
                             </tr>
+                            <%--
                             <tr>
-                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('/oscar/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
+                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('/oscar/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
                             </tr>
+                            --%>
                         </table>
                     </td>                    
                 </tr>                
