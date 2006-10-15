@@ -70,19 +70,45 @@ public class EctSaveEncounterAction
   // id that is stored in the session variable.  If the ID in the echart is 
   // newer, then the user is working with a old (aka dirty) copy of the encounter
   private boolean isDirtyEncounter(EctSessionBean bean)  {
+      String latestID;
+      String usrCopyID;
+      
       try  {
-        String latestID = getLatestID(bean.demographicNo);
-        String usrCopyID = bean.eChartId;        
-        if ( (new Integer(latestID)).intValue() > (new Integer(usrCopyID)).intValue())  {
-            return true;
-        }    
-        else  {
-            return false;
-        }
+        latestID = getLatestID(bean.demographicNo);
+        usrCopyID = bean.eChartId;
       }
       catch (SQLException sqlexception) {
         System.out.println(sqlexception.getMessage());
         return true;
+      }
+      
+      //latestID should only be null if the assessed encounter is new, which
+      // means that it can't be dirty
+      if ( latestID == null || latestID.equals("") )  {
+          return false;
+      }
+      // if the usrCopyID is null and the latestID isn't null, then
+      // two people where probably trying to create a new encounter for
+      // the same person at the same time.
+      else if (usrCopyID == null || usrCopyID.equals(""))  {
+          return true;
+      }
+      
+      try  {
+          Integer iLatestID = new Integer(latestID);
+          Integer iUsrCopyID = new Integer(usrCopyID);
+          if ( iLatestID.longValue() > iUsrCopyID.longValue())  {
+              return true;
+          }    
+          else  {
+              return false;
+          }
+      }
+      catch  (NumberFormatException e) {
+          // already handled the null/empy string case, so shouldn't ever get this
+          // exception.
+          System.out.println(e.getMessage());
+          return true;
       }
  }
   
