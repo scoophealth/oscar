@@ -145,6 +145,12 @@
         }
     }
     
+    function showNotes() {
+        var frm = document.getElementById("frmPopUp");
+        frm.action = "Rourke2006_Notes.pdf";
+        frm.submit();
+    }
+    
     function reset() {        
         document.forms[0].target = "";
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
@@ -391,7 +397,7 @@ pop up description layer
              <table cellpadding="0" cellspacing="0" width="100%"  >                
                   <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_breastFeeding9m" <%= props.getProperty("p3_breastFeeding9m", "") %>/></td>
-                    <td><b><a href="#" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" onclick="popPage('<%=resource%>n_breastFeeding');return false"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/><br/></a><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
+                    <td><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.btnBreastFeeding"/><br/></a><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.msgBreastFeedingDescr"/></span></b></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_formulaFeeding9m" <%= props.getProperty("p3_formulaFeeding9m", "") %>/></td>
@@ -419,7 +425,7 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" name="p3_choking9m" <%= props.getProperty("p3_choking9m", "") %>></td>
-                    <td><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.msgChoking"/>*</span></td>
+                    <td><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.msgChoking"/>*</a></td>
                 </tr>
           </table>
           
@@ -431,7 +437,7 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_breastFeeding12m" <%= props.getProperty("p3_breastFeeding12m", "") %>></td>
-                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
+                    <td><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_homoMilk12m" <%= props.getProperty("p3_homoMilk12m", "") %>></td>
@@ -447,7 +453,7 @@ pop up description layer
                 </tr> 
                 <tr>
                     <td valign="top"><input type="checkbox" name="p3_choking12m" <%= props.getProperty("p3_choking12m", "") %>></td>
-                    <td><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.msgChoking"/>*</span></td>
+                    <td><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.msgChoking"/>*</a></td>
                 </tr>
           </table>
         </td>
@@ -458,7 +464,7 @@ pop up description layer
                 </tr>
                <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_breastFeeding15m" <%= props.getProperty("p3_breastFeeding15m", "") %>></td>
-                    <td><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>n_breastFeeding')"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
+                    <td><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.btnBreastFeeding"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_homoMilk15m" <%= props.getProperty("p3_homoMilk15m", "") %>></td>
@@ -466,7 +472,7 @@ pop up description layer
                 </tr> 
                 <tr>
                     <td valign="top"><input type="checkbox" name="p3_choking15m" <%= props.getProperty("p3_choking15m", "") %>></td>
-                    <td><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.msgChoking"/>*</span></td>
+                    <td><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.msgChoking"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_cup15m" <%= props.getProperty("p3_cup15m", "") %>></td>
@@ -502,21 +508,21 @@ pop up description layer
                 <tr>
                     <td valign="top"><input type="radio" id="p3_carSeatOk" name="p3_carSeatOk" onclick="onCheck(this,'p3_carSeat')" <%= props.getProperty("p3_carSeatOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_carSeatNo" name="p3_carSeatNo" onclick="onCheck(this,'p3_carSeat')" <%= props.getProperty("p3_carSeatNo", "") %>></td>
-                    <td colspan="4" valign="top"><b><a onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()" href="javascript:popPage('<%=resource%>s_motorVehicleAccidents')" ><bean:message key="oscarEncounter.formRourke2006_3.formCarSeat"/></a>*</b></td>
+                    <td colspan="4" valign="top"><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCarSeat"/></a>*</b></td>
                     <td valign="top"><input type="radio" id="p3_poisonsOk" name="p3_poisonsOk" onclick="onCheck(this,'p3_poisons')" <%= props.getProperty("p3_poisonsOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_poisonsNo" name="p3_poisonsNo" onclick="onCheck(this,'p3_poisons')" <%= props.getProperty("p3_poisonsNo", "") %>></td>
-                    <td valign="top"><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formPoisons"/></span></b></td>                    
+                    <td valign="top"><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formPoisons"/></a></b></td>                    
                     <td valign="top"><input type="radio" id="p3_firearmSafetyOk" name="p3_firearmSafetyOk" onclick="onCheck(this,'p3_firearmSafety')" <%= props.getProperty("p3_firearmSafetyOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_firearmSafetyNo" name="p3_firearmSafetyNo" onclick="onCheck(this,'p3_firearmSafety')" <%= props.getProperty("p3_firearmSafetyNo", "") %>></td>
-                    <td colspan="4" valign="top"><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formFireArm"/>*</span></b></td>                    
+                    <td colspan="4" valign="top"><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formFireArm"/>*</a></b></td>                    
                     </tr>
                 <tr>
                     <td valign="top"><input type="radio" id="p3_smokeSafetyOk" name="p3_smokeSafetyOk" onclick="onCheck(this,'p3_smokeSafety')" <%= props.getProperty("p3_smokeSafetyOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_smokeSafetyNo" name="p3_smokeSafetyNo" onclick="onCheck(this,'p3_smokeSafety')" <%= props.getProperty("p3_smokeSafetyNo", "") %>></td>
-                    <td colspan="4" valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formSmokeSafety"/>*</span></td>                    
+                    <td colspan="4" valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formSmokeSafety"/>*</a></td>                    
                     <td valign="top"><input type="radio" id="p3_hotWaterOk" name="p3_hotWaterOk" onclick="onCheck(this,'p3_hotWater')" <%= props.getProperty("p3_hotWaterOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_hotWaterNo" name="p3_hotWaterNo" onclick="onCheck(this,'p3_hotWater')" <%= props.getProperty("p3_hotWaterNo", "") %>></td>
-                    <td valign="top"><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHotWater"/>*</span></i></td>
+                    <td valign="top"><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHotWater"/>*</a></i></td>
                     <td colspan="6">&nbsp;</td>                                       
                 </tr>
                 <tr>
@@ -526,10 +532,10 @@ pop up description layer
                     <td valign="top"><i><bean:message key="oscarEncounter.formRourke2006_2.formElectric"/></i></td>                    
                     <td valign="top"><input type="radio" id="p3_fallsOk" name="p3_fallsOk" onclick="onCheck(this,'p3_falls')" <%= props.getProperty("p3_fallsOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_fallsNo" name="p3_fallsNo" onclick="onCheck(this,'p3_falls')" <%= props.getProperty("p3_fallsNo", "") %>></td>
-                    <td valign="top"><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formFalls"/>*</span></i></td>                    
+                    <td valign="top"><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formFalls"/>*</a></i></td>                    
                     <td valign="top"><input type="radio" id="p3_safeToysOk" name="p3_safeToysOk" onclick="onCheck(this,'p3_safeToys')" <%= props.getProperty("p3_safeToysOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_safeToysNo" name="p3_safeToysNo" onclick="onCheck(this,'p3_safeToys')" <%= props.getProperty("p3_safeToysNo", "") %>></td>
-                    <td colspan="4" valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formSafeToys"/>*</span></td>                    
+                    <td colspan="4" valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formSafeToys"/>*</a></td>                    
                 </tr>
                 <tr>                    
                     <td class="edcol" colspan="3" valign="top"><input class="delete" type="button" value="Del" onclick="del('p3_carSeatOk,p3_carSeatNo,p3_smokeSafetyOk,p3_smokeSafetyNo');"/></td>
@@ -546,13 +552,13 @@ pop up description layer
                 <tr>
                     <td valign="top"><input type="radio" id="p3_sleepCryOk" name="p3_sleepCryOk" onclick="onCheck(this,'p3_sleepCry')" <%= props.getProperty("p3_sleepCryOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_sleepCryNo" name="p3_sleepCryNo" onclick="onCheck(this,'p3_sleepCry')" <%= props.getProperty("p3_sleepCryNo", "") %>></td>
-                    <td colspan="4" valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formsleepCry"/>**</span></td>
+                    <td colspan="4" valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formsleepCry"/>**</a></td>
                     <td valign="top"><input type="radio" id="p3_soothabilityOk" name="p3_soothabilityOk" onclick="onCheck(this,'p3_soothability')" <%= props.getProperty("p3_soothabilityOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_soothabilityNo" name="p3_soothabilityNo" onclick="onCheck(this,'p3_soothability')" <%= props.getProperty("p3_soothabilityNo", "") %>></td>
                     <td valign="top"><bean:message key="oscarEncounter.formRourke2006_1.formSoothability"/></td>
                     <td valign="top"><input type="radio" id="p3_homeVisitOk" name="p3_homeVisitOk" onclick="onCheck(this,'p3_homeVisit')" <%= props.getProperty("p3_homeVisitOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_homeVisitNo" name="p3_homeVisitNo" onclick="onCheck(this,'p3_homeVisit')" <%= props.getProperty("p3_homeVisitNo", "") %>></td>
-                    <td colspan="4" valign="top"><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHomeVisit"/>**</span></b></td>                                        
+                    <td colspan="4" valign="top"><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHomeVisit"/>**</a></b></td>                                        
                 </tr>
               <tr>
                     <td valign="top"><input type="radio" id="p3_parentingOk" name="p3_parentingOk" onclick="onCheck(this,'p3_parenting')" <%= props.getProperty("p3_parentingOk", "") %>></td>
@@ -560,7 +566,7 @@ pop up description layer
                     <td valign="top"><bean:message key="oscarEncounter.formRourke2006_3.formParenting"/></td>
                     <td valign="top"><input type="radio" id="p3_pFatigueOk" name="p3_pFatigueOk" onclick="onCheck(this,'p3_pFatigue')" <%= props.getProperty("p3_pFatigueOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_pFatigueNo" name="p3_pFatigueNo" onclick="onCheck(this,'p3_pFatigue')" <%= props.getProperty("p3_pFatigueNo", "") %>></td>
-                    <td valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formParentFatigue"/>**</span></td>
+                    <td valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formParentFatigue"/>**</a></td>
                     <td valign="top"><input type="radio" id="p3_famConflictOk" name="p3_famConflictOk" onclick="onCheck(this,'p3_famConflict')" <%= props.getProperty("p3_famConflictOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_famConflictNo" name="p3_famConflictNo" onclick="onCheck(this,'p3_famConflict')" <%= props.getProperty("p3_famConflictNo", "") %>></td>
                     <td valign="top"><bean:message key="oscarEncounter.formRourke2006_1.formFamConflict"/></td>
@@ -587,27 +593,27 @@ pop up description layer
                 <tr>
                     <td valign="top"><input type="radio" id="p3_2ndSmokeOk" name="p3_2ndSmokeOk" onclick="onCheck(this,'p3_2ndSmoke')" <%= props.getProperty("p3_2ndSmokeOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_2ndSmokeNo" name="p3_2ndSmokeNo" onclick="onCheck(this,'p3_2ndSmoke')" <%= props.getProperty("p3_2ndSmokeNo", "") %>></td>
-                    <td valign="top"><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formSecondHandSmoke"/>*</span></b></td>
+                    <td valign="top"><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formSecondHandSmoke"/>*</a></b></td>
                     <td valign="top"><input type="radio" id="p3_teethingOk" name="p3_teethingOk" onclick="onCheck(this,'p3_teething')" <%= props.getProperty("p3_teethingOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_teethingNo" name="p3_teethingNo" onclick="onCheck(this,'p3_teething')" <%= props.getProperty("p3_teethingNo", "") %>></td>
-                    <td valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTeething"/>*</span></td>
+                    <td valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTeething"/>*</a></td>
                     <td valign="top"><input type="radio" id="p3_altMedOk" name="p3_altMedOk" onclick="onCheck(this,'p3_altMed')" <%= props.getProperty("p3_altMedOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_altMedNo" name="p3_altMedNo" onclick="onCheck(this,'p3_altMed')" <%= props.getProperty("p3_altMedNo", "") %>></td>
-                    <td valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formAltMed"/>*</span></td>
+                    <td valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formAltMed"/>*</a></td>
                     <td valign="top"><input type="radio" id="p3_pacifierOk" name="p3_pacifierOk" onclick="onCheck(this,'p3_pacifier')" <%= props.getProperty("p3_pacifierOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_pacifierNo" name="p3_pacifierNo" onclick="onCheck(this,'p3_pacifier')" <%= props.getProperty("p3_pacifierNo", "") %>></td>
-                    <td colspan="4" valign="top"><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formPacifierUse"/>*</span></i></td>                     
+                    <td colspan="4" valign="top"><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formPacifierUse"/>*</a></i></td>                     
                 </tr>
                 <tr>
                     <td valign="top"><input type="radio" id="p3_feverOk" name="p3_feverOk" onclick="onCheck(this,'p3_fever')" <%= props.getProperty("p3_feverOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_feverNo" name="p3_feverNo" onclick="onCheck(this,'p3_fever')" <%= props.getProperty("p3_feverNo", "") %>></td>
-                    <td valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formFever"/>*</span></td>
+                    <td valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formFever"/>*</a></td>
                     <td valign="top"><input type="radio" id="p3_activeOk" name="p3_activeOk" onclick="onCheck(this,'p3_active')" <%= props.getProperty("p3_activeOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_activeNo" name="p3_activeNo" onclick="onCheck(this,'p3_active')" <%= props.getProperty("p3_activeNo", "") %>></td>
-                    <td valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formactiveLife"/>*</span></td>                    
+                    <td valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formactiveLife"/>*</a></td>                    
                     <td valign="top"><input type="radio" id="p3_readingOk" name="p3_readingOk" onclick="onCheck(this,'p3_reading')" <%= props.getProperty("p3_readingOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_readingNo" name="p3_readingNo" onclick="onCheck(this,'p3_reading')" <%= props.getProperty("p3_readingNo", "") %>></td>
-                    <td valign="top"><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formEncourageReading"/>**</span></b></td>                                        
+                    <td valign="top"><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote2" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formEncourageReading"/>**</a></b></td>                                        
                     <td valign="top"><input type="radio" id="p3_footwearOk" name="p3_footwearOk" onclick="onCheck(this,'p3_footwear')" <%= props.getProperty("p3_footwearOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_footwearNo" name="p3_footwearNo" onclick="onCheck(this,'p3_footwear')" <%= props.getProperty("p3_footwearNo", "") %>></td>
                     <td colspan="4" valign="top"><bean:message key="oscarEncounter.formRourke2006_3.formFootwear"/></td>
@@ -616,13 +622,13 @@ pop up description layer
                     <td colspan="3" valign="top"><bean:message key="oscarEncounter.formRourke2006_3.formEnvHealth"/></td>
                     <td valign="top"><input type="radio" id="p3_sunExposureOk" name="p3_sunExposureOk" onclick="onCheck(this,'p3_sunExposure')" <%= props.getProperty("p3_sunExposureOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_sunExposureNo" name="p3_sunExposureNo" onclick="onCheck(this,'p3_sunExposure')" <%= props.getProperty("p3_sunExposureNo", "") %>></td>
-                    <td valign="top"><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formSunExposure"/>*</span></td>
+                    <td valign="top"><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formSunExposure"/>*</a></td>
                     <td valign="top"><input type="radio" id="p3_checkSerumOk" name="p3_checkSerumOk" onclick="onCheck(this,'p3_checkSerum')" <%= props.getProperty("p3_checkSerumOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_checkSerumNo" name="p3_checkSerumNo" onclick="onCheck(this,'p3_checkSerum')" <%= props.getProperty("p3_checkSerumNo", "") %>></td>
-                    <td valign="top"><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCheckSerum"/>*</span></i></td>
+                    <td valign="top"><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCheckSerum"/>*</a></i></td>
                     <td valign="top"><input type="radio" id="p3_pesticidesOk" name="p3_pesticidesOk" onclick="onCheck(this,'p3_pesticides')" <%= props.getProperty("p3_pesticidesOk", "") %>></td>
                     <td valign="top"><input type="radio" id="p3_pesticidesNo" name="p3_pesticidesNo" onclick="onCheck(this,'p3_pesticides')" <%= props.getProperty("p3_pesticidesNo", "") %>></td>
-                    <td colspan="4" valign="top"><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formPesticides"/>*</span></i></td>                    
+                    <td colspan="4" valign="top"><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_2.formPesticides"/>*</a></i></td>                    
                 
                 </tr>
                 <tr>
@@ -891,15 +897,15 @@ pop up description layer
                 </tr>                                
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_eyes9m" <%= props.getProperty("p3_eyes9m", "") %>></td>
-                    <td<i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</span></i></td>
+                    <td<i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_corneal9m" <%= props.getProperty("p3_corneal9m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hearing9m" <%= props.getProperty("p3_hearing9m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</a></i></td>
                 </tr>                
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hips9m" <%= props.getProperty("p3_hips9m", "") %>></td>
@@ -914,19 +920,19 @@ pop up description layer
                 </tr>                
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_eyes12m" <%= props.getProperty("p3_eyes12m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_corneal12m" <%= props.getProperty("p3_corneal12m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formCornealReflex"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formCornealReflex"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hearing12m" <%= props.getProperty("p3_hearing12m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</a></i></td>
                 </tr>                                                
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_tonsil12m" <%= props.getProperty("p3_tonsil12m", "") %>></td>
-                    <td><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTonsilSize"/>*</span></td>
+                    <td><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTonsilSize"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hips12m" <%= props.getProperty("p3_hips12m", "") %>></td>
@@ -941,19 +947,19 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_eyes15m" <%= props.getProperty("p3_eyes15m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke1.formRedReflex"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_corneal15m" <%= props.getProperty("p3_corneal15m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formCornealReflex"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hearing15m" <%= props.getProperty("p3_hearing15m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_1.formHearingInquiry"/>*</a></i></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_tonsil15m" <%= props.getProperty("p3_tonsil15m", "") %>></td>
-                    <td><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTonsilSize"/>*</span></td>
+                    <td><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formTonsilSize"/>*</a></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hips15m" <%= props.getProperty("p3_hips15m", "") %>></td>
@@ -971,11 +977,11 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_antiHB9m" <%= props.getProperty("p3_antiHB9m", "") %>></td>
-                    <td><b><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formAntiHB"/>*</span></b><br/><bean:message key="oscarEncounter.formRourke2006_3.formAntiHBcond" /></td>
+                    <td><b><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formAntiHB"/>*</a></b><br/><bean:message key="oscarEncounter.formRourke2006_3.formAntiHBcond" /></td>
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hemoglobin9m" <%= props.getProperty("p3_hemoglobin9m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formHemoglobin"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formHemoglobin"/>*</a></i></td>
                 </tr>
             </table>            
         </td>
@@ -986,7 +992,7 @@ pop up description layer
                 </tr>
                 <tr>
                     <td valign="top"><input type="checkbox" class="chk"  name="p3_hemoglobin12m" <%= props.getProperty("p3_hemoglobin12m", "") %>></td>
-                    <td><i><span onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formHemoglobin"/>*</span></i></td>
+                    <td><i><a href="javascript:showNotes()" onMouseOver="popLayer('<bean:message key="oscarEncounter.formRourke2006.footnote1" />')" onMouseOut="hideLayer()"><bean:message key="oscarEncounter.formRourke2006_3.formHemoglobin"/>*</a></i></td>
                 </tr>
             </table>                     
         </td>
@@ -1057,6 +1063,7 @@ pop up description layer
 </p>
 
 </html:form>
+<form id="frmPopUp" method="get" action=""></form>
 </body>
 <script type="text/javascript">
     Calendar.setup({ inputField : "p3_date9m", ifFormat : "%d/%m/%Y", showsTime :false, button : "p3_date9m_cal", singleClick : true, step : 1 });
