@@ -19,7 +19,7 @@
  *
  * This software was written for the
  * Department of Family Medicine
- * McMaster Unviersity
+ * McMaster University
  * Hamilton
  * Ontario, Canada
  */
@@ -575,7 +575,7 @@ function popupOscarRx(vheight,vwidth,varpage) {
 }
 function popupOscarCon(vheight,vwidth,varpage) {
   var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=0,left=0";
+  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
   var popup=window.open(varpage, "<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>", windowprops);
   popup.focus();
 }
@@ -1481,7 +1481,7 @@ border-right: 2px solid #cfcfcf;
                                }else{
                                   encounterText = bean.encounter+"\n--------------------------------------------------\n$$SPLIT CHART$$\n";
                                }
-                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);
+                               System.out.println("currDate "+bean.appointmentDate+ " currdate "+bean.currentDate);                              
                                if(bean.eChartTimeStamp==null){
                                   encounterText +="\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"] \n";
                                   //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
