@@ -43,7 +43,49 @@ public class PathnetResultsData {
    public PathnetResultsData() {
    }
    
-    
+    /**
+     *Populates ArrayList with labs attached to a consultation request
+     */
+   public ArrayList populatePathnetResultsData(String demographicNo, String consultationId, boolean attached) {
+       String sql = "SELECT m.message_id, patientLabRouting.id " +
+                "FROM hl7_message m, patientLabRouting " +
+                "WHERE patientLabRouting.lab_no = m.message_id "+             
+                "AND patientLabRouting.lab_type = 'BCP' AND patientLabRouting.demographic_no='"+demographicNo+"' " +
+                "AND patientLabRouting.id ";
+       String subquery = "(SELECT document_no FROM consultdocs WHERE patientLabRouting.id = consultdocs.document_no AND " +
+                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL)";
+       String qualifier;
+       if( attached )
+            qualifier = " IN ";
+       else
+            qualifier = " NOT IN "; 
+                    
+       sql += qualifier + subquery;
+       
+       ArrayList labResults = new ArrayList();
+       try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         System.out.println(sql);
+         ResultSet rs = db.GetSQL(sql);
+         while(rs.next()){
+            LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);            
+            lbData.labType = LabResultData.EXCELLERIS;            
+            lbData.segmentID = rs.getString("message_id");
+            lbData.labPatientId = rs.getString("id");
+                                    
+            lbData.dateTime = findPathnetObservationDate(lbData.segmentID);
+                                                
+            lbData.discipline = findPathnetDisipline(lbData.segmentID);
+            labResults.add(lbData);
+         }
+         rs.close();
+         db.CloseConn();
+      }catch(Exception e){
+         System.out.println("exception in CMLPopulate:"+e);                  
+         e.printStackTrace();
+      }      
+      return labResults;
+   }
    /////
    public ArrayList populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
       //System.out.println("populateCMLResultsData getting called now");

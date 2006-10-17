@@ -41,7 +41,8 @@ import oscar.oscarMDS.data.*;
  * @author Jay Gallagher
  */
 public class CommonLabResultData {
-   
+   public static final boolean ATTACHED = true;
+   public static final boolean UNATTACHED = false;
    
    public CommonLabResultData() {
       
@@ -49,6 +50,32 @@ public class CommonLabResultData {
    
    public static String[] getLabTypes(){
       return new String[] {"MDS","CML","BCP"};
+   }
+   
+   public ArrayList populateLabResultsData(String demographicNo, String reqId, boolean attach) {
+      ArrayList labs = new ArrayList();
+      oscar.oscarMDS.data.MDSResultsData mDSData = new oscar.oscarMDS.data.MDSResultsData();    
+      
+      OscarProperties op = OscarProperties.getInstance();
+      
+      String cml = op.getProperty("CML_LABS"); 
+      String mds = op.getProperty("MDS_LABS");
+      String pathnet = op.getProperty("PATHNET_LABS");
+      
+      if( cml != null && cml.trim().equals("yes")){
+         ArrayList cmlLabs = mDSData.populateCMLResultsData(demographicNo, reqId, attach);
+         labs.addAll(cmlLabs);
+      }
+      if (mds != null && mds.trim().equals("yes")){
+         ArrayList mdsLabs = mDSData.populateMDSResultsData2(demographicNo, reqId, attach);      
+         labs.addAll(mdsLabs);            
+      }
+      if (pathnet != null && pathnet.trim().equals("yes")){
+         PathnetResultsData pathData = new PathnetResultsData();
+         ArrayList pathLabs = pathData.populatePathnetResultsData(demographicNo, reqId, attach);            
+         labs.addAll(pathLabs);
+      }            
+      return labs;
    }
    
    public ArrayList populateLabResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {      
