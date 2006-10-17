@@ -504,17 +504,14 @@ function importFromEnct(reqInfo,txtArea)
 <body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();disableDateFields()">
 <html:errors/>
 
-<html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;">
-        <input type="hidden" name="providerNo" value="<%=providerNo%>">
-        <input type="hidden" name="demographicNo" value="<%=demo%>">
-        <input type="hidden" name="requestId" value="<%=requestId%>">
-        <input type="hidden" name="documents" value="">
+<html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;">        
         <%
         oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm thisForm;
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
         //System.out.println("Requested ID :"+requestId);
         if (requestId !=null ){
                 consultUtil.estRequestFromId(requestId);
+                demo = consultUtil.demoNo;
                 thisForm.setAllergies(consultUtil.allergies);
                 thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
                 thisForm.setClinicalInformation(consultUtil.clinicalInformation);
@@ -534,6 +531,7 @@ function importFromEnct(reqInfo,txtArea)
                 thisForm.setAppointmentNotes(consultUtil.appointmentNotes);
                 thisForm.setUrgency(consultUtil.urgency);
                 thisForm.setPatientWillBook(consultUtil.pwb);
+                
 
                 // System.out.println("this is from in the form setter "+ consultUtil.patientName);
 
@@ -559,7 +557,10 @@ function importFromEnct(reqInfo,txtArea)
         
         %>
 
-
+        <input type="hidden" name="providerNo" value="<%=providerNo%>">
+        <input type="hidden" name="demographicNo" value="<%=demo%>">
+        <input type="hidden" name="requestId" value="<%=requestId%>">
+        <input type="hidden" name="documents" value="">
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -661,12 +662,10 @@ function importFromEnct(reqInfo,txtArea)
                         <table>
                             <tr>
                                 <td class="stat">&nbsp;</td>
-                            </tr>
-                            <%--
+                            </tr>                            
                             <tr>
                                 <td style="text-align:center" class="stat"><a href="#" onclick="popup('/oscar/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
-                            </tr>
-                            --%>
+                            </tr>                            
                         </table>
                     </td>                    
                 </tr>                
