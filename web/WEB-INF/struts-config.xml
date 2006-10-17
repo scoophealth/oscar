@@ -192,6 +192,7 @@
          <form-property name="attachedDocs" type="java.lang.String[]"/>
          <form-property name="requestId" type="java.lang.String"/>
          <form-property name="demoNo" type="java.lang.String"/>
+         <form-property name="providerNo" type="java.lang.String"/>
      </form-bean>
 
   </form-beans>
@@ -517,7 +518,7 @@
       <forward name="print" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" />
       <forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
     </action>
-    <action input="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
+    <action input="/oscarEncounter/oscarConsultationRequest/attachmentReport.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
         <forward name="noprint" path="/oscarEncounter/oscarConsultationRequest/nothingtoPrint.jsp" />
     </action>
     <action input="/oscarConsultationRequest/config/AddService.jsp" name="EctConAddServiceForm" path="/oscarEncounter/AddService" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.config.pageUtil.EctConAddServiceAction">
