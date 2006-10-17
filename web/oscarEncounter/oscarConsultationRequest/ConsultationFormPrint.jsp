@@ -235,9 +235,10 @@
     </title>
     </head>
     <body>
-        <html:form action="/oscarEncounter/oscarConsultation/printAttached">
+        <form  method="get "action="attachmentReport.jsp">
             <input type="hidden" name="reqId" value="<%=request.getAttribute("reqId")%>"/>
             <input type="hidden" name="demographicNo" value="<%=request.getParameter("demographicNo")%>"/>
+            <input type="hidden" name="providerNo" value="<%=reqFrm.providerNo%>"/>
         <table class="header" >
             <tr>
             <td align="center">
@@ -248,12 +249,10 @@
             </td>
             <td align="center">
                 <input type=button value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrint"/>" onclick="javascript: PrintWindow();"/>
-            </td>
-            <%--
+            </td>            
             <td align="center">               
                 <input type="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgPrintAttached"/>" />
-            </td>
-            --%>
+            </td>            
             <td align="center">                
                 <input type=button value="<bean:message key="global.btnClose"/>" onclick="javascript: CloseWindow();"/>
             </td>
@@ -295,7 +294,7 @@
 		<% } %>
             </tr>
         </table>
-        </html:form>
+        </form>
         <table class="printTable" name="headerTable">
             <!--header-->
             <tr>
