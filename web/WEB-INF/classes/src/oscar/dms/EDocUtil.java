@@ -91,13 +91,13 @@ public class EDocUtil extends SqlUtilBaseS {
     }
     
     public static void detachDocConsult(String docNo, String consultId) {
-        String sql = "DELETE FROM consultdocs WHERE requestId = " + consultId + " AND document_no = " + docNo;
+        String sql = "UPDATE consultdocs SET deleted = 'Y' WHERE requestId = " + consultId + " AND document_no = " + docNo + " AND doctype = 'D'";
         System.out.println("detachDoc: " + sql);
         runSQL(sql);
     }
     
-    public static void attachDocConsult(String docNo, String consultId) {
-        String sql = "INSERT INTO consultdocs (requestId,document_no) VALUES(" + consultId + "," + docNo + ")";
+    public static void attachDocConsult(String providerNo, String docNo, String consultId) {
+        String sql = "INSERT INTO consultdocs (requestId,document_no,doctype,attach_date, provider_no) VALUES(" + consultId + "," + docNo + ",'D', now(), '" + providerNo + "')";
         System.out.println("attachDoc: " + sql);
         runSQL(sql);
     }
@@ -148,12 +148,12 @@ public class EDocUtil extends SqlUtilBaseS {
     *Fetches all consult docs attached to specific consultation
     */
     public static ArrayList listDocs(String demoNo, String consultationId, boolean attached) {
-        String sql = "SELECT DISTINCT d.document_no, d.docdesc, d.docfilename, d.contenttype FROM document d, ctl_document c " + 
+        String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype FROM document d, ctl_document c " + 
                   "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + 
                   "c.module='demographic' AND c.module_id = " + demoNo +  " AND d.document_no";
         
         String subquery = "(SELECT document_no FROM consultdocs WHERE d.document_no = consultdocs.document_no AND " +
-                            "consultdocs.requestId = " + consultationId + ")";
+                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'D' AND consultdocs.deleted IS NULL)";
         
         String qualifier;
         if( attached )
@@ -174,6 +174,10 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setDescription(rsGetString(rs, "docdesc"));
                 currentdoc.setFileName(rsGetString(rs, "docfilename"));
                 currentdoc.setContentType(rsGetString(rs,"contenttype"));
+                currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+                currentdoc.setType(rsGetString(rs, "doctype"));
+                currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
+                currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
                 resultDocs.add(currentdoc);
             }
             rs.close();
