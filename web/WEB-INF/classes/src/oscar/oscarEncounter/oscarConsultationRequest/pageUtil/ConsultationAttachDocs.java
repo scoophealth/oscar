@@ -46,8 +46,10 @@
 package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.util.ArrayList;
+import java.sql.*;
 import oscar.dms.EDoc;
 import oscar.dms.EDocUtil;
+import oscar.oscarDB.DBHandler;
 
 /**
  *
@@ -56,19 +58,56 @@ import oscar.dms.EDocUtil;
 public class ConsultationAttachDocs {
     private String reqId; //consultation id
     private String demoNo;
+    private String providerNo;
     private ArrayList docs;  //document ids        
     
     /** Creates a new instance of ConsultationAttachDocs */
-    public ConsultationAttachDocs(String demo, String req, String[] d) {
+    public ConsultationAttachDocs(String req) {        
+        reqId = req;
+        demoNo = "";
+        docs = new ArrayList();
+    }
+    /**
+     * @params demographic id, consultation id and array of document ids with prepended 'D' for each id as doc type     
+     */
+    public ConsultationAttachDocs(String prov, String demo, String req, String[] d) {
+        providerNo = prov;
         demoNo = demo;
         reqId = req;
         docs = new ArrayList(d.length);
         
         //if dummy entry skip
         if( !d[0].equals("0") ) {
-            for(int idx = 0; idx < d.length; ++idx )
-                docs.add(d[idx]);
+            for(int idx = 0; idx < d.length; ++idx ) {
+                if( d[idx].charAt(0) == 'D')
+                    docs.add(d[idx].substring(1));
+            }
         }            
+    }
+    
+    public String getDemoNo() {
+        String demo;
+        if( !demoNo.equals(""))
+            demo = demoNo;
+        else {
+            String sql = "SELECT demographicNo FROM consultationRequests WHERE requestId = " + reqId;
+            try {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                
+                ResultSet rs = db.GetSQL(sql);
+                if( rs.next() ) {
+                    demo = rs.getString("demographicNo");
+                    demoNo = demo;
+                }
+                else
+                    demo = "";
+                
+            }catch( SQLException e ) {
+              System.out.println(e.getMessage());
+              demo = "";
+            }                        
+        }
+        
+        return demo;
     }
     
     public void attach() {
@@ -97,12 +136,12 @@ public class ConsultationAttachDocs {
             if( keeplist.contains(oldlist.get(i)))                
                 continue;
                         
-            EDocUtil.detachDocConsult(((EDoc)oldlist.get(i)).getDocId(),reqId);
+            EDocUtil.detachDocConsult(((EDoc)oldlist.get(i)).getDocId(), reqId);
         }
         
         //now we can add association to new list
         for(int i = 0; i < newlist.size(); ++i)
-            EDocUtil.attachDocConsult((String)newlist.get(i),reqId);
+            EDocUtil.attachDocConsult(providerNo, (String)newlist.get(i), reqId);
         
     } //end attach
 }

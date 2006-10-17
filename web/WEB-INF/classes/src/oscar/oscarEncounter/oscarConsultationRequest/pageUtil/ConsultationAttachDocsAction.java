@@ -64,11 +64,14 @@ public class ConsultationAttachDocsAction
 
         String requestId = frm.getString("requestId");
         String demoNo = frm.getString("demoNo");
+        String provNo = frm.getString("providerNo");
         String[] arrDocs = frm.getStrings("attachedDocs");
                 
-        ConsultationAttachDocs Doc = new ConsultationAttachDocs(demoNo,requestId,arrDocs);
+        ConsultationAttachDocs Doc = new ConsultationAttachDocs(provNo,demoNo,requestId,arrDocs);
         Doc.attach();
         
+        ConsultationAttachLabs Lab = new ConsultationAttachLabs(provNo,demoNo,requestId,arrDocs);
+        Lab.attach();
         return null;
 
     }  
