@@ -42,6 +42,7 @@ public class LabResultData implements Comparable{
    public static String MDS = "MDS";
    public static String EXCELLERIS = "BCP"; //EXCELLERIS
    public String segmentID;
+   public String labPatientId;
    public String acknowledgedStatus;
 
    public String healthNumber;
