@@ -578,7 +578,7 @@ public class EctConsultationFormRequestUtil {
 
   public Vector teamVec;
 
-  private String demoNo;
+  public String demoNo;
   public String pwb;
 
 }
