@@ -6913,6 +6913,18 @@ create table scratch_pad (
    scratch_text text
 );
 
+--
+-- CREATE TABLE consultdocs
+--
+CREATE TABLE `consultdocs` (
+  `id` int(10) NOT NULL auto_increment PRIMARY KEY,
+  `requestId` int(10) NOT NULL,
+  `document_no` int(10) NOT NULL,
+  `doctype` char(1) NOT NULL,
+  `deleted` char(1) DEFAULT NULL,
+  `attach_date` date,
+  `provider_no` varchar(6) NOT NULL
+);
 
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
