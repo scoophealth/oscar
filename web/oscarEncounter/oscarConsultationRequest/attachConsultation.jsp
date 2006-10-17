@@ -34,7 +34,8 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocs" %>
+<%@ page import="oscar.oscarLab.ca.on.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" %> 
 <%
@@ -45,8 +46,19 @@ String userlastname = (String) session.getAttribute("userlastname");
 String module = "demographic";
 String demoNo = request.getParameter("demo");
 String requestId = request.getParameter("requestId");
+String providerNo = request.getParameter("provNo");
 
-String moduleName = EDocUtil.getModuleName(module, demoNo);
+if(demoNo == null && requestId == null ) response.sendRedirect("../error.jsp");
+
+if( demoNo == null || demoNo.equals("null")  ) {
+    //System.out.println("attach " + requestId + " demo " + demoNo);
+    ConsultationAttachDocs docsUtil = new ConsultationAttachDocs(requestId);
+    demoNo = docsUtil.getDemoNo();
+    
+}
+
+String patientName = EDocUtil.getModuleName(module, demoNo);
+String[] docType = {"D","L"};
 
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -71,6 +83,19 @@ String moduleName = EDocUtil.getModuleName(module, demoNo);
    border-right-color:#363;
    border-bottom-color:#363;
 }
+
+.doc {
+    color:blue;    
+}
+
+.lab {
+    color:#CC3399;    
+}
+
+.legend {
+    font-family:'trebuchet ms',helvetica,sans-serif;
+    font-size:84%;
+}
 </style>
 
 <script type="text/javascript">
@@ -91,10 +116,10 @@ function setEmpty(selectbox) {
 function swap(srcName,dstName) {
     var src = document.getElementsByName(srcName)[0];
     var dst = document.getElementsByName(dstName)[0];            
-    var opt;
-    
-    //if dummy is being transfered do nothing
-    if( src.options[0].value == "0" )
+    var opt;    
+        
+    //if nothing or dummy is being transfered do nothing
+    if( src.selectedIndex == -1 || src.options[0].value == "0" )
         return;
         
     //if dst has dummy clobber it with new options 
@@ -109,9 +134,11 @@ function swap(srcName,dstName) {
                 dst.add(opt);
                 dst.options[dst.options.length-1].text = src.options[idx].text;
                 dst.options[dst.options.length-1].value = src.options[idx].value;
+                dst.options[dst.options.length-1].className = src.options[idx].className;
                 src.remove(idx);
             }catch(e) { //firefox method of adding option
                 dst.add(src.options[idx],null);
+                dst.options[dst.options.length-1].selected = false;
             }
                         
         }
@@ -140,10 +167,12 @@ function init() {
                         attached.add(opt);
                         attached.options[attached.options.length-1].text = available.options[i].text;
                         attached.options[attached.options.length-1].value = available.options[i].value;
+                        attached.options[attached.options.length-1].className = available.options[i].className;
                         available.remove(i);
                     }catch(e) { //firefox method of adding option
-                        attached.add(available.options[i],null);
-                    }                    
+                        attached.add(available.options[i],null);                        
+                    } 
+                    
                     break;
                 }
             
@@ -196,7 +225,7 @@ function save() {
 </head>
 <body onload="init()" style="background-color:#ddddff">
    
-  <h3 style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header"/> <%=moduleName%></h3>
+  <h3 style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header"/> <%=patientName%></h3>
   <html:form action="/oscarConsultationRequest/attachDoc">
   <table>
       <tr>
@@ -208,6 +237,7 @@ function save() {
          <td style="width:33%;text-align:left" valign="top">                                 
            <html:hidden property="requestId" value="<%=requestId%>"/>
            <html:hidden property="demoNo" value="<%=demoNo%>"/>
+           <html:hidden property="providerNo" value="<%=providerNo%>"/>
                <html:select style="width=100%" property="documents" multiple="1" size="10">                           
              <%                
                 ArrayList privatedocs = new ArrayList();
@@ -218,7 +248,17 @@ function save() {
                     
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
-                    <html:option value="<%=curDoc.getDocId()%>"><%=curDoc.getDescription()%></html:option>
+                    <html:option styleClass="doc" value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
+             <%
+                }
+                CommonLabResultData labData = new CommonLabResultData();
+                ArrayList labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.UNATTACHED);
+                LabResultData resData;
+                for(int idx = 0; idx < labs.size(); ++idx) 
+                {
+                    resData = (LabResultData)labs.get(idx);
+             %>
+                    <html:option styleClass="lab" value="<%=docType[1]+resData.labPatientId%>"><%=resData.getDiscipline()+" "+resData.getDateTime()%></html:option>
              <%
                 }
              %>
@@ -236,11 +276,21 @@ function save() {
                     
                     curDoc = (EDoc)privatedocs.get(idx);
              %>
-                    <html:option value="<%=curDoc.getDocId()%>"><%=curDoc.getDescription()%></html:option>
+                    <html:option styleClass="doc" value="<%=docType[0]+curDoc.getDocId()%>"><%=StringUtils.maxLenString(curDoc.getDescription(),30,27,"...")%></html:option>
+             <%
+                }                             
+                
+                CommonLabResultData labData = new CommonLabResultData();
+                ArrayList labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.ATTACHED);
+                LabResultData resData;
+                for(int idx = 0; idx < labs.size(); ++idx) 
+                {
+                    resData = (LabResultData)labs.get(idx);
+             %>
+                    <html:option styleClass="lab" value="<%=docType[1]+resData.labPatientId%>"><%=resData.getDiscipline()+" "+resData.getDateTime()%></html:option>
              <%
                 }
-                
-             %>             
+             %>
            </html:select>
          </td>
       </tr>
@@ -249,6 +299,11 @@ function save() {
         <td style="text-align:center">
             <input type="submit" class="btn" name="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.submit"/>" onclick="return save();"/> 
         </td>
+        <td>&nbsp;</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td style="text-align:center"><span class="legend">Legend</span><br/><span class="doc legend">Blue - document</span><br/><span class="lab legend">Red - lab</span></td>
         <td>&nbsp;</td>
       </tr>
     </table>
