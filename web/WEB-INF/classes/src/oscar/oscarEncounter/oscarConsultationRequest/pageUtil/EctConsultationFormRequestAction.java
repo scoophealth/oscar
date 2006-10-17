@@ -211,11 +211,15 @@ public class EctConsultationFormRequestAction
           requestId = Integer.toString(rs.getInt(1));
           
           //now that we have consultation id we can save any attached docs as well
+          //format of input is D2|L2 for doc and lab
           String[] docs = frm.getDocuments().split("\\|");
           
           for(int idx = 0; idx < docs.length; ++idx ) {
-              if( docs[idx].length() > 0 ) {                
-                oscar.dms.EDocUtil.attachDocConsult(docs[idx], requestId);
+              if( docs[idx].length() > 0 ) {
+                  if( docs[idx].charAt(0) == 'D' )
+                    oscar.dms.EDocUtil.attachDocConsult(providerNo, docs[idx].substring(1), requestId);                  
+                  else if( docs[idx].charAt(0) == 'L')
+                    oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachLabs.attachLabConsult(providerNo,docs[idx].substring(1),requestId);
               }
           }              
 
