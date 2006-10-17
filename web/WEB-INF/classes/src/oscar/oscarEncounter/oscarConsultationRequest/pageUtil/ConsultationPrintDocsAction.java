@@ -52,15 +52,14 @@ public class ConsultationPrintDocsAction extends Action {
         
         String reqId = request.getParameter("reqId");
         String demoNo = request.getParameter("demographicNo");
-        ArrayList docs = EDocUtil.listDocs( demoNo, reqId, EDocUtil.ATTACHED);        
+        //ArrayList docs = EDocUtil.listDocs( demoNo, reqId, EDocUtil.ATTACHED);        
+        String[] docs = request.getParameterValues("docNo");
         ArrayList alist = new ArrayList();
         String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");        
-        EDoc doc;
-        for (int i =0; i < docs.size(); i++) {
-            doc = (EDoc)docs.get(i);
-            if( doc.isPDF())
-                alist.add(path+doc.getFileName());
-        }    
+        
+        for (int i =0; i < docs.length; i++) 
+            alist.add(path+docs[i]);
+         
 
         if (alist.size() > 0 ){
             response.setContentType("application/pdf");  //octet-stream
