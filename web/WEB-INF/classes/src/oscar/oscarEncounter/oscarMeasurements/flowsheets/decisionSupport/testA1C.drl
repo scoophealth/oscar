@@ -11,7 +11,7 @@
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>
         <java:condition>m.setMeasurement("A1C") == true</java:condition>       
-        <java:condition>m.getDataAsDouble() &lt;= 7.1</java:condition> 
+        <java:condition>m.getDataAsDouble() &lt; 7.1</java:condition> 
          <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition>      
         <java:consequence>     
               System.out.println("A1C RULES IS GETTING RUN"+m.getDataAsDouble());           
@@ -25,7 +25,7 @@
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>
         <java:condition>m.setMeasurement("A1C") == true</java:condition>       
-        <java:condition>m.getDataAsDouble() &lt;= 0.071</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt; 0.071</java:condition>       
         <java:consequence>     
               System.out.println("A1C RULES IS GETTING RUN"+m.getDataAsDouble());           
               m.setInRange(true);
