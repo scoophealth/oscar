@@ -23,19 +23,19 @@
     select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)    
  </Numerator>
  
- <Numerator id ="TW" name="Has Triple Whammy in last 6 months" type="SQL" description="Number of patient in the denom with at least one a1c test in the last 6months
-   and at least one bp test in the last 6months
-   and at least one LDL test in the last 12months" >
+ <Numerator id ="TW" name="Has Triple Whammy in guideline time limit" type="SQL" description="Number of patient in the denom with at least one a1c test in the last 6 months
+   and at least one bp test in the last 6 months
+   and at least one LDL test in the last 12 months" >
     select * from measurements m,measurements m2,measurements m3 
      where   m.demographicNo = '${demographic_no}'  and m.type = 'BP' and  m.dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)    
      and  m2.demographicNo = '${demographic_no}'  and m2.type = 'LDL' and  m2.dateObserved >  DATE_SUB(now(),INTERVAL 12 Month)     
      and  m3.demographicNo = '${demographic_no}'  and m3.type = 'A1C' and  m3.dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)         
  </Numerator>
  
- <Numerator id ="Female" name="Female" type="SQL" description="Number of Men in the denom" >
+ <Numerator id ="Female" name="Female" type="SQL" description="Number of Women in the denom" >
     select * from demographic  where   demographic_no = '${demographic_no}'  and  sex = 'F'
  </Numerator>
- <Numerator id ="Male" name="Male" type="SQL"  description="Number of Women in the denom">
+ <Numerator id ="Male" name="Male" type="SQL"  description="Number of Men in the denom">
     select * from demographic  where   demographic_no = '${demographic_no}'  and  sex = 'M'
  </Numerator>
  
@@ -55,7 +55,7 @@
 DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birth)),'%Y-%m-%d') &gt;= DATE_SUB(now(),INTERVAL 65 Year)
  </Numerator>
  
- <Numerator id ="mam12m" name="Mammagram in past 12m" type="SQL"  description="Number of patients in the denom that have a mam test in the last 12 months">
+ <Numerator id ="mam12m" name="Mammogram in past 12m" type="SQL"  description="Number of patients in the denom that have a mam test in the last 12 months">
   select * from preventions where prevention_type ='MAM' and demographic_no = '${demographic_no}' and prevention_date &gt;= DATE_SUB(now(),INTERVAL 12 Month)
  </Numerator>
  
@@ -133,7 +133,7 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
  <Numerator id ="ldllt2.6" name="LDL lower than 2.6" type="DROOLS"  description="Number of patient in the denom with a LDL lower that 2.6"
             file="testLDLlower2p6.drl"/>
  
- <Numerator id ="valTripWham" name="Triple Whammy incl Vals" type="DROOLS"  description="Number of patient in the denom with a 
+ <Numerator id ="valTripWham" name="Triple Whammy with last values in target" type="DROOLS"  description="Number of patient in the denom with a 
     A1C lower 0.071
     and BP  lower 131
     and LDL lower 2.6"
@@ -197,7 +197,7 @@ type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,de
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'
 </Denominator>
 
-<Denominator id="TripWham" name="Triple Whammy"
+<Denominator id="TripWham" name="Diabetes Registry having Triple Whammy in guideline time limit"
 description="And a combined one above (Triple Whammy)"
 type="SQL">select distinct dx.demographic_no  from measurements m,measurements m2,measurements m3,dxresearch dx, demographic d 
      where   m.demographicNo = dx.demographic_no  and  m.type = 'BP'  and  m.dateObserved  &gt;=  DATE_SUB(now(),INTERVAL 6 Month)    
@@ -206,7 +206,7 @@ type="SQL">select distinct dx.demographic_no  from measurements m,measurements m
      and  dx.dxresearch_code in ('250') and dx.coding_system = 'icd9' and dx.status = 'A' and d.demographic_no = dx.demographic_no and d.patient_status = 'AC'
 </Denominator>
     
-<Denominator id="TripWhambyP" name="Triple Whammy by practice"
+<Denominator id="TripWhambyP" name="Diabetes Registry having Triple Whammy in guideline time limit by practice"
 description="And a combined one above (Triple Whammy) by practice" replaceKeys="provider_no"
 type="SQL">select distinct d.demographic_no from measurements m,measurements m2,measurements m3,dxresearch d,demographic de 
      where   m.demographicNo = d.demographic_no  and m.type = 'BP'   and  m.dateObserved  &gt;=  DATE_SUB(now(),INTERVAL 6 Month)    
@@ -221,7 +221,7 @@ description="Number of active patients"
 type="SQL">select distinct demographic_no from demographic  where patient_status = 'AC'
 </Denominator>
 
-<Denominator id="ActPatbyP" name="ACtive Patients by practice"
+<Denominator id="ActPatbyP" name="Active Patients by practice"
 description="Number of active patients by practice" replaceKeys="provider_no"
 type="SQL">select distinct demographic_no from demographic  where patient_status = 'AC' and provider_no = '${provider_no}'
 </Denominator>
