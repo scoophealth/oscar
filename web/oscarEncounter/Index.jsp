@@ -1516,29 +1516,29 @@ border-right: 2px solid #cfcfcf;
 								</td>
                                 <td style="text-align:right" nowrap>
                                 <oscar:oscarPropertiesCheck property="CPP" value="yes">
-                                <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="EncounterCPP(document.forms['encForm'];"/>
+                                <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');"/>
                                 </oscar:oscarPropertiesCheck>
                                 <oscar:oscarPropertiesCheck property="encPrintOnly" value="yes">
 				    <input type="button" style="height:20px;" class="ControlPushButton" value="Print Only" onClick="javascript:popupPageK('encounterPrint.jsp');"/>
                                 </oscar:oscarPropertiesCheck>
-				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="PrintEncounter(document.forms['encForm']);"/>
-				    <input type="hidden"  name="btnPressed" value="">
+				    <input type="button" style="height:20px;" class="ControlPushButton" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');"/>
+                                    <input type="hidden"  name="btnPressed" value="">
 
 <!-- security code block -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="w">
 					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
-				    <input id="saveBtn" type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; AjaxSubmit(document.forms['encForm']);">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; AjaxSubmit(document.forms['encForm']);">
+				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
                                     <oscar:oscarPropertiesCheck property="billregion" value="BC">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; AjaxSubmit(document.forms['encForm']); ">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; document.forms['encForm'].submit(); ">
                                     </oscar:oscarPropertiesCheck>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart.verifyButton" rights="w">
-                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; AjaxSubmit(document.forms['encForm']);">
+                                    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSign"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Verify and Sign'; document.forms['encForm'].submit();">
 	</security:oscarSec>
 					<% } %>
 	</security:oscarSec>
 <!-- security code block -->
-                                    <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {AjaxSubmit(document.forms['encForm']);}">
+                                    <input type="button" style="height:20px" name="buttonPressed" value="<bean:message key="global.btnExit"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Exit'; if (closeEncounterWindow()) {document.forms['encForm'].submit();}">
                                     <!--input type="button" style="height:20px" onclick="javascript:goToSearch()" name="btnPressed" value="Search New Patient" class="ControlPushButton"-->
                                     <input type="hidden" name="rowOneSize" value="<%=windowSizes.getProperty("rowOneSize")%>">
                                     <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
@@ -1553,7 +1553,7 @@ border-right: 2px solid #cfcfcf;
                             if(bSplit){%>
                             <script>
                                 document.forms['encForm'].btnPressed.value='Save';
-                                AjaxSubmit(document.forms['encForm']);
+                                document.forms['encForm'].submit();
                             </script>
                             <%}
                         %>
