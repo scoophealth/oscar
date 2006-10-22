@@ -430,6 +430,7 @@
       <forward name="bill" path="/billing.do" />
       <forward name="splitchart" path="/oscarEncounter/Index.jsp?saved=true&amp;splitchart=true" />
       <forward name="close" path="/oscarEncounter/close.jsp" />
+      <forward name="concurrencyError" path="/oscarEncounter/concurrencyError.jsp" />
     </action>
     <action input="/Index2.jsp" path="/oscarEncounter/SaveEncounter2" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
       <forward name="saveAndStay" path="/oscarEncounter/Index2.jsp?saved=true" />
@@ -438,6 +439,7 @@
       <forward name="bill" path="/billing.do" />
       <forward name="splitchart" path="/oscarEncounter/Index2.jsp?saved=true&amp;splitchart=true" />
       <forward name="close" path="/oscarEncounter/close.jsp" />
+      <forward name="concurrencyError" path="/oscarEncounter/concurrencyError.jsp" />
     </action>
     <action input="Index.jsp" name="EctARForm" path="/oscarEncounter/AR" scope="request" type="oscar.oscarEncounter.pageUtil.EctARAction">
       <forward name="exit" path="/oscarEncounter/close.jsp" />
