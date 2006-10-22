@@ -69,13 +69,10 @@ public class EctSaveEncounterAction
   //This function will compare the most current id in the echart with the 
   // id that is stored in the session variable.  If the ID in the echart is 
   // newer, then the user is working with a old (aka dirty) copy of the encounter
-  private boolean isDirtyEncounter(EctSessionBean bean)  {
+  private boolean isDirtyEncounter(String demographicNo, String userEChartID)  {
       String latestID;
-      String usrCopyID;
-      
       try  {
-        latestID = getLatestID(bean.demographicNo);
-        usrCopyID = bean.eChartId;
+        latestID = getLatestID(demographicNo);
       }
       catch (SQLException sqlexception) {
         System.out.println(sqlexception.getMessage());
@@ -90,13 +87,13 @@ public class EctSaveEncounterAction
       // if the usrCopyID is null and the latestID isn't null, then
       // two people where probably trying to create a new encounter for
       // the same person at the same time.
-      else if (usrCopyID == null || usrCopyID.equals(""))  {
+      else if (userEChartID == null || userEChartID.equals(""))  {
           return true;
       }
       
       try  {
           Integer iLatestID = new Integer(latestID);
-          Integer iUsrCopyID = new Integer(usrCopyID);
+          Integer iUsrCopyID = new Integer(userEChartID);
           if ( iLatestID.longValue() > iUsrCopyID.longValue())  {
               return true;
           }    
@@ -112,7 +109,7 @@ public class EctSaveEncounterAction
       }
  }
   
-  public synchronized ActionForward execute(ActionMapping actionmapping,
+  public ActionForward execute(ActionMapping actionmapping,
                                ActionForm actionform,
                                HttpServletRequest httpservletrequest,
                                HttpServletResponse httpservletresponse) throws
@@ -121,14 +118,6 @@ public class EctSaveEncounterAction
     EctSessionBean sessionbean = null;
     sessionbean = (EctSessionBean) httpservletrequest.getSession().getAttribute(
         "EctSessionBean");
-
-    //make sure that user is trying to save the latest version of the encounter
-    if ( isDirtyEncounter(sessionbean) )
-    {
-        httpservletresponse.sendError(httpservletresponse.SC_PRECONDITION_FAILED, 
-                "Somebody else is currently modifying this encounter");
-        return actionmapping.findForward("failure");
-    }
         
     sessionbean.socialHistory = httpservletrequest.getParameter("shTextarea");
     sessionbean.familyHistory = httpservletrequest.getParameter("fhTextarea");
@@ -196,53 +185,75 @@ public class EctSaveEncounterAction
       catch (Exception e) {
         e.printStackTrace();
       }
-      DBHandler dbhandler = null;
-      try {
-        dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
-        String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
-        PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
-            pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
-            pstmt.setString(2,sessionbean.demographicNo);  
-            pstmt.setString(3,sessionbean.providerNo); 
-            pstmt.setString(4,sessionbean.subject); 
-            pstmt.setString(5,sessionbean.socialHistory); 
-            pstmt.setString(6,sessionbean.familyHistory); 
-            pstmt.setString(7,sessionbean.medicalHistory); 
-            pstmt.setString(8,sessionbean.ongoingConcerns); 
-            pstmt.setString(9,sessionbean.reminders);
-            pstmt.setString(10,sessionbean.encounter);                                                               
-            pstmt.executeUpdate();                                       
-            pstmt.close();  
-        sessionbean.eChartId = getLatestID(sessionbean.demographicNo);
-                
-        // add log here
-        String ip = httpservletrequest.getRemoteAddr();
-        LogAction.addLog( (String) httpservletrequest.getSession().getAttribute(
-            "user"), LogConst.ADD, LogConst.CON_ECHART,
-                         sessionbean.demographicNo, ip);
+     
+      //This code is synchronized to ensure that only one person is modifying the same patient
+      // record at a time
+      synchronized (this)  {          
+          //unfortunately, can't use the echart ID stored in the session bean, because it may
+          // be overwritten when view split charts.
+          String userEChartID = (String) httpservletrequest.getSession().getAttribute("eChartID");
+          //make sure that user is trying to save the latest version of the encounter
+          if ( isDirtyEncounter(sessionbean.demographicNo, userEChartID) )
+          {
+              //If it is an ajax submit, it should cause and exception, if it is a
+              // regular submission, it should just forward on to an error page.
+              if (httpservletrequest.getParameter("submitMethod").equals("ajax"))
+              {
+                  httpservletresponse.sendError(httpservletresponse.SC_PRECONDITION_FAILED, 
+                    "Somebody else is currently modifying this encounter");
+              }
+              return actionmapping.findForward("concurrencyError");
+          }
 
-        //change the appt status
-        if (sessionbean.status != null && !sessionbean.status.equals("")) {
-          oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
-          as.setApptStatus(sessionbean.status);
-          if (httpservletrequest.getParameter("btnPressed").equals(
-              "Sign,Save and Exit")) {
-            s = "update appointment set status='" + as.signStatus() +
-                "' where appointment_no=" + sessionbean.appointmentNo;
-            dbhandler.RunSQL(s);
+          DBHandler dbhandler = null;
+          try {             
+            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            String s = "insert into eChart (timeStamp, demographicNo,providerNo,subject,socialHistory,familyHistory,medicalHistory,ongoingConcerns,reminders,encounter) values (?,?,?,?,?,?,?,?,?,?)" ;
+            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(s);
+                pstmt.setTimestamp(1,new java.sql.Timestamp(date.getTime())); 
+                pstmt.setString(2,sessionbean.demographicNo);  
+                pstmt.setString(3,sessionbean.providerNo); 
+                pstmt.setString(4,sessionbean.subject); 
+                pstmt.setString(5,sessionbean.socialHistory); 
+                pstmt.setString(6,sessionbean.familyHistory); 
+                pstmt.setString(7,sessionbean.medicalHistory); 
+                pstmt.setString(8,sessionbean.ongoingConcerns); 
+                pstmt.setString(9,sessionbean.reminders);
+                pstmt.setString(10,sessionbean.encounter);                                                               
+                pstmt.executeUpdate();                                       
+                pstmt.close();  
+            sessionbean.eChartId = getLatestID(sessionbean.demographicNo);
+            httpservletrequest.getSession().setAttribute("eChartID",sessionbean.eChartId);
+
+            // add log here
+            String ip = httpservletrequest.getRemoteAddr();
+            LogAction.addLog( (String) httpservletrequest.getSession().getAttribute(
+                "user"), LogConst.ADD, LogConst.CON_ECHART,
+                             sessionbean.demographicNo, ip);
+
+            //change the appt status
+            if (sessionbean.status != null && !sessionbean.status.equals("")) {
+              oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+              as.setApptStatus(sessionbean.status);
+              if (httpservletrequest.getParameter("btnPressed").equals(
+                  "Sign,Save and Exit")) {
+                s = "update appointment set status='" + as.signStatus() +
+                    "' where appointment_no=" + sessionbean.appointmentNo;
+                dbhandler.RunSQL(s);
+              }
+              if (httpservletrequest.getParameter("btnPressed").equals(
+                  "Verify and Sign")) {
+                s = "update appointment set status='" + as.verifyStatus() +
+                    "' where appointment_no=" + sessionbean.appointmentNo;
+                dbhandler.RunSQL(s);
+              }
+            }
+            dbhandler.CloseConn();
           }
-          if (httpservletrequest.getParameter("btnPressed").equals(
-              "Verify and Sign")) {
-            s = "update appointment set status='" + as.verifyStatus() +
-                "' where appointment_no=" + sessionbean.appointmentNo;
-            dbhandler.RunSQL(s);
+          catch (SQLException sqlexception) {
+            System.out.println(sqlexception.getMessage());
           }
-        }
-        dbhandler.CloseConn();
-      }
-      catch (SQLException sqlexception) {
-        System.out.println(sqlexception.getMessage());
-      }
+      }  //end of the synchronization block
     }
 
     try { // save enc. window sizes

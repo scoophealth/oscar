@@ -100,7 +100,8 @@ public class EctIncomingEncounterAction extends Action {
                 bean.check= "myCheck";
                 bean.oscarMsgID = request.getParameter("msgId");
                 bean.setUpEncounterPage();               
-                request.getSession().setAttribute("EctSessionBean",bean);                
+                request.getSession().setAttribute("EctSessionBean",bean);
+                request.getSession().setAttribute("eChartID", bean.eChartId);
             }
         }
         else{
