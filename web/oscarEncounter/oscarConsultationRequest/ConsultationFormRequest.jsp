@@ -664,7 +664,7 @@ function importFromEnct(reqInfo,txtArea)
                                 <td class="stat">&nbsp;</td>
                             </tr>                            
                             <tr>
-                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('/oscar/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
+                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
                             </tr>                            
                         </table>
                     </td>                    
