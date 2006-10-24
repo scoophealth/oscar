@@ -152,6 +152,11 @@
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
     }
     
+    function onGraph(url) {        
+        document.forms["graph"].action = url;
+        document.forms["graph"].submit();
+    }
+    
     function onPrint() {
         document.forms[0].submit.value="print"; 
                 
@@ -283,9 +288,9 @@ pop up description layer
         <td align="center" width="100%">
         <% if(formId > 0)
            { %>
-            <a name="length" href="/oscar/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">
+            <a name="length" href="#" onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
                 <bean:message key="oscarEncounter.formRourke1.btnGraphLenghtWeight"/></a><br>
-            <a name="headCirc" href="/oscar/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">
+            <a name="headCirc" href="#" onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
                 <bean:message key="oscarEncounter.formRourke1.btnGraphHead"/></a>
         <% }else { %>
             &nbsp;
@@ -1140,9 +1145,9 @@ pop up description layer
         <td align="center" width="100%">
         <% if(formId > 0)
            { %>
-            <a name="length" href="/oscar/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>">
+            <a name="length" href="#" onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Growth+Graph1&__cfgfile=<%=growthCharts[0]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
                 <bean:message key="oscarEncounter.formRourke1.btnGraphLenghtWeight"/></a><br>
-            <a name="headCirc" href="/oscar/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">
+            <a name="headCirc" href="#" onclick="onGraph('<%=request.getContextPath()%>/form/formname.do?submit=graph&form_class=Rourke2006&__title=Baby+Head+Circumference&__cfgfile=<%=growthCharts[1]%>&demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');return false;">
                 <bean:message key="oscarEncounter.formRourke1.btnGraphHead"/></a>
         <% }else { %>
             &nbsp;
@@ -1162,6 +1167,8 @@ pop up description layer
 
 </html:form>
 <form id="frmPopUp" method="get" action=""></form>
+<form id="graph" method="post" action="">
+</form>
 </body>
 <script type="text/javascript">
     Calendar.setup({ inputField : "p4_date18m", ifFormat : "%d/%m/%Y", showsTime :false, button : "p4_date18m_cal", singleClick : true, step : 1 });
