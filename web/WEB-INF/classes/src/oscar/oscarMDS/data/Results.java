@@ -72,4 +72,14 @@ public class Results
             default  : return "Invalid";
         }        
     }
+    
+    
+    //notes ArrayList should only contain String objects.
+    public String getLabNotes(int i){
+        String ret = "";
+        if (notes != null && notes.size() > i){
+            ret = (String) notes.get(i);
+        }
+        return ret;
+    }
 }
