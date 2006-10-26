@@ -233,21 +233,24 @@ public class ABCDParser {
       return arr;
    }
    
-   void process(String str){      
-         ArrayList a = d(str);
+   void process(String str){ 
+         if (str != null && !str.trim().equals("") ){
          
-         String lineType = (String) a.get(0);
-         
-         if(lineType.equals("A")){ 
-            logger.info("Processing new report");
-            reportFile = new Atype();
-            reportFile.populate(a);
-            atypes.add(reportFile);
-         }                                                  
-                 
-         if(reportFile != null){
-            reportFile.read(lineType,a);
-         }//ELSE need to throw an exception shouldn't happen
+             ArrayList a = d(str);
+
+             String lineType = (String) a.get(0);
+
+             if(lineType.equals("A")){ 
+                logger.info("Processing new report");
+                reportFile = new Atype();
+                reportFile.populate(a);
+                atypes.add(reportFile);
+             }                                                  
+
+             if(reportFile != null){
+                reportFile.read(lineType,a);
+             }//ELSE need to throw an exception shouldn't happen
+         }
    }
    
    ////
