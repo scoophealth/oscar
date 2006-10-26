@@ -554,7 +554,9 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                     <% for (m=firstorgindex;m<=lastorgindex;m++) {  // print headers %>
                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                <td align="right"><bean:message key="oscarMDS.segmentDisplay.msgORG"/> <%=m-firstorgindex+1%></td>
-                                               <td align="left" colspan="7"><%=((oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(m)).resultsArray.get(0)).notes.get(0)%></td>
+                                               <td align="left" colspan="7"><%=((oscar.oscarMDS.data.Results)((oscar.oscarMDS.data.GroupedReports)((oscar.oscarMDS.data.Headers)mDSSegmentData.headersArray.get(i)).groupedReportsArray.get(m)).resultsArray.get(0)).getLabNotes(0)%></td>
+
+
                                            </tr>
                                     <%     linenum++;
                                        } %>
@@ -795,3 +797,5 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
 </body>
 </html>
+
+
