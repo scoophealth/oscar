@@ -181,7 +181,7 @@ function checkTypeIn() {
       <td align="center"><%=rs.getString("chart_no")==null||rs.getString("chart_no").equals("")?"&nbsp;":rs.getString("chart_no")%></td>
       <td align="center"><%=rs.getString("sex")%></td>
       <td align="center" nowrap><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-      <td align="center"><%=Misc.getShortStr(providerBean.getProperty(rs.getString("provider_no")),"_",11 )%></td>
+      <td align="center"><%=Misc.getShortStr(providerBean.getProperty(rs.getString("provider_no")),"_",12 )%></td>
       <td align="center"><%=rs.getString("roster_status")==null||rs.getString("roster_status").equals("")?"&nbsp;":rs.getString("roster_status")%></td>
       <td align="center"><%=rs.getString("patient_status")==null||rs.getString("patient_status").equals("")?"&nbsp;":rs.getString("patient_status")%></td>
       <td align="center" nowrap><%=rs.getString("phone")==null||rs.getString("phone").equals("")?"&nbsp;":(rs.getString("phone").length()==10?(rs.getString("phone").substring(0,3)+"-"+rs.getString("phone").substring(3)):rs.getString("phone"))%></td>
