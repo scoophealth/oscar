@@ -640,7 +640,14 @@ CREATE TABLE eform_data (
   form_provider varchar(255) default NULL,
   form_data text,
   PRIMARY KEY  (fdid),
-  UNIQUE KEY id (fdid)
+  UNIQUE KEY id (fdid),
+  KEY `idx_eform_data_demographic_no` (`demographic_no`),
+  KEY `idx_eform_data_status` (`status`),
+  KEY `idx_eform_data_from_date` (`form_date`),
+  KEY `idx_eform_data_form_name` (`form_name`),
+  KEY `idx_eform_data_subject` (`subject`),
+  KEY `idx_eform_data_fid` (`fid`),
+  KEY `idx_eform_data_form_provider` (`form_provider`)
 ) TYPE=MyISAM;
 
 --
