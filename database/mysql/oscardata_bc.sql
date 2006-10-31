@@ -23337,43 +23337,29 @@ INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALU
 INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALUES (113,0,130,'19940');
 INSERT INTO ctl_billingservice_age_rules (id, minAge, maxAge, service_code) VALUES (114,0,130,'19941');
 
+
 --
 -- Dumping data for table `billingstatus_types`
 --
 
-INSERT INTO billingstatus_types VALUES ('R','REJ',12);
-INSERT INTO billingstatus_types VALUES ('O','NOSUB',16);
-INSERT INTO billingstatus_types VALUES ('B','SUB',14);
-INSERT INTO billingstatus_types VALUES ('S','SET',13);
-INSERT INTO billingstatus_types VALUES ('D','DEL',6);
-INSERT INTO billingstatus_types VALUES ('Z','HELD',8);
-INSERT INTO billingstatus_types VALUES ('C','DCC',5);
-INSERT INTO billingstatus_types VALUES ('E','PWE',10);
-INSERT INTO billingstatus_types VALUES ('F','REF',11);
-INSERT INTO billingstatus_types VALUES ('X','BAD',1);
-INSERT INTO billingstatus_types VALUES ('W','WCB',15);
-INSERT INTO billingstatus_types VALUES ('H','CAP',3);
-INSERT INTO billingstatus_types VALUES ('N','DNB',7);
-INSERT INTO billingstatus_types VALUES ('P','BILLPAT',2);
-INSERT INTO billingstatus_types VALUES ('T','COLL',4);
-INSERT INTO billingstatus_types VALUES ('A','PAIDPRIV',9);
+INSERT INTO billingstatus_types VALUES ('R','REJ','Rejected',12);
+INSERT INTO billingstatus_types VALUES ('O','NOSUB','Bill MSP - Not Submitted',16);
+INSERT INTO billingstatus_types VALUES ('B','SUB','Submitted',14);
+INSERT INTO billingstatus_types VALUES ('S','SET','Settled',13);
+INSERT INTO billingstatus_types VALUES ('D','DEL','Deleted',6);
+INSERT INTO billingstatus_types VALUES ('Z','HELD','Held',8);
+INSERT INTO billingstatus_types VALUES ('C','DCC','Data Centre Changed',5);
+INSERT INTO billingstatus_types VALUES ('E','PWE','Paid With Explanation',10);
+INSERT INTO billingstatus_types VALUES ('F','REF','Refused',11);
+INSERT INTO billingstatus_types VALUES ('X','BAD','Bad Debt',1);
+INSERT INTO billingstatus_types VALUES ('W','WCB','WCB',15);
+INSERT INTO billingstatus_types VALUES ('H','CAP','Capitated',3);
+INSERT INTO billingstatus_types VALUES ('N','DNB','Do Not Bill',7);
+INSERT INTO billingstatus_types VALUES ('P','BILLPAT','Bill Patient',2);
+INSERT INTO billingstatus_types VALUES ('T','COLL','Transfer to Collection',4);
+INSERT INTO billingstatus_types VALUES ('A','PAIDPRIV','Paid Private',9);
 
-update billingstatus_types set displayNameExt = 'Rejected' where displayName = 'REJ';
-update billingstatus_types set displayNameExt = 'Bill MSP - Not Submitted' where displayName = 'NOSUB';
-update billingstatus_types set displayNameExt = 'Submitted' where displayName = 'SUB';
-update billingstatus_types set displayNameExt = 'Settled' where displayName = 'SET';
-update billingstatus_types set displayNameExt = 'Deleted' where displayName = 'DEL';
-update billingstatus_types set displayNameExt = 'Held' where displayName = 'HELD';
-update billingstatus_types set displayNameExt = 'Data Centre Changed' where displayName = 'DCC';
-update billingstatus_types set displayNameExt = 'Paid With Explanation' where displayName = 'PWE';
-update billingstatus_types set displayNameExt = 'Bad Debt' where displayName = 'BAD';
-update billingstatus_types set displayNameExt = 'WCB' where displayName = 'WCB';
-update billingstatus_types set displayNameExt = 'Capitated' where displayName = 'CAP';
-update billingstatus_types set displayNameExt = 'Bill Patient' where displayName = 'BILLPAT';
-update billingstatus_types set displayNameExt = 'Transfer to Collection' where displayName = 'COLL';
-update billingstatus_types set displayNameExt = 'Paid Private' where displayName = 'PAIDPRIV';
-update billingstatus_types set displayNameExt = 'Do Not Bill' where displayName = 'DNB';
-update billingstatus_types set displayNameExt = 'Refused' where displayName = 'REF';
+
 
 --
 -- Dumping data for table `billingtypes`
