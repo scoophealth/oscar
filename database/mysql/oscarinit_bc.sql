@@ -2347,12 +2347,10 @@ CREATE TABLE billingtypes (
 CREATE TABLE billingstatus_types (
   billingstatus char(1) NOT NULL default '',
   displayName varchar(20) default '',
+  displayNameExt varchar(50) default NULL,
   sortOrder int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (billingstatus)
 ) TYPE=MyISAM;
-
-#A secondary and potentially more detailed textual description of the the billing status type
-ALTER TABLE `billingstatus_types` ADD COLUMN `displayNameExt` VARCHAR(50) AFTER `displayName`;
 
 
 
