@@ -370,10 +370,10 @@ pop up description layer
         <td><bean:message key="oscarEncounter.formRourke1.formHdCirc"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formHt"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formWt"/></td>
-        <td><bean:message key="oscarEncounter.formRourke1.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2006_3.formHdCirc"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formHt"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formWt"/></td>
-        <td><bean:message key="oscarEncounter.formRourke1.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2006_3.formHdCirc"/></td>
     </tr>
     <tr align="center">
         <td><input type="text" class="wide" ondblclick="htEnglish2Metric(this);" name="p1_ht1w" size="4" maxlength="5" value="<%= props.getProperty("p1_ht1w", "") %>"></td>

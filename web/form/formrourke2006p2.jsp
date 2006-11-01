@@ -368,13 +368,13 @@ pop up description layer
         <td class="column" rowspan="2"><a><bean:message key="oscarEncounter.formRourke1.btnGrowth"/>*</td>
         <td><bean:message key="oscarEncounter.formRourke1.formHt"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formWt"/></td>
-        <td><bean:message key="oscarEncounter.formRourke1.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2006_3.formHdCirc"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formHt"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formWt"/></td>
-        <td><bean:message key="oscarEncounter.formRourke1.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2006_3.formHdCirc"/></td>
         <td><bean:message key="oscarEncounter.formRourke1.formHt"/></td>
         <td><bean:message key="oscarEncounter.formRourke2006_2.formWt6m"/></td>
-        <td><bean:message key="oscarEncounter.formRourke1.formHdCirc"/></td>
+        <td><bean:message key="oscarEncounter.formRourke2006_3.formHdCirc"/></td>
     </tr>
     <tr align="center">
         <td><input type="text" class="wide" ondblclick="htEnglish2Metric(this);" name="p2_ht2m" size="4" maxlength="5" value="<%= props.getProperty("p2_ht2m", "") %>"></td>
