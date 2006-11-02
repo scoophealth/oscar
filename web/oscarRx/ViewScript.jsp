@@ -138,7 +138,7 @@ function addressSelect() {
 </script>
 </head>
 
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="addressSelect()">
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <tr>
       <td width="100%" style="padding-left: 3; padding-right: 3; padding-top: 2; padding-bottom: 2" height="0%" colspan="2">
@@ -218,9 +218,15 @@ function addressSelect() {
 					                <select name="addressSel" id="addressSel" onChange="addressSelect()">
 					            <%  for (int i =0; i < vecAddressName.size();i++){
 					                 String te = (String) vecAddressName.get(i);
+                                                         String tf = (String) vecAddress.get(i);
 					            %>
-					                    <option value="<%=i%>"><%=te%></option>
-					            <%  }%>
+					            
+                                                           <option value="<%=i%>"
+                                                    <% if ( tf.indexOf(te) != -1)
+                                                          { %> SELECTED <% }
+                                                     %> ><%=te%></option>
+                                                    <%  }%>
+					            					            
 					                </select>
 					            </td>
                                 </tr>
