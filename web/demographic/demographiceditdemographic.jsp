@@ -796,7 +796,8 @@ div.demographicWrapper {
                                         <div style="background-color: #EEEEFF;" >
                                         <ul>
                                             <li>
-                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/>: <b><%=providerBean.getProperty(rs.getString("provider_no"),"")%></b>
+                                                <% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
+                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/><% } %>: <b><%=providerBean.getProperty(rs.getString("provider_no"),"")%></b>
                                             </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formNurse"/>: <b><%=providerBean.getProperty(resident,"")%></b>
@@ -1105,7 +1106,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               </td>
                             </tr>
                             <tr valign="top">
-                              <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDoctor"/>: </b></td>
+                              <td align="right" nowrap><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
+                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/><% } %>: </b></td>
                               <td align="left" >
                                 <select name="provider_no" style="width:200px">
                                   <option value="" ></option>
