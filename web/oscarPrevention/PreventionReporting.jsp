@@ -1,3 +1,5 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <!--  
 /*
  * 
@@ -49,9 +51,9 @@
 <html:base/>
 <title>oscarPrevention</title><!-- i18n -->
 
-<script src="../share/javascript/Oscar.js"></script>
+<script type="text/javascript" src="../share/javascript/Oscar.js"></script>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" /> 
+<link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" > 
      
 <script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
@@ -68,7 +70,7 @@
   div.ImmSet li a:visited { text-decoration:none; color:blue;}  
 </style>
 
-<SCRIPT LANGUAGE="JavaScript">
+<script type="text/javascript">
 
 function showHideItem(id){ 
     if(document.getElementById(id).style.display == 'none')
@@ -104,7 +106,7 @@ function disableifchecked(ele,nextDate){
     }
 }
 
-</SCRIPT>
+</script>
 
 
 <script type="text/javascript">
@@ -128,8 +130,8 @@ function disableifchecked(ele,nextDate){
         var hash = origRequest.responseText.parseQuery();
         //alert( hash['id'] + " " + hash['followupValue']+" "+hash['Date'] );
         //("id="+id+"&followupValue="+followUpValue+"&Date=
-        var lastFollowupTD = $(hash['id']+'lastFollowup');
-        var nextProcedureTD = $(hash['id']+'nextSuggestedProcedure');
+        var lastFollowupTD = $('lastFollowup'+hash['id']);
+        var nextProcedureTD = $('nextSuggestedProcedure'+hash['id']);
         //alert(nextProcedureTD);
         nextProcedureTD.innerHTML = "----";
         lastFollowupTD.innerHTML = hash['followupValue']+" "+hash['Date'];
@@ -235,7 +237,7 @@ table.ele td{
 
 <body class="BodyStyle" vlink="#0000FF">
 <!--  -->
-    <table  class="MainTable" id="scrollNumber1" name="encounterTable">
+    <table  class="MainTable" id="scrollNumber1" >
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn" width="100" >
                oscarPrevention
@@ -247,7 +249,7 @@ table.ele td{
                             Prevention Reporting
                         </td>
                         <td  >&nbsp;
-							
+		               <a href="../report/ManageLetters.jsp" target="_blank">manage letters</a>			
                         </td>
                         <td style="text-align:right">
                                 <a href="javascript:popupStart(300,400,'Help.jsp')"  ><bean:message key="global.help" /></a> | <a href="javascript:popupStart(300,400,'About.jsp')" ><bean:message key="global.about" /></a> | <a href="javascript:popupStart(300,400,'License.jsp')" ><bean:message key="global.license" /></a>
@@ -379,7 +381,6 @@ table.ele td{
                                 }
                             }
                           
-                  
                                     
                             if (dis.state != null && dis.state.equals("Overdue")){
                                overDueList.add(dis.demographicNo);
@@ -388,7 +389,7 @@ table.ele td{
                        <tr>
                           <td><%=i+1%></td>
                           <td>
-                              <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&displaymode=edit&dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
+                              <a href="javascript: return false;" onClick="popup(724,964,'../demographic/demographiccontrol.jsp?demographic_no=<%=dis.demographicNo%>&amp;displaymode=edit&amp;dboperation=search_detail','MasterDemographic')"><%=dis.demographicNo%></a>                              
                           </td>
                           
                           <%if (type == null ){ %>
@@ -421,7 +422,7 @@ table.ele td{
                           <td bgcolor="<%=dis.color%>"><%=dis.lastDate%></td>
                           
                           <%}%>                          
-                          <td bgcolor="<%=dis.color%>" id="<%=i+1%>lastFollowup">
+                          <td bgcolor="<%=dis.color%>" id="lastFollowup<%=i+1%>">
                              <% if (dis.lastFollowup != null ){ %>                                 
                                  <%=dis.lastFollupProcedure%>
                                  <%=UtilDateUtilities.DateToString(dis.lastFollowup)%> 
@@ -430,7 +431,7 @@ table.ele td{
                                 ----
                              <% } %>                                 
                           </td>
-                          <td bgcolor="<%=dis.color%>" id="<%=i+1%>nextSuggestedProcedure">
+                          <td bgcolor="<%=dis.color%>" id="nextSuggestedProcedure<%=i+1%>">
                               <%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
                                  <a href="javascript: return false;" onclick="return completedProcedure('<%=i+1%>','<%=followUpType%>','<%=dis.nextSuggestedProcedure%>','<%=dis.demographicNo%>');"><%=dis.nextSuggestedProcedure%></a>
                               <%}else{%>
@@ -446,31 +447,41 @@ table.ele td{
                     
                   
                   <%}%>
-                  
+                  <%--
                   <% if ( overDueList.size() > 0 ) { 
                         String queryStr = getUrlParamList(overDueList, "demo");            
                         %>                        
-                        <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
+                        <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode(request.getAttribute("prevType")+" is due","UTF-8")%>">Add Tickler for Overdue</a>
                   <%}%>
+                  --%>
                   
-                  
-                 <% if ( firstLetter.size() > 0 ) { 
+                 <%-- if ( firstLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(firstLetter, "demo"); 
                         %>                        
-                    <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&followupType=<%=followUpType%>&followupValue=L1">Generate First Letter</a>
+                    <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>">Generate First Envelopes</a>
+                  <%}
+                    --%>
+                  
+                  
+                  <% if ( firstLetter.size() > 0 ) { 
+                        String queryStr = getUrlParamList(firstLetter, "demo"); 
+                        %>                        
+                    <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate First Letter</a>
                   <%}%>
                   
                   <% if ( secondLetter.size() > 0 ) { 
                         String queryStr = getUrlParamList(secondLetter, "demo"); 
                         %>                        
-                        <a target="_blank" href="../report/GenerateEnvelopes.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&followupType=<%=followUpType%>&followupValue=L2">Generate Second Letter</a>
+                    <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L2">Generate Second Letter</a>
                   <%}%>
+                  
+                  <%--
                   <% if ( phoneCall.size() > 0 ) { 
                         String queryStr = getUrlParamList(phoneCall, "demo");                      
                         %>                        
                         <a target="_blank" href="../report/GenerateSpreadsheet.do?<%=queryStr%>&message=<%=java.net.URLEncoder.encode("Phone call 1 made for : "+request.getAttribute("prevType"),"UTF-8")%>followupType=<%=followUpType%>&followupValue=P1">Generate Phone Call list</a>
                   <%}%>
-                               
+                  --%>             
                                     
                                 
            
@@ -491,7 +502,7 @@ table.ele td{
             if (i == 0){
               queryStr += paramName+"="+demo;
             }else{
-              queryStr += "&"+paramName+"="+demo;  
+              queryStr += "&amp;"+paramName+"="+demo;  
             }
         }
         return queryStr;
