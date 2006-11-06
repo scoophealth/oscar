@@ -22,7 +22,7 @@
         <parameter identifier="m">
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>      
-        <java:condition>m.getDataAsDouble() &gt; 3.5</java:condition> 
+        <java:condition>m.getDataAsDouble() &gt;= 3.5</java:condition> 
         <java:consequence>     
               System.out.println("LDL 2 RULES IS GETTING RUN");           
               m.setIndicationColor("HIGH 1");
