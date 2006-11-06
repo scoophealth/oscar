@@ -6933,6 +6933,30 @@ CREATE TABLE `consultdocs` (
   `provider_no` varchar(6) NOT NULL
 );
 
+create table report_letters(
+    ID int(10) auto_increment primary key,
+    provider_no varchar(6),
+    report_name varchar(255),
+    file_name varchar(255),
+    report_file mediumblob,
+    date_time datetime,
+    archive char(1) default 0,
+    KEY archive (`archive`),
+    KEY provider_no (`provider_no`),
+    KEY date_time (`date_time`)
+);
+  
+create table log_letters(
+    ID int(10) primary key auto_increment,
+    date_time datetime,
+    provider_no varchar(6),
+    log text,
+    report_id  int(10),
+    KEY report_id (`report_id`),
+    KEY provider_no (`provider_no`),
+    KEY date_time (`date_time`) 
+ );
+
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
 create index preventions_prevention_type on preventions (prevention_type(10));
