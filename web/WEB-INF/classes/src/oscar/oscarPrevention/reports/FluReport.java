@@ -244,12 +244,13 @@ public class FluReport implements PreventionReport {
                   EctMeasurementsDataBean fluData = (EctMeasurementsDataBean) fluFollowupData.iterator().next();
                   System.out.println("fluData "+fluData.getDataField());
                   System.out.println("lastFollowup "+fluData.getDateObservedAsDate()+ " last procedure "+fluData.getDateObservedAsDate());
-              
+                  System.out.println("CUTTOFF DATE : "+cuttoffDate);
                   System.out.println("toString: "+fluData.toString());
                   prd.lastFollowup = fluData.getDateObservedAsDate();
                   prd.lastFollupProcedure = fluData.getDataField();
                   if ( fluData.getDateObservedAsDate().before(cuttoffDate)){
                       prd.nextSuggestedProcedure = this.LETTER1;
+                      System.out.println("returning letter 1");
                       return this.LETTER1;
                   }else{ //AFTER CUTOFF DATE
                       //IS Last 
@@ -257,6 +258,7 @@ public class FluReport implements PreventionReport {
                       int num = UtilDateUtilities.getNumMonths(fluData.getDateObservedAsDate(),today.getTime());
                       if (num > 1 && prd.lastFollupProcedure.equals(this.LETTER1)){
                           prd.nextSuggestedProcedure = this.PHONE1;
+                          System.out.println("returning PHONE 1");
                           return this.PHONE1;
                       }else{
                           //NEED TO RETURN A MESSAGE THAT LAST DATE WAS WITHIN A MONTH
