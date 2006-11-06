@@ -292,7 +292,7 @@ table.ele td{
                   
                </div>
                
-               <input type="submit" />
+               <input type="submit" value="Generate Letters" />
                <input type="button" value="Generate Envelopes" onclick="javascript:genEnvelopes('listDemographic')"/>
                
                
