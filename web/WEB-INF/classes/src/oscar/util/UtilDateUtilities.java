@@ -247,6 +247,35 @@ public class UtilDateUtilities {
    public static int getNumMonths(Calendar dStart,Calendar dEnd) {        
       return getNumMonths(dStart.getTime(),dEnd.getTime());
    }
+   
+   
+   public static int calculateGestationAge(Date today, Date edd) {
+       int i = 40;       
+       Calendar calendar = Calendar.getInstance();
+       calendar.setTime(edd);
+       //Is Today before edd
+       if(today.before(edd)){
+          
+           while (today.before(calendar.getTime()) || today.equals(calendar.getTime())    ) {
+              i--;
+              calendar.add(Calendar.DAY_OF_YEAR, -7);
+              System.out.println("date now :"+calendar.getTime()+ " week: "+i);
+              if (i < 0){
+                  break;
+              }
+           }    
+          i++;
+       }else if (today.after(edd)){
+          // Weeks past 40 weeks? 
+          while (today.after(calendar.getTime())){
+              i++;
+              calendar.add(Calendar.DAY_OF_YEAR,7);
+          } 
+       }
+       
+       if (i < 0) { i = 0; }
+       return i;
+   }
 
     
    
