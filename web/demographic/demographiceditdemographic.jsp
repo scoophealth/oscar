@@ -800,13 +800,13 @@ div.demographicWrapper {
                                                 <bean:message key="demographic.demographiceditdemographic.formDoctor"/><% } %>: <b><%=providerBean.getProperty(rs.getString("provider_no"),"")%></b>
                                             </li>
                                             <li>
-                                                <bean:message key="demographic.demographiceditdemographic.formNurse"/>: <b><%=providerBean.getProperty(resident,"")%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.formNurse"/>: <b><%=providerBean.getProperty(nurse,"")%></b>
                                             </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formMidwife"/>: <b><%=providerBean.getProperty(midwife,"")%></b>
                                             </li>
                                             <li>
-                                                <bean:message key="demographic.demographiceditdemographic.formResident"/>:<b> <%=providerBean.getProperty(nurse,"")%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.formResident"/>:<b> <%=providerBean.getProperty(resident,"")%></b>
                                             </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formRefDoc"/>: <b><%=rd%></b>
@@ -1122,14 +1122,14 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                               </td>
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formNurse"/>: </b> </td>
                               <td align="left">
-                                <select name="resident" style="width:200px">
+                                <select name="nurse" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          rsdemo.beforeFirst();
-                          while (rsdemo.next()) {
+                          ResultSet rsdemo1 = apptMainBean.queryResults("search_provider_nurse");
+                          while (rsdemo1.next()) {
                         %>
-                          <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(resident)?"selected":""%> >
-                          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+                          <option value="<%=rsdemo1.getString("provider_no")%>" <%=rsdemo1.getString("provider_no").equals(nurse)?"selected":""%> >
+                          <%=Misc.getShortStr( (rsdemo1.getString("last_name")+","+rsdemo1.getString("first_name")),"",nStrShowLen)%></option>
                         <% } %>
                                 </select>
                               </td>
@@ -1140,24 +1140,24 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <select name="midwife" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          rsdemo.beforeFirst();
-                          while (rsdemo.next()) {
+                          ResultSet rsdemo2 = apptMainBean.queryResults("search_provider_midwife");
+                          while (rsdemo2.next()) {
                         %>
-                          <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(midwife)?"selected":""%> >
-                          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+                          <option value="<%=rsdemo2.getString("provider_no")%>" <%=rsdemo2.getString("provider_no").equals(midwife)?"selected":""%> >
+                          <%=Misc.getShortStr( (rsdemo2.getString("last_name")+","+rsdemo2.getString("first_name")),"",nStrShowLen)%></option>
                         <% } %>
                                 </select>
                               </td>
                               <td align="right"><b><bean:message key="demographic.demographiceditdemographic.formResident"/>:</b> </td>
                               <td align="left">
-                                <select name="nurse" style="width:200px">
+                                <select name="resident" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          rsdemo.beforeFirst();
-                          while (rsdemo.next()) {
+                          ResultSet rsdemo3 = apptMainBean.queryResults("search_provider_resident");
+                          while (rsdemo3.next()) {
                         %>
-                          <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >
-                          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",nStrShowLen)%></option>
+                          <option value="<%=rsdemo3.getString("provider_no")%>" <%=rsdemo3.getString("provider_no").equals(resident)?"selected":""%> >
+                          <%=Misc.getShortStr( (rsdemo3.getString("last_name")+","+rsdemo3.getString("first_name")),"",nStrShowLen)%></option>
                         <% } %>
                                 </select>
                               </td>

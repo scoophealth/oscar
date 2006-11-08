@@ -14,6 +14,9 @@
 <%
   String [][] dbQueries=new String[][] {
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
+    {"search_provider_midwife", "select * from provider where provider_type='midwife' and status='1' order by last_name"},
+    {"search_provider_nurse", "select * from provider where provider_type='nurse' and status='1' order by last_name"},
+    {"search_provider_resident", "select * from provider where provider_type='resident' and status='1' order by last_name"},
     {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
     {"search_waiting_list", "select * from waitingListName order by name"},
@@ -742,11 +745,11 @@ function checkFormTypeIn() {
         <select name="cust1">
           <option value="" ></option>
           <%
-  rsdemo.beforeFirst();
-  while (rsdemo.next()) {
+  ResultSet rsdemo1 = addDemoBean.queryResults("search_provider_nurse");
+  while (rsdemo1.next()) {
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>">
-          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <option value="<%=rsdemo1.getString("provider_no")%>">
+          <%=Misc.getShortStr( (rsdemo1.getString("last_name")+","+rsdemo1.getString("first_name")),"",12)%></option>
           <%
   }
 %>
@@ -759,11 +762,11 @@ function checkFormTypeIn() {
         <select name="cust4">
           <option value="" ></option>
           <%
-  rsdemo.beforeFirst();
-  while (rsdemo.next()) {
+  ResultSet rsdemo2 = addDemoBean.queryResults("search_provider_midwife");
+  while (rsdemo2.next()) {
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>">
-          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <option value="<%=rsdemo2.getString("provider_no")%>">
+          <%=Misc.getShortStr( (rsdemo2.getString("last_name")+","+rsdemo2.getString("first_name")),"",12)%></option>
           <%
   }
 %>
@@ -774,11 +777,11 @@ function checkFormTypeIn() {
         <select name="cust2">
           <option value="" ></option>
           <%
-  rsdemo.beforeFirst();
-  while (rsdemo.next()) {
+  ResultSet rsdemo3 = addDemoBean.queryResults("search_provider_resident");
+  while (rsdemo3.next()) {
 %>
-          <option value="<%=rsdemo.getString("provider_no")%>">
-          <%=Misc.getShortStr( (rsdemo.getString("last_name")+","+rsdemo.getString("first_name")),"",12)%></option>
+          <option size="15" value="<%=rsdemo3.getString("provider_no")%>">
+          <%=Misc.getShortStr( (rsdemo3.getString("last_name")+","+rsdemo3.getString("first_name")),"",12)%></option>
           <%
   }
 %>
