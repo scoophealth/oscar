@@ -118,7 +118,7 @@ public class GeneratePatientLettersAction extends Action {
            HashMap parameters = new HashMap();
               if ( reportParams != null ){
                    for (int p = 0; p < reportParams.length; p++){
-                       System.out.append("demo = "+demos[i]);
+                       System.out.println("demo = "+demos[i]);
                        parameters.put(reportParams[p],apExe.execute(reportParams[p],demos[i]));
                    }
               }
