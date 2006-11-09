@@ -53,12 +53,10 @@ function setfocus() {
   int top = Integer.parseInt(request.getParameter("top"));
   int height = Integer.parseInt(request.getParameter("height"));
   int gap = Integer.parseInt(request.getParameter("gap"));
-  int b1=0,b2=0,b3=0,b4=0,b5=0;
+  int b1=0,b2=0,b3=0;
   if(request.getParameter("label1checkbox")!=null && request.getParameter("label1checkbox").compareTo("checked")==0) b1=Integer.parseInt(request.getParameter("label1no"));
   if(request.getParameter("label2checkbox")!=null && request.getParameter("label2checkbox").compareTo("checked")==0) b2=Integer.parseInt(request.getParameter("label2no"));
   if(request.getParameter("label3checkbox")!=null && request.getParameter("label3checkbox").compareTo("checked")==0) b3=Integer.parseInt(request.getParameter("label3no"));
-  if(request.getParameter("label4checkbox")!=null && request.getParameter("label4checkbox").compareTo("checked")==0) b4=Integer.parseInt(request.getParameter("label4no"));
-  if(request.getParameter("label5checkbox")!=null && request.getParameter("label5checkbox").compareTo("checked")==0) b5=Integer.parseInt(request.getParameter("label5no"));
   
   for (int i=0; i<b1; i++) {
 %>
@@ -99,40 +97,12 @@ function setfocus() {
 </div>
 <%
   }
-  for (int i=0; i<b4; i++) {
-%>
-
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+(b1+b2+b3)*(height+gap)+i*(height+gap/2)%>px; width:400px; height:100px;">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<%--  <tr><td><%=request.getParameter("label4")%></td></tr>--%>
-<tr><td>
-<font face="Courier New, Courier, mono" size="2"><%=request.getParameter("first_name")%>&nbsp;<%=request.getParameter("last_name")%><br><%=request.getParameter("address")%><br><%=request.getParameter("city")%>,&nbsp;<%=request.getParameter("province")%>,&nbsp;<%=request.getParameter("postal")%><br></font>
-</td></tr>
-</table>
-</div>
-<%
-  }
-  for (int i=0; i<b5; i++) {
-%>
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:<%=left%>px; top:<%=top+(b1+b2+b3+b4)*(height+gap)+i*(height+gap/2)%>px; width:400px; height:100px;">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<%--  <tr><td><%=request.getParameter("label5")%></td></tr>--%>
-<tr><td>
-<font face="Courier New, Courier, mono" size="2"><%=request.getParameter("chart_no")%>&nbsp;&nbsp;<%=request.getParameter("last_name")%>,&nbsp;<%=request.getParameter("first_name")%><br><%=request.getParameter("address")%><br><%=request.getParameter("city")%>,&nbsp;<%=request.getParameter("province")%>,&nbsp;<%=request.getParameter("postal")%><br>
-<%=request.getParameter("dob")%>&nbsp;&nbsp; <%=request.getParameter("age")%>&nbsp; <%=request.getParameter("sex")%> &nbsp;<%=request.getParameter("hin")%><br>
-<%=request.getParameter("phone")%>&nbsp;&nbsp; <%=request.getParameter("phone2")%><br>
-</font>
-</td></tr>
-</table>
-</div>
-<%
-  }
 %>
 <div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:0px; width:70px; height:20px;"> 
-<input type="button" name="button" value="<bean:message key='global.btnPrint'/>" onClick="window.print();">
+  <a href=# onClick="window.print();"><img src="../images/print.gif" width="16" height="16" border="0"><bean:message key="demographic.demographicprintdemographic.btnPrint"/></a> 
 </div>
-<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:24px; width:70px; height:20px;"> 
-<input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);">
+<div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:22px; width:70px; height:20px;"> 
+  <a href=# onClick="history.go(-1);"><img src="../images/previous.gif" border="0"><bean:message key="global.btnBack"/></a> 
 </div>
 
 </body>

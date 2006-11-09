@@ -69,7 +69,7 @@ function onNewPatient() {
   document.labelprint.label3no.value="0";
 }
 function checkTotal() {
-  var total = 0+ document.labelprint.label1no.value + document.labelprint.label2no.value + document.labelprint.label3no.value + document.labelprint.label4no.value + document.labelprint.label5no.value;
+  var total = 0+ document.labelprint.label1no.value + document.labelprint.label2no.value + document.labelprint.label3no.value;
   if(total>7) return false;
   return true;
 }
@@ -82,7 +82,7 @@ function ClipBoard1(spanId) {
 	if( browser.indexOf('msie') > -1 )
 	{			
 		document.getElementById("text1").innerText = document.getElementById(spanId).innerText;
-		//alert("clip");
+		//alert("cl ip");
 		Copied = document.getElementById("text1").createTextRange();
 		//alert("clip");
 		Copied.execCommand("RemoveFormat");
@@ -214,8 +214,6 @@ function ClipBoard4() {
 /*  String label1 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br><br><b>" +last_name+ ", " +first_name+ "</b><br>&nbsp;&nbsp;&nbsp;&nbsp;" +hin+ "<br>&nbsp;&nbsp;&nbsp;&nbsp;" +dob+ " " +sex+ "<br></font>";
   String label2 = "<font face=\"Courier New, Courier, mono\" size=\"2\"><b>" +last_name+ ", " +first_name+ "  &nbsp;" +chart_no+ "</b><br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br>Home: " +phone+ "<br>" +dob+ " " +sex+ "<br>" +hin+ "<br>Bus:" +phone2+ "Dr."+  providername+ "<br></font>";
   String label3 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +last_name+ ", " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";
-  String label4 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +first_name+ " " +last_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br></font>";
-  String label5 = "<font face=\"Courier New, Courier, mono\" size=\"2\">" +chart_no+ " " +last_name+ " " +first_name+ "<br>" +address+ "<br>" +city+ ", " +province+ ", " +postal+ "<br> +dob+ "  " +age+ " " +sex+ "  " +hin+ " " +province+ "<br> +phone+ "<br></font>";
 */
 %>
 
@@ -238,7 +236,6 @@ function ClipBoard4() {
     <input type="hidden" name="providername" value="<%=providername%>">
     <input type="hidden" name="province" value="<%=province%>">
     <input type="hidden" name="sex" value="<%=sex%>">
-    <input type="hidden" name="age" value="<%=age%>">
 	  </td>
     </tr>
     <tr>
@@ -325,7 +322,7 @@ function ClipBoard4() {
 		
 		</TEXTAREA>
 		<input type="button" onClick="ClipBoard1('copytext4');" value="Copy to Clipboard" />
-        <input type="checkbox" name="label4checkbox" value="checked" >
+        <input type="checkbox" name="label3checkbox" value="checked" >
         <input type="text" name="label4no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.4no","1") %>">
       </td>
     </tr>
@@ -345,7 +342,7 @@ function ClipBoard4() {
 		<TEXTAREA ID="text1" STYLE="display:none;">
 		</TEXTAREA>
 		<input type="button" onClick="ClipBoard1('copytext5');" value="Copy to Clipboard" />
-        <input type="checkbox" name="label5checkbox" value="checked" >
+        <input type="checkbox" name="label3checkbox" value="checked" >
         <input type="text" name="label5no" size="2" maxlength="2" value="<%= oscarVariables.getProperty("label.5no","1") %>">
       </td>
     </tr>
@@ -355,6 +352,9 @@ function ClipBoard4() {
         <input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);">
       </td>
     </tr>
+<%--    <input type="hidden" name="label1" value='<%=label1%>'>
+    <input type="hidden" name="label2" value='<%=label2%>'>
+    <input type="hidden" name="label3" value='<%=label3%>'>--%>
 </table>
   </form>
 
