@@ -68,7 +68,10 @@
       readOnly = true;    
    }
 
-
+   String patientName = props.getProperty("patientName"," , ");
+   String[] patientNames = patientName.split(",");
+   
+   String[] patientDOB = props.getProperty("birthDate", " / / ").split("/");
 %>
 
 <script type="text/javascript" language="Javascript">
@@ -76,7 +79,8 @@
 var temp;
 temp = "";
 
-    function onPrint() {
+
+    function onPrint(pdf) {
         document.forms[0].submit.value="print"; 
         var ret = checkAllDates();
         if(ret==true)
@@ -84,7 +88,12 @@ temp = "";
             //ret = confirm("Do you wish to save this form and view the print preview?");
             //popupFixedPage(650,850,'../provider/notice.htm');
             temp=document.forms[0].action;
-            document.forms[0].action = "formlabreqprint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>";
+            
+            if( pdf )
+                document.forms[0].action = "../form/createpdf?__title=Lab+Request&__cfgfile=labReqPrint&__template=newReqLab";
+            else
+                document.forms[0].action = "formlabreqprint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>";
+                
             document.forms[0].target="labReqPrint";
         }
         return ret;
@@ -265,6 +274,11 @@ var maxYear=3100;
 <html:form action="/form/formname">
 
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
+<input type="hidden" name="patientLastName" value="<%=patientNames[0].trim()%>" />
+<input type="hidden" name="patientFirstName" value="<%=patientNames[1].trim()%>" />
+<input type="hidden" name="patientBirthYear" value="<%=patientDOB[0].trim()%>" />
+<input type="hidden" name="patientBirthMth" value="<%=patientDOB[1].trim()%>" />
+<input type="hidden" name="patientBirthDay" value="<%=patientDOB[2].trim()%>" />
 <input type="hidden" name="ID" value="<%= props.getProperty("ID", "0") %>"/>
 <input type="hidden" name="provider_no" value=<%=request.getParameter("provNo")%> />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
@@ -281,7 +295,8 @@ var maxYear=3100;
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <% } %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="Print" onclick="javascript:return onPrint(false);"/>
+            <input type="submit" value="Print Pdf" onclick="javascript:return onPrint(true);"/>
         </td>
     </tr>
 </table>
@@ -895,7 +910,8 @@ var maxYear=3100;
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <% } %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="submit" value="Print" onclick="javascript:return onPrint(false);"/>
+            <input type="submit" value="Print Pdf" onclick="javascript:return onPrint(true);"/>
         </td>
     </tr>
 </table>
