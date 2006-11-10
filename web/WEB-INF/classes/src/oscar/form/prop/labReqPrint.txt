@@ -1,0 +1,73 @@
+reqProvName : left, 89, 66, 0, BaseFont.HELVETICA, 12
+__familyTitle : left, 33, 88, 0, BaseFont.HELVETICA, 12, Family Physician:
+provName : left, 33, 100, 0, BaseFont.HELVETICA, 12
+clinicAddress : left, 33, 112, 0, BaseFont.HELVETICA, 12
+clinicCity : left, 33, 124, 0, BaseFont.HELVETICA, 12
+clinicPC : left, 33, 136, 0, BaseFont.HELVETICA, 12
+
+practitionerNo : center, 17, 185, 0, BaseFont.HELVETICA, 12, _, 148, 157, 10
+ohip : left, 76, 193, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+thirdParty : left, 76, 202, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+wcb : left, 76, 210, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+
+aci : left, 20, 308, 0, BaseFont.HELVETICA, 8, _, 238, 222, 10
+
+patientLastName : left, 242, 230, 0, BaseFont.HELVETICA, 12
+patientFirstName : left, 463, 230, 0, BaseFont.HELVETICA, 12
+healthNumber :  left, 242, 174, 0, BaseFont.HELVETICA, 12
+province :  left, 242, 202, 0, BaseFont.HELVETICA, 12
+patientAddress : left, 242, 251, 0, BaseFont.HELVETICA, 12
+patientCity  : left, 242, 261, 0, BaseFont.HELVETICA, 12
+patientPC : left, 242, 271, 0, BaseFont.HELVETICA, 12
+version :  left, 387, 174, 0, BaseFont.HELVETICA, 12
+orn :  left, 271, 202, 0, BaseFont.HELVETICA, 12
+patientBirthYear :  left, 418, 174, 0, BaseFont.HELVETICA, 12
+patientBirthMth :  left, 478, 174, 0, BaseFont.HELVETICA, 12
+patientBirthDay :  left, 507, 174, 0, BaseFont.HELVETICA, 12
+phoneNumber :  left, 448, 202, 0, BaseFont.HELVETICA, 12
+paymentProgram :  left, 536, 174, 0, BaseFont.HELVETICA, 12
+sex : left, 565, 230, 0, BaseFont.HELVETICA, 12
+
+b_glucose : left, 20, 335, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_creatine : left, 20, 351, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_uricAcid : left, 20, 366, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_sodium : left, 20, 381, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_potassium : left, 20, 397, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_chloride : left, 20, 412, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_ast : left, 20, 428, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_alkPhosphate : left, 20, 441, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_bilirubin : left, 20, 456, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_cholesterol : left, 20, 471, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_triglyceride : left, 20, 487, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+b_urinalysis : left, 20, 503, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+v_acuteHepatitis : left, 25, 531, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_chronicHepatitis : left, 25, 547, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_immune : left, 25, 561, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_hepA : left, 60, 580, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+v_hepB : left, 60, 590, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+formDate : left, 122, 647, 0, BaseFont.HELVETICA, 10
+
+h_bloodFilmExam : left, 177, 335, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+h_hemoglobin : left, 177, 351, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+h_wcbCount : left, 177, 366, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+h_hematocrit : left, 177, 381, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+h_prothrombTime : left, 177, 397, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_pregnancyTest : left, 177, 428, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_heterophile : left, 177, 441, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_rubella : left, 177, 456, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_prenatal : left, 177, 471, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_repeatPrenatal : left, 177, 503, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_prenatalHepatitisB : left, 177, 517, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+i_vdrl : left, 177, 533, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+
+m_cervicalVaginal : left, 177, 562, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_sputum : left, 177, 578, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_throat : left, 177, 595, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_urine : left, 177, 610, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_stoolCulture : left, 177, 624, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_otherSwabs : left, 177, 654, 0, BaseFont.ZAPFDINGBATS, 8, \u2715
+m_other : left, 192, 654, 0, BaseFont.HELVETICA, 8
+
+otherTest : left, 335, 474, 0, BaseFont.HELVETICA, 8, _, 495, 342, 10
