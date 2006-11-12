@@ -114,8 +114,6 @@ public class LoginCheckLoginBean {
         LogAction.addALog("", "failed", LogConst.CON_LOGIN, username, ip);
         userpassword = null;
         password = null;
-        if (DBHandler.isInit())
-            DBHandler.init(null, null, null, null, null);
         return null;
     }
 
@@ -124,8 +122,6 @@ public class LoginCheckLoginBean {
         LogAction.addALog("", "expired", LogConst.CON_LOGIN, username, ip);
         userpassword = null;
         password = null;
-        if (DBHandler.isInit())
-            DBHandler.init(null, null, null, null, null);
         return new String[] { "expired" };
     }
 
