@@ -722,7 +722,9 @@ function checkFormTypeIn() {
       </td>
     </tr>
     <tr valign="top">
-      <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDoctor"/>: </b></td>
+      <td align="right"><b><% if(oscarProps.getProperty("demographicLabelDoctor") != null) { out.print(oscarProps.getProperty("demographicLabelDoctor","")); } else { %>
+                                                <bean:message key="demographic.demographiceditdemographic.formDoctor"/><% } %>
+                                                : </b></td>
       <td align="left" >
         <select name="staff">
           <%
