@@ -310,7 +310,7 @@ table.ele td{
                             Hashtable h = deName.getNameAgeSexHashtable(demos[i]);
                     %>
                         <tr>
-                            <td><%=i%></td>
+                            <td><%=i+1%></td>
                             <td><input type="checkbox" name="demos" value="<%=demos[i]%>" checked /></td>
                             <td><%=h.get("lastName")%>, <%=h.get("firstName")%></td>    
                             <td><%=h.get("sex")%></td>
