@@ -95,6 +95,10 @@ public class ManagePatientLettersAction extends Action {
         }
 
         if (log.isTraceEnabled()) { log.trace("End of ManagePatientLetters Action");}
+        
+        if ("success_manage_from_prevention".equals(request.getParameter("goto")) ){
+            return mapping.findForward("success_manage_from_prevention");
+        }
         return mapping.findForward("success");   
      }
     
