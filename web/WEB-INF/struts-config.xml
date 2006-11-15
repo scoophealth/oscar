@@ -1076,6 +1076,7 @@
 
     <action input="/report/GenerateLetters.jsp" name="ManagePatientLettersForm" path="/report/ManageLetters" scope="request" type="oscar.oscarReport.pageUtil.ManagePatientLettersAction">
       <forward name="success" path="/report/GenerateLetters.jsp" />
+      <forward name="success_manage_from_prevention" path="/oscarPrevention/PreventionReporting.jsp" />
     </action>
 
     <action input="/report/GenerateLetters.jsp" name="FrmForm" path="/report/DownloadLetter" scope="request" type="oscar.oscarReport.pageUtil.DownloadPatientLettersAction">
