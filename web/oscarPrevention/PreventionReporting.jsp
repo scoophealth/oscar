@@ -318,7 +318,7 @@ table.ele td{
                   String type = (String) request.getAttribute("ReportType");
                   String ineligible = (String) request.getAttribute("inEligible");
                   String done = (String) request.getAttribute("up2date");
-                  String percentage = (String) request.getAttribute("precent");
+                  String percentage = (String) request.getAttribute("percent");
                   String followUpType = (String) request.getAttribute("followUpType");
                   ArrayList list = (ArrayList) request.getAttribute("returnReport");
                   Date asDate = (Date) request.getAttribute("asDate");

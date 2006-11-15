@@ -191,7 +191,7 @@ public class FluReport implements PreventionReport {
           Hashtable h = new Hashtable();
           
           h.put("up2date",""+Math.round(done));
-          h.put("precent",percentStr);
+          h.put("percent",percentStr);
           h.put("returnReport",returnReport);
           h.put("inEligible", ""+inList);
           h.put("eformSearch","Flu");
