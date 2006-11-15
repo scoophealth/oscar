@@ -57,19 +57,23 @@ Demographic Report tool
         margin-bottom: 3px;
         padding: 0;
      }
-
-     #provider li{                            
+ 
+     #provider li{
         display: inline;
+        float:left;
         list-style-type: none;
         //padding-left: 30px;
         padding: 4px;
         padding-top: 6px;
+        padding-bottom: 0px;
         border-bottom: 1px solid #666;
         border-right: 1px solid #666;
         border-top: 1px solid #666;
         border-left: 1px solid #666;
         margin-right: 2px;
+        margin-bottom: 2px;
      }
+
 
  </style>
                     
@@ -465,7 +469,7 @@ if ( thisForm != null || thisForm.getAgeStyle() == null || thisForm.getAgeStyle(
                     <%
                     for (int i =0 ; i < providerArray.size(); i++){
                     String pro = (String) providerArray.get(i);%>
-                     <li > <%=providerBean.getProperty(pro,"")%>
+                     <li > <%=providerBean.getProperty(pro,pro)%>
                        <html:multibox property="providerNo" value="<%=pro%>"/>
                      </li>
                     <%}%>
