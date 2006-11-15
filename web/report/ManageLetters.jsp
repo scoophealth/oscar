@@ -258,7 +258,7 @@ table.ele td{
             </td>
             <td valign="top" class="MainTableRightColumn">
                <html:form action="/report/ManageLetters" enctype="multipart/form-data">
-               
+                <input type="hidden" name="goto" value="<%=request.getParameter("goto")%>"/>
                <div>
                   Select Letter:
                   <input type="file" name="reportFile" value="upload"/>
