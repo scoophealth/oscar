@@ -29,6 +29,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -37,6 +38,7 @@
 <html:base/>
 <link rel="stylesheet" type="text/css" media="screen" href="labReqStyle.css" >
 <link rel="stylesheet" type="text/css" media="print" href="print.css">
+<script src="../share/javascript/prototype.js" type="text/javascript"></script>
 <style type="text/css">
 
 </style>
@@ -52,7 +54,7 @@
 	int provNo = Integer.parseInt((String) session.getAttribute("user"));
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
    java.util.Properties props = rec.getFormRecord(demoNo, formId);
-
+        
 	props = ((FrmLabReqRecord) rec).getFormCustRecord(props, provNo);
    OscarProperties oscarProps = OscarProperties.getInstance();
 
@@ -72,6 +74,7 @@
    String[] patientNames = patientName.split(",");
    
    String[] patientDOB = props.getProperty("birthDate", " / / ").split("/");
+   request.removeAttribute("submit");
 %>
 
 <script type="text/javascript" language="Javascript">
@@ -81,20 +84,27 @@ temp = "";
 
 
     function onPrint(pdf) {
-        document.forms[0].submit.value="print"; 
+         
         var ret = checkAllDates();
         if(ret==true)
-        {
+        {            
+            
             //ret = confirm("Do you wish to save this form and view the print preview?");
             //popupFixedPage(650,850,'../provider/notice.htm');
             temp=document.forms[0].action;
             
-            if( pdf )
-                document.forms[0].action = "../form/createpdf?__title=Lab+Request&__cfgfile=labReqPrint&__template=newReqLab";
-            else
-                document.forms[0].action = "formlabreqprint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>";
+            if( pdf ) {                
+                document.forms[0].action = "<rewrite:reWrite jspPage="formname.do?__title=Lab+Request&__cfgfile=labReqPrint&__template=newReqLab"/>";
+                document.forms[0].submit.value="printall"; 
+                document.forms[0].target="_self";
+            }
+            else {                
+                document.forms[0].action = "<rewrite:reWrite jspPage="formname.do"/>";
+                document.forms[0].submit.value="printLabReq"; 
+                document.forms[0].target="labReqPrint";          
+            }
                 
-            document.forms[0].target="labReqPrint";
+              
         }
         return ret;
     }
