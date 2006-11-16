@@ -105,11 +105,12 @@ public class FrmLabReqRecord extends FrmRecord {
                 sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
                         + provNo;
                 rs = db.GetSQL(sql);
-
+               
+                String num = "";
                 if (rs.next()) {
-                    String num = rs.getString("ohip_no");
-                    props.setProperty("reqProvName", rs.getString("provName"));
-                    //props.setProperty("practitionerNo", "0000-" + num + "-00");
+                    num = rs.getString("ohip_no");
+                    props.setProperty("reqProvName", rs.getString("provName"));                    
+                    props.setProperty("practitionerNo", "0000-" + num + "-00");
                 }
                 rs.close();
 
@@ -119,9 +120,12 @@ public class FrmLabReqRecord extends FrmRecord {
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
-                    String num = rs.getString("ohip_no");
+                    if( num.equals("") ) {
+                        num = rs.getString("ohip_no");
+                        props.setProperty("practitionerNo", "0000-"+num+"-00");
+                    }
                     props.setProperty("provName", rs.getString("provName"));
-                    props.setProperty("practitionerNo", "0000-"+num+"-00");
+                    
                 }
                 rs.close();
             }
