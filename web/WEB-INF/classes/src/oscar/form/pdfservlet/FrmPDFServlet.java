@@ -228,8 +228,9 @@ public class FrmPDFServlet extends HttpServlet {
             try {
                 reader = new PdfReader(propFilename);
             } catch (Exception dex) {
-                System.out.println("change path to inside oscar from :" + propFilename);
+                System.out.println("change path to inside oscar from :" + propFilename);                 
                 reader = new PdfReader("/oscar/form/prop/" + template);
+                System.out.println("Found template at /oscar/form/prop/" + template);                
             }
             
             // retrieve the total number of pages
@@ -513,19 +514,18 @@ public class FrmPDFServlet extends HttpServlet {
         String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + cfgFilename;
         
         try {
-            System.out.println("1Can't find the prop file! " + propFilename);
-            InputStream is = new FileInputStream(propFilename); //getServletContext().getResourceAsStream(propFilename);
-            System.out.println("2Can't find the prop file! " + cfgFilename);
+            System.out.println("1Looking for the prop file! " + propFilename);
+            InputStream is = new FileInputStream(propFilename); //getServletContext().getResourceAsStream(propFilename);            
             if (is != null) {
-                System.out.println("3Can't find the prop file! " + cfgFilename);
+                System.out.println("2Found the prop file! " + cfgFilename);
                 ret.load(is);
                 is.close();
             } else {
-                System.out.println("4Can't find the prop file! " + cfgFilename);
+                System.out.println("3Can't open the prop file! " + cfgFilename);
             }
         } catch (Exception e) {
             try {
-                String propPath = "/WEB-INF/classes/" + "oscar/form/prop/";
+                String propPath = "/WEB-INF/classes/oscar/form/prop/";
                 InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
                 if (is != null) {
                     System.out.println("found prop file " + propPath + cfgFilename);
@@ -540,7 +540,7 @@ public class FrmPDFServlet extends HttpServlet {
     }
     
     private String getProjectName() {
-        String propPath = "" + this.getClass().getClassLoader().getResource("/");
+        String propPath = "" + this.getClass().getClassLoader().getResource("/");        
         propPath = propPath.substring(0, propPath.lastIndexOf("/WEB-INF"));
         String propFilename = propPath.substring(propPath.lastIndexOf("/") + 1);
         return propFilename;
