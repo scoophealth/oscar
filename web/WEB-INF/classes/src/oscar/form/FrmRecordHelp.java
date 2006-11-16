@@ -244,6 +244,8 @@ public class FrmRecordHelp {
             return "graph";
         } else if (submit != null && submit.equalsIgnoreCase("printall")) {
             return "printAll";
+        } else if (submit != null && submit.equalsIgnoreCase("printLabReq")) {
+            return "printLabReq";
         } else {
             return "failure";
         }
