@@ -28,7 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@page import="oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties"%>
+<%@page import="java.util.ArrayList, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
 <%
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
@@ -46,18 +46,20 @@ String providerNo = (String) session.getAttribute("user");
 oscar.oscarDemographic.data.DemographicData demoData = null;
 oscar.oscarDemographic.data.DemographicData.Demographic demographic = null;
 
-if( demo == null )
-    System.out.println("ConsultationFormReq demo is null");
+oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
+consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
+
+if( requestId != null ) consultUtil.estRequestFromId(requestId);
+if( demo == null ) demo = consultUtil.demoNo;
+
 if (demo != null ){
     demoData = new oscar.oscarDemographic.data.DemographicData();
     demographic = demoData.getDemographic(demo);
 }
-
 else if(requestId==null)
     response.sendRedirect("../error.jsp");
 
-oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil consultUtil;
-consultUtil = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil();
+
 if (demo != null) consultUtil.estPatient(demo);
 consultUtil.estTeams();
 
@@ -68,6 +70,7 @@ String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
 String formattedDate = year+"/"+mon+"/"+day;
 
 OscarProperties props = OscarProperties.getInstance();
+
 %><head>
 <title>
 <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.title"/>
@@ -89,7 +92,13 @@ input.btn{
    border-bottom-color:#363;
 }
     
+.doc {
+    color:blue;
+}
 
+.lab {
+    color: #CC0099;
+}
 td.tite {
 
 background-color: #bbbbFF;
@@ -376,6 +385,8 @@ function FillThreeBoxes(serNbr)	{
 </SCRIPT>
 
 <script type="text/javascript" language="javascript">
+    
+    
 function BackToOscar() {
        window.close();
 }
@@ -499,9 +510,36 @@ function importFromEnct(reqInfo,txtArea)
     txtArea.value += info;
                 
 }
+
+function updateAttached() {             
+    var t = setTimeout('fetchAttached()', 2000);
+}
+
+function fetchAttached() {
+    var updateElem = 'tdAttachedDocs';
+    var params = "demo=<%=demo%>&requestId=<%=requestId%>";
+    var url = "http://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/displayAttachedFiles.jsp";
+
+    var objAjax = new Ajax.Request (                
+                url,
+                {
+                    method: 'get',
+                    parameters: params,                     
+                    onSuccess: function(request) {
+                                    $(updateElem).innerHTML = request.responseText;
+                                },
+                    onFailure: function(request) {
+                                    $(updateElem).innerHTML = "<h3>Error: " + + request.status + "</h3>";
+                                }
+                }
+
+            );
+
+}        
+          
 </script>
 <link rel="stylesheet" type="text/css" href="../encounterStyles.css">
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();disableDateFields()">
+<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="window.focus();disableDateFields();fetchAttached();">
 <html:errors/>
 
 <html:form action="/oscarEncounter/RequestConsultation" onsubmit="alert('HTHT'); return false;">        
@@ -510,8 +548,7 @@ function importFromEnct(reqInfo,txtArea)
         thisForm = (oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm ) request.getAttribute("EctConsultationFormRequestForm");
         //System.out.println("Requested ID :"+requestId);
         if (requestId !=null ){
-                consultUtil.estRequestFromId(requestId);
-                demo = consultUtil.demoNo;
+                
                 thisForm.setAllergies(consultUtil.allergies);
                 thisForm.setReasonForConsultation(consultUtil.reasonForConsultation);
                 thisForm.setClinicalInformation(consultUtil.clinicalInformation);
@@ -664,8 +701,22 @@ function importFromEnct(reqInfo,txtArea)
                                 <td class="stat">&nbsp;</td>
                             </tr>                            
                             <tr>
-                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
-                            </tr>                            
+                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('http://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center">Currently Attached Files:</td>
+                            </tr>
+                            <tr>
+                                <td id="tdAttachedDocs">                                                                       
+                                </td>                                
+                            </tr>
+                            <tr>
+                                <td style="text-align:center">
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Legend"/><br/>
+                                    <span class="doc"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs"/></span><br/>
+                                    <span class="lab"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs"/></span>
+                                </td>
+                            </tr>
                         </table>
                     </td>                    
                 </tr>                
@@ -1050,9 +1101,9 @@ function importFromEnct(reqInfo,txtArea)
                 <%}%>
             </td>
        </tr>
-
-       <SCRIPT LANGUAGE=JAVASCRIPT>
-        <!--
+       
+       <script type="text/javascript">
+        
 	        initMaster();
         	initService('<%=consultUtil.service%>');
             document.EctConsultationFormRequestForm.phone.value = ("");
@@ -1066,7 +1117,7 @@ function importFromEnct(reqInfo,txtArea)
                 document.EctConsultationFormRequestForm.specialist.options.selectedIndex = 0;
             <%}%>
         //-->
-        </SCRIPT>
+        </script>
 
 
 
@@ -1091,6 +1142,10 @@ function importFromEnct(reqInfo,txtArea)
     </table>
     </html:form>
 </body>
+<script type="text/javascript" src="../../share/javascript/prototype.js"/>
+<script type="text/javascript" language="javascript">
+    
 
+</script>
 </html:html>
 
