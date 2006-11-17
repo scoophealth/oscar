@@ -150,24 +150,16 @@ public class EDocUtil extends SqlUtilBaseS {
     public static ArrayList listDocs(String demoNo, String consultationId, boolean attached) {
         String sql = "SELECT DISTINCT d.document_no, d.doccreator, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype FROM document d, ctl_document c " + 
                   "WHERE d.status=c.status AND d.status != 'D' AND c.document_no=d.document_no AND " + 
-                  "c.module='demographic' AND c.module_id = " + demoNo +  " AND d.document_no";
+                  "c.module='demographic' AND c.module_id = " + demoNo;
         
-        String subquery = "(SELECT document_no FROM consultdocs WHERE d.document_no = consultdocs.document_no AND " +
-                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'D' AND consultdocs.deleted IS NULL)";
+        String attachQuery = "SELECT d.document_no, d.doccreator, d.doctype, d.docdesc, d.observationdate, d.status, d.docfilename, d.contenttype FROM document d, consultdocs cd WHERE d.document_no = cd.document_no AND " +
+                            "cd.requestId = " + consultationId + " AND cd.doctype = 'D' AND cd.deleted IS NULL";                                                                    
+                      
+        ArrayList resultDocs = new ArrayList(); 
+        ArrayList attachedDocs = new ArrayList();
         
-        String qualifier;
-        if( attached )
-            qualifier = " IN ";
-        else
-            qualifier = " NOT IN ";                                  
-        
-        sql += qualifier + subquery + " ORDER BY d.docdesc";
-        
-        System.out.println("sql list: " + sql);
-        ResultSet rs = getSQL(sql);
-        ArrayList resultDocs = new ArrayList();
-        
-        try {
+        try {            
+            ResultSet rs = getSQL(attachQuery);
             while (rs.next()) {
                 EDoc currentdoc = new EDoc();
                 currentdoc.setDocId(rsGetString(rs, "document_no"));
@@ -177,10 +169,32 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
                 currentdoc.setType(rsGetString(rs, "doctype"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
-                currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
-                resultDocs.add(currentdoc);
+                currentdoc.setObservationDate(rsGetString(rs, "observationdate"));                
+                attachedDocs.add(currentdoc);
             }
             rs.close();
+            
+            if( !attached ) {
+                rs = getSQL(sql);
+                while (rs.next()) {
+                    EDoc currentdoc = new EDoc();
+                    currentdoc.setDocId(rsGetString(rs, "document_no"));
+                    currentdoc.setDescription(rsGetString(rs, "docdesc"));
+                    currentdoc.setFileName(rsGetString(rs, "docfilename"));
+                    currentdoc.setContentType(rsGetString(rs,"contenttype"));
+                    currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+                    currentdoc.setType(rsGetString(rs, "doctype"));
+                    currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
+                    currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+                    
+                    if( !attachedDocs.contains(currentdoc))
+                        resultDocs.add(currentdoc);
+                }
+                rs.close();
+            }
+            else
+                resultDocs = attachedDocs;
+            
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         }
