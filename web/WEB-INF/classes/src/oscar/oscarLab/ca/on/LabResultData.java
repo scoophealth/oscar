@@ -28,9 +28,11 @@
 package oscar.oscarLab.ca.on;
 
 import java.util.Date;
+import java.util.Comparator;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
 import oscar.util.UtilDateUtilities;
+
 
 /**
  *
@@ -199,8 +201,28 @@ public class LabResultData implements Comparable{
         return ret;
     }
                 
-                   
-                   
+    public CompareId getComparatorId() {
+        return new CompareId();
+    }
+    
+    
+    public class CompareId implements Comparator {
+        
+        public int compare( Object o1, Object o2 ) {
+            LabResultData lab1 = (LabResultData)o1;
+            LabResultData lab2 = (LabResultData)o2;
+            
+            int labPatientId1 = Integer.parseInt(lab1.labPatientId);
+            int labPatientId2 = Integer.parseInt(lab2.labPatientId);
+            
+            if( labPatientId1 < labPatientId2 )
+                return -1;
+            else if( labPatientId1 > labPatientId2 )
+                return 1;
+            else
+                return 0;
+        }
+    }
    
    
 }
