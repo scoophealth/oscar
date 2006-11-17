@@ -151,16 +151,20 @@ function verifyChecks(t){
          return false;
    }else{
       var oneChecked = 0;
-      for ( i=0; i < t.docNo.length; i++){
-         if(t.docNo[i].checked){
-            oneChecked = oneChecked + 1;
-         }
+      if( t.docNo.length ) {
+        for ( i=0; i < t.docNo.length; i++){
+            if(t.docNo[i].checked){
+                ++oneChecked;
+                break;
+            }
+        }
       }
+      else 
+        oneChecked = t.docNo.checked ? 1 : 0;
+        
       if ( oneChecked == 0 ){
          alert("No documents selected");
-         return false
-            request.setAttribute("functionid", request.getParameter("functionid"));
-            e.printStackTrace();
+         return false;            
       }
    }
    return true;
