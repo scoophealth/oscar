@@ -26,7 +26,7 @@ import oscar.oscarTags.*;
 import oscar.util.*;
 import java.util.Date;
 
-public class EDoc extends TagObject {
+public class EDoc extends TagObject implements Comparable {
     private String docId;
     private String description = "";
     private String dateTimeStamp = "";
@@ -58,6 +58,31 @@ public class EDoc extends TagObject {
         preliminaryProcessing();
     }
     
+    /**
+     *Comparable based on document id
+     */
+    public int compareTo(Object o) {        
+        EDoc doc = (EDoc)o;
+        int ret;
+        int id1 = Integer.parseInt(docId);
+        int id2 = Integer.parseInt(doc.getDocId());
+        
+        if(id1 < id2 )
+            ret = -1;
+        else if( id1 > id2 )
+            ret = 1;
+        else
+            ret = 0;
+        
+        return ret;
+    }
+    
+    public boolean equals(Object o) {
+        if( o == null )
+            return false;
+        
+        return (compareTo(o) == 0);
+    }
     
     private void preliminaryProcessing() {
         this.dateTimeStamp = EDocUtil.getDmsDateTime();
