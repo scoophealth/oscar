@@ -89,7 +89,7 @@ String[] docType = {"D","L"};
 }
 
 .lab {
-    color:#CC3399;    
+    color:#CC0099;    
 }
 
 .legend {
@@ -146,7 +146,7 @@ function swap(srcName,dstName) {
     } //end for
     
     if( src.options.length == 0 )
-        setEmpty(src);
+        setEmpty(src);            
             
 }
 
@@ -200,14 +200,36 @@ function save() {
        if( ops.options.length == 1 && ops.options[0].value == "0" )
         ops.options.length = 0;
        
+       var list = window.opener.document.getElementById("attachedList");       
+       var paragraph = window.opener.document.getElementById("attachDefault");
+       
+       //if we are saving something we need to update list on parent form
+       if( ops.options.length )
+            paragraph.innerHTML = "";                                                            
+       
+       //delete what we have before adding new docs to list
+       while(list.firstChild) {
+            list.removeChild(list.firstChild);
+       }
+       
        for( var idx = 0; idx < ops.options.length; ++idx ) {
             saved += ops.options[idx].value;
             
             if( idx < ops.options.length - 1 )
                 saved += "|";       
+                
+            listElem = window.opener.document.createElement("li");
+            listElem.innerHTML = ops.options[idx].innerHTML;
+            listElem.className = ops.options[idx].className;
+            list.appendChild(listElem);
+                            
        }
                    
-       window.opener.document.EctConsultationFormRequestForm.documents.value = saved;       
+       window.opener.document.EctConsultationFormRequestForm.documents.value = saved; 
+      
+       if( list.childNodes.length == 0 )
+            paragraph.innerHTML = "<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Empty"/>";
+            
        ret = false;
     }    
     else {        
@@ -215,6 +237,7 @@ function save() {
         for( var idx = 0; idx < ops.options.length; ++idx )
             ops.options[idx].selected = true;
             
+        window.opener.updateAttached();
         ret = true;
     }
     window.close();
@@ -223,22 +246,22 @@ function save() {
 //-->
 </script>
 </head>
-<body onload="init()" style="background-color:#ddddff">
+<body onload="init()" style="font-family: Verdana, Tahoma, Arial, sans-serif; background-color:#ddddff">
    
   <h3 style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.header"/> <%=patientName%></h3>
   <html:form action="/oscarConsultationRequest/attachDoc">
-  <table>
+  <table width="100%">
       <tr>
          <th style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.available"/></th>
          <th>&nbsp;</th>
          <th style="text-align:center"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.attached"/></th>
       </tr>
       <tr>
-         <td style="width:33%;text-align:left" valign="top">                                 
+         <td style="width:45%; text-align:left" valign="top">                                 
            <html:hidden property="requestId" value="<%=requestId%>"/>
            <html:hidden property="demoNo" value="<%=demoNo%>"/>
            <html:hidden property="providerNo" value="<%=providerNo%>"/>
-               <html:select style="width=100%" property="documents" multiple="1" size="10">                           
+           <html:select style="width: 100%;" property="documents" multiple="1" size="10">                           
              <%                
                 ArrayList privatedocs = new ArrayList();
                 privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.UNATTACHED);
@@ -264,9 +287,9 @@ function save() {
              %>
                </html:select>
          </td>
-         <td style="width:33%;text-align:center"><input type="button" class="btn" onclick="swap('documents','attachedDocs')" value=">>"/><br/><input type="button" class="btn" onclick="swap('attachedDocs','documents')" value="<<"/></td>
-         <td style="width:33%;text-align:right">
-           <html:select style="width=100%" property="attachedDocs" multiple="1" size="10">
+         <td style="width:10%; text-align:center"><input type="button" class="btn" onclick="swap('documents','attachedDocs')" value=">>"/><br/><input type="button" class="btn" onclick="swap('attachedDocs','documents')" value="<<"/></td>
+         <td style="width:45%; text-align:right">
+           <html:select style="width: 100%;" property="attachedDocs" multiple="1" size="10">
                <%                
                 ArrayList privatedocs = new ArrayList();
                 privatedocs = EDocUtil.listDocs(demoNo, requestId, EDocUtil.ATTACHED);
@@ -294,17 +317,15 @@ function save() {
            </html:select>
          </td>
       </tr>
-      <tr>
-        <td>&nbsp;</td>
+  </table>
+  <table width="100%">
+      <tr>        
         <td style="text-align:center">
             <input type="submit" class="btn" name="submit" value="<bean:message key="oscarEncounter.oscarConsultationRequest.AttachDocPopup.submit"/>" onclick="return save();"/> 
-        </td>
-        <td>&nbsp;</td>
+        </td>       
       </tr>
-      <tr>
-        <td>&nbsp;</td>
-        <td style="text-align:center"><span class="legend">Legend</span><br/><span class="doc legend">Blue - document</span><br/><span class="lab legend">Red - lab</span></td>
-        <td>&nbsp;</td>
+      <tr>        
+        <td style="text-align:center"><span class="legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.Legend"/></span><br/><span class="doc legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendDocs"/></span><br/><span class="lab legend"><bean:message key="oscarEncounter.oscarConsultationRequest.AttachDoc.LegendLabs"/></span></td>        
       </tr>
     </table>
  </html:form>
