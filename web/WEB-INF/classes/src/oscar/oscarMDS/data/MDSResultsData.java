@@ -51,43 +51,50 @@ public class MDSResultsData {
     *Lists labs predicated on relationship to patient's consultation
     */
    public ArrayList populateCMLResultsData(String demographicNo, String consultationId, boolean attached) {
-       String sql = "SELECT lpp.id, lpp.collection_date, lpp.lab_status, patientLabRouting.id AS labId FROM labPatientPhysicianInfo lpp, patientLabRouting "
+       String sql = "SELECT lpp.id, lpp.collection_date, patientLabRouting.id AS labId FROM labPatientPhysicianInfo lpp, patientLabRouting "
             +" WHERE patientLabRouting.lab_type = 'CML' AND lpp.id = patientLabRouting.lab_no AND " 
-            +" patientLabRouting.demographic_no='"+demographicNo+"' AND patientLabRouting.id";          
+            +" patientLabRouting.demographic_no="+demographicNo;          
                
-       String subquery = "(SELECT document_no FROM consultdocs WHERE patientLabRouting.id = consultdocs.document_no AND " +
-                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL)";
-       String qualifier;
-       if( attached )
-            qualifier = " IN ";
-       else
-            qualifier = " NOT IN "; 
-                    
-       sql += qualifier + subquery;
+       String attachQuery = "SELECT document_no FROM consultdocs, patientLabRouting WHERE patientLabRouting.id = consultdocs.document_no AND " +
+                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY document_no";
        
        labResults = new ArrayList();
+       ArrayList attachedLabs = new ArrayList();
+       
        try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         System.out.println(sql);
-         ResultSet rs = db.GetSQL(sql);
-         while(rs.next()){
-            LabResultData lbData = new LabResultData(LabResultData.CML);
-            
-            lbData.labType = LabResultData.CML;
-            lbData.reportStatus =  rs.getString("lab_status");
-            
-            lbData.segmentID = rs.getString("id"); 
-            lbData.labPatientId = rs.getString("labId");
-            
-            lbData.dateTime = rs.getString("collection_date");
-            lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") );                                    
-            
-            lbData.discipline = "Hem/Chem/Other";            
-            
-            labResults.add(lbData);
+         ResultSet rs = db.GetSQL(attachQuery);
+         
+         while(rs.next()) {
+             LabResultData lbData = new LabResultData(LabResultData.CML);
+             lbData.labType = LabResultData.CML;
+             lbData.labPatientId = rs.getString("document_no");
+             attachedLabs.add(lbData);
          }
          rs.close();
-         db.CloseConn();
+         
+         
+         rs = db.GetSQL(sql);         
+         LabResultData lbData = new LabResultData(LabResultData.CML);
+         LabResultData.CompareId c = lbData.getComparatorId();
+         while(rs.next()){            
+            
+            lbData.labType = LabResultData.CML;            
+            lbData.labPatientId = rs.getString("labId");
+            lbData.segmentID = rs.getString("id"); 
+            lbData.dateTime = rs.getString("collection_date");
+            lbData.setDateObj( UtilDateUtilities.getDateFromString(lbData.dateTime, "dd-MMM-yy") ); 
+                        
+            if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
+                labResults.add(lbData);
+            else if( !attached && Collections.binarySearch(attachedLabs, lbData, c) < 0 )
+                labResults.add(lbData);
+            
+            lbData = new LabResultData(LabResultData.CML);
+         }
+         rs.close();
+         db.CloseConn();                  
+         
       }catch(Exception e){
          System.out.println("exception in CMLPopulate:"+e);                  
          e.printStackTrace();
@@ -313,34 +320,39 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
             "patientLabRouting "+
             "LEFT JOIN mdsMSH on patientLabRouting.lab_no = mdsMSH.segmentID "+            
   	    "LEFT JOIN mdsZRG on patientLabRouting.lab_no = mdsZRG.segmentID "+
-            "WHERE " +        
-            "patientLabRouting.lab_type = 'MDS' " +
-            "AND patientLabRouting.demographic_no='"+demographicNo+"' AND patientLabRouting.id ";
-    String subquery = "(SELECT document_no FROM consultdocs WHERE patientLabRouting.id = consultdocs.document_no AND " +
-                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL)";
-    String qualifier;
-    if( attached )
-        qualifier = " IN ";
-    else
-        qualifier = " NOT IN "; 
-                    
-    sql += qualifier + subquery;
+            "WHERE patientLabRouting.lab_type = 'MDS' " +
+            "AND patientLabRouting.demographic_no=" + demographicNo;
     
+    String attachQuery = "SELECT document_no FROM consultdocs, patientLabRouting WHERE patientLabRouting.id = consultdocs.document_no AND " +
+                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL";
+        
     labResults = new ArrayList();
+    ArrayList attachedLabs = new ArrayList();
+    
     try {
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        System.out.println("sql "+sql);
-        ResultSet rs = db.GetSQL(sql);                                                        
+    
+        ResultSet rs = db.GetSQL(attachQuery);
         while(rs.next()) {            
-            LabResultData lData = new LabResultData(LabResultData.MDS);
+            LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);            
+            lbData.labPatientId = rs.getString("document_no");
+            attachedLabs.add(lbData);
+        }
+        rs.close();
+        
+        LabResultData lData = new LabResultData(LabResultData.MDS);            
+        LabResultData.CompareId c = lData.getComparatorId();
+        rs = db.GetSQL(sql);
+         
+        while(rs.next()) {            
+            lData = new LabResultData(LabResultData.MDS);
             lData.segmentID = Integer.toString(rs.getInt("segmentID"));
             lData.labPatientId = rs.getString("id");
                         
             lData.dateTime = rs.getString("dateTime");
             lData.setDateObj(UtilDateUtilities.getDateFromString(lData.dateTime, "yyyy-MM-dd HH:mm:ss"));                                    
             
-            String reportGroupDesc = rs.getString("reportGroupDesc");
-            
+            String reportGroupDesc = rs.getString("reportGroupDesc");            
             if ( reportGroupDesc != null && reportGroupDesc.startsWith("MICRO") ) {
                lData.discipline = "Microbiology";
             } else if ( reportGroupDesc != null && reportGroupDesc.startsWith("DIAGNOSTIC IMAGING") ) {
@@ -348,7 +360,13 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
             } else {
                lData.discipline = "Hem/Chem/Other";
             }
-            labResults.add(lData); 
+            
+            if( attached && Collections.binarySearch(attachedLabs, lData, c) >= 0 )
+                labResults.add(lData);
+            else if( !attached && Collections.binarySearch(attachedLabs, lData, c) < 0 )
+                labResults.add(lData);                        
+            
+            lData = new LabResultData(LabResultData.MDS);
          }
          rs.close();
          db.CloseConn();

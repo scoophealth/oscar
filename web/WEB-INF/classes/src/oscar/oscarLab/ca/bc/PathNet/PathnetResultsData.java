@@ -50,33 +50,43 @@ public class PathnetResultsData {
        String sql = "SELECT m.message_id, patientLabRouting.id " +
                 "FROM hl7_message m, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = m.message_id "+             
-                "AND patientLabRouting.lab_type = 'BCP' AND patientLabRouting.demographic_no='"+demographicNo+"' " +
-                "AND patientLabRouting.id ";
-       String subquery = "(SELECT document_no FROM consultdocs WHERE patientLabRouting.id = consultdocs.document_no AND " +
-                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL)";
-       String qualifier;
-       if( attached )
-            qualifier = " IN ";
-       else
-            qualifier = " NOT IN "; 
-                    
-       sql += qualifier + subquery;
+                "AND patientLabRouting.lab_type = 'BCP' AND patientLabRouting.demographic_no=" + demographicNo;
+                
+       String attachQuery = "SELECT consultdocs.document_no FROM consultdocs, patientLabRouting " + 
+                            "WHERE patientLabRouting.id = consultdocs.document_no AND " +
+                            "consultdocs.requestId = " + consultationId + " AND consultdocs.doctype = 'L' AND consultdocs.deleted IS NULL ORDER BY consultdocs.document_no";       
        
        ArrayList labResults = new ArrayList();
+       ArrayList attachedLabs = new ArrayList();
        try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         System.out.println(sql);
-         ResultSet rs = db.GetSQL(sql);
+         
+         ResultSet rs = db.GetSQL(attachQuery);
+         while(rs.next()) {
+             LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);            
+             lbData.labPatientId = rs.getString("document_no");
+             attachedLabs.add(lbData);
+         }
+         rs.close();
+         
+         LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);            
+         LabResultData.CompareId c = lbData.getComparatorId();
+         rs = db.GetSQL(sql);
+         
          while(rs.next()){
-            LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);            
+         
             lbData.labType = LabResultData.EXCELLERIS;            
             lbData.segmentID = rs.getString("message_id");
-            lbData.labPatientId = rs.getString("id");
-                                    
-            lbData.dateTime = findPathnetObservationDate(lbData.segmentID);
-                                                
+            lbData.labPatientId = rs.getString("id");                                    
+            lbData.dateTime = findPathnetObservationDate(lbData.segmentID);                                                
             lbData.discipline = findPathnetDisipline(lbData.segmentID);
-            labResults.add(lbData);
+            
+            if( attached && Collections.binarySearch(attachedLabs, lbData, c) >= 0 )
+                labResults.add(lbData);
+            else if( !attached && Collections.binarySearch(attachedLabs, lbData, c) < 0 )
+                labResults.add(lbData);
+            
+            lbData = new LabResultData(LabResultData.EXCELLERIS);      
          }
          rs.close();
          db.CloseConn();
