@@ -225,7 +225,7 @@ public class BillingReProcessBillAction
       double dblBillAmount = Double.parseDouble(codePrice);
       double dblUnit = Double.parseDouble(billingUnit);
       double amtTemp = dblBillAmount * dblUnit;
-      billingServicePrice = NumberFormat.getCurrencyInstance().format(amtTemp).replace("$","");
+      billingServicePrice = NumberFormat.getCurrencyInstance().format(amtTemp).replace('$',' ');
 
     }
     catch(NumberFormatException e){
