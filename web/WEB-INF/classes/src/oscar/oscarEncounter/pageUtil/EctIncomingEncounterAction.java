@@ -25,7 +25,8 @@
 package oscar.oscarEncounter.pageUtil;
 import oscar.util.*;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -107,11 +108,11 @@ public class EctIncomingEncounterAction extends Action {
         else{
             return (mapping.findForward("failure"));
         }
-        String[] newDocArr = (String[]) request.getSession().getServletContext().getAttribute("newDocArr");
+        ArrayList newDocArr = (ArrayList) request.getSession().getServletContext().getAttribute("newDocArr");
         
         System.out.println(newDocArr);
         String proNo = (String) request.getSession().getAttribute("user");
-        if (proNo != null  && newDocArr != null && Arrays.binarySearch(newDocArr,proNo) >= 0){
+        if (proNo != null  && newDocArr != null && Collections.binarySearch(newDocArr,proNo) >= 0){
             return (mapping.findForward("success2"));
         }else{
            return (mapping.findForward("success"));

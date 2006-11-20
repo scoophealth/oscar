@@ -76,8 +76,9 @@ public class Startup implements ServletContextListener {
             ///To be removed 
                String newDocs = p.getProperty("DOCS_NEW_ECHART");
                if (newDocs != null){
-                   String[] newDocArr = newDocs.split(",");
-                   Arrays.sort(newDocArr);
+                   String[] arrnewDocs = newDocs.split(",");
+                   ArrayList newDocArr = new ArrayList(Arrays.asList(arrnewDocs));
+                   Collections.sort(newDocArr);
                    sc.getServletContext().setAttribute("newDocArr",newDocArr);
                }
             ///
