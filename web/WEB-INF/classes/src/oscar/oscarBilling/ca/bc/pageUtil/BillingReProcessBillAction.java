@@ -37,6 +37,7 @@ import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.oscarDemographic.data.*;
 import oscar.util.*;
+import java.text.NumberFormat;
 
 public class BillingReProcessBillAction
     extends Action {
@@ -223,7 +224,9 @@ public class BillingReProcessBillAction
       }
       double dblBillAmount = Double.parseDouble(codePrice);
       double dblUnit = Double.parseDouble(billingUnit);
-      billingServicePrice = String.valueOf(dblBillAmount * dblUnit);
+      double amtTemp = dblBillAmount * dblUnit;
+      billingServicePrice = NumberFormat.getCurrencyInstance().format(amtTemp).replace("$","");
+
     }
     catch(NumberFormatException e){
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
