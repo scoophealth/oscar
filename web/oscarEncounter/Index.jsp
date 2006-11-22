@@ -716,6 +716,7 @@ function grabEnter(event){
 // This code supports the autosave function
 //autoSaveTimer is in milliseconds
 var autoSaveTimerLength = <%= oscar.OscarProperties.getInstance().getProperty("ECT_AUTOSAVE_TIMER","-1") %>;
+var SaveFeedbackTimerLength = <%=oscar.OscarProperties.getInstance().getProperty("ECT_SAVE_FEEDBACK_TIMER","2500") %>;
 var request = null;
 if (autoSaveTimerLength > 0)  {
     var autoSaveTimer = setTimeout("AutoSaveEncounter()", autoSaveTimerLength);
@@ -779,6 +780,7 @@ function AjaxSubmit(formToSubmit)  {
 
 // request was successful, so display the returned page
 function AjaxSubmitSuccess(request)  {
+    giveSaveFeedback();
     enableButtons(document.forms['encForm']);
     if (autoSaveTimerLength > 0)  {
         autoSaveTimer=setTimeout("AutoSaveEncounter()", autoSaveTimerLength);
@@ -788,6 +790,17 @@ function AjaxSubmitSuccess(request)  {
 // The request was not successfully handled
 function AjaxSubmitFailure(request)  {
     alert("<bean:message key="oscarEncounter.concurrencyError.errorMsg" />");
+}
+
+function giveSaveFeedback()  {
+    document.getElementById('saveFeedbackRow').style.backgroundColor="yellow";
+    document.getElementById('saveFeedbackText').style.display="inline";
+    saveFeedbackTimer = setTimeout("removeSaveFeedback()", SaveFeedbackTimerLength);
+}
+
+function removeSaveFeedback()  {
+    document.getElementById('saveFeedbackRow').style.backgroundColor="#CCCCFF";
+    document.getElementById('saveFeedbackText').style.display="none";
 }
 
 </script>
@@ -1466,14 +1479,17 @@ border-right: 2px solid #cfcfcf;
                             </tr>
                         </table>
 						<table border=0  bgcolor="#CCCCFF" width=100% >
-                            <tr nowrap>
+                            <tr id="saveFeedbackRow" nowrap>
 							    <td>
                                     <input type="hidden" name="subject" value="<%=UtilMisc.htmlEscape(bean.reason)%>">
 									<% if (consumption>=50) {%>
                                     <input type="submit" style="height:20px"  name="buttonPressed" value="Split Chart" class="ControlPushButton"  onClick="return (onSplit());">
 									<% } %>
-								</td>
+                                                            </td>
                                 <td style="text-align:right" nowrap>
+                                <span id="saveFeedbackText" style="display:none">
+                                    <bean:message key="oscarEncounter.Index.saveFeedbackText"/>
+                                </span>
                                 <oscar:oscarPropertiesCheck property="CPP" value="yes">
                                 <input type="button" style="height:20px;" class="ControlPushButton" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');"/>
                                 </oscar:oscarPropertiesCheck>
