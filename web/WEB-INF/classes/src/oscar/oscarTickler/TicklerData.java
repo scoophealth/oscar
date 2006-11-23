@@ -49,6 +49,14 @@ public class TicklerData {
    public TicklerData() {
    }
    
+   public ResultSet listTickler(String demographic_no, String status, String beginDate, String endDate) throws SQLException {
+       String sql = "select t.message,t.service_date, t.update_date from tickler t where t.status='A' and TO_DAYS(t.service_date) >=TO_DAYS('" + beginDate + "') and TO_DAYS(t.service_date)<=TO_DAYS('" + endDate + "') and t.demographic_no = " + demographic_no + " order by t.service_date desc";
+       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+       ResultSet rs = db.GetSQL(sql);
+       
+       return rs;
+   }
+   
    public void addTickler(String demographic_no,String message,String status,String service_date,String creator,String priority,String task_assigned_to){
             
       String date = service_date;
