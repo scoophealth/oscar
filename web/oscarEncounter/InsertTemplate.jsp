@@ -1,3 +1,4 @@
+<%--
 <!--  
 /*
  * 
@@ -84,3 +85,5 @@ function write2Parent(text){
 </body>
 </html:html>
 
+--%>
+<%=request.getAttribute("templateValue")%>
