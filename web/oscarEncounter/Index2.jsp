@@ -26,6 +26,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
+    long startTime = System.currentTimeMillis();
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
     String demographic$ = request.getParameter("demographicNo") ;
@@ -119,17 +120,7 @@ You have no rights to access the data!
      sChart = false;
   }
   
-  String enTemplates = "";
-  boolean first = true;
-  for(int j=0; j<bean.templateNames.size(); j++) {
-     String encounterTmp = (String)bean.templateNames.get(j);
-        if (first){
-           enTemplates += "'"+encounterTmp+"'";
-           first = false;
-        }else{
-           enTemplates += ",'"+encounterTmp+"'";        
-        }
-  }
+  
 
   
 %>
@@ -142,6 +133,16 @@ You have no rights to access the data!
 <html:base/>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <style type="text/css">
+        .links {
+            color: blue;
+            text-decoration: none;
+        }
+        
+        .linkhover { 
+            color: black;
+            text-decoration: underline;
+        }
+        
 	div.presBox {
 		height: <%=windowSizes.getProperty("presBoxSize")%>;
 		overflow: auto;
@@ -175,8 +176,13 @@ You have no rights to access the data!
   <script src="../share/javascript/effects.js" type="text/javascript"></script>
   <script src="../share/javascript/dragdrop.js" type="text/javascript"></script>
   <script src="../share/javascript/controls.js" type="text/javascript"></script>
+  
+  <%-- for popup menu of forms --%>
+  <script src="../share/javascript/popupmenu.js" type="text/javascript"></script>
+  <script src="../share/javascript/menutility.js" type="text/javascript"></script>
 
 <!--<script type="application/x-javascript" language="javascript" src="/javascript/sizing.js"></script>-->
+
 <script type="text/javascript" language=javascript>
     var X       = 10;
     var pBSmall = 30;
@@ -193,7 +199,17 @@ You have no rights to access the data!
     var textValue1;
     var textValue2;
     var textValue3;
-
+    var autoCompleted = new Array();
+    var autoCompList = new Array();
+   <% 
+  for(int j=0; j<bean.templateNames.size(); j++) {
+     String encounterTmp = (String)bean.templateNames.get(j);
+   %>
+     autoCompleted["<%=encounterTmp%>"] = "ajaxInsertTemplate('<%=encounterTmp%>')";
+     autoCompList.push("<%=encounterTmp%>");
+   <%
+  }
+   %>
     function closeEncounterWindow() {
         return window.confirm("<bean:message key="oscarEncounter.Index.closeEncounterWindowConfirm"/>");
     }
@@ -207,48 +223,11 @@ You have no rights to access the data!
         var ret = confirm("<bean:message key="oscarEncounter.Index.confirmSplit"/>");
         return ret;
     }
-    function popUpImmunizations(vheight,vwidth,varpage) {
-        var page = varpage;
-        windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-        var popup=window.open(varpage, "<bean:message key="global.immunizations"/>", windowprops);
-    }
-
-    function popUpMeasurements(vheight,vwidth,varpage) { //open a new popup window
-      if(varpage!= 'null'){
-          //document.measurementGroupForm.measurementGroupSelect.options[0].selected = true;
-          var page = "<rewrite:reWrite jspPage="oscarMeasurements/SetupMeasurements.do"/>?groupName=" + varpage;
-          windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-          var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-          if (popup != null) {
-            if (popup.opener == null) {
-              popup.opener = self;
-              alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-            }
-          }
-      }
-    }
-    function popUpInsertTemplate(vheight,vwidth,varpage) { //open a new popup window
-        //var x = window.confirm("<bean:message key="oscarEncounter.Index.insertTemplateConfirm"/>");
-        //if(x) {
-              if(varpage!= 'null'){
-                  //document.insertTemplateForm.templateSelect.options[0].selected=true;
-                  var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>?templateName=" + varpage;
-                  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-                  var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-                  if (popup != null) {
-                    if (popup.opener == null) {
-                      popup.opener = self;
-                      alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-                    }
-                  }
-              }
-          //}
-    }
     
     function setCaretPosition(inpu, pos){
 	if(inpu.setSelectionRange){
 		inpu.focus();
-		inpu.setSelectionRange(pos,pos);
+		inpu.setSelectionRange(pos,pos);                
 	}else if (inpu.createTextRange) {
 		var range = inpu.createTextRange();
 		range.collapse(true);
@@ -257,26 +236,76 @@ You have no rights to access the data!
 		range.select();
 	}
     }
-    
+    <%--
     function writeToEncounterNote(res){
-       //paste to encounter window
-       //alert("in writeToEncouterNote"+res);
-       var curPos = document.encForm.enTextarea.value.length + res.responseText.indexOf('\n') +1;
-       //alert(curPos);
+        text = res.responseText;
+       //paste to encounter window       
+       //$("templatejs").update(res.responseText);
+       //alert("Response: " + res.responseText); 
+       text = text.replace(/\\u000A/g, "\u000A");
+        text = text.replace(/\\u000D/g, "\u000D");
+        text = text.replace(/\\u003E/g, "\u003E");
+        text = text.replace(/\\u003C/g, "\u003C");
+        text = text.replace(/\\u005C/g, "\u005C");
+        text = text.replace(/\\u0022/g, "\u0022");
+        text = text.replace(/\\u0027/g, "\u0027");      
+       //alert("js text: " + text);
+       
+        var curPos = document.encForm.enTextarea.value.length + text.indexOf('\n') +2;
+        document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
+        setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        document.encForm.enTextarea.focus();
+       
+      // alert(curPos);
        //alert("len :"+document.encForm.enTextarea.value.length+" first newline "+res.responseText.indexOf('\n'));
-       document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + res.responseText;
-       setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
-       document.encForm.enTextarea.focus();
+      // document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
+       //setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+       //document.encForm.enTextarea.focus();
        setCaretPosition(document.encForm.enTextarea,curPos);
        
     }
-    function ajaxInsertTemplate(varpage) { //open a new popup window
-        if(varpage!= 'null'){
+    --%>
+    function writeToEncounterNote(request) {
+        //$("templatejs").update(request.responseText);
+        var text = request.responseText;
+        text = text.replace(/\\u000A/g, "\u000A");
+        text = text.replace(/\\u000D/g, "\u000D");
+        text = text.replace(/\\u003E/g, "\u003E");
+        text = text.replace(/\\u003C/g, "\u003C");
+        text = text.replace(/\\u005C/g, "\u005C");
+        text = text.replace(/\\u0022/g, "\u0022");
+        text = text.replace(/\\u0027/g, "\u0027");
+
+        document.encForm.enTextarea.value += "\n\n";
+        var curPos;
+        //if insert text begins with a new line char jump to second new line
+        if( (curPos = text.indexOf('\n')) == 0 ) {
+            ++curPos;            
+            var subtxt = text.substr(curPos);
+            curPos = subtxt.indexOf('\n');            
+        }
         
-          var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>?templateName=" + varpage;
-          new Ajax.Request(page, {onSuccess:writeToEncounterNote});
-          
-          
+        curPos += document.encForm.enTextarea.value.length;                        
+        document.encForm.enTextarea.value = document.encForm.enTextarea.value + text;        
+        setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.value.length", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        document.encForm.enTextarea.focus();
+        setCaretPosition(document.encForm.enTextarea,curPos);
+    }
+    
+    function ajaxInsertTemplate(varpage) { //open a new popup window
+        if(varpage!= 'null'){                  
+          var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>";
+          var params = "templateName=" + varpage;
+          new Ajax.Request( page, {
+                                    method: 'post',
+                                    postBody: params,
+                                    evalScripts: true, 
+                                    onSuccess:writeToEncounterNote,
+                                    onFailure: function() {
+                                            alert("Inserting template " + varpage + " failed");
+                                        }
+                                  }
+                            );                    
         }
           
     }
@@ -318,25 +347,26 @@ You have no rights to access the data!
     }
     function onUnbilled(url) {
         if(confirm("<bean:message key="oscarEncounter.Index.onUnbilledConfirm"/>")) {
-            popupPage(700,720, url);
+            popupPage(700,720,'unbilled', url);
         }
-    }
-    function popupPage2(varpage) {
-        var page = "" + varpage;
-        windowprops = "height=600,width=700,location=no,"
-          + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
-        window.open(page, "<bean:message key="oscarEncounter.Index.popupPage2Window"/>", windowprops);
-    }
-    function popupPage(vheight,vwidth,varpage) { //open a new popup window
+    }    
+        
+    var curWin = 0;
+    var openWindows = new Array();
+    
+    function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
       var page = "" + varpage;
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-      var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-      if (popup != null) {
-        if (popup.opener == null) {
-          popup.opener = self;
-          alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-        }
-      }
+            //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+            openWindows.push(window.open(page, name, windowprops));
+            
+            if (openWindows[curWin] != null) {        
+                if (openWindows[curWin].opener == null) {
+                    openWindows[curWin].opener = self;
+                    alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
+                }                
+                ++curWin;                
+            }            
     }
     function urlencode(str) {
         var ns = (navigator.appName=="Netscape") ? 1 : 0;
@@ -532,13 +562,6 @@ function presBoxFull(){
 }
 <!--new functions end from jay-->
 
-function popupSearchPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprop = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
-  var popup=window.open(page, "<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>", windowprop);
-}
-
-
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 document.onmouseup = getActiveText;
 
@@ -589,61 +612,12 @@ function tryAnother(){
 	 alert (txt+"\n"+foundIn);
     ////
 }
-function popupPageK(page) {
-    windowprops = "height=700,width=960,location=no,"
-    + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
-    var popup = window.open(page, "<bean:message key="oscarEncounter.Index.popupPageKWindow"/>", windowprops);
-    popup.focus();
-}
+
 function selectBox(name) {
     to = name.options[name.selectedIndex].value;
     name.selectedIndex =0;
     if(to!="null")
       popupPageK(to);
-}
-function popupOscarRx(vheight,vwidth,varpage) {
-  var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "<bean:message key="global.oscarRx"/>", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-  }
-  popup.focus();
-}
-function popupOscarCon(vheight,vwidth,varpage) {
-  var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=no,menubars=no,toolbars=no,resizable=no,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>", windowprops);
-  popup.focus();
-}
-
-
-function popupOscarComm(vheight,vwidth,varpage) {
-  var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(varpage, "<bean:message key="global.oscarComm"/>", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-  }
-  popup.focus();
-}
-
-function popUpMsg(vheight,vwidth,msgPosition) {
-
-
-  var page = "<rewrite:reWrite jspPage="../oscarMessenger/ViewMessageByPosition.do"/>?from=encounter&orderBy=!date&demographic_no=<%=demoNo%>&messagePosition="+msgPosition;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(page, "<bean:message key="global.oscarRx"/>", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
-    }
-  }
-  popup.focus();
 }
 
 function goToSearch() {
@@ -651,17 +625,51 @@ function goToSearch() {
         if(x)
         {  location = "./search/DemographicSearch.jsp";}
 }
-//function sign(){
-//        document.encForm.enTextarea.value =document.encForm.enTextarea.value +"\n[<bean:message key="oscarEncounter.Index.signed"/> <%=dateConvert.DateToString(bean.currentDate)%> <bean:message key="oscarEncounter.Index.by"/> <%=bean.userName%>]";
-//}
 
-//function saveEncounter(){
-//        location="SaveEncounter.do";
-//}
+function showMenu(menuNumber, eventObj) {
+    //    alert(eventObj);
+    hideAllMenus();
+    var menuId = 'menu' + menuNumber;
+    if(changeObjectVisibility(menuId, 'visible')) {
+	var menuTitle = getStyleObject('menuTitle' + menuNumber);
+	menuTitle.backgroundColor = '#ff9900';
+	eventObj.cancelBubble = true;
+	return true;
+    } else {
+	return false;
+    }
+}
 
-//function saveSignEncounter(){
-//        location="SaveEncounter.do";
-//}
+var numMenus = 3;
+
+function hideAllMenus() {
+    for(counter = 1; counter <= numMenus; counter++) {
+	changeObjectVisibility('menu' + counter, 'hidden');
+	var menuTitle = getStyleObject('menuTitle' + counter);
+	menuTitle.backgroundColor = '#000000';
+    }
+}
+
+document.onclick = hideAllMenus;
+
+     
+    var URLs = new Array( "<rewrite:reWrite jspPage="clinicModules.jsp" />",
+                          "<rewrite:reWrite jspPage="displayForms.do"/>",
+                          "<rewrite:reWrite jspPage="displayEForms.do"/>",                          
+                          "<rewrite:reWrite jspPage="displayDocuments.do"/>",
+                          "<rewrite:reWrite jspPage="displayMessages.do"/>",
+                          "<rewrite:reWrite jspPage="displayLabs.do"/>",
+                          "<rewrite:reWrite jspPage="displayMeasurements.do"/>",
+                          "<rewrite:reWrite jspPage="displayTickler.do"/>",
+                          "<rewrite:reWrite jspPage="displayDisease.do"/>",
+                          "<rewrite:reWrite jspPage="displayConsultation.do"/>"
+                        );        
+                           
+    var divs = new Array( "clinicModules", "encForms", "eForms", "docs", "Msgs", "labs", "measurements", "tickler", "disease", "consult");       
+        
+    
+    var params = new Array("", "cmd=forms",  "cmd=eforms", "cmd=docs", "cmd=msgs", "cmd=labs", "cmd=measurements", "cmd=tickler", 
+                            "cmd=Dx", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");                
 
 function loader(){
     window.focus();
@@ -673,11 +681,62 @@ function loader(){
 
     <%String popUrl = request.getParameter("popupUrl");
       if (popUrl != null){           %>
-      window.setTimeout("popupPageK('<%=popUrl%>')", 2);
+      window.setTimeout("popupPage(700,900,'<%=popUrl%>')", 2);
     <%}%>
 
-    //tmp = document.encForm.enTextarea.value; // these two lines cause the enTextarea to scroll to the bottom (only works in IE)
-    //document.encForm.enTextarea.value = tmp; // another option is to use window.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  (also only works in IE)
+    for( var idx = 0; idx < URLs.length; ++idx ) {
+        var div = document.createElement("div");
+        div.id = divs[idx];
+        div.className = "leftBox";
+        $("leftNavbar").appendChild(div);
+        popLeftColumn(URLs[idx],divs[idx],params[idx]);
+    }
+}
+
+function popLeftColumn(url,div,params) {
+        
+    var objAjax = new Ajax.Request (                        
+                        url,
+                        {
+                            method: 'post', 
+                            postBody: params,
+                            evalScripts: true,
+                            /*onLoading: function() {                            
+                                            $(div).update("<p>Loading ...</p>");
+                                        }, */
+                            onSuccess: function(request) {                            
+                                            while( $(div).firstChild )
+                                                $(div).removeChild($(div).firstChild);
+                                                                                            
+                                            $(div).update(request.responseText);
+                                            listDisplay(params);
+                                       }, 
+                            onFailure: function(request) {
+                                            $(div).innerHTML = "<h3>Error:</h3>" + request.status;
+                                        }
+                        }
+                           
+                  );
+}
+
+function listDisplay(Id) {
+    var eqIdx = Id.indexOf("=");    
+    var numId = Id.substr(eqIdx+1) + "num";
+    
+    if( $(numId).value > 5 ) {
+        var listId = Id.substr(eqIdx+1) + "list";
+        var list = $(listId);
+        var items = list.getElementsByTagName('li');
+        items = $A(items);
+        for( var idx = 5; idx < items.length; ++idx ) {
+            if( items[idx].style.display == 'block' )
+                items[idx].style.display = 'none';
+            else
+                items[idx].style.display = 'block';        
+        }
+    }
+    
+    
 }
 </script>
 <script language="javascript">
@@ -716,29 +775,12 @@ function showpic(picture,id){
      }
   }
 
-
-/////
-
-
-
-
-
-function popperup(vheight,vwidth,varpage,pageName) { //open a new popup window
-  hidepic('Layer1');
-  var page = varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",status=yes,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=100,left=100";
-  var popup=window.open(varpage, pageName, windowprops);
-      popup.opener = self;
-  popup.focus();
-}
-
-
 function grabEnter(event){
   if(window.event && window.event.keyCode == 13){
-      popupSearchPage(600,800,document.forms['ksearch'].channel.options[document.forms['ksearch'].channel.selectedIndex].value+urlencode(document.forms['ksearch'].keyword.value));
+      popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>', document.forms['ksearch'].channel.options[document.forms['ksearch'].channel.selectedIndex].value+urlencode(document.forms['ksearch'].keyword.value));
       return false;
   }else if (event && event.which == 13){
-      popupSearchPage(600,800,document.forms['ksearch'].channel.options[document.forms['ksearch'].channel.selectedIndex].value+urlencode(document.forms['ksearch'].keyword.value));
+      popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>', document.forms['ksearch'].channel.options[document.forms['ksearch'].channel.selectedIndex].value+urlencode(document.forms['ksearch'].keyword.value));
       return false;
   }
 }
@@ -746,17 +788,9 @@ function grabEnter(event){
 function grabEnterGetTemplate(event){
 
   
-  if(window.event && window.event.keyCode == 13){
-      //alert (document.getElementById('enTemplate').value + " | " +$('enTemplate_list').getStyle('display'));
-      if ( $('enTemplate_list').getStyle('display') == 'none'){     
-         popUpInsertTemplate(40,50,document.getElementById('enTemplate').value);   
-      }     
+  if(window.event && window.event.keyCode == 13){          
       return false;
-  }else if (event && event.which == 13){
-      if ( $('enTemplate_list').getStyle('display') == 'none'){
-      //alert (document.getElementById('enTemplate').value + " | " +$('enTemplate_list').getStyle('display'));
-         popUpInsertTemplate(40,50,document.getElementById('enTemplate').value);
-      }
+  }else if (event && event.which == 13){     
       return false;
   }
 }
@@ -789,7 +823,6 @@ border-left: 2px solid #333333;
 border-bottom: 2px solid #cfcfcf;
 border-right: 2px solid #cfcfcf;
 }
-
 </style>
 
 <style type="text/css">
@@ -828,6 +861,8 @@ div.leftBox h3 {
    padding-top:0px;
    margin-bottom:0px;
    padding-bottom:0px;
+   padding-left:5px;
+   padding-right:5px;
 }
 
 div.leftBox ul{ 
@@ -851,6 +886,30 @@ padding-right: 15px;
 white-space: nowrap;
 }
 
+/* popup menu styles for forms */
+.menu { 
+    position: absolute; 
+    visibility: hidden; 
+    background-color: #6699cc; 
+    layer-background-color: #6699cc; 
+    color: white; 
+    border-left: 1px solid black; 
+    border-top: 1px solid black; 
+    border-bottom: 3px solid black; 
+    border-right: 3px solid black; 
+    padding: 3px; 
+    z-index: 10;    
+}            
+.menuItemright { 
+    float: right; 
+    color:white; 
+    text-decoration: none; 
+}
+.menuItemleft { 
+    float: left; 
+    color:white; 
+    text-decoration: none; 
+}
 
 /* template styles*/
           
@@ -881,51 +940,12 @@ white-space: nowrap;
 
 
 </style>
-
-
-<script type="text/javascript">
-        //['icon', 'title', 'url', 'target', 'description'],
-  var myMenu =   [
-                    
-                    [null,'Add',null,null,null,
-                         <%//EctFormData.Form[] forms = new EctFormData().getForms();
-                           for(int j=0; j<forms.length; j++) {
-                              EctFormData.Form frm = forms[j];
-                              if (!frm.isHidden()) {
-                         %>
-                              ['&nbsp;','<%=frm.getFormName()%>','javascript: popupPageK("<%=frm.getFormPage()+demoNo+"&formId=0&provNo="+provNo%>")',null,'<%=frm.getFormName()%>'],
-                                                      
-                         <%   } 
-                           }
-                         %>                         
-                            ['&nbsp;','<bean:message key="oscarEncounter.Index.msgOldForms"/>','javascript:popupPage2("<rewrite:reWrite jspPage="formlist.jsp"/>?demographic_no=<%=demoNo%>")',null,null]			
-                    ]
-                 ];
-
-	
-</script>
-
-
-<SCRIPT LANGUAGE="JavaScript" SRC="../share/javascript/JSCookMenu.js"></SCRIPT>
-
-
-
-<LINK REL="stylesheet" HREF="../share/css/ThemeOffice/theme.css" TYPE="text/css">
-<SCRIPT LANGUAGE="JavaScript" SRC="../share/css/ThemeOffice/theme.js"></SCRIPT>
-
-
-
-
-
 </head>
 
 <body  onload="javascript:loader();"  topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
-<script type="text/javascript" src="../share/javascript/dhtmlXProtobar.js"></script>
-<script type="text/javascript" src="../share/javascript/dhtmlXMenuBar.js"></script>
-<script type="text/javascript" src="../share/javascript/dhtmlXCommon.js"></script>
 
 <html:errors/>
-
+<div id="templatejs" style="display:none"></div>
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;width:100%;height:680;" bordercolor="#111111" id="scrollNumber1" name="<bean:message key="oscarEncounter.Index.encounterTable"/>">
     <tr>
         <td class="hidePrint" bgcolor="#003399" style="border-right: 2px solid #A9A9A9;height:34px;" >
@@ -952,7 +972,7 @@ white-space: nowrap;
                                  <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q="><bean:message key="global.BNF"/></option>
                               </select>
                                <input type="text" name="keyword"  value=""  onkeypress="return grabEnter(event)"/>
-                              <input type="button" name="button"  value="Search" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
+                              <input type="button" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
                             
                               </form>
                              
@@ -967,257 +987,10 @@ white-space: nowrap;
             </td>
     </tr>
     <tr style="height:100%">
-        <td style="border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
-   
-         
-        
-           <div class="leftbox">
-                <h3>&nbsp;<bean:message key="oscarEncounter.Index.clinicalModules"/></h3>
-                <ul>
-                    <li>               
-                        <%if (vLocale.getCountry().equals("BR")) {%>
-                            <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
-                            title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
-                        <%}else{%>
-                            <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&displaymode=edit&dboperation=search_detail','master')"
-                            title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
-                        <%}%>
-                    </li>
-                    <li>
-                        <a href=# onClick="popupOscarCon(700,960,'<rewrite:reWrite jspPage="oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp"/>?de=<%=bean.demographicNo%>');return false;"><bean:message key="global.consultations"/></a>
-                    </li>
-                    <li>
-                        <oscar:oscarPropertiesCheck property="PREVENTION" value="yes">
-                            <a href="javascript:popUpImmunizations(700,960,'../oscarPrevention/index.jsp?demographic_no=<%=bean.demographicNo%>')">
-                            <oscar:preventionWarnings demographicNo="<%=bean.demographicNo%>">prevention</oscar:preventionWarnings></a>
-                        </oscar:oscarPropertiesCheck>
-                    </li>
-                    <li>
-                        <a href=# onClick="popupOscarComm(580,900,'../oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=provNo%>&quickList=');return false;"><bean:message key="global.disease"/></a>
-                    </li>
-                    <li>
-                        <a href=# onClick="popupOscarCon(580,800,'../appointment/appointmentcontrol.jsp?keyword=<%=URLEncoder.encode(bean.patientLastName+","+bean.patientFirstName)%>&displaymode=<%=URLEncoder.encode("Search ")%>&search_mode=search_name&originalpage=<%=URLEncoder.encode("../tickler/ticklerAdd.jsp")%>&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="oscarEncounter.Index.addTickler"/></a>
-                        <a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=<%=bean.demographicNo%>');return false;"><bean:message key="global.viewTickler"/></a><br>
-                        
-                    </li>
-                    <li>
-                       <a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a>
-                    </li>
-                    
-                </ul>
-            </div>
-            
-            <div class="leftbox">
-                <span id="newMen" style="display: inline; float: right;">&nbsp;</span>
-                <h3 onMouseOver="javascript:window.status='View any of <%=patientName%>\'s current forms.';">
-                    &nbsp;<a href=# onClick='popupPage2("<rewrite:reWrite jspPage="formlist.jsp"/>?demographic_no=<%=demoNo%>"); return false;' ><bean:message key="oscarEncounter.Index.msgForms"/></a>  
-                </h3>
+        <td style="width: 15%; border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">                               
+            <div id="leftNavbar" style="position:relative; height:100%; width:100%;">
                 
-                <ul>                   
-                    <%for(int j=0; j<forms.length; j++) {
-                         EctFormData.Form frm = forms[j];
-                         String table = frm.getFormTable();
-                         if(!table.equalsIgnoreCase("")){
-                            EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(demoNo, table);
-                            if(pforms.length>0) {
-                               EctFormData.PatientForm pfrm = pforms[0];
-                     %>
-                           <li><a href="javascript: function myFunction() {return false; }" onclick="javascript: popupPageK('<%="../form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+demoNo%>')" title="Cr:<%=pfrm.getCreated()%> Ed:<%=pfrm.getEdited()%>">
-                               <%=frm.getFormName()%>
-                           </a></li>
-                     <%     }
-                         }
-                      }     %>
-                          
-                </ul>
             </div>
-         
-            
-            <div class="leftbox">
-                <h3 >
-                    &nbsp;<a href=# onClick='popupOscarRx(600,900,"<rewrite:reWrite jspPage="../oscarMessenger/DisplayDemographicMessages.do"/>?orderby=date&boxType=3&demographic_no=<%=demoNo%>&providerNo=<%=provNo%>&userName=<%=providerName%>"); return false;' >oscarMessenger</a>                 
-                   <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demoNo%>','msg')">Msg</a>                   
-                </h3>
-                
-                <ul>                   
-                   <%
-                    String msgId;
-                    String msgSubject;
-                    String msgDate;
-                    for(int j=0; j<10 && j<msgVector.size(); j++) {
-                        msgId = (String) msgVector.elementAt(j);
-                        msgData = new MsgMessageData(msgId);
-                        msgSubject = msgData.getSubject();
-                        msgDate = msgData.getDate();
-
-                        String stripe = "style=\"background-color: #f0f5fe; \" ";
-                        if ( (j % 2) == 0){
-                           stripe = "";
-                        }
-                   %>
-                     <li <%=stripe%>>
-                        <a onclick="javascript:popUpMsg(600,900,<%=j%>);" href=# title="<%=msgSubject +" - "+msgDate%>">
-                        <%=StringUtils.maxLenString(msgSubject, 25, 21, "...")%>
-                        </a>
-                     </li>
-                 <% }%>
-                </ul>
-            </div>
-            
-            <div class="leftbox">
-                <h3 >
-                   &nbsp;<a href=# onClick="popupPage(600,1000,'<rewrite:reWrite jspPage="oscarMeasurements/SetupHistoryIndex.do"/>'); return false;" ><bean:message key="oscarEncounter.Index.measurements"/></a>
-                </h3>
-                
-                <ul>                   
-                   <oscar:oscarPropertiesCheck property="TESTING" value="yes">
-                        <%
-                        dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
-                        Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
-                        ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
-                        for (int f = 0; f < flowsheets.size();f++){
-                            String flowsheetName = (String) flowsheets.get(f);
-                        %>
-                        <li>
-                            <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')">
-                               <%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%>
-                            </a>
-                        </li>
-                        <%}%>
-                   </oscar:oscarPropertiesCheck>
-                   <%
-                   for(int j=0; j<bean.measurementGroupNames.size(); j++) {
-                      String tmp = (String)bean.measurementGroupNames.get(j);
-                   %>
-                      <li>
-                            <a onclick="popUpMeasurements(500,1000,'<%=tmp%>');" href=# title="<%=tmp%>">
-                            <%=StringUtils.maxLenString(tmp, 25, 21, "...")%>
-                            </a>
-                      </li>
-                 <%}%>
-                           
-                </ul>
-            </div>
-            <script type="text/javascript">
-                function whereisit(t){
-                   alert(t.getHeight());
-                   g = $('baaa');
-                   alert(" position "+Position.positionedOffset(g)+ " cumulative " + Position.cumulativeOffset(g)+" real "+Position.realOffset(g)+" ");
-                   alert(window.screen.availTop);
-                   alert(window.screen);
-                   alert("window.screenTop " +window.screenTop);
-                   alert("document.layers" +document.layers);
-                   
-                   var x = 0, y = 0; // default values
-
-                    if (document.all) {
-                      alert("Document.all");
-                      x = window.screenTop + 100;
-                      y = window.screenLeft + 100;
-                    }
-                    else if (document.layers) {
-                      alert("document.layers");
-                      x = window.screenX + 100;
-                      y = window.screenY + 100;
-                    }
-                    alert (" X "+ x + " Y " + y);
-                }
-            </script>
-            <div class="leftbox">
-                <h3><!--a id="baaa" onclick="whereisit(this);">sfsdfsdf</a-->
-&nbsp;<a href="javascript: function myFunction() {return false; }" onClick="popupxy(700,599,'../lab/DemographicLab.jsp?demographicNo=<%=bean.demographicNo%>','DemoLabSheet',5,305)">Lab Result</a>   
-                   <a href="#" onClick="popupPage(700,1000, '../lab/CumulativeLabValues.jsp?demographic_no=<%=bean.demographicNo%>');return false;">Labs</a>
-                   <a href="#" onClick="popupPage(700,1000, '../lab/CumulativeLabValues2.jsp?demographic_no=<%=bean.demographicNo%>');return false;">La</a>
-                </h3>
-                
-                <ul>
-                   <%
-                    for(int j=0; j<labs.size(); j++) {
-                       LabResultData result =  (LabResultData) labs.get(j);
-                       String labURL = "";
-                       String labDisplayName = "";
-                       
-                        if ( result.isMDS() ){ 
-                            labURL ="../oscarMDS/SegmentDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID+"&status="+result.getReportStatus();
-                            labDisplayName = result.getDiscipline()+" "+result.getDateTime();
-                        }else if (result.isCML()){ 
-                            labURL ="../lab/CA/ON/CMLDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID; 
-                            labDisplayName = result.getDiscipline()+" "+result.getDateTime();
-                        }else {
-                            labURL ="../lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+provNo;
-                            labDisplayName = result.getDiscipline()+" "+result.getDateTime();
-                        }
-                       String stripe = "style=\"background-color: #f3f3f3; \" ";
-                       if ( (j % 2) == 0){
-                           stripe = "";
-                       }
-                       
-                   %>
-                        <li <%=stripe%>>
-                           <a href=# onclick="javascript: popupPageK('<%=labURL%>');" title="<%=labDisplayName%>">
-                               <%=StringUtils.maxLenString(labDisplayName, 18, 15, "...")%>
-                           </a>
-                        </li>
-                 <% } %>
-                        
-                </ul>
-            </div>
-           
-
-            <div class="leftbox">
-                <h3>
-                   &nbsp;<a href="#" onClick="popupPage(500,600,'../dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;"><bean:message key="oscarEncounter.Index.msgDocuments"/></a>
-                </h3>
-                <ul>
-                <% 
-                
-                ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE);
-                for (int i=0; i< docList.size(); i++) {
-                    EDoc curDoc = (EDoc) docList.get(i);
-                    String dispFilename = curDoc.getFileName();
-                    String dispStatus   = curDoc.getStatus() + "";
-                    String dispDocNo    = curDoc.getDocId();
-                    String dispDesc     = curDoc.getDescription();
-                   
-                %>
-                   <li >
-                      <a href=# onclick="popup(700,800,'../dms/documentGetFile.jsp?document=<%=StringEscapeUtils.escapeJavaScript(dispFilename)%>&type=<%=dispStatus%>&doc_no=<%=dispDocNo%>', 480,480,1)"><%=dispDesc%></a>
-                   </li>
-                <%}%>          
-                </ul>
-            </div>
-
-            <div class="leftbox">
-                <h3>
-                   &nbsp;<a href="#" style="color:white;" onClick="popupPage(500,950, '../eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;"><bean:message key="global.eForms"/></a> 
-                </h3>   
-                <ul>
-                <%
-                ArrayList eForms = EFormUtil.listPatientEForms(EFormUtil.DATE, EFormUtil.CURRENT, bean.demographicNo);
-  
-                for (int i=0; i< eForms.size(); i++) {
-                    Hashtable curform = (Hashtable) eForms.get(i);
-                     String stripe = "style=\"background-color: #f0fff0;";
-                    
-                    if ( (i % 2) == 0){
-                           stripe = "";
-                       }
-                %>
-                <li <%=stripe%> title="<%=curform.get("formSubject")%> - <%=curform.get("formDate")%>" >
-                    <a  href=# onclick="popup( 700, 800, '../eform/efmshowform_data.jsp?fdid=<%= curform.get("fdid")%>', '<%="FormP" + i%>');">t</a>
-                    <a  href="#" ONCLICK="popupPage(700,800,'../eform/efmshowform_data.jsp?fdid=<%= curform.get("fdid")%>','<%="FormP" + i%>' ); return false;" >
-                       <%=curform.get("formName")%>
-                    </a>
-                </li>
-              <%}%>                         
-                </ul>
-            </div>
-           
-            
-           
-           
-           
-            
         </td>
         <td valign="top">
         <form name="encForm" action="SaveEncounter2.do" method="POST">
@@ -1270,15 +1043,15 @@ white-space: nowrap;
                                 <!-- This is the Social History cell ...sh...-->
                                 <td  valign="top">
                                     <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-                                       <textarea name="shTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
+                                       <textarea name="shTextarea" tabindex="1" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
                                 </td>
                                 <!-- This is the Family History cell ...fh...-->
                                 <td  valign="top">
-                                       <textarea name="fhTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
+                                       <textarea name="fhTextarea" tabindex="2" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
                                 </td>
                                 <!-- This is the Medical History cell ...mh...-->
                                 <td  valign="top" colspan="2">
-                                       <textarea name="mhTextarea" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
+                                       <textarea name="mhTextarea" tabindex="3" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -1321,10 +1094,10 @@ white-space: nowrap;
                             </tr>
                             <tr width="100%">
                                 <td valign="top" style="border-right:2px solid #ccccff">
-                                       <textarea name='ocTextarea' wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
+                                       <textarea name='ocTextarea' tabindex="4" wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
                                 </td>
                                 <td colspan= "2" valign="top">
-                                       <textarea name='reTextarea' wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
+                                       <textarea name='reTextarea' tabindex="5" wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -1416,7 +1189,7 @@ white-space: nowrap;
                                     <table  border="0" cellpadding="0" cellspacing="0" width='100%' >
 									  <tr><td width='75%' >
                                 					         <div class="RowTop" >
-                                    <a href=# onClick="popupPage2('../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
+                                    <a href=# onClick="popupPage(600,700,'<bean:message key="oscarEncounter.Index.popupPage2Window"/>','../report/reportecharthistory.jsp?demographic_no=<%=bean.demographicNo%>');return false;">
                                        <bean:message key="global.encounter"/>: <%=bean.patientLastName %>, <%=bean.patientFirstName%>
                                     </a>
                                 
@@ -1429,16 +1202,17 @@ white-space: nowrap;
                                     <%}%>
                                     
                                                                                   <!-- encounter template -->
-                                eTemplate
-                                <input id="enTemplate" autocomplete="off" size="18" type="text" value=""  onkeypress="return grabEnterGetTemplate(event)"/>
+                                IntelBox
+                                <input id="enTemplate" tabindex="6" autocomplete="off" size="30" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
                                 <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>
            
                                 <script type="text/javascript">
-                                    function dd(){
-                                       
-                                       ajaxInsertTemplate(document.getElementById('enTemplate').value);   
+                                    function menuAction(){
+                                       var name = document.getElementById('enTemplate').value;
+                                       var func = autoCompleted[name];
+                                       eval(func);     
                                     }    
-                                new Autocompleter.Local('enTemplate', 'enTemplate_list', [<%=enTemplates%>], {afterUpdateElement: dd});
+                                new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { afterUpdateElement: menuAction }  );
                                 </script>
                                 <!-- end template -->
 				
@@ -1453,7 +1227,7 @@ white-space: nowrap;
 										int nEctLen = bean.encounter.length();
 									    boolean bTruncate = bSplit &&  nEctLen > 5120?true:false;
 										int consumption = (int) ((bTruncate?5120:nEctLen) / (10.24*32));
-                    consumption = consumption == 0 ? 1 : consumption;
+                                                                            consumption = consumption == 0 ? 1 : consumption;
 									    String ccolor = consumption>=70? "red":(consumption>=50?"orange":"green");
 								%>
 									  <div class="RowTop"><%=consumption+"%"%></div>
@@ -1516,7 +1290,7 @@ white-space: nowrap;
                             %>
                             <tr>
                                 <td colspan="2" valign="top" style="text-align:left">
-                                    <textarea name='enTextarea' wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><%=encounterText%></textarea>
+                                    <textarea name='enTextarea' tabindex="7" wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><%=encounterText%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -1602,7 +1376,7 @@ white-space: nowrap;
             String[] s = (String[]) splitChart.get(i);%>
       <tr class="background-color : #ccccff;">
          <td class="wcblayerTitle">
-            <a href=# onClick="hidepic('splitChartLayer');popupPage2('echarthistoryprint.jsp?echartid=<%=s[0]%>&demographic_no=<%=bean.demographicNo%>');return false;">
+            <a href=# onClick="hidepic('splitChartLayer');popupPage(600,700,'<bean:message key="oscarEncounter.Index.popupPage2Window"/>','echarthistoryprint.jsp?echartid=<%=s[0]%>&demographic_no=<%=bean.demographicNo%>');return false;">
                <%=s[1]%>
             </a>
          </td>
@@ -1615,10 +1389,7 @@ white-space: nowrap;
 </div>
 <%}System.out.println("Session:" + session.getAttribute("user"));%>
 
-<SCRIPT LANGUAGE="JavaScript">
-	cmDraw ('newMen', myMenu, 'vbr', cmThemeOffice, 'ThemeOffice');
-</SCRIPT>
-
 </body>
 </html:html>
 
+<% System.out.println("index2.jsp load time: " + (System.currentTimeMillis()-startTime) + "ms"); %>
