@@ -426,33 +426,23 @@
       <forward name="success" path="/oscarEncounter/Index.jsp" />
       <forward name="success2" path="/oscarEncounter/Index2.jsp" />
     </action>
-    <action input="/oscarEncounter/Index2.jsp" path="/oscarEncounter/displayLabs" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayLabAction">
-        <forward name="success" path="/oscarEncounter/LeftNavBarDisplay.jsp" />
-        <forward name="continue" path="/oscarEncounter/displayForms.do" />
-        <forward name="error" path="/oscarEncounter/LeftNavBarError.jsp" />
+    <action path="/oscarEncounter/displayLabs" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayLabAction">        
     </action>
-    <action input="/oscarEncounter/Index2.jsp" path="/oscarEncounter/displayForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayFormAction">
-        <forward name="success" path="/oscarEncounter/LeftNavBarDisplay.jsp" />
-        <forward name="continue" path="/oscarEncounter/displayEForms.do" />
-        <forward name="error" path="/oscarEncounter/LeftNavBarError.jsp" />
+    <action path="/oscarEncounter/displayForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayFormAction">        
     </action>
-    <action input="/oscarEncounter/Index2.jsp" path="/oscarEncounter/displayEForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayEFormAction">
-        <forward name="success" path="/oscarEncounter/LeftNavBarDisplay.jsp" />
-        <forward name="continue" path="/oscarEncounter/displayMessages.do" />
-        <forward name="error" path="/oscarEncounter/LeftNavBarError.jsp" />
+    <action path="/oscarEncounter/displayEForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayEFormAction">        
     </action>
-    <action input="/oscarEncounter/Index2.jsp" path="/oscarEncounter/displayMessages" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMsgAction">
-        <forward name="success" path="/oscarEncounter/LeftNavBarDisplay.jsp" /> 
-        <forward name="continue" path="/oscarEncounter/displayDocuments.do" />
-        <forward name="error" path="/oscarEncounter/LeftNavBarError.jsp" />
+    <action path="/oscarEncounter/displayMessages" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMsgAction">
     </action>
-    <action input="/oscarEncounter/Index2.jsp" path="/oscarEncounter/displayDocuments" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDocsAction">
-        <forward name="success" path="/oscarEncounter/LeftNavBarDisplay.jsp" />        
-        <forward name="error" path="/oscarEncounter/LeftNavBarError.jsp" />
+    <action path="/oscarEncounter/displayDocuments" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDocsAction">
     </action>
     <action path="/oscarEncounter/displayMeasurements" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayMeasurementsAction">        
     </action>
     <action path="/oscarEncounter/displayTickler" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayTicklerAction">        
+    </action>
+    <action path="/oscarEncounter/displayDisease" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDxAction">        
+    </action>
+    <action path="/oscarEncounter/displayConsultation" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConsultAction">        
     </action>
     <action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
       <forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
