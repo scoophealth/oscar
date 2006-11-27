@@ -551,7 +551,7 @@ function calToday(field) {
 		  }
 	  }else {
 		  //System.out.println("h e re" + vecR.size());
-		  if(vecR.size()>0) {
+		  if(vecR.size()>0 && formId!=0) {
 			  bgcolor = "bgcolor='pink'";
 			  props.setProperty("date"+i, (String)vecR.get(0));
 			  props.setProperty("inr"+i, (String)vecR.get(1));
