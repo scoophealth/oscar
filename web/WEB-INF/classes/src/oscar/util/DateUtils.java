@@ -101,6 +101,12 @@ public class DateUtils {
     return sdf.format(date);
 
   }
+  
+  public static String getDate(Date date, String format) {
+    SimpleDateFormat sdf = new SimpleDateFormat(format);
+    
+    return sdf.format(date);
+  }
 
   public static String getDateTime() {
 
