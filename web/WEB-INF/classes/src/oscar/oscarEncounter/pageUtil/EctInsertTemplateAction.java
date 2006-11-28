@@ -67,6 +67,11 @@ public final class EctInsertTemplateAction extends Action {
             System.out.println(e.getMessage());
         }            
         
-        return (mapping.findForward("success"));
+        String version = (String)request.getParameter("version");
+        if( version != null && version.equals("2") )
+            return (mapping.findForward("success2"));
+        else
+            return (mapping.findForward("success"));
+        
     }
 }
