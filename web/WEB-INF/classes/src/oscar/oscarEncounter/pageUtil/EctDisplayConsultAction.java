@@ -26,7 +26,12 @@
 package oscar.oscarEncounter.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import org.apache.struts.util.MessageResources;
+import oscar.util.DateUtils;
 
 /**
  *
@@ -45,12 +50,24 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();
             theRequests.estConsultationVecByDemographic(bean.demographicNo);
                     
+            String dbFormat = "yyyy-MM-dd";
+            String serviceDateStr;
             for (int idx = theRequests.ids.size() - 1; idx >= 0; --idx ){
                 NavBarDisplayDAO.Item item = Dao.Item();
                 String service = (String) theRequests.service.get(idx);
-                String date    = (String) theRequests.date.get(idx);
-                item.setTitle(service + " " + date);
-                item.setURL("return false;");
+                String dateStr    = (String) theRequests.date.get(idx);
+                DateFormat formatter = new SimpleDateFormat(dbFormat);
+                try {
+                    Date date = (Date)formatter.parse(dateStr);
+                    serviceDateStr = DateUtils.getDate(date, dateFormat);
+                }
+                catch(ParseException ex ) {
+                    System.out.println("EctDisplayConsultationAction: Error creating date " + ex.getMessage());
+                    serviceDateStr = "Error";
+                }
+                url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + (String)theRequests.ids.get(idx) + "'); return false;";
+                item.setTitle(service + " " + serviceDateStr);
+                item.setURL(url);
                 Dao.addItem(item);
             } 
             
