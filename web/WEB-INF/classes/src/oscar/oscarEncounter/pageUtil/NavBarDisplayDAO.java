@@ -147,12 +147,14 @@ public class NavBarDisplayDAO {
         private String title;
         private String URL;
         private String colour;
+        private String bgColour;
         private Date date;
         
         public Item() {
             title = "";
             URL = "";
             colour = "";
+            bgColour = "";
             date = null;
         }
         
@@ -178,6 +180,14 @@ public class NavBarDisplayDAO {
         
         public String getColour() {
             return colour;
+        }
+        
+        public void setBgColour(String c ) {
+            bgColour = c;
+        }
+        
+        public String getBgColour() {
+            return bgColour;
         }
         
         public void setDate(Date d) {
