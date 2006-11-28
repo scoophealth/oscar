@@ -41,6 +41,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  */
 public class EctDisplayAction extends Action {
     private static Hashtable Actions = null;
+    protected static String dateFormat = "dd-MMM-yyyy";
     
     public EctDisplayAction() {
         super();
@@ -57,7 +58,7 @@ public class EctDisplayAction extends Action {
             Actions.put("consultation", "/oscarEncounter/displayConsultation.do");
             Actions.put("success", "/oscarEncounter/LeftNavBarDisplay.jsp");
             Actions.put("error", "/oscarEncounter/LeftNavBarError.jsp");
-        }
+        }                
     }
     
     public ActionForward execute(ActionMapping mapping,
