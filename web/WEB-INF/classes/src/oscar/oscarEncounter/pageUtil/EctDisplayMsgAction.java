@@ -49,8 +49,9 @@ public class EctDisplayMsgAction extends EctDisplayAction {
             Dao.setLeftHeading(heading);
             
             winName = "SendMsg" + bean.demographicNo;
-            url = "<a href=\"#\" onClick=\"popupPage(700,960,'" + winName + "','"+ request.getContextPath() + "/oscarMessenger/SendDemoMessage.do?demographic_no=" + bean.demographicNo + "'); return false;\">" + messages.getMessage("oscarEncounter.LeftNavBar.SendMsg") + "</a>";
-            heading = "<div id=\"sendMsg\" style=\"display: inline; float: right;\"><h3>" + url + "</h3></div>";                 
+            url = "<a href=\"#\" onClick=\"popupPage(700,960,'" + winName + "','"+ request.getContextPath() + "/oscarMessenger/SendDemoMessage.do?demographic_no=" + bean.demographicNo + "'); return false;\">" + "+" + "</a>";
+            heading = "<div id=\"SendMsg\" style=\"clear: both; display: inline; float: right;\"><h3>" + url + "</h3></div>";                 
+            //heading = "<h3>" + url + "</h3>";
             
             Dao.setRightHeading(heading);            
 
