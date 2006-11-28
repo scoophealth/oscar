@@ -11,7 +11,7 @@
 
 // store variables to control where the popup will appear relative to the cursor position
 // positive numbers are below and to the right of the cursor, negative numbers are above and to the left
-var xOffset = 30;
+var xOffset = -30;
 var yOffset = -5;
 
 function showPopup (targetObjectId, eventObj) {
