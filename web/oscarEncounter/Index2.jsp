@@ -169,7 +169,7 @@ You have no rights to access the data!
 </style>
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<link rel="stylesheet" type="text/css" href="../share/css/dhtmlXMenu_xp.css">
+<!-- <link rel="stylesheet" type="text/css" href="../share/css/dhtmlXMenu_xp.css"> -->
 
 <!-- link href="../share/css/script.aculo.us.css" media="screen" rel="Stylesheet" type="text/css" / -->
   <script src="../share/javascript/prototype.js" type="text/javascript"></script>
@@ -269,7 +269,7 @@ You have no rights to access the data!
         //$("templatejs").update(request.responseText);
         var text = request.responseText;
         text = text.replace(/\\u000A/g, "\u000A");
-        text = text.replace(/\\u000D/g, "\u000D");
+        text = text.replace(/\\u000D/g, "");
         text = text.replace(/\\u003E/g, "\u003E");
         text = text.replace(/\\u003C/g, "\u003C");
         text = text.replace(/\\u005C/g, "\u005C");
@@ -277,17 +277,26 @@ You have no rights to access the data!
         text = text.replace(/\\u0027/g, "\u0027");
 
         document.encForm.enTextarea.value += "\n\n";
-        var curPos;
-        //if insert text begins with a new line char jump to second new line
-        if( (curPos = text.indexOf('\n')) == 0 ) {
-            ++curPos;            
-            var subtxt = text.substr(curPos);
-            curPos = subtxt.indexOf('\n');            
-        }
+        var curPos = document.encForm.enTextarea.value.length;
         
-        curPos += document.encForm.enTextarea.value.length;                        
-        document.encForm.enTextarea.value = document.encForm.enTextarea.value + text;        
-        setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.value.length", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        //subtract \r chars from total length for IE
+        if( document.all ) {                        
+            var newLines = document.encForm.enTextarea.value.match(/.*\n.*/g);                        
+            curPos -= newLines.length;                    
+        }
+        ++curPos;            
+        
+        //if insert text begins with a new line char jump to second new line        
+        var newlinePos;
+        if( (newlinePos = text.indexOf('\n')) == 0 ) {
+            ++newlinePos;            
+            var subtxt = text.substr(newlinePos);
+            curPos += subtxt.indexOf('\n');            
+        }               
+
+        document.encForm.enTextarea.value = document.encForm.enTextarea.value + text;                                
+        
+        setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
         document.encForm.enTextarea.focus();
         setCaretPosition(document.encForm.enTextarea,curPos);
     }
@@ -295,7 +304,7 @@ You have no rights to access the data!
     function ajaxInsertTemplate(varpage) { //open a new popup window
         if(varpage!= 'null'){                  
           var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>";
-          var params = "templateName=" + varpage;
+          var params = "templateName=" + varpage + "&version=2";
           new Ajax.Request( page, {
                                     method: 'post',
                                     postBody: params,
@@ -628,7 +637,7 @@ function goToSearch() {
 
 function showMenu(menuNumber, eventObj) {
     //    alert(eventObj);
-    hideAllMenus();
+    /*hideAllMenus();
     var menuId = 'menu' + menuNumber;
     if(changeObjectVisibility(menuId, 'visible')) {
 	var menuTitle = getStyleObject('menuTitle' + menuNumber);
@@ -638,6 +647,9 @@ function showMenu(menuNumber, eventObj) {
     } else {
 	return false;
     }
+    */
+    var menuId = 'menu' + menuNumber;
+    return showPopup(menuId, eventObj);
 }
 
 var numMenus = 3;
@@ -657,18 +669,18 @@ document.onclick = hideAllMenus;
                           "<rewrite:reWrite jspPage="displayForms.do"/>",
                           "<rewrite:reWrite jspPage="displayEForms.do"/>",                          
                           "<rewrite:reWrite jspPage="displayDocuments.do"/>",
+                          "<rewrite:reWrite jspPage="displayLabs.do"/>",                          
                           "<rewrite:reWrite jspPage="displayMessages.do"/>",
-                          "<rewrite:reWrite jspPage="displayLabs.do"/>",
                           "<rewrite:reWrite jspPage="displayMeasurements.do"/>",
                           "<rewrite:reWrite jspPage="displayTickler.do"/>",
                           "<rewrite:reWrite jspPage="displayDisease.do"/>",
                           "<rewrite:reWrite jspPage="displayConsultation.do"/>"
                         );        
                            
-    var divs = new Array( "clinicModules", "encForms", "eForms", "docs", "Msgs", "labs", "measurements", "tickler", "disease", "consult");       
+    var divs = new Array( "clinicModules", "encForms", "eForms", "docs", "labs", "Msgs", "measurements", "tickler", "disease", "consult");       
         
     
-    var params = new Array("", "cmd=forms",  "cmd=eforms", "cmd=docs", "cmd=msgs", "cmd=labs", "cmd=measurements", "cmd=tickler", 
+    var params = new Array("", "cmd=forms",  "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler", 
                             "cmd=Dx", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");                
 
 function loader(){
@@ -724,15 +736,20 @@ function listDisplay(Id) {
     var numId = Id.substr(eqIdx+1) + "num";
     
     if( $(numId).value > 5 ) {
+        var dwnBtnName = Id.substr(eqIdx+1) + "down";
         var listId = Id.substr(eqIdx+1) + "list";
         var list = $(listId);
         var items = list.getElementsByTagName('li');
         items = $A(items);
         for( var idx = 5; idx < items.length; ++idx ) {
-            if( items[idx].style.display == 'block' )
+            if( items[idx].style.display == 'block' ) {
                 items[idx].style.display = 'none';
-            else
-                items[idx].style.display = 'block';        
+                $(dwnBtnName).style.display = 'inline';
+            }
+            else {
+                items[idx].style.display = 'block';                        
+                $(dwnBtnName).style.display = 'none';
+            }
         }
     }
     
@@ -988,7 +1005,7 @@ white-space: nowrap;
     </tr>
     <tr style="height:100%">
         <td style="width: 15%; border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">                               
-            <div id="leftNavbar" style="position:relative; height:100%; width:100%;">
+            <div id="leftNavbar" style="height:100%; width:100%;">
                 
             </div>
         </td>
@@ -1202,8 +1219,8 @@ white-space: nowrap;
                                     <%}%>
                                     
                                                                                   <!-- encounter template -->
-                                IntelBox
-                                <input id="enTemplate" tabindex="6" autocomplete="off" size="30" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
+                                
+                                <input id="enTemplate" tabindex="6" autocomplete="off" size="25" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
                                 <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>
            
                                 <script type="text/javascript">
