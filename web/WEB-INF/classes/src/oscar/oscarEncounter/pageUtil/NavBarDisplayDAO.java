@@ -39,6 +39,7 @@ import java.util.Random;
 public class NavBarDisplayDAO {
     public final static int ALPHASORT = 0;
     public final static int DATESORT = 1;
+    public final static int DATESORT_ASC = 2;
     
     private String LeftHeading;
     private String RightHeading;    
@@ -75,7 +76,7 @@ public class NavBarDisplayDAO {
 	for( int idx = 0; idx < 10; ++idx)
 		System.out.println(idx + ": " + dao.getItem(idx).getTitle());
 
-	dao.sortItems(NavBarDisplayDAO.DATESORT);
+	dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
 
 	System.out.println("Chronologically Sorted:");
 	for( int idx = 0; idx < 10; ++idx)
@@ -133,6 +134,9 @@ public class NavBarDisplayDAO {
         switch(order) {
             case DATESORT:
                 Collections.sort(Items, new Chronologic());
+                break;
+            case DATESORT_ASC:
+                Collections.sort(Items, new ChronologicAsc());
                 break;
             case ALPHASORT:
                 Collections.sort(Items);
@@ -222,6 +226,22 @@ public class NavBarDisplayDAO {
             Item i2 = (Item)o2;
             
             return i1.getDate().compareTo(i2.getDate());
+        }
+    }
+    
+     public class ChronologicAsc implements Comparator {
+        public int compare( Object o1, Object o2 ) {
+            Item i1 = (Item)o1;
+            Item i2 = (Item)o2;
+            Date d1 = i1.getDate();
+            Date d2 = i2.getDate();
+            
+            if( d1.before(d2) )
+                return -1;
+            else if( d1.after(d2) )
+                return 1;
+            else 
+                return 0;                        
         }
     }
 }
