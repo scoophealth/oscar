@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
  
 import oscar.oscarTickler.TicklerData;
+import oscar.util.DateUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -59,8 +60,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     
     winName = "AddTickler" + bean.demographicNo;
     url = request.getContextPath() + "/appointment/appointmentcontrol.jsp?keyword=" + URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") + "&displaymode=" + URLEncoder.encode("Search ", "UTF-8") + "&search_mode=search_name&originalpage=" + URLEncoder.encode(request.getContextPath() + "/tickler/ticklerAdd.jsp", "UTF-8") + "&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=" + bean.demographicNo;
-    heading = "<div id=\"addTickler\" style=\"display: inline; float: right;\"><h3><a href=\"#\" onclick=\"popupPage(500,600,'" + winName + "','" +
-            url + "'); return false;\">" + messages.getMessage("oscarEncounter.Index.addTickler") + "</a></h3></div>";
+    heading = "<div id=\"addTickler\" style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onclick=\"popupPage(500,600,'" + winName + "','" +
+            url + "'); return false;\">+</a></h3></div>";
     Dao.setRightHeading(heading);    
     
     String dateBegin = "0001-01-01";
@@ -69,17 +70,20 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     TicklerData tickler = new TicklerData();
     ResultSet rs = tickler.listTickler(bean.demographicNo, TicklerData.ACTIVE, dateBegin, dateEnd);
     
-    Date createDate;
-    SimpleDateFormat formater;
-    String itemHeader;
+    Date serviceDate;
+    Date today = new Date(System.currentTimeMillis());
+    String itemHeader;    
     
     while(rs.next()) {
-        createDate = rs.getDate("update_date");
-        formater =  new SimpleDateFormat("yyyy-MM-dd");
-        itemHeader = formater.format(createDate);
-        itemHeader += " : " + rs.getString("message");
-        
         NavBarDisplayDAO.Item item = Dao.Item();                        
+        serviceDate = rs.getDate("service_date");
+        item.setDate(serviceDate);
+        if( serviceDate.before(today) )
+            item.setColour("FF0000");
+            
+        itemHeader = StringUtils.maxLenString(rs.getString("message"), 18, 15, "...");        
+        itemHeader += " " + DateUtils.getDate(serviceDate,dateFormat);
+                
         winName = StringUtils.maxLenString(rs.getString("message"), 25, 25, "");        
         try {
             winName = URLEncoder.encode(winName, "UTF-8");
@@ -88,13 +92,14 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
             System.out.println("URLEncoder error " + e.getMessage());
             winName = "ticklerView" + bean.demographicNo;
         }        
-        url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "'); return false;";
+        url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "'); return false;";        
         item.setURL(url);
         item.setTitle(itemHeader);
         Dao.addItem(item);
 
-    }                                
-     
+    }
+    
+     Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
  }catch( Exception e ) {
      System.out.println("Error retrieving " + cmd + " : " + e.getMessage());
      e.printStackTrace();
