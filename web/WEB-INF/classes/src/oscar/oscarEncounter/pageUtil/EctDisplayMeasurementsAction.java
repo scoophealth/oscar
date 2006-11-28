@@ -28,11 +28,13 @@ package oscar.oscarEncounter.pageUtil;
 import oscar.oscarEncounter.oscarMeasurements.*;
 import oscar.oscarResearch.oscarDxResearch.bean.*;
 import oscar.OscarProperties;
+import oscar.util.DateUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
@@ -83,7 +85,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             header.append(" onclick=\"" + url + "\">" + tmp + "</a><br/>");
         }
         
-        header.append("</div><div id='menuTitle3' style=\"display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('3', event);\">+</a></h3></div>");
+        header.append("</div><div id='menuTitle3' style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('3', event);\">+</a></h3></div>");
         Dao.setRightHeading(header.toString());
        
         String demo = (String) bean.getDemographicNo();
@@ -99,9 +101,11 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             
             NavBarDisplayDAO.Item item = Dao.Item();
             data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
-            String tmp = title + "  " + data.getDataField() + " - " + data.getDateObserved();
+            Date date = data.getDateObservedAsDate();
+            String formattedDate = DateUtils.getDate(date,dateFormat);
+            String tmp = title + "  " + data.getDataField() + " - " + formattedDate;
             item.setTitle(tmp);
-            item.setDate(data.getDateObservedAsDate());
+            item.setDate(date);
             item.setURL("return false;");
             Dao.addItem(item);
             

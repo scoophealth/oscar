@@ -33,6 +33,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,25 +69,28 @@ public class EctDisplayLabAction extends EctDisplayAction {
         url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues.jsp?demographic_no=" + bean.demographicNo + "');return false;";
         heading.append("<a href='#' class='menuItemleft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"'");
         heading.append(" onclick=\"" + url + "\">" + messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem2") + " </a>");
-        heading.append("</div><div id='menuTitle2' style=\"display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('2', event);\">+</a></h3></div>");        
+        heading.append("</div><div id='menuTitle2' style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('2', event);\">+</a></h3></div>");        
         Dao.setRightHeading(heading.toString());
         
         NavBarDisplayDAO.Item item = Dao.Item();
         LabResultData result;
         String labDisplayName;
+        //String bgcolour = "FFFFCC";
         StringBuffer func;
         for( int idx = 0; idx < labs.size(); ++idx ) {
             result = (LabResultData) labs.get(idx);
-    
+            Date date = result.getDateObj();
+            String formattedDate = DateUtils.getDate(date,dateFormat);               
             func = new StringBuffer("popupPage(700,960,'");
+            
             if ( result.isMDS() ){ 
-                labDisplayName = result.getDiscipline()+" "+result.getDateTime();                
+                labDisplayName = result.getDiscipline()+" "+formattedDate;                
                 url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&status="+result.getReportStatus();
             }else if (result.isCML()){ 
-                labDisplayName = result.getDiscipline()+" "+result.getDateTime();
+                labDisplayName = result.getDiscipline()+" "+formattedDate;
                 url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;                 
             }else {
-                labDisplayName = result.getDiscipline()+" "+result.getDateTime();               
+                labDisplayName = result.getDiscipline()+" "+formattedDate;               
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                
             }
 
@@ -101,6 +105,7 @@ public class EctDisplayLabAction extends EctDisplayAction {
             func.append(winName + "','" + url + "'); return false;");            
             item.setTitle(labDisplayName);
             item.setURL(func.toString());
+            //item.setBgColour(bgcolour);
             Dao.addItem(item);
             item = Dao.Item();
         }
