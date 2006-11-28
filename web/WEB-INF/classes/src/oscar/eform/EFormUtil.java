@@ -79,7 +79,8 @@ public class EFormUtil {
                curht.put("formSubject", rsGetString(rs, "subject"));
                curht.put("formFileName", rsGetString(rs, "file_name"));
                curht.put("formDate", rsGetString(rs, "form_date"));
-               curht.put("formTime", rsGetString(rs, "form_time"));
+               curht.put("formDateAsDate", rs.getDate("form_date"));
+               curht.put("formTime", rsGetString(rs, "form_time"));               
                results.add(curht);
            }
            rs.close();
@@ -117,6 +118,7 @@ public class EFormUtil {
                curht.put("formName", rsGetString(rs, "form_name"));
                curht.put("formSubject", rsGetString(rs, "subject"));
                curht.put("formDate", rsGetString(rs, "form_date"));
+               curht.put("formDateAsDate", rs.getDate("form_date"));
                results.add(curht);
            }
            rs.close();
