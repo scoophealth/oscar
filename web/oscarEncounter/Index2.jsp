@@ -1126,7 +1126,7 @@ white-space: nowrap;
 		      <table bgcolor="#ccccff" id="presTopTable" border="0" width="100%">
                         <tr>  <!--hr style="border-bottom: 0pt solid #888888; background-color: #888888;"-->
                             <td valign="top">
-                                    <div class="RowTop" ><a href=# onClick="popupOscarRx(700,960,'../oscarRx/showAllergy.do?demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.allergies"/></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
+                                    <div class="RowTop" ><a href=# onClick="popupPage(700,960,'allergy','../oscarRx/showAllergy.do?demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.allergies"/></a>:&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;</div>
                                     <div class="presBox" id="allergyBox">
                                     <ul >
                                     <%      oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies
