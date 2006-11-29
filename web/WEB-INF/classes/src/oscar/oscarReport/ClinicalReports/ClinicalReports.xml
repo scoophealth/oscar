@@ -23,7 +23,7 @@
     select * from measurements m where   m.demographicNo = '${demographic_no}'  and m.type = 'BP' and  dateObserved >  DATE_SUB(now(),INTERVAL 6 Month)    
  </Numerator>
  
- <Numerator id ="TW" name="Has Triple Whammy in guideline time limit" type="SQL" description="Number of patient in the denom with at least one a1c test in the last 6 months
+ <Numerator id ="TW" name="Has Triple Indicator in guideline time limit" type="SQL" description="Number of patient in the denom with at least one a1c test in the last 6 months
    and at least one bp test in the last 6 months
    and at least one LDL test in the last 12 months" >
     select * from measurements m,measurements m2,measurements m3 
@@ -118,7 +118,7 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
  </Numerator>
 
  -->
- <Numerator id ="a1clt0p071" name="A1C lower than 0.071" type="DROOLS"  description="Number of patient in the denom with a a1c lower that 0.071" 
+ <Numerator id ="a1clt0p071" name="A1C lower than 0.07" type="DROOLS"  description="Number of patient in the denom with a a1c lower that 0.071" 
             file="testA1C.drl"/>
  
  <Numerator id ="a1cgt0p079" name="A1C higher than 0.079" type="DROOLS"  description="Number of patient in the denom with a a1c higher that 0.079" 
@@ -130,13 +130,13 @@ DATE_FORMAT(CONCAT( (d.year_of_birth),'-',(d.month_of_birth),'-',(d.date_of_birt
  <Numerator id ="bpgt0p079" name="BP higher than 139" type="DROOLS"  description="Number of patient in the denom with a bp higher that 139"
             file="testBPabove139.drl"/>
            
- <Numerator id ="ldllt2.6" name="LDL lower than 2.6" type="DROOLS"  description="Number of patient in the denom with a LDL lower that 2.6"
+ <Numerator id ="ldllt2.6" name="LDL lower than 2.5" type="DROOLS"  description="Number of patient in the denom with a LDL lower that 2.6"
             file="testLDLlower2p6.drl"/>
  
- <Numerator id ="valTripWham" name="Triple Whammy with last values in target" type="DROOLS"  description="Number of patient in the denom with a 
-    A1C lower 0.071
+ <Numerator id ="valTripWham" name="Triple Indicator with last values in target" type="DROOLS"  description="Number of patient in the denom with a 
+    A1C lower 0.07
     and BP  lower 131
-    and LDL lower 2.6"
+    and LDL lower 2.5"
             file="testTripleWhammy.drl"/>
 <!--Numerators
   
@@ -197,8 +197,8 @@ type="SQL">select distinct d.demographic_no from dxresearch d, measurements m,de
 and d.demographic_no = de.demographic_no and de.provider_no = '${provider_no}' and de.demographic_no = d.demographic_no and de.patient_status = 'AC'
 </Denominator>
 
-<Denominator id="TripWham" name="Diabetes Registry having Triple Whammy in guideline time limit"
-description="And a combined one above (Triple Whammy)"
+<Denominator id="TripWham" name="Diabetes Registry having Triple Indicator in guideline time limit"
+description="And a combined one above (Triple Indicator)"
 type="SQL">select distinct dx.demographic_no  from measurements m,measurements m2,measurements m3,dxresearch dx, demographic d 
      where   m.demographicNo = dx.demographic_no  and  m.type = 'BP'  and  m.dateObserved  &gt;=  DATE_SUB(now(),INTERVAL 6 Month)    
      and  m2.demographicNo   = dx.demographic_no  and m2.type = 'LDL' and  m2.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 12 Month)     
@@ -206,8 +206,8 @@ type="SQL">select distinct dx.demographic_no  from measurements m,measurements m
      and  dx.dxresearch_code in ('250') and dx.coding_system = 'icd9' and dx.status = 'A' and d.demographic_no = dx.demographic_no and d.patient_status = 'AC'
 </Denominator>
     
-<Denominator id="TripWhambyP" name="Diabetes Registry having Triple Whammy in guideline time limit by practice"
-description="And a combined one above (Triple Whammy) by practice" replaceKeys="provider_no"
+<Denominator id="TripWhambyP" name="Diabetes Registry having Triple Indicator in guideline time limit by practice"
+description="And a combined one above (Triple Indicator) by practice" replaceKeys="provider_no"
 type="SQL">select distinct d.demographic_no from measurements m,measurements m2,measurements m3,dxresearch d,demographic de 
      where   m.demographicNo = d.demographic_no  and m.type = 'BP'   and  m.dateObserved  &gt;=  DATE_SUB(now(),INTERVAL 6 Month)    
      and    m2.demographicNo = d.demographic_no  and m2.type = 'LDL' and  m2.dateObserved &gt;=  DATE_SUB(now(),INTERVAL 12 Month)     
