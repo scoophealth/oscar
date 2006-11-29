@@ -995,7 +995,7 @@ white-space: nowrap;
                              
                         </td>
                         <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
-                                <a href="javascript:popupStart(300,400,'Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupStart(300,400,'About.jsp')"><bean:message key="global.about"/></a>
+                                <a href="javascript:popupPage(300,400,'utility','Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupPage(300,400,'utility','About.jsp')"><bean:message key="global.about"/></a>
                         </td>
                     </tr>
                     
@@ -1148,7 +1148,7 @@ white-space: nowrap;
                                         <tr>
                                             <td width=60><div class="RowTop" >Rx Date</td>
                                             <td>
-                                                 <div class="RowTop" ><div class="RowTop" ><a href=# onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a></div></div>
+                                                 <div class="RowTop" ><div class="RowTop" ><a href=# onClick="popupPage(700,960,'Rx','../oscarRx/choosePatient.do?providerNo=<%=bean.providerNo%>&demographicNo=<%=bean.demographicNo%>');return false;"><bean:message key="global.prescriptions"/></a></div></div>
                                             </td>
                                             <td align=right>
                                                 <div style="font-size:8pt;text-align:right;vertical-align:bottom">
