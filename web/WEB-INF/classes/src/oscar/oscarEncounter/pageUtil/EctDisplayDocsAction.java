@@ -28,11 +28,16 @@ package oscar.oscarEncounter.pageUtil;
 import oscar.dms.*;
 import oscar.oscarEncounter.data.*;
 import oscar.util.StringUtils;
+import oscar.util.DateUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,28 +61,47 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
     String js = "";
     ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE);
-    
+    String dbFormat = "yyyy-MM-dd";
+    String serviceDateStr = "";
+    String strTitle;
     for (int i=0; i< docList.size(); i++) {
         EDoc curDoc = (EDoc) docList.get(i);
         String dispFilename = curDoc.getFileName();
-        String dispStatus   = curDoc.getStatus() + "";
-        String dispDocNo    = curDoc.getDocId();
-        String dispDesc     = StringUtils.maxLenString(curDoc.getDescription(), 25, 22, "...");                            
+        String dispStatus   = String.valueOf(curDoc.getStatus());
         
+        if( dispStatus.equals("A") )
+            dispStatus = "active";
+         else if( dispStatus.equals("H") )
+            dispStatus="html";
+                    
+        String dispDocNo    = curDoc.getDocId();
+        String dispDesc     = StringUtils.maxLenString(curDoc.getDescription(), 16, 13, "...");
+        
+        DateFormat formatter = new SimpleDateFormat(dbFormat);
+        String dateStr = curDoc.getObservationDate();
         NavBarDisplayDAO.Item item = Dao.Item();                        
         try {
+            Date date = (Date)formatter.parse(dateStr);
+            serviceDateStr = DateUtils.getDate(date, dateFormat);
+            item.setDate(date);
+            
             winName = URLEncoder.encode(dispDesc, "UTF-8");
+        }
+        catch(ParseException ex ) {
+            System.out.println("EctDisplayDocsAction: Error creating date " + ex.getMessage());
+            serviceDateStr = "Error";
         }
         catch( UnsupportedEncodingException e ) {
             System.out.println("URLEncoding error " + e.getMessage());
             winName = "documents" + bean.demographicNo;
         }
         
+        strTitle = dispDesc + " " + serviceDateStr;
         url = "popupPage(700,800,'" + winName + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "'); ";
-        js = "autoCompleted['" +  dispDesc + "'] = \"" + url + "\"; autoCompList.push('" + dispDesc + "');";
+        js = "autoCompleted['" +  strTitle + "'] = \"" + url + "\"; autoCompList.push('" + strTitle + "');";
         javascript.append(js);
         item.setURL(url);
-        item.setTitle(dispDesc);
+        item.setTitle(strTitle);
         Dao.addItem(item);
 
     }                                
