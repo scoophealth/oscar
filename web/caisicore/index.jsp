@@ -16,7 +16,7 @@
 
 <caisi:isModuleLoad moduleName="survey">
 <br/>
-<html:link target="_blank" action="/mod/caisiComp/SurveyManager.do">Oscar Forms Manager</html:link>
+<html:link target="_blank" action="/mod/caisi/SurveyManager.do">Oscar Forms Manager</html:link>
 </caisi:isModuleLoad>
 
 </body>

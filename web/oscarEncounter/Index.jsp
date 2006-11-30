@@ -83,12 +83,12 @@ You have no rights to access the data!
 %>
 <!-- add by caisi  --> 
 <caisi:isModuleLoad moduleName="program">
-<plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+<plugin:hideWhenCompExists componentName="caisi" reverse="true">
 <%
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
-String hrefurl=request.getContextPath()+"/mod/casemgmtComp/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+String hrefurl=request.getContextPath()+"/mod/caisi/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 if (request.getParameter("casetoEncounter")==null)
 {
 	response.sendRedirect(hrefurl);
@@ -850,7 +850,7 @@ border-right: 2px solid #cfcfcf;
                 <table name="tileTable" style="vertical-align:middle;border-collapse:collapse;" >
                     <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
                     <caisi:isModuleLoad moduleName="program">
-                    <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+                    <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 					</plugin:hideWhenCompExists>
 					</caisi:isModuleLoad>
@@ -875,8 +875,8 @@ border-right: 2px solid #cfcfcf;
         <td style="font-size:80%;border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <table class="LeftTable">
             <caisi:isModuleLoad moduleName="program">
-            	<plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
-       <%String hrefurl2=request.getContextPath()+"/mod/casemgmtComp/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+            	<plugin:hideWhenCompExists componentName="caisi" reverse="true">
+       <%String hrefurl2=request.getContextPath()+"/mod/caisi/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 %>
         		<tr>
         			<td>
@@ -948,7 +948,7 @@ border-right: 2px solid #cfcfcf;
             <table class="LeftTable">
             <form name="leftColumnForm">
             <caisi:isModuleLoad moduleName="program">
-            <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+            <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 			</plugin:hideWhenCompExists>
 			</caisi:isModuleLoad>
@@ -1010,7 +1010,7 @@ border-right: 2px solid #cfcfcf;
             <table class="LeftTable">
             <form name="msgForm">
             <caisi:isModuleLoad moduleName="program">
-            <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+            <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 			</plugin:hideWhenCompExists>
 			</caisi:isModuleLoad>
@@ -1051,7 +1051,7 @@ border-right: 2px solid #cfcfcf;
             <table class="LeftTable">
             <form name="insertTemplateForm">
             <caisi:isModuleLoad moduleName="program">
-            <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+            <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 			</plugin:hideWhenCompExists>
 			</caisi:isModuleLoad>
@@ -1096,7 +1096,7 @@ border-right: 2px solid #cfcfcf;
                         
                         <form name="measurementGroupForm">
                         <caisi:isModuleLoad moduleName="program">
-                    <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+                    <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 					</plugin:hideWhenCompExists>
 					</caisi:isModuleLoad>
@@ -1155,7 +1155,7 @@ border-right: 2px solid #cfcfcf;
             <table class="LeftTable">
                 <form name="ksearch" >
                 <caisi:isModuleLoad moduleName="program">
-                <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+                <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 				</plugin:hideWhenCompExists>
 				</caisi:isModuleLoad>
@@ -1195,7 +1195,7 @@ border-right: 2px solid #cfcfcf;
         <td valign="top">
         <form name="encForm" action="SaveEncounter.do" method="POST">
         <caisi:isModuleLoad moduleName="program">
-        <plugin:hideWhenCompExists componentName="caisiComp" reverse="true">
+        <plugin:hideWhenCompExists componentName="caisi" reverse="true">
 					<input type="hidden" name="casetoEncounter" value="true">
 		</plugin:hideWhenCompExists>
 		</caisi:isModuleLoad>
