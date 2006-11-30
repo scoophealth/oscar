@@ -1,0 +1,1795 @@
+DROP TABLE IF EXISTS `access_type`;
+CREATE TABLE `access_type` (
+  `access_id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `type` varchar(255) default NULL,
+  PRIMARY KEY  (`access_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `admission`
+--
+
+DROP TABLE IF EXISTS `admission`;
+CREATE TABLE `admission` (
+  `am_id` bigint(11) NOT NULL auto_increment,
+  `client_id` bigint(11) NOT NULL default '0',
+  `program_id` bigint(11) NOT NULL default '0',
+  `provider_no` bigint(11) NOT NULL default '0',
+  `admission_date` datetime default NULL,
+  `admission_notes` varchar(255) default NULL,
+  `temp_admission` char(1) default NULL,
+  `discharge_date` datetime default NULL,
+  `discharge_notes` varchar(255) default NULL,
+  `temp_admit_discharge` char(1) default NULL,
+  `admission_status` varchar(24) default NULL,
+  `team_id` int(10) default NULL,
+  `temporary_admission_flag` tinyint(1) default NULL,
+  `agency_id` int(11) default '0',
+  PRIMARY KEY  (`am_id`),
+  KEY `FK1A21809DAA8624B` (`team_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `agency`
+--
+
+DROP TABLE IF EXISTS `agency`;
+CREATE TABLE `agency` (
+  `id` bigint(20) NOT NULL default '0',
+  `name` varchar(50) NOT NULL default '',
+  `description` varchar(255) default NULL,
+  `contact_name` varchar(255) default NULL,
+  `contact_email` varchar(255) default NULL,
+  `contact_phone` varchar(255) default NULL,
+  `local` tinyint(1) NOT NULL default '0',
+  `integrator_enabled` tinyint(1) NOT NULL default '0',
+  `integrator_url` varchar(255) default NULL,
+  `integrator_jms` varchar(255) default NULL,
+  `integrator_username` varchar(255) default NULL,
+  `integrator_password` varchar(255) default NULL,
+  `hic` tinyint(1) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `bed`
+--
+
+DROP TABLE IF EXISTS `bed`;
+CREATE TABLE `bed` (
+  `bed_id` int(10) unsigned NOT NULL auto_increment,
+  `bed_type_id` tinyint(3) unsigned NOT NULL default '0',
+  `room_id` int(10) unsigned NOT NULL default '0',
+  `team_id` int(10) unsigned default NULL,
+  `demographic_no` int(10) unsigned default NULL,
+  `name` varchar(45) default NULL,
+  `expiry` date default NULL,
+  `active` tinyint(1) unsigned NOT NULL default '1',
+  PRIMARY KEY  (`bed_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `bed_log`
+--
+
+DROP TABLE IF EXISTS `bed_log`;
+CREATE TABLE `bed_log` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `program_id` bigint(20) NOT NULL default '0',
+  `provider_no` varchar(11) NOT NULL default '',
+  `sheet_id` bigint(20) NOT NULL default '0',
+  `demographic_no` bigint(20) NOT NULL default '0',
+  `time` varchar(50) NOT NULL default '',
+  `status` varchar(50) NOT NULL default '',
+  `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  KEY `FKF22A268694786124` (`sheet_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `bed_log_sheet`
+--
+
+DROP TABLE IF EXISTS `bed_log_sheet`;
+CREATE TABLE `bed_log_sheet` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+  `program_id` bigint(20) default NULL,
+  `closed` tinyint(1) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `bed_type`
+--
+
+DROP TABLE IF EXISTS `bed_type`;
+CREATE TABLE `bed_type` (
+  `bed_type_id` tinyint(3) unsigned NOT NULL auto_increment,
+  `name` varchar(45) NOT NULL default '',
+  PRIMARY KEY  (`bed_type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `caisi_form`
+--
+
+DROP TABLE IF EXISTS `caisi_form`;
+CREATE TABLE `caisi_form` (
+  `form_id` bigint(20) NOT NULL auto_increment,
+  `description` varchar(255) default NULL,
+  `surveyData` text,
+  `status` smallint(6) default NULL,
+  `version` bigint(20) default '0',
+  PRIMARY KEY  (`form_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `caisi_form_data`
+--
+
+DROP TABLE IF EXISTS `caisi_form_data`;
+CREATE TABLE `caisi_form_data` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `instance_id` bigint(20) default NULL,
+  `page_number` bigint(20) default NULL,
+  `section_id` bigint(20) default NULL,
+  `question_id` bigint(20) default NULL,
+  `value` varchar(255) default NULL,
+  `data_key` varchar(255) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FKC253B2E74497F4E` (`instance_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `caisi_form_instance`
+--
+
+DROP TABLE IF EXISTS `caisi_form_instance`;
+CREATE TABLE `caisi_form_instance` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `form_id` bigint(20) default NULL,
+  `description` varchar(255) default NULL,
+  `date_created` datetime default NULL,
+  `user_id` bigint(20) default NULL,
+  `username` varchar(255) default NULL,
+  `client_id` bigint(20) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `caisi_role`
+--
+
+DROP TABLE IF EXISTS `caisi_role`;
+CREATE TABLE `caisi_role` (
+  `role_id` int(10) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `oscar_name` varchar(255) NOT NULL default '',
+  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`role_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `casemgmt_cpp`
+--
+
+DROP TABLE IF EXISTS `casemgmt_cpp`;
+CREATE TABLE `casemgmt_cpp` (
+  `id` int(10) NOT NULL auto_increment,
+  `demographic_no` varchar(10) NOT NULL default '',
+  `socialHistory` text,
+  `familyHistory` text,
+  `medicalHistory` text,
+  `ongoingConcerns` text,
+  `reminders` text,
+  `update_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  `primaryPhysician` varchar(255) default NULL,
+  `primaryCounsellor` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `casemgmt_issue`
+--
+
+DROP TABLE IF EXISTS `casemgmt_issue`;
+CREATE TABLE `casemgmt_issue` (
+  `id` int(10) NOT NULL auto_increment,
+  `demographic_no` varchar(20) NOT NULL default '',
+  `issue_id` int(10) NOT NULL default '0',
+  `acute` tinyint(1) NOT NULL default '0',
+  `certain` tinyint(1) NOT NULL default '0',
+  `major` tinyint(1) NOT NULL default '0',
+  `resolved` tinyint(1) NOT NULL default '0',
+  `type` varchar(100) NOT NULL default '',
+  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`),
+  KEY `FK718D130B49CFB32F` (`issue_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `casemgmt_issue_notes`
+--
+
+DROP TABLE IF EXISTS `casemgmt_issue_notes`;
+CREATE TABLE `casemgmt_issue_notes` (
+  `id` int(10) NOT NULL default '0',
+  `note_id` int(10) NOT NULL default '0',
+  PRIMARY KEY  (`id`,`note_id`),
+  KEY `FK5876108D1DA7C976` (`id`),
+  KEY `FK5876108D40188B8` (`note_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `casemgmt_note`
+--
+
+DROP TABLE IF EXISTS `casemgmt_note`;
+CREATE TABLE `casemgmt_note` (
+  `note_id` int(10) NOT NULL auto_increment,
+  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `demographic_no` varchar(20) NOT NULL default '',
+  `provider_no` varchar(20) NOT NULL default '',
+  `note` mediumtext NOT NULL,
+  `signed` tinyint(1) NOT NULL default '0',
+  `include_issue_innote` tinyint(1) NOT NULL default '0',
+  `signing_provider_no` varchar(20) NOT NULL default '',
+  `encounter_type` varchar(100) NOT NULL default '',
+  `billing_code` varchar(100) NOT NULL default '',
+  `program_no` varchar(20) NOT NULL default '',
+  `agency_no` varchar(20) NOT NULL default '',
+  `reporter_caisi_role` varchar(20) NOT NULL default '',
+  `reporter_program_team` varchar(20) NOT NULL default '',
+  `history` mediumtext NOT NULL,
+  `password` varchar(255) default NULL,
+  `locked` char(1) default NULL,
+  PRIMARY KEY  (`note_id`),
+  KEY `FKA8D537806CCA0FC` (`provider_no`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `casemgmt_tmpsave`
+--
+
+DROP TABLE IF EXISTS `casemgmt_tmpsave`;
+CREATE TABLE `casemgmt_tmpsave` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `demographic_no` bigint(20) default NULL,
+  `provider_no` varchar(255) default NULL,
+  `program_id` bigint(20) default NULL,
+  `note` text,
+  `update_date` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `client_image`
+--
+
+DROP TABLE IF EXISTS `client_image`;
+CREATE TABLE `client_image` (
+  `image_id` bigint(20) NOT NULL auto_increment,
+  `demographic_no` int(11) default NULL,
+  `image_type` varchar(255) default NULL,
+  `image_data` longtext,
+  `update_date` datetime default NULL,
+  PRIMARY KEY  (`image_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `client_referral`
+--
+
+DROP TABLE IF EXISTS `client_referral`;
+CREATE TABLE `client_referral` (
+  `referral_id` bigint(20) NOT NULL auto_increment,
+  `agency_id` bigint(20) NOT NULL default '0',
+  `client_id` bigint(20) NOT NULL default '0',
+  `referral_date` datetime default NULL,
+  `provider_no` bigint(20) NOT NULL default '0',
+  `notes` varchar(255) default NULL,
+  `program_id` bigint(20) NOT NULL default '0',
+  `status` varchar(30) default NULL,
+  `completion_notes` varchar(255) default NULL,
+  `temporary_admission_flag` tinyint(1) default NULL,
+  `completion_date` datetime default NULL,
+  `source_agency_id` bigint(20) default NULL,
+  PRIMARY KEY  (`referral_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `consent`;
+CREATE TABLE `consent` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `demographic_no` bigint(20) NOT NULL default '0',
+  `provider_no` varchar(255) NOT NULL default '',
+  `provider_name` varchar(255) default NULL,
+  `date_signed` datetime default NULL,
+  `answer_1` int(11) default NULL,
+  `answer_2` int(11) default NULL,
+  `answer_3` int(11) default NULL,
+  `status` varchar(255) default NULL,
+  `hardcopy` tinyint(1) default NULL,
+  `location` varchar(255) default NULL,
+  `form_name` varchar(255) default NULL,
+  `form_version` varchar(255) default NULL,
+  `signature_declaration` tinyint(1) default NULL,
+  `exclusions` varchar(255) default NULL,
+  `refused` tinyint(1) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `consent_interview`
+--
+
+DROP TABLE IF EXISTS `consent_interview`;
+CREATE TABLE `consent_interview` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `consent_id` bigint(20) NOT NULL default '0',
+  `demographic_no` bigint(20) NOT NULL default '0',
+  `provider_no` varchar(255) NOT NULL default '',
+  `form_name` varchar(255) default NULL,
+  `form_version` varchar(255) default NULL,
+  `language` varchar(255) default NULL,
+  `language_other` varchar(255) default NULL,
+  `language_read` varchar(255) default NULL,
+  `language_read_other` varchar(255) default NULL,
+  `education` varchar(255) default NULL,
+  `review` varchar(255) default NULL,
+  `review_other` varchar(255) default NULL,
+  `pressure` varchar(255) default NULL,
+  `pressure_other` varchar(255) default NULL,
+  `information` varchar(255) default NULL,
+  `information_other` varchar(255) default NULL,
+  `followup` varchar(255) default NULL,
+  `followup_other` varchar(255) default NULL,
+  `comments` varchar(255) default NULL,
+  `comments_other` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `cr_cert`;
+CREATE TABLE `cr_cert` (
+  `cert_id` varchar(37) NOT NULL default '',
+  `user_specific` tinyint(1) default NULL,
+  `static_ip` tinyint(1) default NULL,
+  `unassigned` tinyint(1) default NULL,
+  `ip` varchar(15) default NULL,
+  `user_id` varchar(64) default NULL,
+  `machine_id` varchar(37) default NULL,
+  `verification_needed` tinyint(1) default NULL,
+  `usage_times_before_reverify` int(11) default NULL,
+  `policy_id` varchar(37) default NULL,
+  `created_timestamp` datetime default NULL,
+  `last_changed` datetime default NULL,
+  `signature` bigint(20) default NULL,
+  PRIMARY KEY  (`cert_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `cr_machine`
+--
+
+DROP TABLE IF EXISTS `cr_machine`;
+CREATE TABLE `cr_machine` (
+  `machine_id` varchar(37) NOT NULL default '',
+  `ip` varchar(15) default NULL,
+  `machine_name` varchar(255) default NULL,
+  PRIMARY KEY  (`machine_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `cr_policy`
+--
+
+DROP TABLE IF EXISTS `cr_policy`;
+CREATE TABLE `cr_policy` (
+  `policy_id` varchar(37) NOT NULL default '',
+  `static_ip` tinyint(1) default NULL,
+  `ip` varchar(15) default NULL,
+  `remote_access` tinyint(1) default NULL,
+  `generate_super_certs` tinyint(1) default NULL,
+  `administrate_policies` tinyint(1) default NULL,
+  `administrate_questions` tinyint(1) default NULL,
+  `remove_bans` tinyint(1) default NULL,
+  `user_id` varchar(64) default NULL,
+  `role_id` varchar(37) default NULL,
+  `priority` int(11) default NULL,
+  `usage_times_before_reverify` int(11) default NULL,
+  `max_time_between_usage` int(11) default NULL,
+  `expire_cookie` int(11) default NULL,
+  `ip_filter` varchar(128) default NULL,
+  `certs_max` int(11) default NULL,
+  `certs_current` int(11) default NULL,
+  `default_answer` varchar(16) default NULL,
+  PRIMARY KEY  (`policy_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `cr_securityquestion`
+--
+
+DROP TABLE IF EXISTS `cr_securityquestion`;
+CREATE TABLE `cr_securityquestion` (
+  `question_id` varchar(37) NOT NULL default '',
+  `user_id` varchar(128) default NULL,
+  `question` varchar(255) default NULL,
+  `answer` varchar(255) default NULL,
+  PRIMARY KEY  (`question_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `cr_user`
+--
+
+DROP TABLE IF EXISTS `cr_user`;
+CREATE TABLE `cr_user` (
+  `user_id` varchar(64) NOT NULL default '',
+  `password_digest` varchar(128) default NULL,
+  `disabled` tinyint(1) default NULL,
+  `lockedout` tinyint(1) default NULL,
+  `password_expired` tinyint(1) default NULL,
+  PRIMARY KEY  (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `cr_userrole`
+--
+
+DROP TABLE IF EXISTS `cr_userrole`;
+CREATE TABLE `cr_userrole` (
+  `user_id` varchar(64) NOT NULL default '',
+  `user_role` varchar(64) NOT NULL default '',
+  PRIMARY KEY  (`user_id`,`user_role`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `custom_filter`
+--
+
+DROP TABLE IF EXISTS `custom_filter`;
+CREATE TABLE `custom_filter` (
+  `id` int(10) NOT NULL auto_increment,
+  `provider_no` varchar(6) NOT NULL default '',
+  `start_date` date NOT NULL default '0000-00-00',
+  `end_date` date NOT NULL default '0000-00-00',
+  `status` char(1) NOT NULL default '',
+  `priority` varchar(20) NOT NULL default '',
+  `demographic_no` varchar(20) NOT NULL default '',
+  `name` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `custom_filter_assignees`
+--
+
+DROP TABLE IF EXISTS `custom_filter_assignees`;
+CREATE TABLE `custom_filter_assignees` (
+  `filter_id` int(10) NOT NULL default '0',
+  `provider_no` varchar(6) NOT NULL default ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `custom_filter_providers`
+--
+
+DROP TABLE IF EXISTS `custom_filter_providers`;
+CREATE TABLE `custom_filter_providers` (
+  `filter_id` int(10) NOT NULL default '0',
+  `provider_no` varchar(6) NOT NULL default ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `default_role_access`
+--
+
+DROP TABLE IF EXISTS `default_role_access`;
+CREATE TABLE `default_role_access` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `role_id` int(11) NOT NULL default '0',
+  `access_id` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `demographic_bed`
+--
+
+DROP TABLE IF EXISTS `demographic_bed`;
+CREATE TABLE `demographic_bed` (
+  `demographic_no` int(10) unsigned NOT NULL default '0',
+  `bed_id` int(10) unsigned NOT NULL default '0',
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  PRIMARY KEY  (`demographic_no`,`bed_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `formfollowup`
+--
+
+DROP TABLE IF EXISTS `formfollowup`;
+CREATE TABLE `formfollowup` (
+  `ID` bigint(20) NOT NULL auto_increment,
+  `cbox_assistWithHealthCard` char(1) default NULL,
+  `commentsOnEducation` varchar(255) default NULL,
+  `typeOfIncome` varchar(120) default NULL,
+  `historyOfJail` varchar(50) default NULL,
+  `dateEnteredSeaton` varchar(24) default NULL,
+  `commentsOnStreetDrugs` varchar(255) default NULL,
+  `whenMadeAppforOtherIncome` varchar(24) default NULL,
+  `cbox_ODSP` char(1) default NULL,
+  `cbox_fortYork` char(1) default NULL,
+  `cbox_oNeillHouse` char(1) default NULL,
+  `cbox_other` char(1) default NULL,
+  `cbox_haveOther1` char(1) default NULL,
+  `radio_drinkThese` varchar(24) default NULL,
+  `cbox_OAS` char(1) default NULL,
+  `whySponsorshipBreakdown` varchar(255) default NULL,
+  `radio_everBeenJailed` varchar(24) default NULL,
+  `doctor2Phone` varchar(24) default NULL,
+  `radio_caredForDepression` varchar(24) default NULL,
+  `radio_caredForOther` varchar(24) default NULL,
+  `cbox_getMoreMedication` char(1) default NULL,
+  `radio_drugUse` varchar(24) default NULL,
+  `radio_haveMentalProblem` varchar(24) default NULL,
+  `radio_requireReferralToESL` varchar(24) default NULL,
+  `radio_haveHealthCoverage` varchar(24) default NULL,
+  `day` char(2) default NULL,
+  `cbox_speakFrench` char(1) default NULL,
+  `commentsOnLegalIssues` varchar(255) default NULL,
+  `radio_howMuchDrink` varchar(24) default NULL,
+  `radio_needAssistInLegal` varchar(24) default NULL,
+  `commentsOnHousing` varchar(255) default NULL,
+  `cbox_downsviewDells` char(1) default NULL,
+  `cbox_haveUniversity` char(1) default NULL,
+  `publicTrusteeInfo` varchar(255) default NULL,
+  `cbox_longTermProgram` char(1) default NULL,
+  `dateAssessment` varchar(24) default NULL,
+  `cbox_assistWithSINCard` char(1) default NULL,
+  `drinksPerDay` char(3) default NULL,
+  `speakOther` varchar(50) default NULL,
+  `cbox_rememberToTakeMedication` char(1) default NULL,
+  `dateLastContact3` varchar(24) default NULL,
+  `usualOccupation` varchar(70) default NULL,
+  `radio_wantAppmt` varchar(24) default NULL,
+  `radio_hasIDInFile` varchar(24) default NULL,
+  `drinksPerMonth` varchar(5) default NULL,
+  `sponsorName` varchar(50) default NULL,
+  `cbox_pamphletIssued` char(1) default NULL,
+  `dateLastContact1` varchar(24) default NULL,
+  `cbox_OW` char(1) default NULL,
+  `assessCompleteTime` varchar(50) default NULL,
+  `cbox_birchmountResidence` char(1) default NULL,
+  `contact4Name` varchar(50) default NULL,
+  `clientLastAddressPayRent` varchar(255) default NULL,
+  `dateLastContact2` varchar(24) default NULL,
+  `contact2Name` varchar(50) default NULL,
+  `radio_currentlyEmployed` varchar(24) default NULL,
+  `commentsOnFinance` varchar(255) default NULL,
+  `cbox_haveODSP` char(1) default NULL,
+  `agency3Name` varchar(70) default NULL,
+  `amtOwing` varchar(16) default NULL,
+  `cbox_rotaryClub` char(1) default NULL,
+  `clientSurname` varchar(50) default NULL,
+  `completedBy1` varchar(50) default NULL,
+  `commentsOnEmployment` varchar(255) default NULL,
+  `radio_entitledToOtherIncome` varchar(24) default NULL,
+  `dateLastContact4` varchar(24) default NULL,
+  `whereBeforeSeaton` varchar(255) default NULL,
+  `doctor2NameAddr` varchar(255) default NULL,
+  `radio_sponsorshipBreakdown` varchar(24) default NULL,
+  `cbox_assistWithBirthCert` char(1) default NULL,
+  `howHearAboutSeaton` varchar(255) default NULL,
+  `howMuchYouReceive` varchar(12) default NULL,
+  `everMadeAppforOtherIncome` varchar(120) default NULL,
+  `contact4Phone` varchar(24) default NULL,
+  `assistProvided1` varchar(120) default NULL,
+  `cbox_employment` char(1) default NULL,
+  `yourCanadianStatus` varchar(50) default NULL,
+  `radio_everMadeAppforOtherIncome` varchar(24) default NULL,
+  `cbox_haveSchizophrenia` char(1) default NULL,
+  `commentsOnID` varchar(255) default NULL,
+  `cbox_haveOther2` char(1) default NULL,
+  `radio_needAssistWithMedication` varchar(24) default NULL,
+  `assessStartTime` varchar(24) default NULL,
+  `cbox_haveDepression` char(1) default NULL,
+  `cbox_assistWithImmigrant` char(1) default NULL,
+  `clientLastAddress` varchar(255) default NULL,
+  `mainSourceOfIncome` varchar(70) default NULL,
+  `cbox_assistWithNone` char(1) default NULL,
+  `dateExitedSeaton` varchar(24) default NULL,
+  `cbox_haveOHIP` char(1) default NULL,
+  `housingInterested` varchar(70) default NULL,
+  `assistWithOther` varchar(50) default NULL,
+  `needHelpWithImmigration` varchar(50) default NULL,
+  `cbox_speakEnglish` char(1) default NULL,
+  `cbox_assistWithOther` char(1) default NULL,
+  `contact2Phone` varchar(24) default NULL,
+  `cbox_haveCollege` char(1) default NULL,
+  `dateLivedThere` varchar(24) default NULL,
+  `radio_involvedOtherAgencies` varchar(24) default NULL,
+  `assistProvided2` varchar(120) default NULL,
+  `radio_wantHelpQuitDrug` varchar(24) default NULL,
+  `contact1Phone` varchar(24) default NULL,
+  `radio_need60DaysSeatonServices` varchar(24) default NULL,
+  `completedBy2` varchar(50) default NULL,
+  `radio_interestedInTraining` varchar(24) default NULL,
+  `contact3Phone` varchar(24) default NULL,
+  `followupAppmts` varchar(120) default NULL,
+  `cbox_haveAnxiety` char(1) default NULL,
+  `radio_interestBackToSchool` varchar(24) default NULL,
+  `cbox_assistWithCitizenCard` char(1) default NULL,
+  `cbox_haveHighSchool` char(1) default NULL,
+  `cbox_haveOther3` char(1) default NULL,
+  `radio_citizen` varchar(24) default NULL,
+  `clientFirstName` varchar(50) default NULL,
+  `month` char(2) default NULL,
+  `cbox_CPP` char(1) default NULL,
+  `radio_seenDoctorRegAlcohol` varchar(24) default NULL,
+  `radio_wantHelpQuit` varchar(24) default NULL,
+  `radio_owedRent` varchar(24) default NULL,
+  `whereOweRent` varchar(255) default NULL,
+  `howLongUnemployed` char(3) default NULL,
+  `cbox_haveODB` char(1) default NULL,
+  `howLongEmployed` char(3) default NULL,
+  `cbox_annexHarm` char(1) default NULL,
+  `formEdited` datetime default NULL,
+  `dateLastDoctor2Contact` varchar(24) default NULL,
+  `yearsOfEducation` varchar(4) default NULL,
+  `radio_yourCanadianStatus` varchar(24) default NULL,
+  `radio_drugUseFrequency` varchar(24) default NULL,
+  `provider_no` bigint(20) default NULL,
+  `doctor1Phone` varchar(24) default NULL,
+  `agency1Name` varchar(70) default NULL,
+  `cbox_hostel` char(1) default NULL,
+  `commentsOnAlcohol` varchar(255) default NULL,
+  `radio_mentalIllness` varchar(24) default NULL,
+  `cbox_speakSpanish` char(1) default NULL,
+  `drinksPerWeek` varchar(4) default NULL,
+  `commentsOnImmigration` varchar(255) default NULL,
+  `radio_behaviorProblem` varchar(24) default NULL,
+  `agency2Name` varchar(70) default NULL,
+  `commentsOnNeedHelp` varchar(255) default NULL,
+  `radio_havePublicTrustee` varchar(24) default NULL,
+  `cbox_speakOther` char(1) default NULL,
+  `cbox_takePrescribedMedication` char(1) default NULL,
+  `needAssistInLegal` varchar(255) default NULL,
+  `radio_caredForSchizophrenia` varchar(24) default NULL,
+  `formCreated` date default NULL,
+  `demographic_no` bigint(20) NOT NULL default '0',
+  `radio_doYouDrink` varchar(24) default NULL,
+  `radio_drinking` varchar(24) default NULL,
+  `radio_healthProblem` varchar(24) default NULL,
+  `cbox_UI` char(1) default NULL,
+  `livedWithWhom` varchar(120) default NULL,
+  `assistProvided3` varchar(120) default NULL,
+  `cbox_haveManic` char(1) default NULL,
+  `contact1Name` varchar(50) default NULL,
+  `year` varchar(4) default NULL,
+  `radio_caredForManic` varchar(24) default NULL,
+  `cbox_assistWithRefugee` char(1) default NULL,
+  `radio_livedInSubsidized` varchar(24) default NULL,
+  `radio_useDrugs` varchar(24) default NULL,
+  `cbox_needHelpInOther` char(1) default NULL,
+  `assistProvided4` varchar(120) default NULL,
+  `doctor1NameAddr` varchar(255) default NULL,
+  `contact3Name` varchar(50) default NULL,
+  `haveOther` varchar(70) default NULL,
+  `cbox_storeMedication` char(1) default NULL,
+  `agency4Name` varchar(70) default NULL,
+  `radio_caredForAnxiety` varchar(24) default NULL,
+  `dateLastDoctor1Contact` varchar(24) default NULL,
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `formintakea`
+--
+
+DROP TABLE IF EXISTS `formintakea`;
+CREATE TABLE `formintakea` (
+  `ID` bigint(11) NOT NULL auto_increment,
+  `demographic_no` bigint(11) NOT NULL default '0',
+  `provider_no` bigint(11) default '0',
+  `formCreated` date default '0000-00-00',
+  `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `assessDate` varchar(24) default '',
+  `assessStartTime` varchar(24) default '',
+  `enterSeatonDate` varchar(24) default '',
+  `cbox_newClient` char(1) default '',
+  `cbox_dateOfReadmission` char(1) default '',
+  `dateOfReadmission` varchar(24) default '',
+  `cbox_isStatementRead` char(1) default '',
+  `clientSurname` varchar(50) default '',
+  `clientFirstName` varchar(50) default '',
+  `month` char(2) default '',
+  `day` char(2) default '',
+  `year` varchar(4) default '',
+  `cbox_speakEnglish` char(1) default '',
+  `cbox_speakFrench` char(1) default '',
+  `cbox_speakOther` char(1) default '',
+  `speakOther` varchar(36) default '',
+  `reasonToSeaton` varchar(255) default '',
+  `everAtSeatonBefore` varchar(24) default NULL,
+  `datesAtSeaton` varchar(70) default '',
+  `cbox_assistInHealth` char(1) default '',
+  `cbox_assistInIdentification` char(1) default '',
+  `cbox_assistInAddictions` char(1) default '',
+  `cbox_assistInHousing` char(1) default '',
+  `cbox_assistInEducation` char(1) default '',
+  `cbox_assistInEmployment` char(1) default '',
+  `cbox_assistInFinance` char(1) default '',
+  `cbox_assistInLegal` char(1) default '',
+  `cbox_assistInImmigration` char(1) default '',
+  `hasWhatID` varchar(120) default '',
+  `cbox_noID` char(1) default '',
+  `cbox_sinCard` char(1) default '',
+  `sinNum` varchar(24) default '',
+  `cbox_healthCard` char(1) default '',
+  `healthCardNum` varchar(24) default '',
+  `healthCardVer` char(2) default '',
+  `cbox_birthCertificate` char(1) default '',
+  `birthCertificateNum` varchar(24) default '',
+  `cbox_citzenshipCard` char(1) default '',
+  `citzenshipCardNum` varchar(24) default '',
+  `cbox_immigrant` char(1) default '',
+  `immigrantNum` varchar(24) default '',
+  `cbox_refugee` char(1) default '',
+  `refugeeNum` varchar(24) default '',
+  `cbox_otherID` char(1) default '',
+  `otherIdentification` varchar(70) default '',
+  `cbox_idFiled` char(1) default '',
+  `cbox_idNone` char(1) default '',
+  `commentsOnID` varchar(255) default '',
+  `cbox_OW` char(1) default '',
+  `cbox_ODSP` char(1) default '',
+  `cbox_WSIB` char(1) default '',
+  `cbox_Employment` char(1) default '',
+  `cbox_EI` char(1) default '',
+  `cbox_OAS` char(1) default '',
+  `cbox_CPP` char(1) default '',
+  `cbox_OtherIncome` char(1) default '',
+  `radio_onlineCheck` varchar(36) default '',
+  `radio_active` varchar(36) default '',
+  `cbox_noRecord` char(1) default '',
+  `lastIssueDate` varchar(24) default '',
+  `office` varchar(50) default '',
+  `workerNum` varchar(36) default '',
+  `amtReceived` varchar(9) default '',
+  `radio_hasDoctor` varchar(36) default '',
+  `doctorName` varchar(50) default '',
+  `doctorName2` varchar(50) default '',
+  `doctorPhone` varchar(24) default '',
+  `doctorPhoneExt` varchar(8) default '',
+  `doctorAddress` varchar(120) default '',
+  `radio_seeDoctor` varchar(36) default '',
+  `radio_healthIssue` varchar(36) default '',
+  `healthIssueDetails` varchar(255) default '',
+  `cbox_hasDiabetes` char(1) default '',
+  `cbox_insulin` char(1) default '',
+  `cbox_epilepsy` char(1) default '',
+  `cbox_bleeding` char(1) default '',
+  `cbox_hearingImpair` char(1) default '',
+  `cbox_visualImpair` char(1) default '',
+  `cbox_mobilityImpair` char(1) default '',
+  `mobilityImpair` varchar(255) default '',
+  `radio_otherHealthConcern` varchar(36) default '',
+  `otherHealthConerns` varchar(255) default '',
+  `radio_takeMedication` varchar(36) default '',
+  `namesOfMedication` varchar(120) default '',
+  `radio_helpObtainMedication` varchar(36) default '',
+  `helpObtainMedication` varchar(255) default '',
+  `radio_allergicToMedication` varchar(36) default '',
+  `allergicToMedicationName` varchar(255) default '',
+  `reactionToMedication` varchar(255) default '',
+  `radio_mentalHealthConcerns` varchar(36) default '',
+  `mentalHealthConcerns` varchar(255) default '',
+  `cbox_isStatement6Read` char(1) default '',
+  `frequencyOfSeeingDoctor` varchar(8) default '',
+  `cbox_visitWalkInClinic` char(1) default '',
+  `cbox_visitHealthCenter` char(1) default '',
+  `cbox_visitEmergencyRoom` char(1) default '',
+  `cbox_visitOthers` char(1) default '',
+  `otherSpecify` varchar(120) default '',
+  `cbox_visitHealthOffice` char(1) default '',
+  `radio_seeSameDoctor` varchar(36) default '',
+  `frequencyOfSeeingEmergencyRoomDoctor` varchar(8) default '',
+  `radio_didNotReceiveHealthCare` varchar(36) default '',
+  `cbox_treatPhysicalHealth` char(1) default '',
+  `cbox_treatMentalHealth` char(1) default '',
+  `cbox_regularCheckup` char(1) default '',
+  `cbox_treatOtherReasons` char(1) default '',
+  `treatOtherReasons` varchar(255) default '',
+  `cbox_treatInjury` char(1) default '',
+  `cbox_goToWalkInClinic` char(1) default '',
+  `cbox_goToHealthCenter` char(1) default '',
+  `cbox_goToEmergencyRoom` char(1) default '',
+  `cbox_goToOthers` char(1) default '',
+  `goToOthers` varchar(255) default '',
+  `cbox_HealthOffice` char(1) default '',
+  `radio_appmtSeeDoctorIn3Mths` varchar(36) default '',
+  `radio_needRegularDoctor` varchar(36) default '',
+  `radio_objectToRegularDoctorIn4Wks` varchar(36) default '',
+  `radio_rateOverallHealth` varchar(36) default '',
+  `radio_speakToResearcher` varchar(36) default '',
+  `contactName` varchar(70) default '',
+  `contactPhone` varchar(24) default '',
+  `contactAddress` varchar(255) default '',
+  `contactRelationship` varchar(120) default '',
+  `radio_hasMentalIllness` varchar(36) default '',
+  `radio_hasDrinkingProblem` varchar(36) default '',
+  `radio_hasDrugProblem` varchar(36) default '',
+  `radio_hasHealthProblem` varchar(36) default '',
+  `radio_hasBehaviorProblem` varchar(36) default '',
+  `radio_needSeatonService` varchar(36) default '',
+  `radio_seatonTour` varchar(36) default '',
+  `seatonNotToured` varchar(255) default '',
+  `radio_pamphletIssued` varchar(36) default '',
+  `pamphletNotIssued` varchar(255) default '',
+  `summary` varchar(255) default '',
+  `completedBy` varchar(120) default '',
+  `assessCompleteTime` varchar(36) default '',
+  `cbox_pamphletIssued` char(1) default '',
+  `cbox_hostel` char(1) default '',
+  `cbox_hostel_fusion_care` char(1) default '',
+  `cbox_rotaryClub` char(1) default '',
+  `cbox_annexHarm` char(1) default '',
+  `cbox_longTermProgram` char(1) default '',
+  `cbox_birchmountResidence` char(1) default '',
+  `cbox_oNeillHouse` char(1) default '',
+  `cbox_fortYork` char(1) default '',
+  `cbox_downsviewDells` char(1) default '',
+  `cbox_sharing` char(1) default '',
+  `radio_sex` varchar(36) default NULL,
+  `effDate` varchar(10) default NULL,
+  PRIMARY KEY  (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `formintakeb`
+--
+
+DROP TABLE IF EXISTS `formintakeb`;
+CREATE TABLE `formintakeb` (
+  `ID` bigint(11) NOT NULL auto_increment,
+  `demographic_no` bigint(11) NOT NULL default '0',
+  `provider_no` bigint(11) default '0',
+  `formCreated` date default '0001-01-01',
+  `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `dateAssessment` varchar(24) default '',
+  `assessStartTime` varchar(24) default '',
+  `dateEnteredSeaton` varchar(24) default '',
+  `dateExitedSeaton` varchar(24) default '',
+  `clientSurname` varchar(50) default '',
+  `clientFirstName` varchar(50) default '',
+  `month` char(2) default '',
+  `day` char(2) default '',
+  `year` varchar(4) default '',
+  `cbox_speakEnglish` char(1) default '',
+  `cbox_speakFrench` char(1) default '',
+  `cbox_speakSpanish` char(1) default '',
+  `cbox_speakOther` char(1) default '',
+  `speakOther` varchar(50) default '',
+  `howHearAboutSeaton` varchar(255) default '',
+  `whereBeforeSeaton` varchar(255) default '',
+  `radio_hasIDInFile` varchar(24) default '',
+  `cbox_assistWithSINCard` char(1) default '',
+  `cbox_assistWithImmigrant` char(1) default '',
+  `cbox_assistWithHealthCard` char(1) default '',
+  `cbox_assistWithRefugee` char(1) default '',
+  `cbox_assistWithBirthCert` char(1) default '',
+  `cbox_assistWithNone` char(1) default '',
+  `cbox_assistWithCitizenCard` char(1) default '',
+  `cbox_assistWithOther` char(1) default '',
+  `assistWithOther` varchar(50) default '',
+  `commentsOnID` varchar(255) default '',
+  `radio_haveHealthCoverage` varchar(24) default '',
+  `cbox_haveOHIP` char(1) default '',
+  `cbox_haveODSP` char(1) default '',
+  `cbox_haveODB` char(1) default '',
+  `cbox_haveOther1` char(1) default '',
+  `haveOther` varchar(70) default '',
+  `radio_haveMentalProblem` varchar(24) default '',
+  `cbox_haveSchizophrenia` char(1) default '',
+  `radio_caredForSchizophrenia` varchar(24) default '',
+  `cbox_haveManic` char(1) default '',
+  `radio_caredForManic` varchar(24) default '',
+  `cbox_haveDepression` char(1) default '',
+  `radio_caredForDepression` varchar(24) default '',
+  `cbox_haveAnxiety` char(1) default '',
+  `radio_caredForAnxiety` varchar(24) default '',
+  `cbox_haveOther2` char(1) default '',
+  `radio_caredForOther` varchar(24) default '',
+  `doctor1NameAddr` varchar(255) default '',
+  `doctor1Phone` varchar(24) default '',
+  `dateLastDoctor1Contact` varchar(24) default '',
+  `doctor2NameAddr` varchar(255) default '',
+  `doctor2Phone` varchar(24) default '',
+  `dateLastDoctor2Contact` varchar(24) default '',
+  `radio_needAssistWithMedication` varchar(24) default '',
+  `cbox_rememberToTakeMedication` char(1) default '',
+  `cbox_getMoreMedication` char(1) default '',
+  `cbox_storeMedication` char(1) default '',
+  `cbox_needHelpInOther` char(1) default '',
+  `cbox_takePrescribedMedication` char(1) default '',
+  `commentsOnNeedHelp` varchar(255) default '',
+  `radio_doYouDrink` varchar(24) default '',
+  `drinksPerDay` char(3) default '',
+  `drinksPerWeek` varchar(4) default '',
+  `drinksPerMonth` varchar(5) default '',
+  `radio_howMuchDrink` varchar(24) default '',
+  `radio_drinkThese` varchar(24) default '',
+  `radio_seenDoctorRegAlcohol` varchar(24) default '',
+  `radio_wantHelpQuit` varchar(24) default '',
+  `commentsOnAlcohol` varchar(255) default '',
+  `radio_useDrugs` varchar(24) default '',
+  `radio_drugUseFrequency` varchar(24) default '',
+  `radio_wantHelpQuitDrug` varchar(24) default '',
+  `commentsOnStreetDrugs` varchar(255) default '',
+  `housingInterested` varchar(70) default '',
+  `radio_wantAppmt` varchar(24) default '',
+  `clientLastAddress` varchar(255) default '',
+  `clientLastAddressPayRent` varchar(255) default '',
+  `dateLivedThere` varchar(24) default '',
+  `livedWithWhom` varchar(120) default '',
+  `radio_livedInSubsidized` varchar(24) default '',
+  `radio_owedRent` varchar(24) default '',
+  `whereOweRent` varchar(255) default '',
+  `amtOwing` varchar(16) default '',
+  `commentsOnHousing` varchar(255) default '',
+  `yearsOfEducation` varchar(4) default '',
+  `cbox_haveHighSchool` char(1) default '',
+  `cbox_haveCollege` char(1) default '',
+  `cbox_haveUniversity` char(1) default '',
+  `cbox_haveOther3` char(1) default '',
+  `radio_interestBackToSchool` varchar(24) default '',
+  `radio_requireReferralToESL` varchar(24) default '',
+  `commentsOnEducation` varchar(255) default '',
+  `radio_currentlyEmployed` varchar(24) default '',
+  `howLongEmployed` char(3) default '',
+  `howLongUnemployed` char(3) default '',
+  `usualOccupation` varchar(70) default '',
+  `radio_interestedInTraining` varchar(24) default '',
+  `commentsOnEmployment` varchar(255) default '',
+  `mainSourceOfIncome` varchar(70) default '',
+  `cbox_OW` char(1) default '',
+  `cbox_ODSP` char(1) default '',
+  `cbox_employment` char(1) default '',
+  `cbox_UI` char(1) default '',
+  `cbox_OAS` char(1) default '',
+  `cbox_CPP` char(1) default '',
+  `cbox_other` char(1) default '',
+  `howMuchYouReceive` varchar(12) default '',
+  `radio_havePublicTrustee` varchar(24) default '',
+  `publicTrusteeInfo` varchar(255) default '',
+  `radio_entitledToOtherIncome` varchar(24) default '',
+  `typeOfIncome` varchar(120) default '',
+  `radio_everMadeAppforOtherIncome` varchar(24) default '',
+  `everMadeAppforOtherIncome` varchar(120) default '',
+  `whenMadeAppforOtherIncome` varchar(24) default '',
+  `commentsOnFinance` varchar(255) default '',
+  `radio_everBeenJailed` varchar(24) default '',
+  `historyOfJail` varchar(50) default '',
+  `radio_needAssistInLegal` varchar(24) default '',
+  `needAssistInLegal` varchar(255) default '',
+  `commentsOnLegalIssues` varchar(255) default '',
+  `radio_citizen` varchar(24) default '',
+  `radio_yourCanadianStatus` varchar(24) default '',
+  `yourCanadianStatus` varchar(50) default '',
+  `radio_sponsorshipBreakdown` varchar(24) default '',
+  `whySponsorshipBreakdown` varchar(255) default '',
+  `sponsorName` varchar(50) default '',
+  `needHelpWithImmigration` varchar(50) default '',
+  `commentsOnImmigration` varchar(255) default '',
+  `radio_involvedOtherAgencies` varchar(24) default '',
+  `agency1Name` varchar(70) default '',
+  `contact1Name` varchar(50) default '',
+  `contact1Phone` varchar(24) default '',
+  `assistProvided1` varchar(120) default '',
+  `dateLastContact1` varchar(24) default '',
+  `agency2Name` varchar(70) default '',
+  `contact2Name` varchar(50) default '',
+  `contact2Phone` varchar(24) default '',
+  `assistProvided2` varchar(120) default '',
+  `dateLastContact2` varchar(24) default '',
+  `agency3Name` varchar(70) default '',
+  `contact3Name` varchar(50) default '',
+  `contact3Phone` varchar(24) default '',
+  `assistProvided3` varchar(120) default '',
+  `dateLastContact3` varchar(24) default '',
+  `agency4Name` varchar(70) default '',
+  `contact4Name` varchar(50) default '',
+  `contact4Phone` varchar(24) default '',
+  `assistProvided4` varchar(120) default '',
+  `dateLastContact4` varchar(24) default '',
+  `radio_mentalIllness` varchar(24) default '',
+  `radio_drinking` varchar(24) default '',
+  `radio_drugUse` varchar(24) default '',
+  `radio_healthProblem` varchar(24) default '',
+  `radio_behaviorProblem` varchar(24) default '',
+  `radio_need60DaysSeatonServices` varchar(24) default '',
+  `completedBy1` varchar(50) default '',
+  `completedBy2` varchar(50) default '',
+  `assessCompleteTime` varchar(50) default '',
+  `followupAppmts` varchar(120) default '',
+  `cbox_pamphletIssued` char(1) default '',
+  `cbox_hostel` char(1) default '',
+  `cbox_rotaryClub` char(1) default '',
+  `cbox_annexHarm` char(1) default '',
+  `cbox_longTermProgram` char(1) default '',
+  `cbox_birchmountResidence` char(1) default '',
+  `cbox_oNeillHouse` char(1) default '',
+  `cbox_fortYork` char(1) default '',
+  `cbox_downsviewDells` char(1) default '',
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `formintakec`
+--
+
+DROP TABLE IF EXISTS `formintakec`;
+CREATE TABLE `formintakec` (
+  `ID` bigint(20) NOT NULL auto_increment,
+  `cboxReferralByPolice` char(2) default NULL,
+  `radioGender` varchar(16) default NULL,
+  `cboxSocialServiceIssueOther` char(2) default NULL,
+  `cboxBase2ndIncomeNone` char(2) default NULL,
+  `cboxCurrHasSIn` char(2) default NULL,
+  `cboxReferralByFredVictorCentreOther` char(2) default NULL,
+  `cboxReferralByDetentionCenter` char(2) default NULL,
+  `currDescriptionOfHousing` varchar(255) default NULL,
+  `cboxBaseUseHealthBus` char(2) default NULL,
+  `dateOfHospitalization` varchar(10) default NULL,
+  `cboxHousingIssue` char(2) default NULL,
+  `cboxBaseHasCommunity` char(2) default NULL,
+  `cboxBaseHasFriends` char(2) default NULL,
+  `cboxRelocationExit` char(2) default NULL,
+  `cbox2ndPersonalityDisorder` char(2) default NULL,
+  `cboxBase2ndIncomeSocialAssistance` char(2) default NULL,
+  `cbox2ndMedicalMentalDisorder` char(2) default NULL,
+  `cboxReferralByCriminalJusticeSystem` char(2) default NULL,
+  `cboxThreatIssue` char(2) default NULL,
+  `cboxSubstanceAnxietyDisorder` char(2) default NULL,
+  `referralComment` varchar(255) default NULL,
+  `cboxBase2ndIncomeEi` char(2) default NULL,
+  `cboxCurrHasSupportUnknown` char(2) default NULL,
+  `cboxReferralBySelf` char(2) default NULL,
+  `cboxPhysicalIssueOther` char(2) default NULL,
+  `cboxCurrLivingWithSpouse` char(2) default NULL,
+  `cboxReferralByOtherInstitution` char(2) default NULL,
+  `cboxPhysicalHospitalization` char(2) default NULL,
+  `currWhyClientDoNotAccessSocialServices` varchar(255) default NULL,
+  `cboxFinancialIssue` char(2) default NULL,
+  `cboxIsolationIssueOther` char(2) default NULL,
+  `cboxCurrLivingWithUnknown` char(2) default NULL,
+  `cbox2ndIncomeOther` char(2) default NULL,
+  `cboxCurrHasUnknown` char(2) default NULL,
+  `cboxReferralByPhysician` char(2) default NULL,
+  `cbox2ndDisassociativeDisorder` char(2) default NULL,
+  `cboxImmigrationIssueOther` char(2) default NULL,
+  `entryDate` varchar(10) default NULL,
+  `admissionDate` varchar(10) default NULL,
+  `cboxCurrHasCommunity` char(2) default NULL,
+  `cboxDailyActivityIssue` char(2) default NULL,
+  `cboxCurrLivingWithParents` char(2) default NULL,
+  `cboxIdentificationIssueOther` char(2) default NULL,
+  `radioBaseEmploymentStatus` varchar(16) default NULL,
+  `radioCanadianBorn` varchar(16) default NULL,
+  `cboxBaseLivingWithNonrelatives` char(2) default NULL,
+  `cboxCurrIncomeMgmentDoNotNeedTrustee` char(2) default NULL,
+  `cboxBase2ndIncomeFamily` char(2) default NULL,
+  `radioCurrEmploymentStatus` varchar(16) default NULL,
+  `cboxSuicideExit` char(2) default NULL,
+  `cboxReferralByStreetNurseOther` char(2) default NULL,
+  `dayOfBirth` char(2) default NULL,
+  `cboxDualDisorder` char(2) default NULL,
+  `cbox2ndIncomeODSp` char(2) default NULL,
+  `cboxPsychiatricHospitalization` char(2) default NULL,
+  `cbox2ndSomatoformDisorder` char(2) default NULL,
+  `cboxPreAdmission` char(2) default NULL,
+  `cboxReferralByStreetHealthReceptionOther` char(2) default NULL,
+  `cbox2ndAnxietyDisorder` char(2) default NULL,
+  `radioCurrParticipateInEduction` varchar(16) default NULL,
+  `cbox2ndChildhoodDisorder` char(2) default NULL,
+  `cboxCurrIncomeMgmentHasTrustee` char(2) default NULL,
+  `radioCountryOfOrigin` varchar(16) default NULL,
+  `cboxOtherChronicIllness` char(2) default NULL,
+  `cboxMOHLTCDisorder` char(2) default NULL,
+  `cboxPTSd` char(2) default NULL,
+  `cboxBase2ndIncomeDisabilityAssistance` char(2) default NULL,
+  `lengthOfHospitalization` varchar(25) default NULL,
+  `radioCurrPrimaryIncomeSource` varchar(16) default NULL,
+  `baseWhyClientDoNotAccessSocialServices` varchar(255) default NULL,
+  `cbox2ndIncomeInformalOther` char(2) default NULL,
+  `cbox2ndIncomeEi` char(2) default NULL,
+  `cbox2ndGenderIdentityDisorder` char(2) default NULL,
+  `cboxBaseDoNotAccessHealthCare` char(2) default NULL,
+  `currSocialServiceClientAccesses` varchar(255) default NULL,
+  `cbox2ndIncomeUnknown` char(2) default NULL,
+  `radioBaseHealthCareAccess` varchar(16) default NULL,
+  `cboxBase2ndIncomeODSp` char(2) default NULL,
+  `cboxCurrUseWalkinClinic` char(2) default NULL,
+  `cboxReferralByPsychiatrists` char(2) default NULL,
+  `cboxReferralByMentalOrg` char(2) default NULL,
+  `radioBasePrimaryResidenceType` varchar(16) default NULL,
+  `cbox2ndIncomeDisabilityAssistance` char(2) default NULL,
+  `cboxAddictionIssue` char(2) default NULL,
+  `cboxBase2ndIncomePanhandlingOther` char(2) default NULL,
+  `cboxCurrIncomeMgmentUnknown` char(2) default NULL,
+  `cboxLegalIssue` char(2) default NULL,
+  `radioResistTreatment` varchar(16) default NULL,
+  `cbox2ndSchizophrenia` char(2) default NULL,
+  `radioBaseSocialServiceAccess` varchar(16) default NULL,
+  `radioCurrSocialServiceAccess` varchar(16) default NULL,
+  `radioBaseResidenceStatus` varchar(16) default NULL,
+  `cbox2ndIncomeEmployment` char(2) default NULL,
+  `cbox2ndAnxietyDisorderFromSubstance` char(2) default NULL,
+  `radioCurrPrimaryResidenceType` varchar(16) default NULL,
+  `radioCurrPrimaryIncomeSourceOther` varchar(16) default NULL,
+  `cboxReferralByProbation` char(2) default NULL,
+  `radioCurrLegalStatus` varchar(16) default NULL,
+  `cboxProblemsWithPolice2` char(2) default NULL,
+  `formCreated` date default NULL,
+  `cbox2ndIncomeSocialAssistance` char(2) default NULL,
+  `cboxBaseUseHospitalEmergency` char(2) default NULL,
+  `cboxReferralByPublic` char(2) default NULL,
+  `cboxReferralByHospital` char(2) default NULL,
+  `cboxBaseLivingWithSpousePlus` char(2) default NULL,
+  `cboxWithdrawalExit` char(2) default NULL,
+  `cboxCurrLivingWithSelf` char(2) default NULL,
+  `cbox2ndCognitiveDisorder` char(2) default NULL,
+  `cboxBaseIncomeMgmentUnknown` char(2) default NULL,
+  `cboxBaseHasHealthCard` char(2) default NULL,
+  `radioCurrHighestEductionLevel` varchar(16) default NULL,
+  `cboxReferralByPsychiatricHospital` char(2) default NULL,
+  `cboxCurrLivingWithNonrelatives` char(2) default NULL,
+  `cboxFamilyLawIssues1` char(2) default NULL,
+  `cboxProblemsWithPolice1` char(2) default NULL,
+  `cboxBaseHasRegularHealthProvider` char(2) default NULL,
+  `cboxFamilyLawIssues2` char(2) default NULL,
+  `cboxCurrUseShelterClinic` char(2) default NULL,
+  `clientNum` varchar(16) default NULL,
+  `cbox2ndImpulsiveDisorder` char(2) default NULL,
+  `radioIsAboriginal` varchar(16) default NULL,
+  `baseSocialServiceClientAccesses` varchar(255) default NULL,
+  `cboxBase2ndIncomeOther` char(2) default NULL,
+  `cboxBaseIncomeMgmentNeedsTrusteeButDoNotWant` char(2) default NULL,
+  `cbox2ndSleepDisorder` char(2) default NULL,
+  `cboxBaseHasNonStatus` char(2) default NULL,
+  `cboxHealthCareIssueOther` char(2) default NULL,
+  `radioCurrHealthCareAccess` varchar(16) default NULL,
+  `cboxBaseHasCertificate` char(2) default NULL,
+  `cboxBaseLivingWithSelf` char(2) default NULL,
+  `cboxCurrIncomeMgmentNeedsTrustee` char(2) default NULL,
+  `cboxBase2ndIncomeUnknown` char(2) default NULL,
+  `radioLanguageEnglish` varchar(16) default NULL,
+  `yearArrivedInCanada` varchar(16) default NULL,
+  `cboxDateOfBirthUnknown` char(2) default NULL,
+  `cboxOtherIssue` char(2) default NULL,
+  `cboxCurrHasHealthCard` char(2) default NULL,
+  `cboxCurrHasSomeone` char(2) default NULL,
+  `cboxCurrHasRegularHealthProvider` char(2) default NULL,
+  `cbox2ndDevelopmentalDisorder` char(2) default NULL,
+  `cboxBase2ndIncomeInformalOther` char(2) default NULL,
+  `cboxOCd` char(2) default NULL,
+  `cboxCurrUseHospitalEmergency` char(2) default NULL,
+  `cboxBaseLivingWithUnknown` char(2) default NULL,
+  `cbox2ndFactitiousDisorder` char(2) default NULL,
+  `cboxBaseHasSomeone` char(2) default NULL,
+  `cboxRelationalIssue` char(2) default NULL,
+  `cboxBaseHasNativeCard` char(2) default NULL,
+  `radioBaseLegalStatus` varchar(16) default NULL,
+  `cbox2ndIncomeFamily` char(2) default NULL,
+  `cboxCurrHasRelatives` char(2) default NULL,
+  `cboxCurrHasCertificate` char(2) default NULL,
+  `monthOfBirth` char(2) default NULL,
+  `cboxBaseHasSIn` char(2) default NULL,
+  `clientSurname` varchar(40) default NULL,
+  `cbox2ndAnxietyDisorderOCd` char(2) default NULL,
+  `staffName` varchar(60) default NULL,
+  `cboxReferralByStreetIDWorkerOther` char(2) default NULL,
+  `cbox2ndSubstanceDisorder` char(2) default NULL,
+  `radioCurrNeedSocialServices` varchar(16) default NULL,
+  `radioBaseHighestEductionLevel` varchar(16) default NULL,
+  `cboxBaseHasSupportUnknown` char(2) default NULL,
+  `radioCurrResidenceStatus` varchar(16) default NULL,
+  `cboxBaseIncomeMgmentDoNotNeedTrustee` char(2) default NULL,
+  `countryOfOrigin` varchar(60) default NULL,
+  `cboxCurrHasFriends` char(2) default NULL,
+  `radioBasePrimaryIncomeSource` varchar(16) default NULL,
+  `cbox2ndAnxietyDisorderOther` char(2) default NULL,
+  `cboxEducationalIssue` char(2) default NULL,
+  `radioBasePrimaryIncomeSourceOther` varchar(16) default NULL,
+  `radioBaseParticipateInEduction` varchar(16) default NULL,
+  `cboxCurrLivingWithRelatives` char(2) default NULL,
+  `baseDescriptionOfHousing` varchar(255) default NULL,
+  `cboxReferralByCourt` char(2) default NULL,
+  `cbox2ndIncomePanhandlingOther` char(2) default NULL,
+  `cboxReferralByOtherAgency` char(2) default NULL,
+  `cboxCaseFile` char(2) default NULL,
+  `cboxCurrLivingWithChildren` char(2) default NULL,
+  `cboxReferralByMentalHealthWorker` char(2) default NULL,
+  `cboxCurrIncomeMgmentNeedsTrusteeButDoNotWant` char(2) default NULL,
+  `clientFirstName` varchar(40) default NULL,
+  `cboxBankingIssueOther` char(2) default NULL,
+  `cboxBase2ndIncomeEmployment` char(2) default NULL,
+  `cboxNAExit` char(2) default NULL,
+  `cbox2ndIncomeNone` char(2) default NULL,
+  `cboxNa` char(2) default NULL,
+  `cboxBaseHasRelatives` char(2) default NULL,
+  `cboxCurrHasNonStatus` char(2) default NULL,
+  `cboxEmploymentIssue` char(2) default NULL,
+  `yearOfBirth` varchar(4) default NULL,
+  `cboxBase2ndIncomePension` char(2) default NULL,
+  `cboxCurrLivingWithSpousePlus` char(2) default NULL,
+  `cboxPreferredLanguageUnknown` char(2) default NULL,
+  `cbox2ndAnxietyDisorderPSd` char(2) default NULL,
+  `cboxSexualAbuseIssue` char(2) default NULL,
+  `formEdited` datetime default NULL,
+  `cboxBaseUseShelterClinic` char(2) default NULL,
+  `cboxCurrAccessHealthCareUnknown` char(2) default NULL,
+  `cbox2ndIncomePension` char(2) default NULL,
+  `provider_no` bigint(20) default NULL,
+  `cboxCurrDoNotAccessHealthCare` char(2) default NULL,
+  `cboxCurrUseHealthBus` char(2) default NULL,
+  `cboxBaseLivingWithParents` char(2) default NULL,
+  `cboxBaseHasUnknown` char(2) default NULL,
+  `radioBaseNeedSocialServices` varchar(16) default NULL,
+  `cboxNoneListedIssue` char(2) default NULL,
+  `cbox2ndUnknown` char(2) default NULL,
+  `cboxReferralBySafeBeds` char(2) default NULL,
+  `cbox2ndAdjustDisorder` char(2) default NULL,
+  `cboxHospitalizationUnknown` char(2) default NULL,
+  `cboxConcurrentDisorder` char(2) default NULL,
+  `cbox2ndEatingDisorder` char(2) default NULL,
+  `cboxCompleteWithReferral` char(2) default NULL,
+  `cboxBaseUseWalkinClinic` char(2) default NULL,
+  `monthlyProgressReport` varchar(255) default NULL,
+  `cboxOtherAnxietyDisorder` char(2) default NULL,
+  `cboxBaseIncomeMgmentHasTrustee` char(2) default NULL,
+  `demographic_no` bigint(20) NOT NULL default '0',
+  `cboxBaseIncomeMgmentNeedsTrustee` char(2) default NULL,
+  `radioRaceCaucasian` varchar(16) default NULL,
+  `cboxMentalIssue` char(2) default NULL,
+  `preferredLanguage` varchar(30) default NULL,
+  `cbox2ndMoodDisorder` char(2) default NULL,
+  `radioPrimaryDiagnosis` varchar(16) default NULL,
+  `cboxCurrHasNativeCard` char(2) default NULL,
+  `cboxBaseLivingWithChildren` char(2) default NULL,
+  `cboxBaseLivingWithSpouse` char(2) default NULL,
+  `radioTreatmentOrders` varchar(16) default NULL,
+  `cboxReferralByOtherPeople` char(2) default NULL,
+  `cboxBaseAccessHealthCareUnknown` char(2) default NULL,
+  `cboxCompleteWithoutReferral` char(2) default NULL,
+  `cboxDeathExit` char(2) default NULL,
+  `cboxBaseLivingWithRelatives` char(2) default NULL,
+  `currAddress` varchar(255) default NULL,
+  `currPhone` varchar(255) default NULL,
+  `pastAddresses` text,
+  `contactsInfo` text,
+  `ids` text,
+  `hospitalizations` text,
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `formreceptionassessment`
+--
+
+DROP TABLE IF EXISTS `formreceptionassessment`;
+CREATE TABLE `formreceptionassessment` (
+  `ID` int(10) NOT NULL auto_increment,
+  `demographic_no` int(10) NOT NULL default '0',
+  `provider_no` int(10) default NULL,
+  `formCreated` date default NULL,
+  `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `assessDate` varchar(24) default NULL,
+  `assessStartTime` varchar(24) default NULL,
+  `enterSeatonDate` varchar(24) default NULL,
+  `cbox_newClient` char(1) default NULL,
+  `cbox_dateOfReadmission` char(1) default NULL,
+  `dateOfReadmission` varchar(24) default NULL,
+  `clientSurname` varchar(50) default NULL,
+  `clientFirstName` varchar(50) default NULL,
+  `month` char(2) default NULL,
+  `day` char(2) default NULL,
+  `year` varchar(4) default NULL,
+  `cbox_speakEnglish` char(1) default NULL,
+  `cbox_speakFrench` char(1) default NULL,
+  `cbox_speakOther` char(1) default NULL,
+  `speakOther` varchar(36) default NULL,
+  `reasonToSeaton` varchar(255) default NULL,
+  `datesAtSeaton` varchar(70) default NULL,
+  `cbox_assistInHealth` char(1) default NULL,
+  `cbox_assistInIdentification` char(1) default NULL,
+  `cbox_assistInAddictions` char(1) default NULL,
+  `cbox_assistInHousing` char(1) default NULL,
+  `cbox_assistInEducation` char(1) default NULL,
+  `cbox_assistInEmployment` char(1) default NULL,
+  `cbox_assistInFinance` char(1) default NULL,
+  `cbox_assistInLegal` char(1) default NULL,
+  `cbox_assistInImmigration` char(1) default NULL,
+  `cbox_noID` char(1) default NULL,
+  `cbox_sinCard` char(1) default NULL,
+  `cbox_healthCard` char(1) default NULL,
+  `healthCardNum` varchar(24) default NULL,
+  `cbox_birthCertificate` char(1) default NULL,
+  `cbox_citzenshipCard` char(1) default NULL,
+  `cbox_immigrant` char(1) default NULL,
+  `cbox_refugee` char(1) default NULL,
+  `cbox_otherID` char(1) default NULL,
+  `otherIdentification` varchar(70) default NULL,
+  `cbox_idFiled` char(1) default NULL,
+  `cbox_idNone` char(1) default NULL,
+  `commentsOnID` varchar(255) default NULL,
+  `cbox_OW` char(1) default NULL,
+  `cbox_ODSP` char(1) default NULL,
+  `cbox_WSIB` char(1) default NULL,
+  `cbox_Employment` char(1) default NULL,
+  `cbox_EI` char(1) default NULL,
+  `cbox_OAS` char(1) default NULL,
+  `cbox_CPP` char(1) default NULL,
+  `cbox_OtherIncome` char(1) default NULL,
+  `radio_onlineCheck` varchar(36) default NULL,
+  `radio_active` varchar(36) default NULL,
+  `cbox_noRecord` char(1) default NULL,
+  `lastIssueDate` varchar(24) default NULL,
+  `office` varchar(50) default NULL,
+  `workerNum` varchar(36) default NULL,
+  `amtReceived` varchar(9) default NULL,
+  `radio_hasDoctor` varchar(36) default NULL,
+  `doctorName` varchar(50) default NULL,
+  `doctorPhone` varchar(24) default NULL,
+  `doctorPhoneExt` varchar(8) default NULL,
+  `doctorAddress` varchar(120) default NULL,
+  `radio_seeDoctor` varchar(36) default NULL,
+  `radio_healthIssue` varchar(36) default NULL,
+  `healthIssueDetails` varchar(255) default NULL,
+  `cbox_hasDiabetes` char(1) default NULL,
+  `cbox_insulin` char(1) default NULL,
+  `cbox_epilepsy` char(1) default NULL,
+  `cbox_bleeding` char(1) default NULL,
+  `cbox_hearingImpair` char(1) default NULL,
+  `cbox_visualImpair` char(1) default NULL,
+  `cbox_mobilityImpair` char(1) default NULL,
+  `mobilityImpair` varchar(255) default NULL,
+  `radio_otherHealthConcern` varchar(36) default NULL,
+  `otherHealthConerns` varchar(255) default NULL,
+  `radio_takeMedication` varchar(36) default NULL,
+  `namesOfMedication` varchar(120) default NULL,
+  `radio_helpObtainMedication` varchar(36) default NULL,
+  `helpObtainMedication` varchar(255) default NULL,
+  `radio_allergicToMedication` varchar(36) default NULL,
+  `allergicToMedicationName` varchar(255) default NULL,
+  `reactionToMedication` varchar(255) default NULL,
+  `radio_mentalHealthConcerns` varchar(36) default NULL,
+  `mentalHealthConcerns` varchar(255) default NULL,
+  `frequencyOfSeeingDoctor` varchar(8) default NULL,
+  `cbox_visitWalkInClinic` char(1) default NULL,
+  `cbox_visitHealthCenter` char(1) default NULL,
+  `cbox_visitEmergencyRoom` char(1) default NULL,
+  `cbox_visitOthers` char(1) default NULL,
+  `cbox_visitHealthOffice` char(1) default NULL,
+  `radio_seeSameDoctor` varchar(36) default NULL,
+  `frequencyOfSeeingEmergencyRoomDoctor` varchar(8) default NULL,
+  `radio_didNotReceiveHealthCare` varchar(36) default NULL,
+  `cbox_treatPhysicalHealth` char(1) default NULL,
+  `cbox_treatMentalHealth` char(1) default NULL,
+  `cbox_regularCheckup` char(1) default NULL,
+  `cbox_treatOtherReasons` char(1) default NULL,
+  `treatOtherReasons` varchar(255) default NULL,
+  `cbox_treatInjury` char(1) default NULL,
+  `cbox_goToWalkInClinic` char(1) default NULL,
+  `cbox_goToHealthCenter` char(1) default NULL,
+  `cbox_goToEmergencyRoom` char(1) default NULL,
+  `cbox_goToOthers` char(1) default NULL,
+  `goToOthers` varchar(255) default NULL,
+  `cbox_HealthOffice` char(1) default NULL,
+  `radio_appmtSeeDoctorIn3Mths` varchar(36) default NULL,
+  `radio_needRegularDoctor` varchar(36) default NULL,
+  `radio_objectToRegularDoctorIn4Wks` varchar(36) default NULL,
+  `radio_rateOverallHealth` varchar(36) default NULL,
+  `radio_speakToResearcher` varchar(36) default NULL,
+  `contactName` varchar(70) default NULL,
+  `contactPhone` varchar(24) default NULL,
+  `contactAddress` varchar(255) default NULL,
+  `contactRelationship` varchar(120) default NULL,
+  `radio_hasMentalIllness` varchar(36) default NULL,
+  `radio_hasDrinkingProblem` varchar(36) default NULL,
+  `radio_hasDrugProblem` varchar(36) default NULL,
+  `radio_hasHealthProblem` varchar(36) default NULL,
+  `radio_hasBehaviorProblem` varchar(36) default NULL,
+  `radio_needSeatonService` varchar(36) default NULL,
+  `radio_seatonTour` varchar(36) default NULL,
+  `seatonNotToured` varchar(255) default NULL,
+  `radio_pamphletIssued` varchar(36) default NULL,
+  `pamphletNotIssued` varchar(255) default NULL,
+  `summary` varchar(255) default NULL,
+  `completedBy` varchar(120) default NULL,
+  `assessCompleteTime` varchar(36) default NULL,
+  `cbox_pamphletIssued` char(1) default NULL,
+  `cbox_hostel` char(1) default NULL,
+  `cbox_rotaryClub` char(1) default NULL,
+  `cbox_annexHarm` char(1) default NULL,
+  `cbox_longTermProgram` char(1) default NULL,
+  `cbox_birchmountResidence` char(1) default NULL,
+  `cbox_oNeillHouse` char(1) default NULL,
+  `cbox_fortYork` char(1) default NULL,
+  `cbox_downsviewDells` char(1) default NULL,
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `functional_user_type`
+--
+
+DROP TABLE IF EXISTS `functional_user_type`;
+CREATE TABLE `functional_user_type` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `issue`
+--
+
+DROP TABLE IF EXISTS `issue`;
+CREATE TABLE `issue` (
+  `issue_id` int(10) NOT NULL auto_increment,
+  `code` varchar(20) NOT NULL default '',
+  `description` varchar(255) NOT NULL default '',
+  `role` varchar(100) NOT NULL default '',
+  `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`issue_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program`
+--
+
+DROP TABLE IF EXISTS `program`;
+CREATE TABLE `program` (
+  `program_id` int(10) NOT NULL auto_increment,
+  `agency_id` bigint(11) NOT NULL default '0',
+  `name` varchar(70) NOT NULL default '',
+  `descr` varchar(255) default NULL,
+  `address` varchar(255) NOT NULL default '',
+  `phone` varchar(255) NOT NULL default '',
+  `fax` varchar(255) NOT NULL default '',
+  `url` varchar(255) NOT NULL default '',
+  `email` varchar(255) NOT NULL default '',
+  `emergency_number` varchar(255) NOT NULL default '',
+  `type` varchar(50) default NULL,
+  `location` varchar(70) default NULL,
+  `max_allowed` int(6) NOT NULL default '0',
+  `num_of_members` int(6) NOT NULL default '0',
+  `holding_tank` tinyint(1) NOT NULL default '0',
+  `allow_batch_admission` tinyint(1) default NULL,
+  `allow_batch_discharge` tinyint(1) default NULL,
+  `hic` tinyint(1) default NULL,
+  PRIMARY KEY  (`program_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_access`
+--
+
+DROP TABLE IF EXISTS `program_access`;
+CREATE TABLE `program_access` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `program_id` bigint(20) default NULL,
+  `access_type_id` varchar(255) default NULL,
+  `all_roles` tinyint(1) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FKC385F77F9BCAF076` (`access_type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_access_roles`
+--
+
+DROP TABLE IF EXISTS `program_access_roles`;
+CREATE TABLE `program_access_roles` (
+  `id` bigint(20) NOT NULL default '0',
+  `role_id` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`id`,`role_id`),
+  KEY `FK55BF0DFDBC1003F0` (`id`),
+  KEY `FK55BF0DFD60605436` (`role_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_bedlog`
+--
+
+DROP TABLE IF EXISTS `program_bedlog`;
+CREATE TABLE `program_bedlog` (
+  `bedlog_id` bigint(20) NOT NULL auto_increment,
+  `program_id` bigint(20) default NULL,
+  `enabled` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`bedlog_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_bedlog_statuses`
+--
+
+DROP TABLE IF EXISTS `program_bedlog_statuses`;
+CREATE TABLE `program_bedlog_statuses` (
+  `bedlog_id` bigint(20) NOT NULL default '0',
+  `status` varchar(255) default NULL,
+  `position` int(11) default NULL,
+  KEY `FK3D9F5201E471442B` (`bedlog_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_bedlog_times`
+--
+
+DROP TABLE IF EXISTS `program_bedlog_times`;
+CREATE TABLE `program_bedlog_times` (
+  `bedlog_id` bigint(20) NOT NULL default '0',
+  `check_time` varchar(255) default NULL,
+  `position` int(11) default NULL,
+  KEY `FK6F2C9105E471442B` (`bedlog_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_functional_user`
+--
+
+DROP TABLE IF EXISTS `program_functional_user`;
+CREATE TABLE `program_functional_user` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `program_id` bigint(20) default NULL,
+  `user_type_id` bigint(20) default NULL,
+  `provider_no` bigint(20) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK13B70CCFE0B12E7` (`user_type_id`),
+  KEY `FK13B70CCE6DF0AD3` (`provider_no`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_provider`
+--
+
+DROP TABLE IF EXISTS `program_provider`;
+CREATE TABLE `program_provider` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `program_id` bigint(20) default NULL,
+  `provider_no` bigint(20) default NULL,
+  `role_id` bigint(20) default NULL,
+  `team_id` bigint(20) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK3EFA2D4C60605436` (`role_id`),
+  KEY `FK3EFA2D4CE6DF0AD3` (`provider_no`),
+  KEY `FK3EFA2D4CDAA8624B` (`team_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_provider_team`
+--
+
+DROP TABLE IF EXISTS `program_provider_team`;
+CREATE TABLE `program_provider_team` (
+  `id` bigint(20) NOT NULL default '0',
+  `elt` bigint(20) NOT NULL default '0',
+  PRIMARY KEY  (`id`,`elt`),
+  KEY `FK5E7B3D703D01BC3D` (`id`),
+  KEY `FK5E7B3D703073B4BB` (`elt`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_queue`
+--
+
+DROP TABLE IF EXISTS `program_queue`;
+CREATE TABLE `program_queue` (
+  `queue_id` bigint(20) NOT NULL auto_increment,
+  `agency_id` bigint(20) NOT NULL default '0',
+  `client_id` bigint(20) NOT NULL default '0',
+  `referral_date` datetime default NULL,
+  `provider_no` bigint(20) NOT NULL default '0',
+  `notes` varchar(255) default NULL,
+  `program_id` bigint(20) NOT NULL default '0',
+  `status` varchar(30) default NULL,
+  `referral_id` bigint(20) default NULL,
+  `temporary_admission_flag` tinyint(1) default NULL,
+  PRIMARY KEY  (`queue_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_room`
+--
+
+DROP TABLE IF EXISTS `program_room`;
+CREATE TABLE `program_room` (
+  `program_id` int(10) unsigned NOT NULL default '0',
+  `room_id` int(10) unsigned NOT NULL default '0',
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  PRIMARY KEY  (`program_id`,`room_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `program_team`
+--
+
+DROP TABLE IF EXISTS `program_team`;
+CREATE TABLE `program_team` (
+  `team_id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `program_id` bigint(20) default NULL,
+  PRIMARY KEY  (`team_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `provider_default_program`
+--
+
+DROP TABLE IF EXISTS `provider_default_program`;
+CREATE TABLE `provider_default_program` (
+  `id` int(10) NOT NULL auto_increment,
+  `provider_no` varchar(6) NOT NULL default '',
+  `program_id` int(10) NOT NULL default '0',
+  `signnote` tinyint(1) default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `room`
+--
+
+DROP TABLE IF EXISTS `room`;
+CREATE TABLE `room` (
+  `room_id` int(10) unsigned NOT NULL auto_increment,
+  `room_type_id` int(10) unsigned NOT NULL default '1',
+  `program_id` int(10) unsigned default NULL,
+  `name` varchar(45) default NULL,
+  `floor` tinyint(3) unsigned default NULL,
+  `active` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`room_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `room_bed`
+--
+
+DROP TABLE IF EXISTS `room_bed`;
+CREATE TABLE `room_bed` (
+  `room_id` int(10) unsigned NOT NULL default '0',
+  `bed_id` int(10) unsigned NOT NULL default '0',
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  PRIMARY KEY  (`room_id`,`bed_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `room_type`
+--
+
+DROP TABLE IF EXISTS `room_type`;
+CREATE TABLE `room_type` (
+  `room_type_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) NOT NULL default '',
+  PRIMARY KEY  (`room_type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `survey`
+--
+
+DROP TABLE IF EXISTS `survey`;
+CREATE TABLE `survey` (
+  `surveyid` bigint(20) NOT NULL auto_increment,
+  `description` varchar(255) default NULL,
+  `surveyData` text,
+  `status` smallint(6) default NULL,
+  `userId` bigint(20) default NULL,
+  `dateCreated` datetime default NULL,
+  `dateLaunched` datetime default NULL,
+  `dateClosed` datetime default NULL,
+  `launched_instance_id` bigint(20) default NULL,
+  `version` bigint(20) default '0',
+  PRIMARY KEY  (`surveyid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `surveyData`
+--
+
+DROP TABLE IF EXISTS `surveyData`;
+CREATE TABLE `surveyData` (
+  `surveyDataId` int(10) NOT NULL auto_increment,
+  `surveyId` varchar(5) default NULL,
+  `demographic_no` int(10) default NULL,
+  `provider_no` varchar(6) default NULL,
+  `status` char(2) default NULL,
+  `survey_date` date default NULL,
+  `answer` varchar(10) default NULL,
+  `processed` int(10) default NULL,
+  PRIMARY KEY  (`surveyDataId`),
+  KEY `surveyId_index` (`surveyId`),
+  KEY `demographic_no_index` (`demographic_no`),
+  KEY `provider_no_index` (`provider_no`),
+  KEY `status_index` (`status`),
+  KEY `survey_date_index` (`survey_date`),
+  KEY `answer_index` (`answer`),
+  KEY `processed_index` (`processed`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `survey_test_data`
+--
+
+DROP TABLE IF EXISTS `survey_test_data`;
+CREATE TABLE `survey_test_data` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `instance_id` bigint(20) default NULL,
+  `page_number` bigint(20) default NULL,
+  `section_id` bigint(20) default NULL,
+  `question_id` bigint(20) default NULL,
+  `value` varchar(255) default NULL,
+  `data_key` varchar(255) default NULL,
+  `type` varchar(255) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FKB5082892A9437DC8` (`instance_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `survey_test_instance`
+--
+
+DROP TABLE IF EXISTS `survey_test_instance`;
+CREATE TABLE `survey_test_instance` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `survey_id` bigint(20) default NULL,
+  `date_created` datetime default NULL,
+  `user_id` bigint(20) default NULL,
+  `client_id` bigint(20) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `system_message`
+--
+
+DROP TABLE IF EXISTS `system_message`;
+CREATE TABLE `system_message` (
+  `id` int(10) NOT NULL auto_increment,
+  `message` text NOT NULL,
+  `creation_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `expiry_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `team_bed`
+--
+
+DROP TABLE IF EXISTS `team_bed`;
+CREATE TABLE `team_bed` (
+  `team_id` int(10) unsigned NOT NULL default '0',
+  `bed_id` int(10) unsigned NOT NULL default '0',
+  `start` date NOT NULL default '0000-00-00',
+  `end` date NOT NULL default '0000-00-00',
+  PRIMARY KEY  (`team_id`,`bed_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+create table pmm_log (
+    id bigint not null auto_increment,
+    provider_no varchar(255),
+    dateTime datetime,
+    action varchar(20),
+    contentId varchar(80),
+    content varchar(80) not null,
+    ip varchar(30),
+    primary key (id)
+);
+
