@@ -2077,14 +2077,25 @@ public class MSPReconcile {
     String dateField = this.REP_PAYREF.equals(repType) ?
         "t_payment" : "service_date";
 
-    //This class in need of significant refactoring, this is a quick patch to solve a problem where
-    //wrong date being selected for payments and refunds report
+    //This class in need of significant refactoring,(especially this gawd-aweful section which was extracted from the getBills method purely to avoid code duplication
 
     if("creation_date".equals(dateFieldOption)){
       dateField = "creation_date";
     }
     if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
-      criteriaQry += " and b.apptProvider_no = '" + providerNo + "'";
+      if(this.REP_PAYREF.equals(repType)){
+        String[] row = SqlUtils.getRow("select ohip_no from provider where provider_no = " + providerNo);
+        if(row != null && row.length > 0){
+          String ohip_no = row[0];
+          criteriaQry += " and t_practitionerno = '" + ohip_no + "'";
+        }
+        else{
+          throw new RuntimeException("Provider must have ohip no!");
+        }
+      }
+      else{
+        criteriaQry += " and b.apptProvider_no = '" + providerNo + "'";
+      }
     }
 
     if (payeeNo != null && !payeeNo.trim().equalsIgnoreCase("all")) {
@@ -2103,7 +2114,7 @@ public class MSPReconcile {
       criteriaQry += " and ( to_days(" + dateField + ") <= to_days('" + endDate +
           "')) ";
     }
-
+    //put this crap in a Map and use an 'in' clause instead
     if (excludeWCB) {
       criteriaQry += " and b.billingType != 'WCB' ";
     }

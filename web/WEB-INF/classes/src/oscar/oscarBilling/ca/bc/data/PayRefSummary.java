@@ -25,6 +25,7 @@
 package oscar.oscarBilling.ca.bc.data;
 
 import java.text.*;
+import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 /**
  * <p>Title: PayRefSummary</p>
@@ -51,6 +52,7 @@ public class PayRefSummary {
   private double debit = 0.0;
   private double other = 0.0;
   private double adjustmentAmountTotal = 0.0;
+  String line = "";
   public PayRefSummary() {
   }
 
@@ -60,36 +62,38 @@ public class PayRefSummary {
    * @param item String
    * @param strValue String
    */
-  public void addIncValue(String paymentMethod, String strValue) {
+  public void addIncValue(String paymentMethod, double value) {
     paymentMethod = paymentMethod == null ? "" : paymentMethod;
     try {
-      Double value = new Double(strValue);
-      if (paymentMethod.equals("1")) {
-        this.cash += value.doubleValue();
+
+      if (paymentMethod.equals(MSPReconcile.PAYTYPE_CASH)) {
+        this.cash += value;
       }
-      else if (paymentMethod.equals("2")) {
-        this.cheque += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_CHEQUE)) {
+        this.cheque += value;
       }
-      else if (paymentMethod.equals("3")) {
-        this.visa += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_VISA)) {
+        this.visa += value;
       }
-      else if (paymentMethod.equals("4")) {
-        this.mc += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_MC)) {
+        this.mc += value;
       }
-      else if (paymentMethod.equals("5")) {
-        this.amex += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_AMEX)) {
+        this.amex += value;
       }
-      else if (paymentMethod.equals("6")) {
-        this.electronic += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_ELECTRONIC)) {
+
+        this.electronic += value;
+        line+= String.valueOf(electronic) + " " + String.valueOf(value) + "\n";
       }
-      else if (paymentMethod.equals("7")) {
-        this.debit += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_DEBIT)) {
+        this.debit += value;
       }
-      else if (paymentMethod.equals("8")) {
-        this.other += value.doubleValue();
+      else if (paymentMethod.equals(MSPReconcile.PAYTYPE_OTHER)) {
+        this.other += value;
       }
       else{
-        this.other += value.doubleValue();
+        this.other += value;
       }
     }
     catch (Exception e) {
