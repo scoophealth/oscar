@@ -65,7 +65,8 @@ public class CreateBillingReportAction
   private boolean showMSP;
   private boolean showPriv;
   private boolean showWCB;
-  private static final String REPORTS_PATH = "oscar/oscarBilling/ca/bc/reports/";
+  private static final String REPORTS_PATH =
+      "oscar/oscarBilling/ca/bc/reports/";
 
   public CreateBillingReportAction() {
     this.cfgReports();
@@ -122,7 +123,7 @@ public class CreateBillingReportAction
     BillSearch billSearch = null;
 
     //open corresponding Jasper Report Definition
-    InputStream reportInstream = osc.getDocumentStream(REPORTS_PATH + repDef );
+    InputStream reportInstream = osc.getDocumentStream(REPORTS_PATH + repDef);
 
     //COnfigure Reponse Header
     cfgHeader(response, repType, docFmt);
@@ -166,7 +167,7 @@ public class CreateBillingReportAction
 
     }
     else if (repType.equals(msp.REP_MSPREM)) {
-      oscar.entities.Provider payeeProv = msp.getProvider(payee,1);
+      oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
       reportParams.put("payee", payeeProv.getFullName());
       reportParams.put("payeeno", payee);
       String s21id = request.getParameter("rano");
@@ -193,49 +194,48 @@ public class CreateBillingReportAction
       reportParams.put("payeeNo", s21.getPayeeNo());
 
       //This is the practitioner summary subreport stream
-      InputStream subPractSum = osc.getDocumentStream(REPORTS_PATH + this.reportCfg.getProperty("REP_MSPREMSUM_PRACTSUM") );
-      reportParams.put("practSum",osc.getJasperReport(subPractSum));
+      InputStream subPractSum = osc.getDocumentStream(REPORTS_PATH +
+          this.reportCfg.getProperty("REP_MSPREMSUM_PRACTSUM"));
+      reportParams.put("practSum", osc.getJasperReport(subPractSum));
 
       //This is the S23 summary subreport stream
-      InputStream subS23 = osc.getDocumentStream(REPORTS_PATH + this.reportCfg.getProperty("REP_MSPREMSUM_S23") );
-      reportParams.put("adj",osc.getJasperReport(subS23));
+      InputStream subS23 = osc.getDocumentStream(REPORTS_PATH +
+                                                 this.reportCfg.
+                                                 getProperty(
+          "REP_MSPREMSUM_S23"));
+      reportParams.put("adj", osc.getJasperReport(subS23));
 
       //This is the broadcast messages subreport stream
-      InputStream msgs = osc.getDocumentStream(REPORTS_PATH + this.reportCfg.getProperty("MSGS") );
-      reportParams.put("msgs",osc.getJasperReport(msgs));
-
-
-
+      InputStream msgs = osc.getDocumentStream(REPORTS_PATH +
+                                               this.reportCfg.
+                                               getProperty("MSGS"));
+      reportParams.put("msgs", osc.getJasperReport(msgs));
 
       osc.fillDocumentStream(reportParams, outputStream, docFmt, reportInstream,
                              this.getDBConnection(request));
 
     }
 
-    else if (repType.equals(msp.REP_PAYREF)||repType.equals(msp.REP_PAYREF_SUM)) {
+    else if (repType.equals(msp.REP_PAYREF) ||
+             repType.equals(msp.REP_PAYREF_SUM)) {
       billSearch = msp.getPayments(account, payee, provider, startDate,
-                                      endDate,
-                                      !showWCB, !showMSP, !showPriv, !showICBC);
+                                   endDate,
+                                   !showWCB, !showMSP, !showPriv, !showICBC);
       oscar.entities.Provider payeeProv = msp.getProvider(payee, 1);
       oscar.entities.Provider acctProv = msp.getProvider(account, 0);
       oscar.entities.Provider provProv = msp.getProvider(provider, 0);
-
       PayRefSummary sumPayed = new PayRefSummary();
       PayRefSummary sumRefunded = new PayRefSummary();
       for (Iterator iter = billSearch.list.iterator(); iter.hasNext(); ) {
+
         MSPBill item = (MSPBill) iter.next();
         double dblValue = Double.parseDouble(item.getAmount());
-        if (dblValue > 0) {
-          sumPayed.addIncValue(item.getPaymentMethod(), item.getAmount());
-
+        if (dblValue < 0) {
+          sumRefunded.addIncValue(item.getPaymentMethod(), dblValue);
         }
-        else {
-          sumRefunded.addIncValue(item.getPaymentMethod(), item.getAmount());
-        }
-
+        sumPayed.addIncValue(item.getPaymentMethod(), dblValue);
         sumPayed.addAdjustmentAmount(item.getAdjustmentCodeAmt());
       }
-
       reportParams.put("sumPayed",
                        sumPayed);
       reportParams.put("sumRefunded",
@@ -317,16 +317,21 @@ public class CreateBillingReportAction
   public void cfgReports() {
     this.reportCfg.setProperty(MSPReconcile.REP_INVOICE, "rep_invoice.jrxml");
     this.reportCfg.setProperty(MSPReconcile.REP_PAYREF, "rep_payref.jrxml");
-    this.reportCfg.setProperty(MSPReconcile.REP_PAYREF_SUM, "rep_payref_sum.jrxml");
-    this.reportCfg.setProperty(MSPReconcile.REP_ACCOUNT_REC, "rep_account_rec.jrxml");
+    this.reportCfg.setProperty(MSPReconcile.REP_PAYREF_SUM,
+                               "rep_payref_sum.jrxml");
+    this.reportCfg.setProperty(MSPReconcile.REP_ACCOUNT_REC,
+                               "rep_account_rec.jrxml");
     this.reportCfg.setProperty(MSPReconcile.REP_REJ, "rep_rej.jrxml");
 
     this.reportCfg.setProperty(MSPReconcile.REP_WO, "rep_wo.jrxml");
     this.reportCfg.setProperty(MSPReconcile.REP_MSPREM, "rep_msprem.jrxml");
-    this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM, "rep_mspremsum.jrxml");
-    this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_PRACTSUM, "msppremsum.practsum.jrxml");
-    this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_S23,"msppremsum.s23.jrxml");
-    this.reportCfg.setProperty("MSGS","broadcastmessages.jrxml");
+    this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM,
+                               "rep_mspremsum.jrxml");
+    this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_PRACTSUM,
+                               "msppremsum.practsum.jrxml");
+    this.reportCfg.setProperty(MSPReconcile.REP_MSPREMSUM_S23,
+                               "msppremsum.s23.jrxml");
+    this.reportCfg.setProperty("MSGS", "broadcastmessages.jrxml");
   }
 
 }
