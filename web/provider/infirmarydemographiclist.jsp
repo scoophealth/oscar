@@ -146,7 +146,7 @@ String rsAppointNO="0";
 <!-- /security:oscarSec -->
 		<% } %>
 <!-- doctor code block -->
-		<a href="#" onclick="location.href='../mod/programComp/PMmodule/ClientManager.do?id=<%=demographic_no%>'"
+		<a href="#" onclick="location.href='../mod/caisiComp/PMmodule/ClientManager.do?id=<%=demographic_no%>'"
 		>	<%=de.getLabel()%></a>
 		
 <!-- doctor code block -->
@@ -173,6 +173,7 @@ String rsAppointNO="0";
 <!--/security:oscarSec-->
 	  </security:oscarSec>
 <!-- billing code block -->
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_masterLink" rights="r">     
 <% if (vLocale.getCountry().equals("BR")) {%>
     	<a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;"
     	title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
@@ -180,6 +181,7 @@ String rsAppointNO="0";
     	<a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail');return false;"
     	title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
+	</security:oscarSec>
 
      <% if (!vLocale.getCountry().equals("BR")) { %>
 <!-- doctor code block -->

@@ -22,7 +22,7 @@ public class InfirmAction extends BaseAction
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		logger.info("====> inside showProgram action.");
+		logger.debug("====> inside showProgram action.");
 
 		HttpSession se = request.getSession();
 		se.setAttribute("infirmaryView_initflag", "true");
@@ -55,8 +55,30 @@ public class InfirmAction extends BaseAction
 			programId=Integer.valueOf((String)se.getAttribute("infirmaryView_programId")).intValue();
 		}
 		if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
-		logger.info(String.valueOf(programId));
+		
 		se.setAttribute("infirmaryView_programId",String.valueOf(programId));
+		if(programId != 0) {
+			se.setAttribute("case_program_id",String.valueOf(programId));
+		}
+		
+		
+		String[] programInfo = getInfirmBedProgramManager().getProgramInformation(programId);
+		if(programInfo[0] != null) {
+			se.setAttribute("infirmaryView_programAddress",programInfo[0].replaceAll("\\n", "<br>"));
+		} else {
+			se.setAttribute("infirmaryView_programAddress","");
+		}
+		if(programInfo[1] != null) {
+			se.setAttribute("infirmaryView_programTel",programInfo[1]);
+		} else {
+			se.setAttribute("infirmaryView_programTel","");
+		}
+		if(programInfo[2] != null) {
+			se.setAttribute("infirmaryView_programFax",programInfo[2]);
+		} else {
+			se.setAttribute("infirmaryView_programFax","");
+		}
+		
 		Date dt;
 
 		if (se.getAttribute("infirmaryView_date")!=null)
@@ -84,7 +106,7 @@ public class InfirmAction extends BaseAction
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		logger.info("====> inside getSig action.");
+		logger.debug("====> inside getSig action.");
 		String providerNo=request.getParameter("providerNo");
 		if (providerNo==null) providerNo=(String) request.getSession().getAttribute("user");
 		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);
@@ -96,7 +118,7 @@ public class InfirmAction extends BaseAction
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception
 	{
-		logger.info("====> inside toggleSig action.");
+		logger.debug("====> inside toggleSig action.");
 		String providerNo=request.getParameter("providerNo");
 		if (providerNo==null) providerNo=(String) request.getSession().getAttribute("user");
 		Boolean onsig=getInfirmBedProgramManager().getProviderSig(providerNo);

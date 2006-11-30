@@ -28,4 +28,7 @@ public interface ProviderManagerTickler {
 	 * @return The provider
 	 */
 	public Provider getProvider(String provider_no);
+	
+	
+	public List getProgramDomain(String providerNo);
 }

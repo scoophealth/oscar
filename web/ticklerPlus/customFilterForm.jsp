@@ -44,7 +44,16 @@
               <tr>
                       <td class="fieldTitle">Filter Name:</td>
                       <td class="fieldValue">
-                      	<html:text property="filter.name"/>
+                      <c:choose>
+                      <c:when test="${custom_filter.name == '*Myticklers*'}">
+                      	*Myticklers*
+                      	 <html:hidden property="filter.name"/>
+                      </c:when>
+                      <c:otherwise>
+                         <html:text property="filter.name"/>
+                      </c:otherwise>
+                      	</c:choose>
+                      	
 	                 </td>
               </tr>
               <tr>
@@ -108,6 +117,7 @@
 			  <tr>
                       <td class="fieldTitle">Task Assigned To:</td>
                       <td class="fieldValue">
+                      	
                       	<c:forEach var="provider" items="${providers}">
                       	    <%
                       				String checked="";
@@ -117,11 +127,32 @@
 			                      		Set providerList = filter.getAssignees();
 			                      		if(providerList.contains(p)){
 	    	                  				checked="checked";
+	    	                  				%>
+	    	                  				<input name="assignee" type="hidden" value="<c:out value='${provider.provider_no}'/>"/>
+	    	                  				<%
 		    	                  		}
 		                      		}
                       		%>
-                      		<input name="assignee" <%=checked %> type="checkbox" value="<c:out value="${provider.provider_no}"/>"/><c:out value="${provider.lastName}"/>,<c:out value="${provider.firstName}"/><br/>
+                      		
+                      	<c:choose>
+                      	<c:when test="${custom_filter.name != '*Myticklers*'}">
+                      		
+                      		<input name="assignee" <%=checked %> type="checkbox" value="<c:out value='${provider.provider_no}'/>"/>
+                      	
+                      	
+                      		<c:out value="${provider.lastName}"/>,<c:out value="${provider.firstName}"/><br/>
+                      	</c:when>
+                      	</c:choose>
                       	</c:forEach>
+                      	
+                      	
+                      	<c:choose>
+                      	<c:when test="${custom_filter.name == '*Myticklers*'}">Myself, <c:out value="${me}"/>
+                      	</c:when>
+                      	</c:choose>
+                      	
+                      	
+                      	
                       </td>
               </tr>
 				<tr>

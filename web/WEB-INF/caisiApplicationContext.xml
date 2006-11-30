@@ -110,6 +110,11 @@
 			<ref local="caisiSessionFactory"/>
 		</property>
 	</bean>
+	<bean id="issueAdminDAO" class="org.caisi.dao.hibernate.IssueAdminDAOHibernate">
+        	<property name="sessionFactory">
+        		<ref local="caisiSessionFactory"/>
+        	</property>
+    	</bean>
 	<bean id="CaisiRoleDAO" class="org.caisi.dao.hibernate.CaisiRoleDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="caisiSessionFactory"/>
@@ -140,6 +145,11 @@
 	<bean id="programProviderDAOT" class="org.caisi.dao.hibernate.ProgramProviderDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="caisiSessionFactory"/>
+		</property>
+	</bean>
+	<bean id="accessTypeDAO" class="org.caisi.dao.jdbc.AccessTypeDAOJdbc">
+		<property name="dataSource">
+			<ref local="dataSource"/>
 		</property>
 	</bean>
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
@@ -233,6 +243,9 @@
 		<property name="providerDAO">
 			<ref local="providerDAOT"/>
 		</property>
+		<property name="programProviderDAO">
+			<ref local="programProviderDAOT"/>
+		</property>
 	</bean>
 
 	<bean id="preparedTicklerManagerT" 
@@ -313,6 +326,29 @@
 			<ref local="SystemMessageDAO"/>
 		</property>
 	</bean>
+
+ 	<bean id="issueAdminManager"
+        	class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+    		<property name="transactionManager">
+        		<ref local="transactionManager"/>
+    		</property>
+    		<property name="target">
+        		<ref local="issueAdminManagerTarget"/>
+    		</property>
+    		<property name="transactionAttributes">
+        		<props>
+            			<prop key="save*">PROPAGATION_REQUIRED</prop>
+            			<prop key="remove*">PROPAGATION_REQUIRED</prop>
+            			<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+        		</props>
+    		</property>
+    	</bean>
+
+    	<bean id="issueAdminManagerTarget" class="org.caisi.service.impl.IssueAdminManagerImpl">
+    		<property name="issueAdminDAO">
+			<ref local="issueAdminDAO"/>
+		</property>
+    	</bean>
 	
 	
 	<bean id="CaisiRoleManager" 
@@ -339,6 +375,7 @@
 		<property name="providerDAO">
 			<ref local="providerDAOT"/>
 		</property>
+		<property name="accessTypeDAO" ref="accessTypeDAO"/>
 	</bean>
 	
 	<bean id="infirmBedProgramManager" parent="baseTransactionProxy">
@@ -351,7 +388,7 @@
 	
 	<bean id="version" class="org.caisi.service.impl.VersionImpl">
 		<property name="version">
-			<value>2.0</value>
+			<value>2.5.0</value>
 		</property>
 	</bean>
 </beans>

@@ -7,14 +7,6 @@ create table system_message (
 	primary key(id)
 ) TYPE MyISAM;
 
-drop table if exists provider_caisi_role;
-create table provider_caisi_role (
-	provider_no varchar(20) not null,
-	role_id int(10) not null,
-	update_date datetime not null,
-	primary key(provider_no)
-) TYPE MyISAM;
-
 drop table if exists caisi_role;
 create table caisi_role (
 	role_id int(10) not null auto_increment,

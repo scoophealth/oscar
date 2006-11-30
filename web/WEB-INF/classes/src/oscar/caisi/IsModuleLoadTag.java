@@ -34,17 +34,11 @@ public class IsModuleLoadTag extends TagSupport
 					+ propFile;
 			OscarProperties proper = OscarProperties.getInstance();
 			proper.loader(propFileName);
-			if (proper.getProperty("caisi", "").equalsIgnoreCase("yes")
-					|| proper.getProperty("caisi", "").equalsIgnoreCase(
-							"true")
-					|| proper.getProperty("caisi", "").equalsIgnoreCase("on")){
-				if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes")
-					|| proper.getProperty(moduleName, "").equalsIgnoreCase(
-							"true")
-					|| proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
-				if (reverse) return SKIP_BODY;
-				else return EVAL_BODY_INCLUDE;
-			}else if (reverse) return EVAL_BODY_INCLUDE;
+			if (proper.getProperty("plugins", "").equalsIgnoreCase("yes") || proper.getProperty("plugins", "").equalsIgnoreCase("true")|| proper.getProperty("plugins", "").equalsIgnoreCase("on")){
+				if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
+					if (reverse) return SKIP_BODY;
+					else return EVAL_BODY_INCLUDE;
+				}else if (reverse) return EVAL_BODY_INCLUDE;
 			else return SKIP_BODY;
 		} catch (Exception e)
 		{

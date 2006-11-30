@@ -9,17 +9,15 @@
 	    int curHour=now.get(Calendar.HOUR);
 	    int curMinute=now.get(Calendar.MINUTE);
 	    boolean curAm= (now.get(Calendar.HOUR_OF_DAY)<=12)?true:false;
-	    
-	    String absPath=request.getContextPath();
 	%>
 
 <script>
 
 function search_demographic() {
-	window.open('<%=absPath%>/ticklerPlus/demographicSearch.jsp?query=' + document.ticklerForm.elements['tickler.demographic_webName'].value,'demographic_search');
+	window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?query=' + document.ticklerForm.elements['tickler.demographic_webName'].value,'demographic_search');
 }
 function search_provider() {
-	url = '<%=absPath%>/provider/receptionistfindprovider.jsp';
+	url = '<c:out value="${ctx}"/>/provider/receptionistfindprovider.jsp';
 	url += '?caisi=true&pyear=<%=curYear%>&pmonth=<%=curMonth%>&pday=<%=curDay%>&providername=';
 	window.open(url + document.ticklerForm.elements['tickler.task_assigned_to_name'].value,'provider_search');
 }

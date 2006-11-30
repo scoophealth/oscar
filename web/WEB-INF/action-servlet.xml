@@ -49,13 +49,10 @@
 			<ref bean="SystemMessageManager"/>
 		</property>
 	</bean>
-	
-	<bean name="/CaisiRoleAssigner" class="org.caisi.core.web.RoleAssignerAction" singleton="false">
-		<property name="caisiRoleManager">
-			<ref bean="CaisiRoleManager"/>
-		</property>
-	</bean>
-	
+	<bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false">
+        	<property name="issueAdminManager"><ref bean="issueAdminManager"/> </property>
+	        <property name="caisiRoleManager"><ref bean="CaisiRoleManager"/> </property>
+	</bean>	
 	<bean name="/CaisiRole" class="org.caisi.core.web.RoleAction" singleton="false">
 		<property name="caisiRoleManager">
 			<ref bean="CaisiRoleManager"/>

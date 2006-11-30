@@ -59,7 +59,7 @@ ProSignatureData sig = new ProSignatureData();
 
 <body class="BodyStyle" vlink="#0000FF" >
 <!-- add by caisi -->
-<caisi:isModuleLoad moduleName="program">
+<caisi:isModuleLoad moduleName="caisi">
 
 <iframe id="hiddenFrame" src="javascript:void(0)" style="display:none"></iframe>
 <script>
@@ -109,7 +109,7 @@ function toggleSig(n) {
                <html:text property="signature" size="40"/><br>
                
                <!-- add by caisi -->
-               <caisi:isModuleLoad moduleName="program">
+               <caisi:isModuleLoad moduleName="caisi">
                <c:import url="/infirm.do?action=getSig" />
                
                <INPUT TYPE="checkbox" <%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%> onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
@@ -121,7 +121,7 @@ function toggleSig(n) {
                <bean:message key="provider.editSignature.msgNew"/><br>
                <html:text property="signature" size="40"/><br>
                <!-- add by caisi -->
-               <caisi:isModuleLoad moduleName="program">
+               <caisi:isModuleLoad moduleName="caisi">
                <c:import url="/infirm.do?action=getSig" />
                <INPUT TYPE="checkbox" <%= ((Boolean)session.getAttribute("signOnNote")).booleanValue()?"checked":""%> onchange="toggleSig('<%= curUser_no %>')">also sign the signiture in encounter notes
                </caisi:isModuleLoad>

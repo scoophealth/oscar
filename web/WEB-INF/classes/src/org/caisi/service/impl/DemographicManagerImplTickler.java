@@ -26,4 +26,13 @@ public class DemographicManagerImplTickler implements DemographicManagerTickler 
 	public List getDemographics() {
 		return demographicDAO.getDemographics();
 	}
+	
+	public List getProgramIdByDemoNo(String demoNo){
+		return demographicDAO.getProgramIdByDemoNo(demoNo);
+	}
+	
+	public List getDemoProgram(String demoNo){
+		return demographicDAO.getDemoProgram(demoNo);
+	}
+	
 }

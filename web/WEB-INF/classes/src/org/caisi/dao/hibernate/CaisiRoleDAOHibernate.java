@@ -5,6 +5,7 @@ import java.util.List;
 import org.caisi.dao.CaisiRoleDAO;
 import org.caisi.model.CaisiRole;
 import org.caisi.model.Role;
+import org.hibernate.SQLQuery;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class CaisiRoleDAOHibernate extends HibernateDaoSupport implements
@@ -28,6 +29,16 @@ public class CaisiRoleDAOHibernate extends HibernateDaoSupport implements
 
 	public void saveRole(Role role) {
 		this.getHibernateTemplate().saveOrUpdate(role);
+/*
+		SQLQuery query = getSession().createSQLQuery("insert into acces_type (name,type) values (\'write " + role.getName() + " issues\',\'access\'");
+		query.executeUpdate();
+		
+		query = getSession().createSQLQuery("insert into acces_type (name,type) values (\'read " + role.getName() + " issues\',\'access\'");
+		query.executeUpdate();
+		
+		query = getSession().createSQLQuery("insert into acces_type (name,type) values (\'read " + role.getName() + " notes\',\'access\'");
+		query.executeUpdate();
+*/
 	}
 	
 	

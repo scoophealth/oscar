@@ -10,14 +10,5 @@
 		<property name="firstName" column="first_name"/>
 		<property name="lastName" column="last_name"/>
 		<property name="provider_type"/>
-		
-		<many-to-one name="role" 
-			class="org.caisi.model.CaisiRole"
-			column="provider_no"
-			update="false"
-			insert="false"
-			lazy="false"
-			not-found="ignore"
-		/>
     </class>
 </hibernate-mapping>

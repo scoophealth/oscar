@@ -8,7 +8,7 @@
 		<id
 			column="demographic_no"
 			name="demographicNo"
-			type="java.lang.Long"
+			type="integer"
 		>
 			<generator class="native" />
 		</id>

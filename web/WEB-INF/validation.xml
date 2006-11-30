@@ -21,7 +21,19 @@
 		</constant>
     </global>
 
- 
+    <formset>
+        <form name="issueAdminForm">
+            <field property="issueAdmin.code" depends="required">
+                <arg0 key="issueAdmin.code"/>
+            </field>
+            <field property="issueAdmin.description" depends="required">
+                <arg0 key="issueAdmin.description"/>
+            </field>
+            <field property="issueAdmin.role" depends="required">
+                <arg0 key="issueAdmin.role"/>
+            </field>
+        </form>
+    </formset> 
     
 
 </form-validation>

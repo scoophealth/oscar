@@ -47,7 +47,7 @@
 		</tr>
 	-->
 		<tr>
-			<td><input type="button" value="New" onclick="location.href='../CustomFilter.do?method=edit'"/></td>
+			<td><input type="button" value="New" onclick="location.href='<html:rewrite action="/CustomFilter"/>?method=edit'"/></td>
 			<td><input type="button" value="Delete" onclick="this.form.method.value='delete';this.form.submit();"/></td>
 		</tr>
 		</html:form>

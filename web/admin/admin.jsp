@@ -252,7 +252,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 
 <%-- -add by caisi--%>
 <%String absurl= "/" + application.getServletContextName()+"/caisicore/index.jsp"; %>
-<caisi:isModuleLoad moduleName="program">
+<caisi:isModuleLoad moduleName="caisi">
 <tr bgcolor="#CCCCFF">
       <th>
         <p>CAISI</p>

@@ -1,4 +1,5 @@
 <%@ include file="/ticklerPlus/header.jsp"%>
+
 <%@ page import="java.util.Calendar"%>
 <%
 Calendar now = Calendar.getInstance();
@@ -18,10 +19,10 @@ Calendar now = Calendar.getInstance();
 	<tr>
 		<td class="blueText">Service Date Range:</td>
 		<td class="blueText"><span style="text-decoration:underline"
-			onClick="openBrWindow('<%=absurl %>calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</span>
+			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</span>
 		<html:text property="filter.startDate" /></td>
 		<td class="blueText"><span style="text-decoration:underline"
-			onClick="openBrWindow('<%=absurl %>calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End:</span><html:text
+			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End:</span><html:text
 			property="filter.endDate" /></td>
 		<td><input type="button" value="Create Report"
 			onclick="this.form.method.value='filter';this.form.submit();" /></td>
@@ -66,30 +67,22 @@ Calendar now = Calendar.getInstance();
 			<html:options collection="customFilters" property="name" />
 		</html:select></td>
 
-		<td><input type="button" value="My Ticklers"
-			onclick="this.form.method.value='my_tickler_filter';this.form.submit();" /></td>
+		
 		<td></td>
 	</tr>
 
-	</table>
+
 	<br />
 	<%@ include file="/ticklerPlus/messages.jsp"%>
 	<br />
-
 	<table width="100%" border="0" cellpadding="0" cellspacing="1"
 		bgcolor="#C0C0C0">
 		<tr class="title">
 			<th></th>
 			<th></th>
 			<th>Demographic Name</th>
-			<th>Provider Name</th>
-			<!--
-			<th><html:select property="filter.sort_order"
-			onchange="this.form.method.value='filter';this.form.submit();">
-			<html:option value="ASC">   Date Asc   </html:option>
-			<html:option value="DESC">   Date Desc  </html:option>
-			</html:select></th>
-			-->
+			<th class=noprint>Provider Name</th>
+
 			
 			 
 			<%
@@ -105,14 +98,14 @@ Calendar now = Calendar.getInstance();
 				<% session.setAttribute( "filter_order", "DESC");
 			}		
 			%>
-			<th><b><input type="button" value="           Date           "
-			onclick="this.form.method.value='filter';this.form.submit();" /></b></th>
+			<th class=noprint><b><input type="button" value="           Date           "
+			onclick="this.form.method.value='filter';this.form.submit();" class=noprint/></b></th>
 
 	
 
-			<th>Priority</th>
-			<th>Task Assigned To</th>
-			<th>Status</th>
+			<th class=noprint>Priority</th>
+			<th class=noprint>Task Assigned To</th>
+			<th class=noprint>Status</th>
 			<th>Message</th>
 		</tr>
 
@@ -180,11 +173,11 @@ String demographic_name = "";
 			}
 
 			%>
-					<td><input type="checkbox" name="checkbox"
+					<td ><input type="checkbox" name="checkbox"
 						value="<c:out value="${tickler.tickler_no}"/>" /></td>
 					<td><a
 						href="../Tickler.do?method=view&id=<c:out value="${tickler.tickler_no}"/>"><img
-						align="right" src="<%=absurl%>images/<%=view_image %>" border="0" />
+						align="right" src="<c:out value="${ctx}"/>/ticklerPlus/images/<%=view_image %>" border="0" />
 					</a></td>
 
 					<%
@@ -196,12 +189,12 @@ String style = "";
 
 			%>
 					<td style="<%=style%>"><%=demographic_name%></td>
-					<td style="<%=style%>"><%=provider_name%></td>
-					<td style="<%=style%>"><fmt:formatDate pattern="MM/dd/yy : hh:mm a"
+					<td style="<%=style%>" class=noprint><%=provider_name%></td>
+					<td style="<%=style%>" class=noprint><fmt:formatDate pattern="MM/dd/yy : hh:mm a"
 						value="${tickler.service_date}" /></td>
-					<td style="<%=style%>"><c:out value="${tickler.priority}" /></td>
-					<td style="<%=style%>"><%=assignee_name%></td>
-					<td style="<%=style%>"><%=status%></td>
+					<td style="<%=style%>" class=noprint><c:out value="${tickler.priority}" /></td>
+					<td style="<%=style%>" class=noprint><%=assignee_name%></td>
+					<td style="<%=style%>" class=noprint><%=status%></td>
 					<td style="<%=style%>" align="left"><c:out escapeXml="false"
 						value="${tickler.message}" /></td>
 				</tr>
@@ -220,13 +213,12 @@ String style = "";
 		</tr>
 	-->
 		<tr>
-			<!--  <td><input type="button" value="Create New Tickler" onclick="location.href='/<%=application.getServletContextName()%>/Tickler.do?method=edit'"/></td>
-			<td><input type="button" value="Prepared Ticklers" onclick="location.href='/<%=application.getServletContextName()%>/Tickler.do?method=prepared_tickler_list'"/></td>
-			-->
-			<td><input type="button" value="Complete"
+			<td><input type="button" value="Create New Tickler" onclick="location.href='<html:rewrite action="/Tickler"/>?method=edit'"/></td>
+			<td class=noprint><input type="button" value="Complete"
 				onclick="this.form.method.value='complete';this.form.submit();" /></td>
-			<td><input type="button" value="Delete"
-				onclick="this.form.method.value='delete';this.form.submit();" /></td>
+			<td class=noprint><input type="button" value="Delete"
+				onclick="this.form.method.value='delete';this.form.submit();" /></td>	
+				
 		</tr>
 	</table>
 </html:form>

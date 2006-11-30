@@ -64,6 +64,7 @@ public class CustomFilterAction extends DispatchAction {
 	public ActionForward list(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("list");
+	
 		request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
 		return mapping.findForward("customFilterList");
 	}
@@ -76,14 +77,22 @@ public class CustomFilterAction extends DispatchAction {
 		if(name != null && !name.equals("")) {
 			CustomFilter filter = ticklerMgr.getCustomFilter(name);
 			/* get the demographic */
-			Demographic demographic = demographicMgr.getDemographic(filter.getDemographic_no());
+			String demo_no=filter.getDemographic_no();
+			if(!(demo_no.equals(""))&&demo_no!=null)
+			{
+			Demographic demographic = demographicMgr.getDemographic(demo_no);
 			if(demographic != null) {
 				filter.setDemographic_webName(demographic.getFormattedName());
-			}
+			}}
+			else
+				filter.setDemographic_webName("");
+				
 			DynaActionForm filterForm = (DynaActionForm)form;
 			filterForm.set("filter",filter);
 			request.setAttribute("customFilterForm",filterForm);
 			request.setAttribute("custom_filter",filter);
+			request.setAttribute("me_no",(String)request.getSession().getAttribute("user"));
+			request.setAttribute("me",providerMgr.getProvider((String)request.getSession().getAttribute("user")).getFormattedName());
 		}
 		
 		request.setAttribute("providers",providerMgr.getProviders());

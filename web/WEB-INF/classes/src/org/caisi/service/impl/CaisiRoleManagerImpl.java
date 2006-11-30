@@ -2,6 +2,7 @@ package org.caisi.service.impl;
 
 import java.util.List;
 
+import org.caisi.dao.AccessTypeDAO;
 import org.caisi.dao.CaisiRoleDAO;
 import org.caisi.dao.ProviderDAO;
 import org.caisi.model.CaisiRole;
@@ -12,6 +13,11 @@ public class CaisiRoleManagerImpl implements CaisiRoleManager {
 
 	private CaisiRoleDAO roleDAO;
 	private ProviderDAO providerDAO;
+	private AccessTypeDAO accessTypeDAO;
+	
+	public void setAccessTypeDAO(AccessTypeDAO dao) {
+		this.accessTypeDAO = dao;
+	}
 	
 	public void setCaisiRoleDAO(CaisiRoleDAO roleDAO) {
 		this.roleDAO = roleDAO;
@@ -34,6 +40,11 @@ public class CaisiRoleManagerImpl implements CaisiRoleManager {
 		if ("".equals(rolename.trim())) return "role.empty";
 		if (roleDAO.hasExist(rolename)) return "role.hasexist";
 		this.roleDAO.saveRole(role);
+		
+		accessTypeDAO.addAccessType("write " + role.getName() + " issues", "access");
+		accessTypeDAO.addAccessType("read " + role.getName() + " issues", "access");
+		accessTypeDAO.addAccessType("read " + role.getName() + " notes", "access");
+		
 		return null;
 	}
 	public List getRoles() {

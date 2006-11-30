@@ -1,6 +1,7 @@
 package org.caisi.tickler.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.caisi.model.CustomFilter;
 import org.caisi.model.EChart;
 import org.caisi.model.Provider;
 import org.caisi.model.Tickler;
+import org.caisi.model.ProgramProvider;
 import org.caisi.service.ConsultationManager;
 import org.caisi.service.DemographicManagerTickler;
 import org.caisi.service.EChartManager;
@@ -28,6 +30,7 @@ import org.caisi.service.ProviderManagerTickler;
 import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
+import oscar.OscarProperties;
 
 public class TicklerAction extends DispatchAction {
 	private static Log log = LogFactory.getLog(TicklerAction.class);
@@ -102,6 +105,7 @@ public class TicklerAction extends DispatchAction {
 		request.setAttribute("tickler",tickler);
 		request.setAttribute("providers",providerMgr.getProviders());
 		request.setAttribute("from",getFrom(request));
+		
 		return mapping.findForward("view");
 	}
 	
@@ -112,8 +116,65 @@ public class TicklerAction extends DispatchAction {
 		log.debug("filter");
 		DynaActionForm ticklerForm = (DynaActionForm)form;
 		CustomFilter filter = (CustomFilter)ticklerForm.get("filter");
-        List ticklers = ticklerMgr.getTicklers(filter);
-        String filter_order=(String)request.getSession().getAttribute( "filter_order" );
+        List ticklersTemp = ticklerMgr.getTicklers(filter);
+        List ticklers=new ArrayList();
+        
+        //filter out any tickler is not in the provider's program domain
+
+	if(isModuleLoaded(request,"caisi")) {
+        List providerProgram=new ArrayList();
+        List ticklerDemoProgram=new ArrayList();
+        String pro_no=this.getProviderNo(request);
+        providerProgram=providerMgr.getProgramDomain(pro_no);
+        boolean ticklerInProgtam=false; 
+        for(int i=0;i<ticklersTemp.size();i++)
+        {
+        	ticklerDemoProgram=demographicMgr.getDemoProgram(((Tickler)ticklersTemp.get(i)).getDemographic_no());
+        	for(int j=0;j<ticklerDemoProgram.size();j++)
+        	{
+        		for(int k=0;k<providerProgram.size();k++)
+            	{
+        			
+        			if (((ProgramProvider)(providerProgram.get(k))).getProgramId().equals(ticklerDemoProgram.get(j))){
+        				ticklerInProgtam=true;
+        			}
+            	}
+        	}
+        	if(ticklerInProgtam){
+        		ticklers.add(ticklersTemp.get(i));
+        	}
+        }
+      
+        } else {
+		ticklers.addAll(ticklersTemp);
+	}
+		List cf=ticklerMgr.getCustomFilters(this.getProviderNo(request));
+		//make my tickler filter
+		boolean myticklerexisted=false;
+		for (int i=0;i<cf.size();i++){
+			if ((((CustomFilter)(cf.get(i))).getName()).equals("*Myticklers*")){
+				myticklerexisted=true;
+			}
+		}
+		if (!myticklerexisted){
+			
+			CustomFilter myfilter = new CustomFilter();
+			myfilter.setName("*Myticklers*");
+			myfilter.setStartDate("");
+			myfilter.setEnd_date(new Date(System.currentTimeMillis()));
+			myfilter.setProvider_no(this.getProviderNo(request));
+			myfilter.setStatus("A");
+			myfilter.setPriority("");
+			myfilter.setClient("");
+			myfilter.setAssignee((String)request.getSession().getAttribute("user"));
+			myfilter.setDemographic_webName("");
+			myfilter.setDemographic_no("");
+			ticklerMgr.saveCustomFilter(myfilter);
+		}
+		
+		
+		
+		String filter_order=(String)request.getSession().getAttribute( "filter_order" );
         request.getSession().setAttribute("ticklers",ticklers);
 		request.setAttribute("providers",providerMgr.getProviders());
 		request.setAttribute("demographics",demographicMgr.getDemographics());
@@ -130,7 +191,7 @@ public class TicklerAction extends DispatchAction {
 		log.debug("my_tickler_filter");
 		DynaActionForm ticklerForm = (DynaActionForm)form;
 		CustomFilter filter = (CustomFilter)ticklerForm.get("filter");
-		filter.setStart_date(null);
+		filter.setStartDate(null);
 		filter.setEnd_date(new Date(System.currentTimeMillis()));
 		filter.setProvider(null);
 		filter.setStatus("A");
@@ -171,6 +232,10 @@ public class TicklerAction extends DispatchAction {
 		log.debug("reassign by" + id);
 
 		ticklerMgr.reassign(id,getProviderNo(request),reassignee);
+		
+		DynaActionForm ticklerForm = (DynaActionForm)form;
+		ticklerForm.set("tickler",new Tickler());
+        
 		return view(mapping,form,request,response);
 	}
 	
@@ -335,5 +400,20 @@ public class TicklerAction extends DispatchAction {
 			break;
 		}
 		return this.view(mapping,form,request,response);
+	}
+
+
+	public boolean isModuleLoaded(HttpServletRequest request, String moduleName) {
+		String propFile = request.getContextPath().substring(1) + ".properties";
+                String sep = System.getProperty("file.separator");
+                String propFileName = System.getProperty("user.home") + sep  + propFile;
+                OscarProperties proper = OscarProperties.getInstance();
+                proper.loader(propFileName);
+
+		if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") ||  proper.getProperty(moduleName, "").equalsIgnoreCase("on")) {
+			return true;
+		}
+
+		return false;
 	}
 }

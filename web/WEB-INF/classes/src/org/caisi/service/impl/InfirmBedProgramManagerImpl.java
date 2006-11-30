@@ -73,7 +73,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		{
 			Program p = (Program) iter.next();
 			if (p!=null){
-				logger.debug("programName="+p.getName()+"::"+"programId="+p.getId().toString());
+				//logger.debug("programName="+p.getName()+"::"+"programId="+p.getId().toString());
 				pList.add(new LabelValueBean(p.getName(),p.getId().toString()));
 			}
 		}
@@ -88,7 +88,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		{
 			ProgramProvider p = (ProgramProvider) iter.next();
 			if (p!=null && p.getProgram()!=null){
-				logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
+				//logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
 				pList.add(new LabelValueBean(p.getProgram().getName(),p.getProgram().getId().toString()));
 			}
 		}
@@ -98,14 +98,17 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	public List getDemographicByBedProgramIdBeans(int programId,Date dt)
 	{
 		/*default time is Oscar default null time 0001-01-01.*/
-		Date defdt=new GregorianCalendar(1,0,1,23,59,59).getTime();
+		Date defdt=new GregorianCalendar(1,0,1).getTime();
+		dt.setHours(23);
+		dt.setMinutes(59);
+		dt.setSeconds(59);
 		Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
 		ArrayList demographicList=new ArrayList();
 		Demographic de=null;
 		while (iter.hasNext())
 		{
 			de=(Demographic)iter.next();
-			logger.info("demoName="+de.getLastName()+","+de.getFirstName()+"::"+"demoID="+de.getDemographicNo().toString());
+			//logger.info("demoName="+de.getLastName()+","+de.getFirstName()+"::"+"demoID="+de.getDemographicNo().toString());
 			demographicList.add(new LabelValueBean(de.getLastName()+", "+de.getFirstName(),de.getDemographicNo().toString()));
 			
 		}
@@ -168,6 +171,9 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		this.programProviderDAOT = programProviderDAOT;
 	}
 
+	public String[] getProgramInformation(int programId) {
+		return this.bedProgramDao.getProgramInfo(programId);
+	}
 	
 }
 

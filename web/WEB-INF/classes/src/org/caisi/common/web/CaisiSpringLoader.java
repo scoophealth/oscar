@@ -20,7 +20,7 @@ public class CaisiSpringLoader extends ContextLoaderListener{
 			log.info("can't find oscar property file");
 			return false;
 		}
-		String flag=p2.getProperty("caisi","");
+		String flag=p2.getProperty("plugins","");
 		if (flag==null) return false;
 		if ("on".equalsIgnoreCase(flag) ||"true".equalsIgnoreCase(flag)||"yes".equalsIgnoreCase(flag))
 			return true;

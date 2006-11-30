@@ -66,3 +66,21 @@
         text-align: left;
     }
     
+/* style for list tables */
+table.list {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin-top: 10px;
+    width: 100%;
+}
+
+table.list tr.even {
+    background: #eee;
+    border-top: 1px solid silver;
+}
+
+table.list tr.odd {
+    background: white;
+    border-top: 1px solid silver;
+}
+

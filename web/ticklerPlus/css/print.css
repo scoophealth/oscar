@@ -1,0 +1,8 @@
+    BODY{
+        FONT-SIZE: Normal;
+        FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif;
+    }
+    
+div#noprint,.noprint {
+  display : none;
+}

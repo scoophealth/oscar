@@ -3,6 +3,8 @@ package org.caisi.service;
 import java.util.Date;
 import java.util.List;
 
+import org.caisi.model.Program;
+
 public interface InfirmBedProgramManager {
 	public List getPrgramNameID();
 	public List getPrgramName();
@@ -14,4 +16,5 @@ public interface InfirmBedProgramManager {
 	public void setDefaultProgramId(String providerNo, int programId);
 	public Boolean getProviderSig(String demoNo);
 	public void toggleSig(String demoNo);
+	public String[] getProgramInformation(int programId);
 }

@@ -1,3 +1,5 @@
+<%@ include file="/taglibs.jsp" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <html>
 <head>
 	<title>Demographic Search</title>
@@ -14,8 +16,7 @@
 <body onload="document.ADDAPPT.submit();">
 <h2>Searching</h2>
 <table>
-<%String contextName = application.getServletContextName(); %>
-<form name="ADDAPPT" method="post" action="/<%=contextName%>/appointment/appointmentcontrol.jsp">
+<form name="ADDAPPT" method="post" action="<c:out value="${ctx}"/>/appointment/appointmentcontrol.jsp">
 <tr> 
       <td width="35%"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><b>Demographic Name: </b></font></font></td>
       <td colspan="2" width="65%">

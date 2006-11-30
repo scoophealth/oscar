@@ -32,7 +32,7 @@
 <body>
 </c:if>
 
-<%String absurl= "/" + application.getServletContextName()  + "/ticklerPlus/"; %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 	<script>
 		function openBrWindow(theURL,winName,features) { 
 		  window.open(theURL,winName,features);

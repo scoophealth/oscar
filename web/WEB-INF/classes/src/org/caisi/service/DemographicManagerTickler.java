@@ -27,4 +27,9 @@ public interface DemographicManagerTickler {
 	 * @return List of Demographic objects
 	 */
 	public List getDemographics();
+	
+	
+	public List getProgramIdByDemoNo(String demoNo);
+	public List getDemoProgram(String demoNo);
+	
 }

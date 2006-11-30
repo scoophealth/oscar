@@ -17,7 +17,7 @@
 </security:oscarSec>
 
 <!-- caisi infirmary view extension add ffffffffffffff-->
-<caisi:isModuleLoad moduleName="program">
+<caisi:isModuleLoad moduleName="caisi">
 <%
 if (request.getParameter("year")!=null && request.getParameter("month")!=null && request.getParameter("day")!=null)
 	{
@@ -438,14 +438,14 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a></font></td>
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a></font></td>
-        <caisi:isModuleLoad moduleName="program">
-		<plugin:hideWhenCompExists componentName="casemgmtComp">
+        <caisi:isModuleLoad moduleName="caisi">
+		<plugin:hideWhenCompExists componentName="caisiComp">
         
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
         </plugin:hideWhenCompExists>
         </caisi:isModuleLoad>
-        <caisi:isModuleLoad moduleName="program" reverse="true">
+        <caisi:isModuleLoad moduleName="caisi" reverse="true">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
         </caisi:isModuleLoad>
@@ -535,14 +535,14 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <td valign="bottom"><img src="../images/tabs_r_active_end.gif" width="15" height="20" border="0"></td>
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         
-        <caisi:isModuleLoad moduleName="program">
+        <caisi:isModuleLoad moduleName="caisi">
     
-		<plugin:hideWhenCompExists componentName="casemgmtComp">
+		<plugin:hideWhenCompExists componentName="caisiComp">
 		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
 		</plugin:hideWhenCompExists>        
         </caisi:isModuleLoad>
         
-        <caisi:isModuleLoad moduleName="program" reverse="true">
+        <caisi:isModuleLoad moduleName="caisi" reverse="true">
     		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>    
         </caisi:isModuleLoad>
         
@@ -619,7 +619,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	<% } %>
         <td ALIGN="RIGHT" BGCOLOR="Ivory">
 <!-- caisi infirmary view extension add ffffffffffff-->
-<caisi:isModuleLoad moduleName="program">
+<caisi:isModuleLoad moduleName="caisi">
 <table><tr><td>
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
@@ -661,12 +661,12 @@ session.setAttribute("case_program_id", null);
 <%
  //String verno=org.caisi.comp.FrameworkFactory.getFramework().getComponent("coreComp").getComponent().getVersion();
 %>
-<b style="color:blue">caisi core version 2.1.8</b>&nbsp&nbsp&nbsp&nbsp
+<b style="color:blue">caisi core version 2.5.0</b>&nbsp&nbsp&nbsp&nbsp
 </logic:equal>
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
          
 <!-- caisi infirmary view extension add fffffffffffff-->
-<caisi:isModuleLoad moduleName="program">
+<caisi:isModuleLoad moduleName="caisi">
 </td></tr>
 <tr><td>
 <%@ include file="infirmaryviewprogramlist.jsp" %>
@@ -765,7 +765,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
 
 <!-- caisi infirmary view exteion add -->
 <!--  fffffffffffffffffffffffffffffffffffffffffff-->
-<caisi:isModuleLoad moduleName="program">
+<caisi:isModuleLoad moduleName="caisi">
 <%@ include file="infirmarydemographiclist.jsp" %>
 </caisi:isModuleLoad>
 <logic:notEqual name="infirmaryView_isOscar" value="false">
@@ -905,7 +905,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
         	<% if (tickler_no.compareTo("") != 0) {%>	
 	        	<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
         			<a href="#" onClick="popupPage(700,1000, '../tickler/ticklerDemoMain.jsp?demoview=0');return false;" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
-    			</caisi:isModuleLoad>>
+    			</caisi:isModuleLoad>
     			<caisi:isModuleLoad moduleName="ticklerplus">
     				<a href="../ticklerPlus/index.jsp" title="<bean:message key="provider.appointmentProviderAdminDay.ticklerMsg"/>: <%=UtilMisc.htmlEscape(tickler_note)%>"><font color="red">!</font></a>
     			</caisi:isModuleLoad>

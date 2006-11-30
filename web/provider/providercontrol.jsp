@@ -29,8 +29,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ page  import="java.util.*,java.net.*"  errorPage="errorpage.jsp"%>
-<caisi:isModuleLoad moduleName="program"><%
 
+<caisi:isModuleLoad moduleName="caisi"><%
 	String isOscar = request.getParameter("infirmaryView_isOscar");
 	if (session.getAttribute("infirmaryView_isOscar")==null) isOscar="false";
 	if (isOscar!=null) session.setAttribute("infirmaryView_isOscar", isOscar);

@@ -3,6 +3,8 @@ package org.caisi.dao.hibernate;
 import java.util.List;
 
 import org.caisi.dao.BedProgramDao;
+import org.hibernate.Hibernate;
+import org.hibernate.SQLQuery;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class HibernateBedProgramDao extends HibernateDaoSupport implements BedProgramDao{
@@ -41,6 +43,23 @@ public class HibernateBedProgramDao extends HibernateDaoSupport implements BedPr
 		String q="SELECT p.id FROM Program p WHERE p.name = ?";
 		List rs=getProgramResultList(q,name);
 		return rs;
+	}
+	
+	public String[] getProgramInfo(int programId) {
+		String[] result = new String[3];
+		
+		SQLQuery query = getSession().createSQLQuery("SELECT name,address,phone,fax from program where program_id=" + programId);
+		query.addScalar("name", Hibernate.STRING);
+		query.addScalar("address",Hibernate.STRING);
+		query.addScalar("phone",Hibernate.STRING);
+		query.addScalar("fax",Hibernate.STRING);
+		Object[] o = (Object[])query.uniqueResult();
+		if(o != null) {
+			result[0] = new String(o[0] + "\n" + o[1]);
+			result[1] = (String)o[2];
+			result[2] = (String)o[3];
+		}
+		return result;
 	}
 
 }
