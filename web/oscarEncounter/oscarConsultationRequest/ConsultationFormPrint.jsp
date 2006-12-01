@@ -27,6 +27,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 <%@ page import="oscar.OscarProperties, oscar.oscarClinic.ClinicData, java.util.*" %>
 
@@ -311,7 +312,9 @@
                                 &nbsp;&nbsp;  <%-- blank column for spacing --%>
                             </td>
                             <td colspan="2" class="title4" id="clinicName">
-                                <b><%=clinic.getClinicName()%></b>
+                            	<c:if test="${empty infirmaryView_programAddress}">
+	                                <b><%=clinic.getClinicName()%></b>
+                                </c:if>
                             </td>
 <% if(vecAddressBillingNo != null) {%>
                             <td rowspan=3 align="right">
@@ -327,6 +330,8 @@
                             </td>
 <% } %>
                         </tr>
+                        <c:choose>
+                        <c:when test="${empty infirmaryView_programAddress}">
                         <tr>
                             <td colspan="2" class="address" id="clinicAddress">
                 <%=clinic.getClinicAddress()%>, <%=clinic.getClinicCity()%>, <%=clinic.getClinicProvince()%>  <%=clinic.getClinicPostal()%>
@@ -340,6 +345,23 @@
                                 Fax: <%=vecFaxes.size()>=1?vecFaxes.elementAt(0):clinic.getClinicFax()%>
                             </td>
                         </tr>
+                        </c:when>
+                        <c:otherwise>
+                        <tr>
+                            <td colspan="2" class="address" id="clinicAddress">
+               					<c:out value="${infirmaryView_programAddress}" escapeXml="false"/>        			
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="address" id="clinicPhone">
+                                Tel: <c:out value="${infirmaryView_programTel}"/>
+                            </td>
+                            <td class="address" id="clinicFax">
+                                Fax: <c:out value="${infirmaryView_programFax}"/>
+                            </td>
+                        </tr>
+                        </c:otherwise>
+                        </c:choose>
                     </table>
                 </td>
             </tr>

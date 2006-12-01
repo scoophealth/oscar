@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ page import="oscar.oscarProvider.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ page import="oscar.*,java.lang.*"%>
@@ -97,9 +98,20 @@ OscarProperties props = OscarProperties.getInstance();
 			 	clinicTitle += provider.getClinicCity() + "   " + provider.getClinicPostal()  ;
 			%>
 			<input type="hidden" name="doctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
-			<input type="hidden" name="clinicName" value="<%= StringEscapeUtils.escapeHtml(clinicTitle.replaceAll("(<br>)","\\\n")) %>"/>
-			<input type="hidden" name="clinicPhone" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicPhone()) %>"/>
-			<input type="hidden" name="clinicFax" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicFax()) %>"/>
+
+			<c:choose>
+				<c:when test="${empty infirmaryView_programAddress}">
+					<input type="hidden" name="clinicName" value="<%= StringEscapeUtils.escapeHtml(clinicTitle.replaceAll("(<br>)","\\\n")) %>"/>
+					<input type="hidden" name="clinicPhone" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicPhone()) %>"/>
+					<input type="hidden" name="clinicFax" value="<%= StringEscapeUtils.escapeHtml(provider.getClinicFax()) %>"/>
+				</c:when>
+				<c:otherwise>
+					<input type="hidden" name="clinicName" value="<c:out value="${infirmaryView_programAddress}"/>"/>
+					<input type="hidden" name="clinicPhone" value="<c:out value="${infirmaryView_programTel}"/>"/>
+					<input type="hidden" name="clinicFax" value="<c:out value="${infirmaryView_programFax}"/>"/>				
+				</c:otherwise>
+			</c:choose>
+
 
 			<input type="hidden" name="patientName" value="<%= StringEscapeUtils.escapeHtml(patient.getFirstName())+ " " +StringEscapeUtils.escapeHtml(patient.getSurname()) %>"/>
 			<input type="hidden" name="patientAddress" value="<%= StringEscapeUtils.escapeHtml(patient.getAddress()) %>"/>
@@ -112,12 +124,23 @@ OscarProperties props = OscarProperties.getInstance();
         </td>
         <td valign=top height="100px" id="clinicAddress">
             <b><%=doctorName %></b><br>
-            <%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
-            <%= provider.getClinicAddress() %><br>
-            <%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <%= provider.getClinicPostal() %><br>
-            Tel: <%= provider.getClinicPhone() %><br>
-            Fax: <%= provider.getClinicFax() %><br>
+            <c:choose>
+            	<c:when test="${empty infirmaryView_programAddress}">
+		            <%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %><br>
+        		    <%= provider.getClinicAddress() %><br>
+		            <%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        		    <%= provider.getClinicPostal() %><br>
+		            Tel: <%= provider.getClinicPhone() %><br>
+        		    Fax: <%= provider.getClinicFax() %><br>
+        		</c:when>
+        		<c:otherwise>
+        			<c:out value="${infirmaryView_programAddress}" escapeXml="false"/>
+        			<br/>
+        			Tel: <c:out value="${infirmaryView_programTel}"/>
+        			<br/>
+        			Fax: <c:out value="${infirmaryView_programFax}"/>
+        		</c:otherwise>
+        	</c:choose>
         </td>
     </tr>
     <tr>
