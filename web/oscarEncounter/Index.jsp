@@ -88,7 +88,7 @@ You have no rights to access the data!
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
-String hrefurl=request.getContextPath()+"/mod/caisi/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+String hrefurl=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 if (request.getParameter("casetoEncounter")==null)
 {
 	response.sendRedirect(hrefurl);
