@@ -972,7 +972,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <!--/security:oscarSec-->
 	  </security:oscarSec>
 <!-- billing code block -->
-
+<security:oscarSec roleName="<%=roleName$%>" objectName="_masterLink" rights="r">
     <% if (vLocale.getCountry().equals("BR")) {%>
     <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr','master')"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
@@ -980,7 +980,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
     <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail','master')"
     title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
-
+</security:oscarSec>
       <% if (!vLocale.getCountry().equals("BR")) { %>
 
 <!-- doctor code block -->
