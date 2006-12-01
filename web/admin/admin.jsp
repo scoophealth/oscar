@@ -251,19 +251,13 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 <% } %>
 
 <%-- -add by caisi--%>
-<%String absurl= "/" + application.getServletContextName()+"/caisicore/index.jsp"; %>
 <caisi:isModuleLoad moduleName="caisi">
-<tr bgcolor="#CCCCFF">
-      <th>
-        <p>CAISI</p>
-      </th>
-    </tr>
-    <tr bgcolor="#EEEEFF">
-      <td>
-	      <a href="#" ONCLICK ="popupPage(550,800,'<%=absurl %>');return false;" title="CAISI Admin">CAISI Admin</a>
-
-        </td>
-    </tr>
+  <div class="adminBox">
+	<h3>CAISI</h3>
+	<ul>
+	      <li><a href="#" ONCLICK ="popupPage(550,800,'../caisicore/index.jsp');return false;" title="CAISI Admin">CAISI Admin</a></li>
+	</ul>	
+  </div>
  </caisi:isModuleLoad>
  <%-- -add by caisi end--%>
 
