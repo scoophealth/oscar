@@ -114,7 +114,7 @@ public class FrmRourke2006Record extends FrmRecord {
                 + "p1_hc1w, p1_hc2w, p1_hc1m, p2_hc2m, p2_hc4m, p2_hc6m, p3_hc9m, p3_hc12m, p3_hc15m, p4_hc18m, p4_hc24m, "                
                 + "p1_wt1w, p1_wt2w, p1_wt1m, p2_wt2m, p2_wt4m, p2_wt6m, p3_wt9m, p3_wt12m, p3_wt15m, p4_wt18m, p4_wt24m, "                
                 + "p1_ht1w, p1_ht2w, p1_ht1m, p2_ht2m, p2_ht4m, p2_ht6m, p3_ht9m, p3_ht12m, p3_ht15m, p4_ht18m, p4_ht24m, "
-                + "ROUND(DATEDIFF(CURDATE(), c_birthDate)/7) AS c_Age "
+                + "ROUND((TO_DAYS(CURDATE()) - TO_DAYS(c_birthDate))/7) AS c_Age "
                 + "FROM formRourke2006 "
                 + "WHERE demographic_no = " + demographicNo + " AND ID = " + existingID;
              
