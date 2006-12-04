@@ -68,12 +68,12 @@
 
   String ptstatusexp="";
   if(request.getParameter("ptstatus")!=null) {
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
-	if(request.getParameter("ptstatus").equals("active"))   ptstatusexp=" and patient_status in ("+props.getProperty("inactive_statuses", "'AC','DE','IC', 'ID', 'MO', 'FI'")+") ";
-}else {
-	    if(request.getParameter("ptstatus").equals("active"))   ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
-}
-    if(request.getParameter("ptstatus").equals("inactive")) ptstatusexp=" and patient_status in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+	if(request.getParameter("ptstatus").equals("active")) {
+		ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";	
+	} 
+	if(request.getParameter("ptstatus").equals("inactive"))  {
+		ptstatusexp=" and patient_status in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";
+	}
   }
 
   String [][] dbQueries=new String[][] {
