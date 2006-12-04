@@ -44,6 +44,12 @@
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 %>
+
+<%
+	if(roleName$.indexOf("ER Clerk") != -1) {
+		response.sendRedirect("er_clerk.jsp");
+	}
+%>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
 <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
