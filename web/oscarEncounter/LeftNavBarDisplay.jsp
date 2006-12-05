@@ -45,7 +45,7 @@
             }
      %>
         <a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getTitle()%>">
-                               <%=StringUtils.maxLenString(item.getTitle(), 28, 25, "...")%>
+            <%=item.getTitle()%>
         </a>     
                         
       </li>
