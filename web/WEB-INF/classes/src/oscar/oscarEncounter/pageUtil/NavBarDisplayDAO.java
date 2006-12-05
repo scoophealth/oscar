@@ -237,9 +237,9 @@ public class NavBarDisplayDAO {
             Date d2 = i2.getDate();
             
             if( d1.before(d2) )
-                return -1;
-            else if( d1.after(d2) )
                 return 1;
+            else if( d1.after(d2) )
+                return -1;
             else 
                 return 0;                        
         }
