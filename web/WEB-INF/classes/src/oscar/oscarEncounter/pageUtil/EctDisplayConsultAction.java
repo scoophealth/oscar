@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import org.apache.struts.util.MessageResources;
 import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 
 /**
  *
@@ -66,6 +67,7 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                     serviceDateStr = "Error";
                 }
                 url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + (String)theRequests.ids.get(idx) + "'); return false;";
+                service = StringUtils.maxLenString(service, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                 item.setTitle(service + " " + serviceDateStr);
                 item.setURL(url);
                 Dao.addItem(item);

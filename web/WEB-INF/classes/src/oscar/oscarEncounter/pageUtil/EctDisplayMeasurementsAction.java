@@ -29,6 +29,7 @@ import oscar.oscarEncounter.oscarMeasurements.*;
 import oscar.oscarResearch.oscarDxResearch.bean.*;
 import oscar.OscarProperties;
 import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -50,7 +51,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         String url = request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do";       
         StringBuffer header = new StringBuffer("<h3><a href=\"#\" onclick=\"popupPage(600,1000,'" + winName + "','" + url + "'); return false;\">" + 
                 messages.getMessage("oscarEncounter.Index.measurements") + "</a></h3>");
-        Dao.setLeftHeading(header.toString());        
+        Dao.setLeftHeading(header.toString());         
         header = new StringBuffer("<div id=menu3 class='menu' onclick='event.cancelBubble = true;'>" +
                             "<h3 style='text-align:center'>" + messages.getMessage("oscarEncounter.LeftNavBar.InputGrps") + "</h3>");
         
@@ -58,17 +59,21 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
         ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);                            
         for (int f = 0; f < flowsheets.size();f++){
+            NavBarDisplayDAO.Item item = Dao.Item();
             String flowsheetName = (String) flowsheets.get(f);
             String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
 
             winName = flowsheetName + bean.demographicNo;
             url = "popupPage(700,1000,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=" + bean.demographicNo + "&template=" + flowsheetName + "');return false;";
-            header.append("<a href='#' class='menuItemLeft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");
-            header.append(" onclick=\"" + url + "\">" + dispname + "</a><br/>");
+            dispname = StringUtils.maxLenString(dispname, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            item.setTitle(dispname);
+            item.setURL(url);
+            Dao.addItem(item);
+            //header.append("<a href='#' class='menuItemLeft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");
+            //header.append(" onclick=\"" + url + "\">" + dispname + "</a><br/>");
 
         }
-
-
+        
         for(int j=0; j<bean.measurementGroupNames.size(); j++) {
             
             String tmp = (String)bean.measurementGroupNames.get(j);             
@@ -79,8 +84,8 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             catch( UnsupportedEncodingException e ) {
                 System.out.println("URLEncoder error " + e.getMessage());
                 winName = "measurementGroup" + bean.demographicNo;
-            }
-            url = "popupPage(500,1000,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');return false;";
+            } 
+            url = "popupPage(500,1000,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');measurementLoaded('" + winName + "');return false;";
             header.append("<a href='#' class='menuItemLeft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");
             header.append(" onclick=\"" + url + "\">" + tmp + "</a><br/>");
         }
@@ -103,7 +108,9 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
             Date date = data.getDateObservedAsDate();
             String formattedDate = DateUtils.getDate(date,dateFormat);
-            String tmp = title + "  " + data.getDataField() + " - " + formattedDate;
+            String tmp = title + "  " + data.getDataField();
+            tmp = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            tmp += " - " + formattedDate;
             item.setTitle(tmp);
             item.setDate(date);
             item.setURL("return false;");

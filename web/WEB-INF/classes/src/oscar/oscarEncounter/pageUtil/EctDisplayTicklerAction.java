@@ -28,6 +28,7 @@ package oscar.oscarEncounter.pageUtil;
  
 import oscar.oscarTickler.TicklerData;
 import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.util.MessageResources;
-import oscar.util.StringUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -81,10 +81,10 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         if( serviceDate.before(today) )
             item.setColour("FF0000");
             
-        itemHeader = StringUtils.maxLenString(rs.getString("message"), 18, 15, "...");        
+        itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                        
         itemHeader += " " + DateUtils.getDate(serviceDate,dateFormat);
-                
-        winName = StringUtils.maxLenString(rs.getString("message"), 25, 25, "");        
+        
+        winName = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         try {
             winName = URLEncoder.encode(winName, "UTF-8");
         }
@@ -99,7 +99,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
 
     }
     
-     Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
+     Dao.sortItems(NavBarDisplayDAO.DATESORT);
  }catch( Exception e ) {
      System.out.println("Error retrieving " + cmd + " : " + e.getMessage());
      e.printStackTrace();

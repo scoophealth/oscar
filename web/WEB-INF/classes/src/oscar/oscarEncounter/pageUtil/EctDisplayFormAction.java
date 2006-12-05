@@ -33,6 +33,10 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +77,12 @@ public class EctDisplayFormAction extends EctDisplayAction {
                             "<h3 style='text-align:center'>" + messages.getMessage("oscarEncounter.LeftNavBar.AddFrm") + "</h3>");
 
         StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
-        String js = "";        
+        String js = "";   
+        String dbFormat = "yy/MM/dd";        
+        String serviceDateStr;
+        StringBuffer strTitle;
+        Date date;
+        //String bgcolour = "CCFFCC";
         for( int j=0; j<forms.length; j++) {
             EctFormData.Form frm = forms[j];
             
@@ -83,6 +92,41 @@ public class EctDisplayFormAction extends EctDisplayAction {
             catch( UnsupportedEncodingException e ) {
                 System.out.println("URLEncoding error " + e.getMessage());
                 winName = "formName" + bean.demographicNo;
+            }                        
+            
+            String table = frm.getFormTable();
+            if(!table.equalsIgnoreCase("")){
+                EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(bean.demographicNo, table);
+                if(pforms.length>0) {                                           
+                    NavBarDisplayDAO.Item item = Dao.Item();                        
+                    EctFormData.PatientForm pfrm = pforms[0];
+                    
+                    DateFormat formatter = new SimpleDateFormat(dbFormat);
+                    String dateStr = pfrm.getCreated();
+                    try {
+                        date = (Date)formatter.parse(dateStr);                        
+                    }
+                    catch(ParseException ex ) {
+                        System.out.println("EctDisplayFormAction: Error creating date " + ex.getMessage());
+                        serviceDateStr = "Error";
+                        date = new Date(System.currentTimeMillis());
+                    }
+                    
+                    serviceDateStr = DateUtils.getDate(date, dateFormat);
+                    item.setDate(date);
+                    
+                    strTitle = new StringBuffer(StringUtils.maxLenString(frm.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
+                    
+                    url = new StringBuffer("popupPage(700,960,'" + winName + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");
+                    js = "autoCompList.push('" + strTitle + "(started " + serviceDateStr + ")'); autoCompleted['" + strTitle + "(started " + serviceDateStr + ")'] = \"" + url + "\";";                    
+                    javascript.append(js);                                                           
+                    ++numforms;
+                                        
+                    item.setURL(url.toString());
+                    item.setTitle(strTitle + " " + serviceDateStr);
+                    //item.setBgColour(bgcolour);
+                    Dao.addItem(item);
+                }                    
             }
             
             if( !frm.isHidden() ) {                
@@ -101,29 +145,12 @@ public class EctDisplayFormAction extends EctDisplayAction {
                 
                 ++numforms;
             }
-            
-            String table = frm.getFormTable();
-            if(!table.equalsIgnoreCase("")){
-                EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(bean.demographicNo, table);
-                if(pforms.length>0) {                                           
-                    NavBarDisplayDAO.Item item = Dao.Item();                        
-                    EctFormData.PatientForm pfrm = pforms[0];
-                    
-                    url = new StringBuffer("popupPage(700,960,'" + winName + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");
-                    js = "autoCompList.push('" + frm.getFormName() + "(started " + pfrm.getCreated() + ")'); autoCompleted['" + frm.getFormName() + "(started " + pfrm.getCreated() + ")'] = \"" + url + "\";";                    
-                    javascript.append(js);                                                           
-                    ++numforms;
-                                        
-                    item.setURL(url.toString());
-                    item.setTitle(frm.getFormName());
-                    Dao.addItem(item);
-                }                    
-            }                                
         }
-        heading.append("</div><div id='menuTitle1' style=\"display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('1', event);\">+</a></h3></div>");
+        heading.append("</div><div id='menuTitle1' style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('1', event);\">+</a></h3></div>");
         Dao.setRightHeading(heading.toString());
         javascript.append("</script>");
         Dao.setJavaScript(javascript.toString());
+        Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
     }
     catch(SQLException e ) {
         System.out.println("EctDisplayFormAction SQL ERROR: " + e.getMessage());                    

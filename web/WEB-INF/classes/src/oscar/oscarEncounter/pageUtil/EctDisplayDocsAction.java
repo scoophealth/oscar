@@ -75,7 +75,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
             dispStatus="html";
                     
         String dispDocNo    = curDoc.getDocId();
-        String dispDesc     = StringUtils.maxLenString(curDoc.getDescription(), 16, 13, "...");
+        String dispDesc     = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
         
         DateFormat formatter = new SimpleDateFormat(dbFormat);
         String dateStr = curDoc.getObservationDate();

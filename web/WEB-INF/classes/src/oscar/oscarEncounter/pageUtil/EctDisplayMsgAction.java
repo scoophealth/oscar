@@ -27,10 +27,16 @@ package oscar.oscarEncounter.pageUtil;
 
 import oscar.oscarMessenger.util.MsgDemoMap;
 import oscar.oscarMessenger.data.MsgMessageData;
+import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Vector;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
@@ -61,21 +67,32 @@ public class EctDisplayMsgAction extends EctDisplayAction {
             String msgId;
             String msgSubject;
             String msgDate;
+            String dbFormat = "yyyy-MM-dd";
             for( int i=0; i<msgVector.size(); i++) {    
                 msgId = (String) msgVector.elementAt(i);
                 msgData = new MsgMessageData(msgId);
-                msgSubject = msgData.getSubject();                        
+                msgSubject = StringUtils.maxLenString(msgData.getSubject(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+                msgDate = msgData.getDate();
                 NavBarDisplayDAO.Item item = Dao.Item();
                 try {
                     winName = URLEncoder.encode(msgSubject, "UTF-8");
+                    DateFormat formatter = new SimpleDateFormat(dbFormat);                                        
+                    Date date = (Date)formatter.parse(msgDate);
+                    msgDate = DateUtils.getDate(date, dateFormat);
+                    item.setDate(date);                                                            
+                }
+                catch(ParseException e ) {
+                        System.out.println("EctDisplayMsgAction: Error creating date " + e.getMessage());
+                        msgDate = "Error";
                 }
                 catch( UnsupportedEncodingException e ) {
                     System.out.println("URLEncoder Error: " + e.getMessage());
                     winName = "msgView" + bean.demographicNo;
                 }
+                
                 url = "popupPage(600,900,'" + winName + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
                 item.setURL(url);                
-                item.setTitle(msgSubject);
+                item.setTitle(msgSubject + " " + msgDate);
                 Dao.addItem(item);
             }
    

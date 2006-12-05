@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
 import oscar.eform.*;
 import oscar.util.DateUtils;
+import oscar.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -96,7 +97,8 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             javascript.append(js);
             url += " return false;";
             item.setURL(url);
-            item.setTitle((String)curform.get("formName") + " " + formattedDate);
+            String strTitle = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + formattedDate;
+            item.setTitle(strTitle);
             Dao.addItem(item);
         }
                         

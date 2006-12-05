@@ -27,14 +27,20 @@ package oscar.oscarEncounter.pageUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Vector;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import org.apache.struts.util.MessageResources;
 import oscar.oscarResearch.oscarDxResearch.bean.*;
+import oscar.util.StringUtils;
+import oscar.util.DateUtils;
 
 /**
  *
  * retrieves info to display Disease entries for demographic
  */
-public class EctDisplayDxAction extends EctDisplayAction {
+public class EctDisplayDxAction extends EctDisplayAction {    
     private String cmd = "Dx";
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
@@ -43,16 +49,37 @@ public class EctDisplayDxAction extends EctDisplayAction {
         String header = "<h3><a href=\"#\" onclick=\"" + url + "\">" + messages.getMessage("global.disease") + "</a></h3>";
         Dao.setLeftHeading(header);
         
+        String dbFormat = "yyyy-MM-dd";
+        String serviceDateStr;
+        Date date;
         dxResearchBeanHandler hd = new dxResearchBeanHandler(bean.demographicNo);
         Vector diseases = hd.getDxResearchBeanVector();
+        
         for(int idx = 0; idx < diseases.size(); ++idx ) {
             NavBarDisplayDAO.Item item = Dao.Item();
             dxResearchBean dxBean = (dxResearchBean) diseases.get(idx);
-            item.setTitle(dxBean.getDescription());
+            
+            DateFormat formatter = new SimpleDateFormat(dbFormat);
+            String dateStr = dxBean.getEnd_date();
+                         
+            try {
+                date = (Date)formatter.parse(dateStr);
+                serviceDateStr = DateUtils.getDate(date, dateFormat);                                        
+            }
+            catch(ParseException ex ) {
+                System.out.println("EctDisplayDxAction: Error creating date " + ex.getMessage());
+                serviceDateStr = "Error";
+                date = new Date(System.currentTimeMillis());
+            }
+            
+            item.setDate(date);
+            String strTitle = StringUtils.maxLenString(dxBean.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+            
+            item.setTitle(strTitle + " " + serviceDateStr);
             item.setURL("return false;");
             Dao.addItem(item);
         }
-        
+        Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
         return true;
     }
     

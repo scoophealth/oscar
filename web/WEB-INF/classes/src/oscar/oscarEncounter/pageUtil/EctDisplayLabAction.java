@@ -84,13 +84,13 @@ public class EctDisplayLabAction extends EctDisplayAction {
             func = new StringBuffer("popupPage(700,960,'");
             
             if ( result.isMDS() ){ 
-                labDisplayName = result.getDiscipline()+" "+formattedDate;                
+                labDisplayName = result.getDiscipline();               
                 url = request.getContextPath() + "/oscarMDS/SegmentDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID+"&status="+result.getReportStatus();
             }else if (result.isCML()){ 
-                labDisplayName = result.getDiscipline()+" "+formattedDate;
+                labDisplayName = result.getDiscipline();
                 url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;                 
             }else {
-                labDisplayName = result.getDiscipline()+" "+formattedDate;               
+                labDisplayName = result.getDiscipline();
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                
             }
 
@@ -101,7 +101,8 @@ public class EctDisplayLabAction extends EctDisplayAction {
                 winName = "viewLab" + bean.demographicNo;
                 System.out.println("URLEncoder Error: " + e.getMessage());
             }
-                        
+             
+            labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) +" "+formattedDate;
             func.append(winName + "','" + url + "'); return false;");            
             item.setTitle(labDisplayName);
             item.setURL(func.toString());
