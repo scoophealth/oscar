@@ -3713,7 +3713,7 @@ CREATE TABLE `formRourke2006` (
   `p1_problems1m` text,
   `p1_hepatitisVaccine1w` tinyint(1) default NULL,
   `p1_hepatitisVaccine1m` tinyint(1) default NULL,
-  `p1_signature` varchar(250) default NULL,
+  `p1_signature2w` varchar(250) default NULL,
   `p2_date2m` date default NULL,
   `p2_date4m` date default NULL,
   `p2_date6m` date default NULL,
@@ -4208,6 +4208,9 @@ CREATE TABLE `formRourke2006` (
   `p4_signature18m` varchar(250) default NULL,
   `p4_signature24m` varchar(250) default NULL,
   `p4_signature48m` varchar(250) default NULL,
+  `p1_signature1w` varchar(250) default NULL,
+  `p1_signature1m` varchar(250) default NULL,
+  `p2_signature6m` varchar(250) default NULL,
   PRIMARY KEY  (`ID`)
 ) TYPE=MyISAM;
 
