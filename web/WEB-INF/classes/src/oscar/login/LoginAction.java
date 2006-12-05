@@ -124,7 +124,8 @@ public final class LoginAction
       session.setAttribute("userlastname", strAuth[2]);
       session.setAttribute("userprofession", viewType);
       session.setAttribute("userrole", strAuth[4]);
-
+      session.setAttribute("oscar_context_path", request.getContextPath());
+      
       if (viewType.equalsIgnoreCase("receptionist") ||
           viewType.equalsIgnoreCase("doctor")) {
         //get preferences from preference table
