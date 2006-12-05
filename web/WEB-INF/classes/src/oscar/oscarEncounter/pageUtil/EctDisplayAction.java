@@ -42,6 +42,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class EctDisplayAction extends Action {
     private static Hashtable Actions = null;
     protected static String dateFormat = "dd-MMM-yyyy";
+    protected static final String ELLIPSES = "...";
+    protected static final int MAX_LEN_TITLE = 16;
+    protected static final int CROP_LEN_TITLE = 13;
     
     public EctDisplayAction() {
         super();
