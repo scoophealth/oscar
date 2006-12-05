@@ -255,9 +255,20 @@
 		//}
 	}
     }
+    
+    //Remove date from textbox
+    function resetDate(textbox) {
+        if( textbox.value.length > 0 )
+            textbox.value = "";
+        else {
+            var date = new Date();
+            var mth = date.getMonth() + 1;
+            textbox.value = date.getDate() + "/" + mth + "/" + date.getFullYear();
+        }
+    }
 
 </script>
-
+ 
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <div id="object1" style="position:absolute; background-color:FFFFDD;color:black;border-color:black;border-width:20; left:25px; top:-100px; z-index:+1" onmouseover="overdiv=1;"  onmouseout="overdiv=0; setTimeout('hideLayer()',1000)">
 pop up description layer
@@ -359,9 +370,9 @@ pop up description layer
     </tr>
     <tr align="center">
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDate"/></a></td>
-        <td colspan="3"><input readonly type="text" id="p1_date1w" name="p1_date1w" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1w", ""))%>" /> <img src="../images/cal.gif" id="p1_date1w_cal"></td>
-        <td colspan="3"><input readonly type="text" id="p1_date2w" name="p1_date2w" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date2w", ""))%>" /> <img src="../images/cal.gif" id="p1_date2w_cal"></td>
-        <td colspan="3"><input readonly type="text" id="p1_date1m" name="p1_date1m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1m", ""))%>" /> <img src="../images/cal.gif" id="p1_date1m_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p1_date1w" name="p1_date1w" size="10" ondblclick="resetDate(this)" "value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1w", ""))%>" /> <img src="../images/cal.gif" id="p1_date1w_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p1_date2w" name="p1_date2w" size="10" ondblclick="resetDate(this)" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date2w", ""))%>" /> <img src="../images/cal.gif" id="p1_date2w_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p1_date1m" name="p1_date1m" size="10" ondblclick="resetDate(this)" value="<%=UtilMisc.htmlEscape(props.getProperty("p1_date1m", ""))%>" /> <img src="../images/cal.gif" id="p1_date1m_cal"></td>
     </tr>
     <tr align="center">
         <td class="column" rowspan="2"><a><bean:message key="oscarEncounter.formRourke1.btnGrowth"/>*<br/><bean:message key="oscarEncounter.formRourke2006_1.btnGrowthmsg"/></a></td>
@@ -870,13 +881,13 @@ pop up description layer
     <tr>
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.formSignature"/></a></td>
         <td colspan="3">
-            &nbsp;<!--<input type="text" class="wide" style="width:100%" name="p1_signature1w" value="<%= props.getProperty("p1_signature1w", "") %>" />-->
+            <input type="text" class="wide" style="width:100%" name="p1_signature1w" value="<%= props.getProperty("p1_signature1w", "") %>" />
         </td>
         <td colspan="3">
-            <input type="text" class="wide" maxlength="42" style="width:100%" name="p1_signature" value="<%= props.getProperty("p1_signature", "") %>" />
+            <input type="text" class="wide" maxlength="42" style="width:100%" name="p1_signature2w" value="<%= props.getProperty("p1_signature2w", "") %>" />
         </td>
         <td colspan="3">
-            &nbsp;<!-- <input type="text" class="wide" style="width:100%" name="p1_signature1m" value="<%= props.getProperty("p1_signature1m", "") %>" />-->
+            <input type="text" class="wide" style="width:100%" name="p1_signature1m" value="<%= props.getProperty("p1_signature1m", "") %>" />
         </td>
     </tr>
 
