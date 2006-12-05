@@ -876,7 +876,7 @@ border-right: 2px solid #cfcfcf;
             <table class="LeftTable">
             <caisi:isModuleLoad moduleName="program">
             	<plugin:hideWhenCompExists componentName="caisi" reverse="true">
-       <%String hrefurl2=request.getContextPath()+"/mod/caisi/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+       <%String hrefurl2=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 %>
         		<tr>
         			<td>
