@@ -265,6 +265,17 @@
 		//}
 	}
     }
+    
+    //Remove date from textbox
+    function resetDate(textbox) {
+        if( textbox.value.length > 0 )
+            textbox.value = "";
+        else {
+            var date = new Date();
+            var mth = date.getMonth() + 1;
+            textbox.value = date.getDate() + "/" + mth + "/" + date.getFullYear();
+        }
+    }
 
 </script>
 
@@ -360,9 +371,9 @@ pop up description layer
     </tr>
     <tr align="center">
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDate"/></a></td>
-        <td colspan="3"><input readonly type="text" id="p2_date2m" name="p2_date2m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p2_date2m", ""))%>" /> <img src="../images/cal.gif" id="p2_date2m_cal"></td>
-        <td colspan="3"><input readonly type="text" id="p2_date4m" name="p2_date4m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p2_date4m", ""))%>" /> <img src="../images/cal.gif" id="p2_date4m_cal"></td>
-        <td colspan="3"><input readonly type="text" id="p2_date6m" name="p2_date6m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p2_date6m", ""))%>" /> <img src="../images/cal.gif" id="p2_date6m_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p2_date2m" ondblclick="resetDate(this)" name="p2_date2m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p2_date2m", ""))%>" /> <img src="../images/cal.gif" id="p2_date2m_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p2_date4m" ondblclick="resetDate(this)" name="p2_date4m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p2_date4m", ""))%>" /> <img src="../images/cal.gif" id="p2_date4m_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p2_date6m" ondblclick="resetDate(this)" name="p2_date6m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p2_date6m", ""))%>" /> <img src="../images/cal.gif" id="p2_date6m_cal"></td>
     </tr>
     <tr align="center">
         <td class="column" rowspan="2"><a><bean:message key="oscarEncounter.formRourke1.btnGrowth"/>*</td>
@@ -978,7 +989,7 @@ pop up description layer
             <input type="text" class="wide" maxlength="42" style="width:100%" name="p2_signature4m" value="<%= props.getProperty("p2_signature4m", "") %>" />
         </td>
         <td colspan="3">
-            &nbsp;<!-- <input type="text" class="wide" style="width:100%" name="p1_signature1m" value="<%= props.getProperty("p1_signature1m", "") %>" />-->
+            <input type="text" class="wide" style="width:100%" name="p2_signature6m" value="<%= props.getProperty("p2_signature6m", "") %>" />
         </td>
     </tr>
 
