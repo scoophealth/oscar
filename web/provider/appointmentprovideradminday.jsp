@@ -625,7 +625,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 <logic:notEqual name="infirmaryView_isOscar" value="false">
 <%
-session.setAttribute("case_program_id", null);
+//session.setAttribute("case_program_id", null);
 %>
   <a href=# onClick = "popupPage(300,450,'providerchangemygroup.jsp?mygroup_no=<%=mygroupno%>' );return false;" title="<bean:message key="provider.appointmentProviderAdminDay.chGrpNo"/>"><bean:message key="global.group"/>:</a>
   <select name="mygroup_no" onChange="changeGroup(this)">
