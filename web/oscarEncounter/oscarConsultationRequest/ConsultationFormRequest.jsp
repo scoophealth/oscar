@@ -28,6 +28,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@page import="java.util.ArrayList, oscar.dms.*, oscar.oscarEncounter.pageUtil.*,oscar.oscarEncounter.data.*, oscar.OscarProperties, oscar.util.StringUtils, oscar.oscarLab.ca.on.*"%>
 <%
     if(session.getAttribute("user") == null) response.sendRedirect("../../logout.jsp");
@@ -518,7 +519,7 @@ function updateAttached() {
 function fetchAttached() {
     var updateElem = 'tdAttachedDocs';
     var params = "demo=<%=demo%>&requestId=<%=requestId%>";
-    var url = "http://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/displayAttachedFiles.jsp";
+    var url = "<rewrite:reWrite jspPage="displayAttachedFiles.jsp" />";
 
     var objAjax = new Ajax.Request (                
                 url,
@@ -701,7 +702,7 @@ function fetchAttached() {
                                 <td class="stat">&nbsp;</td>
                             </tr>                            
                             <tr>
-                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('http://<%=request.getServerName() %>:<%=request.getServerPort()%><%=request.getContextPath()%>/oscarEncounter/oscarConsultationRequest/attachConsultation.jsp?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
+                                <td style="text-align:center" class="stat"><a href="#" onclick="popup('<rewrite:reWrite jspPage="attachConsultation.jsp"/>?provNo=<%=consultUtil.providerNo%>&demo=<%=demo%>&requestId=<%=requestId%>');return false;"><bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.attachDoc"/></a></td>
                             </tr>
                             <tr>
                                 <td style="text-align:center">Currently Attached Files:</td>
