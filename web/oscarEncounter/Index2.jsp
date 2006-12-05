@@ -24,6 +24,8 @@
  * Ontario, Canada
  */
 --%>
+<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
     long startTime = System.currentTimeMillis();
@@ -68,7 +70,7 @@ You have no rights to access the data!
 
 <%
 	String ip = request.getRemoteAddr();
-//	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
 %>
 <%
 
@@ -82,6 +84,25 @@ You have no rights to access the data!
     return;
   }
 %>
+<!-- add by caisi  --> 
+
+<caisi:isModuleLoad moduleName="program">
+<plugin:hideWhenCompExists componentName="caisi" reverse="true">
+<%
+session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
+session.setAttribute("casemgmt_oscar_bean", bean);
+session.setAttribute("casemgmt_bean_flag", "true");
+String hrefurl=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+if (request.getParameter("casetoEncounter")==null)
+{
+	response.sendRedirect(hrefurl);
+    return;
+}
+%>
+
+</plugin:hideWhenCompExists>
+</caisi:isModuleLoad>
+<!-- add by caisi end--> 
 
 <%
   //need these variables for the forms
@@ -97,13 +118,6 @@ You have no rights to access the data!
   String providerName = bean.userName;
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
-
-  CommonLabResultData comLab = new CommonLabResultData();
-  ArrayList labs = comLab.populateLabResultsData("",demoNo, "", "","","U");
-  Collections.sort(labs);
-
-  //MDSResultsData labResults =  new MDSResultsData();
-  //labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
 
   String province = ((String ) oscarVariables.getProperty("billregion","")).trim().toUpperCase();
   Properties windowSizes = oscar.oscarEncounter.pageUtil.EctWindowSizes.getWindowSizes(provNo);
@@ -169,9 +183,7 @@ You have no rights to access the data!
 </style>
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
-<!-- <link rel="stylesheet" type="text/css" href="../share/css/dhtmlXMenu_xp.css"> -->
 
-<!-- link href="../share/css/script.aculo.us.css" media="screen" rel="Stylesheet" type="text/css" / -->
   <script src="../share/javascript/prototype.js" type="text/javascript"></script>
   <script src="../share/javascript/effects.js" type="text/javascript"></script>
   <script src="../share/javascript/dragdrop.js" type="text/javascript"></script>
@@ -180,8 +192,6 @@ You have no rights to access the data!
   <%-- for popup menu of forms --%>
   <script src="../share/javascript/popupmenu.js" type="text/javascript"></script>
   <script src="../share/javascript/menutility.js" type="text/javascript"></script>
-
-<!--<script type="application/x-javascript" language="javascript" src="/javascript/sizing.js"></script>-->
 
 <script type="text/javascript" language=javascript>
     var X       = 10;
@@ -199,6 +209,7 @@ You have no rights to access the data!
     var textValue1;
     var textValue2;
     var textValue3;
+    var measurementWindows = new Array();
     var autoCompleted = new Array();
     var autoCompList = new Array();
    <% 
@@ -236,35 +247,7 @@ You have no rights to access the data!
 		range.select();
 	}
     }
-    <%--
-    function writeToEncounterNote(res){
-        text = res.responseText;
-       //paste to encounter window       
-       //$("templatejs").update(res.responseText);
-       //alert("Response: " + res.responseText); 
-       text = text.replace(/\\u000A/g, "\u000A");
-        text = text.replace(/\\u000D/g, "\u000D");
-        text = text.replace(/\\u003E/g, "\u003E");
-        text = text.replace(/\\u003C/g, "\u003C");
-        text = text.replace(/\\u005C/g, "\u005C");
-        text = text.replace(/\\u0022/g, "\u0022");
-        text = text.replace(/\\u0027/g, "\u0027");      
-       //alert("js text: " + text);
-       
-        var curPos = document.encForm.enTextarea.value.length + text.indexOf('\n') +2;
-        document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
-        setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
-        document.encForm.enTextarea.focus();
-       
-      // alert(curPos);
-       //alert("len :"+document.encForm.enTextarea.value.length+" first newline "+res.responseText.indexOf('\n'));
-      // document.encForm.enTextarea.value = document.encForm.enTextarea.value + "\n\n" + text;
-       //setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
-       //document.encForm.enTextarea.focus();
-       setCaretPosition(document.encForm.enTextarea,curPos);
-       
-    }
-    --%>
+
     function writeToEncounterNote(request) {
         //$("templatejs").update(request.responseText);
         var text = request.responseText;
@@ -301,7 +284,7 @@ You have no rights to access the data!
         setCaretPosition(document.encForm.enTextarea,curPos);
     }
     
-    function ajaxInsertTemplate(varpage) { //open a new popup window
+    function ajaxInsertTemplate(varpage) { //fetch template
         if(varpage!= 'null'){                  
           var page = "<rewrite:reWrite jspPage="InsertTemplate.do"/>";
           var params = "templateName=" + varpage + "&version=2";
@@ -367,14 +350,13 @@ You have no rights to access the data!
       var page = "" + varpage;
       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
             //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
-            openWindows.push(window.open(page, name, windowprops));
+            openWindows[name] = window.open(page, name, windowprops);
             
-            if (openWindows[curWin] != null) {        
-                if (openWindows[curWin].opener == null) {
-                    openWindows[curWin].opener = self;
+            if (openWindows[name] != null) {        
+                if (openWindows[name].opener == null) {
+                    openWindows[name].opener = self;
                     alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-                }                
-                ++curWin;                
+                }                                     
             }            
     }
     function urlencode(str) {
@@ -574,6 +556,7 @@ function presBoxFull(){
 if (!document.all) document.captureEvents(Event.MOUSEUP);
 document.onmouseup = getActiveText;
 
+
 function getActiveText(e) {
 
   //text = (document.all) ? document.selection.createRange().text : document.getSelection();
@@ -603,7 +586,7 @@ function getActiveText(e) {
   }
   return true;
 }
-
+<%--
 function tryAnother(){
 ////
     var txt = "null";
@@ -633,6 +616,18 @@ function goToSearch() {
         var x = window.confirm("<bean:message key="oscarEncounter.Index.goToSearchConfirm"/>");
         if(x)
         {  location = "./search/DemographicSearch.jsp";}
+}
+--%>
+
+function measurementLoaded(name) {
+    measurementWindows.push(openWindows[name]);
+}
+
+function onClosing() {    
+    for( var idx = 0; idx < measurementWindows.length; ++idx ) {
+        if( !measurementWindows[idx].closed )
+            measurementWindows[idx].parentChanged = true;
+    }
 }
 
 function showMenu(menuNumber, eventObj) {
@@ -959,7 +954,7 @@ white-space: nowrap;
 </style>
 </head>
 
-<body  onload="javascript:loader();"  topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
+<body  onload="javascript:loader();" onunload="onClosing();" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
 
 <html:errors/>
 <div id="templatejs" style="display:none"></div>
@@ -1004,13 +999,23 @@ white-space: nowrap;
             </td>
     </tr>
     <tr style="height:100%">
-        <td style="width: 15%; border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">                               
+        <td style="width: 15%; border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <div id="leftNavbar" style="height:100%; width:100%;">
-                
+                    <caisi:isModuleLoad moduleName="program">
+                        <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+                            <%String hrefurl2=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;%>
+        			<a href="<%=hrefurl2%>">Case Management Encounter</a>
+        		</plugin:hideWhenCompExists>
+                    </caisi:isModuleLoad>
             </div>
         </td>
         <td valign="top">
         <form name="encForm" action="SaveEncounter2.do" method="POST">
+            <caisi:isModuleLoad moduleName="program">
+                    <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+                        <input type="hidden" name="casetoEncounter" value="true">
+                    </plugin:hideWhenCompExists>
+		</caisi:isModuleLoad>
             <table  name="encounterTableRightCol" >
     <!-- social history row --><!-- start new rows here -->
                 <tr>
