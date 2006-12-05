@@ -368,7 +368,7 @@ String regionalIdentifier="";
                    }
                 }
                 
-                var findUnitRegExp = /(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP)/;                
+                var findUnitRegExp = /(PO|SL|IM|SC|PATCH|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/;                
                 var findU = findUnitRegExp.exec(betweenFirstAndSecondDigit);
                 if (findU){
                   //todo make it like !findU
@@ -387,7 +387,7 @@ String regionalIdentifier="";
                 }
                 
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(Tabs|mL|Squirts|gm|mg|µg|Drops|Patch|Puffs)/,frm.unit.options[frm.unit.selectedIndex].text);
-                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP)/,frm.route.options[frm.route.selectedIndex].text);
+                betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(PO|SL|IM|SC|TOP.|INH|SUPP|O.D.|O.S.|O.U.)/,frm.route.options[frm.route.selectedIndex].text);
                 betweenFirstAndSecondDigit = betweenFirstAndSecondDigit.replace(/(OD|BID|TID|QID|Q1H|Q2H|Q1-2H|Q3-4H|Q4H|Q4-6H|Q6H|Q8H|Q12H|QAM|QPM|QHS|Q1Week|Q2Week|Q1Month|Q3Month)/,frm.frequencyCode.value);                                    
                                                                 
                 //Replace Days Weeks or Months
@@ -1023,7 +1023,11 @@ int i;
                                         <html:option value="SC">SC</html:option>                                        
                                         <html:option value="TOP">TOP.</html:option>
                                         <html:option value="INH">INH</html:option>                                        
-                                        <html:option value="SUPP">SUPP</html:option>                       
+                                        <html:option value="SUPP">SUPP</html:option>  
+                                        <html:option value="O.D.">O.D.</html:option> 
+                                        <html:option value="O.S.">O.S.</html:option> 
+                                        <html:option value="O.U.">O.U.</html:option> 
+                                        
                                         <html:option value=""></html:option>
                                     </html:select>
                                     
