@@ -256,6 +256,17 @@
 		//}
 	}
     }
+    
+    //Remove date from textbox
+    function resetDate(textbox) {
+        if( textbox.value.length > 0 )
+            textbox.value = "";
+        else {
+            var date = new Date();
+            var mth = date.getMonth() + 1;
+            textbox.value = date.getDate() + "/" + mth + "/" + date.getFullYear();
+        }
+    }
 
 </script>
 
@@ -351,9 +362,9 @@ pop up description layer
     </tr>
     <tr align="center">
         <td class="column"><a><bean:message key="oscarEncounter.formRourke1.msgDate"/></a></td>
-        <td colspan="3"><input readonly type="text" id="p4_date18m" name="p4_date18m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date18m", ""))%>" /> <img src="../images/cal.gif" id="p4_date18m_cal"></td>
-        <td colspan="3"><input readonly type="text" id="p4_date24m" name="p4_date24m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date24m", ""))%>" /> <img src="../images/cal.gif" id="p4_date24m_cal"></td>
-        <td colspan="2"><input readonly type="text" id="p4_date48m" name="p4_date48m" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date48m", ""))%>" /> <img src="../images/cal.gif" id="p4_date48m_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p4_date18m" name="p4_date18m" ondblclick="resetDate(this)" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date18m", ""))%>" /> <img src="../images/cal.gif" id="p4_date18m_cal"></td>
+        <td colspan="3"><input readonly type="text" id="p4_date24m" name="p4_date24m" ondblclick="resetDate(this)" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date24m", ""))%>" /> <img src="../images/cal.gif" id="p4_date24m_cal"></td>
+        <td colspan="2"><input readonly type="text" id="p4_date48m" name="p4_date48m" ondblclick="resetDate(this)" size="10" value="<%=UtilMisc.htmlEscape(props.getProperty("p4_date48m", ""))%>" /> <img src="../images/cal.gif" id="p4_date48m_cal"></td>
     </tr>
     <tr align="center">
         <td class="column" rowspan="2"><a><bean:message key="oscarEncounter.formRourke1.btnGrowth"/>*</td>
