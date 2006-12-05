@@ -25,13 +25,13 @@ package oscar.eform;
 
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
+import oscar.util.UtilMisc;
+import oscar.OscarProperties;
+import oscar.eform.data.*;
 import java.sql.*;
 import java.io.*;
 import java.util.*;
-import oscar.util.UtilMisc;
-import oscar.util.UtilDateUtilities;
-import oscar.OscarProperties;
-import oscar.eform.data.*;
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class EFormUtil {
     //for sorting....
@@ -91,10 +91,16 @@ public class EFormUtil {
    }
    
    public static ArrayList listImages() {
-       String imagePath = OscarProperties.getInstance().getProperty("eform_image");
+       String imagePath = OscarProperties.getInstance().getProperty("eform_image");       
        System.out.println("Img Path: " + imagePath);
        File dir = new File(imagePath);
-       ArrayList fileList = new ArrayList(Arrays.asList(dir.list()));
+       String[] files = dir.list();
+       ArrayList fileList;
+       if( files != null )
+            fileList = new ArrayList(Arrays.asList(files));
+       else
+            fileList = new ArrayList();
+       
        return fileList;
    }
    
@@ -280,10 +286,10 @@ public class EFormUtil {
        //Adds an eform to the patient
        //open own connection - must be same connection for last_insert_id
        String sql = "INSERT INTO eform_data (fid, form_name, subject, demographic_no, status, form_date, form_time, form_provider, form_data)" +
-       "VALUES ('" + eForm.getFid() + "', '" + eForm.getFormName() + "', '" + eForm.getFormSubject() +
+       "VALUES ('" + eForm.getFid() + "', '" + eForm.getFormName() + "', '" + StringEscapeUtils.escapeSql(eForm.getFormSubject()) +
                "', '" + eForm.getDemographicNo() + "', 1, '" + eForm.getFormDate() + "', '" + eForm.getFormTime() + "', '" + eForm.getProviderNo() +
                "', '" + UtilMisc.charEscape(eForm.getFormHtml(), '\'') + "')";
-       try {
+       try {           
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
            sql = "SELECT LAST_INSERT_ID()";
