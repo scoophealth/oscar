@@ -223,10 +223,12 @@ public class FrmPDFServlet extends HttpServlet {
             document.open();
             
             // create a reader for a certain document
-            String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + template;            
+            //String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + template;            
+            String propFilename = oscar.OscarProperties.getInstance().getProperty("pdfFORMDIR", "") + "/" + template;
             PdfReader reader = null;
             try {
                 reader = new PdfReader(propFilename);
+                System.out.println("Found template at " + propFilename);
             } catch (Exception dex) {
                 System.out.println("change path to inside oscar from :" + propFilename);                 
                 reader = new PdfReader("/oscar/form/prop/" + template);
@@ -511,7 +513,8 @@ public class FrmPDFServlet extends HttpServlet {
     
     protected Properties getCfgProp(String cfgFilename) {
         Properties ret = new Properties();
-        String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + cfgFilename;
+        //String propFilename = "../../OscarDocument/" + getProjectName() + "/form/" + cfgFilename;
+        String propFilename = oscar.OscarProperties.getInstance().getProperty("pdfFORMDIR", "") + "/" + cfgFilename;
         
         try {
             System.out.println("1Looking for the prop file! " + propFilename);
