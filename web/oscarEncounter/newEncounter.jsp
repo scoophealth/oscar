@@ -25,7 +25,7 @@
         
             
             try {
-                String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no";
+                String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs = db.GetSQL(sql);                            
                 
@@ -59,6 +59,8 @@
                 newDocArr.clear();
             else
                 newDocArr = new ArrayList(Arrays.asList(encTesters));
+            
+            Collections.sort(newDocArr);
         
             request.getSession().getServletContext().setAttribute("newDocArr", newDocArr);
         
