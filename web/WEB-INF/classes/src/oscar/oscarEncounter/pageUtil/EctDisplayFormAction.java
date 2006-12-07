@@ -28,7 +28,6 @@ package oscar.oscarEncounter.pageUtil;
 import oscar.util.*;
 import oscar.oscarEncounter.data.*;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -82,17 +81,11 @@ public class EctDisplayFormAction extends EctDisplayAction {
         String serviceDateStr;
         StringBuffer strTitle;
         Date date;
+        String key;
         //String bgcolour = "CCFFCC";
+        int hash;
         for( int j=0; j<forms.length; j++) {
-            EctFormData.Form frm = forms[j];
-            
-            try {
-                winName = URLEncoder.encode(frm.getFormName(), "UTF-8") + bean.demographicNo;
-            }
-            catch( UnsupportedEncodingException e ) {
-                System.out.println("URLEncoding error " + e.getMessage());
-                winName = "formName" + bean.demographicNo;
-            }                        
+            EctFormData.Form frm = forms[j];                                              
             
             String table = frm.getFormTable();
             if(!table.equalsIgnoreCase("")){
@@ -117,8 +110,12 @@ public class EctDisplayFormAction extends EctDisplayAction {
                     
                     strTitle = new StringBuffer(StringUtils.maxLenString(frm.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
                     
-                    url = new StringBuffer("popupPage(700,960,'" + winName + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");
-                    js = "autoCompList.push('" + strTitle + "(started " + serviceDateStr + ")'); autoCompleted['" + strTitle + "(started " + serviceDateStr + ")'] = \"" + url + "\";";                    
+                    hash = winName.hashCode();
+                    hash = hash < 0 ? hash * -1 : hash;
+                    url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");
+                    key = strTitle + "(started " + serviceDateStr + ")";
+                    key = StringEscapeUtils.escapeJavaScript(key);
+                    js = "autoCompList.push('" + key + "'); autoCompleted['" + key + "'] = \"" + url + "\";";                    
                     javascript.append(js);                                                           
                     ++numforms;
                                         
@@ -137,8 +134,12 @@ public class EctDisplayFormAction extends EctDisplayAction {
                     heading.append("menuItemleft' ");
                 
                 heading.append("onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");                
-                url = new StringBuffer("popupPage(700,960,'" + winName + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "');");
-                js = "autoCompList.push('" + frm.getFormName() + " (new)'); autoCompleted['" + frm.getFormName() + " (new)'] = \"" + url + "\";";                    
+                hash = winName.hashCode();
+                hash = hash < 0 ? hash * -1 : hash;
+                url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "');");
+                key = frm.getFormName() + " (new)";
+                key = StringEscapeUtils.escapeJavaScript(key);
+                js = "autoCompList.push('" + key + "'); autoCompleted['" + key + "'] = \"" + url + "\";";                    
                 javascript.append(js);                    
                 heading.append("onclick=\"" + url + " return false;\">" + frm.getFormName() + "</a>");                
                 heading.append("<br/>");

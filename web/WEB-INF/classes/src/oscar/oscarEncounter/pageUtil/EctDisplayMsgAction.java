@@ -30,7 +30,6 @@ import oscar.oscarMessenger.data.MsgMessageData;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Vector;
 import java.util.Date;
@@ -40,6 +39,7 @@ import java.text.ParseException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
+import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -68,14 +68,14 @@ public class EctDisplayMsgAction extends EctDisplayAction {
             String msgSubject;
             String msgDate;
             String dbFormat = "yyyy-MM-dd";
+            int hash;
             for( int i=0; i<msgVector.size(); i++) {    
                 msgId = (String) msgVector.elementAt(i);
                 msgData = new MsgMessageData(msgId);
                 msgSubject = StringUtils.maxLenString(msgData.getSubject(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                 msgDate = msgData.getDate();
                 NavBarDisplayDAO.Item item = Dao.Item();
-                try {
-                    winName = URLEncoder.encode(msgSubject, "UTF-8");
+                try {                 
                     DateFormat formatter = new SimpleDateFormat(dbFormat);                                        
                     Date date = (Date)formatter.parse(msgDate);
                     msgDate = DateUtils.getDate(date, dateFormat);
@@ -84,13 +84,11 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 catch(ParseException e ) {
                         System.out.println("EctDisplayMsgAction: Error creating date " + e.getMessage());
                         msgDate = "Error";
-                }
-                catch( UnsupportedEncodingException e ) {
-                    System.out.println("URLEncoder Error: " + e.getMessage());
-                    winName = "msgView" + bean.demographicNo;
-                }
+                }                
                 
-                url = "popupPage(600,900,'" + winName + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
+                hash = winName.hashCode();
+                hash = hash < 0 ? hash * -1 : hash;
+                url = "popupPage(600,900,'" + hash + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
                 item.setURL(url);                
                 item.setTitle(msgSubject + " " + msgDate);
                 Dao.addItem(item);

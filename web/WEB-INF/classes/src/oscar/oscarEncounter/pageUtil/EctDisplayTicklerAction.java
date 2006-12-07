@@ -30,7 +30,6 @@ import oscar.oscarTickler.TicklerData;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -41,6 +40,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.util.MessageResources;
+import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -73,7 +73,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     Date serviceDate;
     Date today = new Date(System.currentTimeMillis());
     String itemHeader;    
-    
+    int hash;
     while(rs.next()) {
         NavBarDisplayDAO.Item item = Dao.Item();                        
         serviceDate = rs.getDate("service_date");
@@ -85,14 +85,9 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         itemHeader += " " + DateUtils.getDate(serviceDate,dateFormat);
         
         winName = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
-        try {
-            winName = URLEncoder.encode(winName, "UTF-8");
-        }
-        catch( UnsupportedEncodingException e ) {
-            System.out.println("URLEncoder error " + e.getMessage());
-            winName = "ticklerView" + bean.demographicNo;
-        }        
-        url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "'); return false;";        
+        hash = winName.hashCode();
+        hash = hash < 0 ? hash * -1 : hash;
+        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "'); return false;";        
         item.setURL(url);
         item.setTitle(itemHeader);
         Dao.addItem(item);

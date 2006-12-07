@@ -28,7 +28,6 @@ package oscar.oscarEncounter.pageUtil;
 import oscar.util.*;
 import oscar.oscarLab.ca.on.*;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +41,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.MessageResources;
+import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
@@ -76,7 +76,8 @@ public class EctDisplayLabAction extends EctDisplayAction {
         LabResultData result;
         String labDisplayName;
         //String bgcolour = "FFFFCC";
-        StringBuffer func;
+        StringBuffer func; 
+        int hash;
         for( int idx = 0; idx < labs.size(); ++idx ) {
             result = (LabResultData) labs.get(idx);
             Date date = result.getDateObj();
@@ -92,18 +93,12 @@ public class EctDisplayLabAction extends EctDisplayAction {
             }else {
                 labDisplayName = result.getDiscipline();
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                
-            }
-
-            try {
-                winName = URLEncoder.encode(labDisplayName, "UTF-8");
-            }
-            catch( UnsupportedEncodingException e ) {
-                winName = "viewLab" + bean.demographicNo;
-                System.out.println("URLEncoder Error: " + e.getMessage());
-            }
+            }            
              
             labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) +" "+formattedDate;
-            func.append(winName + "','" + url + "'); return false;");            
+            hash = winName.hashCode();
+            hash = hash < 0 ? hash * -1 : hash;
+            func.append(hash + "','" + url + "'); return false;");            
             item.setTitle(labDisplayName);
             item.setURL(func.toString());
             //item.setBgColour(bgcolour);

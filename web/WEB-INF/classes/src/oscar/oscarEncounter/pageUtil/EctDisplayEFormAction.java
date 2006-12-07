@@ -31,16 +31,16 @@ import oscar.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.net.URLEncoder;
 import java.sql.Date;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
+import org.apache.commons.lang.StringEscapeUtils;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayEFormAction extends EctDisplayAction {
-    
+    private final static String BGCOLOUR = "FFCC00";
     private String cmd = "eforms";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                                                                                  
@@ -58,20 +58,17 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");        
         String js = ""; 
         ArrayList eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
+        String key;
+        int hash;
         for( int i = 0; i < eForms.size(); ++i ) {
             Hashtable curform = (Hashtable) eForms.get(i);
-            winName = (String)curform.get("formName") + bean.demographicNo;
-            
-            try {
-                winName = URLEncoder.encode(winName, "UTF-8");
-            }
-            catch( UnsupportedEncodingException e ) {
-                System.out.println("URLEncoding error " + e.getMessage());
-                winName = "eforms" + bean.demographicNo;
-            }
-            
-            url = "popupPage( 700, 800, '" + winName + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + curform.get("fid") + "&demographic_no=" + bean.demographicNo + "', 'FormA" + i + "');";
-            js = "autoCompleted['" + (String)curform.get("formName") + " (new)" + "'] = \"" + url + "\"; autoCompList.push('" + (String)curform.get("formName") + " (new)" + "');";
+            winName = (String)curform.get("formName") + bean.demographicNo;            
+            hash = winName.hashCode();
+            hash = hash < 0 ? hash * -1 : hash;
+            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + curform.get("fid") + "&demographic_no=" + bean.demographicNo + "', 'FormA" + i + "');";
+            key = (String)curform.get("formName") + " (new)";
+            key = StringEscapeUtils.escapeJavaScript(key);
+            js = "autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
             javascript.append(js);
         }
         
@@ -80,25 +77,20 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         for( int i=0; i<eForms.size(); i++) {
             Hashtable curform = (Hashtable) eForms.get(i);
             NavBarDisplayDAO.Item item = Dao.Item();
-            winName = (String)curform.get("formName") + bean.demographicNo;
-            
-            try {
-                winName = URLEncoder.encode(winName, "UTF-8");
-            }
-            catch( UnsupportedEncodingException e ) {
-                System.out.println("URLEncoding error " + e.getMessage());
-                winName = "eforms" + bean.demographicNo;
-            }
-            
-            url = "popupPage( 700, 800, '" + winName + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "');";            
+            winName = (String)curform.get("formName") + bean.demographicNo;            
+            hash = winName.hashCode();
+            hash = hash < 0 ? hash * -1 : hash;
+            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "');";            
             Date date = (Date)curform.get("formDateAsDate");
             String formattedDate = DateUtils.getDate(date,dateFormat);
-            js = "autoCompleted['" + (String)curform.get("formName") + " " + formattedDate + "'] = \"" + url + "\"; autoCompList.push('" + (String)curform.get("formName") + " " + formattedDate + "');";
+            key = (String)curform.get("formName") + " " + formattedDate;
+            key = StringEscapeUtils.escapeJavaScript(key);
+            js = "autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
             javascript.append(js);
             url += " return false;";
             item.setURL(url);
             String strTitle = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + formattedDate;
-            item.setTitle(strTitle);
+            item.setTitle(strTitle);            
             Dao.addItem(item);
         }
                         

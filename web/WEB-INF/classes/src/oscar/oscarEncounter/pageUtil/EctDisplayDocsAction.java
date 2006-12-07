@@ -47,6 +47,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayDocsAction extends EctDisplayAction {
+    private static final String BGCOLOUR = "FF0099";
     private static final String cmd = "docs";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
@@ -64,6 +65,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = "";
     String strTitle;
+    String key;
+    int hash;
     for (int i=0; i< docList.size(); i++) {
         EDoc curDoc = (EDoc) docList.get(i);
         String dispFilename = curDoc.getFileName();
@@ -83,25 +86,22 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         try {
             Date date = (Date)formatter.parse(dateStr);
             serviceDateStr = DateUtils.getDate(date, dateFormat);
-            item.setDate(date);
-            
-            winName = URLEncoder.encode(dispDesc, "UTF-8");
+            item.setDate(date);            
         }
         catch(ParseException ex ) {
             System.out.println("EctDisplayDocsAction: Error creating date " + ex.getMessage());
             serviceDateStr = "Error";
-        }
-        catch( UnsupportedEncodingException e ) {
-            System.out.println("URLEncoding error " + e.getMessage());
-            winName = "documents" + bean.demographicNo;
-        }
+        }        
         
         strTitle = dispDesc + " " + serviceDateStr;
-        url = "popupPage(700,800,'" + winName + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "'); ";
-        js = "autoCompleted['" +  strTitle + "'] = \"" + url + "\"; autoCompList.push('" + strTitle + "');";
+        hash = winName.hashCode();
+        hash = hash < 0 ? hash * -1 : hash;
+        url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "'); ";
+        key = StringEscapeUtils.escapeJavaScript(strTitle);
+        js = "autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
         javascript.append(js);
         item.setURL(url);
-        item.setTitle(strTitle);
+        item.setTitle(strTitle);        
         Dao.addItem(item);
 
     }                                
