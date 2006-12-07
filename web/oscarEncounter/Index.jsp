@@ -116,6 +116,7 @@ if (request.getParameter("casetoEncounter")==null)
 
   CommonLabResultData comLab = new CommonLabResultData();
   ArrayList labs = comLab.populateLabResultsData("",demoNo, "", "","","U");
+  Collections.sort(labs);
 
   //MDSResultsData labResults =  new MDSResultsData();
   //labResults.populateMDSResultsData("", demoNo, "", "", "", "U");
@@ -1503,7 +1504,7 @@ border-right: 2px solid #cfcfcf;
 <!-- security code block -->
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="w">
 					<% if(!bPrincipalControl || (bPrincipalControl && bPrincipalDisplay) ) { %>
-				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; AjaxSubmit(document.forms['encForm'])">
+				    <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSave"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Exit'; document.forms['encForm'].submit();">
                                     <oscar:oscarPropertiesCheck property="billregion" value="BC">
                                     <input type="button" style="height:20px" value="<bean:message key="oscarEncounter.Index.btnSignSaveBill"/>" class="ControlPushButton" onclick="document.forms['encForm'].btnPressed.value='Sign,Save and Bill';document.forms['encForm'].status.value = 'BS'; document.forms['encForm'].submit(); ">
