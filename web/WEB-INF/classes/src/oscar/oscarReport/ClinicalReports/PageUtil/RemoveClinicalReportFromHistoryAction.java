@@ -26,7 +26,7 @@
  *
  */
 
-package oscar.oscarReport.ClinicalReports.pageUtil;
+package oscar.oscarReport.ClinicalReports.PageUtil;
 
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;

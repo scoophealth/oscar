@@ -26,7 +26,7 @@
  *
  */
 
-package oscar.oscarReport.ClinicalReports.pageUtil;
+package oscar.oscarReport.ClinicalReports.PageUtil;
 
 import java.io.IOException;
 import java.util.Hashtable;
