@@ -1,2 +1,0 @@
-The case management module is a plugin for oscar. It depend on oscar and PMM module.
-Please run the "init_casemgmt.sql" after the sql file in oscar package. 
