@@ -176,7 +176,7 @@ function initMaster() {
 // create car make objects and fill arrays
 //==========
 function K( serviceNumber, service ){
-
+        
 	servicesName[service] = new ServicesName(serviceNumber);
 	services[serviceNumber] = new Service( );
 }
@@ -205,10 +205,10 @@ function disableDateFields(){
 /////////////////////////////////////////////////////////////////////
 // create car model objects and fill arrays
 //=======
-function D( servNumber, specNum, phoneNum ,SpecName,SpecFax,SpecAddress){
-
-	var specialistObj = new Specialist(servNumber,specNum,phoneNum, SpecName, SpecFax, SpecAddress);
-	services[servNumber].specialists[specNum] = specialistObj;
+function D( servNumber, specNum, phoneNum ,SpecName,SpecFax,SpecAddress){    
+    var specialistObj = new Specialist(servNumber,specNum,phoneNum, SpecName, SpecFax, SpecAddress);
+    services[servNumber].specialists[specNum] = specialistObj;
+        
 }
 //-------------------------------------------------------------------
 
@@ -259,14 +259,15 @@ function fillSpecialistSelect( aSelectedService ){
 
 	if ( selectedIdx == 0){ return; }
 
-	var specs = (services[makeNbr].specialists);
-
-	var i=0;
-	i++;
-	for ( specIndex in specs){
-	   aPit = specs[ specIndex ];
-	   document.EctConsultationFormRequestForm.specialist.options[ i ] = new Option( aPit.specName , aPit.specNbr );
-	   i++;
+	var specs = (services[makeNbr].specialists);	       
+	var i = 1;
+	for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
+	   aPit = specs[ specIndex ];           
+           if( aPit != undefined ) {
+                //alert("specIndex " + specIndex + " -> " + aPit.specName);
+                document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );	
+           }
+           
 	}
 
 }
@@ -750,10 +751,10 @@ function fetchAttached() {
                 <td align="right" class="tite1">
                     <html:select property="service" onchange="fillSpecialistSelect(this);">
     					<option>------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
-					    <option/>
+					<!-- <option/>
 				    	<option/>
 			    		<option/>
-		    			<option/>
+		    			<option/> -->
 				    </html:select>
                 </td>
             </tr>
@@ -764,10 +765,10 @@ function fetchAttached() {
                 <td align="right" class="tite2">
                     <html:select property="specialist" size="1" onchange="GetExtensionOn(this)">
 		    		    <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
-    					<option/>
+    					<!-- <option/>
 	    				<option/>
 		    			<option/>
-			    		<option/>
+			    		<option/> -->
 				    </html:select>
                 </td>
             </tr>
@@ -1143,7 +1144,7 @@ function fetchAttached() {
     </table>
     </html:form>
 </body>
-<script type="text/javascript" src="../../share/javascript/prototype.js"/>
+<script type="text/javascript" src="../../share/javascript/prototype.js"/> 
 <script type="text/javascript" language="javascript">
     
 
