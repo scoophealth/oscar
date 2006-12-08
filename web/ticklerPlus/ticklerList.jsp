@@ -8,6 +8,27 @@ Calendar now = Calendar.getInstance();
 
 			%>
 
+<script>
+	function batch_operation(method) {
+		var checked=false;
+		
+		var checkboxes=document.getElementsByName("checkbox");
+		var x=0;
+		for(x=0;x<checkboxes.length;x++) {
+			if(checkboxes[x].checked==true) {
+				checked=true;
+			}
+		}
+		if(checked==false) {
+			alert('You must choose a tickler');
+			return false;
+		}
+		var form = document.ticklerForm;
+		form.method.value=method;
+		form.submit();
+	}
+	
+</script>
 
 <html:form action="/Tickler">
 	<input type="hidden" name="method" value="save" />
@@ -215,9 +236,9 @@ String style = "";
 		<tr>
 			<td><input type="button" value="Create New Tickler" onclick="location.href='<html:rewrite action="/Tickler"/>?method=edit'"/></td>
 			<td class=noprint><input type="button" value="Complete"
-				onclick="this.form.method.value='complete';this.form.submit();" /></td>
+				onclick="batch_operation('complete');" /></td>
 			<td class=noprint><input type="button" value="Delete"
-				onclick="this.form.method.value='delete';this.form.submit();" /></td>	
+				onclick="batch_operation('delete');" /></td>	
 				
 		</tr>
 	</table>
