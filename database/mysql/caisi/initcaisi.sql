@@ -1,3 +1,7 @@
+--
+-- Table structure for table `access_type`
+--
+
 DROP TABLE IF EXISTS `access_type`;
 CREATE TABLE `access_type` (
   `access_id` bigint(20) NOT NULL auto_increment,
@@ -59,45 +63,69 @@ CREATE TABLE `agency` (
 DROP TABLE IF EXISTS `bed`;
 CREATE TABLE `bed` (
   `bed_id` int(10) unsigned NOT NULL auto_increment,
-  `bed_type_id` tinyint(3) unsigned NOT NULL default '0',
-  `room_id` int(10) unsigned NOT NULL default '0',
+  `bed_type_id` int(10) unsigned NOT NULL default '1',
+  `room_id` int(10) unsigned NOT NULL,
+  `room_start` date NOT NULL,
   `team_id` int(10) unsigned default NULL,
-  `demographic_no` int(10) unsigned default NULL,
-  `name` varchar(45) default NULL,
-  `expiry` date default NULL,
+  `name` varchar(45) NOT NULL,
   `active` tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (`bed_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `bed_log`
---
 
-DROP TABLE IF EXISTS `bed_log`;
-CREATE TABLE `bed_log` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `program_id` bigint(20) NOT NULL default '0',
-  `provider_no` varchar(11) NOT NULL default '',
-  `sheet_id` bigint(20) NOT NULL default '0',
-  `demographic_no` bigint(20) NOT NULL default '0',
-  `time` varchar(50) NOT NULL default '',
-  `status` varchar(50) NOT NULL default '',
-  `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`),
-  KEY `FKF22A268694786124` (`sheet_id`)
+--
+-- Table structure for table `bed_check_time`
+--
+DROP TABLE IF EXISTS `bed_check_time`;
+CREATE TABLE `bed_check_time` (
+  `bed_check_time_id` int(10) unsigned NOT NULL auto_increment,
+  `program_id` int(10) unsigned NOT NULL,
+  `time` time NOT NULL,
+  PRIMARY KEY  (`bed_check_time_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `bed_log_sheet`
+-- Table structure for table `bed_demographic`
 --
 
-DROP TABLE IF EXISTS `bed_log_sheet`;
-CREATE TABLE `bed_log_sheet` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `date_created` datetime NOT NULL default '0000-00-00 00:00:00',
-  `program_id` bigint(20) default NULL,
-  `closed` tinyint(1) default NULL,
-  PRIMARY KEY  (`id`)
+DROP TABLE IF EXISTS `bed_demographic`;
+CREATE TABLE  `bed_demographic` (
+  `bed_id` int(10) unsigned NOT NULL,
+  `demographic_no` int(10) unsigned NOT NULL,
+  `bed_demographic_status_id` int(10) unsigned NOT NULL default '1',
+  `provider_no` varchar(6) NOT NULL,
+  `late_pass` tinyint(1) unsigned NOT NULL default '0',
+  `reservation_start` date NOT NULL,
+  `reservation_end` date NOT NULL,
+  PRIMARY KEY  (`bed_id`,`demographic_no`),
+  UNIQUE KEY `idx_bed` (`bed_id`),
+  UNIQUE KEY `idx_demographic` (`demographic_no`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `bed_demographic_historical`
+--
+
+DROP TABLE IF EXISTS `bed_demographic_historical`;
+CREATE TABLE `bed_demographic_historical` (
+  `bed_id` int(10) unsigned NOT NULL,
+  `demographic_no` int(10) unsigned NOT NULL,
+  `usage_start` date NOT NULL,
+  `usage_end` date NOT NULL,
+  PRIMARY KEY  (`bed_id`,`demographic_no`,`usage_start`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `bed_demographic_status`
+--
+
+DROP TABLE IF EXISTS `bed_demographic_status`;
+CREATE TABLE `bed_demographic_status` (
+  `bed_demographic_status_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) NOT NULL,
+  `duration` int(10) unsigned NOT NULL default '0',
+  `dflt` tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`bed_demographic_status_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -106,8 +134,8 @@ CREATE TABLE `bed_log_sheet` (
 
 DROP TABLE IF EXISTS `bed_type`;
 CREATE TABLE `bed_type` (
-  `bed_type_id` tinyint(3) unsigned NOT NULL auto_increment,
-  `name` varchar(45) NOT NULL default '',
+  `bed_type_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) NOT NULL,
   PRIMARY KEY  (`bed_type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -493,19 +521,6 @@ CREATE TABLE `default_role_access` (
   `access_id` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `demographic_bed`
---
-
-DROP TABLE IF EXISTS `demographic_bed`;
-CREATE TABLE `demographic_bed` (
-  `demographic_no` int(10) unsigned NOT NULL default '0',
-  `bed_id` int(10) unsigned NOT NULL default '0',
-  `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
-  PRIMARY KEY  (`demographic_no`,`bed_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `formfollowup`
@@ -1504,42 +1519,6 @@ CREATE TABLE `program_access_roles` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `program_bedlog`
---
-
-DROP TABLE IF EXISTS `program_bedlog`;
-CREATE TABLE `program_bedlog` (
-  `bedlog_id` bigint(20) NOT NULL auto_increment,
-  `program_id` bigint(20) default NULL,
-  `enabled` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`bedlog_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `program_bedlog_statuses`
---
-
-DROP TABLE IF EXISTS `program_bedlog_statuses`;
-CREATE TABLE `program_bedlog_statuses` (
-  `bedlog_id` bigint(20) NOT NULL default '0',
-  `status` varchar(255) default NULL,
-  `position` int(11) default NULL,
-  KEY `FK3D9F5201E471442B` (`bedlog_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Table structure for table `program_bedlog_times`
---
-
-DROP TABLE IF EXISTS `program_bedlog_times`;
-CREATE TABLE `program_bedlog_times` (
-  `bedlog_id` bigint(20) NOT NULL default '0',
-  `check_time` varchar(255) default NULL,
-  `position` int(11) default NULL,
-  KEY `FK6F2C9105E471442B` (`bedlog_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
 -- Table structure for table `program_functional_user`
 --
 
@@ -1604,19 +1583,6 @@ CREATE TABLE `program_queue` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `program_room`
---
-
-DROP TABLE IF EXISTS `program_room`;
-CREATE TABLE `program_room` (
-  `program_id` int(10) unsigned NOT NULL default '0',
-  `room_id` int(10) unsigned NOT NULL default '0',
-  `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
-  PRIMARY KEY  (`program_id`,`room_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
 -- Table structure for table `program_team`
 --
 
@@ -1650,23 +1616,23 @@ CREATE TABLE `room` (
   `room_id` int(10) unsigned NOT NULL auto_increment,
   `room_type_id` int(10) unsigned NOT NULL default '1',
   `program_id` int(10) unsigned default NULL,
-  `name` varchar(45) default NULL,
-  `floor` tinyint(3) unsigned default NULL,
+  `name` varchar(45) NOT NULL,
+  `floor` varchar(45) default NULL,
   `active` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`room_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Table structure for table `room_bed`
+-- Table structure for table `room_bed_historical`
 --
 
-DROP TABLE IF EXISTS `room_bed`;
-CREATE TABLE `room_bed` (
-  `room_id` int(10) unsigned NOT NULL default '0',
-  `bed_id` int(10) unsigned NOT NULL default '0',
-  `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
-  PRIMARY KEY  (`room_id`,`bed_id`)
+DROP TABLE IF EXISTS `room_bed_historical`;
+CREATE TABLE `room_bed_historical` (
+  `room_id` int(10) unsigned NOT NULL,
+  `bed_id` int(10) unsigned NOT NULL,
+  `contain_start` date NOT NULL,
+  `contain_end` date NOT NULL,
+  PRIMARY KEY  (`room_id`,`bed_id`,`contain_start`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -1676,7 +1642,7 @@ CREATE TABLE `room_bed` (
 DROP TABLE IF EXISTS `room_type`;
 CREATE TABLE `room_type` (
   `room_type_id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(45) NOT NULL default '',
+  `name` varchar(45) NOT NULL,
   PRIMARY KEY  (`room_type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1768,20 +1734,6 @@ CREATE TABLE `system_message` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
---
--- Table structure for table `team_bed`
---
-
-DROP TABLE IF EXISTS `team_bed`;
-CREATE TABLE `team_bed` (
-  `team_id` int(10) unsigned NOT NULL default '0',
-  `bed_id` int(10) unsigned NOT NULL default '0',
-  `start` date NOT NULL default '0000-00-00',
-  `end` date NOT NULL default '0000-00-00',
-  PRIMARY KEY  (`team_id`,`bed_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-
 create table pmm_log (
     id bigint not null auto_increment,
     provider_no varchar(255),
@@ -1792,4 +1744,3 @@ create table pmm_log (
     ip varchar(30),
     primary key (id)
 );
-
