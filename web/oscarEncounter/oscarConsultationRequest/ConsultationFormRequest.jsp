@@ -206,9 +206,8 @@ function disableDateFields(){
 // create car model objects and fill arrays
 //=======
 function D( servNumber, specNum, phoneNum ,SpecName,SpecFax,SpecAddress){    
-    var specialistObj = new Specialist(servNumber,specNum,phoneNum, SpecName, SpecFax, SpecAddress);
-    services[servNumber].specialists[specNum] = specialistObj;
-        
+    var specialistObj = new Specialist(servNumber,specNum,phoneNum, SpecName, SpecFax, SpecAddress);    
+    services[servNumber].specialists.push(specialistObj);           
 }
 //-------------------------------------------------------------------
 
@@ -248,28 +247,22 @@ function fillSpecialistSelect( aSelectedService ){
 	var selectedIdx = aSelectedService.selectedIndex;
 	var makeNbr = (aSelectedService.options[ selectedIdx ]).value;
 
-
-
 	document.EctConsultationFormRequestForm.specialist.options.selectedIndex = 0;
 	document.EctConsultationFormRequestForm.specialist.options.length = 1;
 
 	document.EctConsultationFormRequestForm.phone.value = ("");
 	document.EctConsultationFormRequestForm.fax.value = ("");
 	document.EctConsultationFormRequestForm.address.value = ("");
-
+        
 	if ( selectedIdx == 0){ return; }
-
-	var specs = (services[makeNbr].specialists);	       
-	var i = 1;
+        
+        var i = 1;
+	var specs = (services[makeNbr].specialists);	
 	for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
-	   aPit = specs[ specIndex ];           
-           if( aPit != undefined ) {
-                //alert("specIndex " + specIndex + " -> " + aPit.specName);
-                document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );	
-           }
-           
+	   aPit = specs[ specIndex ];                      
+           document.EctConsultationFormRequestForm.specialist.options[ i++ ] = new Option( aPit.specName , aPit.specNbr );	           
 	}
-
+ 
 }
 //-------------------------------------------------------------------
 
@@ -290,41 +283,59 @@ function fillSpecialistSelect1( makeNbr )
 //    window.alert("after selectedModels "+specNbr);
 	var i=0;
 	i++;
-	for ( specIndex in specs )
+        var notSet = true;
+	for ( var specIndex = 0; specIndex < specs.length; ++specIndex )
 	{
 		aPit = specs[specIndex];
 		document.EctConsultationFormRequestForm.specialist.options[i] = new Option(aPit.specName, aPit.specNbr );
        // window.alert("in da loop");
-		if (aPit.specName.toUpperCase() == x[j]) {
+                
+		/*if (aPit.specName.toUpperCase() == x[j]) {
 			document.EctConsultationFormRequestForm.specialist.options[i].selected = true;
 			j++;
-		}
+                        notSet = false;
+		}*/
 		i++;
 	}
     //window.alert("im out");
+        if( notSet ) {            
+            document.EctConsultationFormRequestForm.specialist.options[0].selected = true;
+        }
 }
 //-------------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////////
-function setSpec(servNbr,specialNbr){
+function setSpec(servNbr,specialNbr){    
 //    //window.alert("get Called");
     specs = (services[servNbr].specialists);
 //    //window.alert("got specs");
     var i=1;
-    for ( specIndex in specs ){
+    var NotSelected = true;
+    for ( var specIndex = 0; specIndex < specs.length; ++specIndex ){
 //      //  window.alert("loop");
-        aPit = specs[specIndex];
+        aPit = specs[specIndex];        
         if (aPit.specNbr == specialNbr){
 //        //    window.alert("if");
             document.EctConsultationFormRequestForm.specialist.options[i].selected = true;
+            NotSelected = false;
         }
 
         i++;
     }
+    
+    if( NotSelected )
+        document.EctConsultationFormRequestForm.specialist.options[0].selected = true;
 //    window.alert("exiting");
 
 }
 //=------------------------------------------------------------------
+
+/////////////////////////////////////////////////////////////////////
+//insert first option title into specialist drop down list select box
+function initSpec() {
+    var aSpecialist = services["-1"].specialists[0];
+    document.EctConsultationFormRequestForm.specialist.options[0] = new Option(aSpecialist.specNbr, aSpecialist.specId);
+}
 
 /////////////////////////////////////////////////////////////////////
 function initService(ser){
@@ -339,7 +350,7 @@ function initService(ser){
 	      document.EctConsultationFormRequestForm.service.options[ i ].selected = true;
 	      isSel = 1;
           //window.alert("get here"+serNBR);
-	      fillSpecialistSelect1( serNBR );
+	      fillSpecialistSelect1( serNBR );              
           //window.alert("and here");
 	   }
 	   if (isSel != 1){
@@ -362,10 +373,15 @@ function GetExtensionOn(SelectedSpec)	{
 	}
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
 	var specs = (services[selectedService].specialists);					// get all the specs the offer this service
-	aSpeci = specs[SelectedSpec.value];									// get the specialist Object for the currently selected spec
-	document.EctConsultationFormRequestForm.phone.value = (aSpeci.phoneNum);
-	document.EctConsultationFormRequestForm.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
-	document.EctConsultationFormRequestForm.address.value = (aSpeci.specAddress);
+        for( var idx = 0; idx < specs.length; ++idx ) {
+            aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
+            if( aSpeci.specNbr == SelectedSpec.value ) {	
+                document.EctConsultationFormRequestForm.phone.value = (aSpeci.phoneNum);
+                document.EctConsultationFormRequestForm.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
+                document.EctConsultationFormRequestForm.address.value = (aSpeci.specAddress);
+                break;
+            }
+        }
 }
 //-----------------------------------------------------------------
 
@@ -374,11 +390,16 @@ function FillThreeBoxes(serNbr)	{
 
 	var selectedService = document.EctConsultationFormRequestForm.service.value;  				// get the service that is selected now
 	var specs = (services[selectedService].specialists);					// get all the specs the offer this service
-
-	aSpeci = specs[serNbr];									// get the specialist Object for the currently selected spec
-	document.EctConsultationFormRequestForm.phone.value = (aSpeci.phoneNum);
-	document.EctConsultationFormRequestForm.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
-	document.EctConsultationFormRequestForm.address.value = (aSpeci.specAddress);
+        
+        for( var idx = 0; idx < specs.length; ++idx ) {
+            aSpeci = specs[idx];									// get the specialist Object for the currently selected spec
+            if( aSpeci.specNbr == serNbr ) {
+                document.EctConsultationFormRequestForm.phone.value = (aSpeci.phoneNum);
+                document.EctConsultationFormRequestForm.fax.value = (aSpeci.specFax);					// load the text fields with phone fax and address
+                document.EctConsultationFormRequestForm.address.value = (aSpeci.specAddress);
+                break;
+           }
+        }
 }
 //-----------------------------------------------------------------
 
@@ -750,8 +771,8 @@ function fetchAttached() {
                 </td>
                 <td align="right" class="tite1">
                     <html:select property="service" onchange="fillSpecialistSelect(this);">
-    					<option>------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
-					<!-- <option/>
+    					<!-- <option value="-1">------ <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formServSelect"/> ------</option>
+					<option/>
 				    	<option/>
 			    		<option/>
 		    			<option/> -->
@@ -764,8 +785,8 @@ function fetchAttached() {
                 </td>
                 <td align="right" class="tite2">
                     <html:select property="specialist" size="1" onchange="GetExtensionOn(this)">
-		    		    <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
-    					<!-- <option/>
+		    		    <!-- <option value="-1">--- <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formSelectSpec"/> ---</option>
+                                        <option/>
 	    				<option/>
 		    			<option/>
 			    		<option/> -->
@@ -1108,6 +1129,7 @@ function fetchAttached() {
         
 	        initMaster();
         	initService('<%=consultUtil.service%>');
+                initSpec();
             document.EctConsultationFormRequestForm.phone.value = ("");
         	document.EctConsultationFormRequestForm.fax.value = ("");
         	document.EctConsultationFormRequestForm.address.value = ("");
