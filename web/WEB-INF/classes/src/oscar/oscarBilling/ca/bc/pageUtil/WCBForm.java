@@ -137,7 +137,9 @@ public final class WCBForm
   }
 
   public String SQL(String billingno, String amount) {
-
+    if(this.w_servicelocation == null || this.w_servicelocation.equals("")){
+       throw new RuntimeException("Service Location Must Not Be Empty for demographic_no:" + String.valueOf(this.demographic_no));
+    }
     return sql
 
         + "'"

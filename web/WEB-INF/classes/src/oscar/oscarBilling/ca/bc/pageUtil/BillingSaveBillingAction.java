@@ -440,6 +440,13 @@ public class BillingSaveBillingAction
           db.RunSQL(wcb.SQL(billingid, amnt));
         }
       **/
+
+         //fixes bug where service location not being set
+
+         //for some bizarre reason billing table stores location with trailing '|' e.g 'A|'
+         //whereas WCB table stores it as single char.
+         String serviceLocation = bean.getVisitType().substring(0);
+         wcb.setW_servicelocation(serviceLocation);
          db.RunSQL(wcb.SQL(billingid, amnt));
 
         //If an extra fee item was declared on the WCB form, save it in
