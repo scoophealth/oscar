@@ -99,8 +99,8 @@ function set(target) {
 function changeList(){
     var quickList = document.forms[0].quickList.options[document.forms[0].quickList.selectedIndex].value;
     var demographicNo = document.forms[0].demographicNo.value;    
-    var providerNo = document.forms[0].providerNo.value;    
-    openNewPage(600,600,'setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList+'&providerNo='+providerNo);    
+    var providerNo = document.forms[0].providerNo.value;        
+    location.href = 'setupDxResearch.do?demographicNo='+demographicNo+'&quickList='+quickList+'&providerNo='+providerNo
 }
 
 function openNewPage(vheight,vwidth,varpage) { 
