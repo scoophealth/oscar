@@ -210,8 +210,10 @@ if (request.getParameter("casetoEncounter")==null)
     var textValue2;
     var textValue3;
     var measurementWindows = new Array();
-    var autoCompleted = new Array();
+    var openWindows = new Array();
+    var autoCompleted = new Object();
     var autoCompList = new Array();
+    var itemColours = new Object();
    <% 
   for(int j=0; j<bean.templateNames.size(); j++) {
      String encounterTmp = (String)bean.templateNames.get(j);
@@ -343,8 +345,7 @@ if (request.getParameter("casetoEncounter")==null)
         }
     }    
         
-    var curWin = 0;
-    var openWindows = new Array();
+    var curWin = 0;    
     
     function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
       var page = "" + varpage;
@@ -1331,9 +1332,9 @@ white-space: nowrap;
                                 
                                 
                                 <oscar:oscarPropertiesCheck property="CPP" value="yes">
-                                <input type="button" style="height:20px;" class="ControlPushButton2" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterCPP.jsp');"/>
+                                <input type="button" style="height:20px;" class="ControlPushButton2" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'cpp', 'encounterCPP.jsp');"/>
                                 </oscar:oscarPropertiesCheck>
-				    <input type="button" style="height:20px;" class="ControlPushButton2" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPageK('encounterPrint.jsp');"/>
+				    <input type="button" style="height:20px;" class="ControlPushButton2" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'print', 'encounterPrint.jsp');"/>
 				    <input type="hidden"  name="btnPressed" value="">
 
 <!-- security code block -->
