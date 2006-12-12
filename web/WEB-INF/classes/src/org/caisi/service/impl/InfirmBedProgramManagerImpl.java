@@ -3,6 +3,7 @@ package org.caisi.service.impl;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -14,12 +15,10 @@ import org.caisi.dao.BedProgramDao;
 import org.caisi.dao.DemographicDAO;
 import org.caisi.dao.ProgramProviderDAO;
 import org.caisi.dao.ProviderDefaultProgramDao;
-import org.caisi.dao.ProviderRoleProgramDao;
 import org.caisi.model.Demographic;
 import org.caisi.model.Program;
 import org.caisi.model.ProgramProvider;
 import org.caisi.model.ProviderDefaultProgram;
-import org.caisi.model.ProviderRoleProgram;
 import org.caisi.service.InfirmBedProgramManager;
 
 public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
@@ -99,10 +98,15 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	{
 		/*default time is Oscar default null time 0001-01-01.*/
 		Date defdt=new GregorianCalendar(1,0,1).getTime();
-		dt.setHours(23);
-		dt.setMinutes(59);
-		dt.setSeconds(59);
-		Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
+                
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(dt);
+                cal.set(Calendar.HOUR_OF_DAY,23);
+                cal.set(Calendar.MINUTE,59);
+                cal.set(Calendar.SECOND,59);
+                dt = cal.getTime();
+		
+                Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
 		ArrayList demographicList=new ArrayList();
 		Demographic de=null;
 		while (iter.hasNext())

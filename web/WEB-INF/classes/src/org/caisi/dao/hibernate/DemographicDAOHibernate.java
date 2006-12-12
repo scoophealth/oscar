@@ -1,5 +1,6 @@
 package org.caisi.dao.hibernate;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -65,12 +66,14 @@ public class DemographicDAOHibernate extends HibernateDaoSupport implements Demo
 
 		/* default time is Oscar default null time 0001-01-01. */
 		Date defdt = new GregorianCalendar(1, 0, 1).getTime();
-		Date dt = new Date();
-		dt.setHours(23);
-		dt.setMinutes(59);
-		dt.setSeconds(59);
-
-		List rs = (List) getHibernateTemplate().find(q, new Object[] { demoNo, dt, dt, defdt });
+		
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY,23);
+                cal.set(Calendar.MINUTE,59);
+                cal.set(Calendar.SECOND,59);
+                Date dt = cal.getTime();
+                
+                List rs = (List) getHibernateTemplate().find(q, new Object[] { demoNo, dt, dt, defdt });
 
 		return rs;
 	}
