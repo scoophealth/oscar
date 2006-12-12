@@ -96,8 +96,10 @@ public class AddPreventionAction  extends Action {
          addHashtoArray(extraData,request.getParameter("neverReason"),"neverReason");
          addHashtoArray(extraData,request.getParameter("manufacture"),"manufacture");
          addHashtoArray(extraData,request.getParameter("dosage"),"dosage");
+         addHashtoArray(extraData,request.getParameter("product"),"product");
          addHashtoArray(extraData,request.getParameter("workflowId"),"workflowId");
          addHashtoArray(extraData,request.getParameter("formId"),"formId");
+         
          
          
          
