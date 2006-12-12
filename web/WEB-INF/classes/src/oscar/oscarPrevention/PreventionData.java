@@ -35,6 +35,7 @@ import oscar.oscarDB.*;
 import oscar.oscarDemographic.data.*;
 import oscar.util.*;
 import org.apache.commons.lang.StringEscapeUtils;
+import oscar.oscarProvider.data.ProviderData;
 
 /**
  *
@@ -164,6 +165,18 @@ public class PreventionData {
       }
    }
    
+   public String getProviderName(Hashtable hash){
+       String name = "";
+       if (hash != null){
+           String proNum = (String) hash.get("provider_no");
+           if (proNum == null || proNum.equals("-1")){
+              name = (String) hash.get("provider_name");
+           }else{
+              name = ProviderData.getProviderName(proNum);  
+           }
+       }
+       return name;
+   }
    
    public void updatetPreventionData(String id ,String creator, String demoNo, String date, String providerNo, String providerName, String preventionType,String refused,String nextDate,String neverWarn,ArrayList list){
       deletePreventionData( id);
@@ -172,6 +185,26 @@ public class PreventionData {
    
    public ArrayList getPreventionData(String demoNo){
       return getPreventionData("%",demoNo);
+   }
+   
+   
+   public ArrayList getPreventionDataFromExt(String extKey, String extVal){
+      ArrayList list = new ArrayList();
+         
+      try {
+         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+         ResultSet rs;
+         String sql = "Select prevention_id from preventionsExt where  keyval = '"+extKey+"' and val = '"+extVal+"'" ;            
+         System.out.println(sql); 
+         rs = db.GetSQL(sql);
+         while (rs.next()){       
+           list.add(getPreventionById(rs.getString("prevention_id")));    
+         }        
+         db.CloseConn();            
+       } catch (SQLException e) {
+           System.out.println(e.getMessage());
+       }
+       return list;
    }
    
    public ArrayList getPreventionData(String preventionType,String demoNo){
@@ -192,12 +225,15 @@ public class PreventionData {
                h.put("refused",rs.getString("refused"));
                h.put("type",rs.getString("prevention_type"));
                System.out.println("id set to "+rs.getString("id"));
+               h.put("provider_no",rs.getString("provider_no")); 
+               h.put("provider_name",rs.getString("provider_name"));
                h.put("prevention_date",rs.getString("prevention_date"));
                java.util.Date date = null;
                
                try{               
                   DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                   date = (java.util.Date)formatter.parse(rs.getString("prevention_date"));
+                  h.put("prevention_date_asDate",date);
                }catch(Exception pe){}
                String age = "N/A";   
                if(date!= null){                               
@@ -216,6 +252,7 @@ public class PreventionData {
    
    
    public String getPreventionComment(String id){
+       System.out.println("Calling getPreventionComment "+id);
        String comment = null;
        try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -277,6 +314,8 @@ public class PreventionData {
                addToHashIfNotNull(h,"demographicNo", rs.getString("demographic_no"));
                addToHashIfNotNull(h,"creationDate", rs.getString("creation_date"));
                addToHashIfNotNull(h,"preventionDate", rs.getString("prevention_date"));
+               addToHashIfNotNull(h,"prevention_date_asDate",rs.getDate("prevention_date"));
+               //System.out.println(rs.getDate("prevention_date"));
                addToHashIfNotNull(h,"providerName", rs.getString("provider_name"));
                addToHashIfNotNull(h,"preventionType", rs.getString("prevention_type"));
                addToHashIfNotNull(h,"deleted", rs.getString("deleted"));
@@ -300,6 +339,12 @@ public class PreventionData {
    
    private void addToHashIfNotNull(Hashtable h,String key,String val){
       if (val != null && !val.equalsIgnoreCase("null")){
+         h.put(key,val);
+      }
+   }
+   
+   private void addToHashIfNotNull(Hashtable h,String key,java.util.Date val){
+      if (val != null ){
          h.put(key,val);
       }
    }
