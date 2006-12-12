@@ -265,4 +265,14 @@ public class WriteNewMeasurements {
         catch(SQLException e) { e.printStackTrace(); }
     }
     
+     public void write(final String followUpType, final String followUpValue, final String demographicNo, final String providerNo,final java.util.Date dateObserved,final String comment ) {        
+        Hashtable measure = new Hashtable();
+        measure.put("value",followUpValue);
+        measure.put("type",followUpType);
+        measure.put("measuringInstruction","");
+        measure.put("comments",  comment == null ? "":comment  );
+        measure.put("dateObserved",UtilDateUtilities.DateToString(dateObserved, "yyyy-MM-dd HH:mm:ss"));
+        measure.put("dateEntered",UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd HH:mm:ss"));
+        write(measure,demographicNo,providerNo);
+    }
 }
