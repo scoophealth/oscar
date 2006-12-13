@@ -628,6 +628,7 @@ String fmtApptDate = fmt.format(new Date());
     </tr>
     <tr>
     	<td colspan="2" align="center" valign="top" class="SectionHead">
+          <html:hidden property="doValidate"/>
           <input type="submit" name="save" value="Save" />|
           <%if(readonly){%><input type="submit" name="bill" value="Bill"/>|<%}%>
           <%if(!readonly&&!"true".equals(fromBilling)){%><input type="submit" name="saveandbill" value="Save and Bill"/>|<%}%>
