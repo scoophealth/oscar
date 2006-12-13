@@ -197,8 +197,11 @@ public class PreventionData {
          String sql = "Select prevention_id from preventionsExt where  keyval = '"+extKey+"' and val = '"+extVal+"'" ;            
          System.out.println(sql); 
          rs = db.GetSQL(sql);
-         while (rs.next()){       
-           list.add(getPreventionById(rs.getString("prevention_id")));    
+         while (rs.next()){     
+           Hashtable hash = getPreventionById(rs.getString("prevention_id"));
+           if(hash.get("deleted") != null && ( (String) hash.get("deleted")).equals("0")   ){
+              list.add(hash);    
+           }    
          }        
          db.CloseConn();            
        } catch (SQLException e) {
