@@ -20,7 +20,8 @@ INSERT INTO batchEligibility VALUES("10", "Incorrect Health Number", "Health Num
 INSERT INTO batchEligibility VALUES("15", "Pre-assigned newborn Health Number", "Advise parent/guardian to complete registration process with MOH");
 INSERT INTO batchEligibility VALUES("20", "Not eligible", "Eligibility does not exist for this number on MOH database -refer to local OHIP office");
 INSERT INTO batchEligibility VALUES("25", "Unknown card", "May not be a Ministry-issued card");
-INSERT INTO batchEligibility VALUES("60", "Expired card", "Card has expired - if no new card, fill in Health Number Release form and refer to local OHIP office");INSERT INTO batchEligibility VALUES("70", "Stolen card", "Reported stolen and is no longer valid -refer to local OHIP office");
+INSERT INTO batchEligibility VALUES("60", "Expired card", "Card has expired - if no new card, fill in Health Number Release form and refer to local OHIP office");
+INSERT INTO batchEligibility VALUES("70", "Stolen card", "Reported stolen and is no longer valid -refer to local OHIP office");
 INSERT INTO batchEligibility VALUES("75", "Cancelled card", "Cancelled by MOH - if no new card, fill in Health Number Release form and refer to local OHIP office");
 INSERT INTO batchEligibility VALUES("80", "Damaged card", "Cancelled by MOH - if no new card, fill in Health Number Rrelease form and refer to local OHIP office");
 INSERT INTO batchEligibility VALUES("83", "Lost card", "Reported to MOH as lost and is no longer valid - if no new card, refer to local OHIP office");
@@ -10405,4 +10406,3 @@ INSERT INTO diagnosticcode VALUES (533,'042','AIDS                              
 --
 insert into encounterForm values('Growth Charts', '../form/formGrowthChart.jsp?demographic_no=', 'formGrowthChart', 0);
 insert into encounterForm values('AR2005', '../form/formonar.jsp?demographic_no=', 'formONAR', '0');
-
