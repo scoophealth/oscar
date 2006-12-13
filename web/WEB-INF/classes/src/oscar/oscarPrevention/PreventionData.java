@@ -210,6 +210,54 @@ public class PreventionData {
        return list;
    }
    
+   
+   
+   
+   
+   
+   ////////
+   /**
+    *Method to get a list of (demographic #, prevention dates, and key values)  of a certain type <injectionTppe> from a start Date to an end Date with a Ext key value
+    *EG get all Rh injection's product #, from 2006-12-12 to 2006-12-18
+    *
+    */
+   public ArrayList getExtValues(String injectionType,java.util.Date startDate,java.util.Date endDate,String keyVal){
+   String sql = "select demographic_no, prevention_date ,val from preventions, preventionsExt where preventions.id = preventionsExt.prevention_id  and prevention_type = ? and prevention_date >= ? and prevention_date <= ? and preventionsExt.keyval = ? and preventions.deleted = '0' and preventions.refused = '0' order by prevention_date";
+     
+        ArrayList list = new ArrayList();
+        DBHandler dbhandler = null;
+        try {
+            //System.out.println("e-DATE: "+date);
+            dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+            
+            PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(sql);
+            pstmt.setString(1,injectionType);
+            pstmt.setDate(2,new java.sql.Date(startDate.getTime()));
+            pstmt.setDate(3,new java.sql.Date(endDate.getTime()));
+            pstmt.setString(4,keyVal);
+            
+            ResultSet rs = pstmt.executeQuery();
+         
+            while (rs.next()){
+                Hashtable h = new Hashtable();
+                 h.put("demographic_no", rs.getString("demographic_no"));
+                 h.put("val",rs.getString("val"));
+                 h.put("prevention_date",rs.getDate("prevention_date"));
+                list.add(h);
+            }
+          
+            rs.close();
+            pstmt.close();
+            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return list;
+   }
+   ////////
+   
+   
+   
    public ArrayList getPreventionData(String preventionType,String demoNo){
       ArrayList list = new ArrayList();
       
