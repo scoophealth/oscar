@@ -76,7 +76,7 @@ CREATE TABLE appointment (
 CREATE TABLE batchEligibility(
   responseCode int(9) NOT NULL ,
   MOHResponse varchar(100) NOT NULL,
-  reason varchar(100) NOT NULL,
+  reason varchar(255) NOT NULL,
   PRIMARY KEY  (responseCode)
 ) TYPE=MyISAM;
 
@@ -6984,5 +6984,4 @@ create index status_index on surveyData (status(2));
 create index survey_date_index on surveyData (survey_date);
 create index answer_index on surveyData (answer(10));
 create index processed_index on surveyData (processed);
-
 
