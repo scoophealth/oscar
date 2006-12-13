@@ -522,6 +522,7 @@
                 for (int k = 0; k < alist.size(); k++){
                 Hashtable hdata = (Hashtable) alist.get(k);
                 Hashtable hextended = pd.getPreventionKeyValues(""+hdata.get("id"));
+                String refused = (String) hdata.get("refused");
                 %>    
                 <fieldset>
                     <legend>
@@ -529,17 +530,41 @@
                         &nbsp; &nbsp; &nbsp; Date: <%=hdata.get("preventionDate")%>
                         &nbsp; &nbsp; &nbsp; Weeks: <%=UtilDateUtilities.calculateGestationAge( (Date) hdata.get("prevention_date_asDate") , (Date) h.get("completion_date"))%>
                     </legend>
+                    <%if ( refused.equals("1")){ %>
+                       Refused  <a onclick="deleteInjection('<%=hdata.get("id")%>')" href="javascript: function myFunction() {return false; }" style="color: blue;"> Delete </a>
+                    <%}else{%>
+                    
                     Given By: <%=pd.getProviderName(hdata)%>
                     Location: <%=hextended.get("location")  %>
                     Lot #: <%=hextended.get("lot")  %>
                     Dosage: <%=hextended.get("dosage")  %>
+                    <a onclick="deleteInjection('<%=hdata.get("id")%>')" href="javascript: function myFunction() {return false; }" style="color: blue;"> Delete </a>
                     </br>
                     Reason: <%=hextended.get("reason")  %>
-                </fieldset>
+                    <%}%>
+               </fieldset>
                <%  }
-                 }%>                           
+                 }%>                     
+                 
+                 
+                 <html:form action="/oscarPrevention/AddPrevention"  styleId="deleteForm" target="_blank">
+                 
+                     <input type="hidden" name="id" id="deleteId" />
+                     <input type="hidden" name="demographic_no" value="<%=demographicNo%>" />
+                     
+                     <input type="hidden" name="delete" value="delete"/>
+                 </html:form>
 
             <script type="text/javascript">
+                
+            function deleteInjection(idval){
+               var delId = document.getElementById('deleteId');
+               delId.value = idval;
+               //alert(delId.value);
+               document.getElementById('deleteForm').submit();
+               
+            }
+                
             Calendar.setup( { inputField : "prevDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
             Calendar.setup( { inputField : "end_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
             Calendar.setup( { inputField : "dob", ifFormat : "%Y-%m-%d", showsTime :false, button : "dateOB", singleClick : true, step : 1 } );
