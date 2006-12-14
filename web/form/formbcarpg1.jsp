@@ -119,7 +119,9 @@ function showHideBox(layerName, iState) { // 1 visible, 0 hidden
 }
 function insertBox(str, field, layerName) { // 1 visible, 0 hidden
     if(document.getElementById)	{
+        console.log("field :"+field); 
         var obj = document.getElementById(field);
+        console.log("obj "+obj);
         obj.value = str;
     }
     showHideBox(layerName, 0);
@@ -401,73 +403,73 @@ function calByLMP() {
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
 <div ID="Langdiv" class="demo">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('Langdiv',0); return false;">X</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('English','pg1_langPref', 'Langdiv'); return false;">English</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('French','pg1_langPref', 'Langdiv'); return false;">French</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Mandarin','pg1_langPref', 'Langdiv'); return false;">Mandarin</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Cantonese','pg1_langPref', 'Langdiv'); return false;">Cantonese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Hindu','pg1_langPref', 'Langdiv'); return false;">Hindu</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Punjabi','pg1_langPref', 'Langdiv'); return false;">Punjabi</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Pushtu','pg1_langPref', 'Langdiv'); return false;">Pushtu</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Spanish','pg1_langPref', 'Langdiv'); return false;">Spanish</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Tagalog','pg1_langPref', 'Langdiv'); return false;">Tagalog</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Urdu','pg1_langPref', 'Langdiv'); return false;">Urdu</a></td></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Langdiv',0); return false;">X</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('English','pg1_langPref', 'Langdiv'); return false;">English</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('French','pg1_langPref', 'Langdiv'); return false;">French</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Mandarin','pg1_langPref', 'Langdiv'); return false;">Mandarin</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Cantonese','pg1_langPref', 'Langdiv'); return false;">Cantonese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Hindu','pg1_langPref', 'Langdiv'); return false;">Hindu</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Punjabi','pg1_langPref', 'Langdiv'); return false;">Punjabi</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Pushtu','pg1_langPref', 'Langdiv'); return false;">Pushtu</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Spanish','pg1_langPref', 'Langdiv'); return false;">Spanish</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Tagalog','pg1_langPref', 'Langdiv'); return false;">Tagalog</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Urdu','pg1_langPref', 'Langdiv'); return false;">Urdu</a></td></tr>
    </table>
 </div>
 <div ID="Origdiv" class="demo2">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('Origdiv',0); return false;">X</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Caucasian','pg1_ethOrig', 'Origdiv'); return false;">Caucasian</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Black','pg1_ethOrig', 'Origdiv'); return false;">Black</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('South Asian','pg1_ethOrig', 'Origdiv'); return false;">South Asian</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Pakistani','pg1_ethOrig', 'Origdiv'); return false;">Pakistani</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Sri Lankan','pg1_ethOrig', 'Origdiv'); return false;">Sri Lankan</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Japanese','pg1_ethOrig', 'Origdiv'); return false;">Japanese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Filipino','pg1_ethOrig', 'Origdiv'); return false;">Filipino</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Chinese','pg1_ethOrig', 'Origdiv'); return false;">Chinese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Vietnamese','pg1_ethOrig', 'Origdiv'); return false;">Vietnamese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Hispanic','pg1_ethOrig', 'Origdiv'); return false;">Hispanic</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('First Nations','pg1_ethOrig', 'Origdiv'); return false;">First Nations</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Jewish','pg1_ethOrig', 'Origdiv'); return false;">Jewish</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Other','pg1_ethOrig', 'Origdiv'); return false;">Other</a></td></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Origdiv',0); return false;">X</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Caucasian','pg1_ethOrig', 'Origdiv'); return false;">Caucasian</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Black','pg1_ethOrig', 'Origdiv'); return false;">Black</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('South Asian','pg1_ethOrig', 'Origdiv'); return false;">South Asian</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Pakistani','pg1_ethOrig', 'Origdiv'); return false;">Pakistani</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Sri Lankan','pg1_ethOrig', 'Origdiv'); return false;">Sri Lankan</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Japanese','pg1_ethOrig', 'Origdiv'); return false;">Japanese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Filipino','pg1_ethOrig', 'Origdiv'); return false;">Filipino</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Chinese','pg1_ethOrig', 'Origdiv'); return false;">Chinese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Vietnamese','pg1_ethOrig', 'Origdiv'); return false;">Vietnamese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Hispanic','pg1_ethOrig', 'Origdiv'); return false;">Hispanic</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('First Nations','pg1_ethOrig', 'Origdiv'); return false;">First Nations</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Jewish','pg1_ethOrig', 'Origdiv'); return false;">Jewish</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Other','pg1_ethOrig', 'Origdiv'); return false;">Other</a></td></tr>
    </table>
 </div>
 <div ID="Origdiv1" class="demo2">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('Origdiv1',0); return false;">X</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Caucasian','pg1_faEthOrig', 'Origdiv1'); return false;">Caucasian</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Black','pg1_faEthOrig', 'Origdiv1'); return false;">Black</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('South Asian','pg1_faEthOrig', 'Origdiv1'); return false;">South Asian</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Pakistani','pg1_faEthOrig', 'Origdiv1'); return false;">Pakistani</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Sri Lankan','pg1_faEthOrig', 'Origdiv1'); return false;">Sri Lankan</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Japanese','pg1_faEthOrig', 'Origdiv1'); return false;">Japanese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Filipino','pg1_faEthOrig', 'Origdiv1'); return false;">Filipino</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Chinese','pg1_faEthOrig', 'Origdiv1'); return false;">Chinese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Vietnamese','pg1_faEthOrig', 'Origdiv1'); return false;">Vietnamese</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Hispanic','pg1_faEthOrig', 'Origdiv1'); return false;">Hispanic</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('First Nations','pg1_faEthOrig', 'Origdiv1'); return false;">First Nations</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Jewish','pg1_faEthOrig', 'Origdiv1'); return false;">Jewish</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('Other','pg1_faEthOrig', 'Origdiv1'); return false;">Other</a></td></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Origdiv1',0); return false;">X</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Caucasian','pg1_faEthOrig', 'Origdiv1'); return false;">Caucasian</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Black','pg1_faEthOrig', 'Origdiv1'); return false;">Black</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('South Asian','pg1_faEthOrig', 'Origdiv1'); return false;">South Asian</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Pakistani','pg1_faEthOrig', 'Origdiv1'); return false;">Pakistani</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Sri Lankan','pg1_faEthOrig', 'Origdiv1'); return false;">Sri Lankan</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Japanese','pg1_faEthOrig', 'Origdiv1'); return false;">Japanese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Filipino','pg1_faEthOrig', 'Origdiv1'); return false;">Filipino</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Chinese','pg1_faEthOrig', 'Origdiv1'); return false;">Chinese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Vietnamese','pg1_faEthOrig', 'Origdiv1'); return false;">Vietnamese</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Hispanic','pg1_faEthOrig', 'Origdiv1'); return false;">Hispanic</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('First Nations','pg1_faEthOrig', 'Origdiv1'); return false;">First Nations</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Jewish','pg1_faEthOrig', 'Origdiv1'); return false;">Jewish</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('Other','pg1_faEthOrig', 'Origdiv1'); return false;">Other</a></td></tr>
    </table>
 </div>
 <div ID="Instrdiv" class="demo1">
 	<center>
    <table bgcolor='#007FFF' width='99%'>
-     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
-     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+     <tr><th align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
+     <tr><th><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
    </table>
    </center>
 </div>
 <div ID="Delidiv" class="demo3">
 	<center>
    <table bgcolor='silver' width='99%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('Delidiv',0); return false;">X</a></td></tr>
-     <tr><td><a href=# onclick="insertBox1('SVD','Delidiv'); return false;">SVD</a></td></tr>
-     <tr><td><a href=# onclick="insertBox1('C-section','Delidiv'); return false;">C-section</a></td></tr>
-     <tr><td><a href=# onclick="insertBox1('Vacuum','Delidiv'); return false;">Vacuum</a></td></tr>
-     <tr><td><a href=# onclick="insertBox1('Forceps','Delidiv'); return false;">Forceps</a></td></tr>
-     <tr><td><a href=# onclick="insertBox1('Vacuum and Forceps','Delidiv'); return false;">Vacuum and Forceps</a></td></tr>
-     <tr><td><a href=# onclick="insertBox1('Forceps Trial and C-section','Delidiv'); return false;">Forceps Trial and C-section</a></td></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Delidiv',0); return false;">X</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox1('SVD','Delidiv'); return false;">SVD</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox1('C-section','Delidiv'); return false;">C-section</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox1('Vacuum','Delidiv'); return false;">Vacuum</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox1('Forceps','Delidiv'); return false;">Forceps</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox1('Vacuum and Forceps','Delidiv'); return false;">Vacuum and Forceps</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox1('Forceps Trial and C-section','Delidiv'); return false;">Forceps Trial and C-section</a></td></tr>
    </table>
    </center>
 </div>
@@ -512,7 +514,7 @@ function calByLMP() {
   if (!bView) {
 %>
          <td>
-           <a href=# title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
+           <a href="javascript: function myFunction() {return false; }" title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
         </td>
 
         <td align="right"><!-- font size=-2><b>View:</b> </font>
@@ -545,7 +547,7 @@ function calByLMP() {
       <td width="30%"><b>1.</b> HOSPITAL<br>
       <input type="text" name="c_hospital" <%=oscarVariables.getProperty("BCAR_hospital")==null? " ": ("class=\"spe\" onDblClick='showDef(\""+oscarVariables.getProperty("BCAR_hospital")+"\", this);'") %> style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_hospital", "") %>" @oscar.formDB />
       </td>
-	  <td width="33%"><a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp'); return false;">PRIMARY CARE GIVER</a><br>
+	  <td width="33%"><a href="javascript: function myFunction() {return false; }" onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp'); return false;">PRIMARY CARE GIVER</a><br>
       <input type="text" name="pg1_priCare" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_priCare", "") %>" @oscar.formDB />
       </td><td colspan="2">FAMILY PHYSICIAN<br>
       <input type="text" name="pg1_famPhy" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_famPhy", "") %>" @oscar.formDB />
@@ -569,11 +571,11 @@ function calByLMP() {
       <input type="text" name="pg1_maidenName" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_maidenName", "") %>" @oscar.formDB  />
       </td>
 	  <td width="33%">ETHNIC ORIGIN<br>
-      <input type="text" name="pg1_ethOrig" class="spe" onDblClick="showHideBox('Origdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_ethOrig", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_ethOrig" id="pg1_ethOrig" class="spe" onDblClick="showHideBox('Origdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_ethOrig", "") %>" @oscar.formDB  />
 	  </td>
 	  
 	  <td><span class="small9">LANGUAGE PREFERRED</span><br>
-      <input type="text" name="pg1_langPref" class="spe" onDblClick="showHideBox('Langdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_langPref", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_langPref" id="pg1_langPref" class="spe" onDblClick="showHideBox('Langdiv',1);" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("pg1_langPref", "") %>" @oscar.formDB  />
 	  </td>
     </tr>
   </table>
@@ -587,7 +589,7 @@ function calByLMP() {
       <input type="text" name="pg1_partnerAge" style="width:100%" size="2" maxlength="2" value="<%= props.getProperty("pg1_partnerAge", "") %>" @oscar.formDB  />
 	  </td>
 	  <td><span class="small9">ETHNIC ORIGIN OF NEWBORN’S FATHER</span>
-      <input type="text" name="pg1_faEthOrig" class="spe" onDblClick="showHideBox('Origdiv1',1);" style="width:100%" size="30" maxlength="50" value="<%= props.getProperty("pg1_faEthOrig", "") %>" @oscar.formDB  />
+      <input type="text" name="pg1_faEthOrig" id="pg1_faEthOrig" class="spe" onDblClick="showHideBox('Origdiv1',1);" style="width:100%" size="30" maxlength="50" value="<%= props.getProperty("pg1_faEthOrig", "") %>" @oscar.formDB  />
 	  </td>
     </tr>
   </table>
@@ -600,7 +602,7 @@ function calByLMP() {
       <td>DATE<br>
       <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
-      <td align="right"><%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font size='+1' color='red'>Synchronize</font></a></b>") :"" %></td>
+      <td align="right"><%=bSync? ("<b><a href=\"javascript: function myFunction() {return false; }\" onClick='syncDemo(); return false;'><font size='+1' color='red'>Synchronize</font></a></b>") :"" %></td>
     </tr><tr>
       <td width="55%">SURNAME<br>
       <input type="text" name="c_surname" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("c_surname", "") %>" @oscar.formDB />
@@ -622,7 +624,7 @@ function calByLMP() {
       <td>PERSONAL HEALTH NUMBER<br>
       <input type="text" name="c_phn" style="width:100%" size="20" maxlength="20" value="<%= props.getProperty("c_phn", "") %>" @oscar.formDB />
 	  </td>
-	  <td><span class="small9"><a href=# onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp?fieldname=c_phyMid'); return false;">PHYSICIAN / MIDWIFE NAME</a></span><br>
+	  <td><span class="small9"><a href="javascript: function myFunction() {return false; }" onClick="popupFixedPage(600, 300, 'formbcarpg1namepopup.jsp?fieldname=c_phyMid'); return false;">PHYSICIAN / MIDWIFE NAME</a></span><br>
       <input type="text" name="c_phyMid" style="width:100%" size="30" maxlength="60" value="<%= props.getProperty("c_phyMid", "") %>" @oscar.formDB />
 	  </td>
     </tr>
@@ -677,7 +679,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <th width="8%">PRESENT<br>HEALTH</th>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg1_obHistDate1" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate1", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate1" id="pg1_obHistDate1" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate1", "") %>" @oscar.formDB />
   <img src="../images/cal.gif" id="pg1_obHistDate1_cal">
   </td>
   <td>
@@ -712,7 +714,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate2" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate2", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate2" id="pg1_obHistDate2" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate2", "") %>" @oscar.formDB />
   <img src="../images/cal.gif" id="pg1_obHistDate2_cal">
   </td>
   <td>
@@ -747,7 +749,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate3" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate3", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate3" id="pg1_obHistDate3" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate3", "") %>" @oscar.formDB />
   <img src="../images/cal.gif" id="pg1_obHistDate3_cal">
   </td>
   <td>
@@ -781,7 +783,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate4" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate4", "") %>" @oscar.formDB  />
+  <input type="text" name="pg1_obHistDate4" id="pg1_obHistDate4" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate4", "") %>" @oscar.formDB  />
   <img src="../images/cal.gif" id="pg1_obHistDate4_cal">
   </td>
   <td>
@@ -815,7 +817,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   </td>
 </tr><tr>
   <td>
-  <input type="text" name="pg1_obHistDate5" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate5", "") %>" @oscar.formDB />
+  <input type="text" name="pg1_obHistDate5" id="pg1_obHistDate5" size="6" maxlength="10" value="<%= props.getProperty("pg1_obHistDate5", "") %>" @oscar.formDB />
   <img src="../images/cal.gif" id="pg1_obHistDate5_cal">
   </td>
   <td>
@@ -857,7 +859,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <table width="100%" border="1"  cellspacing="0" cellpadding="0">
   <tr>
     <td width="30%"><b>4.</b> LMP <img src="../images/cal.gif" id="pg1_lmp_cal"><br> dd/mm/yyyy<br>
-    <input type="text" name="pg1_lmp" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_lmp", "") %>" @oscar.formDB dbType="date"/>
+    <input type="text" name="pg1_lmp" id="pg1_lmp" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_lmp", "") %>" @oscar.formDB dbType="date"/>
 	</td>
     <td width="30%">MENSES CYCLE<br>
     <input type="text" name="pg1_mensCycle" style="width:100%" size="8" maxlength="8" value="<%= props.getProperty("pg1_mensCycle", "") %>" @oscar.formDB />
@@ -882,13 +884,13 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
         </select>
 		</td><td width="30%"><span class="small8">WHEN STOPPED:</font><br>
 		dd/mm/yyyy <img src="../images/cal.gif" id="pg1_stopDate_cal"><br>
-        <input type="text" name="pg1_stopDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_stopDate", "") %>" @oscar.formDB />
+        <input type="text" name="pg1_stopDate" id="pg1_stopDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_stopDate", "") %>" @oscar.formDB />
 		</td>
 	  </tr>
 	  </table>
 	</td>
 	<td>EDD BY US <img src="../images/cal.gif" id="pg1_eddByUs_cal"><br> dd/mm/yyyy<br>
-    <input type="text" name="pg1_eddByUs" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByUs", "") %>" @oscar.formDB dbType="date"/>
+    <input type="text" name="pg1_eddByUs" id="pg1_eddByUs" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_eddByUs", "") %>" @oscar.formDB dbType="date"/>
 	</td>
   </tr>
   </table>
@@ -1331,7 +1333,7 @@ Reproductive Care Program. I understand that I can ask my care provider if I hav
   <table class="shrinkMe" width="100%" border="1"  cellspacing="0" cellpadding="0">
   <tr>
     <td colspan="2"><b>11. EXAMINATION</b> dd/mm/yyyy <img src="../images/cal.gif" id="pg1_examination_cal"><br>
-      <input type="text" name="pg1_examination"  style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_examination", "") %>" @oscar.formDB  dbType="date"/>
+      <input type="text" name="pg1_examination" id="pg1_examination" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_examination", "") %>" @oscar.formDB  dbType="date"/>
 	</td>
 	<td colspan="2"><b>BP</b><br>
       <input type="text" name="pg1_bp"  style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("pg1_bp", "") %>" @oscar.formDB />	
