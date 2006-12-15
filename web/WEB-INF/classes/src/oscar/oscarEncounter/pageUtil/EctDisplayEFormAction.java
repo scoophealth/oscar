@@ -47,13 +47,13 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 
         //set lefthand module heading and link
         String winName = "eForm" + bean.demographicNo;
-        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no=" + bean.demographicNo + "');return false;";        
+        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no=" + bean.demographicNo + "')";        
         Dao.setLeftHeading(messages.getMessage("global.eForms"));
         Dao.setLeftURL(url);
         
         //set the right hand heading link
         winName = "AddeForm" + bean.demographicNo;
-        url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/eform/efmformslistadd.jsp?demographic_no=" + bean.demographicNo + "')";
+        url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/eform/efmformslistadd.jsp?demographic_no=" + bean.demographicNo + "'); return false;";
         Dao.setRightURL(url);        
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action      
 
@@ -89,8 +89,8 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             item.setLinkTitle((String)curform.get("formSubject"));
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
-            javascript.append(js);    
-            url += "return false";
+            javascript.append(js);                
+            url += "return false;";
             item.setURL(url);
             String strTitle = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + formattedDate;
             item.setTitle(strTitle);             
