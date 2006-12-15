@@ -42,11 +42,14 @@ public class EctDisplayConsultAction extends EctDisplayAction {
          private String cmd = "consultation";
  
          public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
-            String winName = "Consultation" + bean.demographicNo;
-            String url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=" + bean.demographicNo + "');return false;";
-            String header = "<h3><a href=\"#\" onclick=\"" + url + "\">" + messages.getMessage("global.consultations") + "</a></h3>";
-            Dao.setLeftHeading(header);
             
+            //set lefthand module heading and link
+            String winName = "Consultation" + bean.demographicNo;
+            String url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/DisplayDemographicConsultationRequests.jsp?de=" + bean.demographicNo + "')";            
+            Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Consult"));
+            Dao.setLeftURL(url);
+            
+            //grab all consultations for patient and add list item for each
             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;
             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();
             theRequests.estConsultationVecByDemographic(bean.demographicNo);
@@ -67,6 +70,8 @@ public class EctDisplayConsultAction extends EctDisplayAction {
                     serviceDateStr = "Error";
                 }
                 url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/ViewRequest.do?de=" + bean.demographicNo + "&requestId=" + (String)theRequests.ids.get(idx) + "'); return false;";
+                
+                item.setLinkTitle(service + " " + serviceDateStr);
                 service = StringUtils.maxLenString(service, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
                 item.setTitle(service + " " + serviceDateStr);
                 item.setURL(url);

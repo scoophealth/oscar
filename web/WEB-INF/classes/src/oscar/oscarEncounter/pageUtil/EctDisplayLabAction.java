@@ -51,28 +51,32 @@ public class EctDisplayLabAction extends EctDisplayAction {
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {          
         CommonLabResultData comLab = new CommonLabResultData();
         ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
-        Collections.sort(labs);
+        Collections.sort(labs);               
 
+        //set text for lefthand module title
+        Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Labs"));
+        
+        //set link for lefthand module title
         String winName = "Labs" + bean.demographicNo;
         String url = "popupPage(700,599,'" + winName + "','" + request.getContextPath() + "/lab/DemographicLab.jsp?demographicNo=" + bean.demographicNo + "'); return false;";
-        String header = "<h3><a href=\"#\" onclick=\"" + url + "\">" + messages.getMessage("oscarEncounter.LeftNavBar.Labs") + "</a></h3>";
-        Dao.setLeftHeading(header);
+        Dao.setLeftURL(url);
         
-        StringBuffer heading = new StringBuffer("<div id=menu2 class='menu' onload='this.style.width=125;' onclick='event.cancelBubble = true;'>" +
-                            "<h3 style='text-align:center'>" + messages.getMessage("oscarEncounter.LeftNavBar.LabMenuHeading") + "</h3>"); 
-        
-        heading.append("<a href='#' class='menuItemleft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"'");        
+        //we're going to display popup menu of 2 selections - row display and grid display
+        String menuId = "2";
+        Dao.setRightHeadingID(menuId);
+        Dao.setRightURL("return !showMenu('" + menuId + "', event);");
+        Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuHeading"));                
         
         winName = "AllLabs" + bean.demographicNo;
-        url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "');return false;";
-        heading.append(" onclick=\"" + url + "\">" + messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1") + " </a><br/>");
-        url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues.jsp?demographic_no=" + bean.demographicNo + "');return false;";
-        heading.append("<a href='#' class='menuItemleft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"'");
-        heading.append(" onclick=\"" + url + "\">" + messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem2") + " </a>");
-        heading.append("</div><div id='menuTitle2' style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('2', event);\">+</a></h3></div>");        
-        Dao.setRightHeading(heading.toString());
+        url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "')";
+        Dao.addPopUpUrl(url);
+        Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1"));
         
-        NavBarDisplayDAO.Item item = Dao.Item();
+        url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues.jsp?demographic_no=" + bean.demographicNo + "')";
+        Dao.addPopUpUrl(url);
+        Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem2"));
+             
+        //now we add individual module items
         LabResultData result;
         String labDisplayName;
         //String bgcolour = "FFFFCC";
@@ -95,15 +99,16 @@ public class EctDisplayLabAction extends EctDisplayAction {
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                
             }            
              
-            labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) +" "+formattedDate;
+            NavBarDisplayDAO.Item item = Dao.Item();
+            item.setLinkTitle(labDisplayName + " " + formattedDate);
+            labDisplayName = StringUtils.maxLenString(labDisplayName, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES); // +" "+formattedDate;
             hash = winName.hashCode();
             hash = hash < 0 ? hash * -1 : hash;
             func.append(hash + "','" + url + "'); return false;");            
-            item.setTitle(labDisplayName);
+            item.setTitle(labDisplayName + " " + formattedDate);
             item.setURL(func.toString());
             //item.setBgColour(bgcolour);
-            Dao.addItem(item);
-            item = Dao.Item();
+            Dao.addItem(item);            
         }
 
         return true;

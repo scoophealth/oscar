@@ -28,7 +28,6 @@ package oscar.oscarEncounter.pageUtil;
 import oscar.util.*;
 import oscar.oscarEncounter.data.*;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
@@ -49,51 +48,50 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 
 public class EctDisplayFormAction extends EctDisplayAction {
-    private String cmd = "forms";
+    private static final String BGCOLOUR = "33FF00";
+    private String cmd = "forms"; 
+    private String menuId = "1";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
                                         
     try {       
         
-        StringBuffer url = new StringBuffer(request.getContextPath() + "/oscarEncounter/formlist.jsp?demographic_no=" + bean.demographicNo);
         String winName = "Forms" + bean.demographicNo;
-        StringBuffer heading = new StringBuffer("<h3><a href='#' onClick=\"popupPage(600,700,'" + winName + "','" + url + "'); return false;\" >" + 
-                messages.getMessage("oscarEncounter.Index.msgForms") + "</a></h3>");
-        
-        Dao.setLeftHeading(heading.toString());                               
-               
-        EctFormData.Form[] forms = new EctFormData().getForms();
-        int numforms = 0;
-        boolean column = false;
-        String width = "125";  //width of menu
-        
-        if( forms.length > 40 ) { //magic number of forms for creating columns in menu
-            column = true;
-            width = "250";
-        }
-        
-        heading = new StringBuffer("<div id=menu1 class='menu' onload='this.style.width=" + width + "' onclick='event.cancelBubble = true;'>" +
-                            "<h3 style='text-align:center'>" + messages.getMessage("oscarEncounter.LeftNavBar.AddFrm") + "</h3>");
+        StringBuffer url = new StringBuffer("popupPage(600, 700, '" + winName + "', '" + request.getContextPath() + "/oscarEncounter/formlist.jsp?demographic_no=" + bean.demographicNo + "')");                               
 
+        //set text for lefthand module title
+        Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgForms")); 
+        //set link for lefthand module title
+        Dao.setLeftURL(url.toString());               
+                
+        //we're going to display a pop up menu of forms so we set the menu title and id num of menu
+        Dao.setRightHeadingID(menuId);
+        Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.AddFrm"));
         StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
         String js = "";   
         String dbFormat = "yy/MM/dd";        
         String serviceDateStr;
         StringBuffer strTitle;
+        String fullTitle;
         Date date;
         String key;
+        int hash;        
+        //grab all of the forms
+        EctFormData.Form[] forms = new EctFormData().getForms();        
         //String bgcolour = "CCFFCC";
-        int hash;
         for( int j=0; j<forms.length; j++) {
-            EctFormData.Form frm = forms[j];                                              
+            EctFormData.Form frm = forms[j];         
+            winName = frm.getFormName() + bean.demographicNo;                                    
             
             String table = frm.getFormTable();
             if(!table.equalsIgnoreCase("")){
                 EctFormData.PatientForm[] pforms = new EctFormData().getPatientForms(bean.demographicNo, table);
+                //if a form has been started for the patient, create a module item for it
                 if(pforms.length>0) {                                           
                     NavBarDisplayDAO.Item item = Dao.Item();                        
                     EctFormData.PatientForm pfrm = pforms[0];
                     
+                    //convert date to that specified in base class
                     DateFormat formatter = new SimpleDateFormat(dbFormat);
                     String dateStr = pfrm.getCreated();
                     try {
@@ -107,50 +105,54 @@ public class EctDisplayFormAction extends EctDisplayAction {
                     
                     serviceDateStr = DateUtils.getDate(date, dateFormat);
                     item.setDate(date);
-                    
-                    strTitle = new StringBuffer(StringUtils.maxLenString(frm.getFormName(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
-                    
+                     
+                    fullTitle = frm.getFormName();
+                    strTitle = new StringBuffer(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
+                    strTitle.append(" " + serviceDateStr);
                     hash = winName.hashCode();
                     hash = hash < 0 ? hash * -1 : hash;
-                    url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");
-                    key = strTitle + "(started " + serviceDateStr + ")";
+                    url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");                    
+                    key = fullTitle + "(started " + serviceDateStr + ")";
                     key = StringEscapeUtils.escapeJavaScript(key);
-                    js = "autoCompList.push('" + key + "'); autoCompleted['" + key + "'] = \"" + url + "\";";                    
-                    javascript.append(js);                                                           
-                    ++numforms;
-                                        
+                    
+                    //auto completion arrays and colour code are set
+                    js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompList.push('" + key + "'); autoCompleted['" + key + "'] = \"" + url + "\";";                    
+                    javascript.append(js);                                                                               
+
+                    //set item href text
+                    item.setTitle(strTitle.toString());
+                    //set item link
+                    url.append("return false;");
                     item.setURL(url.toString());
-                    item.setTitle(strTitle + " " + serviceDateStr);
-                    //item.setBgColour(bgcolour);
+                    //set item link title text
+                    item.setLinkTitle(fullTitle + " " + serviceDateStr);                    
+                    
                     Dao.addItem(item);
                 }                    
             }
             
+            //we add all unhidden forms to the pop up menu
             if( !frm.isHidden() ) {                
-                heading.append("<a href='#' class='");                
-                if( column )
-                    heading.append((numforms%2==0?"menuItemleft":"menuItemright") + "' ");
-                else
-                    heading.append("menuItemleft' ");
-                
-                heading.append("onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");                
                 hash = winName.hashCode();
                 hash = hash < 0 ? hash * -1 : hash;
-                url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "');");
+                url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "')");
+                Dao.addPopUpUrl(url.toString());
                 key = frm.getFormName() + " (new)";
+                Dao.addPopUpText(frm.getFormName());
                 key = StringEscapeUtils.escapeJavaScript(key);
-                js = "autoCompList.push('" + key + "'); autoCompleted['" + key + "'] = \"" + url + "\";";                    
-                javascript.append(js);                    
-                heading.append("onclick=\"" + url + " return false;\">" + frm.getFormName() + "</a>");                
-                heading.append("<br/>");
                 
-                ++numforms;
+                //auto completion arrays and colour code are set
+                js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompList.push('" + key + "'); autoCompleted['" + key + "'] = \"" + url + ";\";";                    
+                javascript.append(js);                                    
             }
-        }
-        heading.append("</div><div id='menuTitle1' style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('1', event);\">+</a></h3></div>");
-        Dao.setRightHeading(heading.toString());
+        }        
+        url = new StringBuffer("return !showMenu('" + menuId + "', event);");
+        Dao.setRightURL(url.toString());
+        
         javascript.append("</script>");
         Dao.setJavaScript(javascript.toString());
+        
+        //sort module items, i.e. forms, from most recently started to more distant
         Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
     }
     catch(SQLException e ) {

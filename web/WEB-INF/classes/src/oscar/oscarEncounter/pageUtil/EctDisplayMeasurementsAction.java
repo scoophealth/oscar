@@ -45,16 +45,23 @@ import org.apache.commons.lang.StringEscapeUtils;
 public class EctDisplayMeasurementsAction extends EctDisplayAction {
     private static final String cmd = "measurements";
     
-   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {              
+        String menuId = "3"; //div id for popup menu
        
-        String winName = "measurements" + bean.demographicNo;
-        String url = request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do";       
-        StringBuffer header = new StringBuffer("<h3><a href=\"#\" onclick=\"popupPage(600,1000,'" + winName + "','" + url + "'); return false;\">" + 
-                messages.getMessage("oscarEncounter.Index.measurements") + "</a></h3>");
-        Dao.setLeftHeading(header.toString());         
-        header = new StringBuffer("<div id=menu3 class='menu' onclick='event.cancelBubble = true;'>" +
-                            "<h3 style='text-align:center'>" + messages.getMessage("oscarEncounter.LeftNavBar.InputGrps") + "</h3>");
+        //set text for lefthand module title
+        Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.measurements")); 
         
+        //set link for lefthand module title
+        String winName = "measurements" + bean.demographicNo;
+        String url = "popupPage(600,1000,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do')";
+        Dao.setLeftURL(url.toString());        
+        
+        //we're going to display a pop up menu of measurement groups
+        Dao.setRightHeadingID(menuId);
+        Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.InputGrps"));
+        Dao.setRightURL("return !showMenu('" + menuId + "', event);");
+        
+        //first we add flowsheets to the module items
         dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
         Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
         ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);                            
@@ -68,29 +75,26 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             hash = winName.hashCode();
             hash = hash < 0 ? hash * -1 : hash;
             url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=" + bean.demographicNo + "&template=" + flowsheetName + "');return false;";
+            item.setLinkTitle(dispname);
             dispname = StringUtils.maxLenString(dispname, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             item.setTitle(dispname);
             item.setURL(url);
-            Dao.addItem(item);
-            //header.append("<a href='#' class='menuItemLeft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");
-            //header.append(" onclick=\"" + url + "\">" + dispname + "</a><br/>");
-
+            Dao.addItem(item);            
         }
         
+        //now we grab measurement groups for popup menu
         for(int j=0; j<bean.measurementGroupNames.size(); j++) {
             
             String tmp = (String)bean.measurementGroupNames.get(j);             
             winName = tmp + bean.demographicNo;
             hash = winName.hashCode();
             hash = hash < 0 ? hash * -1 : hash;
-            url = "popupPage(500,1000,'" + hash  + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');measurementLoaded('" + winName + "');return false;";
-            header.append("<a href='#' class='menuItemLeft' onmouseover='this.style.color=\"black\"' onmouseout='this.style.color=\"white\"' ");
-            header.append(" onclick=\"" + url + "\">" + tmp + "</a><br/>");
+            url = "popupPage(500,1000,'" + hash  + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');measurementLoaded('" + winName + "')";
+            Dao.addPopUpUrl(url);
+            Dao.addPopUpText(tmp);            
         }
-        
-        header.append("</div><div id='menuTitle3' style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onmouseover=\"return !showMenu('3', event);\">+</a></h3></div>");
-        Dao.setRightHeading(header.toString());
-       
+
+        //finally we add specific measurements to module item list
         String demo = (String) bean.getDemographicNo();
         oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo);
         oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean data;
@@ -99,6 +103,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         for( int idx = 0; idx < measureTypes.size(); ++idx ) {            
             data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measureTypes.get(idx);
             String title = data.getTypeDisplayName();
+            String type = data.getType();
+            
+            winName = type + bean.demographicNo;
+            hash = winName.hashCode();
+            hash = hash < 0 ? hash * -1 : hash;
+            
             hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, data.getType());
             Vector measures = (Vector) hd.getMeasurementsDataVector();
             
@@ -107,11 +117,11 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             Date date = data.getDateObservedAsDate();
             String formattedDate = DateUtils.getDate(date,dateFormat);
             String tmp = title + "  " + data.getDataField();
-            tmp = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
-            tmp += " - " + formattedDate;
-            item.setTitle(tmp);
-            item.setDate(date);
-            item.setURL("return false;");
+            item.setLinkTitle(tmp + " " + formattedDate);
+            tmp = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);            
+            item.setTitle(tmp + " " + formattedDate);                       
+            item.setDate(date);            
+            item.setURL("popupPage(300,800,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do?type=" + type + "'); return false;");
             Dao.addItem(item);
             
         }

@@ -47,24 +47,23 @@ import org.apache.commons.lang.StringEscapeUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayDocsAction extends EctDisplayAction {
-    private static final String BGCOLOUR = "FF0099";
+    private static final String BGCOLOUR = "FF99FF";
     private static final String cmd = "docs";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
         
     String winName = "docs" + bean.demographicNo;
-    String url = new String("<h3><a href='#' onClick=\"popupPage(500,960,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
-            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.curProviderNo + 
-            "');return false;\">" + messages.getMessage("oscarEncounter.Index.msgDocuments") + "</a></h3>");        
+    String url = "popupPage(500,960,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
+            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.curProviderNo + "')";        
 
-    Dao.setLeftHeading(url);
+    Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgDocuments"));
+    Dao.setLeftURL(url);
 
     StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
     String js = "";
     ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE);
     String dbFormat = "yyyy-MM-dd";
-    String serviceDateStr = "";
-    String strTitle;
+    String serviceDateStr = "";    
     String key;
     int hash;
     for (int i=0; i< docList.size(); i++) {
@@ -77,7 +76,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
          else if( dispStatus.equals("H") )
             dispStatus="html";
                     
-        String dispDocNo    = curDoc.getDocId();
+        String dispDocNo    = curDoc.getDocId();        
         String dispDesc     = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
         
         DateFormat formatter = new SimpleDateFormat(dbFormat);
@@ -92,16 +91,18 @@ public class EctDisplayDocsAction extends EctDisplayAction {
             System.out.println("EctDisplayDocsAction: Error creating date " + ex.getMessage());
             serviceDateStr = "Error";
         }        
-        
-        strTitle = dispDesc + " " + serviceDateStr;
+                        
         hash = winName.hashCode();
         hash = hash < 0 ? hash * -1 : hash;
-        url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "'); ";
-        key = StringEscapeUtils.escapeJavaScript(strTitle);
-        js = "autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
+        url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
+        key = dispDesc + " " + serviceDateStr;
+        item.setLinkTitle(key);
+        item.setTitle(key);
+        key = StringEscapeUtils.escapeJavaScript(key);
+        js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
         javascript.append(js);
-        item.setURL(url);
-        item.setTitle(strTitle);        
+        url += "return false;";
+        item.setURL(url);        
         Dao.addItem(item);
 
     }                                

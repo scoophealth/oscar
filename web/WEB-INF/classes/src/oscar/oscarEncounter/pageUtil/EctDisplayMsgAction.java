@@ -48,19 +48,21 @@ public class EctDisplayMsgAction extends EctDisplayAction {
     private static final String cmd = "msgs";
   
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                              
-                          
+                                                  
+            //set text for lefthand module title
+            Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Messages"));
+            
+            //set link for lefthand module title
             String winName = "ViewMsg" + bean.demographicNo;
-            String url = request.getContextPath() + "/oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&userName=" + bean.userName;
-            String heading = "<h3 ><a href=\"#\" onClick=\"popupPage(600,900,'" + winName + "', '" + url + "'); return false;\" >" + messages.getMessage("oscarEncounter.LeftNavBar.Messages") + "</a></h3>";
-            Dao.setLeftHeading(heading);
+            String url = "popupPage(600,900,'" + winName + "','" + request.getContextPath() + "/oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&userName=" + bean.userName + "')";
+            Dao.setLeftURL(url);
             
+            //set the right hand heading link
             winName = "SendMsg" + bean.demographicNo;
-            url = "<a href=\"#\" onClick=\"popupPage(700,960,'" + winName + "','"+ request.getContextPath() + "/oscarMessenger/SendDemoMessage.do?demographic_no=" + bean.demographicNo + "'); return false;\">" + "+" + "</a>";
-            heading = "<div id=\"SendMsg\" style=\"clear: both; display: inline; float: right;\"><h3>" + url + "</h3></div>";                 
-            //heading = "<h3>" + url + "</h3>";
-            
-            Dao.setRightHeading(heading);            
-
+            url = "popupPage(700,960,'" + winName + "','"+ request.getContextPath() + "/oscarMessenger/SendDemoMessage.do?demographic_no=" + bean.demographicNo + "'); return false;";
+            Dao.setRightURL(url);
+            Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action
+                                  
             MsgDemoMap msgDemoMap = new MsgDemoMap();
             Vector msgVector = msgDemoMap.getMsgVector(bean.demographicNo);
             MsgMessageData msgData; 
@@ -91,6 +93,7 @@ public class EctDisplayMsgAction extends EctDisplayAction {
                 url = "popupPage(600,900,'" + hash + "','" + request.getContextPath() + "/oscarMessenger/ViewMessageByPosition.do?from=encounter&orderBy=!date&demographic_no=" + bean.demographicNo + "&messagePosition="+i + "'); return false;";
                 item.setURL(url);                
                 item.setTitle(msgSubject + " " + msgDate);
+                item.setLinkTitle(msgData.getSubject() + " " + msgDate);
                 Dao.addItem(item);
             }
    

@@ -51,19 +51,18 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
                       
  try {         
 
+    //Set lefthand module heading and link
     String winName = "ViewTickler" + bean.demographicNo;
-    String url = request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo;
-    String heading = "<h3><a href=\"#\" onclick=\"popupPage(500,900,'" + winName + "','" + url + "');return false;\">" + 
-             messages.getMessage("global.viewTickler") + "</a></h3>";
+    String url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "')";
+    Dao.setLeftHeading(messages.getMessage("global.viewTickler"));
+    Dao.setLeftURL(url);        
     
-    Dao.setLeftHeading(heading);
-    
+    //set right hand heading link
     winName = "AddTickler" + bean.demographicNo;
-    url = request.getContextPath() + "/appointment/appointmentcontrol.jsp?keyword=" + URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") + "&displaymode=" + URLEncoder.encode("Search ", "UTF-8") + "&search_mode=search_name&originalpage=" + URLEncoder.encode(request.getContextPath() + "/tickler/ticklerAdd.jsp", "UTF-8") + "&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=" + bean.demographicNo;
-    heading = "<div id=\"addTickler\" style=\"clear: both; display: inline; float: right;\"><h3><a href=\"#\" onclick=\"popupPage(500,600,'" + winName + "','" +
-            url + "'); return false;\">+</a></h3></div>";
-    Dao.setRightHeading(heading);    
-    
+    url = "popupPage(500,600,'" + winName + "','" + request.getContextPath() + "/appointment/appointmentcontrol.jsp?keyword=" + URLEncoder.encode(bean.patientLastName + "," + bean.patientFirstName,"UTF-8") + "&displaymode=" + URLEncoder.encode("Search ", "UTF-8") + "&search_mode=search_name&originalpage=" + URLEncoder.encode(request.getContextPath() + "/tickler/ticklerAdd.jsp", "UTF-8") + "&orderby=last_name&appointment_date=2000-01-01&limit1=0&limit2=5&status=t&start_time=10:45&end_time=10:59&duration=15&dboperation=add_apptrecord&type=&demographic_no=" + bean.demographicNo + "'); return false;";
+    Dao.setRightURL(url);
+    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+        
     String dateBegin = "0001-01-01";
     String dateEnd = "9999-12-31";        
      
@@ -81,15 +80,14 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
         if( serviceDate.before(today) )
             item.setColour("FF0000");
             
-        itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);                        
-        itemHeader += " " + DateUtils.getDate(serviceDate,dateFormat);
-        
+        itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + DateUtils.getDate(serviceDate,dateFormat);                      
+        item.setLinkTitle(itemHeader);        
+        item.setTitle(itemHeader);
         winName = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
         hash = winName.hashCode();
         hash = hash < 0 ? hash * -1 : hash;
         url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "'); return false;";        
-        item.setURL(url);
-        item.setTitle(itemHeader);
+        item.setURL(url);        
         Dao.addItem(item);
 
     }

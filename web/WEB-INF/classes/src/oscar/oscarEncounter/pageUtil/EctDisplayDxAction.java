@@ -44,11 +44,14 @@ public class EctDisplayDxAction extends EctDisplayAction {
     private String cmd = "Dx";
     
     public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
+
+        //set lefthand module heading and link
         String winName = "Disease" + bean.demographicNo;
-        String url = "popupPage(580,900,'" + winName + "','" + request.getContextPath() + "/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&quickList=');return false;";
-        String header = "<h3><a href=\"#\" onclick=\"" + url + "\">" + messages.getMessage("global.disease") + "</a></h3>";
-        Dao.setLeftHeading(header);
+        String url = "popupPage(580,900,'" + winName + "','" + request.getContextPath() + "/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=" + bean.demographicNo + "&providerNo=" + bean.providerNo + "&quickList=')";        
+        Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.DxRegistry"));
+        Dao.setLeftURL(url);
         
+        //grab all of the diseases associated with patient and add a list item for each
         String dbFormat = "yyyy-MM-dd";
         String serviceDateStr;
         Date date;
@@ -72,10 +75,11 @@ public class EctDisplayDxAction extends EctDisplayAction {
                 date = new Date(System.currentTimeMillis());
             }
             
-            item.setDate(date);
+            item.setDate(date);            
             String strTitle = StringUtils.maxLenString(dxBean.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
             
             item.setTitle(strTitle + " " + serviceDateStr);
+            item.setLinkTitle(dxBean.getDescription() + " " + serviceDateStr);
             item.setURL("return false;");
             Dao.addItem(item);
         }
