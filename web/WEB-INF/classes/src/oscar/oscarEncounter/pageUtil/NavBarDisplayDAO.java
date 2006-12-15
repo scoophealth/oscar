@@ -42,16 +42,26 @@ public class NavBarDisplayDAO {
     public final static int DATESORT_ASC = 2;
     
     private String LeftHeading;
-    private String RightHeading;    
+    private String RightHeading; 
+    private String LeftURL;
+    private String RightURL;
     private String JavaScript;
+    private String PopUpHeader;
     private ArrayList Items;
+    private ArrayList PopUpMenuURLS;
+    private ArrayList PopUpMenuNames;
     
     /** Creates a new instance of NavBarDisplayDAO */
     public NavBarDisplayDAO() {   
         LeftHeading = null;
-        RightHeading = null;        
+        RightHeading = null;
+        LeftURL = null;
+        RightURL = null;
         JavaScript = null;
+        PopUpHeader = null;
         Items = new ArrayList();
+        PopUpMenuURLS = new ArrayList();
+        PopUpMenuNames = new ArrayList();
     }
     
     public static void main(String[] args) {
@@ -88,10 +98,6 @@ public class NavBarDisplayDAO {
         LeftHeading = h;
     }
     
-    public void setRightHeading(String h) {
-        RightHeading = h;
-    }
-    
     public String getLeftHeading() {
         if( LeftHeading == null )
             return new String("");
@@ -99,12 +105,49 @@ public class NavBarDisplayDAO {
         return LeftHeading;
     }
     
-    public String getRightHeading() {
+    public void setRightHeadingID(String h) {
+        RightHeading = h;
+    }
+            
+    public String getRightHeadingID() {
         if( RightHeading == null )
             return new String("");
         
         return RightHeading;
     }                     
+    
+    public void setLeftURL( String url ) {
+        LeftURL = url;
+    }
+    
+    public String getLeftURL() {
+        if( LeftURL == null )
+            return new String("");
+        
+        return LeftURL;
+    }
+    
+     public void setRightURL( String url ) {
+        RightURL = url;
+    }
+    
+    public String getRightURL() {
+        if( RightURL == null )
+            return new String("");
+        
+        return RightURL;
+    }
+    
+    public void setMenuHeader(String heading) {
+        PopUpHeader = heading;
+    }
+    
+    public String getMenuHeader() {
+        if( PopUpHeader == null )
+            return new String("");
+        
+        return PopUpHeader;
+    }        
     
     public void setJavaScript(String js) {
         JavaScript = js;
@@ -112,6 +155,26 @@ public class NavBarDisplayDAO {
     
     public String getJavaScript() {
         return JavaScript;
+    }
+            
+    public void addPopUpUrl(String url) {
+        PopUpMenuURLS.add(url);
+    }
+    
+    public String getPopUpUrl(int i) {
+        return (String)PopUpMenuURLS.get(i);
+    }
+    
+    public void addPopUpText(String txt) {
+        PopUpMenuNames.add(txt);
+    }
+    
+    public String getPopUpText(int i) {
+        return (String)PopUpMenuNames.get(i);
+    }
+    
+    public int numPopUpMenuItems() {
+        return PopUpMenuURLS.size();
     }
     
     public void addItem(Item i) {
@@ -149,6 +212,7 @@ public class NavBarDisplayDAO {
      */
     public class Item implements Comparable {
         private String title;
+        private String linkTitle;
         private String URL;
         private String colour;
         private String bgColour;
@@ -156,6 +220,7 @@ public class NavBarDisplayDAO {
         
         public Item() {
             title = "";
+            linkTitle = "";
             URL = "";
             colour = "";
             bgColour = "";
@@ -168,6 +233,14 @@ public class NavBarDisplayDAO {
         
         public String getTitle() {
             return title;
+        }
+        
+        public void setLinkTitle(String t) {
+            linkTitle = t;
+        }
+        
+        public String getLinkTitle() {
+            return linkTitle;
         }
         
         public void setURL(String url) {
