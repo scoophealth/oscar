@@ -80,47 +80,47 @@ public class EctDisplayAction extends Action {
         
         request.setAttribute("navbarName", navName);
         
-        if( bean != null ) {
-            //Can we handle request?
-            //Check attrib first so we know if we are in a chain call before a direct request
-            String params = (String)request.getAttribute("cmd");
-            if( params == null )
-                params = request.getParameter("cmd");
+        if( bean == null )
+            return new ActionForward((String)Actions.get(forward));
+                
+        //Can we handle request?
+        //Check attrib first so we know if we are in a chain call before a direct request
+        String params = (String)request.getAttribute("cmd");
+        if( params == null )
+            params = request.getParameter("cmd");
 
-            if( params != null ) {
-                //Check to see if this call is for us
-                if( params.indexOf(cmd) > -1 ) {
+        if( params != null ) {
+            //Check to see if this call is for us
+            if( params.indexOf(cmd) > -1 ) {
 
-                    Locale locale = getLocale(request);
-                    MessageResources messages = getResources(request);
+                Locale locale = getLocale(request);
+                MessageResources messages = getResources(request);
 
-                    NavBarDisplayDAO Dao = (NavBarDisplayDAO)request.getAttribute("DAO");
-                    if( Dao == null )
-                        Dao = new NavBarDisplayDAO(); 
-                    
-                    if( getInfo(bean,request, Dao,messages) ) {
-                        request.setAttribute("DAO",Dao);
+                NavBarDisplayDAO Dao = (NavBarDisplayDAO)request.getAttribute("DAO");
+                if( Dao == null )
+                    Dao = new NavBarDisplayDAO(); 
 
-                        String regex = "\\b" + cmd + "\\b";                                                
-                        String remainingCmds = params.replaceAll(regex,"").trim();                        
+                if( getInfo(bean,request, Dao,messages) ) {
+                    request.setAttribute("DAO",Dao);
 
-                        //Are there more commmands to forward to or do we print what we have?
-                        if( remainingCmds.length() > 0 ) {
-                            request.setAttribute("cmd",remainingCmds);
-                            int pos = remainingCmds.indexOf(' ');
-                            if( pos > -1 )
-                                forward = remainingCmds.substring(0,pos);
-                            else
-                                forward = remainingCmds;
-                        }
+                    String regex = "\\b" + cmd + "\\b";                                                
+                    String remainingCmds = params.replaceAll(regex,"").trim();                        
+
+                    //Are there more commmands to forward to or do we print what we have?
+                    if( remainingCmds.length() > 0 ) {
+                        request.setAttribute("cmd",remainingCmds);
+                        int pos = remainingCmds.indexOf(' ');
+                        if( pos > -1 )
+                            forward = remainingCmds.substring(0,pos);
                         else
-                            forward = "success";    
-                    
+                            forward = remainingCmds;
                     }
+                    else
+                        forward = "success";    
+
                 }
             }
         }
-        
                 
         return new ActionForward((String)Actions.get(forward));
     }
