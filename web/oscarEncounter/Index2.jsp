@@ -220,6 +220,7 @@ if (request.getParameter("casetoEncounter")==null)
    %>
      autoCompleted["<%=encounterTmp%>"] = "ajaxInsertTemplate('<%=encounterTmp%>')";
      autoCompList.push("<%=encounterTmp%>");
+     itemColours["<%=encounterTmp%>"] = "99CCCC";
    <%
   }
    %>
@@ -663,7 +664,7 @@ document.onclick = hideAllMenus;
      
     var URLs = new Array( "<rewrite:reWrite jspPage="clinicModules.jsp" />",
                           "<rewrite:reWrite jspPage="displayForms.do"/>",
-                          "<rewrite:reWrite jspPage="displayEForms.do"/>",                          
+                          "<rewrite:reWrite jspPage="displayEForms.do"/>",
                           "<rewrite:reWrite jspPage="displayDocuments.do"/>",
                           "<rewrite:reWrite jspPage="displayLabs.do"/>",                          
                           "<rewrite:reWrite jspPage="displayMessages.do"/>",
@@ -676,7 +677,7 @@ document.onclick = hideAllMenus;
     var divs = new Array( "clinicModules", "encForms", "eForms", "docs", "labs", "Msgs", "measurements", "tickler", "disease", "consult");       
         
     
-    var params = new Array("", "cmd=forms",  "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler", 
+    var params = new Array("", "cmd=forms", "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler", 
                             "cmd=Dx", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");                
 
 function loader(){
@@ -686,7 +687,7 @@ function loader(){
     document.encForm.enTextarea.focus();
     document.encForm.enTextarea.value = document.encForm.enTextarea.value + "";
     document.encForm.enTextarea.scrollTop = document.encForm.enTextarea.scrollHeight;
-
+    
     <%String popUrl = request.getParameter("popupUrl");
       if (popUrl != null){           %>
       window.setTimeout("popupPage(700,900,'<%=popUrl%>')", 2);
@@ -697,7 +698,7 @@ function loader(){
         div.id = divs[idx];
         div.className = "leftBox";
         $("leftNavbar").appendChild(div);
-        popLeftColumn(URLs[idx],divs[idx],params[idx]);
+        popLeftColumn(URLs[idx],divs[idx],params[idx]);        
     }
 }
 
@@ -842,7 +843,7 @@ border-right: 2px solid #cfcfcf;
 
 
 div.leftBox{
-   width:95%;
+   width:100%;
    margin-top: 2px;
    margin-left:3px;
    margin-right:1px;   
@@ -865,7 +866,7 @@ div.leftBox h3 a {
 
 div.leftBox h3 {  
    background-color: #6699cc; 
-   /*font-size: 1.25em;*/
+   /*font-size: 1.0em;*/
    font-size: 9px;
    /*font-variant:small-caps;*/
    color: white;
@@ -936,14 +937,16 @@ white-space: nowrap;
             margin:0;
             padding:0;
             width:100%;
-            list-style-type:none;
+            list-style-type:square;
+            list-style-position:inside;
           }
           div.enTemplate_name_auto_complete ul li {
             margin:0;
-            padding:3px;
+            padding:3px;            
           }
           div.enTemplate_name_auto_complete ul li.selected { 
             background-color: #ffb; 
+            text-decoration: underline;
           }
           div.enTemplate_name_auto_complete ul strong.highlight { 
             color: #800; 
@@ -961,18 +964,27 @@ white-space: nowrap;
 <div id="templatejs" style="display:none"></div>
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;width:100%;height:680;" bordercolor="#111111" id="scrollNumber1" name="<bean:message key="oscarEncounter.Index.encounterTable"/>">
     <tr>
-        <td class="hidePrint" bgcolor="#003399" style="border-right: 2px solid #A9A9A9;height:34px;" >
+        <td class="hidePrint" bgcolor="#003399" style="width:auto; border-right: 2px solid #A9A9A9;height:34px;" >
             <div class="Title">
-			&nbsp;<bean:message key="oscarEncounter.Index.msgEncounter"/>
+			&nbsp;<bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
+                        <a href="javascript:popupPage(300,400,'utility','Help.jsp')"><bean:message key="global.help"/></a> &nbsp;&nbsp; <a href="javascript:popupPage(300,400,'utility','About.jsp')"><bean:message key="global.about"/></a>
             </div>
         </td>
 
         <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
-                <table name="tileTable" style="vertical-align:middle;border-collapse:collapse;" >
+                <table name="tileTable" style="width:100%;vertical-align:middle;border-collapse:collapse;" >
                     <tr>
-                        <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-weight:bold;width:100%;" NOWRAP >
-                            <%=bean.patientLastName %>, <%=bean.patientFirstName%> <%=bean.patientSex%> <%=bean.patientAge%>
-                            <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
+                        <td class="Header" style="width:100%;padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-weight:bold;" NOWRAP >
+                        <%
+                            String winName = "Master" + bean.demographicNo;
+                            String url;
+                            if (vLocale.getCountry().equals("BR"))
+                                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail_ptbr";                            
+                            else
+                                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
+                        %>
+                            <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a><%=bean.patientSex%> <%=bean.patientAge%>
+                            <span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
                     
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             
@@ -990,9 +1002,9 @@ white-space: nowrap;
                               </form>
                              
                         </td>
-                        <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
+                        <%-- <td class="Header" style="text-align:center;border-right: 3px solid #003399" NOWRAP>
                                 <a href="javascript:popupPage(300,400,'utility','Help.jsp')"><bean:message key="global.help"/></a> | <a href="javascript:popupPage(300,400,'utility','About.jsp')"><bean:message key="global.about"/></a>
-                        </td>
+                        </td>--%>
                     </tr>
                     
                 </table>
@@ -1000,7 +1012,7 @@ white-space: nowrap;
             </td>
     </tr>
     <tr style="height:100%">
-        <td style="width: 15%; border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
+        <td style="border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <div id="leftNavbar" style="height:100%; width:100%;">
                     <caisi:isModuleLoad moduleName="program">
                         <plugin:hideWhenCompExists componentName="caisi" reverse="true">
@@ -1010,7 +1022,7 @@ white-space: nowrap;
                     </caisi:isModuleLoad>
             </div>
         </td>
-        <td valign="top">
+        <td valign="top">                
         <form name="encForm" action="SaveEncounter2.do" method="POST">
             <caisi:isModuleLoad moduleName="program">
                     <plugin:hideWhenCompExists componentName="caisi" reverse="true">
@@ -1036,17 +1048,7 @@ white-space: nowrap;
                                     <% } %>
                                     </div>
                                 </td>
-                                <td><div class="RowTop" >
-                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
-                                        out.print(oscarVariables.getProperty("medicalHistory", ""));
-                                    %>
-                                    <% } else { %>
-                                    <bean:message key="oscarEncounter.Index.medHist"/>:
-                                    <% } %>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-size:8pt;text-align:right;vertical-align:bottom">
+                                <td><div style="display:inline; float:right; font-size:8pt;text-align:right;vertical-align:bottom">
                                     <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                                         <bean:message key="oscarEncounter.Index.x"/></a> |
                                     <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
@@ -1060,26 +1062,36 @@ white-space: nowrap;
                                     <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                                         <bean:message key="oscarEncounter.Index.r"/></a>
                                     </div>
+                                    <div class="RowTop" >
+                                    <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
+                                        out.print(oscarVariables.getProperty("medicalHistory", ""));
+                                    %>
+                                    <% } else { %>
+                                    <bean:message key="oscarEncounter.Index.medHist"/>:
+                                    <% } %>
+                                    </div>                                                                    
                                 </td>
                             </tr>
+                            
                             <tr width="100%">
                                 <!-- This is the Social History cell ...sh...-->
                                 <td  valign="top">
                                     <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
-                                       <textarea name="shTextarea" tabindex="1" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
+                                       <textarea name="shTextarea" tabindex="1" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>
                                 </td>
                                 <!-- This is the Family History cell ...fh...-->
                                 <td  valign="top">
-                                       <textarea name="fhTextarea" tabindex="2" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
+                                       <textarea name="fhTextarea" tabindex="2" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>
                                 </td>
                                 <!-- This is the Medical History cell ...mh...-->
                                 <td  valign="top" colspan="2">
-                                       <textarea name="mhTextarea" tabindex="3" wrap="hard"  cols= "31" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
+                                       <textarea name="mhTextarea" tabindex="3" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
+                
     <!-- ongoing concerns row -->
                 <tr>
                     <td>
@@ -1093,13 +1105,9 @@ white-space: nowrap;
                                     <bean:message key="oscarEncounter.Index.msgConcerns"/>:
                                     <% } %>
                                     </div><input type="hidden" name="ocInput"/>
-                                </td>
-
+                                </td>                                
                                 <td>
-                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>
-                                </td>
-                                <td>
-                                    <div style="font-size:8pt;text-align:right;vertical-align:bottom">
+                                    <div style="display:inline;float:right;font-size:8pt;text-align:right;vertical-align:bottom">
                                     <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
                                         <bean:message key="oscarEncounter.Index.x"/></a> |
                                     <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
@@ -1112,20 +1120,22 @@ white-space: nowrap;
                                         <bean:message key="oscarEncounter.Index.f"/></a> |
                                     <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
                                         <bean:message key="oscarEncounter.Index.r"/></a>
-                                    </div>
+                                    </div>                                    
+                                    <div class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>                                
                                </td>
                             </tr>
                             <tr width="100%">
                                 <td valign="top" style="border-right:2px solid #ccccff">
-                                       <textarea name='ocTextarea' tabindex="4" wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
+                                       <textarea name='ocTextarea' tabindex="4" wrap="hard" cols="44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.ongoingConcerns%></textarea>
                                 </td>
                                 <td colspan= "2" valign="top">
-                                       <textarea name='reTextarea' tabindex="5" wrap="hard" cols="48" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
+                                       <textarea name='reTextarea' tabindex="5" wrap="hard" cols="44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
+                
     <!-- prescription row -->
 		<tr>
 		   <td >
@@ -1174,7 +1184,7 @@ white-space: nowrap;
                                             </td>
                                         </tr>
                                     </table>
-                                    <div class="presBox" id="presBox">
+                                    <div class="presBox" style="width:100%;" id="presBox">
 
                                     <%
                                     oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
@@ -1192,7 +1202,7 @@ white-space: nowrap;
                                             %>
                                                 <tr>
                                                     <td <%=styleColor%> valign=top style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxD%></td>
-                                                    <td width=600 <%=styleColor%> style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxP%></td>
+                                                    <td <%=styleColor%> style="border-bottom: 1pt solid #888888; font-size:10px;"><%=rxP%></td>
                                                 </tr>
                                             <%}%>
                                         </table>
@@ -1235,7 +1245,7 @@ white-space: nowrap;
                                        var func = autoCompleted[name];
                                        eval(func);     
                                     }    
-                                new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { afterUpdateElement: menuAction }  );
+                                new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );
                                 </script>
                                 <!-- end template -->
 				
@@ -1313,7 +1323,7 @@ white-space: nowrap;
                             %>
                             <tr>
                                 <td colspan="2" valign="top" style="text-align:left">
-                                    <textarea name='enTextarea' tabindex="7" wrap="hard" cols="99" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><%=encounterText%></textarea>
+                                    <textarea name='enTextarea' tabindex="7" wrap="hard" cols="90" style="height:<%=windowSizes.getProperty("rowThreeSize")%>;overflow:auto"><%=encounterText%></textarea>
                                 </td>
                             </tr>
                         </table>
@@ -1334,7 +1344,7 @@ white-space: nowrap;
                                 <oscar:oscarPropertiesCheck property="CPP" value="yes">
                                 <input type="button" style="height:20px;" class="ControlPushButton2" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'cpp', 'encounterCPP.jsp');"/>
                                 </oscar:oscarPropertiesCheck>
-				    <input type="button" style="height:20px;" class="ControlPushButton2" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'print', 'encounterPrint.jsp');"/>
+				    <input type="button" style="height:20px;" class="ControlPushButton2" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'print', 'encounterPrint.jsp');return false;"/>
 				    <input type="hidden"  name="btnPressed" value="">
 
 <!-- security code block -->
@@ -1371,8 +1381,8 @@ white-space: nowrap;
                     </td>
                 </tr>
 <!-- end new rows here -->
-            </table>
-        </td>
+            </table> 
+        </td> 
     </tr>
     <tr>
         <td class="MainTableBottomRowLeftColumn">
