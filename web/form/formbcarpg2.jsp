@@ -770,48 +770,48 @@ function calToday(field) {
 <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <div ID="Langdiv" class="demo">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('Langdiv',0); return false;">X</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('ceph', 'Langdiv'); return false;">ceph</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('breech', 'Langdiv'); return false;">breech</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('transv', 'Langdiv'); return false;">transv</a></td></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Langdiv',0); return false;">X</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('ceph', 'Langdiv'); return false;">ceph</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('breech', 'Langdiv'); return false;">breech</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('transv', 'Langdiv'); return false;">transv</a></td></tr>
    </table>
 </div>
 <div ID="GBSdiv" class="demo3">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('GBSdiv',0); return false;">X</a></td></tr>
-     <tr><th><a href=# onclick="insertBox('pos', 'GBSdiv'); return false;">pos</a></th></tr>
-     <tr><th><a href=# onclick="insertBox('neg', 'GBSdiv'); return false;">neg</a></th></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('GBSdiv',0); return false;">X</a></td></tr>
+     <tr><th><a href="javascript: function myFunction() {return false; }" onclick="insertBox('pos', 'GBSdiv'); return false;">pos</a></th></tr>
+     <tr><th><a href="javascript: function myFunction() {return false; }" onclick="insertBox('neg', 'GBSdiv'); return false;">neg</a></th></tr>
    </table>
 </div>
 <div ID="BirthPlacediv" class="demo4">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('BirthPlacediv',0); return false;">X</a></td></tr>
-     <tr><th><a href=# onclick="insertBox('hospital', 'BirthPlacediv'); return false;">hospital</a></th></tr>
-     <tr><th><a href=# onclick="insertBox('home', 'BirthPlacediv'); return false;">home</a></th></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('BirthPlacediv',0); return false;">X</a></td></tr>
+     <tr><th><a href="javascript: function myFunction() {return false; }" onclick="insertBox('hospital', 'BirthPlacediv'); return false;">hospital</a></th></tr>
+     <tr><th><a href="javascript: function myFunction() {return false; }" onclick="insertBox('home', 'BirthPlacediv'); return false;">home</a></th></tr>
    </table>
 </div>
 <div ID="UrineDiv" class="demo">
    <table bgcolor='silver' width='100%'>
-     <tr><td align='right'><a href=# onclick="showHideBox('UrineDiv',0); return false;">X</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('-', 'UrineDiv'); return false;">-</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('+', 'UrineDiv'); return false;">+</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('++', 'UrineDiv'); return false;">++</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('+++', 'UrineDiv'); return false;">+++</a></td></tr>
-     <tr><td><a href=# onclick="insertBox('++++', 'UrineDiv'); return false;">++++</a></td></tr>
+     <tr><td align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('UrineDiv',0); return false;">X</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('-', 'UrineDiv'); return false;">-</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('+', 'UrineDiv'); return false;">+</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('++', 'UrineDiv'); return false;">++</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('+++', 'UrineDiv'); return false;">+++</a></td></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="insertBox('++++', 'UrineDiv'); return false;">++++</a></td></tr>
    </table>
 </div>
 <div ID="Instrdiv" class="demo1">
 	<center>
    <table bgcolor='#007FFF' width='99%'>
-     <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
-     <tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
+     <tr><th align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
+     <tr><th><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double click shaded fields for drop down or calculation.</font><br>&nbsp;</a></th></tr>
    </table>
    </center>
 </div>
 <div ID="BMIdiv" class="demo2">
    <table bgcolor='#007FFF' width='99%'>
-     <tr><th align='right'><a href=# onclick="showHideBox('BMIdiv',0); return false;"><font color="red">X</font></a></th></tr>
-     <tr><td><a href=# onclick="showHideBox('BMIdiv',0); return false;">
+     <tr><th align='right'><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('BMIdiv',0); return false;"><font color="red">X</font></a></th></tr>
+     <tr><td><a href="javascript: function myFunction() {return false; }" onclick="showHideBox('BMIdiv',0); return false;">
      <font color="#66FF66">The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell. <br>
       If putting in weight or height in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the height or weight cells (kg.) or it will not calculate the BMI.</font><br>&nbsp;</a>
      </td></tr>
@@ -851,7 +851,7 @@ function calToday(field) {
   if (!bView) {
 %> 
          <td>
-           <a href=# title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
+           <a href="javascript: function myFunction() {return false; }" title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
         </td>
 
         <!--<td align="right">  <b>View:</b>
@@ -955,7 +955,7 @@ function calToday(field) {
 		  <td align="center"><span class="small9"><I>Results</I></font></td>
 		</tr><tr>
 		  <td nowrap>
-          <input type="text" name="ar2_labRATDate1" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate1", "") %>" @oscar.formDB  dbType="date"/>
+          <input type="text" name="ar2_labRATDate1" id="ar2_labRATDate1" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate1", "") %>" @oscar.formDB  dbType="date"/>
           <img src="../images/cal.gif" id="ar2_labRATDate1_cal">
 		  </td>
 		  <td>
@@ -963,7 +963,7 @@ function calToday(field) {
 		  </td>
 		</tr><tr>
 		  <td nowrap>
-          <input type="text" name="ar2_labRATDate2" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate2", "") %>" @oscar.formDB  dbType="date"/>
+          <input type="text" name="ar2_labRATDate2" id="ar2_labRATDate2" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate2", "") %>" @oscar.formDB  dbType="date"/>
           <img src="../images/cal.gif" id="ar2_labRATDate2_cal">
 		  </td>
 		  <td>
@@ -971,7 +971,7 @@ function calToday(field) {
 		  </td>
 		</tr><tr>
 		  <td nowrap>
-          <input type="text" name="ar2_labRATDate3" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate3", "") %>" @oscar.formDB  dbType="date"/>
+          <input type="text" name="ar2_labRATDate3" id="ar2_labRATDate3" size="8" maxlength="10" value="<%= props.getProperty("ar2_labRATDate3", "") %>" @oscar.formDB  dbType="date"/>
           <img src="../images/cal.gif" id="ar2_labRATDate3_cal">
 		  </td>
 		  <td>
@@ -982,11 +982,11 @@ function calToday(field) {
 		  </td>
 		</tr><tr>
 		  <td>
-          <input type="text" name="ar2_labRhIgG" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRhIgG", "") %>" @oscar.formDB dbType="date"/>
+          <input type="text" name="ar2_labRhIgG" id="ar2_labRhIgG" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRhIgG", "") %>" @oscar.formDB dbType="date"/>
           <img src="../images/cal.gif" id="ar2_labRhIgG_cal">
 		  </td>
 		  <td>
-          <input type="text" name="ar2_labRhIgG2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRhIgG2", "") %>" @oscar.formDB dbType="date"/>
+          <input type="text" name="ar2_labRhIgG2" id="ar2_labRhIgG2" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_labRhIgG2", "") %>" @oscar.formDB dbType="date"/>
           <img src="../images/cal.gif" id="ar2_labRhIgG2_cal">
 		  </td>
 		</tr>
@@ -1096,7 +1096,7 @@ function calToday(field) {
           <input type="text" name="ar2_labGWeek" style="width:100%" size="3" maxlength="5" value="<%= props.getProperty("ar2_labGWeek", "") %>" @oscar.formDB />
           </td>
           <td nowrap>
-          <input type="text" name="ar2_labDiabDate" size="8" maxlength="10" value="<%= props.getProperty("ar2_labDiabDate", "") %>" @oscar.formDB  dbType="date"/>
+          <input type="text" name="ar2_labDiabDate" id="ar2_labDiabDate" size="8" maxlength="10" value="<%= props.getProperty("ar2_labDiabDate", "") %>" @oscar.formDB  dbType="date"/>
           <img src="../images/cal.gif" id="ar2_labDiabDate_cal">
           </td>
 		  <td>
@@ -1168,7 +1168,7 @@ function calToday(field) {
           <input type="text" name="c_ppHt"  class="spe" style="width:100%;" onDblClick="htEnglish2Metric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppHt", "") %>" @oscar.formDB />
 		  </td>
 		  <td width="12%">
-		  <a href=# onClick="showBMIBox('BMIdiv',1, this, event);return false;" title='The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell.  If putting in weight or height in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the height or weight cells (kg.) or it will not calculate the BMI.'>
+		  <a href="javascript: function myFunction() {return false; }" onClick="showBMIBox('BMIdiv',1, this, event);return false;" title='The height and weight MUST be in metric for the BMI to calculate when you double click in the shaded cell.  If putting in weight or height in Standard measurement, double click each cell to convert to metric. Then, double click in the BMI cell to calculate. Do not put any text in the height or weight cells (kg.) or it will not calculate the BMI.'>
 		  <font color='red'><b>BMI</b></color></a><br>
           <input type="text" name="c_ppBMI"  class="spe" style="width:100%;" onDblClick="calcBMIMetric();" size="5" maxlength="5" value="<%= props.getProperty("c_ppBMI", "") %>" @oscar.formDB />
 		  </td>
@@ -1176,7 +1176,7 @@ function calToday(field) {
           <input type="text" name="ar2_lmpDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("ar2_lmpDate", "") %>" @oscar.formDB dbType="date"/>
 		  </td>
 		  <td>EDD <span class="small8">DD/MM/YYYY</span><br>
-          <input type="text" name="c_EDD" size="10" maxlength="10" value="<%= props.getProperty("c_EDD", "") %>" @oscar.formDB dbType="date"/>
+          <input type="text" name="c_EDD" id="c_EDD" size="10" maxlength="10" value="<%= props.getProperty("c_EDD", "") %>" @oscar.formDB dbType="date"/>
 		  <img src="../images/cal.gif" id="c_EDD_cal"> 
 		  </td>
 		</tr>
@@ -1765,7 +1765,7 @@ function calToday(field) {
 		</th>
 		</tr><tr>
         <td width="20%"><span class="small9">1ST ULTRASOUND DATE</span><br>
-        <input type="text" name="ar2_1USoundDate" size="10" maxlength="10" value="<%= props.getProperty("ar2_1USoundDate", "") %>" @oscar.formDB dbType="date"/>
+        <input type="text" name="ar2_1USoundDate" id="ar2_1USoundDate" size="10" maxlength="10" value="<%= props.getProperty("ar2_1USoundDate", "") %>" @oscar.formDB dbType="date"/>
         <img src="../images/cal.gif" id="ar2_1USoundDate_cal">
 		</td>
         <td width="15%" nowrap><span class="small9">GEST. AGE BY US </span><br>
