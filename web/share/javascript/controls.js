@@ -50,6 +50,7 @@ Autocompleter.Base.prototype = {
     else
       this.options = options || {};
 
+    /*REJ*/this.options.colours      = this.options.colours;
     this.options.paramName    = this.options.paramName || this.element.name;
     this.options.tokens       = this.options.tokens || [];
     this.options.frequency    = this.options.frequency || 0.4;
@@ -381,7 +382,7 @@ Autocompleter.Local = Class.create();
 Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
   initialize: function(element, update, array, options) {
     this.baseInitialize(element, update, options);
-    this.options.array = array;   
+    this.options.array = array;         
   },
 
   getUpdatedChoices: function() {
@@ -399,8 +400,8 @@ Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
         var ret       = []; // Beginning matches
         var partial   = []; // Inside matches
         var entry     = instance.getToken();
-        var count     = 0;
-
+        var count     = 0;        
+       
         for (var i = 0; i < instance.options.array.length &&  
           ret.length < instance.options.choices ; i++) { 
 
@@ -408,20 +409,21 @@ Autocompleter.Local.prototype = Object.extend(new Autocompleter.Base(), {
           var foundPos = instance.options.ignoreCase ? 
             elem.toLowerCase().indexOf(entry.toLowerCase()) : 
             elem.indexOf(entry);
-
+         
+         var colour = instance.options.colours[elem] ? "color: " + instance.options.colours[elem] : "";         
           while (foundPos != -1) {
             if (foundPos == 0 && elem.length != entry.length) { 
-              ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" + 
-                elem.substr(entry.length) + "</li>");
-                /* ret.push("<li>" + elem.substr(0, entry.length) +   
+              /*ret.push("<li><strong>" + elem.substr(0, entry.length) + "</strong>" + 
                 elem.substr(entry.length) + "</li>"); */
+                ret.push("<li style=\"" + colour + "\"><span style=\"color:000000;\">" + elem.substr(0, entry.length) +   
+                elem.substr(entry.length) + "</span></li>");
               break;
             } else if (entry.length >= instance.options.partialChars && 
               instance.options.partialSearch && foundPos != -1) {
               if (instance.options.fullSearch || /\s/.test(elem.substr(foundPos-1,1))) {
-                partial.push("<li>" + elem.substr(0, foundPos) + "<strong>" +
+                partial.push("<li style=\"" + colour + "\"><span style=\"color:000000;\">" + elem.substr(0, foundPos) + "<strong>" +
                   elem.substr(foundPos, entry.length) + "</strong>" + elem.substr(
-                  foundPos + entry.length) + "</li>"); 
+                  foundPos + entry.length) + "<span style=\"color:FFFFFF;\"></li>"); 
                   /*partial.push("<li>" + elem.substr(0, foundPos) + "<span style=\"color:FF0000\">" +
                   elem.substr(foundPos, entry.length) + "</span>" + elem.substr(
                   foundPos + entry.length) + "</li>"); */
