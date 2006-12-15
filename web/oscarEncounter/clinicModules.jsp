@@ -21,7 +21,7 @@
 
 <h3>&nbsp;<bean:message key="oscarEncounter.Index.clinicalModules"/></h3>
                 <ul id="ModuleList">
-                    <li>               
+                    <%-- <li>               
                         <%
                             winName = "Master" + bean.demographicNo;
                             if (vLocale.getCountry().equals("BR")) {                            
@@ -33,7 +33,7 @@
                             title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><bean:message key="global.master"/></a>
                         <%}%>
                     </li>
-                    <%-- <li>
+                     <li>
                         <%
                            winName = "Consultations" + bean.demographicNo;
                         %>
