@@ -201,12 +201,298 @@
          <form-property name="providerNo" type="java.lang.String"/>
      </form-bean>
 
+		<form-bean
+			name="clientSearchForm"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+		<form-bean
+			name="intakeAForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="intake"
+				type="org.oscarehr.PMmodule.model.Formintakea" />
+			<form-property
+				name="view2"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeAFormBean" />
+			<form-property
+				name="bean"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeFormBean" />
+		</form-bean>
+		<form-bean
+			name="intakeAReport1Form"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+		<form-bean
+			name="intakeCReport1Form"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+		<form-bean
+			name="intakeCForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="intake"
+				type="org.oscarehr.PMmodule.model.Formintakec" />
+			<form-property
+				name="view2"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeCFormBean" />
+			<form-property
+				name="addresses"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeCAddress[]"
+				size="20" />
+			<form-property
+				name="contact"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeCContact[]"
+				size="20" />
+			<form-property
+				name="identification"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeCIdentification[]"
+				size="20" />
+			<form-property
+				name="hospitalization"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization[]"
+				size="20" />
+			<form-property
+				name="bean"
+				type="org.oscarehr.PMmodule.web.formbean.IntakeFormBean" />
+		</form-bean>
+		<form-bean
+			name="consentForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="consent"
+				type="org.oscarehr.PMmodule.model.Consent" />
+			<form-property
+				name="interview"
+				type="org.oscarehr.PMmodule.model.ConsentInterview" />
+		</form-bean>
+		<form-bean
+			name="demographicForm"
+			type="org.apache.struts.validator.LazyValidatorForm" />
+			
+		<form-bean
+			name="programManagerViewForm"
+			type="org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean" />
+			
+		<form-bean
+			name="programManagerForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="view"
+				type="org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean" />
+			<form-property
+				name="access"
+				type="org.oscarehr.PMmodule.model.ProgramAccess" />
+			<form-property
+				name="admission"
+				type="org.oscarehr.PMmodule.model.Admission" />
+			<form-property
+				name="bedCheckTimes"
+				type="org.oscarehr.PMmodule.model.BedCheckTime[]" />
+			<form-property
+				name="addTime"
+				type="java.lang.String" />
+			<form-property
+				name="removeId"
+				type="java.lang.String" />
+			<form-property
+				name="function"
+				type="org.oscarehr.PMmodule.model.ProgramFunctionalUser" />
+			<form-property
+				name="program"
+				type="org.oscarehr.PMmodule.model.Program" />
+			<form-property
+				name="provider"
+				type="org.oscarehr.PMmodule.model.ProgramProvider" />
+			<form-property
+				name="team"
+				type="org.oscarehr.PMmodule.model.ProgramTeam" />
+			<form-property
+				name="queue"
+				type="org.oscarehr.PMmodule.model.ProgramQueue" />
+		</form-bean>
+		<form-bean
+			name="agencyManagerForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="view"
+				type="org.oscarehr.PMmodule.web.formbean.AgencyManagerViewFormBean" />
+			<form-property
+				name="agency"
+				type="org.oscarehr.PMmodule.model.Agency" />
+			<form-property
+				name="numRooms"
+				type="java.lang.Integer" />
+			<form-property
+				name="numBeds"
+				type="java.lang.Integer" />
+			<form-property
+				name="rooms"
+				type="org.oscarehr.PMmodule.model.Room[]" />
+			<form-property
+				name="roomTypes"
+				type="org.oscarehr.PMmodule.model.RoomType[]" />
+			<form-property
+				name="beds"
+				type="org.oscarehr.PMmodule.model.Bed[]" />
+			<form-property
+				name="bedTypes"
+				type="org.oscarehr.PMmodule.model.BedType[]" />
+			<form-property
+				name="programs"
+				type="org.oscarehr.PMmodule.model.Program[]" />
+		</form-bean>
+		<form-bean
+			name="clientSearchForm2"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="criteria"
+				type="org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean" />
+		</form-bean>
+		<form-bean
+			name="clientManagerForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="view"
+				type="org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean" />
+			<form-property
+				name="admission"
+				type="org.oscarehr.PMmodule.model.Admission" />
+			<form-property
+				name="bedDemographic"
+				type="org.oscarehr.PMmodule.model.BedDemographic" />
+			<form-property
+				name="client"
+				type="org.oscarehr.PMmodule.model.Demographic" />
+			<form-property
+				name="erconsent"
+				type="org.oscarehr.PMmodule.web.formbean.ErConsentFormBean" />
+			<form-property
+				name="form"
+				type="org.oscarehr.survey.model.oscar.OscarFormInstance" />
+			<form-property
+				name="program"
+				type="org.oscarehr.PMmodule.model.Program" />
+			<form-property
+				name="referral"
+				type="org.oscarehr.PMmodule.model.ClientReferral" />
+			<form-property
+				name="unreservedBeds"
+				type="org.oscarehr.PMmodule.model.Bed[]" />
+			<form-property
+				name="bedDemographicStatuses"
+				type="org.oscarehr.PMmodule.model.BedDemographicStatus[]" />
+		</form-bean>
+		<form-bean
+			name="staffManagerForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="provider"
+				type="org.oscarehr.PMmodule.model.Provider" />
+			<form-property
+				name="program_provider"
+				type="org.oscarehr.PMmodule.model.ProgramProvider" />
+			<form-property
+				name="view"
+				type="org.oscarehr.PMmodule.web.formbean.StaffManagerViewFormBean" />
+		</form-bean>
+		<form-bean
+			name="bedLogForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="bedlog"
+				type="org.oscarehr.PMmodule.model.BedLog" />
+			<form-property
+				name="sheet"
+				type="org.oscarehr.PMmodule.model.BedLogSheet" />
+		</form-bean>
+		<form-bean
+			name="preIntakeForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="form"
+				type="org.oscarehr.PMmodule.web.formbean.PreIntakeForm" />
+		</form-bean>
+		<form-bean
+			name="followUpForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="intake"
+				type="org.oscarehr.PMmodule.model.FormFollowUp" />
+		</form-bean>
+		<form-bean
+			name="activityReportForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="form"
+				type="org.oscarehr.PMmodule.web.formbean.ActivityReportFormBean" />
+		</form-bean>
+		<form-bean
+			name="surveyExecuteForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="view"
+				type="org.oscarehr.survey.web.formbean.SurveyExecuteFormBean" />
+			<form-property
+				name="data"
+				type="org.oscarehr.survey.web.formbean.SurveyExecuteDataBean" />
+		</form-bean>
+		<form-bean
+			name="defaultRoleAccessForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="form"
+				type="org.oscarehr.PMmodule.model.DefaultRoleAccess" />
+		</form-bean>
+		<form-bean
+			name="surveyForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="survey"
+				type="org.oscarehr.survey.model.Survey" />
+			<form-property
+				name="model"
+				type="org.oscarehr.surveymodel.SurveyDocument" />
+			<form-property
+				name="web"
+				type="org.oscarehr.survey.web.formbean.SurveyManagerFormBean" />
+			<form-property
+				name="pageModel"
+				type="org.oscarehr.surveymodel.Page" />
+			<form-property
+				name="questionModel"
+				type="org.oscarehr.surveymodel.Question" />
+			<form-property
+				name="sectionModel"
+				type="java.util.Map" />
+		</form-bean>
+		<form-bean
+			name="surveyTestForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="view"
+				type="org.oscarehr.survey.web.formbean.SurveyExecuteFormBean" />
+			<form-property
+				name="data"
+				type="org.oscarehr.survey.web.formbean.SurveyExecuteDataBean" />
+		</form-bean>
+		<form-bean
+			name="caseManagementViewForm"
+			type="org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean" />
+		<form-bean
+			name="caseManagementEntryForm"
+			type="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean" />		
+		<form-bean
+			name="clientImageForm"
+			type="org.apache.struts.validator.DynaValidatorForm">
+			<form-property
+				name="clientImage"
+				type="org.oscarehr.casemgmt.web.formbeans.ClientImageFormBean" />
+		</form-bean>
   </form-beans>
   <global-forwards>
     <forward name="Logout" path="/logout.jsp" redirect="true" />
     <forward name="SessionTimeOut" path="/sessiontimeout.jsp" redirect="true" />
     <forward name="failure" path="/failure.jsp" redirect="true" />
+   	<forward name="auth" path="/survey/auth.jsp" />
   </global-forwards>
+  
   <action-mappings>
   	<!-- caisi core action -->
   	<action path="/SystemMessage"
@@ -1171,12 +1457,476 @@
 				<forward name="login" path="/ticklerPlus/loginUnreadTicklers.jsp"/>
 			</action>
                         
-                       
+		<action
+			path="/PMmodule/IntakeAReport1Action"
+			type="org.oscarehr.PMmodule.web.IntakeAReport1Action"
+			name="intakeAReport1Form"
+			scope="request"
+			input="/PMmodule/IntakeAReport1.jsp">
+			<forward
+				name="success"
+				path="/PMmodule/IntakeAReport1.jsp" />
+			<forward
+				name="error"
+				path="/PMmodule/IntakeAReport1.jsp" />
+			<forward
+				name="timeout"
+				path="/PMmodule/Timeout.jsp" />
+		</action>
+		<action
+			path="/PMmodule/IntakeCReport1Action"
+			type="org.oscarehr.PMmodule.web.IntakeCReport1Action"
+			name="intakeCReport1Form"
+			scope="request"
+			input="/PMmodule/IntakeCReport1.jsp">
+			<forward
+				name="success"
+				path="/PMmodule/IntakeCReport1.jsp" />
+			<forward
+				name="error"
+				path="/PMmodule/IntakeCReport1.jsp" />
+			<forward
+				name="timeout"
+				path="/PMmodule/Timeout.jsp" />
+		</action>
+		<action
+			path="/PMmodule/ProgramManager"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="programManagerForm"
+			scope="session">
+			<forward
+				name="list"
+				path="page.pmm.admin.list" />
+			<forward
+				name="edit"
+				path="page.pmm.admin.edit" />
+			<forward
+				name="timeout"
+				path="/PMmodule/Timeout.jsp" />
+		</action>
+		<action
+			path="/PMmodule/ProgramManagerView"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="programManagerViewForm"
+			scope="request">
+			<forward
+				name="view"
+				path="page.pmm.admin.view" />
+			<forward
+				name="viewBedCheckReport"
+				path="/PMmodule/Admin/ProgramView/bed_check_report.jsp" />
+		</action>
+		<action
+			path="/PMmodule/AgencyManager"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="agencyManagerForm"
+			scope="session">
+			<forward
+				name="view"
+				path="page.pmm.admin.agency.view" />
+			<forward
+				name="edit"
+				path="page.pmm.admin.agency.edit" />
+		</action>
+		<action
+			path="/PMmodule/ProviderSearch"
+			type="org.springframework.web.struts.DelegatingActionProxy">
+			<forward
+				name="results"
+				path="/PMmodule/ProviderSearch.jsp" />
+		</action>
+		<action
+			path="/PMmodule/ClientSearch2"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="clientSearchForm2"
+			scope="request">
+			<forward
+				name="form"
+				path="page.pmm.client.searchform" />
+			<forward
+				name="search"
+				path="page.pmm.client.searchresults" />
+		</action>
+		<action
+			path="/PMmodule/ClientManager"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="clientManagerForm"
+			scope="session">
+			<forward
+				name="edit"
+				path="page.pmm.client" />
+			<forward
+				name="edit-redirect"
+				path="page.pmm.client"
+				redirect="true" />
+			<forward
+				name="search_programs"
+				path="/PMmodule/ClientManager/ProgramSearch.jsp" />
+			<forward
+				name="survey"
+				path="/PMmodule/Forms/SurveyExecute.do" />
+			<forward
+				name="consent"
+				path="page.pmm.erconsent" />
+			<forward
+				name="er-redirect"
+				path="/PMmodule/ErReceptionistReport.jsp" />
+			<forward
+				name="search"
+				path="/PMmodule/ClientSearch2.do"
+				redirect="true" />
+			<forward
+				name="integrator_admissions"
+				path="/PMmodule/integrator/admissions.jsp" />
+			<forward
+				name="integrator_referrals"
+				path="/PMmodule/integrator/referrals.jsp" />
+			<forward
+				name="links"
+				path="/PMmodule/ClientManager/links.jsp" />
+		</action>
+		<action
+			path="/PMmodule/ProviderInfo"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request">
+			<forward
+				name="view"
+				path="page.pmm.provider.view" />
+		</action>
+		<action
+			path="/PMmodule/IntakeA"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="intakeAForm"
+			scope="request">
+			<forward
+				name="form"
+				path="/PMmodule/IntakeA.jsp" />
+			<forward
+				name="success"
+				path="/PMmodule/ClientManager.do?method=edit" />
+			<forward
+				name="error"
+				path="/PMmodule/ProviderInfo.do?method=view" />
+			<forward
+				name="cancel-new"
+				path="/PMmodule/ProviderInfo.do?method=view" />
+			<forward
+				name="cancel-update"
+				path="/PMmodule/ClientManager.do?method=edit" />
+		</action>
+		<action
+			path="/PMmodule/IntakeC"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="session"
+			name="intakeCForm"
+			input="/PMmodule/IntakeC.jsp">
+			<forward
+				name="form"
+				path="/PMmodule/IntakeC.jsp" />
+			<forward
+				name="success"
+				path="/PMmodule/ClientManager.do?method=edit" />
+			<forward
+				name="error"
+				path="/PMmodule/ProviderInfo.do?method=view" />
+			<forward
+				name="cancel-new"
+				path="/PMmodule/ProviderInfo.do?method=view" />
+			<forward
+				name="cancel-update"
+				path="/PMmodule/ClientManager.do?method=edit" />
+		</action>
+		<action
+			path="/PMmodule/Consent"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request"
+			name="consentForm"
+			input="/PMmodule/Consent/consentFormA.jsp"
+			validate="false">
+			<forward
+				name="formA"
+				path="/PMmodule/Consent/consentFormA.jsp" />
+			<forward
+				name="formB"
+				path="/PMmodule/Consent/consentFormB.jsp" />
+			<forward
+				name="interview"
+				path="/PMmodule/Consent/consentInterview.jsp" />
+			<forward
+				name="success"
+				path="/PMmodule/Consent/exit.jsp" />
+			<forward
+				name="agency_list"
+				path="/PMmodule/Consent/agencyList.jsp" />
+		</action>
+		<action
+			path="/PMmodule/StaffManager"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="staffManagerForm"
+			scope="request">
+			<forward
+				name="list"
+				path="page.pmm.staff.list" />
+			<forward
+				name="edit"
+				path="page.pmm.staff.edit" />
+		</action>
+		<action
+			path="/PMmodule/Intake"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="action"
+			name="preIntakeForm"
+			scope="request">
+			<forward
+				name="pre-intake"
+				path="page.intake.form" />
+			<forward
+				name="intakea"
+				path="/PMmodule/IntakeA.do" />
+			<forward
+				name="intakec"
+				path="/PMmodule/IntakeC.do" />
+		</action>
+		<!-- FORMS -->
+		<action
+			path="/PMmodule/Forms/FollowUp"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="followUpForm"
+			scope="request"
+			input="/PMmodule/forms/FollowUp.jsp">
+			<forward
+				name="form"
+				path="/PMmodule/forms/FollowUp.jsp" />
+			<forward
+				name="success"
+				path="/PMmodule/ClientManager.do?method=edit" />
+			<forward
+				name="error"
+				path="/PMmodule/ClientManager.do?method=edit"
+				redirect="true" />
+		</action>
+		<action
+			path="/PMmodule/Forms/SurveyExecute"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="surveyExecuteForm"
+			scope="session">
+			<forward
+				name="view"
+				path="/PMmodule/survey/surveyView.jsp" />
+			<forward
+				name="execute"
+				path="/PMmodule/survey/surveyExecute.jsp" />
+			<forward
+				name="client_manager"
+				path="/PMmodule/ClientManager.do?method=save_survey"
+				redirect="false" />
+			<forward
+				name="success"
+				path="/PMmodule/ClientManager.do?method=edit" />
+		</action>
+		<action
+			path="/PMmodule/Admin/DefaultRoleAccess"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="defaultRoleAccessForm"
+			validate="false"
+			scope="request">
+			<forward
+				name="list"
+				path="page.pmm.admin.defaultroleaccess.list" />
+			<forward
+				name="form"
+				path="page.pmm.admin.defaultroleaccess.form" />
+			<forward
+				name="rlist"
+				path="/PMmodule/Admin/DefaultRoleAccess.do?method=list"
+				redirect="true" />
+		</action>
+		<!-- REPORTS -->
+		<action
+			path="/PMmodule/Reports/ProgramActivityReport"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="activityReportForm"
+			scope="request"
+			validate="false">
+			<forward
+				name="form"
+				path="page.report.activityform" />
+			<forward
+				name="report"
+				path="page.report.activityreport" />
+		</action>
+		<action
+			path="/PMmodule/Reports/BasicReport"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request"
+			validate="false">
+			<forward
+				name="form"
+				path="page.report.basicform" />
+		</action>
+		<action
+			path="/PMmodule/Reports/ExitInterviewReport"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request"
+			validate="false">
+			<forward
+				name="form"
+				path="page.report.exitinterviewform" />
+		</action>
+		<action
+			path="/PMmodule/Reports/ExitInterviewReportDetailed"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request"
+			validate="false">
+			<forward
+				name="form"
+				path="page.report.exitinterviewformdetailed" />
+		</action>
+		<action
+			path="/SurveyManager"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="surveyForm"
+			scope="session">
+			<forward
+				name="edit"
+				path=".view.survey.form" />
+			<forward
+				name="list"
+				path=".view.survey.manager"
+				redirect="true" />
+			<forward
+				name="new_survey"
+				path=".view.survey.new_survey" />
+			<forward
+				name="question_editor"
+				path="/survey/surveyManager/questionForm.jsp" />
+			<forward
+				name="execute"
+				path="/SurveyTest.do"
+				redirect="false" />
+			<forward
+				name="import"
+				path=".view.survey.import" />
+		</action>
+		<action
+			path="/SurveyTest"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			name="surveyTestForm"
+			scope="session">
+			<forward
+				name="view"
+				path="/survey/surveyTest/surveyView.jsp" />
+			<forward
+				name="execute"
+				path="/survey/surveyTest/surveyExecute.jsp" />
+			<forward
+				name="manager"
+				path="/SurveyManager.do?method=list"
+				redirect="true" />
+		</action>
+		<action
+			path="/ReceptionistReport"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request">
+			<forward
+				name="report"
+				path="/er/receptionist_report.jsp" />
+		</action>
+		<action
+			path="/CaseManagementView"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="session"
+			input="/casemgmt/CaseManagementView.jsp"
+			name="caseManagementViewForm">
+			<forward
+				name="view"
+				path="/casemgmt/CaseManagementView.jsp" />
+			<forward
+				name="page.casemgmt.view"
+				path="page.casemgmt.view" />
+			<forward
+				name="domain-error"
+				path="/casemgmt/domain-error.jsp" />
+			<forward
+				name="unlockForm"
+				path="/casemgmt/unlockNoteForm.jsp" />
+			<forward
+				name="unlockSuccess"
+				path="/casemgmt/unlockNoteSuccess.jsp" />
+			<forward
+				name="unlockError"
+				path="/casemgmt/unlockNoteError.jsp" />
+		</action>
+		<action
+			path="/CaseManagementEntry"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="session"
+			input="/casemgmt/CaseManagementEntry.jsp"
+			name="caseManagementEntryForm">
+			<forward
+				name="view"
+				path="/casemgmt/CaseManagementEntry.jsp" />
+			<forward
+				name="list"
+				path="/casemgmt/CaseManagementView.do?method=view"
+				redirect="true" />
+			<forward
+				name="IssueSearch"
+				path="/casemgmt/IssueSearch.jsp" />
+			<forward
+				name="NoDemoERR"
+				path="/casemgmt/noDemo.jsp" />
+			<forward
+				name="windowClose"
+				path="/casemgmt/close.jsp" />
+			<forward
+				name="historyview"
+				path="/casemgmt/historyview.jsp" />
+		</action>
+		<action
+			path="/ClientImage"
+			type="org.springframework.web.struts.DelegatingActionProxy"
+			parameter="method"
+			scope="request"
+			name="clientImageForm"
+			input="/casemgmt/uploadimage.jsp">
+			<forward
+				name="success"
+				path="/casemgmt/uploadimage.jsp" />
+		</action>                       
                         
   </action-mappings>
   <controller
 		processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
+		
   <message-resources parameter="oscarResources" />
+  <message-resources parameter="MessageResources_program" key="pmm"/>
+  <message-resources parameter="HelpResources" key="help" />
+  <message-resources parameter="MessageResources_survey" key="survey" />  
+  <message-resources parameter="MessageResources_casemgmt" key="casemgmt" />
+
   	<plug-in className="org.apache.struts.tiles.TilesPlugin">
 
 		<!-- Path to XML definition file -->

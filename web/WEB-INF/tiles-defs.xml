@@ -39,4 +39,280 @@
     <definition name="${YOUR_DEFINITION_HERE}">
     </definition>
 
+	<definition
+		name="page.pmm.admin.view"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/ProgramManagerView.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.admin.list"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/ProgramManagerList.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.admin.edit"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/ProgramManagerForm.jsp" />
+	</definition>
+	
+	<definition
+		name="page.pmm.admin.agency.view"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/AgencyManagerView.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.admin.agency.edit"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/AgencyManagerForm.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.client.searchform"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/ClientSearchForm.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.client.searchresults"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/ClientSearchResults.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.client"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/ClientManager.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.provider.view"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/ProviderInfoView.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.staff.list"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/StaffManagerList.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.staff.edit"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/StaffManagerForm.jsp" />
+	</definition>
+	<definition
+		name="page.intake.form"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/PreIntakeForm.jsp" />
+	</definition>
+	<definition
+		name="page.report.activityform"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/ActivityReportForm.jsp" />
+	</definition>
+	<definition
+		name="page.report.activityreport"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/ActivityReport.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.erconsent"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/erConsent.jsp" />
+	</definition>
+	<definition
+		name="page.report.basicform"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/BasicReport.jsp" />
+	</definition>
+	<definition
+		name="page.report.exitinterviewform"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/ExitInterviewReport.jsp" />
+	</definition>
+	<definition
+		name="page.report.exitinterviewformdetailed"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/ExitInterviewReportDetailed.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.admin.defaultroleaccess.list"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/DefaultRoleAccessList.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.admin.defaultroleaccess.form"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/DefaultRoleAccessForm.jsp" />
+	</definition>
+	<definition
+		name=".layout.simple"
+		path="/layouts/simpleLayout.jsp">
+		<put
+			name="title"
+			value="Default Title" />
+		<put
+			name="meta"
+			value="/survey/meta.jsp" />
+		<put
+			name="stylesheet"
+			value="/survey/stylesheet.jsp" />
+		<put
+			name="javascript"
+			value="/survey/javascript.jsp" />
+		<put
+			name="header"
+			value="/survey/header.jsp" />
+		<put
+			name="footer"
+			value="/survey/footer.jsp" />
+		<put
+			name="body"
+			value="/survey/body.jsp" />
+	</definition>
+	<definition
+		name=".view.survey.manager"
+		extends=".layout.simple">
+		<put
+			name="title"
+			value="eForm Manager" />
+		<put
+			name="body"
+			value="/survey/surveyManager/surveyManager.jsp" />
+	</definition>
+	<definition
+		name=".view.survey.form"
+		extends=".layout.simple">
+		<put
+			name="title"
+			value="eForm Manager: Create/Edit Survey" />
+		<put
+			name="body"
+			value="/survey/surveyManager/surveyForm.jsp" />
+	</definition>
+	<definition
+		name=".view.survey.new_survey"
+		extends=".layout.simple">
+		<put
+			name="title"
+			value="eForm Manager: Create New Form" />
+		<put
+			name="body"
+			value="/survey/surveyManager/createSurvey.jsp" />
+	</definition>
+	<definition
+		name=".view.survey.import"
+		extends=".layout.simple">
+		<put
+			name="title"
+			value="eForm Manager: Import Survey" />
+		<put
+			name="body"
+			value="/survey/surveyManager/importForm.jsp" />
+	</definition>
+	<definition
+		name="page.casemgmt.view"
+		path="/casemgmt/encounterLayout.jsp">
+		<put
+			name="navigation"
+			value="/casemgmt/navigation.jsp" />
+		<put
+			name="body"
+			value="/casemgmt/CaseManagementView.jsp" />
+	</definition>
 </tiles-definitions>
