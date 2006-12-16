@@ -153,8 +153,7 @@ String demographic_name = "";
 			String provider_name = "";
 			String assignee_name = "";
 			String status = "Active";
-			String late_status = "b";
-
+			String late_status = "b";			
 			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
 			if (temp != null) {
 				Demographic demographic = (Demographic) temp.getDemographic();

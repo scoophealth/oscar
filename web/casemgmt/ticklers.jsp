@@ -1,0 +1,80 @@
+<%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ page import="java.util.Date,org.caisi.model.*,org.oscarehr.casemgmt.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*,org.caisi.service.Version" %>
+
+<table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+	<tr class="title">
+		<th>Provider Name</th>
+		<th>Date</th>
+		<th>Priority</th>
+		<th>Task Assigned To</th>
+		<th>Status</th>
+		<th>Message</th>
+	</tr>
+	
+	<tr>
+		<%int index=0; 
+			String bgcolor;
+			String view_image;
+		%>
+		<c:forEach var="tickler" items="${ticklers}">
+			<%
+				if(index++%2!=0) {
+					bgcolor="white";
+					view_image="details.gif";
+				} else {
+					bgcolor="#EEEEFF";
+					view_image="details2.gif";
+				}
+			%>
+			<tr bgcolor="<%=bgcolor %>" align="center">
+				<%
+					String provider_name="";
+					String assignee_name="";
+					String status = "Active";
+					String late_status = "b";
+					
+					Tickler temp = (Tickler)pageContext.getAttribute("tickler");
+					if(temp != null) {
+						Provider provider = (Provider)temp.getProvider();
+						if(provider != null) {
+							provider_name = provider.getLastName() + "," + provider.getFirstName();
+						}
+						Provider assignee = (Provider)temp.getAssignee();
+						if(assignee != null) {
+							assignee_name = assignee.getLastName() + "," + assignee.getFirstName();
+						}
+						switch(temp.getStatus()) {
+						case 'A': status="Active";break;
+						case 'D': status="Deleted";break;
+						case 'C': status="Completed";break;
+						}
+						// add by PINE_SOFT
+						// get system date
+						Date sysdate = new java.util.Date();
+						Date service_date = (Date)temp.getService_date();
+						
+						if (!sysdate.before(service_date)) {
+							late_status = "a";
+						}
+					}
+				
+				%>
+				<%
+					String style = "";
+				    if ("a".equals(late_status)) {
+				    	style="color:red;";
+				    }
+				%>   
+				    <td style="<%=style%>"><%=provider_name %></td>
+					<td style="<%=style%>"><fmt:formatDate pattern="MM/dd/yy : hh:mm a" value="${tickler.service_date}"/></td>
+					<td style="<%=style%>"><c:out value="${tickler.priority}"/></td>
+					<td style="<%=style%>"><%=assignee_name %></td>
+					<td style="<%=style%>"><%=status %></td>
+					<td style="<%=style%>" align="left"><c:out escapeXml="false" value="${tickler.message}"/></td>
+			</tr>
+		</c:forEach>
+	</tr>
+	<tr>
+		<td colspan="9"><%=((java.util.List)request.getAttribute("ticklers")).size() %> ticklers found.</td>
+	</tr>
+</table>

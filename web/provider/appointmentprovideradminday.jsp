@@ -1,6 +1,5 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 <!-- add by caisi -->
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -31,7 +30,6 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 session.setAttribute("infirmaryView_OscarQue",request.getQueryString()); 
 String absurl="/infirm.do?action=showProgram";
 %>
-<!-- plugin:include componentName="coreComp" absoluteUrl="<%=absurl%>"/ -->
 <c:import url="/infirm.do?action=showProgram" />
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
@@ -439,11 +437,8 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a></font></td>
         <caisi:isModuleLoad moduleName="caisi">
-		<plugin:hideWhenCompExists componentName="caisi">
-        
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
          <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
-        </plugin:hideWhenCompExists>
         </caisi:isModuleLoad>
         <caisi:isModuleLoad moduleName="caisi" reverse="true">
         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
@@ -516,18 +511,13 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <td></td>
 <!-- caisi menu extension point add -->
 <%int menuTagNumber=0; %> 
-<plugin:pageContextExtension serviceName="oscarMenuExtension" stemFromPrefix="Oscar"/>
-<logic:iterate name="oscarMenuExtension.points" id="pt" scope="page" type="oscar.caisi.OscarMenuExtension">
-<%if (org.caisi.common.IsPropertiesOn.propertiesOn(pt.getName().toLowerCase())) {
-	menuTagNumber++;
-%>
-
+<caisi:isModuleLoad moduleName="caisi">
       <td rowspan=2 BGCOLOR='#C0C0C0' ALIGN='MIDDLE' nowrap><font
-       FACE='VERDANA,ARIAL,HELVETICA' SIZE=2>&nbsp;<a href='<html:rewrite page="<%= pt.getLink() %>"/>'>
-       <%= pt.getName() %></a>&nbsp;</font></td>
+       FACE='VERDANA,ARIAL,HELVETICA' SIZE=2>&nbsp;<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>
+       Program</a>&nbsp;</font></td>
       <td></td>
-<%} %>      
-</logic:iterate>
+	<% menuTagNumber++; %>
+</caisi:isModuleLoad>
 
 <!-- caisi menu extension point add end-->
       </tr><tr>
@@ -536,10 +526,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
         
         <caisi:isModuleLoad moduleName="caisi">
-    
-		<plugin:hideWhenCompExists componentName="caisi">
 		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-		</plugin:hideWhenCompExists>        
         </caisi:isModuleLoad>
         
         <caisi:isModuleLoad moduleName="caisi" reverse="true">

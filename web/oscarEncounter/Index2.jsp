@@ -24,7 +24,6 @@
  * Ontario, Canada
  */
 --%>
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -86,21 +85,18 @@ You have no rights to access the data!
 %>
 <!-- add by caisi  --> 
 
-<caisi:isModuleLoad moduleName="program">
-<plugin:hideWhenCompExists componentName="caisi" reverse="true">
+<caisi:isModuleLoad moduleName="caisi">
 <%
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
-String hrefurl=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 if (request.getParameter("casetoEncounter")==null)
 {
 	response.sendRedirect(hrefurl);
     return;
 }
 %>
-
-</plugin:hideWhenCompExists>
 </caisi:isModuleLoad>
 <!-- add by caisi end--> 
 
@@ -1014,20 +1010,16 @@ white-space: nowrap;
     <tr style="height:100%">
         <td style="border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <div id="leftNavbar" style="height:100%; width:100%;">
-                    <caisi:isModuleLoad moduleName="program">
-                        <plugin:hideWhenCompExists componentName="caisi" reverse="true">
-                            <%String hrefurl2=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;%>
+                    <caisi:isModuleLoad moduleName="caisi">
+                            <%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;%>
         			<a href="<%=hrefurl2%>">Case Management Encounter</a>
-        		</plugin:hideWhenCompExists>
                     </caisi:isModuleLoad>
             </div>
         </td>
         <td valign="top">                
         <form name="encForm" action="SaveEncounter2.do" method="POST">
-            <caisi:isModuleLoad moduleName="program">
-                    <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+            <caisi:isModuleLoad moduleName="caisi">
                         <input type="hidden" name="casetoEncounter" value="true">
-                    </plugin:hideWhenCompExists>
 		</caisi:isModuleLoad>
             <table  name="encounterTableRightCol" >
     <!-- social history row --><!-- start new rows here -->

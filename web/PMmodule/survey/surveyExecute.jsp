@@ -1,0 +1,87 @@
+<%@ include file="/taglibs.jsp" %>
+<html:html>
+	<head>
+		<title>Oscar Forms</title>
+		<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+		
+		<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/execute.css" type="text/css">
+		<script>
+			function clickTab(name) {
+				document.surveyExecuteForm.elements['view.tab'].value=name;
+				document.surveyExecuteForm.method.value='refresh';
+				document.surveyExecuteForm.submit();
+			}
+		</script>
+		<script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/calendar.js"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/lang/calendar-en.js"></script>
+        <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/calendar-setup.js"></script>
+        <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/jsCalendar/skins/aqua/theme.css">
+	</head>
+	
+	<body>
+		
+		<%@ include file="/common/messages.jsp"%>
+		<html:form action="/PMmodule/Forms/SurveyExecute">
+		<html:hidden property="view.tab"/>
+		<html:hidden property="view.id"/>
+		<input type="hidden" name="method" value="save_survey"/>
+		<h3>Survey</h3>
+		<br/>
+
+		<div class="tabs" id="tabs">
+			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
+		
+		<c:forEach var="tab" items="${tabs}">
+				<c:choose>
+					<c:when test="${tab eq currentTab}">
+						<td style="background-color: #555;"><c:out value="${tab}"/></td>
+					</c:when>
+					<c:otherwise>
+						<td><a style="" href="javascript:void(0)" onclick="javascript:clickTab('<c:out value="${tab}"/>');return false;"><c:out value="${tab}"/></a></td>
+					</c:otherwise>
+				</c:choose>
+		</c:forEach>
+		</tr>
+	</table>
+	</div>
+	
+	<c:if test="${requestScope.introduction != null}">
+		<p><c:out value="${introduction.text }"/></p>
+	</c:if>
+		
+		<br/>
+		<table border="0" width="100%" cellspacing="2" cellpadding="2">
+		<c:forEach var="qcontainer" items="${page.QContainerArray}">
+			<tr>
+				<c:choose>
+					<c:when test="${qcontainer.question != null}">
+						<c:set var="sectionId" value="0" scope="request"/>		
+						<c:set var="question" value="${qcontainer.question}" scope="request"/>
+						<jsp:include page="question.jsp"/>
+					</c:when>
+					<c:otherwise>
+						<c:set var="section" value="${qcontainer.section}" scope="request"/>
+						<jsp:include page="section.jsp"/>
+					</c:otherwise>
+				</c:choose>
+			</tr>
+		</c:forEach>
+	</table>
+	<br/>
+	<c:if test="${requestScope.closing != null}">
+		<p><c:out value="${closing.text }"/></p>
+	</c:if>	
+	<br/>
+	<table width="50%">
+			<tr>
+				<td colspan="2">
+					<html:submit value="Save"/>
+					<html:cancel value="Cancel"/>
+				</td>
+			</tr>
+		</table>
+		
+		</html:form>
+	</body>
+</html:html>

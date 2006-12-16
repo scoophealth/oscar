@@ -146,7 +146,7 @@ String rsAppointNO="0";
 <!-- /security:oscarSec -->
 		<% } %>
 <!-- doctor code block -->
-		<a href="#" onclick="location.href='../mod/caisi/PMmodule/ClientManager.do?id=<%=demographic_no%>'"
+		<a href="#" onclick="location.href='../PMmodule/ClientManager.do?id=<%=demographic_no%>'"
 		>	<%=de.getLabel()%></a>
 		
 <!-- doctor code block -->

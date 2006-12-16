@@ -28,7 +28,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <caisi:isModuleLoad moduleName="ticklerplus"><%
 if(session.getValue("user") != null) {
@@ -162,16 +161,7 @@ if(session.getValue("user") != null) {
       <table border=0 width='100%' cellpadding="3">
       <tr>
       <td align="right">
-<%if (org.caisi.common.IsPropertiesOn.isCaisiEnable()) { %>
-<%
- String verno=org.caisi.comp.FrameworkFactory.getFramework().getComponent("rootComp").getComponent().getVersion();
-%>
-<font size="-2" color="#C0C0C0">CAISI-OSCAR version <%=verno %></font>&nbsp&nbsp&nbsp&nbsp
-          <html:link page="/versionDetail.jsp" target="_blank"><font size="-2" color="#C0C0C0">build version</font></html:link>
-<%}else{ %>
-
           <font size="-2" color="#C0C0C0">build date: <%= buildDate %></font>
-<%} %>
       </td></tr>
       <tr bgcolor='gold'><td>
       <center><font size="+1"><b><%=props.getProperty("logintitle", "")%>

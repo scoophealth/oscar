@@ -1,0 +1,63 @@
+<%@ include file="/taglibs.jsp"%>
+<%@ page import="java.util.*"%>
+<%@ page import="org.oscarehr.PMmodule.model.*"%>
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">Admission History</th>
+		</tr>
+	</table>
+</div>
+<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissionHistory" requestURI="/PMmodule/ClientManager.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
+	
+	<display:column property="programName" sortable="true" title="Program Name" />
+	<display:column property="programType" sortable="true" title="Program Type" />
+	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
+	<display:column property="dischargeDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Discharge Date" />
+	<display:column sortable="true" title="Days in Program">
+		<%
+		Admission tmpAd = (Admission) pageContext.getAttribute("admission");
+
+		Date admissionDate = tmpAd.getAdmissionDate();
+		Date dischargeDate = tmpAd.getDischargeDate();
+		
+		if (dischargeDate == null) {
+			dischargeDate = new Date();
+		}
+		
+		long diff = dischargeDate.getTime() - admissionDate.getTime();
+		
+		diff = diff / 1000; // seconds;
+		diff = diff / 60; // minutes;
+		diff = diff / 60; // hours
+		diff = diff / 24; // days
+		
+		String numDays = String.valueOf(diff);
+		%>
+		<%=numDays%>
+	</display:column>
+	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+</display:table>
+<br />
+<br />
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th title="Programs">Referral History</th>
+		</tr>
+	</table>
+</div>
+<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referralHistory" requestURI="/PMmodule/ClientManager.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+	
+	<display:column property="programName" sortable="true" title="Program Name" />
+	<display:column property="programType" sortable="true" title="Program Type" />
+	<display:column property="referralDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Referral Date" />
+	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
+	<display:column property="completionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Completion Date" />
+	<display:column property="completionNotes" sortable="true" title="Completion Notes" />
+	<display:column property="status" sortable="true" title="Status" />
+	<display:column property="notes" sortable="true" title="Notes" />
+</display:table>

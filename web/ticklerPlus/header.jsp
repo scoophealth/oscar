@@ -1,5 +1,5 @@
 <%@ include file="/taglibs.jsp" %>
-<%@ page import="org.caisi.model.*,org.springframework.context.*,org.springframework.web.context.support.*,org.caisi.service.Version" %>
+<%@ page import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*,org.caisi.service.Version" %>
 <%@ page import="java.util.Date" %>
 <%@ page errorPage="/ticklerPlus/Error.jsp" %>
 

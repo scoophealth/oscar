@@ -24,7 +24,6 @@
  * Ontario, Canada
  */
 --%>
-<%@ taglib uri="http://www.caisi.ca/plugin-tag" prefix="plugin" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%
@@ -82,21 +81,18 @@ You have no rights to access the data!
   }
 %>
 <!-- add by caisi  --> 
-<caisi:isModuleLoad moduleName="program">
-<plugin:hideWhenCompExists componentName="caisi" reverse="true">
+<caisi:isModuleLoad moduleName="caisi">
 <%
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
-String hrefurl=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 if (request.getParameter("casetoEncounter")==null)
 {
 	response.sendRedirect(hrefurl);
     return;
 }
 %>
-
-</plugin:hideWhenCompExists>
 </caisi:isModuleLoad>
 <!-- add by caisi end--> 
 <%
@@ -850,11 +846,9 @@ border-right: 2px solid #cfcfcf;
         <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
                 <table name="tileTable" style="vertical-align:middle;border-collapse:collapse;" >
                     <form name="appointmentListForm" action="./oscarEncounter.Index/IncomingEncounter.do">
-                    <caisi:isModuleLoad moduleName="program">
-                    <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+                    <caisi:isModuleLoad moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-					</plugin:hideWhenCompExists>
-					</caisi:isModuleLoad>
+  		    </caisi:isModuleLoad>
                     
                     <tr>
                         <td width=70% class="Header" style="padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-size:80%;font-weight:bold;width:100%;" NOWRAP >
@@ -875,16 +869,14 @@ border-right: 2px solid #cfcfcf;
     <tr style="height:100%">
         <td style="font-size:80%;border-top:2px solid #A9A9A9;border-right:2px solid #A9A9A9;vertical-align:top">
             <table class="LeftTable">
-            <caisi:isModuleLoad moduleName="program">
-            	<plugin:hideWhenCompExists componentName="caisi" reverse="true">
-       <%String hrefurl2=request.getContextPath()+"/mod/caisi/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+            <caisi:isModuleLoad moduleName="caisi">
+       <%String hrefurl2=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 %>
         		<tr>
         			<td>
         			<a href="<%=hrefurl2%>">Case Management Encounter</a>
         			</td>
         		</tr>
-        		</plugin:hideWhenCompExists>
         	</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
@@ -948,11 +940,9 @@ border-right: 2px solid #cfcfcf;
 
             <table class="LeftTable">
             <form name="leftColumnForm">
-            <caisi:isModuleLoad moduleName="program">
-            <plugin:hideWhenCompExists componentName="caisi" reverse="true">
-					<input type="hidden" name="casetoEncounter" value="true">
-			</plugin:hideWhenCompExists>
-			</caisi:isModuleLoad>
+            <caisi:isModuleLoad moduleName="caisi">
+		<input type="hidden" name="casetoEncounter" value="true">
+ 	</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
                         <bean:message key="oscarEncounter.Index.msgForms"/>
@@ -1010,10 +1000,8 @@ border-right: 2px solid #cfcfcf;
             </table>
             <table class="LeftTable">
             <form name="msgForm">
-            <caisi:isModuleLoad moduleName="program">
-            <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+            <caisi:isModuleLoad moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-			</plugin:hideWhenCompExists>
 			</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
@@ -1051,10 +1039,8 @@ border-right: 2px solid #cfcfcf;
             </table>
             <table class="LeftTable">
             <form name="insertTemplateForm">
-            <caisi:isModuleLoad moduleName="program">
-            <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+            <caisi:isModuleLoad moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-			</plugin:hideWhenCompExists>
 			</caisi:isModuleLoad>
                 <tr class="Header">
                     <td style="font-weight:bold">
@@ -1096,10 +1082,8 @@ border-right: 2px solid #cfcfcf;
                         <%}%>
                         
                         <form name="measurementGroupForm">
-                        <caisi:isModuleLoad moduleName="program">
-                    <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+                        <caisi:isModuleLoad moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-					</plugin:hideWhenCompExists>
 					</caisi:isModuleLoad>
                         <select name="measurementGroupSelect" class="ControlSelect" onChange="popUpMeasurements(500,1000,document.measurementGroupForm.measurementGroupSelect.options[document.measurementGroupForm.measurementGroupSelect.selectedIndex].value);return false;">
                         <option value="null" selected>-<bean:message key="oscarEncounter.Index.SelectGroup"/>-
@@ -1155,10 +1139,8 @@ border-right: 2px solid #cfcfcf;
             </table>
             <table class="LeftTable">
                 <form name="ksearch" >
-                <caisi:isModuleLoad moduleName="program">
-                <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+                <caisi:isModuleLoad moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-				</plugin:hideWhenCompExists>
 				</caisi:isModuleLoad>
                     <tr class="Header">
                         <td style="font-weight:bold">
@@ -1195,10 +1177,8 @@ border-right: 2px solid #cfcfcf;
         </td>
         <td valign="top">
         <form name="encForm" action="SaveEncounter.do" method="POST">
-        <caisi:isModuleLoad moduleName="program">
-        <plugin:hideWhenCompExists componentName="caisi" reverse="true">
+        <caisi:isModuleLoad moduleName="caisi">
 					<input type="hidden" name="casetoEncounter" value="true">
-		</plugin:hideWhenCompExists>
 		</caisi:isModuleLoad>
             <table  name="encounterTableRightCol" >
     <!-- social history row --><!-- start new rows here -->
