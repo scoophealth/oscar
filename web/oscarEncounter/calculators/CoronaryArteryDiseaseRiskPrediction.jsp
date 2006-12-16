@@ -310,11 +310,11 @@ function calculate(){
     if (document.calCorArDi.sex[0].checked){
         if (Total > 22){
             riskLvl = "HIGH";
-            lipidLvl = "LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 2.0           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
         }
         else if (Total < 20){
             riskLvl = "LOW";
-            lipidLvl = "LDL-C Level(mmol/L) - < 4.5           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 5.0           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
         }
         else{
             riskLvl = "MODERATE";
@@ -323,11 +323,11 @@ function calculate(){
     }else{
         if (Total > 14){
             riskLvl = "HIGH";
-            lipidLvl = "LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 2.0           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n";
         }
         else if (Total < 13){
             riskLvl = "LOW";
-            lipidLvl = "LDL-C Level(mmol/L) - < 4.5           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
+            lipidLvl = "LDL-C Level(mmol/L) - < 5.0           *\n* TC/HDL-C Ratio - < 6.0\t\t*\n";
         }
         else{
             riskLvl = "MODERATE";
@@ -369,7 +369,7 @@ function calculate(){
                                         +"*****************************************\n"
                                         +"* Based on risk, your target lipid      *\n"
                                         +"* levels should be:                     *\n"
-                                        +"* LDL-C Level(mmol/L) - < 2.5           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n"
+                                        +"* LDL-C Level(mmol/L) - < 2.0           *\n* TC/HDL-C Ratio - < 4.0\t\t*\n"
                                         +"*****************************************";
 	}else{
             document.second.prediction.value="*****************************************\n"
