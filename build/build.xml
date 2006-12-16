@@ -82,7 +82,8 @@
      excludes="oscar/oscarMessenger/**,oscar/form/study/**"
      destdir="${classes_web}"
 	 deprecation="on"
-	 debug="on">
+	 debug="on"
+	>
    <classpath>
       <pathelement path="${classes_web}/"/>
       <path refid="classpath.path"/>
@@ -109,8 +110,8 @@
      destdir="${classes_web}"
 	 deprecation="on"
 	 debug="on"
-         target="1.4"
-         source="1.4">
+         target="1.5"
+         source="1.5">
    <classpath>
       <pathelement path="${classes_web}/"/>
       <path refid="classpath.path"/>
