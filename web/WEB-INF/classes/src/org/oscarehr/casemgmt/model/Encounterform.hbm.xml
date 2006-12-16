@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.casemgmt.model">
+	<class name="Encounterform" table="encounterForm">
+		<id
+			column="form_value"
+			name="formValue"
+			type="string"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="hidden"
+			length="5"
+			name="hidden"
+			not-null="true"
+			type="integer"
+		 />
+		<property
+			column="form_name"
+			length="30"
+			name="formName"
+			not-null="true"
+			type="string"
+		 />
+		<property
+			column="form_table"
+			length="50"
+			name="formTable"
+			not-null="true"
+			type="string"
+		 />
+	</class>
+</hibernate-mapping>

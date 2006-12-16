@@ -16,12 +16,12 @@
 		
 		<set name="providers" table="custom_filter_providers" lazy="false">
 		    <key column="filter_id"/>
-		    <many-to-many column="provider_no" class="org.caisi.model.Provider"/>
+		    <many-to-many column="provider_no" class="org.oscarehr.PMmodule.model.Provider"/>
 		</set>
 		
 		<set name="assignees" table="custom_filter_assignees" lazy="false">
 		    <key column="filter_id"/>
-		    <many-to-many column="provider_no" class="org.caisi.model.Provider"/>
+		    <many-to-many column="provider_no" class="org.oscarehr.PMmodule.model.Provider"/>
 		</set>
 		
 		<property name="demographic_no"/>

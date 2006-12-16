@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="AccessType" table="access_type">
+		<id
+			column="access_id"
+			name="Id"
+			type="java.lang.Long"
+			unsaved-value="0"
+		>
+			<generator class="native" />
+		</id>
+		 
+		<property
+			column="name"
+			name="Name"
+			not-null="false"
+			type="string"
+		 />
+		 
+		<property
+			column="type"
+			name="Type"
+			not-null="false"
+			type="string"
+		 />
+	</class>
+</hibernate-mapping>

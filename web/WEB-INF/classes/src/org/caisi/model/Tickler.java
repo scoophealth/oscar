@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Provider;
+
 public class Tickler extends BaseObject {
 	private Long tickler_no;
 	private String demographic_no;

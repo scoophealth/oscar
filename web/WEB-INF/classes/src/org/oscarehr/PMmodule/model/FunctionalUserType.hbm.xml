@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="FunctionalUserType" table="functional_user_type">
+		<id
+			column="id"
+			name="Id"
+			type="java.lang.Long"
+		>
+			<generator class="native" />
+		</id>
+		 
+		<property
+			column="name"
+			name="Name"
+			not-null="false"
+			type="string"
+		 />
+		 
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="SecUserRole"
+		table="secUserRole"
+	>
+		<composite-id>
+			<key-property
+				name="RoleName"
+				column="role_name"
+				type="string"
+			/>
+			<key-property
+				name="ProviderNo"
+				column="provider_no"
+				type="string"
+			/>
+		</composite-id>
+
+
+
+	</class>
+</hibernate-mapping>

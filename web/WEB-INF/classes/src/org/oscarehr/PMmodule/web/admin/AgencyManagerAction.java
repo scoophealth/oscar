@@ -1,0 +1,286 @@
+package org.oscarehr.PMmodule.web.admin;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.PMmodule.exception.IntegratorException;
+import org.oscarehr.PMmodule.model.Agency;
+import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.PMmodule.model.Room;
+import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.PMmodule.web.formbean.AgencyManagerViewFormBean;
+
+public class AgencyManagerAction extends BaseAction {
+
+	private static final Log log = LogFactory.getLog(AgencyManagerAction.class);
+	
+	private static final String FORWARD_EDIT = "edit";
+	private static final String FORWARD_VIEW = "view";
+	
+	private static final String BEAN_AGENCY = "agency";
+	private static final String BEAN_ROOMS = "rooms";
+	private static final String BEAN_ROOM_TYPES = "roomTypes";
+	private static final String BEAN_BEDS = "beds";
+	private static final String BEAN_BED_TYPES = "bedTypes";
+	private static final String BEAN_PROGRAMS = "programs";
+	
+	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		return view(mapping, form, request, response);
+	}
+
+	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		
+		AgencyManagerViewFormBean tabBean = (AgencyManagerViewFormBean) agencyForm.get("view");
+		
+		if (tabBean.getTab() != null && tabBean.getTab().equalsIgnoreCase("community")) {
+			if (integratorManager.isEnabled() && integratorManager.isRegistered()) {
+				request.setAttribute("agencies", integratorManager.getAgencies());
+			}
+		}
+
+		request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
+		request.setAttribute(BEAN_ROOMS, roomManager.getRooms());
+		request.setAttribute(BEAN_ROOM_TYPES, roomManager.getRoomTypes());
+		request.setAttribute(BEAN_BEDS, bedManager.getBeds());
+		request.setAttribute(BEAN_BED_TYPES, bedManager.getBedTypes());
+		request.setAttribute(BEAN_PROGRAMS, programManager.getBedPrograms());
+		
+		request.setAttribute("integrator_enabled", new Boolean(integratorManager.isEnabled()));
+		request.setAttribute("integrator_registered", new Boolean(integratorManager.isRegistered()));
+		request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
+
+		return mapping.findForward(FORWARD_VIEW);
+	}
+
+	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		
+		Agency localAgency = agencyManager.getLocalAgency();
+		
+		agencyForm.set(BEAN_AGENCY, localAgency);
+		agencyForm.set(BEAN_ROOMS, roomManager.getRooms());
+		agencyForm.set(BEAN_ROOM_TYPES, roomManager.getRoomTypes());
+		agencyForm.set(BEAN_BEDS, bedManager.getBeds());
+		agencyForm.set(BEAN_BED_TYPES, bedManager.getBedTypes());
+		agencyForm.set(BEAN_PROGRAMS, programManager.getBedPrograms());
+		
+		request.setAttribute("id", localAgency.getId());
+		request.setAttribute("integratorEnabled", new Boolean(localAgency.isIntegratorEnabled()));
+		request.setAttribute("integrator_enabled", new Boolean(integratorManager.isEnabled()));
+		request.setAttribute("integrator_registered", new Boolean(integratorManager.isRegistered()));
+		
+		return mapping.findForward(FORWARD_EDIT);
+	}
+
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		
+		Agency agency = (Agency) agencyForm.get(BEAN_AGENCY);
+
+		if (isCancelled(request)) {
+			request.getSession().removeAttribute("agencyManagerForm");
+			request.setAttribute("id", agency.getId());
+
+			return view(mapping, form, request, response);
+		}
+
+		if (request.getParameter("agency.hic") == null) {
+			agency.setHic(false);
+		}
+
+		agencyManager.saveLocalAgency(agency);
+		
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("agency.saved", agency.getName()));
+		saveMessages(request, messages);
+
+		request.setAttribute("id", agency.getId());
+		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+
+		logManager.log(getProviderNo(request), "write", "agency", agency.getId().toString(), request.getRemoteAddr());
+
+		return mapping.findForward(FORWARD_EDIT);
+	}
+	
+	public ActionForward saveRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		
+		Room[] rooms = (Room[]) agencyForm.get(BEAN_ROOMS);
+		
+		for (int i = 0; i < rooms.length; i++) {
+	        if (request.getParameter("rooms[" + i + "].active") == null) {
+	        	rooms[i].setActive(false);
+	        }
+        }
+		
+		roomManager.saveRooms(rooms);
+		
+		return edit(mapping, form, request, response);
+    }
+
+	public ActionForward saveBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		
+		Bed[] beds = (Bed[]) agencyForm.get(BEAN_BEDS);
+
+		for (int i = 0; i < beds.length; i++) {
+	        if (request.getParameter("beds[" + i + "].active") == null) {
+	        	beds[i].setActive(false);
+	        }
+        }
+		
+		bedManager.saveBeds(beds);
+		
+		return edit(mapping, form, request, response);
+    }
+	
+	public ActionForward addRoom(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		roomManager.addRoom();
+		
+		return edit(mapping, form, request, response);
+    }
+	
+	public ActionForward addBed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		bedManager.addBed();
+		
+		return edit(mapping, form, request, response);
+    }
+	
+	public ActionForward enable_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		Agency agency = agencyManager.getLocalAgency();
+
+		if (agency.getId().longValue() == 0) {
+			try {
+				if (agency.getId().longValue() == 0) {
+					String id = integratorManager.register(agency, agency.getIntegratorUserName());
+					if (id != null) {
+						agency.setId(Long.valueOf(id));
+						agencyManager.saveLocalAgency(agency);
+					} else {
+						throw new Exception("Unable to register agency");
+					}
+					integratorManager.refresh();
+				} else {
+					log.warn("already registered!!");
+				}
+			} catch (Throwable e) {
+				log.error(e);
+				ActionMessages messages = new ActionMessages();
+				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.registered.failed", e.getMessage()));
+				saveMessages(request, messages);
+				request.setAttribute("id", agency.getId());
+				request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+
+				return mapping.findForward(FORWARD_EDIT);
+			}
+		}
+
+		agency.setIntegratorEnabled(true);
+		agencyManager.saveAgency(agency);
+		integratorManager.refresh();
+
+		request.setAttribute("id", agency.getId());
+		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+
+		return mapping.findForward(FORWARD_EDIT);
+	}
+
+	public ActionForward disable_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		Agency agency = agencyManager.getLocalAgency();
+		agency.setIntegratorEnabled(false);
+		agencyManager.saveAgency(agency);
+		integratorManager.refresh();
+
+		request.setAttribute("id", agency.getId());
+		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+
+		return mapping.findForward(FORWARD_EDIT);
+	}
+
+	public ActionForward register(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Agency agency = agencyManager.getLocalAgency();
+			
+			if (agency.getId() == 0) {
+				String id = integratorManager.register(agency, agency.getIntegratorUserName());
+				
+				if (id != null) {
+					agency.setId(Long.valueOf(id));
+					agencyManager.saveLocalAgency(agency);
+				} else {
+					log.error("error");
+				}
+				integratorManager.refresh();
+			} else {
+				log.warn("already registered!!");
+			}
+		} catch (Throwable e) {
+			log.error(e);
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.registered.failed"));
+			saveMessages(request, messages);
+		}
+		
+		return view(mapping, form, request, response);
+	}
+
+	public ActionForward refresh_programs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			integratorManager.refreshPrograms(programManager.getProgramsByAgencyId("0"));
+		} catch (IntegratorException e) {
+			log.error(e);
+		}
+
+		return view(mapping, form, request, response);
+	}
+
+	public ActionForward refresh_admissions(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			integratorManager.refreshAdmissions(admissionManager.getAdmissions());
+		} catch (IntegratorException e) {
+			log.error(e);
+		}
+
+		return view(mapping, form, request, response);
+	}
+
+	public ActionForward refresh_providers(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			integratorManager.refreshProviders(providerManager.getProviders());
+		} catch (IntegratorException e) {
+			log.error(e);
+		}
+
+		return view(mapping, form, request, response);
+	}
+
+	public ActionForward refresh_referrals(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			integratorManager.refreshReferrals(clientManager.getReferrals());
+		} catch (IntegratorException e) {
+			log.error(e);
+		}
+
+		return view(mapping, form, request, response);
+	}
+
+	public ActionForward refresh_clients(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			integratorManager.refreshClients(clientManager.getClients());
+		} catch (IntegratorException e) {
+			log.error(e);
+		}
+
+		return view(mapping, form, request, response);
+	}
+
+}

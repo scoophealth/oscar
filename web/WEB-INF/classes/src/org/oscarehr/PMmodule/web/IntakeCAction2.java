@@ -1,0 +1,617 @@
+package org.oscarehr.PMmodule.web;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.PMmodule.exception.IntegratorException;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Formintakec;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.web.formbean.IntakeCAddress;
+import org.oscarehr.PMmodule.web.formbean.IntakeCContact;
+import org.oscarehr.PMmodule.web.formbean.IntakeCFormBean;
+import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
+import org.oscarehr.PMmodule.web.formbean.IntakeCIdentification;
+import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
+
+public class IntakeCAction2 extends BaseAction {
+	
+	private static Log log = LogFactory.getLog(IntakeAAction2.class);
+	private  final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+	
+	
+	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward new_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		request.getSession().setAttribute("demographic",null);
+		return form(mapping,form,request,response);
+	}
+	
+	public IntakeCAddress[] createAddresses() {
+		IntakeCAddress[] value= new IntakeCAddress[20];
+		for(int x=0;x<value.length;x++) {
+			value[x] = new IntakeCAddress();
+		}
+		return value;
+	}
+	
+	public IntakeCContact[] createContacts() {
+		IntakeCContact[] value= new IntakeCContact[20];
+		for(int x=0;x<value.length;x++) {
+			value[x] = new IntakeCContact();
+		}
+		return value;
+	}
+	
+	public IntakeCIdentification[] createIds() {
+		IntakeCIdentification[] value= new IntakeCIdentification[20];
+		for(int x=0;x<value.length;x++) {
+			value[x] = new IntakeCIdentification();
+		}
+		return value;
+	}
+	
+	public IntakeCHospitalization[] createHospitalizations() {
+		IntakeCHospitalization[] value= new IntakeCHospitalization[20];
+		for(int x=0;x<value.length;x++) {
+			value[x] = new IntakeCHospitalization();
+		}
+		return value;
+	}
+	
+	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		IntakeCFormBean formBean = (IntakeCFormBean)intakeForm.get("view2");
+		IntakeFormBean intakeFormBean = (IntakeFormBean)intakeForm.get("bean");
+		
+		//IntakeCAddress[] addresses = (IntakeCAddress[])intakeForm.get("addresses");
+		//IntakeCContact[] contacts = (IntakeCContact[])intakeForm.get("contact");
+		//IntakeCIdentification[] identifications = (IntakeCIdentification[])intakeForm.get("identification");
+
+		IntakeCAddress[] addresses = this.createAddresses();
+		IntakeCContact[] contacts = this.createContacts();
+		IntakeCIdentification[] identifications = this.createIds();
+		IntakeCHospitalization[] hospitalizations = this.createHospitalizations();
+		
+		intakeForm.set("intake", new Formintakec());
+		//intakeForm.set("view",new IntakeCFormBean());
+		intakeForm.set("addresses",addresses);
+		intakeForm.set("contact",contacts);
+		intakeForm.set("identification",identifications);
+		intakeForm.set("hospitalization",hospitalizations);
+		formBean.setNumContacts(1);
+		formBean.setNumIdentification(1);
+		formBean.setNumPastAddresses(0);
+		formBean.setNumHospitalization(1);
+		
+		String demographicNo = request.getParameter("demographicNo");
+		
+		if(demographicNo==null) {
+			demographicNo=(String)request.getAttribute("demographicNo");
+		}
+		request.setAttribute("clientId", demographicNo);
+			
+		Formintakec intakeCForm = intakeCManager.getCurrentForm(demographicNo);
+		boolean update=(intakeCForm != null);
+		if(!update) {
+			intakeCForm = new Formintakec();
+		}
+		
+		//view form, provider
+		Demographic client  = clientManager.getClientByDemographicNo(demographicNo);
+		if(client != null) {
+			this.updateForm(intakeCForm,client);
+		}
+		
+		//from using the /Intake action
+		Demographic demographicInfo = (Demographic)request.getSession().getAttribute("demographic");
+		if(demographicInfo != null) {
+			log.debug("have demographic information");
+			intakeFormBean.setAgencyId(demographicInfo.getAgencyId());
+			intakeFormBean.setClientId(demographicInfo.getDemographicNo().longValue());
+			//this.updateForm(intakeCForm, demographicInfo);
+		}
+		
+		if(update) {
+			if(client == null) {
+				ActionMessages messages = new ActionMessages();
+				messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.invalid_client"));
+				saveMessages(request,messages);			
+				return mapping.findForward("success");
+			}  
+			intakeCForm.setDemographicNo(Long.valueOf(demographicNo));
+			
+			//get past addresses - have to parse out field
+			String pastAddresses = intakeCForm.getPastAddresses();
+			if(pastAddresses != null && pastAddresses.length() > 0) {
+				String[] entries = pastAddresses.split("\\$\\$\\$");
+				for(int x=0;x<entries.length;x++) {
+					String[] fields = entries[x].split("~~~");
+					if(fields.length > 0) {
+						addresses[x].setInfo(fields[0]);
+						addresses[x].setStartDate(fields[1]);
+						if(fields.length>2) {
+							addresses[x].setEndDate(fields[2]);
+						}
+					}
+				}
+				formBean.setNumPastAddresses(entries.length);
+			}
+
+			String contactsInfo = intakeCForm.getContactsInfo();
+			if(contactsInfo != null && contactsInfo.length() > 0) {
+				String[] entries = contactsInfo.split("\\$\\$\\$");
+				for(int x=0;x<entries.length;x++) {
+					String fields[] = entries[x].split("~~~");
+					
+					
+					String temp[]={"*","*","*","*","*","*","*"};
+					for(int i=0;i<fields.length;i++){
+						temp[i]=fields[i];
+					}
+					
+					fields=temp;
+					
+					
+					if(fields.length != 0) {
+						contacts[x].setAddress(fields[0]);
+						contacts[x].setEmail(fields[1]);
+						contacts[x].setFax(fields[2]);
+						contacts[x].setName(fields[3]);
+						contacts[x].setPhone(fields[4]);
+						contacts[x].setRelationship(fields[5]);
+						if(fields.length > 6) {
+							contacts[x].setOtherInfo(fields[6]);
+						}
+					}
+				}
+				formBean.setNumContacts(entries.length);
+			}
+			
+			String idsInfo = intakeCForm.getIds();
+			if(idsInfo != null && idsInfo.length() > 0) {
+				String[] entries = idsInfo.split("\\$\\$\\$");
+				for(int x=0;x<entries.length;x++) {
+					String[] fields = entries[x].split("~~~");
+					if(fields.length != 0) {
+						identifications[x].setType(fields[0]);
+						identifications[x].setNumber(fields[1]);
+					}
+				}
+				formBean.setNumIdentification(entries.length);
+				intakeForm.set("identification",identifications);
+			}
+			
+			String hospitalizationInfo = intakeCForm.getHospitalizations();
+			if(hospitalizationInfo != null && hospitalizationInfo.length() > 0) {
+				String[] entries = hospitalizationInfo.split("\\$\\$\\$");
+				for(int x=0;x<entries.length;x++) {
+					String[] fields = entries[x].split("~~~");
+					if(fields.length != 0) {
+						hospitalizations[x].setDate(fields[0]);
+						hospitalizations[x].setLength(fields[1]);
+						hospitalizations[x].setPsychiatric(Boolean.valueOf(fields[2]).booleanValue());
+						hospitalizations[x].setPhysicalHealth(Boolean.valueOf(fields[3]).booleanValue());
+						hospitalizations[x].setUnknown(Boolean.valueOf(fields[4]).booleanValue());
+					}
+				}
+				formBean.setNumHospitalization(entries.length);
+				intakeForm.set("hospitalization",hospitalizations);
+			}
+		} else {
+			//intakeCForm = new Formintakec();
+			intakeCForm.setAdmissionDate(formatter.format(new Date()));
+			//set client name
+			if(client != null) {
+				intakeCForm.setDemographicNo(Long.valueOf(demographicNo));
+				intakeCForm.setClientFirstName(client.getFirstName());
+				intakeCForm.setClientSurname(client.getLastName());
+				this.updateForm(intakeCForm, client);
+			}
+			
+			if(demographicInfo != null) {
+				intakeCForm.setClientFirstName(demographicInfo.getFirstName());
+				intakeCForm.setClientSurname(demographicInfo.getLastName());
+				if(demographicInfo.getDateOfBirth().startsWith("0")) {
+					intakeCForm.setDayOfBirth(demographicInfo.getDateOfBirth().substring(1));
+				} else {
+					intakeCForm.setDayOfBirth(demographicInfo.getDateOfBirth());
+				}
+				if(demographicInfo.getMonthOfBirth().startsWith("0")) {
+					intakeCForm.setMonthOfBirth(demographicInfo.getMonthOfBirth().substring(1));
+				} else {
+					intakeCForm.setMonthOfBirth(demographicInfo.getMonthOfBirth());		
+				}
+				intakeCForm.setYearOfBirth(demographicInfo.getYearOfBirth());
+				if(demographicInfo.getSex() != null) {
+					if(demographicInfo.getSex().equalsIgnoreCase("M")) {
+						intakeCForm.setRadioGender("2");
+					} else if(demographicInfo.getSex().equalsIgnoreCase("F")) {
+						intakeCForm.setRadioGender("1");			
+					} else if(demographicInfo.getSex().equalsIgnoreCase("T")) {
+						//other
+						intakeCForm.setRadioGender("3");
+					}
+				}
+				if(demographicInfo.getHin() != null) {
+					if(demographicInfo.getHin()!=null && demographicInfo.getHin().length()>0) {
+						IntakeCIdentification id = new IntakeCIdentification();
+						if(demographicInfo.getHcType() != null) {
+							id.setType("Health Insurance # (" + demographicInfo.getHcType() + ")");
+						} else {
+							id.setType("Health Insurance # (unknown province)");
+						}
+						id.setNumber(demographicInfo.getHin() + " " +  demographicInfo.getVer());
+						identifications[0]= id;
+						formBean.setNumIdentification(1);
+					}
+				}
+			}
+		}
+
+		if(client != null) {
+			Admission a = admissionManager.getCurrentCommunityProgramAdmission(String.valueOf(client.getDemographicNo()));
+			if(a != null) {
+				request.setAttribute("in_community_program", new Boolean(true));
+			}
+		}
+		
+		
+		intakeCForm.setStaffName(providerManager.getProviderName(getProviderNo(request)));		
+		intakeForm.set("intake",intakeCForm);
+
+		setAttributes(request,form);
+		
+		logManager.log(getProviderNo(request),"read","intakec",demographicNo,request.getRemoteAddr());
+	   	request.setAttribute("demographicNo",demographicNo);
+		return mapping.findForward("form");
+	}
+
+	public ActionForward refresh(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String demographicNo = request.getParameter("demographicNo");
+		request.setAttribute("demographicNo",demographicNo);
+		
+		setAttributes(request,form);
+		
+		return mapping.findForward("form");
+	}
+		
+	protected void setAttributes(HttpServletRequest request,ActionForm form) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		Formintakec intake = (Formintakec)intakeForm.get("intake");
+		
+	
+		List origProgramDomain = providerManager.getProgramDomain(getProviderNo(request));
+		request.setAttribute("programDomainBed",this.getProgramDomain_Bed(origProgramDomain));
+		request.setAttribute("programDomainService",this.getProgramDomain_Service(origProgramDomain));
+		request.setAttribute("clientId", intake.getDemographicNo());
+	}
+	public ActionForward add_address(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		IntakeCFormBean formBean = (IntakeCFormBean)intakeForm.get("view2");
+		formBean.setNumPastAddresses(formBean.getNumPastAddresses()+1);
+		setAttributes(request,form);
+		
+		return mapping.findForward("form");
+	}
+	
+	public ActionForward add_contact(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		IntakeCFormBean formBean = (IntakeCFormBean)intakeForm.get("view2");
+		formBean.setNumContacts(formBean.getNumContacts()+1);
+		setAttributes(request,form);
+		
+		return mapping.findForward("form");
+	}
+	
+	public ActionForward add_identification(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		IntakeCFormBean formBean = (IntakeCFormBean)intakeForm.get("view2");
+		formBean.setNumIdentification(formBean.getNumIdentification()+1);
+		setAttributes(request,form);
+		
+		return mapping.findForward("form");
+	}
+	
+	public ActionForward add_hospitalization(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		IntakeCFormBean formBean = (IntakeCFormBean)intakeForm.get("view2");
+		formBean.setNumHospitalization(formBean.getNumHospitalization()+1);
+		//log.debug("numHospitalization=" + formBean.getNumHospitalization());
+		setAttributes(request,form);
+		
+		return mapping.findForward("form");
+	}
+		
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		IntakeCFormBean formBean = (IntakeCFormBean)intakeForm.get("view2");
+		IntakeFormBean intakeFormBean = (IntakeFormBean)intakeForm.get("bean");
+		
+		Formintakec intakec = (Formintakec)intakeForm.get("intake");
+		IntakeCAddress[] addresses = (IntakeCAddress[])intakeForm.get("addresses");
+		IntakeCContact[] contacts = (IntakeCContact[])intakeForm.get("contact");
+		IntakeCIdentification[] identifications = (IntakeCIdentification[])intakeForm.get("identification");
+		IntakeCHospitalization[] hospitalizations = (IntakeCHospitalization[])intakeForm.get("hospitalization");
+		boolean update = false;
+		
+		if(intakec.getId() != null && intakec.getId().longValue()>0) {
+			update = true;
+		}
+		
+		//must handle past addresses/contacts/identification
+		if(formBean.getNumPastAddresses() > 0) {
+			StringBuffer addressesBuffer = new StringBuffer();
+			for(int x=0;x<formBean.getNumPastAddresses();x++) {
+				IntakeCAddress address = addresses[x];
+				addressesBuffer.append(address.getInfo()).append("~~~").append(address.getStartDate()).append("~~~").append(address.getEndDate()).append("$$$");
+			}
+			intakec.setPastAddresses(addressesBuffer.toString());
+		}
+		if(formBean.getNumContacts() > 0) {
+			StringBuffer contactsBuffer = new StringBuffer();
+			for(int x=0;x<formBean.getNumContacts();x++) {
+				IntakeCContact contact = contacts[x];
+				contactsBuffer.append(contact.getAddress()==""||contact.getAddress()==null?"*":contact.getAddress()).append("~~~")
+					.append(contact.getEmail()==""||contact.getEmail()==null?"*":contact.getEmail()).append("~~~")
+					.append(contact.getFax()==""||contact.getFax()==null?"*":contact.getFax()).append("~~~")
+					.append(contact.getName()==""||contact.getName()==null?"*":contact.getName()).append("~~~")
+					.append(contact.getPhone()==""||contact.getPhone()==null?"*":contact.getPhone()).append("~~~")
+					.append(contact.getRelationship()==""||contact.getRelationship()==null?"*":contact.getRelationship()).append("~~~")
+					.append(contact.getOtherInfo()).append("$$$");
+			}
+			intakec.setContactsInfo(contactsBuffer.toString());
+		}
+		if(formBean.getNumIdentification() > 0) {
+			StringBuffer idBuffer = new StringBuffer();
+			for(int x=0;x<formBean.getNumIdentification();x++) {
+				IntakeCIdentification id = identifications[x];
+				idBuffer.append(
+						id.getType()).append("~~~")
+						.append(id.getNumber()).append("$$$");
+				}
+			intakec.setIds(idBuffer.toString());
+		}
+		if(formBean.getNumHospitalization() > 0) {
+			StringBuffer idBuffer = new StringBuffer();
+			for(int x=0;x<formBean.getNumHospitalization();x++) {
+				IntakeCHospitalization hospitalization = hospitalizations[x];
+				idBuffer.append(
+						hospitalization.getDate()).append("~~~")
+						.append(hospitalization.getLength()).append("~~~")
+						.append(hospitalization.isPsychiatric()).append("~~~")
+						.append(hospitalization.isPhysicalHealth()).append("~~~")
+						.append(hospitalization.isUnknown()).append("~~~")
+						.append("$$$");
+				}
+			intakec.setHospitalizations(idBuffer.toString());
+		}
+		intakec.setStaffName(providerManager.getProviderName(getProviderNo(request)));		
+		intakec.setProviderNo(Long.valueOf(this.getProviderNo(request)));
+		intakeCManager.saveNewIntake(intakec);
+		
+		if(update) {
+			updateClientInfo(intakec,String.valueOf(intakec.getDemographicNo()));
+		}
+		
+		Date admissionDate= null;
+		try {
+			admissionDate = formatter.parse(intakec.getAdmissionDate());
+		}catch(ParseException e) {
+			log.warn(e);
+		}
+		
+		if(!update) {
+	//		see if we can admit them
+			long admissionProgramId = formBean.getAdmissionProgram();
+			log.debug(String.valueOf(admissionProgramId));
+			
+			Program admissionProgram = null;
+			
+			if(admissionProgramId == 0) {
+				//holding tank!
+				if(admissionManager.getCurrentBedProgramAdmission(String.valueOf(intakec.getDemographicNo())) == null) {
+					admissionProgram = programManager.getHoldingTankProgram();
+				}
+			} else {
+				admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
+			}
+			
+			if(admissionProgram != null) {
+				try {
+					admissionManager.processInitialAdmission(String.valueOf(intakec.getDemographicNo()),getProviderNo(request),admissionProgram,"initial admission",admissionDate);
+				}catch(Exception e) {
+					log.warn(e);
+				}
+			} else {
+				ActionMessages messages = new ActionMessages();
+				messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
+				saveMessages(request,messages);			
+			}
+		}
+		
+		if(update) {
+			long admissionProgramId =formBean.getAdmissionProgram();		
+			
+			if(admissionProgramId != 0) {
+				Admission commAdmission = admissionManager.getCurrentCommunityProgramAdmission(String.valueOf(intakec.getDemographicNo()));
+				Program admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
+				
+				if(commAdmission != null && admissionProgram != null && !admissionProgram.isFull()) {
+					try {
+						admissionManager.processAdmission(String.valueOf(intakec.getDemographicNo()), getProviderNo(request), admissionProgram, null, "Intake Based Admission",admissionDate);						
+					}catch(Exception e) {
+						ActionMessages messages = new ActionMessages();
+						messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
+						saveMessages(request,messages);		
+					}
+				} else {
+					ActionMessages messages = new ActionMessages();
+					messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
+					saveMessages(request,messages);		
+				}
+			}	
+		}		
+		
+		String[] servicePrograms = request.getParameterValues("admit_service");
+		if(servicePrograms != null) {
+			for(int x=0;x<servicePrograms.length;x++) {
+				Program serviceProgram =  programManager.getProgram(servicePrograms[x]);
+				if(serviceProgram != null) {
+					try {
+						admissionManager.processInitialAdmission(String.valueOf(intakec.getDemographicNo()),getProviderNo(request),serviceProgram,"initial admission",admissionDate);						
+					}catch(Exception e) {
+						log.warn(e);
+					}
+				}
+			}
+		}
+		
+		try {
+			/* if client is based on one from a remote agency */
+			if(intakeFormBean.getAgencyId() != integratorManager.getLocalAgencyId() && intakeFormBean.getAgencyId() != 0) {
+				//integrator-add/merge
+				Demographic demographic = clientManager.getClientByDemographicNo(String.valueOf(intakec.getDemographicNo()));
+				integratorManager.saveClient(demographic);
+				integratorManager.mergeClient(demographic,intakeFormBean.getAgencyId(),intakeFormBean.getClientId());
+				//saveClientExtras(demographic.getDemographicNo().intValue(),(Demographic)request.getSession().getAttribute("demographic"));
+			} else {
+				//new client
+				integratorManager.saveClient(clientManager.getClientByDemographicNo(String.valueOf(intakec.getDemographicNo())));
+			}
+		}catch(IntegratorException e) {
+			log.error(e);
+		}
+	
+		request.getSession().setAttribute("demographic",null);		
+		request.setAttribute("demographicNo",String.valueOf(intakec.getDemographicNo()));		
+		intakeForm.reset(mapping,request);
+		intakeForm.set("view2",new IntakeCFormBean());
+		return mapping.findForward("success");
+	}
+	
+	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm intakeForm = (DynaActionForm)form;
+		Formintakec intakec = (Formintakec)intakeForm.get("intake");
+		boolean update = false;
+		if(intakec.getId() != null && intakec.getId().longValue()>0) {
+			update=true;
+		}
+		Long demographicNo = intakec.getDemographicNo();
+		request.setAttribute("demographicNo",demographicNo);
+		intakeForm.reset(mapping,request);
+		if(update) {
+			return mapping.findForward("cancel-update"); 
+		} else {
+			//return mapping.findForward("cancel-new"); 
+			return new ActionForward("/PMmodule/ProviderInfo.do?method=view");
+		}
+	}
+	
+	
+	protected List getProgramDomain_Bed(List origProgramDomain) {
+		List programDomain = new ArrayList();
+		
+		for(Iterator iter=origProgramDomain.iterator();iter.hasNext();) {
+			ProgramProvider pp = (ProgramProvider)iter.next();
+			Program p = programManager.getProgram(String.valueOf(pp.getProgramId()));
+			boolean add = true;
+			if(!p.getType().equalsIgnoreCase("bed")) {
+				add=false;
+			}
+			if(p.getNumOfMembers().intValue() >= p.getMaxAllowed().intValue()) {
+				add=false;
+			}
+			//pp.setProgramName(p.getName());
+			if(add) {
+				programDomain.add(p);
+			}
+		}
+		return programDomain;
+	}
+	
+	protected List getProgramDomain_Service(List origProgramDomain) {
+		List programDomain = new ArrayList();
+		
+		for(Iterator iter=origProgramDomain.iterator();iter.hasNext();) {
+			ProgramProvider pp = (ProgramProvider)iter.next();
+			Program p = programManager.getProgram(String.valueOf(pp.getProgramId()));
+			boolean add = true;
+			if(!p.getType().equalsIgnoreCase("service")) {
+				add=false;
+			}
+			if(p.getNumOfMembers().intValue() >= p.getMaxAllowed().intValue()) {
+				add=false;
+			}
+			//pp.setProgramName(p.getName());
+			if(add) {
+				programDomain.add(p);
+			}
+		}
+		return programDomain;
+	}
+	
+	protected void updateClientInfo(Formintakec intake, String demographicNo) {
+		Demographic client  = clientManager.getClientByDemographicNo(demographicNo);
+		client.setFirstName(intake.getClientFirstName());
+		client.setLastName(intake.getClientSurname());
+		if(intake.getYearOfBirth()!= null && intake.getYearOfBirth().length()>0) {
+			client.setYearOfBirth(intake.getYearOfBirth());
+		}
+		if(intake.getMonthOfBirth()!= null && intake.getMonthOfBirth().length()>0) {
+			client.setMonthOfBirth(intake.getMonthOfBirth());
+		}
+		if(intake.getDayOfBirth()!= null && intake.getDayOfBirth().length()>0) {
+			client.setDateOfBirth(intake.getDayOfBirth());
+		}
+		clientManager.saveClient(client);
+	}
+	
+	protected void updateForm(Formintakec intake, Demographic client) {
+		if(client.getYearOfBirth() != null && client.getYearOfBirth().length()>0) {
+			intake.setYearOfBirth(client.getYearOfBirth());
+		}
+		if(client.getMonthOfBirth() != null && client.getMonthOfBirth().length()>0) {
+			intake.setMonthOfBirth(String.valueOf(Integer.parseInt(client.getMonthOfBirth())));
+		}
+		if(client.getDateOfBirth() != null && client.getDateOfBirth().length()>0) {
+			intake.setDayOfBirth(String.valueOf(Integer.parseInt(client.getDateOfBirth())));
+		}		
+	}
+	
+	protected void saveClientExtras(int demographicNo, Demographic remoteDemographic) {
+		if(remoteDemographic == null) {
+			log.warn("Expected demographic session variable to be set!");
+			return;
+		}
+		
+		if(remoteDemographic.getExtras() == null) {
+			log.info("no extras found");
+			return;
+		}
+		
+		for(int x=0;x<remoteDemographic.getExtras().length;x++) {
+			clientManager.saveDemographicExt(demographicNo, remoteDemographic.getExtras()[x].getKey(), remoteDemographic.getExtras()[x].getValue());
+		}		
+	}
+	
+}

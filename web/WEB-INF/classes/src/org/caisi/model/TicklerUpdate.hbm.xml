@@ -14,7 +14,7 @@
 		<property name="update_date" type="java.util.Date"/>
 		
 		<many-to-one name="provider" 
-			class="org.caisi.model.Provider"
+			class="org.oscarehr.PMmodule.model.Provider"
 			column="provider_no"
 			update="false"
 			insert="false"

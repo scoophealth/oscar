@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.survey.model">
+   	<class name="Survey" table="survey">    
+        <id name="surveyId" column="surveyid" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <property name="description" type="string"/>
+        <property name="surveyData" type="text"/>
+        <property name="version"/>
+		<property name="status" type="short"/>
+        <property name="userId" type="long"/>
+        <property name="dateCreated" type="timestamp"/>
+        <property name="dateLaunched" type="timestamp"/>
+        <property name="dateClosed" type="timestamp"/>
+        <property name="launchedInstanceId" column="launched_instance_id"/>
+	</class>
+</hibernate-mapping>

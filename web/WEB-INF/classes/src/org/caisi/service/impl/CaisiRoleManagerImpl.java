@@ -4,16 +4,16 @@ import java.util.List;
 
 import org.caisi.dao.AccessTypeDAO;
 import org.caisi.dao.CaisiRoleDAO;
-import org.caisi.dao.ProviderDAO;
 import org.caisi.model.CaisiRole;
 import org.caisi.model.Role;
 import org.caisi.service.CaisiRoleManager;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 
 public class CaisiRoleManagerImpl implements CaisiRoleManager {
 
 	private CaisiRoleDAO roleDAO;
-	private ProviderDAO providerDAO;
 	private AccessTypeDAO accessTypeDAO;
+	private ProviderDao providerDAO;
 	
 	public void setAccessTypeDAO(AccessTypeDAO dao) {
 		this.accessTypeDAO = dao;
@@ -23,7 +23,7 @@ public class CaisiRoleManagerImpl implements CaisiRoleManager {
 		this.roleDAO = roleDAO;
 	}
 	
-	public void setProviderDAO(ProviderDAO providerDAO) {
+	public void setProviderDAO(ProviderDao providerDAO) {
 		this.providerDAO = providerDAO;
 	}
 	

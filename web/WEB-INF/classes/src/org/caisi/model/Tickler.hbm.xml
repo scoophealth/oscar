@@ -28,7 +28,7 @@
 		</set>
 
 		<many-to-one name="demographic" 
-			class="org.caisi.model.Demographic"
+			class="org.oscarehr.PMmodule.model.Demographic"
 			column="demographic_no"
 			update="false"
 			insert="false"
@@ -37,7 +37,7 @@
 		/>
 
 		<many-to-one name="provider" 
-			class="org.caisi.model.Provider"
+			class="org.oscarehr.PMmodule.model.Provider"
 			column="creator"
 			update="false"
 			insert="false"
@@ -46,7 +46,7 @@
 		/>
 
 		<many-to-one name="assignee" 
-			class="org.caisi.model.Provider"
+			class="org.oscarehr.PMmodule.model.Provider"
 			column="task_assigned_to"
 			update="false"
 			insert="false"

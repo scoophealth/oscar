@@ -3,7 +3,6 @@ package org.caisi.dao.hibernate;
 import java.util.List;
 
 import org.caisi.dao.ProviderDefaultProgramDao;
-import org.caisi.model.Program;
 import org.caisi.model.ProviderDefaultProgram;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

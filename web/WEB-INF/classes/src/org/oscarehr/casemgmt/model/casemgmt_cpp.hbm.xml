@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.oscarehr.casemgmt.model.CaseManagementCPP" table="casemgmt_cpp">
+        <id name="id" column="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        
+		<property name="demographic_no"/>
+		<property name="socialHistory"/>
+		<property name="familyHistory"/>
+		<property name="medicalHistory"/>
+		<property name="ongoingConcerns"/>
+		<property name="reminders"/>
+		<property name="update_date" type="java.util.Date"/>
+		<property name="primaryPhysician"/>
+		<property name="primaryCounsellor"/>
+    </class>
+</hibernate-mapping>

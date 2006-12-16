@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="BedDemographicHistorical"
+		table="bed_demographic_historical">
+		<meta attribute="sync-DAO">false</meta>
+		<composite-id
+			name="id"
+			class="BedDemographicHistoricalPK">
+			<key-property
+				name="bedId"
+				column="bed_id"
+				type="integer" />
+			<key-property
+				name="demographicNo"
+				column="demographic_no"
+				type="integer" />
+			<key-property
+				name="usageStart"
+				column="usage_start"
+				type="date" />
+		</composite-id>
+		<property
+			name="usageEnd"
+			column="usage_end"
+			type="date"
+			not-null="true"
+			length="10" />
+	</class>
+</hibernate-mapping>

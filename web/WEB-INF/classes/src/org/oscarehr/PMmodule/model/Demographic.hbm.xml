@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="Demographic"
+		table="demographic">
+		<id
+			column="demographic_no"
+			name="DemographicNo"
+			type="integer">
+			<generator class="native" />
+		</id>
+		<property
+			column="phone"
+			length="20"
+			name="Phone"
+			type="string" />
+		<property
+			column="patient_status"
+			length="20"
+			name="PatientStatus"
+			type="string" />
+		<property
+			column="roster_status"
+			length="20"
+			name="RosterStatus"
+			type="string" />
+		<property
+			column="provider_no"
+			length="250"
+			name="ProviderNo"
+			type="string" />
+		<property
+			column="pin"
+			length="10"
+			name="Pin"
+			type="string" />
+		<property
+			column="hin"
+			length="20"
+			name="Hin"
+			type="string" />
+		<property
+			column="address"
+			length="60"
+			name="Address"
+			type="string" />
+		<property
+			column="province"
+			length="20"
+			name="Province"
+			type="string" />
+		<property
+			column="month_of_birth"
+			length="2"
+			name="MonthOfBirth"
+			type="string" />
+		<property
+			column="ver"
+			length="3"
+			name="Ver"
+			type="string" />
+		<property
+			column="date_of_birth"
+			length="2"
+			name="DateOfBirth"
+			type="string" />
+		<property
+			column="sex"
+			length="1"
+			name="Sex"
+			type="string" />
+		<property
+			column="date_joined"
+			length="10"
+			name="DateJoined"
+			type="date" />
+		<property
+			column="family_doctor"
+			length="80"
+			name="FamilyDoctor"
+			type="string" />
+		<property
+			column="city"
+			length="20"
+			name="City"
+			type="string" />
+		<property
+			column="first_name"
+			length="30"
+			name="FirstName"
+			not-null="true"
+			type="string" />
+		<property
+			column="postal"
+			length="9"
+			name="Postal"
+			type="string" />
+		<property
+			column="hc_renew_date"
+			length="10"
+			name="HcRenewDate"
+			type="date" />
+		<property
+			column="phone2"
+			length="20"
+			name="Phone2"
+			type="string" />
+		<property
+			column="pcn_indicator"
+			length="20"
+			name="PcnIndicator"
+			type="string" />
+		<property
+			column="end_date"
+			length="10"
+			name="EndDate"
+			type="date" />
+		<property
+			column="last_name"
+			length="30"
+			name="LastName"
+			not-null="true"
+			type="string" />
+		<property
+			column="hc_type"
+			length="20"
+			name="HcType"
+			type="string" />
+		<property
+			column="chart_no"
+			length="10"
+			name="ChartNo"
+			type="string" />
+		<property
+			column="email"
+			length="100"
+			name="Email"
+			type="string" />
+		<property
+			column="year_of_birth"
+			length="4"
+			name="YearOfBirth"
+			type="string" />
+		<property
+			column="eff_date"
+			length="10"
+			name="EffDate"
+			type="date" />
+	</class>
+</hibernate-mapping>

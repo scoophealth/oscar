@@ -3,7 +3,8 @@ package org.caisi.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.caisi.model.Demographic;
+import org.oscarehr.PMmodule.model.Demographic;
+
 
 /**
  * DAO interface for working with Demographic table in OSCAR

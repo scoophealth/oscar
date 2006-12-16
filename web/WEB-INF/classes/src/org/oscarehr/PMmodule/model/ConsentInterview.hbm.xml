@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="ConsentInterview" table="consent_interview">
+		<id
+			column="id"
+			length="11"
+			name="Id"
+			type="java.lang.Long"
+			unsaved-value="0"
+		>
+			<generator class="native" />
+		</id>
+
+		 <property
+			column="consent_id"
+			name="consentId"
+			not-null="true"
+			type="long"
+		 />
+
+
+		<property
+			column="demographic_no"
+			length="11"
+			name="demographicNo"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		 
+		<property
+			column="provider_no"
+			name="ProviderNo"
+			not-null="true"
+			type="java.lang.String"
+		 />
+				 
+		  <property
+			column="form_name"
+			name="formName"
+			not-null="false"
+			type="java.lang.String"
+		 />		
+		 
+		 <property
+			column="form_version"
+			name="formVersion"
+			not-null="false"
+			type="java.lang.String"
+		 />			
+		 
+		 <property
+			column="language"
+			name="language"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="language_other"
+			name="languageOther"
+			not-null="false"
+			type="java.lang.String"
+		 />	
+		 
+		 
+		 <property
+			column="language_read"
+			name="languageRead"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="language_read_other"
+			name="languageReadOther"
+			not-null="false"
+			type="java.lang.String"
+		 />			 
+		 
+		 
+		 <property
+			column="education"
+			name="education"
+			not-null="false"
+			type="java.lang.String"
+		 />			 
+		 		
+		
+		 <property
+			column="review"
+			name="review"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="review_other"
+			name="reviewOther"
+			not-null="false"
+			type="java.lang.String"
+		 />		 
+		 
+		 <property
+			column="pressure"
+			name="pressure"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="pressure_other"
+			name="pressureOther"
+			not-null="false"
+			type="java.lang.String"
+		 />				 
+		 
+		 
+		 <property
+			column="information"
+			name="information"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="information_other"
+			name="informationOther"
+			not-null="false"
+			type="java.lang.String"
+		 />		
+		 
+		 
+		 <property
+			column="followup"
+			name="followup"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="followup_other"
+			name="followupOther"
+			not-null="false"
+			type="java.lang.String"
+		 />				 
+		 
+		 
+ 		 <property
+			column="comments"
+			name="comments"
+			not-null="false"
+			type="java.lang.String"
+		 />			 		
+		 <property
+			column="comments_other"
+			name="commentsOther"
+			not-null="false"
+			type="java.lang.String"
+		 />		
+	</class>
+</hibernate-mapping>

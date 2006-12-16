@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.oscarehr.casemgmt.model.CaseManagementTmpSave" table="casemgmt_tmpsave">
+        <id name="id" column="id" unsaved-value="0" type="java.lang.Long">
+            <generator class="native"/>
+        </id>
+        
+		<property name="demographicNo" column="demographic_no" type="long"/>
+		<property name="providerNo" column="provider_no" type="string"/>
+		<property name="programId" column="program_id" type="long"/>
+		<property name="note" type="string"/>
+		<property name="update_date" type="java.util.Date"/>
+		
+    </class>
+</hibernate-mapping>

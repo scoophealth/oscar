@@ -13,13 +13,14 @@ import org.apache.struts.util.LabelValueBean;
 import org.caisi.dao.AdmissionDao;
 import org.caisi.dao.BedProgramDao;
 import org.caisi.dao.DemographicDAO;
-import org.caisi.dao.ProgramProviderDAO;
 import org.caisi.dao.ProviderDefaultProgramDao;
-import org.caisi.model.Demographic;
-import org.caisi.model.Program;
-import org.caisi.model.ProgramProvider;
 import org.caisi.model.ProviderDefaultProgram;
 import org.caisi.service.InfirmBedProgramManager;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramProvider;
 
 public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	private BedProgramDao bedProgramDao;
@@ -28,6 +29,8 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	private ProgramProviderDAO programProviderDAOT;
 	//private ProviderRoleProgramDao providerRoleProgramDao;
 	private ProviderDefaultProgramDao providerDefaultProgramDao;
+	private ProgramDao programDao;
+	
 	
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(InfirmBedProgramManagerImpl.class);
@@ -35,6 +38,10 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	public void setBedProgramDao(BedProgramDao dao)
 	{
 		this.bedProgramDao=dao;
+	}
+	
+	public void setProgramDao(ProgramDao dao) {
+		this.programDao = dao;
 	}
 	
 	public void setProviderDefaultProgramDao(ProviderDefaultProgramDao dao)
@@ -86,9 +93,10 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		while (iter.hasNext())
 		{
 			ProgramProvider p = (ProgramProvider) iter.next();
-			if (p!=null && p.getProgram()!=null){
+			if (p!=null && p.getProgramId() != null && p.getProgramId().longValue()>0){
 				//logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
-				pList.add(new LabelValueBean(p.getProgram().getName(),p.getProgram().getId().toString()));
+				Program program = programDao.getProgram(new Integer(p.getProgramId().intValue()));
+				pList.add(new LabelValueBean(program.getName(),program.getId().toString()));
 			}
 		}
 		return pList;
@@ -98,15 +106,15 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	{
 		/*default time is Oscar default null time 0001-01-01.*/
 		Date defdt=new GregorianCalendar(1,0,1).getTime();
-                
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(dt);
-                cal.set(Calendar.HOUR_OF_DAY,23);
-                cal.set(Calendar.MINUTE,59);
-                cal.set(Calendar.SECOND,59);
-                dt = cal.getTime();
 		
-                Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dt);
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.SECOND,59);
+		dt = cal.getTime();	
+		
+		Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
 		ArrayList demographicList=new ArrayList();
 		Demographic de=null;
 		while (iter.hasNext())

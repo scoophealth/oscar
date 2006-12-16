@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.survey.model">
+   	<class name="SurveyTestData" table="survey_test_data">    
+        <id name="id" column="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <property name="instanceId" type="long" column="instance_id"/>
+        <property name="pageNumber" type="long" column="page_number"/>
+        <property name="sectionId" type="long" column="section_id"/>
+        <property name="questionId" type="long" column="question_id"/>
+        <property name="value" type="string" column="value"/>
+        <property name="key" type="string" column="data_key"/>
+        <property name="type" type="string" column="type"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="RoomBedHistorical"
+		table="room_bed_historical">
+		<meta attribute="sync-DAO">false</meta>
+		<composite-id
+			name="id"
+			class="RoomBedHistoricalPK">
+			<key-property
+				name="roomId"
+				column="room_id"
+				type="integer" />
+			<key-property
+				name="bedId"
+				column="bed_id"
+				type="integer" />
+			<key-property
+				name="containStart"
+				column="contain_start"
+				type="date" />
+		</composite-id>
+		<property
+			name="containEnd"
+			column="contain_end"
+			type="date"
+			not-null="true"
+			length="10" />
+	</class>
+</hibernate-mapping>

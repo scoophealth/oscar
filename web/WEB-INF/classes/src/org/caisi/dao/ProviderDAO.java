@@ -2,7 +2,7 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.caisi.model.Provider;
+import org.oscarehr.PMmodule.model.Provider;
 
 /**
  * DAO interface for working with Provider table in OSCAR

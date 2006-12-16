@@ -25,7 +25,7 @@ public class IsPropertiesOn{
 	}
 	
 	public static boolean isProgramEnable(){
-		return propertiesOn("program");
+		return propertiesOn("caisi");
 	}
 	
 	public static boolean isTicklerPlusEnable(){

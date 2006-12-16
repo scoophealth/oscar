@@ -1,0 +1,122 @@
+package org.oscarehr.casemgmt.service.impl;
+
+import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.dao.ProviderDao;
+import org.oscarehr.PMmodule.service.AdmissionManager;
+import org.oscarehr.PMmodule.service.RoleManager;
+import org.oscarehr.casemgmt.dao.AllergyDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementCPPDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementIssueDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
+import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
+import org.oscarehr.casemgmt.dao.ClientImageDAO;
+import org.oscarehr.casemgmt.dao.EchartDAO;
+import org.oscarehr.casemgmt.dao.EncounterFormDAO;
+import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.dao.MessagetblDAO;
+import org.oscarehr.casemgmt.dao.PrescriptionDAO;
+import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
+import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
+
+public class BaseCaseManagementManager {
+
+	protected String issueAccessType="access";
+	
+	
+	protected CaseManagementNoteDAO caseManagementNoteDAO;
+	protected CaseManagementIssueDAO caseManagementIssueDAO;
+	protected IssueDAO issueDAO;
+	protected CaseManagementCPPDAO caseManagementCPPDAO;
+	protected AllergyDAO allergyDAO;
+	protected PrescriptionDAO prescriptionDAO;
+	protected EncounterFormDAO encounterFormDAO;
+	protected MessagetblDAO messagetblDAO;
+	protected EchartDAO echartDAO;
+	protected ProviderDao providerDAO;
+	protected ClientDao demographicDAO;
+	protected ProviderSignitureDao providerSignitureDao;
+	protected RoleProgramAccessDAO roleProgramAccessDAO;
+	protected ClientImageDAO clientImageDAO;
+	protected RoleManager roleManager;
+	protected CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
+	protected AdmissionManager admissionManager;
+	
+	
+	public void setEchartDAO(EchartDAO echartDAO) {
+		this.echartDAO = echartDAO;
+	}
+
+	public void setEncounterFormDAO(EncounterFormDAO dao) {
+		this.encounterFormDAO = dao;
+	}
+
+	public void setMessagetblDAO(MessagetblDAO dao) {
+		this.messagetblDAO = dao;
+	}
+
+	public void setCaseManagementNoteDAO(CaseManagementNoteDAO dao)	{
+		this.caseManagementNoteDAO = dao;
+	}
+
+	public void setCaseManagementIssueDAO(CaseManagementIssueDAO dao) {
+		this.caseManagementIssueDAO = dao;
+	}
+
+	public void setIssueDAO(IssueDAO dao) {
+		this.issueDAO = dao;
+	}
+
+	public void setCaseManagementCPPDAO(CaseManagementCPPDAO dao) {
+		this.caseManagementCPPDAO = dao;
+	}
+
+	public void setAllergyDAO(AllergyDAO dao) {
+		this.allergyDAO = dao;
+	}
+
+	public void setPrescriptionDAO(PrescriptionDAO dao) {
+		this.prescriptionDAO = dao;
+	}
+	
+	public void setClientImageDAO(ClientImageDAO dao) {
+		this.clientImageDAO = dao;
+	}
+	
+	public void setRoleManager(RoleManager mgr) {
+		this.roleManager= mgr;
+	}
+
+	public void setProviderSignitureDao(ProviderSignitureDao providerSignitureDao) {
+		this.providerSignitureDao = providerSignitureDao;
+	}
+
+	public void setRoleProgramAccessDAO(RoleProgramAccessDAO roleProgramAccessDAO) {
+		this.roleProgramAccessDAO = roleProgramAccessDAO;
+	}
+	
+	public void setDemographicDAO(ClientDao demographicDAO) {
+		this.demographicDAO = demographicDAO;
+	}
+
+	public void setProviderDAO(ProviderDao providerDAO)	{
+		this.providerDAO = providerDAO;
+	}
+	
+	public void setCaseManagementTmpSaveDAO(CaseManagementTmpSaveDAO dao) {
+		this.caseManagementTmpSaveDAO = dao;
+	}
+	
+	protected String removeFirstSpace(String withSpaces) {
+        int spaceIndex = withSpaces.indexOf(' '); //use lastIndexOf to remove last space
+        if (spaceIndex < 0) { //no spaces!
+            return withSpaces;
+        }
+        return withSpaces.substring(0, spaceIndex)
+            + withSpaces.substring(spaceIndex+1, withSpaces.length());
+    }
+
+	public void setAdmissionManager(AdmissionManager mgr) {
+		this.admissionManager = mgr;
+	}
+}
+

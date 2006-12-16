@@ -3,7 +3,7 @@ package org.caisi.dao.hibernate;
 import java.util.List;
 
 import org.caisi.dao.ProviderDAO;
-import org.caisi.model.Provider;
+import org.oscarehr.PMmodule.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

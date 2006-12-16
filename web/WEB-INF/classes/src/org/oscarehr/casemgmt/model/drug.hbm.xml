@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+    <class name="org.oscarehr.casemgmt.model.Drug" table="drugs">
+        <id name="id" column="drugid" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <property name="provider_no"/>
+        <property name="demographic_no"/>
+        <property name="archived"/>
+        <property name="rx_date" type="java.util.Date"/>
+        <property name="end_date" type="java.util.Date"/>
+        <property name="BN"/>
+        <property name="GCN_SEQNO"/>
+        <property name="customName"/>
+  		<property name="special"/>
+  		<property name="script_no"/>
+  		<property name="create_date" type="java.util.Date"/>		
+    </class>
+</hibernate-mapping>

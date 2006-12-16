@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="ClientReferral" table="client_referral">
+		<id
+			column="referral_id"
+			name="Id"
+			type="java.lang.Long"
+		>
+			<generator class="native" />
+		</id>
+		<property
+			column="source_agency_id"
+			length="11"
+			name="SourceAgencyId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		 
+		<property
+			column="agency_id"
+			length="11"
+			name="AgencyId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="client_id"
+			length="11"
+			name="ClientId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="referral_date"
+			length="19"
+			name="ReferralDate"
+			not-null="false"
+			type="timestamp"
+		 />
+		<property
+			column="provider_no"
+			length="11"
+			name="ProviderNo"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="notes"
+			length="255"
+			name="Notes"
+			not-null="false"
+			type="string"
+		 />
+		 <property
+			column="completion_notes"
+			length="255"
+			name="CompletionNotes"
+			not-null="false"
+			type="string"
+		 />
+		<property
+			column="program_id"
+			length="11"
+			name="ProgramId"
+			not-null="true"
+			type="java.lang.Long"
+		 />
+		<property
+			column="status"
+			length="30"
+			name="Status"
+			not-null="false"
+			type="string"
+		 />
+		 
+		 <property
+			column="temporary_admission_flag"
+			name="TemporaryAdmission"
+			not-null="false"
+			type="boolean"
+		 />
+		 
+		<property
+			column="completion_date"
+			length="19"
+			name="CompletionDate"
+			not-null="false"
+			type="timestamp"
+		 />
+
+		<property
+		 	name="ProviderLastName"
+		 	type="string"
+		 	formula="(select p.last_name from provider p where p.provider_no = provider_no)"
+		 	/>
+		<property
+		 	name="ProviderFirstName"
+		 	type="string"
+		 	formula="(select p.first_name from provider p where p.provider_no = provider_no)"
+		 	/>
+		 	
+		<property
+		 	name="ProgramName"
+		 	type="string"
+		 	formula="(select p.name from program p where p.program_id = program_id)"
+		 	/>
+		 	
+    	<property
+		 	name="programType"
+		 	type="string"
+		 	formula="(select p.type from program p where p.program_id = program_id)"
+		 	/>
+		 	
+	</class>
+</hibernate-mapping>

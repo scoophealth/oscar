@@ -3,7 +3,7 @@ package org.caisi.service;
 import java.util.List;
 
 import org.caisi.dao.DemographicDAO;
-import org.caisi.model.Demographic;
+import org.oscarehr.PMmodule.model.Demographic;
 
 /**
  * Manager Interface for Demographics

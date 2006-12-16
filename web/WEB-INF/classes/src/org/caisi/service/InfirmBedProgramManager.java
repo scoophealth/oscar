@@ -3,7 +3,6 @@ package org.caisi.service;
 import java.util.Date;
 import java.util.List;
 
-import org.caisi.model.Program;
 
 public interface InfirmBedProgramManager {
 	public List getPrgramNameID();

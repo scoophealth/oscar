@@ -20,9 +20,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.EChart;
-import org.caisi.model.Provider;
 import org.caisi.model.Tickler;
-import org.caisi.model.ProgramProvider;
 import org.caisi.service.ConsultationManager;
 import org.caisi.service.DemographicManagerTickler;
 import org.caisi.service.EChartManager;
@@ -30,12 +28,16 @@ import org.caisi.service.ProviderManagerTickler;
 import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ProviderManager;
+
 import oscar.OscarProperties;
 
 public class TicklerAction extends DispatchAction {
 	private static Log log = LogFactory.getLog(TicklerAction.class);
 	private TicklerManager ticklerMgr = null;
-	private ProviderManagerTickler providerMgr = null;
+	private ProviderManager providerMgr = null;
 	private PreparedTicklerManager preparedTicklerMgr = null;
 	private ConsultationManager consultationMgr = null;
 	private DemographicManagerTickler demographicMgr = null;
@@ -49,7 +51,7 @@ public class TicklerAction extends DispatchAction {
 		this.demographicMgr = demographicManager;
 	}
 	
-	public void setProviderManager(ProviderManagerTickler providerMgr) {
+	public void setProviderManager(ProviderManager providerMgr) {
 		this.providerMgr = providerMgr;
 	}
 	

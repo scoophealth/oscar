@@ -1,0 +1,876 @@
+package org.oscarehr.survey.web;
+
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.util.LabelValueBean;
+import org.apache.xmlbeans.XmlOptions;
+import org.oscarehr.survey.model.QuestionTypes;
+import org.oscarehr.survey.model.Survey;
+import org.oscarehr.survey.service.SurveyLaunchManager;
+import org.oscarehr.survey.service.SurveyManager;
+import org.oscarehr.survey.service.SurveyModelManager;
+import org.oscarehr.survey.service.SurveyTestManager;
+import org.oscarehr.survey.web.formbean.PageNavEntry;
+import org.oscarehr.survey.web.formbean.SurveyManagerFormBean;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import org.oscarehr.surveymodel.DateDocument;
+import org.oscarehr.surveymodel.Page;
+import org.oscarehr.surveymodel.Question;
+import org.oscarehr.surveymodel.Section;
+import org.oscarehr.surveymodel.SurveyDocument;
+import org.oscarehr.surveymodel.PossibleAnswersDocument.PossibleAnswers;
+import org.oscarehr.surveymodel.SelectDocument.Select;
+
+
+
+public class SurveyManagerAction extends AbstractSurveyAction {
+	private Log log = LogFactory.getLog(getClass());
+
+	private SurveyManager surveyManager;
+	private SurveyTestManager surveyTestManager;
+	private SurveyLaunchManager surveyLaunchManager;
+	private QuestionTypes questionTypes;
+	
+	
+	public void setSurveyManager(SurveyManager mgr) {
+		this.surveyManager = mgr;
+	}
+	
+	public void setSurveyTestManager(SurveyTestManager mgr) {
+		this.surveyTestManager = mgr;
+	}
+    
+	public void setSurveyLaunchManager(SurveyLaunchManager mgr) {
+		this.surveyLaunchManager = mgr;
+	}
+	
+	public void setQuestionTypes(QuestionTypes qt) {
+		this.questionTypes = qt;
+	}
+	
+	
+	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		return list(mapping,form,request,response);
+	}
+	
+    public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+    	
+        request.setAttribute("surveys",surveyManager.getSurveys());
+        return mapping.findForward("list");
+    }
+    
+    public ActionForward test(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+    	
+    	String surveyId = request.getParameter("id");
+    	if(surveyId != null) {
+    		surveyManager.updateStatus(surveyId,Survey.STATUS_TEST);
+    	}
+    	request.setAttribute("id",surveyId);
+    	return mapping.findForward("execute");
+    }
+    
+    public ActionForward new_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+    	
+    	DynaActionForm surveyForm = (DynaActionForm)form;
+    	surveyForm.set("survey",new Survey());
+    	surveyForm.set("web",new SurveyManagerFormBean());
+    	surveyForm.set("model",null);
+    	surveyForm.set("pageModel",null);
+    	
+    	request.setAttribute("templates",surveyManager.getSurveys());
+    	
+    	return mapping.findForward("new_survey");
+    }
+    
+    public ActionForward create_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+    	
+    	DynaActionForm surveyForm = (DynaActionForm)form;
+    	Survey survey = (Survey)surveyForm.get("survey");
+    	SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+    	//make sure there's a name
+    	if(survey.getDescription() != null && survey.getDescription().equals("")) {
+    		postMessage(request,"survey.noname");
+    		request.setAttribute("templates",surveyManager.getSurveys());
+    		return mapping.findForward("new_survey");
+    	}
+    	
+    	//check to see if name exists
+    	if(surveyManager.getSurveyByName(survey.getDescription()) != null) {
+    		this.postMessage(request,"name.exists");
+    		request.setAttribute("templates",surveyManager.getSurveys());
+    		return mapping.findForward("new_survey");
+    	}
+    
+    	SurveyDocument model = null;
+    	
+    	//if using a template, load model into memory
+    	if(formBean.getTemplateId()>0) {
+    		Survey template = surveyManager.getSurvey(String.valueOf(formBean.getTemplateId()));
+    		String xml = template.getSurveyData();
+    		try {
+    			model = SurveyDocument.Factory.parse(new StringReader(xml));
+    			model.getSurvey().setName(survey.getDescription());
+    			model.getSurvey().setVersion(0);
+    		}catch(Exception e) {
+    			this.postMessage(request,"survey.create_error","Error loading template model");
+        		request.setAttribute("templates",surveyManager.getSurveys());
+        		return mapping.findForward("new_survey");
+    		}		
+    	} else {
+	    	//build a new model
+	    	model = SurveyDocument.Factory.newInstance();
+	    	SurveyDocument.Survey surveyData = model.addNewSurvey();
+	    	surveyData.setName(survey.getDescription());
+	    	surveyData.setBody(surveyData.addNewBody());
+	    	Page page = surveyData.getBody().addNewPage();
+	    	page.setDescription("Page 1");
+    	}
+    	
+    	formBean.setPage("1");
+    	surveyForm.set("model",model);
+    	
+    	return form(mapping,form,request,response);
+    }
+    
+	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		String id = request.getParameter("id");
+		
+		if(id == null) {
+			this.postMessage(request,"survey.noid");
+			return list(mapping,form,request,response);
+		}
+		
+		
+		Survey survey = surveyManager.getSurvey(id);
+
+        if(survey == null) {
+        	this.postMessage(request,"survey.edit_error","Survey not found");
+            return list(mapping,form,request,response);
+        }
+        
+        if(survey.getStatus().equals(new Short(Survey.STATUS_TEST))) {
+        	surveyTestManager.clearTestData(id);
+        }
+        
+        surveyForm.set("survey",survey);
+        
+        try {
+        	String xml = survey.getSurveyData();
+        	SurveyDocument model = SurveyDocument.Factory.parse(new StringReader(xml));
+        	surveyForm.set("model",model);
+        }catch(Exception e) {
+        	log.error(e);
+        	postMessage(request,"survey.edit_error",e.getMessage());
+        	return list(mapping,form,request,response);
+        }
+        formBean.setPage("1");
+		
+        return form(mapping,form,request,response);
+	}
+	
+	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		SurveyDocument.Survey survey = model.getSurvey();
+		
+		List pages = new ArrayList();
+		if(survey.getIntroduction() != null) {
+			pages.add(new PageNavEntry("Introduction","Introduction"));
+		}
+		
+		for(int x=0;x<survey.getBody().getPageArray().length;x++) {
+			pages.add(new PageNavEntry(String.valueOf(x+1),survey.getBody().getPageArray(x).getDescription()));
+		}
+		
+		if(survey.getClosing() != null) {
+			pages.add(new PageNavEntry("Closing","Closing"));
+		}
+		
+		request.setAttribute("pages",pages);
+					
+		String pageName = formBean.getPage();
+		if(pageName.equalsIgnoreCase("Introduction")) {
+			
+		}
+		else if(pageName.equals("Closing")) {
+			
+		} else {
+			if(pageName == null || pageName.length()==0) {
+				pageName = "1";
+	    	    }
+			if(pageName.startsWith("Page")) {
+				pageName = pageName.substring(5);
+			}
+			
+			int pn = Integer.parseInt(pageName);
+			
+			Page p = survey.getBody().getPageArray(pn-1);
+			
+			surveyForm.set("pageModel",p);
+			request.setAttribute("page_number",pageName);
+		}
+		
+		request.setAttribute("QuestionTypes", questionTypes);
+        setSectionProperties(request,survey,formBean);
+        
+		return mapping.findForward("edit");
+	}
+		
+	public ActionForward navigate(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward add_introduction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		if(surveyModel.getIntroduction() == null) {
+			surveyModel.setIntroduction(surveyModel.addNewIntroduction());
+			surveyModel.getIntroduction().setIncludeOnFirstPage(true);
+		}
+		formBean.setPage("Introduction");
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward remove_introduction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		if(surveyModel.getIntroduction() != null) {
+			surveyModel.unsetIntroduction();
+		}
+		
+		formBean.setPage("1");
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward add_page(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		
+		SurveyDocument.Survey survey = model.getSurvey();
+		Page p = survey.getBody().addNewPage();
+		p.setDescription(String.valueOf("Page " + survey.getBody().getPageArray().length));
+		formBean.setPage(String.valueOf(survey.getBody().getPageArray().length));
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward remove_page(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		String pageName = formBean.getPage();
+		SurveyDocument.Survey survey = model.getSurvey();
+		int pageNumber = Integer.parseInt(request.getParameter("id"));
+		
+		log.debug("removing page number " + pageNumber);
+		//remove the page, only if it's not the only page
+		if(survey.getBody().getPageArray().length == 1) {
+			postMessage(request,"survey_1page");
+			return form(mapping,form,request,response);
+		}
+		
+		Page p = survey.getBody().getPageArray(pageNumber-1);
+		if(p != null) {
+			survey.getBody().removePage(pageNumber-1);
+		}
+		
+		formBean.setPage("1");
+		
+		return form(mapping,form,request,response);
+	}
+
+	public ActionForward add_closing(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		if(surveyModel.getClosing() == null) {
+			surveyModel.setClosing(surveyModel.addNewClosing());
+			surveyModel.getClosing().setIncludeOnLastPage(true);
+		}
+		
+		formBean.setPage("Closing");
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward remove_closing(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		if(surveyModel.getClosing() != null) {
+			surveyModel.unsetClosing();
+		}
+		
+		formBean.setPage("1");
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward add_section(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		String pageNumber = formBean.getPage();
+		Page page = surveyModel.getBody().getPageArray(Integer.parseInt(pageNumber)-1);
+		
+		Section section = page.addNewQContainer().addNewSection();
+		section.setDescription("");
+		section.setId(SurveyManagerAction.getUnusedSectionId(page));
+		
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward remove_section(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		int id = Integer.parseInt(request.getParameter("id"));
+		String pageNumber = formBean.getPage();
+		Page page = surveyModel.getBody().getPageArray(Integer.parseInt(pageNumber)-1);
+		
+		
+		for(int x=0;x<page.getQContainerArray().length;x++) {
+			if(page.getQContainerArray(x).isSetSection()) {
+				Section section = page.getQContainerArray(x).getSection();
+				if(section.getId() == id) {
+					//found it
+					page.removeQContainer(x);
+				}
+			}
+		}
+		
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward add_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+	
+		String pageNumber = formBean.getPage();
+		int sectionId = formBean.getSection();
+		String questionType = formBean.getQuestionTypeData();
+		
+		//log.debug("add_question: page=" + pageNumber);
+		//log.debug("add_question: section=" + sectionId);
+		//log.debug("add_question: questionType=" + questionType);
+		
+		/* find right place */
+		Page page = surveyModel.getBody().getPageArray(Integer.parseInt(pageNumber)-1);
+		if(sectionId == 0) {
+			//no section
+			SurveyModelManager.createQuestion(surveyModel,pageNumber,questionType);
+		} else {
+			//find section
+			Section section = SurveyModelManager.findSection(surveyModel,pageNumber,sectionId);
+			if(section != null) {
+				SurveyModelManager.createQuestion(surveyModel,page,section,questionType);
+			}
+		}
+		
+		formBean.setSection(0);
+		formBean.setQuestionType("");
+		formBean.setQuestionTypeData("");
+		
+		return form(mapping,form,request,response);
+	}
+	
+	public ActionForward edit_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		String questionId = request.getParameter("id");
+		int qid = Integer.parseInt(questionId);
+		String sectionId = request.getParameter("section");
+		String pageNumber = request.getParameter("page");
+		
+		Question question = SurveyModelManager.findQuestion(surveyModel,pageNumber,Integer.parseInt(sectionId),qid);
+		
+		if(question != null && question.getType().isSetSelect()) {
+			Select select = question.getType().getSelect();
+			PossibleAnswers pa = select.getPossibleAnswers();
+			formBean.setNumAnswers(pa.getAnswerArray().length);
+		}
+		if(question != null && question.getType().isSetDate()) {
+			DateDocument.Date.Enum enum1 = question.getType().getDate();
+			List dateFormats = new ArrayList();
+			for(int x=1;x<=enum1.table.lastInt();x++) {
+				LabelValueBean bean = new LabelValueBean();
+				bean.setValue(String.valueOf(enum1.table.forInt(x).intValue()));
+				bean.setLabel(enum1.table.forInt(x).toString());
+				dateFormats.add(bean);
+			}
+			formBean.setDateFormat(String.valueOf(enum1.intValue()));
+			request.setAttribute("dateFormats",dateFormats);
+		}
+		surveyForm.set("questionModel",question);
+		
+		return mapping.findForward("question_editor");
+	}
+	
+	public ActionForward question_adjust_possible_answers(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		Question question = (Question)surveyForm.get("questionModel");
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		if(question.getType().isSetSelect()) {
+			Select select = question.getType().getSelect();
+			PossibleAnswers pa = select.getPossibleAnswers();
+			if(formBean.getNumAnswers() > pa.getAnswerArray().length) {
+				//adding more
+				for(int x=0;x<(formBean.getNumAnswers()-pa.getAnswerArray().length+1);x++) {
+					pa.addNewAnswer();
+				}
+			} else if(formBean.getNumAnswers() < pa.getAnswerArray().length) {
+				//remove some
+				int index = pa.getAnswerArray().length-1;
+				int numToRemove = pa.getAnswerArray().length-formBean.getNumAnswers();
+				log.debug("index=" + index);
+				log.debug("numtoRemove=" + numToRemove);
+				while(numToRemove-- > 0) {
+					pa.removeAnswer(index--);
+				}
+			}
+			formBean.setNumAnswers(pa.getAnswerArray().length);
+		}
+		
+		return mapping.findForward("question_editor");
+	}
+	
+	public ActionForward save_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		Question question = (Question)surveyForm.get("questionModel");
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		log.info("saving question: " + question.getDescription());
+		
+		if(question.getType().isSetSelect()) {
+			Select select = question.getType().getSelect();
+			PossibleAnswers pa = select.getPossibleAnswers();
+			int numAnswers = formBean.getNumAnswers();
+			for(int x=0;x<numAnswers;x++) {
+				String answer = request.getParameter("answer_" + (x+1));
+				pa.setAnswerArray(x,answer);
+			}
+		}
+		if(question.getType().isSetDate()) {
+			int dateFormat = Integer.parseInt(formBean.getDateFormat());
+			question.getType().setDate(DateDocument.Date.Enum.forInt(dateFormat));
+		}
+		return null;
+	}
+
+	public ActionForward remove_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+
+		String id = request.getParameter("id");
+		int sectionId = formBean.getSection();
+		String pageNumber = formBean.getPage();
+		
+		SurveyModelManager.removeQuestion(surveyModel,pageNumber,sectionId,Integer.parseInt(id));
+		
+		return form(mapping,form,request,response);
+	}
+
+	
+	public ActionForward clear_test_data(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String surveyId = request.getParameter("id");
+		if(surveyId != null) {
+			surveyTestManager.clearTestData(surveyId);
+		}
+		return list(mapping,form,request,response);
+	}
+	
+	public ActionForward launch(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String surveyId = request.getParameter("id");
+		if(surveyId != null) {
+			Survey survey = surveyManager.getSurvey(surveyId);
+			long instanceId = surveyLaunchManager.launch(survey);
+			survey.setLaunchedInstanceId(instanceId);
+			surveyManager.saveSurvey(survey);
+			surveyManager.updateStatus(surveyId,Survey.STATUS_LAUNCHED);
+		}
+		return list(mapping,form,request,response);
+	}
+	
+	public ActionForward close(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String surveyId = request.getParameter("id");
+		if(surveyId != null) {
+			surveyLaunchManager.close(surveyManager.getSurvey(surveyId).getLaunchedInstanceId());
+			surveyManager.updateStatus(surveyId,Survey.STATUS_CLOSED);
+		}
+		return list(mapping,form,request,response);
+	}
+	
+	public ActionForward reopen(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String surveyId = request.getParameter("id");
+		if(surveyId != null) {
+			surveyLaunchManager.reopen(surveyManager.getSurvey(surveyId).getLaunchedInstanceId());
+			surveyManager.updateStatus(surveyId,Survey.STATUS_LAUNCHED);
+		}
+		return list(mapping,form,request,response);
+	}
+	
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		Survey survey = (Survey)surveyForm.get("survey");
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		SurveyDocument model = (SurveyDocument)surveyForm.get("model");
+		SurveyDocument.Survey surveyModel = model.getSurvey();
+		
+		if(this.isCancelled(request)) {
+			return list(mapping,form,request,response);
+		}
+		
+		setSectionProperties(request,surveyModel,formBean);
+        
+		surveyModel.setVersion(surveyModel.getVersion()+1);
+		survey.setVersion(surveyModel.getVersion());
+		
+        //Add creation date
+        if(survey.getDateCreated()==null) {
+            survey.setDateCreated(new Date());
+        }
+    
+        survey.setUserId(Long.valueOf((String)request.getSession().getAttribute("user")));
+        
+        try {
+        	StringWriter sw = new StringWriter();
+        	model.save(sw);
+        	String xml = sw.toString();
+        	survey.setSurveyData(xml);
+        }catch(Exception e) {
+        	this.postMessage(request,"survey.saved.error","Unabled to create XML :" + e.getMessage());
+        	return form(mapping,form,request,response);
+        }
+        
+        survey.setStatus(new Short(Survey.STATUS_IN_REVIEW));
+        
+		surveyManager.saveSurvey(survey);
+		
+		postMessage(request,"survey.saved");
+		
+		return list(mapping,form,request,response);
+	}
+	
+	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String id = request.getParameter("id");
+		
+		surveyManager.deleteSurvey(id);
+		
+		postMessage(request,"survey.deleted");
+	
+		return list(mapping,form,request,response);
+	}
+
+	public ActionForward show_import_form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		return mapping.findForward("import");
+	}	
+	
+	public ActionForward import_survey(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		DynaActionForm surveyForm = (DynaActionForm)form;
+		SurveyManagerFormBean formBean = (SurveyManagerFormBean)surveyForm.get("web");
+		
+		SurveyDocument surveyDocument = null;
+		try {
+			InputStream is = formBean.getImportFile().getInputStream();
+			surveyDocument = SurveyDocument.Factory.parse(is);
+		}catch(Exception e) {
+			postMessage(request,"execute.parse_error",e.getMessage());
+			return list(mapping,form,request,response);
+		}
+		
+		//check name
+		if(surveyManager.getSurveyByName(surveyDocument.getSurvey().getName()) != null) {
+			this.postMessage(request,"name.exists");
+    		return list(mapping,form,request,response);
+		}
+		
+		try {	
+			Survey survey = new Survey();
+			survey.setDateCreated(new Date());
+			survey.setDescription(surveyDocument.getSurvey().getName());
+			survey.setStatus(new Short(Survey.STATUS_TEST));
+			//survey.setSurveyData()
+			survey.setUserId(new Long(userManager.getUserId(request)));
+			survey.setVersion(surveyDocument.getSurvey().getVersion());
+			
+			//save data
+			StringWriter sw = new StringWriter();
+        	surveyDocument.save(sw);
+        	String xml = sw.toString();
+        	survey.setSurveyData(xml);
+			
+        	surveyManager.saveSurvey(survey);
+		}catch(Exception e) {
+			postMessage(request,"survey.import_error",e.getMessage());
+			log.error(e);
+		}
+		return list(mapping,form,request,response);
+	}
+	
+	
+	public ActionForward export(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String id = request.getParameter("id");
+		
+		SurveyDocument survey = surveyManager.getSurveyDocument(id);
+		if(survey == null) {
+			postMessage(request,"survey.missing");
+			return list(mapping,form,request,response);
+		}
+		
+		response.setContentType("text/xml");
+		response.setHeader("Content-disposition","attachement;filename=" + survey.getSurvey().getName() + ".xml");
+		try {
+			XmlOptions options = new XmlOptions();
+			options.setSavePrettyPrint();
+			options.setSavePrettyPrintIndent(4);
+			survey.save(response.getWriter(),options);
+		}catch(Exception e) {
+			log.error(e);
+		}
+		
+		return null;
+	}
+	
+	public ActionForward copy(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(!userManager.isAdmin(request)) {
+    		postMessage(request,"survey.auth");
+    		return mapping.findForward("auth");
+    	}
+		
+		String id = request.getParameter("id");
+		
+		log.debug("copying a survey");
+		
+		Survey survey = surveyManager.getSurvey(id);
+		if(survey == null) {
+			postMessage(request,"survey.missing");
+			return list(mapping,form,request,response);
+		}
+		
+		Survey newSurvey = new Survey();
+		newSurvey.setDateCreated(new Date());
+		newSurvey.setDescription(survey.getDescription());
+		newSurvey.setSurveyData(survey.getSurveyData());
+		newSurvey.setUserId(new Long(userManager.getUserId(request)));
+		newSurvey.setVersion(survey.getVersion());
+		newSurvey.setStatus(new Short(Survey.STATUS_IN_REVIEW));
+		
+		surveyManager.saveSurvey(newSurvey);
+		
+		return list(mapping,form,request,response);
+	}
+	
+	protected static int getUnusedSectionId(Page page) {
+		int id  = 1;
+		for(int x=0;x<page.getQContainerArray().length;x++) {
+			if(page.getQContainerArray(x).isSetSection()) {
+				if(page.getQContainerArray(x).getSection().getId() == id) {
+					id++;
+				} else if(page.getQContainerArray(x).getSection().getId()> id) {
+					id = page.getQContainerArray(x).getSection().getId()+1;
+				}
+			}
+		}
+		return id;
+	}
+	
+	protected void setSectionProperties(HttpServletRequest request,SurveyDocument.Survey survey, SurveyManagerFormBean formBean) {
+		Enumeration e = request.getParameterNames();
+        while(e.hasMoreElements()) {
+        	String name = (String)e.nextElement();
+        	if(name.startsWith("section_description_")) {
+        		String sectionId = name.substring(name.lastIndexOf("_")+1);
+        		String description =request.getParameter(name);
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(sectionId).intValue());
+        		if(section != null) {
+        			section.setDescription(description);
+        			//log.debug("setting description for section " + sectionId);
+        		}
+        	}
+        }
+	}
+	
+}

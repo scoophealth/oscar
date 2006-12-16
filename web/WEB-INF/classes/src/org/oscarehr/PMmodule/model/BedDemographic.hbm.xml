@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="BedDemographic"
+		table="bed_demographic">
+		<meta attribute="sync-DAO">false</meta>
+		<composite-id
+			name="id"
+			class="BedDemographicPK">
+			<key-property
+				name="demographicNo"
+				column="demographic_no"
+				type="integer" />
+			<key-property
+				name="bedId"
+				column="bed_id"
+				type="integer" />
+		</composite-id>
+		<property
+			name="bedDemographicStatusId"
+			column="bed_demographic_status_id"
+			type="integer"
+			not-null="true"
+			length="10" />
+		<property
+			name="providerNo"
+			column="provider_no"
+			type="string"
+			not-null="true"
+			length="6" />
+		<property
+			name="latePass"
+			column="late_pass"
+			type="boolean"
+			not-null="true" />
+		<property
+			name="reservationStart"
+			column="reservation_start"
+			type="date"
+			not-null="true"
+			length="10" />
+		<property
+			name="reservationEnd"
+			column="reservation_end"
+			type="date"
+			not-null="true"
+			length="10" />
+	</class>
+</hibernate-mapping>

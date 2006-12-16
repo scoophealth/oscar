@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.oscarehr.PMmodule.model.Provider;
+
 /**
 * Object representation of 'custom_filter' table in OSCAR
 * @author Marc Dumontier <a href="mailto:marc@mdumontier.com">marc@mdumontier.com</a>
@@ -170,7 +172,7 @@ public class CustomFilter extends BaseObject {
 	}
 	public void setAssignee(String assignee) {
 		Provider p = new Provider();
-		p.setProvider_no(assignee);
+		p.setProviderNo(assignee);
 		this.getAssignees().clear();
 		this.getAssignees().add(p);
 	}
@@ -183,7 +185,7 @@ public class CustomFilter extends BaseObject {
 	}
 	public void setProvider(String provider) {
 		Provider p = new Provider();
-		p.setProvider_no(provider);
+		p.setProviderNo(provider);
 		this.getProviders().clear();
 		this.getProviders().add(p);
 	}

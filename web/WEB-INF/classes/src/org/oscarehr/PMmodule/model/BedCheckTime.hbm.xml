@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="BedCheckTime"
+		table="bed_check_time">
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="bed_check_time_id">
+			<generator class="native" />
+		</id>
+		<property
+			name="programId"
+			column="program_id"
+			type="integer"
+			not-null="true"
+			length="10" />
+		<property
+			name="time"
+			column="bed_check_time"
+			type="time"
+			not-null="true"
+			length="8" />
+	</class>
+</hibernate-mapping>

@@ -1,7 +1,6 @@
 package org.caisi.tickler.web;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,17 +16,18 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.caisi.model.CustomFilter;
-import org.caisi.model.Demographic;
-import org.caisi.model.Provider;
 import org.caisi.service.DemographicManagerTickler;
 import org.caisi.service.ProviderManagerTickler;
 import org.caisi.service.TicklerManager;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ProviderManager;
 
 public class CustomFilterAction extends DispatchAction {
 	
 	private static Log log = LogFactory.getLog(CustomFilterAction.class);
 	private TicklerManager ticklerMgr = null;
-	private ProviderManagerTickler providerMgr = null;
+	private ProviderManager providerMgr = null;
 	private DemographicManagerTickler demographicMgr = null;
 	
 	public void setTicklerManager(TicklerManager ticklerManager) {
@@ -38,7 +38,7 @@ public class CustomFilterAction extends DispatchAction {
 		this.demographicMgr = demographicManager;
 	}
 	
-	public void setProviderManager(ProviderManagerTickler providerMgr) {
+	public void setProviderManager(ProviderManager providerMgr) {
 		this.providerMgr = providerMgr;
 	}
 	

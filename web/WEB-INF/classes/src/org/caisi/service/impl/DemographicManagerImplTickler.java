@@ -3,8 +3,8 @@ package org.caisi.service.impl;
 import java.util.List;
 
 import org.caisi.dao.DemographicDAO;
-import org.caisi.model.Demographic;
 import org.caisi.service.DemographicManagerTickler;
+import org.oscarehr.PMmodule.model.Demographic;
 
 /**
  * Implements the DemographicManagerTickler interface 

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class name="ProgramFunctionalUser" table="program_functional_user">
+		<id
+			column="id"
+			name="Id"
+			type="java.lang.Long"
+			unsaved-value="0"
+		>
+			<generator class="native" />
+		</id>
+
+		<property
+			column="program_id"
+			length="11"
+			name="ProgramId"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+		 
+		<property
+			column="user_type_id"
+			name="UserTypeId"
+			not-null="false"
+			type="long"
+		 />
+		 
+		<property
+			column="provider_no"
+			length="11"
+			name="ProviderNo"
+			not-null="false"
+			type="java.lang.Long"
+		 />
+
+		 <many-to-one name="UserType" 
+			class="org.oscarehr.PMmodule.model.FunctionalUserType"
+			column="user_type_id"
+			update="false"
+			insert="false"
+			lazy="false"
+		/>
+		
+		 <many-to-one name="Provider" 
+			class="org.oscarehr.PMmodule.model.Provider"
+			column="provider_no"
+			update="false"
+			insert="false"
+			lazy="false"
+		/>
+		
+	</class>
+</hibernate-mapping>

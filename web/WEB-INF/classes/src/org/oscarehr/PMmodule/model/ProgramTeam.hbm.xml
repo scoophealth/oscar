@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping package="org.oscarehr.PMmodule.model">
+	<class
+		name="ProgramTeam"
+		table="program_team">
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="id"
+			type="integer"
+			column="team_id"
+			unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property
+			name="name"
+			column="name"
+			type="string"
+			not-null="false"
+			length="255" />
+		<property
+			name="programId"
+			column="program_id"
+			type="integer"
+			not-null="false"
+			length="10" />
+	</class>
+</hibernate-mapping>

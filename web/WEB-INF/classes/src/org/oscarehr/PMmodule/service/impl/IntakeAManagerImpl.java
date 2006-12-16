@@ -1,0 +1,115 @@
+package org.oscarehr.PMmodule.service.impl;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.dao.IntakeADao;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Formintakea;
+import org.oscarehr.PMmodule.service.IntakeAManager;
+
+public class IntakeAManagerImpl extends BaseIntakeManager implements IntakeAManager {
+	
+	private static Log log = LogFactory.getLog(IntakeAManagerImpl.class);
+	
+	private IntakeADao dao;
+	private ClientDao clientDao;
+	
+	public void setIntakeADao(IntakeADao dao) {
+		this.dao = dao;
+	}
+	
+	public void setClientDao(ClientDao dao) {
+		this.clientDao = dao;
+	}
+	
+	public Formintakea getCurrIntakeAByDemographicNo(String demographicNo) {
+		if(demographicNo == null || demographicNo.length()==0) {
+			return null;
+		}
+		return dao.getCurrIntakeAByDemographicNo(demographicNo);
+	}
+
+	public List getIntakeAs() {
+		return dao.getIntakeAs();
+	}
+
+	public List getIntakeAByTimePeriod(String startDate, String endDate) {
+		return dao.getIntakeAByTimePeriod(startDate, endDate);
+	}
+	
+	public Formintakea setNewIntakeAObj(Formintakea intakeA) {
+		return dao.setNewIntakeAObj(intakeA);
+	}
+
+	public boolean addIntakeA(Formintakea intakeA) {
+		return dao.addIntakeA(intakeA);
+	}
+
+	public boolean addNewClientToIntakeA(Formintakea intakeA, String newDemographicNo, String actionType) {
+		return dao.addNewClientToIntakeA(intakeA, newDemographicNo, actionType);
+	}
+	
+	public void saveNewIntake(Formintakea form) {
+		if(form.getDemographicNo() == null || form.getDemographicNo().longValue() == 0) {
+			//create demographic
+			Demographic client = new Demographic();
+			client.setFirstName(form.getClientFirstName());
+			client.setLastName(form.getClientSurname());
+			client.setAddress("");
+			client.setChartNo("");
+			client.setCity("");
+			client.setDateJoined(new Date());
+			client.setEmail("");
+			client.setPhone("");
+			client.setPhone2("");
+			client.setPostal("");
+			client.setProvince("");
+			client.setRosterStatus("");
+			client.setPatientStatus("AC");
+			client.setPcnIndicator("");
+			client.setPin("");
+			if(form.getYear().equals("")) {
+				form.setYear("0001");
+			}
+			if(form.getMonth().equals("")) {
+				form.setMonth("01");
+			}
+			if(form.getDay().equals("")){
+				form.setDay("01");
+			}
+			client.setYearOfBirth(form.getYear());
+			client.setMonthOfBirth(form.getMonth());
+			client.setDateOfBirth(form.getDay());
+			client.setProviderNo(String.valueOf(form.getProviderNo()));
+			client.setFamilyDoctor("");
+			if(form.getRadioSex() != null && form.getRadioSex().length() >0) {
+				client.setSex(form.getRadioSex().substring(0,1).toUpperCase());
+			} else {
+				client.setSex("");
+			}
+			client.setDateJoined(new Date());
+			client.setAddress("");
+			client.setCity("");
+			client.setEmail("");
+			client.setHcType("");
+			client.setHin(form.getHealthCardNum());
+			client.setVer(form.getHealthCardVer());
+			
+			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.YEAR,2100);
+			client.setEffDate(new Date());
+			client.setEndDate(cal.getTime());
+			client.setHcRenewDate(cal.getTime());
+			
+			clientDao.saveClient(client);
+			form.setDemographicNo(new Long(client.getDemographicNo().longValue()));
+		}
+		form.setFormEdited(new Date());
+		dao.saveForm(form);
+	}
+}

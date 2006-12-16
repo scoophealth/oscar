@@ -2,8 +2,6 @@ package org.caisi.dao;
 
 import java.util.List;
 
-import org.caisi.model.Program;
-
 public interface BedProgramDao {
 
 	public List getAllBedProgram();

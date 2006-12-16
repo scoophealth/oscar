@@ -3,7 +3,7 @@ package org.caisi.service;
 import java.util.List;
 
 import org.caisi.dao.ProviderDAO;
-import org.caisi.model.Provider;
+import org.oscarehr.PMmodule.model.Provider;
 
 /**
  * Manager Interface for Providers
