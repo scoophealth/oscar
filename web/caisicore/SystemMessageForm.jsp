@@ -41,7 +41,7 @@ function openBrWindow(theURL,winName,features) {
    	                  	int day = rightNow.get(Calendar.DAY_OF_MONTH);
    	                  	String formattedDate = year + "-" + month + "-" + day;
                      %>
-                     <a href="#" onClick="openBrWindow('../calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=systemMessageForm&amp;openerElement=system_message.expiry_day&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img border="0" src="images/calendar.jpg"/></a>
+                     <a href="#" onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=systemMessageForm&amp;openerElement=system_message.expiry_day&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img border="0" src="images/calendar.jpg"/></a>
                      </td>
                      <td></td>
 				</tr>
