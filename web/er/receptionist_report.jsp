@@ -124,7 +124,7 @@
 		<td colspan="2">
 			<input type="button" value="Print" onclick="window.print()"/>
 			&nbsp;
-			<input type="button" value="Back to Client Search" onclick="location.href='../../provider/er_clerk.jsp'"/>
+			<input type="button" value="Back to Client Search" onclick="location.href='provider/er_clerk.jsp'"/>
 		</td>
 	</tr>
 </table>
