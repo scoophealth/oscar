@@ -252,6 +252,17 @@ function popUpBillStatus(vheight,vwidth,varpage) {
 <%-- -add by caisi--%>
 <caisi:isModuleLoad moduleName="caisi">
   <div class="adminBox">
+      <h3>&nbsp;<bean:message key="admin.admin.caisi"/></h3>
+      <ul>
+         <li><a href="../SystemMessage.do"><bean:message key="admin.admin.systemMessage"/></a></li>
+         <li><a href="../issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></a></li>
+         <li><a href="../CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></a></li>         
+         <li><a href="../SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></a></li>         
+      </ul>
+  </div>
+  
+
+  <div class="adminBox">
 	<h3>CAISI</h3>
 	<ul>
 	      <li><a href="#" ONCLICK ="popupPage(550,800,'../caisicore/index.jsp');return false;" title="CAISI Admin">CAISI Admin</a></li>
