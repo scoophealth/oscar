@@ -132,6 +132,7 @@ public final class WCBForm
   private String w_providerno;
   private boolean notBilled;
   private String wcbFormId;
+  private boolean doValidate;
   public WCBForm() {
 
   }
@@ -1387,6 +1388,11 @@ public final class WCBForm
   public String getWcbFormId() {
     return wcbFormId;
   }
+
+  public boolean isDoValidate() {
+    return doValidate;
+  }
+
   /**
    * Setter for property formNeeded.
 
@@ -1432,6 +1438,10 @@ public final class WCBForm
     this.wcbFormId = wcbFormId;
   }
 
+  public void setDoValidate(boolean doValidate) {
+    this.doValidate = doValidate;
+  }
+
   public void notBilled(boolean notBilled) {
     this.notBilled = notBilled;
   }
@@ -1466,7 +1476,7 @@ public final class WCBForm
      * Disable validation of fields if this is a preliminary save
      * Validation isn't required until it is time to bill and submit this particular claim
      */
-    if(request.getParameter("save")!=null){
+    if(request.getParameter("save")!=null && !doValidate){
       return errors;
     }
     if (w_lname == null || "".equals(w_lname)) {

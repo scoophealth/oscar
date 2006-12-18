@@ -181,6 +181,7 @@ public class BillingCreateBillingAction
         request.setAttribute("WCBForm", wcbForm);
         wcbForm.setFormNeeded("1");
         wcbForm.setProvider_no(bean.getApptProviderNo());
+        wcbForm.setDoValidate(true);
 
         return (mapping.findForward("WCB"));
       }
