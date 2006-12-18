@@ -130,7 +130,7 @@
                 
                        
                 // Start the spell checker
-                 startSpellCheck('${ctx}/jspspellcheck/',elements);
+                 startSpellCheck('jspspellcheck/',elements);
                 
             }
 

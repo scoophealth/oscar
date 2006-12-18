@@ -124,6 +124,9 @@
    <fileset dir="${webapp}/WEB-INF/classes/src" includes="*.properties" />
   </copy>
   <copy todir="${classes_web}">
+   <fileset dir="${webapp}/WEB-INF/classes/src" includes="*.0" />
+  </copy>
+  <copy todir="${classes_web}">
    <fileset dir="${webapp}/WEB-INF/classes/src" includes="**/*.hbm.xml" />
   </copy>
   <copy todir="${classes_web}/oscar/form/prop">
