@@ -59,7 +59,7 @@ public class IntakeAAction2 extends BaseAction {
 		
 		Formintakea intakeAForm = null;
 		if(demographicNo != null) {
-			intakeAManager.getCurrIntakeAByDemographicNo(demographicNo);
+			intakeAForm = intakeAManager.getCurrIntakeAByDemographicNo(demographicNo);
 		}
 		boolean update=(intakeAForm != null);
 		if(!update) {
