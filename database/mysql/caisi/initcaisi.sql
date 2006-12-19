@@ -80,8 +80,9 @@ DROP TABLE IF EXISTS `bed_check_time`;
 CREATE TABLE `bed_check_time` (
   `bed_check_time_id` int(10) unsigned NOT NULL auto_increment,
   `program_id` int(10) unsigned NOT NULL,
-  `time` time NOT NULL,
-  PRIMARY KEY  (`bed_check_time_id`)
+  `bed_check_time` time NOT NULL,
+  PRIMARY KEY  (`bed_check_time_id`),
+  UNIQUE KEY `idx_program_time` USING BTREE (`program_id`,`bed_check_time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
@@ -136,6 +137,7 @@ DROP TABLE IF EXISTS `bed_type`;
 CREATE TABLE `bed_type` (
   `bed_type_id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
+  `dflt` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`bed_type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1643,6 +1645,7 @@ DROP TABLE IF EXISTS `room_type`;
 CREATE TABLE `room_type` (
   `room_type_id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
+  `dflt` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`room_type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

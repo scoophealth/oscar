@@ -1,6 +1,5 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <%
 	String yearStr = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));

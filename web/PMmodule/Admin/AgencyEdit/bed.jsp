@@ -66,7 +66,8 @@
 	</tr>
 	<tr>
 		<td>
-			<html:submit onclick="agencyManagerForm.method.value='addRoom';">Add Room</html:submit>
+			<html:text property="numRooms" />
+			<html:submit onclick="agencyManagerForm.method.value='addRooms';">Add Rooms</html:submit>
 		</td>
 	</tr>
 	<tr>
@@ -140,10 +141,11 @@
 		<td>
 			<c:choose>
 				<c:when test="${not empty agencyManagerForm.map.rooms}">
-					<html:submit onclick="agencyManagerForm.method.value='addBed';">Add Bed</html:submit>
+					<html:text property="numBeds" />
+					<html:submit onclick="agencyManagerForm.method.value='addBeds';">Add Beds</html:submit>
 				</c:when>
 				<c:otherwise>
-					<html:submit disabled="true" onclick="agencyManagerForm.method.value='addBed';">Add Bed</html:submit>
+					<html:submit disabled="true">Add Beds</html:submit>
 				</c:otherwise>
 			</c:choose>
 		</td>

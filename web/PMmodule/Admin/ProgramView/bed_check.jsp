@@ -1,9 +1,16 @@
 <%@ include file="/taglibs.jsp"%>
+
 <html:hidden property="bedId" />
+
 <script type="text/javascript">
 	function unreserveBed(id) {
 		document.programManagerViewForm.bedId.value = id;
 		document.programManagerViewForm.method.value = 'unreserveBed';
+	}
+	
+	function popupBedCheckReport(programId) {
+		url = '<html:rewrite page="/PMmodule/ProgramManagerView.do?method=viewBedCheckReport&programId="/>';
+		window.open(url + programId, 'bedCheckReport', 'width=800,height=600');
 	}
 </script>
 
@@ -17,17 +24,7 @@
 					</tr>
 				</table>
 			</div>
-			<display:table class="simple" name="reservedBeds" uid="bed" export="true" requestURI="/PMmodule/ProgramManagerView.do">
-				<display:setProperty name="paging.banner.placement" value="bottom" />
-				
-				<display:setProperty name="export.banner" value="Generate: {0}" />
-				<display:setProperty name="export.excel" value="false" />
-				<display:setProperty name="export.csv" value="false" />
-				<display:setProperty name="export.xml" value="false" />
-				<display:setProperty name="export.pdf" value="true" />
-				<display:setProperty name="export.pdf.label" value="Bed Check Report"/>
-				<display:setProperty name="export.pdf.filename" value="BedCheckReport.pdf"/>
-				
+			<display:table class="simple" name="reservedBeds" uid="bed" requestURI="/PMmodule/ProgramManagerView.do">
 				<display:column property="name" title="Bed" />
 				<display:column property="roomName" title="Room" />
 				<display:column property="demographicName" title="Client" />
@@ -35,12 +32,16 @@
 				<display:column property="latePass" title="Late Pass" />
 				<display:column property="reservationStart" title="Reserved Since" />
 				<display:column property="reservationEnd" title="Reserved Until" />
-				<display:column title="Not Present" media="pdf" />
-				<display:column media="html">
-					<html:submit onclick="unreserveBed('${bed.id}');">Unreserve Bed</html:submit>
+				<display:column>
+					<html:submit onclick="unreserveBed('${bed.id}')">Unreserve Bed</html:submit>
 				</display:column>
 			</display:table>
 			<!-- recently unreserved beds go here -->
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Generate: <a href="javascript:void(0)" onclick="popupBedCheckReport('<c:out value="${id}"/>')">Bed Check Report</a> 
 		</td>
 	</tr>
 </table>

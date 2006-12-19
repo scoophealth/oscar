@@ -37,7 +37,7 @@
 			<display:table class="simple" name="sessionScope.programManagerForm.bedCheckTimes" uid="bedCheckTime" requestURI="/PMmodule/ProgramManager.do">
 				<display:column property="time" format="{0, time, short}" title=""/>
 				<display:column>
-					<input type="button" value="Remove" onclick="removeBedCheckTime('${bedCheckTime.id}');" />
+					<input type="button" value="Remove" onclick="removeBedCheckTime('<c:out value="${bedCheckTime.id}"/>');" />
 				</display:column>
 			</display:table>
 		</td>

@@ -1,7 +1,6 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ page import="java.util.*"%>
-<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 
 <script>
 var XMLHttpRequestObject = false;
@@ -136,15 +135,15 @@ function showEMPILinks() {
 		<c:otherwise>
 			<tr>
 				<th width="20%">Assigned</th>
-				<td>${bedDemographic.bedName} (${bedDemographic.roomName} ${bedDemographic.programName})</td>
+				<td><c:out value="${bedDemographic.bedName}" /> (<c:out value="${bedDemographic.roomName}" /> <c:out value="${bedDemographic.programName}" />)</td>
 			</tr>
 			<tr>
 				<th width="20%">Status</th>
-				<td>${bedDemographic.statusName}</td>
+				<td><c:out value="${bedDemographic.statusName}" /></td>
 			</tr>
 			<tr>
 				<th width="20%">Late Pass</th>
-				<td>${bedDemographic.latePass}</td>
+				<td><c:out value="${bedDemographic.latePass}" /></td>
 			</tr>
 			<tr>
 				<th width="20%">Reserved Until</th>

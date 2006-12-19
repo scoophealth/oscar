@@ -1,8 +1,4 @@
-<%@ page errorPage="error.jsp" %>
-<%@ page language="java"%>
-
-<%@ include file="/taglibs.jsp" %>
-
+<%@ include file="/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html:html locale="true">
   <head>

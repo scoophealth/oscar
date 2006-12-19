@@ -1,5 +1,6 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
+
 <html:form action="/PMmodule/ProgramManagerView">
 	
 	<html:hidden property="tab" />
@@ -8,6 +9,7 @@
 	
 	<script>
 		function clickTab(name) {
+			document.programManagerViewForm.method.value='view';
 			document.programManagerViewForm.tab.value=name;
 			document.programManagerViewForm.submit();
 		}
@@ -19,29 +21,28 @@
 		</tr>
 	</table>
 	
-	<div class="tabs" id="tabs">
+	<div class="tabs">
 		<%
-			ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) request.getAttribute("programManagerViewForm");
-			String selectedTab = formBean.getTab();
+		String selectedTab = request.getParameter("tab");
 			
-			if (selectedTab == null || selectedTab.trim().equals("")) {
-				selectedTab = ProgramManagerViewFormBean.tabs[0];
-			}
+		if (selectedTab == null || selectedTab.trim().equals("")) {
+			selectedTab = ProgramManagerViewFormBean.tabs[0];
+		}
 		%>
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>
 				<%
-				for (int x = 0; x < ProgramManagerViewFormBean.tabs.length; x++) {
-					if (ProgramManagerViewFormBean.tabs[x].equals(selectedTab)) {
+				for (int i = 0; i < ProgramManagerViewFormBean.tabs.length; i++) {
+					if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase(selectedTab)) {
 				%>
 					<td style="background-color: #555;">
-						<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[x] %>'); return false;"><%=ProgramManagerViewFormBean.tabs[x]%></a>
+						<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i]%>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a>
 					</td>
 				<%
 					} else {
 				%>
 					<td>
-						<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[x] %>');return false;"><%=ProgramManagerViewFormBean.tabs[x]%></a>
+						<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i]%>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a>
 					</td>
 				<%
 					}
@@ -50,6 +51,6 @@
 			</tr>
 		</table>
 	</div>
-	<%@ include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp" />
 	<jsp:include page="<%="/PMmodule/Admin/ProgramView/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>" />
 </html:form>

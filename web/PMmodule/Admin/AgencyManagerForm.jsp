@@ -47,6 +47,6 @@
 			</tr>
 		</table>
 	</div>
-	<%@include file="/common/messages.jsp"%>
+	<jsp:include page="/common/messages.jsp" />
 	<jsp:include page="<%="/PMmodule/Admin/AgencyEdit/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>" />
 </html:form>

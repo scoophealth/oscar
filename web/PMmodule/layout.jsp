@@ -1,12 +1,8 @@
-<%@ page errorPage="error.jsp"%>
-<%@ page language="java"%>
 <%@ include file="/taglibs.jsp"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html:html locale="true">
 	<head>
-		<html:base />
 		<title>Program Management Module</title>
 		<style type="text/css">
 			@import "<html:rewrite page="/css/tigris.css" />";
@@ -30,6 +26,7 @@
 			dojo.require("dojo.widget.*");
 			dojo.require("dojo.validate.*");
 		</script>
+		<html:base />
 	</head>
 	<body>
 		<div class="composite">
