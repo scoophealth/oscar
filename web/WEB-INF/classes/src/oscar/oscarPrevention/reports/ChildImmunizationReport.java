@@ -179,7 +179,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 cal.add(Calendar.YEAR, 2);
                 Date twoYearsAfterDOB = cal.getTime();
                 
-                System.out.println("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
+                //System.out.println("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
                 if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) ){//&& endOfYear.after(prevDate)){                  
                    prd.bonusStatus = "Y";
                    done++;
