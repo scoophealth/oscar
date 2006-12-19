@@ -57,7 +57,7 @@ if (groupView == null) {
 <bean:message key="eform.showmyform.title"/>
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
-<link rel="stylesheet" type="text/css" href="../share/css/eforms.css">
+<link rel="stylesheet" type="text/css" href="../share/css/eformStyle.css">
 <script type="text/javascript" language="javascript">
 function popupPage(varpage, windowname) {
     var page = "" + varpage;
@@ -79,6 +79,7 @@ function checkSelectBox() {
     }
 }
 </script>
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
@@ -116,35 +117,14 @@ function checkSelectBox() {
                 <br>
                 <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>" class="current"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
                 <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.btnDeleted"/> </a>
+                <jsp:include page="efmviewgroups.jsp">
+                    <jsp:param name="url" value="../eform/efmpatientformlist.jsp"/>
+                    <jsp:param name="groupView" value="<%=groupView%>"/>
+                    <jsp:param name="patientGroups" value="1"/>
+                </jsp:include>
             </td>
             <td class="MainTableRightColumn" valign="top">
             
-<%   ArrayList groups = EFormUtil.getEFormGroups(demographic_no);
-%>
-     <table>
-       <tr>
-            <form action="../eform/efmpatientformlist.jsp" method="get" onsubmit="return checkSelectBox()">
-            <td align="center">
-                <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
-                <select name="group_view">
-                      <option value="default"><bean:message key="eform.groups.page.selectDefault"/></option>
-<%                    for (int i=0; i<groups.size(); i++) {        
-                          String selected = "";
-                          Hashtable curhash = (Hashtable) groups.get(i);
-                          String group = (String) curhash.get("groupName");
-                          String count = (String) curhash.get("count");
-                          if (group.equals(groupView)) selected = " selected";
-%>
-                              <option value="<%=group%>"<%=selected%>><%=group%> (<%=count%>)</option>
-                        <% } %>
-                </select>
-            </td><td>
-                <input type="submit" value="<bean:message key="eform.groups.page.view"/>">
-            </td></form><td>
-                <input type="button" value="<bean:message key="eform.groups.page.viewAll"/>" onclick="javascript:window.location='../eform/efmpatientformlist.jsp?demographic_no=<%=demographic_no%>'">
-            </td>
-    </tr>
-   </table>
      
 <table class="elements" width="100%">
   <tr bgcolor=<%=deepColor%> >
