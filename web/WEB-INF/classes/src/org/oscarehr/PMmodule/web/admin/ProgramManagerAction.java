@@ -449,6 +449,9 @@ public class ProgramManagerAction extends BaseAction {
 		if (request.getParameter("program.hic") == null) {
 			program.setHic(false);
 		}
+		if (request.getParameter("program.holdingTank") == null) {
+			program.setHoldingTank(false);
+		}
 
 		if (program.getMaxAllowed().intValue() < program.getNumOfMembers().intValue()) {
 			ActionMessages messages = new ActionMessages();
