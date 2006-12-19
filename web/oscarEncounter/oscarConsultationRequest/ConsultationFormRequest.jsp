@@ -600,12 +600,10 @@ function fetchAttached() {
             //  new request      
             if( demo != null ) {
                         thisForm.setAllergies(demographic.RxInfo.getAllergies());
-                
-			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
-                            thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
-			} else {
-                            thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
-			}
+                        StringBuffer meds;
+			meds = new StringBuffer(demographic.RxInfo.getCurrentMedication());                            			
+                        meds.append(demographic.EctInfo.getFamilyHistory());
+                        thisForm.setCurrentMedications(meds.toString());
             }
                 
                 thisForm.setStatus("1");
