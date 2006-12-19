@@ -222,6 +222,11 @@ public class BillingReProcessBillAction
           codePrice = codeRecord[0];
           System.out.println("codePrice=" + codePrice);
       }
+      
+      if("E".equals(payment_mode)){
+          codePrice = "0.00";
+      }
+      
       double dblBillAmount = Double.parseDouble(codePrice);
       double dblUnit = Double.parseDouble(billingUnit);
       double amtTemp = dblBillAmount * dblUnit;
