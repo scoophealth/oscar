@@ -260,14 +260,6 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="../SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></a></li>         
       </ul>
   </div>
-  
-
-  <div class="adminBox">
-	<h3>CAISI</h3>
-	<ul>
-	      <li><a href="#" ONCLICK ="popupPage(550,800,'../caisicore/index.jsp');return false;" title="CAISI Admin">CAISI Admin</a></li>
-	</ul>	
-  </div>
  </caisi:isModuleLoad>
  <%-- -add by caisi end--%>
 
