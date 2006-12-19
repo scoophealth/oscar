@@ -3,7 +3,18 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ page import="oscar.oscarRx.data.*"%>
+
+
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("../noRights.html");%>
+</security:oscarSec>
+
 <% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />

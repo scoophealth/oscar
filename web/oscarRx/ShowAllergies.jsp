@@ -2,6 +2,15 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("../noRights.html");%>
+</security:oscarSec>
+
 <% response.setHeader("Cache-Control","no-cache");%>
 <logic:notPresent name="RxSessionBean" scope="session">
     <logic:redirect href="error.html" />
