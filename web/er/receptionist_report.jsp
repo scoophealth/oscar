@@ -121,6 +121,9 @@
 		</td>
 	</tr>
 	<tr>
+		<td colspan="2"><a href="javascript:void(0);" onclick="window.open('oscarPrevention/index.jsp?demographic_no=<c:out value="${demographicNo}"/>','prevention','width=600,height=600');return false;">Immunization Record</a></td>
+	</tr>
+	<tr>
 		<td colspan="2">
 			<input type="button" value="Print" onclick="window.print()"/>
 			&nbsp;

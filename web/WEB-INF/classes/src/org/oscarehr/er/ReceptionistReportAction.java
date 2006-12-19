@@ -104,6 +104,7 @@ public class ReceptionistReportAction extends DispatchAction {
 			admission.setProgram(programManager.getProgram(String.valueOf(admission.getProgramId())));
 		}
 		
+		request.setAttribute("demographicNo",clientId);
 		request.setAttribute("client_name",name);
 		request.setAttribute("client_dob",dob);
 		request.setAttribute("client_healthCard",healthCard);
