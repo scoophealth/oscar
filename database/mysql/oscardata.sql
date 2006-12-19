@@ -1312,6 +1312,7 @@ insert into `secObjectName` values ('_admin.eform');
 insert into `secObjectName` values ('_admin.encounter');
 insert into `secObjectName` values ('_admin.misc');
 insert into `secObjectName` values ('_masterLink');
+insert into `secObjectName` values ('_rx');
  
 
 insert into `secObjPrivilege` values('receptionist', '_appointment', '|*|', 0, '999998');
@@ -1326,8 +1327,11 @@ insert into `secObjPrivilege` values('doctor', '_demographic', '|*|', 0, '999998
 insert into `secObjPrivilege` values('doctor', '_billing', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('doctor', '_tasks', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('doctor','_masterLink','|*|',0,999998);
+insert into `secObjPrivilege` values('doctor','_rx','|*|',0,999998);
+
 insert into `secObjPrivilege` values('admin', '_admin', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('admin','_masterLink','|*|',0,999998);
+
 
 -- for role locum
 insert into `secObjPrivilege` values('locum', '_appointment', '|*|', 0, '999998');
@@ -1338,6 +1342,7 @@ insert into `secObjPrivilege` values('locum', '_demographic', '|*|', 0, '999998'
 insert into `secObjPrivilege` values('locum', '_billing', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('locum', '_tasks', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('locum','_masterLink','|*|',0,999998);
+insert into `secObjPrivilege` values('locum','_rx','|*|',0,999998);
 
 -- for role nurse
 insert into `secObjPrivilege` values('nurse', '_appointment', '|*|', 0, '999998');
@@ -1347,5 +1352,5 @@ insert into `secObjPrivilege` values('nurse', '_demographic', '|*|', 0, '999998'
 insert into `secObjPrivilege` values('nurse', '_billing', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('nurse', '_tasks', '|*|', 0, '999998');
 insert into `secObjPrivilege` values('nurse','_masterLink','|*|',0,999998);
-
+insert into `secObjPrivilege` values('nurse','_rx','|*|',0,999998);
 
