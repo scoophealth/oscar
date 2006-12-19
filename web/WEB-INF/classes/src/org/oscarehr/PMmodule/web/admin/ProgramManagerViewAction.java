@@ -132,6 +132,14 @@ public class ProgramManagerViewAction extends BaseAction {
     
     	return mapping.findForward("view");
     }
+	
+	public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    	Integer programId = Integer.valueOf(request.getParameter("programId"));
+
+		request.setAttribute("reservedBeds", bedManager.getBedsByProgram(programId, true, null));
+		
+		return mapping.findForward("viewBedCheckReport");
+	}
 
 	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String programId = request.getParameter("id");

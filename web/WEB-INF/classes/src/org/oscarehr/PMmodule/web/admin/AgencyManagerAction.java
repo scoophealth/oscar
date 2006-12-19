@@ -28,8 +28,10 @@ public class AgencyManagerAction extends BaseAction {
 	private static final String BEAN_AGENCY = "agency";
 	private static final String BEAN_ROOMS = "rooms";
 	private static final String BEAN_ROOM_TYPES = "roomTypes";
+	private static final String BEAN_NUM_ROOMS = "numRooms";
 	private static final String BEAN_BEDS = "beds";
 	private static final String BEAN_BED_TYPES = "bedTypes";
+	private static final String BEAN_NUM_BEDS = "numBeds";
 	private static final String BEAN_PROGRAMS = "programs";
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -49,10 +51,7 @@ public class AgencyManagerAction extends BaseAction {
 
 		request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
 		request.setAttribute(BEAN_ROOMS, roomManager.getRooms());
-		request.setAttribute(BEAN_ROOM_TYPES, roomManager.getRoomTypes());
 		request.setAttribute(BEAN_BEDS, bedManager.getBeds());
-		request.setAttribute(BEAN_BED_TYPES, bedManager.getBedTypes());
-		request.setAttribute(BEAN_PROGRAMS, programManager.getBedPrograms());
 		
 		request.setAttribute("integrator_enabled", new Boolean(integratorManager.isEnabled()));
 		request.setAttribute("integrator_registered", new Boolean(integratorManager.isRegistered()));
@@ -69,8 +68,10 @@ public class AgencyManagerAction extends BaseAction {
 		agencyForm.set(BEAN_AGENCY, localAgency);
 		agencyForm.set(BEAN_ROOMS, roomManager.getRooms());
 		agencyForm.set(BEAN_ROOM_TYPES, roomManager.getRoomTypes());
+		agencyForm.set(BEAN_NUM_ROOMS, new Integer(1));
 		agencyForm.set(BEAN_BEDS, bedManager.getBeds());
 		agencyForm.set(BEAN_BED_TYPES, bedManager.getBedTypes());
+		agencyForm.set(BEAN_NUM_BEDS, new Integer(1));
 		agencyForm.set(BEAN_PROGRAMS, programManager.getBedPrograms());
 		
 		request.setAttribute("id", localAgency.getId());
@@ -143,14 +144,24 @@ public class AgencyManagerAction extends BaseAction {
 		return edit(mapping, form, request, response);
     }
 	
-	public ActionForward addRoom(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		roomManager.addRoom();
+	public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		Integer numRooms = (Integer) agencyForm.get("numRooms");
+		
+		if (numRooms!= null && numRooms > 0) {
+			roomManager.addRooms(numRooms);
+		}
 		
 		return edit(mapping, form, request, response);
     }
 	
-	public ActionForward addBed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		bedManager.addBed();
+	public ActionForward addBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm agencyForm = (DynaActionForm) form;
+		Integer numBeds = (Integer) agencyForm.get("numBeds");
+
+		if (numBeds != null && numBeds > 0) {
+			bedManager.addBeds(numBeds);
+		}
 		
 		return edit(mapping, form, request, response);
     }

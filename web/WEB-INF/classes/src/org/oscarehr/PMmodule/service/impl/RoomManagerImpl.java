@@ -54,16 +54,6 @@ public class RoomManagerImpl implements RoomManager {
 		return rooms;
 	}
 
-	public RoomType getDefaultRoomType() {
-		for (RoomType roomType : getRoomTypes()) {
-			if (roomType.isDefault()) {
-				return roomType;
-			}
-		}
-
-		throw new IllegalStateException("no default room type");
-	}
-
 	/**
 	 * @see org.oscarehr.PMmodule.service.RoomManager#getRoomTypes()
 	 */
@@ -72,13 +62,16 @@ public class RoomManagerImpl implements RoomManager {
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.service.RoomManager#addRoom()
+	 * @see org.oscarehr.PMmodule.service.RoomManager#addRooms(int)
 	 */
-	public void addRoom() {
+	public void addRooms(int numRooms) {
 		RoomType roomType = getDefaultRoomType();
-		Room newRoom = Room.create(roomType);
-		validate(newRoom);
-		roomDAO.saveRoom(newRoom);
+		
+		for (int i = 0; i < numRooms; i++) {
+			Room newRoom = Room.create(roomType);
+			validate(newRoom);
+			roomDAO.saveRoom(newRoom);
+        }
 	}
 
 	/**
@@ -94,6 +87,16 @@ public class RoomManagerImpl implements RoomManager {
 			roomDAO.saveRoom(room);
 		}
 	}
+
+	RoomType getDefaultRoomType() {
+    	for (RoomType roomType : getRoomTypes()) {
+    		if (roomType.isDefault()) {
+    			return roomType;
+    		}
+    	}
+    
+    	throw new IllegalStateException("no default room type");
+    }
 
 	void setAttributes(Room room) {
 		// room type is mandatory

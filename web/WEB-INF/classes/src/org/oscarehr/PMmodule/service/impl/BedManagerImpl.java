@@ -87,16 +87,6 @@ public class BedManagerImpl implements BedManager {
 		return beds;
 	}
 	
-	public BedType getDefaultBedType() {
-		for (BedType bedType : getBedTypes()) {
-			if (bedType.isDefault()) {
-				return bedType;
-			}
-		}
-
-		throw new IllegalStateException("no default bed type");
-	}
-
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedManager#getBedTypes()
 	 */
@@ -105,13 +95,16 @@ public class BedManagerImpl implements BedManager {
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.service.BedManager#addBed()
+	 * @see org.oscarehr.PMmodule.service.BedManager#addBeds(int)
 	 */
-	public void addBed() {
+	public void addBeds(int numBeds) {
 		BedType bedType = getDefaultBedType();
-		Bed newBed = Bed.create(bedType);
-		validate(newBed);
-		bedDAO.saveBed(newBed);
+		
+		for (int i = 0; i < numBeds; i++) {
+			Bed newBed = Bed.create(bedType);
+			validate(newBed);
+			bedDAO.saveBed(newBed);
+        }
 	}
 
 	/**
@@ -127,6 +120,25 @@ public class BedManagerImpl implements BedManager {
 			bedDAO.saveBed(bed);
 		}
 	}
+
+	BedType getDefaultBedType() {
+    	for (BedType bedType : getBedTypes()) {
+    		if (bedType.isDefault()) {
+    			return bedType;
+    		}
+    	}
+    
+    	throw new IllegalStateException("no default bed type");
+    }
+
+	boolean filterBed(Bed bed, Boolean reserved, Date time) {
+    	if (reserved == null) {
+    		return false;
+    	}
+    
+    	// TODO IC Bedlog - if time t not null, bed or historical bed exists with start < t and end > t
+    	return (time != null) ? reserved != bed.isReserved() && true : reserved != bed.isReserved();
+    }
 
 	void setAttributes(Bed bed) {
 		// bed type is mandatory
@@ -160,15 +172,6 @@ public class BedManagerImpl implements BedManager {
 			bed.setReservationStart(bedDemographic.getReservationStart());
 			bed.setReservationEnd(bedDemographic.getReservationEnd());
 		}
-	}
-
-	boolean filterBed(Bed bed, Boolean reserved, Date time) {
-		if (reserved == null) {
-			return false;
-		}
-
-		// TODO IC Bedlog - if time t not null, bed or historical bed exists with start < t and end > t
-		return (time != null) ? reserved != bed.isReserved() && true : reserved != bed.isReserved();
 	}
 
 	void validate(Bed bed) {

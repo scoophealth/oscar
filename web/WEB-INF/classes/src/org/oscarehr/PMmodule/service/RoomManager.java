@@ -29,9 +29,12 @@ public interface RoomManager {
 	public RoomType[] getRoomTypes();
 
 	/**
-	 * Add a new room
+	 * Add new rooms
+	 * 
+	 * @param numRooms
+	 *            number of rooms
 	 */
-	public void addRoom();
+	public void addRooms(int numRooms);
 
 	/**
 	 * Save rooms

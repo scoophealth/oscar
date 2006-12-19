@@ -30,7 +30,9 @@ public interface BedManager {
 	public Bed[] getBedsByProgram(Integer programId, Boolean reserved, Date time);
 
 	/**
-	 * @return
+	 * Get beds
+	 * 
+	 * @return array of beds
 	 */
 	public Bed[] getBeds();
 
@@ -40,12 +42,18 @@ public interface BedManager {
 	public BedType[] getBedTypes();
 
 	/**
-	 * Add a new bed
+	 * Add new beds
+	 * 
+	 * @param numBeds
+	 *            number of beds
 	 */
-	public void addBed();
+	public void addBeds(int numBeds);
 
 	/**
+	 * Save beds
+	 * 
 	 * @param beds
+	 *            beds to save
 	 */
 	public void saveBeds(Bed[] beds);
 

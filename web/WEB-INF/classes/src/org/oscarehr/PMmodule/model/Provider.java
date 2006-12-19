@@ -7,7 +7,7 @@ import org.oscarehr.PMmodule.model.base.BaseProvider;
  */
 public class Provider extends BaseProvider {
 	
-	public static final String SYSTEM_PROVIDER_NO = "1";
+	public static final String SYSTEM_PROVIDER_NO = "-1";
 
 	/* [CONSTRUCTOR MARKER BEGIN] */
 	public Provider() {
