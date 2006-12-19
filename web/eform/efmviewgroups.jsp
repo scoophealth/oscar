@@ -25,7 +25,12 @@
  */
 --%>
 <%@ page import = "java.util.*, oscar.eform.*"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%   
+if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+   
+   
 String url = "";
 if (request.getParameter("url") != null) 
     url = (String) request.getParameter("url");
@@ -64,6 +69,8 @@ if (patientGroups.equals("1")) {
                <li class="<%=selected%>"><a href="#" onclick="document.getElementById('group_view').value='<%=group%>'; document.forms['groupselect'].submit();"><%=group%> (<%=size%>)</a></li>
            <% } %>
           </ul>
-          <a href="#" onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')">Edit Groups</a>
+          <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
+              <a href="#" onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')">Edit Groups</a>
+          </security:oscarSec>
       </div>
 </form>    
