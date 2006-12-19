@@ -33,6 +33,10 @@ public class Provider extends BaseProvider {
 	public String getFormattedName() {
 		return getLastName() + ", " + getFirstName();
 	}
+	
+	public String getFullName() {
+		return getFirstName() + " " + getLastName();
+	}
 
 	public String getProvider_no() {
 		return getProviderNo();

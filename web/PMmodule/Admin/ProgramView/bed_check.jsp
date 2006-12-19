@@ -6,6 +6,7 @@
 	function unreserveBed(id) {
 		document.programManagerViewForm.bedId.value = id;
 		document.programManagerViewForm.method.value = 'unreserveBed';
+		document.programManagerViewForm.submit();
 	}
 	
 	function popupBedCheckReport(programId) {
@@ -33,7 +34,7 @@
 				<display:column property="reservationStart" title="Reserved Since" />
 				<display:column property="reservationEnd" title="Reserved Until" />
 				<display:column>
-					<html:submit onclick="unreserveBed('${bed.id}')">Unreserve Bed</html:submit>
+					<input type="button" value="Unreserve Bed" onclick="unreserveBed('<c:out value="${bed.id}"/>');" />
 				</display:column>
 			</display:table>
 			<!-- recently unreserved beds go here -->
