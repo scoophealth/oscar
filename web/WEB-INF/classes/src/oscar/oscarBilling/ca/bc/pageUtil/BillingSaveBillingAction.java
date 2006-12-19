@@ -158,7 +158,7 @@ public class BillingSaveBillingAction
     if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri")) {
       for (int i = 0; i < billItem.size(); i++) {
         if (paymentMode == 'E') {
-          billedAmount = "0000000";
+          billedAmount = "0.00";
         }
         else {
           billedAmount = ( (oscar.oscarBilling.ca.bc.pageUtil.
