@@ -2,7 +2,7 @@
 
 <table width="100%" summary="View rooms, and beds">
 	<tr>
-		<td width="80%">
+		<td width="100%">
 			<div class="tabs" id="viewRoomsHeader">
 				<table cellpadding="3" cellspacing="0" border="0">
 					<tr>
@@ -27,7 +27,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td width="80%">
+		<td width="100%">
 			<div class="tabs" id="viewBedsHeader">
 				<table cellpadding="3" cellspacing="0" border="0">
 					<tr>

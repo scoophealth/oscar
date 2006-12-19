@@ -7,7 +7,7 @@
 	<input type="hidden" name="id" value="<c:out value="${requestScope.id}" />" />
 	<html:hidden property="agency.id" />
 	
-	<div class="tabs" id="tabs">
+	<div class="tabs">
 		<script>
 			function clickTab(name) {
 				document.agencyManagerForm.elements['view.tab'].value=name;

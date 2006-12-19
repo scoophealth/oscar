@@ -23,9 +23,10 @@
 				</tr>
 			</table>
 			
-			<div class="tabs" id="tabs">
+			<div class="tabs">
 				<%
 					String selectedTab = request.getParameter("view.tab");
+				
 					if (selectedTab == null || selectedTab.trim().equals("")) {
 						selectedTab = ProgramManagerViewFormBean.tabs[0];
 					}
@@ -34,10 +35,14 @@
 					<tr>
 						<%
 						for (int x = 0; x < ProgramManagerViewFormBean.tabs.length; x++) {
+							if (ProgramManagerViewFormBean.tabs[x].equalsIgnoreCase("Bed")) {
+								System.err.println(selectedTab);
+							}
+							
 							if (ProgramManagerViewFormBean.tabs[x].equals(selectedTab)) {
 						%>
 						<td style="background-color: #555;">
-							<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[x] %>'); return false;"><%=ProgramManagerViewFormBean.tabs[x]%></a>
+							<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[x] %>');return false;"><%=ProgramManagerViewFormBean.tabs[x]%></a>
 						</td>
 						<%
 							} else {
