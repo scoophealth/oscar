@@ -56,8 +56,8 @@ public final class RxChoosePatientAction extends Action {
         
         // Setup variables       
         
-        if(request.getSession().getAttribute("user") == null  || !( ((String) request.getSession().getAttribute("userprofession")).equalsIgnoreCase("doctor") )  ){
-            return (mapping.findForward("Logout"));
+        if(request.getSession().getAttribute("user") == null  ){
+           return (mapping.findForward("Logout"));
         }
         
         String user_no;
