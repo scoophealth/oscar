@@ -35,7 +35,7 @@ States
 #ccccff - normal
 orange - needs attention
 red imediate attention
--->      <parameter ident
+-->      
    <rule name="No EDD 0">
         <parameter identifier="w">
             <class>oscar.oscarWorkflow.WorkFlowInfo</class>
@@ -49,7 +49,7 @@ System.out.println("setting 0");
 
 
     <rule name="No Appt 1">
-  ifier="w">
+        <parameter identifier="w">
             <class>oscar.oscarWorkflow.WorkFlowInfo</class>
         </parameter>
         <java:condition>w.isCurrentState("1")</java:condition>
