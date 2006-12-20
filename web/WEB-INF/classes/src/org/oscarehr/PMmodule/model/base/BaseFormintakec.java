@@ -1061,7 +1061,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxCurrLivingWithUnknown () {
 		if(_cboxCurrLivingWithUnknown!=""&&_cboxCurrLivingWithUnknown!=null)
 		return _cboxCurrLivingWithUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -1095,7 +1095,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxCurrHasUnknown () {
 		if(_cboxCurrHasUnknown!=""&&_cboxCurrHasUnknown!=null)
 		return _cboxCurrHasUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -1781,7 +1781,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCbox2ndIncomeUnknown () {
 		if(_cbox2ndIncomeUnknown!=""&_cbox2ndIncomeUnknown!=null)
 		return _cbox2ndIncomeUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -1947,7 +1947,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxCurrIncomeMgmentUnknown () {
 		if(_cboxCurrIncomeMgmentUnknown!=""&&_cboxCurrIncomeMgmentUnknown!=null)
 		return _cboxCurrIncomeMgmentUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -2332,7 +2332,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxBaseIncomeMgmentUnknown () {
 		if(_cboxBaseIncomeMgmentUnknown!=""&&_cboxBaseIncomeMgmentUnknown!=null)
 		return _cboxBaseIncomeMgmentUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -2709,7 +2709,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxBase2ndIncomeUnknown () {
 		if(_cboxBase2ndIncomeUnknown!=""&&_cboxBase2ndIncomeUnknown!=null)
 		return _cboxBase2ndIncomeUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -2762,7 +2762,7 @@ public abstract class BaseFormintakec  implements Serializable {
 		
 		if(_cboxDateOfBirthUnknown!=""&&_cboxDateOfBirthUnknown!=null)
 		return _cboxDateOfBirthUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -2908,7 +2908,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxBaseLivingWithUnknown () {
 		if(_cboxBaseLivingWithUnknown!=""&&_cboxBaseLivingWithUnknown!=null)
 		return _cboxBaseLivingWithUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3204,7 +3204,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxBaseHasSupportUnknown () {
 		if(_cboxBaseHasSupportUnknown!=""&&_cboxBaseHasSupportUnknown!=null)
 		return _cboxBaseHasSupportUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3566,7 +3566,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxNAExit () {
 		if(_cboxNAExit!=""&&_cboxNAExit!=null)
 		return _cboxNAExit;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3600,7 +3600,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxNa () {
 		if(_cboxNa!=""&&_cboxNa!=null)
 		return _cboxNa;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3716,7 +3716,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxPreferredLanguageUnknown () {
 		if (_cboxPreferredLanguageUnknown!=""&&_cboxPreferredLanguageUnknown!=null)
 		return _cboxPreferredLanguageUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3798,7 +3798,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxCurrAccessHealthCareUnknown () {
 		if(_cboxCurrAccessHealthCareUnknown!=""&&_cboxCurrAccessHealthCareUnknown!=null)
 		return _cboxCurrAccessHealthCareUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3896,7 +3896,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxBaseHasUnknown () {
 		if(_cboxBaseHasUnknown!=""&&_cboxBaseHasUnknown!=null)
 		return _cboxBaseHasUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3934,7 +3934,7 @@ public abstract class BaseFormintakec  implements Serializable {
 
 		if(_cboxNoneListedIssue!=""&&_cboxNoneListedIssue!=null)
 		return _cboxNoneListedIssue;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -3953,7 +3953,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCbox2ndUnknown () {
 		if(_cbox2ndUnknown!=""&&_cbox2ndUnknown!=null)
 		return _cbox2ndUnknown;
-		else return"true";
+		else return"tr";
 	}
 
 	/**
@@ -4311,7 +4311,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxReferralByOtherPeople () {
 		if(_cboxReferralByOtherPeople!=""&&_cboxReferralByOtherPeople!=null)
 		return _cboxReferralByOtherPeople;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
@@ -4329,7 +4329,7 @@ public abstract class BaseFormintakec  implements Serializable {
 	public java.lang.String getCboxBaseAccessHealthCareUnknown () {
 		if(_cboxBaseAccessHealthCareUnknown!=""&&_cboxBaseAccessHealthCareUnknown!=null)
 		return _cboxBaseAccessHealthCareUnknown;
-		else return "true";
+		else return "tr";
 	}
 
 	/**
