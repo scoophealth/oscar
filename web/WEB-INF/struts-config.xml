@@ -1181,13 +1181,12 @@
 		<action input="/oscarPrevention/PreventionReporting.jsp" name="FrmForm" path="/oscarMeasurement/AddShortMeasurement" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctAddShortMeasurementAction">
 			<forward name="success" path="/oscarPrevention/PreventionReporting.jsp" />
 		</action>
-		<!-- action path="/form/RHPrevention" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormRHPreventionAction">
+                <action path="/form/RHPrevention" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormRHPreventionAction">
 			<forward name="success" path="/form/formRhImmuneGlobulin.jsp" />          
-			</action>    
-			
-			<action path="/form/AddRHWorkFlow" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormAddRHWorkFlowAction">
+		</action>    
+                <action path="/form/AddRHWorkFlow" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormAddRHWorkFlowAction">
 			<forward name="success" path="/form/RHPrevention.do" />          
-			</action -->
+		</action>
 		<action path="/Tickler" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" name="ticklerForm" input="/ticklerPlus/ticklerForm.jsp" validate="false">
 			<forward name="list" path="/ticklerPlus/ticklerList.jsp" />
 			<forward name="view" path="/ticklerPlus/ticklerView.jsp" />
