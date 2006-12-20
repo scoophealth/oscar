@@ -18,6 +18,15 @@
 			</tr>
 		</table>
 	</c:when>
+	<c:when test="${empty unreservedBeds}">
+		<table class="simple" cellspacing="2" cellpadding="3">
+			<tr>
+				<td>
+					<span style="color:red">Program has no unreserved beds</span>
+				</td>
+			</tr>
+		</table>
+	</c:when>
 	<c:otherwise>
 		<table class="simple" cellspacing="2" cellpadding="3">
 			<tr>

@@ -335,6 +335,10 @@ public class ClientManagerAction extends BaseAction {
 		}
 		
 		bedDemographicManager.saveBedDemographic(bedDemographic);
+		
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.success"));
+		saveMessages(request, messages);
 
 		return edit(mapping, form, request, response);
 	}
