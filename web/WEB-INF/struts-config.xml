@@ -1127,10 +1127,10 @@
 		<action input="/billing/CA/BC/billingPreferences.jsp" name="billingPreferencesActionForm" path="/billing/CA/BC/viewBillingPreferencesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ViewBillingPreferencesAction" validate="false">
 			<forward name="success" path="/billing/CA/BC/billingPreferences.jsp" />
 		</action>
-		<action input="/report/ClinicalReports.jsp" name="FrmForm" path="/RunClinicalReport" type="oscar.oscarReport.ClinicalReports.pageUtil.RunClinicalReportAction">
+		<action input="/report/ClinicalReports.jsp" name="FrmForm" path="/RunClinicalReport" type="oscar.oscarReport.ClinicalReports.PageUtil.RunClinicalReportAction">
 			<forward name="success" path="/report/ClinicalReports.jsp" />
 		</action>
-		<action input="/report/ClinicalReports.jsp" name="FrmForm" path="/report/RemoveClinicalReport" type="oscar.oscarReport.ClinicalReports.pageUtil.RemoveClinicalReportFromHistoryAction">
+		<action input="/report/ClinicalReports.jsp" name="FrmForm" path="/report/RemoveClinicalReport" type="oscar.oscarReport.ClinicalReports.PageUtil.RemoveClinicalReportFromHistoryAction">
 			<forward name="success" path="/report/ClinicalReports.jsp" />
 		</action>
 		<action input="/billing/CA/BC/billingSVCTrayAssoc.jsp" name="supServiceCodeAssocActionForm" path="/billing/CA/BC/supServiceCodeAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocAction" validate="false">
