@@ -531,6 +531,8 @@ function importFromEnct(reqInfo,txtArea)
         txtArea.value += '\n';
         
     txtArea.value += info;
+    txtArea.scrollTop = txtArea.scrollHeight;
+    txtArea.focus();
                 
 }
 
@@ -600,10 +602,12 @@ function fetchAttached() {
             //  new request      
             if( demo != null ) {
                         thisForm.setAllergies(demographic.RxInfo.getAllergies());
-                        StringBuffer meds;
-			meds = new StringBuffer(demographic.RxInfo.getCurrentMedication());                            			
-                        meds.append(demographic.EctInfo.getFamilyHistory());
-                        thisForm.setCurrentMedications(meds.toString());
+                
+			if(props.getProperty("currentMedications", "").equalsIgnoreCase("otherMedications")) {
+                            thisForm.setCurrentMedications(demographic.EctInfo.getFamilyHistory());
+			} else {
+                            thisForm.setCurrentMedications(demographic.RxInfo.getCurrentMedication());
+			}
             }
                 
                 thisForm.setStatus("1");
@@ -1080,13 +1084,22 @@ function fetchAttached() {
             </td>
        </tr>
        <tr>
-            <td colspan=2 class="tite4">
-                <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
-                        out.print(props.getProperty("currentMedicationsTitle", ""));
-                   } else { %>
-                        <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
-                <% } %>                
-            </td>
+            <td colspan="2" class="tite4">
+                <table width="100%">
+                    <tr>
+                        <td width="30%" class="tite4">
+                            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
+                                    out.print(props.getProperty("currentMedicationsTitle", ""));
+                               } else { %>
+                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.formCurrMedications"/>:
+                            <% } %>  
+                        </td>
+                        <td>
+                                <input type="button" class="btn" value="<bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.btnImportOtherMeds"/>" onclick="importFromEnct('OtherMeds',document.forms[0].currentMedications);" />
+                        </td>
+                    </tr>
+                </table>
+            </td>            
        </tr>
        <tr>
             <td colspan=2 >
