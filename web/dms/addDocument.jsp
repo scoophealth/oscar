@@ -219,7 +219,7 @@ function checkDefaultDate(object, defaultValue) {
                                 <% } %>
                                 <input type="text" name="docDesc" size="30" value="<%=formdata.getDocDesc()%>" onfocus="checkDefaultValue(this)"<% if (docerrors.containsKey("descmissing")) {%> class="warning"<%}%>>
                                 <input type="hidden" name="docCreator" value="<%=formdata.getDocCreator()%>" size="20">
-                                <span class="fieldlabel" title="Observation Date">Obs Date (yyyy/mm/dd): </span><input type="text" name="observationDate" id="observationDate" value="<%=formdata.getObservationDate()%>" onfocus="checkDefaultDate(this, '<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd")%>')" size="10" style="text-align: center;"><a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
+                                <span class="fieldlabel" title="Observation Date">Obs Date (yyyy/mm/dd): </span><input type="text" name="observationDate" id="observationDate" value="<%=formdata.getObservationDate()%>" onclick="checkDefaultDate(this, '<%=UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd")%>')" size="10" style="text-align: center;"><a id="obsdate"><img title="Calendar" src="../images/cal.gif" alt="Calendar" border="0" /></a>
                                 <input type="file" name="docFile" size="20"<% if (docerrors.containsKey("uploaderror")) {%> class="warning"<%}%>>
                                 <br/>
                                 <input type="hidden" name="mode" value="add">
