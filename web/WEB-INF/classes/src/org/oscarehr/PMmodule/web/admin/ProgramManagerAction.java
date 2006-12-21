@@ -461,7 +461,7 @@ public class ProgramManagerAction extends BaseAction {
 			return mapping.findForward("edit");
 		}
 
-		if (!program.getType().equalsIgnoreCase("bed check") && program.isHoldingTank()) {
+		if (!program.getType().equalsIgnoreCase("bed") && program.isHoldingTank()) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.invalid_holding_tank"));
 			saveMessages(request, messages);
