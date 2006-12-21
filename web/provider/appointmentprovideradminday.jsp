@@ -1,8 +1,10 @@
 <% response.setHeader("Cache-Control","no-cache");%>
+
 <!-- add by caisi -->
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <!-- add by caisi end<style>* {border:1px solid black;}</style> -->
 
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
@@ -35,8 +37,8 @@ String absurl="/infirm.do?action=showProgram";
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
-
 <%@ page import="org.apache.commons.lang.*" %>
+<%@ page import="org.springframework.*" %>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -173,6 +175,9 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
  * Ontario, Canada
  */
 -->
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.caisi.service.Version"%>
 <html:html locale="true">
 <head>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
@@ -648,19 +653,20 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <a href=# onClick = "review('1')" title="<bean:message key="provider.appointmentProviderAdminDay.viewAllProv"/>"><bean:message key="provider.appointmentProviderAdminDay.viewAll"/></a> &nbsp;|&nbsp;
 <% } %>
 </logic:notEqual>
+
 <logic:equal name="infirmaryView_isOscar" value="false">
 <%
- //String verno=org.caisi.comp.FrameworkFactory.getFramework().getComponent("coreComp").getComponent().getVersion();
+	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+	Version version = (Version) ctx.getBean("version");
 %>
-<b style="color:blue">caisi core version 2.5.0</b>&nbsp&nbsp&nbsp&nbsp
+<span style="font-weight:bold;color:blue">caisi core version <%=version.getVersion()%></span>&nbsp&nbsp&nbsp&nbsp
 </logic:equal>
+
          <a href="../logout.jsp"><bean:message key="global.btnLogout"/> <img src="../images/next.gif"  border="0" width="10" height="9" align="absmiddle"> &nbsp;</a>
          
 <!-- caisi infirmary view extension add fffffffffffff-->
 <caisi:isModuleLoad moduleName="caisi">
-</td></tr>
-<tr><td>
-<%@ include file="infirmaryviewprogramlist.jsp" %>
+	<%@ include file="infirmaryviewprogramlist.jsp" %>
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end fffffffffffff-->
 

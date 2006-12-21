@@ -1,5 +1,13 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.caisi.service.Version"%>
+
+<%
+	WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+	Version version = (Version) ctx.getBean("version");
+%>
 
 <%
 	String yearStr = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
@@ -14,7 +22,8 @@
 
 	String dateStr = yearStr + "-" + mthStr + "-" + dayStr;
 %>
-<script>
+
+<script type="text/javascript">
 function createIntakeAReport1()
 {
         var dateObj = new Date();
@@ -81,7 +90,7 @@ function createIntakeCReport1()
 					<tr>
 						<td nowrap="nowrap" width="120">
 							<div align="center">
-								<bean:message key="version" bundle="pmm"/>
+								<span style="font-weight:bold"><%=version.getVersion()%></span>
 							</div>
 						</td>
 					</tr>
