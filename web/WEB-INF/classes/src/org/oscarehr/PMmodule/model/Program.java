@@ -8,6 +8,7 @@ import org.oscarehr.PMmodule.model.base.BaseProgram;
 public class Program extends BaseProgram {
 	
 	public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
+	public static final String SERVICE_TYPE = "Service";
 	
 	/* [CONSTRUCTOR MARKER BEGIN] */
 	
@@ -30,17 +31,21 @@ public class Program extends BaseProgram {
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
-
-	public boolean getHoldingTank() {
-		return isHoldingTank();
-	}
-
+	
 	public boolean isFull() {
 		if (getNumOfMembers().intValue() >= getMaxAllowed().intValue()) {
 			return true;
 		}
 		
 		return false;
+	}
+	
+	public boolean isService() {
+		return SERVICE_TYPE.equalsIgnoreCase(getType());
+	}
+
+	public boolean getHoldingTank() {
+		return isHoldingTank();
 	}
 	
 }

@@ -3,19 +3,27 @@ package org.oscarehr.PMmodule.web.formbean;
 import org.apache.struts.action.ActionForm;
 
 public class ProgramManagerViewFormBean extends ActionForm {
-	
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String[] tabs = { "General", "Staff", "Function User", "Teams", "Clients", "Queue", "Access", "Bed Check" };
 
 	private String tab;
-
+	private String bedId;
 	private String clientId;
-
 	private String queueId;
 
-	private String bedId;
-	
+	/**
+	 * @return Returns the tab.
+	 */
+	public String getTab() {
+		return tab;
+	}
+
+	public String getBedId() {
+		return bedId;
+	}
+
 	/**
 	 * @return Returns the clientId.
 	 */
@@ -28,10 +36,15 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	}
 
 	/**
-	 * @return Returns the tab.
+	 * @param tab
+	 *            The tab to set.
 	 */
-	public String getTab() {
-		return tab;
+	public void setTab(String tab) {
+		this.tab = tab;
+	}
+
+	public void setBedId(String bedId) {
+		this.bedId = bedId;
 	}
 
 	/**
@@ -45,21 +58,5 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public void setQueueId(String queueId) {
 		this.queueId = queueId;
 	}
-
-	/**
-	 * @param tab
-	 *            The tab to set.
-	 */
-	public void setTab(String tab) {
-		this.tab = tab;
-	}
-
-	public String getBedId() {
-    	return bedId;
-    }
-
-	public void setBedId(String bedId) {
-    	this.bedId = bedId;
-    }
 
 }

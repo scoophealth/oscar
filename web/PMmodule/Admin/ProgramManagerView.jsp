@@ -1,6 +1,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 
+<%@page import="org.oscarehr.PMmodule.model.Program"%>
 <html:form action="/PMmodule/ProgramManagerView">
 	
 	<html:hidden property="tab" />
@@ -23,30 +24,36 @@
 	
 	<div class="tabs">
 		<%
-		String selectedTab = request.getParameter("tab");
-			
-		if (selectedTab == null || selectedTab.trim().equals("")) {
-			selectedTab = ProgramManagerViewFormBean.tabs[0];
-		}
+			String selectedTab = request.getParameter("tab");
+				
+			if (selectedTab == null || selectedTab.trim().equals("")) {
+				selectedTab = ProgramManagerViewFormBean.tabs[0];
+			}
 		%>
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>
 				<%
-				for (int i = 0; i < ProgramManagerViewFormBean.tabs.length; i++) {
-					if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase(selectedTab)) {
+					Program program = (Program) request.getAttribute("program");
+
+					for (int i = 0; i < ProgramManagerViewFormBean.tabs.length; i++) {
+						if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Bed Check") && program.isService()) {
+							break;
+						}
+
+						if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase(selectedTab)) {
 				%>
 					<td style="background-color: #555;">
 						<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i]%>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a>
 					</td>
 				<%
-					} else {
+						} else {
 				%>
 					<td>
 						<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i]%>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a>
 					</td>
 				<%
+						}
 					}
-				}
 				%>
 			</tr>
 		</table>

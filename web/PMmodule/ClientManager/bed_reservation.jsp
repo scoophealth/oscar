@@ -18,7 +18,7 @@
 			</tr>
 		</table>
 	</c:when>
-	<c:when test="${empty unreservedBeds}">
+	<c:when test="${empty clientManagerForm.map.unreservedBeds}">
 		<table class="simple" cellspacing="2" cellpadding="3">
 			<tr>
 				<td>
@@ -30,7 +30,7 @@
 	<c:otherwise>
 		<table class="simple" cellspacing="2" cellpadding="3">
 			<tr>
-				<th width="20%">Reserved</th>
+				<th width="20%">Name</th>
 				<td>
 					<html:select property="bedDemographic.bedId">
 						<c:forEach var="unreservedBed" items="${clientManagerForm.map.unreservedBeds}">
@@ -78,7 +78,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th width="20%">Reserved Until</th>
+				<th width="20%">Until</th>
 				<td>
 					<input type="text" name="bedDemographic.strReservationEnd" id="strReservationEnd_field" readonly="readonly" value="<c:out value="${clientManagerForm.map.bedDemographic.strReservationEnd}"/>" />
 					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="strReservationEnd_field-button" alt="Reserve Until Calendar" title="Reserve Until Calendar" />

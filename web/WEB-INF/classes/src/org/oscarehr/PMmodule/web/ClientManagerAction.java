@@ -558,13 +558,11 @@ public class ClientManagerAction extends BaseAction {
 			}
 		}
 
-		/* bed reservation */
+		/* bed reservation view */
 		BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(clientId));
-
-		/* view */
 		request.setAttribute("bedDemographic", bedDemographic);
 
-		/* edit */
+		/* bed reservation edit */
 		if (tabBean.getTab().equals("Bed Reservation")) {
 			// set bed program id
 			Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(clientId);
@@ -576,8 +574,6 @@ public class ClientManagerAction extends BaseAction {
 			boolean reservationExists = (bedDemographic != null);
 			bedDemographic = reservationExists ? bedDemographic : BedDemographic.create(Integer.valueOf(clientId), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
 			Bed reservedBed = reservationExists ? bedManager.getBed(bedDemographic.getBedId()) : null;
-			
-			System.err.println(bedDemographic.getStrReservationEnd());
 			
 			clientForm.set("bedDemographic", bedDemographic);
 			

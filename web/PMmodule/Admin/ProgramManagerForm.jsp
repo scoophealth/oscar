@@ -1,6 +1,9 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
-<html:form action="/PMmodule/ProgramManager.do">
+<%@ page import="org.oscarehr.PMmodule.model.Program"%>
+
+<%@page import="org.apache.struts.validator.DynaValidatorForm"%>
+<html:form action="/PMmodule/ProgramManager">
 
 	<html:hidden property="view.tab" />
 	<input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />
@@ -19,7 +22,7 @@
 			
 			<table width="100%">
 				<tr>
-					<td style="text-align: right;" align="right"><c:out value="${programName}" /></td>
+					<td style="text-align:right;" align="right"><c:out value="${programName}" /></td>
 				</tr>
 			</table>
 			
@@ -34,25 +37,28 @@
 				<table cellpadding="0" cellspacing="0" border="0">
 					<tr>
 						<%
-						for (int x = 0; x < ProgramManagerViewFormBean.tabs.length; x++) {
-							if (ProgramManagerViewFormBean.tabs[x].equalsIgnoreCase("Bed")) {
-								System.err.println(selectedTab);
-							}
+							DynaValidatorForm form = (DynaValidatorForm) session.getAttribute("programManagerForm");
+							Program program = (Program) form.get("program");
 							
-							if (ProgramManagerViewFormBean.tabs[x].equals(selectedTab)) {
+							for (int i = 0; i < ProgramManagerViewFormBean.tabs.length; i++) {
+								if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Bed Check") && program.isService()) {
+									break;
+								}
+								
+								if (ProgramManagerViewFormBean.tabs[i].equals(selectedTab)) {
 						%>
 						<td style="background-color: #555;">
-							<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[x] %>');return false;"><%=ProgramManagerViewFormBean.tabs[x]%></a>
+							<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a>
 						</td>
 						<%
-							} else {
+								} else {
 						%>
 						<td>
-							<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[x] %>');return false;"><%=ProgramManagerViewFormBean.tabs[x]%></a>
+							<a href="javascript:void(0)" onclick="javascript:clickTab('<%=ProgramManagerViewFormBean.tabs[i] %>');return false;"><%=ProgramManagerViewFormBean.tabs[i]%></a>
 						</td>
 						<%
+								}
 							}
-						}
 						%>
 					</tr>
 				</table>
