@@ -128,9 +128,9 @@ public class SurveyModelManager {
 		if(questionType.equals(QuestionTypes.SCALE)) {
 			question.addNewType().addNewScale();
 		}
-		//if(questionType.equals(QuestionTypes.DATE)) {
-		//	question.addNewType().setDate();
-		//}
+		if(questionType.equals(QuestionTypes.DATE)) {
+			question.addNewType().setDate(DateDocument.Date.YYYY_MM_DD);
+		}
 		if(questionType.equals(QuestionTypes.SELECT)) {
 			Select select = question.addNewType().addNewSelect();
 			select.addNewPossibleAnswers();
