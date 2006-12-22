@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+    "-//Hibernate/Hibernate Mapping DTD //EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="org.caisi.model.IssueAdmin" table="issue">
          <id name="id" column="issue_id" unsaved-value="0">
