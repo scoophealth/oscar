@@ -55,7 +55,7 @@ public class TicklerDAOHibernate extends HibernateDaoSupport implements
 			comment.setTickler_no(tickler_id.longValue());
 			comment.setUpdate_date(new Date());
 			comment.setProvider_no(provider);
-			current_assignee= ((Provider)(getHibernateTemplate().find("from Provider p where p.provider_no = ?",task_assigned_to)).get(0)).getFormattedName();
+			current_assignee= ((Provider)(getHibernateTemplate().find("from Provider p where p.ProviderNo = ?",task_assigned_to)).get(0)).getFormattedName();
 			message = "RE-ASSIGNMENT RECORD: [Tickler \""+tickler.getDemographic().getFormattedName()+"\" was reassigned from \""+former_assignee+"\"  to \""+current_assignee +"\"]";
 			comment.setMessage(message);
 			tickler.getComments().add(comment);			
