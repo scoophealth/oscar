@@ -20,7 +20,7 @@
 			url += '?method=search_programs&program.name=' + programName + '&program.type=' + programType;
 			url += '&formName=clientManagerForm&formElementName=program.name&formElementId=program.id&formElementAgencyId=program.agencyId&formElementType=program.type&submit=true';
 		
-		window.open(url, 'program_search', 'width=500, height=400');
+		window.open(url, 'program_search', 'width=800, height=600');
 	}
 
 	function do_referral() {
