@@ -1,0 +1,224 @@
+/*
+ * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * Yi Li
+ */
+package oscar.oscarBilling.ca.on.data;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
+public class JdbcBillingReviewImpl {
+	private static final Logger _logger = Logger.getLogger(JdbcBillingReviewImpl.class);
+	BillingONDataHelp dbObj = new BillingONDataHelp();
+
+	public String getCodeFee(String val) {
+		String retval = null;
+		String sql = "select value from billingservice where service_code='" + val + "'";
+
+		// _logger.info("getCodeFee(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				retval = rs.getString("value");
+			}
+		} catch (SQLException e) {
+			_logger.error("getCodeFee(sql = " + sql + ")");
+		}
+
+		return retval;
+	}
+
+	public String getPercFee(String val) {
+		String retval = null;
+		String sql = "select percentage from billingservice where service_code='" + val + "'";
+
+		// _logger.info("getCodeFee(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				retval = rs.getString("percentage");
+			}
+		} catch (SQLException e) {
+			_logger.error("getPercFee(sql = " + sql + ")");
+		}
+
+		return retval;
+	}
+
+	public String[] getPercMinMaxFee(String val) {
+		String[] retval = { "", "" };
+		String sql = "select min, max from billingperclimit where service_code='" + val + "'";
+
+		// _logger.info("getCodeFee(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				retval[0] = rs.getString("min");
+				retval[1] = rs.getString("max");
+			}
+		} catch (SQLException e) {
+			_logger.error("getPercMinMaxFee(sql = " + sql + ")");
+		}
+
+		return retval;
+	}
+
+	// invoice report
+	public List getBill(String billType, String statusType, String providerNo, String startDate, String endDate,
+			String demoNo) {
+		List retval = new Vector();
+		BillingClaimHeader1Data ch1Obj = null;
+		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType;
+		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
+		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
+				+ "provider_no,provider_ohip_no, apptProvider_no,timestamp,total,paid" + " from billing_on_cheader1 where " + temp
+				+ " order by billing_date, billing_time";
+
+		_logger.info("getBill(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId("" + rs.getInt("id"));
+				ch1Obj.setDemographic_no("" + rs.getInt("demographic_no"));
+				ch1Obj.setDemographic_name(rs.getString("demographic_name"));
+				ch1Obj.setBilling_date(rs.getString("billing_date"));
+				ch1Obj.setBilling_time(rs.getString("billing_time"));
+				ch1Obj.setStatus(rs.getString("status"));
+				ch1Obj.setProvider_no(rs.getString("provider_no"));
+				ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
+				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
+				ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+				ch1Obj.setTotal(rs.getString("total"));
+				ch1Obj.setPay_program(rs.getString("pay_program"));
+				ch1Obj.setPaid(rs.getString("paid"));
+				retval.add(ch1Obj);
+			}
+		} catch (SQLException e) {
+			_logger.error("getBill(sql = " + sql + ")");
+		}
+		return retval;
+	}
+
+	// invoice report
+	public List getBill(String billType, String statusType, String providerNo, String startDate, String endDate,
+			String demoNo, String serviceCode, String dx, String visitType) {
+		List retval = new Vector();
+		BillingClaimHeader1Data ch1Obj = null;
+		String temp = demoNo + " " + providerNo + " " + statusType + " " + startDate + " " + endDate + " " + billType + " " + visitType ;
+		temp = temp.trim().startsWith("and") ? temp.trim().substring(3) : temp;
+
+		String sql = "select id,pay_program,demographic_no,demographic_name,billing_date,billing_time,status,"
+				+ "provider_no,provider_ohip_no,apptProvider_no,timestamp,total,paid" + " from billing_on_cheader1 where " + temp
+				+ " order by billing_date, billing_time";
+
+		_logger.info("getBill(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+
+				sql = "select fee, service_code, dx from billing_on_item where ch1_id=" + rs.getInt("id")
+						+ " and service_code like '" + serviceCode + "' and status!='D'" + dx;
+				ResultSet rs1 = dbObj.searchDBRecord(sql);
+				while (rs1.next()) {
+					ch1Obj = new BillingClaimHeader1Data();
+					ch1Obj.setId("" + rs.getInt("id"));
+					ch1Obj.setDemographic_no("" + rs.getInt("demographic_no"));
+					ch1Obj.setDemographic_name(rs.getString("demographic_name"));
+					ch1Obj.setBilling_date(rs.getString("billing_date"));
+					ch1Obj.setBilling_time(rs.getString("billing_time"));
+					ch1Obj.setStatus(rs.getString("status"));
+					ch1Obj.setProvider_no(rs.getString("provider_no"));
+					ch1Obj.setProvider_ohip_no(rs.getString("provider_ohip_no"));
+					ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
+					ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+					// ch1Obj.setTotal(rs.getString("total"));
+					ch1Obj.setPay_program(rs.getString("pay_program"));
+					ch1Obj.setPaid(rs.getString("paid"));
+
+					ch1Obj.setTotal(rs1.getString("fee"));
+					ch1Obj.setRec_id(rs1.getString("dx"));
+					ch1Obj.setTransc_id(rs1.getString("service_code"));
+					retval.add(ch1Obj);
+				}
+			}
+		} catch (SQLException e) {
+			_logger.error("getBill(sql = " + sql + ")");
+		}
+		return retval;
+	}
+
+	// billing page
+	public List getBillingHist(String demoNo, String strLimit, String strDateRange) {
+		List retval = new Vector();
+		BillingClaimHeader1Data ch1Obj = null;
+		String sql = "select * from billing_on_cheader1 where demographic_no=" + demoNo + strDateRange
+				+ " and status!='D' order by billing_date desc, billing_time desc, id desc " + strLimit;
+
+		// _logger.info("getBillingHist(sql = " + sql + ")");
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				ch1Obj = new BillingClaimHeader1Data();
+				ch1Obj.setId("" + rs.getInt("id"));
+				ch1Obj.setBilling_date(rs.getString("billing_date"));
+				ch1Obj.setBilling_time(rs.getString("billing_time"));
+				ch1Obj.setStatus(rs.getString("status"));
+				ch1Obj.setProvider_no(rs.getString("provider_no"));
+				ch1Obj.setApptProvider_no(rs.getString("apptProvider_no"));
+				ch1Obj.setUpdate_datetime(rs.getString("timestamp"));
+
+				ch1Obj.setPay_program(rs.getString("pay_program"));
+				ch1Obj.setVisittype(rs.getString("visittype"));
+				ch1Obj.setAdmission_date(rs.getString("admission_date"));
+				ch1Obj.setFacilty_num(rs.getString("facilty_num"));
+				ch1Obj.setTotal(rs.getString("total"));
+				retval.add(ch1Obj);
+
+				sql = "select * from billing_on_item where ch1_id=" + ch1Obj.getId() + " and status!='D'";
+
+				// _logger.info("getBillingHist(sql = " + sql + ")");
+				ResultSet rs2 = dbObj.searchDBRecord(sql);
+				String dx = "";
+				String strService = "";
+				String strServiceDate = "";
+				while (rs2.next()) {
+					strService += rs2.getString("service_code") + " x " + rs2.getString("ser_num") + ", ";
+					dx = rs2.getString("dx");
+					strServiceDate = rs2.getString("service_date");
+				}
+				BillingItemData itObj = new BillingItemData();
+				itObj.setService_code(strService);
+				itObj.setDx(dx);
+				itObj.setService_date(strServiceDate);
+				retval.add(itObj);
+			}
+		} catch (SQLException e) {
+			_logger.error("getBillingHist(sql = " + sql + ")");
+		}
+
+		return retval;
+	}
+}

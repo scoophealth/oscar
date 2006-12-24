@@ -80,6 +80,37 @@ public class RAData {
 		return list;
 	}
 
+	public ArrayList getRADataIntern(String billingNo, String service_date, String ohip_no) {
+		ArrayList list = new ArrayList();
+		String sql = "Select * from radetail where billing_no = '" + StringEscapeUtils.escapeSql(billingNo) + "'";
+		sql += " and service_date='" + service_date + "' and providerohip_no='" + ohip_no + "'";
+		try {
+			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			ResultSet rs = db.GetSQL(sql);
+			while (rs.next()) {
+				Hashtable h = new Hashtable();
+				h.put("radetail_no", rs.getString("radetail_no"));
+				h.put("raheader_no", rs.getString("raheader_no"));
+				h.put("providerohip_no", rs.getString("providerohip_no"));
+				h.put("billing_no", rs.getString("billing_no"));
+				h.put("service_code", rs.getString("service_code"));
+				h.put("service_count", rs.getString("service_count"));
+				h.put("hin", rs.getString("hin"));
+				h.put("amountclaim", rs.getString("amountclaim"));
+				h.put("amountpay", rs.getString("amountpay"));
+				h.put("service_date", rs.getString("service_date"));
+				h.put("error_code", rs.getString("error_code"));
+				h.put("billtype", rs.getString("billtype"));
+				list.add(h);
+			}
+			rs.close();
+			db.CloseConn();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public String getErrorCodes(ArrayList a) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < a.size(); i++) {

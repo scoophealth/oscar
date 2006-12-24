@@ -1,0 +1,25 @@
+package oscar.oscarBilling.ca.on.pageUtil;
+
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+
+import oscar.oscarBilling.ca.on.data.JdbcBilling3rdPartImpl;
+
+public class Billing3rdPartPrep {
+	private static final Logger _logger = Logger.getLogger(Billing3rdPartPrep.class);
+	JdbcBilling3rdPartImpl dbObj = new JdbcBilling3rdPartImpl();
+
+	// get 3rd billing data
+	public Properties get3rdPartBillProp(String invNo) {
+		Properties ret = new Properties();
+		ret = dbObj.get3rdPartBillProp(invNo);
+		return ret;
+	}
+
+	public Properties getLocalClinicAddr() {
+		Properties ret = new Properties();
+		ret = dbObj.getLocalClinicAddr();
+		return ret;
+	}
+}

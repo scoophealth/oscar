@@ -152,6 +152,10 @@ public class BillingClaimsErrorReportBeanHandler {
     public Vector getClaimsErrorReportBeanVector(){
         return claimsErrorReportBeanVector;
     }
+
+	public void setClaimsErrorReportBeanVector(Vector claimsErrorReportBeanVector) {
+		this.claimsErrorReportBeanVector = claimsErrorReportBeanVector;
+	}
         
 }
 

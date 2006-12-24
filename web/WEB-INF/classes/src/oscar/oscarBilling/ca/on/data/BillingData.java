@@ -35,66 +35,70 @@ import org.apache.commons.lang.StringEscapeUtils;
 import oscar.oscarDB.DBHandler;
 
 /**
- *
+ * 
  * @author jay
  */
 public class BillingData {
-    
-    /** Creates a new instance of BillingData */
-    public BillingData() {
-    }
-    
-    public ArrayList getBills(String statusType, String providerNo,String startDate, String endDate, String demoNo){
-        ArrayList list = new ArrayList();
-        
-        String providerQuery = "";
-        String startDateQuery = "";
-        String endDateQuery = "";
-        String demoQuery = "";
 
-        if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
-           providerQuery = " and apptProvider_no = '" + providerNo + "'";
-        }
+	/** Creates a new instance of BillingData */
+	public BillingData() {
+	}
 
-        if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
-          //startDateQuery = " and ( to_days(billing_date) >= to_days('" + startDate +"')) ";
-          startDateQuery = " and ( billing_date >= '"+startDate+"') ";
-        }
+	public ArrayList getBills(String statusType, String providerNo, String startDate, String endDate, String demoNo) {
+		ArrayList list = new ArrayList();
 
-        if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
-           //endDateQuery = " and ( to_days(billing_date) <= to_days('" + endDate +"')) ";
-           endDateQuery = " and ( billing_date <= '"+endDate+"') ";
-        }
-        if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")) {
-           demoQuery = " and demographic_no = '" + demoNo + "' ";
-        }
-        
-        String p = "select * from billing where  status like '"+StringEscapeUtils.escapeSql(statusType)+"' "
-                   + providerQuery
-                   + startDateQuery
-                   + endDateQuery
-                   + demoQuery;
-        System.out.println("bill status query "+p);
-        try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-           ResultSet rs = db.GetSQL(p);
-           while (rs.next()) {
-              Hashtable h = new Hashtable();
-              h.put("billing_no", rs.getString("billing_no"));
-              h.put("demographic_no", rs.getString("demographic_no"));
-              h.put("status",rs.getString("status"));
-              h.put("provider_no", rs.getString("provider_no"));
-              h.put("demographic_name", rs.getString("demographic_name"));
-              h.put("billing_date", rs.getString("billing_date"));
-              h.put("billing_time", rs.getString("billing_time"));
-              h.put("total", rs.getString("total"));
-              list.add(h);
-           }
-           rs.close();
-           db.CloseConn();
-        }catch (Exception e) {
-           e.printStackTrace();
-        }
-        return list;
-    }
+		String providerQuery = "";
+		String startDateQuery = "";
+		String endDateQuery = "";
+		String demoQuery = "";
+
+		if (providerNo != null && !providerNo.trim().equalsIgnoreCase("all")) {
+			providerQuery = " and apptProvider_no = '" + providerNo + "'";
+		}
+
+		if (startDate != null && !startDate.trim().equalsIgnoreCase("")) {
+			// startDateQuery = " and ( to_days(billing_date) >= to_days('" +
+			// startDate +"')) ";
+			startDateQuery = " and ( billing_date >= '" + startDate + "') ";
+		}
+
+		if (endDate != null && !endDate.trim().equalsIgnoreCase("")) {
+			// endDateQuery = " and ( to_days(billing_date) <= to_days('" +
+			// endDate +"')) ";
+			endDateQuery = " and ( billing_date <= '" + endDate + "') ";
+		}
+		if (demoNo != null && !demoNo.trim().equalsIgnoreCase("")) {
+			demoQuery = " and demographic_no = '" + demoNo + "' ";
+		}
+
+		String p = "select billing_no,demographic_no,status,provider_no,demographic_name,billing_date,billing_time,total from billing where  status like '"
+				+ StringEscapeUtils.escapeSql(statusType)
+				+ "' "
+				+ providerQuery
+				+ startDateQuery
+				+ endDateQuery
+				+ demoQuery;
+		System.out.println("bill status query " + p);
+		try {
+			DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+			ResultSet rs = db.GetSQL(p);
+			while (rs.next()) {
+				Hashtable h = new Hashtable();
+				h.put("billing_no", "" + rs.getInt("billing_no"));
+				h.put("demographic_no", rs.getString("demographic_no"));
+				h.put("status", rs.getString("status"));
+				h.put("provider_no", rs.getString("provider_no"));
+				h.put("demographic_name", rs.getString("demographic_name"));
+				h.put("billing_date", rs.getString("billing_date"));
+				h.put("billing_time", rs.getString("billing_time"));
+				h.put("total", rs.getString("total"));
+				list.add(h);
+			}
+			rs.close();
+			db.CloseConn();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 }
