@@ -507,6 +507,10 @@ if (othercode1.compareTo("") == 0 || othercode1 == null || othercode1.length() <
                             otherdbcode1.compareTo("P022A")==0 || otherdbcode1.compareTo("P023A")==0 || 
                             otherdbcode1.compareTo("P030A")==0 ||
                             otherdbcode1.compareTo("K005A")==0 ||
+                            otherdbcode1.compareTo("K030A")==0 ||
+                            otherdbcode1.compareTo("K017A")==0 ||
+                            otherdbcode1.compareTo("P005A")==0 ||
+                            otherdbcode1.compareTo("P004A")==0 ||
                             otherdbcode1.compareTo("Z716A")==0 || otherdbcode1.startsWith("S") || 
                             (otherdbcode1.endsWith("B") && !otherdbcode1.endsWith("C988B") && !otherdbcode1.endsWith("C998B") && !otherdbcode1.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee);
@@ -603,6 +607,10 @@ if (othercode2.compareTo("") == 0 || othercode2 == null || othercode2.length() <
                             otherdbcode2.compareTo("P022A")==0 || otherdbcode2.compareTo("P023A")==0 || 
                             otherdbcode2.compareTo("P030A")==0 ||
                             otherdbcode2.compareTo("K005A")==0 ||
+                            otherdbcode2.compareTo("K030A")==0 ||
+                            otherdbcode2.compareTo("K017A")==0 ||
+                            otherdbcode2.compareTo("P005A")==0 ||
+                            otherdbcode2.compareTo("P004A")==0 ||
                             otherdbcode2.compareTo("Z716A")==0 || otherdbcode2.startsWith("S") || 
                             (otherdbcode2.endsWith("B") && !otherdbcode2.endsWith("C988B") && !otherdbcode2.endsWith("C998B") && !otherdbcode2.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee02);
@@ -698,6 +706,10 @@ if (othercode3.compareTo("") == 0 || othercode3 == null || othercode3.length() <
                             otherdbcode3.compareTo("P022A")==0 || otherdbcode3.compareTo("P023A")==0 || 
                             otherdbcode3.compareTo("P030A")==0 ||
                             otherdbcode3.compareTo("K005A")==0 ||
+                            otherdbcode3.compareTo("K030A")==0 ||
+                            otherdbcode3.compareTo("P005A")==0 ||
+                            otherdbcode3.compareTo("P004A")==0 ||
+                            otherdbcode3.compareTo("K017A")==0 ||
                             otherdbcode3.compareTo("Z716A")==0 || otherdbcode3.startsWith("S") || 
                             (otherdbcode3.endsWith("B") && !otherdbcode3.endsWith("C988B") && !otherdbcode3.endsWith("C998B") && !otherdbcode3.endsWith("C999B") ) ){
 				pValue1 = pValue1.add(otherfee03);
@@ -808,6 +820,10 @@ for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
                             scode.compareTo("P022A")==0 || scode.compareTo("P023A")==0 || 
                             scode.compareTo("P030A")==0 ||
                             scode.compareTo("K005A")==0 ||
+                            scode.compareTo("K030A")==0 ||
+                            scode.compareTo("P005A")==0 ||
+                            scode.compareTo("P004A")==0 ||
+                            scode.compareTo("K017A")==0 ||
                             scode.compareTo("A903A")==0 || scode.compareTo("C903A")==0 || 
                             scode.compareTo("C003A")==0 || scode.compareTo("W102A")==0 || 
                             scode.compareTo("W109A")==0 || scode.compareTo("W903A")==0 || 
@@ -1133,9 +1149,9 @@ function validateItems(form){
             break;
         }
      }             
-    
     return ret;
 }
+    
 
 function getNewCurrentDxCodeList(origRequest){
    //alert("calling get NEW current Dx Code List");

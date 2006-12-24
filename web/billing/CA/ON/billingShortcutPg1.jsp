@@ -17,7 +17,7 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page errorPage="errorpage.jsp"%>
 <%@ page import="java.util.*,java.net.*, java.sql.*, oscar.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties"
 	scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties"
@@ -110,6 +110,12 @@
 
   // get patient's billing history
   boolean bFirst = true;
+  Vector vecHistD = new Vector();
+  List aL = null;
+  
+  OscarProperties props = OscarProperties.getInstance();
+  if(!props.getProperty("isNewONbilling", "").equals("true")) {
+	  
   sql = "select billing_no,billing_date,visitdate,visitType, update_date, clinic_ref_code, content from billing " +
 		" where demographic_no=" + demo_no + " and status!='D' order by billing_date desc, billing_no desc limit 5";
   rs = dbObj.searchDBRecord(sql);
@@ -131,8 +137,6 @@
 		r_doctor_ohip= SxmlMisc.getXmlContent(rs.getString("content"), "rdohip");
     }
   }
-
-  Vector vecHistD = new Vector();
 
   for (int i = 0; i < vecHist.size(); i++) {
     String billingNo = ((Properties)vecHist.get(i)).getProperty("billing_no", "");
@@ -164,7 +168,25 @@
     propHist.setProperty("diagnostic_code", dx);
     vecHistD.add(propHist);
   }
+  } else {
+		JdbcBillingReviewImpl hdbObj = new JdbcBillingReviewImpl();
+		aL = hdbObj.getBillingHist(demo_no, " limit 5 ", "");
+		if (aL.size()>0) {
+			BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(0);
+			BillingItemData iobj = (BillingItemData) aL.get(1);
 
+			propHist = new Properties();
+
+			propHist.setProperty("visitdate", obj.getAdmission_date()); // admission date
+			propHist.setProperty("visitType", obj.getVisittype());
+			propHist.setProperty("clinic_ref_code", obj.getFacilty_num());
+			vecHist.add(propHist);
+			propHist.setProperty("diagnostic_code", iobj.getDx());
+			vecHistD.add(propHist);
+		}
+	  
+  }
+  
   // display the fixed billing part
   // Retrieving Provider
   Vector vecProvider = new Vector();
@@ -261,6 +283,7 @@
 	  for(int i=0; i<vecCodeCol1.size(); i++) {
 	  	sql += (i==0?"":" or ") + "service_code='" + ((Properties)vecCodeCol1.get(i)).getProperty("serviceCode") + "'";
 	  }
+	  //System.out.println("vecCodeCol1: " + sql);
 	  rs = dbObj.searchDBRecord(sql);
 	  while (rs.next()) {
 	    propPremium.setProperty(rs.getString("service_code"), "A");
@@ -322,6 +345,8 @@
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PRIVATE" />
 <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=UTF-8" />
 <title>HospitalBilling</title>
+<link rel="stylesheet" type="text/css" href="billingON.css" />
+
 <!-- calendar stylesheet -->
 <link rel="stylesheet" type="text/css" media="all"
 	href="../../../share/calendar/calendar.css" title="win2k-cold-1" />
@@ -996,7 +1021,9 @@ ctlCount = 0;
 </form>
 
 
-<br>
+<br/>
+<%   if(!props.getProperty("isNewONbilling", "").equals("true")) {
+%>
 <table border="0" cellpadding="0" cellspacing="2" width="100%"
 	bgcolor="#CCCCFF">
 	<tr>
@@ -1036,7 +1063,45 @@ ctlCount = 0;
 		</td>
 	</tr>
 </table>
+<% } else { %>
+<table border="0" cellpadding="1" cellspacing="2" width="100%" class="myIvory">
+	<tr class="myYellow">
+		<td colspan="6"><%=demoname%> - <b>Billing History</b> (last 5 records)</td>
+	</tr>
+	<tr>
+		<td>
+		<table border="1" cellspacing="0" cellpadding="1" bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%">
+			<tr class="myYellow" align="center">
+				<th nowrap>Serial No.</th>
+				<th nowrap>Billing Date</th>
+				<th nowrap>Appt/Adm Date</th>
+				<th nowrap>Service Code</th>
+				<th nowrap>Dx</th>
+				<th>Create Date</th>
+			</tr>
+			<%// new billing records
+			for (int i = 0; i < aL.size(); i = i + 2) {
+				BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
+				BillingItemData iobj = (BillingItemData) aL.get(i + 1);
+				//System.out.println(i + obj.getBilling_date());
 
+				%>
+			<tr <%=i%4==0? "class=\"myGreen\"":""%> align="center">
+				<td><%=obj.getId()%></td>
+				<td><%=obj.getBilling_date()%></td>
+				<td><%=iobj.getService_date()%></td>
+				<td><%=iobj.getService_code()%></td>
+				<td><%=iobj.getDx()%></td>
+				<td><%=obj.getUpdate_datetime().substring(0, 10)%></td>
+			</tr>
+			<%}
+
+		%>
+		</table>
+		</td>
+	</tr>
+</table>
+<% } %>
 <script type="text/javascript">//<![CDATA[
     // the default multiple dates selected, first time the calendar is instantiated
     var MA = [];

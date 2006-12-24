@@ -18,6 +18,7 @@
   <%@ page errorPage="errorpage.jsp"import="java.util.*,java.math.*,java.net.*,
                                             java.sql.*, oscar.util.*, oscar.*" %>
   <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp" %>
+  <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*" %>
   <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
   <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
   <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -291,6 +292,22 @@
 			param[22] = user_no;//request.getParameter("user_no");
 			int nBillNo = 0;
 			int nBillDetailNo = 0;
+			
+			// for new billing
+			OscarProperties props = OscarProperties.getInstance();
+			if(props.getProperty("isNewONbilling", "").equals("true")) {
+				BillingSavePrep saveObj = new BillingSavePrep();
+				// combine two vecs into one
+				if(vecServiceCodePerc.size()>1) {
+					vecServiceCodePrice.add( "" + bdPerc); //vecServiceCodePerc.get(1) );
+					vecServiceCodeUnit.add( vecServiceCodePerc.get(2) );
+					vecServiceCode.add( vecServiceCodePerc.get(0) );
+					vecServiceCodeDesc.add( vecServiceCodePerc.get(3) );
+				}
+				Vector vecT = saveObj.getBillingClaimHospObj(request, tempDate[k], total, vecServiceCode, vecServiceCodeUnit, vecServiceCodePrice);
+				saveObj.addABillingRecord(vecT);
+			} else {
+			
 			//BillingONDataHelp billObj = new BillingONDataHelp();
 			//String sql = "insert into billing values('\\N',?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)";
 			sql = "insert into billing(clinic_no, demographic_no, provider_no, appointment_no, organization_spec_code, demographic_name, hin, update_date, update_time, billing_date, billing_time, clinic_ref_code, content, total, status, dob, visitdate, visittype, provider_ohip_no, provider_rma_no, apptProvider_no, asstProvider_no, creator) values( "
@@ -341,13 +358,15 @@
 		    	}
 		    	System.out.println(nBillNo + sql);
 			}
+			
+			}
 		} // end of for loop
 		msg = "<br>Billing records were added.<br>";
 		if("Save".equals(request.getParameter("submit"))) {
 			msg += "<script language=\"JavaScript\"> self.close();</script>";
 		} else {
 		    msg += "<script language=\"JavaScript\">window.location = 'billingShortcutPg1.jsp?billRegion=&billForm=" 
-		        + URLEncoder.encode(oscarVariables.getProperty("hospital_view", "")) + "&hotclick=&appointment_no=0&demographic_name="
+		        + URLEncoder.encode(oscarVariables.getProperty("hospital_view", oscarVariables.getProperty("default_view"))) + "&hotclick=&appointment_no=0&demographic_name="
 		        + URLEncoder.encode(demoLast) + "%2C" 
 		        + URLEncoder.encode(demoFirst) + "&demographic_no="
 		        + demo_no + "&providerview=1&user_no="
@@ -508,6 +527,10 @@ System.out.println(" * ******************************" + sql);
 <%
 }
 %>
+	<input type="hidden" name="hc_type" value="<%=demoHCTYPE%>">
+	<input type="hidden" name="referralCode" value="<%=r_doctor_ohip%>">
+	<input type="hidden" name="sex" value="<%=demoSex%>">
+	<input type="hidden" name="proOHIPNO" value="<%=proOHIPNO%>">
     </form>
 
   </table>

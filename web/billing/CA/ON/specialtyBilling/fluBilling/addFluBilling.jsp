@@ -28,7 +28,7 @@
 if(session.getAttribute("user") == null ) response.sendRedirect("../../../../../logout.jsp");
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.login.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.login.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ include file="../../../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbFLU.jsp" %>
@@ -62,8 +62,14 @@ while(rs.next()){
 	billingProvider.add(rs.getString("p.last_name") +","+ rs.getString("p.first_name"));
 }
 
-System.out.println("size of result: "+ billingProvider.size());
+//System.out.println("size of result: "+ billingProvider.size());
 
+//OscarProperties props = OscarProperties.getInstance();
+//System.out.println("OscarProperties: "+ oscarVariables.getProperty("isNewONbilling", ""));
+String actionPage = "dbAddFluBilling.jsp";
+if(oscarVariables.getProperty("isNewONbilling", "").equals("true")) {
+	actionPage = "onDbAddFluBilling.jsp";
+}
 %>
 
 <html>
@@ -117,7 +123,7 @@ function OtherScriptAttach() {
 function validate2(form){
 form.goPrev.value = "goPrev";
 if (validateProviderNo(form)){
-form.action = "dbAddFluBilling.jsp"
+form.action = "<%=actionPage%>" ; //"dbAddFluBilling.jsp"
 form.submit()
 }
 
@@ -127,7 +133,7 @@ else{}
 function validate(form){
 form.goPrev.value = "";
 if (validateProviderNo(form)){
-form.action = "dbAddFluBilling.jsp"
+form.action = "<%=actionPage%>" ; //"dbAddFluBilling.jsp"
 form.submit()
 }
 

@@ -1,0 +1,151 @@
+<!-- 
+ *
+ * Copyright (c) 2006-. OSCARservice, OpenSoft System. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * Yi Li
+ */
+-->
+
+<% 
+    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
+%>
+
+<%@ page import="java.io.*, java.sql.*, oscar.*, oscar.util.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
+
+<%
+JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();
+Properties propRt = new Properties();
+
+String nowDate = ""; 
+
+String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
+String transactiontype="", providerno="", specialty="", account="", patient_last="", patient_first="", provincecode="", newhin="", hin="", ver="", billtype="", location="";
+String servicedate="", serviceno="", servicecode="", amountsubmit="", amountpay="", amountpaysign="", explain="", error="";
+String proFirst="", proLast="", demoFirst="", demoLast="", apptDate="", apptTime="", checkAccount="", strcount="", strtCount="";
+String balancefwd="",abf_ca="", abf_ad="",abf_re="",abf_de="";
+String transaction="",trans_code="",cheque_indicator="", trans_date="",trans_amount="", trans_message="";
+String message="", message_txt="";
+String xml_ra="";
+
+int accountno=0, totalsum=0, txFlag=0, recFlag=0, flag=0, payFlag=0, count=0, tCount=0, amountPaySum=0, amountSubmitSum=0;
+String raNo = "";
+
+ResultSet rslocal;
+filename = documentBean.getFilename();
+
+if(!filename.equals("")) {
+
+	OscarProperties props = OscarProperties.getInstance();
+	filepath = props.getProperty("DOCUMENT_DIR", "").trim(); //"/usr/local/OscarDocument/" + url +"/document/";
+	dbObj.importRAFile(filepath + filename);	
+} 
+%>   
+   
+
+<html>
+<head>
+<title>Billing Reconcilliation</title>
+<link rel="stylesheet" type="text/css" href="../billing/CA/ON/billingON.css" />
+       
+<script language="JavaScript">
+<!--
+var remote=null;
+function refresh() {
+  history.go(0);
+}
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+  if (remote != null) {
+    if (remote.opener == null)
+      remote.opener = self;
+  }
+  if (x == 1) { return remote; }
+}
+
+var awnd=null;
+function popPage(url) {
+  awnd=rs('',url ,400,200,1);
+  awnd.focus();
+}
+
+function checkReconcile(url){
+  if(confirm("You are about to reconcile the file, are you sure?")) {
+    location.href=url;
+  } else{
+    alert("You have cancel the action!");
+  }
+}
+//-->
+</SCRIPT>
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%" >
+<tr class="myDarkGreen">
+	<th align='LEFT'>
+	<input type='button' name='print' value='Print' onClick='window.print(); return false;'> </th> 
+	<th><font color="#FFFFFF">Billing Reconcilliation</font></th>
+	<th align='RIGHT'><input type='button' name='close' value='Close' onClick='window.close()'></th>
+</tr>
+</table>
+ 
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+<tr class="myYellow">  
+	<th width="10%">Read Date</th>
+	<th width="10%">Payment Date </th>
+	<th width="25%">Payable </th>
+	<th width="10%">Records/Claims</th>
+	<th width="8%">Total </th>
+	<th width="22%">Action</th>
+	<th>Status</th>
+</tr>
+   
+<% //
+List aL = dbObj.getAllRahd("D");
+for(int i = 0; i < aL.size(); i++) {
+	Properties pro = (Properties) aL.get(i);
+	raNo = pro.getProperty("raheader_no");
+	nowDate = pro.getProperty("readdate");
+	paymentdate = pro.getProperty("paymentdate");
+	payable = pro.getProperty("payable");
+	strcount= pro.getProperty("claims");
+	strtCount = pro.getProperty("records");
+	total = pro.getProperty("totalamount");
+	String status = pro.getProperty("status");
+%> 
+		     
+<tr <%=i%2==0?"class='myGreen'":"class='myIvory'"%>> 
+    <td><%=nowDate%>  </td>
+    <td align="center"><%=paymentdate%> </td>
+    <td><%=payable%></td>
+    <td align="center"><%=strcount%>/<%=strtCount%></td>
+    <td align="right"><%=total%></td>
+    <td align="center">
+	<a href="../billing/CA/ON/onGenRAError.jsp?rano=<%=raNo%>&proNo=" target="_blank">Error</a> | 
+	<a href="../billing/CA/ON/onGenRASummary.jsp?rano=<%=raNo%>&proNo=" target="_blank">Summary</a>| 
+	<a href="../billing/CA/ON/genRADesc.jsp?rano=<%=raNo%>" target="_blank">Report </a></td>
+    <td><%=status.compareTo("N")==0?"<a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle.jsp?rano=" + raNo +"')\">Settle</a> <a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle35.jsp?rano=" + raNo +"')\">S35</a>" : status.compareTo("S")==0?" <a href=# onClick=\"checkReconcile('../billing/CA/ON/onGenRAsettle35.jsp?rano=" + raNo +"')\">S35</a>":"Processed"%></td>
+</tr>
+<%
+}
+%>
+</table>
+
+</body>
+</html>

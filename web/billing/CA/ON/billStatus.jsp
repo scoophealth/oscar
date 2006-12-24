@@ -42,6 +42,12 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 
 <%
 
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("isNewONbilling", "").equals("true")) {
+%>
+<jsp:forward page="billingONStatus.jsp" />
+<% } %>
+<%
 ProviderData pd = new ProviderData();
 ArrayList pList = pd.getProviderList();
 
@@ -287,12 +293,16 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
           </tr>
        
           
-       <% for (int i = 0 ; i < bList.size(); i++) { 
+       <% 
+       System.out.println(" Error calculating value for bList.size(): "+bList.size()); 
+
+       for (int i = 0 ; i < bList.size(); i++) { 
        Hashtable h = (Hashtable) bList.get(i);    
-       ArrayList raList = raData.getRAData(""+h.get("billing_no"));
+       ArrayList raList = raData.getRAData((String)h.get("billing_no"));
        boolean incorrectVal = false;
        
        BigDecimal valueToAdd = new BigDecimal("0.00");
+       System.out.println(" Error calculating value for billing_no: "+(String)h.get("billing_no")); 
        try{
           valueToAdd = new BigDecimal(""+h.get("total")).setScale(2, BigDecimal.ROUND_HALF_UP);  
        }catch(Exception badValueException){ 
@@ -300,8 +310,11 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
           incorrectVal = true;
        }
        total = total.add(valueToAdd);
+       System.out.println(" Er ror calculating value for bList.size(): "+raList.size()); 
        String amountPaid = raData.getAmountPaid(raList);
+       System.out.println(" E rr or calculating value for bList.size(): "+bList.size()); 
        paidTotal.add(new BigDecimal(amountPaid).setScale(2,BigDecimal.ROUND_HALF_UP));
+       System.out.println(" E rr or calculating value for bList.size(): "+bList.size()); 
        
        %>       
           <tr> 

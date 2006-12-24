@@ -27,6 +27,11 @@
 <%  
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 String user_no = (String) session.getAttribute("user");
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("isNewONbilling", "").equals("true")) {
+%>
+<jsp:forward page="billingONMRI.jsp" />
+<% } %>
 %> 
 
 <%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.net.*" errorPage="errorpage.jsp" %>

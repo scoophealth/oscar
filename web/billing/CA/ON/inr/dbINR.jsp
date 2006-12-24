@@ -91,7 +91,7 @@
       {"updatebillservice", "update billingservice set description=? where service_code=?"},
       {"save_inrbilling", "insert into billinginr values('\\N',?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"},
       {"search_inrbilling_dt", "select *  from billinginr where provider_no like ? and status<>'D'"},
-      {"search_inrbilling_dt_billno", "select b.demographic_no, b.demographic_name, b.provider_no, b.provider_ohip_no, b.provider_rma_no, b.diagnostic_code, b.service_code, b.service_desc, b.billing_amount, b.billing_unit, d.hin, d.ver, d.year_of_birth, d.month_of_birth, d.date_of_birth  from billinginr b, demographic d where d.demographic_no=b.demographic_no and b.billinginr_no=? and b.status<>'D'"},
+      {"search_inrbilling_dt_billno", "select b.demographic_no, b.demographic_name, b.provider_no, b.provider_ohip_no, b.provider_rma_no, b.diagnostic_code, b.service_code, b.service_desc, b.billing_amount, b.billing_unit, d.hin, d.ver, d.year_of_birth, d.month_of_birth, d.date_of_birth, d.hc_type, d.sex, d.last_name, d.first_name  from billinginr b, demographic d where d.demographic_no=b.demographic_no and b.billinginr_no=? and b.status<>'D'"},
       {"update_inrbilling_dt_billno", "update billinginr set status=?, createdatetime=? where billinginr_no=? and status<>'D'"},
       {"update_inrbilling_dt_item", "update billinginr set hin=?,dob=?, service_code=?, service_desc=?, billing_amount=?, diagnostic_code=? where billinginr_no=? and status<>'D'"},
       

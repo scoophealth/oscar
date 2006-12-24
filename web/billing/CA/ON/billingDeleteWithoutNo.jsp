@@ -25,15 +25,17 @@
 -->
 
  <%
-  if(session.getValue("user") == null)
+  if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
   String curUser_no,userfirstname,userlastname;
   curUser_no = (String) session.getAttribute("user");
 //  mygroupno = (String) session.getAttribute("groupno");  
-  userfirstname = (String) session.getAttribute("userfirstname");
-  userlastname = (String) session.getAttribute("userlastname");
+  //userfirstname = (String) session.getAttribute("userfirstname");
+  //userlastname = (String) session.getAttribute("userlastname");
 %>    
-<%@ page  import="java.sql.*, java.util.*,java.net.*, oscar.MyDateFormat"  errorPage="errorpage.jsp"%>
+<%@ page  import="java.sql.*, java.util.*,oscar.*"  errorPage="errorpage.jsp"%>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*" %>
+<%@ page import="oscar.oscarBilling.ca.on.data.*" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbBilling.jsp" %>
@@ -60,7 +62,7 @@
       </tr>
     </table>
 <%
-   String billCode = "";
+   String billCode = " ";
    String apptNo = request.getParameter("appointment_no");
    ResultSet rsprovider = null;  
 // String proNO = request.getParameter("xml_provider");
@@ -82,18 +84,21 @@ String billNo ="";
      
    
   int rowsAffected=0;
-  // int recordCount = Integer.parseInt(request.getParameter("record"));
- //      for (int i=0;i<recordCount;i++){
- //     String[] param2 = new String[7];
-   //    param2[0] = billNo;
-   //    param2[1] = request.getParameter("billrec"+i);
-   //    param2[2] = request.getParameter("billrecdesc"+i);
-   //    param2[3] = request.getParameter("pricerec"+i);
-   //    param2[4] = request.getParameter("diagcode");
-   //    param2[5] = request.getParameter("appointment_date");
-   //    param2[6] = request.getParameter("billtype");
-       rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
-       
+  OscarProperties props = OscarProperties.getInstance();
+  if(props.getProperty("isNewONbilling", "").equals("true")) {
+	  //search bill status
+	  BillingCorrectionPrep dbObj = new BillingCorrectionPrep();
+	  List billStatus = dbObj.getBillingNoStatusByAppt(apptNo);
+	  //delete the bill
+	  if(billStatus!=null && billStatus.size()>1 && ((String)billStatus.get(1)).startsWith("B")){
+		  out.println("Sorry, cannot delete billed items.");
+	  } else if(billStatus!=null) {
+		  rowsAffected = dbObj.deleteBilling((String)billStatus.get(0),"D", curUser_no)? 1 : 0;
+	  }
+	  
+  } else {
+	  rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
+  }   
        
        //       }
 

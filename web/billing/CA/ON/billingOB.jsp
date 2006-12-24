@@ -17,8 +17,10 @@ String premiumFlag="";
 String service_form="";
 
 OscarProperties props = OscarProperties.getInstance();
-
+if(props.getProperty("isNewONbilling", "").equals("true")) {
 %>
+<jsp:forward page="billingON.jsp" />
+<% } %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>

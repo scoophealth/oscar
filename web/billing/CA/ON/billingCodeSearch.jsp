@@ -39,7 +39,7 @@
  if (search.compareTo("") == 0){
  search = "search_service_code";
  }
- 
+ 	
     String codeName= "",codeName1 = "", codeName2 = "";
        String xcodeName= "",xcodeName1 = "",xcodeName2 = "";
    codeName = request.getParameter("name");
@@ -94,9 +94,15 @@ desc2 = "%" + codeName2 + "%";
 function CodeAttach(File0) {
       
       self.close();
+<% 
+if(request.getParameter("nameF") != null) {
+		out.println("self.opener." + request.getParameter("nameF") + " = File0;");
+} else {
+%>      
       self.opener.document.serviceform.xml_other1.value = File0;
-      self.opener.document.serviceform.xml_other2.value ='';
-      self.opener.document.serviceform.xml_other3.value ='';
+      self.opener.document.serviceform.xml_other2.value ="";
+      self.opener.document.serviceform.xml_other3.value ="";
+<% } %>
 }
 -->
 </script>
@@ -168,6 +174,11 @@ String Dcode="", DcodeDesc="";
 </script>
 <% } %>
 </table><input type="submit" name="update" value="Confirm"><input type="button" name="cancel" value="Cancel" onclick="javascript:window.close()">
+<% 
+if(request.getParameter("nameF") != null) {
+		out.println("<input type='hidden' name='nameF' value=\"" + request.getParameter("nameF") + "\"/>");
+}
+%> 
 </form>
 </body>
 </html>

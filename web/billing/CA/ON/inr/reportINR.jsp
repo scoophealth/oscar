@@ -101,7 +101,7 @@ history.go(0);
 
  %>
 <table width="100%" border="0" bgcolor="#E6F0F7">
-  <form name="serviceform" method="post" action="genINRbilling.jsp">
+  <form name="serviceform" method="post" action="<%=oscarVariables.getProperty("isNewONbilling","").equals("true")? "onGenINRbilling.jsp":"genINRbilling.jsp" %>">
     <tr> 
       <td width="220"><b><font face="Arial, Helvetica, sans-serif" size="2" color="#003366">Select 
         provider </font></b></td>

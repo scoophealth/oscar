@@ -25,7 +25,7 @@
 -->
 
 <%
-  if(session.getValue("user") == null)
+  if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.htm");
   String curProvider_no;
   curProvider_no = (String) session.getAttribute("user");
@@ -36,16 +36,24 @@
   String strLimit2="10";
   if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
+
+  OscarProperties props = OscarProperties.getInstance();
+  if(props.getProperty("isNewONbilling", "").equals("true")) {
+  %>
+  <jsp:forward page="billingONHistory.jsp" />
+  <% } 
 %> 
 <%@ page import="java.util.*, java.sql.*, java.net.*, oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <%@ include file="dbBilling.jsp" %> 
 <html>
 <head> 
 <title> BILLING HISTORY</title>
-<link rel="stylesheet" href="../web.css" >
+<link rel="stylesheet" href="billingON.css" >
       <meta http-equiv="expires" content="Mon,12 May 1998 00:36:05 GMT">
       <meta http-equiv="Pragma" content="no-cache">
 
@@ -63,33 +71,58 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 }
 //-->
 </SCRIPT>
-<!--base target="pt_srch_main"-->
 </head>
-<body  background="../images/gray_bg.jpg" bgproperties="fixed" >
+<body topmargin="0">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER NOWRAP><font face="Helvetica" color="#FFFFFF">BILLING HISTORY 
+  <tr class="myDarkGreen">
+    <th><font color="#FFFFFF">BILLING HISTORY 
       </font></th>
   </tr>
 </table>
 
-<!--%@ include file="zcppfulltitlesearch.htm" %-->
-
 <table width="95%" border="0">
   <tr><td align="left"><i>Results for Demographic</i> :<%=request.getParameter("last_name")%>,<%=request.getParameter("first_name")%> (<%=request.getParameter("demographic_no")%>)</td></tr>
 </table>
-<hr>
 <CENTER><table width="100%" border="2" bgcolor="#ffffff"> 
-<tr bgcolor="#339999">
+<tr class="myYellow">
       <TH align="center" width="5%"><b>INVOICE#</b></TH>
-      <TH align="left" width="25%"><b>APPOINTMENT DATE-TIME</b></TH>      
+      <TH align="left" width="25%"><b>APPT DATE</b></TH>      
       <TH align="center" width="10%"><b>BILL TYPE</b></TH>
       <TH align="center" width="15%"><b>BILL PROVIDER</b></TH>
       <TH align="center" width="15%"><b>APPT PROVIDER</b></TH>
       <TH align="center" width="10%"><b>COMMENTS</b></TH>
 </tr>
+<% // new billing records
+JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
+List aL = dbObj.getBillingHist(request.getParameter("demographic_no"), "", "");
+for(int i=0; i<aL.size(); i=i+2) {
+	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
+%>
+<tr bgcolor="<%=i%2==0?"#CCFF99":"white"%>">
+      <td width="5%" align="center" height="25">
+        <a href=# onClick="popupPage(600,800, 'billingView.do?billing_no=<%=obj.getId()%>&dboperation=search_bill&hotclick=0')"><%=obj.getId()%></a>
+        <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r">
+        <a href=# onClick="popupPage(600,800, 'billingONCorrection.jsp?billing_no=<%=obj.getId()%>')">edit</a>
+        </security:oscarSec>
+      </td>
+      <td align="left" width="25%" height="25"><%=obj.getBilling_date()%> &nbsp; &nbsp; &nbsp; &nbsp; <%=obj.getBilling_time()%></td>
+      <td align="center" width="10%" height="25"><%=BillingDataHlp.propBillingType.getProperty(obj.getStatus(),"")%></td>
+      <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getProvider_no(), "")%></td>
+       <td align="center" width="15%" height="25"><%=providerBean.getProperty(obj.getApptProvider_no(), "")%></td>
+    
+      <% if (obj.getStatus().compareTo("B")==0 || obj.getStatus().compareTo("S")==0) { %>
+      <td align="center" width="10%" height="25">&nbsp;</td>
+      <% } else { %>
+      <td align="center" width="10%" height="25"><a href="billingDeleteNoAppt.jsp?billing_no=<%=obj.getId()%>&billCode=<%=obj.getStatus()%>&dboperation=delete_bill&hotclick=0">Unbill</a></td>
+      <% } %>
+</tr>
+<% 
+}
+%>
 <%
+//OscarProperties props = OscarProperties.getInstance();
+if(!props.getProperty("isNewONbilling", "").equals("true")) {
  String proFirst="";
  String proLast="";
  String proNo = "";
@@ -153,7 +186,6 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
   apptMainBean.closePstmtConn();
-  
 %> 
 
 </table>
@@ -171,6 +203,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 %>
 <a href="billinghistory.jsp?last_name=<%=URLEncoder.encode(request.getParameter("last_name")) %>&first_name=<%=URLEncoder.encode(request.getParameter("first_name")) %>&demographic_no=<%=request.getParameter("demographic_no")%>&displaymode=<%=request.getParameter("displaymode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=<%=request.getParameter("orderby")%>&limit1=<%=nNextPage%>&limit2=<%=strLimit2%>"> Next Page</a>
 <%
+}
+
 }
 %>
 <p>

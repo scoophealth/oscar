@@ -30,15 +30,26 @@
 
 <% 
     if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
+
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("isNewONbilling", "").equals("true")) {
+%>
+<jsp:forward page="onGenRA.jsp" />
+<% } %>
 %>
 
-<%@ page import="java.io.*, java.sql.*, oscar.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.io.*, java.sql.*,oscar.*, oscar.util.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.data.*"%>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <jsp:useBean id="documentBean" class="oscar.DocumentBean" scope="request" /> 
 <%@ include file="dbBilling.jsp" %>
 
-<%  
+<%
+JdbcBillingRAImpl dbObj = new JdbcBillingRAImpl();
+Properties propRt = new Properties();
+
 String nowDate = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy/MM/dd"); 
 
 String filepath="", filename = "", header="", headerCount="", total="", paymentdate="", payable="", totalStatus="", deposit=""; //request.getParameter("filename");
@@ -68,6 +79,7 @@ if(!filename.equals("")) {
 		header = nextline.substring(0,1);
 	
 		if (header.compareTo("H") == 0) { 
+			//System.out.println(nextline);
 			headerCount = nextline.substring(2,3);
 	
 			if (headerCount.compareTo("1") == 0){
@@ -105,6 +117,7 @@ if(!filename.equals("")) {
 	
 					// if there is no radt record for the rahd, update the rahd status to "D"
 					// if (radtNum == 0) update rahd
+					propRt = dbObj.getPropBillNoRAHeaderNo(raNo);
 				}
 	
 				if (raNo.compareTo("") == 0 || raNo == null || radtNum == 0){
@@ -120,7 +133,9 @@ if(!filename.equals("")) {
 					param[6]="N";
 					param[7]=nowDate;
 					param[8]="<xml_cheque>"+total+"</xml_cheque>";
+					System.out.println(raNo + " : " + nextline);
 					int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_rahd");
+					System.out.println(rowsAffected + " : " );
 	
 					rsdemo = null;
 					rsdemo = apptMainBean.queryResults(param2, "search_rahd");
@@ -128,6 +143,7 @@ if(!filename.equals("")) {
 					while (rsdemo.next()) {   
 						raNo = rsdemo.getString("raheader_no");
 					}
+					propRt = dbObj.getPropBillNoRAHeaderNo(raNo);
 				}
 			} // ends with "1"
 	
@@ -165,6 +181,7 @@ if(!filename.equals("")) {
 			}
 		   
 			if (headerCount.compareTo("5") == 0){
+				//System.out.println(account+":"+nextline);
 				transactiontype = nextline.substring(14,15);
 				servicedate = nextline.substring(15,23);
 				serviceno= nextline.substring(23,25);
@@ -173,6 +190,7 @@ if(!filename.equals("")) {
 				amountpay = nextline.substring(37,43);
 				amountpaysign = nextline.substring(43,44);
 				explain = nextline.substring(44,46);
+				//System.out.println(amountpay);
 	
 				payFlag = 0;
 				error = "";
@@ -181,7 +199,15 @@ if(!filename.equals("")) {
 				amountpay  = String.valueOf(amountPaySum );
 				if (amountpay.compareTo("0") == 0)	amountpay = "000";
 	
-				amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);      
+				if(amountpay.length()>2) {
+					amountpay = amountpay.substring(0, amountpay.length()-2) + "." + amountpay.substring(amountpay.length()-2);      
+				} else {
+					if(amountpay.length()==2) {
+						amountpay = "0." + amountpay;      
+					} else {
+						amountpay = "0.0" + amountpay;      
+					}
+				}
 				amountSubmitSum = Integer.parseInt(amountsubmit);
 				amountsubmit  = String.valueOf(amountSubmitSum );
 				if (amountsubmit.compareTo("0") == 0) amountsubmit = "000";
@@ -190,7 +216,7 @@ if(!filename.equals("")) {
 				newhin = hin + ver;
 	
 				// if it needs to write a radt record for the rahd record
-				if (recFlag > 0) {
+				if (recFlag > 0 || !propRt.contains(account)) {
 					String[] param4 =new String[11];
 					param4[0]=raNo;
 					param4[1]=providerno;
@@ -203,7 +229,20 @@ if(!filename.equals("")) {
 					param4[8]=servicedate;
 					param4[9]=explain;
 					param4[10]=billtype;
-					int rowsAffected3 = apptMainBean.queryExecuteUpdate(param4,"save_radt");
+					//int rowsAffected3 = apptMainBean.queryExecuteUpdate(param4,"save_radt");
+					BillingRAData dObj = new BillingRAData();
+					dObj.setRaheader_no(raNo);
+					dObj.setProviderohip_no(providerno);
+					dObj.setBilling_no(account);
+					dObj.setService_code(servicecode);
+					dObj.setService_count(serviceno);
+					dObj.setHin(newhin);
+					dObj.setAmountclaim(amountsubmit);
+					dObj.setAmountpay(amountpaysign+amountpay);
+					dObj.setService_date(servicedate);
+					dObj.setError_code(explain);
+					dObj.setBilltype(billtype);
+					int rowsAffected3 = dbObj.addOneRADtRecord(dObj); 
 				}
 			}
 	

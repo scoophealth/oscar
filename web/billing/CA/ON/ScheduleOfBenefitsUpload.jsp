@@ -132,6 +132,14 @@ function checkAll(formId){
         <tr>
             <td class="MainTableLeftColumn" valign="top">
             &nbsp;
+            <a href="http://www.health.gov.on.ca/english/providers/program/ohip/sob/schedule_master.html">OHIP Fee Schedule</a><br/>
+            <br/>
+            <li> Download the text file.</li>
+			<li> Brows&find file on HD.</li>
+			<li> Click "Import".</li>
+			<li> Click "Update" checkbox to select All.</li>
+			<li> Click "Update Billing Code Prices" at bottom.</li>
+			<li> Click "Import".</li>
             </td>
             <td valign="top" class="MainTableRightColumn">
             

@@ -36,7 +36,12 @@ int rowCount = 0;
 int rowReCount = 0;
 ResultSet rslocation = null;  
 ResultSet rsPatient = null; 
+
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("isNewONbilling", "").equals("true")) {
 %>
+<jsp:forward page="billingONCorrection.jsp" />
+<% } %>
 
 <%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.oscarBilling.ca.on.data.BillingONDataHelp"%>

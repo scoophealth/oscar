@@ -1,6 +1,11 @@
 <% 
-    if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
+    if(session.getAttribute("user") == null) response.sendRedirect("../../../logout.jsp");
+
+OscarProperties props = OscarProperties.getInstance();
+if(props.getProperty("isNewONbilling", "").equals("true")) {
 %>
+<jsp:forward page="onGenRAError.jsp" />
+<% } %>
 
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat" errorPage="errorpage.jsp" %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
@@ -107,6 +112,7 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 </tr>
 
 <%
+/*
 	String[] param = new String[3];
 	param[0] = raNo;
 	param[1] = "I2";
@@ -134,7 +140,8 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 			amountpay = rsdemo2.getString("amountpay");
 			if (explain == null || explain.compareTo("") == 0){
 				explain = "**";
-			}      
+			}    
+*/
 %>
 <tr> 
 	<td width="10%" height="16"><%=account%></td>
@@ -148,8 +155,8 @@ if (proNo.compareTo("") == 0 || proNo.compareTo("all") == 0){
 </tr>
 
 <%
-		}
-	} 
+//		}
+//	} 
 } else {
 %>
 
