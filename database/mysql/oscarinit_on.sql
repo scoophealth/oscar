@@ -1006,3 +1006,248 @@ CREATE TABLE formONAR(
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
 
+# Disk file name
+DROP TABLE IF EXISTS billing_on_diskname;
+CREATE TABLE billing_on_diskname (
+  id int(11) NOT NULL auto_increment,
+  monthCode char(1) default '',
+  batchcount int(3),
+  ohipfilename varchar(50),
+  groupno varchar(6) default NULL,
+  creator char(6) default NULL,
+  claimrecord varchar(10) default null,
+  createdatetime datetime,
+  status char(1) default NULL,
+  total varchar(20) default null,
+  timestamp timestamp,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_filename (
+  id int(11) NOT NULL auto_increment,
+  disk_id int(11) NOT NULL,
+  htmlfilename varchar(50),
+  providerohipno varchar(6) default NULL,
+  providerno char(6) NOT NULL,
+  claimrecord varchar(10) default null,
+  status char(1) default NULL,
+  total varchar(20) default null,
+  timestamp timestamp,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_repo (
+  id int(11) NOT NULL auto_increment,
+  h_id int(11) NOT NULL,
+  category varchar(60),
+  content text,
+  createdatetime datetime,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_proc (
+  id int(11) NOT NULL auto_increment,
+  creator varchar(6),
+  action varchar(60)  default '',
+  comment varchar(200)  default '',
+  object varchar(60) default '',
+  createdatetime datetime,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_header (
+  id int(11) NOT NULL auto_increment,
+  disk_id int(11) NOT NULL,
+  transc_id char(2) default 'HE',
+  rec_id char(1) default 'B',
+  spec_id char(3) default 'V03',
+  moh_office char(1) default '',
+  batch_id varchar(12) default '',
+  operator varchar(6) default '',
+  group_num char(4) default '0000',
+  provider_reg_num varchar(6) default '',
+  specialty char(2) default '00',
+  h_count varchar(4) default '0000',
+  r_count varchar(4) default '0000',
+  t_count varchar(5) default '00000',
+  batch_date date,
+
+  createdatetime datetime,
+  updatedatetime datetime,
+  creator varchar(6) default '',
+  action varchar(60)  default '',
+  comment varchar(200)  default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_cheader1 (
+  id int(12) NOT NULL auto_increment,
+  header_id int(11) NOT NULL,
+  transc_id char(2) default 'HE',
+  rec_id char(1) default 'H',
+  hin char(10) default NULL,
+  ver char(2) default '  ',
+  dob char(8) default NULL,
+  ##acc_num char(8) default NULL,
+  pay_program char(3) default 'HCP',
+  payee char(1) default 'P',
+  ref_num varchar(6) default NULL,
+  facilty_num varchar(4) default NULL,
+  admission_date varchar(10) default NULL,
+  ref_lab_num varchar(4) default NULL,
+  man_review char(1) default NULL,
+  location varchar(4) default NULL,
+
+  demographic_no int(10) NOT NULL default '0',
+  provider_no varchar(6) NOT NULL default '',
+  appointment_no int(12) default NULL,
+  demographic_name varchar(20) default NULL,
+  sex char(1) default '1',
+  province char(2) default 'ON',
+  billing_date date default NULL,
+  billing_time time default NULL,
+  total varchar(7) default NULL,
+  paid varchar(7) default NULL,
+  status char(1) default NULL,
+  comment varchar(255) default NULL,
+  visittype char(2) default NULL,
+  provider_ohip_no varchar(20) default NULL,
+  provider_rma_no varchar(20) default NULL,
+  apptProvider_no varchar(6) default NULL,
+  asstProvider_no varchar(6) default NULL,
+  creator varchar(6) default NULL,
+  timestamp timestamp,
+  PRIMARY KEY  (id),
+  KEY appointment_no (appointment_no,demographic_no),
+  KEY demographic_no (demographic_no),
+  KEY billing_date (billing_date),
+  KEY provider_no (provider_no),
+  KEY provider_ohip_no (provider_ohip_no),
+  KEY apptProvider_no (apptProvider_no),
+  KEY creator (creator),
+  KEY status (status)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_cheader2 (
+  id int(12) NOT NULL auto_increment,
+  ch1_id int(12) NOT NULL ,
+  transc_id char(2) default 'HE',
+  rec_id char(1) default 'R',
+  hin char(12) default NULL,
+  last_name char(9) default '  ',
+  first_name char(5) default NULL,
+  sex char(1) default '1',
+  province char(2) default 'AB',
+  timestamp timestamp,
+  PRIMARY KEY  (id),
+  KEY ch1_id (ch1_id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_item (
+  id int(12) NOT NULL auto_increment,
+  ch1_id int(12) NOT NULL ,
+  transc_id char(2) default 'HE',
+  rec_id char(1) default 'T',
+  service_code char(20) default NULL,
+  fee varchar(7) default '',
+  ser_num char(2) default '01',
+  service_date date,
+  dx char(4) default '',
+  dx1 char(4) default '',
+  dx2 char(4) default '',
+
+  status char(1) default NULL,
+  timestamp timestamp,
+  PRIMARY KEY  (id),
+  KEY ch1_id (ch1_id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_favourite (
+  id int(12) NOT NULL auto_increment,
+  name varchar(60) default '',
+  service_dx varchar(255) default '',
+  provider_no varchar(6) default null,
+  timestamp timestamp,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_private_service (
+  id int(6) NOT NULL auto_increment,
+  service_code varchar(10) default NULL,
+  description varchar(255),
+  value varchar(8) default NULL,
+  percentage varchar(8) default NULL,
+  update_date date default NULL,
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_payment_type (
+  id int(11) NOT NULL auto_increment,
+  payment_type varchar(25) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_errorCode (
+  code varchar(5) NOT NULL,
+  description varchar(255) NOT NULL default '',
+  PRIMARY KEY  (code)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_3rdPartyAddress (
+  id int(6) NOT NULL auto_increment,
+  attention varchar(100) NOT NULL,
+  company_name varchar(100) NOT NULL,
+  address varchar(200) NOT NULL default '',
+  city varchar(200) NOT NULL default '',
+  province varchar(10) NOT NULL default '',
+  postcode varchar(10) NOT NULL default '',
+  telephone varchar(15) NOT NULL default '',
+  fax varchar(15) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_eareport (
+  id int(12) NOT NULL auto_increment,
+  providerohip_no varchar(6),
+  group_no varchar(6) default '0000',
+  specialty char(2) default '00',
+  process_date date,
+  hin varchar(12),
+  ver char(2),
+  dob date,
+  billing_no int(6),
+  ref_no varchar(6),
+  facility varchar(4),
+  admitted_date varchar(8),
+  claim_error varchar(20),
+  code varchar(5),
+  fee varchar(10), 
+  unit varchar(2),
+  code_date date,
+  dx varchar(5),
+  exp varchar(60),
+  code_error varchar(20),
+  report_name varchar(20)  default '',
+  status char(1) default 'N',
+  comment varchar(100),
+
+  PRIMARY KEY  (id),
+  key (providerohip_no),
+  key (code_date),
+  key (process_date)
+) TYPE=MyISAM;
+
+CREATE TABLE billing_on_ext (
+  id int(12) NOT NULL auto_increment,
+  billing_no int(6),
+  demographic_no int(10) NOT NULL default '0',
+  key_val varchar(50),
+  value varchar(255) ,
+  date_time datetime,
+  status char(1) default '1',
+  PRIMARY KEY  (id),
+  key (key_val),
+  key (billing_no)
+) TYPE=MyISAM;
+
+
