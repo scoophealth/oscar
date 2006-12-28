@@ -378,9 +378,11 @@ function showHideLayers() { //v3.0
 		if(document.forms[0].dxCode.value.length!=3 && document.forms[0].dxCode.value.length!=0){
         	alert("Wrong dx code!");
             b = false;
+        	return b;
         } else if(document.forms[0].xml_provider.value=="000000"){
         	alert("Please select a provider.");
             b = false;
+        	return b;
         } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")){
         	alert("Need an admission date.");
             b = false;
