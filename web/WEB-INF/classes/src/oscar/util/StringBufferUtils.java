@@ -25,6 +25,12 @@ package oscar.util;
 
 public class StringBufferUtils {
     static public int indexOfIgnoreCase(StringBuffer strbuf, String target, int start) {
+        String searchStr = strbuf.toString().toLowerCase();
+        String lowerTarget = target.toLowerCase();
+        return searchStr.indexOf(lowerTarget, start);
+    }
+    /*
+    static public int indexOfIgnoreCase(StringBuffer strbuf, String target, int start) {
         //resembles the indexOfIgnoreCase member function of the String class
         int pointer = 0;
         for (int i=start; i<strbuf.length(); i++) {
@@ -60,5 +66,5 @@ public class StringBufferUtils {
             return(true);
         }
         return(false);
-    }
+    }*/
 }
