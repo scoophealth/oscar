@@ -638,6 +638,9 @@ function formPopupHide(){
       thisForm.setXml_location(sxml_location);
       thisForm.setXml_provider(sxml_provider);
       thisForm.setXml_visittype(sxml_visittype);
+      if ( OscarProperties.getInstance().getProperty("BC_DEFAULT_ALT_BILLING") != null && OscarProperties.getInstance().getProperty("BC_DEFAULT_ALT_BILLING").equalsIgnoreCase("YES")){
+         thisForm.setXml_encounter("8");
+      }
     }
     String apDate = thisForm.getXml_appointment_date();
     if (apDate != null && apDate.trim().length() == 0) {
