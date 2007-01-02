@@ -5,13 +5,22 @@
 <script LANGUAGE="JavaScript">
 function closeWin() {
       
-      self.close();
-      self.opener.location.reload();      
+      
+      if ( self.opener.refreshInfo){
+         self.opener.refreshInfo();
+         self.setTimeout('closeThisWindow()', 5000)  
+      }else{
+         self.close();
+         self.opener.location.reload();      
+      }
+}
+function closeThisWindow(){
+   self.close();
 }
 </script>
 
 </head>
 <body onload="closeWin();">
-
+    Click to <a  href="javascript: function myFunction() {return false; }" onclick="window.close();">Close</a> window
 </body>
 </html>
