@@ -25,7 +25,7 @@
 %>
 
 <%@page pageEncoding="UTF-8"%>
-<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*"  %>
+<%@ page import="java.math.*, java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarLab.ca.on.*,oscar.util.*,oscar.oscarLab.*"  %>
 <%
     if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 
@@ -39,6 +39,9 @@
     CommonLabTestValues labTests = new CommonLabTestValues();
    
     ArrayList list   = labTests.findValuesForTest(labType, demoNo, testName);
+    
+    SortHashtable sorter = new SortHashtable();
+                      Collections.sort(list,sorter);
              
     %>                   
       <div class="preventionSection"  id="preventionSection<%=ran%>" >
