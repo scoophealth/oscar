@@ -65,10 +65,9 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         for( int i = 0; i < eForms.size(); ++i ) {
             Hashtable curform = (Hashtable) eForms.get(i);
             winName = (String)curform.get("formName") + bean.demographicNo;            
-            hash = winName.hashCode();
-            hash = hash < 0 ? hash * -1 : hash;
+            hash = Math.abs(winName.hashCode());
             url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + curform.get("fid") + "&demographic_no=" + bean.demographicNo + "', 'FormA" + i + "');";
-            key = (String)curform.get("formName") + " (new)";
+            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
             javascript.append(js);
@@ -80,12 +79,11 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             Hashtable curform = (Hashtable) eForms.get(i);
             NavBarDisplayDAO.Item item = Dao.Item();
             winName = (String)curform.get("formName") + bean.demographicNo;            
-            hash = winName.hashCode();
-            hash = hash < 0 ? hash * -1 : hash;
+            hash = Math.abs(winName.hashCode());            
             url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "');";            
             Date date = (Date)curform.get("formDateAsDate");
             String formattedDate = DateUtils.getDate(date,dateFormat);
-            key = (String)curform.get("formName") + " " + formattedDate;
+            key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
             item.setLinkTitle((String)curform.get("formSubject"));
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";

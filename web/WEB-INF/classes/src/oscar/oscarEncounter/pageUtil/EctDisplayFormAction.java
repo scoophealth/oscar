@@ -98,8 +98,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
                         date = (Date)formatter.parse(dateStr);                        
                     }
                     catch(ParseException ex ) {
-                        System.out.println("EctDisplayFormAction: Error creating date " + ex.getMessage());
-                        serviceDateStr = "Error";
+                        System.out.println("EctDisplayFormAction: Error creating date " + ex.getMessage());                        
                         date = new Date(System.currentTimeMillis());
                     }
                     
@@ -109,10 +108,9 @@ public class EctDisplayFormAction extends EctDisplayAction {
                     fullTitle = frm.getFormName();
                     strTitle = new StringBuffer(StringUtils.maxLenString(fullTitle, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES));
                     strTitle.append(" " + serviceDateStr);
-                    hash = winName.hashCode();
-                    hash = hash < 0 ? hash * -1 : hash;
+                    hash = Math.abs(winName.hashCode()); 
                     url = new StringBuffer("popupPage(700,960,'" + hash + "started', '" + request.getContextPath() + "/form/forwardshortcutname.jsp?formname="+frm.getFormName()+"&demographic_no="+bean.demographicNo + "');");                    
-                    key = fullTitle + "(started " + serviceDateStr + ")";
+                    key = StringUtils.maxLenString(fullTitle, MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
                     key = StringEscapeUtils.escapeJavaScript(key);
                     
                     //auto completion arrays and colour code are set
@@ -133,11 +131,10 @@ public class EctDisplayFormAction extends EctDisplayAction {
             
             //we add all unhidden forms to the pop up menu
             if( !frm.isHidden() ) {                
-                hash = winName.hashCode();
-                hash = hash < 0 ? hash * -1 : hash;
+                hash = Math.abs(winName.hashCode());
                 url = new StringBuffer("popupPage(700,960,'" + hash + "new', '" + frm.getFormPage()+bean.demographicNo+"&formId=0&provNo="+bean.providerNo + "')");
                 Dao.addPopUpUrl(url.toString());
-                key = frm.getFormName() + " (new)";
+                key = StringUtils.maxLenString(frm.getFormName(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
                 Dao.addPopUpText(frm.getFormName());
                 key = StringEscapeUtils.escapeJavaScript(key);
                 
