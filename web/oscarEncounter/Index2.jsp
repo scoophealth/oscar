@@ -148,17 +148,16 @@ if (request.getParameter("casetoEncounter")==null)
     /* span formatting for measurements div found in ajax call */
         span.measureCol1 {            
             float: left;
-            width: 30%;            
+            width: 50px;            
         }
         
         span.measureCol2 {
             float: left;
-            width: 40%;
+            width: 55px;
         }
         
         span.measureCol3 {
-            float: left;            
-            width: 30%;            
+            float: left;                        
         }
         
         .links {
