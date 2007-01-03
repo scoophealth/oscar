@@ -107,11 +107,13 @@ if (request.getParameter("casetoEncounter")==null)
   String provNo = bean.providerNo;
   EctFormData.Form[] forms = new EctFormData().getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
-  EctProviderData.Provider prov = new EctProviderData().getProvider(provNo);
+  EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo); 
+  
   String patientName = pd.getFirstName()+" "+pd.getSurname();
   String patientAge = pd.getAge();
   String patientSex = pd.getSex();
   String providerName = bean.userName;
+  
   String pAge = Integer.toString(dateConvert.calcAge(bean.yearOfBirth,bean.monthOfBirth,bean.dateOfBirth));
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
@@ -143,6 +145,22 @@ if (request.getParameter("casetoEncounter")==null)
 <html:base/>
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <style type="text/css">
+    /* span formatting for measurements div found in ajax call */
+        span.measureCol1 {            
+            float: left;
+            width: 30%;            
+        }
+        
+        span.measureCol2 {
+            float: left;
+            width: 40%;
+        }
+        
+        span.measureCol3 {
+            float: left;            
+            width: 30%;            
+        }
+        
         .links {
             color: blue;
             text-decoration: none;
@@ -205,14 +223,45 @@ if (request.getParameter("casetoEncounter")==null)
     var textValue1;
     var textValue2;
     var textValue3;
+    var calculatorColour = "9900CC";
     var measurementWindows = new Array();
-    var openWindows = new Array();
+    var openWindows = new Object();
     var autoCompleted = new Object();
     var autoCompList = new Array();
     var itemColours = new Object();
+    
+    //Add calculators to autocompleter menu
+    autoCompleted["<bean:message key="oscarEncounter.Index.bodyMass"/>"] = "popupPage(650,775,'BodyMassIndex','http://www.intmed.mcw.edu/clincalc/body.html')";
+    autoCompList.push("<bean:message key="oscarEncounter.Index.bodyMass"/>");
+    itemColours["<bean:message key="oscarEncounter.Index.bodyMass"/>"] = calculatorColour;
+    
+    autoCompleted["<bean:message key="oscarEncounter.Index.coronary"/>"] = "popupPage(525,775,'CoronaryArteryDiseaseRisk','calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>')";
+    autoCompList.push("<bean:message key="oscarEncounter.Index.coronary"/>");
+    itemColours["<bean:message key="oscarEncounter.Index.coronary"/>"] = calculatorColour;
+    
+    autoCompleted["<bean:message key="oscarEncounter.Index.msgOsteoporotic"/>"] = "popupPage(525,775,'OsteoporoticFracture','calculators/OsteoporoticFracture.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>')";
+    autoCompList.push("<bean:message key="oscarEncounter.Index.msgOsteoporotic"/>");
+    itemColours["<bean:message key="oscarEncounter.Index.msgOsteoporotic"/>"] = calculatorColour;
+    
+    autoCompleted["<bean:message key="oscarEncounter.Index.pregnancy"/>"] = "popupPage(650,775,'PregancyCalculator','http://www.intmed.mcw.edu/clincalc/pregnancy.html')";
+    autoCompList.push("<bean:message key="oscarEncounter.Index.pregnancy"/>");
+    itemColours["<bean:message key="oscarEncounter.Index.pregnancy"/>"] = calculatorColour;
+    
+    autoCompleted["<bean:message key="oscarEncounter.Index.simpleCalculator"/>"] = "popupPage(400,500,'SimpleCalc','calculators/SimpleCalculator.jsp')";
+    autoCompList.push("<bean:message key="oscarEncounter.Index.simpleCalculator"/>");
+    itemColours["<bean:message key="oscarEncounter.Index.simpleCalculator"/>"] = calculatorColour;
+    
+    autoCompleted["<bean:message key="oscarEncounter.Index.generalConversions"/>"] = "popupPage(650,775,'GeneralConversions','calculators/GeneralCalculators.jsp')";
+    autoCompList.push("<bean:message key="oscarEncounter.Index.generalConversions"/>");
+    itemColours["<bean:message key="oscarEncounter.Index.generalConversions"/>"] = calculatorColour;
+    
    <% 
+   int MaxLen = 25;
+   int TruncLen = 22;
+   String ellipses = "...";
   for(int j=0; j<bean.templateNames.size(); j++) {
      String encounterTmp = (String)bean.templateNames.get(j);
+     encounterTmp = StringUtils.maxLenString(encounterTmp, MaxLen, TruncLen, ellipses);
    %>
      autoCompleted["<%=encounterTmp%>"] = "ajaxInsertTemplate('<%=encounterTmp%>')";
      autoCompList.push("<%=encounterTmp%>");
@@ -354,9 +403,11 @@ if (request.getParameter("casetoEncounter")==null)
                 if (openWindows[name].opener == null) {
                     openWindows[name].opener = self;
                     alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
-                }                                     
+                }
+                openWindows[name].focus();
             }            
-    }
+    }        
+    
     function urlencode(str) {
         var ns = (navigator.appName=="Netscape") ? 1 : 0;
         if (ns) { return escape(str); }
@@ -657,24 +708,23 @@ function hideAllMenus() {
 
 document.onclick = hideAllMenus;
 
-     
-    var URLs = new Array( "<rewrite:reWrite jspPage="clinicModules.jsp" />",
-                          "<rewrite:reWrite jspPage="displayForms.do"/>",
-                          "<rewrite:reWrite jspPage="displayEForms.do"/>",
-                          "<rewrite:reWrite jspPage="displayDocuments.do"/>",
-                          "<rewrite:reWrite jspPage="displayLabs.do"/>",                          
-                          "<rewrite:reWrite jspPage="displayMessages.do"/>",
-                          "<rewrite:reWrite jspPage="displayMeasurements.do"/>",
-                          "<rewrite:reWrite jspPage="displayTickler.do"/>",
-                          "<rewrite:reWrite jspPage="displayDisease.do"/>",
-                          "<rewrite:reWrite jspPage="displayConsultation.do"/>"
-                        );        
-                           
-    var divs = new Array( "clinicModules", "encForms", "eForms", "docs", "labs", "Msgs", "measurements", "tickler", "disease", "consult");       
-        
+    //This object stores the key -> cmd value passed to action class and the id of the created div
+    // and the value -> URL of the action class
+    var URLs = { 
+                  preventions:  "<rewrite:reWrite jspPage="displayPrevention.do"/>",
+                  tickler:      "<rewrite:reWrite jspPage="displayTickler.do"/>",
+                  Dx:           "<rewrite:reWrite jspPage="displayDisease.do"/>",
+                  forms:        "<rewrite:reWrite jspPage="displayForms.do"/>",
+                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do"/>",
+                  docs:         "<rewrite:reWrite jspPage="displayDocuments.do"/>",
+                  labs:         "<rewrite:reWrite jspPage="displayLabs.do"/>",                          
+                  msgs:         "<rewrite:reWrite jspPage="displayMessages.do"/>",
+                  measurements: "<rewrite:reWrite jspPage="displayMeasurements.do"/>",
+                  consultation: "<rewrite:reWrite jspPage="displayConsultation.do"/>"
+              };                                               
     
-    var params = new Array("", "cmd=forms", "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler", 
-                            "cmd=Dx", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");                
+    var params = new Array("cmd=forms", "cmd=eforms", "cmd=docs", "cmd=labs", "cmd=msgs", "cmd=measurements", "cmd=tickler", 
+                            "cmd=Dx", "cmd=preventions", "cmd=consultation", "cmd=msgs+eforms+forms+docs+labs+measurements+tickler");                
 
 function loader(){
     window.focus();
@@ -689,17 +739,18 @@ function loader(){
       window.setTimeout("popupPage(700,900,'<%=popUrl%>')", 2);
     <%}%>
 
-    for( var idx = 0; idx < URLs.length; ++idx ) {
+    for( var idx in URLs ) {        
         var div = document.createElement("div");
-        div.id = divs[idx];
+        div.id = idx;
         div.className = "leftBox";
         $("leftNavbar").appendChild(div);
-        popLeftColumn(URLs[idx],divs[idx],params[idx]);        
+        popLeftColumn(URLs[idx],idx,idx);
     }
 }
 
 function popLeftColumn(url,div,params) {
         
+    params = "cmd=" + params;
     var objAjax = new Ajax.Request (                        
                         url,
                         {
@@ -729,7 +780,11 @@ function listDisplay(Id) {
     var numId = Id.substr(eqIdx+1) + "num";
     
     if( $(numId).value > 5 ) {
-        var dwnBtnName = Id.substr(eqIdx+1) + "down";
+        var btnName = Id.substr(eqIdx+1) + "img";
+        var image = $(btnName);
+        var expand;
+        var expandPath = "graphics/expand.gif";
+        var collapsePath = "../oscarMessenger/img/collapse.gif";
         var listId = Id.substr(eqIdx+1) + "list";
         var list = $(listId);
         var items = list.getElementsByTagName('li');
@@ -737,17 +792,24 @@ function listDisplay(Id) {
         for( var idx = 5; idx < items.length; ++idx ) {
             if( items[idx].style.display == 'block' ) {
                 items[idx].style.display = 'none';
-                $(dwnBtnName).style.display = 'inline';
+                expand = true;
             }
             else {
-                items[idx].style.display = 'block';                        
-                $(dwnBtnName).style.display = 'none';
+                items[idx].style.display = 'block';
+                expand = false;
             }
         }
+        
+        if( expand )
+            image.src = expandPath;        
+        else
+            image.src = collapsePath;       
     }
     
     
 }
+
+
 </script>
 <script language="javascript">
 
@@ -963,7 +1025,7 @@ white-space: nowrap;
         <td class="hidePrint" bgcolor="#003399" style="width:auto; border-right: 2px solid #A9A9A9;height:34px;" >
             <div class="Title">
 			&nbsp;<bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
-                        <a href="javascript:popupPage(300,400,'utility','Help.jsp')"><bean:message key="global.help"/></a> &nbsp;&nbsp; <a href="javascript:popupPage(300,400,'utility','About.jsp')"><bean:message key="global.about"/></a>
+                       <%=prov.getFirstName()%>&nbsp;<%=prov.getSurname()%>
             </div>
         </td>
 
@@ -1334,9 +1396,9 @@ white-space: nowrap;
                                 
                                 
                                 <oscar:oscarPropertiesCheck property="CPP" value="yes">
-                                <input type="button" style="height:20px;" class="ControlPushButton2" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'cpp', 'encounterCPP.jsp');"/>
+                                <input type="button" style="height:20px;" class="ControlPushButton2" value="CPP" onClick="document.forms['encForm'].btnPressed.value='Save'; popupPage(700, 960, 'cpp', 'encounterCPP.jsp'); document.forms['encForm'].submit();"/>
                                 </oscar:oscarPropertiesCheck>
-				    <input type="button" style="height:20px;" class="ControlPushButton2" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; document.forms['encForm'].submit();javascript:popupPage(700, 960, 'print', 'encounterPrint.jsp');return false;"/>
+				    <input type="button" style="height:20px;" class="ControlPushButton2" value="<bean:message key="global.btnPrint"/>" onClick="document.forms['encForm'].btnPressed.value='Save'; popupPage(700, 960, 'print', 'encounterPrint.jsp');"/>
 				    <input type="hidden"  name="btnPressed" value="">
 
 <!-- security code block -->
