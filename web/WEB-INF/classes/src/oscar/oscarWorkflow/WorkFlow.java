@@ -26,7 +26,9 @@ public interface WorkFlow {
     public String getState(String state);  
     public List getStates();
     public WorkFlowInfo executeRules(Hashtable hashtable);
+    public WorkFlowInfo executeRules(WorkFlowDS wfDS,Hashtable hashtable);
     public String getLink(String demographic,String workFlowId);
     int addToWorkFlow(String providerNo, String demographicNo, Date endDate);
+    public WorkFlowDS getWorkFlowDS();
     
 }
