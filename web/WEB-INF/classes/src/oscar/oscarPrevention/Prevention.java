@@ -40,9 +40,10 @@ public class Prevention {
       
    String sex;
    String name= null;  // Not really needed but handy for testing
-   Hashtable preventionTypes = new Hashtable();
+   Hashtable preventionTypes = new Hashtable();   
    Date DOB = null;
          
+   Hashtable warnings = new Hashtable();
    ArrayList messageList = new ArrayList();
    ArrayList reminder = new ArrayList();
    
@@ -73,9 +74,19 @@ public class Prevention {
    
    public void addWarning(String warn){
       messageList.add(warn);
-   }      
+   }     
+   
+   public void addWarning(String prevName, String warn) {
+        addWarning(warn);
+        warnings.put(prevName, warn);
+   }
+   
    public ArrayList getWarnings(){
       return messageList;
+   }
+   
+   public Hashtable getWarningMsgs() {
+       return warnings;
    }
    
    public void addReminder(String warn){
