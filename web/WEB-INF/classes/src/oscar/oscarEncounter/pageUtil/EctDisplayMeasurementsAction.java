@@ -72,8 +72,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             String dispname = MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName);
 
             winName = flowsheetName + bean.demographicNo;
-            hash = winName.hashCode();
-            hash = hash < 0 ? hash * -1 : hash;
+            hash = Math.abs(winName.hashCode());
             url = "popupPage(700,1000,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=" + bean.demographicNo + "&template=" + flowsheetName + "');return false;";
             item.setLinkTitle(dispname);
             dispname = StringUtils.maxLenString(dispname, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
@@ -87,8 +86,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             
             String tmp = (String)bean.measurementGroupNames.get(j);             
             winName = tmp + bean.demographicNo;
-            hash = winName.hashCode();
-            hash = hash < 0 ? hash * -1 : hash;
+            hash = Math.abs(winName.hashCode());            
             url = "popupPage(500,1000,'" + hash  + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=" + tmp + "');measurementLoaded('" + winName + "')";
             Dao.addPopUpUrl(url);
             Dao.addPopUpText(tmp);            
@@ -106,8 +104,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             String type = data.getType();
             
             winName = type + bean.demographicNo;
-            hash = winName.hashCode();
-            hash = hash < 0 ? hash * -1 : hash;
+            hash = Math.abs(winName.hashCode());
             
             hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, data.getType());
             Vector measures = (Vector) hd.getMeasurementsDataVector();
@@ -116,10 +113,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
             Date date = data.getDateObservedAsDate();
             String formattedDate = DateUtils.getDate(date,dateFormat);
-            String tmp = title + "  " + data.getDataField();
-            item.setLinkTitle(tmp + " " + formattedDate);
-            tmp = StringUtils.maxLenString(tmp, MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);            
-            item.setTitle(tmp + " " + formattedDate);                       
+            item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
+            title = padd(title, data.getDataField());
+            String tmp = "<span class=\"measureCol1\">" + title + "</span>";
+            tmp += "<span class=\"measureCol2\">" + data.getDataField() + "</span>";
+            tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
+            item.setTitle(tmp);                       
             item.setDate(date);            
             item.setURL("popupPage(300,800,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do?type=" + type + "'); return false;");
             Dao.addItem(item);
@@ -131,6 +130,27 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
   }
    public String getCmd() {
        return cmd;
+   }
+   
+   /**
+    *truncate string to specified length so that measurements are always displayed
+    *in a column
+    */
+   public String padd(String str, String data) {
+       String tmp;
+       int overflow = str.length() + data.length() - MAX_LEN_TITLE;
+       //if we are over limit, truncate
+       if( overflow > 0 ) {
+           int maxsize = (str.length()-overflow) > 0 ? str.length()-overflow : 1;
+           int minsize = maxsize > 3 ? maxsize - 3 : 0;
+           String ellipses = new String();
+           ellipses = org.apache.commons.lang.StringUtils.rightPad(ellipses, maxsize - minsize, '.');
+           tmp = StringUtils.maxLenString(str, maxsize, minsize, ellipses);
+       }
+       else
+           tmp = str;
+       
+       return tmp;
    }
    
 }
