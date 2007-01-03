@@ -27,6 +27,7 @@ package oscar.oscarEncounter.pageUtil;
 
 import java.util.Collections;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Random;
@@ -203,6 +204,20 @@ public class NavBarDisplayDAO {
                 break;
             case ALPHASORT:
                 Collections.sort(Items);
+        }
+        
+    }
+    
+    public void sortItems(List list, int order ) {        
+        switch(order) {
+            case DATESORT:
+                Collections.sort(list, new Chronologic());
+                break;
+            case DATESORT_ASC:
+                Collections.sort(list, new ChronologicAsc());
+                break;
+            case ALPHASORT:
+                Collections.sort(list);
         }
         
     }
