@@ -389,9 +389,10 @@ function calculate(){
 
 function write2Parent(){
     var text = document.second.prediction.value;
+    var pastewin = window.opener;
 
     pastewin.document.encForm.enTextarea.value = pastewin.document.encForm.enTextarea.value + "\n\n" + text;
-    pastewin.setTimeout("document.encForm.enTextarea.scrollTop=2147483647", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+    pastewin.setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
     pastewin.document.encForm.enTextarea.focus();
     
     
