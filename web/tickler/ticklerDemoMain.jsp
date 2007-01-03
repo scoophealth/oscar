@@ -9,6 +9,21 @@
     if(request.getParameter("limit1")!=null) strLimit1 = request.getParameter("limit1");
   if(request.getParameter("limit2")!=null) strLimit2 = request.getParameter("limit2");
   String demoview = request.getParameter("demoview")==null?"all":request.getParameter("demoview") ;
+  
+//Retrieve encounter id for updating encounter navbar if info this page changes anything
+String parentAjaxId;
+if( request.getParameter("parentAjaxId") != null )
+    parentAjaxId = request.getParameter("parentAjaxId");
+else if( request.getAttribute("parentAjaxId") != null )
+    parentAjaxId = (String)request.getAttribute("parentAjaxId");
+else
+    parentAjaxId = "";
+    
+String updateParent;
+if( request.getParameter("updateParent") != null )
+    updateParent = request.getParameter("updateParent");
+else
+    updateParent = "false";    
 %>
 <%@ page import="java.util.*, java.sql.*,java.text.*, oscar.*, java.net.*" %>
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -250,6 +265,17 @@ function refresh() {
     		document.serviceform.xml_vdate.value = beginD;
 }
 
+function setup() {
+    var update = "<%=updateParent%>";
+    var parentId = "<%=parentAjaxId%>";
+    var Url = window.opener.URLs;
+    
+    if( update == "true" && parentId != "" && !window.opener.closed )
+        window.opener.popLeftColumn(Url[parentId], parentId, parentId);
+    else if( update == "true" && parentId == "" && !window.opener.closed )
+        window.opener.location.reload();
+  }
+
 </script>
 <style type="text/css">
 	<!--
@@ -300,7 +326,7 @@ function refresh() {
 </style>      
 </head>
 
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
+<body onload="setup();" bgcolor="#FFFFFF" text="#000000" leftmargin="0" rightmargin="0" topmargin="10">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#FFFFFF"> 
     <td height="10" width="70%"> </td>
@@ -348,6 +374,8 @@ function refresh() {
 <table bgcolor=#666699 border=0 cellspacing=0 width=100%><form name="ticklerform" method="post" action="dbTicklerDemoMain.jsp">
 <tr><td>
   <input type="hidden" name="demoview" value="<%=demoview%>"> 
+  <input type="hiden" name="parentAjaxId" value="<%=parentAjaxId%>">
+  <input type="hidden" name="updateParent" value="true" >
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <TR bgcolor=#666699>
 <TD width="3%"><FONT FACE="verdana,arial,helvetica" COLOR="#FFFFFF" SIZE="-2"><B></B></FONT></TD>
