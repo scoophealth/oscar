@@ -49,6 +49,12 @@ public class EctDisplayConsultAction extends EctDisplayAction {
             Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.Consult"));
             Dao.setLeftURL(url);
             
+            //set the right hand heading link\
+            winName = "newConsult" + bean.demographicNo;
+            url = "popupPage(700,960,'" + winName + "','" + request.getContextPath() + "/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp?de=" + bean.demographicNo + "&teamVar='); return false;";
+            Dao.setRightURL(url);        
+            Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action 
+            
             //grab all consultations for patient and add list item for each
             oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil theRequests;
             theRequests = new  oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsUtil();

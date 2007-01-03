@@ -51,6 +51,11 @@ public class EctDisplayDxAction extends EctDisplayAction {
         Dao.setLeftHeading(messages.getMessage("oscarEncounter.LeftNavBar.DxRegistry"));
         Dao.setLeftURL(url);
         
+        //set righthand link to same as left so we have visual consistency with other modules
+        url += "; return false;";
+        Dao.setRightURL(url);        
+        Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action 
+        
         //grab all of the diseases associated with patient and add a list item for each
         String dbFormat = "yyyy-MM-dd";
         String serviceDateStr;
