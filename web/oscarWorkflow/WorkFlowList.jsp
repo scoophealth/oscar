@@ -202,12 +202,15 @@ WorkFlow
                          <th>Next Appt</th>
                       </tr>
                       </thead>
-                <%      for (int j = 0; j < workList.size(); j++){
+                <%      
+                          WorkFlowDS wfDS = flow.getWorkFlowDS();
+          
+                          for (int j = 0; j < workList.size(); j++){
                           Hashtable h = (Hashtable) workList.get(j);
                           Hashtable demoHash = deName.getNameAgeSexHashtable(""+h.get("demographic_no"));
                           String colour = "";
                           
-                          WorkFlowInfo wfi = flow.executeRules(h);
+                          WorkFlowInfo wfi = flow.executeRules(wfDS,h);
                           colour = wfi.getColour();
                           String gestAge = "";
                           try{
