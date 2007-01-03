@@ -17,9 +17,9 @@
     //Do we have a '+' command to display on the right of the module header?
    String rh = dao.getRightHeadingID();
    if( !rh.equals("") ) {          
-%>
+%>        
         <div id='menuTitle<%=rh%>' style="margin-right: 3px; clear: both; display: inline; float: right;"><h3><a href="#" <%=dao.numPopUpMenuItems() > 0 ? "onmouseover" : "onclick"%>="<%=dao.getRightURL()%>">+</a></h3></div>
-<%
+<%        
         int num;
         //if there is a pop up menu then grab all of the items and format according to number
         if( (num = dao.numPopUpMenuItems()) > 0 ) {
@@ -59,6 +59,11 @@
         } //end if menu items
    } //end if there is a right hand header
    
+   if( dao.numItems() > 5 ) {
+%>       
+  <a style="width: 2%; margin: 5px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-5 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>img" src="graphics/expand.gif"/></a>     
+<%  
+   }
    //left hand module header comes last as it's displayed as a block
 %>
 <h3><a href="#" onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3> 
@@ -81,13 +86,8 @@
                        
       %>
       <li <%=stripe%>>
-     <%
-            if( j == 4 && dao.numItems() > 5 ) {
-     %>    
-                <a id="<%=request.getAttribute("navbarName")%>down" style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-5 + " more items"%>"><img src="graphics/expand.gif"/></a>
-     <%
-            }
-            else if( j == dao.numItems()-1 && j > 4 ) {
+     <%     
+            if( j == dao.numItems()-1 && j > 4 ) {
      %>           
                 <a id="<%=request.getAttribute("navbarName")%>up" style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="../oscarMessenger/img/collapse.gif"/></a>
      <%
