@@ -131,7 +131,7 @@ div.leftBox h3 {
 div.leftBox ul{ 
        /*border-top: 1px solid #F11;*/
        /*border-bottom: 1px solid #F11;*/
-       font-size: 1.0em;
+       font-size: 0.8em;
        list-style:none;
        list-style-type:none; 
        list-style-position:outside;       
