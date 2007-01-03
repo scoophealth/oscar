@@ -1,4 +1,35 @@
 
+<%--
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ *  Jason Gallagher
+ *
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada
+ *
+ * DosingRecomendation.java
+ *
+ * Created on December 21, 2006, 11:23 AM
+ *
+ */
+ --%>
+
 <%@ page language="java"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*,java.util.*,oscar.oscarPrevention.*" %>
 <%@ page import="oscar.oscarProvider.data.*,oscar.oscarWorkflow.*,oscar.oscarEncounter.oscarMeasurements.bean.*" %>
@@ -99,7 +130,7 @@
         <script type="text/javascript" src="../share/calendar/calendar.js" ></script>      
         <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
         <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script> 
-        <script type="text/javascript" src="../share/prototype.js" ></script>
+        <script type="text/javascript" src="../share/javascript/prototype.js" ></script>
         <script type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 
         <style type="text/css">
@@ -228,7 +259,26 @@
             }
         
         
+            
+            fieldset.obsHist{
+              
+            }
+            
+            fieldset.obsHist label{
+            margin-left: 5px;
+               width: auto; 
+               float: none;
+            }
         
+            
+            fieldset.obsHist input{
+            float: none;
+            width: auto;
+            margin-right: 3px;
+            margin-left: 4px;
+            }
+            
+            
             fieldset {
             margin-right: 10px;
             padding-right: 10px;
@@ -350,7 +400,7 @@
     </script>
 
 
-    <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(768,833)">
+    <body bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0" onload="window.resizeTo(807,833)">
         <!--
         @oscar.formDB Table="formAdf" 
         @oscar.formDB Field="ID" Type="int(10)" Null="NOT NULL" Key="PRI" Default="" Extra="auto_increment"
@@ -475,6 +525,13 @@
                                 <option value="N" <%=props.getProperty("motherRHtype", "").equalsIgnoreCase("N")?"selected":""%> >Neg</option>
                                 <option value="P" <%=props.getProperty("motherRHtype", "").equalsIgnoreCase("P")?"selected":""%> >Pos</option>
                             </select>
+                            <label class="smallmargin">Antibodies Detected:</label>  
+                            <select name="motherRHtype">
+                                <option >Not Set</option>
+                                <option value="Y" <%=props.getProperty("motherAntibodies", "").equalsIgnoreCase("Y")?"selected":""%> >Yes</option>
+                                <option value="N" <%=props.getProperty("motherAntibodies", "").equalsIgnoreCase("N")?"selected":""%> >No</option>
+                            </select>
+                    
                     <br/> 
                     <label>Hospital for Delivery:</label> <input type="text" name="hospitalForDelivery" value="<%=props.getProperty("hospitalForDelivery","")%>"/> 
                 </fieldset>
@@ -495,10 +552,144 @@
                     <label>Telephone:</label> <input type="text" name="refPhyPhone"  value="<%=props.getProperty("refPhyPhone","")%>"    /> 
                     <label>Fax:</label> <input type="text" name="refPhyFax" value="<%=props.getProperty("refPhyFax","")%>" /> 
                     <br/>
+                </fieldset>
+                
+           
+                
+                
+                
+                 <fieldset class="obsHist">
+                    <legend>Obstetrical History</legend>
+                    <label>G</label> <input type="text"  name="obsHisG" size="2"  value="<%=props.getProperty("obsHisG","")%>"/> 
+                    <label>P</label> <input type="text"  name="obsHisP" size="2" value="<%=props.getProperty("obsHisP","")%>"/> 
+                    <label>T</label> <input type="text"  name="obsHisT" size="2" value="<%=props.getProperty("obsHisT","")%>"/> 
+                    <label>A</label> <input type="text"  name="obsHisA" size="2" value="<%=props.getProperty("obsHisA","")%>"/> 
+                    <label>L</label> <input type="text"  name="obsHisL" size="2" value="<%=props.getProperty("obsHisL","")%>"/> 
+                    <br/>
+                    
+                    <input type="checkbox" name="obsHisTubMolPregYes"  <%=props.getProperty("obsHisTubMolPregYes","")%>>Yes</input>
+                    <input type="checkbox" name="obsHisTubMolPregNo"   <%=props.getProperty("obsHisTubMolPregNo","")%>>No</input>
+                    <label>Any previous tubal or molar pregnancy?</label>
+                    
+                    <br/>
+                    <input type="checkbox" name="obsHisMisAbortionYes"  <%=props.getProperty("obsHisMisAbortionYes","")%>>Yes</input>
+                    <input type="checkbox" name="obsHisMisAbortionNo"   <%=props.getProperty("obsHisMisAbortionNo","")%>>No</input>
+                    <label style="float: none;">Any previous miscarriage, pregnancy loss, or therapeutic abortions?</label> 
+                                                                          
+                    <br/>
+                    <input type="checkbox" name="obsHisReceiveAntiDYes"  <%=props.getProperty("obsHisReceiveAntiDYes","")%>>Yes</input>
+                    <input type="checkbox" name="obsHisReceiveAntiDNo"   <%=props.getProperty("obsHisReceiveAntiDNo","")%>>No</input>
+                    <label>Did you receive Anti-D during each of these pregnancies or following the pregnancy loss?</label> 
+                                                                           <br/>
+                
+                    <input type="checkbox" name="obsHisReactionAntiDYes"  <%=props.getProperty("obsHisReactionAntiDYes","")%>>Yes</input>
+                    <input type="checkbox" name="obsHisReactionAntiDNo"   <%=props.getProperty("obsHisReactionAntiDNo","")%>>No</input>                                                       
+                    <label>Did you have any adverise reaction to the Anti-D?</label> 
+                                                                          
+                </fieldset>
+                
+                
+                
+                <fieldset class="obsHist">
+                    <legend>Past Medical History</legend>
+                    
+                    <input type="checkbox" name="pmHisBlClDisordersYes"  <%=props.getProperty("pmHisBlClDisordersYes","")%>>Yes</input>
+                    <input type="checkbox" name="pmHisBlClDisordersNo"   <%=props.getProperty("pmHisBlClDisordersNo","")%>>No</input> 
+                    <label>Do you have any bleeding or clotting disorders?</label> 
+                    If yes, describe<input type="text" name="pmHisBlClDisordersComment"  value="<%=props.getProperty("pmHisBlClDisordersComment","")%>" /> 
+                    
+                    <br/>
+                    <input type="checkbox" name="pmHisBlPlTransfusYes"  <%=props.getProperty("pmHisBlPlTransfusYes","")%>>Yes</input>
+                    <input type="checkbox" name="pmHisBlPlTransfusNo"   <%=props.getProperty("pmHisBlPlTransfusNo","")%>>No</input>
+                    <label>Have you had any blood or platelet transfusions?</label> 
+                    If yes, when<input type="text" name="pmHisBlPlTransfusComment"  value="<%=props.getProperty("pmHisBlPlTransfusComment","")%>" /> 
+                </fieldset>
+                
+                
+                <fieldset class="obsHist">
+                    <legend>Allergies</legend>
+                    <input type="checkbox" name="allReactionsYes"  <%=props.getProperty("allReactionsYes","")%>>Yes</input>
+                    <input type="checkbox" name="allReactionsNo"   <%=props.getProperty("allReactionsNo","")%>>No</input>    
+                    <label>Any adverse reactions to previous immune globulin (other than Rh im) or other blood products?</label> 
+                        If yes, describe<input type="text" name="allReactionsComment"  value="<%=props.getProperty("allReactionsComment","")%>" /> 
+                    <br/>
+                </fieldset>
+                
+                
+                <fieldset class="obsHist">
+                    <legend>Current Pregnancy</legend>
+                    
+                    <label>Father's ABO:</label> 
+                            <select style="float:none;" name="fatherABO">
+                                <option>Not Set</option> 
+                                <option value="A" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("A")?"selected":""%>  >A</option>
+                                <option value="B" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("B")?"selected":""%>  >B</option>
+                                <option value="o" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("o")?"selected":""%>  >O</option>
+                                <option value="U" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("U")?"selected":""%>  >Unknown</option>
+                            </select>
+                            <br/>
+                    
+                    <input type="checkbox" name="curPregDueDateChangeYes"  <%=props.getProperty("curPregDueDateChangeYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregDueDateChangeNo"   <%=props.getProperty("curPregDueDateChangeNo","")%>>No</input>    
+                    <label>Has your due date changed during this pregnancy?</label> 
+                        
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregProceduresYes"  <%=props.getProperty("curPregProceduresYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregProceduresNo"   <%=props.getProperty("curPregProceduresNo","")%>>No</input>    
+                    <label>Any procedures during this pregnancy such as amniocentesis, chorionic villous sampling, cordocentesis, or external cephalic version?</label> 
+                    If yes, when<input type="text" name="curPregProceduresComment"  value="<%=props.getProperty("curPregProceduresComment","")%>" /> 
+                   
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregBleedingYes"  <%=props.getProperty("curPregBleedingYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregBleedingNo"   <%=props.getProperty("curPregBleedingNo","")%>>No</input>    
+                    <label>Any bleeding during this pregnancy?</label> 
+                    If yes, when<input type="text" name="curPregBleedingComment"  value="<%=props.getProperty("curPregBleedingComment","")%>" /> 
+                   
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregBleedingContYes"  <%=props.getProperty("curPregBleedingContYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregBleedingContNo"   <%=props.getProperty("curPregBleedingContNo","")%>>No</input>    
+                    <label>Has the bleeding continued?</label> 
+                    
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregThreatMiscarriageYes"  <%=props.getProperty("curPregThreatMiscarriageYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregThreatMiscarriageNo"   <%=props.getProperty("curPregThreatMiscarriageNo","")%>>No</input>    
+                    <label>Any threatened miscarriage during this pregnancy?</label> 
+                    
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregTraumaYes"  <%=props.getProperty("curPregTraumaYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregTraumaNo"   <%=props.getProperty("curPregTraumaNo","")%>>No</input>    
+                    <label>Any abdominal trauma, serious fall or car accident?</label> 
                     
                     
+                     <br/>
+                    
+                    <input type="checkbox" name="curPregAntiDYes"  <%=props.getProperty("curPregAntiDYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregAntiDNo"   <%=props.getProperty("curPregAntiDNo","")%>>No</input>    
+                    <label>Have you received any Anti-D during this pregnancy?</label> 
+                    If yes, when<input type="text" name="curPregAntiDComment"  value="<%=props.getProperty("curPregAntiDComment","")%>" /> 
+                   
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregAntiDReactionYes"  <%=props.getProperty("curPregAntiDReactionYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregAntiDReactionNo"   <%=props.getProperty("curPregAntiDReactionNo","")%>>No</input>    
+                    <label>Any adverse reaction?</label>
+                    
+                    
+                    <br/>
+                    
+                    <input type="checkbox" name="curPregBloodDrawnYes"  <%=props.getProperty("curPregBloodDrawnYes","")%>>Yes</input>
+                    <input type="checkbox" name="curPregBloodDrawnNo"   <%=props.getProperty("curPregBloodDrawnNo","")%>>No</input>    
+                    <label>Blood sample drawn?</label>
                     
                 </fieldset>
+                
+                
+                
                 <fieldset>
                     <legend>Comments</legend>
                     <textarea name="comments"style="width: 45em;"><%=props.getProperty("comments","")%></textarea>
@@ -515,7 +706,9 @@
                 <% System.out.println("HERE 5");%>
                 </html:form>
                 
-                <% if (h != null) { 
+                <div id="injectionInfo"></div>
+                
+                <%-- if (h != null) { 
                 PreventionData pd = new PreventionData();
                 ArrayList alist = pd.getPreventionDataFromExt("workflowId", ""+h.get("ID"));       
                 
@@ -544,7 +737,7 @@
                     <%}%>
                </fieldset>
                <%  }
-                 }%>                     
+                 }--%>                     
                  
                  
                  <html:form action="/oscarPrevention/AddPrevention"  styleId="deleteForm" target="_blank">
@@ -556,12 +749,42 @@
                  </html:form>
 
             <script type="text/javascript">
+            <%if (h != null) { %>  
+            function getInjectionInformation(origRequest){
+               console.log("calling get renal dosing information");
+               var url = "../form/RhInjectionDisplay.jsp";
+               var ran_number=Math.round(Math.random()*1000000);
+               var params = "demographicNo=<%=demographicNo%>&id=<%=h.get("ID")%>&date=<%=(Date) h.get("completion_date")%>&rand="+ran_number;  //hack to get around ie caching the page
+               console.log("params" + params);
+               new Ajax.Updater('injectionInfo',url, {method:'get',parameters:params,asynchronous:true}); 
+               //alert(origRequest.responseText);
+            }
+            getInjectionInformation();    
+                
+                
+            function refreshInfo(){
+            getInjectionInformation();    
+            
+            }
+                <%}%>
+                
+                
+                function deleteCall(){
+                    var url = "../oscarPrevention/AddPrevention.do";
+                var data = Form.serialize('deleteForm'); 
+                console.log("deleteCall "+data);
+                new Ajax.Request(url, {method: 'post',postBody: data,asynchronous:true,onComplete: getInjectionInformation}); 
+                }
                 
             function deleteInjection(idval){
                var delId = document.getElementById('deleteId');
                delId.value = idval;
+               console.log("calling deleteInjection "+idval);
+               
+               deleteCall();
+               
                //alert(delId.value);
-               document.getElementById('deleteForm').submit();
+               //document.getElementById('deleteForm').submit();
                
             }
                 
