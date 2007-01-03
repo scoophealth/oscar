@@ -28,6 +28,7 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarClinic.ClinicData;
 
 public class EctProviderData {
     public class Provider {
@@ -102,12 +103,15 @@ public class EctProviderData {
                 String firstName = rs.getString("first_name");
                 if(firstName.indexOf("Dr.") < 0)
                     firstName = "Dr. "+firstName;
-                String clinicName = "Stonechurch Family Health Centre";
-                String clinicAddress = "549 Stone Church Rd. E.";
-                String clinicCity = "Hamilton";
-                String clinicPostal = "L8W 3L2";
-                String clinicPhone = "905-575-1300";
-                String clinicFax = "905-575-0779";
+                
+                ClinicData clinic = new ClinicData();
+                clinic.refreshClinicData();
+                String clinicName = clinic.getClinicName(); 
+                String clinicAddress = clinic.getClinicAddress();
+                String clinicCity = clinic.getClinicCity();
+                String clinicPostal = clinic.getClinicPostal();
+                String clinicPhone = clinic.getClinicPhone();
+                String clinicFax = clinic.getClinicFax();
                 provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax);
             }
             rs.close();
