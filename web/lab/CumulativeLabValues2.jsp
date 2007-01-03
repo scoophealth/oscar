@@ -408,7 +408,7 @@ function addLabToList(req){
                       String latestDate = "&nbsp;";
                       String abn = "";
                       if (list != null && list.size() > 0){
-                         Hashtable hdata = (Hashtable) list.get(list.size() -1 );
+                         Hashtable hdata = (Hashtable) list.get(0);//list.size() -1 );
                          latestVal = (String) hdata.get("result");
                          latestDate = (String) hdata.get("collDate");
                          latestDate = UtilDateUtilities.DateToString( (Date) hdata.get("collDateDate") , "dd-MMM yyyy");   
