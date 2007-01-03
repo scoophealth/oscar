@@ -118,6 +118,20 @@ public class RHWorkFlow implements WorkFlow {
         return wfi;
     }
     
+    public WorkFlowInfo executeRules(WorkFlowDS wfDS,Hashtable hashtable) {
+        WorkFlowInfo wfi = new WorkFlowInfo(hashtable);
+        try{
+        wfi = wfDS.getMessages(wfi);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return wfi;
+    }
+    
+    
+    public WorkFlowDS getWorkFlowDS(){
+        return WorkFlowDSFactory.getWorkFlowDS("Rh_workflow.drl");
+    }
     
     public String getLink(String demographicNo,String workFlowId){
         return "../form/forwardshortcutname.jsp?formname=RH Form&amp;demographic_no="+demographicNo;
