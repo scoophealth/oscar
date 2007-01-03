@@ -78,6 +78,21 @@ if (sortRequest != null) {
 
 ArrayList doctypes = EDocUtil.getDoctypes(module);
 
+//Retrieve encounter id for updating encounter navbar if info this page changes anything
+String parentAjaxId;
+if( request.getParameter("parentAjaxId") != null )
+    parentAjaxId = request.getParameter("parentAjaxId");
+else if( request.getAttribute("parentAjaxId") != null )
+    parentAjaxId = (String)request.getAttribute("parentAjaxId");
+else
+    parentAjaxId = "";
+
+
+String updateParent;
+if( request.getParameter("updateParent") != null )
+    updateParent = request.getParameter("updateParent");
+else
+    updateParent = "false";
 %>
 <html:html locale="true">
 <head>
@@ -103,6 +118,7 @@ Rounded("div.doclist","bottom","transparent", "#e0ecff", "small border #ccccd7")
 Rounded("div.leftplane","top", "transparent", "#CCCCFF","small border #ccccff");
 Rounded("div.leftplane","bottom","transparent","#EEEEFF","small border #ccccff");
 onloadfunction();
+setup();  //reload parent content if necessary
 }
 
 
@@ -180,7 +196,18 @@ function popup1(height, width, url, windowName){
     }  
   }  
   popup.focus();  
+  
 }
+
+
+  function setup() {
+    var update = "<%=updateParent%>";
+    var parentId = "<%=parentAjaxId%>";
+    var Url = window.opener.URLs;
+    
+    if( update == "true" && !window.opener.closed )
+        window.opener.popLeftColumn(Url[parentId], parentId, parentId);
+  }
 </script>
 
 <script src="../share/javascript/prototype.js" type="text/javascript"></script>

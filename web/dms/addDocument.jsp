@@ -71,6 +71,15 @@ if (request.getAttribute("mode") != null) {
     mode = (String) request.getParameter("mode");
 }
 
+//Retrieve encounter id for updating encounter navbar if info this page changes anything
+String parentAjaxId;
+if( request.getParameter("parentAjaxId") != null )
+    parentAjaxId = request.getParameter("parentAjaxId");
+else if( request.getAttribute("parentAjaxId") != null )
+    parentAjaxId = (String)request.getAttribute("parentAjaxId");
+else
+    parentAjaxId = "";
+
 if (request.getAttribute("completedForm") != null) {
 formdata = (AddEditDocumentForm) request.getAttribute("completedForm");
 /*  Moved the edit to a separate popup window
@@ -206,6 +215,7 @@ function checkDefaultDate(object, defaultValue) {
                                 <input type="hidden" name="function" value="<%=formdata.getFunction()%>" size="20">
                                 <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
                                 <input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
+                                <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>" >
                                 <select name="docType" onchange="checkSel(this)"<% if (docerrors.containsKey("typemissing")) {%> class="warning"<%}%>>
                                    <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
                                    <%
