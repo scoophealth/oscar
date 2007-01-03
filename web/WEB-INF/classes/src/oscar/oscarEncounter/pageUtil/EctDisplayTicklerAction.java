@@ -53,7 +53,7 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
 
     //Set lefthand module heading and link
     String winName = "ViewTickler" + bean.demographicNo;
-    String url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "')";
+    String url = "popupPage(500,900,'" + winName + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "')";
     Dao.setLeftHeading(messages.getMessage("global.viewTickler"));
     Dao.setLeftURL(url);        
     
@@ -73,20 +73,21 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     Date today = new Date(System.currentTimeMillis());
     String itemHeader;    
     int hash;
+    long days;
     while(rs.next()) {
         NavBarDisplayDAO.Item item = Dao.Item();                        
         serviceDate = rs.getDate("service_date");
         item.setDate(serviceDate);
-        if( serviceDate.before(today) )
+        days = (today.getTime() - serviceDate.getTime())/(1000*60*60*24);
+        if( days > 0 )
             item.setColour("FF0000");
             
         itemHeader = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES) + " " + DateUtils.getDate(serviceDate,dateFormat);                      
         item.setLinkTitle(itemHeader);        
         item.setTitle(itemHeader);
         winName = StringUtils.maxLenString(rs.getString("message"), MAX_LEN_TITLE, MAX_LEN_TITLE, "");                
-        hash = winName.hashCode();
-        hash = hash < 0 ? hash * -1 : hash;
-        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "'); return false;";        
+        hash = Math.abs(winName.hashCode());        
+        url = "popupPage(500,900,'" + hash + "','" + request.getContextPath() + "/tickler/ticklerDemoMain.jsp?demoview=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";        
         item.setURL(url);        
         Dao.addItem(item);
 
