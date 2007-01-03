@@ -514,6 +514,24 @@ public class DemographicData {
         public String getSex() {
             return sex;
         }
+        
+        public boolean isFemale(){
+            boolean female = false;
+            if (sex != null && sex.trim().equalsIgnoreCase("f")){
+                female = true;
+            }
+            return female;
+        }
+        
+        public boolean isMale(){
+            boolean male = false;
+            if (sex != null && sex.trim().equalsIgnoreCase("m")){
+                male = true;
+            }
+            return male;
+        }
+        
+        
         public String getEndDate() {
             return end_date;
         }
@@ -550,6 +568,7 @@ public class DemographicData {
         public EctInformation getEctInformation(){
             return new EctInformation();
         }
+        
         
         public class RxInformation{
             private String currentMedication;
