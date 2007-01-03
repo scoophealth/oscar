@@ -52,19 +52,31 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
         
+    //set lefthand module heading and link
     String winName = "docs" + bean.demographicNo;
     String url = "popupPage(500,960,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
             "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.curProviderNo + "')";        
 
     Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgDocuments"));
     Dao.setLeftURL(url);
-
-    StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");
+    
+    
+    //set the right hand heading link to call addDocument in index jsp
+    winName = "addDoc" + bean.demographicNo;    
+    url = "popupPage(500,960,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" + 
+            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.curProviderNo + "&mode=add" + 
+            "&parentAjaxId=" + cmd + "');return false;";            
+        
+    Dao.setRightURL(url);
+    Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
+  
+    StringBuffer javascript = new StringBuffer("<script type=\"text/javascript\">");    
     String js = "";
     ArrayList docList = EDocUtil.listDocs("demographic", bean.demographicNo, null, EDocUtil.PRIVATE, EDocUtil.SORT_OBSERVATIONDATE);
     String dbFormat = "yyyy-MM-dd";
     String serviceDateStr = "";    
     String key;
+    String title;
     int hash;
     for (int i=0; i< docList.size(); i++) {
         EDoc curDoc = (EDoc) docList.get(i);
@@ -77,7 +89,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
             dispStatus="html";
                     
         String dispDocNo    = curDoc.getDocId();        
-        String dispDesc     = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
+        title = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_TITLE, CROP_LEN_TITLE, ELLIPSES);
         
         DateFormat formatter = new SimpleDateFormat(dbFormat);
         String dateStr = curDoc.getObservationDate();
@@ -92,12 +104,11 @@ public class EctDisplayDocsAction extends EctDisplayAction {
             serviceDateStr = "Error";
         }        
                         
-        hash = winName.hashCode();
-        hash = hash < 0 ? hash * -1 : hash;
+        hash = Math.abs(winName.hashCode());
         url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
-        key = dispDesc + " " + serviceDateStr;
-        item.setLinkTitle(key);
-        item.setTitle(key);
+        item.setLinkTitle(title);
+        item.setTitle(title);
+        key = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
         key = StringEscapeUtils.escapeJavaScript(key);
         js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
         javascript.append(js);
