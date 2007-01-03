@@ -15,7 +15,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 1");
-              prev.addWarning("Needs First Booster");
+              prev.addWarning("DTaP-IPV 1", "Needs First Booster");
         </java:consequence>
     </rule>
 
@@ -32,7 +32,7 @@
         
         <java:consequence>              
               System.out.println("DTaP-IPV 2");
-              prev.addWarning("Needs Second Booster");
+              prev.addWarning("DTaP-IPV", "Needs Second Booster");
         </java:consequence>
     </rule>
     
@@ -47,7 +47,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 2");
-              prev.addWarning("Needs Second Booster");
+              prev.addWarning("DTaP-IPV", "Needs Second Booster");
         </java:consequence>
     </rule>
 
@@ -65,7 +65,7 @@
 
         <java:consequence>              
               System.out.println("DTaP-IPV 3");
-              prev.addWarning("Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third Booster");
         </java:consequence>
     </rule>
 
@@ -80,7 +80,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 2.1");
-              prev.addWarning("Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third Booster");
         </java:consequence>
     </rule>
 
@@ -97,7 +97,7 @@
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         <java:consequence>              
               System.out.println("DTaP-IPV 4");
-              prev.addWarning("Needs Fourth Booster");
+              prev.addWarning("DTaP-IPV", "Needs Fourth Booster");
         </java:consequence>
     </rule>
 
@@ -112,7 +112,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 2.1");
-              prev.addWarning("Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third Booster");
         </java:consequence>
     </rule>
 
@@ -129,7 +129,7 @@
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         <java:consequence>              
               System.out.println("DTaP-IPV 3");
-              prev.addWarning("Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third Booster");
         </java:consequence>
     </rule>
     <rule name="DTaP-IPV 6">
@@ -144,7 +144,7 @@
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         <java:consequence>              
               System.out.println("DTaP-IPV 3");
-              prev.addWarning("Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third Booster");
         </java:consequence>
     </rule>
     <rule name="Hib 1">
@@ -156,7 +156,7 @@
         <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
         <java:consequence>              
               System.out.println("Hib 1");
-              prev.addWarning("Needs first Hib");
+              prev.addWarning("Hib", "Needs first Hib");
         </java:consequence>
     </rule>
     <rule name="Hib 2">
@@ -169,7 +169,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Hib") &gt;= 2</java:condition>                        
         <java:consequence>              
               System.out.println("Hib 2");
-              prev.addWarning("Needs second Hib");
+              prev.addWarning("Hib", "Needs second Hib");
         </java:consequence>
     </rule>
     <rule name="Hib 3">
@@ -182,7 +182,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Hib") &gt;= 2</java:condition>                        
         <java:consequence>              
               System.out.println("Hib 3");
-              prev.addWarning("Needs third Hib");
+              prev.addWarning("Hib", "Needs third Hib");
         </java:consequence>
     </rule>
     <rule name="Hib 4">
@@ -193,8 +193,8 @@
         <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
         <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
         <java:consequence>              
-              System.out.println("Hib 3");
-              prev.addWarning("Needs first Hib");
+              System.out.println("Hib 4");
+              prev.addWarning("Hib", "Needs first Hib");
         </java:consequence>
     </rule>
     <rule name="Hib 5">
@@ -207,7 +207,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Hib") &gt;= 2</java:condition>                        
         <java:consequence>              
               System.out.println("Hib 5");
-              prev.addWarning("Needs second Hib");
+              prev.addWarning("Hib", "Needs second Hib");
         </java:consequence>
     </rule>
     <rule name="Hib 6">
@@ -219,7 +219,7 @@
         <java:condition>prev.getNumberOfPreventionType("Hib") == 0 </java:condition>        
         <java:consequence>              
               System.out.println("Hib 6");
-              prev.addWarning("Needs second Hib");
+              prev.addWarning("Hib", "Needs second Hib");
         </java:consequence>
     </rule>
 
@@ -234,7 +234,7 @@
                 
         <java:consequence>              
               System.out.println("Pneu-C 1");
-              prev.addWarning("Needs First Pneu-C");
+              prev.addWarning("Pneu-C", "Needs First Pneu-C");
         </java:consequence>
     </rule>
     <rule name="Pneu-C 2">
@@ -247,7 +247,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
         <java:consequence>              
               System.out.println("Pneu-C 2");
-              prev.addWarning("Needs Second Pneu-C");
+              prev.addWarning("Pneu-C", "Needs Second Pneu-C");
         </java:consequence>
     </rule>
     <rule name="Pneu-C 3">
@@ -260,7 +260,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
         <java:consequence>              
               System.out.println("Pneu-C 3");
-              prev.addWarning("Needs Third Pneu-C");
+              prev.addWarning("Pneu-C", "Needs Third Pneu-C");
         </java:consequence>
     </rule>
     <rule name="Pneu-C 4">
@@ -273,7 +273,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 6</java:condition>                                        
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs Fourth Pneu-C");
+              prev.addWarning("Pneu-C", "Needs Fourth Pneu-C");
         </java:consequence>
     </rule>
     <rule name="Pneu-C 5">
@@ -284,8 +284,8 @@
         <java:condition>prev.getAgeInMonths() &lt; 24</java:condition>
         <java:condition>prev.getNumberOfPreventionType("Pneu-C") == 0</java:condition>        
         <java:consequence>              
-              System.out.println("Pneu-C 4");
-              prev.addWarning("Needs First Pneu-C");
+              System.out.println("Pneu-C 5");
+              prev.addWarning("Pneu-C", "Needs First Pneu-C");
         </java:consequence>
     </rule>
     <rule name="Pneu-C 6">
@@ -298,7 +298,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Pneu-C") &gt;= 2</java:condition>                                        
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs Second Pneu-C");
+              prev.addWarning("Pneu-C", "Needs Second Pneu-C");
         </java:consequence>
     </rule>
 
@@ -313,7 +313,7 @@
         <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>                        
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs First MMR");
+              prev.addWarning("MMR", "Needs First MMR");
         </java:consequence>
     </rule>
     <rule name="MMR 1.1">
@@ -326,7 +326,7 @@
         <java:condition>prev.getNumberOfPreventionType("MMR") == 0</java:condition>                
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs First MMR");
+              prev.addWarning("MMR", "Needs First MMR");
         </java:consequence>
     </rule>
 
@@ -341,7 +341,7 @@
         <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 28</java:condition>
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs Second MMR");
+              prev.addWarning("MMR", "Needs Second MMR");
         </java:consequence>
     </rule>
 
@@ -356,7 +356,7 @@
         <java:condition>prev.getHowManyDaysSinceLast("VZ") &gt;= 0</java:condition>
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs Second MMR");
+              prev.addWarning("MMR", "Needs Second MMR");
         </java:consequence>
     </rule>
 
@@ -369,7 +369,7 @@
         <java:condition>prev.getNumberOfPreventionType("MenC-C") == 0</java:condition>                  
         <java:consequence>              
               System.out.println("Pneu-C 4");
-              prev.addWarning("Needs MenC-C");
+              prev.addWarning("MenC-C", "Needs MenC-C");
         </java:consequence>
     </rule>
 
@@ -382,7 +382,7 @@
         <java:condition>prev.getNumberOfPreventionType("MenC-C") == 0</java:condition>                  
         <java:consequence>              
               System.out.println("MenC-C 2");
-              prev.addWarning("Needs MenC-C");
+              prev.addWarning("MenC-C", "Needs MenC-C");
         </java:consequence>
     </rule>
 
@@ -395,7 +395,7 @@
         <java:condition>prev.getNumberOfPreventionType("MenC-C") == 0</java:condition>                  
         <java:consequence>              
               System.out.println("MenC-C 3");
-              prev.addWarning("Needs MenC-C");
+              prev.addWarning("MenC-C", "Needs MenC-C");
         </java:consequence>
     </rule>
 
@@ -409,7 +409,7 @@
         <java:condition>prev.getHowManyDaysSinceLast("MMR") &gt;= 28</java:condition>
         <java:consequence>              
               System.out.println("VZ 1");
-              prev.addWarning("Needs VZ");
+              prev.addWarning("VZ", "Needs VZ");
         </java:consequence>
     </rule>
 
@@ -423,7 +423,7 @@
         <java:condition>prev.getHowManyDaysSinceLast("MMR") == 0</java:condition>
         <java:consequence>              
               System.out.println("VZ 2");
-              prev.addWarning("Needs VZ");
+              prev.addWarning("VZ", "Needs VZ");
         </java:consequence>
     </rule>
 
@@ -437,7 +437,7 @@
         <java:condition>prev.getHowManyDaysSinceLast("MMR") &gt;= 28</java:condition>
         <java:consequence>              
               System.out.println("VZ 3");
-              prev.addWarning("Needs VZ");
+              prev.addWarning("VZ", "Needs VZ");
         </java:consequence>
     </rule>
 
@@ -451,7 +451,7 @@
         <java:condition>prev.getHowManyDaysSinceLast("MMR") == 0</java:condition>
         <java:consequence>              
               System.out.println("VZ 4");
-              prev.addWarning("Needs VZ");
+              prev.addWarning("VZ", "Needs VZ");
         </java:consequence>
     </rule>
 
@@ -464,7 +464,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 120</java:condition>
         <java:consequence>              
               System.out.println("dTap 1");
-              prev.addWarning("Needs Booster");
+              prev.addWarning("dTap", "Needs Booster");
         </java:consequence>
     </rule>
 
@@ -477,7 +477,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("dTaP") &gt;= 120</java:condition>
         <java:consequence>              
               System.out.println("Td 1");
-              prev.addWarning("Needs Booster");
+              prev.addWarning("Td", "Needs Booster");
         </java:consequence>
     </rule>
 
@@ -489,7 +489,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Td") &gt;= 120</java:condition>
         <java:consequence>              
               System.out.println("Td 2");
-              prev.addWarning("Needs Booster");
+              prev.addWarning("Td", "Needs Booster");
         </java:consequence>
     </rule>
 
@@ -501,7 +501,7 @@
         <java:condition>!prev.isLastPreventionWithinRange("Flu","2005-10-01","2006-01-29")</java:condition> 
         <java:consequence>              
               System.out.println("Flu 1");
-              prev.addWarning("Needs Flu Shot ");
+              prev.addWarning("Flu", "Needs Flu Shot ");
         </java:consequence>
     </rule>
 
@@ -513,7 +513,7 @@
         <java:condition>prev.isPassedNextDate("Flu")</java:condition>                    
         <java:consequence>              
               System.out.println("Flu 1");
-              prev.addWarning("Needs Flu Shot ");
+              prev.addWarning("Flu", "Needs Flu Shot ");
         </java:consequence>
     </rule>
 
@@ -546,7 +546,7 @@
         <java:condition>!prev.isNextDateSet("PAP")</java:condition>        
         <java:consequence>              
               System.out.println("PAP 2");
-              prev.addWarning("PAP is overdue for this patient");
+              prev.addWarning("PAP", "PAP is overdue for this patient");
         </java:consequence>
     </rule>
 
@@ -560,7 +560,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("PAP") == -1</java:condition>                
         <java:consequence>              
               System.out.println("PAP 3");
-              prev.addWarning("No PAP records can be found for this patient");
+              prev.addWarning("PAP", "No PAP records can be found for this patient");
         </java:consequence>
     </rule>
 
@@ -574,7 +574,7 @@
         <java:condition>prev.isPassedNextDate("PAP")</java:condition>        
         <java:consequence>              
               System.out.println("PAP 3");
-              prev.addWarning("PAP is overdue for this patient");
+              prev.addWarning("PAP", "PAP is overdue for this patient");
         </java:consequence>
     </rule>
 
@@ -624,7 +624,7 @@
         <java:condition>!prev.isNextDateSet("MAM")</java:condition>        
         <java:consequence>              
               System.out.println("MAM 2");
-              prev.addWarning("Mammogram is overdue for this patient");
+              prev.addWarning("MAM", "Mammogram is overdue for this patient");
         </java:consequence>
     </rule>
 
@@ -638,7 +638,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("MAM") == -1</java:condition>                
         <java:consequence>              
               System.out.println("MAM 3");
-              prev.addWarning("No Mammogram records can be found for this patient");
+              prev.addWarning("MAM", "No Mammogram records can be found for this patient");
         </java:consequence>
     </rule>
 
@@ -652,7 +652,7 @@
         <java:condition>prev.isPassedNextDate("MAM")</java:condition>        
         <java:consequence>              
               System.out.println("MAM 3");
-              prev.addWarning("MAM is overdue for this patient");
+              prev.addWarning("MAM", "MAM is overdue for this patient");
         </java:consequence>
     </rule>
 
