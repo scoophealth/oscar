@@ -143,7 +143,7 @@ TH {
     font-size: small;
     text-decoration: bold;
     background-color: #CBC9E0;
-    //#CBC9E0;
+    /*#CBC9E0;*/
 }
 
 .ControlTextarea
@@ -245,8 +245,7 @@ TH {
 }
 .Title
 {
-    font-weight:bold;
-    font-size:110%;
+    font-weight:bold;    
     color:white;
 }
 .fieldBox {
