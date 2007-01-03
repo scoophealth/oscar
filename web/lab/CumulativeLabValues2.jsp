@@ -393,29 +393,28 @@ function addLabToList(req){
                       <th><%=UtilDateUtilities.DateToString( labDate , "dd-MMM yy")%></th>
                       <%}%>
                    </tr>
+                   
                    <%for (int i = 0 ; i < prevList.size(); i++){ 
                       Hashtable h = (Hashtable) prevList.get(i);
                       String prevName = (String) h.get("testName");
                       String labType = (String) h.get("labType");
                       
-                      CommonLabTestValues labTests2 = new CommonLabTestValues();
-   
-                      ArrayList list   = labTests2.findValuesForTest(labType, demographic_no, prevName);
-                      SortHashtable sorter = new SortHashtable();
-                      Collections.sort(list,sorter);
-                      
                       String latestVal = "&nbsp;";
                       String latestDate = "&nbsp;";
                       String abn = "";
-                      if (list != null && list.size() > 0){
-                         Hashtable hdata = (Hashtable) list.get(0);//list.size() -1 );
-                         latestVal = (String) hdata.get("result");
-                         latestDate = (String) hdata.get("collDate");
-                         latestDate = UtilDateUtilities.DateToString( (Date) hdata.get("collDateDate") , "dd-MMM yyyy");   
-                         abn = r(hdata.get("abn")); 
-                         out.write("<!-- "+hdata.get("abn")+" -->");
-                      }
-                
+                      
+                      Hashtable dater2 = (Hashtable) labsBasedOnName.get(labType+"|"+prevName);
+                      for (int h2 = 0; h2 < labTestDates.size(); h2++){  
+                         Date labDate= (Date) labTestDates.get(h2);
+                         Hashtable hdata = (Hashtable) dater2.get(labDate);
+                         if (hdata != null){
+                            latestVal = (String) hdata.get("result");
+                            latestDate = UtilDateUtilities.DateToString( (Date) hdata.get("collDateDate") , "dd-MMM yyyy");
+                            abn = r(hdata.get("abn"));
+                            h2 = labTestDates.size();
+                         }
+                       }
+                      
                    %>   
                    <tr> 
                       <td><%=StringUtils.maxLenString(prevName,30,27,"...")%></td>
