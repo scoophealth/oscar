@@ -103,6 +103,18 @@
    </javac>   
  </target>
 
+ 
+ <patternset id="meta.files">
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.0" />
+        <include name="**/*.hbm.xml" />
+        <include name="**/*.drl" />
+        <include name="**/*.txt" />
+        <include name="**/*.pdf" />
+        <include name="**/*.jrxml" />
+ </patternset> 
+ 
  <target name="web" depends="init">
   <javac 
 	 srcdir="${src_web}"
@@ -117,42 +129,11 @@
       <path refid="classpath.path"/>
    </classpath>
   </javac>
-  <copy todir="${classes_web}/oscar/oscarSecurity">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarSecurity" includes="*.properties" />
-  </copy>
   <copy todir="${classes_web}">
-   <fileset dir="${webapp}/WEB-INF/classes/src" includes="*.properties" />
-  </copy>
-  <copy todir="${classes_web}">
-   <fileset dir="${webapp}/WEB-INF/classes/src" includes="*.0" />
-  </copy>
-  <copy todir="${classes_web}">
-   <fileset dir="${webapp}/WEB-INF/classes/src" includes="**/*.hbm.xml" />
-  </copy>
-  <copy todir="${classes_web}/oscar/form/prop">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/form/prop" includes="*" />
-  </copy>
-  <copy todir="${classes_web}/oscar/oscarPrevention/">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarPrevention/" includes="*.drl,*.xml" />
-  </copy>
-  <copy todir="${classes_web}/oscar/oscarEncounter/oscarMeasurements/flowsheets/">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarEncounter/oscarMeasurements/flowsheets/"  > 
-       <include name="**/*.drl"/>
-       <include name="**/*.xml"/>
-   </fileset>
+      <fileset dir="${webapp}/WEB-INF/classes/src">
+          <patternset refid="meta.files"/>
+      </fileset>
   </copy> 
-  <copy todir="${classes_web}/oscar/eform/">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/eform/" includes="*.xml" />
-  </copy>  
-  <copy todir="${classes_web}/oscar/oscarBilling/ca/bc/MSP/">
-   <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarBilling/ca/bc/MSP/" includes="*.properties" />
-  </copy>  
-  <copy todir="${classes_web}/oscar/oscarBilling/ca/bc/reports">
-     <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarBilling/ca/bc/reports" includes="*.*" />
-  </copy>
-  <copy todir="${classes_web}/oscar/oscarReport/ClinicalReports">
-     <fileset dir="${webapp}/WEB-INF/classes/src/oscar/oscarReport/ClinicalReports" includes="*.xml" />
-  </copy>
  </target>
 
  <target name="testprep" depends="init">
