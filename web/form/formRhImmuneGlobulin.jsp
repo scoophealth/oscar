@@ -517,6 +517,7 @@
                                 <option value="A" <%=props.getProperty("motherABO", "").equalsIgnoreCase("A")?"selected":""%>  >A</option>
                                 <option value="B" <%=props.getProperty("motherABO", "").equalsIgnoreCase("B")?"selected":""%>  >B</option>
                                 <option value="o" <%=props.getProperty("motherABO", "").equalsIgnoreCase("o")?"selected":""%>  >O</option>
+                                <option value="AB" <%=props.getProperty("motherABO", "").equalsIgnoreCase("AB")?"selected":""%>  >O</option>
                             </select>
 
                             <label class="smallmargin">Rh type:</label>  
@@ -538,7 +539,7 @@
                 
                 
                 <fieldset>
-                    <legend>Physician / Midwife</legend>
+                    <legend>Physician (OB) / Midwife</legend>
                     
                     <label>Last Name:</label> <input type="text" name="refPhySurname"  value="<%=props.getProperty("refPhySurname","")%>"    /> 
                     <label>First Name:</label> <input type="text" name="refPhyFirstname" value="<%=props.getProperty("refPhyFirstname","")%>" /> 
@@ -551,6 +552,24 @@
                     <br/>
                     <label>Telephone:</label> <input type="text" name="refPhyPhone"  value="<%=props.getProperty("refPhyPhone","")%>"    /> 
                     <label>Fax:</label> <input type="text" name="refPhyFax" value="<%=props.getProperty("refPhyFax","")%>" /> 
+                    <br/>
+                </fieldset>
+                
+                
+                <fieldset>
+                    <legend>Family Doctor</legend>
+                    
+                    <label>Last Name:</label> <input type="text" name="famPhySurname"  value="<%=props.getProperty("famPhySurname","")%>"    /> 
+                    <label>First Name:</label> <input type="text" name="famPhyFirstname" value="<%=props.getProperty("famPhyFirstname","")%>" /> 
+                    <br/>
+                    <label>Address:</label> <input type="text" name="famPhyAddress" size="20" value="<%=props.getProperty("famPhyAddress","")%>" /> 
+                    <label>City:</label> <input type="text" name="famPhyCity"   value="<%=props.getProperty("famPhyCity","")%>"/> 
+                    <br/>
+                    <label>Province:</label> <input type="text" name="famPhyProvince"   value="<%=props.getProperty("famPhyProvince","")%>"/> 
+                    <label>Postal Code:</label> <input type="text" name="famPhyPostalCode"   value="<%=props.getProperty("famPhyPostalCode","")%>"/> 
+                    <br/>
+                    <label>Telephone:</label> <input type="text" name="famPhyPhone"  value="<%=props.getProperty("famPhyPhone","")%>"    /> 
+                    <label>Fax:</label> <input type="text" name="famPhyFax" value="<%=props.getProperty("famPhyFax","")%>" /> 
                     <br/>
                 </fieldset>
                 
@@ -582,9 +601,7 @@
                     <label>Did you receive Anti-D during each of these pregnancies or following the pregnancy loss?</label> 
                                                                            <br/>
                 
-                    <input type="checkbox" name="obsHisReactionAntiDYes"  <%=props.getProperty("obsHisReactionAntiDYes","")%>>Yes</input>
-                    <input type="checkbox" name="obsHisReactionAntiDNo"   <%=props.getProperty("obsHisReactionAntiDNo","")%>>No</input>                                                       
-                    <label>Did you have any adverise reaction to the Anti-D?</label> 
+                   
                                                                           
                 </fieldset>
                 
@@ -610,7 +627,7 @@
                     <legend>Allergies</legend>
                     <input type="checkbox" name="allReactionsYes"  <%=props.getProperty("allReactionsYes","")%>>Yes</input>
                     <input type="checkbox" name="allReactionsNo"   <%=props.getProperty("allReactionsNo","")%>>No</input>    
-                    <label>Any adverse reactions to previous immune globulin (other than Rh im) or other blood products?</label> 
+                    <label>Any adverse reactions to previous immune globulin or other blood products?</label> 
                         If yes, describe<input type="text" name="allReactionsComment"  value="<%=props.getProperty("allReactionsComment","")%>" /> 
                     <br/>
                 </fieldset>
@@ -627,11 +644,18 @@
                                 <option value="o" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("o")?"selected":""%>  >O</option>
                                 <option value="U" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("U")?"selected":""%>  >Unknown</option>
                             </select>
+                            <label class="smallmargin">Father's Rh type:</label>  
+                            <select style="float:none;" name="fatherRHtype">
+                                <option >Not Set</option>
+                                <option value="N" <%=props.getProperty("fatherRHtype", "").equalsIgnoreCase("N")?"selected":""%> >Neg</option>
+                                <option value="P" <%=props.getProperty("fatherRHtype", "").equalsIgnoreCase("P")?"selected":""%> >Pos</option>
+                            </select>
                             <br/>
                     
                     <input type="checkbox" name="curPregDueDateChangeYes"  <%=props.getProperty("curPregDueDateChangeYes","")%>>Yes</input>
                     <input type="checkbox" name="curPregDueDateChangeNo"   <%=props.getProperty("curPregDueDateChangeNo","")%>>No</input>    
                     <label>Has your due date changed during this pregnancy?</label> 
+                    Comment<input type="text" name="curPregDueDateChangeComment"  value="<%=props.getProperty("curPregDueDateChangeComment","")%>" /> 
                         
                     <br/>
                     
@@ -644,8 +668,8 @@
                     
                     <input type="checkbox" name="curPregBleedingYes"  <%=props.getProperty("curPregBleedingYes","")%>>Yes</input>
                     <input type="checkbox" name="curPregBleedingNo"   <%=props.getProperty("curPregBleedingNo","")%>>No</input>    
-                    <label>Any bleeding during this pregnancy?</label> 
-                    If yes, when<input type="text" name="curPregBleedingComment"  value="<%=props.getProperty("curPregBleedingComment","")%>" /> 
+                    <label>Any bleeding or threatened miscarriage during this pregnancy?</label> 
+                    <br/>If yes, when<input type="text" name="curPregBleedingComment"  value="<%=props.getProperty("curPregBleedingComment","")%>" /> 
                    
                     <br/>
                     
@@ -654,12 +678,7 @@
                     <label>Has the bleeding continued?</label> 
                     
                     <br/>
-                    
-                    <input type="checkbox" name="curPregThreatMiscarriageYes"  <%=props.getProperty("curPregThreatMiscarriageYes","")%>>Yes</input>
-                    <input type="checkbox" name="curPregThreatMiscarriageNo"   <%=props.getProperty("curPregThreatMiscarriageNo","")%>>No</input>    
-                    <label>Any threatened miscarriage during this pregnancy?</label> 
-                    
-                    <br/>
+             
                     
                     <input type="checkbox" name="curPregTraumaYes"  <%=props.getProperty("curPregTraumaYes","")%>>Yes</input>
                     <input type="checkbox" name="curPregTraumaNo"   <%=props.getProperty("curPregTraumaNo","")%>>No</input>    
