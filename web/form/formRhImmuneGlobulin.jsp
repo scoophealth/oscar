@@ -527,7 +527,7 @@
                                 <option value="P" <%=props.getProperty("motherRHtype", "").equalsIgnoreCase("P")?"selected":""%> >Pos</option>
                             </select>
                             <label class="smallmargin">Antibodies Detected:</label>  
-                            <select name="motherRHtype">
+                            <select name="motherAntibodies">
                                 <option >Not Set</option>
                                 <option value="Y" <%=props.getProperty("motherAntibodies", "").equalsIgnoreCase("Y")?"selected":""%> >Yes</option>
                                 <option value="N" <%=props.getProperty("motherAntibodies", "").equalsIgnoreCase("N")?"selected":""%> >No</option>
