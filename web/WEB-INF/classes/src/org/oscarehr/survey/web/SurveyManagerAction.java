@@ -262,7 +262,8 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		}
 		
 		request.setAttribute("QuestionTypes", questionTypes);
-        setSectionProperties(request,survey,formBean);
+		
+		setSectionProperties(request,survey,formBean);
         
 		return mapping.findForward("edit");
 	}
@@ -861,13 +862,17 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		Enumeration e = request.getParameterNames();
         while(e.hasMoreElements()) {
         	String name = (String)e.nextElement();
+        	String pageName = formBean.getPage();
         	if(name.startsWith("section_description_")) {
         		String sectionId = name.substring(name.lastIndexOf("_")+1);
         		String description =request.getParameter(name);
+        		
+        		if(!(pageName.equalsIgnoreCase("Introduction")) && !(pageName.equalsIgnoreCase("Closing"))) {
         		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(sectionId).intValue());
         		if(section != null) {
         			section.setDescription(description);
         			//log.debug("setting description for section " + sectionId);
+        		}
         		}
         	}
         }
