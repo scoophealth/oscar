@@ -38,7 +38,6 @@ String absurl="/infirm.do?action=showProgram";
 
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*, oscar.*, oscar.util.*" %>
 <%@ page import="org.apache.commons.lang.*" %>
-<%@ page import="org.springframework.*" %>
 
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
