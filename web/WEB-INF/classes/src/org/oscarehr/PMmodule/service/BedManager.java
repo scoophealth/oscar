@@ -1,6 +1,5 @@
 package org.oscarehr.PMmodule.service;
 
-import java.util.Date;
 
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedType;
@@ -23,11 +22,9 @@ public interface BedManager {
 	 *            program identifier
 	 * @param reserved
 	 *            reserved flag
-	 * @param time
-	 *            cutoff time
 	 * @return array of beds
 	 */
-	public Bed[] getBedsByProgram(Integer programId, Boolean reserved, Date time);
+	public Bed[] getBedsByProgram(Integer programId, Boolean reserved);
 
 	/**
 	 * Get beds

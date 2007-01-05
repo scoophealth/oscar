@@ -3,7 +3,6 @@ package org.oscarehr.PMmodule.web.admin;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,20 +37,21 @@ public class ProgramManagerViewAction extends BaseAction {
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
     
-    	// find the id
-    	String id = request.getParameter("id");
+    	// find the program id
+    	String programId = request.getParameter("id");
     
-    	if (id == null) {
-    		id = (String) request.getAttribute("id");
+    	if (programId == null) {
+    		programId = (String) request.getAttribute("id");
     	}
     
-    	// queue
-    	if (request.getParameter("clientId") != null) {
-    		request.setAttribute("clientId", request.getParameter("clientId"));
+    	String demographicNo = request.getParameter("clientId");
+    	
+    	if (demographicNo != null) {
+    		request.setAttribute("clientId", demographicNo);
     	}
     
     	// need the queue to determine which tab to go to first
-    	List queue = programQueueManager.getActiveProgramQueuesByProgramId(id);
+    	List queue = programQueueManager.getActiveProgramQueuesByProgramId(programId);
     	request.setAttribute("queue", queue);
     
     	if (formBean.getTab() == null || formBean.getTab().equals("")) {
@@ -62,75 +62,73 @@ public class ProgramManagerViewAction extends BaseAction {
     		}
     	}
     
-    	Program program = programManager.getProgram(id);
+    	Program program = programManager.getProgram(programId);
     	request.setAttribute("program", program);
     
     	if (formBean.getTab().equals("General")) {
-    		request.setAttribute("agency", programManager.getAgencyByProgram(id));
+    		request.setAttribute("agency", programManager.getAgencyByProgram(programId));
     	}
     
     	if (formBean.getTab().equals("Staff")) {
-    		request.setAttribute("providers", programManager.getProgramProviders(id));
+    		request.setAttribute("providers", programManager.getProgramProviders(programId));
     	}
     
     	if (formBean.getTab().equals("Function User")) {
-    		request.setAttribute("functional_users", programManager.getFunctionalUsers(id));
+    		request.setAttribute("functional_users", programManager.getFunctionalUsers(programId));
     	}
     
     	if (formBean.getTab().equals("Teams")) {
-    		List teams = programManager.getProgramTeams(id);
-    
-    		for (Iterator iter = teams.iterator(); iter.hasNext();) {
-    			ProgramTeam team = (ProgramTeam) iter.next();
-    			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(id), team.getId()));
-    			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(id), team.getId()));
-    		}
+    		List<ProgramTeam> teams = programManager.getProgramTeams(programId);
+    		
+    		for (ProgramTeam team : teams) {
+    			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
+    			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+            }
     
     		request.setAttribute("teams", teams);
     	}
     
     	if (formBean.getTab().equals("Clients")) {
-    		request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(id));
+    		request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
     		request.setAttribute("program_name", program.getName());
-    		List teams = programManager.getProgramTeams(id);
+    		
+    		List<ProgramTeam> teams = programManager.getProgramTeams(programId);
     
-    		for (Iterator iter = teams.iterator(); iter.hasNext();) {
-    			ProgramTeam team = (ProgramTeam) iter.next();
-    			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(id), team.getId()));
-    			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(id), team.getId()));
-    		}
+    		for (ProgramTeam team : teams) {
+    			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
+    			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+            }
+    		
     		request.setAttribute("teams", teams);
     
     		List<Program> batchAdmissionPrograms = new ArrayList<Program>();
-    		Program[] bedPrograms = programManager.getBedPrograms();
-    
-    		for (int x = 0; x < bedPrograms.length; x++) {
-    			Program p = (Program) bedPrograms[x];
-    
-    			if (p.isAllowBatchAdmission()) {
-    				batchAdmissionPrograms.add(p);
+    		
+    		for (Program bedProgram : programManager.getBedPrograms()) {
+    			if (bedProgram.isAllowBatchAdmission()) {
+    				batchAdmissionPrograms.add(bedProgram);
     			}
-    		}
+            }
     
-    		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
     		request.setAttribute("programs", batchAdmissionPrograms);
-    		request.setAttribute("allowBatchDischarge", new Boolean(program.isAllowBatchDischarge()));
+    		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
+    		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());
     	}
     
     	if (formBean.getTab().equals("Access")) {
-    		request.setAttribute("accesses", programManager.getProgramAccesses(id));
+    		request.setAttribute("accesses", programManager.getProgramAccesses(programId));
     	}
     
     	if (formBean.getTab().equals("Bed Check")) {
-    		formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(id), true, null));
-    		
+    		formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(programId), true));
     		request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
     		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
+    		
+    		request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
     	}
     
-    	logManager.log(getProviderNo(request), "view", "program", id, request.getRemoteAddr());
+    	logManager.log(getProviderNo(request), "view", "program", programId, request.getRemoteAddr());
     
-    	request.setAttribute("id", id);
+    	request.setAttribute("id", programId);
     
     	return mapping.findForward("view");
     }
@@ -148,7 +146,7 @@ public class ProgramManagerViewAction extends BaseAction {
 	public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	Integer programId = Integer.valueOf(request.getParameter("programId"));
 
-		request.setAttribute("reservedBeds", bedManager.getBedsByProgram(programId, true, null));
+		request.setAttribute("reservedBeds", bedManager.getBedsByProgram(programId, true));
 		
 		return mapping.findForward("viewBedCheckReport");
 	}

@@ -29,7 +29,7 @@ function unCheckNoAboriginal(form) {
 
 function unCheckOtherIssues(form) {
 	var otherCB = form.elements['intake.cboxOtherIssue'].checked;
-	if(otherCB == false) {
+	if(otherCB === false) {
 		form.elements['intake.cboxHealthCareIssueOther'].checked = false;
 		form.elements['intake.cboxSocialServiceIssueOther'].checked = false;
 		form.elements['intake.cboxBankingIssueOther'].checked = false;
@@ -43,7 +43,7 @@ function unCheckOtherIssues(form) {
 
 function unCheckReferralAgency(form) {
 	var otherCB = form.elements['intake.cboxReferralByOtherAgency'].checked;
-	if(otherCB == false) {
+	if(otherCB === false) {
 		form.elements['intake.cboxReferralByStreetNurseOther'].checked = false;
 		form.elements['intake.cboxReferralByStreetIDWorkerOther'].checked = false;
 		form.elements['intake.cboxReferralByStreetHealthReceptionOther'].checked = false;
@@ -53,7 +53,7 @@ function unCheckReferralAgency(form) {
 
 function unCheckReferralCriminal(form) {
 	var otherCB = form.elements['intake.cboxReferralByCriminalJusticeSystem'].checked;
-	if(otherCB == false) {
+	if(otherCB === false) {
 		form.elements['intake.cboxReferralByPolice'].checked = false;
 		form.elements['intake.cboxReferralByCourt'].checked = false;
 		form.elements['intake.cboxReferralByDetentionCenter'].checked = false;
@@ -63,7 +63,7 @@ function unCheckReferralCriminal(form) {
 }
 
 function checkBaseLegalStatusToOther(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}
 	var arrOther = form.elements['intake.radioBaseLegalStatus'];
@@ -84,7 +84,7 @@ function unCheckBaseLegalStatus(form) {
 
 
 function checkCurrentLegalStatusToOther(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}
 	var arrOther = form.elements['intake.radioCurrLegalStatus'];
@@ -106,7 +106,7 @@ function unCheckCurrentLegalStatus(form) {
 
 
 function checkAnxietyDisorder(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}
 	var arrOther = form.elements['intake.radioPrimaryDiagnosis'];
@@ -129,14 +129,14 @@ function uncheckPrimaryDiagnosisChildren(form) {
 }
 
 function check2ndAnxietyDisorder(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}	
 	form.elements['intake.cbox2ndAnxietyDisorder'].checked=true;
 }
 
 function uncheck2ndAnxietyDisorderChildren(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		form.elements['intake.cbox2ndAnxietyDisorderPSd'].checked = false;
 		form.elements['intake.cbox2ndAnxietyDisorderOCd'].checked = false;
 		form.elements['intake.cbox2ndAnxietyDisorderFromSubstance'].checked = false;
@@ -145,7 +145,7 @@ function uncheck2ndAnxietyDisorderChildren(input,form) {
 }
 
 function checkPrimaryIncomeOther(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}
 	var arrOther = form.elements['intake.radioBasePrimaryIncomeSource'];
@@ -166,14 +166,14 @@ function unClickPrimaryIncomeChildren(form) {
 }
 
 function check2ndIncomeOther(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}
 	form.elements['intake.cboxBase2ndIncomeOther'].checked=true;
 }
 
 function unCheck2ndIncomeOther(input,form) {
-	if(input.checked == true) {
+	if(input.checked === true) {
 		return;
 	}
 	form.elements['intake.cboxBase2ndIncomePanhandlingOther'].checked=false;
@@ -198,22 +198,15 @@ function clickCurrPrimaryIncomeOther(input,form) {
 }
 
 function uncheck2ndIncomeOtherChildren(input,form) {
-	if(input.checked == true) {
+	if(input.checked === true) {
 		return;
 	}
 	form.elements['intake.cbox2ndIncomePanhandlingOther'].checked=false;
 	form.elements['intake.cbox2ndIncomeInformalOther'].checked=false;
 }
 
-function check2ndIncomeOther(input,form) {
-	if(input.checked == false) {
-		return;
-	}
-	form.elements['intake.cboxBase2ndIncomeOther'].checked=true;
-}
-
 function checkCurrent2ndIncomeOther(input,form) {
-	if(input.checked == false) {
+	if(input.checked === false) {
 		return;
 	}
 	form.elements['intake.cbox2ndIncomeOther'].checked=true;

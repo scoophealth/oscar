@@ -40,6 +40,25 @@ public class BedDemographicHistorical extends BaseBedDemographicHistorical {
 
 	/* [CONSTRUCTOR MARKER END] */
 
+	private Bed bed;
+	private Demographic demographic;
+	
+	public void setBed(Bed bed) {
+	    this.bed = bed;
+    }
+	
+	public void setDemographic(Demographic demographic) {
+		this.demographic = demographic;
+	}
+
+	public String getBedName() {
+		return bed != null ? bed.getName() : null;
+	}
+	
+	public String getClientName() {
+		return demographic != null ? demographic.getFormattedName() : null;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);

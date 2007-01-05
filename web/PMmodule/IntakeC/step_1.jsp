@@ -391,7 +391,12 @@
 <table width="95%" align="center" border="1">
 	<tr>
 		<td align="center" class="style76">
-		<div align="center"><html:submit value="Save" onclick="this.form.method.value='save';" /> <html:cancel onclick="this.form.method.value='cancel';" /> <input type="button" value="Print" onclick="javascript:return onPrint();" />
+			<div align="center">
+				<html:submit value="Save" onclick="this.form.method.value='saveAndClose';" />
+				<html:submit value="Save Without Closing" onclick="this.form.method.value='saveWithoutClose';" />
+				<html:cancel onclick="this.form.method.value='cancel';" />
+				<input type="button" value="Print" onclick="javascript:return onPrint();" />
+			</div>
 		</td>
 	</tr>
 </table>

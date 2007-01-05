@@ -1,6 +1,9 @@
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Date;
+
 import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.BedDemographicHistorical;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
 
 /**
@@ -63,11 +66,20 @@ public interface BedDemographicDAO {
 	public BedDemographicStatus getBedDemographicStatus(Integer bedDemographicStatusId);
 
 	/**
-	 * Get BedDemographic statuses
+	 * Get BedDemographicStatuses
 	 * 
 	 * @return array of statutes
 	 */
 	public BedDemographicStatus[] getBedDemographicStatuses();
+
+	/**
+	 * Get BedDemographicHistoricals since given date
+	 * 
+	 * @param since
+	 *            given date
+	 * @return array of historicals
+	 */
+	public BedDemographicHistorical[] getBedDemographicHistoricals(Date since);
 
 	/**
 	 * Save BedDemographic relationship object

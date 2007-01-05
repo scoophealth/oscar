@@ -14,26 +14,28 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 
 	private IntakeCDao intakeDao;
 	private ClientDao clientDao;
-	
+
 	public void setIntakeCDao(IntakeCDao intakeDao) {
 		this.intakeDao = intakeDao;
 	}
-	
+
 	public void setClientDao(ClientDao dao) {
 		this.clientDao = dao;
 	}
-	
+
 	public Formintakec getCurrentForm(String demographicNo) {
-		if(demographicNo != null) {
+		if (demographicNo != null) {
 			return intakeDao.getCurrentForm(Integer.valueOf(demographicNo));
 		}
+		
 		return null;
 	}
 
 	public void saveNewIntake(Formintakec form) {
-		if(form.getDemographicNo() == null || form.getDemographicNo().longValue() == 0) {
-			//create demographic
+		if (form.getDemographicNo() == null || form.getDemographicNo().longValue() == 0) {
+			// create demographic
 			Demographic client = new Demographic();
+			
 			client.setFirstName(form.getClientFirstName());
 			client.setLastName(form.getClientSurname());
 			client.setAddress("");
@@ -49,23 +51,26 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			client.setPatientStatus("AC");
 			client.setPcnIndicator("");
 			client.setPin("");
-			if(form.getYearOfBirth().equals("")) {
+			
+			if (form.getYearOfBirth().equals("")) {
 				form.setYearOfBirth("0001");
 			}
-			if(form.getMonthOfBirth().equals("")) {
+			if (form.getMonthOfBirth().equals("")) {
 				form.setMonthOfBirth("01");
 			}
-			if(form.getDayOfBirth().equals("")){
+			if (form.getDayOfBirth().equals("")) {
 				form.setDayOfBirth("01");
 			}
+			
 			client.setYearOfBirth(form.getYearOfBirth());
 			client.setMonthOfBirth(form.getMonthOfBirth());
 			client.setDateOfBirth(form.getDayOfBirth());
 			client.setProviderNo(String.valueOf(form.getProviderNo()));
 			client.setFamilyDoctor("");
-			if(form.getRadioGender() != null && form.getRadioGender().length()>0) {
+			
+			if (form.getRadioGender() != null && form.getRadioGender().length() > 0) {
 				int gender = Integer.parseInt(form.getRadioGender());
-				switch(gender) {
+				switch (gender) {
 				case 1:
 					client.setSex("F");
 					break;
@@ -75,7 +80,8 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 				default:
 					client.setSex("");
 				}
-			}			
+			}
+			
 			client.setDateJoined(new Date());
 			client.setAddress("");
 			client.setCity("");
@@ -83,22 +89,25 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 			client.setHcType("");
 			client.setHin("");
 			client.setVer("");
-			
+
 			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.YEAR,2100);
+			cal.set(Calendar.YEAR, 2100);
 			client.setEffDate(new Date());
 			client.setEndDate(cal.getTime());
 			client.setHcRenewDate(cal.getTime());
-			
+
 			clientDao.saveClient(client);
-			form.setDemographicNo(new Long(client.getDemographicNo().longValue()));
+			
+			form.setDemographicNo(client.getDemographicNo().longValue());
 		}
+		
 		form.setFormEdited(new Date());
+		
 		intakeDao.saveForm(form);
 	}
 
-    public List getCohort(Date BeginDate, Date EndDate) {
-    	List clients = clientDao.getClients();
-        return intakeDao.getCohort(BeginDate, EndDate,clients);
-    }
+	public List getCohort(Date beginDate, Date endDate) {
+		return intakeDao.getCohort(beginDate, endDate, clientDao.getClients());
+	}
+	
 }

@@ -13,103 +13,104 @@ import org.oscarehr.PMmodule.model.Formintakec;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class IntakeCDaoHibernate extends HibernateDaoSupport implements IntakeCDao {
-	
+
 	private static Log log = LogFactory.getLog(IntakeCDaoHibernate.class);
 
 	public Formintakec getCurrentForm(Integer demographicNo) {
-		if(demographicNo == null || demographicNo.intValue() <= 0) {
+		if (demographicNo == null || demographicNo.intValue() <= 0) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		Formintakec result = null;
-		
-		List results = this.getHibernateTemplate().find("from Formintakec f where f.DemographicNo = ? order by FormEdited desc",demographicNo);
-		if(!results.isEmpty()) {
-			result =  (Formintakec)results.get(0);
+
+		List results = this.getHibernateTemplate().find("from Formintakec f where f.DemographicNo = ? order by FormEdited desc", demographicNo);
+		if (!results.isEmpty()) {
+			result = (Formintakec) results.get(0);
 		}
-		
-		if(log.isDebugEnabled()) {
-			log.debug("getCurrentForm: demographicNo=" + demographicNo + ",found=" + (result!=null));
+
+		if (log.isDebugEnabled()) {
+			log.debug("getCurrentForm: demographicNo=" + demographicNo + ",found=" + (result != null));
 		}
-		
+
 		return result;
 	}
 
 	public Formintakec getForm(Long id) {
-		if(id == null || id.intValue() <= 0) {
+		if (id == null || id.intValue() <= 0) {
 			throw new IllegalArgumentException();
 		}
-		
-		Formintakec result =  (Formintakec)this.getHibernateTemplate().get(Formintakec.class,id);
-		
-		if(log.isDebugEnabled()) {
-			log.debug("getForm: id=" + id + ",found=" + (result!=null));
+
+		Formintakec result = (Formintakec) this.getHibernateTemplate().get(Formintakec.class, id);
+
+		if (log.isDebugEnabled()) {
+			log.debug("getForm: id=" + id + ",found=" + (result != null));
 		}
-		
+
 		return result;
 	}
 
 	public void saveForm(Formintakec form) {
-		if(form == null) {
+		if (form == null) {
 			throw new IllegalArgumentException();
 		}
-		
-		this.getHibernateTemplate().save(form);
-		
-		if(log.isDebugEnabled()) {
+
+		getHibernateTemplate().saveOrUpdate(form);
+
+		if (log.isDebugEnabled()) {
 			log.debug("saveForm:" + form.getId());
 		}
 	}
 
 	public List getCohort(Date EndDate, Date BeginDate, List clients) {
-		if(BeginDate == null && EndDate == null) {
-			return new ArrayList();			
+		if (BeginDate == null && EndDate == null) {
+			return new ArrayList();
 		}
-		SimpleDateFormat formatter =new SimpleDateFormat("yyyy/MM/dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 		List results = new ArrayList();
-		
-		if(log.isDebugEnabled()) {
+
+		if (log.isDebugEnabled()) {
 			log.debug("Getting Cohort: " + BeginDate + " to " + EndDate);
 		}
-		
-		for(int x=0;x<clients.size();x++) {
-			Demographic client = (Demographic)clients.get(x);
-			if(client.getPatientStatus().equals("AC")) {
-				//get current intake
+
+		for (int x = 0; x < clients.size(); x++) {
+			Demographic client = (Demographic) clients.get(x);
+			if (client.getPatientStatus().equals("AC")) {
+				// get current intake
 				Formintakec intake = this.getCurrentForm(client.getDemographicNo());
-				//parse date
+				// parse date
 				Date admissionDate = null;
-				try {					
+				try {
 					admissionDate = formatter.parse(intake.getAdmissionDate());
-				}catch(Exception e) {}
-				if(admissionDate == null) {
+				} catch (Exception e) {
+				}
+				if (admissionDate == null) {
 					log.warn("invalid admission date for client #" + client.getDemographicNo());
 					continue;
 				}
-				//does it belong in this cohort?
-				if(BeginDate != null && EndDate != null) {
-					if(admissionDate.after(BeginDate) && admissionDate.before(EndDate)) {
+				// does it belong in this cohort?
+				if (BeginDate != null && EndDate != null) {
+					if (admissionDate.after(BeginDate) && admissionDate.before(EndDate)) {
 						log.debug("admissionDate=" + admissionDate);
-						//ok, add this client
+						// ok, add this client
 						Object[] ar = new Object[2];
 						ar[0] = intake;
 						ar[1] = client;
 						results.add(ar);
 					}
 				}
-				if(BeginDate == null && admissionDate.before(EndDate)) {
+				if (BeginDate == null && admissionDate.before(EndDate)) {
 					log.debug("admissionDate=" + admissionDate);
-					//ok, add this client
+					// ok, add this client
 					Object[] ar = new Object[2];
 					ar[0] = intake;
 					ar[1] = client;
 					results.add(ar);
-				}				
+				}
 			}
 		}
-		
+
 		log.info("getCohort: found " + results.size() + " results. (" + BeginDate + " - " + EndDate + ")");
-		
+
 		return results;
 	}
 }

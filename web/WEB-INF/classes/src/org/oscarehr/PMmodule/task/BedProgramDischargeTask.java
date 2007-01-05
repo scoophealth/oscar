@@ -1,6 +1,5 @@
 package org.oscarehr.PMmodule.task;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
@@ -21,22 +20,15 @@ public class BedProgramDischargeTask extends TimerTask {
 
 	private static final Log log = LogFactory.getLog(BedProgramDischargeTask.class);
 
-	private static final String DISCHARGE_TIME = "8:00 AM"; // TODO IC Bedlog bedProgram.getDischargeTime();
+	// TODO IC Bedlog bedProgram.getDischargeTime();
+	private static final String DISCHARGE_TIME = "8:00 AM";
+	private static final long PERIOD = 3600000;
 
-	private static final DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
-
-	private static final long period = 3600000;
-
-	
 	private ProgramManager programManager;
-
 	private BedManager bedManager;
-	
 	private BedDemographicManager bedDemographicManager;
-	
 	private AdmissionManager admissionManager;
 
-	
 	public void setProgramManager(ProgramManager programManager) {
 		this.programManager = programManager;
 	}
@@ -57,13 +49,13 @@ public class BedProgramDischargeTask extends TimerTask {
 		Program[] bedPrograms = programManager.getBedPrograms();
 
 		for (Program bedProgram : bedPrograms) {
-			Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME, timeFormat);
-			Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - period, timeFormat);
-			Date currentExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime(), timeFormat);
+			Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME);
+			Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - PERIOD);
+			Date currentExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime());
 			
 			// previousExecutionTime < dischargeTime <= currentExecutionTime
 			if (previousExecutionTime.before(dischargeTime) && (dischargeTime.equals(currentExecutionTime) || dischargeTime.before(currentExecutionTime))) {
-				Bed[] reservedBeds = bedManager.getBedsByProgram(bedProgram.getId(), true, null);
+				Bed[] reservedBeds = bedManager.getBedsByProgram(bedProgram.getId(), true);
 				
 				for (Bed reservedBed : reservedBeds) {
 					BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(reservedBed.getId());

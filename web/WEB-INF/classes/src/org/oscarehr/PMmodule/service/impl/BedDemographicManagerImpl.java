@@ -10,14 +10,17 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.BedDemographicHistorical;
+import org.oscarehr.PMmodule.model.BedDemographicHistoricalPK;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
+import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
 public class BedDemographicManagerImpl implements BedDemographicManager {
-	
+
 	private static final Log log = LogFactory.getLog(BedDemographicManagerImpl.class);
 
 	private BedDemographicDAO bedDemographicDAO;
@@ -51,10 +54,13 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 		this.programDAO = programDAO;
 	}
 
+	/**
+	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#demographicExists(java.lang.Integer)
+	 */
 	public boolean demographicExists(Integer bedId) {
-	    return bedDemographicDAO.demographicExists(bedId);
+		return bedDemographicDAO.demographicExists(bedId);
 	}
-	
+
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getBedDemographicByBed(java.lang.Integer)
 	 */
@@ -120,6 +126,22 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	}
 
 	/**
+	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#getExpiredReservations()
+	 */
+	public BedDemographicHistorical[] getExpiredReservations() {
+		BedDemographicHistorical[] bedDemographicHistoricals = bedDemographicDAO.getBedDemographicHistoricals(DateTimeFormatUtils.getToday());
+		
+		for (BedDemographicHistorical historical : bedDemographicHistoricals) {
+			BedDemographicHistoricalPK id = historical.getId();
+			
+			historical.setBed(bedDAO.getBed(id.getBedId()));
+			historical.setDemographic(demographicDAO.getClientByDemographicNo(id.getDemographicNo()));
+        }
+		
+		return bedDemographicHistoricals;
+	}
+
+	/**
 	 * @see org.oscarehr.PMmodule.service.BedDemographicManager#saveBedDemographic(org.oscarehr.PMmodule.model.BedDemographic)
 	 */
 	public void saveBedDemographic(BedDemographic bedDemographic) {
@@ -136,7 +158,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	 */
 	public void deleteBedDemographic(BedDemographic bedDemographic) {
 		bedDemographicDAO.deleteBedDemographic(bedDemographic);
-		
+
 		log.debug("deleteBedDemographic: " + bedDemographic);
 	}
 

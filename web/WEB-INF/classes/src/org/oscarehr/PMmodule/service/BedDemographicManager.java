@@ -1,14 +1,17 @@
 package org.oscarehr.PMmodule.service;
 
 import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.BedDemographicHistorical;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
 
 public interface BedDemographicManager {
 
-
 	/**
-	 * @param id
-	 * @return
+	 * Does demographic exist for given bedId
+	 * 
+	 * @param bedId
+	 *            given bedId
+	 * @return true, if demographic exists
 	 */
 	public boolean demographicExists(Integer bedId);
 
@@ -43,6 +46,13 @@ public interface BedDemographicManager {
 	 * @return array of BedDemographic statuses
 	 */
 	public BedDemographicStatus[] getBedDemographicStatuses();
+
+	/**
+	 * Get reservations that expired today
+	 * 
+	 * @return array of expired reservations
+	 */
+	public BedDemographicHistorical[] getExpiredReservations();
 
 	/**
 	 * Save BedDemographic relationship object

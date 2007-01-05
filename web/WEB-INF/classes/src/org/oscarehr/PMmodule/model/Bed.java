@@ -96,9 +96,13 @@ public class Bed extends BaseBed {
 	public Date getReservationStart() {
 		return bedDemographic != null ? bedDemographic.getReservationStart() : null;
 	}
-
+	
 	public Date getReservationEnd() {
 		return bedDemographic != null ? bedDemographic.getReservationEnd() : null;
+	}
+
+	public String getStrReservationEnd() {
+		return bedDemographic != null ? bedDemographic.getStrReservationEnd() : null;
 	}
 	
 	public Integer getCommunityProgramId() {
@@ -134,9 +138,9 @@ public class Bed extends BaseBed {
 		}
 	}
 
-	public void setReservationEnd(String reservationEnd) {
+	public void setStrReservationEnd(String strReservationEnd) {
 		if (bedDemographic != null) {
-			bedDemographic.setStrReservationEnd(reservationEnd);
+			bedDemographic.setStrReservationEnd(strReservationEnd);
 		}
 	}
 

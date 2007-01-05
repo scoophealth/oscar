@@ -8,6 +8,8 @@ import org.oscarehr.PMmodule.model.base.BaseProgram;
 public class Program extends BaseProgram {
 	
 	public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
+	
+	public static final String BED_TYPE = "Bed";
 	public static final String SERVICE_TYPE = "Service";
 	
 	/* [CONSTRUCTOR MARKER BEGIN] */
@@ -38,6 +40,10 @@ public class Program extends BaseProgram {
 		}
 		
 		return false;
+	}
+	
+	public boolean isBed() {
+		return BED_TYPE.equalsIgnoreCase(getType());
 	}
 	
 	public boolean isService() {

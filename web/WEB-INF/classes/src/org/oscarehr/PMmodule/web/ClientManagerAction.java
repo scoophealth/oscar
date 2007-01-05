@@ -576,7 +576,7 @@ public class ClientManagerAction extends BaseAction {
 			clientForm.set("bedDemographic", bedDemographic);
 			
 			// set unreserved beds
-			Bed[] unreservedBeds = bedManager.getBedsByProgram(bedProgramId, false, null);
+			Bed[] unreservedBeds = bedManager.getBedsByProgram(bedProgramId, false);
 			unreservedBeds = reservationExists ? (Bed[]) ArrayUtils.add(unreservedBeds, 0, reservedBed) : unreservedBeds;
 
 			clientForm.set("unreservedBeds", unreservedBeds);

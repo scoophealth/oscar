@@ -1,7 +1,6 @@
 package org.oscarehr.PMmodule.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.BedDAO;
@@ -52,9 +51,9 @@ public class BedManagerImpl implements BedManager {
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.service.BedManager#getBedsByProgram(java.lang.Integer, java.lang.Boolean, java.util.Date)
+	 * @see org.oscarehr.PMmodule.service.BedManager#getBedsByProgram(java.lang.Integer, java.lang.Boolean)
 	 */
-	public Bed[] getBedsByProgram(Integer programId, Boolean reserved, Date time) {
+	public Bed[] getBedsByProgram(Integer programId, Boolean reserved) {
 		if (programId == null) {
 			return new Bed[] {};
 		}
@@ -65,7 +64,7 @@ public class BedManagerImpl implements BedManager {
 			for (Bed bed : bedDAO.getBeds(room.getId(), Boolean.TRUE)) {
 				setAttributes(bed);
 
-				if (!filterBed(bed, reserved, time)) {
+				if (!filterBed(bed, reserved)) {
 					beds.add(bed);
 				}
 			}
@@ -141,13 +140,12 @@ public class BedManagerImpl implements BedManager {
     	throw new IllegalStateException("no default bed type");
     }
 
-	boolean filterBed(Bed bed, Boolean reserved, Date time) {
+	boolean filterBed(Bed bed, Boolean reserved) {
     	if (reserved == null) {
     		return false;
     	}
-    
-    	// TODO IC Bedlog - if time t not null, bed or historical bed exists with start < t and end > t
-    	return (time != null) ? reserved != bed.isReserved() && true : reserved != bed.isReserved();
+    	
+    	return reserved != bed.isReserved();
     }
 
 	void setAttributes(Bed bed) {

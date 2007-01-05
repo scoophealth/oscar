@@ -1,7 +1,5 @@
 package org.oscarehr.PMmodule.model;
 
-import java.text.DateFormat;
-
 import org.oscarehr.PMmodule.model.base.BaseBedCheckTime;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
@@ -9,8 +7,6 @@ public class BedCheckTime extends BaseBedCheckTime {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final DateFormat TIME_FORMAT = DateFormat.getTimeInstance(DateFormat.SHORT);
-
 	public static BedCheckTime create(Integer programId, String time) {
 		BedCheckTime bedCheckTime = new BedCheckTime();
 		bedCheckTime.setProgramId(programId);
@@ -42,12 +38,12 @@ public class BedCheckTime extends BaseBedCheckTime {
 	/* [CONSTRUCTOR MARKER END] */
 
 	public String getStrTime() {
-		return DateTimeFormatUtils.getStringFromTime(getTime(), TIME_FORMAT);
+		return DateTimeFormatUtils.getStringFromTime(getTime());
 	}
 
 	// property adapted for view
 	public void setStrTime(String strTime) {
-		setTime(DateTimeFormatUtils.getTimeFromString(strTime, TIME_FORMAT));
+		setTime(DateTimeFormatUtils.getTimeFromString(strTime));
 	}
 
 }

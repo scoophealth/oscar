@@ -1,7 +1,5 @@
 package org.oscarehr.PMmodule.model;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -11,8 +9,6 @@ import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 public class BedDemographic extends BaseBedDemographic {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static BedDemographic create(Integer demographicNo, BedDemographicStatus bedDemographicStatus, String providerNo) {
 		BedDemographicPK id = new BedDemographicPK();
@@ -24,10 +20,10 @@ public class BedDemographic extends BaseBedDemographic {
 		bedDemographic.setProviderNo(providerNo);
 
 		// set reservation start to today and reservation end to today + duration
-		Date today = DateTimeFormatUtils.getToday(DATE_FORMAT);
+		Date today = DateTimeFormatUtils.getToday();
 		
 		bedDemographic.setReservationStart(today);
-		bedDemographic.setReservationEnd(DateTimeFormatUtils.getFuture(today, bedDemographicStatus.getDuration(), DATE_FORMAT));
+		bedDemographic.setReservationEnd(DateTimeFormatUtils.getFuture(today, bedDemographicStatus.getDuration()));
 
 		return bedDemographic;
 	}
@@ -76,16 +72,16 @@ public class BedDemographic extends BaseBedDemographic {
     }
 	
 	public boolean isExpired() {
-		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd(), DATE_FORMAT);
-		Date today = DateTimeFormatUtils.getToday(DATE_FORMAT);
+		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd());
+		Date today = DateTimeFormatUtils.getToday();
 		
 		return end.before(today);
 	}
 	
 	public boolean isValidReservation() {
-		Date start = DateTimeFormatUtils.getDateFromDate(getReservationStart(), DATE_FORMAT);
-		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd(), DATE_FORMAT);
-		Date today = DateTimeFormatUtils.getToday(DATE_FORMAT);
+		Date start = DateTimeFormatUtils.getDateFromDate(getReservationStart());
+		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd());
+		Date today = DateTimeFormatUtils.getToday();
 
 		return start.before(end) && today.before(end);
 	}
@@ -156,18 +152,18 @@ public class BedDemographic extends BaseBedDemographic {
 
 	// property adapted for view
 	public String getStrReservationEnd() {
-		return DateTimeFormatUtils.getStringFromDate(getReservationEnd(), DATE_FORMAT);
+		return DateTimeFormatUtils.getStringFromDate(getReservationEnd());
 	}
 
 	// property adapted for view
 	public void setStrReservationEnd(String strReservationEnd) {
-		setReservationEnd(DateTimeFormatUtils.getDateFromString(strReservationEnd, DATE_FORMAT));
+		setReservationEnd(DateTimeFormatUtils.getDateFromString(strReservationEnd));
 	}
 
 	public void setReservationEnd(Integer duration) {
 		if (duration != null && duration > 0) {
-			Date startPlusDuration = DateTimeFormatUtils.getFuture(getReservationStart(), duration, DATE_FORMAT);
-			Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd(), DATE_FORMAT);
+			Date startPlusDuration = DateTimeFormatUtils.getFuture(getReservationStart(), duration);
+			Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd());
 			
 			// start + duration > end
 			if (startPlusDuration.after(end)) {

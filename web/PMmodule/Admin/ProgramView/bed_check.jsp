@@ -88,16 +88,16 @@
 				<display:column property="reservationStart" title="Since" />
 				<!-- reservationEnd is editable -->
 				<display:column title="Until">
-					<input type="text" name="reservedBeds[<c:out value="${reservedBed_rowNum - 1}" />].reservationEnd" id="reservationEnd_field" readonly="readonly" value="<c:out value="${reservedBed.reservationEnd}"/>" />
+					<input type="text" name="reservedBeds[<c:out value="${reservedBed_rowNum - 1}" />].strReservationEnd" id="strReservationEnd_field" readonly="readonly" value="<c:out value="${reservedBed.strReservationEnd}"/>" />
 					
-					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="reservationEnd_field-button" alt="Until Calendar" title="Until Calendar" />
+					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="strReservationEnd_field-button" alt="Until Calendar" title="Until Calendar" />
 					
 					<script type="text/javascript">
 						Calendar.setup(
 							{
-								inputField :  'reservationEnd_field',
+								inputField :  'strReservationEnd_field',
 								ifFormat :    '%Y-%m-%d',
-								button :      'reservationEnd_field-button',
+								button :      'strReservationEnd_field-button',
 								align :       'cr',
 								singleClick : true,
 								firstDay :    1
@@ -136,13 +136,13 @@
 			<div class="tabs">
 				<table cellpadding="3" cellspacing="0" border="0">
 					<tr>
-						<th>Unreserved Beds</th>
+						<th>Todays' Expired Reservations</th>
 					</tr>
 				</table>
 			</div>
-			<display:table class="simple" name="unreservedBeds" uid="unreservedBed" requestURI="/PMmodule/ProgramManagerView.do">
-				<display:column title="Client"></display:column>
-				<display:column title="Program"></display:column>
+			<display:table class="simple" name="expiredReservations" uid="expiredReservation">
+				<display:column property="bedName"></display:column>
+				<display:column property="clientName"></display:column>
 			</display:table>
 		</td>
 	</tr>
