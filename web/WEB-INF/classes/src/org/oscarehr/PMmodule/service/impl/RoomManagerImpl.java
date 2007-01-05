@@ -3,7 +3,6 @@ package org.oscarehr.PMmodule.service.impl;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
-import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomType;
 import org.oscarehr.PMmodule.service.RoomManager;
@@ -101,15 +100,13 @@ public class RoomManagerImpl implements RoomManager {
 	void setAttributes(Room room) {
 		// room type is mandatory
 		Integer roomTypeId = room.getRoomTypeId();
-		RoomType roomType = roomDAO.getRoomType(roomTypeId);
-		room.setRoomTypeName(roomType.getName());
+		room.setRoomType(roomDAO.getRoomType(roomTypeId));
 
 		// program is optional
 		Integer programId = room.getProgramId();
 
 		if (programId != null) {
-			Program program = programDAO.getProgram(programId);
-			room.setProgramName(program.getName());
+			room.setProgram(programDAO.getProgram(programId));
 		}
 	}
 

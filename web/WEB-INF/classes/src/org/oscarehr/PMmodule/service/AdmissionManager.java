@@ -12,21 +12,21 @@ import org.oscarehr.PMmodule.model.Program;
 
 public interface AdmissionManager  {
 	
-	public Admission getAdmission(String programId, String demographicNo);
+	public Admission getAdmission(String programId, Integer demographicNo);
 	
-	public Admission getCurrentAdmission(String programId, String demographicNo);
+	public Admission getCurrentAdmission(String programId, Integer demographicNo);
 	
 	public List getAdmissions();
 
-	public List getAdmissions(String demographicNo);
+	public List getAdmissions(Integer demographicNo);
 		
-	public List getCurrentAdmissions(String demographicNo);
+	public List getCurrentAdmissions(Integer demographicNo);
 
-	public Admission getCurrentBedProgramAdmission(String demographicNo);
+	public Admission getCurrentBedProgramAdmission(Integer demographicNo);
 
-	public List getCurrentServiceProgramAdmission(String demographicNo);
+	public List getCurrentServiceProgramAdmission(Integer demographicNo);
 	
-	public Admission getCurrentCommunityProgramAdmission(String demographicNo);
+	public Admission getCurrentCommunityProgramAdmission(Integer demographicNo);
 	
 	public List getCurrentAdmissionsByProgramId(String programId);
 	
@@ -34,17 +34,17 @@ public interface AdmissionManager  {
 	
 	public void saveAdmission(Admission admission);
 	
-	public void processAdmission(String demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes) throws ProgramFullException,AdmissionException;
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes) throws ProgramFullException,AdmissionException;
 
-	public void processAdmission(String demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException,AdmissionException;
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException,AdmissionException;
 
-	public void processAdmission(String demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission) throws ProgramFullException, AdmissionException;
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission) throws ProgramFullException, AdmissionException;
 
-	public void processInitialAdmission(String demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException,AlreadyAdmittedException;
+	public void processInitialAdmission(Integer demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException,AlreadyAdmittedException;
 
-	public Admission getTemporaryAdmission(String demographicNo);
+	public Admission getTemporaryAdmission(Integer demographicNo);
 	
-	public List getCurrentTemporaryProgramAdmission(String demographicNo);
+	public List getCurrentTemporaryProgramAdmission(Integer demographicNo);
 
 	public List search(AdmissionSearchBean searchBean);
 	

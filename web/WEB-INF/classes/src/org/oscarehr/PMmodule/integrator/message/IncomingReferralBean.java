@@ -112,7 +112,7 @@ public class IncomingReferralBean implements MessageListener {
 				
 				
 				//check if client is admitted to this program
-				Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()),String.valueOf(client.getDemographicNo()));
+				Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), client.getDemographicNo());
 				if(currentAdmission != null) {
 					log.debug("client already admitted to this program!");
 					log.debug("need to reject this referral, and send the message back");

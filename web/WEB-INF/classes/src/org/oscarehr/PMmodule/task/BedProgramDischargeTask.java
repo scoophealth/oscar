@@ -71,7 +71,6 @@ public class BedProgramDischargeTask extends TimerTask {
 					if (bedDemographic.isExpired()) {
 						try {
 							admissionManager.processDischargeToCommunity(Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), Provider.SYSTEM_PROVIDER_NO, "bed reservation ended - automatically discharged");
-							bedDemographicManager.deleteBedDemographic(bedDemographic);
 						} catch (AdmissionException e) {
 							log.error("Error discharging to community", e);
 						}

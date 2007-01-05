@@ -54,18 +54,27 @@ public class BedDemographic extends BaseBedDemographic {
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	private String statusName;
-
-	private String providerName;
-
-	private String bedName;
-
-	private String demographicName;
-
-	private String roomName;
-
-	private String programName;
-
+	private BedDemographicStatus bedDemographicStatus;
+	private Provider provider;
+	private Bed bed;
+	private Demographic demographic;
+	
+	public void setBedDemographicStatus(BedDemographicStatus bedDemographicStatus) {
+	    this.bedDemographicStatus = bedDemographicStatus;
+    }
+	
+	public void setProvider(Provider provider) {
+	    this.provider = provider;
+    }
+	
+	public void setBed(Bed bed) {
+	    this.bed = bed;
+    }
+	
+	public void setDemographic(Demographic demographic) {
+	    this.demographic = demographic;
+    }
+	
 	public boolean isExpired() {
 		Date end = DateTimeFormatUtils.getDateFromDate(getReservationEnd(), DATE_FORMAT);
 		Date today = DateTimeFormatUtils.getToday(DATE_FORMAT);
@@ -82,51 +91,57 @@ public class BedDemographic extends BaseBedDemographic {
 	}
 
 	public String getStatusName() {
-		return statusName;
+		return bedDemographicStatus.getName();
 	}
 
 	public void setStatusName(String statusName) {
-		this.statusName = statusName;
+		// immutable
+		System.out.println("BedDemographic.setStatusName()");
 	}
 
 	public String getProviderName() {
-		return providerName;
+		return provider.getFormattedName();
 	}
 
 	public void setProviderName(String providerName) {
-		this.providerName = providerName;
+		// immutable
+		System.out.println("BedDemographic.setProviderName()");
 	}
 
 	public String getBedName() {
-		return bedName;
+		return bed != null ? bed.getName() : null;
 	}
 
 	public void setBedName(String bedName) {
-		this.bedName = bedName;
+		// immutable
+		System.out.println("BedDemographic.setBedName()");
 	}
 
 	public String getDemographicName() {
-		return demographicName;
+		return demographic != null ? demographic.getFormattedName() : null;
 	}
 
 	public void setDemographicName(String demographicName) {
-		this.demographicName = demographicName;
+		// immutable
+		System.out.println("BedDemographic.setDemographicName()");
 	}
 
 	public String getRoomName() {
-		return roomName;
+		return bed != null ? bed.getRoomName() : null;
 	}
 
 	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+		// immutable
+		System.out.println("BedDemographic.setRoomName()");
 	}
 
 	public String getProgramName() {
-		return programName;
+		return bed != null ? bed.getProgramName() : null;
 	}
 
 	public void setProgramName(String programName) {
-		this.programName = programName;
+		// immutable
+		System.out.println("BedDemographic.setProgramName()");
 	}
 
 	// property adapted for view

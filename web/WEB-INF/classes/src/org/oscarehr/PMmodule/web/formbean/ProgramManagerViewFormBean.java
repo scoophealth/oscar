@@ -1,6 +1,7 @@
 package org.oscarehr.PMmodule.web.formbean;
 
 import org.apache.struts.action.ActionForm;
+import org.oscarehr.PMmodule.model.Bed;
 
 public class ProgramManagerViewFormBean extends ActionForm {
 
@@ -9,9 +10,9 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public static final String[] tabs = { "General", "Staff", "Function User", "Teams", "Clients", "Queue", "Access", "Bed Check" };
 
 	private String tab;
-	private String bedId;
 	private String clientId;
 	private String queueId;
+	private Bed[] reservedBeds;
 
 	/**
 	 * @return Returns the tab.
@@ -19,22 +20,7 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	public String getTab() {
 		return tab;
 	}
-
-	public String getBedId() {
-		return bedId;
-	}
-
-	/**
-	 * @return Returns the clientId.
-	 */
-	public String getClientId() {
-		return clientId;
-	}
-
-	public String getQueueId() {
-		return queueId;
-	}
-
+	
 	/**
 	 * @param tab
 	 *            The tab to set.
@@ -43,10 +29,12 @@ public class ProgramManagerViewFormBean extends ActionForm {
 		this.tab = tab;
 	}
 
-	public void setBedId(String bedId) {
-		this.bedId = bedId;
+	/**
+	 * @return Returns the clientId.
+	 */
+	public String getClientId() {
+		return clientId;
 	}
-
 	/**
 	 * @param clientId
 	 *            The clientId to set.
@@ -55,8 +43,20 @@ public class ProgramManagerViewFormBean extends ActionForm {
 		this.clientId = clientId;
 	}
 
+	public String getQueueId() {
+		return queueId;
+	}
+
 	public void setQueueId(String queueId) {
 		this.queueId = queueId;
 	}
+
+	public Bed[] getReservedBeds() {
+    	return reservedBeds;
+    }
+
+	public void setReservedBeds(Bed[] reservedBeds) {
+    	this.reservedBeds = reservedBeds;
+    }
 
 }

@@ -19,6 +19,7 @@ import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
@@ -111,9 +112,7 @@ public class ProgramManagerViewAction extends BaseAction {
     			}
     		}
     
-    		List communityPrograms = programManager.getCommunityPrograms();
-    
-    		request.setAttribute("communityPrograms", communityPrograms);
+    		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
     		request.setAttribute("programs", batchAdmissionPrograms);
     		request.setAttribute("allowBatchDischarge", new Boolean(program.isAllowBatchDischarge()));
     	}
@@ -123,7 +122,10 @@ public class ProgramManagerViewAction extends BaseAction {
     	}
     
     	if (formBean.getTab().equals("Bed Check")) {
-    		request.setAttribute("reservedBeds", bedManager.getBedsByProgram(Integer.valueOf(id), true, null));
+    		formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(id), true, null));
+    		
+    		request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
+    		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
     	}
     
     	logManager.log(getProviderNo(request), "view", "program", id, request.getRemoteAddr());
@@ -132,6 +134,16 @@ public class ProgramManagerViewAction extends BaseAction {
     
     	return mapping.findForward("view");
     }
+	
+	public ActionForward viewBedReservationChangeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		Integer reservedBedId = Integer.valueOf(request.getParameter("reservedBedId"));
+		System.err.println(reservedBedId);
+		
+		// BedDemographicChange[] bedDemographicChanges = bedDemographicManager.getBedDemographicChanges(reservedBedId)
+		request.setAttribute("bedReservationChanges", null);
+		
+		return mapping.findForward("viewBedReservationChangeReport");
+	}
 	
 	public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	Integer programId = Integer.valueOf(request.getParameter("programId"));
@@ -151,7 +163,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		Program fullProgram = programManager.getProgram(String.valueOf(programId));
 
 		try {
-			admissionManager.processAdmission(clientId, getProviderNo(request), fullProgram, request.getParameter("admission.dischargeNotes"), request.getParameter("admission.admissionNotes"), queue.isTemporaryAdmission());
+			admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, request.getParameter("admission.dischargeNotes"), request.getParameter("admission.admissionNotes"), queue.isTemporaryAdmission());
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
 			saveMessages(request, messages);
@@ -270,43 +282,67 @@ public class ProgramManagerViewAction extends BaseAction {
 
 		Program program = programManager.getProgram(String.valueOf(programId));
 		ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
+		
 		/*
 		 * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
 		 */
 		if (program.getType().equalsIgnoreCase("bed") && queue != null && !queue.isTemporaryAdmission()) {
-			Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(clientId);
+			Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(clientId));
 			if (currentAdmission != null) {
 				log.warn("client already in a bed program..doing a discharge/admit if proceeding");
 				request.setAttribute("current_admission", currentAdmission);
 				request.setAttribute("current_program", programManager.getProgram(String.valueOf(currentAdmission.getProgramId())));
 			}
 		}
-		request.setAttribute("do_admit", new Boolean(true));
+		request.setAttribute("do_admit", Boolean.TRUE);
 
 		return view(mapping, form, request, response);
 	}
 
 	public ActionForward select_client_for_reject(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("do_reject", new Boolean(true));
+		request.setAttribute("do_reject", Boolean.TRUE);
 
 		return view(mapping, form, request, response);
 	}
 	
-	public ActionForward unreserveBed(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
-		Integer bedId = Integer.valueOf(formBean.getBedId());
+	public ActionForward saveReservedBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		ProgramManagerViewFormBean programManagerViewFormBean = (ProgramManagerViewFormBean) form;
 		
-		try {
-			BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(bedId);
-			admissionManager.processDischargeToCommunity(Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged");
-			bedDemographicManager.deleteBedDemographic(bedDemographic);
-		} catch (AdmissionException e) {
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
-			saveMessages(request, messages);
-		}
+		Bed[] reservedBeds = programManagerViewFormBean.getReservedBeds();
 		
-		return view(mapping, form, request, response);
+		for (int i = 0; i < reservedBeds.length; i++) {
+			Bed reservedBed = reservedBeds[i];
+	        
+			// detect check box false
+			if (request.getParameter("reservedBeds[" + i + "].latePass") == null) {
+				reservedBed.setLatePass(false);
+	        }
+	        
+			// save bed
+	        bedManager.saveBed(reservedBed);
+	        
+			BedDemographic bedDemographic = reservedBed.getBedDemographic();
+			
+			if (bedDemographic != null) {
+				// save bed demographic
+				bedDemographicManager.saveBedDemographic(bedDemographic);
+				
+				Integer communityProgramId = reservedBed.getCommunityProgramId();
+				
+				if (communityProgramId > 0) {
+					try {
+						// discharge to community program
+						admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged");
+					} catch (AdmissionException e) {
+						ActionMessages messages = new ActionMessages();
+						messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
+						saveMessages(request, messages);
+					}
+				}
+			}
+        }
+		
+		return view(mapping, form, request, response);	
 	}
 	
 }

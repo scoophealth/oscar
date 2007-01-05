@@ -32,19 +32,12 @@ public class ProgramManagerImpl implements ProgramManager {
 	private static Log log = LogFactory.getLog(ProgramManagerImpl.class);
 
 	private ProgramDao dao;
-
 	private ProgramProviderDAO programProviderDAO;
-
 	private ProgramFunctionalUserDAO programFunctionalUserDAO;
-
 	private ProgramTeamDAO programTeamDAO;
-
 	private ProgramAccessDAO programAccessDAO;
-
 	private AdmissionDao admissionDAO;
-
 	private IntegratorManager integratorManager;
-
 	private DefaultRoleAccessDAO defaultRoleAccessDAO;
 
 	public void setIntegratorManager(IntegratorManager mgr) {
@@ -105,6 +98,7 @@ public class ProgramManagerImpl implements ProgramManager {
 				log.error(e);
 			}
 		}
+		
 		return getProgram(programId);
 	}
 
@@ -298,10 +292,8 @@ public class ProgramManagerImpl implements ProgramManager {
 		return programDomain;
 	}
 
-	public List getCommunityPrograms() {
-		Program p = new Program();
-		p.setType("community");
-		return dao.search(p);
+	public Program[] getCommunityPrograms() {
+		return dao.getCommunityPrograms();
 	}
 
 	public List getDefaultRoleAccesses() {

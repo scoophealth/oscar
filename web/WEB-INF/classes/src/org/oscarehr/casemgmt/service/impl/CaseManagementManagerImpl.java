@@ -812,7 +812,7 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 		
 		List providerPrograms = roleProgramAccessDAO.getProgramProviderByProviderNo(providerNo);
 
-		List allAdmissions = this.admissionManager.getAdmissions(demographicNo);
+		List allAdmissions = this.admissionManager.getAdmissions(Integer.valueOf(demographicNo));
 		
 		for(int x=0;x<providerPrograms.size();x++) {
 			ProgramProvider pp = (ProgramProvider)providerPrograms.get(x);

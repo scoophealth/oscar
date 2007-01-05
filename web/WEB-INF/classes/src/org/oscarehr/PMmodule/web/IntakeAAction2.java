@@ -128,7 +128,7 @@ public class IntakeAAction2 extends BaseAction {
 		}
 		
 		if(client != null) {
-			Admission a = admissionManager.getCurrentCommunityProgramAdmission(String.valueOf(client.getDemographicNo()));
+			Admission a = admissionManager.getCurrentCommunityProgramAdmission(client.getDemographicNo());
 			if(a != null) {
 				request.setAttribute("in_community_program", new Boolean(true));
 			}
@@ -177,7 +177,7 @@ public class IntakeAAction2 extends BaseAction {
 			
 			if(admissionProgramId == 0) {
 				//holding tank!
-				if(admissionManager.getCurrentBedProgramAdmission(String.valueOf(intakea.getDemographicNo())) == null) {
+				if(admissionManager.getCurrentBedProgramAdmission(intakea.getDemographicNo().intValue()) == null) {
 					admissionProgram = programManager.getHoldingTankProgram();
 				}
 			} else {
@@ -186,7 +186,7 @@ public class IntakeAAction2 extends BaseAction {
 			
 			if(admissionProgram != null) {
 				try {
-					admissionManager.processInitialAdmission(String.valueOf(intakea.getDemographicNo()),getProviderNo(request),admissionProgram,"initial admission", null);
+					admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(),getProviderNo(request),admissionProgram,"initial admission", null);
 				}catch(Exception e) {
 					log.warn(e);
 				}
@@ -201,12 +201,12 @@ public class IntakeAAction2 extends BaseAction {
 			long admissionProgramId =formBean.getAdmissionProgram();		
 			
 			if(admissionProgramId != 0) {
-				Admission commAdmission = admissionManager.getCurrentCommunityProgramAdmission(String.valueOf(intakea.getDemographicNo()));
+				Admission commAdmission = admissionManager.getCurrentCommunityProgramAdmission(intakea.getDemographicNo().intValue());
 				Program admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
 				
 				if(commAdmission != null && admissionProgram != null && !admissionProgram.isFull()) {
 					try {
-						admissionManager.processAdmission(String.valueOf(intakea.getDemographicNo()), getProviderNo(request), admissionProgram, null, "Intake Based Admission");						
+						admissionManager.processAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), admissionProgram, null, "Intake Based Admission");						
 					}catch(Exception e) {
 						ActionMessages messages = new ActionMessages();
 						messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
@@ -226,7 +226,7 @@ public class IntakeAAction2 extends BaseAction {
 				Program serviceProgram =  programManager.getProgram(servicePrograms[x]);
 				if(serviceProgram != null) {
 					try {
-						admissionManager.processInitialAdmission(String.valueOf(intakea.getDemographicNo()),getProviderNo(request),serviceProgram,"initial admission",null);						
+						admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(),getProviderNo(request),serviceProgram,"initial admission",null);						
 					}catch(Exception e) {
 						log.warn(e);
 					}

@@ -98,7 +98,7 @@ public class ReceptionistReportAction extends DispatchAction {
 		String dob = client.getFormattedDob();
 		String healthCard = client.getHin() + " " + client.getVer();
 		
-		List admissions = admissionManager.getCurrentAdmissions(clientId);
+		List admissions = admissionManager.getCurrentAdmissions(Integer.valueOf(clientId));
 		for(Iterator iter = admissions.iterator();iter.hasNext();) {
 			Admission admission = (Admission)iter.next();
 			admission.setProgram(programManager.getProgram(String.valueOf(admission.getProgramId())));

@@ -103,5 +103,5 @@ public interface ProgramManager
 	
 	public List getProgramDomain(String providerNo);
 	
-	public List getCommunityPrograms();
+	public Program[] getCommunityPrograms();
 }

@@ -24,8 +24,6 @@
 			<ref bean="chartManagerT"/>
 		</property>
 	</bean>
-	
-	
 	<bean name="/CustomFilter" class="org.caisi.tickler.web.CustomFilterAction" singleton="false">
 		<property name="ticklerManager">
 			<ref bean="ticklerManagerT"/>
@@ -37,13 +35,11 @@
 			<ref bean="providerManager"/>
 		</property>
 	</bean>
-
 	<bean name="/UnreadTickler" class="org.caisi.tickler.web.UnreadTicklerAction" singleton="false">
 		<property name="ticklerManager">
 			<ref bean="ticklerManagerT"/>
 		</property>
 	</bean>
-	
 	<bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false">
 		<property name="systemMessageManager">
 			<ref bean="SystemMessageManager"/>
@@ -58,7 +54,6 @@
 			<ref bean="CaisiRoleManager"/>
 		</property>
 	</bean>
-
 	<bean
 		name="/PMmodule/ClientSearch2"
 		class="org.oscarehr.PMmodule.web.ClientSearchAction2"

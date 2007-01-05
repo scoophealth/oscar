@@ -11,9 +11,7 @@ public class Bed extends BaseBed {
 	private static final long serialVersionUID = 1L;
 
 	private static final Integer DEFAULT_ROOM_ID = 1;
-
-	private static final String DEFAULT_NAME = "new bed";
-
+	private static final String DEFAULT_NAME = "";
 	private static final boolean DEFAULT_ACTIVE = true;
 
 	public static Bed create(BedType bedType) {
@@ -49,89 +47,103 @@ public class Bed extends BaseBed {
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	private String bedTypeName;
+	private BedType bedType;
+	private Room room;
+	private ProgramTeam team;
+	private BedDemographic bedDemographic;
+	private Integer communityProgramId;
 
-	private String roomName;
-
-	private String teamName;
+	public boolean isReserved() {
+		return getReservationStart() != null && getReservationEnd() != null;
+	}
 	
-	private String demographicName;
-	
-	private String statusName;
-	
-	private boolean latePass;
-	
-	private Date reservationStart;
-
-	private Date reservationEnd;
-
-	public String getBedTypeName() {
-		return bedTypeName;
+	public boolean isLatePass() {
+		return bedDemographic != null ? bedDemographic.isLatePass() : false;
 	}
 
-	public void setBedTypeName(String bedTypeName) {
-		this.bedTypeName = bedTypeName;
+	public String getBedTypeName() {
+		return bedType.getName();
 	}
 
 	public String getRoomName() {
-		return roomName;
+		return room.getName();
 	}
 
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
+	public String getProgramName() {
+		return room.getProgramName();
 	}
 
 	public String getTeamName() {
-		return teamName;
+		return team != null ? team.getName() : null;
 	}
 
-	public void setTeamName(String teamName) {
-		this.teamName = teamName;
-	}
+	public BedDemographic getBedDemographic() {
+	    return bedDemographic;
+    }
 	
 	public String getDemographicName() {
-	    return demographicName;
-    }
-	
-	public void setDemographicName(String clientName) {
-	    this.demographicName = clientName;
-    }
+		return bedDemographic != null ? bedDemographic.getDemographicName() : null;
+	}
+
+	public Integer getStatusId() {
+		return bedDemographic != null ? bedDemographic.getBedDemographicStatusId() : null;
+	}
 	
 	public String getStatusName() {
-	    return statusName;
-    }
-	
-	public void setStatusName(String statusName) {
-	    this.statusName = statusName;
-    }
-	
-	public boolean isLatePass() {
-	    return latePass;
-    }
-	
-	public void setLatePass(boolean latePass) {
-	    this.latePass = latePass;
-    }
-	
+		return bedDemographic != null ? bedDemographic.getStatusName() : null;
+	}
+
 	public Date getReservationStart() {
-	    return reservationStart;
-    }
-	
-	public void setReservationStart(Date reservationStart) {
-	    this.reservationStart = reservationStart;
-    }
+		return bedDemographic != null ? bedDemographic.getReservationStart() : null;
+	}
 
 	public Date getReservationEnd() {
-		return reservationEnd;
+		return bedDemographic != null ? bedDemographic.getReservationEnd() : null;
+	}
+	
+	public Integer getCommunityProgramId() {
+		return communityProgramId;
+	}
+	
+	
+	public void setBedType(BedType bedType) {
+		this.bedType = bedType;
 	}
 
-	public void setReservationEnd(Date reservationEnd) {
-		this.reservationEnd = reservationEnd;
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 
-	public boolean isReserved() {
-		return reservationStart != null && reservationEnd != null;
+	public void setTeam(ProgramTeam team) {
+		this.team = team;
 	}
+
+	public void setBedDemographic(BedDemographic bedDemographic) {
+		this.bedDemographic = bedDemographic;
+	}
+
+	public void setStatusId(Integer statusId) {
+		if (bedDemographic != null) {
+			bedDemographic.setBedDemographicStatusId(statusId);
+		}
+	}
+
+	public void setLatePass(boolean latePass) {
+		if (bedDemographic != null) {
+			bedDemographic.setLatePass(latePass);
+		}
+	}
+
+	public void setReservationEnd(String reservationEnd) {
+		if (bedDemographic != null) {
+			bedDemographic.setStrReservationEnd(reservationEnd);
+		}
+	}
+
+	public void setCommunityProgramId(Integer communityProgramId) {
+		this.communityProgramId = communityProgramId;
+	}
+	
 	
 	@Override
 	public String toString() {

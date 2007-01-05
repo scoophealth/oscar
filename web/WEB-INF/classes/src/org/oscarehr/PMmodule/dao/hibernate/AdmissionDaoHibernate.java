@@ -272,7 +272,7 @@ public class AdmissionDaoHibernate extends HibernateDaoSupport implements Admiss
 		return results;
 	}
 
-	public Admission getTemporaryAdmission(Long demographicNo) {
+	public Admission getTemporaryAdmission(Integer demographicNo) {
 		Admission result = null;
 		if (demographicNo == null || demographicNo.intValue() <= 0) {
 			throw new IllegalArgumentException();

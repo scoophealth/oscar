@@ -152,9 +152,7 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 	}
 
 	public List getServicePrograms() {
-		String queryStr = "FROM Program p WHERE p.Type='Service' ORDER BY  p.Name ";
-
-		List rs = getHibernateTemplate().find(queryStr);
+		List rs = getHibernateTemplate().find("FROM Program p WHERE p.Type = 'Service' ORDER BY p.Name");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getServicePrograms: # of programs: " + rs.size());
@@ -162,8 +160,17 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 
 		return rs;
 	}
+	
+	@SuppressWarnings("unchecked")
+    public Program[] getCommunityPrograms() {
+		List list = getHibernateTemplate().find("FROM Program p WHERE p.Type = 'Community' ORDER BY p.Name");
 
-
+		if (log.isDebugEnabled()) {
+			log.debug("getCommunityPrograms: # of programs: " + list.size());
+		}
+		
+		return (Program[]) list.toArray(new Program[list.size()]);
+	}
 
 	public void saveProgram(Program program) {
 		if (program == null) {

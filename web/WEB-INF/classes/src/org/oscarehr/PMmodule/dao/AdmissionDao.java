@@ -32,7 +32,7 @@ public interface AdmissionDao {
 
 	public List getAdmissionsInTeam(Integer programId, Integer teamId);
 
-	public Admission getTemporaryAdmission(Long demographicNo);
+	public Admission getTemporaryAdmission(Integer demographicNo);
 
 	public List search(AdmissionSearchBean searchBean);
 	

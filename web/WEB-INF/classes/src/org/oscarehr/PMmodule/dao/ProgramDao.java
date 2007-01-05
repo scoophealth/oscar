@@ -24,6 +24,8 @@ public interface ProgramDao {
 
 	public List getServicePrograms();
 
+	public Program[] getCommunityPrograms();
+	
 	public void saveProgram(Program program);
 
 	public void removeProgram(Integer programId);

@@ -10,7 +10,6 @@
 	
 	<script>
 		function clickTab(name) {
-			document.programManagerViewForm.method.value='view';
 			document.programManagerViewForm.tab.value=name;
 			document.programManagerViewForm.submit();
 		}

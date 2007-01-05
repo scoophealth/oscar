@@ -7,7 +7,7 @@
 	<head>
 		<html:base />
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Bed Check Report</title>
+		<title>Bed Reservation Change Report</title>
 		<style type="text/css">
 			@import "<html:rewrite page="/css/displaytag.css" />";
 		</style>
@@ -24,17 +24,12 @@
 			</tr>
 		</table>
 		<br />
-		<display:table class="simple" name="reservedBeds" uid="bed">
-			<display:column property="name" title="Bed" />
-			<display:column property="roomName" title="Room" />
-			<display:column property="demographicName" title="Client" />
-			<display:column property="statusName" title="Status" />
-			<display:column property="latePass" title="Late Pass" />
-			<display:column property="reservationStart" title="Since" format="{0, date, yyyy-MM-dd}"/>
-			<display:column property="reservationEnd" title="Until" format="{0, date, yyyy-MM-dd}"/>
-			<display:column title="Not Present">
-				<input type="checkbox" />
-			</display:column>
+		<display:table class="simple" name="bedReservationChanges" uid="bedReservationChange">
+			<display:column property="who" title="Who" />
+			<display:column property="when" title="When" />
+			<display:column property="property" title="Property" />
+			<display:column property="old" title="Old" />
+			<display:column property="new" title="New" />
 		</display:table>
 </body>
 </html:html>

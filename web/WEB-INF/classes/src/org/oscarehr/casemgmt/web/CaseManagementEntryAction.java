@@ -280,7 +280,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
        	note.setReporter_caisi_role(role);	
 
 		try {
-			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(),note.getDemographic_no())).getTeamId());
+			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
 		}catch(Throwable e) {
 			log.error(e);
 			team = "0";

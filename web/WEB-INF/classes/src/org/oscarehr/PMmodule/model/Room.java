@@ -7,8 +7,7 @@ public class Room extends BaseRoom {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String DEFAULT_NAME = "new room";
-
+	private static final String DEFAULT_NAME = "";
 	private static final boolean DEFAULT_ACTIVE = true;
 
 	public static final Room create(RoomType roomType) {
@@ -42,24 +41,33 @@ public class Room extends BaseRoom {
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	private String roomTypeName;
-
-	private String programName;
-
+	private RoomType roomType;
+	private Program program;
+	
+	public void setRoomType(RoomType roomType) {
+	    this.roomType = roomType;
+    }
+	
+	public void setProgram(Program program) {
+	    this.program = program;
+    }
+	
 	public String getRoomTypeName() {
-		return roomTypeName;
+		return roomType.getName();
 	}
 
 	public void setRoomTypeName(String roomTypeName) {
-		this.roomTypeName = roomTypeName;
+		roomType.setName(roomTypeName);
 	}
 
 	public String getProgramName() {
-		return programName;
+		return program != null ? program.getName() : null;
 	}
 
 	public void setProgramName(String programName) {
-		this.programName = programName;
+		if (program != null) {
+			program.setName(programName);
+		}
 	}
 
 	@Override

@@ -147,7 +147,7 @@ public class ClientManagerImpl implements ClientManager {
 	}
 
 	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException {
-		Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), String.valueOf(referral.getClientId()));
+		Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
 		if (currentAdmission != null) {
 			referral.setStatus("rejected");
 			referral.setCompletionNotes("Client currently admitted");

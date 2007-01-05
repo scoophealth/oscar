@@ -56,13 +56,13 @@ public class ClientManagerAction extends BaseAction {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
 		Admission admission = (Admission) clientForm.get("admission");
-		Program p = (Program) clientForm.get("program");
-		String id = request.getParameter("id");
+		Program program = (Program) clientForm.get("program");
+		String demographicNo = request.getParameter("id");
 
-		Program fullProgram = programManager.getProgram(String.valueOf(p.getId()));
+		Program fullProgram = programManager.getProgram(String.valueOf(program.getId()));
 
 		try {
-			admissionManager.processAdmission(id, getProviderNo(request), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
+			admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
 		} catch (ProgramFullException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", "Program is full."));
@@ -73,25 +73,26 @@ public class ClientManagerAction extends BaseAction {
 			saveMessages(request, messages);
 		}
 
-		logManager.log(getProviderNo(request), "write", "admit", id, getIP(request));
+		logManager.log(getProviderNo(request), "write", "admit", demographicNo, getIP(request));
 
-		setEditAttributes(form, request, id);
+		setEditAttributes(form, request, demographicNo);
 		return mapping.findForward("edit");
 	}
 
 	public ActionForward admit_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
-		Program p = (Program) clientForm.get("program");
-		String id = request.getParameter("id");
-		setEditAttributes(form, request, id);
+		Program program = (Program) clientForm.get("program");
+		String demographicNo = request.getParameter("id");
+		setEditAttributes(form, request, demographicNo);
 
-		Program program = programManager.getProgram(p.getId());
+		program = programManager.getProgram(program.getId());
+		
 		/*
 		 * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
 		 */
 		if (program.getType().equalsIgnoreCase("bed")) {
-			Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(id);
+			Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo));
 			if (currentAdmission != null) {
 				request.setAttribute("current_admission", currentAdmission);
 				request.setAttribute("current_program", programManager.getProgram(currentAdmission.getProgramId()));
@@ -139,28 +140,25 @@ public class ClientManagerAction extends BaseAction {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
 		Admission admission = (Admission) clientForm.get("admission");
-		Program p = (Program) clientForm.get("program");
-		String id = request.getParameter("id");
-		boolean success = true;
-
+		Program program = (Program) clientForm.get("program");
+		String clientId = request.getParameter("id");
+		
+		ActionMessages messages = new ActionMessages();
+		
 		try {
-			admissionManager.processDischargeToCommunity(p.getId(), new Integer(id), getProviderNo(request), admission.getDischargeNotes());
-		} catch (AdmissionException e) {
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
-			saveMessages(request, messages);
-			success = false;
-		}
-
-		if (success) {
-			ActionMessages messages = new ActionMessages();
+			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes());
+			logManager.log(getProviderNo(request), "write", "discharge", clientId, getIP(request));
+			
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
-			logManager.log(getProviderNo(request), "write", "discharge", id, getIP(request));
+		} catch (AdmissionException e) {
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
+			saveMessages(request, messages);
 		}
 
-		setEditAttributes(form, request, id);
+		setEditAttributes(form, request, clientId);
 		admission.setDischargeNotes("");
+		
 		return mapping.findForward("edit");
 	}
 
@@ -376,7 +374,7 @@ public class ClientManagerAction extends BaseAction {
 		ErConsentFormBean consentFormBean = (ErConsentFormBean) clientForm.get("erconsent");
 		boolean success = true;
 
-		String id = request.getParameter("id");
+		String demographicNo = request.getParameter("id");
 
 		// save consent to session
 		Map<String, ErConsentFormBean> consentMap = (Map) request.getSession().getAttribute("er_consent_map");
@@ -384,7 +382,7 @@ public class ClientManagerAction extends BaseAction {
 		if (consentMap == null) {
 			consentMap = new HashMap<String, ErConsentFormBean>();
 		}
-		consentMap.put(id, consentFormBean);
+		consentMap.put(demographicNo, consentFormBean);
 
 		request.getSession().setAttribute("er_consent_map", consentMap);
 
@@ -396,7 +394,7 @@ public class ClientManagerAction extends BaseAction {
 			// refer/admin client to service program associated with this user
 			ClientReferral referral = new ClientReferral();
 			referral.setAgencyId(new Long(0));
-			referral.setClientId(new Long(id));
+			referral.setClientId(new Long(demographicNo));
 			referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
 			referral.setProgramId(new Long(program.getProgramId().longValue()));
 			referral.setProviderNo(Long.valueOf(getProviderNo(request)));
@@ -404,7 +402,7 @@ public class ClientManagerAction extends BaseAction {
 			referral.setSourceAgencyId(new Long(0));
 			referral.setStatus("active");
 
-			Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getProgramId()), id);
+			Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getProgramId()), Integer.valueOf(demographicNo));
 			if (currentAdmission != null) {
 				referral.setStatus("rejected");
 				referral.setCompletionNotes("Client currently admitted");
@@ -414,7 +412,7 @@ public class ClientManagerAction extends BaseAction {
 				saveMessages(request, messages);
 				doAdmit = false;
 			}
-			ProgramQueue queue = programQueueManager.getActiveProgramQueue(String.valueOf(program.getId()), id);
+			ProgramQueue queue = programQueueManager.getActiveProgramQueue(String.valueOf(program.getId()), demographicNo);
 			if (queue != null) {
 				referral.setStatus("rejected");
 				referral.setCompletionNotes("Client already in queue");
@@ -431,7 +429,7 @@ public class ClientManagerAction extends BaseAction {
 			if (doAdmit) {
 				String admissionNotes = "ER Automated admission\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason();
 				try {
-					admissionManager.processAdmission(id, getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
+					admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
 				} catch (Exception e) {
 					ActionMessages messages = new ActionMessages();
 					messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
@@ -442,7 +440,7 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		clientForm.set("erconsent", new ErConsentFormBean());
-		request.setAttribute("id", id);
+		request.setAttribute("id", demographicNo);
 		if (success) {
 			return mapping.findForward("er-redirect");
 		} else {
@@ -483,13 +481,13 @@ public class ClientManagerAction extends BaseAction {
 		return false;
 	}
 
-	private void setEditAttributes(ActionForm form, HttpServletRequest request, String clientId) {
+	private void setEditAttributes(ActionForm form, HttpServletRequest request, String demographicNo) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
 		ClientManagerFormBean tabBean = (ClientManagerFormBean) clientForm.get("view");
 
-		request.setAttribute("id", clientId);
-		request.setAttribute("client", clientManager.getClientByDemographicNo(clientId));
+		request.setAttribute("id", demographicNo);
+		request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
 
 		String providerNo = getProviderNo(request);
 
@@ -511,43 +509,43 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		if (tabBean.getTab().equals("Summary")) {
-			request.setAttribute("admissions", admissionManager.getCurrentAdmissions(clientId));
-			request.setAttribute("intakeADate", clientManager.getMostRecentIntakeADate(clientId));
-			request.setAttribute("intakeAProvider", clientManager.getMostRecentIntakeAProvider(clientId));
-			request.setAttribute("intakeCDate", clientManager.getMostRecentIntakeCDate(clientId));
-			request.setAttribute("intakeCProvider", clientManager.getMostRecentIntakeCProvider(clientId));
-			Consent consent = consentManager.getMostRecentConsent(Long.valueOf(clientId));
+			request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
+			request.setAttribute("intakeADate", clientManager.getMostRecentIntakeADate(demographicNo));
+			request.setAttribute("intakeAProvider", clientManager.getMostRecentIntakeAProvider(demographicNo));
+			request.setAttribute("intakeCDate", clientManager.getMostRecentIntakeCDate(demographicNo));
+			request.setAttribute("intakeCProvider", clientManager.getMostRecentIntakeCProvider(demographicNo));
+			Consent consent = consentManager.getMostRecentConsent(Long.valueOf(demographicNo));
 			request.setAttribute("consent", consent);
 
 			if (consent == null) {
-				DemographicExt remote_consent = clientManager.getDemographicExt(new Integer(clientId), "consent_st");
+				DemographicExt remote_consent = clientManager.getDemographicExt(new Integer(demographicNo), "consent_st");
 
 				if (remote_consent != null) {
 					request.setAttribute("remote_consent", remote_consent);
-					request.setAttribute("remote_consent_exclusions", clientManager.getDemographicExt(new Integer(clientId), "consent_ex"));
+					request.setAttribute("remote_consent_exclusions", clientManager.getDemographicExt(new Integer(demographicNo), "consent_ex"));
 
-					DemographicExt remoteConsentAgency = clientManager.getDemographicExt(new Integer(clientId), "consent_ag");
+					DemographicExt remoteConsentAgency = clientManager.getDemographicExt(new Integer(demographicNo), "consent_ag");
 					if (remoteConsentAgency != null) {
 						request.setAttribute("remote_consent_agency", remoteConsentAgency);
 						request.setAttribute("remote_consent_agency_name", Agency.getAgencyName(Long.parseLong(remoteConsentAgency.getValue())));
 					}
 
-					request.setAttribute("remote_consent_date", clientManager.getDemographicExt(new Integer(clientId), "consent_dt"));
+					request.setAttribute("remote_consent_date", clientManager.getDemographicExt(new Integer(demographicNo), "consent_dt"));
 				}
 			}
 
 			request.setAttribute("intakeAEnabled", String.valueOf(intakeAManager.getEnabled()));
 			request.setAttribute("intakeCEnabled", String.valueOf(intakeCManager.getEnabled()));
-			request.setAttribute("referrals", clientManager.getActiveReferrals(clientId));
+			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo));
 		}
 
 		/* history */
 		if (tabBean.getTab().equals("History")) {
-			request.setAttribute("admissionHistory", admissionManager.getAdmissions(clientId));
-			request.setAttribute("referralHistory", clientManager.getReferrals(clientId));
+			request.setAttribute("admissionHistory", admissionManager.getAdmissions(Integer.valueOf(demographicNo)));
+			request.setAttribute("referralHistory", clientManager.getReferrals(demographicNo));
 		}
 
-		List currentAdmissions = admissionManager.getCurrentAdmissions(clientId);
+		List currentAdmissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
 
 		for (int x = 0; x < currentAdmissions.size(); x++) {
 			Admission admission = (Admission) currentAdmissions.get(x);
@@ -559,20 +557,20 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		/* bed reservation view */
-		BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(clientId));
+		BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(Integer.valueOf(demographicNo));
 		request.setAttribute("bedDemographic", bedDemographic);
 
 		/* bed reservation edit */
 		if (tabBean.getTab().equals("Bed Reservation")) {
 			// set bed program id
-			Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(clientId);
+			Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo));
 			Integer bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId().intValue() : null;
 			
 			request.setAttribute("bedProgramId", bedProgramId);
 			
 			// set bed demographic
 			boolean reservationExists = (bedDemographic != null);
-			bedDemographic = reservationExists ? bedDemographic : BedDemographic.create(Integer.valueOf(clientId), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
+			bedDemographic = reservationExists ? bedDemographic : BedDemographic.create(Integer.valueOf(demographicNo), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
 			Bed reservedBed = reservationExists ? bedManager.getBed(bedDemographic.getBedId()) : null;
 			
 			clientForm.set("bedDemographic", bedDemographic);
@@ -589,27 +587,27 @@ public class ClientManagerAction extends BaseAction {
 
 		/* forms */
 		if (tabBean.getTab().equals("Forms")) {
-			request.setAttribute("FormFollowUp_info", formsManager.getFormInfo(clientId, FormFollowUp.class));
-			request.setAttribute("FormAFollowUp_info", formsManager.getFormInfo(clientId, Formintakea.class));
-			request.setAttribute("FormCFollowUp_info", formsManager.getFormInfo(clientId, Formintakec.class));
+			request.setAttribute("FormFollowUp_info", formsManager.getFormInfo(demographicNo, FormFollowUp.class));
+			request.setAttribute("FormAFollowUp_info", formsManager.getFormInfo(demographicNo, Formintakea.class));
+			request.setAttribute("FormCFollowUp_info", formsManager.getFormInfo(demographicNo, Formintakec.class));
 
 			/* survey module */
 			request.setAttribute("survey_list", surveyManager.getAllForms());
-			request.setAttribute("surveys", surveyManager.getForms(clientId));
+			request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 		}
 
 		/* refer */
 		if (tabBean.getTab().equals("Refer")) {
-			request.setAttribute("referrals", clientManager.getActiveReferrals(clientId));
+			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo));
 		}
 
 		/* discharge */
 		if (tabBean.getTab().equals("Discharge")) {
 			request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
-			request.setAttribute("serviceAdmissions", admissionManager.getCurrentServiceProgramAdmission(clientId));
-			request.setAttribute("temporaryAdmissions", admissionManager.getCurrentTemporaryProgramAdmission(clientId));
-			request.setAttribute("current_bed_program", admissionManager.getCurrentBedProgramAdmission(clientId));
-			request.setAttribute("current_community_program", admissionManager.getCurrentCommunityProgramAdmission(clientId));
+			request.setAttribute("serviceAdmissions", admissionManager.getCurrentServiceProgramAdmission(Integer.valueOf(demographicNo)));
+			request.setAttribute("temporaryAdmissions", admissionManager.getCurrentTemporaryProgramAdmission(Integer.valueOf(demographicNo)));
+			request.setAttribute("current_bed_program", admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo)));
+			request.setAttribute("current_community_program", admissionManager.getCurrentCommunityProgramAdmission(Integer.valueOf(demographicNo)));
 		}
 	}
 

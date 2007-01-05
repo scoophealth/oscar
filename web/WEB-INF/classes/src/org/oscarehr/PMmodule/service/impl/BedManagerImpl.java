@@ -10,7 +10,6 @@ import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedType;
-import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
@@ -18,11 +17,8 @@ import org.oscarehr.PMmodule.service.BedManager;
 public class BedManagerImpl implements BedManager {
 
 	private BedDAO bedDAO;
-
 	private RoomDAO roomDAO;
-
 	private ProgramTeamDAO teamDAO;
-
 	private BedDemographicManager bedDemographicManager;
 
 	public void setBedDAO(BedDAO bedDAO) {
@@ -45,6 +41,10 @@ public class BedManagerImpl implements BedManager {
 	 * @see org.oscarehr.PMmodule.service.BedManager#getBed(java.lang.Integer)
 	 */
 	public Bed getBed(Integer bedId) {
+		if (bedId == null) {
+			throw new IllegalArgumentException("bedId is null");
+		}
+		
 		Bed bed = bedDAO.getBed(bedId);
 		setAttributes(bed);
 
@@ -102,11 +102,10 @@ public class BedManagerImpl implements BedManager {
 		
 		for (int i = 0; i < numBeds; i++) {
 			Bed newBed = Bed.create(bedType);
-			validate(newBed);
-			bedDAO.saveBed(newBed);
+			saveBed(newBed);
         }
 	}
-
+	
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedManager#saveBeds(java.util.List)
 	 */
@@ -116,9 +115,20 @@ public class BedManagerImpl implements BedManager {
 		}
 
 		for (Bed bed : beds) {
-			validate(bed);
-			bedDAO.saveBed(bed);
+			saveBed(bed);
 		}
+	}
+	
+	/**
+	 * @see org.oscarehr.PMmodule.service.BedManager#saveBed(org.oscarehr.PMmodule.model.Bed)
+	 */
+	public void saveBed(Bed bed) {
+		if (bed == null) {
+			throw new IllegalArgumentException("bed is null");
+		}
+		
+		validate(bed);
+		bedDAO.saveBed(bed);
 	}
 
 	BedType getDefaultBedType() {
@@ -142,35 +152,23 @@ public class BedManagerImpl implements BedManager {
 
 	void setAttributes(Bed bed) {
 		// bed type is mandatory
-		Integer bedTypeId = bed.getBedTypeId();
-		BedType bedType = bedDAO.getBedType(bedTypeId);
-		String bedTypeName = (bedType != null) ? bedType.getName() : "N/A";
-		bed.setBedTypeName(bedTypeName);
+		bed.setBedType(bedDAO.getBedType(bed.getBedTypeId()));
 
 		// room is mandatory
-		Integer roomId = bed.getRoomId();
-		Room room = roomDAO.getRoom(roomId);
-		String roomName = (room != null) ? room.getName() : "N/A";
-		bed.setRoomName(roomName);
+		bed.setRoom(roomDAO.getRoom(bed.getRoomId()));
 
 		// team is optional
 		Integer teamId = bed.getTeamId();
 
 		if (teamId != null) {
-			ProgramTeam team = teamDAO.getProgramTeam(teamId);
-			String teamName = (team != null) ? team.getName() : "N/A";
-			bed.setTeamName(teamName);
+			bed.setTeam(teamDAO.getProgramTeam(teamId));
 		}
 
 		// demographic is optional
 		BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(bed.getId());
 
 		if (bedDemographic != null) {
-			bed.setDemographicName(bedDemographic.getDemographicName());
-			bed.setStatusName(bedDemographic.getStatusName());
-			bed.setLatePass(bedDemographic.isLatePass());
-			bed.setReservationStart(bedDemographic.getReservationStart());
-			bed.setReservationEnd(bedDemographic.getReservationEnd());
+			bed.setBedDemographic(bedDemographic);
 		}
 	}
 

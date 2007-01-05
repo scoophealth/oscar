@@ -13,7 +13,6 @@ import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 
@@ -22,15 +21,10 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	private static final Log log = LogFactory.getLog(BedDemographicManagerImpl.class);
 
 	private BedDemographicDAO bedDemographicDAO;
-
 	private ProviderDao providerDAO;
-
 	private BedDAO bedDAO;
-
 	private ClientDao demographicDAO;
-
 	private RoomDAO roomDAO;
-
 	private ProgramDao programDAO;
 
 	public void setBedDemographicDAO(BedDemographicDAO BedDemographicDAO) {
@@ -72,8 +66,7 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 			setAttributes(bedDemographic);
 
 			Demographic demographic = demographicDAO.getClientByDemographicNo(bedDemographic.getId().getDemographicNo());
-			String demographicName = (demographic != null) ? demographic.getFormattedName() : "N/A";
-			bedDemographic.setDemographicName(demographicName);
+			bedDemographic.setDemographic(demographic);
 		}
 
 		return bedDemographic;
@@ -90,19 +83,16 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 			setAttributes(bedDemographic);
 
 			Bed bed = bedDAO.getBed(bedDemographic.getId().getBedId());
-			String bedName = (bed != null) ? bed.getName() : "N/A";
-			bedDemographic.setBedName(bedName);
+			bedDemographic.setBed(bed);
 
 			Room room = roomDAO.getRoom(bed.getRoomId());
-			String roomName = (room != null) ? room.getName() : "N/A";
-			bedDemographic.setRoomName(roomName);
+			bed.setRoom(room);
 
 			Integer programId = room.getProgramId();
 
 			if (programId != null) {
 				Program program = programDAO.getProgram(programId);
-				String programName = (program != null) ? program.getName() : "N/A";
-				bedDemographic.setProgramName(programName);
+				room.setProgram(program);
 			}
 		}
 
@@ -153,16 +143,13 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	void setAttributes(BedDemographic bedDemographic) {
 		Integer bedDemographicStatusId = bedDemographic.getBedDemographicStatusId();
 		BedDemographicStatus bedDemographicStatus = bedDemographicDAO.getBedDemographicStatus(bedDemographicStatusId);
-		String statusName = (bedDemographicStatus != null) ? bedDemographicStatus.getName() : "N/A";
-		bedDemographic.setStatusName(statusName);
+		bedDemographic.setBedDemographicStatus(bedDemographicStatus);
 
 		Integer duration = (bedDemographicStatus != null) ? bedDemographicStatus.getDuration() : 0;
 		bedDemographic.setReservationEnd(duration);
 
 		String providerNo = bedDemographic.getProviderNo();
-		Provider provider = providerDAO.getProvider(providerNo);
-		String providerName = (provider != null) ? provider.getFormattedName() : "N/A";
-		bedDemographic.setProviderName(providerName);
+		bedDemographic.setProvider(providerDAO.getProvider(providerNo));
 	}
 
 	void validate(BedDemographic bedDemographic) {

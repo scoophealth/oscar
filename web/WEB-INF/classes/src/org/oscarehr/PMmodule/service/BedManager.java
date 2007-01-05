@@ -50,6 +50,14 @@ public interface BedManager {
 	public void addBeds(int numBeds);
 
 	/**
+	 * Save bed
+	 * 
+	 * @param bed
+	 *            bed to save
+	 */
+	public void saveBed(Bed bed);
+
+	/**
 	 * Save beds
 	 * 
 	 * @param beds

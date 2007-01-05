@@ -117,6 +117,7 @@ public class AgencyManagerAction extends BaseAction {
 		
 		Room[] rooms = (Room[]) agencyForm.get(BEAN_ROOMS);
 		
+		// detect check box false
 		for (int i = 0; i < rooms.length; i++) {
 	        if (request.getParameter("rooms[" + i + "].active") == null) {
 	        	rooms[i].setActive(false);
