@@ -215,19 +215,11 @@ public class BillingReProcessBillAction
     //Multiply the bill amount by the units - Fixes bug where wrong amount being sent to MSP
 
     try{
-
-      String[] codeRecord = getServiceCodePrice(billingServiceCode,msp.BILLPATIENT.equals(billingStatus));
-      String codePrice = "";
-      if (codeRecord != null && codeRecord.length > 0) {
-          codePrice = codeRecord[0];
-          System.out.println("codePrice=" + codePrice);
-      }
       
       if("E".equals(payment_mode)){
-          codePrice = "0.00";
+          billingServicePrice = "0.00";
       }
-      
-      double dblBillAmount = Double.parseDouble(codePrice);
+      double dblBillAmount = Double.parseDouble(billingServicePrice);
       double dblUnit = Double.parseDouble(billingUnit);
       double amtTemp = dblBillAmount * dblUnit;
       String fmtStr = NumberFormat.getCurrencyInstance().format(amtTemp);
@@ -235,6 +227,7 @@ public class BillingReProcessBillAction
 
     }
     catch(NumberFormatException e){
+      e.printStackTrace();
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
     }
 
