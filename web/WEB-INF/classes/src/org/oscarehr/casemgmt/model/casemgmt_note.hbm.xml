@@ -1,72 +1,48 @@
-<!-- 
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
- -->
-
-
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (c) 2001-2002.
+	
+	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+	This software is published under the GPL GNU General Public License.
+	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	
+	OSCAR TEAM
+	
+	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+-->
 <!DOCTYPE hibernate-mapping PUBLIC
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
-
 <hibernate-mapping>
-    <class name="org.oscarehr.casemgmt.model.CaseManagementNote" table="casemgmt_note">
-        <id name="id" column="note_id" unsaved-value="0">
-            <generator class="native"/>
-        </id>
-        <property name="update_date" type="java.util.Date"/>
-		<property name="demographic_no"/>
-		<property name="provider_no"/>
-		<property name="note"/>
-		<property name="signed"/>
-		<property name="includeissue" column="include_issue_innote"/>
-		<property name="signing_provider_no"/>
-		<property name="encounter_type"/>
-		<property name="billing_code"/>
-		<property name="program_no"/>
-		<property name="agency_no"/>
-		<property name="reporter_caisi_role"/>
-		<property name="reporter_program_team"/>
-		<property name="history"/>
-		
-		<many-to-one name="provider" 
-			class="org.oscarehr.PMmodule.model.Provider"
-			column="provider_no"
-			update="false"
-			not-found='ignore'
-			insert="false"
-			lazy="false"
-		/>
-		
+	<class name="org.oscarehr.casemgmt.model.CaseManagementNote" table="casemgmt_note">
+		<id name="id" column="note_id" unsaved-value="0">
+			<generator class="native" />
+		</id>
+		<property name="update_date" type="java.util.Date" />
+		<property name="demographic_no" />
+		<property name="provider_no" />
+		<property name="note" />
+		<property name="signed" />
+		<property name="includeissue" column="include_issue_innote" />
+		<property name="signing_provider_no" />
+		<property name="encounter_type" />
+		<property name="billing_code" />
+		<property name="program_no" />
+		<property name="agency_no" />
+		<property name="reporter_caisi_role" />
+		<property name="reporter_program_team" />
+		<property name="history" />
+		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" not-found='ignore' insert="false" lazy="false" />
 		<set name="issues" table="casemgmt_issue_notes">
-		    <key column="note_id"/>
-		    <many-to-many column="id" class="org.oscarehr.casemgmt.model.CaseManagementIssue"/>
+			<key column="note_id" />
+			<many-to-many column="id" class="org.oscarehr.casemgmt.model.CaseManagementIssue" />
 		</set>
-		
 		<property name="roleName" type="string" formula="(select r.name from caisi_role r where r.role_id = reporter_caisi_role)" />
 		<property name="programName" type="string" formula="(select p.name from program p where p.program_id = program_no)" />
-		
-		<property name="password" type="string" column="password"/>
-		<property name="locked" type="boolean" column="locked"/>
-		
-    </class>
+		<property name="password" type="string" column="password" />
+		<property name="locked" type="boolean" column="locked" />
+	</class>
 </hibernate-mapping>

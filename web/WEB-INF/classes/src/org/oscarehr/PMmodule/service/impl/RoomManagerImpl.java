@@ -22,9 +22,12 @@
 
 package org.oscarehr.PMmodule.service.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
+import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomType;
 import org.oscarehr.PMmodule.service.RoomManager;
@@ -34,10 +37,15 @@ import org.oscarehr.PMmodule.service.RoomManager;
  */
 public class RoomManagerImpl implements RoomManager {
 
+	private static final Log log = LogFactory.getLog(RoomManagerImpl.class);
+	
+	private static <T extends Exception> void handleException(T e) throws T {
+		log.error(e);
+		throw e;
+	}
+	
 	private RoomDAO roomDAO;
-
 	private ProgramDao programDAO;
-
 	private BedDAO bedDAO;
 
 	public void setRoomDAO(RoomDAO roomDAO) {
@@ -56,6 +64,10 @@ public class RoomManagerImpl implements RoomManager {
 	 * @see org.oscarehr.PMmodule.service.RoomManager#getRoom(java.lang.Integer)
 	 */
 	public Room getRoom(Integer roomId) {
+		if (roomId == null) {
+			handleException(new IllegalArgumentException("roomId must not be null"));
+		}
+
 		Room room = roomDAO.getRoom(roomId);
 		setAttributes(room);
 
@@ -85,28 +97,34 @@ public class RoomManagerImpl implements RoomManager {
 	/**
 	 * @see org.oscarehr.PMmodule.service.RoomManager#addRooms(int)
 	 */
-	public void addRooms(int numRooms) {
-		RoomType roomType = getDefaultRoomType();
+	public void addRooms(int numRooms) throws RoomHasActiveBedsException {
+		if (numRooms < 1) {
+			handleException(new IllegalArgumentException("numRooms must be greater than or equal to 1"));
+		}
+
+		RoomType defaultRoomType = getDefaultRoomType();
 		
 		for (int i = 0; i < numRooms; i++) {
-			Room newRoom = Room.create(roomType);
-			validate(newRoom);
-			roomDAO.saveRoom(newRoom);
+			saveRoom(Room.create(defaultRoomType));
         }
 	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.service.RoomManager#saveRooms(java.util.List)
 	 */
-	public void saveRooms(Room[] rooms) {
+	public void saveRooms(Room[] rooms) throws RoomHasActiveBedsException {
 		if (rooms == null) {
-			throw new IllegalArgumentException("array rooms is null");
+			handleException(new IllegalArgumentException("rooms must not be null"));
 		}
 
 		for (Room room : rooms) {
-			validate(room);
-			roomDAO.saveRoom(room);
+			saveRoom(room);
 		}
+	}
+	
+	void saveRoom(Room room) throws RoomHasActiveBedsException {
+		validate(room);
+		roomDAO.saveRoom(room);
 	}
 
 	RoomType getDefaultRoomType() {
@@ -116,15 +134,15 @@ public class RoomManagerImpl implements RoomManager {
     		}
     	}
     
-    	throw new IllegalStateException("no default room type");
+		handleException(new IllegalStateException("no default room type"));
+		
+		return null;
     }
 
 	void setAttributes(Room room) {
-		// room type is mandatory
 		Integer roomTypeId = room.getRoomTypeId();
 		room.setRoomType(roomDAO.getRoomType(roomTypeId));
 
-		// program is optional
 		Integer programId = room.getProgramId();
 
 		if (programId != null) {
@@ -132,43 +150,39 @@ public class RoomManagerImpl implements RoomManager {
 		}
 	}
 
-	void validate(Room room) {
+	void validate(Room room) throws RoomHasActiveBedsException {
 		if (room == null) {
-			throw new IllegalArgumentException("room is null");
+			handleException(new IllegalStateException("room must not be null"));
 		}
 
 		validateRoom(room);
-
-		// mandatory
 		validateRoomType(room.getRoomTypeId());
-
-		// optional
 		validateProgram(room.getProgramId());
 	}
 
-	void validateRoom(Room room) {
+	void validateRoom(Room room) throws RoomHasActiveBedsException {
 		Integer roomId = room.getId();
 
 		if (roomId != null) {
 			if (!roomDAO.roomExists(roomId)) {
-				throw new IllegalArgumentException("no room with id : " + roomId);
+				handleException(new IllegalStateException("no room with id : " + roomId));
 			}
 
 			if (!room.isActive() && bedDAO.getBeds(roomId, true).length > 0) {
-				throw new IllegalStateException("inactive room with id : " + roomId + " has active beds");
+				handleException(new RoomHasActiveBedsException("room with id : " + roomId + " has active beds"));
 			}
 		}
 	}
 
 	void validateRoomType(Integer roomTypeId) {
 		if (!roomDAO.roomTypeExists(roomTypeId)) {
-			throw new IllegalArgumentException("no room type with id : " + roomTypeId);
+			handleException(new IllegalStateException("no room type with id : " + roomTypeId));
 		}
 	}
 
 	void validateProgram(Integer programId) {
 		if (programId != null && !programDAO.isBedProgram(programId)) {
-			throw new IllegalArgumentException("no bed program with id : " + programId);
+			handleException(new IllegalStateException("no bed program with id : " + programId));
 		}
 	}
 

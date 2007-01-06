@@ -1,119 +1,37 @@
-<!-- 
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
- -->
-
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (c) 2001-2002.
+	
+	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+	This software is published under the GPL GNU General Public License.
+	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	
+	OSCAR TEAM
+	
+	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+-->
 <!DOCTYPE hibernate-mapping PUBLIC
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
-
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
 	<class name="Agency" table="agency">
-		<id
-			column="id"
-			name="Id"
-			type="java.lang.Long"
-		>
+		<id column="id" name="Id" type="java.lang.Long">
 			<generator class="assigned" />
 		</id>
-		<property
-			column="name"
-			length="50"
-			name="Name"
-			not-null="true"
-			type="string"
-		 />
-		<property
-			column="description"
-			name="Descr"
-			not-null="false"
-			type="string"
-		 />
-		<property
-			column="contact_name"
-			name="ContactName"
-			not-null="false"
-			type="string"
-		 />
-		<property
-			column="contact_email"
-			name="ContactEmail"
-			not-null="false"
-			type="string"
-		 />
-		<property
-			column="contact_phone"
-			name="ContactPhone"
-			not-null="false"
-			type="string"
-		 />
-		 
-		<property
-			column="local"
-			name="Local"
-			not-null="true"
-			type="boolean"
-		 />
-		 
-		<property
-			column="integrator_enabled"
-			name="IntegratorEnabled"
-			not-null="true"
-			type="boolean"
-		 />
-		 
-		<property
-			column="integrator_url"
-			name="IntegratorURL"
-			not-null="false"
-			type="string"
-		 />
-		 
-		<property
-			column="integrator_jms"
-			name="IntegratorJMS"
-			not-null="false"
-			type="string"
-		 />
-		 
-		 <property
-			column="integrator_username"
-			name="IntegratorUserName"
-			not-null="false"
-			type="string"
-		 />
-
- 		<property
-			column="integrator_password"
-			name="IntegratorPassword"
-			not-null="false"
-			type="string"
-		 />
-		 <property
-			column="hic"
-			name="hic"
-			not-null="false"
-			type="boolean"
-		 />
+		<property column="name" length="50" name="Name" not-null="true" type="string" />
+		<property column="description" name="Descr" not-null="false" type="string" />
+		<property column="contact_name" name="ContactName" not-null="false" type="string" />
+		<property column="contact_email" name="ContactEmail" not-null="false" type="string" />
+		<property column="contact_phone" name="ContactPhone" not-null="false" type="string" />
+		<property column="local" name="Local" not-null="true" type="boolean" />
+		<property column="integrator_enabled" name="IntegratorEnabled" not-null="true" type="boolean" />
+		<property column="integrator_url" name="IntegratorURL" not-null="false" type="string" />
+		<property column="integrator_jms" name="IntegratorJMS" not-null="false" type="string" />
+		<property column="integrator_username" name="IntegratorUserName" not-null="false" type="string" />
+		<property column="integrator_password" name="IntegratorPassword" not-null="false" type="string" />
+		<property column="hic" name="hic" not-null="false" type="boolean" />
 	</class>
 </hibernate-mapping>

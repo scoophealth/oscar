@@ -25,9 +25,12 @@ package org.oscarehr.PMmodule.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.dao.RoomDAO;
+import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedType;
@@ -35,7 +38,17 @@ import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 
+/**
+ * Implementation of BedManager interface
+ */
 public class BedManagerImpl implements BedManager {
+	
+	private static final Log log = LogFactory.getLog(BedManagerImpl.class);
+	
+	private static <T extends Exception> void handleException(T e) throws T {
+		log.error(e);
+		throw e;
+	}
 
 	private BedDAO bedDAO;
 	private RoomDAO roomDAO;
@@ -63,21 +76,21 @@ public class BedManagerImpl implements BedManager {
 	 */
 	public Bed getBed(Integer bedId) {
 		if (bedId == null) {
-			throw new IllegalArgumentException("bedId is null");
+			handleException(new IllegalArgumentException("bedId must not be null"));
 		}
 		
 		Bed bed = bedDAO.getBed(bedId);
 		setAttributes(bed);
-
+		
 		return bed;
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.service.BedManager#getBedsByProgram(java.lang.Integer, java.lang.Boolean)
+	 * @see org.oscarehr.PMmodule.service.BedManager#getBedsByProgram(java.lang.Integer, boolean)
 	 */
-	public Bed[] getBedsByProgram(Integer programId, Boolean reserved) {
+	public Bed[] getBedsByProgram(Integer programId, boolean reserved) {
 		if (programId == null) {
-			return new Bed[] {};
+			handleException(new IllegalArgumentException("programId must not be null"));
 		}
 
 		List<Bed> beds = new ArrayList<Bed>();
@@ -118,21 +131,24 @@ public class BedManagerImpl implements BedManager {
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedManager#addBeds(int)
 	 */
-	public void addBeds(int numBeds) {
-		BedType bedType = getDefaultBedType();
+	public void addBeds(int numBeds) throws BedReservedException {
+		if (numBeds < 1) {
+			handleException(new IllegalArgumentException("numBeds must be greater than or equal to 1"));
+		}
+		
+		BedType defaultBedType = getDefaultBedType();
 		
 		for (int i = 0; i < numBeds; i++) {
-			Bed newBed = Bed.create(bedType);
-			saveBed(newBed);
+			saveBed(Bed.create(defaultBedType));
         }
 	}
 	
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedManager#saveBeds(java.util.List)
 	 */
-	public void saveBeds(Bed[] beds) {
+	public void saveBeds(Bed[] beds) throws BedReservedException {
 		if (beds == null) {
-			throw new IllegalArgumentException("array beds is null");
+			handleException(new IllegalArgumentException("beds must not be null"));
 		}
 
 		for (Bed bed : beds) {
@@ -143,11 +159,7 @@ public class BedManagerImpl implements BedManager {
 	/**
 	 * @see org.oscarehr.PMmodule.service.BedManager#saveBed(org.oscarehr.PMmodule.model.Bed)
 	 */
-	public void saveBed(Bed bed) {
-		if (bed == null) {
-			throw new IllegalArgumentException("bed is null");
-		}
-		
+	public void saveBed(Bed bed) throws BedReservedException {
 		validate(bed);
 		bedDAO.saveBed(bed);
 	}
@@ -159,7 +171,9 @@ public class BedManagerImpl implements BedManager {
     		}
     	}
     
-    	throw new IllegalStateException("no default bed type");
+		handleException(new IllegalStateException("no default bed type"));
+		
+		return null;
     }
 
 	boolean filterBed(Bed bed, Boolean reserved) {
@@ -171,20 +185,15 @@ public class BedManagerImpl implements BedManager {
     }
 
 	void setAttributes(Bed bed) {
-		// bed type is mandatory
 		bed.setBedType(bedDAO.getBedType(bed.getBedTypeId()));
-
-		// room is mandatory
 		bed.setRoom(roomDAO.getRoom(bed.getRoomId()));
 
-		// team is optional
 		Integer teamId = bed.getTeamId();
 
 		if (teamId != null) {
 			bed.setTeam(teamDAO.getProgramTeam(teamId));
 		}
 
-		// demographic is optional
 		BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(bed.getId());
 
 		if (bedDemographic != null) {
@@ -192,48 +201,44 @@ public class BedManagerImpl implements BedManager {
 		}
 	}
 
-	void validate(Bed bed) {
+	void validate(Bed bed) throws BedReservedException {
 		if (bed == null) {
-			throw new IllegalArgumentException("bed is null");
+			handleException(new IllegalStateException("bed must not be null"));
 		}
 
 		validateBed(bed.getId(), bed);
-
-		// mandatory
 		validateBedType(bed.getBedTypeId());
 		validateRoom(bed.getRoomId());
-
-		// optional
 		validateTeam(bed.getTeamId());
 	}
 
-	void validateBed(Integer bedId, Bed bed) {
+	void validateBed(Integer bedId, Bed bed) throws BedReservedException {
 		if (bedId != null) {
 			if (!bedDAO.bedExists(bedId)) {
-				throw new IllegalArgumentException("no bed with id : " + bedId);
+				handleException(new IllegalStateException("no bed with id : " + bedId));
 			}
 			
 			if (!bed.isActive() && bedDemographicManager.demographicExists(bed.getId())) {
-				throw new IllegalStateException("bed with id : " + bedId + " has a reservation");
+				handleException(new BedReservedException("bed with id : " + bedId + " has a reservation"));
 			}
 		}
 	}
 
 	void validateBedType(Integer bedTypeId) {
 		if (!bedDAO.bedTypeExists(bedTypeId)) {
-			throw new IllegalArgumentException("no bed type with id : " + bedTypeId);
+			handleException(new IllegalStateException("no bed type with id : " + bedTypeId));
 		}
 	}
 
 	void validateRoom(Integer roomId) {
 		if (!roomDAO.roomExists(roomId)) {
-			throw new IllegalArgumentException("no room with id : " + roomId);
+			handleException(new IllegalStateException("no room with id : " + roomId));
 		}
 	}
 
 	void validateTeam(Integer teamId) {
 		if (teamId != null && !teamDAO.teamExists(teamId)) {
-			throw new IllegalArgumentException("no team with id : " + teamId);
+			handleException(new IllegalStateException("no team with id : " + teamId));
 		}
 	}
 

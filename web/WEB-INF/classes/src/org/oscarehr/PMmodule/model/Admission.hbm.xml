@@ -1,140 +1,42 @@
-<!-- 
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
- -->
-
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Copyright (c) 2001-2002.
+	
+	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+	This software is published under the GPL GNU General Public License.
+	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	
+	OSCAR TEAM
+	
+	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+-->
 <!DOCTYPE hibernate-mapping PUBLIC
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
-	<class
-		name="Admission"
-		table="admission">
-		<id
-			column="am_id"
-			name="Id"
-			type="java.lang.Long">
+	<class name="Admission" table="admission">
+		<id column="am_id" name="Id" type="java.lang.Long">
 			<generator class="native" />
 		</id>
-		<property
-			column="agency_id"
-			length="11"
-			name="AgencyId"
-			not-null="true"
-			type="java.lang.Long" />
-		<property
-			column="provider_no"
-			length="11"
-			name="ProviderNo"
-			not-null="true"
-			type="java.lang.Long" />
-		<property
-			column="admission_status"
-			length="24"
-			name="AdmissionStatus"
-			not-null="false"
-			type="string" />
-		<property
-			column="client_id"
-			length="11"
-			name="ClientId"
-			not-null="true"
-			type="integer" />
-		<property
-			column="admission_date"
-			length="19"
-			name="AdmissionDate"
-			not-null="false"
-			type="timestamp" />
-		<property
-			column="admission_notes"
-			length="255"
-			name="AdmissionNotes"
-			not-null="false"
-			type="string" />
-		<property
-			column="temp_admission"
-			length="1"
-			name="TempAdmission"
-			not-null="false"
-			type="string" />
-		<property
-			column="program_id"
-			length="11"
-			name="ProgramId"
-			not-null="true"
-			type="java.lang.Long" />
-		<property
-			column="temp_admit_discharge"
-			length="1"
-			name="TempAdmitDischarge"
-			not-null="false"
-			type="string" />
-		<property
-			column="discharge_notes"
-			length="255"
-			name="DischargeNotes"
-			not-null="false"
-			type="string" />
-		<property
-			column="discharge_date"
-			length="19"
-			name="DischargeDate"
-			not-null="false"
-			type="timestamp" />
-		<property
-			column="team_id"
-			length="11"
-			name="TeamId"
-			not-null="false"
-			type="java.lang.Long" />
-		<many-to-one
-			name="team"
-			class="org.oscarehr.PMmodule.model.ProgramTeam"
-			column="team_id"
-			update="false"
-			insert="false"
-			lazy="false"
-			not-found="ignore" />
-		<many-to-one
-			name="client"
-			class="org.oscarehr.PMmodule.model.Demographic"
-			column="client_id"
-			update="false"
-			insert="false"
-			lazy="false" />
-		<property
-			column="temporary_admission_flag"
-			name="TemporaryAdmission"
-			not-null="false"
-			type="boolean" />
-		<property
-			name="programName"
-			type="string"
-			formula="(select p.name from program p where p.program_id = program_id)" />
-		<property
-			name="programType"
-			type="string"
-			formula="(select p.type from program p where p.program_id = program_id)" />
+		<property column="agency_id" length="11" name="AgencyId" not-null="true" type="java.lang.Long" />
+		<property column="provider_no" length="11" name="ProviderNo" not-null="true" type="java.lang.Long" />
+		<property column="admission_status" length="24" name="AdmissionStatus" not-null="false" type="string" />
+		<property column="client_id" length="11" name="ClientId" not-null="true" type="integer" />
+		<property column="admission_date" length="19" name="AdmissionDate" not-null="false" type="timestamp" />
+		<property column="admission_notes" length="255" name="AdmissionNotes" not-null="false" type="string" />
+		<property column="temp_admission" length="1" name="TempAdmission" not-null="false" type="string" />
+		<property column="program_id" length="11" name="ProgramId" not-null="true" type="java.lang.Long" />
+		<property column="temp_admit_discharge" length="1" name="TempAdmitDischarge" not-null="false" type="string" />
+		<property column="discharge_notes" length="255" name="DischargeNotes" not-null="false" type="string" />
+		<property column="discharge_date" length="19" name="DischargeDate" not-null="false" type="timestamp" />
+		<property column="team_id" length="11" name="TeamId" not-null="false" type="java.lang.Long" />
+		<many-to-one name="team" class="org.oscarehr.PMmodule.model.ProgramTeam" column="team_id" update="false" insert="false" lazy="false" not-found="ignore" />
+		<many-to-one name="client" class="org.oscarehr.PMmodule.model.Demographic" column="client_id" update="false" insert="false" lazy="false" />
+		<property column="temporary_admission_flag" name="TemporaryAdmission" not-null="false" type="boolean" />
+		<property name="programName" type="string" formula="(select p.name from program p where p.program_id = program_id)" />
+		<property name="programType" type="string" formula="(select p.type from program p where p.program_id = program_id)" />
 	</class>
 </hibernate-mapping>

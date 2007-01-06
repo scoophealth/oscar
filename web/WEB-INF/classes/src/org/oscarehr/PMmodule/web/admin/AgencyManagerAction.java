@@ -33,7 +33,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.IntegratorException;
+import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.Room;
@@ -146,7 +148,13 @@ public class AgencyManagerAction extends BaseAction {
 	        }
         }
 		
-		roomManager.saveRooms(rooms);
+		try {
+	        roomManager.saveRooms(rooms);
+        } catch (RoomHasActiveBedsException e) {
+    		ActionMessages messages = new ActionMessages();
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
+    		saveMessages(request, messages);
+        }
 		
 		return edit(mapping, form, request, response);
     }
@@ -162,7 +170,13 @@ public class AgencyManagerAction extends BaseAction {
 	        }
         }
 		
-		bedManager.saveBeds(beds);
+		try {
+	        bedManager.saveBeds(beds);
+        } catch (BedReservedException e) {
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
+			saveMessages(request, messages);
+        }
 		
 		return edit(mapping, form, request, response);
     }
@@ -172,7 +186,13 @@ public class AgencyManagerAction extends BaseAction {
 		Integer numRooms = (Integer) agencyForm.get("numRooms");
 		
 		if (numRooms!= null && numRooms > 0) {
-			roomManager.addRooms(numRooms);
+			try {
+	            roomManager.addRooms(numRooms);
+            } catch (RoomHasActiveBedsException e) {
+        		ActionMessages messages = new ActionMessages();
+        		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
+        		saveMessages(request, messages);
+            }
 		}
 		
 		return edit(mapping, form, request, response);
@@ -183,7 +203,13 @@ public class AgencyManagerAction extends BaseAction {
 		Integer numBeds = (Integer) agencyForm.get("numBeds");
 
 		if (numBeds != null && numBeds > 0) {
-			bedManager.addBeds(numBeds);
+			try {
+	            bedManager.addBeds(numBeds);
+            } catch (BedReservedException e) {
+    			ActionMessages messages = new ActionMessages();
+    			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
+    			saveMessages(request, messages);
+            }
 		}
 		
 		return edit(mapping, form, request, response);

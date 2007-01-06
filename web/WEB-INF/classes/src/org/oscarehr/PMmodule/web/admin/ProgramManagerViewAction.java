@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.exception.AdmissionException;
+import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
@@ -56,7 +57,8 @@ public class ProgramManagerViewAction extends BaseAction {
     	return view(mapping, form, request, response);
     }
 
-	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	@SuppressWarnings("unchecked")
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
     
     	// find the program id
@@ -339,27 +341,33 @@ public class ProgramManagerViewAction extends BaseAction {
 	        }
 	        
 			// save bed
-	        bedManager.saveBed(reservedBed);
-	        
-			BedDemographic bedDemographic = reservedBed.getBedDemographic();
-			
-			if (bedDemographic != null) {
-				// save bed demographic
-				bedDemographicManager.saveBedDemographic(bedDemographic);
-				
-				Integer communityProgramId = reservedBed.getCommunityProgramId();
-				
-				if (communityProgramId > 0) {
-					try {
-						// discharge to community program
-						admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged");
-					} catch (AdmissionException e) {
-						ActionMessages messages = new ActionMessages();
-						messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
-						saveMessages(request, messages);
-					}
-				}
-			}
+	        try {
+	            bedManager.saveBed(reservedBed);
+	            
+	            BedDemographic bedDemographic = reservedBed.getBedDemographic();
+	            
+	            if (bedDemographic != null) {
+	            	// save bed demographic
+	            	bedDemographicManager.saveBedDemographic(bedDemographic);
+	            	
+	            	Integer communityProgramId = reservedBed.getCommunityProgramId();
+	            	
+	            	if (communityProgramId > 0) {
+	            		try {
+	            			// discharge to community program
+	            			admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged");
+	            		} catch (AdmissionException e) {
+	            			ActionMessages messages = new ActionMessages();
+	            			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
+	            			saveMessages(request, messages);
+	            		}
+	            	}
+	            }
+            } catch (BedReservedException e) {
+    			ActionMessages messages = new ActionMessages();
+    			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
+    			saveMessages(request, messages);
+            }
         }
 		
 		return view(mapping, form, request, response);	
