@@ -215,11 +215,19 @@ public class BillingReProcessBillAction
     //Multiply the bill amount by the units - Fixes bug where wrong amount being sent to MSP
 
     try{
-      
-      if("E".equals(payment_mode)){
-          billingServicePrice = "0.00";
+
+      String[] codeRecord = getServiceCodePrice(billingServiceCode,false);
+      String codePrice = "";
+      if (codeRecord != null && codeRecord.length > 0) {
+          codePrice = codeRecord[0];
+          System.out.println("codePrice=" + codePrice);
       }
-      double dblBillAmount = Double.parseDouble(billingServicePrice);
+
+      if("E".equals(payment_mode)){
+          codePrice = "0.00";
+      }
+
+      double dblBillAmount = Double.parseDouble(codePrice);
       double dblUnit = Double.parseDouble(billingUnit);
       double amtTemp = dblBillAmount * dblUnit;
       String fmtStr = NumberFormat.getCurrencyInstance().format(amtTemp);
@@ -346,8 +354,9 @@ public class BillingReProcessBillAction
     return mapping.findForward("success");
   }
 
-  private String[] getServiceCodePrice(String billingServiceCode,boolean isPrivate) {
-    String prepend = isPrivate?"A":"";
+
+  private String[] getServiceCodePrice(String billingServiceCode,boolean usePrefix) {
+    String prepend = usePrefix?"A":"";
     String[] privateCodeRecord = SqlUtils.getRow(
         "select value from billingservice where service_code = '" + prepend + billingServiceCode + "'");
     return privateCodeRecord;
