@@ -1,0 +1,54 @@
+
+<%--
+NOTE: THIS IS NOT A STANDALONE JSP
+This JSP is included in all reportByTemplate pages; it lists all available templates on the left side of the screen
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+--%>
+<%@ page import = "java.util.*, oscar.oscarReport.reportByTemplate.*"%>
+<%
+  if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
+ArrayList templates = (new ReportManager()).getReportTemplatesNoParam();
+String templateViewId = request.getParameter("templateviewid");
+if (templateViewId == null) templateViewId = "";
+%>
+      <div class="templatelist">
+          <div class="templatelistHeader">
+            Select a template:
+          </div>
+          <ul class="templatelist">
+              <li><a href="homePage.jsp"><b>Main Page</b></a>
+            <%for (int i=0; i<templates.size(); i++) {
+                String selected = "";
+                ReportObject curReport = (ReportObject) templates.get(i);
+                String templateId = curReport.getTemplateId();
+                String templateTitle = curReport.getTitle();
+                String selectedTemplate = "";
+                if (templateId.equals(templateViewId)) selectedTemplate = "selectedTemplate";%>
+               <li class="<%=selectedTemplate%>">- <a href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
+           <% } %>
+          </ul>
+          <a href="editTemplates.jsp" style="color: #226d55; font-size: 10px;">Edit Templates</a>
+      </div>
+</form>    
