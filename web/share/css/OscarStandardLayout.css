@@ -118,7 +118,7 @@ input.warning, select.warning, file.warning {
         border: 1px solid #e26e6e;
 }
 font.comment {
-        font-size:10px;
+        font-size: 10px;
         vertical-align: super;
 }
 
