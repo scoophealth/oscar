@@ -1,27 +1,17 @@
-<!-- 
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
- -->
-
+<!--
+	Copyright (c) 2001-2002.
+	
+	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+	This software is published under the GPL GNU General Public License.
+	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	
+	OSCAR TEAM
+	
+	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+-->
 <%@ include file="/taglibs.jsp"%>
 
 <script type="text/javascript">
@@ -88,16 +78,16 @@
 				<display:column property="reservationStart" title="Since" />
 				<!-- reservationEnd is editable -->
 				<display:column title="Until">
-					<input type="text" name="reservedBeds[<c:out value="${reservedBed_rowNum - 1}" />].strReservationEnd" id="strReservationEnd_field" readonly="readonly" value="<c:out value="${reservedBed.strReservationEnd}"/>" />
+					<input type="text" name="reservedBeds[<c:out value="${reservedBed_rowNum - 1}" />].strReservationEnd" id="strReservationEnd_<c:out value="${reservedBed_rowNum - 1}" />_field" readonly="readonly" value="<c:out value="${reservedBed.strReservationEnd}"/>" />
 					
-					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="strReservationEnd_field-button" alt="Until Calendar" title="Until Calendar" />
+					<img align="top" src="<html:rewrite page="/images/calendar.gif" />" id="strReservationEnd_<c:out value="${reservedBed_rowNum - 1}" />_field-button" alt="Until Calendar" title="Until Calendar" />
 					
 					<script type="text/javascript">
 						Calendar.setup(
 							{
-								inputField :  'strReservationEnd_field',
+								inputField :  'strReservationEnd_' + <c:out value="${reservedBed_rowNum - 1}" /> + '_field',
 								ifFormat :    '%Y-%m-%d',
-								button :      'strReservationEnd_field-button',
+								button :      'strReservationEnd_' + <c:out value="${reservedBed_rowNum - 1}" /> + '_field-button',
 								align :       'cr',
 								singleClick : true,
 								firstDay :    1
