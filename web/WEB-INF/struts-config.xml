@@ -1345,6 +1345,19 @@
 		<action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
 			<forward name="success" path="/casemgmt/uploadimage.jsp" />
 		</action>
+                <!-- OSCAR Report By Template -->
+                <action input="/oscarReport/reportByTemplate/reportConfiguration.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/GenerateReportAction" scope="request" type="oscar.oscarReport.reportByTemplate.GenerateReportAction">
+                    <forward name="success" path="/oscarReport/reportByTemplate/resultReport.jsp"/>
+                    <forward name="fail" path="/oscarReport/reportByTemplate/reportConfiguration.jsp"/>
+                </action>
+                <action input="/oscarReport/reportByTemplate/editTemplates.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/editTemplatesAction" scope="request" type="oscar.oscarReport.reportByTemplate.EditTemplatesAction">
+                    <forward name="success" path="/oscarReport/reportByTemplate/editTemplates.jsp"></forward>
+                    <forward name="fail" path="/oscarReport/reportByTemplate/editTemplates.jsp"></forward>
+                </action>
+                <action input="/oscarReport/reportByTemplate/resultReport.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/generateOutFilesAction" scope="request" type="oscar.oscarReport.reportByTemplate.GenerateOutFilesAction">
+                    <forward name="success" path="/oscarReport/reportByTemplate/resultReport.jsp"></forward>
+                </action>
+                <!-- END OSCAR Report By Template -->
 	</action-mappings>
 	
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
