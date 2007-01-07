@@ -96,7 +96,6 @@ public class ReportObjectGeneric implements ReportObject {
     }
     
     public String getPreparedSQL(Map parameters) {
-        Launcher launcher = new Launcher();
         String sql = (new ReportManager()).getSQL(this.templateId);
         int cursor1 = 0;
         while ((cursor1 = sql.indexOf("{")) != -1) {
