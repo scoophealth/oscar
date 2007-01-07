@@ -275,5 +275,77 @@ public class UtilXML {
       return ret;
    }
    
+   /*Escapes prepared xml, in other words it would escape something like this:
+    <query>select * from books where dateEntered >=${BottomDate} and dateEntered<=${TopDate}<query>'
+    *escapes '&' and '<'
+    *-Paul
+   */
+   
+   public static String escapeXML(String xml) {
+        xml = xml.replaceAll("&", "&amp;");
+        int pointer1 = 0;
+        int pointer2 = 0;
+        while ((pointer1 = xml.indexOf("<", pointer1)) != -1) {
+            if (xml.charAt(pointer1+1) == '/' || xml.charAt(pointer1+1) == '?') {
+                pointer1++;
+                continue;
+            }
+            pointer2 = xml.indexOf(">", pointer1);
+            if (xml.indexOf(" ", pointer1) < pointer2) {
+                pointer2 = xml.indexOf(" ", pointer1);
+            }
+            String tag = xml.substring(pointer1, pointer2);
+            String closetag = tag.substring(0, 1) + "/" + tag.substring(1);
+            closetag += ">";
+            //System.out.println("closetag: " + closetag);
+            if (xml.indexOf(closetag) == -1) {
+                xml = xml.substring(0, pointer1) + "&lt;" + xml.substring(pointer1+1);
+                //System.out.println("found, replaced: " + xml.substring(pointer1-10, pointer1+10));
+            }
+            pointer1++;
+        }
+        return xml;
+   }
+   
+   public static String escapeAllXML(String xml) {
+       xml = xml.replaceAll("&", "&amp;");
+       xml = xml.replaceAll("<", "&lt;");
+       return xml;
+   }
+   
+   //escapes all xml inside and including a certain tag (Good to use before parsing with jdom)
+   //'tag' parameter must be in the form <mytag> ; no attributes;
+   //must be a complete tag
+   //Example:  <param><attr>hello</attr></param>  -->   &lt;param>&lt;attr>hello&lt;/attr>&lt;/param>
+   //-Paul A
+   public static String escapeAllXML(String xml, String tag) {
+       String closetag = tag.substring(0, 1) + "/" + tag.substring(1);
+       String opentag = tag.substring(0, tag.indexOf(">"));
+       int pointer1 = 0;
+       int pointer2 = 0;
+       while ((pointer1 = xml.indexOf(opentag, pointer1)) != -1) {
+           char terminationChar = xml.charAt(pointer1+tag.length()-1);
+           if ((terminationChar != '>') && (terminationChar != ' ')) {
+               pointer1++;
+               continue;
+           }
+           //pointer1 = xml.indexOf(">", pointer1);
+           pointer2 = xml.indexOf(closetag, pointer1)+closetag.length();
+           String innerText = xml.substring(pointer1, pointer2);
+           innerText = escapeAllXML(innerText);
+           xml = xml.substring(0, pointer1) + innerText + xml.substring(pointer2);
+           pointer1++;
+       }
+       return xml;
+   }
+   
+   //reverses escapeAllXML()
+   //Paul A
+   public static String unescapeXML(String xml) {
+       xml = xml.replaceAll("&amp;", "&");
+       xml = xml.replaceAll("&lt;", "<");
+       xml = xml.replaceAll("&gt;", ">");
+       return xml;
+   }
    
 }
