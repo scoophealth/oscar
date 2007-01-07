@@ -244,31 +244,74 @@ public class StringUtils {
    * @return boolean
    */
   public static boolean isValidDate(String dateString,String format) {
-    boolean ret = false;
-    SimpleDateFormat fmt = new SimpleDateFormat(format);
-    try {
-      fmt.parse(dateString);
-      ret = true;
-    }
-    catch (ParseException ex) {
-    }
-    finally {
-      return ret;
-    }
+      boolean ret = false;
+      SimpleDateFormat fmt = new SimpleDateFormat(format);
+      try {
+          fmt.parse(dateString);
+          ret = true;
+      } catch (ParseException ex) {
+      } finally {
+          return ret;
+      }
   }
   
-      public static String readFileStream(FormFile file) {
-        try {
-            InputStream is = file.getInputStream();
-            int pointer;
-            StringBuffer strb = new StringBuffer(file.getFileSize());
-            while ((pointer = is.read()) != -1) {
-                strb.append((char) pointer);
-            }
-            return(strb.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
+  public static String readFileStream(FormFile file) {
+      try {
+          InputStream is = file.getInputStream();
+          int pointer;
+          StringBuffer strb = new StringBuffer(file.getFileSize());
+          while ((pointer = is.read()) != -1) {
+              strb.append((char) pointer);
+          }
+          return(strb.toString());
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+      return("");
+  }
+  
+  //joins an array into a string; array elements separated by a specified delimiter
+  public static String join(String[] strArray, String delimiter) {
+      StringBuffer result = new StringBuffer();
+      for (int i=0, arrayLength=strArray.length; i<arrayLength; i++) {
+          result.append(strArray[i]);
+          if (i < arrayLength-1) {
+              result.append(delimiter);
+          }
+      }
+      return result.toString();
+  }
+  //arraylist elements must be string types
+  public static String join(ArrayList strArray, String delimiter) {
+      StringBuffer result = new StringBuffer();
+      for (int i=0, arrayLength=strArray.size(); i<arrayLength; i++) {
+          result.append(strArray.get(i));
+          if (i < arrayLength-1) {
+              result.append(delimiter);
+          }
+      }
+      return result.toString();
+  }
+  
+  public static ArrayList split(String rawString, String delimiter) {
+        ArrayList result = new ArrayList();
+        StringTokenizer st = new StringTokenizer(rawString, delimiter);
+
+        while (st.hasMoreTokens()) {
+          result.add(st.nextToken());
+
         }
-        return("");
-    }
+        return result;
+  }
+  
+  public static String[] splitToStringArray(String rawString, String delimiter) {
+        StringTokenizer st = new StringTokenizer(rawString, delimiter);
+        String[] result = new String[st.countTokens()];
+        int i = 0;
+        while (st.hasMoreTokens()) {
+          result[i] = (st.nextToken());
+          i++;
+        }
+        return result;
+  }
 }
