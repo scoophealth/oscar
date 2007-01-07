@@ -22,10 +22,9 @@
 
 package org.oscarehr.PMmodule.model;
 
-import java.util.Calendar;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.model.base.BaseBedDemographicHistorical;
+import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
 public class BedDemographicHistorical extends BaseBedDemographicHistorical {
 
@@ -35,7 +34,7 @@ public class BedDemographicHistorical extends BaseBedDemographicHistorical {
 		BedDemographicHistorical historical = new BedDemographicHistorical();
 
 		historical.setId(BedDemographicHistoricalPK.create(bedDemographic.getId(), bedDemographic.getReservationStart()));
-		historical.setUsageEnd(Calendar.getInstance().getTime());
+		historical.setUsageEnd(DateTimeFormatUtils.getToday());
 
 		return historical;
 	}
