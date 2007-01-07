@@ -90,7 +90,7 @@ public class BedManagerImpl implements BedManager {
 	 */
 	public Bed[] getBedsByProgram(Integer programId, boolean reserved) {
 		if (programId == null) {
-			handleException(new IllegalArgumentException("programId must not be null"));
+			return new Bed[] {};
 		}
 
 		List<Bed> beds = new ArrayList<Bed>();
