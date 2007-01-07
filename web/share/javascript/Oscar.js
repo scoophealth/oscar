@@ -63,55 +63,13 @@ function hideItem(id){
         document.getElementById(id).style.display = 'none'; 
 }
 
-
-function validDate(id) {
-   //checks if the <input type="text"> has a valid date format yyyy/mm/dd
-   var completeRawDate = document.getElementById(id).value;
-   var delimiter = '/';
-   if (completeRawDate.indexOf('/') == -1)
-       delimiter = '-';
-   var dateArray = completeRawDate.split(delimiter);
-   if (dateArray.length != 3) return false;
-   year = (dateArray[0] - 0);
-   month = (dateArray[1] - 1);
-   day = (dateArray[2] - 0);
-   //alert("year: " + year + ", " + month + ", " + day);
-   dateObject = new Date(year,month,day);
-   return ((day==dateObject.getDate()) && (month==dateObject.getMonth()) && (year==dateObject.getFullYear()));
-}
-
-
-//to get elements by custom attributes, everything but the 'attribute' field is optional
-document.getElementsByAttribute=function(attrN,attrV,multi){
-    attrV=attrV.replace(/\|/g,'\\|').replace(/\[/g,'\\[').replace(/\(/g,'\\(').replace(/\+/g,'\\+').replace(/\./g,'\\.').replace(/\*/g,'\\*').replace(/\?/g,'\\?').replace(/\//g,'\\/');
-    var
-        multi=typeof multi!='undefined'?
-            multi:
-            false,
-        cIterate=document.getElementsByTagName('*'),
-        aResponse=[],
-        attr,
-        re=new RegExp(multi?'\\b'+attrV+'\\b':'^'+attrV+'$'),
-        i=0,
-        elm;
-    while((elm=cIterate.item(i++))){
-        attr=elm.getAttributeNode(attrN);
-        if(attr &&
-            attr.specified &&
-            re.test(attr.value)
-        )
-            aResponse.push(elm);
-    }
-    return aResponse;
-}
-
 /*
 oElm - Mandatory. This is element in whose children you will look for the attribute.
 strTagName - Mandatory. This is the name of the HTML elements you want to look in. Use wildcard (*) if you want to look in all elements.
 strAttributeName - Mandatory. The name of the attribute you’re looking for.
-strAttributeValue - Optional. If you want the attribute you’re looking for to have a certain value as well. 
+strAttributeValue - Optional. If you want the attribute you’re looking for to have a certain value as well. (don't specify it if you don't know it)
 */
-document.getElementsByAttribute2 = function(oElm, strTagName, strAttributeName, strAttributeValue){
+document.getElementsByAttribute = function(oElm, strTagName, strAttributeName, strAttributeValue){
     var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);
     var arrReturnElements = new Array();
     var oAttributeValue = (typeof strAttributeValue != "undefined")? new RegExp("(^|\\s)" + strAttributeValue + "(\\s|$)") : null;
@@ -127,4 +85,69 @@ document.getElementsByAttribute2 = function(oElm, strTagName, strAttributeName, 
         }
     }
     return arrReturnElements;
+}
+
+function validDate(id) {
+   //checks if the <input type="text"> has a valid date format yyyy/mm/dd
+   var completeRawDate = document.getElementById(id).value;
+   return validDateText(completeRawDate);
+}
+
+function validDateText(completeRawDate) {
+//Just another method that validates date in a string, useful if you want to make your own
+//date checking script.
+   var delimiter = '/';
+   if (completeRawDate.indexOf('/') == -1)
+       delimiter = '-';
+   var dateArray = completeRawDate.split(delimiter);
+   if (dateArray.length != 3) return false;
+   year = (dateArray[0] - 0);
+   month = (dateArray[1] - 1);
+   day = (dateArray[2] - 0);
+   //alert("year: " + year + ", " + month + ", " + day);
+   dateObject = new Date(year,month,day);
+   return ((day==dateObject.getDate()) && (month==dateObject.getMonth()) && (year==dateObject.getFullYear()));
+}
+
+function validDateFieldsByClass(className, parentEle) {
+//Checks if the dates are valid, identifies date fields by class name; datefield preferrably type="text"
+// parentEle is any object that encloses the fields, usually the form element
+   var datefields = document.getElementsByClassName(className, parentEle)
+   for (var i=0; i<datefields.length; i++) {
+      if (!validDateText(datefields[i].value)) {
+        datefields[i].focus();
+        return false;
+      }
+   }
+   return true;
+}
+
+//returns mouse coordinates
+function getMouseCoords(e) {
+        var array = new Array(2);
+	var posx = 0;
+	var posy = 0;
+	if (!e) var e = window.event;
+	if (e.pageX || e.pageY) 	{
+		posx = e.pageX;
+		posy = e.pageY;
+	}
+	else if (e.clientX || e.clientY) 	{
+        posx = e.clientX + document.body.scrollLeft
+			+ document.documentElement.scrollLeft;
+		posy = e.clientY + document.body.scrollTop
+			+ document.documentElement.scrollTop;
+	}
+        array[0] = posx;
+        array[1] = posy;
+        return array;
+}
+
+//example  <input type="checkbox" onclick="checkAll(this, 'parentEle', 'checkclass')">
+function checkAll(master, parentEle, className){
+   var val = master.checked;
+   var chkList = document.getElementsByClassName(className, parentEle);
+   for (i =0; i < chkList.length; i++){
+      chkList[i].checked = val;
+   }
 }
