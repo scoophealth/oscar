@@ -60,6 +60,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <meta http-equiv="Cache-Control" content="no-cache" />
 <title><bean:message key="admin.admin.title"/></title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 <script type="text/JavaScript">
 function onsub() {
 	if(document.searchprovider.keyword.value=="") {
@@ -335,6 +336,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <% if (!country.equals("BR")) { %>
          <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/RptByExample.do');return false;"><bean:message key="admin.admin.btnQueryByExample"/></a></li>
          <%}%>
+         <li><a href="#" onclick="popup(600, 900, '../oscarReport/reportByTemplate/homePage.jsp', 'reportbytemplate')">Report by Template</a>
          <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/dbReportAgeSex.jsp');return false;"><bean:message key="admin.admin.btnAgeSexReport"/></a></li>
          <li><a href="#" onclick ="popupPage(600,900,'../oscarReport/oscarReportVisitControl.jsp');return false;"><bean:message key="admin.admin.btnVisitReport"/></a></li>
            <%-- This links doesnt make sense on Brazil. Hide then --%>
@@ -372,7 +374,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <h3>&nbsp;<bean:message key="admin.admin.oscarMessenger"/></h3>
       <ul>
          <li><a href="#" onclick ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curProvider_no%>&amp;userName=<%=userfirstname%>%20<%=userlastname%>');return false;"><bean:message key="admin.admin.messages"/></a></li>
-         <li><a href="#" onClick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>
+         <li><a href="#" onclick="popupOscarRx(600,900,'../oscarMessenger/config/MessengerAdmin.jsp');return false;"><bean:message key="admin.admin.btnMessengerAdmin"/></a></li>
       </ul>
   </div>
   </security:oscarSec>
