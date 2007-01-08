@@ -52,8 +52,10 @@
     <c:when test="${status.count % 2 == 0}"><tr class="even"></c:when>
     <c:otherwise><tr class="odd"></c:otherwise>
 </c:choose>
-
+<!--Not allow to edit issue
     <td><a href="issueAdmin.do?method=edit&amp;id=<c:out value="${issueAdmin.id}"/>"><c:out value="${issueAdmin.code}"/></a></td>
+-->   
+	<td><c:out value="${issueAdmin.code}"/></a></td>
     <td><c:out value="${issueAdmin.description}"/></td>
     <td><c:out value="${issueAdmin.role}"/></td>
 <!--
