@@ -1,30 +1,23 @@
-<!-- 
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
- -->
-
+<!--
+	Copyright (c) 2001-2002.
+	
+	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
+	This software is published under the GPL GNU General Public License.
+	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU General Public License for more details.
+	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+	
+	OSCAR TEAM
+	
+	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+-->
 <%@ include file="/taglibs.jsp"%>
-<%@ page import="org.oscarehr.PMmodule.model.*"%>
-<%@ page import="java.util.*"%>
+
+<%@page import="org.oscarehr.PMmodule.model.Admission"%>
+<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
+<%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
+<%@page import="java.util.Date"%>
 
 <script>
 var XMLHttpRequestObject = false;
@@ -35,7 +28,7 @@ if (window.XMLHttpRequest) {
 	XMLHttpRequestObject = new ActiveXObject("Microsoft.XMLHTTP");
 }
 
-window.onload=new Function("summary_load();");
+window.onload = new Function("summary_load();");
 
 function summary_load() {
 	showEMPILinks();
@@ -122,7 +115,7 @@ function showEMPILinks() {
 		<td>
 		<%
 		if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
-			Integer demographicNo = ((org.oscarehr.PMmodule.model.Demographic) request.getAttribute("client")).getDemographicNo();
+			Integer demographicNo = ((Demographic) request.getAttribute("client")).getDemographicNo();
 			pageContext.setAttribute("demographicNo",demographicNo);
 		%>
 			<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a>
@@ -170,7 +163,7 @@ function showEMPILinks() {
 				<td><c:out value="${bedDemographic.latePass}" /></td>
 			</tr>
 			<tr>
-				<th width="20%">Reserved Until</th>
+				<th width="20%">Until</th>
 				<td><fmt:formatDate value="${bedDemographic.reservationEnd}" pattern="yyyy-MM-dd" /></td>
 			</tr>
 		</c:otherwise>
@@ -325,25 +318,19 @@ function showEMPILinks() {
 	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
 	<display:column sortable="true" title="Days in Program">
 		<%
-			Admission tmpAd = (Admission) pageContext.getAttribute("admission");
-
-			Date admissionDate = tmpAd.getAdmissionDate();
-			Date dischargeDate = tmpAd.getDischargeDate();
-			String adNumDays = "";
+			Admission tempAdmission = (Admission) pageContext.getAttribute("admission");
+			Date admissionDate = tempAdmission.getAdmissionDate();
+			Date dischargeDate = tempAdmission.getDischargeDate() != null ? tempAdmission.getDischargeDate() : new Date();
 			
-			if (dischargeDate == null) {
-				dischargeDate = new Date();
-			}
+			long diff = dischargeDate.getTime() - admissionDate.getTime();
+			diff = diff / 1000; // seconds
+			diff = diff / 60; // minutes
+			diff = diff / 60; // hours
+			diff = diff / 24; // days
 
-			long diff1 = dischargeDate.getTime() - admissionDate.getTime();
-			diff1 = diff1 / 1000; //seconds;
-			diff1 = diff1 / 60; //minutes;
-			diff1 = diff1 / 60; //hours
-			diff1 = diff1 / 24; //days
-
-			adNumDays = String.valueOf(diff1);
+			String numDays = String.valueOf(diff);
 		%>
-		<%=adNumDays%>
+		<%=numDays%>
 	</display:column>
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
 	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
@@ -369,18 +356,17 @@ function showEMPILinks() {
 	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
 	<display:column sortable="true" title="Days in Queue">
 		<%
-			ClientReferral temp = (ClientReferral) pageContext.getAttribute("referral");
-			Date referralDate = temp.getReferralDate();
+			ClientReferral tempReferral = (ClientReferral) pageContext.getAttribute("referral");
+			Date referralDate = tempReferral.getReferralDate();
 			Date currentDate = new Date();
-			String numDays = "";
-
+			
 			long diff = currentDate.getTime() - referralDate.getTime();
 			diff = diff / 1000; // seconds
 			diff = diff / 60; // minutes
 			diff = diff / 60; // hours
 			diff = diff / 24; // days
 
-			numDays = String.valueOf(diff);
+			String numDays = String.valueOf(diff);
 		%>
 		<%=numDays%>
 	</display:column>
