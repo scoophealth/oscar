@@ -201,8 +201,13 @@ public class JdbcBillingRAImpl {
 					}
 
 					if (valid) {
-						accountno = Integer.parseInt(account.trim());
-						account = String.valueOf(accountno);
+						if("".equals(account.trim())) {
+							accountno = 0;
+							account = "0";
+						} else {
+							accountno = Integer.parseInt(account.trim());
+							account = String.valueOf(accountno);
+						}
 					}
 				}
 
