@@ -42,6 +42,7 @@
 
 <script language="javascript">
 <%-- start javascript ---- check to see if it is really empty in database --%>
+
 function setfocus() {
   this.focus();
   document.UPDATEPRE.mygroup_no.focus();
@@ -56,8 +57,21 @@ function validate() {
      
      return false;
   }else{
-  	return true;
-  }
+  	
+  	var checked=false;
+  	var checkboxes = document.getElementsByName("data");
+	var x=0;
+		for(x=0;x<checkboxes.length;x++) {
+			if(checkboxes[x].checked==true) {
+				checked=true;
+			}
+		}
+		if(checked==false) {
+			alert('You must choose a provider');
+			return false;
+		}
+		return true;
+  	}	
 }
 </script>
 
@@ -110,7 +124,7 @@ function validate() {
           <tr BGCOLOR="<%=i%2==0?"ivory":"white"%>">
             <td >&nbsp; <%=rsgroup.getString("last_name")%>, <%=rsgroup.getString("first_name")%></td>
               <td ALIGN="center"> 
-                <input type="checkbox" name="data<%=i%>" value="<%=i%>">
+                <input type="checkbox" name="data" value="<%=i%>">
                 <input type="hidden" name="provider_no<%=i%>" value="<%=rsgroup.getString("provider_no")%>">
                 <INPUT TYPE="hidden" NAME="last_name<%=i%>" VALUE='<%=rsgroup.getString("last_name")%>'>
                 <INPUT TYPE="hidden" NAME="first_name<%=i%>" VALUE='<%=rsgroup.getString("first_name")%>'>
