@@ -517,7 +517,7 @@
                                 <option value="A" <%=props.getProperty("motherABO", "").equalsIgnoreCase("A")?"selected":""%>  >A</option>
                                 <option value="B" <%=props.getProperty("motherABO", "").equalsIgnoreCase("B")?"selected":""%>  >B</option>
                                 <option value="o" <%=props.getProperty("motherABO", "").equalsIgnoreCase("o")?"selected":""%>  >O</option>
-                                <option value="AB" <%=props.getProperty("motherABO", "").equalsIgnoreCase("AB")?"selected":""%>  >O</option>
+                                <option value="AB" <%=props.getProperty("motherABO", "").equalsIgnoreCase("AB")?"selected":""%>  >AB</option>
                             </select>
 
                             <label class="smallmargin">Rh type:</label>  
@@ -642,6 +642,7 @@
                                 <option value="A" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("A")?"selected":""%>  >A</option>
                                 <option value="B" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("B")?"selected":""%>  >B</option>
                                 <option value="o" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("o")?"selected":""%>  >O</option>
+                                <option value="AB" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("AB")?"selected":""%>  >AB</option>
                                 <option value="U" <%=props.getProperty("fatherABO", "").equalsIgnoreCase("U")?"selected":""%>  >Unknown</option>
                             </select>
                             <label class="smallmargin">Father's Rh type:</label>  
