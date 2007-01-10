@@ -299,17 +299,20 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ="popupPage(200,300,'../billing/CA/BC/settleBG.jsp');return false;">Settle Over/Under paid Claims</a></li>
          <% }else if (oscarVariables.getProperty("billregion","").equals("ON")){ %>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a></li>
-          <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Add/Edit Billing Service Code</a></li>
+          <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Manage Billing Service Code</a></li>
+          <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/billingONEditPrivateCode.jsp');return false;">Manage Private Billing Code</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a></li>
           <li><a href="#" onclick ="popupPage(700,700,'../billing/CA/ON/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a></li>
           <li><a href="#" onclick ="popupPage(700,720,'../billing/CA/ON/billingOHIPreport.jsp');return false;"><bean:message key="admin.admin.btnGenerateOHIPDiskette"/></a></li>
           <li><a href="#" onclick ="popupPage(700,640,'../billing/CA/ON/billingCorrection.jsp?billing_no=');return false;"><bean:message key="admin.admin.btnBillingCorrection"/></a></li>
           <li><a href="#" onclick ="popupPage(700,640,'../billing/CA/ON/inr/reportINR.jsp?provider_no=all');return false;"><bean:message key="admin.admin.btnINRBatchBilling"/></a></li>
-          <li><a href="#" onclick ="popupPage(600,900,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li>
-          <li><a href="#" onclick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li>
+          <li><a href="#" onclick ="popupPage(600,900,'../billing/CA/ON/billingONUpload.jsp');return false;">Upload MOH files</a></li>
+          <li><a href="#" onclick ="popupPage(600,900,'../servlet/oscar.DocumentUploadServlet');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li>
+          <!--  li><a href="#" onclick ="popupPage(600,900,'../billing/CA/ON/billingRA.jsp');return false;"><bean:message key="admin.admin.btnBillingReconcilliation"/></a></li-->
+          <!--  li><a href="#" onclick ="popupPage(600,1000,'../billing/CA/ON/billingOBECEA.jsp');return false;"><bean:message key="admin.admin.btnEDTBillingReportGenerator"/></a></li-->
           <oscar:oscarPropertiesCheck property="TESTING" value="yes">
-             <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/ON/billStatus.jsp');return false;">Bill Status</a></li>
+             <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/ON/billStatus.jsp');return false;">Invoice Reports</a></li>
           </oscar:oscarPropertiesCheck>
          <%}%>
       </ul>
