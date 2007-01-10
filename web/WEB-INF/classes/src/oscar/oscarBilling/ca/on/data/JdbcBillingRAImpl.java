@@ -208,6 +208,9 @@ public class JdbcBillingRAImpl {
 							accountno = Integer.parseInt(account.trim());
 							account = String.valueOf(accountno);
 						}
+					} else {
+						accountno = -1;
+						account = "-1";
 					}
 				}
 
