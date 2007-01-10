@@ -111,6 +111,12 @@
           <input type="text" name="mygroup_no" value="">
         </td>
       </tr>
+      <tr>
+      	<td>
+      	</td>
+      	<td><input type="hidden" name="new_tickler_warning_window" value="disable">
+      	</td>
+      </tr>
       <tr> 
         <td colspan="2"> 
           <div align="center"> 
