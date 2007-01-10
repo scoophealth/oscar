@@ -107,7 +107,16 @@ if (request.getParameter("casetoEncounter")==null)
   String provNo = bean.providerNo;
   EctFormData.Form[] forms = new EctFormData().getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
-  EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo); 
+  String famDocName, famDocSurname;
+  if(bean.familyDoctorNo.equals("")) {
+    famDocName = "";
+    famDocSurname = "";      
+  }
+  else {
+    EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo); 
+    famDocName = prov.getFirstName();
+    famDocSurname = prov.getSurname();
+  }
   
   String patientName = pd.getFirstName()+" "+pd.getSurname();
   String patientAge = pd.getAge();
@@ -1024,7 +1033,7 @@ white-space: nowrap;
         <td class="hidePrint" bgcolor="#003399" style="width:auto; border-right: 2px solid #A9A9A9;height:34px;" >
             <div class="Title">
 			&nbsp;<bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
-                       <%=prov.getFirstName()%>&nbsp;<%=prov.getSurname()%>
+                       <%=famDocName%>&nbsp;<%=famDocSurname%>
             </div>
         </td>
 
