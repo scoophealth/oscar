@@ -3,6 +3,7 @@ String invNo = request.getParameter("billingNo");
 Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
 Properties propClinic = privateObj.getLocalClinicAddr();
 Properties prop3rdPart = privateObj.get3rdPartBillProp(invNo);
+Properties prop3rdPayMethod = privateObj.get3rdPayMethod();
 
 BillingCorrectionPrep billObj = new BillingCorrectionPrep();
 List aL = billObj.getBillingRecordObj(invNo);
@@ -98,6 +99,7 @@ bdBal = bdBal.subtract(bdPay);
 bdBal = bdBal.subtract(bdRef);
 %>
 <tr align="right"><td><b>Balance:</b></td><td><%=bdBal %></td></tr>
+<tr align="right"><td>(<%=prop3rdPayMethod.getProperty(prop3rdPart.getProperty("payMethod",""), "") %>)</td><td></td></tr>
 </table>
 
 </body>

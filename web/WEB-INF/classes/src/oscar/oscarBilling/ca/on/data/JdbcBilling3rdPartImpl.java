@@ -10,7 +10,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 public class JdbcBilling3rdPartImpl {
-	private static final Logger _logger = Logger.getLogger(JdbcBilling3rdPartImpl.class);
+	private static final Logger _logger = Logger
+			.getLogger(JdbcBilling3rdPartImpl.class);
+
 	BillingONDataHelp dbObj = new BillingONDataHelp();
 
 	public Properties get3rdPartBillProp(String invNo) {
@@ -20,7 +22,8 @@ public class JdbcBilling3rdPartImpl {
 
 		try {
 			while (rs.next()) {
-				retval.setProperty(rs.getString("key_val"), rs.getString("value"));
+				retval.setProperty(rs.getString("key_val"), rs
+						.getString("value"));
 			}
 		} catch (SQLException e) {
 			_logger.error("get3rdPartBillProp(sql = " + sql + ")");
@@ -36,11 +39,15 @@ public class JdbcBilling3rdPartImpl {
 		try {
 			while (rs.next()) {
 				retval.setProperty("clinic_name", rs.getString("clinic_name"));
-				retval.setProperty("clinic_address", rs.getString("clinic_address"));
+				retval.setProperty("clinic_address", rs
+						.getString("clinic_address"));
 				retval.setProperty("clinic_city", rs.getString("clinic_city"));
-				retval.setProperty("clinic_province", rs.getString("clinic_province"));
+				retval.setProperty("clinic_province", rs
+						.getString("clinic_province"));
 				retval.setProperty("clinic_fax", rs.getString("clinic_fax"));
-				retval.setProperty("clinic_phone", rs.getString("clinic_phone"));
+				retval
+						.setProperty("clinic_phone", rs
+								.getString("clinic_phone"));
 				retval.setProperty("clinic_fax", rs.getString("clinic_fax"));
 			}
 		} catch (SQLException e) {
@@ -49,18 +56,43 @@ public class JdbcBilling3rdPartImpl {
 		return retval;
 	}
 
+	public Properties get3rdPayMethod() {
+		Properties retval = new Properties();
+		String sql = "select * from billing_payment_type";
+		ResultSet rs = dbObj.searchDBRecord(sql);
+
+		try {
+			while (rs.next()) {
+				retval.setProperty(("" + rs.getInt("id")), rs
+						.getString("payment_type"));
+			}
+		} catch (SQLException e) {
+			_logger.error("get3rdPayMethod(sql = " + sql + ")");
+		}
+		return retval;
+	}
+
 	// 3rd bill ins. address
 	public int addOne3rdAddrRecord(Properties val) {
 		int retval = 0;
-		String sql = "insert into billing_on_3rdPartyAddress values(\\N, " + " '"
-				+ StringEscapeUtils.escapeSql(val.getProperty("attention", "")) + "' ,'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("company_name", "")) + "'," + "'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("address", "")) + "'," + "'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("city", "")) + "'," + "'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("province", "")) + "'," + "'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("postcode", "")) + "'," + "'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("telephone", "")) + "'," + "'"
-				+ StringEscapeUtils.escapeSql(val.getProperty("fax", "")) + "')";
+		String sql = "insert into billing_on_3rdPartyAddress values(\\N, "
+				+ " '"
+				+ StringEscapeUtils.escapeSql(val.getProperty("attention", ""))
+				+ "' ,'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("company_name",
+						"")) + "'," + "'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("address", ""))
+				+ "'," + "'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("city", ""))
+				+ "'," + "'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("province", ""))
+				+ "'," + "'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("postcode", ""))
+				+ "'," + "'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("telephone", ""))
+				+ "'," + "'"
+				+ StringEscapeUtils.escapeSql(val.getProperty("fax", ""))
+				+ "')";
 		_logger.info("addOne3rdAddrRecord(sql = " + sql + ")");
 		retval = dbObj.saveBillingRecord(sql);
 
@@ -72,13 +104,19 @@ public class JdbcBilling3rdPartImpl {
 
 	public boolean update3rdAddr(String id, Properties val) {
 		String sql = "update billing_on_3rdPartyAddress set attention='"
-				+ StringEscapeUtils.escapeSql(val.getProperty("attention", "")) + "', company_name='"
-				+ StringEscapeUtils.escapeSql(val.getProperty("company_name", "")) + "', address='"
-				+ StringEscapeUtils.escapeSql(val.getProperty("address", "")) + "', city='"
-				+ StringEscapeUtils.escapeSql(val.getProperty("city", "")) + "', province='"
-				+ StringEscapeUtils.escapeSql(val.getProperty("province", "")) + "', postcode='"
-				+ val.getProperty("postcode", "") + "', telephone='" + val.getProperty("telephone", "") + "', fax='"
-				+ val.getProperty("fax", "") + "' where id=" + val.getProperty("id", "");
+				+ StringEscapeUtils.escapeSql(val.getProperty("attention", ""))
+				+ "', company_name='"
+				+ StringEscapeUtils.escapeSql(val.getProperty("company_name",
+						"")) + "', address='"
+				+ StringEscapeUtils.escapeSql(val.getProperty("address", ""))
+				+ "', city='"
+				+ StringEscapeUtils.escapeSql(val.getProperty("city", ""))
+				+ "', province='"
+				+ StringEscapeUtils.escapeSql(val.getProperty("province", ""))
+				+ "', postcode='" + val.getProperty("postcode", "")
+				+ "', telephone='" + val.getProperty("telephone", "")
+				+ "', fax='" + val.getProperty("fax", "") + "' where id="
+				+ val.getProperty("id", "");
 		boolean retval = dbObj.updateDBRecord(sql);
 
 		if (!retval) {
@@ -110,8 +148,8 @@ public class JdbcBilling3rdPartImpl {
 
 	public List get3rdAddrList(String keyword, String field) {
 		List ret = new Vector();
-		String sql = "select * from billing_on_3rdPartyAddress where " + field + " like '" + keyword
-				+ "%' order by attention, company_name";
+		String sql = "select * from billing_on_3rdPartyAddress where " + field
+				+ " like '" + keyword + "%' order by attention, company_name";
 		ResultSet rsdemo = dbObj.searchDBRecord(sql);
 		try {
 			while (rsdemo.next()) {
@@ -156,7 +194,7 @@ public class JdbcBilling3rdPartImpl {
 				String postcode = rsdemo.getString("postcode");
 				String telephone = rsdemo.getString("telephone");
 				String fax = rsdemo.getString("fax");
-				//Properties prop = new Properties();
+				// Properties prop = new Properties();
 				prop.setProperty("id", id);
 				prop.setProperty("attention", attention);
 				prop.setProperty("company_name", company_name);
@@ -175,7 +213,8 @@ public class JdbcBilling3rdPartImpl {
 
 	public Properties get3rdAddrProp(String name) {
 		Properties prop = new Properties();
-		String sql = "select * from billing_on_3rdPartyAddress where company_name ='" + name + "'";
+		String sql = "select * from billing_on_3rdPartyAddress where company_name ='"
+				+ name + "'";
 		ResultSet rsdemo = dbObj.searchDBRecord(sql);
 		try {
 			while (rsdemo.next()) {
@@ -188,7 +227,7 @@ public class JdbcBilling3rdPartImpl {
 				String postcode = rsdemo.getString("postcode");
 				String telephone = rsdemo.getString("telephone");
 				String fax = rsdemo.getString("fax");
-				//Properties prop = new Properties();
+				// Properties prop = new Properties();
 				prop.setProperty("id", id);
 				prop.setProperty("attention", attention);
 				prop.setProperty("company_name", company_name);

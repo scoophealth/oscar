@@ -22,4 +22,10 @@ public class Billing3rdPartPrep {
 		ret = dbObj.getLocalClinicAddr();
 		return ret;
 	}
+	
+	public Properties get3rdPayMethod() {
+		Properties ret = new Properties();
+		ret = dbObj.get3rdPayMethod();
+		return ret;
+	}
 }
