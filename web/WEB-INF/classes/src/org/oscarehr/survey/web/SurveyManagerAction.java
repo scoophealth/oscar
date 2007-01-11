@@ -734,7 +734,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		
 		postMessage(request,"survey.saved");
 		
-		return list(mapping,form,request,response);
+		return mapping.findForward("redirect");
 	}
 	
 	public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
