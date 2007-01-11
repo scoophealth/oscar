@@ -57,13 +57,9 @@
             </div>
 <%            
         } //end if menu items
-   } //end if there is a right hand header
-   
-   if( dao.numItems() > 5 ) {
-%>       
-  <a style="width: 2%; margin: 5px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-5 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>img" src="graphics/expand.gif"/></a>     
-<%  
-   }
+   } //end if there is a right hand header               
+ 
+
    //left hand module header comes last as it's displayed as a block
 %>
 <h3><a href="#" onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3> 
@@ -87,11 +83,17 @@
       %>
       <li <%=stripe%>>
      <%     
+            if( dao.numItems() > 5 && j == 4 ) {
+     %>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-5 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>img" src="graphics/expand.gif"/></a>
+     <%
+            }
+            
             if( j == dao.numItems()-1 && j > 4 ) {
      %>           
                 <a id="<%=request.getAttribute("navbarName")%>up" style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="../oscarMessenger/img/collapse.gif"/></a>
      <%
-            }
+            }            
      %>
         <a class="links" style="<%=colour%>" onmouseover="this.className='linkhover'"  onmouseout="this.className='links'" href="#" onclick="<%=item.getURL()%>" title="<%=item.getLinkTitle()%>">
             <%=item.getTitle()%>
