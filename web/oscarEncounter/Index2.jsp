@@ -104,7 +104,7 @@ if (request.getParameter("casetoEncounter")==null)
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
-  String provNo = bean.providerNo;
+  String provNo = bean.providerNo;  
   EctFormData.Form[] forms = new EctFormData().getForms();
   EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
   String famDocName, famDocSurname;
@@ -116,6 +116,7 @@ if (request.getParameter("casetoEncounter")==null)
     EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo); 
     famDocName = prov.getFirstName();
     famDocSurname = prov.getSurname();
+    
   }
   
   String patientName = pd.getFirstName()+" "+pd.getSurname();
@@ -1033,8 +1034,11 @@ white-space: nowrap;
         <td class="hidePrint" bgcolor="#003399" style="width:auto; border-right: 2px solid #A9A9A9;height:34px;" >
             <div class="Title">
 			&nbsp;<bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
-                       <%=famDocName%>&nbsp;<%=famDocSurname%>
+                       <%=famDocName%>&nbsp;<%=famDocSurname%>                       
             </div>
+            <div class="Title" style="margin: 0 auto; text-align:center">
+                <a href="javascript: function myFunction() {return false; }"  title="<bean:message key="oscarEncounter.Index.calculators"/>" onClick="popupPage(150,200,'calculatorWin','calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" ><img alt="<bean:message key="oscarEncounter.Index.calculators"/>" src="graphics/calculator.gif"></a>
+            </div>                
         </td>
 
         <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
