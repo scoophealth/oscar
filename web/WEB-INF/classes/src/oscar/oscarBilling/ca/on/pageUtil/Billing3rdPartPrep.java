@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 import oscar.oscarBilling.ca.on.data.JdbcBilling3rdPartImpl;
 
 public class Billing3rdPartPrep {
-	private static final Logger _logger = Logger.getLogger(Billing3rdPartPrep.class);
+	private static final Logger _logger = Logger
+			.getLogger(Billing3rdPartPrep.class);
+
 	JdbcBilling3rdPartImpl dbObj = new JdbcBilling3rdPartImpl();
 
 	// get 3rd billing data
@@ -22,10 +24,17 @@ public class Billing3rdPartPrep {
 		ret = dbObj.getLocalClinicAddr();
 		return ret;
 	}
-	
+
 	public Properties get3rdPayMethod() {
 		Properties ret = new Properties();
 		ret = dbObj.get3rdPayMethod();
 		return ret;
 	}
+
+	public boolean updateKeyValue(String billingNo, String demoNo, String key,
+			String value) {
+		boolean ret = dbObj.updateKeyValue(billingNo, key, value);
+		return ret;
+	}
+
 }

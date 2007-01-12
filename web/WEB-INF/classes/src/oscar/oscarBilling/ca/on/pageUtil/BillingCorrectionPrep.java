@@ -13,6 +13,7 @@ import oscar.oscarBilling.ca.on.data.BillingClaimHeader1Data;
 import oscar.oscarBilling.ca.on.data.BillingDataHlp;
 import oscar.oscarBilling.ca.on.data.BillingItemData;
 import oscar.oscarBilling.ca.on.data.BillingProviderData;
+import oscar.oscarBilling.ca.on.data.JdbcBilling3rdPartImpl;
 import oscar.oscarBilling.ca.on.data.JdbcBillingClaimImpl;
 import oscar.oscarBilling.ca.on.data.JdbcBillingCodeImpl;
 import oscar.oscarBilling.ca.on.data.JdbcBillingCorrection;
@@ -20,7 +21,9 @@ import oscar.oscarBilling.ca.on.data.JdbcBillingPageUtil;
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
 
 public class BillingCorrectionPrep {
-	private static final Logger _logger = Logger.getLogger(BillingCorrectionPrep.class);
+	private static final Logger _logger = Logger
+			.getLogger(BillingCorrectionPrep.class);
+
 	JdbcBillingCorrection dbObj = new JdbcBillingCorrection();
 
 	// 
@@ -42,35 +45,62 @@ public class BillingCorrectionPrep {
 	}
 
 	// compare the obj first, push old record to repo if needed.
-	public boolean updateBillingClaimHeader(BillingClaimHeader1Data ch1Obj, HttpServletRequest requestData) {
+	public boolean updateBillingClaimHeader(BillingClaimHeader1Data ch1Obj,
+			HttpServletRequest requestData) {
 		boolean ret = true;
 		if (isChangedBillingClaimHeader(ch1Obj, requestData)) {
 			int i = dbObj.addRepoClaimHeader(ch1Obj);
-			_logger.info("updateBillingClaimHeader(old value = " + i + ch1Obj.getStatus() + "|" + ch1Obj.getRef_num()
-					+ "|" + ch1Obj.getAdmission_date() + "|" + ch1Obj.getFacilty_num() + "|" + ch1Obj.getMan_review()
-					+ "|" + ch1Obj.getBilling_date() + "|" + ch1Obj.getProvider_no() + "|" + ch1Obj.getCreator());
+			_logger.info("updateBillingClaimHeader(old value = " + i
+					+ ch1Obj.getStatus() + "|" + ch1Obj.getRef_num() + "|"
+					+ ch1Obj.getAdmission_date() + "|"
+					+ ch1Obj.getFacilty_num() + "|" + ch1Obj.getMan_review()
+					+ "|" + ch1Obj.getBilling_date() + "|"
+					+ ch1Obj.getProvider_no() + "|" + ch1Obj.getCreator());
 
-			ch1Obj.setStatus(requestData.getParameter("status").substring(0, 1));
+			ch1Obj
+					.setStatus(requestData.getParameter("status").substring(0,
+							1));
 			ch1Obj.setPay_program(requestData.getParameter("payProgram"));
 			ch1Obj.setRef_num(requestData.getParameter("rdohip"));
 			ch1Obj.setVisittype(requestData.getParameter("visittype"));
 
 			ch1Obj.setAdmission_date(requestData.getParameter("xml_vdate"));
 			ch1Obj.setFacilty_num(requestData.getParameter("clinic_ref_code"));
-			ch1Obj.setMan_review(requestData.getParameter("m_review") == null ? "" : "Y");
-			ch1Obj.setBilling_date(requestData.getParameter("xml_appointment_date"));
+			ch1Obj
+					.setMan_review(requestData.getParameter("m_review") == null ? ""
+							: "Y");
+			ch1Obj.setBilling_date(requestData
+					.getParameter("xml_appointment_date"));
 			ch1Obj.setProvider_no(requestData.getParameter("provider_no"));
 			ch1Obj.setComment(requestData.getParameter("comment"));
 
 			// provider_ohip_no update as well
-			BillingProviderData otemp = (new JdbcBillingPageUtil()).getProviderObj(requestData
-					.getParameter("provider_no"));
+			BillingProviderData otemp = (new JdbcBillingPageUtil())
+					.getProviderObj(requestData.getParameter("provider_no"));
 			ch1Obj.setProvider_ohip_no(otemp.getOhipNo());
 			ch1Obj.setProvider_rma_no(otemp.getRmaNo());
-			ch1Obj.setCreator((String) requestData.getSession().getAttribute("user"));
+			ch1Obj.setCreator((String) requestData.getSession().getAttribute(
+					"user"));
 
 			ret = dbObj.updateBillingClaimHeader(ch1Obj);
 		}
+
+		// 3rd party elements
+		if (requestData.getParameter("payment") != null) {
+			ret = update3rdPartyItem(requestData);
+		}
+		return ret;
+	}
+
+	public boolean update3rdPartyItem(HttpServletRequest request) {
+		boolean ret = true;
+		JdbcBilling3rdPartImpl tobj = new JdbcBilling3rdPartImpl();
+		String billingNo = request.getParameter("xml_billing_no");
+		tobj.updateKeyValue(billingNo, "payment", request
+				.getParameter("payment"));
+		tobj
+				.updateKeyValue(billingNo, "refund", request
+						.getParameter("refund"));
 		return ret;
 	}
 
@@ -86,11 +116,14 @@ public class BillingCorrectionPrep {
 		String serviceDate = request.getParameter("xml_appointment_date");
 
 		for (int i = 0; i < BillingDataHlp.FIELD_MAX_SERVICE_NUM; i++) {
-			if (request.getParameter("servicecode" + i) != null && request.getParameter("servicecode" + i).length() > 0) { // == 5
+			if (request.getParameter("servicecode" + i) != null
+					&& request.getParameter("servicecode" + i).length() > 0) { // == 5
 				vecName.add(request.getParameter("servicecode" + i));
 				vecUnit.add(request.getParameter("billingunit" + i));
 				vecFee.add(request.getParameter("billingamount" + i));
-				vecStatus.add(request.getParameter("itemStatus" + i) == null ? "O" : "S");
+				vecStatus
+						.add(request.getParameter("itemStatus" + i) == null ? "O"
+								: "S");
 			}
 		}
 
@@ -98,7 +131,8 @@ public class BillingCorrectionPrep {
 		String claimId = "0";
 		for (int i = 0; i < lItemObj.size(); i++) {
 			BillingItemData iObj = (BillingItemData) lItemObj.get(i);
-			ret = changeItem(iObj, dx, serviceDate, vecName, vecUnit, vecFee, vecStatus);
+			ret = changeItem(iObj, dx, serviceDate, vecName, vecUnit, vecFee,
+					vecStatus);
 			claimId = iObj.getCh1_id();
 			_logger.info(iObj.getService_code() + " lItemObj = " + ret);
 		}
@@ -109,7 +143,8 @@ public class BillingCorrectionPrep {
 			String sUnit = (String) vecUnit.get(i);
 			String sFee = (String) vecFee.get(i);
 			String sStatus = (String) vecStatus.get(i);
-			ret = addItem(lItemObj, dx, serviceDate, sName, sUnit, sFee, sStatus);
+			ret = addItem(lItemObj, dx, serviceDate, sName, sUnit, sFee,
+					sStatus);
 			_logger.info(sName + " lItemObj(value = " + ret);
 		}
 
@@ -119,7 +154,8 @@ public class BillingCorrectionPrep {
 		updateAmount(newAmount, claimId);
 		// update paid if needed
 		if (request.getParameter("status").substring(0, 1).equals("S")
-				&& request.getParameter("payProgram").matches(BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
+				&& request.getParameter("payProgram").matches(
+						BillingDataHlp.BILLINGMATCHSTRING_3RDPARTY)) {
 			updatePaid(newAmount, claimId);
 		}
 
@@ -155,7 +191,8 @@ public class BillingCorrectionPrep {
 	}
 
 	// sql - set key=value, key1=value1, ...
-	private boolean isChangedBillingClaimHeader(BillingClaimHeader1Data existObj, HttpServletRequest request) {
+	private boolean isChangedBillingClaimHeader(
+			BillingClaimHeader1Data existObj, HttpServletRequest request) {
 		boolean ret = false;
 		// _logger.info("isChangedBillingClaimHeader(old value = " +
 		// existObj.getStatus() + "|" + existObj.getRef_num()
@@ -164,44 +201,61 @@ public class BillingCorrectionPrep {
 		// + "|" + existObj.getBilling_date() + "|" + existObj.getProvider_no()
 		// + "|" + existObj.getPay_program());
 		String temp = request.getParameter("m_review") == null ? "" : "Y";
-		if (!existObj.getStatus().equals(request.getParameter("status").substring(0, 1)))
+		if (!existObj.getStatus().equals(
+				request.getParameter("status").substring(0, 1)))
 			System.out.println("status");
-		if (!existObj.getPay_program().equals(request.getParameter("payProgram")))
+		if (!existObj.getPay_program().equals(
+				request.getParameter("payProgram")))
 			System.out.println("payProgram");
 		if (!existObj.getRef_num().equals(request.getParameter("rdohip")))
 			System.out.println("rdohip");
 		if (!existObj.getVisittype().equals(request.getParameter("visittype")))
 			System.out.println("visittype");
-		if (!existObj.getAdmission_date().equals(request.getParameter("xml_vdate")))
+		if (!existObj.getAdmission_date().equals(
+				request.getParameter("xml_vdate")))
 			System.out.println("xml_vdate");
 
-		if (!existObj.getFacilty_num().equals(request.getParameter("clinic_ref_code")))
+		if (!existObj.getFacilty_num().equals(
+				request.getParameter("clinic_ref_code")))
 			System.out.println("facNum:" + existObj.getFacilty_num());
 		if (!existObj.getMan_review().equals(temp))
-			System.out.println("|" + existObj.getMan_review() + ":temp:" + temp + "|");
-		if (!existObj.getBilling_date().equals(request.getParameter("xml_appointment_date")))
+			System.out.println("|" + existObj.getMan_review() + ":temp:" + temp
+					+ "|");
+		if (!existObj.getBilling_date().equals(
+				request.getParameter("xml_appointment_date")))
 			System.out.println("Billing_date");
-		if (!existObj.getProvider_no().equals(request.getParameter("provider_no")))
+		if (!existObj.getProvider_no().equals(
+				request.getParameter("provider_no")))
 			System.out.println("getProvider_no");
 
-		if (!existObj.getStatus().equals(request.getParameter("status").substring(0, 1))
-				|| !existObj.getPay_program().equals(request.getParameter("payProgram"))
-				|| !existObj.getRef_num().equals(request.getParameter("rdohip"))
-				|| !existObj.getVisittype().equals(request.getParameter("visittype"))
-				|| !existObj.getAdmission_date().equals(request.getParameter("xml_vdate"))
-				|| !existObj.getFacilty_num().equals(request.getParameter("clinic_ref_code"))
+		if (!existObj.getStatus().equals(
+				request.getParameter("status").substring(0, 1))
+				|| !existObj.getPay_program().equals(
+						request.getParameter("payProgram"))
+				|| !existObj.getRef_num()
+						.equals(request.getParameter("rdohip"))
+				|| !existObj.getVisittype().equals(
+						request.getParameter("visittype"))
+				|| !existObj.getAdmission_date().equals(
+						request.getParameter("xml_vdate"))
+				|| !existObj.getFacilty_num().equals(
+						request.getParameter("clinic_ref_code"))
 				|| !existObj.getMan_review().equals(temp)
-				|| !existObj.getBilling_date().equals(request.getParameter("xml_appointment_date"))
-				|| !existObj.getComment().equals(request.getParameter("comment"))
-				|| !existObj.getProvider_no().equals(request.getParameter("provider_no"))) {
+				|| !existObj.getBilling_date().equals(
+						request.getParameter("xml_appointment_date"))
+				|| !existObj.getComment().equals(
+						request.getParameter("comment"))
+				|| !existObj.getProvider_no().equals(
+						request.getParameter("provider_no"))) {
 			ret = true;
 		}
 		return ret;
 	}
 
 	// status...
-	private boolean changeItem(BillingItemData oldObj, String sDx, String serviceDate, Vector vecName, Vector vecUnit,
-			Vector vecFee, Vector vecStatus) {
+	private boolean changeItem(BillingItemData oldObj, String sDx,
+			String serviceDate, Vector vecName, Vector vecUnit, Vector vecFee,
+			Vector vecStatus) {
 		boolean ret = true;
 		// System.out.println("status:" + oldObj.getService_code() + ":" +
 		// vecName.get(0) + ":");
@@ -218,14 +272,17 @@ public class BillingCorrectionPrep {
 				bStatusChange = true;
 			}
 
-			if (!oldObj.getSer_num().equals((String) vecUnit.get(i)) || !oldObj.getFee().equals((String) vecFee.get(i))
-					|| !oldObj.getDx().equals(sDx) || !oldObj.getService_date().equals(serviceDate) || bStatusChange) {
+			if (!oldObj.getSer_num().equals((String) vecUnit.get(i))
+					|| !oldObj.getFee().equals((String) vecFee.get(i))
+					|| !oldObj.getDx().equals(sDx)
+					|| !oldObj.getService_date().equals(serviceDate)
+					|| bStatusChange) {
 				int j = dbObj.addRepoOneItem(oldObj);
 				if (j == 0)
 					return false;
 				oldObj.setSer_num(getUnit((String) vecUnit.get(i)));
-				oldObj
-						.setFee(getFee((String) vecFee.get(i), getUnit((String) vecUnit.get(i)), (String) vecName
+				oldObj.setFee(getFee((String) vecFee.get(i),
+						getUnit((String) vecUnit.get(i)), (String) vecName
 								.get(i)));
 				oldObj.setService_date(serviceDate);
 				oldObj.setDx(sDx);
@@ -243,8 +300,8 @@ public class BillingCorrectionPrep {
 		return ret;
 	}
 
-	private boolean addItem(List lItemObj, String sDx, String serviceDate, String sName, String sUnit, String sFee,
-			String sStatus) {
+	private boolean addItem(List lItemObj, String sDx, String serviceDate,
+			String sName, String sUnit, String sFee, String sStatus) {
 		boolean ret = true;
 		BillingItemData oldObj = null;
 		for (int i = 0; i < lItemObj.size(); i++) {
@@ -290,13 +347,15 @@ public class BillingCorrectionPrep {
 
 	private String sumFee(Vector vecFee) {
 		String ret = "";
-		BigDecimal fee = new BigDecimal(Double.parseDouble("0.00")).setScale(4, BigDecimal.ROUND_HALF_UP);
+		BigDecimal fee = new BigDecimal(Double.parseDouble("0.00")).setScale(4,
+				BigDecimal.ROUND_HALF_UP);
 		for (int i = 0; i < vecFee.size(); i++) {
 			String temp = (String) vecFee.get(i);
 			if (temp.indexOf(".") < 0) {
 				temp = temp + ".00";
 			}
-			BigDecimal tFee = new BigDecimal(Double.parseDouble(temp)).setScale(4, BigDecimal.ROUND_HALF_UP);
+			BigDecimal tFee = new BigDecimal(Double.parseDouble(temp))
+					.setScale(4, BigDecimal.ROUND_HALF_UP);
 			fee = fee.add(tFee);
 		}
 		ret = fee.setScale(2, BigDecimal.ROUND_HALF_UP).toString();

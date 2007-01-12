@@ -125,6 +125,19 @@ public class JdbcBilling3rdPartImpl {
 		return retval;
 	}
 
+	public boolean updateKeyValue(String billingNo, String key, String value) {
+		String sql = "update billing_on_ext set value='"
+				+ StringEscapeUtils.escapeSql(value) + "' where billing_no="
+				+ billingNo + " and key_val='"
+				+ StringEscapeUtils.escapeSql(key) + "'";
+		boolean retval = dbObj.updateDBRecord(sql);
+
+		if (!retval) {
+			_logger.error("updateKeyValue(sql = " + sql + ")");
+		}
+		return retval;
+	}
+
 	public List get3rdAddrNameList() {
 		List ret = new Vector();
 		String sql = "select id, company_name from billing_on_3rdPartyAddress ";

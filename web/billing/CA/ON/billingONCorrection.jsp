@@ -54,6 +54,7 @@
 			String r_status = "";
 			String roster_status = "";
 			String comment = "";
+			String htmlPaid = "";
 			int rowCount = 0;
 			int rowReCount = 0;
 			ResultSet rslocation = null;
@@ -257,8 +258,21 @@ function popupPage(vheight,vwidth,varpage) {
 						r_status = "";
 						roster_status = "";
 						comment = ch1Obj.getComment();
+						//paid = ch1Obj.getPaid();
 					}
 				}
+
+				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)) {
+					htmlPaid = "";
+				} else {
+					Billing3rdPartPrep tObj = new Billing3rdPartPrep();
+					Properties tProp = tObj.get3rdPartBillProp(request.getParameter("billing_no").trim());
+					htmlPaid = "Paid</br><input type='text' name='payment' size=5 value='" 
+						+ tProp.getProperty("payment") + "' /></br>";
+					htmlPaid += "Refund</br><input type='text' name='refund' size=5 value='" 
+						+ tProp.getProperty("refund") + "' /></br>";
+				}
+
 %>
 
 <table width="100%" border="0" class="myYellow">
@@ -510,22 +524,25 @@ if(bFlag) {
 %>
 
 	<tr class="myGreen">
-		<td colspan="5"><b> <bean:message key="billing.billingCorrection.formDiagnosticCode" /></b></td>
+		<td colspan="4"><b> <bean:message key="billing.billingCorrection.formDiagnosticCode" /></b></td>
+		<td colspan="2"><b></b></td>
 	</tr>
 	<tr>
 		<td colspan="4"><input type="hidden" name="xml_diagnostic_code" value="<%=diagCode%>"> <input type="text"
 			style="font-size:80%;" name="xml_diagnostic_detail" value="<%=diagCode%>" size="50"> <input type="hidden"
 			name="xml_dig_search1"> <a href="javascript:ScriptAttach()"><bean:message key="billing.billingCorrection.btnDXSearch" /></a></td>
+		<td colspan="2"></td>
 	</tr>
 	<tr>
-		<td colspan="4"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
+		<td colspan="6"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
 	</tr>
 	<tr>
-		<td colspan="4">Billing Notes:<br>
+		<td colspan="6">Billing Notes:<br>
 			<textarea name="comment" value="" cols=60 rows=4><%=comment %></textarea>
 		</td>
 	</tr>
 </table>
+<%=htmlPaid %>
 <form>
 </body>
 <script type="text/javascript">
