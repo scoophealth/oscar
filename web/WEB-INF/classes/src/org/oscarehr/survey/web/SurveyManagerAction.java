@@ -608,7 +608,10 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			int dateFormat = Integer.parseInt(formBean.getDateFormat());
 			question.getType().setDate(DateDocument.Date.Enum.forInt(dateFormat));
 		}
-		return null;
+		//return null;
+		return form(mapping,form,request,response);
+		
+		
 	}
 
 	public ActionForward remove_question(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -749,7 +752,8 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		
 		postMessage(request,"survey.deleted");
 	
-		return list(mapping,form,request,response);
+		//return list(mapping,form,request,response);
+		return mapping.findForward("redirect");
 	}
 
 	public ActionForward show_import_form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
