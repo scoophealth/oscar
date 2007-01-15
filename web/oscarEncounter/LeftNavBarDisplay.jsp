@@ -68,6 +68,8 @@
 <ul id="<%=request.getAttribute("navbarName")%>list" style="clear:both;">
     <%
        //now we display the actual items of the module
+        boolean expand = dao.numItems() > 5;
+        int numToDisplay = 4; //0 based so 5 items in this case
         int j;
         String stripe,colour,bgColour;        
         for(j=0; j<dao.numItems(); j++) {
@@ -83,15 +85,20 @@
       %>
       <li <%=stripe%>>
      <%     
-            if( dao.numItems() > 5 && j == 4 ) {
+            if( expand && j == 0 ) {
      %>
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-5 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>img" src="graphics/expand.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img id="<%=request.getAttribute("navbarName")%>topimg" src="../oscarMessenger/img/collapse.gif"/></a>
+     <%
+            }
+            if( expand && j == numToDisplay ) {
+     %>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-numToDisplay-1 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>midimg" src="graphics/expand.gif"/></a>
      <%
             }
             
-            if( j == dao.numItems()-1 && j > 4 ) {
+            if( j == dao.numItems()-1 && j > numToDisplay ) {
      %>           
-                <a id="<%=request.getAttribute("navbarName")%>up" style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="../oscarMessenger/img/collapse.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="../oscarMessenger/img/collapse.gif"/></a>
      <%
             }            
      %>
