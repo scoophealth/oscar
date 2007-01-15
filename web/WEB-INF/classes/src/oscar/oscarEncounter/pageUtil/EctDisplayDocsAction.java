@@ -55,7 +55,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     //set lefthand module heading and link
     String winName = "docs" + bean.demographicNo;
     String url = "popupPage(500,960,'" + winName + "', '" + request.getContextPath() + "/dms/documentReport.jsp?" + 
-            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.curProviderNo + "')";        
+            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "')";        
 
     Dao.setLeftHeading(messages.getMessage("oscarEncounter.Index.msgDocuments"));
     Dao.setLeftURL(url);
@@ -64,7 +64,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     //set the right hand heading link to call addDocument in index jsp
     winName = "addDoc" + bean.demographicNo;    
     url = "popupPage(500,960,'" + winName + "','" + request.getContextPath() + "/dms/documentReport.jsp?" + 
-            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.curProviderNo + "&mode=add" + 
+            "function=demographic&doctype=lab&functionid=" + bean.demographicNo + "&curUser=" + bean.providerNo + "&mode=add" + 
             "&parentAjaxId=" + cmd + "');return false;";            
         
     Dao.setRightURL(url);
