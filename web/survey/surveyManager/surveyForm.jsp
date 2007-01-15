@@ -330,8 +330,11 @@
 	                            		<td width="10%">
 											<a href="<html:rewrite action="/SurveyManager"/>?method=remove_question&id=<c:out value="${question.id }"/>&section=0"><img src="images/delete.png" border="0"></a>
 										  	&nbsp;
+										  	<!--
 										  	<a href="javascript:void(0);return false;" onclick="OpenQuestionEditor('<c:out value="${surveyForm.map.web.page}"/>','0','<c:out value="${question.id}"/>')"><img src="images/edit.png" border="0"></a>
 									  		&nbsp;
+									  		  -->
+									  		<a href="<html:rewrite action="/SurveyManager"/>?method=edit_question&page=<c:out value="${surveyForm.map.web.page}"/>&section=0&id=<c:out value="${question.id}"/>"><img src="images/edit.png" border="0"></a>
 	                            		</td>
 	                            		<td align="left">
 	                            			<c:out value="${question.description}"/>
@@ -383,8 +386,11 @@
 	                            		<td width="10%">
 											<a href="<html:rewrite action="/SurveyManager"/>?method=remove_question&id=<c:out value="${question.id }"/>&web.section=<c:out value="${section.id}"/>"><img src="images/delete.png" border="0"></a>
 										  	&nbsp;
+										  	<!--
 										  	<a href="javascript:void(0);return false;" onclick="OpenQuestionEditor('<c:out value="${surveyForm.map.web.page}"/>','<c:out value="${section.id}"/>','<c:out value="${question.id}"/>')"><img src="images/edit.png" border="0"></a>
 									  		&nbsp;
+									  		 -->
+									  		<a href="<html:rewrite action="/SurveyManager"/>?method=edit_question&page=<c:out value="${surveyForm.map.web.page}"/>&section=<c:out value="${section.id}"/>&id=<c:out value="${question.id}"/>"><img src="images/edit.png" border="0"></a> 
 	                            		</td>
 	                            		<td align="left">
 	                            			<c:out value="${question.description}"/>

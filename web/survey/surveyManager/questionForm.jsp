@@ -31,10 +31,12 @@
 	<body>
 	<script>
 		function save() {
+			document.surveyForm.method.value="save_question";
 			document.surveyForm.submit();
 			window.close();
 			opener.document.surveyForm.method.value="form";
 			opener.document.surveyForm.submit();
+			
 		}
 		
 		function adjust_possible_answers() {
@@ -171,7 +173,10 @@
 					</td>
 				</tr>
 			</table>
-			<input type="button" value="Save" onclick="save()"/>
+			<!-- 
+			<input type="button" value="Save" onClick="save();"/>
+			 -->
+			 <html:submit styleClass="button">Save</html:submit>
 			<input type="button" value="Cancel" onclick="window.close();"/>
 		</html:form>
 	</body>
