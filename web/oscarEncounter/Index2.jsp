@@ -789,8 +789,10 @@ function listDisplay(Id) {
     var numId = Id.substr(eqIdx+1) + "num";
     
     if( $(numId).value > 5 ) {
-        var btnName = Id.substr(eqIdx+1) + "img";
-        var image = $(btnName);
+        var btnName = Id.substr(eqIdx+1) + "topimg";
+        var topImage = $(btnName);
+        btnName = Id.substr(eqIdx+1) + "midimg";
+        var midImage = $(btnName);
         var expand;
         var expandPath = "graphics/expand.gif";
         var collapsePath = "../oscarMessenger/img/collapse.gif";
@@ -809,10 +811,15 @@ function listDisplay(Id) {
             }
         }
         
-        if( expand )
-            image.src = expandPath;        
-        else
-            image.src = collapsePath;       
+        if( expand ) {
+            topImage.style.display = 'none';
+            midImage.style.display = 'inline';
+        }
+        else {
+            topImage.style.display = 'inline';
+            midImage.style.display = 'none';
+        }
+            
     }
     
     
