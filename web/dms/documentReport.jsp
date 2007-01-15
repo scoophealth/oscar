@@ -33,11 +33,20 @@ String userlastname = (String) session.getAttribute("userlastname");
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
+<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <%
+
+for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
+    String name = (String)e.nextElement();    
+    System.out.println("DOC PARAMS " + name + " -> " + request.getParameter(name));    
+ }
+    
 //if delete request is made
 if (request.getParameter("delDocumentNo") != null) {
     EDocUtil.deleteDocument(request.getParameter("delDocumentNo"));
@@ -63,6 +72,13 @@ if (request.getParameter("function") != null) {
     moduleid = (String) request.getAttribute("functionid");
 }
 String moduleName = EDocUtil.getModuleName(module, moduleid);
+
+String curUser = "";
+if (request.getParameter("curUser") != null) {
+    curUser = request.getParameter("curUser");    
+} else if (request.getAttribute("curUser") != null) {
+    curUser = (String) request.getAttribute("curUser");    
+}
 
 //sorting
 String sort = EDocUtil.SORT_OBSERVATIONDATE;
@@ -161,7 +177,20 @@ function checkAll(checkboxId,parentEle, className){
    }
 }
 
+function submitForm(actionPath) {
+    
+    var form = document.forms[2];
+    if(verifyChecks(form)) {
+        form.action = actionPath;
+        form.submit();
+        return true;
+    }
+    else
+        return false;
+}
+
 function verifyChecks(t){
+   
    if ( t.docNo == null ){ 
          alert("No documents selected");
          return false;
@@ -251,8 +280,9 @@ function popup1(height, width, url, windowName){
          <td class="MainTableRightColumn" colspan="2" valign="top">
            <jsp:include page="addDocument.jsp"/>
            
-           <html:form action="/dms/combinePDFs" onsubmit="return verifyChecks(this);">
-           
+           <html:form action="/dms/combinePDFs">
+           <input type="hidden" name="curUser" value="<%=curUser%>">
+           <input type="hidden" name="demoId" value="<%=moduleid%>">
            <div class="documentLists">
                <%-- STUFF TO DISPLAY --%>
              <%
@@ -360,7 +390,16 @@ function popup1(height, width, url, windowName){
             <div>
               <input type="button" name="Button" value="<bean:message key="dms.documentReport.btnDoneClose"/>" onclick=self.close();>
               <input type="button" name="print" value='<bean:message key="global.btnPrint"/>' onClick="window.print()">
-              <input type="submit" value="Combine PDFs"/>
+              <input type="button" value="Combine PDFs" onclick="return submitForm('<rewrite:reWrite jspPage="combinePDFs.do"/>');"/>
+              <%
+                    if( module.equals("demographic") ) {
+              %>
+                        <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+                            <input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/>
+                        </oscarProp:oscarPropertiesCheck>
+              <%
+                    }
+              %>
             </div>
            </html:form>
          </td>
