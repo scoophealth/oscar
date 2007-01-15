@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarClinic.ClinicData;
+import oscar.SxmlMisc;
 
 public class EctProviderData {
     public class Provider {
@@ -41,6 +42,8 @@ public class EctProviderData {
         String clinicPostal;
         String clinicPhone;
         String clinicFax;
+        String indivoId;
+        String indivoPasswd;
 
         public String getProviderNo() {
             return providerNo;
@@ -77,6 +80,14 @@ public class EctProviderData {
         public String getClinicFax()        {
             return clinicFax;
         }
+        
+        public String getIndivoId() {
+            return indivoId;
+        }
+        
+        public String getIndivoPasswd() {
+            return indivoPasswd;
+        }
 
         public Provider(String providerNo, String surname, String firstName, String clinicName, String clinicAddress, String clinicCity, 
                 String clinicPostal, String clinicPhone, String clinicFax)        {
@@ -90,6 +101,21 @@ public class EctProviderData {
             this.clinicPhone = clinicPhone;
             this.clinicFax = clinicFax;
         }
+        
+        public Provider(String providerNo, String surname, String firstName, String clinicName, String clinicAddress, String clinicCity, 
+                String clinicPostal, String clinicPhone, String clinicFax, String indivoId, String indivoPasswd)        {
+            this.providerNo = providerNo;
+            this.surname = surname;
+            this.firstName = firstName;
+            this.clinicName = clinicName;
+            this.clinicAddress = clinicAddress;
+            this.clinicCity = clinicCity;
+            this.clinicPostal = clinicPostal;
+            this.clinicPhone = clinicPhone;
+            this.clinicFax = clinicFax;
+            this.indivoId = indivoId;
+            this.indivoPasswd = indivoPasswd;
+        }
     }
 
     public Provider getProvider(String providerNo)    {
@@ -101,6 +127,12 @@ public class EctProviderData {
             if(rs.next()) {
                 String surname = rs.getString("last_name");
                 String firstName = rs.getString("first_name");
+                String comments = rs.getString("comments");
+                System.out.println("PROVIDER COMMENTS " + comments);
+                String selfLearningId = SxmlMisc.getXmlContent(comments,"xml_p_slpusername");
+                System.out.println("INDIVO ID " + selfLearningId);
+                String selfLearningPasswd = SxmlMisc.getXmlContent(comments,"xml_p_slppassword");
+                
                 if(firstName.indexOf("Dr.") < 0)
                     firstName = "Dr. "+firstName;
                 
@@ -112,7 +144,7 @@ public class EctProviderData {
                 String clinicPostal = clinic.getClinicPostal();
                 String clinicPhone = clinic.getClinicPhone();
                 String clinicFax = clinic.getClinicFax();
-                provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax);
+                provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, selfLearningId, selfLearningPasswd);
             }
             rs.close();
             db.CloseConn();
