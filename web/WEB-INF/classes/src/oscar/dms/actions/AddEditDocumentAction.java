@@ -43,6 +43,7 @@ public class AddEditDocumentAction extends Action {
                 redirect.addParameter("docerrors", "docerrors");  //Allows the JSP to check if the document was just submitted
                 redirect.addParameter("function", request.getParameter("function"));
                 redirect.addParameter("functionid", request.getParameter("functionid"));
+                redirect.addParameter("curUser", request.getParameter("curUser"));
                 String parentAjaxId = request.getParameter("parentAjaxId");
                 //if we're called with parent ajax id inform jsp that parent needs to be updated
                 if( !parentAjaxId.equals("") ) {
@@ -54,6 +55,7 @@ public class AddEditDocumentAction extends Action {
                 request.setAttribute("function", request.getParameter("function"));
                 request.setAttribute("functionid", request.getParameter("functionid"));
                 request.setAttribute("parentAjaxId", request.getParameter("parentAjaxId"));
+                request.setAttribute("curUser", request.getParameter("curUser"));
                 return mapping.findForward("failAdd");
             }
         } else {
