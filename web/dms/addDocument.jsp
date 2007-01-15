@@ -46,6 +46,13 @@ if (request.getParameter("function") != null) {
     moduleid = (String) request.getAttribute("functionid");
 }
 
+String curUser = "";
+if (request.getParameter("curUser") != null) {
+    curUser = request.getParameter("curUser");    
+} else if (request.getAttribute("curUser") != null) {
+    curUser = (String) request.getAttribute("curUser");    
+}
+
 OscarProperties props = OscarProperties.getInstance();
 
 AddEditDocumentForm formdata = new AddEditDocumentForm();
@@ -216,6 +223,7 @@ function checkDefaultDate(object, defaultValue) {
                                 <input type="hidden" name="functionId" value="<%=formdata.getFunctionId()%>" size="20">
                                 <input type="hidden" name="functionid" value="<%=moduleid%>" size="20">
                                 <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>" >
+                                <input type="hidden" name="curUser" value="<%=curUser%>" >
                                 <select name="docType" onchange="checkSel(this)"<% if (docerrors.containsKey("typemissing")) {%> class="warning"<%}%>>
                                    <option value=""><bean:message key="dms.addDocument.formSelect"/></option>
                                    <%
