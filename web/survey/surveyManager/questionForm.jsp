@@ -175,9 +175,10 @@
 			</table>
 			<!-- 
 			<input type="button" value="Save" onClick="save();"/>
+			<input type="button" value="Cancel" onclick="window.close();"/>
 			 -->
 			 <html:submit styleClass="button">Save</html:submit>
-			<input type="button" value="Cancel" onclick="window.close();"/>
+			 <html:cancel value="Cancel"/>
 		</html:form>
 	</body>
 </html:html>
