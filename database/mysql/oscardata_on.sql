@@ -10406,6 +10406,7 @@ INSERT INTO diagnosticcode VALUES (533,'042','AIDS                              
 --
 insert into encounterForm values('Growth Charts', '../form/formGrowthChart.jsp?demographic_no=', 'formGrowthChart', 0);
 insert into encounterForm values('AR2005', '../form/formonar.jsp?demographic_no=', 'formONAR', '0');
+insert into encounterForm values('Ovulation', '../form/formovulation.jsp?demographic_no=', 'formovulation', '0');
 
 INSERT INTO billing_payment_type (id, payment_type) VALUES (1,'CASH');
 INSERT INTO billing_payment_type (id, payment_type) VALUES (2,'CHEQUE');
