@@ -45,6 +45,9 @@ import org.indivo.xml.talk.AuthenticateResultType;
 import org.indivo.xml.phr.urns.ContentTypeQNames;
 import org.indivo.xml.phr.urns.DocumentClassificationUrns;
 
+import org.indivo.xml.phr.contact.NameType;
+import org.indivo.xml.phr.contact.ConciseContactInformationType;
+
 import org.indivo.xml.phr.binarydata.BinaryDataType;
 import org.indivo.xml.phr.binarydata.BinaryData;
 import org.indivo.xml.phr.binarydata.ObjectFactory;
@@ -53,9 +56,17 @@ import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.ContentDescriptionType;
 
+import org.indivo.xml.phr.medication.Medication;
+import org.indivo.xml.phr.medication.MedicationType;
+
+import org.indivo.xml.phr.types.CodedValueType;
+import org.indivo.xml.phr.types.CodingSystemReferenceType;
+
 import org.indivo.xml.talk.AddDocumentResultType;
 
 import org.w3c.dom.Element;
+
+import oscar.oscarRx.data.RxPrescriptionData.Prescription;
 
 /**
  *
@@ -145,6 +156,54 @@ public class Send2Indivo {
         AddDocumentResultType addDocumentResultType = client.addDocument(sessionTicket,recipientId, doc);
     }
     
+    /**Create a Medication Type with prescription and send it to indivo server */
+     public boolean sendMedication(Prescription drug, String providerFname, String providerLname, String recipientId) {
+        NameType name = new NameType();
+        name.setFirstName(providerFname);
+        name.setLastName(providerLname);
+
+        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
+        contactInfo.getPersonName().add(name);
+
+        MedicationType medType = new MedicationType();
+        medType.setPrescription(true);
+        medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());
+                
+        medType.setName(drug.getDrugName());
+        medType.setDuration(drug.getDuration());
+        medType.setRefills(String.valueOf(drug.getRepeat()));
+        medType.setSubstitutionPermitted(drug.getNosubs());
+        medType.setProvider(contactInfo);
+
+        org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
+        org.indivo.xml.JAXBUtils jaxbUtils              = new   org.indivo.xml.JAXBUtils();
+        org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
+        Medication med = medFactory.createMedication(medType);
+
+        try {
+            Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));            
+            IndivoDocumentType doc = generator.generateDefaultDocument(indivoId, indivoFullName, indivoRole, DocumentClassificationUrns.MEDICATION, ContentTypeQNames.MEDICATION, element);
+            sendDocument(recipientId, doc);
+        }
+        catch(javax.xml.bind.JAXBException e ) {
+            errorMsg = e.getMessage();
+            System.out.println("JAXB Error " + errorMsg);
+            return false;
+        }
+        catch(ActionNotPerformedException e) {
+            errorMsg = e.getMessage();
+            System.out.println("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
+            return false;
+        }
+        catch(IndivoException e ) {
+            errorMsg = e.getMessage();
+            System.out.println("Indivo Network Error " + errorMsg);
+            return false;
+        } 
+
+         return true;
+     }
+    
     /**Send file to indivo as a raw sequence of bytes */
     public boolean sendBinaryFile(String file, String description, String recipientId) {        
         byte[] bfile = getFile(file);
@@ -195,4 +254,11 @@ public class Send2Indivo {
         return errorMsg;
     }
     
+    public String getSessionId() {
+        return sessionTicket;
+    }
+    
+    public void setSessionId(String session) {
+        sessionTicket = session;
+    }
 }
