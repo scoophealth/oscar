@@ -119,9 +119,7 @@ function showHideBox(layerName, iState) { // 1 visible, 0 hidden
 }
 function insertBox(str, field, layerName) { // 1 visible, 0 hidden
     if(document.getElementById)	{
-        console.log("field :"+field); 
         var obj = document.getElementById(field);
-        console.log("obj "+obj);
         obj.value = str;
     }
     showHideBox(layerName, 0);
