@@ -581,7 +581,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<img src="../images/cal.gif" id="pg1_formDate_cal">
           <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
       <br>
-      <input type="text" name="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg1_formDate" id="pg1_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
       <td >MOTHER'S I.D. NUMBER<br>
       <input type="text" name="pg1_motherID" style="width:100%" size="15" maxlength="20" value="<%= props.getProperty("pg1_motherID", "") %>" @oscar.formDB />
@@ -1200,7 +1200,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<input type="text" name="birTimeHour1" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour1", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate1" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB  dbType="date"/>
+		<input type="text" name="birTimeDate1" id="birTimeDate1" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate1", "") %>" @oscar.formDB  dbType="date"/>
           <img src="../images/cal.gif" id="birTimeDate1_cal">
 		</td>
 	  </tr><tr>
@@ -1209,7 +1209,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<input type="text" name="birTimeHour2" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour2", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate2" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate2" id="birTimeDate2" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate2", "") %>" @oscar.formDB dbType="date" />
           <img src="../images/cal.gif" id="birTimeDate2_cal">
 		</td>
 	  </tr><tr>
@@ -1218,7 +1218,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<input type="text" name="birTimeHour3" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour3", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate3" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate3" id="birTimeDate3" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate3", "") %>" @oscar.formDB dbType="date" />
           <img src="../images/cal.gif" id="birTimeDate3_cal">
 		</td>
 	  </tr><tr>
@@ -1227,7 +1227,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<input type="text" name="birTimeHour4" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour4", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate4" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate4" id="birTimeDate4" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate4", "") %>" @oscar.formDB dbType="date" />
           <img src="../images/cal.gif" id="birTimeDate4_cal">
 		</td>
 	  </tr><tr>
@@ -1236,7 +1236,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<input type="text" name="birTimeHour5" style="width:100%" size="5" maxlength="5" value="<%= props.getProperty("birTimeHour5", "") %>" @oscar.formDB dbType="time" />
 		</td>
 		<td>
-		<input type="text" name="birTimeDate5" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB dbType="date" />
+		<input type="text" name="birTimeDate5" id="birTimeDate5" size="10" maxlength="10" value="<%= props.getProperty("birTimeDate5", "") %>" @oscar.formDB dbType="date" />
           <img src="../images/cal.gif" id="birTimeDate5_cal">
 		</td>
 	  </tr>
@@ -1303,7 +1303,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
 		<td align="center" rowspan="2"><B>STILLBIRTH</B> (dd/mm/yyyy)<br>
 		Last FHR
           <img src="../images/cal.gif" id="birFHR_cal">
-		<input type="text" name="birFHR" size="10" maxlength="10" value="<%= props.getProperty("birFHR", "") %>" @oscar.formDB  dbType="date"/>
+		<input type="text" name="birFHR" id="birFHR" size="10" maxlength="10" value="<%= props.getProperty("birFHR", "") %>" @oscar.formDB  dbType="date"/>
 		</td>
 	  </tr><tr>
 		<td width="10%">
@@ -1398,7 +1398,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
   <td colspan="2" nowrap><B>CONSULT TO:</B>
   <input type="text" name="consultTo" size="30" maxlength="120" value="<%= props.getProperty("consultTo", "") %>" @oscar.formDB />
   &nbsp;| ADMISSION 
-  <input type="text" name="admisDateTime" size="12" maxlength="16" value="<%= props.getProperty("admisDateTime", "") %>" @oscar.formDB />
+  <input type="text" name="admisDateTime" id="admisDateTime" size="12" maxlength="16" value="<%= props.getProperty("admisDateTime", "") %>" @oscar.formDB />
   <img src="../images/cal.gif" id="admisDateTime_cal">
   </td>
   <td width="20%">SIGNATURE</td>
@@ -1411,7 +1411,7 @@ function calculateDiffDateTime(sDate, sTime, eDate, eTime, objHour, objMin) {
   <input type="checkbox" name="conPedia" <%= props.getProperty("conPedia", "") %>  @oscar.formDB dbType="tinyint(1)"/>
   PEDIATRICIAN
   &nbsp;&nbsp;&nbsp; | DISCHARGE 
-  <input type="text" name="dischargeDateTime" size="12" maxlength="16" value="<%= props.getProperty("dischargeDateTime", "") %>" @oscar.formDB />
+  <input type="text" name="dischargeDateTime" id="dischargeDateTime" size="12" maxlength="16" value="<%= props.getProperty("dischargeDateTime", "") %>" @oscar.formDB />
   <img src="../images/cal.gif" id="dischargeDateTime_cal">
    | PP LOS
 	<input type="text" name="ppLos" onDblClick="calcPPLOS();" class="spe" size="3" maxlength="3" value="<%= props.getProperty("ppLos", "") %>" @oscar.formDB />
