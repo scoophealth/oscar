@@ -42,8 +42,8 @@
 						<img src="<c:out value="${ctx}" />/images/details.gif" border="0" />
 					</a>
 				</display:column>
-				<display:column property="name" title="Bed" />
 				<display:column property="roomName" title="Room" />
+				<display:column property="name" title="Bed" />
 				<display:column property="demographicName" title="Client" />
 				<!-- status is editable -->
 				<display:column title="Status">
@@ -131,8 +131,8 @@
 				</table>
 			</div>
 			<display:table class="simple" name="expiredReservations" uid="expiredReservation">
-				<display:column property="bedName"></display:column>
-				<display:column property="clientName"></display:column>
+				<display:column property="bedName" title="Bed" />
+				<display:column property="demographicName" title="Client" />
 			</display:table>
 		</td>
 	</tr>

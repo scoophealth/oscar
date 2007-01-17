@@ -51,12 +51,12 @@
 							<c:choose>
 								<c:when test="${unreservedBed.id == clientManagerForm.map.bedDemographic.bedId}">
 									<option value="<c:out value="${unreservedBed.id}"/>" selected="selected">
-										<c:out value="${unreservedBed.name}" />
+										<c:out value="${unreservedBed.roomName}" /> - <c:out value="${unreservedBed.name}" />
 									</option>
 								</c:when>
 								<c:otherwise>
 									<option value="<c:out value="${unreservedBed.id}"/>">
-										<c:out value="${unreservedBed.name}" />
+										<c:out value="${unreservedBed.roomName}" /> - <c:out value="${unreservedBed.name}" />
 									</option>
 								</c:otherwise>
 							</c:choose>
@@ -115,7 +115,7 @@
 		<table>
 			<tr>
 				<td>
-					<html:submit onclick="clientManagerForm.method.value='saveBedReservation';">Save Bed Reservation</html:submit>
+					<html:submit onclick="clientManagerForm.method.value='saveBedReservation';">Save</html:submit>
 				</td>
 				<td>
 					<html:reset>Reset</html:reset>

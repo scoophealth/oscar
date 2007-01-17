@@ -76,7 +76,7 @@ public class BedDemographicHistorical extends BaseBedDemographicHistorical {
 		return bed != null ? bed.getName() : null;
 	}
 	
-	public String getClientName() {
+	public String getDemographicName() {
 		return demographic != null ? demographic.getFormattedName() : null;
 	}
 

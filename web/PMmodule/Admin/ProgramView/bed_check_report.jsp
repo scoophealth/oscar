@@ -37,12 +37,21 @@
 			</tr>
 		</table>
 		<br />
-		<display:table class="simple" name="reservedBeds" uid="bed">
-			<display:column property="name" title="Bed" style="text-align: center" />
+		<display:table class="simple" name="reservedBeds" uid="reservedBed">
 			<display:column property="roomName" title="Room" style="text-align: center" />
+			<display:column property="name" title="Bed" style="text-align: center" />
 			<display:column property="demographicName" title="Client" style="text-align: center" />
 			<display:column property="statusName" title="Status" style="text-align: center" />
-			<display:column property="latePass" title="Late Pass" style="text-align: center" />
+			<display:column title="Late Pass" style="text-align: center">
+				<c:choose>
+					<c:when test="${reservedBed.latePass}">
+						<input type="checkbox" checked="checked" />
+					</c:when>
+					<c:otherwise>
+						<input type="checkbox" />
+					</c:otherwise>
+				</c:choose>
+			</display:column>
 			<display:column property="reservationStart" title="Since" format="{0, date, yyyy-MM-dd}" style="text-align: center" />
 			<display:column property="reservationEnd" title="Until" format="{0, date, yyyy-MM-dd}" style="text-align: center" />
 			<display:column title="Not Present" style="text-align: center"><input type="checkbox" /></display:column>

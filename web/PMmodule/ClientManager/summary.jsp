@@ -152,7 +152,7 @@ function showEMPILinks() {
 		<c:otherwise>
 			<tr>
 				<th width="20%">Assigned</th>
-				<td><c:out value="${bedDemographic.bedName}" /> (<c:out value="${bedDemographic.roomName}" /> <c:out value="${bedDemographic.programName}" />)</td>
+				<td><c:out value="${bedDemographic.roomName}" /> - <c:out value="${bedDemographic.bedName}" /> (<c:out value="${bedDemographic.programName}" />)</td>
 			</tr>
 			<tr>
 				<th width="20%">Status</th>

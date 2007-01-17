@@ -1146,10 +1146,10 @@
 		<action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/combinePDFs" type="oscar.dms.actions.CombinePDFAction" scope="request" validate="false">
 			<forward name="success" path="/dms/documentReport.jsp"></forward>
 		</action>
-                <action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/send2Indivo" type="oscar.dms.actions.Send2IndivoAction" scope="request" validate="false">
-                        <forward name="success" path="/indivo/indivo.jsp"></forward>
-                        <forward name="error" path="/indivo/indivoError.jsp"></forward>
-                </action>
+		<action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/send2Indivo" type="oscar.dms.actions.Send2IndivoAction" scope="request" validate="false">
+			<forward name="success" path="/indivo/indivo.jsp"></forward>
+			<forward name="error" path="/indivo/indivoError.jsp"></forward>
+		</action>
 		<action input="/dms/documentReport.jsp" name="addLinkDoc" path="/dms/addLink" type="oscar.dms.actions.AddEditHtmlAction" scope="request" validate="false">
 			<forward name="success" path="/dms/documentReport.jsp"></forward>
 			<forward name="failed" path="/dms/documentReport.jsp"></forward>
