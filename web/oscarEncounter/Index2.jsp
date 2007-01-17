@@ -1440,6 +1440,8 @@ white-space: nowrap;
                                     <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
                                     <input type="hidden" name="presBoxSize" value="<%=windowSizes.getProperty("presBoxSize")%>">
                                     <input type="hidden" name="rowThreeSize" value="<%=windowSizes.getProperty("rowThreeSize")%>">
+                                    <input type="hidden" name="status" value="t" />
+                                    <input type="hidden" name="appointment_no" value="<%=bean.appointmentNo%>"/>
                                 </td>
                             </tr>
                         </table>
