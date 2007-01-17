@@ -226,7 +226,7 @@ table.hiddenLayer {
                                <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" ><%=prefPharmacy%></a>                               
                             </td>
                         </tr>
-                        <oscarProp:oscarPropertiesCheck property="PHR" value="yes">
+                        <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
                         <tr>
                             <td colspan="3">
                             <a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record</a>                                
