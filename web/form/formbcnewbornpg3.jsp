@@ -504,12 +504,12 @@ function onCheckSlave(a, masterName) {
 	  </td>
 	</tr><tr>
       <td nowrap>
-      <input type="text" name="ar2_9Date1" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date1", "") %>"   />
+      <input type="text" name="ar2_9Date1" id="ar2_9Date1" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date1", "") %>"   />
           <img src="../images/cal.gif" id="ar2_9Date1_cal">
 	  </td>
 	</tr><tr>
       <td nowrap>
-      <input type="text" name="ar2_9Date2" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date2", "") %>"   />
+      <input type="text" name="ar2_9Date2" id="ar2_9Date2" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date2", "") %>"   />
           <img src="../images/cal.gif" id="ar2_9Date2_cal">
 	  </td><td>
 	  <input type="checkbox" name="ar2_9Test2" <%= props.getProperty("ar2_9Test2", "") %>   /> 
@@ -517,7 +517,7 @@ function onCheckSlave(a, masterName) {
 	  </td>
 	</tr><tr>
       <td nowrap>
-      <input type="text" name="ar2_9Date3" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date3", "") %>"   />
+      <input type="text" name="ar2_9Date3" id="ar2_9Date3" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date3", "") %>"   />
           <img src="../images/cal.gif" id="ar2_9Date3_cal">
 	  </td><td>
 	  &nbsp;&nbsp;&nbsp;<input type="checkbox" name="ar2_9Test3" <%= props.getProperty("ar2_9Test3", "") %>   /> 
@@ -525,7 +525,7 @@ function onCheckSlave(a, masterName) {
 	  </td>
 	</tr><tr>
       <td nowrap>
-      <input type="text" name="ar2_9Date4" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date4", "") %>"   />
+      <input type="text" name="ar2_9Date4" id="ar2_9Date4" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date4", "") %>"   />
           <img src="../images/cal.gif" id="ar2_9Date4_cal">
 	  </td><td>
 	  &nbsp;&nbsp;&nbsp;<input type="checkbox" name="ar2_9Test4" <%= props.getProperty("ar2_9Test4", "") %>   /> 
@@ -533,7 +533,7 @@ function onCheckSlave(a, masterName) {
 	  </td>
 	</tr><tr>
       <td nowrap>
-      <input type="text" name="ar2_9Date5" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date5", "") %>"   />
+      <input type="text" name="ar2_9Date5"  id="ar2_9Date5" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date5", "") %>"   />
           <img src="../images/cal.gif" id="ar2_9Date5_cal">
 	  </td><td>
 	  <input type="checkbox" name="ar2_9Test5" <%= props.getProperty("ar2_9Test5", "") %>   /> 
@@ -541,7 +541,7 @@ function onCheckSlave(a, masterName) {
 	  </td>
 	</tr><tr>
       <td nowrap>
-      <input type="text" name="ar2_9Date6" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date6", "") %>"   />
+      <input type="text" name="ar2_9Date6" id="ar2_9Date6" size="8" maxlength="10" value="<%= props.getProperty("ar2_9Date6", "") %>"   />
           <img src="../images/cal.gif" id="ar2_9Date6_cal">
 	  </td><td>
 	  <input type="checkbox" name="ar2_9Test6" <%= props.getProperty("ar2_9Test6", "") %>   /> 
@@ -562,7 +562,7 @@ function onCheckSlave(a, masterName) {
           <img src="../images/cal.gif" id="pg3_formDate_cal">
           <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
       <br>
-      <input type="text" name="pg3_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg3_formDate" id="pg3_formDate" style="width:100%" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
     </tr><tr>
       <td width="55%">SURNAME<br>
@@ -601,32 +601,32 @@ function onCheckSlave(a, masterName) {
   <td><span class="small8">DATE RESOLVED</span></td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="ar2_10Date1" size="8" maxlength="10" value="<%= props.getProperty("ar2_10Date1", "") %>"   />
+  <input type="text" name="ar2_10Date1" id="ar2_10Date1" size="8" maxlength="10" value="<%= props.getProperty("ar2_10Date1", "") %>"   />
           <img src="../images/cal.gif" id="ar2_10Date1_cal">
   </td><td>
   <input type="text" name="ar2_10List1" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("ar2_10List1", "") %>"  />
   </td><td nowrap>
-  <input type="text" name="ar2_10DateRes1" size="8" maxlength="10" value="<%= props.getProperty("ar2_10DateRes1", "") %>"   />
+  <input type="text" name="ar2_10DateRes1" id="ar2_10DateRes1" size="8" maxlength="10" value="<%= props.getProperty("ar2_10DateRes1", "") %>"   />
           <img src="../images/cal.gif" id="ar2_10DateRes1_cal">
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="ar2_10Date2" size="8" maxlength="10" value="<%= props.getProperty("ar2_10Date2", "") %>"   />
+  <input type="text" name="ar2_10Date2" id="ar2_10Date2" size="8" maxlength="10" value="<%= props.getProperty("ar2_10Date2", "") %>"   />
           <img src="../images/cal.gif" id="ar2_10Date2_cal">
   </td><td nowrap>
   <input type="text" name="ar2_10List2" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("ar2_10List2", "") %>"  />
   </td><td>
-  <input type="text" name="ar2_10DateRes2" size="8" maxlength="10" value="<%= props.getProperty("ar2_10DateRes2", "") %>"   />
+  <input type="text" name="ar2_10DateRes2" id="ar2_10DateRes2" size="8" maxlength="10" value="<%= props.getProperty("ar2_10DateRes2", "") %>"   />
           <img src="../images/cal.gif" id="ar2_10DateRes2_cal">
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="ar2_10Date3" size="8" maxlength="10" value="<%= props.getProperty("ar2_10Date3", "") %>"   />
+  <input type="text" name="ar2_10Date3" id="ar2_10Date3" size="8" maxlength="10" value="<%= props.getProperty("ar2_10Date3", "") %>"   />
           <img src="../images/cal.gif" id="ar2_10Date3_cal">
   </td><td>
   <input type="text" name="ar2_10List3" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("ar2_10List3", "") %>"  />
   </td><td nowrap>
-  <input type="text" name="ar2_10DateRes3" size="8" maxlength="10" value="<%= props.getProperty("ar2_10DateRes3", "") %>"   />
+  <input type="text" name="ar2_10DateRes3" id="ar2_10DateRes3" size="8" maxlength="10" value="<%= props.getProperty("ar2_10DateRes3", "") %>"   />
           <img src="../images/cal.gif" id="ar2_10DateRes3_cal">
   </td>
 </tr>
@@ -638,91 +638,91 @@ function onCheckSlave(a, masterName) {
   <td><B>PROGRESS NOTES</B></td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date1" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date1", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date1" id="pg3_11Date1" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date1", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date1_cal">
   </td><td>
   <input type="text" name="pg3_11List1" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List1", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date2" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date2", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date2" id="pg3_11Date2" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date2", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date2_cal">
   </td><td>
   <input type="text" name="pg3_11List2" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List2", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date3" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date3", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date3" id="pg3_11Date3" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date3", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date3_cal">
   </td><td>
   <input type="text" name="pg3_11List3" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List3", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date4" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date4", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date4" id="pg3_11Date4" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date4", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date4_cal">
   </td><td>
   <input type="text" name="pg3_11List4" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List4", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date5" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date5", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date5" id="pg3_11Date5" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date5", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date5_cal">
   </td><td>
   <input type="text" name="pg3_11List5" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List5", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date6" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date6", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date6" id="pg3_11Date6" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date6", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date6_cal">
   </td><td>
   <input type="text" name="pg3_11List6" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List6", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date7" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date7", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date7" id="pg3_11Date7" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date7", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date7_cal">
   </td><td>
   <input type="text" name="pg3_11List7" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List7", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date8" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date8", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date8" id="pg3_11Date8" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date8", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date8_cal">
   </td><td>
   <input type="text" name="pg3_11List8" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List8", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date9" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date9", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date9" id="pg3_11Date9" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date9", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date9_cal">
   </td><td>
   <input type="text" name="pg3_11List9" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List9", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date10" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date10", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date10" id="pg3_11Date10" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date10", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date10_cal">
   </td><td>
   <input type="text" name="pg3_11List10" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List10", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date11" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date11", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date11" id="pg3_11Date11" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date11", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date11_cal">
   </td><td>
   <input type="text" name="pg3_11List11" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List11", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date12" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date12", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date12" id="pg3_11Date12" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date12", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date12_cal">
   </td><td>
   <input type="text" name="pg3_11List12" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List12", "") %>" @oscar.formDB />
   </td>
 </tr><tr>
   <td nowrap>
-  <input type="text" name="pg3_11Date13" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date13", "") %>" @oscar.formDB dbType="date" />
+  <input type="text" name="pg3_11Date13" id="pg3_11Date13" size="8" maxlength="10" value="<%= props.getProperty("pg3_11Date13", "") %>" @oscar.formDB dbType="date" />
 	<img src="../images/cal.gif" id="pg3_11Date13_cal">
   </td><td>
   <input type="text" name="pg3_11List13" style="width:100%" size="90" maxlength="200" value="<%= props.getProperty("pg3_11List13", "") %>" @oscar.formDB />
@@ -739,7 +739,7 @@ function onCheckSlave(a, masterName) {
   <td colspan="3%">DONE</td>
 </tr><tr>
   <td colspan="2%">
-  <input type="text" name="ar2_12Date" size="8" maxlength="10" value="<%= props.getProperty("ar2_12Date", "") %>"   />
+  <input type="text" name="ar2_12Date" id="ar2_12Date" size="8" maxlength="10" value="<%= props.getProperty("ar2_12Date", "") %>"   />
 	<img src="../images/cal.gif" id="ar2_12Date_cal">
   </td>
   <td width="22%" nowrap><span class="small8">METHOD</span>
@@ -766,7 +766,7 @@ function onCheckSlave(a, masterName) {
 		<tr>
 		  <td width="40%"><B>13. DISCHARGE EXAMINATION</B><br>
 		  Date
-		  <input type="text" name="ar2_13ExamDate" size="10" maxlength="10" value="<%= props.getProperty("ar2_13ExamDate", "") %>"   />
+		  <input type="text" name="ar2_13ExamDate" id="ar2_13ExamDate" size="10" maxlength="10" value="<%= props.getProperty("ar2_13ExamDate", "") %>"   />
           <img src="../images/cal.gif" id="ar2_13ExamDate_cal">
 		  </td><td width="18%" nowrap>WEIGHT<br>
 		  <input type="text" name="ar2_13Weight" size="6" maxlength="6" value="<%= props.getProperty("ar2_13Weight", "") %>"  />g

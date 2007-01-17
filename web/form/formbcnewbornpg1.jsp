@@ -497,7 +497,7 @@ function onCheckSlave(a, masterName) {
       <input type="text" name="c_l" style="width:100%" size="2" maxlength="4" value="<%= props.getProperty("c_l", "") %>" @oscar.formDB />
       </th>
       <td width="20%">EDD dd/mm/yyyy
-      <input type="text" name="pg1_eddByDate" size="8" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg1_eddByDate" id="pg1_eddByDate" size="8" maxlength="10" value="<%= props.getProperty("pg1_eddByDate", "") %>" @oscar.formDB dbType="date" />
           <img src="../images/cal.gif" id="pg1_eddByDate_cal">
       </td>
 	  <td width="20%" nowrap align="center">BLOOD GROUP/Rh<br>
@@ -559,7 +559,7 @@ function onCheckSlave(a, masterName) {
           <img src="../images/cal.gif" id="pg1_formDate_cal">
           <%=bSync? ("<b><a href=# onClick='syncDemo(); return false;'><font color='red'>Synchronize</font></a></b>") :"" %>
       <br>
-      <input type="text" name="pg1_formDate" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
+      <input type="text" name="pg1_formDate" id="pg1_formDate" size="10" maxlength="10" value="<%= props.getProperty("pg1_formDate", "") %>" @oscar.formDB dbType="date" />
       </td>
     </tr><tr>
       <td width="55%">SURNAME<br>
@@ -697,7 +697,7 @@ function onCheckSlave(a, masterName) {
     <th colspan="2"  align="left">4. DELIVERY ROOM</th>
   </tr><tr>
 	<td colspan="2">BIRTHDATE
-	<input type="text" name="pg1_delRomBirthDay" size="10" maxlength="10" value="<%= props.getProperty("pg1_delRomBirthDay", "") %>" @oscar.formDB  dbType="date"/>
+	<input type="text" name="pg1_delRomBirthDay" id="pg1_delRomBirthDay" size="10" maxlength="10" value="<%= props.getProperty("pg1_delRomBirthDay", "") %>" @oscar.formDB  dbType="date"/>
           <img src="../images/cal.gif" id="pg1_delRomBirthDay_cal">
 	TIME
 	<input type="text" name="pg1_delRomBirthTime" size="5" maxlength="5" value="<%= props.getProperty("pg1_delRomBirthTime", "") %>" @oscar.formDB  dbType="time"/>
@@ -1415,7 +1415,7 @@ function onCheckSlave(a, masterName) {
 	  <td width="20%">DATE
 		<img src="../images/cal.gif" id="pg1_Date_cal">
 	  <br>
-	  <input type="text" name="pg1_Date" size="10" maxlength="10" value="<%= props.getProperty("pg1_Date", "") %>" @oscar.formDB  dbType="date"/>
+	  <input type="text" name="pg1_Date" id="pg1_Date" size="10" maxlength="10" value="<%= props.getProperty("pg1_Date", "") %>" @oscar.formDB  dbType="date"/>
 	  </td>
 	  <td width="10%">TIME<br>
 	  <input type="text" name="pg1_Time" size="5" maxlength="5" value="<%= props.getProperty("pg1_Time", "") %>" @oscar.formDB  dbType="time"/>
