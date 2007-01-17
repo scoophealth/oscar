@@ -1060,8 +1060,15 @@ CREATE TABLE formBCBirthSumMo(
   conOther tinyint(1),
   conOtherTxt varchar(30),
   conLos varchar(3),
-  PRIMARY KEY (ID)
-) TYPE=MyISAM;
+  ppLos char(3) default NULL,
+  admisDateTime varchar(16) default NULL,
+  dischargeDateTime varchar(16) default NULL,
+  PRIMARY KEY (ID),
+  KEY `demographic_no` (`demographic_no`),
+  KEY `formCreated` (`formCreated`)
+);
+
+
 --
 -- Table structure for table 'formBCNewBorn'
 --
