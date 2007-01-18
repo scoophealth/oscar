@@ -102,7 +102,12 @@ public class EctDisplayAction extends Action {
                 NavBarDisplayDAO Dao = (NavBarDisplayDAO)request.getAttribute("DAO");
                 if( Dao == null )
                     Dao = new NavBarDisplayDAO(); 
-
+                
+                String headingColour = request.getParameter("hC");
+                if (headingColour != null){
+                   Dao.setHeadingColour(headingColour);
+                }
+                
                 if( getInfo(bean,request, Dao,messages) ) {
                     request.setAttribute("DAO",Dao);
 
