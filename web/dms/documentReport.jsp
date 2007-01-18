@@ -42,10 +42,6 @@ String userlastname = (String) session.getAttribute("userlastname");
 
 <%
 
-for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
-    String name = (String)e.nextElement();    
-    System.out.println("DOC PARAMS " + name + " -> " + request.getParameter(name));    
- }
     
 //if delete request is made
 if (request.getParameter("delDocumentNo") != null) {
