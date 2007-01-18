@@ -18,7 +18,7 @@
    String rh = dao.getRightHeadingID();
    if( !rh.equals("") ) {          
 %>        
-        <div id='menuTitle<%=rh%>' style="margin-right: 3px; clear: both; display: inline; float: right;"><h3><a href="#" <%=dao.numPopUpMenuItems() > 0 ? "onmouseover" : "onclick"%>="<%=dao.getRightURL()%>">+</a></h3></div>
+        <div id='menuTitle<%=rh%>' style="margin-right: 3px; clear: both; display: inline; float: right;"><h3 <%=getBackgroundColor(dao)%> ><a href="#" <%=dao.numPopUpMenuItems() > 0 ? "onmouseover" : "onclick"%>="<%=dao.getRightURL()%>">+</a></h3></div>
 <%        
         int num;
         //if there is a pop up menu then grab all of the items and format according to number
@@ -62,7 +62,7 @@
 
    //left hand module header comes last as it's displayed as a block
 %>
-<h3><a href="#" onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3> 
+<h3 <%=getBackgroundColor(dao)%> ><a href="#" onclick="<%=dao.getLeftURL()%>; return false;"><%=dao.getLeftHeading()%></a></h3> 
 
 
 <ul id="<%=request.getAttribute("navbarName")%>list" style="clear:both;">
@@ -115,4 +115,15 @@
     <input type="hidden" id="<%=request.getAttribute("navbarName")%>num" value="<%=j%>" />
     <%   
         System.out.println("LeftNavBar " + request.getAttribute("navbarName") + "load time: " + (System.currentTimeMillis()-startTime) + "ms");
+    %>
+    
+    <%!
+    public String getBackgroundColor(NavBarDisplayDAO dao){
+        if ( dao.hasHeadingColour()){
+           return  " style=\"background-color: #"+dao.getHeadingColour()+";\" "; 
+        }
+        return "";
+    }
+    
+    
     %>
