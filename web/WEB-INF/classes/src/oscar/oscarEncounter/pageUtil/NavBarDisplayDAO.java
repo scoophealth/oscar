@@ -51,6 +51,8 @@ public class NavBarDisplayDAO {
     private ArrayList Items;
     private ArrayList PopUpMenuURLS;
     private ArrayList PopUpMenuNames;
+    private String headingColour = null;
+    
     
     /** Creates a new instance of NavBarDisplayDAO */
     public NavBarDisplayDAO() {   
@@ -331,5 +333,21 @@ public class NavBarDisplayDAO {
             else 
                 return 0;                        
         }
+    }
+
+    public String getHeadingColour() {
+        return headingColour;
+    }
+
+    public void setHeadingColour(String headingColour) {
+        this.headingColour = headingColour;
+    }
+    
+    public boolean hasHeadingColour(){
+        boolean hasHeadingColour = false;
+        if (this.headingColour != null){
+           hasHeadingColour = true;
+        }
+        return hasHeadingColour; 
     }
 }
