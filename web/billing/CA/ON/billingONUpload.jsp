@@ -77,7 +77,7 @@ function onSubmit(){
 
 <p>
 <table width="400" border="0">
-<form name="form1" method="post" action="" ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
+<form id="form1" name="form1" method="post" action="" ENCTYPE="multipart/form-data" onsubmit="return onSubmit();">
 <tr> 
 	<td width="181">
 	<b>Select diskette</b></td>
