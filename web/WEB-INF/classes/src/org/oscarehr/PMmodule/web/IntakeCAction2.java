@@ -306,7 +306,8 @@ public class IntakeCAction2 extends BaseAction {
 
 		setAttributes(request, form);
 
-		return form(mapping, form, request, response);
+		//return form(mapping, form, request, response);
+		return mapping.findForward("form");
 	}
 
 	public ActionForward add_address(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -361,7 +362,9 @@ public class IntakeCAction2 extends BaseAction {
 	
 	public ActionForward saveWithoutClose(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		save(mapping, form, request, response);
-		
+		DynaActionForm intakeForm = (DynaActionForm) form;
+		Formintakec intakec = (Formintakec) intakeForm.get("intake");
+		request.setAttribute("demographicNo", String.valueOf(intakec.getDemographicNo()));
 		return refresh(mapping, form, request, response);
 	}
 
@@ -382,7 +385,7 @@ public class IntakeCAction2 extends BaseAction {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
     protected void setAttributes(HttpServletRequest request, ActionForm form) {
     	DynaActionForm intakeForm = (DynaActionForm) form;
     	Formintakec intake = (Formintakec) intakeForm.get("intake");
