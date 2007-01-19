@@ -26,7 +26,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -306,7 +305,6 @@ public class IntakeCAction2 extends BaseAction {
 
 		setAttributes(request, form);
 
-		//return form(mapping, form, request, response);
 		return mapping.findForward("form");
 	}
 
@@ -347,24 +345,19 @@ public class IntakeCAction2 extends BaseAction {
 	}
 
 	public ActionForward saveAndClose(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm intakeForm = (DynaActionForm) form;
-		Formintakec intakec = (Formintakec) intakeForm.get("intake");
-
 		save(mapping, form, request, response);
 		
-		request.getSession().setAttribute("demographic", null);
-		request.setAttribute("demographicNo", String.valueOf(intakec.getDemographicNo()));
+		DynaActionForm intakeForm = (DynaActionForm) form;
 		intakeForm.reset(mapping, request);
 		intakeForm.set("view2", new IntakeCFormBean());
+		request.getSession().setAttribute("demographic", null);
 		
 		return mapping.findForward("success");
 	}
 	
 	public ActionForward saveWithoutClose(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		save(mapping, form, request, response);
-		DynaActionForm intakeForm = (DynaActionForm) form;
-		Formintakec intakec = (Formintakec) intakeForm.get("intake");
-		request.setAttribute("demographicNo", String.valueOf(intakec.getDemographicNo()));
+		
 		return refresh(mapping, form, request, response);
 	}
 
@@ -385,7 +378,6 @@ public class IntakeCAction2 extends BaseAction {
 		}
 	}
 
-	//@SuppressWarnings("unchecked")
     protected void setAttributes(HttpServletRequest request, ActionForm form) {
     	DynaActionForm intakeForm = (DynaActionForm) form;
     	Formintakec intake = (Formintakec) intakeForm.get("intake");
@@ -629,6 +621,8 @@ public class IntakeCAction2 extends BaseAction {
 		} catch (IntegratorException e) {
 			log.error(e);
 		}
+		
+		request.setAttribute("demographicNo", String.valueOf(intakec.getDemographicNo()));
 	}
 
 	protected void saveClientExtras(int demographicNo, Demographic remoteDemographic) {

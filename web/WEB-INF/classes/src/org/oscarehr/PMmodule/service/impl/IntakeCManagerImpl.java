@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.IntakeCDao;
 import org.oscarehr.PMmodule.model.Demographic;
@@ -46,7 +47,7 @@ public class IntakeCManagerImpl extends BaseIntakeManager implements IntakeCMana
 	}
 
 	public Formintakec getCurrentForm(String demographicNo) {
-		if (demographicNo != null) {
+		if (StringUtils.isNotBlank(demographicNo)) {
 			return intakeDao.getCurrentForm(Integer.valueOf(demographicNo));
 		}
 		

@@ -20,25 +20,25 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
- -->
+-->
 
 <%@ page language="java" isErrorPage="true"%>
 <head>
-<title>Doh!</title>
+	<title>Doh!</title>
 </head>
 An Error has occurred in this application.
 <%
-if (exception != null) {
+	if (exception != null) {
 %>
 <pre>
 <%
-exception.printStackTrace(new java.io.PrintWriter(out));
+		exception.printStackTrace(new java.io.PrintWriter(out));
 %>
 </pre>
 <%
-} else {
+	} else {
 %>
-Please check your log files for further information.
+		Please check your log files for further information.
 <%
-}
+	}
 %>
