@@ -15,7 +15,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 1");
-              prev.addWarning("DTaP-IPV 1", "Needs First Booster");
+              prev.addWarning("DTaP-IPV 1", "Needs First DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -32,7 +32,7 @@
         
         <java:consequence>              
               System.out.println("DTaP-IPV 2");
-              prev.addWarning("DTaP-IPV", "Needs Second Booster");
+              prev.addWarning("DTaP-IPV", "Needs Second DTaP-IPV /HIB");
         </java:consequence>
     </rule>
     
@@ -47,7 +47,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 2");
-              prev.addWarning("DTaP-IPV", "Needs Second Booster");
+              prev.addWarning("DTaP-IPV", "Needs Second DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -65,7 +65,7 @@
 
         <java:consequence>              
               System.out.println("DTaP-IPV 3");
-              prev.addWarning("DTaP-IPV", "Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -80,7 +80,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 2.1");
-              prev.addWarning("DTaP-IPV", "Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -97,7 +97,7 @@
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         <java:consequence>              
               System.out.println("DTaP-IPV 4");
-              prev.addWarning("DTaP-IPV", "Needs Fourth Booster");
+              prev.addWarning("DTaP-IPV", "Needs Fourth DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -112,7 +112,7 @@
                 
         <java:consequence>              
               System.out.println("DTaP-IPV 2.1");
-              prev.addWarning("DTaP-IPV", "Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third DTaP-IPV /HIB");
         </java:consequence>
     </rule>
 
@@ -129,7 +129,7 @@
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         <java:consequence>              
               System.out.println("DTaP-IPV 3");
-              prev.addWarning("DTaP-IPV", "Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third DTaP-IPV /HIB");
         </java:consequence>
     </rule>
     <rule name="DTaP-IPV 6">
@@ -144,7 +144,7 @@
         <java:condition>!prev.isPreventionNever("DTaP-IPV")</java:condition>
         <java:consequence>              
               System.out.println("DTaP-IPV 3");
-              prev.addWarning("DTaP-IPV", "Needs Third Booster");
+              prev.addWarning("DTaP-IPV", "Needs Third DTaP-IPV /HIB");
         </java:consequence>
     </rule>
     <rule name="Hib 1">
@@ -464,7 +464,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("DTaP-IPV") &gt;= 120</java:condition>
         <java:consequence>              
               System.out.println("dTap 1");
-              prev.addWarning("dTap", "Needs Booster");
+              prev.addWarning("dTap", "Needs dTap");
         </java:consequence>
     </rule>
 
@@ -477,7 +477,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("dTaP") &gt;= 120</java:condition>
         <java:consequence>              
               System.out.println("Td 1");
-              prev.addWarning("Td", "Needs Booster");
+              prev.addWarning("Td", "Needs Td");
         </java:consequence>
     </rule>
 
@@ -489,7 +489,7 @@
         <java:condition>prev.getHowManyMonthsSinceLast("Td") &gt;= 120</java:condition>
         <java:consequence>              
               System.out.println("Td 2");
-              prev.addWarning("Td", "Needs Booster");
+              prev.addWarning("Td", "Needs Td");
         </java:consequence>
     </rule>
 
