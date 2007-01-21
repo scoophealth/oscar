@@ -120,7 +120,25 @@
         link=""
         layout="injection"
         atc="J07BG01"
-        showIfMinRecordNum="1"/>        
+        showIfMinRecordNum="1"/>   
+        
+   <item        
+        desc="Typhoid=Typhoid"
+        name="Typhoid"
+        link=""
+        layout="injection"
+        atc="J07AP01"
+        showIfMinRecordNum="1"/> 
+        
+   <item        
+        desc="HPV=Human papillomavirus quadrivalent vaccine"
+        name="HPV"
+        link=""
+        layout="injection"
+        atc="J07BM01"
+        showIfMinRecordNum="1"/> 
+        
+        
                 
    <item        
         desc="TB=Tuberculosis"
