@@ -720,15 +720,15 @@ document.onclick = hideAllMenus;
     //This object stores the key -> cmd value passed to action class and the id of the created div
     // and the value -> URL of the action class
     var URLs = { 
-                  preventions:  "<rewrite:reWrite jspPage="displayPrevention.do"/>",
-                  tickler:      "<rewrite:reWrite jspPage="displayTickler.do"/>",
-                  Dx:           "<rewrite:reWrite jspPage="displayDisease.do"/>",
-                  forms:        "<rewrite:reWrite jspPage="displayForms.do"/>",
-                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do"/>",
-                  docs:         "<rewrite:reWrite jspPage="displayDocuments.do"/>",
-                  labs:         "<rewrite:reWrite jspPage="displayLabs.do"/>",                          
-                  msgs:         "<rewrite:reWrite jspPage="displayMessages.do"/>",
-                  measurements: "<rewrite:reWrite jspPage="displayMeasurements.do"/>",
+                  preventions:  "<rewrite:reWrite jspPage="displayPrevention.do?hC=009999"/>",
+                  tickler:      "<rewrite:reWrite jspPage="displayTickler.do?hC=FF6600"/>",
+                  Dx:           "<rewrite:reWrite jspPage="displayDisease.do?hC=5A5A5A"/>",
+                  forms:        "<rewrite:reWrite jspPage="displayForms.do?hC=917611"/>",
+                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%>
+                  docs:         "<rewrite:reWrite jspPage="displayDocuments.do?hC=476BB3"/>",
+                  labs:         "<rewrite:reWrite jspPage="displayLabs.do?hC=A0509C"/>", <%/* 550066   */%>                         
+                  msgs:         "<rewrite:reWrite jspPage="displayMessages.do?hC=DDDD00"/>", <% /* FF33CC */ %>
+                  measurements: "<rewrite:reWrite jspPage="displayMeasurements.do?hC=344887"/>",
                   consultation: "<rewrite:reWrite jspPage="displayConsultation.do"/>"
               };                                               
     
