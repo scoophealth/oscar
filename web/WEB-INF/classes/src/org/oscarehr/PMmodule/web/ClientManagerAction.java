@@ -227,7 +227,7 @@ public class ClientManagerAction extends BaseAction {
 		String roles = (String)request.getSession().getAttribute("userrole");
 		if (roles.indexOf("ER Clerk") != -1) {
 			Map consentMap = (Map) request.getSession().getAttribute("er_consent_map");
-
+			
 			if (consentMap == null) {
 				return mapping.findForward("consent");
 			}
@@ -235,8 +235,9 @@ public class ClientManagerAction extends BaseAction {
 			if (consentMap.get(id) == null) {
 				return mapping.findForward("consent");
 			}
-
+			
 			request.getSession().setAttribute("er_consent_map", consentMap);
+			return mapping.findForward("er-redirect");
 		}
 
 		return mapping.findForward("edit");
