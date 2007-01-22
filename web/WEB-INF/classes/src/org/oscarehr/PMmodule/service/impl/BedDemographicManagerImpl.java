@@ -230,25 +230,25 @@ public class BedDemographicManagerImpl implements BedDemographicManager {
 	}
 
 	void validateBedDemographicStatus(Integer bedDemographicStatusId) {
-		if (bedDemographicStatusId != null && !bedDemographicDAO.bedDemographicStatusExists(bedDemographicStatusId)) {
+		if (!bedDemographicDAO.bedDemographicStatusExists(bedDemographicStatusId)) {
 			handleException(new IllegalArgumentException("no bed demographic status with id : " + bedDemographicStatusId));
 		}
 	}
 
 	void validateProvider(String providerId) {
-		if (providerId != null && !providerDAO.providerExists(providerId)) {
+		if (!providerDAO.providerExists(providerId)) {
 			handleException(new IllegalArgumentException("no provider with id : " + providerId));
 		}
 	}
 
 	void validateBed(Integer bedId) {
-		if (bedId != null && !bedDAO.bedExists(bedId)) {
+		if (!bedDAO.bedExists(bedId)) {
 			handleException(new IllegalArgumentException("no bed with id : " + bedId));
 		}
 	}
 
 	void validateDemographic(Integer demographicNo) {
-		if (demographicNo != null && !demographicDAO.clientExists(demographicNo)) {
+		if (!demographicDAO.clientExists(demographicNo)) {
 			handleException(new IllegalArgumentException("no demographic with id : " + demographicNo));
 		}
 	}
