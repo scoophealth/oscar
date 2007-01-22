@@ -40,6 +40,8 @@ public final class DateTimeFormatUtils {
 	
 	// Public methods
 	
+	// Dates
+	
 	public static final Date getFuture(Date start, Integer daysInFuture) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, daysInFuture);
@@ -63,7 +65,9 @@ public final class DateTimeFormatUtils {
 	public static final Date getDateFromDate(Date date) {
 		return parseFormat(date, DATE_FORMAT);
 	}
-
+	
+	// Times
+	
 	public static final Date getTimeFromLong(long time) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
