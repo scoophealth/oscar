@@ -262,7 +262,8 @@ function popupPage(vheight,vwidth,varpage) {
 					}
 				}
 
-				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram)) {
+				if("HCP".equals(payProgram) || "RMB".equals(payProgram) || "WCB".equals(payProgram) 
+						|| request.getParameter("billing_no").length() < 1) {
 					htmlPaid = "";
 				} else {
 					Billing3rdPartPrep tObj = new Billing3rdPartPrep();
