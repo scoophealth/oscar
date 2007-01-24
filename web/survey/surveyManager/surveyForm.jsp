@@ -98,6 +98,11 @@
         	document.surveyForm.submit(); 
         }
         
+        function updateSection() {
+			document.surveyForm.method.value="update_section";
+			document.surveyForm.submit();
+        }
+        
         function addPage() {
 			document.surveyForm.method.value="add_page";
     		document.surveyForm.submit();
@@ -290,7 +295,7 @@
 	       	    	 <div id="<c:out value="page${page_number}"/>">					            
 	            		<table class="surveyPage" width="100%">
                         <tr>
-                            <td class="pageTitle" colspan="2">
+                            <td class="pageTitle" colspan="3">
                             	<a href="<html:rewrite action="/SurveyManager"/>?method=remove_page&id=<c:out value="${page_number }"/>"><img src="images/delete.png" border="0"></a>
 								&nbsp;
                             	Page Title:&nbsp;
@@ -305,8 +310,12 @@
 	                        </html:select>
 	          		     </td>
                             
-                            <td align="left">
+                            <td align="right">
                                 <input type="button" value="Add New Section" onclick="addSection()"/>
+                            </td>
+                            
+                            <td align="left">
+                                <input type="button" value="Update Section" onclick="updateSection()"/>
                             </td>
                         </tr>
                         
@@ -324,7 +333,7 @@
                         %>
                         
                         <tr>
-                            <td id="page1_Container" colspan="2" class="container">
+                            <td id="page1_Container" colspan="3" class="container">
 	                            <table class="section" width="90%">
 	                            	<tr>
 	                            		<td width="10%">
@@ -358,7 +367,7 @@
                         		
                          %>
                         
-                         <tr><td id="page1_Container" colspan="2" class="container">
+                         <tr><td id="page1_Container" colspan="3" class="container">
                      		<table class="section" width="90%">
                      			<tr>
                      				<td class="sectionDescr" width="1%">
@@ -369,7 +378,7 @@
                      				
                      			</tr>
 								<tr>
-									<td colspan="2">
+									<td colspan="3">
 										<html-el:select property="web.questionType" onchange="addQuestionType('${section.id}', this.options[this.selectedIndex].value);" styleClass="formElement">
 				                            <html:option value="">Add New Question:</html:option>
 		    		                        <html:options collection="QuestionTypes" property="value" labelProperty="label" />
@@ -380,7 +389,7 @@
 								<c:forEach var="question" items="${section.questionArray}">
 								<% org.oscarehr.surveymodel.Question question = (org.oscarehr.surveymodel.Question)pageContext.getAttribute("question"); %>
                        <tr>
-                            <td id="page1_Container" colspan="2" class="container">
+                            <td id="page1_Container" colspan="3" class="container">
 	                            <table class="section" width="90%">
 	                            	<tr>
 	                            		<td width="10%">
