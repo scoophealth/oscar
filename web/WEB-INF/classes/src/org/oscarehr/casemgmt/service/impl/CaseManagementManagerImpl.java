@@ -551,15 +551,37 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 	public String getDemoAge(String demoNo) {
 		
 		Calendar rightNow = Calendar.getInstance();
-		int CurrentYear = rightNow.get(Calendar.YEAR);
-		
-		
+		int curYear = rightNow.get(Calendar.YEAR);
+		int curMonth = rightNow.get(Calendar.MONTH);
+		int curDay = rightNow.get(Calendar.DAY_OF_MONTH);
+		  
 		Demographic dg=demographicDAO.getClientByDemographicNo(new Integer(demoNo));
-		int age=CurrentYear-Integer.parseInt(dg.getYearOfBirth());
+		if (dg==null) return "";
+		
+		int year = Integer.parseInt(dg.getYearOfBirth());
+		int month = Integer.parseInt(dg.getMonthOfBirth());
+		int date = Integer.parseInt(dg.getDateOfBirth());
+		
+		int age = 0;
+		
+		if( curMonth>month || (curMonth==month && curDay >= date) ) { 
+	 		  age = curYear-year; 
+	   	} else {
+	 		  age = curYear-year -1; 
+	 		}
+				
+		if(age<127)
+			return Integer.toString(age);
+		else return (age+" (Please check DOB)");
+	   
+		/*
+		Demographic dg=demographicDAO.getClientByDemographicNo(new Integer(demoNo));			
+		int age=currentYear-Integer.parseInt(dg.getYearOfBirth());
 		if (dg==null) return "";
 		else if(age<127)
 			return Integer.toString(age);
 		else return (age+" (Please check DOB)");
+		*/
 	}
 	
 	public String getDemoDOB(String demoNo) {
