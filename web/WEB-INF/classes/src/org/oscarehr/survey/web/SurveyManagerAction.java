@@ -265,9 +265,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		request.setAttribute("pages",pages);
 					
 		String pageName = formBean.getPage();
-		if(pageName == null || pageName.length()==0) {
-			pageName = "1";
-    	    }
+		
 		if(pageName.equalsIgnoreCase("Introduction")) {
 			
 		}
