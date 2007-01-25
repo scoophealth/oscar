@@ -257,7 +257,7 @@ Sort:
 						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit/Sign Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>				
-					<c:when test="${note.signed and note.provider_no eq param.providerNo}">
+					<c:when test="${note.signed and note.provider_no eq param.providerNo and (note.locked !=true)}">
 						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>
@@ -266,7 +266,7 @@ Sort:
 					</c:otherwise>	
 				</c:choose>
 				<c:choose>				
-					<c:when test="${note.hasHistory == true}">
+					<c:when test="${note.hasHistory == true and note.locked != true}">
 						<c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
 						<img src="<c:out value="${ctx}"/>/images/history.gif" title="Note History" style="cursor:pointer" onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')" >
 					</c:when>
