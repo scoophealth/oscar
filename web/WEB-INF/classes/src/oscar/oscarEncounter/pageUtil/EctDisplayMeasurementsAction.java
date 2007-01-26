@@ -63,7 +63,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
         
         //first we add flowsheets to the module items
         dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
-        Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
+        Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();        
         ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);                            
         int hash;
         for (int f = 0; f < flowsheets.size();f++){
@@ -109,20 +109,21 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, data.getType());
             Vector measures = (Vector) hd.getMeasurementsDataVector();
             
-            NavBarDisplayDAO.Item item = Dao.Item();
-            data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
-            Date date = data.getDateObservedAsDate();
-            String formattedDate = DateUtils.getDate(date,dateFormat);
-            item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
-            title = padd(title, data.getDataField());
-            String tmp = "<span class=\"measureCol1\">" + title + "</span>";
-            tmp += "<span class=\"measureCol2\">" + data.getDataField() + "</span>";
-            tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
-            item.setTitle(tmp);                       
-            item.setDate(date);            
-            item.setURL("popupPage(300,800,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do?type=" + type + "'); return false;");
-            Dao.addItem(item);
-            
+            if(measures.size() > 0 ) {
+                NavBarDisplayDAO.Item item = Dao.Item();
+                data = (oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean) measures.get(0);
+                Date date = data.getDateObservedAsDate();
+                String formattedDate = DateUtils.getDate(date,dateFormat);
+                item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
+                title = padd(title, data.getDataField());
+                String tmp = "<span class=\"measureCol1\">" + title + "</span>";
+                tmp += "<span class=\"measureCol2\">" + data.getDataField() + "</span>";
+                tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
+                item.setTitle(tmp);                       
+                item.setDate(date);            
+                item.setURL("popupPage(300,800,'" + hash + "','" + request.getContextPath() + "/oscarEncounter/oscarMeasurements/SetupDisplayHistory.do?type=" + type + "'); return false;");
+                Dao.addItem(item);
+            }
         }
         
         return true;
