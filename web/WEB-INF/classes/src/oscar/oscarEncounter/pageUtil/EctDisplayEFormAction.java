@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayEFormAction extends EctDisplayAction {
-    private final static String BGCOLOUR = "FFCC00";
+    private final static String BGCOLOUR = "11CC00";
     private String cmd = "eforms";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                                                                                  

@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 
 public class EctDisplayFormAction extends EctDisplayAction {
-    private static final String BGCOLOUR = "33FF00";
+    private static final String BGCOLOUR = "917611";
     private String cmd = "forms"; 
     private String menuId = "1";
     
