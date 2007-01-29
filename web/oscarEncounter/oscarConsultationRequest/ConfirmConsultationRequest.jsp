@@ -46,7 +46,7 @@ function BackToOscar() {
 
 function finishPage(secs){
     setTimeout("window.close()",secs*500);    
-    window.opener.location.reload();    
+    //window.opener.location.reload();    
 }
 
 </script>
