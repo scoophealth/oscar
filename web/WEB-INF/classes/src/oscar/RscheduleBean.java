@@ -37,6 +37,7 @@ public class RscheduleBean {
   public String avail_hourB = ""; 
   public String avail_hour = "";
   public String creator = "";
+  public String active = "A";
   private String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
   private String sitedaytag[] = {"A7","A1","A2","A3","A4","A5","A6"};
 
