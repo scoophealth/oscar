@@ -772,8 +772,8 @@ function popLeftColumn(url,div,params) {
                             onSuccess: function(request) {                            
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
-                                                                                            
-                                            $(div).update(request.responseText);
+                                                                                                                                        
+                                            $(div).innerHTML = request.responseText;
                                             listDisplay(params);
                                        }, 
                             onFailure: function(request) {
