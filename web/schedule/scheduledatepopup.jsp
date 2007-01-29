@@ -26,7 +26,7 @@
 
 <%--
 /*
- * $RCSfile: AbstractApplication.java,v $ *
+ * $RCSfile: scheduledatepopup.jsp,v $ *
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
  * This program is free software; you can redistribute it and/or 
@@ -66,7 +66,7 @@
     available = aHScheduleDate.available.compareTo("1")==0?"checked":""  ;
     strHour = aHScheduleDate.hour;
     //strHour = "value='"+ aHScheduleDate.hour +"'";
-    strReason = "value='"+ aHScheduleDate.reason +"'" ;
+    strReason = aHScheduleDate.reason ;
     strCreator= aHScheduleDate.creator;
   }
 
@@ -141,15 +141,27 @@ function upCaseCtrl(ctrl) {
               
             </td>
           </tr>
-          <!--tr>
+          <% 
+          OscarProperties props = OscarProperties.getInstance();
+          boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+          if(bMoreAddr) {
+          	String [] siteList = props.getProperty("scheduleSiteID", "").split("\\|");
+          %>
+          <tr>
             <td>
-              <div align="right">Summary: </div>
+              <div align="right">Location: </div>
             </td>
             <td>
-              <input type="text" name="reason" <%=strReason%> >
+<select name="reason">
+<% for(int i=0; i<siteList.length; i++) { %>
+	<option value="<%=siteList[i]%>" <%=strReason.equals(siteList[i])?"selected":""%>><b><%=siteList[i]%></b></option>
+<% } %>
+</select>							
+              <!--input type="text" name="reason" <%--=strReason--%> -->
             </td>
-          </tr-->
-              <input type="hidden" name="reason" <%=strReason%> >
+          </tr>
+          <% } %>
+              <!--  input type="hidden" name="reason" <%--=strReason--%> -->
           <tr>
             <td>
               <div align="right"><bean:message key="schedule.scheduledatepopup.formCreator"/>: </div>

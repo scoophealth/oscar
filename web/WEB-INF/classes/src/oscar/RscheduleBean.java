@@ -38,6 +38,7 @@ public class RscheduleBean {
   public String avail_hour = "";
   public String creator = "";
   private String weekdaytag[] = {"SUN","MON","TUE","WED","THU","FRI","SAT"};
+  private String sitedaytag[] = {"A7","A1","A2","A3","A4","A5","A6"};
 
   public RscheduleBean() {}
   public RscheduleBean( String provider_no1, String sdate1,String edate1,String bAvailable1, String day_of_week1, String avail_hourB1, String avail_hour1, String creator1) {
@@ -148,6 +149,19 @@ public class RscheduleBean {
     } 
     return val;
   }
+  public String getSiteAvail(GregorianCalendar aDate) { 
+	  	String val = "";
+	    if(provider_no!="") {
+	      int j = aDate.get(Calendar.DAY_OF_WEEK)-1;
+		    int i = j==7?0:j;
+	  	  if(this.available.compareTo("A")==0) {
+	  	    if(getEvenWeek(new GregorianCalendar(MyDateFormat.getYearFromStandardDate(this.sdate), MyDateFormat.getMonthFromStandardDate(this.sdate)-1,MyDateFormat.getDayFromStandardDate(this.sdate)), aDate) ) {
+	  	      val = SxmlMisc.getXmlContent(avail_hour, ("<"+sitedaytag[i]+">"),"</"+sitedaytag[i]+">") ; 
+	  		  } else val = SxmlMisc.getXmlContent(avail_hourB, ("<"+sitedaytag[i]+">"),"</"+sitedaytag[i]+">") ; 
+	  	  } else val = SxmlMisc.getXmlContent(avail_hour, ("<"+sitedaytag[i]+">"),"</"+sitedaytag[i]+">") ; 
+	    } 
+	    return val;
+	  }
   public String getDateAvailHour(String aDate) { 
     return (getDateAvailHour(new GregorianCalendar(MyDateFormat.getYearFromStandardDate(aDate), MyDateFormat.getMonthFromStandardDate(aDate)-1,MyDateFormat.getDayFromStandardDate(aDate))));
   }

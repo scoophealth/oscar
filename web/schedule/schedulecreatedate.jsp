@@ -108,7 +108,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
       param3[1]=provider_no;
       param3[2]="1";
       param3[3]="b";
-      param3[4]="";
+      param3[4]=scheduleRscheduleBean.getSiteAvail(cal);
       param3[5]=scheduleRscheduleBean.getDateAvailHour(cal);//SxmlMisc.getXmlContent(scheduleRscheduleBean.avail_hour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">");
       param3[6]=user_name;
       rowsAffected = scheduleMainBean.queryExecuteUpdate(param3,"add_scheduledate");
