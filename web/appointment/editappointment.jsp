@@ -9,8 +9,10 @@
 
   boolean bFirstDisp=true; //this is the first time to display the window
   if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
+  
+  ApptData apptObj = (new ApptOpt()).getApptObj(request);
 %>
-<%@ page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.oscarDemographic.data.*, java.util.*, java.sql.*, oscar.appt.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -168,6 +170,23 @@ function checkTimeTypeIn(obj) {
 	  } 
 	}
 }
+<% if(apptObj!=null) { %>
+function pasteAppt() {
+	document.EDITAPPT.status.value = "<%=apptObj.getStatus()%>";
+	document.EDITAPPT.duration.value = "<%=apptObj.getDuration()%>";
+	document.EDITAPPT.chart_no.value = "<%=apptObj.getChart_no()%>";
+	document.EDITAPPT.keyword.value = "<%=apptObj.getName()%>";
+	document.EDITAPPT.demographic_no.value = "<%=apptObj.getDemographic_no()%>";
+	document.EDITAPPT.reason.value = "<%=apptObj.getReason()%>";
+	document.EDITAPPT.notes.value = "<%=apptObj.getNotes()%>";
+	document.EDITAPPT.location.value = "<%=apptObj.getLocation()%>";
+	document.EDITAPPT.resources.value = "<%=apptObj.getResources()%>";
+}
+<% } %>
+function onCut() {
+  document.EDITAPPT.submit();
+}
+
 </script>
 <body  onload="setfocus()" background="../images/gray_bg.jpg" bgproperties="fixed" topmargin="0" leftmargin="0" rightmargin="0">
 <FORM NAME = "EDITAPPT" METHOD="post" ACTION="appointmentcontrol.jsp"  onSubmit="return(onSub())">
@@ -352,7 +371,13 @@ function checkTimeTypeIn(obj) {
               <div align="right"><font face="arial"><bean:message key="Appointment.formLocation"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <INPUT TYPE="TEXT" NAME="location"  tabindex="4"  VALUE="<%=bFirstDisp?rs.getString("location"):request.getParameter("location")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
+            <% 
+            OscarProperties props = OscarProperties.getInstance();
+            boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+            String loc = bFirstDisp?rs.getString("location"):request.getParameter("location").equals("")?"":request.getParameter("location");
+            String colo = bMoreAddr? (new ApptOpt()).getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+            %>
+              <INPUT TYPE="TEXT" NAME="location"  tabindex="4" style="background-color: <%=colo%>" VALUE="<%=bFirstDisp?rs.getString("location"):request.getParameter("location")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
             </td>
             <td width="5%"  ></td>
             <td width="20%"  ALIGN="LEFT"> 
@@ -419,7 +444,6 @@ function checkTimeTypeIn(obj) {
 	</td>
 </tr>
 </table>
-</FORM>
 
 <table width="95%" align="center">
   <tr><td><bean:message key="Appointment.msgTelephone"/>: <%= phone%><br><bean:message key="Appointment.msgRosterStatus"/>: <%=rosterstatus%>
@@ -431,6 +455,16 @@ function checkTimeTypeIn(obj) {
 <% } %>  
   </tr>
 </table>
+<hr/>
+<table width="95%" align="center">
+  <tr><td>
+  <input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Cut';" value="Cut"/> |
+  <input type="submit" onclick="document.forms['EDITAPPT'].displaymode.value='Copy';" value="Copy"/>
+  <% if(apptObj!=null) { %><a href=# onclick="pasteAppt();">Paste</a><% } %>
+  </td>
+  </tr>
+</table>
+</FORM>
 
 </body>
 </html:html>

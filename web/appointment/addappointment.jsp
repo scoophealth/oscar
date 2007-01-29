@@ -1,7 +1,7 @@
 <%
 
-  if(session.getValue("user") == null)    response.sendRedirect("../logout.jsp");
-
+  if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
+  String DONOTBOOK = "Do_Not_Book";
   String curProvider_no = request.getParameter("provider_no");
   String curDoctor_no = request.getParameter("doctor_no") != null ? request.getParameter("doctor_no") : "";
 
@@ -28,9 +28,11 @@
   if (request.getParameter("demographic_no")!=null) bFromWL=true;
 
   String duration = request.getParameter("duration")!=null?(request.getParameter("duration").equals(" ")||request.getParameter("duration").equals("")||request.getParameter("duration").equals("null")?(""+everyMin) :request.getParameter("duration")):(""+everyMin) ;
+  
+  ApptData apptObj = (new ApptOpt()).getApptObj(request);
 
 %>
-<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*, oscar.appt.*" errorPage="../appointment/errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="addApptBean" class="oscar.AppointmentMainBean" scope="page" /><%@ include file="../admin/dbconnection.jsp" %>
@@ -41,7 +43,7 @@
 String [][] dbQueries=new String[][] { 
 
     {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
-
+    {"search_appt_name", "select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
 
     {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
@@ -102,7 +104,7 @@ String [][] dbQueries=new String[][] {
 -->
 <head>
 <title><bean:message key="appointment.addappointment.title"/></title>
-<script language="javascript">
+<script type="text/javascript">
 
 <!-- start javascript ---- check to see if it is really empty in database
 
@@ -260,7 +262,9 @@ function calculateEndTime() {
 
 }
 
-
+function onNotBook() {
+	document.forms[0].keyword.value = "<%=DONOTBOOK%>" ;
+}
 
 function onButRepeat() {
 
@@ -269,6 +273,19 @@ function onButRepeat() {
 	if (calculateEndTime()) { document.forms[0].submit(); }
 
 }
+<% if(apptObj!=null) { %>
+function pasteAppt() {
+	//document.forms[0].status.value = "<%=apptObj.getStatus()%>";
+	document.forms[0].duration.value = "<%=apptObj.getDuration()%>";
+	//document.forms[0].chart_no.value = "<%=apptObj.getChart_no()%>";
+	document.forms[0].keyword.value = "<%=apptObj.getName()%>";
+	document.forms[0].demographic_no.value = "<%=apptObj.getDemographic_no()%>";
+	document.forms[0].reason.value = "<%=apptObj.getReason()%>";
+	document.forms[0].notes.value = "<%=apptObj.getNotes()%>";
+	//document.forms[0].location.value = "<%=apptObj.getLocation()%>";
+	document.forms[0].resources.value = "<%=apptObj.getResources()%>";
+}
+<% } %>
 
 // stop javascript -->
 
@@ -326,6 +343,13 @@ function onButRepeat() {
 
   String deepcolor = apptnum==0?"#CCCCFF":"gold", weakcolor = apptnum==0?"#EEEEFF":"ivory";
 
+  rsdemo = addApptBean.queryResults(param, "search_appt_name");
+  boolean bDnb = false;
+  while(rsdemo.next()) {
+      String apptName = rsdemo.getString("name");
+      if(apptName.equalsIgnoreCase(DONOTBOOK)) bDnb = true;
+  }
+  
 %>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"  leftmargin="0" rightmargin="0"> 
 <%
@@ -441,7 +465,7 @@ String disabled="";
           %> 
       <bean:message key='appointment.addappointment.msgDoubleBooking'/> 
       <%
-
+			if(bDnb) out.println("<br/>You can NOT book an appointment on this time slot.");
        }
 
      %> 
@@ -485,7 +509,7 @@ String disabled="";
           <tr valign="middle" BGCOLOR="#CCCCFF"> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="appointment.addappointment.formSurName"/>:</font></div></td> 
             <td width="20%"> <INPUT TYPE="TEXT" NAME="keyword" VALUE="<%=(bFirstDisp && !bFromWL)?"":request.getParameter("name").equals("")?session.getAttribute("appointmentname")==null?"":session.getAttribute("appointmentname"):request.getParameter("name")%>" HEIGHT="20" border="0" hspace="2" width="25" tabindex="1"> </td> 
-            <td width="5%"></td> 
+            <td width="5%"><font size=-1><a href=# onclick="onNotBook();">Not book</font></a></td> 
             <td width="20%"> <div align="right"><font face="arial"> 
                 <INPUT TYPE="hidden" NAME="orderby" VALUE="last_name, first_name" > 
                 <INPUT TYPE="hidden" NAME="search_mode" VALUE="search_name" > 
@@ -511,7 +535,18 @@ String disabled="";
           </tr> 
           <tr valign="middle" BGCOLOR="#EEEEFF"> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formLocation"/>:</font></div></td> 
-            <td width="20%"> <input type="TEXT" name="location"  tabindex="4" value="<%=bFirstDisp?"":request.getParameter("location").equals("")?"":request.getParameter("location")%>" width="25" height="20" border="0" hspace="2"> </TD> 
+            <% 
+            OscarProperties props = OscarProperties.getInstance();
+            boolean bMoreAddr = props.getProperty("scheduleSiteID", "").equals("") ? false : true;
+			String tempLoc = "";
+            if(bFirstDisp && bMoreAddr) {
+            	//System.out.println(dateString2 + curProvider_no);
+            	tempLoc = (new ApptOpt()).getLocationFromSchedule(dateString2, curProvider_no);
+            }
+            String loc = bFirstDisp?tempLoc:request.getParameter("location").equals("")?"":request.getParameter("location");
+            String colo = bMoreAddr? (new ApptOpt()).getColorFromLocation(props.getProperty("scheduleSiteID", ""), props.getProperty("scheduleSiteColor", ""),loc) : "white";
+            %>
+            <td width="20%"> <input type="TEXT" name="location" style="background-color: <%=colo%>" tabindex="4" value="<%=loc%>" width="25" height="20" border="0" hspace="2"> </TD> 
             <td width="5%" ></td> 
             <td width="20%"> <div align="right"><font face="arial"><bean:message key="Appointment.formResources"/>:</font></div></td> 
             <td width="20%"> <input type="TEXT" name="resources"  tabindex="5" value="<%=bFirstDisp?"":request.getParameter("resources").equals("")?"":request.getParameter("resources")%>" width="25" height="20" border="0" hspace="2"> </td> 
@@ -545,6 +580,7 @@ String disabled="";
   </table> 
   <table width="100%" BGCOLOR="<%=deepcolor%>"> 
     <tr> 
+<% if(!bDnb) { %>    
       <TD nowrap> <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Group Appt'" VALUE="<bean:message key="appointment.addappointment.btnGroupAppt"/> 
 " <%=disabled%>> 
         <%
@@ -565,6 +601,7 @@ String disabled="";
         <INPUT TYPE="submit" onclick="document.forms['ADDAPPT'].displaymode.value='Add Appointment'" tabindex="6" VALUE="<bean:message key="appointment.addappointment.btnAddAppointment"/> 
 " <%=disabled%>> </TD> 
       <TD></TD> 
+<% } %>
       <TD align="right"><INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/> 
 " onClick="window.close();"> 
         <input type="button" value="<bean:message key="appointment.addappointment.btnRepeat"/> 
@@ -572,5 +609,14 @@ String disabled="";
     </tr> 
   </TABLE> 
 </FORM> 
+<% if(apptObj!=null) { %>
+  <hr/>
+<table width="95%" align="center">
+  <tr><td>
+	<a href=# onclick="pasteAppt();">Paste</a>
+  </td>
+  </tr>
+</table>
+<% } %>
 </body>
 </html:html>
