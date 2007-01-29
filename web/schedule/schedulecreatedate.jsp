@@ -46,7 +46,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   String sdate = MyDateFormat.getMysqlStandardDate(y,m,d );
   String edate = MyDateFormat.getMysqlStandardDate(Integer.parseInt(request.getParameter("eyear")),Integer.parseInt(request.getParameter("emonth")),Integer.parseInt(request.getParameter("eday")) );
   int rowsAffected = 0;
-  if(sdate.equals(scheduleRscheduleBean.sdate) ) {
+  /*if(sdate.equals(scheduleRscheduleBean.sdate) ) {
     String[] param1 =new String[3];
     param1[0]=request.getParameter("provider_no");
     param1[1]="1";
@@ -55,25 +55,81 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
     param1[1]="A";
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
+  }*/
+  String[] searchParams = new String[13];
+  searchParams[0] = request.getParameter("provider_no");
+  searchParams[1] = sdate;
+  searchParams[2] = edate;
+  searchParams[3] = sdate;
+  searchParams[4] = edate;
+  searchParams[5] = sdate;
+  searchParams[6] = edate;
+  searchParams[7] = sdate;
+  searchParams[8] = edate;
+  searchParams[9] = sdate;
+  searchParams[10] = edate;
+  searchParams[11] = sdate;
+  searchParams[12] = edate;
+  //check if existing schedule covers part or all of new schedule's time period
+  ResultSet rset = scheduleMainBean.queryResults(searchParams, "search_rschedule_overlaps");  
+  boolean scheduleOverlaps = false;
+  if( rset.next() ) {
+      scheduleOverlaps = rset.getInt(1) > 0;
   }
-    
+  rset.close();
+
+  //if we already have a schedule tell the user!
+  if( scheduleOverlaps ) {
+      String redirect = request.getHeader("Referer") + "&overlap=true";
+      System.out.println("Redirecting to " + redirect);
+      response.sendRedirect(redirect);
+      return;
+  }
+      
+  //if the schedule is the same we are editing instead
+  String[] searchParams1 = new String[3];
+  searchParams1[0] = request.getParameter("provider_no");
+  searchParams1[1] = sdate;
+  searchParams1[2] = edate;
+  rset = scheduleMainBean.queryResults(searchParams1, "search_rschedule_exists");
+  boolean editingSchedule = false;
+  if( rset.next() ) {
+    editingSchedule = rset.getInt(1) > 0;
+  }
+  rset.close();
+  
   //save rschedule data 
   if(bAlternate) 
     scheduleRscheduleBean.setRscheduleBean(provider_no, sdate,edate,request.getParameter("available"),request.getParameter("day_of_week"), request.getParameter("day_of_weekB") ,request.getParameter("avail_hourB"), request.getParameter("avail_hour"), user_name);
   else
     scheduleRscheduleBean.setRscheduleBean(provider_no, sdate,edate,request.getParameter("available"),request.getParameter("day_of_week"), request.getParameter("avail_hourB"), request.getParameter("avail_hour"), user_name);
     //System.out.println("llllppppppppppppppp"+scheduleRscheduleBean.available +GregorianCalendar.SUNDAY+GregorianCalendar.MONDAY+scheduleRscheduleBean.available +scheduleRscheduleBean.provider_no+" "+ scheduleRscheduleBean.day_of_week); 
-  String[] param2 =new String[8];
-  param2[0]=scheduleRscheduleBean.provider_no; // or use request.getParameter("provider_no");
-  param2[1]=scheduleRscheduleBean.sdate;
-  param2[2]=scheduleRscheduleBean.edate;
-  param2[3]=scheduleRscheduleBean.available;
-  param2[4]=scheduleRscheduleBean.day_of_week;
-  param2[5]=scheduleRscheduleBean.avail_hourB;
-  param2[6]=scheduleRscheduleBean.avail_hour;
-  param2[7]=scheduleRscheduleBean.creator;
-  rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"add_rschedule");
 
+  if( editingSchedule ) {
+    String[] updateParams = new String[7];
+    updateParams[0] = scheduleRscheduleBean.day_of_week;
+    updateParams[1] = scheduleRscheduleBean.avail_hourB;
+    updateParams[2] = scheduleRscheduleBean.avail_hour;
+    updateParams[3] = scheduleRscheduleBean.creator;
+    updateParams[4] = scheduleRscheduleBean.provider_no;
+    updateParams[5] = scheduleRscheduleBean.available;
+    updateParams[6] = scheduleRscheduleBean.sdate;
+    rowsAffected = scheduleMainBean.queryExecuteUpdate(updateParams,"update_rschedule1");
+  }
+  else {
+    String[] param2 =new String[10];
+    param2[0]=scheduleRscheduleBean.provider_no; // or use request.getParameter("provider_no");
+    param2[1]=scheduleRscheduleBean.sdate;
+    param2[2]=scheduleRscheduleBean.edate;
+    param2[3]=scheduleRscheduleBean.available;
+    param2[4]=scheduleRscheduleBean.day_of_week;
+    param2[5]=scheduleRscheduleBean.avail_hourB;
+    param2[6]=scheduleRscheduleBean.avail_hour;
+    param2[7]=scheduleRscheduleBean.creator;
+    param2[8]= "";
+    param2[9]=scheduleRscheduleBean.active;
+    rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"add_rschedule");
+  }
 
   //create scheduledate record and initial scheduleDateBean
   scheduleDateBean.clear();
@@ -81,7 +137,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   while (rsgroup.next()) { 
     scheduleDateBean.put(rsgroup.getString("sdate"), new HScheduleDate(rsgroup.getString("available"), rsgroup.getString("priority"), rsgroup.getString("reason"), rsgroup.getString("hour"), rsgroup.getString("creator") ));
   }
-  
+
   //initial scheduleHolidayBean record
   if(scheduleHolidayBean.isEmpty() ) {
     rsgroup = scheduleMainBean.queryResults("%","search_scheduleholiday");
@@ -89,14 +145,14 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
       scheduleHolidayBean.put(rsgroup.getString("sdate"), new HScheduleHoliday(rsgroup.getString("holiday_name") ));
     }
   }
-  
+
   //create scheduledate record by 'b' rate
   String[] param4 =new String[3];
     param4[0]=provider_no;
     param4[1]=sdate;
     param4[2]=edate;
   rowsAffected = scheduleMainBean.queryExecuteUpdate(param4,"delete_scheduledate_b");
-  String[] param3 =new String[7];
+  String[] param3 =new String[9];
   GregorianCalendar cal = new GregorianCalendar(y,m-1,d);
 //  GregorianCalendar cal = new GregorianCalendar(year,month-1,1);
   for(int i=0;i<365*yearLimit;i++) {
@@ -111,13 +167,16 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
       param3[4]=scheduleRscheduleBean.getSiteAvail(cal);
       param3[5]=scheduleRscheduleBean.getDateAvailHour(cal);//SxmlMisc.getXmlContent(scheduleRscheduleBean.avail_hour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">");
       param3[6]=user_name;
+      param3[7]="";
+      param3[8]=scheduleRscheduleBean.active;
       rowsAffected = scheduleMainBean.queryExecuteUpdate(param3,"add_scheduledate");
     }
     if((y+"-"+MyDateFormat.getDigitalXX(m)+"-"+MyDateFormat.getDigitalXX(d)).equals(edate)) break;
-   	cal.add(cal.DATE, 1);
+        cal.add(cal.DATE, 1);
   }
 
 }
+ 
 /////////////////////////////////////
 
 %>
