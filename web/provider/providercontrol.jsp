@@ -123,11 +123,11 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     //{"searchallprovider", "select * from provider order by ?"}, ^M
     {"searchallprovider", "select * from provider where status='1' order by last_name"},
     {"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },
-    {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? order by sdate" },
-    {"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? order by sdate" },
-    {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" },
+    {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? and status = 'A' order by sdate" },
+    {"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? and status = 'A' order by sdate" },
+    {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=? and status = 'A'" },
 
-    {"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
+    {"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
     // {"search_timecode", "select * from scheduletemplatecode order by ?"},
     {"search_timecode", "select * from scheduletemplatecode order by code"},
     {"search_resource_baseurl", "select * from property where name = ?"},
@@ -184,11 +184,11 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     //{"searchallprovider", "select * from provider order by ?"}, ^M
     {"searchallprovider", "select * from provider where status='1' order by last_name"},
     {"search_scheduleholiday", "select * from scheduleholiday where sdate > ?" },
-    {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? order by sdate" },
-    {"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? order by sdate" },
-    {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" },
+    {"search_scheduledate_datep", "select * from scheduledate where sdate between ? and ? and status = 'A' order by sdate" },
+    {"search_scheduledate_singlep", "select * from scheduledate where sdate between ? and ? and provider_no=? and status = 'A' order by sdate" },
+    {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=? and status = 'A'" },
 
-    {"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
+    {"search_appttimecode", "select scheduledate.provider_no, scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.sdate=? and  scheduledate.provider_no=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"},
     // {"search_timecode", "select * from scheduletemplatecode order by ?"},
     {"search_timecode", "select * from scheduletemplatecode order by code"},
     {"search_resource_baseurl", "select * from property where name = ?"},
