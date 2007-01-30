@@ -63,6 +63,15 @@ public class BaseCaseManagementManager {
 	protected CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
 	protected AdmissionManager admissionManager;
 	
+	private boolean enabled;
+		
+	public boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	
 	public void setEchartDAO(EchartDAO echartDAO) {
 		this.echartDAO = echartDAO;

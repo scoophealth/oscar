@@ -89,5 +89,7 @@ public interface CaseManagementManager {
 		
 	public boolean isClientInProgramDomain(String providerNo, String demographicNo);
 	public boolean unlockNote(int noteId, String password);
+	
+	public boolean getEnabled();
 }
 

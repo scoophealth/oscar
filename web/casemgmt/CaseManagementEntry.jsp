@@ -424,10 +424,12 @@ if (pId==null) pId="";
 			</tr>
 		</caisirole:SecurityAccess>
 		</c:if>
+		<c:if test="${requestScope.passwordEnabled=='true'}">
 		<tr>
 			<td class="fieldTitle">Password:</td>
 			<td class="fieldValue"><html:password property="caseNote.password"/></td>
 		</tr>
+		</c:if>
 		<tr>
 			<td class="fieldValue" colspan="2">
 			<input type="submit" value="Save"

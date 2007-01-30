@@ -82,6 +82,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		request.setAttribute("demoAge", getDemoAge(demono));
 		request.setAttribute("demoDOB", getDemoDOB(demono));
 		
+		if(caseManagementMgr.getEnabled())
+			request.setAttribute("passwordEnabled","true");
+		else
+			request.setAttribute("passwordEnabled","false");
 		
 		/* process the request from other module */
 		if (!"casemgmt".equalsIgnoreCase(request.getParameter("from"))) {
