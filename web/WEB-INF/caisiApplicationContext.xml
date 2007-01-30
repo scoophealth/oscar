@@ -556,7 +556,7 @@
 			<props>
 				<prop key="*">PROPAGATION_REQUIRED</prop>
 			</props>
-		</property>
+		</property>		
 	</bean>
 	<bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.impl.CaseManagementManagerImpl">
 		<property name="caseManagementNoteDAO">
@@ -606,6 +606,7 @@
 		</property>
 		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />
 		<property name="admissionManager" ref="admissionManager" />
+		<property name="enabled" value="${casemgmt.note.password.enabled}" />		
 	</bean>
 	<bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
