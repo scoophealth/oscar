@@ -8,6 +8,17 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>New Encounter Access</title>
+        <script type="text/javascript" LANGUAGE="JavaScript">
+
+        function checkAll(formId){
+	   var f = document.getElementById(formId);
+           var val = f.checkA.checked;
+	   for (i =0; i < f.encTesters.length; i++){
+	   	f.encTesters[i].checked = val;
+	   }
+	}
+        </script>
+
     </head>
     <body>
   
@@ -20,10 +31,10 @@
 %>
             <h3>Aassign New Encounter to:</h3>
         
-            <form method="post" action="newEncounter.jsp">
-<%                                        
-        
-            
+            <form method="post" action="newEncounter.jsp" id="sbForm">
+                                        
+            <input type="checkbox" name="checkAll2" onclick="checkAll('sbForm')" id="checkA" /> Check All<br>
+<%            
             try {
                 String sql = "SELECT provider.provider_no, last_name, first_name from provider, security where provider.provider_no = security.provider_no order by last_name";
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
