@@ -359,7 +359,7 @@ public static String removeNewLine(String str){
 
 ///
 
-public String space(int i) {
+public static String space(int i) {
         String returnValue = new String();
         for(int j=0; j < i; j++) {
             returnValue += " ";
@@ -367,7 +367,7 @@ public String space(int i) {
         return returnValue;
     }
     
-    public String backwardSpace(String y,int i) {
+    public static String backwardSpace(String y,int i) {
         String returnValue = new String();
         y = safeString(y);        
         for(int j=y.length(); j < i; j++) {
@@ -376,14 +376,14 @@ public String space(int i) {
         return cutBackString(y+returnValue,i);
     }    
     
-    public String zero(int x) {
+    public static String zero(int x) {
         String returnZeroValue = new String();
         for(int y=0; y < x; y++) {
             returnZeroValue += "0";
         }
         return returnZeroValue;
     }
-    public String forwardZero(String y, int x) {
+    public static String forwardZero(String y, int x) {
         String returnZeroValue = new String();
         y = safeString(y);        
         for(int i=y.length(); i < x; i++) {
@@ -392,7 +392,7 @@ public String space(int i) {
         return cutFrontString(returnZeroValue+y,x);
     }
     
-    public String backwardZero(String y,int i) {
+    public static String backwardZero(String y,int i) {
         String returnValue = new String();
         y = safeString(y);        
         for(int j=y.length(); j < i; j++) {
@@ -402,14 +402,14 @@ public String space(int i) {
     }    
     
     
-    public String cutFrontString(String str,int len){
+    public static String cutFrontString(String str,int len){
         return str.substring(str.length() - len, str.length());
     }
-    public String cutBackString(String str,int len){
+    public static String cutBackString(String str,int len){
         return str.substring(0,len);
     }
     
-    public String forwardSpace(String y, int x) {
+    public static String forwardSpace(String y, int x) {
         String returnZeroValue = new String();
         y = safeString(y);                
         for(int i=y.length(); i < x; i++) {
@@ -418,7 +418,7 @@ public String space(int i) {
         return cutFrontString(returnZeroValue+y,x);
     }
     
-    public String moneyFormatPaddedZeroNoDecimal(String y, int x) {
+    public static String moneyFormatPaddedZeroNoDecimal(String y, int x) {
         String returnZeroValue = "";
         try{
            returnZeroValue = forwardZero(y.replaceAll("\\.",""),x);
