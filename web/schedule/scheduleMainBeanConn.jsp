@@ -35,7 +35,7 @@
     {"search_rschedule_current2", "select * from rschedule where provider_no=? and sdate >=? and status = 'A' order by sdate limit 1 " }, 
     {"search_rschedule_future", "select * from rschedule where provider_no=? and available=? and sdate >? and status = 'A' order by sdate" }, 
     {"search_rschedule_future1", "select * from rschedule where provider_no=?  and sdate >? and status = 'A' order by sdate" }, 
-    {"search_rschedule_overlaps", "select count(id) from rschedule where provider_no=? and ((sdate <? and edate >?) or (? < sdate and sdate < ?) or (? < edate and edate < ?) or ( ? < sdate and edate < ?) or (sdate = ? and sdate = ?) or (edate = ? and edate = ?)) and status = 'A'" },
+    {"search_rschedule_overlaps", "select count(id) from rschedule where provider_no=? and ((sdate <? and edate >?) or (? < sdate and sdate < ?) or (? < edate and edate < ?) or ( ? < sdate and edate < ?) or (sdate = ? and sdate = ?) or (edate = ? and edate <= ?)) and status = 'A'" },
     {"search_rschedule_exists", "select count(id) from rschedule where provider_no=? and sdate =? and edate =? and status = 'A'" },
     {"add_rschedule", "insert into rschedule values(?,?,?,?,?,?,?,?,?,?)" },
     {"delete_rschedule", "update rschedule set status = 'D' where provider_no=? and available=? and sdate=?" },
