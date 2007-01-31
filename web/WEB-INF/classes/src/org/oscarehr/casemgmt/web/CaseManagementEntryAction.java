@@ -383,7 +383,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 		caseManagementMgr.saveCPP(cpp, providerNo);
 		
-		if(note.getPassword().length()>0) {
+		if(note.getPassword() != null && note.getPassword().length()>0) {
 			note.setLocked(true);
 		} else {
 			note.setLocked(false);
