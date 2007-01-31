@@ -65,6 +65,8 @@
      {"edit" , "editappointment.jsp"},
      {"Update Appt" , "appointmentupdatearecord.jsp"},
      {"Delete Appt" , "appointmentdeletearecord.jsp"},
+     {"Cut" , "appointmentcutrecord.jsp"},
+     {"Copy" , "appointmentcopyrecord.jsp"},
    };
    apptMainBean.doConfigure(dbParams,dbOperation,toFile);
 %>
