@@ -9,11 +9,12 @@
   String [] addr = props.getProperty("scheduleSiteID", "").split("\\|");
   
 %>
-<%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
+<%@ page import="java.util.*, java.net.*, java.sql.*, oscar.*, oscar.util.*, java.text.*, java.lang.*, org.apache.struts.util.*" errorPage="../appointment/errorpage.jsp" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="scheduleRscheduleBean" class="oscar.RscheduleBean" scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <!--  
 /*
  * 
@@ -58,6 +59,8 @@
       param[1]= rsgroup.getString("sdate");
       edate= rsgroup.getString("edate");
     }
+    
+    System.out.println("START DATE " + request.getParameter("sdate") + " END DATE " + edate);
     String[] param1 =new String[3];
     param1[0]=param[0];
     param1[1]="1";
@@ -90,26 +93,40 @@
 function setfocus() {
   this.focus();
 }
-function selectrschedule(s) {
-  if(self.location.href.lastIndexOf("&sdate=") > 0 ) a = self.location.href.substring(0,self.location.href.lastIndexOf("&sdate="));
-  else a = self.location.href;
-	self.location.href = a + "&sdate=" +s.options[s.selectedIndex].value ;
+function selectrschedule(s) {    
+    var ref = "<rewrite:reWrite jspPage="scheduletemplateapplying.jsp"/>";
+    ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";    
+    ref += "&sdate=" +s.options[s.selectedIndex].value;
+    self.location.href = ref;
 }
-function onBtnDelete() {
-  if( confirm("<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>") ) {
-    self.location.href += "&delete=1&deldate=all" ;
-  } else {;}
+function onBtnDelete(s) {
+  if( confirm("<bean:message key="schedule.scheduletemplateapplying.msgDeleteConfirmation"/>") ) {        
+    var ref = "<rewrite:reWrite jspPage="scheduletemplateapplying.jsp"/>";
+    ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";    
+    ref += "&sdate=" +s.options[s.selectedIndex].value;
+    ref += "&delete=1&deldate=all";
+    self.location.href = ref;    
+  }
 }
 
-function checkDate(year,month,day) {
-	// target must in the format 'Month Day, Year' e.g. 'July 4, 1998'
-  var theMonth = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-  var target = theMonth[month-1] +" " +day+", " +year;
-  var original = theMonth[month-1] +" 1, " +year;
-	var today = new Date(original);
-	var tomorrow = new Date(target);
-	if(today.getMonth() != tomorrow.getMonth()) { return false; }
-	else { return true; }
+function checkDate(y,m,d) {
+    var days = new Array(31,28,31,30,31,30,31,31,30,31,30,31);    
+    var year, month, day;
+    
+    //do we have sane values for date?
+    if( isNaN(year = parseInt(y)) || isNaN(month = parseInt(m)) || isNaN(day = parseInt(d)) )        
+        return false;
+    
+    //are we dealing with a leap year?
+    if( (year % 4 == 0) && (year % 100 != 0) )
+        days[1] = 29;
+    else if( (year % 4 == 0) && (year % 100 == 0) && (year % 400 == 0) )
+        days[1] = 29;
+        
+    if( (year < 1970) || (month < 1) || (month > 12) || (day < 1) || (day >days[month-1]) )
+        return false;
+        
+    return true;
 }
 function onChangeDates() {
 	if(!checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) ) { alert("<bean:message key="schedule.scheduletemplateapplying.msgIncorrectOutput"/>"); }
@@ -258,12 +275,18 @@ function addDataString1() {
 	if(document.schedule.syear.value=="" || document.schedule.smonth.value=="" || document.schedule.sday.value=="" || document.schedule.eyear.value=="" || document.schedule.emonth.value=="" || document.schedule.eday.value=="") {
 	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputDate"/>");
 	  return false;
-	} else if( !checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) || !checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) || (document.schedule.eyear.value-1)<(document.schedule.syear.value-1) ) {
+	} else if( !checkDate(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value) || !checkDate(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value) ) {
 	  alert("<bean:message key="schedule.scheduletemplateapplying.msgInputCorrectDate"/>");
 	  return false;
-	} else {
-	  return true;
 	}
+        
+        var sDate = new Date(document.schedule.syear.value,document.schedule.smonth.value,document.schedule.sday.value);
+        var eDate = new Date(document.schedule.eyear.value,document.schedule.emonth.value,document.schedule.eday.value);
+        
+        if( sDate > eDate ) {
+            alert("<bean:message key="schedule.scheduletemplateapplying.msgDateOrder"/>");
+            return false;
+        }
 }
 //-->
 </script>
@@ -389,13 +412,14 @@ function addDataString1() {
                   <%=rsgroup.getString("sdate")+" ~ "+rsgroup.getString("edate")%></option>
 <%
  	}
+        MessageResources msg = MessageResourcesFactory.createFactory().createResources("oscarResources");
 %>
                   </select>
-                <input type="button" name="command" value="<bean:message key="schedule.scheduletemplateapplying.btnDelete"/>" onClick="onBtnDelete()">
+                <input type="button" name="command" value="<bean:message key="schedule.scheduletemplateapplying.btnDelete"/>" onClick="onBtnDelete(document.forms['schedule'].elements['select'])">
               </td>
             </tr>
             <tr> 
-              <td colspan="2">&nbsp;</td>
+              <td style="color:red" colspan="2"><%=request.getParameter("overlap") != null?msg.getMessage("schedule.scheduletemplateapplying.msgScheduleConflict"):"&nbsp;"%></td>
             </tr>
             <tr> 
               <td bgcolor="#CCFFCC" colspan="2"><bean:message key="schedule.scheduletemplateapplying.msgDate"/>
