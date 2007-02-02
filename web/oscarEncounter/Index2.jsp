@@ -724,7 +724,7 @@ document.onclick = hideAllMenus;
                   tickler:      "<rewrite:reWrite jspPage="displayTickler.do?hC=FF6600"/>",
                   Dx:           "<rewrite:reWrite jspPage="displayDisease.do?hC=5A5A5A"/>",
                   forms:        "<rewrite:reWrite jspPage="displayForms.do?hC=917611"/>",
-                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%>
+                  /*eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%> */
                   docs:         "<rewrite:reWrite jspPage="displayDocuments.do?hC=476BB3"/>",
                   labs:         "<rewrite:reWrite jspPage="displayLabs.do?hC=A0509C"/>", <%/* 550066   */%>                         
                   msgs:         "<rewrite:reWrite jspPage="displayMessages.do?hC=DDDD00"/>", <% /* FF33CC */ %>
@@ -757,6 +757,21 @@ function loader(){
     }
 }
 
+<%--function popLeftColumn(url,div,params) {
+
+    params = "cmd=" + params;
+    var objAjax = new Ajax.Updater(div,url, {method:'post',
+                                          postBody:params,
+                                          asynchronous:true,
+                                          evalScripts:true,
+                                          onFailure: function(request) {
+
+                                                    $(div).innerHTML = "<h3>Error:</h3>" + request.status;
+                                          }
+                                  });
+
+}--%>
+
 function popLeftColumn(url,div,params) {
         
     params = "cmd=" + params;
@@ -773,7 +788,12 @@ function popLeftColumn(url,div,params) {
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
                                                                                                                                         
-                                            $(div).innerHTML = request.responseText;
+                                            //$(div).innerHTML = request.responseText;
+                                            if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
+                                                $(div).updateSafari(request.responseText);
+                                            else
+                                                $(div).update(request.responseText);
+                                                
                                             listDisplay(params);
                                        }, 
                             onFailure: function(request) {
@@ -1307,7 +1327,7 @@ white-space: nowrap;
                                     </a>
                                     <%}%>
                                     
-                                                                                  <!-- encounter template -->
+                                                                                U  <!-- encounter template -->
                                 
                                 <input id="enTemplate" tabindex="6" autocomplete="off" size="25" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
                                 <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>
