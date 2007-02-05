@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 
 public class EctDisplayFormAction extends EctDisplayAction {
-    private static final String BGCOLOUR = "917611";
+    //private static final String BGCOLOUR = "917611";
     private String cmd = "forms"; 
     private String menuId = "1";
     
@@ -79,6 +79,7 @@ public class EctDisplayFormAction extends EctDisplayAction {
         //grab all of the forms
         EctFormData.Form[] forms = new EctFormData().getForms();        
         //String bgcolour = "CCFFCC";
+        String BGCOLOUR = request.getParameter("hC");
         for( int j=0; j<forms.length; j++) {
             EctFormData.Form frm = forms[j];         
             winName = frm.getFormName() + bean.demographicNo;                                    

@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayEFormAction extends EctDisplayAction {
-    private final static String BGCOLOUR = "11CC00";
+    //private final static String BGCOLOUR = "11CC00";
     private String cmd = "eforms";
     
   public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {                                                                                                  
@@ -62,6 +62,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
         ArrayList eForms = EFormUtil.listEForms(EFormUtil.NAME, EFormUtil.CURRENT);
         String key;
         int hash;
+        String BGCOLOUR = request.getParameter("hC");
         for( int i = 0; i < eForms.size(); ++i ) {
             Hashtable curform = (Hashtable) eForms.get(i);
             winName = (String)curform.get("formName") + bean.demographicNo;            

@@ -47,7 +47,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayDocsAction extends EctDisplayAction {
-    private static final String BGCOLOUR = "476BB3";
+    //private static final String BGCOLOUR = "476BB3";
     private static final String cmd = "docs";
     
  public boolean getInfo(EctSessionBean bean, HttpServletRequest request, NavBarDisplayDAO Dao, MessageResources messages) {
@@ -78,6 +78,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
     String key;
     String title;
     int hash;
+    String BGCOLOUR = request.getParameter("hC");
     for (int i=0; i< docList.size(); i++) {
         EDoc curDoc = (EDoc) docList.get(i);
         String dispFilename = curDoc.getFileName();
@@ -110,7 +111,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
         item.setTitle(title);
         key = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
         key = StringEscapeUtils.escapeJavaScript(key);
-        js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
+        js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";        
         javascript.append(js);
         url += "return false;";
         item.setURL(url);        
@@ -118,6 +119,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
 
     }                                
     javascript.append("</script>");
+    System.out.println(javascript.toString());
     Dao.setJavaScript(javascript.toString());
     return true;
         
