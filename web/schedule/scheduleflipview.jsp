@@ -42,7 +42,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 <% 
   String [][] dbQueries=new String[][] { 
-    {"search_timecode", "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.provider_no=? and scheduledate.sdate>=? and scheduledate.sdate<=? and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 
+    {"search_timecode", "select scheduletemplate.timecode, scheduledate.sdate from scheduletemplate, scheduledate where scheduletemplate.name=scheduledate.hour and scheduledate.provider_no=? and scheduledate.sdate>=? and scheduledate.sdate<=? and scheduledate.status = 'A' and (scheduletemplate.provider_no=scheduledate.provider_no or scheduletemplate.provider_no='Public') order by scheduledate.sdate"}, 
     {"search_appt", "select * from appointment where provider_no=? and appointment_date>=? and appointment_date<=? order by appointment_date, start_time, end_time"}, 
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? order by first_name"}, 
     {"search_timecodesingle", "select * from scheduletemplatecode order by code"}, 
