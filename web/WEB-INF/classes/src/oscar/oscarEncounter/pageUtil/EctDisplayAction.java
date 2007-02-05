@@ -122,6 +122,9 @@ public class EctDisplayAction extends Action {
                             forward = remainingCmds.substring(0,pos);
                         else
                             forward = remainingCmds;
+                        
+                        if( Actions.get(forward) == null )
+                            forward = "error";
                     }
                     else
                         forward = "success";    
