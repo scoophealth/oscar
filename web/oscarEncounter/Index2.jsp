@@ -208,9 +208,7 @@ if (request.getParameter("casetoEncounter")==null)
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 
   <script src="../share/javascript/prototype.js" type="text/javascript"></script>
-  <script src="../share/javascript/effects.js" type="text/javascript"></script>
-  <script src="../share/javascript/dragdrop.js" type="text/javascript"></script>
-  <script src="../share/javascript/controls.js" type="text/javascript"></script>
+  <script src="../share/javascript/scriptaculous.js" type="text/javascript"></script>  
   
   <%-- for popup menu of forms --%>
   <script src="../share/javascript/popupmenu.js" type="text/javascript"></script>
@@ -724,7 +722,7 @@ document.onclick = hideAllMenus;
                   tickler:      "<rewrite:reWrite jspPage="displayTickler.do?hC=FF6600"/>",
                   Dx:           "<rewrite:reWrite jspPage="displayDisease.do?hC=5A5A5A"/>",
                   forms:        "<rewrite:reWrite jspPage="displayForms.do?hC=917611"/>",
-                  /*eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%> */
+                  eforms:       "<rewrite:reWrite jspPage="displayEForms.do?hC=11CC00"/>",<%/*  88E900 */%> 
                   docs:         "<rewrite:reWrite jspPage="displayDocuments.do?hC=476BB3"/>",
                   labs:         "<rewrite:reWrite jspPage="displayLabs.do?hC=A0509C"/>", <%/* 550066   */%>                         
                   msgs:         "<rewrite:reWrite jspPage="displayMessages.do?hC=DDDD00"/>", <% /* FF33CC */ %>
