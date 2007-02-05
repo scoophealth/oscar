@@ -288,8 +288,8 @@ public class NavBarDisplayDAO {
             date = d;
         }
         
-        public Date getDate() {
-            return date;
+        public Date getDate() {            
+            return (date == null?date = new Date(System.currentTimeMillis()):date);
         }
         
         //default compare is alphabetical
@@ -307,6 +307,10 @@ public class NavBarDisplayDAO {
                 return false;
             
             return (compareTo(o) == 0);
+        }
+        
+        public int hashCode() {
+            return title.hashCode();
         }
     }
     
