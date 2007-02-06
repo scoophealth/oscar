@@ -133,8 +133,8 @@ String regionalIdentifier="";
             frm.repeat.value = 0;
         }
 
-        if(frm.quantity.value == null || frm.quantity.value.length < 1){
-            alert('Please enter a quantity.');
+        if( frm.quantity.value.length < 1 || frm.quantity.value.match(/\D/)){
+            alert('<bean:message key="WriteScript.msgQuantity"/>');
         }else{
             
             frm.action.value = action;
@@ -640,6 +640,37 @@ String regionalIdentifier="";
 		
     }
     
+    function validNum(e) {
+        var keynum;
+        
+        if( window.event ) 
+            keynum = e.keyCode;
+        else if( e.which )
+            keynum = e.which;                    
+                        
+        if( keynum == undefined )
+            return true;
+            
+        var keychar = String.fromCharCode(keynum);
+        var numcheck = /(\d|\x08)/;
+        
+        return numcheck.test(keychar)
+    }
+    
+    function chkQty(val) {
+        if( val.match(/\D/) )
+            return false;
+      
+        return true;
+    }
+    
+    function pageLoad() {
+        calcQty();
+        var txtQty = document.forms.RxWriteScriptForm.quantity;
+        if( txtQty.restrict ) alert("YES");
+        txtQty.restrict = "0-9";
+    }
+    
 </script>
 
 
@@ -718,7 +749,7 @@ String regionalIdentifier="";
 
 
 </head>
-<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="javascript:calcQty();">
+<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="javascript:pageLoad();">
 
 <html:form action="/oscarRx/writeScript">
 <html:hidden property="action" />
@@ -1114,7 +1145,7 @@ int i;
                                     Quantity: auto<input type="checkbox" name="autoQty" />
                                 </td>
                                 <td colspan=2 width=65%>
-                                    <html:text property="quantity" size="8" onchange="javascript:writeScriptDisplay(); customQty(this.value);" onkeypress="customQty(this.value);" />
+                                    <html:text property="quantity" size="8" onchange="javascript:if( chkQty(this.value) ) {writeScriptDisplay(); customQty(this.value);}"  onkeypress="return validNum(event);"  onkeyup="customQty(this.value);"/>
 
                                     <input type=button value="<<" onclick="javascript:useQtyMax();" />
                                     (Calculated:&nbsp;<span id="lblSugQty" style="font-weight:bold"></span>&nbsp;)
