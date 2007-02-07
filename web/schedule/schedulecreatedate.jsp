@@ -4,6 +4,7 @@
   String user_name = (String) session.getAttribute("userlastname")+","+ (String) session.getAttribute("userfirstname");
   boolean bAlternate =(request.getParameter("alternate")!=null&&request.getParameter("alternate").equals("checked") )?true:false;
   int yearLimit = Integer.parseInt(session.getAttribute("schedule_yearlimit") != null ? ((String)session.getAttribute("schedule_yearlimit")) : "2");
+  boolean scheduleOverlaps = false;
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*" errorPage="../appointment/errorpage.jsp" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
@@ -56,6 +57,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     param1[1]="A";
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
   }*/
+  //This code is for maintaining one schedule/person
   String[] searchParams = new String[13];
   searchParams[0] = request.getParameter("provider_no");
   searchParams[1] = sdate;
@@ -72,19 +74,19 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   searchParams[12] = edate;
   //check if existing schedule covers part or all of new schedule's time period
   ResultSet rset = scheduleMainBean.queryResults(searchParams, "search_rschedule_overlaps");  
-  boolean scheduleOverlaps = false;
+  
   if( rset.next() ) {
       scheduleOverlaps = rset.getInt(1) > 0;
   }
   rset.close();
 
-  //if we already have a schedule tell the user!
-  if( scheduleOverlaps ) {
+  //if we already have a schedule tell the user! -- See below, we just warn the user for now
+  /*if( scheduleOverlaps ) {
       String redirect = request.getHeader("Referer") + "&overlap=true";
       System.out.println("Redirecting to " + redirect);
       response.sendRedirect(redirect);
       return;
-  }
+  }*/
       
   //if the schedule is the same we are editing instead
   String[] searchParams1 = new String[3];
@@ -116,7 +118,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     updateParams[6] = scheduleRscheduleBean.sdate;
     rowsAffected = scheduleMainBean.queryExecuteUpdate(updateParams,"update_rschedule1");
   }
-  else {
+  else { 
     String[] param2 =new String[10];
     param2[0]=scheduleRscheduleBean.provider_no; // or use request.getParameter("provider_no");
     param2[1]=scheduleRscheduleBean.sdate;
@@ -279,6 +281,15 @@ function refresh() {
             int [][] dateGrid = aDate.getMonthDateGrid();
 %>
       <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+          <%
+            if( scheduleOverlaps ) {
+          %>
+                        <tr>
+                            <td style="color:red"><bean:message key="schedule.schedulecreatedate.msgConflict"/></td>
+                        </tr>
+         <%
+            }
+         %>
   			<tr>
         	  <td BGCOLOR="#CCFFCC" width="50%" align="center" >
 			  <a href="schedulecreatedate.jsp?provider_no=<%=provider_no%>&provider_name=<%=URLEncoder.encode(provider_name)%>&year=<%=year%>&month=<%=month%>&day=<%=day%>&delta=-1&bFirstDisp=0"> &nbsp;&nbsp;<img src="../images/previous.gif" WIDTH="10" HEIGHT="9" BORDER="0" ALT='<bean:message key="schedule.schedulecreatedate.btnLastMonthTip"/>' vspace="2"> <bean:message key="schedule.schedulecreatedate.btnLastMonth"/>&nbsp;&nbsp; 
