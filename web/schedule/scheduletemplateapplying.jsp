@@ -45,8 +45,8 @@
 <%@ include file="scheduleMainBeanConn.jsp" %>  
 <% } %>
 <%
-  String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );
-  String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 1) + today.substring(today.indexOf('-'));
+  String today = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyy-MM-dd" );  
+  String lastYear = (Integer.parseInt(today.substring(0,today.indexOf('-'))) - 2) + today.substring(today.indexOf('-'));
   //System.out.println("last year is: " + lastYear);
 
   if(request.getParameter("delete")!= null && request.getParameter("delete").equals("1") ) { //delete rschedule
