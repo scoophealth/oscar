@@ -79,9 +79,15 @@
         var ret = checkAllDates();
         if(ret==true)
         {
-            document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+2&__cfgfile=onar2PrintCfgPg1&__cfgGraphicFile=onar2PrintGraphCfgPg1&__template=onar2";
-            document.forms[0].target="_blank";            
-        }
+            if( document.forms[0].c_finalEDB.value == "" && !confirm("<bean:message key="oscarEncounter.formOnar.msgNoEDB"/>")) {
+                ret = false;
+            }
+            else {
+                document.forms[0].action = "../form/createpdf?__title=Antenatal+Record+Part+2&__cfgfile=onar2PrintCfgPg1&__cfgGraphicFile=onar2PrintGraphCfgPg1&__template=onar2";
+                document.forms[0].target="_blank";       
+            }
+                
+        }   
         return ret;
     }
 
