@@ -59,7 +59,7 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
 	//only for "yyyy MM dd"
 	public boolean checkDateStr(String strDate) {
 		boolean ret = true;
-		if (dateFormat == null || strDate == null)
+		if (dateFormat == null || strDate == null || strDate.equals("") )
 			return false;
 
 		//find the sep
@@ -136,13 +136,13 @@ public final class FrmPdfGraphicAR extends FrmPdfGraphic {
 		fStartY = fsy;
 		fEndY = fey;
 
-		dateFormat = df;
+		dateFormat = df;                
 		fEDB =
 			checkDateStr(fedb)
 				? UtilDateUtilities.DateToString(
 					UtilDateUtilities.StringToDate(fedb, dateFormat),
 					"yyyy-MM-dd")
-				: "0000-00-00";
+				: "0000-00-00";                
 	}
 
         
