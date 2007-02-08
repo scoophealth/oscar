@@ -28,7 +28,15 @@
 function createIntakeAReport1()
 {
         var dateObj = new Date();
-        var yearStr = dateObj.getYear() + 1900;
+        var year;
+        var yearStr;
+       
+        var year = dateObj.getYear();
+        if(year < 2000)
+        	yearStr = dateObj.getYear() + 1900;
+        else
+        	yearStr = year;
+        	
         var mthStr = (dateObj.getMonth() + 1) + "";
         var dayStr = "" + dateObj.getDate();
 
