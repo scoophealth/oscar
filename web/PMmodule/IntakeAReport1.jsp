@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
 	Copyright (c) 2001-2002.
@@ -13,6 +12,7 @@
 	OSCAR TEAM
 	
 	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+
 -->
 <%@ include file="/taglibs.jsp"%>
 
@@ -73,12 +73,13 @@
 <html:html xhtml="true" locale="true">
 	<head>
 		<title>Untitled Document</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link rel="stylesheet" type="text/css" href="<html:rewrite page="/css/intakeA.css" />" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+		<link rel="stylesheet" type="text/css" href="<html:rewrite page="/css/intakeA.css"/>" ></link>
 		<script language="JavaScript" src="<html:rewrite page="/js/ClientSearch.js" />"></script>
-		<html:base />
+		<html:base></html:base>
 	</head>
 	<body>
+	
 	<html:form action="/PMmodule/IntakeAReport1Action.admit" method="post">
 		<table height="15" align="center">
 			<tr>
