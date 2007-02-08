@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.PMmodule.common.PassIntakeFormVars;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Formintakea;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
@@ -113,8 +114,8 @@ throws  IOException, ServletException
             return  (mapping.findForward(target));
 
 		}
-
-		numOfIntakeAs = filteredIntakAs.size();   
+		
+		numOfIntakeAs = filteredIntakAs.size();  
 		
 		int numOfReadmission  = calculateNumOfReadmission(filteredIntakAs);
 		double proportionOfReadmission = calculateProportionOfReadmission(filteredIntakAs);
@@ -185,8 +186,7 @@ throws  IOException, ServletException
 }
 //################################################################################
 private List filterOutOnlyMostRecentClientIntakeAs(List intakeAs)
-{	
-	
+{		
 	if(intakeAMgr == null  ||  intakeAs == null  ||  intakeAs.size() <= 0)
 	{
 		return null;
@@ -194,13 +194,20 @@ private List filterOutOnlyMostRecentClientIntakeAs(List intakeAs)
 	List filteredIntakAs = new ArrayList();
 	long demographicNo = 0;
 	long prevDemoNo = 0;
+	
 	for(int i=0; i < intakeAs.size(); i++)
 	{
 		demographicNo = ((Formintakea)intakeAs.get(i)).getDemographicNo().longValue();
-		
+		//System.out.println("here is loop  " + i+"  client NO : " + demographicNo);
 		if(prevDemoNo != demographicNo)
 		{
-			filteredIntakAs.add(intakeAs.get(i));
+			Demographic demographic = clientMgr.getClientByDemographicNo(String.valueOf(demographicNo));
+			String clientStatus = (String)demographic.getPatientStatus();
+			if(clientStatus==null || clientStatus=="" || !clientStatus.equals("IN")){
+				//System.out.println("here is loop  " + i+"  client NO : " + demographicNo);
+				filteredIntakAs.add(intakeAs.get(i));
+				//System.out.println("here is loop  " + i+"  client NO : " + demographicNo);
+			}
 		}
 		
 		prevDemoNo = demographicNo;
