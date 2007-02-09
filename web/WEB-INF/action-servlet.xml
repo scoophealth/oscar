@@ -487,4 +487,14 @@
 			<ref bean="ClientImageManager" />
 		</property>
 	</bean>
+	
+	<bean
+		name="/ArchiveView"
+		class="org.oscarehr.casemgmt.web.ArchiveViewAction"
+		singleton="false">
+		<property name="programManager">
+			<ref bean="programManager" />
+		</property>
+	</bean>	
+	
 </beans>
