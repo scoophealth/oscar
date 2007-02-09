@@ -140,10 +140,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			} else {
 				issues=caseManagementMgr.getActiveIssues(providerNo,this.getDemographicNo(request));
 			}
-			
+			/*
+			if(request.getSession().getAttribute("archiveView")!="true")
+				request.setAttribute("Issues",caseManagementMgr.filterIssues(issues,providerNo,programId));
+			else
+				request.setAttribute("Issues",issues);
+			*/
 			request.setAttribute("Issues",caseManagementMgr.filterIssues(issues,providerNo,programId));
 			
-
+			
 			/* PROGRESS NOTES */			
 			List notes = null;
 			
@@ -160,7 +165,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			}
 			
 			//apply role based access
-			notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
+			//if(request.getSession().getAttribute("archiveView")!="true")
+				notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
 			
 			//apply provider filter
 			Set providers = new HashSet();

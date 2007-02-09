@@ -164,7 +164,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		/* remove the remembered echart string */
 		request.getSession().setAttribute("lastSavedNoteString", null);
 
-		List issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId);
+		List issues;
+		issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId);
+		/*
+		if(request.getSession().getAttribute("archiveView")!="true")
+			issues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId);
+		else
+			issues = caseManagementMgr.getIssues(providerNo, demono);
+		*/
 		
 		cform.setDemoNo(demono);
 		CaseManagementNote note = null;
@@ -303,8 +310,14 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			log.error(e);
 			role = "0";
 		}
-       	note.setReporter_caisi_role(role);	
-
+		/*
+		if(request.getSession().getAttribute("archiveView")!="true")
+			note.setReporter_caisi_role(role);	
+		else
+			note.setReporter_caisi_role("1");
+		*/
+		note.setReporter_caisi_role(role);
+		
 		try {
 			team = String.valueOf((admissionManager.getAdmission(note.getProgram_no(), Integer.valueOf(note.getDemographic_no()))).getTeamId());
 		}catch(Throwable e) {
@@ -499,10 +512,27 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		// get the issue list have search string
 		String search = (String) cform.getSearString();
 		
-		List searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
+		List searchResults;
+		searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
+		/*
+		if(request.getSession().getAttribute("archiveView")!="true")
+			searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);
+		else
+			searchResults = caseManagementMgr.searchIssuesNoRolesConcerned(providerNo,programId,search);
+		*/
+		
 		List filteredSearchResults = new ArrayList();
+		
 		//remove issues which we already have - we don't want duplicates
-		List existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId);
+		List existingIssues;
+		existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId);
+		/*
+		if(request.getSession().getAttribute("archiveView")!="true")
+			existingIssues = caseManagementMgr.filterIssues(caseManagementMgr.getIssues(providerNo, demono),providerNo,programId);
+		else
+			existingIssues = caseManagementMgr.getIssues(providerNo, demono);
+		*/
+		
 		Map existingIssuesMap = convertIssueListToMap(existingIssues);		
 		for(Iterator iter=searchResults.iterator();iter.hasNext();) {
 			Issue issue = (Issue)iter.next();

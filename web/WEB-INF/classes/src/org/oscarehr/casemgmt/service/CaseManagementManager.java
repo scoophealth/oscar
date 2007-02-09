@@ -57,6 +57,7 @@ public interface CaseManagementManager {
 	public void addNewIssueToConcern(String demoNo,String issueName);
 	public boolean haveIssue(Long issid, String DemoNo);
 	public List searchIssues(String providerNo, String programId, String search);
+	public List searchIssuesNoRolesConcerned(String providerNo, String programId, String search);
 	
 	public CaseManagementCPP getCPP(String demographic_no);
 	public List getAllergies(String demographic_no);

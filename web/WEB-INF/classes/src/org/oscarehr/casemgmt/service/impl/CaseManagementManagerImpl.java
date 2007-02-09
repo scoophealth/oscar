@@ -777,6 +777,12 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 		return issList;
 	}
 	
+	public List searchIssuesNoRolesConcerned(String providerNo, String programId, String search) {
+	
+		List issList = issueDAO.searchNoRolesConcerned(search);
+		
+		return issList;
+	}
 	
 	public List filterIssues(List issues, String providerNo, String programId){
 		List filteredIssues = new ArrayList();

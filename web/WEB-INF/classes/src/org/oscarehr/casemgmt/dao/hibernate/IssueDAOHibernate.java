@@ -83,4 +83,11 @@ public class IssueDAOHibernate extends HibernateDaoSupport implements IssueDAO {
 		return this.getHibernateTemplate().find(sql,new Object[]{search,search});
 
 	}
+	public List searchNoRolesConcerned(String search) {		
+		search="%"+search+"%";
+		search=search.toLowerCase();
+		String sql="from Issue i where (lower(i.code) like ? or lower(i.description) like ?)";
+		System.out.println(sql);
+		return this.getHibernateTemplate().find(sql,new Object[]{search,search});
+	}
 }

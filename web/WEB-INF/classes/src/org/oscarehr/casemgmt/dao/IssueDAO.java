@@ -36,4 +36,5 @@ public interface IssueDAO extends DAO {
 	public List findIssueBySearch(String search);
 	
 	public List search(String search, List roles);
+	public List searchNoRolesConcerned(String search);
 }
