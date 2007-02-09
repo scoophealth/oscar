@@ -483,6 +483,14 @@
                                     </tr>
                                     <tr>
                                         <td class="subTitles">
+                                            <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgWPhone"/>
+                                        </td>
+                                        <td class="fillLine">
+                                <%=reqFrm.patientWPhone %>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="subTitles">
                                             <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgBirth"/>:
                                         </td>
                                         <td class="fillLine">
@@ -667,6 +675,7 @@ public String formatEmail(oscar.oscarEncounter.oscarConsultationRequest.pageUtil
    s +="<b>DOB:</b>"+reqFrm.patientDOB+"<br/>";
    s +="<b>HIN:</b>"+reqFrm.patientHealthNum+" "+reqFrm.patientHealthCardVersionCode+" <b>HIN Type:</b>"+reqFrm.patientHealthCardType+"<br/>";
    s +="<b>Phone:</b>"+reqFrm.patientPhone+"<br/>";
+   s +="<b>Phone:</b>"+reqFrm.patientWPhone+"<br/>";
    s +="<b>Address:</b>"+reqFrm.patientAddress+"<br/><br/><br/>";
    
    

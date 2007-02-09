@@ -87,6 +87,8 @@ public class EctConsultationFormRequestUtil {
             "," + rs.getString("province") + "," + rs.getString("postal");
 
         patientPhone = rs.getString("phone");
+        
+        patientWPhone = rs.getString("phone2");
 
         patientDOB = rs.getString("year_of_birth") + "/" +
             rs.getString("month_of_birth") + "/" + rs.getString("date_of_birth");
@@ -513,6 +515,8 @@ public class EctConsultationFormRequestUtil {
   public String patientAddress;
 
   public String patientPhone;
+  
+  public String patientWPhone;
 
   public String patientDOB;
 

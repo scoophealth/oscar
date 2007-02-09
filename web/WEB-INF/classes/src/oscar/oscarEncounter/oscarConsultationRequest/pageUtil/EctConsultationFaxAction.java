@@ -183,6 +183,7 @@ public class EctConsultationFaxAction extends Action {
          conPacket.addChildElement("patientName").addTextNode(replaceIllegalCharacters(reqFrm.patientName));
          conPacket.addChildElement("patientAddress").addTextNode(replaceIllegalCharactersAmps(reqFrm.patientAddress));
          conPacket.addChildElement("patientTelephone").addTextNode(replaceIllegalCharacters(reqFrm.patientPhone));
+         conPacket.addChildElement("patientTelephone").addTextNode(replaceIllegalCharacters(reqFrm.patientWPhone));
          conPacket.addChildElement("patientBirthdate").addTextNode(replaceIllegalCharacters(reqFrm.patientDOB ));
          conPacket.addChildElement("healthCardNo").addTextNode(replaceIllegalCharacters(reqFrm.patientHealthNum+" "+reqFrm.patientHealthCardVersionCode+" "+reqFrm.patientHealthCardType));
          conPacket.addChildElement("appointmentDate").addTextNode(replaceIllegalCharacters(appDate));

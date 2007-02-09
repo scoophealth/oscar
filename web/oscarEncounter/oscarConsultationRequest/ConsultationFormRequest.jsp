@@ -952,6 +952,14 @@ function fetchAttached() {
             </tr>
             <tr>
                 <td class="tite4">
+                <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgWPhone"/>:
+                </td >
+                <td class="tite2">
+                    <%=consultUtil.patientWPhone%>
+                </td>
+            </tr>
+            <tr>
+                <td class="tite4">
                 <bean:message key="oscarEncounter.oscarConsultationRequest.ConsultationFormRequest.msgBirthDate"/>:
                 </td>
                 <td class="tite2">
@@ -972,14 +980,6 @@ function fetchAttached() {
                 </td>
                 <td class="tite3">
                     <%=consultUtil.patientHealthNum%>&nbsp;<%=consultUtil.patientHealthCardVersionCode%>&nbsp;<%=consultUtil.patientHealthCardType%>
-                </td>
-            </tr>
-            <tr>
-                <td class="tite4">&nbsp;
-
-                </td>
-                <td class="tite4">&nbsp;
-
                 </td>
             </tr>
             <tr>
