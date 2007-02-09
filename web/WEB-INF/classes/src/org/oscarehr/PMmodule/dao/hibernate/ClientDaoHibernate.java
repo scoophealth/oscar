@@ -152,7 +152,9 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 			String sql = "{alias}.demographic_no = 0";
 			criteria.add(Restrictions.sqlRestriction(sql));
 		}
-
+		
+		criteria.add(Expression.ne("PatientStatus", "IN"));
+		
 		criteria.addOrder(Order.asc("LastName"));
 		List results = criteria.list();
 
