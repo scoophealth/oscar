@@ -24,6 +24,9 @@
 
 	%>
 <table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
+<%if(session.getAttribute("archiveView")!=null && session.getAttribute("archiveView")=="false") { %>
+<a href="<html:rewrite action="/ArchiveView.do"/>">ARCHIVE VIEW</a>
+<%}%>
 <logic:iterate id="de" name="infirmaryView_demographicBeans" type="org.apache.struts.util.LabelValueBean">
 <tr>
 	<td width='1'  title='null'><font color='white'></font></td>

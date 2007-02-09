@@ -626,6 +626,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
   <select name="mygroup_no" onChange="changeGroup(this)">
   <option value=".<bean:message key="global.default"/>">.<bean:message key="global.default"/></option>
 <%
+	request.getSession().setAttribute("archiveView","false");
 	rst=apptMainBean.queryResultsCaisi( "searchmygroupno");
    rsgroup = (ResultSet) rst[0];
  	 while (rsgroup.next()) {
@@ -745,7 +746,7 @@ for(int nProvider=0;nProvider<numProvider;nProvider++) {
           <% } %>
 </logic:notEqual>
 <logic:equal name="infirmaryView_isOscar" value="false">
-	<%String prID="1"; %> 
+	<%String prID="1"; %> 	
 	<logic:present name="infirmaryView_programId">
 	<%prID=(String)session.getAttribute("infirmaryView_programId"); %>
 	</logic:present>

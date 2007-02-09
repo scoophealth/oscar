@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.struts.util.LabelValueBean;
 import org.codehaus.xfire.XFireRuntimeException;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO;
@@ -317,7 +318,31 @@ public class ProgramManagerImpl implements ProgramManager {
 	public Program[] getCommunityPrograms() {
 		return dao.getCommunityPrograms();
 	}
-
+	
+	public List getProgramBeans(String providerNo) {		
+		if (providerNo==null||"".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
+		ArrayList pList = new ArrayList();
+		Program[] program = dao.getCommunityPrograms();
+		for(int i=0; i<program.length; i++){
+			pList.add(new LabelValueBean(program[i].getName(),program[i].getId().toString()));
+		}
+		return pList;
+		/*
+		Iterator iter = programProviderDAOT.getProgramProvidersByProvider(new Long(providerNo)).iterator();
+		ArrayList pList = new ArrayList();
+		while (iter.hasNext())
+		{
+			ProgramProvider p = (ProgramProvider) iter.next();
+			if (p!=null && p.getProgramId() != null && p.getProgramId().longValue()>0){
+				//logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
+				Program program = programDao.getProgram(new Integer(p.getProgramId().intValue()));
+				pList.add(new LabelValueBean(program.getName(),program.getId().toString()));
+			}
+		}
+		return pList;
+		*/
+	}
+	
 	public List getDefaultRoleAccesses() {
 		return defaultRoleAccessDAO.getDefaultRoleAccesses();
 	}

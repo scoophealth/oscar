@@ -126,4 +126,5 @@ public interface ProgramManager
 	public List getProgramDomain(String providerNo);
 	
 	public Program[] getCommunityPrograms();
+	public List getProgramBeans(String providerNo);
 }
