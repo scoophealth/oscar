@@ -32,7 +32,7 @@ public interface InfirmBedProgramManager {
 	public List getPrgramName();
 	public List getProgramBeans();
 	public List getProgramBeans(String providerNo);
-	public List getDemographicByBedProgramIdBeans(int programId,Date dt);
+	public List getDemographicByBedProgramIdBeans(int programId,Date dt,String archiveView);
 	public int getDefaultProgramId();
 	public int getDefaultProgramId(String providerNo);
 	public void setDefaultProgramId(String providerNo, int programId);

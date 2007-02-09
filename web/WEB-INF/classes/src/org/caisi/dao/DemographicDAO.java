@@ -56,6 +56,8 @@ public interface DemographicDAO extends DAO {
 	public List getDemographicByProgram(int programId, Date dt, Date defdt);
 
 	public List getActiveDemographicByProgram(int programId, Date dt, Date defdt);
+	
+	public List getArchiveDemographicByPromgram(int programId,Date dt, Date defdt);
 
 	public List getProgramIdByDemoNo(String demoNo);
 

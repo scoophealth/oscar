@@ -109,7 +109,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		return pList;
 	}
 	
-	public List getProgramBeans(String providerNo) {
+	public List getProgramBeans(String providerNo) {		
 		if (providerNo==null||"".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
 		Iterator iter = programProviderDAOT.getProgramProvidersByProvider(new Long(providerNo)).iterator();
 		ArrayList pList = new ArrayList();
@@ -125,7 +125,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		return pList;
 	}
 	
-	public List getDemographicByBedProgramIdBeans(int programId,Date dt)
+	public List getDemographicByBedProgramIdBeans(int programId,Date dt, String archiveView)
 	{
 		/*default time is Oscar default null time 0001-01-01.*/
 		Date defdt=new GregorianCalendar(1,0,1).getTime();
@@ -136,8 +136,13 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 		cal.set(Calendar.MINUTE,59);
 		cal.set(Calendar.SECOND,59);
 		dt = cal.getTime();	
+		Iterator iter;
 		
-		Iterator iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
+		if(archiveView!=null && archiveView.equals("true"))
+			iter=demographicDAOT.getArchiveDemographicByPromgram(programId,dt,defdt).iterator();
+		else
+			iter=demographicDAOT.getActiveDemographicByProgram(programId,dt,defdt).iterator();
+		
 		ArrayList demographicList=new ArrayList();
 		Demographic de=null;
 		while (iter.hasNext())

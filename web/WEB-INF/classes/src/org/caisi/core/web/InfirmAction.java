@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
+import org.oscarehr.PMmodule.service.ProgramManager;
 
 public class InfirmAction extends BaseAction
 {
@@ -46,17 +47,39 @@ public class InfirmAction extends BaseAction
 	{
 		logger.debug("====> inside showProgram action.");
 
-		HttpSession se = request.getSession();
+		HttpSession se = request.getSession();	
 		se.setAttribute("infirmaryView_initflag", "true");
-		String providerNo=(String) se.getAttribute("user");
-		
+		String providerNo=(String) se.getAttribute("user");				
+				
 		//clear memory for programbean
 		//List memob=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memob!=null) memob.clear();
 		
+		List programBean;
+		String archiveView = (String)request.getSession().getAttribute("archiveView");
+		/*
+		if(archiveView != null && archiveView.equals("true")){
+			
+			ProgramManager manager = getProgramManager();
+			programBean = manager.getProgramBeans(providerNo);	
+			se.setAttribute("infirmaryView_programBeans",programBean );
+		}
+		else {
+			InfirmBedProgramManager manager=getInfirmBedProgramManager();
+			programBean=manager.getProgramBeans(providerNo);	
+			se.setAttribute("infirmaryView_programBeans",programBean );
+		}
+		*/
 		InfirmBedProgramManager manager=getInfirmBedProgramManager();
-		List programBean=manager.getProgramBeans(providerNo);
+		programBean=manager.getProgramBeans(providerNo);	
 		se.setAttribute("infirmaryView_programBeans",programBean );
+				
+		
+		
+		
+		
+		
+		
 		//set default program
 		int defaultprogramId=getInfirmBedProgramManager().getDefaultProgramId(providerNo);
 		boolean defaultInList=false;
@@ -114,7 +137,7 @@ public class InfirmAction extends BaseAction
 		//List memo=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memo!=null) memo.clear();
 		
-		se.setAttribute("infirmaryView_demographicBeans",getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt));
+		se.setAttribute("infirmaryView_demographicBeans",getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView));
 		
 		/*java.util.Enumeration enu =  se.getAttributeNames();
 		while (enu.hasMoreElements())
