@@ -42,4 +42,9 @@ public class ArchiveViewAction extends DispatchAction {
 		
 		return mapping.findForward("view");
 	}
+	
+	public ActionForward cmm(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
+		request.getSession().setAttribute("archiveView","false");
+		return mapping.findForward("view");
+	}
 }
