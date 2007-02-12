@@ -27,7 +27,7 @@
 <%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
 <a href="<html:rewrite action="/ArchiveView.do"/>">Archive View</a>
 <%} else {%>
-You are in the archive view !
+You are in the archive view ! &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
 <%} %>
 <logic:iterate id="de" name="infirmaryView_demographicBeans" type="org.apache.struts.util.LabelValueBean">
 <tr>
