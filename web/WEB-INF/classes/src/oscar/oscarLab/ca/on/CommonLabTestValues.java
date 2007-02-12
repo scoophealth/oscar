@@ -137,7 +137,7 @@ public class CommonLabTestValues {
       //Need to check which labs are active
          ArrayList labList = new ArrayList();   
          String sql = "select p.lab_type, x.observationIden " +
-                      "from mdsOBX x, mdsMSH m, patientLabRouting p, " +
+                      "from mdsOBX x, mdsMSH m, patientLabRouting p " +
                       " where p.demographic_no = '"+demographic+"' " +
                       "and m.segmentID = p.lab_no " +
                       "and x.segmentID = m.segmentID  "; 
