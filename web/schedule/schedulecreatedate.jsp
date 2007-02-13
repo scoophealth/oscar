@@ -47,7 +47,7 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   String sdate = MyDateFormat.getMysqlStandardDate(y,m,d );
   String edate = MyDateFormat.getMysqlStandardDate(Integer.parseInt(request.getParameter("eyear")),Integer.parseInt(request.getParameter("emonth")),Integer.parseInt(request.getParameter("eday")) );
   int rowsAffected = 0;
-  /*if(sdate.equals(scheduleRscheduleBean.sdate) ) {
+  if(sdate.equals(scheduleRscheduleBean.sdate) ) {
     String[] param1 =new String[3];
     param1[0]=request.getParameter("provider_no");
     param1[1]="1";
@@ -56,9 +56,9 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
     param1[1]="A";
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param1,"delete_rschedule");
-  }*/
+  }
   //This code is for maintaining one schedule/person
-  String[] searchParams = new String[13];
+  String[] searchParams = new String[15];
   searchParams[0] = request.getParameter("provider_no");
   searchParams[1] = sdate;
   searchParams[2] = edate;
@@ -72,6 +72,9 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   searchParams[10] = edate;
   searchParams[11] = sdate;
   searchParams[12] = edate;
+  searchParams[13] = sdate;
+  searchParams[14] = edate;
+  
   //check if existing schedule covers part or all of new schedule's time period
   ResultSet rset = scheduleMainBean.queryResults(searchParams, "search_rschedule_overlaps");  
   
