@@ -139,7 +139,15 @@
 									<td><html:radio property="questionModel.type.select.renderType" value="checkbox" onclick="set_select_type()"/></td>
 									<td>Checkboxes (Multi-Select)</td>									
 								</tr>
-								
+								<tr>
+									<td>Orientation</td>
+									<td>
+										<html:select property="questionModel.type.select.orientation">
+											<html:option value="vertical">vertical</html:option>
+											<html:option value="horizontal">horizontal</html:option>
+										</html:select>
+									</td>
+								</tr>
 								<tr>
 									<td>Allow "Other":</td>
 									<td>

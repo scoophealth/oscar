@@ -142,6 +142,9 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:int" use="required"/>
 		<xs:attribute name="mandatory" type="xs:boolean" default="true"/>
+		<xs:attribute name="row" type="xs:int" use="optional"/>
+		<xs:attribute name="column" type="xs:int" use="optional"/>
+		<xs:attribute name="orientation" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	
@@ -177,6 +180,7 @@
 			<xs:attribute name="multiAnswer" type="xs:boolean" default="false"/>
 			<xs:attribute name="multiRow" type="xs:boolean" default="true"/>
 			<xs:attribute name="renderType" type="xs:string" />
+			<xs:attribute name="orientation" type="xs:string" use="optional" />
 		</xs:complexType>
 	</xs:element>
 	
