@@ -19,6 +19,11 @@
 	if (((java.util.List) session.getAttribute("infirmaryView_demographicBeans")).size()==0)
 	{ %>
 		<p><b>no client in this program.</b></p>
+		<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
+		<a href="<html:rewrite action="/ArchiveView.do"/>">Archive View</a>
+		<%} else {%>
+		<b>You are in the archive view ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
+		<%} %>
 	<%}else{
 	int k=0;
 
@@ -27,7 +32,7 @@
 <%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
 <a href="<html:rewrite action="/ArchiveView.do"/>">Archive View</a>
 <%} else {%>
-You are in the archive view ! &nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
+<b>You are in the archive view ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
 <%} %>
 <logic:iterate id="de" name="infirmaryView_demographicBeans" type="org.apache.struts.util.LabelValueBean">
 <tr>
