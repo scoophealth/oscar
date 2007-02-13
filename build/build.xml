@@ -367,6 +367,22 @@
             </manifest>
         </jar>
 </target>
+	
+<!--XMLBeans Tasks-->
+<taskdef file="xmlBeanTasks.properties" classpathref="classpath.path"/>
+
+<target name="xml.compile" description="Creates Java classes based on an XML Schema using Apache XMLBeans">
+        <xmlbeans
+                classgendir="xmlbeans"
+                classpathref="classpath.path"
+                failonerror="true"
+                includejavaruntime="yes"
+                javasource="1.4"
+                schema="../resources/survey.xsd"
+                destfile="../web/WEB-INF/lib/surveyModel.jar"
+        />
+</target>
+	
 
  <taskdef file="tomcatTasks.properties">
     <classpath>
