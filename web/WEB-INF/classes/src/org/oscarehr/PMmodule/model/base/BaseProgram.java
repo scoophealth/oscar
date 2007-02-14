@@ -84,6 +84,7 @@ public abstract class BaseProgram  implements Serializable {
 	private boolean _allowBatchAdmission;
 	private boolean _allowBatchDischarge;
 	private boolean _hic;
+	private java.lang.String _programStatus;
 
 
 	// constructors
@@ -426,6 +427,14 @@ public abstract class BaseProgram  implements Serializable {
 		this._hic = _hic;
 	}
 
+
+	public java.lang.String getProgramStatus() {
+		return _programStatus;
+	}
+
+	public void setProgramStatus(java.lang.String _status) {
+		_programStatus = _status;
+	}
 
 	public boolean equals (Object obj) {
 		if (null == obj) return false;

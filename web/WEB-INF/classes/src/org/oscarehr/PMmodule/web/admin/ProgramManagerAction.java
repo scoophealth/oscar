@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
@@ -474,7 +475,21 @@ public class ProgramManagerAction extends BaseAction {
 		if (request.getParameter("program.holdingTank") == null) {
 			program.setHoldingTank(false);
 		}
-
+		
+		//if a program has a client in it, you cannot make it inactive
+		if(request.getParameter("program.programStatus").equals("inactive")) {
+			//Admission ad = admissionManager.getAdmission(Long.valueOf(request.getParameter("id")));
+			List admissions = admissionManager.getCurrentAdmissionsByProgramId(String.valueOf(program.getId()));
+			if(admissions.size()>0){
+				ActionMessages messages = new ActionMessages();
+				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.client_in_the_program", program.getName()));
+				saveMessages(request, messages);
+				setEditAttributes(request, String.valueOf(program.getId()));
+				return mapping.findForward("edit");
+			}					
+		}
+				
+				
 		if (program.getMaxAllowed().intValue() < program.getNumOfMembers().intValue()) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.max_too_small", program.getName()));

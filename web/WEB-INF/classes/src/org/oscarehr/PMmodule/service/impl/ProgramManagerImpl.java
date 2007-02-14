@@ -133,6 +133,10 @@ public class ProgramManagerImpl implements ProgramManager {
 		return dao.getAllPrograms();
 	}
 
+	public List getAllActivePrograms() {
+		return dao.getAllActivePrograms();
+	}
+	
 	public List getProgramsByAgencyId(String agencyId) {
 		return dao.getProgramsByAgencyId(agencyId);
 	}

@@ -146,6 +146,16 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		return rs;
 	}
 
+	public List getAllActivePrograms() {
+		List rs = getHibernateTemplate().find("FROM Program p WHERE p.Type != ? and p.programStatus='active' ORDER BY p.Name ", "community");
+
+		if (log.isDebugEnabled()) {
+			log.debug("getAllPrograms: # of programs: " + rs.size());
+		}
+
+		return rs;
+	}
+	
 	public List getProgramsByAgencyId(String agencyId) {
 		if (agencyId == null || agencyId.length() <= 0) {
 			return null;
@@ -237,7 +247,9 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		if (program.getType() == null || program.getType().equals("") || !program.getType().equals("community")) {
 			criteria.add(Expression.ne("Type", "community"));
 		}
-
+		
+		criteria.add(Expression.eq("programStatus","active"));
+		
 		criteria.addOrder(Order.asc("Name"));
 
 		List results = criteria.list();

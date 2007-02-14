@@ -49,6 +49,8 @@ public interface ProgramManager
 	
 	public List getAllPrograms();
 	
+	public List getAllActivePrograms();
+	
 	public List getProgramsByAgencyId(String agencyId);
 	
 	public Program[] getBedPrograms();

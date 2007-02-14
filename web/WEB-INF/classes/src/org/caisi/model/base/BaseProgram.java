@@ -62,6 +62,7 @@ public abstract class BaseProgram  implements Serializable {
 	private java.lang.String _location;
 	private java.lang.String _name;
 	private java.lang.Long _agencyId;
+	private java.lang.String _programStatus;
 
 
 	// constructors
@@ -226,6 +227,14 @@ public abstract class BaseProgram  implements Serializable {
 		this._agencyId = _agencyId;
 	}
 
+
+	public java.lang.String getProgramStatus() {
+		return _programStatus;
+	}
+
+	public void setProgramStatus(java.lang.String _status) {
+		_programStatus = _status;
+	}
 
 	public boolean equals (Object obj) {
 		if (null == obj) return false;

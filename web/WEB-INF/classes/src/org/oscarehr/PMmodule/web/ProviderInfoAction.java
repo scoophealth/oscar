@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,13 +51,19 @@ public class ProviderInfoAction extends BaseAction {
 		request.setAttribute("agencyDomain", providerManager.getAgencyDomain(providerNo));
 		
 		List programDomain = providerManager.getProgramDomain(providerNo);
+		List activeProgramDomain = new ArrayList();
 		
 		for (Iterator i = programDomain.iterator(); i.hasNext();) {
 			ProgramProvider programProvider = (ProgramProvider) i.next();
-			programProvider.setProgram(programManager.getProgram(programProvider.getProgramId()));
+			//programProvider.setProgram(programManager.getProgram(programProvider.getProgramId()));
+			if(programManager.getProgram(programProvider.getProgramId()).getProgramStatus().equals("active")){
+				programProvider.setProgram(programManager.getProgram(programProvider.getProgramId()));
+				activeProgramDomain.add(programProvider);				
+			}
 		}
 		
-		request.setAttribute("programDomain", programDomain);
+		//request.setAttribute("programDomain", programDomain);
+		request.setAttribute("programDomain", activeProgramDomain);
 		
 		return mapping.findForward("view");
 	}

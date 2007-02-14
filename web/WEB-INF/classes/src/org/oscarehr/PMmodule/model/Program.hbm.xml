@@ -39,5 +39,6 @@
 		<property column="allow_batch_admission" name="AllowBatchAdmission" not-null="false" type="boolean" />
 		<property column="allow_batch_discharge" name="AllowBatchDischarge" not-null="false" type="boolean" />
 		<property column="hic" name="hic" not-null="false" type="boolean" />
+		<property column="program_status" name="programStatus" not-null="true" type="string" />
 	</class>
 </hibernate-mapping>
