@@ -66,6 +66,15 @@
 		</td>
 	</tr>
 	<tr class="b">
+		<td width="20%">Status:</td>
+		<td>
+			<html:select property="program.programStatus">
+				<html:option value="active" />
+				<html:option value="inactive" />
+			</html:select>
+		</td>
+	</tr>
+	<tr class="b">
 		<td width="20%">Location:</td>
 		<td><html:text property="program.location" size="30" /></td>
 	</tr>

@@ -33,6 +33,7 @@
 	</display:column>
 	<display:column property="descr" sortable="true" title="Description" />
 	<display:column property="type" sortable="true" title="Type" />
+	<display:column property="programStatus" sortable="true" title="Status" />
 	<display:column property="location" sortable="true" title="Location" />
 	<display:column sortable="true" title="Participation">
 		<c:out value="${program.numOfMembers}" />/<c:out value="${program.maxAllowed}" />&nbsp;(<c:out value="${program.queueSize}" /> waiting)
