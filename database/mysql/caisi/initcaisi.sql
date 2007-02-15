@@ -1490,6 +1490,7 @@ CREATE TABLE `program` (
   `allow_batch_admission` tinyint(1) default NULL,
   `allow_batch_discharge` tinyint(1) default NULL,
   `hic` tinyint(1) default NULL,
+  `program_status` varchar(8) NOT NULL default 'active',
   PRIMARY KEY  (`program_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
