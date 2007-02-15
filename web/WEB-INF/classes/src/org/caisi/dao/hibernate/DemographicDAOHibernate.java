@@ -22,9 +22,11 @@
 
 package org.caisi.dao.hibernate;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import org.caisi.dao.DemographicDAO;
@@ -74,24 +76,64 @@ public class DemographicDAOHibernate extends HibernateDaoSupport implements Demo
 	 * get demographics according to their program, admit time, discharge time, ordered by lastname and first name
 	 */
 	public List getActiveDemographicByProgram(int programId, Date dt, Date defdt) {
+		//get duplicated clients from this sql
 		String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and " + "(a.DischargeDate>=? or (a.DischargeDate is null) or a.DischargeDate=?)"
 		        + " order by d.LastName,d.FirstName";
 
 		String status = "AC"; // only show active clients
 		List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, dt, defdt });
-
-		return rs;
+		
+		List clients = new ArrayList();
+		Integer clientNo = 0;		
+		Iterator it = rs.iterator();
+		while(it.hasNext()){
+			Demographic demographic = (Demographic)it.next();
+						
+			//no dumplicated clients.
+			if(demographic.getDemographicNo() == clientNo)
+				continue;
+			
+			clientNo = demographic.getDemographicNo();
+						
+			clients.add(demographic);			
+		}
+		//return rs;
+		return clients;
 	}
 
 	public List getArchiveDemographicByPromgram(int programId,Date dt, Date defdt) {
+		//get duplicated demographic records with the same id ....from this sql
 		String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and a.AdmissionStatus=? "
         		+ " order by d.LastName,d.FirstName";
-
+		
 		String status = "AC"; // only show active clients
-		String admissionStatus = "discharged";
+		String admissionStatus = "discharged"; //only show discharged clients
 		List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, admissionStatus});
-
-		return rs;
+		
+		//and clients should not currently in this program.
+		List clients = new ArrayList();
+		String clientId = null;
+		Integer clientNo = 0;
+		
+		Iterator it = rs.iterator();
+		while(it.hasNext()){
+			Demographic demographic = (Demographic)it.next();
+			String q1 = "Select a.AdmissionStatus From Admission a " + "Where a.ClientId=? and a.ProgramId=? and a.AdmissionStatus=?" ;
+			String ss = "current";
+			
+			//no dumplicated clients.
+			if(demographic.getDemographicNo() == clientNo)
+				continue;
+			
+			clientNo = demographic.getDemographicNo();
+			clientId = String.valueOf(clientNo);
+			List rs1 = (List)getHibernateTemplate().find(q1,new Object[]{clientId, new Integer(programId), ss});
+			if(rs1.size()==0) {				
+				clients.add(demographic);
+			}
+		}
+		
+		return clients;
 	}
 	
 	public List getProgramIdByDemoNo(String demoNo) {
