@@ -84,11 +84,12 @@ public class DemographicDAOHibernate extends HibernateDaoSupport implements Demo
 	}
 
 	public List getArchiveDemographicByPromgram(int programId,Date dt, Date defdt) {
-		String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? "
+		String q = "Select d From Demographic d, Admission a " + "Where (d.PatientStatus=? or d.PatientStatus='' or d.PatientStatus=null) and d.DemographicNo=a.ClientId and a.ProgramId=? and a.AdmissionDate<=? and a.AdmissionStatus=? "
         		+ " order by d.LastName,d.FirstName";
 
 		String status = "AC"; // only show active clients
-		List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt});
+		String admissionStatus = "discharged";
+		List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, admissionStatus});
 
 		return rs;
 	}
