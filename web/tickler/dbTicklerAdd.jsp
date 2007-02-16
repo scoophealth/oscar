@@ -24,6 +24,7 @@
  */
 -->
 
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -59,11 +60,37 @@ docassigned =request.getParameter("task_assigned_to");
 	  param[7]=docassigned;
 
  int rowsAffected = apptMainBean.queryExecuteUpdate(param,"save_tickler");
-	        
+String parentAjaxId = request.getParameter("parentAjaxId");
+String updateParent = request.getParameter("updateParent");
+
 if (rowsAffected == 1){
 %>
 <script LANGUAGE="JavaScript">
+      
+      var parentId = "<%=parentAjaxId%>";
+      var updateParent = <%=updateParent%>;
+      var demo = "<%=module_id%>";
+      var Url = window.opener.URLs;
+      
+      /*because the url for demomaintickler is truncated by the delete action, we need
+        to reconstruct it if necessary
+      */
+      if( parentId != "" && updateParent == true && !window.opener.closed ) {        
+        var ref = window.opener.location.href;
+        if( ref.indexOf("?") > -1 && ref.indexOf("updateParent") == -1 )
+            ref = ref + "&updateParent=true";
+        else if( ref.indexOf("?") == -1 )
+            ref = ref + "?demoview=" + demo + "&parentAjaxId=" + parentId + "&updateParent=true";
+                
+        window.opener.location = ref;
+      }
+      else if( parentId != "" && !window.opener.closed ) {        
+        window.opener.document.forms['encForm'].elements['reloadDiv'].value=parentId;
+        window.opener.updateNeeded = true;
+      }
+      else if( updateParent == true && !window.opener.closed )        
+        window.opener.location.reload();
+      
       self.close();
-      self.opener.location.reload();
 </script>
 <%}%>
