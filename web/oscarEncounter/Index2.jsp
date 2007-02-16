@@ -753,6 +753,20 @@ function loader(){
         $("leftNavbar").appendChild(div);
         popLeftColumn(URLs[idx],idx,idx);
     }
+    
+}
+
+var updateNeeded = false;
+
+function updateDiv() {
+    
+    if( updateNeeded ) { 
+        var div = $F("reloadDiv");
+        popLeftColumn(URLs[div], div, div);  
+        updateNeeded = false;
+    }
+    
+    setTimeout("updateDiv();", 1000);
 }
 
 <%--function popLeftColumn(url,div,params) {
@@ -770,8 +784,7 @@ function loader(){
 
 }--%>
 
-function popLeftColumn(url,div,params) {
-        
+function popLeftColumn(url,div,params) {    
     params = "cmd=" + params;
     var objAjax = new Ajax.Request (                        
                         url,
@@ -781,11 +794,11 @@ function popLeftColumn(url,div,params) {
                             evalScripts: true,
                             /*onLoading: function() {                            
                                             $(div).update("<p>Loading ...</p>");
-                                        }, */
+                                        }, */                            
                             onSuccess: function(request) {                            
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
-                                                                                                                                        
+                                                                                             
                                             //$(div).innerHTML = request.responseText;
                                             if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
                                                 $(div).updateSafari(request.responseText);
@@ -1050,7 +1063,7 @@ white-space: nowrap;
 </style>
 </head>
 
-<body  onload="javascript:loader();" onunload="onClosing();" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
+<body  onload="javascript:loader();" onunload="javascript:onClosing();" topmargin="0" leftmargin="0" bottommargin="0" rightmargin="0" vlink="#0000FF">
 
 <html:errors/>
 <div id="templatejs" style="display:none"></div>
@@ -1117,6 +1130,7 @@ white-space: nowrap;
         </td>
         <td valign="top">                
         <form name="encForm" action="SaveEncounter2.do" method="POST">
+            <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
             <caisi:isModuleLoad moduleName="caisi">
                         <input type="hidden" name="casetoEncounter" value="true">
 		</caisi:isModuleLoad>
@@ -1514,6 +1528,9 @@ white-space: nowrap;
    </table>
 </div>
 <%}System.out.println("Session:" + session.getAttribute("user"));%>
+<script type="text/javascript">
+    setTimeout("updateDiv();", 1000);
+</script>
 
 </body>
 </html:html>
