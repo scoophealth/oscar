@@ -47,6 +47,19 @@ if ( request.getAttribute("demographic_no") != null){
 }
 if(demoName == null){demoName ="";}
 
+//Retrieve encounter id for updating encounter navbar if info this page changes anything
+String parentAjaxId;
+if( request.getParameter("parentAjaxId") != null )
+    parentAjaxId = request.getParameter("parentAjaxId");
+else
+    parentAjaxId = "";
+    
+String updateParent;
+if( request.getParameter("updateParent") != null )
+    updateParent = request.getParameter("updateParent");
+else
+    updateParent = "true";  
+
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.net.*, oscar.oscarEncounter.pageUtil.EctSessionBean" %>
 <%@ include file="../admin/dbconnection.jsp" %>
@@ -115,9 +128,10 @@ function setfocus() {
 
 function validate(form){
 if (validateDemoNo(form)){
-form.action = "dbTicklerAdd.jsp"
-form.submit()}
+form.action = "dbTicklerAdd.jsp";
+form.submit();
 
+}
 else{}
 }
 function validateDemoNo() {
@@ -256,10 +270,14 @@ var newD = newYear + "-" + newMonth + "-" + newDay;
               <INPUT TYPE="hidden" NAME="provider_no" VALUE="115">
               <INPUT TYPE="hidden" NAME="creator" VALUE="oscardoc, doctor">
               <INPUT TYPE="hidden" NAME="remarks" VALUE="">
+              <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>"/>
+              <input type="hidden" name="updateParent" value="<%=updateParent%>"/>
  </form>
 </table>
 <table width="100%" border="0" bgcolor="#EEEEFF">
   <form name="serviceform" method="post" >
+      <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>"/>
+      <input type="hidden" name="updateParent" value="<%=updateParent%>"/>
      <tr> 
       <td width="35%"> <div align="left"><font color="#003366"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"><strong><bean:message key="tickler.ticklerAdd.formChartNo"/>:</strong> </font></font></div></td>
       <td colspan="2"> <div align="left"><INPUT TYPE="hidden" NAME="demographic_no" VALUE="<%=bFirstDisp?"":request.getParameter("demographic_no").equals("")?"":request.getParameter("demographic_no")%>"><%=ChartNo%></div></td>
