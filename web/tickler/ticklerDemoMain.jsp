@@ -266,12 +266,15 @@ function refresh() {
 }
 
 function setup() {
-    var update = "<%=updateParent%>";
+    
     var parentId = "<%=parentAjaxId%>";
     var Url = window.opener.URLs;
+    var update = "<%=updateParent%>";    
     
-    if( update == "true" && parentId != "" && !window.opener.closed )
-        window.opener.popLeftColumn(Url[parentId], parentId, parentId);
+    if( update == "true" && parentId != "" && !window.opener.closed ) {
+        window.opener.document.forms['encForm'].elements['reloadDiv'].value=parentId;
+        window.opener.updateNeeded = true;
+    }
     else if( update == "true" && parentId == "" && !window.opener.closed )
         window.opener.location.reload();
   }
@@ -364,6 +367,7 @@ function setup() {
               <div align="right">
                    <input type="hidden" name="demoview" value="<%=demoview%>">
                    <input type="hidden" name="Submit" value="">
+                   <input type="hiden" name="parentAjaxId" value="<%=parentAjaxId%>">
                    <input type="submit" value="<bean:message key="tickler.ticklerDemoMain.btnCreateReport"/>" class="mbttn" onclick="document.forms['serviceform'].Submit.value='Create Report'; document.forms['serviceform'].submit();">
               </div>
       </td>
@@ -501,7 +505,7 @@ if (nItems == 0) {
 <tr bgcolor=#666699><td colspan="8" class="white">
 <a href="javascript:CheckAll();"><bean:message key="tickler.ticklerDemoMain.btnCheckAll"/></a> - 
 <a href="javascript:ClearAll();"><bean:message key="tickler.ticklerDemoMain.btnClearAll"/></a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-<input type="button" name="button" value="<bean:message key="tickler.ticklerDemoMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp')" class="sbttn">
+<input type="button" name="button" value="<bean:message key="tickler.ticklerDemoMain.btnAddTickler"/>" onClick="popupPage('400','600', 'ticklerAdd.jsp?updateParent=true&parentAjaxId=<%=parentAjaxId%>')" class="sbttn">
 <input type="hidden" name="submit_form" value="">
 <% if (ticklerview.compareTo("D") == 0){%>
 <input type="button" value="<bean:message key="tickler.ticklerDemoMain.btnErase"/>" class="sbttn" onclick="document.forms['ticklerform'].submit_form.value='Erase Completely'; document.forms['ticklerform'].submit();">
