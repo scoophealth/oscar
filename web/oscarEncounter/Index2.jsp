@@ -1339,7 +1339,7 @@ white-space: nowrap;
                                     </a>
                                     <%}%>
                                     
-                                                                                U  <!-- encounter template -->
+                                                                                  <!-- encounter template -->
                                 
                                 <input id="enTemplate" tabindex="6" autocomplete="off" size="25" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
                                 <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>
