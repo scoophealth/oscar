@@ -314,4 +314,21 @@ public class StringUtils {
         }
         return result;
   }
+  
+  /**
+   *Takes a list of String Objects and returns a String with the all values from the list separated by a comma
+   */
+  public static String getCSV(List l){
+        StringBuffer ret = new StringBuffer();;
+        if (l != null){
+            for (int i = 0; i < l.size(); i++){
+                ret.append((String) l.get(i));
+                if (i + 1 < l.size()){
+                   ret.append(",");   
+                }
+            }
+        }
+        return ret.toString();
+   }
+  
 }
