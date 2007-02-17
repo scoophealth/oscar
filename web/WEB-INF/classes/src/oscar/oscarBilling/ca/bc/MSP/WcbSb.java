@@ -1,5 +1,6 @@
 package oscar.oscarBilling.ca.bc.MSP;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import oscar.Misc;
 import oscar.*;
@@ -93,8 +94,21 @@ public class WcbSb {
    String newLine ="\r\n";
    Misc misc = new Misc();
    
-   public WcbSb(java.sql.ResultSet rs) {
-      try {
+   public WcbSb(String billingNo){
+       try{
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           ResultSet rs =
+           db.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
+           + billingNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");
+           if (rs.next()){
+              fillWithRs(rs);
+           }
+           //TODO: what to do if the result is empty?? 
+       }catch (Exception e){}
+   }
+   
+   private void fillWithRs(java.sql.ResultSet rs){
+       try {
          this.bill_amount = rs.getString("wcb.bill_amount");
          this.visit_type = rs.getString("w_servicelocation");
          this.billing_no = getBillingMasterNo(rs.getString("billing_no"));
@@ -154,6 +168,22 @@ public class WcbSb {
       catch (Exception ex) {
          System.err.println("WcbSb (Constructor): " + ex.getMessage());
       }
+       
+   }
+   
+   public BigDecimal getBillingAmountForFee1BigDecimal(){
+     BigDecimal bdFee= null;
+     try{
+        double dFee = Double.parseDouble(billamountforfeeitem1);
+        bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+     }catch(Exception e){
+         bdFee = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_UP);
+     }
+     return bdFee;
+  }
+   
+   public WcbSb(java.sql.ResultSet rs) {
+      fillWithRs(rs);
    }
    private String StripLineBreaks(String input) {
       if (input != null) {
