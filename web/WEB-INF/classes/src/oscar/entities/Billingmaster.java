@@ -24,6 +24,11 @@
 
 package oscar.entities;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 /**
  * Encapsulates data from table billingmaster
  *
@@ -34,7 +39,7 @@ public class Billingmaster {
    */
   private int billingmasterNo;
   private int billingNo;
-  private String createdate;
+  private Date createdate;
   private String billingstatus;
   private int demographicNo;
   private int appointmentNo;
@@ -91,6 +96,8 @@ public class Billingmaster {
   private String oinAddress3;
   private String oinAddress4;
   private String oinPostalcode;
+  
+  private int paymentMethod;
 
   /**
    * Class constructor with no arguments.
@@ -161,7 +168,7 @@ public class Billingmaster {
    * @param oinPostalcode String
    */
   public Billingmaster(int billingmasterNo, int billingNo,
-                       String createdate, String billingstatus,
+                       Date createdate, String billingstatus,
                        int demographicNo, int appointmentNo, String claimcode,
                        String datacenter, String payeeNo, String practitionerNo,
                        String phn, String nameVerify, String dependentNum,
@@ -268,7 +275,7 @@ public class Billingmaster {
    * Gets the createdate
    * @return String createdate
    */
-  public String getCreatedate() {
+  public Date getCreatedate() {
     return createdate;
   }
 
@@ -740,7 +747,7 @@ public class Billingmaster {
    * Sets the createdate
    * @param createdate String
    */
-  public void setCreatedate(String createdate) {
+  public void setCreatedate(Date createdate) {
     this.createdate = createdate;
   }
 
@@ -1190,5 +1197,59 @@ public class Billingmaster {
    */
   public void setOinPostalcode(String oinPostalcode) {
     this.oinPostalcode = oinPostalcode;
-  }}
+  }
+  
+  public void setPractitioner_no(String practitioner_no) {
+    this.practitionerNo = practitioner_no;
+  }
+  
+  public void setPayee_no(String payee_no) {
+    this.payeeNo = payee_no;
+  }
+  
+  
+    public int getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(int paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+  
+  public String toString() {
+        return ToStringBuilder.reflectionToString(this,
+                ToStringStyle.MULTI_LINE_STYLE);
+    }
+
+  ////
+  
+  
+  
+  
+  public BigDecimal getBillingAmountBigDecimal(){
+     BigDecimal bdFee= null;
+     try{
+        double dFee = Double.parseDouble(getBillAmount());
+        bdFee = new BigDecimal(dFee).setScale(2, BigDecimal.ROUND_HALF_UP);
+     }catch(Exception e){
+         bdFee = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_UP);
+     }
+     return bdFee;
+  }
+  
+  public boolean hasNoteRecord (){
+       boolean retval = false;
+       try{
+          if (this.getCorrespondenceCode().equals("N") || this.getCorrespondenceCode().equals("B")){
+             retval = true;
+          }
+       }catch(Exception e){
+          retval = false;
+          e.printStackTrace();
+       }
+       return retval;
+    }
+
+}
 
