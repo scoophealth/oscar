@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import oscar.util.SqlUtils;
 import java.util.List;
 import java.util.*;
+import oscar.entities.Billingmaster;
 
 public class CheckBillingData {
 
@@ -385,4 +386,98 @@ public class CheckBillingData {
         ret = printErrorMsg(billingNo, ret);
         return ret;
     }
+
+
+
+    public String checkC02(String billingNo, Billingmaster bm){
+        StringBuffer ret = new StringBuffer();
+        ret.append(checkLength(bm.getClaimcode(), 3,
+                "C02:P00 Rec Code In Wrong! ")); //P00
+        // 3
+        ret.append(checkLength(bm.getDatacenter(), 5,
+                "C02:P02 Data Center Number Wrong! ")); //P02
+        // 5
+        // + forwardZero(logNo,7) //P04 7
+        ret.append(checkLength(bm.getPayeeNo(), 5,
+                "C02:P06 Payee Num Wrong! ")); //P06
+        // 5
+        ret.append(checkLength(bm.getPractitionerNo(), 5,
+                "C02:P08 Practitioner Num Wrong! ")); //P08
+        // 5
+        ret.append(checkMSPPHN(bm.getPhn(),bm.getOinInsurerCode()));//P14
+
+        // 10
+        //* + forwardSpace(rs2.getString("name_verify"),4) //P16 4 +
+        ret.append(checkDependentNum(bm.getDependentNum()));//P18 2 +
+        ret.append(checkSrvUnits(bm.getBillingUnit()));//P20 3 +
+
+        /*
+         * forwardZero(rs2.getString("clarification_code"),2) //P22 2 +
+         * forwardSpace(rs2.getString("anatomical_area"), 2) //P23 2 +
+         */
+
+        ret.append(checkAfterHourIndicator(bm.getAfterHour()));//P24 1 +
+
+        // forwardZero(rs2.getString("new_program"),2) //P25 2 +
+        ret.append(checkFeeCode(bm.getBillingCode())); //P26 5 +
+        ret.append(checkBilledAmount(bm.getBillAmount())); //P27 7 +
+
+        // forwardZero(rs2.getString("payment_mode"), 1) //P28 1 +
+        ret.append(checkLength(bm.getServiceDate(), 8,
+                "C02:P30 Service Date Wrong! ")); //P30 8 +
+        // forwardZero(rs2.getString("service_to_day"),2) //P32 2 +
+        ret.append(checkSubmissionCode(bm.getSubmissionCode())); //P34 1 +
+        // space(1) //P35 1 +
+        ret.append(checkDxCode1(bm.getDxCode1())); //P36 5 +
+        /*
+         * backwardSpace(rs2.getString("dx_code2"), 5) //P37 5 +
+         * backwardSpace(rs2.getString("dx_code3"), 5) //P38 5 + space(15) //
+         * //P39 15 +
+         */
+
+        ret.append(checkSrvLocation(bm.getServiceLocation())); //P40 1 +
+        ret.append(checkReferral(bm.getReferralFlag1(),bm.getReferralNo1(), "Referral 1")); //P41 1 + P42 5 +
+        ret.append(checkReferral(bm.getReferralFlag2(),bm.getReferralNo2(), "Referral 2")); //P44 1 + P46 5 +
+        /*
+         * forwardZero(rs2.getString("time_call"),4) //P47 4 + zero(4) //P48 4 // +
+         * zero(4) //P50 4 +
+         */
+
+        ret.append(checkBirthDate(bm.getBirthDate())); //P52 8 +
+        ret.append(checkOfficeFolioNum(""+bm.getBillingmasterNo())); //P54 7
+        // +
+        ret.append(checkCorrespondenceCode(bm.getCorrespondenceCode())); //P56
+        // 1 +
+
+        ret.append(checkMVACode(bm.getMvaClaimCode())); //P60 1
+        /*
+         * space(20) //P58 20 + forwardSpace(rs2.getString("mva_claim_code"),1)
+         * //P60 1 + forwardZero(rs2.getString("icbc_claim_no"), 8) //P62 8 +
+         * forwardZero(rs2.getString("original_claim"), 20 ) //P64 20 +
+         * forwardZero(rs2.getString("facility_no"), 5) //P70 5 +
+         * forwardZero(rs2.getString("facility_sub_no"), 5) //P72 5 + space(58)
+         * //p80 58 +
+         */
+
+        ret.append(checkOinInsCode(bm.getOinInsurerCode())); //P100 2
+
+        // backwardSpace(rs2.getString("oin_registration_no"),12)//P102 12 // +
+        ret.append(checkOinBirthDate(bm.getOinBirthdate())); //P104 8 +
+        /*
+         * backwardSpace(rs2.getString("oin_first_name"),12) //P106 12 +
+         * backwardSpace(rs2.getString("oin_second_name"),1) //P108 1 +
+         * backwardSpace(rs2.getString("oin_surname"),18) //P110 18 +
+         */
+        ret.append(checkOinSexCode(bm.getOinSexCode())); //P112 1 +
+        /*
+         * backwardSpace(rs2.getString("oin_address"),25) //P114 25 +
+         * backwardSpace(rs2.getString("oin_address2"),25) //P116 25 +
+         * backwardSpace(rs2.getString("oin_address3"),25) //P118 25 +
+         * backwardSpace(rs2.getString("oin_address4"),25) //P120 25 +
+         * backwardSpace(rs2.getString("oin_postalcode"),6); //P122 6
+         */
+        
+        return printErrorMsg(billingNo, ret.toString());
+    }
+
 }
