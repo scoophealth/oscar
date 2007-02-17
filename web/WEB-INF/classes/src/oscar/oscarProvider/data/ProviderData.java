@@ -91,6 +91,33 @@ public class ProviderData {
       getProvider(providerNo);
    }
    
+   public List getProviderListWithInsuranceNo(){
+       return getProviderListWithInsuranceNo("%");
+   }
+   
+   public List getProviderListWithInsuranceNo(String insurerNo){
+        ArrayList list = new ArrayList();
+        try {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs;
+                String sql = "select * from provider where provider_type='doctor' and ohip_no like '"+insurerNo+"' and ohip_no != '' order by last_name";
+
+                rs = db.GetSQL(sql);
+                while  (rs.next()) {
+                   list.add(rs.getString("provider_no"));
+                }
+
+                rs.close();
+                db.CloseConn();
+                               
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }         
+        return list;
+   }
+   
+  
+   
    public void getProvider(String providerNo){
           try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
