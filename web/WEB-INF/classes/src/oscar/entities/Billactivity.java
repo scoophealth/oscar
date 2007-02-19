@@ -24,6 +24,8 @@
 
 package oscar.entities;
 
+import java.util.Date;
+
 /**
  * Encapsulates data from table billactivity
  *
@@ -39,9 +41,10 @@ public class Billactivity {
   private String htmlcontext;
   private String ohipcontext;
   private String claimrecord;
-  private String updatedatetime;
+  private Date updatedatetime;
   private String status;
   private String total;
+  private int id;
 
   /**
    * Class constructor with no arguments.
@@ -69,20 +72,20 @@ public class Billactivity {
                       String ohipfilename, String providerohipno,
                       String groupno, String creator, String htmlcontext,
                       String ohipcontext, String claimrecord,
-                      String updatedatetime, String status, String total) {
-    this.monthCode = monthCode;
-    this.batchcount = batchcount;
-    this.htmlfilename = htmlfilename;
-    this.ohipfilename = ohipfilename;
-    this.providerohipno = providerohipno;
-    this.groupno = groupno;
-    this.creator = creator;
-    this.htmlcontext = htmlcontext;
-    this.ohipcontext = ohipcontext;
-    this.claimrecord = claimrecord;
-    this.updatedatetime = updatedatetime;
-    this.status = status;
-    this.total = total;
+                      Date updatedatetime, String status, String total) {
+    this.setMonthCode(monthCode);
+    this.setBatchcount(batchcount);
+    this.setHtmlfilename(htmlfilename);
+    this.setOhipfilename(ohipfilename);
+    this.setProviderohipno(providerohipno);
+    this.setGroupno(groupno);
+    this.setCreator(creator);
+    this.setHtmlcontext(htmlcontext);
+    this.setOhipcontext(ohipcontext);
+    this.setClaimrecord(claimrecord);
+    this.setUpdatedatetime(updatedatetime);
+    this.setStatus(status);
+    this.setTotal(total);
   }
 
   /**
@@ -169,7 +172,7 @@ public class Billactivity {
    * Gets the updatedatetime
    * @return String updatedatetime
    */
-  public String getUpdatedatetime() {
+  public Date getUpdatedatetime() {
     return updatedatetime;
   }
 
@@ -273,10 +276,11 @@ public class Billactivity {
    * Sets the updatedatetime
    * @param updatedatetime String
    */
-  public void setUpdatedatetime(String updatedatetime) {
+  public void setUpdatedatetime(Date updatedatetime) {
     this.updatedatetime = updatedatetime;
   }
 
+  
   /**
    * Sets the status
    * @param status String
@@ -292,5 +296,13 @@ public class Billactivity {
   public void setTotal(String total) {
     this.total = total;
   }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
 }
