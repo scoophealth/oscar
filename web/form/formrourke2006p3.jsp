@@ -156,9 +156,42 @@
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
     }
     
+    function $F(elem) {
+        return document.forms[0].elements[elem].value;
+    
+    }
+    
+    /*We have to check that measurements are numeric and an observation date has 
+     *been entered for that measurment
+     */
+    function checkMeasures() {
+        var measurements = new Array(3);
+        measurements[0] = new Array("p3_ht9m", "p3_wt9m", "p3_hc9m");
+        measurements[1] = new Array("p3_ht12m", "p3_wt12m", "p3_hc12m");
+        measurements[2] = new Array("p3_ht15m", "p3_wt15m", "p3_hc15m");
+        var dates = new Array("p3_date9m", "p3_date12m", "p3_date15m");
+                    
+        for( var dateIdx = 0; dateIdx < dates.length; ++dateIdx ) {
+            var date = dates[dateIdx];
+            for( var elemIdx = 0; elemIdx < measurements[dateIdx].length; ++elemIdx ) {
+                var elem = measurements[dateIdx][elemIdx];                
+                if( $F(elem).length > 0 && (isNaN($F(elem)) || $F(date).length == 0 )) {
+                    alert('<bean:message key="oscarEncounter.formRourke2006.frmError"/>');
+                    return false;
+                }
+            }
+           
+        }
+            
+        return true;   
+    }
+    
     function onGraph(url) {        
-        document.forms["graph"].action = url;
-        document.forms["graph"].submit();
+        if( checkMeasures() ) {
+            document.forms["graph"].action = url;
+            document.forms["graph"].submit();
+        } 
+                
     }
     
     function onPrint() {
@@ -180,10 +213,13 @@
     }
     
     function onSave() {
-        document.forms[0].submit.value="save";                
-        reset();
-        return confirm("Are you sure you want to save this form?");
+        if( checkMeasures() ) {
+            document.forms[0].submit.value="save";                
+            reset();                
+            return confirm("Are you sure you want to save this form?");
+        }
         
+        return false; 
     }
     function onExit() {
         if(confirm("Are you sure you wish to exit without saving your changes?")==true)
@@ -193,9 +229,13 @@
         return(false);
     }
     function onSaveExit() {
-        document.forms[0].submit.value="exit";        
-        reset();
-        return confirm("Are you sure you wish to save and close this window?");
+        if( checkMeasures() ) {
+            document.forms[0].submit.value="exit";
+            reset();
+            return confirm("Are you sure you wish to save and close this window?");
+        }
+        
+        return false;
     }
     
     function popPage(varpage,pageName) {
