@@ -1,5 +1,4 @@
 c_birthDate : center, 214, 631, 0, BaseFont.HELVETICA, 6, _, 253, 622, 7
-c_Age   : left, 363, 607, 0, BaseFont.HELVETICA, 8 
 c_pName	: left, 379, 94, 0, BaseFont.HELVETICA, 8 
 c_birthWeight : center, 288, 631, 0, BaseFont.HELVETICA, 6, _, 330, 622, 7
 c_length :  center, 330, 631, 0, BaseFont.HELVETICA, 6, _, 370, 622, 7
