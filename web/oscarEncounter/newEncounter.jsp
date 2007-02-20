@@ -24,12 +24,16 @@
   
 <%  
     ArrayList newDocArr = (ArrayList) request.getSession().getServletContext().getAttribute("newDocArr");
+    Boolean useNewEchart = (Boolean) request.getSession().getServletContext().getAttribute("useNewEchart");
+    
     String userNo = (String) request.getSession().getAttribute("user"); 
-    if( userNo != null && newDocArr != null ) {
+    if( userNo != null && (newDocArr != null || (useNewEchart != null && useNewEchart.equals(Boolean.TRUE))) ) {
+        
+        if( newDocArr == null ) newDocArr = new ArrayList();
         
         if( request.getMethod().equalsIgnoreCase("get") ) {
 %>
-            <h3>Aassign New Encounter to:</h3>
+            <h3>Assign New Encounter to:</h3>
         
             <form method="post" action="newEncounter.jsp" id="sbForm">
                                         
