@@ -81,6 +81,11 @@ public class Startup implements ServletContextListener {
                    Collections.sort(newDocArr);
                    sc.getServletContext().setAttribute("newDocArr",newDocArr);
                }
+               
+               String echartSwitch = p.getProperty("USE_NEW_ECHART");
+               if( echartSwitch.equalsIgnoreCase("yes") ) {
+                   sc.getServletContext().setAttribute("useNewEchart", true);
+               }
             ///
         } catch (Exception e) {
             System.out.println("*** No Property File ***");
