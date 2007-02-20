@@ -206,9 +206,13 @@ public class IntakeCAction2 extends BaseAction {
 				String[] entries = idsInfo.split("\\$\\$\\$");
 				for (int x = 0; x < entries.length; x++) {
 					String[] fields = entries[x].split("~~~");
-					if (fields.length != 0) {
+					if (fields.length != 0 && fields.length==2) {
 						identifications[x].setType(fields[0]);
 						identifications[x].setNumber(fields[1]);
+					}
+					else if(fields.length==1){
+						identifications[x].setType(fields[0]);
+						identifications[x].setNumber("");
 					}
 				}
 				formBean.setNumIdentification(entries.length);
