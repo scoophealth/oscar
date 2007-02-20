@@ -75,11 +75,13 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
         //now we list prevention modules as items
         PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();
         ArrayList prevList = pdc.getPreventions();
-        Hashtable warningTable = p.getWarningMsgs();        
+        Hashtable warningTable = p.getWarningMsgs();    
+        
         int hash; 
         String dbFormat = "yyyy-MM-dd";
         String serviceDateStr;
         String highliteColour = "FF0000";
+        String inelligibleColour = "FF6600";
         Date date = null;
         Date defaultDate = new Date(System.currentTimeMillis());
         url += "; return false;";
@@ -103,6 +105,9 @@ public class EctDisplayPreventionAction extends EctDisplayAction {
                         serviceDateStr = DateUtils.getDate(date, dateFormat);
                         item.setDate(date);
                     }
+                    
+                    if( hdata.get("refused").equals("2") )
+                        item.setColour(inelligibleColour);
                 }
                 else {
                     serviceDateStr = "";
