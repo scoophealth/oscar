@@ -1,0 +1,421 @@
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ *  Jason Gallagher
+ *
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada
+ *
+ * TeleplanFileWriter.java
+ *
+ * Created on January 24, 2007, 5:18 PM
+ *
+ */
+
+package oscar.oscarBilling.ca.bc.MSP;
+
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import oscar.Misc;
+import oscar.OscarProperties;
+import oscar.entities.Billingmaster;
+import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
+import oscar.oscarDB.DBHandler;
+import oscar.oscarProvider.data.ProviderData;
+
+/**
+ *
+ * @author jay
+ */
+public class TeleplanFileWriter {
+    
+    StringBuffer mspFileStr = null;
+    StringBuffer mspHtmlStr = null;
+    int sequenceNum = 0;
+    ArrayList billingToBeMarkedAsBilled = null;
+    ArrayList billingmasterToBeMarkedAsBilled = null;
+    private BigDecimal bigTotal = null;
+    ArrayList logList = null;
+    int totalClaims = 0;
+    
+    
+    public CheckBillingData checkData = new CheckBillingData();
+    Misc misc = new Misc();
+    
+    /** Creates a new instance of TeleplanFileWriter */
+    public TeleplanFileWriter() {
+        mspFileStr = new StringBuffer();
+        mspHtmlStr = new StringBuffer();
+        sequenceNum = getLastSequenceNumber();
+        billingToBeMarkedAsBilled = new ArrayList();
+        billingmasterToBeMarkedAsBilled = new ArrayList();
+        bigTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        logList = new ArrayList();
+    }
+    
+    private void addToTotal(BigDecimal bd){
+        bigTotal = bigTotal.add(bd);
+    }
+    
+    private void addToMarkBillingmasterList(String billingmasterNo){
+        billingmasterToBeMarkedAsBilled.add(billingmasterNo);
+    }
+    
+    private void addToMarkBillingList(String billingNo){
+        billingToBeMarkedAsBilled.add(billingNo);
+    }
+    
+    private void increaseClaims(){
+        totalClaims++;
+    }
+
+    private void increaseClaims(int numClaims){
+        totalClaims += numClaims;
+    }
+    
+    private int getLastSequenceNumber(){
+        TeleplanSequenceDAO seqDAO = new TeleplanSequenceDAO();
+        return seqDAO.getLastSequenceNumber();   
+    }
+    
+    private int getCurrentSequenceNumber(){
+        return sequenceNum;
+    }
+    
+    /*
+     * After the sequence gets to 9999999  (7 9's) it rolls over to one again
+        Conditions. 
+     *    Last line is 9999999 
+     *    9999999 is hit in the middle of a file generation
+     */
+    private String getNextSequenceNumber(){
+        sequenceNum++;
+        if ( sequenceNum > 9999999){
+            sequenceNum = 1;
+        }
+        return ""+sequenceNum;
+    }
+    private void appendToFile(String str){
+        mspFileStr.append(str);
+    }
+    
+    private void appendToHTML(String str){
+        mspHtmlStr.append(str);
+    }
+    
+    public TeleplanSubmission getSubmission(boolean testRun,ProviderData[] providers,String dataCenterId ) throws Exception{
+        
+        
+        String logNo =  getNextSequenceNumber() ;
+        String headerLine = "VS1" + dataCenterId + misc.forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + misc.space(25) + misc.space(57) + "\r";
+        String errorMsg = checkData.checkVS1("VS1" , dataCenterId , misc.forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , misc.space(25) , misc.space(57));
+        setLog(logNo, headerLine);
+        
+        appendToHTML(HtmlTeleplanHelper.htmlHeaderGen(errorMsg));
+        appendToFile(headerLine);
+        
+        errorMsg = "";
+        
+        for (int p = 0; p < providers.length; p++){
+           appendToHTML(HtmlTeleplanHelper.htmlNewProviderSection(providers[p].getOhip_no(),new Date()));    
+           List list = getBilling(providers[p].getOhip_no(),null,null); // null,null because date range doesn't do anything 
+           //Get All The Bills for this provider
+           
+           System.out.println("Got List For Billing size?"+list.size());
+           int providerClaimsCount = 0;
+           BigDecimal providerTotals = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+           for (int i = 0; i < list.size(); i++){
+                HashMap map = (HashMap) list.get(i);
+                String billType = (String) map.get("billingtype");
+                String billing_no = (String) map.get("billing_no");
+                Claims c = null;
+                if (billType.equals("MSP")  || billType.equals("ICBC") ) {
+                    c = createMSPICBCLines(billing_no,dataCenterId);   System.out.println("ITs an MSP / IcBc bill");
+                }else if(billType.equals("WCB")){
+                    //TODO:Should pass dataCenterId to WCB but it looks it up in the properties currently, fix in the future
+                    c = createWCB(billing_no);            System.out.println("Its a WCB bill");
+                }
+                
+                providerClaimsCount += c.getNumClaims();
+                providerTotals = providerTotals.add(c.getClaimTotal());
+                
+                addToMarkBillingList(billing_no);
+           } 
+           //Add to Providers Totals to the  submission
+           addToTotal(providerTotals);
+           increaseClaims(providerClaimsCount);
+           appendToHTML(HtmlTeleplanHelper.htmlFooter(providers[p].getOhip_no(),providerClaimsCount,providerTotals)); 
+        }
+        appendToHTML(HtmlTeleplanHelper.htmlFooter("",totalClaims,bigTotal)); 
+        appendToHTML(HtmlTeleplanHelper.htmlBottom());
+        
+        TeleplanSubmission submission = new  TeleplanSubmission(mspFileStr.toString(),
+                                                                mspHtmlStr.toString(),
+                                                                getCurrentSequenceNumber(),
+                                                                billingToBeMarkedAsBilled, 
+                                                                billingmasterToBeMarkedAsBilled,
+                                                                bigTotal,
+                                                                logList,
+                                                                totalClaims);
+        return submission;
+    }
+    
+    
+    private Claims createWCB(String billing_no){
+  
+           WcbSb sb = new WcbSb(billing_no);
+           appendToHTML(sb.getHtmlLine());
+           //TODO: DOES THIS DO ANYTHING appendToHTML(checkData.printWarningMsg(""))
+           
+           Claims claims = new Claims();
+           claims.increaseClaims();
+           claims.addToTotal(sb.getBillingAmountForFee1BigDecimal());
+           BillingmasterDAO masDAO = new BillingmasterDAO();
+        
+           List billMasterList = masDAO.getBillingMasterByBillingNo(billing_no);
+           Billingmaster bm = (Billingmaster) billMasterList.get(0);
+           
+           System.out.println("FORM NEEDED ?"+sb.isFormNeeded());
+           if(sb.isFormNeeded()){
+               
+                String logNo = getNextSequenceNumber();
+                String lines = sb.Line1(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line2(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line3(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line4(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line5(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line6(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line7(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+
+                logNo = getNextSequenceNumber();
+                lines = sb.Line8(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+           }else{
+                String logNo = getNextSequenceNumber();
+                String lines = sb.Line9(String.valueOf(logNo));
+                appendToFile("\n"+ lines +"\r");
+                setLog(logNo, lines,""+bm.getBillingmasterNo());
+           }
+           addToMarkBillingmasterList(""+bm.getBillingmasterNo());
+           return claims;
+    }
+    
+    //This needs to handle having multiple billingmaster line per billing but from now 
+    private Claims createMSPICBCLines(String billing_no,String dataCenterId){
+        BillingmasterDAO masDAO = new BillingmasterDAO();
+        
+        List billMasterList = masDAO.getBillingMasterWithStatus(billing_no,"O");
+        Claims claims = new Claims();
+        for (int i= 0; i < billMasterList.size(); i++){
+            Billingmaster bm = (Billingmaster) billMasterList.get(i);
+            bm.setDatacenter(dataCenterId);
+            //System.out.println(bm.toString());
+            claims.increaseClaims();
+            String logNo = getNextSequenceNumber();  
+            String dataLine = getClaimDetailRecord(bm,logNo);  //NEED TO IMPLEMENT this method
+            appendToFile("\n"+dataLine+"\r");
+            setLog(logNo,dataLine,bm.getBillingmasterNo());
+            
+            if (bm.hasNoteRecord()){
+              String noteLogNo = getNextSequenceNumber();
+              String noteRecordLine = getNoteRecord(bm,noteLogNo);
+              appendToFile("\n"+noteRecordLine+"\r");
+              setLog(noteLogNo,noteRecordLine,bm.getBillingmasterNo());
+            }   
+            claims.addToTotal(bm.getBillingAmountBigDecimal());
+                                            //?this null is supposed to be the demographic name
+            appendToHTML( HtmlTeleplanHelper.htmlLine(""+bm.getBillingmasterNo(),billing_no,"", getHinForHTML(bm), bm.getServiceDate() ,bm.getBillingCode(),bm.getBillAmount(),bm.getDxCode1(),bm.getDxCode2(),bm.getDxCode3() ) ) ;
+            appendToHTML(checkData.checkC02(""+bm.getBillingmasterNo(), bm));
+
+            addToMarkBillingmasterList(""+bm.getBillingmasterNo());
+        }
+        return claims;
+    }  
+
+    private String getHinForHTML(Billingmaster bm){
+        String hin = bm.getPhn();
+        if (bm.getOinInsurerCode() != null && (bm.getOinInsurerCode().trim().length() > 0) ){
+         hin = bm.getOinRegistrationNo();    
+        }
+        return hin;
+    }
+
+    
+    //TODO: DATA CENTER NUMBER IS HERE?? should that be from property?
+    public String getNoteRecord(Billingmaster bm, String seqNo) {
+       MSPBillingNote note = new MSPBillingNote();
+       return note.getN01(bm.getDatacenter(),seqNo,bm.getPayeeNo(),bm.getPractitionerNo(), "A", note.getNote(""+bm.getBillingmasterNo()));
+    }
+
+
+    private void setLog(String logNo, String value) { 
+        logList.add(new TeleplanLog(logNo,value));
+    }
+    
+    private void setLog(String logNo,String value, String billingmaster) {
+        logList.add(new TeleplanLog(logNo,value,billingmaster));
+    }
+    
+    private void setLog(String logNo,String value, int billingmaster) {
+        logList.add(new TeleplanLog(logNo,value,""+billingmaster));
+    }
+    
+    //Date Range not implemented
+    //This should be moved out of this class
+    private List getBilling(String providerInsNo,Date startDate, Date endDate) throws Exception{
+        ArrayList list = new ArrayList();      
+        DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+        String query = "select * from billing where provider_ohip_no='"+ providerInsNo+"' and (status='O' or status='W') " ;
+        System.out.println("1st billing query "+query);
+        ResultSet rs = db.GetSQL(query);
+        while (rs.next()){
+            HashMap map = new HashMap();
+            map.put("billing_no",rs.getString("billing_no"));
+            map.put("demographic_name",rs.getString("demographic_name"));
+            map.put("billingtype",rs.getString("billingtype"));   
+            list.add(map);
+        }     
+        return list;
+    }
+    
+    private String  roundUp (String str){
+       String retval = "1";
+       try{
+          retval = new java.math.BigDecimal(str).setScale(0,BigDecimal.ROUND_UP).toString();
+       }catch(Exception e){ e.printStackTrace();}
+       return retval;
+    }
+    
+    public String getClaimDetailRecord(Billingmaster bm ,String logNo) {
+        StringBuffer dLine = new StringBuffer(); 
+            dLine.append(misc.forwardSpace(bm.getClaimcode(),3));                       //p00   3
+            dLine.append(misc.forwardSpace(bm.getDatacenter(),5));                      //p02   5
+            dLine.append(misc.forwardZero(logNo,7));                                    //p04   7
+            dLine.append(misc.forwardSpace(bm.getPayeeNo(),5));                         //p06   5
+            dLine.append(misc.forwardSpace(bm.getPractitionerNo(),5));                  //p08   5
+            dLine.append(misc.forwardZero(bm.getPhn(),10));                             //p14  10
+            dLine.append(misc.forwardSpace(bm.getNameVerify(),4));                      //p16   4
+            dLine.append(misc.forwardSpace(bm.getDependentNum(),2));                    //p18   2
+            dLine.append(misc.forwardZero(roundUp(bm.getBillingUnit()),3));             //p20   3
+            dLine.append(misc.forwardZero(bm.getClarificationCode() ,2));               //p22   2
+            dLine.append(misc.forwardSpace(bm.getAnatomicalArea(), 2));                 //p23   2
+            dLine.append(misc.forwardSpace(bm.getAfterHour(),1));                       //p24   1
+            dLine.append(misc.forwardZero(bm.getNewProgram(),2));                       //p25   2
+            dLine.append(misc.forwardZero(bm.getBillingCode(),5));                      //p26   5
+            dLine.append(misc.moneyFormatPaddedZeroNoDecimal(bm.getBillAmount(),7));    //p27   7
+            dLine.append(misc.forwardZero(bm.getPaymentMode(), 1));                     //p28   1
+            dLine.append(misc.forwardSpace(bm.getServiceDate(), 8));                    //p30   8
+            dLine.append(misc.forwardZero(bm.getServiceToDay(),2));                     //p32   2
+            dLine.append(misc.forwardSpace(bm.getSubmissionCode(), 1));                 //p34   1
+            dLine.append(misc.space(1));                                                //p35   1
+            dLine.append(misc.backwardSpace(bm.getDxCode1(), 5));                       //p36   5
+            dLine.append(misc.backwardSpace(bm.getDxCode2(), 5));                       //p37   5
+            dLine.append(misc.backwardSpace(bm.getDxCode3(), 5));                       //p38   5
+            dLine.append(misc.space(15));                                               //p39  15
+            dLine.append(misc.forwardSpace(bm.getServiceLocation(), 1));                //p40   1
+            dLine.append(misc.forwardZero(bm.getReferralFlag1(), 1));                   //p41   1
+            dLine.append(misc.forwardZero(bm.getReferralNo1(),5));                      //p42   5
+            dLine.append(misc.forwardZero(bm.getReferralFlag2(),1));                    //p44   1
+            dLine.append(misc.forwardZero(bm.getReferralNo2(),5));                      //p46   5
+            dLine.append(misc.forwardZero(bm.getTimeCall(),4));                         //p47   4
+            dLine.append(misc.forwardZero(bm.getServiceStartTime(),4));                 //p48   4
+            dLine.append(misc.forwardZero(bm.getServiceEndTime(),4));                   //p50   4
+            dLine.append(misc.forwardZero(bm.getBirthDate(),8));                        //p52   8
+            dLine.append(misc.forwardZero(""+bm.getBillingmasterNo(), 7));              //p54   7
+            dLine.append(misc.forwardSpace(bm.getCorrespondenceCode(), 1));             //p56   1
+            dLine.append(misc.space(20));                                               //p58  20
+            dLine.append(misc.forwardSpace(bm.getMvaClaimCode(),1));                    //p60   1
+            dLine.append(misc.forwardZero(bm.getIcbcClaimNo(), 8));                     //p62   8
+            dLine.append(misc.forwardZero(bm.getOriginalClaim(), 20 ));                 //p64  20
+            dLine.append(misc.forwardZero(bm.getFacilityNo(), 5));                      //p70   5
+            dLine.append(misc.forwardZero(bm.getFacilitySubNo(), 5));                   //p72   5
+            dLine.append(misc.space(58));                                               //p80  58
+            dLine.append(misc.backwardSpace(bm.getOinInsurerCode(),2));                 //p100  2
+            dLine.append(misc.forwardZero(bm.getOinRegistrationNo(),12));               //p102 12
+            dLine.append(misc.backwardSpace(bm.getOinBirthdate(),8));                   //p104  8
+            dLine.append(misc.backwardSpace(bm.getOinFirstName(),12));                  //p106 12
+            dLine.append(misc.backwardSpace(bm.getOinSecondName(),1));                  //p108  1
+            dLine.append(misc.backwardSpace(bm.getOinSurname(),18));                    //p110 18
+            dLine.append(misc.backwardSpace(bm.getOinSexCode(),1));                     //p112  1
+            dLine.append(misc.backwardSpace(bm.getOinAddress(),25));                    //p114 25
+            dLine.append(misc.backwardSpace(bm.getOinAddress2(),25));                   //p116 25
+            dLine.append(misc.backwardSpace(bm.getOinAddress3(),25));                   //p118 25
+            dLine.append(misc.backwardSpace(bm.getOinAddress4(),25));                   //p120 25
+            dLine.append(misc.backwardSpace(bm.getOinPostalcode(),6));                  //p122  6
+        return dLine.toString();
+    }
+   
+    
+    class Claims{
+        BigDecimal claimTotal = null;
+        int numClaims = 0;
+    
+        public Claims(){
+            claimTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+        public void addToTotal(BigDecimal bd){
+            bigTotal = bigTotal.add(bd);
+        }
+        
+        public void increaseClaims(){
+            numClaims++;
+        }
+        
+        public int getNumClaims(){
+            return numClaims;
+        }
+        
+        public BigDecimal getClaimTotal(){
+            return claimTotal;
+        }
+    
+    }
+    
+}
