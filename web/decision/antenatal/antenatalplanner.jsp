@@ -24,13 +24,13 @@
  */
 -->
 
-
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   String demographic_no = request.getParameter("demographic_no")!=null?request.getParameter("demographic_no"):("null") ;
   String form_no = request.getParameter("formId")!=null?request.getParameter("formId"):("0") ;
-  String query_name = request.getParameter("queryName")!=null?request.getParameter("queryName"):("") ;
+  String query_name = request.getParameter("query_name")!=null?request.getParameter("query_name"):("") ;
   String curUser_no = (String) session.getAttribute("user");
+  
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*,java.net.*,java.io.*" errorPage="../../appointment/errorpage.jsp" %>
 <jsp:useBean id="plannerBean" class="oscar.AppointmentMainBean" scope="page" />
@@ -98,14 +98,15 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
   
   ResultSet rsdemo = null ;
   if(!form_no.equals("0")) {
-	  if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
-	      rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
-	  } else {
-		  rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");
-	  }
+      if(query_name.equalsIgnoreCase("search_formonarrisk") ) {
+          rsdemo = plannerBean.queryResults(form_no, "search_formonarrisk");
+      } else {
+              rsdemo = plannerBean.queryResults(form_no, "search_formarrisk");                  
+      }
+          
       ResultSetMetaData resultsetmetadata = rsdemo.getMetaData();
       while (rsdemo.next()) { 
-          finalEDB = rsdemo.getString("c_finalEDB");
+          finalEDB = rsdemo.getString("c_finalEDB");              
 	      wt = rsdemo.getString("pg1_wt");
 	      ht = rsdemo.getString("pg1_ht");
           for(int k = 1; k <= resultsetmetadata.getColumnCount(); k++) {
