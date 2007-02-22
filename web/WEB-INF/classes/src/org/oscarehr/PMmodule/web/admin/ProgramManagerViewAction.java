@@ -289,10 +289,12 @@ public class ProgramManagerViewAction extends BaseAction {
 		String notes = request.getParameter("admission.admissionNotes");
 		String programId = request.getParameter("id");
 		String clientId = request.getParameter("clientId");
-
+		String rejectionReason = request.getParameter("radioRejectionReason");
+		
+		
 		log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
 
-		programQueueManager.rejectQueue(programId, clientId, notes);
+		programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
 
 		return view(mapping, form, request, response);
 	}

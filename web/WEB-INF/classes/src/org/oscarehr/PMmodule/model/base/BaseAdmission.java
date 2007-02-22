@@ -92,6 +92,7 @@ public abstract class BaseAdmission  implements Serializable {
 	private java.lang.String programName;
 	private java.lang.String programType;
 
+	
 	// many to one
 	private org.oscarehr.PMmodule.model.ProgramTeam team;
 	private org.oscarehr.PMmodule.model.Demographic client;
@@ -406,8 +407,6 @@ public abstract class BaseAdmission  implements Serializable {
 	public void setClient (org.oscarehr.PMmodule.model.Demographic client) {
 		this.client = client;
 	}
-
-
 
 
 	public boolean equals (Object obj) {

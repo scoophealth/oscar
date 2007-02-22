@@ -36,6 +36,16 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	private String queueId;
 	private Bed[] reservedBeds;
 
+	private String radioRejectionReason;
+	
+	public String getRadioRejectionReason() {
+		return radioRejectionReason;
+	}
+
+	public void setRadioRejectionReason(String radioRejectionReason) {
+		this.radioRejectionReason = radioRejectionReason;
+	}
+
 	/**
 	 * @return Returns the tab.
 	 */
