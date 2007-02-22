@@ -112,9 +112,12 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
     
     public Properties getGraphicXYProp(Vector xDate, Vector yHeight) {
         xyProp = new Properties();
+        String x,y;
 	for (int i = 0; i < xDate.size(); i++) {
-            if (xDate.get(i) != null && yHeight.get(i) != null)
-                getGraphicXYProp( (String) xDate.get(i), (String) yHeight.get(i));
+            x = (String) xDate.get(i);
+            y = (String) yHeight.get(i);
+            if ( x != null &&  y != null && !x.equals("") && !y.equals(""))
+                getGraphicXYProp( x, y );
 			
 	}
 
@@ -151,10 +154,19 @@ public class FrmPdfGraphicRourke extends FrmPdfGraphic {
             smonth += (float)startDate.get(Calendar.YEAR) * 12.0;
             emonth += (float)curDate.get(Calendar.YEAR) * 12.0;
             
-            System.out.println("emonth - smonth " + emonth + " - " + smonth);
+            if ( smonth > emonth ) {
+                System.out.println("FrmPdfGraphicRourke: Start date after xDate");
+                return;
+            }                
+            if( fStartY > ycoord ) {
+                System.out.println("FrmPdfGraphicRourke: Ycoord less than starting Y value");
+                return;
+            }
+                
+            System.out.println("emonth,  smonth " + emonth + ", " + smonth);
             
             //calc xcoord and ycoord
-            xcoord = deltaX * (emonth - smonth);
+            xcoord = deltaX * (emonth - smonth);            
             ycoord = deltaY * (ycoord - fStartY);
             
             System.out.println("Graphic x y: " + xcoord + ", " + ycoord );
