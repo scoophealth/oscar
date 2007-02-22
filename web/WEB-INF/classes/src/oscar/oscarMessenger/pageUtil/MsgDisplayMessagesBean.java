@@ -300,6 +300,7 @@ public class MsgDisplayMessagesBean {
         orderTable.put("from","sentby");
         orderTable.put("subject","thesubject");
         orderTable.put("date","thedate");
+        orderTable.put("sentto", "sentto");
                                 
         orderBy = (String) orderTable.get(order);  
         if (orderBy == null){
@@ -595,7 +596,7 @@ public java.util.Vector estDemographicInbox(){
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         java.sql.ResultSet rs;
 
-        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, attachment, pdfattachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'  " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));                
+        String sql = new String("select messageid as status, messageid as message , thedate,  thesubject, sentby, sentto, attachment, pdfattachment from messagetbl m where sentbyNo = '"+ providerNo+"' and sentByLocation = '"+getCurrentLocationId()+"'  " + getSQLSearchFilter(searchCols) + " order by "+getOrderBy(orderby));                
 
         rs = db.GetSQL(sql);
 
@@ -607,6 +608,7 @@ public java.util.Vector estDemographicInbox(){
            dm.thesubject = rs.getString("thesubject");
            dm.thedate    = rs.getString("thedate");
            dm.sentby     = rs.getString("sentby");
+           dm.sentto     = rs.getString("sentto");
            String att    = rs.getString("attachment");
            String pdfAtt    = rs.getString("pdfattachment");           
               if (att == null || att.equals("null") ){
