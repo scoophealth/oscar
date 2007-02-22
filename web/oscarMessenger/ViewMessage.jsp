@@ -54,6 +54,7 @@ if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter(
 oscar.oscarMessenger.pageUtil.MsgSessionBean bean = (oscar.oscarMessenger.pageUtil.MsgSessionBean)pageContext.findAttribute("bean");
 oscar.oscarMessenger.util.MsgDemoMap msgDemoMap = new oscar.oscarMessenger.util.MsgDemoMap();
 java.util.Hashtable demoMap = msgDemoMap.getDemoMap((String) request.getAttribute("viewMessageId"));
+String boxType = request.getParameter("boxType");
 %>
 
 <title>
@@ -170,22 +171,28 @@ function popupSearchDemo(keyword){ // open a new popup window
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <a href="javascript:window.print()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnPrint"/></a>
                                         </td></tr></table>
-                                    </td>        
-
+                                    </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/DisplayMessages.jsp" styleClass="messengerButtons">
                                              <bean:message key="oscarMessenger.ViewMessage.btnInbox"/>
                                             </html:link>
                                         </td></tr></table>
-                                    </td> 
+                                    </td>  
+                                    <%
+                                        if( boxType.equals("1") ) {
+                                        
+                                    %>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <html:link page="/oscarMessenger/DisplayMessages.jsp?boxType=1" styleClass="messengerButtons">
                                              <bean:message key="oscarMessenger.ViewMessage.btnSent"/>
                                             </html:link>
                                         </td></tr></table>
-                                    </td>
+                                    </td>  
+                                    <%
+                                        }
+                                    %>                                                                                                          
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnExit"/></a>
