@@ -69,6 +69,7 @@ public class MsgViewMessageAction extends Action {
         String orderBy = request.getParameter("orderBy");
         String msgCount = request.getParameter("msgCount");
         String from = request.getParameter("from")==null?"oscarMessenger":request.getParameter("from");
+        String boxType = request.getParameter("boxType")==null?"":request.getParameter("boxType");
         
         if(msgCount==null){
             MsgDisplayMessagesBean DisplayMessagesBeanId = new MsgDisplayMessagesBean();
@@ -159,6 +160,7 @@ public class MsgViewMessageAction extends Action {
         }
         
         ParameterActionForward actionforward = new ParameterActionForward(mapping.findForward("success"));
+        actionforward.addParameter("boxType", boxType);
         if(from.equalsIgnoreCase("encounter")){
             actionforward = new ParameterActionForward(mapping.findForward("viewFromEncounter"));
             actionforward.addParameter("demographic_no", demographic_no);
