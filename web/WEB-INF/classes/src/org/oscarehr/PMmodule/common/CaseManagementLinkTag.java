@@ -32,14 +32,12 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 public class CaseManagementLinkTag extends TagSupport {
 
-	private String name;
-
-	private String demographicNo;
-
-	private String providerNo;
-
-	private String providerName;
+    private static final long serialVersionUID = 1L;
 	
+    private String name;
+	private String demographicNo;
+	private String providerNo;
+	private String providerName;
 	private Tag parent;
 
 	public CaseManagementLinkTag() {

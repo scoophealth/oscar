@@ -67,6 +67,9 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 public class ClientManagerAction extends BaseAction {
 
 	private static Log log = LogFactory.getLog(ClientManagerAction.class);
+	
+	// Parameter
+	public static final String ID = "id";
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;

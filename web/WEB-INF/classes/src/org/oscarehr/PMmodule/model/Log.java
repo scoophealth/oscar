@@ -30,28 +30,26 @@ import org.oscarehr.PMmodule.model.base.BaseLog;
  */
 public class Log extends BaseLog {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public Log () {
+	private static final long serialVersionUID = 1L;
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
+	public Log() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Log (long _id) {
+	public Log(long _id) {
 		super(_id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Log (
-		long _id,
-		java.lang.String _content) {
-
-		super (
-			_id,
-			_content);
+	public Log(long _id, java.lang.String _content) {
+		super(_id, _content);
 	}
-/*[CONSTRUCTOR MARKER END]*/
+	/*[CONSTRUCTOR MARKER END]*/
+	
 }

@@ -30,22 +30,19 @@ import org.oscarehr.PMmodule.model.base.BaseSecUserRole;
  */
 public class SecUserRole extends BaseSecUserRole {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public SecUserRole () {
+	private static final long serialVersionUID = 1L;
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
+	public SecUserRole() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public SecUserRole (
-		java.lang.String _roleName,
-		java.lang.String _providerNo) {
-
-		super (
-			_roleName,
-			_providerNo);
+	public SecUserRole(java.lang.String _roleName, java.lang.String _providerNo) {
+		super(_roleName, _providerNo);
 	}
+	/*[CONSTRUCTOR MARKER END]*/
 
-/*[CONSTRUCTOR MARKER END]*/
 }

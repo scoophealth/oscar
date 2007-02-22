@@ -27,40 +27,37 @@ import org.oscarehr.PMmodule.model.base.BaseProgram;
  * This is the object class that relates to the program table. Any customizations belong here.
  */
 public class Program extends BaseProgram {
-	
+
+	private static final long serialVersionUID = 1L;
+
 	public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
 	
 	public static final String BED_TYPE = "Bed";
 	public static final String SERVICE_TYPE = "Service";
 	
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	
-	public Program() {
+	public Program () {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Program(java.lang.Integer _id) {
-		super(_id);
+	public Program (java.lang.Integer id) {
+		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Program(java.lang.Integer _id, java.lang.Integer _maxAllowed, java.lang.String _name, java.lang.Long _agencyId) {
-		super(_id, _maxAllowed, _name, _agencyId);
+	public Program(java.lang.Integer id, java.lang.Integer maxAllowed, java.lang.String address, java.lang.String phone, java.lang.String fax, java.lang.String url, java.lang.String email, java.lang.String emergencyNumber, java.lang.String name, java.lang.Long agencyId, boolean holdingTank, java.lang.String programStatus) {
+		super(id, maxAllowed, address, phone, fax, url, email, emergencyNumber, name, agencyId, holdingTank, programStatus);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
 	
 	public boolean isFull() {
-		if (getNumOfMembers().intValue() >= getMaxAllowed().intValue()) {
-			return true;
-		}
-		
-		return false;
+		return getNumOfMembers() >= getMaxAllowed();
 	}
 	
 	public boolean isBed() {

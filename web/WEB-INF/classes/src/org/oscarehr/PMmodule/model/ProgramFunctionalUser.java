@@ -19,28 +19,28 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseProgramFunctionalUser;
 
 /**
- * This is the object class that relates to the program_functional_user table.
- * Any customizations belong here.
+ * This is the object class that relates to the program_functional_user table. Any customizations belong here.
  */
 public class ProgramFunctionalUser extends BaseProgramFunctionalUser {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public ProgramFunctionalUser () {
+	private static final long serialVersionUID = 1L;
+
+	/* [CONSTRUCTOR MARKER BEGIN] */
+	public ProgramFunctionalUser() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public ProgramFunctionalUser (java.lang.Long _id) {
+	public ProgramFunctionalUser(java.lang.Long _id) {
 		super(_id);
 	}
-
-/*[CONSTRUCTOR MARKER END]*/
+	/* [CONSTRUCTOR MARKER END] */
+	
 }

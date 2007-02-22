@@ -42,7 +42,7 @@ public class AgencyDaoHibernate extends HibernateDaoSupport implements AgencyDao
 		Agency agency = (Agency) getHibernateTemplate().get(Agency.class, agencyId);
 
 		if (log.isDebugEnabled()) {
-			log.debug("getAgency: agencyId=" + agencyId + ", found=" + (agency != null));
+			log.debug("getAgency: agencyId = " + agencyId + ", found = " + (agency != null));
 		}
 
 		return agency;
@@ -51,17 +51,27 @@ public class AgencyDaoHibernate extends HibernateDaoSupport implements AgencyDao
 	public Agency getLocalAgency() {
 		Agency agency = null;
 
-		List results = getHibernateTemplate().find("from Agency a where a.Local = true");
+		List results = getHibernateTemplate().find("from Agency a where a.local = true");
 
 		if (!results.isEmpty()) {
 			agency = (Agency) results.get(0);
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("getLocalAgency:found=" + (agency != null));
+			log.debug("getLocalAgency: found = " + (agency != null));
 		}
 
 		return agency;
+	}
+	
+	public List getAgencies() {
+		List results = this.getHibernateTemplate().find("from Agency");
+		
+		if (log.isDebugEnabled()) {
+			log.debug("getAgencies : # of results = " + results.size());
+		}
+		
+		return results;
 	}
 
 	public void saveAgency(Agency agency) {
@@ -72,19 +82,9 @@ public class AgencyDaoHibernate extends HibernateDaoSupport implements AgencyDao
 		getHibernateTemplate().saveOrUpdate(agency);
 
 		if (log.isDebugEnabled()) {
-			log.debug("saveAgency : id=" + agency.getId());
+			log.debug("saveAgency : id = " + agency.getId());
 		}
 
-	}
-
-	public List getAgencies() {
-		List results = this.getHibernateTemplate().find("from Agency");
-
-		if (log.isDebugEnabled()) {
-			log.debug("getAgencies : # of results=" + results.size());
-		}
-
-		return results;
 	}
 
 }

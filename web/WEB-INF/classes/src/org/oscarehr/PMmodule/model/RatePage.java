@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseRatePage;
@@ -30,33 +29,26 @@ import org.oscarehr.PMmodule.model.base.BaseRatePage;
  */
 public class RatePage extends BaseRatePage {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public RatePage () {
+	private static final long serialVersionUID = 1L;
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
+	public RatePage() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public RatePage (java.lang.Integer _id) {
+	public RatePage(java.lang.Integer _id) {
 		super(_id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public RatePage (
-		java.lang.Integer _id,
-		java.lang.Integer _visitors,
-		java.lang.Integer _score,
-		java.lang.String _pageName) {
-
-		super (
-			_id,
-			_visitors,
-			_score,
-			_pageName);
+	public RatePage(java.lang.Integer _id, java.lang.Integer _visitors, java.lang.Integer _score, java.lang.String _pageName) {
+		super(_id, _visitors, _score, _pageName);
 	}
-
-/*[CONSTRUCTOR MARKER END]*/
+	/*[CONSTRUCTOR MARKER END]*/
+	
 }

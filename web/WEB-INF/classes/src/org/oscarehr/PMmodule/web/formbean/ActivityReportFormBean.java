@@ -25,7 +25,7 @@ package org.oscarehr.PMmodule.web.formbean;
 public class ActivityReportFormBean {
 	private String startDate;
 	private String endDate;
-	private long programId;
+	private int programId;
 	private long teamId;
 	
 	public String getEndDate() {
@@ -34,10 +34,10 @@ public class ActivityReportFormBean {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	public long getProgramId() {
+	public int getProgramId() {
 		return programId;
 	}
-	public void setProgramId(long programId) {
+	public void setProgramId(int programId) {
 		this.programId = programId;
 	}
 	public String getStartDate() {

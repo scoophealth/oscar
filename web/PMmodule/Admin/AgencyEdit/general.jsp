@@ -42,7 +42,7 @@
 	</tr>
 	<tr class="b">
 		<td width="20%">Description:</td>
-		<td><html:text property="agency.descr" /></td>
+		<td><html:text property="agency.description" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">HIC:</td>

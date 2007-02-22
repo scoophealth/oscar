@@ -33,6 +33,8 @@ import org.oscarehr.PMmodule.utility.Utility;
  */
 public class Demographic extends BaseDemographic {
 
+	private static final long serialVersionUID = 1L;
+	
 	private static final String SEPERATOR = "-";
 
 	/* [CONSTRUCTOR MARKER END] */
@@ -53,13 +55,10 @@ public class Demographic extends BaseDemographic {
 	public Demographic(java.lang.Integer _demographicNo, java.lang.String _firstName, java.lang.String _lastName) {
 		super(_demographicNo, _firstName, _lastName);
 	}
-
 	/* [CONSTRUCTOR MARKER BEGIN] */
 
 	private long agencyId;
-
 	private String links = "";
-
 	private DemographicExt[] extras;
 
 	public String addZero(String text, int num) {
@@ -91,6 +90,10 @@ public class Demographic extends BaseDemographic {
 		return agencyId;
 	}
 
+	public String getAgencyName() {
+		return Agency.getAgencyName(agencyId);
+	}
+	
 	public DemographicExt[] getExtras() {
 		return extras;
 	}
@@ -110,7 +113,7 @@ public class Demographic extends BaseDemographic {
 				if (response.length() > 0) {
 					response.append(",");
 				}
-				response.append(Agency.getAgencyName(Long.valueOf(agencyId).longValue()));
+				response.append(Agency.getAgencyName(Long.valueOf(agencyId)));
 
 			}
 		}

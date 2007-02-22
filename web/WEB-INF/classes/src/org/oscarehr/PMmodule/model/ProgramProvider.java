@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseProgramProvider;
@@ -30,23 +29,24 @@ import org.oscarehr.PMmodule.model.base.BaseProgramProvider;
  */
 public class ProgramProvider extends BaseProgramProvider {
 
-	
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public ProgramProvider () {
+	private static final long serialVersionUID = 1L;
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
+	public ProgramProvider() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public ProgramProvider (java.lang.Long _id) {
+	public ProgramProvider(java.lang.Long _id) {
 		super(_id);
 	}
-/*[CONSTRUCTOR MARKER END]*/
+	/*[CONSTRUCTOR MARKER END]*/
 
 	private String programName;
 	private Program program;
-	
+
 	/**
 	 * @return Returns the programName.
 	 */
@@ -68,5 +68,5 @@ public class ProgramProvider extends BaseProgramProvider {
 	public void setProgram(Program program) {
 		this.program = program;
 	}
-	
+
 }

@@ -167,7 +167,7 @@ public class RoomDAOHibernate extends HibernateDaoSupport implements RoomDAO {
 	}
 
 	void updateHistory(Room room) {
-		// TODO IC Bedlog update create and persist historical data
+		// TODO IC Bedlog Historical - update create and persist historical data
 		// get previous programroom
 		// set end date to today
 		// create new programroom

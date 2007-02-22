@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import java.util.Map;
@@ -31,60 +30,79 @@ import org.oscarehr.PMmodule.model.base.BaseAgency;
  */
 public class Agency extends BaseAgency {
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	public Agency() {
-		super();
-	}
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Constructor for primary key
-	 */
-	public Agency(java.lang.Long _id) {
-		super(_id);
-	}
+	private static Agency localAgency;
+	private static Map agencyMap;
 
-	/**
-	 * Constructor for required fields
-	 */
-	public Agency(java.lang.Long _id, java.lang.String _name, boolean _local, boolean _integratorEnabled) {
-		super(_id, _name, _local, _integratorEnabled);
-	}
-
-	/* [CONSTRUCTOR MARKER END] */
-
-	public boolean getLocal() {
-		return isLocal();
-	}
-
-	protected static Map agencyMap;
-
-	public static void setAgencyMap(Map map) {
-		agencyMap = map;
+	public static Agency getLocalAgency() {
+		return localAgency;
 	}
 
 	public static Map getAgencyMap() {
 		return agencyMap;
 	}
 
-	public static String getAgencyName(long agencyId) {
-		if (agencyMap == null) {
-			return "Unknown (" + agencyId + ")";
-		}
-		Agency agency = (Agency) agencyMap.get(new Long(agencyId));
-		if (agency == null) {
-			return "Unknown (" + agencyId + ")";
-		} else {
-			return agency.getName();
-		}
-	}
-
-	protected static Agency localAgency;
-
-	public static Agency getLocalAgency() {
-		return localAgency;
-	}
-
 	public static void setLocalAgency(Agency agency) {
 		localAgency = agency;
 	}
+
+	public static void setAgencyMap(Map map) {
+		agencyMap = map;
+	}
+
+	public static String getAgencyName(Long agencyId) {
+		if (agencyMap != null) {
+			Agency agency = (Agency) agencyMap.get(agencyId);
+
+			if (agency != null) {
+				return agency.getName();
+			}
+		}
+
+		return "Unknown (" + agencyId + ")";
+	}
+
+	/* [CONSTRUCTOR MARKER BEGIN] */
+	public Agency () {
+		super();
+	}
+
+	/**
+	 * Constructor for primary key
+	 */
+	public Agency (java.lang.Long id) {
+		super(id);
+	}
+
+	/**
+	 * Constructor for required fields
+	 */
+	public Agency (
+		java.lang.Long id,
+		java.lang.String name,
+		boolean local,
+		boolean integratorEnabled,
+		boolean intakesCombined,
+		java.lang.Integer intakeQuick) {
+
+		super (
+			id,
+			name,
+			local,
+			integratorEnabled,
+			intakesCombined,
+			intakeQuick);
+	}
+
+	/* [CONSTRUCTOR MARKER END] */
+
+	public Agency(Long id, String name, boolean local, boolean integratorEnabled) {
+		super(id, name, local, integratorEnabled, false, 1);
+	}
+
+	public boolean getLocal() {
+		return isLocal();
+	}
+
 }

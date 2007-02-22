@@ -6,7 +6,7 @@
 	<jspversion>1.1</jspversion>
 	<shortname>CaisiTags</shortname>
 	<uri>http://www.caisi.ca</uri>
-	<info>Caisi Extension Tags Library</info>
+	<info>Caisi Tags Library</info>
 	<tag>
 		<name>isModuleLoad</name>
 		<tagclass>oscar.caisi.IsModuleLoadTag</tagclass>
@@ -70,6 +70,22 @@
 		<attribute>
 			<name>providerName</name>
 			<required>no</required>
+			<rtexprvalue>yes</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>intakeInstance</name>
+		<tagclass>org.oscarehr.PMmodule.common.IntakeInstanceTag</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>Intake Instance Tag</info>
+		<attribute>
+			<name>base</name>
+			<required>yes</required>
+			<rtexprvalue>yes</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>instance</name>
+			<required>yes</required>
 			<rtexprvalue>yes</rtexprvalue>
 		</attribute>
 	</tag>

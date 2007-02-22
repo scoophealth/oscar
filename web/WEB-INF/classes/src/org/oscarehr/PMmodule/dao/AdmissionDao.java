@@ -30,9 +30,9 @@ import org.oscarehr.PMmodule.model.AdmissionSearchBean;
 
 public interface AdmissionDao {
 	
-	public Admission getAdmission(Long programId, Integer demographicNo);
+	public Admission getAdmission(Integer programId, Integer demographicNo);
 
-	public Admission getCurrentAdmission(Long programId, Integer demographicNo);
+	public Admission getCurrentAdmission(Integer programId, Integer demographicNo);
 
 	public List getAdmissions();
 
@@ -46,7 +46,7 @@ public interface AdmissionDao {
 
 	public Admission getCurrentCommunityProgramAdmission(ProgramDao programDAO, Integer demographicNo);
 
-	public List getCurrentAdmissionsByProgramId(Long programId);
+	public List getCurrentAdmissionsByProgramId(Integer programId);
 
 	public Admission getAdmission(Long id);
 

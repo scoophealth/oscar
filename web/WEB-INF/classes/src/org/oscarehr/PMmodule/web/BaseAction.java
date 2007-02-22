@@ -24,6 +24,8 @@ package org.oscarehr.PMmodule.web;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
@@ -36,6 +38,7 @@ import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ConsentManager;
 import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.FormsManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
 import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
@@ -52,40 +55,28 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class BaseAction extends DispatchAction {
 
+	protected static final String PARAM_START = "?";
+	protected static final String PARAM_EQUALS = "=";
+	protected static final String PARAM_AND = "&";
+	
 	protected AdmissionManager admissionManager;
-
 	protected AgencyManager agencyManager;
-
 	protected BedCheckTimeManager bedCheckTimeManager;
-	
 	protected BedDemographicManager bedDemographicManager;
-	
 	protected BedManager bedManager;
-
 	protected ClientManager clientManager;
-
 	protected ConsentManager consentManager;
-
 	protected FormsManager formsManager;
-
+	protected GenericIntakeManager genericIntakeManager;
 	protected IntakeAManager intakeAManager;
-
 	protected IntakeCManager intakeCManager;
-
 	protected IntegratorManager integratorManager;
-
 	protected LogManager logManager;
-
 	protected ProgramManager programManager;
-
 	protected ProviderManager providerManager;
-
 	protected ProgramQueueManager programQueueManager;
-
 	protected RoleManager roleManager;
-
 	protected RoomManager roomManager;
-
 	protected SurveyManager surveyManager;
 
 	public void addError(HttpServletRequest req, String message) {
@@ -100,9 +91,9 @@ public class BaseAction extends DispatchAction {
 		addMessages(req, msgs);
 	}
 
-	public void addMessage(HttpServletRequest req, String key, String val1) {
+	public void addMessage(HttpServletRequest req, String key, String val) {
 		ActionMessages msgs = getMessages(req);
-		msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(key, val1));
+		msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(key, val));
 		addMessages(req, msgs);
 	}
 
@@ -122,6 +113,10 @@ public class BaseAction extends DispatchAction {
 		return (ClientManager) getAppContext().getBean("clientManager");
 	}
 
+	public GenericIntakeManager getGenericIntakeManager() {
+	    return genericIntakeManager;
+    }
+	
 	public IntakeAManager getIntakeAManager() {
 		return (IntakeAManager) getAppContext().getBean("intakeAManager");
 	}
@@ -182,7 +177,11 @@ public class BaseAction extends DispatchAction {
 	public void setFormsManager(FormsManager mgr) {
 		this.formsManager = mgr;
 	}
-
+	
+	public void setGenericIntakeManager(GenericIntakeManager genericIntakeManager) {
+	    this.genericIntakeManager = genericIntakeManager;
+    }
+	
 	public void setIntakeAManager(IntakeAManager mgr) {
 		this.intakeAManager = mgr;
 	}
@@ -233,6 +232,14 @@ public class BaseAction extends DispatchAction {
 
 	protected String getProviderNo(HttpServletRequest request) {
 		return getProvider(request).getProviderNo();
+	}
+
+	protected ActionForward createForward(ActionMapping mapping, String forwardName, StringBuilder parameters) {
+		ActionForward forward = mapping.findForward(forwardName);
+		StringBuilder path = new StringBuilder(forward.getPath());
+		path.append(parameters);
+		
+		return new ActionForward(path.toString());
 	}
 
 }

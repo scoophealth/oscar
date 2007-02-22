@@ -1,25 +1,3 @@
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
-
 package org.oscarehr.PMmodule.model.base;
 
 import java.io.Serializable;
@@ -78,7 +56,7 @@ public abstract class BaseAdmission  implements Serializable {
 		java.lang.Long agencyId,
 		java.lang.Long providerNo,
 		java.lang.Integer clientId,
-		java.lang.Long programId) {
+		java.lang.Integer programId) {
 
 		this.setId(id);
 		this.setAgencyId(agencyId);
@@ -105,11 +83,11 @@ public abstract class BaseAdmission  implements Serializable {
 	private java.util.Date admissionDate;
 	private java.lang.String admissionNotes;
 	private java.lang.String tempAdmission;
-	private java.lang.Long programId;
+	private java.lang.Integer programId;
 	private java.lang.String tempAdmitDischarge;
 	private java.lang.String dischargeNotes;
 	private java.util.Date dischargeDate;
-	private java.lang.Long teamId;
+	private java.lang.Integer teamId;
 	private boolean temporaryAdmission;
 	private java.lang.String programName;
 	private java.lang.String programType;
@@ -264,7 +242,7 @@ public abstract class BaseAdmission  implements Serializable {
 	/**
 	 * Return the value associated with the column: program_id
 	 */
-	public java.lang.Long getProgramId () {
+	public java.lang.Integer getProgramId () {
 		return programId;
 	}
 
@@ -272,7 +250,7 @@ public abstract class BaseAdmission  implements Serializable {
 	 * Set the value related to the column: program_id
 	 * @param programId the program_id value
 	 */
-	public void setProgramId (java.lang.Long programId) {
+	public void setProgramId (java.lang.Integer programId) {
 		this.programId = programId;
 	}
 
@@ -332,7 +310,7 @@ public abstract class BaseAdmission  implements Serializable {
 	/**
 	 * Return the value associated with the column: team_id
 	 */
-	public java.lang.Long getTeamId () {
+	public java.lang.Integer getTeamId () {
 		return teamId;
 	}
 
@@ -340,7 +318,7 @@ public abstract class BaseAdmission  implements Serializable {
 	 * Set the value related to the column: team_id
 	 * @param teamId the team_id value
 	 */
-	public void setTeamId (java.lang.Long teamId) {
+	public void setTeamId (java.lang.Integer teamId) {
 		this.teamId = teamId;
 	}
 

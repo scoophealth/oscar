@@ -143,9 +143,8 @@ public class BedDemographicDAOHibernate extends HibernateDaoSupport implements B
 	public void saveBedDemographic(BedDemographic bedDemographic) {
 		updateHistory(bedDemographic);
 
-		getHibernateTemplate().saveOrUpdate(bedDemographic);
+		bedDemographic = (BedDemographic) getHibernateTemplate().merge(bedDemographic);
 		getHibernateTemplate().flush();
-		getHibernateTemplate().refresh(bedDemographic);
 
 		log.debug("saveBedDemographic: " + bedDemographic);
 	}

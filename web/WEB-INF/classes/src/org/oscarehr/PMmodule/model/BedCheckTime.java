@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseBedCheckTime;

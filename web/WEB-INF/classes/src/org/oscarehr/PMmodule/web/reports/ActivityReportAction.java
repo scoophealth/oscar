@@ -82,7 +82,7 @@ public class ActivityReportAction extends DispatchAction {
 		
 		//# of new admissions
 		AdmissionSearchBean searchBean = new AdmissionSearchBean();
-		searchBean.setProgramId(new Long(formBean.getProgramId()));
+		searchBean.setProgramId(formBean.getProgramId());
 		try {
 			searchBean.setStartDate(formatter.parse(formBean.getStartDate()));
 			searchBean.setEndDate(formatter.parse(formBean.getEndDate()));
@@ -95,7 +95,7 @@ public class ActivityReportAction extends DispatchAction {
 		List programs = programManager.getProgramsByAgencyId("0");
 		for(Iterator iter=programs.iterator();iter.hasNext();) {
 			Program p = (Program)iter.next();
-			searchBean.setProgramId(new Long(p.getId().intValue()));
+			searchBean.setProgramId(p.getId());
 			List admissions = admissionManager.search(searchBean);
 			int totalAdmissions = admissions.size();
 			

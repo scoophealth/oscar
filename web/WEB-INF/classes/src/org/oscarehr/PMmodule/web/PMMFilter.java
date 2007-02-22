@@ -40,7 +40,6 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.OscarSecurityManager;
-import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -49,98 +48,84 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * pre set some session variables!
  * 
  * @author marc
- *
  */
 public class PMMFilter implements Filter {
 
 	private static Log log = LogFactory.getLog(PMMFilter.class);
-	private ProviderManager providerManager;
-	private ProgramManager programManager;
-	private OscarSecurityManager oscarSecurityManager;
-	private FilterConfig config;
-	private IntegratorManager integratorManager;
+
 	private AgencyManager agencyManager;
+	private IntegratorManager integratorManager;
+	private OscarSecurityManager oscarSecurityManager;
+	private ProviderManager providerManager;
+	private FilterConfig config;
 	private String testModeEnabled;
-	
+
 	public void setProviderManager(HttpServletRequest request) {
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
-		
-		this.providerManager = (ProviderManager) wac.getBean("providerManager");
-		this.programManager = (ProgramManager) wac.getBean("programManager");
-		this.oscarSecurityManager = (OscarSecurityManager)wac.getBean("oscarSecurityManager");
-		this.integratorManager = (IntegratorManager)wac.getBean("integratorManager");
-		this.agencyManager = (AgencyManager)wac.getBean("agencyManager");
-		testModeEnabled = (String)wac.getBean("testmode");
-	}
-	
-	public void init(FilterConfig arg0) throws ServletException {
-		this.config = arg0;
+
+		agencyManager = (AgencyManager) wac.getBean("agencyManager");
+		integratorManager = (IntegratorManager) wac.getBean("integratorManager");
+		oscarSecurityManager = (OscarSecurityManager) wac.getBean("oscarSecurityManager");
+		providerManager = (ProviderManager) wac.getBean("providerManager");
+		testModeEnabled = (String) wac.getBean("testmode");
 	}
 
-	public void doFilter(ServletRequest baseRequest, ServletResponse baseResponse,
-			FilterChain chain) throws IOException, ServletException {
-		
-		HttpServletRequest request = (HttpServletRequest)baseRequest;
-		
-		//log.debug(request.getRequestURI());
-		
+	public void init(FilterConfig config) throws ServletException {
+		this.config = config;
+	}
+
+	public void doFilter(ServletRequest baseRequest, ServletResponse baseResponse, FilterChain chain) throws IOException, ServletException {
+		HttpServletRequest request = (HttpServletRequest) baseRequest;
 		HttpSession session = request.getSession();
-		this.setProviderManager(request);
 		
-		//for testing
-		if(testModeEnabled != null && testModeEnabled.equals("true")) {
-			if(session.getAttribute("user") == null) {
+		setProviderManager(request);
+
+		// for testing
+		if (testModeEnabled != null && testModeEnabled.equals("true")) {
+			if (session.getAttribute("user") == null) {
 				log.warn("using test user");
-				session.setAttribute("user","999998");
-				//session.setAttribute("user","43433");
-				session.setAttribute("userrole","doctor admin");
+				session.setAttribute("user", "999998");
+				session.setAttribute("userrole", "doctor admin");
 			}
 		}
-		
-		String oscarUser = (String)session.getAttribute("user");
-		if(oscarUser == null || oscarUser.length()==0) {
+
+		String oscarUser = (String) session.getAttribute("user");
+		if (oscarUser == null || oscarUser.length() == 0) {
 			log.info("Not logged in!");
-			chain.doFilter(baseRequest,baseResponse);
+			chain.doFilter(baseRequest, baseResponse);
 		}
-		
-		if(session.getAttribute("provider") == null) {
+
+		if (session.getAttribute("provider") == null) {
 			log.debug("setting session variable: provider");
-			session.setAttribute("provider",providerManager.getProvider(oscarUser));
+			session.setAttribute("provider", providerManager.getProvider(oscarUser));
 		}
-		//if(session.getAttribute("program_domain") == null) {
-		//	log.debug("setting session variable: program_domain");
-			session.setAttribute("program_domain",providerManager.getProgramDomain(oscarUser));
-		//}
 		
-		if(session.getAttribute("pmm_admin") == null) {
+		session.setAttribute("program_domain", providerManager.getProgramDomain(oscarUser));
+
+		if (session.getAttribute("pmm_admin") == null) {
 			log.debug("setting session variable: pmm_admin");
-			session.setAttribute("pmm_admin",new Boolean(oscarSecurityManager.hasAdminRole(oscarUser)));
+			session.setAttribute("pmm_admin", new Boolean(oscarSecurityManager.hasAdminRole(oscarUser)));
 		}
-		
-		if(request.getRequestURI().indexOf("ProgramManager.do") != -1 && ((String)session.getAttribute("userrole")).indexOf("admin") == -1) {
+
+		if (request.getRequestURI().indexOf("ProgramManager.do") != -1 && ((String) session.getAttribute("userrole")).indexOf("admin") == -1) {
 			RequestDispatcher rd = baseRequest.getRequestDispatcher("/common/auth.jsp");
-			rd.forward(baseRequest,baseResponse);
+			rd.forward(baseRequest, baseResponse);
 			return;
 		}
-		
-		//set local agency
-		if(request.getSession().getServletContext().getAttribute("agency") == null) {
+
+		// set local agency
+		if (request.getSession().getServletContext().getAttribute("agency") == null) {
 			Agency agency = agencyManager.getLocalAgency();
-			request.getSession().getServletContext().setAttribute("agency",agency);
+			request.getSession().getServletContext().setAttribute("agency", agency);
 			Agency.setLocalAgency(agency);
 		}
-		
-		
-		//init integrator
+
+		// init integrator
 		integratorManager.isEnabled();
-		
-    	chain.doFilter(baseRequest,baseResponse);
 
+		chain.doFilter(baseRequest, baseResponse);
 	}
 
-	public void destroy() {
-		// TODO Auto-generated method stub
-
-	}
+	public void destroy() {}
 
 }

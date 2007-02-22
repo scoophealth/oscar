@@ -29,6 +29,8 @@ import org.oscarehr.PMmodule.model.base.BaseDemographicExt;
  */
 public class DemographicExt extends BaseDemographicExt {
 
+	private static final long serialVersionUID = 1L;
+
 	/* [CONSTRUCTOR MARKER BEGIN] */
 	public DemographicExt() {
 		super();

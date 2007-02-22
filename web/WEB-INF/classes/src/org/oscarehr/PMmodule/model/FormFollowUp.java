@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseFormFollowUp;
@@ -30,29 +29,26 @@ import org.oscarehr.PMmodule.model.base.BaseFormFollowUp;
  */
 public class FormFollowUp extends BaseFormFollowUp {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public FormFollowUp () {
+	private static final long serialVersionUID = 1L;
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
+	public FormFollowUp() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public FormFollowUp (java.lang.Long _id) {
+	public FormFollowUp(java.lang.Long _id) {
 		super(_id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public FormFollowUp (
-		java.lang.Long _id,
-		java.lang.Long _demographicNo) {
-
-		super (
-			_id,
-			_demographicNo);
+	public FormFollowUp(java.lang.Long _id, java.lang.Long _demographicNo) {
+		super(_id, _demographicNo);
 	}
-
-/*[CONSTRUCTOR MARKER END]*/
+	/*[CONSTRUCTOR MARKER END]*/
+	
 }

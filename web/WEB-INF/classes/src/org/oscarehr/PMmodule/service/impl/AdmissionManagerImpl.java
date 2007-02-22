@@ -71,11 +71,11 @@ public class AdmissionManagerImpl implements AdmissionManager {
     }
 	
 	public Admission getAdmission(String programId, Integer demographicNo) {
-		return dao.getAdmission(Long.valueOf(programId), demographicNo);
+		return dao.getAdmission(Integer.valueOf(programId), demographicNo);
 	}
 
 	public Admission getCurrentAdmission(String programId, Integer demographicNo) {
-		return dao.getCurrentAdmission(Long.valueOf(programId), demographicNo);
+		return dao.getCurrentAdmission(Integer.valueOf(programId), demographicNo);
 	}
 
 	public List getAdmissions() {
@@ -103,7 +103,7 @@ public class AdmissionManagerImpl implements AdmissionManager {
 	}
 
 	public List getCurrentAdmissionsByProgramId(String programId) {
-		return dao.getCurrentAdmissionsByProgramId(Long.valueOf(programId));
+		return dao.getCurrentAdmissionsByProgramId(Integer.valueOf(programId));
 	}
 
 	public Admission getAdmission(Long id) {
@@ -163,9 +163,9 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		newAdmission.setAdmissionNotes(admissionNotes);
 		newAdmission.setAdmissionStatus("current");
 		newAdmission.setClientId(demographicNo);
-		newAdmission.setProgramId(new Long(program.getId().intValue()));
+		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(Long.valueOf(providerNo));
-		newAdmission.setTeamId(new Long(0));
+		newAdmission.setTeamId(0);
 		newAdmission.setAgencyId(new Long(0));
 		newAdmission.setTemporaryAdmission(tempAdmission);
 		
@@ -208,9 +208,9 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		newAdmission.setAdmissionNotes(admissionNotes);
 		newAdmission.setAdmissionStatus("current");
 		newAdmission.setClientId(demographicNo);
-		newAdmission.setProgramId(new Long(program.getId().intValue()));
+		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(Long.valueOf(providerNo));
-		newAdmission.setTeamId(new Long(0));
+		newAdmission.setTeamId(0);
 		newAdmission.setAgencyId(new Long(0));
 		saveAdmission(newAdmission);
 	}
@@ -272,9 +272,9 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		admission.setAdmissionNotes(notes);
 		admission.setAdmissionStatus("current");
 		admission.setClientId(demographicNo);
-		admission.setProgramId(communityProgramId.longValue());
+		admission.setProgramId(communityProgramId);
 		admission.setProviderNo(Long.valueOf(providerNo));
-		admission.setTeamId(0L);
+		admission.setTeamId(0);
 		admission.setAgencyId(0L);
 		admission.setTemporaryAdmission(false);
 

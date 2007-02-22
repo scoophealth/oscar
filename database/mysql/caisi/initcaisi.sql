@@ -41,6 +41,9 @@ CREATE TABLE `admission` (
 DROP TABLE IF EXISTS `agency`;
 CREATE TABLE `agency` (
   `id` bigint(20) NOT NULL default '0',
+  `intakes_combined` boolean NOT NULL DEFAULT 0,
+  `intake_quick` integer unsigned NOT NULL DEFAULT 1,
+  `intake_indepth` integer unsigned DEFAULT 2,
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) default NULL,
   `contact_name` varchar(255) default NULL,
@@ -1453,6 +1456,73 @@ CREATE TABLE `functional_user_type` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
+-- Table structure for table `intake_node_type`
+--
+CREATE TABLE `intake_node_type` (
+  `intake_node_type_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY  (`intake_node_type_id`)
+) ENGINE=InnoDB;
+
+--
+-- Table structure for table `intake_node`
+--
+CREATE TABLE `intake_node` (
+  `intake_node_id` int(10) unsigned NOT NULL auto_increment,
+  `intake_node_type_id` int(10) unsigned NOT NULL,
+  `pos` int(10) unsigned default 0,
+  `parent_intake_node_id` int(10) unsigned default NULL,
+  PRIMARY KEY  (`intake_node_id`),
+  KEY `IDX_intake_node_intake_node_type` (`intake_node_type_id`),
+  KEY `IDX_intake_node_intake_node` (`parent_intake_node_id`),
+  CONSTRAINT `FK_intake_node_intake_node_type` FOREIGN KEY (`intake_node_type_id`) REFERENCES `intake_node_type` (`intake_node_type_id`),
+  CONSTRAINT `FK_intake_node_intake_node` FOREIGN KEY (`parent_intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
+) ENGINE=InnoDB;
+
+--
+-- Table structure for table `intake_label`
+--
+CREATE TABLE `intake_label` (
+  `intake_label_id` int(10) unsigned NOT NULL auto_increment,
+  `intake_node_id` int(10) unsigned NOT NULL,
+  `pos` int(10) unsigned default 0,
+  `lbl` text NOT NULL,
+  PRIMARY KEY  (`intake_label_id`),
+  KEY `IDX_intake_label_intake_node` (`intake_node_id`),
+  CONSTRAINT `FK_intake_label_intake_node` FOREIGN KEY (`intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
+) ENGINE=InnoDB;
+
+--
+-- Table structure for table `intake_instance`
+--
+CREATE TABLE `intake_instance` (
+  `intake_instance_id` int(10) unsigned NOT NULL auto_increment,
+  `intake_node_id` int(10) unsigned NOT NULL,
+  `client_id` int(10) unsigned NOT NULL,
+  `staff_id` varchar(6) NOT NULL,
+  `creation_date` datetime NOT NULL,
+  PRIMARY KEY  (`intake_instance_id`),
+  KEY `IDX_intake_instance_intake_node` (`intake_node_id`),
+  KEY `IDX_intake_instance_client_creation_date` (`client_id`,`creation_date`),
+  CONSTRAINT `FK_intake_instance_intake_node` FOREIGN KEY (`intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
+) ENGINE=InnoDB;
+
+--
+-- Table structure for table `intake_answer`
+--
+CREATE TABLE `intake_answer` (
+  `intake_answer_id` int(10) unsigned NOT NULL auto_increment,
+  `intake_instance_id` int(10) unsigned NOT NULL,
+  `intake_node_id` int(10) unsigned NOT NULL,
+  `val` text NOT NULL,
+  PRIMARY KEY  (`intake_answer_id`),
+  KEY `IDX_intake_answer_intake_instance` (`intake_instance_id`),
+  KEY `IDX_intake_answer_intake_node` (`intake_node_id`),
+  CONSTRAINT `FK_intake_answer_intake_instance` FOREIGN KEY (`intake_instance_id`) REFERENCES `intake_instance` (`intake_instance_id`),
+  CONSTRAINT `FK_intake_answer_intake_node` FOREIGN KEY (`intake_node_id`) REFERENCES `intake_node` (`intake_node_id`)
+) ENGINE=InnoDB;
+
+--
 -- Table structure for table `issue`
 --
 
@@ -1474,6 +1544,7 @@ DROP TABLE IF EXISTS `program`;
 CREATE TABLE `program` (
   `program_id` int(10) NOT NULL auto_increment,
   `agency_id` bigint(11) NOT NULL default '0',
+  `intake_program` integer unsigned,
   `name` varchar(70) NOT NULL default '',
   `descr` varchar(255) default NULL,
   `address` varchar(255) NOT NULL default '',

@@ -19,28 +19,28 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseDefaultRoleAccess;
 
 /**
- * This is the object class that relates to the default_role_access table.
- * Any customizations belong here.
+ * This is the object class that relates to the default_role_access table. Any customizations belong here.
  */
 public class DefaultRoleAccess extends BaseDefaultRoleAccess {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public DefaultRoleAccess () {
+	private static final long serialVersionUID = 1L;
+
+	/* [CONSTRUCTOR MARKER BEGIN] */
+	public DefaultRoleAccess() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public DefaultRoleAccess (java.lang.Long _id) {
+	public DefaultRoleAccess(java.lang.Long _id) {
 		super(_id);
 	}
 
-/*[CONSTRUCTOR MARKER END]*/
+	/* [CONSTRUCTOR MARKER END] */
 }

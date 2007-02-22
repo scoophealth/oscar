@@ -46,10 +46,9 @@ public class Admission extends BaseAdmission {
 	/**
 	 * Constructor for required fields
 	 */
-	public Admission(java.lang.Long id, java.lang.Long agencyId, java.lang.Long providerNo, java.lang.Integer clientId, java.lang.Long programId) {
+	public Admission(java.lang.Long id, java.lang.Long agencyId, java.lang.Long providerNo, java.lang.Integer clientId, java.lang.Integer programId) {
 		super(id, agencyId, providerNo, clientId, programId);
 	}
-	
 	/* [CONSTRUCTOR MARKER END] */
 
 	private Program program;

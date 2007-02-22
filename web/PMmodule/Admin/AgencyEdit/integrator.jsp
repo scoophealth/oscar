@@ -65,11 +65,11 @@
 	</tr>
 	<tr class="b">
 		<td width="20%">Integrator URL:</td>
-		<td><html:text property="agency.integratorURL" /></td>
+		<td><html:text property="agency.integratorUrl" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Integrator username:</td>
-		<td><html:text property="agency.integratorUserName" /></td>
+		<td><html:text property="agency.integratorUsername" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Integrator password:</td>

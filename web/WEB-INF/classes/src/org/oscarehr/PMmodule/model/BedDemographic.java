@@ -27,8 +27,12 @@ import java.util.Date;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.oscarehr.PMmodule.model.base.BaseBedDemographic;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.common.dao.Auditable;
 
-public class BedDemographic extends BaseBedDemographic {
+/**
+ * BedDemographic
+ */
+public class BedDemographic extends BaseBedDemographic implements Auditable {
 
 	private static final long serialVersionUID = 1L;
 

@@ -212,7 +212,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		String programName = request.getParameter("program_name");
 		Admission ad = admissionManager.getAdmission(Long.valueOf(admissionId));
 
-		ad.setTeamId(Long.valueOf(teamId));
+		ad.setTeamId(Integer.valueOf(teamId));
 
 		admissionManager.saveAdmission(ad);
 
@@ -269,9 +269,9 @@ public class ProgramManagerViewAction extends BaseAction {
 				newAdmission.setAdmissionNotes("Batch Admit");
 				newAdmission.setAdmissionStatus("current");
 				newAdmission.setClientId(admission.getClientId());
-				newAdmission.setProgramId(Long.valueOf(admitToProgramId));
+				newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
 				newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));
-				newAdmission.setTeamId(new Long(0));
+				newAdmission.setTeamId(0);
 				newAdmission.setAgencyId(admission.getAgencyId());
 
 				admissionManager.saveAdmission(newAdmission);

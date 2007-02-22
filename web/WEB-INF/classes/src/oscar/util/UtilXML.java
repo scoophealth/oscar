@@ -70,7 +70,7 @@ public class UtilXML {
       try {
          Transformer trans = TransformerFactory.newInstance().newTransformer();
          //trans.setOutputProperty(OutputKeys.INDENT, "yes");
-         //trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "1");
+         //trans.setOutputProperty("{http://xml.apache.org/xslt}baseIndent-amount", "1");
          trans.transform(src, rslt);
       }
       catch(Exception e) {
@@ -87,7 +87,7 @@ public class UtilXML {
          Transformer trans = TransformerFactory.newInstance().newTransformer();
          trans.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
          trans.setOutputProperty(javax.xml.transform.OutputKeys.DOCTYPE_SYSTEM, dtdname);
-         //trans.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "1");
+         //trans.setOutputProperty("{http://xml.apache.org/xslt}baseIndent-amount", "1");
          trans.transform(src, rslt);
       }
       catch(Exception e) {

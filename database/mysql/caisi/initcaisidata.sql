@@ -89,3 +89,36 @@ INSERT INTO `bed_demographic_status` VALUES (1, 'N/A', 0, 1);
 
 -- SYSTEM PROVIDER
 insert into `provider` (`provider_no`, `last_name`, `first_name`, `provider_type`, `specialty`, `sex`, `status`) values (-1, 'system', 'system', 'system', 'system', 's', 1);
+
+--
+-- Populate intake node types
+--
+INSERT INTO `intake_node_type` VALUES
+	(1, 'quick intake'),
+	(2, 'in-depth intake'),
+	(3, 'program intake'),
+	(4, 'page'),
+	(5, 'section'),
+	(6, 'question'),
+	(7, 'question single choice'),
+	(8, 'question multiple choice'),
+	(9, 'answer boolean'),
+	(10, 'answer date'),
+	(11, 'answer integer'),
+	(12, 'answer string'),
+	(13, 'answer telephone'),
+	(14, 'answer email');
+
+--
+-- Populate intake nodes
+--
+INSERT INTO `intake_node` VALUES
+	(1, 1, NULL, NULL),
+	(2, 2, NULL, NULL);
+
+--
+-- Populate intake labels
+--
+INSERT INTO `intake_label` VALUES
+	(1, 1, 0, 'Quick Intake'),
+	(2, 2, 0, 'In-depth Intake');

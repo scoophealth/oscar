@@ -30,14 +30,8 @@ import javax.servlet.jsp.tagext.Tag;
 
 public class RateTag implements Tag {
 
-	/**
-	 * 
-	 */
-	// private static final long serialVersionUID = 8251786214828879212L;
 	private PageContext pc = null;
-
 	private Tag parent = null;
-
 	private String name = null;
 
 	public void setPageContext(PageContext p) {
@@ -62,45 +56,42 @@ public class RateTag implements Tag {
 
 	public int doStartTag() throws JspException {
 		try {
-			
-			String pageName = ((HttpServletRequest) pc.getRequest())
-					.getServletPath();
+			String pageName = ((HttpServletRequest) pc.getRequest()).getServletPath();
 			pageName = pageName.substring(pageName.lastIndexOf('/') + 1);
 			pc.getOut().print(
-							"<script>function popup(form) {var w = open('','_RatePage','toolbar=no,resizable=yes,scrollbars=yes,width=600,height=400');"
-									+ "w.document.write('Please wait...');form.target='_RatePage'}</script>"
-									+ "<div id='projecttools' class='toolgroup'>"
-									+ "<div class='label'>"
-									+ "<Strong>Rate this page</Strong>"
-									+ "</div>"
-									+ "<div class='body' align='center'>"
-									+ "<form target='_blank' action='"
-									+ ((HttpServletRequest) pc.getRequest())
-											.getContextPath()
-									+ "/ratePage.do' method='post' onsubmit='popup(this)'>"
-									+ "<select name='rate' style='width:80px; margin:4px;'>"
-									+ "<option value='10' selected>10</option>"
-									+ "<option vaue='9'>9</option>"
-									+ "<option vaue='8'>8</option>"
-									+ "<option vaue='7'>7</option>"
-									+ "<option vaue='6'>6</option>"
-									+ "<option vaue='5'>5</option>"
-									+ "<option vaue='4'>4</option>"
-									+ "<option vaue='3'>3</option>"
-									+ "<option vaue='2'>2</option>"
-									+ "<option vaue='1'>1</option>"
-									+ "</select>"
-									+ "<input type='hidden' name='rateURL' value='"
-									+ pageName
-									+ "'>"
-									+ "<input type='submit' value='go' style='margin:4px;'>"
-									+ "</form>" + "</div>"
-
-									+ "</div>");
-
+		        "<script>" +
+		        	"function popup(form) {" +
+		        		"var w = open('','_RatePage','toolbar=no,resizable=yes,scrollbars=yes,width=600,height=400');" +
+		        		"w.document.write('Please wait...');form.target='_RatePage'" +
+		        	"}" +
+		        "</script>" +
+		        "<div id='projecttools' class='toolgroup'>" +
+		        	"<div class='label'>" +
+		        		"<Strong>Rate this page</Strong>" +
+		        	"</div>" +
+		        	"<div class='body' align='center'>" +
+		        		"<form target='_blank' action='" + ((HttpServletRequest) pc.getRequest()).getContextPath() + "/ratePage.do' method='post' onsubmit='popup(this)'>" +
+		        			"<select name='rate' style='width:80px; margin:4px;'>" +
+						        "<option value='10' selected>10</option>" +
+						        "<option vaue='9'>9</option>" +
+						        "<option vaue='8'>8</option>" +
+						        "<option vaue='7'>7</option>" +
+						        "<option vaue='6'>6</option>" +
+						        "<option vaue='5'>5</option>" +
+						        "<option vaue='4'>4</option>" +
+						        "<option vaue='3'>3</option>" +
+						        "<option vaue='2'>2</option>" +
+						        "<option vaue='1'>1</option>" +
+		        			"</select>" +
+		        			"<input type='hidden' name='rateURL' value='" + pageName + "'>" +
+		        			"<input type='submit' value='go' style='margin:4px;'>" +
+		        		"</form>" +
+		        	"</div>" +
+		        "</div>");
 		} catch (Exception e) {
 			throw new JspTagException("An IOException occurred.");
 		}
+		
 		return SKIP_BODY;
 	}
 
@@ -113,4 +104,5 @@ public class RateTag implements Tag {
 		parent = null;
 		name = null;
 	}
+	
 }

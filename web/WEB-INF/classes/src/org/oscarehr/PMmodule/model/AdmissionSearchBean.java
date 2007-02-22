@@ -30,12 +30,12 @@ public class AdmissionSearchBean {
 	private Long clientId;
 	private Date startDate;
 	private Date endDate;
-	private Long programId;
+	private Integer programId;
 	
-	public Long getProgramId() {
+	public Integer getProgramId() {
 		return programId;
 	}
-	public void setProgramId(Long programId) {
+	public void setProgramId(Integer programId) {
 		this.programId = programId;
 	}
 	public String getAdmissionStatus() {

@@ -221,7 +221,7 @@ public class AgencyManagerAction extends BaseAction {
 		if (agency.getId().longValue() == 0) {
 			try {
 				if (agency.getId().longValue() == 0) {
-					String id = integratorManager.register(agency, agency.getIntegratorUserName());
+					String id = integratorManager.register(agency, agency.getIntegratorUsername());
 					if (id != null) {
 						agency.setId(Long.valueOf(id));
 						agencyManager.saveLocalAgency(agency);
@@ -271,7 +271,7 @@ public class AgencyManagerAction extends BaseAction {
 			Agency agency = agencyManager.getLocalAgency();
 			
 			if (agency.getId() == 0) {
-				String id = integratorManager.register(agency, agency.getIntegratorUserName());
+				String id = integratorManager.register(agency, agency.getIntegratorUsername());
 				
 				if (id != null) {
 					agency.setId(Long.valueOf(id));

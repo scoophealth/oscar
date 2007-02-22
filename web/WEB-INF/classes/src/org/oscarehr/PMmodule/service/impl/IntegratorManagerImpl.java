@@ -136,16 +136,16 @@ public class IntegratorManagerImpl extends BaseIntegratorManager implements Inte
 	        Service agencyServiceModel = new ObjectServiceFactory().create(AgencyService.class);
 	        Service programServiceModel = new ObjectServiceFactory().create(ProgramService.class);
 	        try {
-	        	 agencyService = (AgencyService) factory.create(agencyServiceModel,this.localAgency.getIntegratorURL() + "/service/AgencyService");
+	        	 agencyService = (AgencyService) factory.create(agencyServiceModel,localAgency.getIntegratorUrl() + "/service/AgencyService");
 	        	
 	        	 XFireProxy proxy =  (XFireProxy)Proxy.getInvocationHandler(agencyService);
-	             proxy.getClient().addOutHandler(new OutgoingAuthenticationHandler(localAgency.getIntegratorUserName(),localAgency.getIntegratorPassword()));
+	             proxy.getClient().addOutHandler(new OutgoingAuthenticationHandler(localAgency.getIntegratorUsername(),localAgency.getIntegratorPassword()));
 	             proxy.getClient().setTransport(new SoapHttpTransport());
 	             
-	        	 programService = (ProgramService)factory.create(programServiceModel,this.localAgency.getIntegratorURL() + "/service/ProgramService");
+	        	 programService = (ProgramService)factory.create(programServiceModel,localAgency.getIntegratorUrl() + "/service/ProgramService");
 	        	
 	        	 proxy =  (XFireProxy)Proxy.getInvocationHandler(programService);
-	             proxy.getClient().addOutHandler(new OutgoingAuthenticationHandler(localAgency.getIntegratorUserName(),localAgency.getIntegratorPassword()));
+	             proxy.getClient().addOutHandler(new OutgoingAuthenticationHandler(localAgency.getIntegratorUsername(),localAgency.getIntegratorPassword()));
 	             proxy.getClient().setTransport(new SoapHttpTransport());
 	             
 	             setupAgencyMap();

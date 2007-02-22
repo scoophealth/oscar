@@ -19,28 +19,28 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseFunctionalUserType;
 
 /**
- * This is the object class that relates to the functional_user_type table.
- * Any customizations belong here.
+ * This is the object class that relates to the functional_user_type table. Any customizations belong here.
  */
 public class FunctionalUserType extends BaseFunctionalUserType {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public FunctionalUserType () {
+	private static final long serialVersionUID = 1L;
+
+	/* [CONSTRUCTOR MARKER BEGIN] */
+	public FunctionalUserType() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public FunctionalUserType (java.lang.Long _id) {
+	public FunctionalUserType(java.lang.Long _id) {
 		super(_id);
 	}
 
-/*[CONSTRUCTOR MARKER END]*/
+	/* [CONSTRUCTOR MARKER END] */
 }

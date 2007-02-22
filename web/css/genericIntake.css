@@ -1,0 +1,76 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+	overflow: hidden;
+}
+
+.intakeLayoutContainer {
+	width: 95%;
+	height: 95%;
+	left: 1%;
+	top: 1%;
+	position: relative;
+	overflow: auto;
+}
+
+.intakeTopPane {
+	font-weight: bold;
+	font-size: 14px;
+	text-align: center;
+	padding: 5px;
+}
+
+.intakeChildPane {
+	padding: 5px;
+	overflow: auto;
+}
+
+.intakeBottomPane {
+	padding: 5px;
+}
+
+.intakePageContainer {
+	width: 100%;
+	height: 100%;
+}
+			
+.intakeSectionContainer {
+	width: 100%;
+	height: 100%;
+}
+
+.intakeSection {
+	overflow: auto;
+}
+			
+table.intakeTable {
+	width: 100%;
+	font-size: 10px;
+}
+			
+table.intakeTable td {
+	padding: 2px;
+}
+
+table.intakeTable label {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.intakeBedProgramCell {
+	width: 15%;
+	vertical-align: top;
+}
+
+.intakeQuestionCell {
+	background-color: #CCCCCC; 
+}
+
+.intakeAnswerCell {
+	font-style: italic;
+}
+
+.intakeEmptyCell {
+	width: 5%;
+}

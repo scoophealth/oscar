@@ -42,7 +42,7 @@
 	</tr>
 	<tr class="b">
 		<td width="20%">Description:</td>
-		<td><c:out value="${agency.descr}" /></td>
+		<td><c:out value="${agency.description}" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">HIC:</td>

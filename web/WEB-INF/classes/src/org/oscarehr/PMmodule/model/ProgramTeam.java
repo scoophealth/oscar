@@ -30,6 +30,8 @@ import org.oscarehr.PMmodule.model.base.BaseProgramTeam;
  */
 public class ProgramTeam extends BaseProgramTeam {
 
+	private static final long serialVersionUID = 1L;
+
 	/* [CONSTRUCTOR MARKER BEGIN] */
 	public ProgramTeam() {
 		super();
@@ -45,7 +47,6 @@ public class ProgramTeam extends BaseProgramTeam {
 	/* [CONSTRUCTOR MARKER END] */
 
 	private List providers;
-
 	private List admissions;
 
 	/**

@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseAccessType;
@@ -30,7 +29,9 @@ import org.oscarehr.PMmodule.model.base.BaseAccessType;
  */
 public class AccessType extends BaseAccessType {
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
+	private static final long serialVersionUID = 1L;
+
+	/*[CONSTRUCTOR MARKER BEGIN]*/
 	public AccessType () {
 		super();
 	}
@@ -42,5 +43,5 @@ public class AccessType extends BaseAccessType {
 		super(_id);
 	}
 
-/*[CONSTRUCTOR MARKER END]*/
+	/*[CONSTRUCTOR MARKER END]*/
 }
