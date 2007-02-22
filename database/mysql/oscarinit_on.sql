@@ -79,9 +79,6 @@ CREATE TABLE formGrowthChart(
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
 
---
---Tables used in CML Lab Module
---
 create table labReportInformation(
   id  int(10) NOT NULL auto_increment primary key,
   location_id  varchar(10),
@@ -1372,10 +1369,8 @@ CREATE TABLE `formovulation` (
   `comment12` varchar(255) default '',
   `postComment` varchar(255) default '',
   PRIMARY KEY  (`ID`)
-) 
+);
 
-# Disk file name
-DROP TABLE IF EXISTS billing_on_diskname;
 CREATE TABLE billing_on_diskname (
   id int(11) NOT NULL auto_increment,
   monthCode char(1) default '',
@@ -1617,5 +1612,4 @@ CREATE TABLE billing_on_ext (
   key (key_val),
   key (billing_no)
 ) TYPE=MyISAM;
-
 

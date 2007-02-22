@@ -136,6 +136,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 		client.setDateOfBirth(intakeSearchBean.getDayOfBirth());
 		client.setHin(intakeSearchBean.getHealthCardNumber());
 		client.setVer(intakeSearchBean.getHealthCardVersion());
+		client.setPatientStatus("AC");
 		
 		return client;
 	}

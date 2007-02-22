@@ -1,5 +1,5 @@
 -- default agency
-insert into agency values(0,'Default Agency','Default Agency','','','',1,0,'','','','',0);
+insert into agency (id, name, description, local, hic) values (0, 'Default Agency', 'Default Agency', 1, 0);
 
 -- default roles
 INSERT INTO `caisi_role` VALUES (1,'doctor','',now()),(2,'nurse','',now()),(3,'counsellor','',now()),(4,'csw','',now());

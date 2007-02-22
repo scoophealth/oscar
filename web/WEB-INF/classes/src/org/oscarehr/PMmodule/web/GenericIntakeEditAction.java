@@ -238,9 +238,12 @@ public class GenericIntakeEditAction extends BaseAction {
 	private SortedSet<Integer> getClientServiceProgramIds(Integer clientId) {
 		SortedSet<Integer> clientServiceProgramIds = new TreeSet<Integer>();
 		
-		for (Object o : admissionManager.getCurrentServiceProgramAdmission(clientId)) {
-			Admission servicePorgramAdmission = (Admission) o;
-			clientServiceProgramIds.add(servicePorgramAdmission.getProgramId());
+		List admissions = admissionManager.getCurrentServiceProgramAdmission(clientId);
+		if (admissions != null) {
+			for (Object o : admissions) {
+				Admission servicePorgramAdmission = (Admission) o;
+				clientServiceProgramIds.add(servicePorgramAdmission.getProgramId());
+			}
 		}
 		
 		return clientServiceProgramIds;

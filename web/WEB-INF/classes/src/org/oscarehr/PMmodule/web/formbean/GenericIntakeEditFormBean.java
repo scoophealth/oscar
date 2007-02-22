@@ -80,20 +80,34 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	    this.days = days;
     }
 	
-	public void setBedProgramLabelValues(List<Program> bedPrograms) {
-		List<LabelValueBean> programlabelValues = new ArrayList<LabelValueBean>();
+	public Integer getSelectedBedProgramId() {
+    	Integer programId = null;
+    	
+    	if (bedProgramId != null) {
+    		programId = Integer.valueOf(bedProgramId);
+    	}
+    	
+    	return programId;
+    }
+
+	public void setCurrentBedProgramId(Integer programId) {
+    	if (programId != null) {
+    		setBedProgramId(programId.toString());
+    	}
+    }
+
+	public void setBedProgramLabelValues(List<Program> programs) {
+		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
 		
-		for (Program program : bedPrograms) {
-			programlabelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
+		if (programs != null) {
+			for (Program program : programs) {
+				labelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
+			}
 		}
 		
-		setBedPrograms(programlabelValues);
+		setBedPrograms(labelValues);
 	}
 
-	public void setCurrentBedProgramId(Integer currentBedProgramId) {
-		setBedProgramId(currentBedProgramId.toString());
-	}
-	
 	public List<LabelValueBean> getBedPrograms() {
     	return bedPrograms;
     }
@@ -110,46 +124,38 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		this.bedProgramId = currentBedProgramId;
 	}
 
-	public void setServiceProgramLabelValues(List<Program> servicePrograms) {
-		List<LabelValueBean> programlabelValues = new ArrayList<LabelValueBean>();
-		
-		for (Program program : servicePrograms) {
-			programlabelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
-		}
-		
-		setServicePrograms(programlabelValues);
-	}
-	
 	public List<Integer> getSelectedServiceProgramIds() {
-		List<Integer> selectedServiceProgramIds = new ArrayList<Integer>();
+    	List<Integer> programIds = new ArrayList<Integer>();
+    	
+    	if (serviceProgramIds != null) {
+    		for (String programId : serviceProgramIds) {
+    			programIds.add(Integer.valueOf(programId));
+    		}
+    	}
+    	
+    	return programIds;
+    }
+
+	public void setCurrentServiceProgramIds(Set<Integer> currentProgramIds) {
+    	List<String> programIds = new ArrayList<String>();
+    	
+    	if (currentProgramIds != null) {
+    		for (Integer currentProgramId : currentProgramIds) {
+    			programIds.add(currentProgramId.toString());
+    		}
+    	}
+    	
+    	setServiceProgramIds((String[]) programIds.toArray(new String[programIds.size()]));
+    }
+
+	public void setServiceProgramLabelValues(List<Program> programs) {
+		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
 		
-		if (serviceProgramIds != null) {
-			for (String serviceProgramId : serviceProgramIds) {
-				selectedServiceProgramIds.add(Integer.valueOf(serviceProgramId));
-			}
+		for (Program program : programs) {
+			labelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
 		}
 		
-		return selectedServiceProgramIds;
-	}
-	
-	public Integer getSelectedBedProgramId() {
-		Integer selectedBedProgramId = null;
-		
-		if (bedProgramId != null) {
-			selectedBedProgramId = Integer.valueOf(bedProgramId);
-		}
-		
-		return selectedBedProgramId;
-	}
-	
-	public void setCurrentServiceProgramIds(Set<Integer> currentServiceProgramIds) {
-		List<String> serviceProgramIds = new ArrayList<String>(currentServiceProgramIds.size());
-		
-		for (Integer currentServiceProgramId : currentServiceProgramIds) {
-			serviceProgramIds.add(currentServiceProgramId.toString());
-		}
-		
-		setServiceProgramIds((String[]) serviceProgramIds.toArray(new String[serviceProgramIds.size()]));
+		setServicePrograms(labelValues);
 	}
 	
 	public List<LabelValueBean> getServicePrograms() {
