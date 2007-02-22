@@ -279,15 +279,34 @@ function BackToOscar()
                                       <%}%>
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
-                                      <% if (moreMessages.equals("true")){%>
-                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from&moreMessages=true" paramId="boxType" paramName="pageType">
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
-                                            </html:link>
-                                       <%}else{%>
-                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from&moreMessages=false" paramId="boxType" paramName="pageType">
-                                            <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
-                                            </html:link>
-                                       <%}%>
+                                      <%
+                                        if( pageType == 1 ) {
+                                            if (moreMessages.equals("true")){%>
+                                                <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=sentto&moreMessages=true" paramId="boxType" paramName="pageType">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgTo"/>
+                                                </html:link>
+                                            <%}else{%>
+                                                <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=sentto&moreMessages=false" paramId="boxType" paramName="pageType">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgTo"/>
+                                                </html:link>
+                                       <%   
+                                            }
+                                        }
+                                        else {
+                                     
+                                            if (moreMessages.equals("true")){%>
+                                                <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from&moreMessages=true" paramId="boxType" paramName="pageType">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                                </html:link>
+                                            <%}else{%>
+                                                <html:link page="/oscarMessenger/DisplayMessages.jsp?orderby=from&moreMessages=false" paramId="boxType" paramName="pageType">
+                                                <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                                </html:link>
+                                       <%   
+                                            }
+                                    
+                                        }
+                                     %>   
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
                                         <% if (moreMessages.equals("true")){%>
@@ -361,10 +380,22 @@ function BackToOscar()
                                     <bean:message key="<%= key %>"/>
                                     </td>
                                     <td bgcolor="#EEEEFF">
-                                    <%= dm.sentby  %>
+                                        <%
+                                            if( pageType == 1 ) {
+                                                int pos = dm.sentto.indexOf(",");
+                                                if( pos == -1 )
+                                                    out.print(dm.sentto);
+                                                else
+                                                    out.print(dm.sentto.substring(0,pos));
+                                            }
+                                            else {
+                                                out.print(dm.sentby);
+                                           }
+                                        %>
+                                    
                                     </td>
                                     <td bgcolor="#EEEEFF">
-                                    <a href="<%=request.getContextPath()%>/oscarMessenger/ViewMessage.do?messageID=<%=dm.messageId  %>">
+                                    <a href="<%=request.getContextPath()%>/oscarMessenger/ViewMessage.do?messageID=<%=dm.messageId%>&boxType=<%=pageType%>">
                                         <%=dm.thesubject%>
                                     </a>
 
