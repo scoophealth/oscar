@@ -33,6 +33,7 @@ public class MsgDisplayMessage {
     public String thesubject = null;
     public String thedate    = null;
     public String sentby     = null;
+    public String sentto     = null;
     public String attach     = null;
     public String pdfAttach     = null;
 
