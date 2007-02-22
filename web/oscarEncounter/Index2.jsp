@@ -1091,7 +1091,7 @@ white-space: nowrap;
                             else
                                 url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
                         %>
-                            <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a><%=bean.patientSex%> <%=bean.patientAge%>
+                            <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
                             <span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
                     
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
