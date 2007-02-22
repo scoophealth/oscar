@@ -250,6 +250,9 @@ function isNumeric(strString){
   <tr>
     <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a>
   </tr>
+  <tr>
+    <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a>
+  </tr>
 
 </table>
 
