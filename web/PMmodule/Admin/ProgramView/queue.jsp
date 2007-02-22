@@ -83,7 +83,8 @@
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
 	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
-	<display:column property="notes" sortable="true" title="Notes" />
+	<display:column property="notes" sortable="true" title="Reason for referral" />
+	<display:column property="presentProblems" sortable="true" title="Present problems"/>
 </display:table>
 <br />
 <br />
@@ -111,6 +112,26 @@
 </c:if>
 <c:if test="${requestScope.do_reject != null}">
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+			<td width="5%"><html:radio property="radioRejectionReason" value="1" /></td>
+			<td>Client requires acute care</td>
+		</tr
+		<tr>
+			<td width="5%"><html:radio property="radioRejectionReason" value="2" /></td>
+			<td>Client not interested</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="radioRejectionReason" value="3" /></td>
+			<td>Client does not fit program criteria</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="radioRejectionReason" value="4" /></td>
+			<td>Program does not have space available</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="radioRejectionReason" value="5" /></td>
+			<td>Other</td>
+		</tr>
 		<tr class="b">
 			<td width="20%">Rejection Note:</td>
 			<td><textarea cols="50" rows="7" name="admission.admissionNotes"></textarea></td>

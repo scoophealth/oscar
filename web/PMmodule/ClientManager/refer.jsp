@@ -86,7 +86,9 @@
 		%>
 		<%=numDays%>
 	</display:column>
-	<display:column property="notes" sortable="true" title="Notes" />
+	<!--  display:column property="notes" sortable="true" title="Notes" /> -->
+	<display:column property="notes" sortable="true" title="Reason for referral" />
+	<display:column property="presentProblems" sortable="true" title="Present Problems"/>
 </display:table>
 <br />
 <br />
@@ -146,8 +148,12 @@
 <c:if test="${requestScope.do_refer != null}">
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr class="b">
-			<td width="20%">Referral Notes:</td>
+			<td width="20%">Reason for referral:</td>
 			<td><html:textarea cols="50" rows="7" property="referral.notes" /></td>
+		</tr>
+		<tr class="b">
+			<td width="20%">Presenting Problems:</td>
+			<td><html:textarea cols="50" rows="7" property="referral.presentProblems" /></td>
 		</tr>
 		<c:if test="${program.type eq 'Bed' }">
 			<tr class="b">

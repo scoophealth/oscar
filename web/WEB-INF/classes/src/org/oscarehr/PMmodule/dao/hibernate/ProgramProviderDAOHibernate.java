@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.dao.hibernate;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -123,6 +124,25 @@ public class ProgramProviderDAOHibernate extends HibernateDaoSupport implements 
 		}
 	}
 
+	public void deleteProgramProviderByProgramId(Long programId){
+		if (programId == null || programId.intValue() <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		List o = getProgramProviders(programId);
+		if (o != null) {
+			Iterator it = o.iterator();
+			while(it.hasNext()){
+				Object o1 = it.next();
+				this.getHibernateTemplate().delete(o1);
+			}
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("deleteProgramProvider programId=" + programId);
+		}
+	}
+	
 	public List getProgramProvidersInTeam(Integer programId, Integer teamId) {
 		if (programId == null || programId.intValue() <= 0) {
 			throw new IllegalArgumentException();

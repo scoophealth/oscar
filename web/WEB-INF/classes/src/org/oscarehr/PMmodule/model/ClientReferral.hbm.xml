@@ -21,7 +21,7 @@
 		<id column="referral_id" name="Id" type="java.lang.Long">
 			<generator class="native" />
 		</id>
-		<property column="source_agency_id" length="11" name="SourceAgencyId" not-null="true" type="java.lang.Long" />
+		<property column="source_agency_id" length="11" name="SourceAgencyId" not-null="false" type="java.lang.Long" />
 		<property column="agency_id" length="11" name="AgencyId" not-null="true" type="java.lang.Long" />
 		<property column="client_id" length="11" name="ClientId" not-null="true" type="java.lang.Long" />
 		<property column="referral_date" length="19" name="ReferralDate" not-null="false" type="timestamp" />
@@ -36,5 +36,7 @@
 		<property name="ProviderFirstName" type="string" formula="(select p.first_name from provider p where p.provider_no = provider_no)" />
 		<property name="ProgramName" type="string" formula="(select p.name from program p where p.program_id = program_id)" />
 		<property name="programType" type="string" formula="(select p.type from program p where p.program_id = program_id)" />
+		<property column="present_problems" length="255" name="presentProblems" not-null="false" type="string" />
+		<property column="radioRejectionReason" length="10" name="radioRejectionReason" not-null="false" type="string"/>
 	</class>
 </hibernate-mapping>

@@ -40,6 +40,8 @@ public interface ProgramProviderDAO {
 
 	public void deleteProgramProvider(Long id);
 
+	public void deleteProgramProviderByProgramId(Long programId);
+	
 	public List getProgramProvidersInTeam(Integer programId, Integer teamId);
 
 	public List getProgramDomain(Long providerNo);
