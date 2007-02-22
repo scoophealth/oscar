@@ -178,7 +178,14 @@ function popupSearchDemo(keyword){ // open a new popup window
                                              <bean:message key="oscarMessenger.ViewMessage.btnInbox"/>
                                             </html:link>
                                         </td></tr></table>
-                                    </td>                                    
+                                    </td> 
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
+                                            <html:link page="/oscarMessenger/DisplayMessages.jsp?boxType=1" styleClass="messengerButtons">
+                                             <bean:message key="oscarMessenger.ViewMessage.btnSent"/>
+                                            </html:link>
+                                        </td></tr></table>
+                                    </td>
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
                                             <a href="javascript:BackToOscar()" class="messengerButtons"><bean:message key="oscarMessenger.ViewMessage.btnExit"/></a>
