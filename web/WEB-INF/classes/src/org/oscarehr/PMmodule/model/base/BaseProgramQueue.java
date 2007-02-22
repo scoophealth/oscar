@@ -77,7 +77,8 @@ public abstract class BaseProgramQueue  implements Serializable {
 	private java.lang.String _clientLastName;
 	private java.lang.String _clientFirstName;
 
-
+	private java.lang.String presentProblems;
+	
 	// constructors
 	public BaseProgramQueue () {
 		initialize();
@@ -356,6 +357,14 @@ public abstract class BaseProgramQueue  implements Serializable {
 		this._clientFirstName = _clientFirstName;
 	}
 
+
+	public java.lang.String getPresentProblems() {
+		return presentProblems;
+	}
+
+	public void setPresentProblems(java.lang.String presentProblems) {
+		this.presentProblems = presentProblems;
+	}
 
 	public boolean equals (Object obj) {
 		if (null == obj) return false;

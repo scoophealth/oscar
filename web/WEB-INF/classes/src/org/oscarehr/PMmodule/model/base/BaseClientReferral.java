@@ -69,6 +69,8 @@ public abstract class BaseClientReferral  implements Serializable {
 	private java.util.Date _referralDate;
 	private java.lang.Long _providerNo;
 	private java.lang.String _notes;
+	private java.lang.String presentProblems;
+	private java.lang.String radioRejectionReason;
 	private java.lang.String _completionNotes;
 	private java.lang.Long _programId;
 	private java.lang.String _status;
@@ -232,6 +234,22 @@ public abstract class BaseClientReferral  implements Serializable {
 		this._notes = _notes;
 	}
 
+
+	public java.lang.String getPresentProblems() {
+		return presentProblems;
+	}
+
+	public void setPresentProblems(java.lang.String presentProblems) {
+		this.presentProblems = presentProblems;
+	}
+
+	public java.lang.String getRadioRejectionReason() {
+		return radioRejectionReason;
+	}
+
+	public void setRadioRejectionReason(java.lang.String radioRejectionReason) {
+		this.radioRejectionReason = radioRejectionReason;
+	}
 
 	/**
 	 * Return the value associated with the column: completion_notes

@@ -160,6 +160,8 @@ public class ClientManagerImpl implements ClientManager {
 			queue.setStatus("active");
 			queue.setReferralId(referral.getId());
 			queue.setTemporaryAdmission(referral.isTemporaryAdmission());
+			queue.setPresentProblems(referral.getPresentProblems());
+			
 			queueManager.saveProgramQueue(queue);
 		}
 	}
@@ -174,6 +176,7 @@ public class ClientManagerImpl implements ClientManager {
 			referral.setStatus("rejected");
 			referral.setCompletionNotes("Client currently admitted");
 			referral.setCompletionDate(new Date());
+			
 			saveClientReferral(referral);
 			throw new AlreadyAdmittedException();
 		}
@@ -183,6 +186,7 @@ public class ClientManagerImpl implements ClientManager {
 			referral.setStatus("rejected");
 			referral.setCompletionNotes("Client already in queue");
 			referral.setCompletionDate(new Date());
+			
 			saveClientReferral(referral);
 			throw new AlreadyQueuedException();
 		}

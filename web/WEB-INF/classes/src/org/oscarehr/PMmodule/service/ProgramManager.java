@@ -83,6 +83,8 @@ public interface ProgramManager
 	
 	public void deleteProgramProvider(String id);
 	
+	public void deleteProgramProviderByProgramId(Long programId);
+	
 	/* functional users */
 
 	public List getFunctionalUserTypes();

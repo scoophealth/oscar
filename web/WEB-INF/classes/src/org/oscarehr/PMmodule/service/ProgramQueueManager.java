@@ -39,5 +39,5 @@ public interface ProgramQueueManager
 		
 	public void saveProgramQueue(ProgramQueue programQueue);
 	
-	public void rejectQueue(String programId, String clientId,String notes);
+	public void rejectQueue(String programId, String clientId,String notes, String rejectionReason);
 }

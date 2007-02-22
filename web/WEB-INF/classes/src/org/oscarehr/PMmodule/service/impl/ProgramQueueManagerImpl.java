@@ -74,7 +74,7 @@ public class ProgramQueueManagerImpl implements ProgramQueueManager
 		return dao.getActiveProgramQueue(Long.valueOf(programId),Integer.valueOf(demographicNo));
 	}
 	
-	public void rejectQueue(String programId, String clientId,String notes) {
+	public void rejectQueue(String programId, String clientId,String notes, String rejectionReason) {
 		ProgramQueue queue = getActiveProgramQueue(programId,clientId);
 		if(queue==null) {
 			return;
@@ -83,10 +83,12 @@ public class ProgramQueueManagerImpl implements ProgramQueueManager
 		if(referral != null) {
 			referral.setStatus("rejected");
 			referral.setCompletionDate(new Date());
-			referral.setCompletionNotes(notes);
+			referral.setCompletionNotes(notes);			
+			referral.setRadioRejectionReason(rejectionReason);
 			this.referralDAO.saveClientReferral(referral);
 		}
-		queue.setStatus("rejected");
+		queue.setStatus("rejected");		
+		
 		this.saveProgramQueue(queue);
 	}
 }

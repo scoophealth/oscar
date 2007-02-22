@@ -201,6 +201,10 @@ public class ProgramManagerImpl implements ProgramManager {
 		programProviderDAO.deleteProgramProvider(Long.valueOf(id));
 	}
 
+	public void deleteProgramProviderByProgramId(Long programId){
+		programProviderDAO.deleteProgramProviderByProgramId(programId);
+	}
+	
 	public List getFunctionalUserTypes() {
 		return programFunctionalUserDAO.getFunctionalUserTypes();
 	}
