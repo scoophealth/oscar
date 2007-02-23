@@ -36,6 +36,8 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
+  if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
   String demographic_no = request.getParameter("demographic_no"); 
   
   //PreventionDisplayConfig pdc = PreventionDisplayConfig.getInstance();//new PreventionDisplayConfig();
@@ -306,6 +308,38 @@ div.recommendations li{
                        </jsp:include>
                        </div>
                 </div>
+                
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_rx" rights="r"  >
+                <div class="leftBox">
+                    <h3>&nbsp;Current Patient Rx List  <a href="#" onclick="Element.toggle('rxFullListing'); return false;" style="font-size:x-small;" >show/hide</a></h3>
+                       <div class="wrapper" id="rxFullListing"  >
+                        
+                           <%
+                                    oscar.oscarRx.data.RxPrescriptionData prescriptData = new oscar.oscarRx.data.RxPrescriptionData();
+                                    oscar.oscarRx.data.RxPrescriptionData.Prescription [] arr = {};
+                                    arr = prescriptData.getUniquePrescriptionsByPatient(Integer.parseInt(demographic_no));
+                                    if (arr.length > 0){%>
+                                        <ul>
+                                            <%for (int i = 0; i < arr.length; i++){
+                                                String rxD = arr[i].getRxDate().toString();
+                                                //String rxP = arr[i].getRxDisplay();
+                                                String rxP = arr[i].getFullOutLine().replaceAll(";"," ");
+                                                rxP = rxP + "   " + arr[i].getEndDate();
+                                                String styleColor = "";
+                                                if(arr[i].isCurrent() == true){  
+                                            %>
+                                                <li title="<%=rxD%> - <%=rxP%>"  >- <%= org.apache.commons.lang.StringUtils.abbreviate(rxP,24)%></li>
+                                            <%  }
+                                            }%>
+                                        </ul>
+                                    <%}%>
+                           
+                           
+                       
+                       </div>
+                </div>
+                </security:oscarSec>
+                
                        
             </td>
             <td valign="top" class="MainTableRightColumn">
