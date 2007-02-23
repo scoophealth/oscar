@@ -38,7 +38,7 @@ public class RptByExampleQueryBeanHandler {
     Vector allQueryVector = new Vector();
     Vector queryVector = new Vector();
     String startDate;
-    String endDate;
+    String endDate;   
     
     public RptByExampleQueryBeanHandler() {       
     }
@@ -58,10 +58,10 @@ public class RptByExampleQueryBeanHandler {
             String sql = "SELECT * from reportByExamplesFavorite WHERE providerNo='" + providerNo + "'ORDER BY name";
             System.out.println("Sql Statement: " + sql);
             ResultSet rs;
-            int i = 0;
+            
             for(rs = db.GetSQL(sql); rs.next(); )
             {
-                if (i<10){
+            
                     StringEscapeUtils strEscUtils = new StringEscapeUtils();                                                   
                     String queryWithEscapeChar = strEscUtils.escapeJava(rs.getString("query"));                   
                     //oscar.oscarReport.data.RptByExampleData exampleData  = new oscar.oscarReport.data.RptByExampleData();
@@ -71,11 +71,7 @@ public class RptByExampleQueryBeanHandler {
                     //System.out.println("queryWithEscapeChar" + queryWithEscapeChar);
                     String queryNameWithEscapeChar = strEscUtils.escapeJava(rs.getString("name"));
                     RptByExampleQueryBean query = new RptByExampleQueryBean(rs.getInt("id"), rs.getString("query"), rs.getString("name"));
-                    favoriteVector.add(query);                 
-                }
-                else
-                    break;
-                i++;                
+                    favoriteVector.add(query);                             
             }
 
             rs.close();
