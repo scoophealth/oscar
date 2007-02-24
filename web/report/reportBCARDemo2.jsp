@@ -152,7 +152,13 @@ for (int i = 0; i < vecValue.size(); i++) {
 			vecVarValue.add(request.getParameter((String) vecVar.get(j)));
 		}
 	}
+        
+        
 	String strFilter = RptReportCreator.getWhereValueClause(tempVal, vecVarValue);
+        
+        
+        
+        
 	if(strFilter.indexOf("demographic.")>=0) {
 	    bDemoFilter = true;
 	    sDemoFilter += (sDemoFilter.length()<1?"":" and ") + strFilter; 
@@ -295,6 +301,9 @@ Properties propARValue = new Properties();
 if( (bDemoSelect && bARSelect && !bSpecSelect && !bSpecFilter) || (!bSpecSelect && bARFilter && !bSpecFilter) ) {
     String sTempEle = sARFilter.length()>0? (" and "+sARFilter) : "";
     String subQuery = "select max(ID) from formBCAR, demographic where demographic.demographic_no=formBCAR.demographic_no ";
+    
+    ///here is the prob
+    
     subQuery += " and " + sDemoFilter + sTempEle + " group by formBCAR.demographic_no,formBCAR.formCreated ";
 	System.out.println(" demographic and formBCAR subQuery: " + subQuery);
     String subFormId = "";
@@ -305,6 +314,9 @@ if( (bDemoSelect && bARSelect && !bSpecSelect && !bSpecFilter) || (!bSpecSelect 
 
 	sTempEle = sARSelect.length()>0? (","+sARSelect) : "";
 	subFormId = subFormId.length()>0? subFormId : "0";
+        
+        
+        
     String sql = "select demographic.demographic_no," + sDemoSelect + sTempEle + " from demographic,formBCAR where ";
     sql += " formBCAR.ID in (" + subFormId + ") and demographic.demographic_no=formBCAR.demographic_no " + ORDER_BY;
 	System.out.println(" demographic and formBCAR: " + sql);
@@ -510,8 +522,9 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
         </tr>
       </table>
       
-      <table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
-        <tr BGCOLOR="#66CCCC">
+      <table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%" class="sortable tabular_list">
+        <thead>  
+         <tr BGCOLOR="#66CCCC">
           <th width="6%">No.</th>
 <% for(int i=0; i<vecFieldCaption.size(); i++) { %>
           <th><%=(String) vecFieldCaption.get(i)%></th>
@@ -521,7 +534,8 @@ if( (bDemoSelect && bARSelect && bSpecSelect) || (bARFilter && bSpecFilter) ) {
 %>
           <th><%=(String) vecSpecCaption.get(i)%></th>
 <% } }%>
-        </tr>
+         </tr>
+        </thead>
 <% 
 for(int i=0; i<vecFieldValue.size(); i++) {
 	String color = i%2==0? "#EEEEFF" : "#DDDDFF";
@@ -543,6 +557,9 @@ for(int i=0; i<vecFieldValue.size(); i++) {
       </table>
       
       </center>
+      <script language="javascript" src="../commons/scripts/sort_table/css.js">
+      <script language="javascript" src="../commons/scripts/sort_table/common.js">
+      <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js">
     </body>
   </html>
       
