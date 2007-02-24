@@ -116,14 +116,17 @@ Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption
           </td>
         </tr>
       </table>
+    
 
       <hr>
-      <table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%">
-        <tr BGCOLOR="#66CCCC">
-<% for(int i=0; i<vecFieldCaption.size(); i++) { %>
-          <th><%=(String) vecFieldCaption.get(i)%></th>
-<% } %>
-        </tr>
+      <table BORDER="0" CELLPADDING="1" CELLSPACING="1" WIDTH="100%" class="sortable tabular_list" >
+          <thead>  
+              <tr BGCOLOR="#66CCCC">
+                  <% for(int i=0; i<vecFieldCaption.size(); i++) { %>
+                  <th><%=(String) vecFieldCaption.get(i)%></th>
+                  <% } %>
+              </tr>
+          </thead> 
 <% for(int i=0; i<vecFieldValue.size(); i++) {
 	String color = i%2==0? "#EEEEFF" : "#DDDDFF";
 	Properties prop = (Properties) vecFieldValue.get(i);
@@ -136,5 +139,8 @@ Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption
 <% } %>
       </table>
 
+      <script language="javascript" src="../commons/scripts/sort_table/css.js">
+      <script language="javascript" src="../commons/scripts/sort_table/common.js">
+      <script language="javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js">
     </body>
   </html:html>
