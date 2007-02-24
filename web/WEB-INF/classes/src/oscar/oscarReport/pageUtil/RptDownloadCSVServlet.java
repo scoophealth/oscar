@@ -12,9 +12,11 @@
 
 package oscar.oscarReport.pageUtil;
 
+import com.Ostermiller.util.CSVPrinter;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -34,6 +36,7 @@ import oscar.login.DBHelp;
 import oscar.oscarReport.data.RptReportConfigData;
 import oscar.oscarReport.data.RptReportCreator;
 import oscar.oscarReport.data.RptReportItem;
+import oscar.util.UtilMisc;
 
 public class RptDownloadCSVServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -46,84 +49,6 @@ public class RptDownloadCSVServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         if (session == null)
             return;
-        /*
-        // /////////////////////////////////////
-        String VALUE = "value_";
-        String DATE_FORMAT = "dateFormat_";
-        String SAVE_AS = "default";
-        String reportId = request.getParameter("id") != null ? request.getParameter("id") : "0";
-        // get form name
-        String in = "";
-        String DELIMETER = "\t";
-        try {
-            reportName = (new RptReportItem()).getReportName(reportId);
-            RptFormQuery formQuery = new RptFormQuery();
-            String reportSql = formQuery.getQueryStr(reportId, request);
-            // System.out.println("SQL: " + reportSql);
-
-            RptReportConfigData formConfig = new RptReportConfigData();
-            Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);
-            Vector vecFieldCaption = vecField[1];
-            Vector vecFieldName = vecField[0];
-            // System.out.println("SQL: 1");
-            Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
-            // System.out.println("SQL: 2");
-
-            for (int i = 0; i < vecFieldCaption.size(); i++) {
-                in += (i == 0 ? "" : DELIMETER) + (String) vecFieldCaption.get(i);
-            }
-
-            for (int i = 0; i < vecFieldValue.size(); i++) {
-                Properties prop = (Properties) vecFieldValue.get(i);
-                in += "\n";
-                for (int j = 0; j < vecFieldCaption.size(); j++) {
-                    in += (j == 0 ? "" : DELIMETER) + prop.getProperty((String) vecFieldCaption.get(j), "");
-                }
-            }
-        } catch (Exception e1) {
-            _logger.error("service() - form report");
-        }
-        */
-        // /////////////////////////////////////
-        /*
-                // /////////////////////////////////////
-                String VALUE = "value_";
-                String DATE_FORMAT = "dateFormat_";
-                String SAVE_AS = "default";
-                String reportId = request.getParameter("id") != null ? request.getParameter("id") : "0";
-                // get form name
-                String in = "";
-                String DELIMETER = "\t";
-                try {
-                    reportName = (new RptReportItem()).getReportName(reportId);
-                    RptFormQuery formQuery = new RptFormQuery();
-                    String reportSql = formQuery.getQueryStr(reportId, request);
-                    // System.out.println("SQL: " + reportSql);
-        
-                    RptReportConfigData formConfig = new RptReportConfigData();
-                    Vector[] vecField = formConfig.getAllFieldNameValue(SAVE_AS, reportId);
-                    Vector vecFieldCaption = vecField[1];
-                    Vector vecFieldName = vecField[0];
-                    // System.out.println("SQL: 1");
-                    Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
-                    // System.out.println("SQL: 2");
-        
-                    for (int i = 0; i < vecFieldCaption.size(); i++) {
-                        in += (i == 0 ? "" : DELIMETER) + (String) vecFieldCaption.get(i);
-                    }
-        
-                    for (int i = 0; i < vecFieldValue.size(); i++) {
-                        Properties prop = (Properties) vecFieldValue.get(i);
-                        in += "\n";
-                        for (int j = 0; j < vecFieldCaption.size(); j++) {
-                            in += (j == 0 ? "" : DELIMETER) + prop.getProperty((String) vecFieldCaption.get(j), "");
-                        }
-                    }
-                } catch (Exception e1) {
-                    _logger.error("service() - form report");
-                }
-                */
-                // /////////////////////////////////////
         String in="";
         try {
             in = request.getParameter("demoReport") != null ? demoReport(request) : formReport(request);
@@ -161,7 +86,7 @@ public class RptDownloadCSVServlet extends HttpServlet {
                 } catch (Exception e) {
                 }
         }
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+
     }
 
     public void init(ServletConfig config) throws ServletException {
@@ -188,19 +113,28 @@ public class RptDownloadCSVServlet extends HttpServlet {
             Vector vecFieldName = vecField[0];
             // System.out.println("SQL: 1");
             Vector vecFieldValue = (new RptReportCreator()).query(reportSql, vecFieldCaption);
+
             // System.out.println("SQL: 2");
 
+            StringWriter swr = new StringWriter();
+            CSVPrinter csvp = new CSVPrinter(swr);
+            csvp.changeDelimiter('\t');
+             
             for (int i = 0; i < vecFieldCaption.size(); i++) {
-                in += (i == 0 ? "" : DELIMETER) + (String) vecFieldCaption.get(i);
+                csvp.write((String) vecFieldCaption.get(i));
             }
 
             for (int i = 0; i < vecFieldValue.size(); i++) {
                 Properties prop = (Properties) vecFieldValue.get(i);
-                in += "\n";
+                csvp.writeln();
                 for (int j = 0; j < vecFieldCaption.size(); j++) {
-                    in += (j == 0 ? "" : DELIMETER) + prop.getProperty((String) vecFieldCaption.get(j), "");
+                    csvp.write(prop.getProperty((String) vecFieldCaption.get(j), ""));
                 }
             }
+            in = swr.toString();
+            
+            
+
         } catch (Exception e1) {
             _logger.error("service() - form report");
         }
@@ -651,31 +585,37 @@ public class RptDownloadCSVServlet extends HttpServlet {
             }
         }
 
+        StringWriter swr = new StringWriter();
+        CSVPrinter csvp = new CSVPrinter(swr);
+        csvp.changeDelimiter('\t'); 
         
+        csvp.write("id");    
         for(int i=0; i<vecFieldCaption.size(); i++) { 
-            in += (i == 0 ? "id" : "") + DELIMETER + (String) vecFieldCaption.get(i);
+            csvp.write( (String) vecFieldCaption.get(i));
         } 
         if(bSpecSelect) {
             for(int i=0; i<vecSpecCaption.size(); i++) {
-                in += DELIMETER + (String) vecSpecCaption.get(i);
+                csvp.write((String) vecSpecCaption.get(i));
             } 
         }
 
         for(int i=0; i<vecFieldValue.size(); i++) {
             Properties prop = (Properties) vecFieldValue.get(i);
-            in += "\n" + (i+1);
+            csvp.writeln();
+            csvp.write(""+(i+1));
         
             for(int j=0; j<vecFieldName.size(); j++) {
-                in += DELIMETER + prop.getProperty((String) vecFieldName.get(j), "");
+                csvp.write(prop.getProperty((String) vecFieldName.get(j), ""));
             }
             if(bSpecSelect) {
                 String demoNo = prop.getProperty("demographic_no");
                 for(int j=0; j<vecSpecCaption.size(); j++) {
-                    in += DELIMETER + propSpecValue.getProperty(demoNo+((String) vecSpecCaption.get(j)).replaceAll(" ","_"), "");
+                    csvp.write(propSpecValue.getProperty(demoNo+((String) vecSpecCaption.get(j)).replaceAll(" ","_"), ""));
                 } 
             }
-        }
+        }  
         
+        in = swr.toString();
         return in;
     }
 }
