@@ -23,15 +23,18 @@ public final class RptReportCreator {
 
     // select formBCAR.pg1_ethOrig as Ethnic Origin, ...
     public String getSelectField(String recordId) throws SQLException {
-        String ret = " ";
+        StringBuffer ret = new StringBuffer();
         String sql = "select * from reportConfig where report_id = " + recordId + " order by order_no";
         ResultSet rs = dbObj.searchDBRecord(sql);
         while (rs.next()) {
-            ret += (ret.length() < 8 ? " " : ", ") + rs.getString("table_name") + "." + rs.getString("name")
-                    + " as '" + StringEscapeUtils.escapeSql(rs.getString("caption")) + "'";
+            String caption = rs.getString("caption");
+            ret.append( (ret.length() < 8 ? " " : ", ") + rs.getString("table_name") + "." + rs.getString("name") );
+            if(caption != null && caption.length() > 0){
+               ret.append(" as '" + StringEscapeUtils.escapeSql(rs.getString("caption")) + "'");
+            }
         }
         rs.close();
-        return ret;
+        return ret.toString();
     }
 
     // from formBCAR
