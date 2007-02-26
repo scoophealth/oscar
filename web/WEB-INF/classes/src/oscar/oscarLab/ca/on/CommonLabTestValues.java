@@ -262,7 +262,7 @@ public class CommonLabTestValues {
                String segId = rs.getString("segmentID");
                String range = "";
                String units = "";
-               String collDate = "";
+               String collDate = rs.getString("dateTime"); //mdsOBX dateTime
                
                String sql2 = "select * from mdsZMN where segmentID = '"+segId+"' and reportName = '"+testNam+"'";
                ResultSet rs2 = db.GetSQL(sql2);                     
@@ -270,7 +270,6 @@ public class CommonLabTestValues {
                if(rs2.next()){               
                   range = rs2.getString("referenceRange");  // mdsZMN referenceRange
                   units = rs2.getString("units"); //mdsZMN units
-                  collDate = rs2.getString("dateTime"); //mdsOBX dateTime
                }
                rs2.close();
                Hashtable h = new Hashtable();
