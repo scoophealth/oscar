@@ -148,9 +148,20 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
             ResultSet rs = db.GetSQL(sql);      
             while(rs.next()){
-               String testNam = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));
+               String testNam = "Unknown";rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));
                String labType = rs.getString("lab_type"); 
                String title = "";//TODO:rs.getString("title");
+               
+               try{   
+                 String obserIden = rs.getString("observationIden");//.substring(rs.getString("observationIden").indexOf('^'),rs.getString("observationIden").indexOf('^',rs.getString("observationIden").indexOf('^')));  //reportname or observationIden
+                 int first = rs.getString("observationIden").indexOf('^');
+                 int second = rs.getString("observationIden").indexOf('^',first+1);
+                 testNam = rs.getString("observationIden").substring(first+1,second);
+               }catch(Exception e){
+                   e.printStackTrace();
+               }
+               
+               
                Hashtable h = new Hashtable();
                h.put("testName", testNam);
                h.put("labType",labType);
@@ -386,7 +397,7 @@ public class CommonLabTestValues {
             while(rs.next()){
                
                //String testNam = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));  //reportname or observationIden
-               
+                
                String obserIden = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));  //reportname or observationIden
                int first = rs.getString("observationIden").indexOf('^');
                int second = rs.getString("observationIden").substring(first+1).indexOf('^');
