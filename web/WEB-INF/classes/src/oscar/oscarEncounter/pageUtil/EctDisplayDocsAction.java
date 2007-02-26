@@ -119,7 +119,7 @@ public class EctDisplayDocsAction extends EctDisplayAction {
 
     }                                
     javascript.append("</script>");
-    System.out.println(javascript.toString());
+    
     Dao.setJavaScript(javascript.toString());
     return true;
         
