@@ -171,7 +171,8 @@ public class CommonLabTestValues {
             rs.close();
             db.CloseConn();        
          }catch(Exception e){
-            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e); 
+            e.printStackTrace();
          } 
        
        return labList;
@@ -204,7 +205,8 @@ public class CommonLabTestValues {
             rs.close();
             db.CloseConn();        
          }catch(Exception e){
-            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);  
+            e.printStackTrace();
          } 
        
        return labList;
@@ -254,7 +256,8 @@ public class CommonLabTestValues {
             rs.close();
             db.CloseConn();        
          }catch(Exception e){
-            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e); 
+            e.printStackTrace();
          }
       } else if ( labType != null && labType.equals("MDS")){
          //String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no";
@@ -296,7 +299,8 @@ public class CommonLabTestValues {
             rs.close();
             db.CloseConn();        
          }catch(Exception e){
-            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e); 
+            e.printStackTrace();
          }
       }else if ( labType != null && labType.equals("BCP")){
           String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
@@ -328,7 +332,8 @@ public class CommonLabTestValues {
             rs.close();
             db.CloseConn();        
          }catch(Exception e){
-            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);         
+            System.out.println("exception in CommonLabTestValues.findValuesForTest():"+e);       
+            e.printStackTrace();
          }     
           
       }
