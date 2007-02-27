@@ -6,6 +6,7 @@
   String demographic_no = request.getParameter("demographic_no"); 
   String deepColor = "#CCCCFF" , weakColor = "#EEEEFF" ;
   String country = request.getLocale().getCountry();
+  String parentAjaxId = request.getParameter("parentAjaxId");
 %>  
 
 <%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
@@ -72,10 +73,19 @@ function popupPage(varpage, windowname) {
        popup.focus();
     }
 }
+
+function updateAjax() {
+    var parentAjaxId = "<%=parentAjaxId%>";    
+    if( parentAjaxId != "null" ) {
+        window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
+        window.opener.updateNeeded = true;    
+    }
+
+}
 </script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
 <!--  -->
     <table class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -100,15 +110,15 @@ function popupPage(varpage, windowname) {
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
-               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>" class="current"> <bean:message key="eform.showmyform.btnAddEForm"/></a><br/>
+               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" class="current"> <bean:message key="eform.showmyform.btnAddEForm"/></a><br/>
                 <%  if (country.equals("BR")) { %>
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
                 <%}else{%>
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
                 <%}%>
                 <br>
-                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
-                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.btnDeleted"/></a>
+                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
+                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnDeleted"/></a>
                 
 <jsp:include page="efmviewgroups.jsp">
     <jsp:param name="url" value="../eform/efmformslistadd.jsp"/>
@@ -120,10 +130,10 @@ function popupPage(varpage, windowname) {
 
 <table class="elements" style="margin-left: 0px; margin-right: 0px;" width="100%">
       <tr bgcolor=<%=deepColor%>>
-      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.btnFormName"/></a></th>
-      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_subject"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_subject&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnSubject"/></a></th>
       <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=file_name"><bean:message key="eform.myform.btnFile"/></a></th>-->
-      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_date"><bean:message key="eform.showmyform.formDate"/></a></th>
+      <th><a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&orderby=form_date&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.formDate"/></a></th>
       <!--<th><a href="myform.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.formTime"/></a></th> -->
       </tr>      
       

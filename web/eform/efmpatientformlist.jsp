@@ -44,6 +44,9 @@ String groupView = request.getParameter("group_view");
 if (groupView == null) {
     groupView = "";
 }
+
+String parentAjaxId = request.getParameter("parentAjaxId");
+
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -78,11 +81,20 @@ function checkSelectBox() {
         return false;
     }
 }
+
+function updateAjax() {
+    var parentAjaxId = "<%=parentAjaxId%>";    
+    if( parentAjaxId != "null" ) {
+        window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
+        window.opener.updateNeeded = true;    
+    }
+
+}
 </script>
 <script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF">
+<body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -107,7 +119,7 @@ function checkSelectBox() {
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
-               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>" > <bean:message key="eform.showmyform.btnAddEForm"/></a>
+               <a href="efmformslistadd.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" > <bean:message key="eform.showmyform.btnAddEForm"/></a>
                 <br>
                 <%  if (country.equals("BR")) { %>
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr"><bean:message key="global.btnBack" /> &nbsp;</a>
@@ -115,12 +127,13 @@ function checkSelectBox() {
                     <a href="../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail"><bean:message key="global.btnBack" /> &nbsp;</a>
                 <%}%>
                 <br>
-                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>" class="current"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
-                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>"><bean:message key="eform.showmyform.btnDeleted"/> </a>
+                <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" class="current"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
+                <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnDeleted"/> </a>
                 <jsp:include page="efmviewgroups.jsp">
                     <jsp:param name="url" value="../eform/efmpatientformlist.jsp"/>
                     <jsp:param name="groupView" value="<%=groupView%>"/>
                     <jsp:param name="patientGroups" value="1"/>
+                    <jsp:param name="parentAjaxId" value="<%=parentAjaxId%>" />
                 </jsp:include>
             </td>
             <td class="MainTableRightColumn" valign="top">
@@ -128,9 +141,9 @@ function checkSelectBox() {
      
 <table class="elements" width="100%">
   <tr bgcolor=<%=deepColor%> >
-    <th><a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_name&group_view=<%=groupView%>"><bean:message key="eform.showmyform.btnFormName"/></a></th>
-    <th><a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>"><bean:message key="eform.showmyform.btnSubject"/></a></th>
-    <th><a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>"><bean:message key="eform.showmyform.formDate"/></a></th>    
+    <th><a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_name&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnFormName"/></a></th>
+    <th><a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&orderby=form_subject&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnSubject"/></a></th>
+    <th><a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&group_view=<%=groupView%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.formDate"/></a></th>    
     <th><bean:message key="eform.showmyform.msgAction"/></th>
   </tr> 
 <%
@@ -147,7 +160,7 @@ function checkSelectBox() {
         <td><a href="#" ONCLICK="popupPage('efmshowform_data.jsp?fdid=<%= curform.get("fdid")%>', '<%="FormP" + i%>'); return false;" TITLE="View Form" onmouseover="window.status='View This Form'; return true"><%=curform.get("formName")%></a></td>
         <td><%=curform.get("formSubject")%></td>
         <td align='center'><%=curform.get("formDate")%></td>
-        <td align='center'><a href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>"><bean:message key="eform.uploadimages.btnDelete"/></a></td>
+        <td align='center'><a href="../eform/removeEForm.do?fdid=<%=curform.get("fdid")%>&group_view=<%=groupView%>&demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.uploadimages.btnDelete"/></a></td>
     </tr>
 <%
   }
