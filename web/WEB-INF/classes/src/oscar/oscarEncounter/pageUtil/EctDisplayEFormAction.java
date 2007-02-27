@@ -47,13 +47,13 @@ public class EctDisplayEFormAction extends EctDisplayAction {
 
         //set lefthand module heading and link
         String winName = "eForm" + bean.demographicNo;
-        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no=" + bean.demographicNo + "')";        
+        String url = "popupPage(500,950,'" + winName + "', '" + request.getContextPath() + "/eform/efmpatientformlist.jsp?demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "')";        
         Dao.setLeftHeading(messages.getMessage("global.eForms"));
         Dao.setLeftURL(url);
         
         //set the right hand heading link
         winName = "AddeForm" + bean.demographicNo;
-        url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/eform/efmformslistadd.jsp?demographic_no=" + bean.demographicNo + "'); return false;";
+        url = "popupPage(500,950,'" + winName + "','" + request.getContextPath() + "/eform/efmformslistadd.jsp?demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "'); return false;";
         Dao.setRightURL(url);        
         Dao.setRightHeadingID(cmd);  //no menu so set div id to unique id for this action      
 
@@ -81,7 +81,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             NavBarDisplayDAO.Item item = Dao.Item();
             winName = (String)curform.get("formName") + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());            
-            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "');";            
+            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmshowform_data.jsp?fdid=" + curform.get("fdid") + "&parentAjaxId=" + cmd + "');";            
             Date date = (Date)curform.get("formDateAsDate");
             String formattedDate = DateUtils.getDate(date,dateFormat);
             key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + formattedDate + ")";
