@@ -40,6 +40,7 @@ public class AddEFormAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                 HttpServletRequest request, HttpServletResponse response) {
          System.out.println("==================SAVING ==============");
+         
          Enumeration paramNamesE = request.getParameterNames();
          //for each name="fieldname" value="myval"
          ArrayList paramNames = new ArrayList();  //holds "fieldname, ...."
@@ -52,6 +53,8 @@ public class AddEFormAction extends Action {
          String curField = "";
          while (paramNamesE.hasMoreElements()) {
              curField = (String) paramNamesE.nextElement();
+             if( curField.equalsIgnoreCase("parentAjaxId"))
+                 continue;
              paramNames.add(curField);
              paramValues.add(request.getParameter(curField));
          }
