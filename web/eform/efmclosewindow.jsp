@@ -34,10 +34,17 @@
 <%@page import="oscar.eform.data.*"%>
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <script type="text/javascript" language="javascript">
-   window.close();
+   
    if (!window.opener.closed) {
-   window.opener.location.reload();
-   window.opener.focus();
+        var parentAjaxId = "<%=request.getParameter("parentAjaxId")%>";
+        if( parentAjaxId != "null" ) {
+            window.opener.document.forms['encForm'].elements['reloadDiv'].value = parentAjaxId;
+            window.opener.updateNeeded = true;            
+        }
+        else        
+            window.opener.location.reload();
+        window.opener.focus();
+        window.close();
     }
 </script>
 </body>
