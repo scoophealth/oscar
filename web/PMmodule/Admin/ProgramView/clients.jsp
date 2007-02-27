@@ -143,7 +143,7 @@ function do_batch_discharge(community) {
 	<input type="button" value="Batch Discharge To CAISI Program" onclick="do_batch_discharge(false)" />
 	<select name="batch_discharge_program">
 		<option value="0"></option>
-		<c:forEach var="program" items="${programs}">
+		<c:forEach var="program" items="${bedPrograms}">
 			<c:if test="${program.id != requestScope.id}">
 				<option value="<c:out value="${program.id}"/>"><c:out value="${program.name}" /></option>
 			</c:if>

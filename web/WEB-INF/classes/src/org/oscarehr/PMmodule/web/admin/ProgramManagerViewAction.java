@@ -133,7 +133,8 @@ public class ProgramManagerViewAction extends BaseAction {
     			}
             }
     
-    		request.setAttribute("programs", batchAdmissionPrograms);
+    		//request.setAttribute("programs", batchAdmissionPrograms);
+    		request.setAttribute("bedPrograms", batchAdmissionPrograms);    		
     		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
     		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());
     	}
@@ -247,7 +248,13 @@ public class ProgramManagerViewAction extends BaseAction {
 					log.warn("admission #" + admissionId + " not found.");
 					continue;
 				}
-
+				
+				//temporary admission will not allow batach discharge.
+				if(admission.isTemporaryAdmission()==true){
+					message += "Some clients are in this bed program temporarily. You cannot do batch discharge for the client whose 'Temporary Admission' is true !";
+					continue;
+				}
+					
 				// lets see if there's room first
 				Program programToAdmit = programManager.getProgram(admitToProgramId);
 				if (programToAdmit == null) {
