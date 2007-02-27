@@ -38,6 +38,8 @@ import org.apache.struts.action.*;
 
 public class EForm extends EFormBase {
     
+    private String parentAjaxId = null;
+    
     public EForm() {
     }
     
@@ -72,6 +74,11 @@ public class EForm extends EFormBase {
         this.demographicNo = demographicNo;
     }
     
+    public void setAction(String pAjaxId) {
+        parentAjaxId = pAjaxId;
+        setAction();
+    }
+    
     public void setAction() {
         //sets action= in the form
         StringBuffer html = new StringBuffer(formHtml);
@@ -100,11 +107,16 @@ public class EForm extends EFormBase {
         }
         if (index < 0) return;
         index += 5;
-        String action = "action=\"../eform/addEForm.do?efmfid=" + fid + 
+        StringBuffer action = new StringBuffer("action=\"../eform/addEForm.do?efmfid=" + fid + 
                         "&efmdemographic_no=" + demographicNo + 
-                        "&efmprovider_no=" + providerNo + "\"";
+                        "&efmprovider_no=" + providerNo);
+        if( parentAjaxId != null )
+            action.append("&parentAjaxId=" + parentAjaxId);
+        
+        action.append("\"");
+        
         String method = "method=\"POST\"";
-        html.insert(index, " " + action + " " + name + method);
+        html.insert(index, " " + action.toString() + " " + name + method);
         formHtml = html.toString();
     }
     

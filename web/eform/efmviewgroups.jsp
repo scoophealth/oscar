@@ -43,6 +43,8 @@ if (request.getParameter("demographic_no") != null)
 String patientGroups = "";
 if (request.getParameter("patientGroups") != null) 
     patientGroups = (String) request.getParameter("patientGroups");
+    
+String parentAjaxId = request.getParameter("parentAjaxId");
 
 ArrayList groups;
 if (patientGroups.equals("1")) {
@@ -54,6 +56,7 @@ if (patientGroups.equals("1")) {
 <form action="<%=url%>" name="groupselect" method="get">
       <input type="hidden" id="group_view" name="group_view" value="">
       <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
+      <input type="hidden" name="parentAjaxId" value="<%=parentAjaxId%>">
       <div class="grouplist">
           <div class="grouplistHeader">
             View Group: 
