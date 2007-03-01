@@ -107,10 +107,10 @@ INSERT INTO `intake_label` VALUES
 --
 -- Alter agency table structure
 --
-ALTER TABLE `agency`
-	DROP COLUMN `intakes_combined`,
-	DROP COLUMN `intake_quick`,
-	DROP COLUMN `intake_indepth`;
+--ALTER TABLE `agency`
+--	DROP COLUMN `intakes_combined`,
+--	DROP COLUMN `intake_quick`,
+--	DROP COLUMN `intake_indepth`;
 
 ALTER TABLE `agency`
 	ADD COLUMN `intakes_combined` BOOLEAN NOT NULL DEFAULT 0 AFTER `id`,
@@ -120,8 +120,8 @@ ALTER TABLE `agency`
 --
 -- Alter program table structure
 --
-ALTER TABLE `program`
-	DROP COLUMN `intake_program`;
+--ALTER TABLE `program`
+--	DROP COLUMN `intake_program`;
 
 ALTER TABLE `program`
 	ADD COLUMN `intake_program` INTEGER UNSIGNED AFTER `agency_id`;
