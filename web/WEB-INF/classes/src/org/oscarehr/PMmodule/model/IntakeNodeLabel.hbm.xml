@@ -21,38 +21,13 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
-	<class name="IntakeNode" table="intake_node">
+	<class name="IntakeNodeLabel" table="intake_node_label">
 		<meta attribute="sync-DAO">false</meta>
 		
-		<id name="id" type="integer" column="intake_node_id">
+		<id name="id" type="integer" column="intake_node_label_id">
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="nodeTemplate" column="intake_node_template_id"
-			class="IntakeNodeTemplate" not-null="true" />
-			
-		<many-to-one name="label" cascade="save-update"
-			class="IntakeNodeLabel" column="intake_node_label_id"
-			not-null="false" lazy="false" />
-			
-		<many-to-one name="parent" class="IntakeNode"
-			column="parent_intake_node_id" not-null="false"
-			insert="false" update="false" />
-
-		<list name="children" cascade="save-update" inverse="false">
-			<key column="parent_intake_node_id" not-null="false" />
-			<list-index column="pos" />
-			<one-to-many class="IntakeNode" />
-		</list>
-
-		<set name="intakes" inverse="true" sort="natural">
-			<key column="intake_node_id" />
-			<one-to-many class="Intake" />
-		</set>
-		
-		<set name="answers" inverse="true" sort="natural">
-			<key column="intake_node_id" />
-			<one-to-many class="IntakeAnswer" />
-		</set>
+		<property name="label" column="lbl" type="string" not-null="true" />
 	</class>
 </hibernate-mapping>

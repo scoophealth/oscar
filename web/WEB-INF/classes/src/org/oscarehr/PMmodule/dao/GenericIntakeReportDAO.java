@@ -16,32 +16,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.oscarehr.PMmodule.web.adapter;
+package org.oscarehr.PMmodule.dao;
 
-/**
- * Adapt intake nodes to html
- */
-public interface IntakeNodeHtmlAdapter {
-
-	/**
-	 * Get builder for markup before visiting children
-	 * 
-	 * @return builder with markup
-	 */
-	public StringBuilder getPreBuilder();
-
-	/**
-	 * Get builder for markup after visiting children
-	 * 
-	 * @return builder with markup
-	 */
-	public StringBuilder getPostBuilder();
-
-	/**
-	 * Get number of tabs to indent
-	 * 
-	 * @return number of tabs to indent
-	 */
-	public int getIndent();
+public interface GenericIntakeReportDAO {
 
 }

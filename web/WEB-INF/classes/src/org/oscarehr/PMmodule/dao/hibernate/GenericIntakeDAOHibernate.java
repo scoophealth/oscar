@@ -18,13 +18,12 @@
  */
 package org.oscarehr.PMmodule.dao.hibernate;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -34,43 +33,33 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class GenericIntakeDAOHibernate extends HibernateDaoSupport implements GenericIntakeDAO {
 	
 	private static final Log LOG = LogFactory.getLog(GenericIntakeDAOHibernate.class);
-
+	
 	/**
-	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakeNode(java.lang.Integer)
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntake(IntakeNode, java.lang.Integer)
 	 */
-	public IntakeNode getIntakeNode(Integer intakeNodeId) {
-		if (intakeNodeId == null || intakeNodeId < 1) {
-			throw new IllegalArgumentException("intakeNodeId must be non-null and greater than 0");
+	public Intake getIntake(IntakeNode node, Integer clientId) {
+		if (node == null || clientId == null) {
+			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
 		}
 		
-		IntakeNode intakeNode = (IntakeNode) getHibernateTemplate().load(IntakeNode.class, intakeNodeId);
-		getChildren(intakeNode);
+		List result = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? order by i.createdOn desc", new Object[] { node, clientId });
+		LOG.info("getIntake: " + result.size());
 		
-		LOG.info("getIntakeNode : " + intakeNodeId);
-
-		return intakeNode;
-	}
-	
-	private void getChildren(IntakeNode intakeNode) {
-		HashSet<Integer> nodeIds = new HashSet<Integer>();
-		nodeIds.add(intakeNode.getId());
-		
-		getChildren(nodeIds, intakeNode.getChildren());
+		return (result != null && result.size() > 0) ? (Intake) result.get(0) : null;
 	}
 
-	private void getChildren(Set<Integer> nodeIds, List<IntakeNode> children) {
-		for (IntakeNode child : children) {
-			Integer childId = child.getId();
-			
-			if (nodeIds.contains(childId)) {
-            	throw new IllegalStateException("intake node with id : " + childId + " is an ancestor of itself");
-            } else {
-            	nodeIds.add(childId);
-            }
-			
-			// load children
-			getChildren(nodeIds, child.getChildren());
-        }
+	/**
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#saveIntake(org.oscarehr.PMmodule.model.Intake)
+	 */
+	public Integer saveIntake(Intake intake) {
+		if (intake.getId() != null) {
+			throw new IllegalArgumentException("Cannot update an existing intake (id: " + intake.getId() + ")");
+		}
+		
+		Integer intakeId = (Integer) getHibernateTemplate().save(intake);
+		LOG.info("saveIntake: " + intakeId);
+		
+		return intakeId;
 	}
 
 }

@@ -178,13 +178,13 @@
 	</bean>
 	
 	<!-- Generic Intake -->
-	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeDAOHibernate">
+	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeNodeDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
 	
-	<bean id="genericIntakeInstanceDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeInstanceDAOHibernate">
+	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
@@ -599,8 +599,8 @@
 	<bean id="genericIntakeManager" parent="baseTransactionProxy">
 		<property name="target">
 			<bean class="org.oscarehr.PMmodule.service.impl.GenericIntakeManagerImpl">
+				<property name="genericIntakeNodeDAO" ref="genericIntakeNodeDAO" />
 				<property name="genericIntakeDAO" ref="genericIntakeDAO" />
-				<property name="genericIntakeInstanceDAO" ref="genericIntakeInstanceDAO" />
 				<property name="programDAO" ref="programDao" />
 			</bean>
 		</property>

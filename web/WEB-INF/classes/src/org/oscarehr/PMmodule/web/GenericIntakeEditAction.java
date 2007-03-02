@@ -1,3 +1,21 @@
+/**
+ * Copyright (C) 2007.
+ * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
@@ -21,7 +39,7 @@ import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.IntakeInstance;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 
@@ -58,8 +76,8 @@ public class GenericIntakeEditAction extends BaseAction {
 		Demographic client = getClient(request);
 		intakeEditBean.setClient(client);
 		
-		List<Program> bedPrograms = getBedPrograms();
-		intakeEditBean.setBedProgramLabelValues(bedPrograms);
+		List<Program> bedCommunityPrograms = getBedCommunityPrograms();
+		intakeEditBean.setBedCommunityProgramLabelValues(bedCommunityPrograms);
 		
 		List<Program> servicePrograms = getServicePrograms();
 		intakeEditBean.setServiceProgramLabelValues(servicePrograms);
@@ -68,14 +86,14 @@ public class GenericIntakeEditAction extends BaseAction {
 		String providerNo = getProviderNo(request);
 		
 		if (QUICK.equalsIgnoreCase(intakeType)) {
-			IntakeInstance instance = genericIntakeManager.createQuickIntake(providerNo);
-			intakeEditBean.setInstance(instance);
+			Intake intake = genericIntakeManager.createQuickIntake(providerNo);
+			intakeEditBean.setIntake(intake);
 		} else if (INDEPTH.equalsIgnoreCase(intakeType)) {
-			IntakeInstance instance = genericIntakeManager.createIndepthIntake(providerNo);
-			intakeEditBean.setInstance(instance);
+			Intake intake = genericIntakeManager.createIndepthIntake(providerNo);
+			intakeEditBean.setIntake(intake);
 		} else if (PROGRAM.equalsIgnoreCase(intakeType)) {
-			IntakeInstance instance = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
-			intakeEditBean.setInstance(instance);
+			Intake intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
+			intakeEditBean.setIntake(intake);
 		}
 		
 		return mapping.findForward(EDIT);
@@ -88,26 +106,26 @@ public class GenericIntakeEditAction extends BaseAction {
 		Demographic client = getClient(clientId);
 		intakeEditBean.setClient(client);
 		
-		List<Program> bedPrograms = getBedPrograms();
-		intakeEditBean.setBedProgramLabelValues(bedPrograms);
-		intakeEditBean.setCurrentBedProgramId(getClientBedProgramId(clientId));
+		List<Program> bedCommunityPrograms = getBedCommunityPrograms();
+		intakeEditBean.setBedCommunityProgramLabelValues(bedCommunityPrograms);
+		intakeEditBean.setCurrentBedCommunityProgramId(getCurrentBedCommunityProgramId(clientId));
 		
 		List<Program> servicePrograms = getServicePrograms();
 		intakeEditBean.setServiceProgramLabelValues(servicePrograms);
-		intakeEditBean.setCurrentServiceProgramIds(getClientServiceProgramIds(clientId));
+		intakeEditBean.setCurrentServiceProgramIds(getCurrrentServiceProgramIds(clientId));
 		
 		String intakeType = getType(request);
 		String providerNo = getProviderNo(request);
 		
 		if (QUICK.equalsIgnoreCase(intakeType)) {
-			IntakeInstance instance = genericIntakeManager.copyQuickIntake(clientId, providerNo);
-			intakeEditBean.setInstance(instance);
+			Intake intake = genericIntakeManager.copyQuickIntake(clientId, providerNo);
+			intakeEditBean.setIntake(intake);
 		} else if (INDEPTH.equalsIgnoreCase(intakeType)) {
-			IntakeInstance instance = genericIntakeManager.copyIndepthIntake(clientId, providerNo);
-			intakeEditBean.setInstance(instance);
+			Intake intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo);
+			intakeEditBean.setIntake(intake);
 		} else if (PROGRAM.equalsIgnoreCase(intakeType)) {
-			IntakeInstance instance = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
-			intakeEditBean.setInstance(instance);
+			Intake intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
+			intakeEditBean.setIntake(intake);
 		}
 
 		return mapping.findForward(EDIT);
@@ -133,18 +151,20 @@ public class GenericIntakeEditAction extends BaseAction {
 			// admit client to program(s)
 			Integer clientId = client.getDemographicNo();
 			String providerNo = getProviderNo(request);
-			Integer bedProgramId = intakeEditBean.getSelectedBedProgramId();
+			Integer bedCommunityProgramId = intakeEditBean.getSelectedBedCommunityProgramId();
 			List<Integer> serviceProgramIds = intakeEditBean.getSelectedServiceProgramIds();
 			
-			admitBedProgram(clientId, providerNo, bedProgramId);
+			admitBedCommunityProgram(clientId, providerNo, bedCommunityProgramId);
 			admitServicePrograms(clientId, providerNo, serviceProgramIds);
 			
-			// save instance
-			IntakeInstance instance = intakeEditBean.getInstance();
-			saveInstance(instance, clientId);
+			// save intake
+			Intake intake = intakeEditBean.getIntake();
+			saveIntake(intake, clientId);
 			
 			forward = getClientEditForward(mapping, clientId);
 		} catch (Exception e) {
+			LOG.error(e);
+			
 			ActionMessages messages = new ActionMessages();
     		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
     		saveErrors(request, messages);
@@ -211,11 +231,12 @@ public class GenericIntakeEditAction extends BaseAction {
 		return clientManager.getClientByDemographicNo(clientId.toString());
 	}
 	
-	private List<Program> getBedPrograms() {
-		List<Program> bedPrograms = new ArrayList<Program>();
-		Collections.addAll(bedPrograms, programManager.getBedPrograms());
+	private List<Program> getBedCommunityPrograms() {
+		List<Program> bedCommunityPrograms = new ArrayList<Program>();
+		Collections.addAll(bedCommunityPrograms, programManager.getBedPrograms());
+		Collections.addAll(bedCommunityPrograms, programManager.getCommunityPrograms());
 		
-		return bedPrograms;
+		return bedCommunityPrograms;
 	}
 
 	private List<Program> getServicePrograms() {
@@ -229,13 +250,22 @@ public class GenericIntakeEditAction extends BaseAction {
 		return servicePrograms;
 	}
 	
-	private Integer getClientBedProgramId(Integer clientId) {
+	private Integer getCurrentBedCommunityProgramId(Integer clientId) {
+		Integer programId = null;
+		
 		Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(clientId);
-		return (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId() : null;
+		Admission communityProgramAdmission = admissionManager.getCurrentCommunityProgramAdmission(clientId);
+		
+		if (bedProgramAdmission != null) {
+			programId = bedProgramAdmission.getProgramId();
+		} else if (communityProgramAdmission != null) {
+			programId = communityProgramAdmission.getProgramId();
+		}
+		
+		return programId;
 	}
 	
-	
-	private SortedSet<Integer> getClientServiceProgramIds(Integer clientId) {
+	private SortedSet<Integer> getCurrrentServiceProgramIds(Integer clientId) {
 		SortedSet<Integer> clientServiceProgramIds = new TreeSet<Integer>();
 		
 		List admissions = admissionManager.getCurrentServiceProgramAdmission(clientId);
@@ -265,23 +295,40 @@ public class GenericIntakeEditAction extends BaseAction {
 		}
 	}
 
-	private void admitBedProgram(Integer clientId, String providerNo, Integer bedProgramId) throws ProgramFullException, AdmissionException {
-		Program bedProgram = null;
-		Integer clientBedProgramId = getClientBedProgramId(clientId);
+	private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException {
+		Program bedCommunityProgram = null;
+		Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
 		
-		if (bedProgramId == null && clientBedProgramId == null) {
-			bedProgram = programManager.getHoldingTankProgram();
-		} else if (bedProgramId != null) {
-			bedProgram =  programManager.getProgram(bedProgramId);
+		if (bedCommunityProgramId == null && currentBedCommunityProgramId == null) {
+			bedCommunityProgram = programManager.getHoldingTankProgram();
+		} else if (bedCommunityProgramId != null) {
+			bedCommunityProgram =  programManager.getProgram(bedCommunityProgramId);
 		}
 		
-		if (bedProgram != null && (clientBedProgramId == null || !clientBedProgramId.equals(bedProgramId))) {
-			admissionManager.processAdmission(clientId, providerNo, bedProgram, "intake discharge", "intake admit");
+		if (bedCommunityProgram != null) {
+			if (currentBedCommunityProgramId == null) {
+				admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+			} else if (!currentBedCommunityProgramId.equals(bedCommunityProgramId)) {
+				if (programManager.getProgram(currentBedCommunityProgramId).isBed()) {
+					if (bedCommunityProgram.isBed()) {
+						admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+					} else {
+						admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge");
+					}
+				} else {
+					if (bedCommunityProgram.isCommunity()) {
+						admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge");
+					} else {
+						admissionManager.processDischarge(currentBedCommunityProgramId, clientId, "intake discharge");
+						admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
+					}
+				}
+			}
 		}
 	}
 
 	private void admitServicePrograms(Integer clientId, String providerNo, List<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException {
-		SortedSet<Integer> clientServicePrograms = getClientServiceProgramIds(clientId);
+		SortedSet<Integer> clientServicePrograms = getCurrrentServiceProgramIds(clientId);
 		
 		for (Integer serviceProgramId : serviceProgramIds) {
 			if (!clientServicePrograms.contains(serviceProgramId)) {
@@ -291,9 +338,9 @@ public class GenericIntakeEditAction extends BaseAction {
 		}
 	}
 
-	private void saveInstance(IntakeInstance instance, Integer clientId) {
-		instance.setClientId(clientId);
-		genericIntakeManager.saveInstance(instance);
+	private void saveIntake(Intake intake, Integer clientId) {
+		intake.setClientId(clientId);
+		genericIntakeManager.saveIntake(intake);
 	}
 
 }

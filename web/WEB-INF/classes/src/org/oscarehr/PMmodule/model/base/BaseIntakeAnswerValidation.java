@@ -21,28 +21,28 @@ package org.oscarehr.PMmodule.model.base;
 import java.io.Serializable;
 
 /**
- * This is an object that contains data related to the intake_node_type table. Do not modify this class because it will be overwritten if the configuration file related to this class is modified.
+ * This is an object that contains data related to the intake_answer_validation table. Do not modify this class because it will be overwritten if the configuration file related to this class is modified.
  * 
- * @hibernate.class table="intake_node_type"
+ * @hibernate.class table="intake_answer_validation"
  */
 
-public abstract class BaseIntakeNodeType implements Serializable {
+public abstract class BaseIntakeAnswerValidation implements Serializable {
 
-	public static String REF = "IntakeNodeType";
+	public static String REF = "IntakeAnswerValidation";
 
 	public static String PROP_TYPE = "type";
 
 	public static String PROP_ID = "id";
 
 	// constructors
-	public BaseIntakeNodeType() {
+	public BaseIntakeAnswerValidation() {
 		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public BaseIntakeNodeType(java.lang.Integer id) {
+	public BaseIntakeAnswerValidation(java.lang.Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -50,7 +50,7 @@ public abstract class BaseIntakeNodeType implements Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public BaseIntakeNodeType(java.lang.Integer id, java.lang.String type) {
+	public BaseIntakeAnswerValidation(java.lang.Integer id, java.lang.String type) {
 
 		this.setId(id);
 		this.setType(type);
@@ -71,7 +71,7 @@ public abstract class BaseIntakeNodeType implements Serializable {
 	/**
 	 * Return the unique identifier of this class
 	 * 
-	 * @hibernate.id generator-class="native" column="intake_node_type_id"
+	 * @hibernate.id generator-class="native" column="intake_answer_validation_id"
 	 */
 	public java.lang.Integer getId() {
 		return id;
@@ -108,14 +108,14 @@ public abstract class BaseIntakeNodeType implements Serializable {
 	public boolean equals(Object obj) {
 		if (null == obj)
 			return false;
-		if (!(obj instanceof org.oscarehr.PMmodule.model.IntakeNodeType))
+		if (!(obj instanceof org.oscarehr.PMmodule.model.IntakeAnswerValidation))
 			return false;
 		else {
-			org.oscarehr.PMmodule.model.IntakeNodeType intakeNodeType = (org.oscarehr.PMmodule.model.IntakeNodeType) obj;
-			if (null == this.getId() || null == intakeNodeType.getId())
+			org.oscarehr.PMmodule.model.IntakeAnswerValidation intakeAnswerValidation = (org.oscarehr.PMmodule.model.IntakeAnswerValidation) obj;
+			if (null == this.getId() || null == intakeAnswerValidation.getId())
 				return false;
 			else
-				return (this.getId().equals(intakeNodeType.getId()));
+				return (this.getId().equals(intakeAnswerValidation.getId()));
 		}
 	}
 

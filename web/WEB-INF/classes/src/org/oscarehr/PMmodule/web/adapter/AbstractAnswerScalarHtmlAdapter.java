@@ -18,36 +18,21 @@
  */
 package org.oscarehr.PMmodule.web.adapter;
 
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class PageTypeHtmlAdapter extends AbstractHtmlAdapter {
+abstract class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter {
 
-	public PageTypeHtmlAdapter(int indent, IntakeNode node) {
-		super(indent, node);
+	protected AbstractAnswerScalarHtmlAdapter(int indent, IntakeNode node, Intake intake) {
+		super(indent, node, intake);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
-	 */
-	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
-
-		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" >").append(EOL);
-		beginTag();
-
-		return preBuilder;
+	protected StringBuilder startAnswer(StringBuilder builder) {
+		return isParentQuestion() ? startCell(startRow(builder)) : builder;
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
-	 */
-	public StringBuilder getPostBuilder() {
-		StringBuilder postBuilder = super.getPostBuilder();
-
-		endTag();
-		indent(postBuilder).append("</div> <!-- End Page -->").append(EOL);
-
-		return postBuilder;
+	protected StringBuilder endAnswer(StringBuilder builder) {
+		return isParentQuestion() ? endRow(endCell(builder)) : builder;
 	}
 
 }

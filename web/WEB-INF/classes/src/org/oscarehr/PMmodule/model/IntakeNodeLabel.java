@@ -18,48 +18,40 @@
  */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseIntakeLabel;
+import org.oscarehr.PMmodule.model.base.BaseIntakeNodeLabel;
 
-public class IntakeLabel extends BaseIntakeLabel {
+public class IntakeNodeLabel extends BaseIntakeNodeLabel {
 
 	private static final long serialVersionUID = 1L;
 
+	public IntakeNodeLabel(String label) {
+		super(null, label);
+	}
+
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	public IntakeLabel () {
+	public IntakeNodeLabel() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeLabel (java.lang.Integer id) {
+	public IntakeNodeLabel(java.lang.Integer id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeLabel(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNode node, java.lang.String label) {
-		super(id, node, label);
+	public IntakeNodeLabel(java.lang.Integer id, java.lang.String label) {
+		super(id, label);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
-	
-	public IntakeLabel(String label) {
-		super();
-		setLabel(label);
-	}
-		
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(getClass().getSimpleName());
-		builder.append("(");
-		builder.append(getId()).append(", ");
-		builder.append(getLabel());
-		builder.append(")");
-		
-		return builder.toString();
+		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getLabel()).append(")").toString();
 	}
 
 }

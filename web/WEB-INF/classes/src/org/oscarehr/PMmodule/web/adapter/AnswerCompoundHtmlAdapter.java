@@ -20,44 +20,18 @@ package org.oscarehr.PMmodule.web.adapter;
 
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class SectionTypeHtmlAdapter extends AbstractHtmlAdapter {
-	
-	public SectionTypeHtmlAdapter(int indent, IntakeNode node) {
+public class AnswerCompoundHtmlAdapter extends AbstractAnswerHtmlAdapter {
+
+	public AnswerCompoundHtmlAdapter(int indent, IntakeNode node) {
 		super(indent, node);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
-	 */
 	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
-
-		if (!(isFirstChild() && isParentIntake())) {
-			indent(preBuilder);
-		}
-
-		preBuilder.append("<div dojoType=\"TitlePane\" label=\"").append(getLabel()).append("\" labelNodeClass=\"intakeSectionLabel\" containerNodeClass=\"intakeSectionContainer\" >").append(EOL);
-		beginTag();
-
-		indent(preBuilder).append("<table class=\"intakeTable\">").append(EOL);
-		beginTag();
-
-		return preBuilder;
+		return startCell(startRow(super.getPreBuilder()));
 	}
-
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
-	 */
+	
 	public StringBuilder getPostBuilder() {
-		StringBuilder postBuilder = super.getPostBuilder();
-
-		endTag();
-		indent(postBuilder).append("</table> <!-- End Question Table -->").append(EOL);
-			
-		endTag();
-		indent(postBuilder).append("</div> <!-- End Section -->").append(EOL);
-
-		return postBuilder;
+		return endRow(endCell(super.getPostBuilder()));
 	}
 
 }

@@ -27,7 +27,7 @@
 		<id name="id" type="integer" column="intake_node_type_id">
 			<generator class="native" />
 		</id>
-		
-		<property name="name" column="name" type="string" not-null="true" length="255" />
+
+		<property name="type" column="type" type="string" not-null="true" length="255" />
 	</class>
 </hibernate-mapping>

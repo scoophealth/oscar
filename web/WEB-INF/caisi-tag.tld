@@ -74,17 +74,17 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>intakeInstance</name>
-		<tagclass>org.oscarehr.PMmodule.common.IntakeInstanceTag</tagclass>
+		<name>intake</name>
+		<tagclass>org.oscarehr.PMmodule.common.IntakeTag</tagclass>
 		<bodycontent>empty</bodycontent>
-		<info>Intake Instance Tag</info>
+		<info>Intake Tag</info>
 		<attribute>
 			<name>base</name>
 			<required>yes</required>
 			<rtexprvalue>yes</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>instance</name>
+			<name>intake</name>
 			<required>yes</required>
 			<rtexprvalue>yes</rtexprvalue>
 		</attribute>

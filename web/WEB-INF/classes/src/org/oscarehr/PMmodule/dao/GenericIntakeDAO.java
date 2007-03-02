@@ -18,17 +18,29 @@
  */
 package org.oscarehr.PMmodule.dao;
 
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
 public interface GenericIntakeDAO {
 
 	/**
-	 * Get the tree of nodes rooted at node with given id
+	 * Get most recent intake with given node for given client
 	 * 
-	 * @param intakeNodeId
-	 *            root node id
-	 * @return tree of nodes
+	 * @param node
+	 *            node id
+	 * @param clientId
+	 *            client id
+	 * @return Most recent intake
 	 */
-	public IntakeNode getIntakeNode(Integer intakeNodeId);
-	
+	public Intake getIntake(IntakeNode node, Integer clientId);
+
+	/**
+	 * Save a new intake
+	 * 
+	 * @param intake
+	 *            given intake
+	 * @return intake id
+	 */
+	public Integer saveIntake(Intake intake);
+
 }

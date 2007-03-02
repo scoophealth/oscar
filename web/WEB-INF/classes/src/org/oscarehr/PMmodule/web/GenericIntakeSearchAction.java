@@ -1,3 +1,21 @@
+/**
+ * Copyright (C) 2007.
+ * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package org.oscarehr.PMmodule.web;
 
 import java.util.List;
@@ -46,8 +64,21 @@ public class GenericIntakeSearchAction extends BaseAction {
 		if (intakeSearchBean.isRemoteMatch() || intakeSearchBean.isLocalMatch()) {
 			return mapping.findForward(SEARCH_FORM);
 		} else {
-			return getCreateLocalForward(mapping, intakeSearchBean);
+			return createLocal(mapping, form, request, response);
 		}
+	}
+	
+	public ActionForward createLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
+		request.setAttribute(GenericIntakeEditAction.CLIENT, createClient(intakeSearchBean));
+		
+		return getCreateLocalForward(mapping, intakeSearchBean);
+	}
+	
+	public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
+		
+		return getUpdateLocalForward(mapping, intakeSearchBean);
 	}
 	
 	public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -66,20 +97,7 @@ public class GenericIntakeSearchAction extends BaseAction {
     		return mapping.findForward(SEARCH_FORM);
         }
     }
-
-	public ActionForward createLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-        request.setAttribute(GenericIntakeEditAction.CLIENT, createClient(intakeSearchBean));
-    	
-    	return getCreateLocalForward(mapping, intakeSearchBean);
-    }
-
-	public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-		
-		return getUpdateLocalForward(mapping, intakeSearchBean);
-	}
-
+	
 	private Demographic[] remoteSearch(GenericIntakeSearchFormBean intakeSearchBean) {
 		Demographic[] matches = null;
 		

@@ -1,82 +1,100 @@
+/**
+ * Copyright (C) 2007.
+ * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package org.oscarehr.PMmodule.service.impl;
 
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
-import org.oscarehr.PMmodule.dao.GenericIntakeInstanceDAO;
+import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Agency;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeAnswer;
-import org.oscarehr.PMmodule.model.IntakeInstance;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 
 public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	
+	private GenericIntakeNodeDAO genericIntakeNodeDAO;
 	private GenericIntakeDAO genericIntakeDAO;
-	private GenericIntakeInstanceDAO genericIntakeInstanceDAO;
 	private ProgramDao programDAO;
 	
-	public void setGenericIntakeDAO(GenericIntakeDAO intakeDAO) {
-	    this.genericIntakeDAO = intakeDAO;
+	public void setGenericIntakeNodeDAO(GenericIntakeNodeDAO genericIntakeNodeDAO) {
+	    this.genericIntakeNodeDAO = genericIntakeNodeDAO;
     }
 	
-	public void setGenericIntakeInstanceDAO(GenericIntakeInstanceDAO intakeInstanceDAO) {
-	    this.genericIntakeInstanceDAO = intakeInstanceDAO;
+	public void setGenericIntakeDAO(GenericIntakeDAO genericIntakeDAO) {
+	    this.genericIntakeDAO = genericIntakeDAO;
     }
 	
 	public void setProgramDAO(ProgramDao programDAO) {
 	    this.programDAO = programDAO;
     }
 	
-	public IntakeInstance createQuickIntake(String providerNo) {
-		IntakeNode quickIntake = getIntake(Agency.getLocalAgency().getIntakeQuick());
-		IntakeInstance quickIntakeInstance = createInstance(quickIntake, null, providerNo);
+	public Intake createQuickIntake(String providerNo) {
+		IntakeNode quickIntakeNode = getIntakeNode(Agency.getLocalAgency().getIntakeQuick());
+		Intake quickIntake = createIntake(quickIntakeNode, null, providerNo);
 		
-		return quickIntakeInstance;
+		return quickIntake;
 	}
 
-	public IntakeInstance createIndepthIntake(String providerNo) {
-		IntakeNode indepthIntake = getIntake(Agency.getLocalAgency().getIntakeIndepth());
-		IntakeInstance indepthIntakeInstance = createInstance(indepthIntake, null, providerNo);
+	public Intake createIndepthIntake(String providerNo) {
+		IntakeNode indepthIntakeNode = getIntakeNode(Agency.getLocalAgency().getIntakeIndepth());
+		Intake indepthIntake = createIntake(indepthIntakeNode, null, providerNo);
 
-		return indepthIntakeInstance;
+		return indepthIntake;
 	}
 
-	public IntakeInstance createProgramIntake(Integer programId, String providerNo) {
-		IntakeNode programIntake = getIntake(programDAO.getProgram(programId).getIntakeProgram());
-		IntakeInstance programIntakeInstance = createInstance(programIntake, null, providerNo);
+	public Intake createProgramIntake(Integer programId, String providerNo) {
+		IntakeNode programIntakeNode = getIntakeNode(programDAO.getProgram(programId).getIntakeProgram());
+		Intake programIntake = createIntake(programIntakeNode, null, providerNo);
 		
-		return programIntakeInstance;
+		return programIntake;
 	}
 	
-	public IntakeInstance copyQuickIntake(Integer clientId, String staffId) {
-		IntakeNode quickIntake = getIntake(Agency.getLocalAgency().getIntakeQuick());
-		IntakeInstance quickIntakeInstance = copyInstance(quickIntake, clientId, staffId);
+	public Intake copyQuickIntake(Integer clientId, String staffId) {
+		IntakeNode quickIntakeNode = getIntakeNode(Agency.getLocalAgency().getIntakeQuick());
+		Intake quickIntake = copyIntake(quickIntakeNode, clientId, staffId);
 		
-	    return quickIntakeInstance;
+	    return quickIntake;
 	}
 	
-	public IntakeInstance copyIndepthIntake(Integer clientId, String staffId) {
-		IntakeNode indepthIntake = getIntake(Agency.getLocalAgency().getIntakeIndepth());
-		IntakeInstance indepthIntakeInstance = copyInstance(indepthIntake, clientId, staffId);
+	public Intake copyIndepthIntake(Integer clientId, String staffId) {
+		IntakeNode indepthIntakeNode = getIntakeNode(Agency.getLocalAgency().getIntakeIndepth());
+		Intake indepthIntake = copyIntake(indepthIntakeNode, clientId, staffId);
 		
-	    return indepthIntakeInstance;
+	    return indepthIntake;
 	}
 	
-	public IntakeInstance copyProgramIntake(Integer clientId, Integer programId, String staffId) {
-		IntakeNode programIntake = getIntake(programDAO.getProgram(programId).getIntakeProgram());
-		IntakeInstance programIntakeInstance = copyInstance(programIntake, clientId, staffId);
+	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId) {
+		IntakeNode programIntakeNode = getIntakeNode(programDAO.getProgram(programId).getIntakeProgram());
+		Intake programIntake = copyIntake(programIntakeNode, clientId, staffId);
 
-	    return programIntakeInstance;
+	    return programIntake;
 	}
 	
-	public Integer saveInstance(IntakeInstance instance) {
-	    return genericIntakeInstanceDAO.saveIntakeInstance(instance);
+	public Integer saveIntake(Intake intake) {
+	    return genericIntakeDAO.saveIntake(intake);
 	}
 	
-	private IntakeNode getIntake(Integer intakeNodeId) {
-		IntakeNode intakeNode = genericIntakeDAO.getIntakeNode(intakeNodeId);
+	private IntakeNode getIntakeNode(Integer intakeNodeId) {
+		IntakeNode intakeNode = genericIntakeNodeDAO.getIntakeNode(intakeNodeId);
 		
 		if (!intakeNode.isIntake()) {
 			throw new IllegalStateException("node with id : " + intakeNodeId + " is not an intake");
@@ -85,36 +103,36 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 		return intakeNode;
 	}
 	
-	private IntakeInstance copyInstance(IntakeNode intakeRoot, Integer clientId, String staffId) {
-		IntakeInstance instance = genericIntakeInstanceDAO.getInstance(intakeRoot, clientId);
+	private Intake copyIntake(IntakeNode intakeRoot, Integer clientId, String staffId) {
+		Intake intake = genericIntakeDAO.getIntake(intakeRoot, clientId);
 		
-		if (instance == null) {
-			throw new IllegalStateException(String.format("Could not find instance for node id (%s) and client id (%s)", new Object[] { clientId, staffId }));
+		if (intake == null) {
+			throw new IllegalStateException(String.format("Could not find intake for node id (%s) and client id (%s)", new Object[] { clientId, staffId }));
 		}
 		
-		IntakeInstance copyInstance = createInstance(intakeRoot, clientId, staffId);
+		Intake intakeCopy = createIntake(intakeRoot, clientId, staffId);
 		
-		for (IntakeAnswer answer : instance.getAnswers()) {
-			copyInstance.getAnswerMapped(answer.getNode().getIdStr()).setValue(answer.getValue());
+		for (IntakeAnswer answer : intake.getAnswers()) {
+			intakeCopy.getAnswerMapped(answer.getNode().getIdStr()).setValue(answer.getValue());
 		}
 
-		return copyInstance;
+		return intakeCopy;
 	}
 	
-	private IntakeInstance createInstance(IntakeNode intakeRoot, Integer clientId, String staffId) {
-		IntakeInstance instance = IntakeInstance.create(intakeRoot, clientId, staffId);
-        createAnswers(instance, instance.getNode().getChildren());
+	private Intake createIntake(IntakeNode intakeRoot, Integer clientId, String staffId) {
+		Intake intake = Intake.create(intakeRoot, clientId, staffId);
+        createAnswers(intake, intake.getNode().getChildren());
 		
-		return instance;
+		return intake;
 	}
 	
-	private void createAnswers(IntakeInstance instance, List<IntakeNode> children) {
+	private void createAnswers(Intake intake, List<IntakeNode> children) {
 		for (IntakeNode child : children) {
-	        if (child.isAnswer()) {
-	        	IntakeAnswer.create(instance, child);
+	        if (child.isScalarAnswer()) {
+	        	intake.addToanswers(IntakeAnswer.create(child));
 	        }
 	        
-	        createAnswers(instance, child.getChildren());
+	        createAnswers(intake, child.getChildren());
         }
 	}
 

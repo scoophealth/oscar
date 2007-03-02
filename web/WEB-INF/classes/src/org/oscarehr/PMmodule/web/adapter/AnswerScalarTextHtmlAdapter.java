@@ -18,36 +18,26 @@
  */
 package org.oscarehr.PMmodule.web.adapter;
 
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class PageTypeHtmlAdapter extends AbstractHtmlAdapter {
-
-	public PageTypeHtmlAdapter(int indent, IntakeNode node) {
-		super(indent, node);
+public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter {
+	
+	public AnswerScalarTextHtmlAdapter(int indent, IntakeNode node, Intake intake) {
+		super(indent, node, intake);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
-	 */
 	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
+		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" >").append(EOL);
-		beginTag();
+		indent(preBuilder).append(getTextInput(getId(), getAnswerValue(), getValidationType())).append(EOL);
+		indent(preBuilder).append(getLabel()).append(EOL);
 
-		return preBuilder;
+		return endAnswer(preBuilder);
 	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
-	 */
-	public StringBuilder getPostBuilder() {
-		StringBuilder postBuilder = super.getPostBuilder();
-
-		endTag();
-		indent(postBuilder).append("</div> <!-- End Page -->").append(EOL);
-
-		return postBuilder;
+	private String getTextInput(String id, String value, String type) {
+		return String.format("<input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\" onsubmit=\"validate(this, '%s')\" />", new Object[] { id, value, type });
 	}
 
 }

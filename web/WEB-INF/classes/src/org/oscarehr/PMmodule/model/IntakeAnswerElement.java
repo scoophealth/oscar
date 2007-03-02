@@ -19,60 +19,56 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
-import org.oscarehr.PMmodule.model.base.BaseIntakeAnswer;
+import org.oscarehr.PMmodule.model.base.BaseIntakeAnswerElement;
 
-public class IntakeAnswer extends BaseIntakeAnswer implements Comparable<IntakeAnswer> {
+public class IntakeAnswerElement extends BaseIntakeAnswerElement implements Comparable<IntakeAnswerElement> {
 
 	private static final long serialVersionUID = 1L;
 
-	public static IntakeAnswer create(IntakeNode node) {
-		IntakeAnswer answer = new IntakeAnswer();
-		answer.setNode(node);
-
-		return answer;
+	public IntakeAnswerElement(String element) {
+		super(null, null, element);
 	}
-
-	/* [CONSTRUCTOR MARKER BEGIN] */
 	
-	public IntakeAnswer() {
+	/* [CONSTRUCTOR MARKER BEGIN] */
+
+	public IntakeAnswerElement() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeAnswer(java.lang.Integer id) {
+	public IntakeAnswerElement(java.lang.Integer id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeAnswer(java.lang.Integer id, org.oscarehr.PMmodule.model.Intake intake, org.oscarehr.PMmodule.model.IntakeNode node, java.lang.String value) {
-		super(id, intake, node, value);
+	public IntakeAnswerElement(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNodeTemplate nodeTemplate, java.lang.String element) {
+		super(id, nodeTemplate, element);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	@Override
-	public String getValue() {
-		return super.getValue() != null ? super.getValue() : "";
-	}
-
-	@Override
-	public String toString() {
-		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getValue()).append(")").toString();
+	public String getValidationStr() {
+		return getValidation() != null ? getValidation().getType() : "";
 	}
 	
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
-	public int compareTo(IntakeAnswer answer) {
+	public int compareTo(IntakeAnswerElement answerElement) {
 		CompareToBuilder compareToBuilder = new CompareToBuilder();
-		compareToBuilder.append(getId(), answer.getId());
-		compareToBuilder.append(getNode().getId(), answer.getNode().getId());
-		
+		compareToBuilder.append(getId(), answerElement.getId());
+		compareToBuilder.append(getElement(), answerElement.getElement());
+
 		return compareToBuilder.toComparison();
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getElement()).append(", ").append(getValidation()).append(")").toString();
 	}
 
 }

@@ -16,31 +16,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.oscarehr.PMmodule.dao;
+package org.oscarehr.PMmodule.web.adapter;
 
-import org.oscarehr.PMmodule.model.IntakeInstance;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public interface GenericIntakeInstanceDAO {
+public class IntakeHtmlAdapter extends AbstractHtmlAdapter {
 
-	/**
-	 * Get most recent instance with given node for given client
-	 * 
-	 * @param node
-	 *            node id
-	 * @param clientId
-	 *            client id
-	 * @return Most recent instance
-	 */
-	public IntakeInstance getInstance(IntakeNode node, Integer clientId);
+	public IntakeHtmlAdapter(int indent, IntakeNode node) {
+		super(indent, node);
+	}
+	
+	@Override
+	public StringBuilder getPreBuilder() {
+		StringBuilder preBuilder = super.getPreBuilder();
+		
+		if (hasPages()) {
+			preBuilder.append("<div dojoType=\"TabContainer\" class=\"intakePageContainer\" >").append(EOL);
+			beginTag();
+		}
+		
+		return preBuilder;
+	}
 
-	/**
-	 * Save a new intake instance
-	 * 
-	 * @param instance
-	 *            given instance
-	 * @return instance id
-	 */
-	public Integer saveIntakeInstance(IntakeInstance instance);
+	public StringBuilder getPostBuilder() {
+		StringBuilder postBuilder = super.getPostBuilder();
+		
+		if (hasPages()) {
+			endTag();
+			indent(postBuilder).append("</div> <!-- End Page Container -->").append(EOL);
+		}
 
+		return postBuilder;
+	}
 }

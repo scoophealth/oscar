@@ -21,17 +21,13 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
-	<class name="IntakeLabel" table="intake_label">
+	<class name="IntakeAnswerValidation" table="intake_answer_validation">
 		<meta attribute="sync-DAO">false</meta>
 		
-		<id name="id" type="integer" column="intake_label_id">
+		<id name="id" type="integer" column="intake_answer_validation_id">
 			<generator class="native" />
 		</id>
-		
-		<property name="label" column="lbl" type="string" not-null="true" />
-		
-		<many-to-one name="node" class="IntakeNode"
-			column="intake_node_id" not-null="true"
-			insert="false" update="false"/>
+
+		<property name="type" column="type" type="string" not-null="true" length="255" />
 	</class>
 </hibernate-mapping>

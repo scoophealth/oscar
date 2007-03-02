@@ -33,6 +33,7 @@ public class Program extends BaseProgram {
 	public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
 	
 	public static final String BED_TYPE = "Bed";
+	public static final String COMMUNITY_TYPE = "community";
 	public static final String SERVICE_TYPE = "Service";
 	
 	/* [CONSTRUCTOR MARKER BEGIN] */
@@ -62,6 +63,10 @@ public class Program extends BaseProgram {
 	
 	public boolean isBed() {
 		return BED_TYPE.equalsIgnoreCase(getType());
+	}
+	
+	public boolean isCommunity() {
+		return COMMUNITY_TYPE.equalsIgnoreCase(getType());
 	}
 	
 	public boolean isService() {

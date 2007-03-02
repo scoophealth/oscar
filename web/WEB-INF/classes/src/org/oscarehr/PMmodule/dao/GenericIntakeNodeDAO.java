@@ -16,38 +16,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.oscarehr.PMmodule.web.adapter;
+package org.oscarehr.PMmodule.dao;
 
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class PageTypeHtmlAdapter extends AbstractHtmlAdapter {
-
-	public PageTypeHtmlAdapter(int indent, IntakeNode node) {
-		super(indent, node);
-	}
+public interface GenericIntakeNodeDAO {
 
 	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
+	 * Get the tree of nodes rooted at node with given id
+	 * 
+	 * @param intakeNodeId
+	 *            root node id
+	 * @return tree of nodes
 	 */
-	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
-
-		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" >").append(EOL);
-		beginTag();
-
-		return preBuilder;
-	}
-
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
-	 */
-	public StringBuilder getPostBuilder() {
-		StringBuilder postBuilder = super.getPostBuilder();
-
-		endTag();
-		indent(postBuilder).append("</div> <!-- End Page -->").append(EOL);
-
-		return postBuilder;
-	}
-
+	public IntakeNode getIntakeNode(Integer intakeNodeId);
+	
 }

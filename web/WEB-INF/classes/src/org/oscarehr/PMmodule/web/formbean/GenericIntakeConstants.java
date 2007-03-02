@@ -5,7 +5,7 @@ import org.apache.struts.util.LabelValueBean;
 public class GenericIntakeConstants {
 
 	public static final LabelValueBean[] GENDERS = new LabelValueBean[] {
-    	new LabelValueBean("", ""),
+    	new LabelValueBean("", "D"),
     	new LabelValueBean("Male", "M"),
     	new LabelValueBean("Female", "F"),
     	new LabelValueBean("Transgendered", "T")

@@ -23,7 +23,8 @@
 			@import "<html:rewrite page="/css/displaytag.css" />";
 			@import "<html:rewrite page="/jsCalendar/skins/aqua/theme.css" />";
 		</style>
-		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar.js" />"></script>
+		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
+		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar.js" />" /></script>
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/lang/calendar-en.js" />"></script>
 		<script type="text/javascript" src="<html:rewrite page="/jsCalendar/calendar-setup.js" />"></script>
 				

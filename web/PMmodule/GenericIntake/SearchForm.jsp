@@ -1,45 +1,8 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ include file="/common/messages.jsp"%>
-<script type="text/javascript">
-	function validateForm() {
-		if (document.forms[0].elements['firstName'].value == '' && document.forms[0].elements['lastName'].value == '' &&
-			document.forms[0].elements['monthOfBirth'].value == '' && document.forms[0].elements['dayOfBirth'].value == '' && document.forms[0].elements['yearOfBirth'].value == '' &&
-			document.forms[0].elements['healthCardNumber'].value == '' && document.forms[0].elements['healthCardVersion'].value == '') {
-			
-			alert('You must use at least 1 of the search fields');
-			
-			return false;
-		}
-		
-		return true;
-	}
-		
-	function search() {
-		setMethod('search');
-	}
-	
-	function createLocal() {
-		setMethod('createLocal');
-	}
-	
-	function updateLocal(clientId) {
-		document.forms[0].elements['clientId'].value = clientId;
-		setMethod('updateLocal');
-	}
-	
-	function copyRemote(agencyId, clientId) {
-		document.forms[0].elements['agencyId'].value = agencyId;
-		document.forms[0].elements['clientId'].value = clientId;
-		setMethod('copyRemote');
-	}
-	
-	function setMethod(target) {
-		document.forms[0].method.value=target;
-	}
-</script>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
-<html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateForm();">
+<html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm();">
 	<html:hidden property="method" />
 	<html:hidden property="clientId" />
 	<html:hidden property="agencyId" />
@@ -91,7 +54,7 @@
 			<display:caption>Results from: <c:out value="${requestScope.genericIntakeSearchForm.matchType}" /></display:caption>
 			<display:setProperty name="paging.banner.placement" value="bottom" />
 			
-			<display:column title="">
+			<display:column style="width: 10%">
 				<c:choose>
 					<c:when test="${client.agencyId == 0 or client.agencyId == applicationScope.agency.id}">
 						<html-el:submit onclick="updateLocal('${client.demographicNo}')">Update Local</html-el:submit>

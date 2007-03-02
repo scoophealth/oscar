@@ -131,7 +131,11 @@
 				<c:choose>
 					<c:when test="${applicationScope.agency.id == client.agencyId or client.agencyId == 0}">
 						<!-- this is a local client -->
-						<span title="Update client intake form"><a href="#" onclick="update_client('<c:out value="${client.agencyId}"/>','<c:out value="${client.demographicNo}"/>');return false;"><img border="0" src="images/refresh.gif" /></a></span>
+						<span title="Update client intake form">
+							<a href="#" onclick="update_client('<c:out value="${client.agencyId}"/>','<c:out value="${client.demographicNo}"/>');return false;">
+								<img border="0" src="images/refresh.gif" />
+							</a>
+						</span>
 					</c:when>
 					<c:otherwise>
 						<!--  remote client -->

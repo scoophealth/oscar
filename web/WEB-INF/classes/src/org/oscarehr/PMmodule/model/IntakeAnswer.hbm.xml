@@ -7,12 +7,12 @@
 	modify it under the terms of the GNU General Public License
 	as published by the Free Software Foundation; either version 2
 	of the License, or (at your option) any later version.
-
+	
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 	GNU General Public License for more details.
-
+	
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -23,20 +23,19 @@
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
 	<class name="IntakeAnswer" table="intake_answer">
 		<meta attribute="sync-DAO">false</meta>
+		
 		<id name="id" type="integer" column="intake_answer_id">
 			<generator class="native" />
 		</id>
-		
+
 		<property name="value" column="val" type="string" not-null="true" />
 		
-		<many-to-one
-			name="instance"
-			column="intake_instance_id"
-			class="IntakeInstance"
+		<many-to-one name="intake"
+			column="intake_id"
+			class="Intake"
 			not-null="true" />
 		
-		<many-to-one
-			name="node"
+		<many-to-one name="node"
 			column="intake_node_id"
 			class="IntakeNode"
 			not-null="true" />

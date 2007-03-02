@@ -19,192 +19,130 @@
 package org.oscarehr.PMmodule.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.commons.collections.Closure;
 import org.oscarehr.PMmodule.model.base.BaseIntakeNode;
+import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
 
 public class IntakeNode extends BaseIntakeNode {
 
-	private class GetLevelClosure implements Closure {
-		private int level = 0;
-		
-		public void execute(Object o) {
-	        level++;
-        }
-
-		public int getLevel() {
-        	return level;
-        }
-	}
-	
-	private class GetNumLevelsClosure implements Closure {
-		private SortedSet<Integer> levels = new TreeSet<Integer>();
-
-		public void execute(Object o) {
-			IntakeNode leaf = (IntakeNode) o;
-			
-	    	if (leaf.getChildren().isEmpty()) {
-	    		levels.add(leaf.getLevel());
-	    	}	        
-        }
-		
-		public int getNumLevels() {
-			return levels.isEmpty() ? 0 : levels.last();
-		}
-	}
-	
 	private static final long serialVersionUID = 1L;
-	
-	private static int QUESTION_LEVEL = 3;
 
+	private IntakeNodeWalker walker;
+
+	public IntakeNode(IntakeNodeTemplate nodeTemplate) {
+		super(null, nodeTemplate);
+	}
+	
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	public IntakeNode () {
+
+	public IntakeNode() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeNode (java.lang.Integer id) {
+	public IntakeNode(java.lang.Integer id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeNode(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNodeType type) {
-		super(id, type);
+	public IntakeNode(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNodeTemplate nodeTemplate) {
+		super(id, nodeTemplate);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	public IntakeNode(IntakeNodeType type) {
-		super();
-		setType(type);
+	@Override
+	protected void initialize() {
+		setChildren(new ArrayList<IntakeNode>());
+		setIntakes(new TreeSet<Intake>());
+		setAnswers(new TreeSet<IntakeAnswer>());
+
+		walker = new IntakeNodeWalker(this);
+	}
+
+	@Override
+	public void addTochildren(IntakeNode child) {
+		child.setParent(this);
+		super.addTochildren(child);
 	}
 	
 	public boolean isIntake() {
-		return getParent() == null && getType().isIntakeType();
+		return getParent() == null && getNodeTemplate().isIntake();
 	}
 
-	public boolean isAnswer() {
-		return getType().isAnswerType();
+	public boolean isPage() {
+		return getNodeTemplate().isPage();
 	}
 
+	public boolean isQuestion() {
+		return getNodeTemplate().isQuestion();
+	}
+
+	public boolean isScalarAnswer() {
+		return getNodeTemplate().isScalarAnswer();
+	}
+
+	public boolean isAnswerBoolean() {
+		return getNodeTemplate().isAnswerBoolean();
+	}
+
+	public boolean hasPages() {
+		for (IntakeNode child : getChildren()) {
+			return child.isPage();
+		}
+
+		return false;
+	}
+
+	public IntakeNodeHtmlAdapter getHtmlAdapter(int indent, Intake intake, IntakeNode node) {
+		return getNodeTemplate().getType().getHtmlAdapter(indent, node, intake);
+	}
+	
 	public String getIdStr() {
-		return (getId() != null) ? getId().toString() : "";
+		return getId() != null ? getId().toString() : "";
+	}
+
+	public String getLabelStr() {
+		return getLabel() != null ? getLabel().getLabel() : getNodeTemplate().getLabelStr();
 	}
 
 	public Integer getIndex() {
 		if (getParent() != null) {
 			List<IntakeNode> siblings = getParent().getChildren();
-			
+
 			for (int i = 0; i < siblings.size(); i++) {
 				IntakeNode sibling = siblings.get(i);
-				
+
 				if (sibling.equals(this)) {
 					return i;
 				}
 			}
 		}
-		
-		return null;
-	}
-	
-	public Integer getNumSiblings() {
-		if (getParent() != null) {
-			return getParent().getChildren().size();
-		}
-		
-		return null;
-	}
-	
-	public String getLabel(int index) {
-		return (getLabels().size() > index) ? getLabels().get(index).getLabel() : "";
-	}
-	
-	public int getQuestionLevel() {
-		return getLevel() - IntakeNode.QUESTION_LEVEL;
+
+		return 0;
 	}
 
-	public int getMaxPathLength() {
-		return getNumLevels() - getLevel() + 1;
+	public int getLevel() {
+		return walker.getLevel();
 	}
-	
-	@Override
-	public void addTochildren(IntakeNode child) {
-		super.addTochildren(child);
-		child.setParent(this);
+
+	public int getQuestionLevel() {
+		return walker.getQuestionLevel();
 	}
-	
-	@Override
-	public void addTolabels(IntakeLabel label) {
-		super.addTolabels(label);
-		label.setNode(this);
+
+	public int getNumLevels() {
+		return walker.getNumLevels();
 	}
-	
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		
-		builder.append(REF).append("(");
-		builder.append(getId()).append(", ").append(getType());
-		
-		for (Iterator i = getLabels().iterator(); i.hasNext();) {
-	        builder.append(", ").append(i.next());
-        }
-
-		builder.append(")");
-
-		return builder.toString();
-	}
-	
-	@Override
-	protected void initialize() {
-		setChildren(new ArrayList<IntakeNode>());
-		setLabels(new ArrayList<IntakeLabel>());
-		setAnswers(new TreeSet<IntakeAnswer>());
-		setInstances(new TreeSet<IntakeInstance>());
-	}
-	
-	int getLevel() {
-		GetLevelClosure closure = new GetLevelClosure();		
-		getRoot(closure);
-		
-		return closure.getLevel();
+		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getLabel()).append(", ").append(getNodeTemplate()).append(")").toString();
 	}
 
-	int getNumLevels() {
-		GetNumLevelsClosure closure = new GetNumLevelsClosure();
-		walkTree(closure, getRoot().getChildren());
-		
-		return closure.getNumLevels();
-	}
-
-	private IntakeNode getRoot() {
-		return getRoot(new Closure() { public void execute(Object o) {} });
-	}
-	
-	private IntakeNode getRoot(Closure closure) {
-		IntakeNode root = this;
-		
-		while (root.getParent() != null) {
-			closure.execute(root);
-			root = root.getParent();
-		}
-		
-		return root;
-	}
-
-	private void walkTree(Closure closure, List<IntakeNode> children) {
-	    for (IntakeNode child : children) {
-			closure.execute(child);
-	        walkTree(closure, child.getChildren());
-        }
-    }
-		
 }

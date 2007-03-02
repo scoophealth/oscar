@@ -1,21 +1,39 @@
+/**
+ * Copyright (C) 2007.
+ * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package org.oscarehr.PMmodule.service;
 
-import org.oscarehr.PMmodule.model.IntakeInstance;
+import org.oscarehr.PMmodule.model.Intake;
 
 public interface GenericIntakeManager {
 	
-	public IntakeInstance createQuickIntake(String providerNo);
+	public Intake createQuickIntake(String providerNo);
 
-	public IntakeInstance createIndepthIntake(String providerNo);
+	public Intake createIndepthIntake(String providerNo);
 
-	public IntakeInstance createProgramIntake(Integer programId, String providerNo);
+	public Intake createProgramIntake(Integer programId, String providerNo);
 	
-	public IntakeInstance copyQuickIntake(Integer clientId, String staffId);
+	public Intake copyQuickIntake(Integer clientId, String staffId);
 
-	public IntakeInstance copyIndepthIntake(Integer clientId, String staffId);
+	public Intake copyIndepthIntake(Integer clientId, String staffId);
 
-	public IntakeInstance copyProgramIntake(Integer clientId, Integer programId, String staffId);
+	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId);
 	
-	public Integer saveInstance(IntakeInstance instance);
+	public Integer saveIntake(Intake intake);
 
 }

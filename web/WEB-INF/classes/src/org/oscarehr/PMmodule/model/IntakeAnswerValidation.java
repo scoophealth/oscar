@@ -16,38 +16,43 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-package org.oscarehr.PMmodule.web.adapter;
+package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.model.base.BaseIntakeAnswerValidation;
 
-public class PageTypeHtmlAdapter extends AbstractHtmlAdapter {
+public class IntakeAnswerValidation extends BaseIntakeAnswerValidation {
 
-	public PageTypeHtmlAdapter(int indent, IntakeNode node) {
-		super(indent, node);
+	private static final long serialVersionUID = 1L;
+
+	public IntakeAnswerValidation(String type) {
+		super(null, type);
+	}
+
+	/* [CONSTRUCTOR MARKER BEGIN] */
+
+	public IntakeAnswerValidation() {
+		super();
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
+	 * Constructor for primary key
 	 */
-	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
-
-		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" >").append(EOL);
-		beginTag();
-
-		return preBuilder;
+	public IntakeAnswerValidation(java.lang.Integer id) {
+		super(id);
 	}
 
 	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
+	 * Constructor for required fields
 	 */
-	public StringBuilder getPostBuilder() {
-		StringBuilder postBuilder = super.getPostBuilder();
+	public IntakeAnswerValidation(java.lang.Integer id, java.lang.String type) {
+		super(id, type);
+	}
 
-		endTag();
-		indent(postBuilder).append("</div> <!-- End Page -->").append(EOL);
+	/* [CONSTRUCTOR MARKER END] */
 
-		return postBuilder;
+	@Override
+	public String toString() {
+		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getType()).append(")").toString();
 	}
 
 }

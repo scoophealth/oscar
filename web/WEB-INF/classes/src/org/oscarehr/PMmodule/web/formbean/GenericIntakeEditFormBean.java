@@ -1,3 +1,21 @@
+/**
+ * Copyright (C) 2007.
+ * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 package org.oscarehr.PMmodule.web.formbean;
 
 import java.util.ArrayList;
@@ -11,7 +29,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.IntakeInstance;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 
 public class GenericIntakeEditFormBean extends ActionForm {
@@ -25,13 +43,13 @@ public class GenericIntakeEditFormBean extends ActionForm {
     private LabelValueBean[] months;
     private LabelValueBean[] days;
 	
-    private List<LabelValueBean> bedPrograms;
-    private String bedProgramId;
+    private List<LabelValueBean> bedCommunityPrograms;
+    private String bedCommunityProgramId;
 
 	private List<LabelValueBean> servicePrograms;
     private String[] serviceProgramIds;
     
-    private IntakeInstance instance;
+    private Intake intake;
     private Integer addIntakeNodeId;
     
     public GenericIntakeEditFormBean() {
@@ -80,23 +98,23 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	    this.days = days;
     }
 	
-	public Integer getSelectedBedProgramId() {
+	public Integer getSelectedBedCommunityProgramId() {
     	Integer programId = null;
     	
-    	if (bedProgramId != null) {
-    		programId = Integer.valueOf(bedProgramId);
+    	if (bedCommunityProgramId != null && bedCommunityProgramId.length() > 0) {
+    		programId = Integer.valueOf(bedCommunityProgramId);
     	}
     	
     	return programId;
     }
 
-	public void setCurrentBedProgramId(Integer programId) {
+	public void setCurrentBedCommunityProgramId(Integer programId) {
     	if (programId != null) {
-    		setBedProgramId(programId.toString());
+    		setBedCommunityProgramId(programId.toString());
     	}
     }
 
-	public void setBedProgramLabelValues(List<Program> programs) {
+	public void setBedCommunityProgramLabelValues(List<Program> programs) {
 		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
 		
 		if (programs != null) {
@@ -105,23 +123,23 @@ public class GenericIntakeEditFormBean extends ActionForm {
 			}
 		}
 		
-		setBedPrograms(labelValues);
+		setBedCommunityPrograms(labelValues);
 	}
 
-	public List<LabelValueBean> getBedPrograms() {
-    	return bedPrograms;
+	public List<LabelValueBean> getBedCommunityPrograms() {
+    	return bedCommunityPrograms;
     }
 	
-	public void setBedPrograms(List<LabelValueBean> bedPrograms) {
-    	this.bedPrograms = bedPrograms;
+	public void setBedCommunityPrograms(List<LabelValueBean> bedCommunityPrograms) {
+    	this.bedCommunityPrograms = bedCommunityPrograms;
     }
 
-	public String getBedProgramId() {
-		return bedProgramId;
+	public String getBedCommunityProgramId() {
+		return bedCommunityProgramId;
 	}
 
-	public void setBedProgramId(String currentBedProgramId) {
-		this.bedProgramId = currentBedProgramId;
+	public void setBedCommunityProgramId(String currentBedCommunityProgramId) {
+		this.bedCommunityProgramId = currentBedCommunityProgramId;
 	}
 
 	public List<Integer> getSelectedServiceProgramIds() {
@@ -174,12 +192,12 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		this.serviceProgramIds = currentServiceProgramIds;
 	}
 
-	public IntakeInstance getInstance() {
-    	return instance;
+	public Intake getIntake() {
+    	return intake;
     }
 
-	public void setInstance(IntakeInstance instance) {
-    	this.instance = instance;
+	public void setIntake(Intake instance) {
+    	this.intake = instance;
     }
 	
 	public Integer getAddIntakeNodeId() {
@@ -191,24 +209,27 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	}
 
 	public String getTitle() {
-		return instance.getNode().getLabel(0);
+		return intake.getNode().getLabelStr();
 	}
 
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
-		setBedProgramId("");
+		setBedCommunityProgramId("");
 		setServiceProgramIds(new String[] {});
 		
-	    // TODO Reset checkboxes
+		if (intake != null) {
+			for (String id : intake.getBooleanAnswerNodeIds()) {
+				if (request.getParameter("answerMapped[" + id + "].value") == null) {
+					intake.setAnswerMapped(id, "F");
+				}
+			}
+		}
 	}
 	
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		ActionErrors errors = new ActionErrors();
-		
-		// TODO Validate answers
-		
-	    return errors;
+		// TODO Intake validate answers
+	    return new ActionErrors();
 	}
     
 }

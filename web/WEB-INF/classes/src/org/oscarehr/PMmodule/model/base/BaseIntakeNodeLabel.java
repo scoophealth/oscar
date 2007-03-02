@@ -21,28 +21,28 @@ package org.oscarehr.PMmodule.model.base;
 import java.io.Serializable;
 
 /**
- * This is an object that contains data related to the intake_node_type table. Do not modify this class because it will be overwritten if the configuration file related to this class is modified.
+ * This is an object that contains data related to the intake_node_label table. Do not modify this class because it will be overwritten if the configuration file related to this class is modified.
  * 
- * @hibernate.class table="intake_node_type"
+ * @hibernate.class table="intake_node_label"
  */
 
-public abstract class BaseIntakeNodeType implements Serializable {
+public abstract class BaseIntakeNodeLabel implements Serializable {
 
-	public static String REF = "IntakeNodeType";
+	public static String REF = "IntakeNodeLabel";
 
-	public static String PROP_TYPE = "type";
+	public static String PROP_LABEL = "label";
 
 	public static String PROP_ID = "id";
 
 	// constructors
-	public BaseIntakeNodeType() {
+	public BaseIntakeNodeLabel() {
 		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public BaseIntakeNodeType(java.lang.Integer id) {
+	public BaseIntakeNodeLabel(java.lang.Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -50,10 +50,10 @@ public abstract class BaseIntakeNodeType implements Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public BaseIntakeNodeType(java.lang.Integer id, java.lang.String type) {
+	public BaseIntakeNodeLabel(java.lang.Integer id, java.lang.String label) {
 
 		this.setId(id);
-		this.setType(type);
+		this.setLabel(label);
 		initialize();
 	}
 
@@ -66,12 +66,12 @@ public abstract class BaseIntakeNodeType implements Serializable {
 	private java.lang.Integer id;
 
 	// fields
-	private java.lang.String type;
+	private java.lang.String label;
 
 	/**
 	 * Return the unique identifier of this class
 	 * 
-	 * @hibernate.id generator-class="native" column="intake_node_type_id"
+	 * @hibernate.id generator-class="native" column="intake_node_label_id"
 	 */
 	public java.lang.Integer getId() {
 		return id;
@@ -89,33 +89,33 @@ public abstract class BaseIntakeNodeType implements Serializable {
 	}
 
 	/**
-	 * Return the value associated with the column: type
+	 * Return the value associated with the column: lbl
 	 */
-	public java.lang.String getType() {
-		return type;
+	public java.lang.String getLabel() {
+		return label;
 	}
 
 	/**
-	 * Set the value related to the column: type
+	 * Set the value related to the column: lbl
 	 * 
-	 * @param type
-	 *            the type value
+	 * @param label
+	 *            the lbl value
 	 */
-	public void setType(java.lang.String type) {
-		this.type = type;
+	public void setLabel(java.lang.String label) {
+		this.label = label;
 	}
 
 	public boolean equals(Object obj) {
 		if (null == obj)
 			return false;
-		if (!(obj instanceof org.oscarehr.PMmodule.model.IntakeNodeType))
+		if (!(obj instanceof org.oscarehr.PMmodule.model.IntakeNodeLabel))
 			return false;
 		else {
-			org.oscarehr.PMmodule.model.IntakeNodeType intakeNodeType = (org.oscarehr.PMmodule.model.IntakeNodeType) obj;
-			if (null == this.getId() || null == intakeNodeType.getId())
+			org.oscarehr.PMmodule.model.IntakeNodeLabel intakeNodeLabel = (org.oscarehr.PMmodule.model.IntakeNodeLabel) obj;
+			if (null == this.getId() || null == intakeNodeLabel.getId())
 				return false;
 			else
-				return (this.getId().equals(intakeNodeType.getId()));
+				return (this.getId().equals(intakeNodeLabel.getId()));
 		}
 	}
 

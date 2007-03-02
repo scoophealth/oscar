@@ -18,39 +18,49 @@
  */
 package org.oscarehr.PMmodule.web.adapter;
 
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class QuestionTypeHtmlAdapter extends AbstractHtmlAdapter {
+abstract class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
 	
-	public QuestionTypeHtmlAdapter(int indent, IntakeNode node) {
-	    super(indent, node);
+	protected AbstractAnswerHtmlAdapter(int indent, IntakeNode node, Intake intake) {
+	    super(indent, node, intake);
     }
+	
+	protected AbstractAnswerHtmlAdapter(int indent, IntakeNode node) {
+		super(indent, node);
+	}
 
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
-	 */
-	public StringBuilder getPreBuilder() {
-		StringBuilder preBuilder = super.getPreBuilder();
-
-		indent(preBuilder).append("<tr>").append(EOL);
+	protected StringBuilder startRow(StringBuilder builder) {
+		indent(builder).append("<tr>").append(EOL);
 		beginTag();
-		
+
 		for (int i = 0; i < getNestedQuestionLevel(); i++) {
-			indent(preBuilder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
+			indent(builder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
         }
+
+		return builder;
+	}
+	
+	protected StringBuilder endRow(StringBuilder builder) {
+		endTag();
+		indent(builder).append("</tr>").append(EOL);
 		
-		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
+		return builder;
+	}
+
+	protected StringBuilder startCell(StringBuilder builder) {
+		indent(builder).append("<td class=\"intakeAnswerCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
 		beginTag();
 		
-		indent(preBuilder).append(getLabel()).append(EOL);
-		
+		return builder;
+	}
+	
+	protected StringBuilder endCell(StringBuilder builder) {
 		endTag();
-		indent(preBuilder).append("</td>").append(EOL);
+		indent(builder).append("</td>").append(EOL);
 		
-		endTag();
-		indent(preBuilder).append("</tr>").append(EOL);
-
-	    return preBuilder;
-    }
+		return builder;
+	}
 	
 }
