@@ -83,6 +83,9 @@
 		<property name="formsManager">
 			<ref bean="formsManager" />
 		</property>
+		<property name="genericIntakeManager">
+			<ref bean="genericIntakeManager" />
+		</property>
 		<property name="intakeAManager">
 			<ref bean="intakeAManager" />
 		</property>

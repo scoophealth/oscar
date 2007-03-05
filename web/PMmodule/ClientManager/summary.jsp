@@ -1,17 +1,3 @@
-<!--
-	Copyright (c) 2001-2002.
-	
-	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
-	This software is published under the GPL GNU General Public License.
-	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See the GNU General Public License for more details.
-	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-	
-	OSCAR TEAM
-	
-	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
--->
 <%@ include file="/taglibs.jsp"%>
 
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
@@ -40,18 +26,8 @@ function consent_mandatory() {
 	</c:if>
 }
 
-function openIntakeA(view) {
-	var url = '<html:rewrite action="/PMmodule/IntakeA.do"/>';
-		url += "?formIntakeALock=N&viewIntakeA=" + view + "&demographicNo=";
-		url += '<c:out value="${client.demographicNo}"/>';		
-	location.href = url;
-}
-
-function openIntakeC(view) {
-	var url = '<html:rewrite action="/PMmodule/IntakeC.do"/>';
-		url += "?formIntakeCLock=N&viewIntakeC=" + view + "&demographicNo=";
-		url += '<c:out value="${client.demographicNo}"/>';		
-	location.href = url;
+function updateQuickIntake(clientId) {
+	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=quick&clientId=" + clientId;
 }
 
 function openConsent(){
@@ -116,7 +92,7 @@ function showEMPILinks() {
 		<%
 		if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
 			Integer demographicNo = ((Demographic) request.getAttribute("client")).getDemographicNo();
-			pageContext.setAttribute("demographicNo",demographicNo);
+			pageContext.setAttribute("demographicNo", demographicNo);
 		%>
 			<a href="javascript:void(0);" onclick="window.open('<c:out value="${ctx}"/>/demographic/demographiccontrol.jsp?displaymode=edit&dboperation=search_detail&demographic_no=<c:out value="${demographicNo}"/>','master_file');return false;">OSCAR Master File</a>
 		<%
@@ -175,55 +151,32 @@ function showEMPILinks() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th>Intake Forms</th>
+			<th>Intake Form</th>
 		</tr>
 	</table>
 </div>
-
 <table class="simple" cellspacing="2" cellpadding="3">
 	<thead>
 		<tr>
-			<th>Form Name</th>
+			<th>Name</th>
 			<th>Most Recent</th>
 			<th>Staff</th>
-			<th>Status</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:if test="${requestScope.intakeAEnabled eq 'true'}">
-		<tr>
-			<td width="20%">CAISI Intake</td>
-			<c:if test="${intakeADate != null}">
-				<td><fmt:formatDate value="${intakeADate}" pattern="yyyy-MM-dd kk:mm" /></td>
-				<td><c:out value="${intakeAProvider}" /></td>
-				<td></td>
-				<td><input type="button" value="Update" onclick="javascript:openIntakeA('Y')" /></td>
-			</c:if>
-			<c:if test="${intakeADate == null}">
-				<td><span style="color:red">None found</span></td>
-				<td></td>
-				<td></td>
-				<td><input type="button" value="New Form" onclick="javascript:openIntakeA('N')" /></td>
-			</c:if>
-		</tr>
-	</c:if>
-	<c:if test="${requestScope.intakeCEnabled eq 'true'}">
-		<tr>
-			<td width="20%">Street Health Mental Health Intake</td>
-			<c:if test="${intakeCDate != null}">
-				<td><fmt:formatDate value="${intakeCDate}" pattern="yyyy-MM-dd kk:mm" /></td>
-				<td><c:out value="${intakeCProvider}" /></td>
-				<td></td>
-				<td><input type="button" value="Update" onclick="javascript:openIntakeC('Y')" /></td>
-			</c:if>
-			<c:if test="${intakeCDate == null}">
-				<td><span style="color:red">None found</span></td>
-				<td></td>
-				<td></td>
-				<td><input type="button" value="New Form" onclick="javascript:openIntakeC('N')" /></td>
-			</c:if>
-		</tr>
-	</c:if>
+	<tr>
+		<td width="20%">Registration Intake</td>
+		<c:if test="${mostRecentQuickIntake != null}">
+			<td><c:out value="${mostRecentQuickIntake.createdOnStr}" /></td>
+			<td><c:out value="${mostRecentQuickIntake.staffName}" /></td>
+			<td><input type="button" value="Update" onclick="javascript:updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+		</c:if>
+		<c:if test="${mostRecentQuickIntake == null}">
+			<td><span style="color:red">None found</span></td>
+			<td></td>
+			<td><input type="button" value="Create" onclick="javascript:updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+		</c:if>
+	</tr>
 </table>
 
 <br />
@@ -232,7 +185,7 @@ function showEMPILinks() {
 	<div class="tabs">
 		<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
-				<th>Consent</th>
+				<th>Consent Form</th>
 			</tr>
 		</table>
 	</div>
@@ -240,7 +193,7 @@ function showEMPILinks() {
 	<table class="simple" cellspacing="2" cellpadding="3">
 		<thead>
 			<tr>
-				<th>Form Name</th>
+				<th>Name</th>
 				<th>Most Recent</th>
 				<th>Staff</th>
 				<th>Status</th>
@@ -360,14 +313,14 @@ function showEMPILinks() {
 			Date referralDate = tempReferral.getReferralDate();
 			Date currentDate = new Date();
 			
-			long diff = currentDate.getTime() - referralDate.getTime();
-			diff = diff / 1000; // seconds
-			diff = diff / 60; // minutes
-			diff = diff / 60; // hours
-			diff = diff / 24; // days
+			long referralDiff = currentDate.getTime() - referralDate.getTime();
+			referralDiff = referralDiff / 1000; // seconds
+			referralDiff = referralDiff / 60; // minutes
+			referralDiff = referralDiff / 60; // hours
+			referralDiff = referralDiff / 24; // days
 
-			String numDays = String.valueOf(diff);
+			String referralNumDays = String.valueOf(referralDiff);
 		%>
-		<%=numDays%>
+		<%=referralNumDays%>
 	</display:column>
 </display:table>

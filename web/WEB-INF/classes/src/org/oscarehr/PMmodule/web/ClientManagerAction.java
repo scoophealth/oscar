@@ -19,7 +19,6 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
@@ -54,9 +53,7 @@ import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
-import org.oscarehr.PMmodule.model.FormFollowUp;
-import org.oscarehr.PMmodule.model.Formintakea;
-import org.oscarehr.PMmodule.model.Formintakec;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
@@ -536,10 +533,10 @@ public class ClientManagerAction extends BaseAction {
 
 		if (tabBean.getTab().equals("Summary")) {
 			request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
-			request.setAttribute("intakeADate", clientManager.getMostRecentIntakeADate(demographicNo));
-			request.setAttribute("intakeAProvider", clientManager.getMostRecentIntakeAProvider(demographicNo));
-			request.setAttribute("intakeCDate", clientManager.getMostRecentIntakeCDate(demographicNo));
-			request.setAttribute("intakeCProvider", clientManager.getMostRecentIntakeCProvider(demographicNo));
+			
+			Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
+			request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
+			
 			Consent consent = consentManager.getMostRecentConsent(Long.valueOf(demographicNo));
 			request.setAttribute("consent", consent);
 
@@ -559,9 +556,7 @@ public class ClientManagerAction extends BaseAction {
 					request.setAttribute("remote_consent_date", clientManager.getDemographicExt(new Integer(demographicNo), "consent_dt"));
 				}
 			}
-
-			request.setAttribute("intakeAEnabled", String.valueOf(intakeAManager.getEnabled()));
-			request.setAttribute("intakeCEnabled", String.valueOf(intakeCManager.getEnabled()));
+			
 			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo));
 		}
 
@@ -613,9 +608,10 @@ public class ClientManagerAction extends BaseAction {
 
 		/* forms */
 		if (tabBean.getTab().equals("Forms")) {
-			request.setAttribute("FormFollowUp_info", formsManager.getFormInfo(demographicNo, FormFollowUp.class));
-			request.setAttribute("FormAFollowUp_info", formsManager.getFormInfo(demographicNo, Formintakea.class));
-			request.setAttribute("FormCFollowUp_info", formsManager.getFormInfo(demographicNo, Formintakec.class));
+			// TODO Intake get lists of intake forms (quick, indepth, program)
+			request.setAttribute("quickIntakes", genericIntakeManager.getQuickIntakes(Integer.valueOf(demographicNo)));
+			request.setAttribute("indepthIntakes", genericIntakeManager.getIndepthIntakes(Integer.valueOf(demographicNo)));
+			request.setAttribute("programIntakes", genericIntakeManager.getProgramIntakes(Integer.valueOf(demographicNo)));
 
 			/* survey module */
 			request.setAttribute("survey_list", surveyManager.getAllForms());

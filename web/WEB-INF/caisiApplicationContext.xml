@@ -602,6 +602,7 @@
 				<property name="genericIntakeNodeDAO" ref="genericIntakeNodeDAO" />
 				<property name="genericIntakeDAO" ref="genericIntakeDAO" />
 				<property name="programDAO" ref="programDao" />
+				<property name="admissionDAO" ref="admissionDao" />
 			</bean>
 		</property>
 	</bean>

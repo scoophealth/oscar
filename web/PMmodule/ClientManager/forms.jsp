@@ -1,53 +1,19 @@
-<!-- 
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
- -->
-
 <%@ include file="/taglibs.jsp"%>
+
 <input type="hidden" name="clientId" value="" />
 <input type="hidden" name="formId" value="" />
+
 <script>
-function openForm() {
-	var url = '<html:rewrite action="/PMmodule/Forms/FollowUp.do"/>';
-	url += "?demographicNo=";
-	url += '<c:out value="${client.demographicNo}"/>';
-	
-	location.href = url;
+function updateQuickIntake(clientId) {
+	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=quick&clientId=" + clientId;
 }
 
-function openFormA() {
-	var url = '<html:rewrite action="/PMmodule/IntakeA.do"/>';
-	url += "?demographicNo=";
-	url += '<c:out value="${client.demographicNo}"/>';
-	
-	location.href = url;
+function updateIndepthIntake(clientId) {
+	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=indepth&clientId=" + clientId;
 }
 
-function openFormC() {
-	var url = '<html:rewrite action="/PMmodule/IntakeC.do"/>';
-	url += "?demographicNo=";
-	url += '<c:out value="${client.demographicNo}"/>';
-	
-	location.href = url;
+function updateProgramIntake(clientId, programId) {
+	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=program&clientId=" + clientId + "&programId=" + programId;
 }
 
 function openSurvey() {
@@ -70,7 +36,7 @@ function openSurvey() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th title="Programs">Follow Up Form (aka IntakeB)</th>
+			<th title="Programs">Registration Intake</th>
 		</tr>
 	</table>
 </div>
@@ -82,16 +48,16 @@ function openSurvey() {
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:forEach var="form" items="${FormFollowUp_info}">
+	<c:forEach var="intake" items="${quickIntakes}">
 		<tr>
-			<td width="20%"><c:out value="${form.formDate}" /></td>
-			<td><c:out value="${form.providerName}" /></td>
+			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
+			<td><c:out value="${intake.staffName}" /></td>
 			<td><input type="button" value="View" onclick="alert('Not yet implemented');" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
 		<td colspan="3">
-			<input type="button" value="Update" onclick="openForm()" />
+			<input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />
 		</td>
 	</tr>
 </table>
@@ -101,7 +67,7 @@ function openSurvey() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th title="Programs">Form IntakeA</th>
+			<th title="Programs">Follow-up Intake</th>
 		</tr>
 	</table>
 </div>
@@ -113,16 +79,16 @@ function openSurvey() {
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:forEach var="form" items="${FormAFollowUp_info}">
+	<c:forEach var="intake" items="${indepthIntakes}">
 		<tr>
-			<td width="20%"><c:out value="${form.formDate}" /></td>
-			<td><c:out value="${form.providerName}" /></td>
+			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
+			<td><c:out value="${intake.staffName}" /></td>
 			<td><input type="button" value="View" onclick="alert('Not yet implemented');" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
 		<td colspan="3">
-			<input type="button" value="Update" onclick="openFormA()" />
+			<input type="button" value="Update" onclick="updateIndepthIntake('<c:out value="${client.demographicNo}" />')" />
 		</td>
 	</tr>
 </table>
@@ -132,7 +98,7 @@ function openSurvey() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th title="Programs">Form IntakeC</th>
+			<th title="Programs">Program Intakes</th>
 		</tr>
 	</table>
 </div>
@@ -144,16 +110,16 @@ function openSurvey() {
 			<th>Actions</th>
 		</tr>
 	</thead>
-	<c:forEach var="form" items="${FormCFollowUp_info}">
+	<c:forEach var="intake" items="${programIntakes}">
 		<tr>
-			<td width="20%"><c:out value="${form.formDate}" /></td>
-			<td><c:out value="${form.providerName}" /></td>
-			<td><input type="button" value="View" onclick="alert('Not yet implemented');" /></td>
+			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
+			<td><c:out value="${intake.staffName}" /></td>
+			<td>
+				<input type="button" value="View" onclick="alert('Not yet implemented');" />
+				<input type="button" value="Update" onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
+			</td>
 		</tr>
 	</c:forEach>
-	<tr>
-		<td colspan="3"><input type="button" value="Update" onclick="openFormC()" /></td>
-	</tr>
 </table>
 <br />
 <br />
@@ -161,7 +127,7 @@ function openSurvey() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th title="Programs">User Created Forms</th>
+			<th title="Programs">User Created</th>
 		</tr>
 	</table>
 </div>
@@ -186,7 +152,7 @@ function openSurvey() {
 <br />
 <br />
 
-New Form:&nbsp;
+New User Created Form:&nbsp;
 <html:select property="form.formId" onchange="openSurvey()">
 	<html:option value="0">&nbsp;</html:option>
 	<html:options collection="survey_list" property="formId" labelProperty="description" />

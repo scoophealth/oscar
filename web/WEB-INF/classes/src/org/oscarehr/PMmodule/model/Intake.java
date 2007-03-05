@@ -18,25 +18,35 @@
  */
 package org.oscarehr.PMmodule.model;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.oscarehr.PMmodule.model.base.BaseIntake;
 
 public class Intake extends BaseIntake {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
-	public static Intake create(IntakeNode node, Integer clientId, String staffId) {
+	public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId) {
 		Intake intake = new Intake();
 		intake.setNode(node);
 		intake.setClientId(clientId);
+		intake.setProgramId(programId);
 		intake.setStaffId(staffId);
 		intake.setCreatedOn(Calendar.getInstance());
 
 		return intake;
 	}
+	
+	private Demographic client;
+	private Provider staff;
+	private Integer programId;
 
 	/* [CONSTRUCTOR MARKER BEGIN] */
 
@@ -61,21 +71,26 @@ public class Intake extends BaseIntake {
 	/* [CONSTRUCTOR MARKER END] */
 	
 	@Override
+	protected void initialize() {
+		setAnswers(new TreeSet<IntakeAnswer>());
+	}
+	
+	@Override
 	public void addToanswers(IntakeAnswer answer) {
 		answer.setIntake(this);
 		super.addToanswers(answer);
 	}
-
+	
 	public IntakeAnswer getAnswerMapped(String key) {
 		for (IntakeAnswer answer : getAnswers()) {
 			if (answer.getNode().getIdStr().equals(key)) {
 				return answer;
 			}
 		}
-
+		
 		throw new IllegalStateException("No answer found with key: " + key);
 	}
-
+	
 	public void setAnswerMapped(String key, String value) {
 		for (IntakeAnswer answer : getAnswers()) {
 			if (answer.getNode().getIdStr().equals(key)) {
@@ -83,7 +98,7 @@ public class Intake extends BaseIntake {
 				return;
 			}
 		}
-
+		
 		throw new IllegalStateException("No answer found with key: " + key);
 	}
 	
@@ -97,6 +112,34 @@ public class Intake extends BaseIntake {
 		}		
 		
 		return ids;
+	}
+	
+	public String getClientName() {
+		return client != null ? client.getFormattedName() : null;
+	}
+	
+	public void setClient(Demographic client) {
+		this.client = client;
+	}
+	
+	public String getStaffName() {
+		return staff != null ? staff.getFormattedName() : null;
+	}
+
+	public void setStaff(Provider staff) {
+		this.staff = staff;
+	}
+	
+	public Integer getProgramId() {
+		return programId;
+	}
+	
+	public void setProgramId(Integer programId) {
+		this.programId = programId;
+	}
+	
+	public String getCreatedOnStr() {
+		return DATE_FORMAT.format(getCreatedOn().getTime());
 	}
 
 	@Override

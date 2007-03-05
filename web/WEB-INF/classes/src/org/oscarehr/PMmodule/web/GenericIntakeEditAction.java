@@ -212,10 +212,6 @@ public class GenericIntakeEditAction extends BaseAction {
 		return Integer.valueOf(getParameter(request, PROGRAM_ID));
 	}
 		
-	private String getParameter(HttpServletRequest request, String parameterName) {
-		return request.getParameter(parameterName);
-	}
-	
 	// Forward
 	
 	private ActionForward getClientEditForward(ActionMapping mapping, Integer clientId) {

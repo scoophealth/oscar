@@ -18,9 +18,17 @@
  */
 package org.oscarehr.PMmodule.service;
 
+import java.util.List;
+
 import org.oscarehr.PMmodule.model.Intake;
 
 public interface GenericIntakeManager {
+	
+	public Intake copyQuickIntake(Integer clientId, String staffId);
+	
+	public Intake copyIndepthIntake(Integer clientId, String staffId);
+	
+	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId);
 	
 	public Intake createQuickIntake(String providerNo);
 
@@ -28,12 +36,14 @@ public interface GenericIntakeManager {
 
 	public Intake createProgramIntake(Integer programId, String providerNo);
 	
-	public Intake copyQuickIntake(Integer clientId, String staffId);
+	public Intake getMostRecentQuickIntake(Integer clientId);
 
-	public Intake copyIndepthIntake(Integer clientId, String staffId);
+	public List<Intake> getQuickIntakes(Integer clientId);
 
-	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId);
-	
+	public List<Intake> getIndepthIntakes(Integer clientId);
+
+	public List<Intake> getProgramIntakes(Integer clientId);
+
 	public Integer saveIntake(Intake intake);
 
 }

@@ -33,10 +33,10 @@ import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
 import org.oscarehr.PMmodule.service.BedCheckTimeManager;
+import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ConsentManager;
-import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.FormsManager;
 import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.IntakeAManager;
@@ -225,15 +225,19 @@ public class BaseAction extends DispatchAction {
 	protected String getIP(HttpServletRequest request) {
 		return request.getRemoteAddr();
 	}
-
-	protected Provider getProvider(HttpServletRequest request) {
-		return (Provider) request.getSession().getAttribute("provider");
-	}
-
+	
 	protected String getProviderNo(HttpServletRequest request) {
 		return getProvider(request).getProviderNo();
 	}
 
+	protected Provider getProvider(HttpServletRequest request) {
+		return (Provider) request.getSession().getAttribute("provider");
+	}
+	
+	protected String getParameter(HttpServletRequest request, String parameterName) {
+		return request.getParameter(parameterName);
+	}
+	
 	protected ActionForward createForward(ActionMapping mapping, String forwardName, StringBuilder parameters) {
 		ActionForward forward = mapping.findForward(forwardName);
 		StringBuilder path = new StringBuilder(forward.getPath());

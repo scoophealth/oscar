@@ -24,7 +24,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
@@ -224,12 +223,6 @@ public class GenericIntakeEditFormBean extends ActionForm {
 				}
 			}
 		}
-	}
-	
-	@Override
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
-		// TODO Intake validate answers
-	    return new ActionErrors();
 	}
     
 }

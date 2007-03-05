@@ -18,6 +18,8 @@
  */
 package org.oscarehr.PMmodule.dao;
 
+import java.util.List;
+
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
@@ -27,19 +29,34 @@ public interface GenericIntakeDAO {
 	 * Get most recent intake with given node for given client
 	 * 
 	 * @param node
-	 *            node id
+	 *            node
 	 * @param clientId
 	 *            client id
+	 * @param programId
+	 *            program id
 	 * @return Most recent intake
 	 */
-	public Intake getIntake(IntakeNode node, Integer clientId);
+	public Intake getIntake(IntakeNode node, Integer clientId, Integer programId);
+
+	/**
+	 * Get intakes with given node for given client
+	 * 
+	 * @param node
+	 *            node
+	 * @param clientId
+	 *            client id
+	 * @param programId
+	 *            program id
+	 * @return Intakes
+	 */
+	public List<Intake> getIntakes(IntakeNode node, Integer clientId, Integer programId);
 
 	/**
 	 * Save a new intake
 	 * 
 	 * @param intake
-	 *            given intake
-	 * @return intake id
+	 *            new intake
+	 * @return saved intake id
 	 */
 	public Integer saveIntake(Intake intake);
 

@@ -39,12 +39,13 @@ public class GenericIntakeSearchAction extends BaseAction {
 	
 	private static Log LOG = LogFactory.getLog(GenericIntakeSearchAction.class);
 	
-	private static final String SEARCH_FORM = "searchForm";
-	private static final String INTAKE_EDIT = "intakeEdit";
+	// Forwards
+	private static final String FORWARD_SEARCH_FORM = "searchForm";
+	private static final String FORWARD_INTAKE_EDIT = "intakeEdit";
 	
 	@Override
 	protected ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	    return mapping.findForward(SEARCH_FORM);
+	    return mapping.findForward(FORWARD_SEARCH_FORM);
 	}
 	
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -62,7 +63,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 		
 		// if matches found display results, otherwise create local intake
 		if (intakeSearchBean.isRemoteMatch() || intakeSearchBean.isLocalMatch()) {
-			return mapping.findForward(SEARCH_FORM);
+			return mapping.findForward(FORWARD_SEARCH_FORM);
 		} else {
 			return createLocal(mapping, form, request, response);
 		}
@@ -70,15 +71,14 @@ public class GenericIntakeSearchAction extends BaseAction {
 	
 	public ActionForward createLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-		request.setAttribute(GenericIntakeEditAction.CLIENT, createClient(intakeSearchBean));
 		
-		return getCreateLocalForward(mapping, intakeSearchBean);
+		return forwardIntakeEditCreate(mapping, request, createClient(intakeSearchBean));
 	}
 	
 	public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 		
-		return getUpdateLocalForward(mapping, intakeSearchBean);
+		return forwardIntakeEditUpdate(mapping, intakeSearchBean.getClientId());
 	}
 	
 	public ActionForward copyRemote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -86,15 +86,14 @@ public class GenericIntakeSearchAction extends BaseAction {
     	
     	try {
             Demographic remoteClient = integratorManager.getDemographic(intakeSearchBean.getAgencyId(), intakeSearchBean.getClientId());
-            request.setAttribute(GenericIntakeEditAction.CLIENT, remoteClient);
             
-            return getCopyRemoteForward(mapping, intakeSearchBean);
+            return forwardIntakeEditCreate(mapping, request, remoteClient);
         } catch (IntegratorException e) {
     		ActionMessages messages = new ActionMessages();
     		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.error", e.getMessage()));
     		saveErrors(request, messages);
     		
-    		return mapping.findForward(SEARCH_FORM);
+    		return mapping.findForward(FORWARD_SEARCH_FORM);
         }
     }
 	
@@ -119,32 +118,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 
 		return clientManager.search(clientSearchBean);
 	}
-	
-	private ActionForward getCopyRemoteForward(ActionMapping mapping, GenericIntakeSearchFormBean intakeSearchBean) {
-    	StringBuilder parameters = new StringBuilder(PARAM_START);
-    	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);
-    	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK);
-    	
-    	return createForward(mapping, INTAKE_EDIT, parameters);
-    }
-
-	private ActionForward getCreateLocalForward(ActionMapping mapping, GenericIntakeSearchFormBean intakeSearchBean) {
-    	StringBuilder parameters = new StringBuilder(PARAM_START);
-    	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);
-    	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK);
-    	
-    	return createForward(mapping, INTAKE_EDIT, parameters);
-    }
-
-	private ActionForward getUpdateLocalForward(ActionMapping mapping, GenericIntakeSearchFormBean intakeSearchBean) {
-		StringBuilder parameters = new StringBuilder(PARAM_START);
-		parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.UPDATE).append(PARAM_AND);
-		parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK).append(PARAM_AND);
-		parameters.append(GenericIntakeEditAction.CLIENT_ID).append(PARAM_EQUALS).append(intakeSearchBean.getClientId());
 		
-		return createForward(mapping, INTAKE_EDIT, parameters);
-	}
-	
 	private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean) {
 		Demographic client = new Demographic();
 		client.setFirstName(intakeSearchBean.getFirstName());
@@ -157,6 +131,25 @@ public class GenericIntakeSearchAction extends BaseAction {
 		client.setPatientStatus("AC");
 		
 		return client;
+	}
+	
+	protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
+		request.setAttribute(GenericIntakeEditAction.CLIENT, client);
+
+    	StringBuilder parameters = new StringBuilder(PARAM_START);
+    	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);
+    	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK);
+    	
+    	return createForward(mapping, FORWARD_INTAKE_EDIT, parameters);
+    }
+
+	protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId) {
+		StringBuilder parameters = new StringBuilder(PARAM_START);
+		parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.UPDATE).append(PARAM_AND);
+		parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK).append(PARAM_AND);
+		parameters.append(GenericIntakeEditAction.CLIENT_ID).append(PARAM_EQUALS).append(clientId);
+		
+		return createForward(mapping, FORWARD_INTAKE_EDIT, parameters);
 	}
 	
 }

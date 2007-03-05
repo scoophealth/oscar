@@ -19,14 +19,13 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.oscarehr.PMmodule.web.formbean;
 
 public class ClientManagerFormBean {
 
-	private String tab;
-
 	public static final String[] tabs = { "Summary", "History", "Bed Reservation", "Forms", "Refer", "Discharge" };
+
+	private String tab;
 
 	public ClientManagerFormBean() {
 		setTab(tabs[0]);
