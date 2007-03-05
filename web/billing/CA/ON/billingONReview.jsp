@@ -63,6 +63,7 @@
 	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);
 
 	Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
+			String dxDesc = prepObj.getDxDescription(request.getParameter("dxCode"));
 			String clinicview = oscarVariables.getProperty("clinic_view", "");
 			String clinicNo = oscarVariables.getProperty("clinic_no", "");
 			String visitType = oscarVariables.getProperty("visit_type", "");
@@ -256,7 +257,8 @@
 						<td nowrap width="30%" align="center" ><b>Service Date</b><br>
 						<%=request.getParameter("service_date").replaceAll("\\n", "<br>")%></td>
 						<td align="center" width="33%"><b>Diagnostic Code</b><br>
-						<%=request.getParameter("dxCode")%>
+						<%=request.getParameter("dxCode")%></br>
+						<%=dxDesc%>
 						</td>
 						<td valign="top"><b>Refer. Doctor</b><br>
 						<%=request.getParameter("referralDocName")%><br>

@@ -28,14 +28,18 @@ import org.apache.log4j.Logger;
 import oscar.oscarBilling.ca.on.data.BillingReviewCodeItem;
 import oscar.oscarBilling.ca.on.data.BillingReviewPercItem;
 import oscar.oscarBilling.ca.on.data.JdbcBillingClaimImpl;
+import oscar.oscarBilling.ca.on.data.JdbcBillingDxImpl;
 import oscar.oscarBilling.ca.on.data.JdbcBillingPageUtil;
 import oscar.oscarBilling.ca.on.data.JdbcBillingReviewImpl;
 
 public class BillingReviewPrep {
-	private static final Logger _logger = Logger.getLogger(BillingReviewPrep.class);
+	private static final Logger _logger = Logger
+			.getLogger(BillingReviewPrep.class);
+
 	JdbcBillingReviewImpl dbObj = new JdbcBillingReviewImpl();
 
-	public Vector getServiceCodeReviewVec(Vector vecCode, Vector vecUnit, Vector vecAt) {
+	public Vector getServiceCodeReviewVec(Vector vecCode, Vector vecUnit,
+			Vector vecAt) {
 		Vector ret = new Vector();
 		BillingReviewCodeItem codeItem = null;
 
@@ -55,7 +59,9 @@ public class BillingReviewPrep {
 				codeItem.setCodeTotal("0");
 				codeItem.setMsg("<b>No this code in the database!!!</b>");
 				ret.add(codeItem);
-				_logger.error("getServiceCodeReviewVec: No this code in the database! " + vecCode.get(i));
+				_logger
+						.error("getServiceCodeReviewVec: No this code in the database! "
+								+ vecCode.get(i));
 				continue;
 			}
 			// if perc. code
@@ -89,7 +95,8 @@ public class BillingReviewPrep {
 	}
 
 	// get perc code item display
-	public Vector getPercCodeReviewVec(Vector vecCode, Vector vecUnit, Vector vecReviewCodeItem) {
+	public Vector getPercCodeReviewVec(Vector vecCode, Vector vecUnit,
+			Vector vecReviewCodeItem) {
 		Vector ret = new Vector();
 		// no perc. code
 		if (vecCode.size() == vecReviewCodeItem.size())
@@ -99,7 +106,8 @@ public class BillingReviewPrep {
 		BillingReviewPercItem percItem = null;
 		Vector vecCodeFee = new Vector();
 		for (int i = 0; i < vecReviewCodeItem.size(); i++) {
-			vecCodeFee.add(((BillingReviewCodeItem) vecReviewCodeItem.get(i)).getCodeFee());
+			vecCodeFee.add(((BillingReviewCodeItem) vecReviewCodeItem.get(i))
+					.getCodeFee());
 		}
 
 		for (int i = 0; i < vecCode.size(); i++) {
@@ -108,8 +116,9 @@ public class BillingReviewPrep {
 
 			// not perc. code
 			if (i < vecReviewCodeItem.size()
-					&& ((String) vecCode.get(i)).equals(((BillingReviewCodeItem) vecReviewCodeItem.get(i))
-							.getCodeName())) {
+					&& ((String) vecCode.get(i))
+							.equals(((BillingReviewCodeItem) vecReviewCodeItem
+									.get(i)).getCodeName())) {
 				continue;
 			}
 
@@ -128,14 +137,17 @@ public class BillingReviewPrep {
 				percItem.setVecCodeTotal(new Vector());
 				percItem.setMsg("<b>No this perc. code in the database!!!</b>");
 				ret.add(percItem);
-				_logger.error("getServiceCodeReviewVec: No this perc. code in the database! " + vecCode.get(i));
+				_logger
+						.error("getServiceCodeReviewVec: No this perc. code in the database! "
+								+ vecCode.get(i));
 				continue;
 			}
 
 			// calculate fee
 			Vector vecCodeTotal = new Vector();
 			for (int j = 0; j < vecCodeFee.size(); j++) {
-				BigDecimal bigCodeFee = new BigDecimal((String) vecCodeFee.get(j));
+				BigDecimal bigCodeFee = new BigDecimal((String) vecCodeFee
+						.get(j));
 				// BigDecimal bigCodeUnit = new BigDecimal((String)
 				// vecUnit.get(i));
 				// BigDecimal bigCodeAt = new BigDecimal((String) vecAt.get(i));
@@ -167,8 +179,9 @@ public class BillingReviewPrep {
 	}
 
 	// ret[0],[1],[2] - Vector vecCode, Vector vecUnit, Vector vecAt
-	public Vector[] getRequestCodeVec(HttpServletRequest requestData, String paramNameCode, String paramNameUnit,
-			String paramNameAt, int numItem) {
+	public Vector[] getRequestCodeVec(HttpServletRequest requestData,
+			String paramNameCode, String paramNameUnit, String paramNameAt,
+			int numItem) {
 		Vector[] ret = new Vector[3];
 		ret[0] = new Vector();
 		ret[1] = new Vector();
@@ -178,8 +191,10 @@ public class BillingReviewPrep {
 			if ("".equals(requestData.getParameter(paramNameCode + i)))
 				continue;
 			ret[0].add(requestData.getParameter(paramNameCode + i));
-			ret[1].add(defaultParamValue(requestData.getParameter(paramNameUnit + i)));
-			ret[2].add(defaultParamValue(requestData.getParameter(paramNameAt + i)));
+			ret[1].add(defaultParamValue(requestData.getParameter(paramNameUnit
+					+ i)));
+			ret[2].add(defaultParamValue(requestData.getParameter(paramNameAt
+					+ i)));
 		}
 		return ret;
 	}
@@ -188,17 +203,19 @@ public class BillingReviewPrep {
 	// checkbox
 	// this way for no sequence order
 	// should change to col1, col2, col3 scan and get a sequence order
-	public Vector[] getRequestFormCodeVec(HttpServletRequest requestData, String paramNameCode, String paramNameUnit,
-			String paramNameAt) {
+	public Vector[] getRequestFormCodeVec(HttpServletRequest requestData,
+			String paramNameCode, String paramNameUnit, String paramNameAt) {
 		Vector[] ret = new Vector[3];
 		ret[0] = new Vector();
 		ret[1] = new Vector();
 		ret[2] = new Vector();
 
-		for (Enumeration e = requestData.getParameterNames(); e.hasMoreElements();) {
+		for (Enumeration e = requestData.getParameterNames(); e
+				.hasMoreElements();) {
 			String temp = e.nextElement().toString();
-			if (temp.startsWith(paramNameCode) && (temp.length() == 9 || temp.startsWith(paramNameCode + "_"))
-					&& !temp.equals("xml_vdate")) {
+			if (temp.startsWith(paramNameCode)
+					&& (temp.length() == 9 || temp.startsWith(paramNameCode
+							+ "_")) && !temp.equals("xml_vdate")) {
 				// _logger.info(requestData.getParameter(temp) +
 				// "getRequestFormCodeVec:" + temp);
 				ret[0].add(temp.substring(4));
@@ -228,6 +245,14 @@ public class BillingReviewPrep {
 		if (val != null && !val.equals("")) {
 			ret = val;
 		}
+
+		return ret;
+	}
+
+	// get dx description
+	public String getDxDescription(String val) {
+		JdbcBillingDxImpl dxObj = new JdbcBillingDxImpl();
+		String ret = dxObj.getDxDescription(val);
 
 		return ret;
 	}
