@@ -141,7 +141,7 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 				Admission serviceProgramAdmission = (Admission) o;
 				
 				Program program = serviceProgramAdmission.getProgram();
-				if (program.getIntakeProgram() != null) {
+				if (program != null && program.getIntakeProgram() != null) {
 					IntakeNode node = getNode(program.getIntakeProgram());
 					List<Intake> intakes = getIntakes(node, clientId, program.getId());
 					
