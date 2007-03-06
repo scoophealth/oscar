@@ -161,7 +161,7 @@ public class GenericIntakeEditAction extends BaseAction {
 			Intake intake = intakeEditBean.getIntake();
 			saveIntake(intake, clientId);
 			
-			forward = getClientEditForward(mapping, clientId);
+			forward = forwardClientEdit(mapping, clientId);
 		} catch (Exception e) {
 			LOG.error(e);
 			
@@ -177,7 +177,6 @@ public class GenericIntakeEditAction extends BaseAction {
 	
 	@Override
 	protected ActionForward cancelled(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// TODO Intake Clear session
 		return mapping.findForward(PROVIDER_VIEW);
 	}
 
@@ -214,11 +213,11 @@ public class GenericIntakeEditAction extends BaseAction {
 		
 	// Forward
 	
-	private ActionForward getClientEditForward(ActionMapping mapping, Integer clientId) {
+	private ActionForward forwardClientEdit(ActionMapping mapping, Integer clientId) {
     	StringBuilder parameters = new StringBuilder(PARAM_AND);
     	parameters.append(ClientManagerAction.ID).append(PARAM_EQUALS).append(clientId);
     	
-    	return createForward(mapping, CLIENT_EDIT, parameters);
+    	return createRedirectForward(mapping, CLIENT_EDIT, parameters);
     }
 	
 	// Adapt

@@ -1218,7 +1218,7 @@
 			name="genericIntakeSearchForm"
 			scope="request">
 			<forward name="searchForm" path="page.genericIntake.searchForm" />
-			<forward name="intakeEdit" path="/PMmodule/GenericIntake/Edit.do" />
+			<forward name="intakeEdit" path="/PMmodule/GenericIntake/Edit.do" redirect="true" />
 		</action>
 		<action
 			path="/PMmodule/GenericIntake/Edit"
@@ -1227,8 +1227,8 @@
 			name="genericIntakeEditForm"
 			scope="session">
 			<forward name="edit" path="/PMmodule/GenericIntake/Edit.jsp" />
-			<forward name="clientEdit" path="/PMmodule/ClientManager.do?method=edit" />
-			<forward name="providerView" path="/PMmodule/ProviderInfo.do?method=view" />
+			<forward name="clientEdit" path="/PMmodule/ClientManager.do?method=edit" redirect="true" />
+			<forward name="providerView" path="/PMmodule/ProviderInfo.do?method=view" redirect="true" />
 		</action>
 		<!-- Generic Intake -->
 

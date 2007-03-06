@@ -140,7 +140,7 @@ public class GenericIntakeSearchAction extends BaseAction {
     	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);
     	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK);
     	
-    	return createForward(mapping, FORWARD_INTAKE_EDIT, parameters);
+    	return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
 
 	protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId) {
@@ -149,7 +149,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 		parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK).append(PARAM_AND);
 		parameters.append(GenericIntakeEditAction.CLIENT_ID).append(PARAM_EQUALS).append(clientId);
 		
-		return createForward(mapping, FORWARD_INTAKE_EDIT, parameters);
+		return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
 	}
 	
 }

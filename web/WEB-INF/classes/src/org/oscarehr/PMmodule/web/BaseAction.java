@@ -28,6 +28,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.RedirectingActionForward;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
@@ -238,12 +239,12 @@ public class BaseAction extends DispatchAction {
 		return request.getParameter(parameterName);
 	}
 	
-	protected ActionForward createForward(ActionMapping mapping, String forwardName, StringBuilder parameters) {
+	protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuilder parameters) {
 		ActionForward forward = mapping.findForward(forwardName);
 		StringBuilder path = new StringBuilder(forward.getPath());
 		path.append(parameters);
 		
-		return new ActionForward(path.toString());
+		return new RedirectingActionForward(path.toString());
 	}
 
 }
