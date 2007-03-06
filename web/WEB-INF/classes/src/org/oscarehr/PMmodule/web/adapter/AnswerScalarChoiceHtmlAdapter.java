@@ -77,7 +77,7 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 			builder.append(" selected=\"selected\"");
 		}
 
-		builder.append(" />").append(String.format("%s</option>", new Object[] { label }));
+		builder.append(" >").append(String.format("%s</option>", new Object[] { label }));
 
 		return builder;
 	}

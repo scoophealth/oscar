@@ -46,16 +46,16 @@ import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 public class GenericIntakeEditAction extends BaseAction {
 
 	private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
-			
+
 	// Request Attributes
 	public static final String CLIENT = "client";
-	
+
 	// Parameters
 	public static final String METHOD = "method";
 	public static final String TYPE = "type";
 	public static final String CLIENT_ID = "clientId";
 	public static final String PROGRAM_ID = "programId";
-	
+
 	// Method parameter values
 	public static final String CREATE = "create";
 	public static final String UPDATE = "update";
@@ -69,33 +69,25 @@ public class GenericIntakeEditAction extends BaseAction {
 	private static final String EDIT = "edit";
 	private static final String CLIENT_EDIT = "clientEdit";
 	private static final String PROVIDER_VIEW = "providerView";
-	
+
 	public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean intakeEditBean = (GenericIntakeEditFormBean) form;
-		
-		Demographic client = getClient(request);
-		intakeEditBean.setClient(client);
-		
-		List<Program> bedCommunityPrograms = getBedCommunityPrograms();
-		intakeEditBean.setBedCommunityProgramLabelValues(bedCommunityPrograms);
-		
-		List<Program> servicePrograms = getServicePrograms();
-		intakeEditBean.setServiceProgramLabelValues(servicePrograms);
-		
+
 		String intakeType = getType(request);
 		String providerNo = getProviderNo(request);
-		
+
+		Intake intake = null;
+
 		if (QUICK.equalsIgnoreCase(intakeType)) {
-			Intake intake = genericIntakeManager.createQuickIntake(providerNo);
-			intakeEditBean.setIntake(intake);
+			intake = genericIntakeManager.createQuickIntake(providerNo);
 		} else if (INDEPTH.equalsIgnoreCase(intakeType)) {
-			Intake intake = genericIntakeManager.createIndepthIntake(providerNo);
-			intakeEditBean.setIntake(intake);
+			intake = genericIntakeManager.createIndepthIntake(providerNo);
 		} else if (PROGRAM.equalsIgnoreCase(intakeType)) {
-			Intake intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
-			intakeEditBean.setIntake(intake);
+			intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
 		}
-		
+
+		setBeanProperties(intakeEditBean, intake, getClient(request), null, null);
+
 		return mapping.findForward(EDIT);
 	}
 
@@ -103,102 +95,76 @@ public class GenericIntakeEditAction extends BaseAction {
 		GenericIntakeEditFormBean intakeEditBean = (GenericIntakeEditFormBean) form;
 
 		Integer clientId = getClientId(request);
-		Demographic client = getClient(clientId);
-		intakeEditBean.setClient(client);
-		
-		List<Program> bedCommunityPrograms = getBedCommunityPrograms();
-		intakeEditBean.setBedCommunityProgramLabelValues(bedCommunityPrograms);
-		intakeEditBean.setCurrentBedCommunityProgramId(getCurrentBedCommunityProgramId(clientId));
-		
-		List<Program> servicePrograms = getServicePrograms();
-		intakeEditBean.setServiceProgramLabelValues(servicePrograms);
-		intakeEditBean.setCurrentServiceProgramIds(getCurrrentServiceProgramIds(clientId));
-		
 		String intakeType = getType(request);
 		String providerNo = getProviderNo(request);
-		
+
+		Intake intake = null;
+
 		if (QUICK.equalsIgnoreCase(intakeType)) {
-			Intake intake = genericIntakeManager.copyQuickIntake(clientId, providerNo);
-			intakeEditBean.setIntake(intake);
+			intake = genericIntakeManager.copyQuickIntake(clientId, providerNo);
 		} else if (INDEPTH.equalsIgnoreCase(intakeType)) {
-			Intake intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo);
-			intakeEditBean.setIntake(intake);
+			intake = genericIntakeManager.copyIndepthIntake(clientId, providerNo);
 		} else if (PROGRAM.equalsIgnoreCase(intakeType)) {
-			Intake intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
-			intakeEditBean.setIntake(intake);
+			intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
 		}
+
+		setBeanProperties(intakeEditBean, intake, getClient(clientId), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId));
 
 		return mapping.findForward(EDIT);
 	}
 
+	// TODO Intake - Generate add buttons for collection answers
 	public ActionForward addAnswer(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		// create copy of answer (addIntakeNodeId)
 		// save copy
-		
+
 		return mapping.findForward(EDIT);
 	}
 
 	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		ActionForward forward = null;
-		
+
 		try {
 			GenericIntakeEditFormBean intakeEditBean = (GenericIntakeEditFormBean) form;
-			
+
 			// save client
 			Demographic client = intakeEditBean.getClient();
 			saveClient(client);
-			
+
 			// admit client to program(s)
 			Integer clientId = client.getDemographicNo();
 			String providerNo = getProviderNo(request);
 			Integer bedCommunityProgramId = intakeEditBean.getSelectedBedCommunityProgramId();
 			List<Integer> serviceProgramIds = intakeEditBean.getSelectedServiceProgramIds();
-			
+
 			admitBedCommunityProgram(clientId, providerNo, bedCommunityProgramId);
 			admitServicePrograms(clientId, providerNo, serviceProgramIds);
-			
+
 			// save intake
 			Intake intake = intakeEditBean.getIntake();
 			saveIntake(intake, clientId);
-			
+
 			forward = forwardClientEdit(mapping, clientId);
 		} catch (Exception e) {
 			LOG.error(e);
-			
+
 			ActionMessages messages = new ActionMessages();
-    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
-    		saveErrors(request, messages);
-			
-    		forward = mapping.findForward(EDIT);
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
+			saveErrors(request, messages);
+
+			forward = mapping.findForward(EDIT);
 		}
-		
+
 		return forward;
 	}
-	
+
 	@Override
 	protected ActionForward cancelled(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return mapping.findForward(PROVIDER_VIEW);
 	}
 
-	// Attribute
-	
-	private Demographic getClient(HttpServletRequest request) {
-		Demographic client = (Demographic) getAttribute(request, CLIENT);
-		return (client != null) ? client : new Demographic();
-	}
-	
-	private Object getAttribute(HttpServletRequest request, String attributeName) {
-		Object attribute = request.getAttribute(attributeName);
-		
-		if (attribute != null) {
-			request.removeAttribute(attributeName);
-		}
-		
-		return attribute;
-	}
-	
 	// Parameter
-	
+
 	private String getType(HttpServletRequest request) {
 		return getParameter(request, TYPE);
 	}
@@ -210,78 +176,91 @@ public class GenericIntakeEditAction extends BaseAction {
 	private Integer getProgramId(HttpServletRequest request) {
 		return Integer.valueOf(getParameter(request, PROGRAM_ID));
 	}
-		
+
+	// Request Attribute
+
+	private Demographic getClient(HttpServletRequest request) {
+		Demographic client = (Demographic) getRequestAttribute(request, CLIENT);
+		return (client != null) ? client : new Demographic();
+	}
+
 	// Forward
-	
+
 	private ActionForward forwardClientEdit(ActionMapping mapping, Integer clientId) {
-    	StringBuilder parameters = new StringBuilder(PARAM_AND);
-    	parameters.append(ClientManagerAction.ID).append(PARAM_EQUALS).append(clientId);
-    	
-    	return createRedirectForward(mapping, CLIENT_EDIT, parameters);
-    }
-	
+		StringBuilder parameters = new StringBuilder(PARAM_AND);
+		parameters.append(ClientManagerAction.ID).append(PARAM_EQUALS).append(clientId);
+
+		return createRedirectForward(mapping, CLIENT_EDIT, parameters);
+	}
+
 	// Adapt
-	
+
 	private Demographic getClient(Integer clientId) {
 		return clientManager.getClientByDemographicNo(clientId.toString());
 	}
-	
-	private List<Program> getBedCommunityPrograms() {
-		List<Program> bedCommunityPrograms = new ArrayList<Program>();
-		Collections.addAll(bedCommunityPrograms, programManager.getBedPrograms());
-		Collections.addAll(bedCommunityPrograms, programManager.getCommunityPrograms());
-		
-		return bedCommunityPrograms;
+
+	private List<Program> getBedPrograms() {
+		List<Program> bedPrograms = new ArrayList<Program>();
+		Collections.addAll(bedPrograms, programManager.getBedPrograms());
+
+		return bedPrograms;
+	}
+
+	private List<Program> getCommunityPrograms() {
+		List<Program> communityPrograms = new ArrayList<Program>();
+		Collections.addAll(communityPrograms, programManager.getCommunityPrograms());
+
+		return communityPrograms;
 	}
 
 	private List<Program> getServicePrograms() {
 		List<Program> servicePrograms = new ArrayList<Program>();
-		
+
 		for (Object o : programManager.getServicePrograms()) {
 			Program servicePorgram = (Program) o;
 			servicePrograms.add(servicePorgram);
 		}
-		
+
 		return servicePrograms;
 	}
-	
+
 	private Integer getCurrentBedCommunityProgramId(Integer clientId) {
-		Integer programId = null;
-		
+		Integer currentProgramId = null;
+
 		Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(clientId);
 		Admission communityProgramAdmission = admissionManager.getCurrentCommunityProgramAdmission(clientId);
-		
+
 		if (bedProgramAdmission != null) {
-			programId = bedProgramAdmission.getProgramId();
+			currentProgramId = bedProgramAdmission.getProgramId();
 		} else if (communityProgramAdmission != null) {
-			programId = communityProgramAdmission.getProgramId();
+			currentProgramId = communityProgramAdmission.getProgramId();
 		}
-		
-		return programId;
+
+		return currentProgramId;
 	}
-	
-	private SortedSet<Integer> getCurrrentServiceProgramIds(Integer clientId) {
-		SortedSet<Integer> clientServiceProgramIds = new TreeSet<Integer>();
-		
+
+	private SortedSet<Integer> getCurrentServiceProgramIds(Integer clientId) {
+		SortedSet<Integer> currentProgramIds = new TreeSet<Integer>();
+
 		List admissions = admissionManager.getCurrentServiceProgramAdmission(clientId);
 		if (admissions != null) {
 			for (Object o : admissions) {
-				Admission servicePorgramAdmission = (Admission) o;
-				clientServiceProgramIds.add(servicePorgramAdmission.getProgramId());
+				Admission serviceProgramAdmission = (Admission) o;
+				currentProgramIds.add(serviceProgramAdmission.getProgramId());
 			}
 		}
-		
-		return clientServiceProgramIds;
+
+		return currentProgramIds;
 	}
 
 	private void saveClient(Demographic client) throws IntegratorException {
 		// local save
 		clientManager.saveClient(client);
-	
+
 		// remote save
 		try {
 			integratorManager.saveClient(client);
-			
+
 			if (client.getAgencyId() != integratorManager.getLocalAgencyId() && client.getAgencyId() != 0) {
 				integratorManager.mergeClient(client, client.getAgencyId(), client.getDemographicNo());
 			}
@@ -293,13 +272,13 @@ public class GenericIntakeEditAction extends BaseAction {
 	private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException {
 		Program bedCommunityProgram = null;
 		Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
-		
+
 		if (bedCommunityProgramId == null && currentBedCommunityProgramId == null) {
 			bedCommunityProgram = programManager.getHoldingTankProgram();
 		} else if (bedCommunityProgramId != null) {
-			bedCommunityProgram =  programManager.getProgram(bedCommunityProgramId);
+			bedCommunityProgram = programManager.getProgram(bedCommunityProgramId);
 		}
-		
+
 		if (bedCommunityProgram != null) {
 			if (currentBedCommunityProgramId == null) {
 				admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
@@ -323,11 +302,11 @@ public class GenericIntakeEditAction extends BaseAction {
 	}
 
 	private void admitServicePrograms(Integer clientId, String providerNo, List<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException {
-		SortedSet<Integer> clientServicePrograms = getCurrrentServiceProgramIds(clientId);
-		
+		SortedSet<Integer> clientServicePrograms = getCurrentServiceProgramIds(clientId);
+
 		for (Integer serviceProgramId : serviceProgramIds) {
 			if (!clientServicePrograms.contains(serviceProgramId)) {
-				Program serviceProgram =  programManager.getProgram(serviceProgramId);
+				Program serviceProgram = programManager.getProgram(serviceProgramId);
 				admissionManager.processAdmission(clientId, providerNo, serviceProgram, "intake discharge", "intake admit");
 			}
 		}
@@ -336,6 +315,19 @@ public class GenericIntakeEditAction extends BaseAction {
 	private void saveIntake(Intake intake, Integer clientId) {
 		intake.setClientId(clientId);
 		genericIntakeManager.saveIntake(intake);
+	}
+
+	// Bean
+
+	private void setBeanProperties(GenericIntakeEditFormBean bean, Intake intake, Demographic client, Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds) {
+		bean.setIntake(intake);
+		bean.setClient(client);
+
+		bean.setBedCommunityPrograms(getBedPrograms(), getCommunityPrograms());
+		bean.setSelectedBedCommunityProgramId(currentBedCommunityProgramId);
+
+		bean.setServiceProgramLabelValues(getServicePrograms());
+		bean.setSelectedServiceProgramIds(currentServiceProgramIds);
 	}
 
 }

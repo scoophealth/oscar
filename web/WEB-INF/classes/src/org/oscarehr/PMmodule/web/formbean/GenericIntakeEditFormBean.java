@@ -32,37 +32,44 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 
 public class GenericIntakeEditFormBean extends ActionForm {
-	
-    private static final long serialVersionUID = 1L;
 
-    private String method;
-    
-    private Demographic client;
-    private LabelValueBean[] genders;
-    private LabelValueBean[] months;
-    private LabelValueBean[] days;
-	
-    private List<LabelValueBean> bedCommunityPrograms;
-    private String bedCommunityProgramId;
+	private static final long serialVersionUID = 1L;
+
+	private static final String BED_PROGRAM_LABEL = "Bed Program";
+	private static final String COMMUNITY_PROGRAM_LABEL = "Community Location";
+
+	private String method;
+
+	private Demographic client;
+	private LabelValueBean[] genders;
+	private LabelValueBean[] months;
+	private LabelValueBean[] days;
+
+	private List<LabelValueBean> bedCommunityPrograms;
+	private String bedCommunityProgramId;
+	private String bedCommunityProgramLabel;
 
 	private List<LabelValueBean> servicePrograms;
-    private String[] serviceProgramIds;
-    
-    private Intake intake;
-    private Integer addIntakeNodeId;
-    
-    public GenericIntakeEditFormBean() {
-    	setGenders(GenericIntakeConstants.GENDERS);
-		setMonths(GenericIntakeConstants.MONTHS);
-		setDays(GenericIntakeConstants.DAYS);
-    }
+	private String[] serviceProgramIds;
+
+	private Intake intake;
+	private Integer addIntakeNodeId;
+
+	public GenericIntakeEditFormBean() {
+		genders = GenericIntakeConstants.GENDERS;
+		months = GenericIntakeConstants.MONTHS;
+		days = GenericIntakeConstants.DAYS;
+
+		bedCommunityPrograms = new ArrayList<LabelValueBean>();
+		servicePrograms = new ArrayList<LabelValueBean>();
+	}
 
 	public String getMethod() {
-	    return method;
+		return method;
 	}
 
 	public void setMethod(String method) {
-	    this.method = method;
+		this.method = method;
 	}
 
 	public Demographic getClient() {
@@ -77,128 +84,101 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		return genders;
 	}
 
-	public void setGenders(LabelValueBean[] genders) {
-		this.genders = genders;
-	}
-
 	public LabelValueBean[] getMonths() {
 		return months;
 	}
-	
-	public void setMonths(LabelValueBean[] months) {
-	    this.months = months;
-    }
-	
+
 	public LabelValueBean[] getDays() {
-    	return days;
-    }
-	
-	public void setDays(LabelValueBean[] days) {
-	    this.days = days;
-    }
-	
-	public Integer getSelectedBedCommunityProgramId() {
-    	Integer programId = null;
-    	
-    	if (bedCommunityProgramId != null && bedCommunityProgramId.length() > 0) {
-    		programId = Integer.valueOf(bedCommunityProgramId);
-    	}
-    	
-    	return programId;
-    }
-
-	public void setCurrentBedCommunityProgramId(Integer programId) {
-    	if (programId != null) {
-    		setBedCommunityProgramId(programId.toString());
-    	}
-    }
-
-	public void setBedCommunityProgramLabelValues(List<Program> programs) {
-		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
-		
-		if (programs != null) {
-			for (Program program : programs) {
-				labelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
-			}
-		}
-		
-		setBedCommunityPrograms(labelValues);
+		return days;
 	}
 
+	// Bed/Community programs
+
 	public List<LabelValueBean> getBedCommunityPrograms() {
-    	return bedCommunityPrograms;
-    }
-	
-	public void setBedCommunityPrograms(List<LabelValueBean> bedCommunityPrograms) {
-    	this.bedCommunityPrograms = bedCommunityPrograms;
-    }
+		return bedCommunityPrograms;
+	}
+
+	public void setBedCommunityPrograms(List<Program> bedPrograms, List<Program> communityPrograms) {
+		setBedCommunityProgramLabel(!bedPrograms.isEmpty(), !communityPrograms.isEmpty());
+		bedCommunityPrograms = convertToLabelValues(bedPrograms, communityPrograms);
+	}
+
+	public String getBedCommunityProgramLabel() {
+		return bedCommunityProgramLabel;
+	}
+
+	public void setBedCommunityProgramLabel(boolean hasBedPrograms, boolean hasCommunityPrograms) {
+		StringBuffer buffer = new StringBuffer();
+
+		if (hasBedPrograms) {
+			buffer.append(BED_PROGRAM_LABEL);
+		}
+
+		if (hasBedPrograms && hasCommunityPrograms) {
+			buffer.append(" or ");
+		}
+
+		if (hasCommunityPrograms) {
+			buffer.append(COMMUNITY_PROGRAM_LABEL);
+		}
+
+		bedCommunityProgramLabel = buffer.toString();
+	}
+
+	// Selected Bed/Community program id
+
+	public Integer getSelectedBedCommunityProgramId() {
+		return convertToInteger(bedCommunityProgramId);
+	}
+
+	public void setSelectedBedCommunityProgramId(Integer selectedId) {
+		bedCommunityProgramId = convertToString(selectedId);
+	}
 
 	public String getBedCommunityProgramId() {
 		return bedCommunityProgramId;
 	}
 
-	public void setBedCommunityProgramId(String currentBedCommunityProgramId) {
-		this.bedCommunityProgramId = currentBedCommunityProgramId;
+	public void setBedCommunityProgramId(String bedCommunityProgramId) {
+		this.bedCommunityProgramId = bedCommunityProgramId;
 	}
 
-	public List<Integer> getSelectedServiceProgramIds() {
-    	List<Integer> programIds = new ArrayList<Integer>();
-    	
-    	if (serviceProgramIds != null) {
-    		for (String programId : serviceProgramIds) {
-    			programIds.add(Integer.valueOf(programId));
-    		}
-    	}
-    	
-    	return programIds;
-    }
+	// Service programs
 
-	public void setCurrentServiceProgramIds(Set<Integer> currentProgramIds) {
-    	List<String> programIds = new ArrayList<String>();
-    	
-    	if (currentProgramIds != null) {
-    		for (Integer currentProgramId : currentProgramIds) {
-    			programIds.add(currentProgramId.toString());
-    		}
-    	}
-    	
-    	setServiceProgramIds((String[]) programIds.toArray(new String[programIds.size()]));
-    }
+	public List<LabelValueBean> getServicePrograms() {
+		return servicePrograms;
+	}
 
 	public void setServiceProgramLabelValues(List<Program> programs) {
-		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
-		
-		for (Program program : programs) {
-			labelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
-		}
-		
-		setServicePrograms(labelValues);
+		servicePrograms = convertToLabelValues(programs);
 	}
-	
-	public List<LabelValueBean> getServicePrograms() {
-    	return servicePrograms;
-    }
-	
-	public void setServicePrograms(List<LabelValueBean> servicePrograms) {
-    	this.servicePrograms = servicePrograms;
-    }
-	
+
+	// Selected service program id
+
+	public List<Integer> getSelectedServiceProgramIds() {
+		return convertToIntegers(serviceProgramIds);
+	}
+
+	public void setSelectedServiceProgramIds(Set<Integer> selectedIds) {
+		serviceProgramIds = convertToStrings(selectedIds);
+	}
+
 	public String[] getServiceProgramIds() {
 		return serviceProgramIds;
 	}
 
-	public void setServiceProgramIds(String[] currentServiceProgramIds) {
-		this.serviceProgramIds = currentServiceProgramIds;
+	public void setServiceProgramIds(String[] serviceProgramIds) {
+		this.serviceProgramIds = serviceProgramIds;
 	}
 
 	public Intake getIntake() {
-    	return intake;
-    }
+		return intake;
+	}
 
-	public void setIntake(Intake instance) {
-    	this.intake = instance;
-    }
-	
+	public void setIntake(Intake intake) {
+		this.intake = intake;
+	}
+
 	public Integer getAddIntakeNodeId() {
 		return addIntakeNodeId;
 	}
@@ -215,7 +195,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		setBedCommunityProgramId("");
 		setServiceProgramIds(new String[] {});
-		
+
 		if (intake != null) {
 			for (String id : intake.getBooleanAnswerNodeIds()) {
 				if (request.getParameter("answerMapped[" + id + "].value") == null) {
@@ -224,5 +204,72 @@ public class GenericIntakeEditFormBean extends ActionForm {
 			}
 		}
 	}
-    
+
+	// Private
+
+	private List<LabelValueBean> convertToLabelValues(List<Program> primary, List<Program> secondary) {
+		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
+
+		labelValues.addAll(convertToLabelValues(primary));
+		labelValues.addAll(convertToLabelValues(secondary));
+
+		return labelValues;
+	}
+
+	private List<LabelValueBean> convertToLabelValues(List<Program> programs) {
+		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
+
+		if (programs != null) {
+			for (Program program : programs) {
+				labelValues.add(new LabelValueBean(program.getName(), program.getId().toString()));
+			}
+		}
+
+		return labelValues;
+	}
+
+	private List<Integer> convertToIntegers(String[] sources) {
+		List<Integer> result = new ArrayList<Integer>();
+
+		if (sources != null) {
+			for (String source : sources) {
+				result.add(convertToInteger(source));
+			}
+		}
+
+		return result;
+	}
+
+	private Integer convertToInteger(String source) {
+		Integer result = null;
+
+		if (source != null && source.length() > 0) {
+			result = Integer.valueOf(source);
+		}
+
+		return result;
+	}
+
+	private String[] convertToStrings(Set<Integer> sources) {
+		List<String> result = new ArrayList<String>();
+
+		if (sources != null) {
+			for (Integer source : sources) {
+				result.add(convertToString(source));
+			}
+		}
+
+		return ((String[]) result.toArray(new String[result.size()]));
+	}
+
+	private String convertToString(Integer source) {
+		String result = null;
+
+		if (source != null) {
+			result = source.toString();
+		}
+
+		return result;
+	}
+
 }

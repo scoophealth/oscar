@@ -239,6 +239,16 @@ public class BaseAction extends DispatchAction {
 		return request.getParameter(parameterName);
 	}
 	
+	protected Object getRequestAttribute(HttpServletRequest request, String attributeName) {
+		Object attribute = request.getAttribute(attributeName);
+		
+		if (attribute != null) {
+			request.removeAttribute(attributeName);
+		}
+		
+		return attribute;
+	}
+	
 	protected ActionForward createRedirectForward(ActionMapping mapping, String forwardName, StringBuilder parameters) {
 		ActionForward forward = mapping.findForward(forwardName);
 		StringBuilder path = new StringBuilder(forward.getPath());

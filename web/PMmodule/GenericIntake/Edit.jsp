@@ -9,7 +9,7 @@
 			@import "<html:rewrite page="/css/genericIntake.css" />";
 		</style>
 
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />" />
+		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
 		
 		<script type="text/javascript">
 			var djConfig = {
@@ -18,7 +18,7 @@
 				searchIds: ["layoutContainer", "topPane", "clientPane", "bottomPane", "clientTable", "admissionsTable"]
 			};
 		</script>
-		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />" />
+		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
 		<script type="text/javascript">
 			dojo.require("dojo.widget.LayoutContainer");
 			dojo.require("dojo.widget.ContentPane");
@@ -78,7 +78,7 @@
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
-								<td class="intakeBedCommunityProgramCell"><label>Bed/Community Program</label></td>
+								<td class="intakeBedCommunityProgramCell"><label><c:out value="${sessionScope.genericIntakeEditForm.bedCommunityProgramLabel}" /></label></td>
 								<td><label>Service Programs</label></td>
 							</tr>
 							<tr>

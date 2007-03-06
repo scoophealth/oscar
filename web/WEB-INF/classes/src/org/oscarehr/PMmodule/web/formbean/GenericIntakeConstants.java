@@ -12,7 +12,7 @@ public class GenericIntakeConstants {
 	};
     
 	public static final LabelValueBean[] MONTHS = new LabelValueBean[] { 
-    	new LabelValueBean("", ""),
+    	new LabelValueBean("Month", ""),
     	new LabelValueBean("January", "01"), new LabelValueBean("February", "02"),
     	new LabelValueBean("March", "03"), new LabelValueBean("April", "04"),
     	new LabelValueBean("May", "05"), new LabelValueBean("June", "06"),
@@ -22,7 +22,7 @@ public class GenericIntakeConstants {
     };
 	
 	public static final LabelValueBean[] DAYS = new LabelValueBean[] {
-    	new LabelValueBean("", ""),
+    	new LabelValueBean("Day", ""),
     	new LabelValueBean("01", "01"), new LabelValueBean("02", "02"), new LabelValueBean("03", "03"), new LabelValueBean("04", "04"),
     	new LabelValueBean("05", "05"), new LabelValueBean("06", "06"), new LabelValueBean("07", "07"), new LabelValueBean("08", "08"),
     	new LabelValueBean("09", "09"), new LabelValueBean("10", "10"), new LabelValueBean("11", "11"), new LabelValueBean("12", "12"),
