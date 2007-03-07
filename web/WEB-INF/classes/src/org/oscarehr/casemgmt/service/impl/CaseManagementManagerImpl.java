@@ -435,50 +435,49 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 		return false;
 	}
 
-	/*
-	 *  
-	 * 
-	 */
-	public List getAccessRight(String providerNo, String demoNo, String programId)
-	{
-		List progList=null;
-		if (programId==null) {
-			progList = demographicDAO.getProgramIdByDemoNo(demoNo);
-		} else {
-			progList= new ArrayList();
-			progList.add(new Long(programId));
-		}
+	public List getAccessRight(String providerNo, String demoNo, String programId) {
+		List<Integer> progList = new ArrayList<Integer>();
 		
-		if (progList==null) {
+		if (programId == null) {
+			for (Object o : demographicDAO.getProgramIdByDemoNo(demoNo)) {
+				progList.add((Integer) o);
+			}
+		} else {
+			progList.add(Integer.valueOf(programId));
+		}
+
+		if (progList.isEmpty()) {
 			return null;
 		}
-		
-		List rt=new ArrayList();
-		Iterator itr= progList.iterator();
-		
-		while (itr.hasNext()) { 
-			Long pId=(Long)itr.next();			 
-			List ppList=roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, pId);			 
-			List paList=roleProgramAccessDAO.getAccessListByProgramID(pId);
 
-			for(int i=0; i<ppList.size();i++) {			
-				ProgramProvider pp=(ProgramProvider)ppList.get(i);
-				//add default role access				
-				List arList=roleProgramAccessDAO.getDefaultAccessRightByRole(pp.getRoleId());
-				for (int j=0;j<arList.size();j++){
-					DefaultRoleAccess ar=(DefaultRoleAccess)arList.get(j);					
-					addrt(rt,ar.getAccess_type());				 
-				}				 
-				for (int k=0;k<paList.size();k++) {					 
-					ProgramAccess pa=(ProgramAccess)paList.get(k);					
+		List rt = new ArrayList();
+		Iterator<Integer> itr = progList.iterator();
+
+		while (itr.hasNext()) {
+			Integer pId = itr.next();
+			
+			List ppList = roleProgramAccessDAO.getProgramProviderByProviderProgramID(providerNo, pId.longValue());
+			List paList = roleProgramAccessDAO.getAccessListByProgramID(pId.longValue());
+
+			for (int i = 0; i < ppList.size(); i++) {
+				ProgramProvider pp = (ProgramProvider) ppList.get(i);
+				// add default role access
+				List arList = roleProgramAccessDAO.getDefaultAccessRightByRole(pp.getRoleId());
+				for (int j = 0; j < arList.size(); j++) {
+					DefaultRoleAccess ar = (DefaultRoleAccess) arList.get(j);
+					addrt(rt, ar.getAccess_type());
+				}
+				for (int k = 0; k < paList.size(); k++) {
+					ProgramAccess pa = (ProgramAccess) paList.get(k);
 					if (pa.isAllRoles()) {
-						addrt(rt,pa.getAccessType());
-					} else if (roleInAccess(pp.getRoleId(),pa)) { 
-						addrt(rt,pa.getAccessType());
+						addrt(rt, pa.getAccessType());
+					} else if (roleInAccess(pp.getRoleId(), pa)) {
+						addrt(rt, pa.getAccessType());
 					}
-				}			 
+				}
 			}
-		 }		 
+		}
+		
 		return rt;
 	}
 	
