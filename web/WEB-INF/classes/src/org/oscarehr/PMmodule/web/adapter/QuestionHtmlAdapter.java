@@ -20,11 +20,11 @@ package org.oscarehr.PMmodule.web.adapter;
 
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class SectionTypeHtmlAdapter extends AbstractHtmlAdapter {
+public class QuestionHtmlAdapter extends AbstractHtmlAdapter {
 	
-	public SectionTypeHtmlAdapter(int indent, IntakeNode node) {
-		super(indent, node);
-	}
+	public QuestionHtmlAdapter(int indent, IntakeNode node) {
+	    super(indent, node);
+    }
 
 	/**
 	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
@@ -32,32 +32,25 @@ public class SectionTypeHtmlAdapter extends AbstractHtmlAdapter {
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		if (!(isFirstChild() && isParentIntake())) {
-			indent(preBuilder);
-		}
-
-		preBuilder.append("<div dojoType=\"TitlePane\" label=\"").append(getLabel()).append("\" labelNodeClass=\"intakeSectionLabel\" containerNodeClass=\"intakeSectionContainer\" >").append(EOL);
+		indent(preBuilder).append("<tr>").append(EOL);
 		beginTag();
-
-		indent(preBuilder).append("<table class=\"intakeTable\">").append(EOL);
+		
+		for (int i = 0; i < getNestedQuestionLevel(); i++) {
+			indent(preBuilder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
+        }
+		
+		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
 		beginTag();
-
-		return preBuilder;
-	}
-
-	/**
-	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
-	 */
-	public StringBuilder getPostBuilder() {
-		StringBuilder postBuilder = super.getPostBuilder();
-
+		
+		indent(preBuilder).append(getLabel()).append(EOL);
+		
 		endTag();
-		indent(postBuilder).append("</table> <!-- End Question Table -->").append(EOL);
-			
+		indent(preBuilder).append("</td>").append(EOL);
+		
 		endTag();
-		indent(postBuilder).append("</div> <!-- End Section -->").append(EOL);
+		indent(preBuilder).append("</tr>").append(EOL);
 
-		return postBuilder;
-	}
-
+	    return preBuilder;
+    }
+	
 }

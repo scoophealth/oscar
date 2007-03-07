@@ -30,11 +30,18 @@
 	<body>
 		<html:form action="/PMmodule/GenericIntake/Edit">
 			<html:hidden property="method" />
+			<!-- Container -->
 			<div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
+				<%
+					GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
+				%>
+				<!-- Top -->
 				<div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
 					<c:out value="${sessionScope.genericIntakeEditForm.title}" />
 				</div>
+				<!-- Client -->
 				<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
+					<!-- Client Information -->
 					<div id="clientTable" dojoType="TitlePane" label="Client Information" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
@@ -54,7 +61,7 @@
 										<html:select property="client.dateOfBirth">
 											<html:optionsCollection property="days" value="value" label="label" />
 										</html:select>&nbsp;
-										<html:text property="client.yearOfBirth" size="4" />&nbsp;(MM/DD/YYYY)
+										<html:text property="client.yearOfBirth" size="4" />&nbsp;(YYYY)
 									</label>
 								</td>
 							</tr>
@@ -73,8 +80,19 @@
 								<td><label>Province<br><html:text property="client.province" /></label></td>
 								<td><label>Postal Code<br><html:text property="client.postal" /></label></td>
 							</tr>
+							<!-- Case Management -->
+							<c:if test="${!empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+								<tr>
+									<td>
+										<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intakeEditForm.getIntake().getClientId()%>" providerNo="<%=intakeEditForm.getIntake().getStaffId()%>" providerName="<%=intakeEditForm.getIntake().getStaffName()%>" />', '', 'width=800,height=600,resizable')" >
+											<span>Case Management Notes</span>
+										</a>
+									</td>
+								</tr>
+							</c:if>
 						</table>
 					</div>
+					<!-- Program Admissions -->
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
@@ -95,11 +113,9 @@
 							</tr>
 						</table>
 					</div>
-					<%
-					GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
-					%>
 					<caisi:intake base="<%=5%>" intake="<%=intakeEditForm.getIntake()%>" />
 				</div>
+				<!-- Bottom -->
 				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<table class="intakeTable">
 						<tr>

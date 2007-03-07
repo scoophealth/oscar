@@ -20,11 +20,11 @@ package org.oscarehr.PMmodule.web.adapter;
 
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class QuestionTypeHtmlAdapter extends AbstractHtmlAdapter {
+public class SectionHtmlAdapter extends AbstractHtmlAdapter {
 	
-	public QuestionTypeHtmlAdapter(int indent, IntakeNode node) {
-	    super(indent, node);
-    }
+	public SectionHtmlAdapter(int indent, IntakeNode node) {
+		super(indent, node);
+	}
 
 	/**
 	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPreBuilder()
@@ -32,25 +32,32 @@ public class QuestionTypeHtmlAdapter extends AbstractHtmlAdapter {
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		indent(preBuilder).append("<tr>").append(EOL);
-		beginTag();
-		
-		for (int i = 0; i < getNestedQuestionLevel(); i++) {
-			indent(preBuilder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
-        }
-		
-		indent(preBuilder).append("<td class=\"intakeQuestionCell\" colspan=\"").append(getDistanceToMaxLevel()).append("\">").append(EOL);
-		beginTag();
-		
-		indent(preBuilder).append(getLabel()).append(EOL);
-		
-		endTag();
-		indent(preBuilder).append("</td>").append(EOL);
-		
-		endTag();
-		indent(preBuilder).append("</tr>").append(EOL);
+		if (!(isFirstChild() && isParentIntake())) {
+			indent(preBuilder);
+		}
 
-	    return preBuilder;
-    }
-	
+		preBuilder.append("<div dojoType=\"TitlePane\" label=\"").append(getLabel()).append("\" labelNodeClass=\"intakeSectionLabel\" containerNodeClass=\"intakeSectionContainer\" >").append(EOL);
+		beginTag();
+
+		indent(preBuilder).append("<table class=\"intakeTable\">").append(EOL);
+		beginTag();
+
+		return preBuilder;
+	}
+
+	/**
+	 * @see org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter#getPostBuilder()
+	 */
+	public StringBuilder getPostBuilder() {
+		StringBuilder postBuilder = super.getPostBuilder();
+
+		endTag();
+		indent(postBuilder).append("</table> <!-- End Question Table -->").append(EOL);
+			
+		endTag();
+		indent(postBuilder).append("</div> <!-- End Section -->").append(EOL);
+
+		return postBuilder;
+	}
+
 }

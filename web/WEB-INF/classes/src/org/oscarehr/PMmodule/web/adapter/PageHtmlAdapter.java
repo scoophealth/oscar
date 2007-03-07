@@ -20,9 +20,9 @@ package org.oscarehr.PMmodule.web.adapter;
 
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class PageTypeHtmlAdapter extends AbstractHtmlAdapter {
+public class PageHtmlAdapter extends AbstractHtmlAdapter {
 
-	public PageTypeHtmlAdapter(int indent, IntakeNode node) {
+	public PageHtmlAdapter(int indent, IntakeNode node) {
 		super(indent, node);
 	}
 

@@ -21,22 +21,18 @@
 			<td>
 				<html:select property="monthOfBirth">
 					<html:optionsCollection property="months" value="value" label="label" />
-				</html:select>
-				&nbsp;
+				</html:select>&nbsp;
 				<html:select property="dayOfBirth">
 					<html:optionsCollection property="days" value="value" label="label" />
-				</html:select>
-				&nbsp;
-				<html:text property="yearOfBirth" size="4" />
+				</html:select>&nbsp;
+				<html:text property="yearOfBirth" size="4" />&nbsp;(YYYY)
 			</td>
 		</tr>
 		<tr>
 			<th>Health Card</th>
 			<td>
-				<html:text property="healthCardNumber" size="10" />
-				&nbsp;
-				<html:text property="healthCardVersion" size="2" />
-				(version)
+				<html:text property="healthCardNumber" size="10" />&nbsp;
+				<html:text property="healthCardVersion" size="2" />&nbsp;(version)
 			</td>
 		</tr>
 		<tr>

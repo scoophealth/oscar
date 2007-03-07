@@ -134,7 +134,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 	}
 	
 	protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
-		request.setAttribute(GenericIntakeEditAction.CLIENT, client);
+		request.getSession().setAttribute(GenericIntakeEditAction.CLIENT, client);
 
     	StringBuilder parameters = new StringBuilder(PARAM_START);
     	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);

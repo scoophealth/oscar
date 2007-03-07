@@ -177,10 +177,10 @@ public class GenericIntakeEditAction extends BaseAction {
 		return Integer.valueOf(getParameter(request, PROGRAM_ID));
 	}
 
-	// Request Attribute
+	// Session Attribute
 
 	private Demographic getClient(HttpServletRequest request) {
-		Demographic client = (Demographic) getRequestAttribute(request, CLIENT);
+		Demographic client = (Demographic) getSessionAttribute(request, CLIENT);
 		return (client != null) ? client : new Demographic();
 	}
 

@@ -239,11 +239,11 @@ public class BaseAction extends DispatchAction {
 		return request.getParameter(parameterName);
 	}
 	
-	protected Object getRequestAttribute(HttpServletRequest request, String attributeName) {
-		Object attribute = request.getAttribute(attributeName);
+	protected Object getSessionAttribute(HttpServletRequest request, String attributeName) {
+		Object attribute = request.getSession().getAttribute(attributeName);
 		
 		if (attribute != null) {
-			request.removeAttribute(attributeName);
+			request.getSession().removeAttribute(attributeName);
 		}
 		
 		return attribute;

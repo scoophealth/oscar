@@ -24,9 +24,9 @@ import org.oscarehr.PMmodule.web.adapter.AnswerScalarChoiceHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.AnswerScalarTextHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.IntakeHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.PageTypeHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.QuestionTypeHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.SectionTypeHtmlAdapter;
+import org.oscarehr.PMmodule.web.adapter.PageHtmlAdapter;
+import org.oscarehr.PMmodule.web.adapter.QuestionHtmlAdapter;
+import org.oscarehr.PMmodule.web.adapter.SectionHtmlAdapter;
 
 public class IntakeNodeType extends BaseIntakeNodeType {
 
@@ -88,11 +88,11 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 		if (isType(INTAKE_ID)) {
 			htmlAdapter = new IntakeHtmlAdapter(indent, node);
 		} else if (isType(PAGE_ID)) {
-			htmlAdapter = new PageTypeHtmlAdapter(indent, node);
+			htmlAdapter = new PageHtmlAdapter(indent, node);
 		} else if (isType(SECTION_ID)) {
-			htmlAdapter = new SectionTypeHtmlAdapter(indent, node);
+			htmlAdapter = new SectionHtmlAdapter(indent, node);
 		} else if (isType(QUESTION_ID)) {
-			htmlAdapter = new QuestionTypeHtmlAdapter(indent, node);
+			htmlAdapter = new QuestionHtmlAdapter(indent, node);
 		} else if (isType(ANSWER_COMPOUND_ID)) {
 			htmlAdapter = new AnswerCompoundHtmlAdapter(indent, node);
 		} else if (isType(ANSWER_SCALAR_CHOICE_ID)) {
