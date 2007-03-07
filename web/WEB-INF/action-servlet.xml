@@ -460,4 +460,22 @@
 			<ref bean="programManager" />
 		</property>
 	</bean>
+	<!--  Vaccine -->
+	<bean name="/VaccineProviderReport" class="org.oscarehr.vaccine.VaccineProviderReportAction" singleton="false">
+		<property name="programManager">
+			<ref bean="programManager" />
+		</property>
+		<property name="clientManager">
+			<ref bean="clientManager" />
+		</property>
+		<property name="admissionManager">
+			<ref bean="admissionManager" />
+		</property>
+		<property name="caseManagementManager">
+			<ref bean="CaseManagementManager" />
+		</property>
+		<property name="providerManager">
+			<ref bean="providerManager" />
+		</property>
+	</bean>	
 </beans>

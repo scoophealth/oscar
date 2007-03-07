@@ -126,6 +126,7 @@ function createIntakeCReport1()
 			<br />
 			<html:link action="/PMmodule/GenericIntake/Search.do">New Client</html:link></div>
 		</div>
+		<c:if test="${sessionScope.userrole ne 'ER Clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
 		<div>
 			<span>Reporting Tools</span>
 			<div>
@@ -136,14 +137,14 @@ function createIntakeCReport1()
 				<a href="javascript:void(0)" onclick="javascript:createIntakeCReport1();return false;">Street Health Mental Health Report</a>
 			</div>
 		</div>
+		</c:if>
+		
+		<c:if test="${sessionScope.userrole eq 'ER Clerk' or sessionScope.userrole eq 'Vaccine Provider'}">		
 		<%
-			if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("ER Clerk") != -1) {
-				String oscarContextPath=(String)session.getAttribute("oscar_context_path");
+			String oscarContextPath=(String)session.getAttribute("oscar_context_path");
 		%>
 			<div><a href="<%=oscarContextPath%>/logout.jsp">Logout</a></div>
-		<%
-			}
-		%>
+		</c:if>
 		<%
 			if (session.getAttribute("userrole") != null && ((String) session.getAttribute("userrole")).indexOf("admin") != -1) {
 		%>
@@ -180,7 +181,9 @@ function createIntakeCReport1()
 		<%
 			}
 		%>
-		<div>
-			<span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Oscar Medical</a></span>
-		</div>
+		<c:if test="${sessionScope.userrole ne 'ER Clerk' and sessionScope.userrole ne 'Vaccine Provider'}">		
+			<div>
+				<span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Oscar Medical</a></span>
+			</div>
+		</c:if>
 </div>

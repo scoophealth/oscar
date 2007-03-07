@@ -223,8 +223,14 @@ public class ClientManagerAction extends BaseAction {
 
 		logManager.log(getProviderNo(request), "read", "pmm client record", id, getIP(request));
 
-		// for ERModule
 		String roles = (String)request.getSession().getAttribute("userrole");
+				
+		// for Vaccine Provider
+		if (roles.indexOf("Vaccine Provider") != -1) {
+			return new ActionForward("/VaccineProviderReport.do?id=" + id,true);
+		}
+		
+		// for ERModule
 		if (roles.indexOf("ER Clerk") != -1) {
 			Map consentMap = (Map) request.getSession().getAttribute("er_consent_map");
 			

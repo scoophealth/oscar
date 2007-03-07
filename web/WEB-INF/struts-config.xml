@@ -1171,6 +1171,7 @@
 			<forward name="survey" path="/PMmodule/Forms/SurveyExecute.do" />
 			<forward name="consent" path="page.pmm.erconsent" />
 			<forward name="er-redirect" path="/PMmodule/ErReceptionistReport.jsp" />
+			<forward name="vaccine-report" path="/VaccineProviderReport.do" redirect="true"/>
 			<forward name="search" path="/PMmodule/ClientSearch2.do" redirect="true" />
 			<forward name="integrator_admissions" path="/PMmodule/integrator/admissions.jsp" />
 			<forward name="integrator_referrals" path="/PMmodule/integrator/referrals.jsp" />
@@ -1314,6 +1315,9 @@
 		<!-- END OSCAR Report By Template -->
 		<action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">
 			<forward name="view" path="/provider/providercontrol.jsp" redirect="true" />
+		</action>
+		<action path="/VaccineProviderReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+			<forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
 		</action>
 	</action-mappings>
 	

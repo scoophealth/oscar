@@ -49,6 +49,12 @@
 		response.sendRedirect("er_clerk.jsp");
 	}
 %>
+
+<%
+	if(roleName$.indexOf("Vaccine Provider") != -1) {
+		response.sendRedirect("vaccine_provider.jsp");
+	}
+%>
 <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment" rights="r" reverse="<%=true%>" >
 <%response.sendRedirect("../logout.jsp");%>
 </security:oscarSec>
