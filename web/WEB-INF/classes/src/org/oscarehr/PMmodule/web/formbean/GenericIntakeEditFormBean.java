@@ -36,7 +36,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private static final long serialVersionUID = 1L;
 
 	private static final String BED_PROGRAM_LABEL = "Bed Program";
-	private static final String COMMUNITY_PROGRAM_LABEL = "Community Location";
+	private static final String COMMUNITY_PROGRAM_LABEL = "Residence Location";
 
 	private String method;
 
@@ -59,9 +59,6 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		genders = GenericIntakeConstants.GENDERS;
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
-
-		bedCommunityPrograms = new ArrayList<LabelValueBean>();
-		servicePrograms = new ArrayList<LabelValueBean>();
 	}
 
 	public String getMethod() {
@@ -210,6 +207,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private List<LabelValueBean> convertToLabelValues(List<Program> primary, List<Program> secondary) {
 		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
 
+		labelValues.add(GenericIntakeConstants.EMPTY);
 		labelValues.addAll(convertToLabelValues(primary));
 		labelValues.addAll(convertToLabelValues(secondary));
 

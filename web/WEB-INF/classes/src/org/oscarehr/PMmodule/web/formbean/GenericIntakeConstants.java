@@ -4,6 +4,8 @@ import org.apache.struts.util.LabelValueBean;
 
 public class GenericIntakeConstants {
 
+	public static final LabelValueBean EMPTY = new LabelValueBean("", ""); 
+	
 	public static final LabelValueBean[] GENDERS = new LabelValueBean[] {
     	new LabelValueBean("", "D"),
     	new LabelValueBean("Male", "M"),
