@@ -21,6 +21,7 @@ package org.oscarehr.PMmodule.model;
 import org.oscarehr.PMmodule.model.base.BaseIntakeNodeType;
 import org.oscarehr.PMmodule.web.adapter.AnswerCompoundHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.AnswerScalarChoiceHtmlAdapter;
+import org.oscarehr.PMmodule.web.adapter.AnswerScalarNoteHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.AnswerScalarTextHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.IntakeHtmlAdapter;
 import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
@@ -105,8 +106,7 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 		} else if (isType(ANSWER_SCALAR_TEXT_ID)) {
 			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
 		} else if (isType(ANSWER_SCALAR_NOTE_ID)) {
-			// TODO Intake Create AnswerScalarNoteHtmlAdapter
-			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
+			htmlAdapter = new AnswerScalarNoteHtmlAdapter(indent, node, intake);
 		} else {
 			throw new IllegalStateException("No html adapter for type: " + getType());
 		}

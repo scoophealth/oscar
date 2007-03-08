@@ -21,23 +21,27 @@ package org.oscarehr.PMmodule.web.adapter;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 
-public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter {
+public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter {
 	
-	public AnswerScalarTextHtmlAdapter(int indent, IntakeNode node, Intake intake) {
+	private static final Integer COLS = 50;
+	private static final Integer ROWS = 7;
+	
+	public AnswerScalarNoteHtmlAdapter(int indent, IntakeNode node, Intake intake) {
 		super(indent, node, intake);
 	}
 
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(getTextInput(getId(), getAnswerValue())).append(EOL);
+		indent(preBuilder).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(EOL);
 		indent(preBuilder).append(getLabel()).append(EOL);
 
 		return endAnswer(preBuilder);
 	}
 
-	private String getTextInput(String id, String value) {
-		return String.format("<input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { id, value });
+	private String getTextInput(String id, Integer cols, Integer rows, String value) {
+		return String.format("<textarea name=\"intake.answerMapped(%s).value\" cols=\"%s\" rows=\"%s\">%s</textarea>", new Object[] { id, cols, rows, value });
+		
 	}
 
 }

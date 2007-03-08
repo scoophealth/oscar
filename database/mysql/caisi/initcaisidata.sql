@@ -119,7 +119,7 @@ INSERT INTO `intake_node_type` VALUES
 	(4, 'question'),
 	(5, 'answer compound'),
 	(6, 'answer scalar choice'),
-	(7, 'answer scalar text')
+	(7, 'answer scalar text'),
 	(8, 'answer scalar note');
 
 --
