@@ -128,7 +128,8 @@
 			                      		if(providerList.contains(p)){
 	    	                  				checked="checked";
 	    	                  				%>
-	    	                  				<input name="assignee" type="hidden" value="<c:out value='${provider.provider_no}'/>"/>
+	    	                  			<!--  	<input name="assignee" type="hidden" value="<c:out value='${provider.provider_no}'/>"/>
+	    	                  			-->
 	    	                  				<%
 		    	                  		}
 		                      		}

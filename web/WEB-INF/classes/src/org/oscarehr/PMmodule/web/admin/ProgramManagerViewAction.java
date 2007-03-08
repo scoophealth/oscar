@@ -251,7 +251,7 @@ public class ProgramManagerViewAction extends BaseAction {
 				
 				//temporary admission will not allow batach discharge.
 				if(admission.isTemporaryAdmission()==true){
-					message += "Some clients are in this bed program temporarily. You cannot do batch discharge for the client whose 'Temporary Admission' is true !";
+					message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
 					continue;
 				}
 					

@@ -243,6 +243,10 @@ public class TicklerAction extends DispatchAction {
         CustomFilter filter = (CustomFilter)ticklerForm.get("filter");
         String name = filter.getName();
         CustomFilter newFilter = ticklerMgr.getCustomFilter(name);
+        
+        /*String filterId = Long.toString(filter.getId());
+        CustomFilter newFilter = ticklerMgr.getCustomFilterById(Integer.valueOf(filterId));
+        */
         if(newFilter == null) {
         	newFilter = new CustomFilter();
         }

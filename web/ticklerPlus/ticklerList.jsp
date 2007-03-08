@@ -72,7 +72,7 @@ Calendar now = Calendar.getInstance();
 	</tr>
 	<tr>
 		<td colspan="2" class="blueText">Client: <html:select
-			property="filter.client"
+			property="filter.demographic_no"
 			onchange="this.form.method.value='filter';this.form.submit();">
 			<option value="All Clients">All Clients</option>
 			<html:options collection="demographics" property="demographicNo"
