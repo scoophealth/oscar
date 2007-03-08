@@ -477,5 +477,8 @@
 		<property name="providerManager">
 			<ref bean="providerManager" />
 		</property>
+		<property name="genericIntakeManager">
+			<ref bean="genericIntakeManager"/>
+		</property>
 	</bean>	
 </beans>

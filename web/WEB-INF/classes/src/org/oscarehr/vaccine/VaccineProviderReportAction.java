@@ -1,7 +1,6 @@
 package org.oscarehr.vaccine;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,10 +12,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.BaseAction;
@@ -31,7 +31,12 @@ public class VaccineProviderReportAction extends BaseAction {
 	private AdmissionManager admissionManager;
 	private CaseManagementManager caseManagementManager;
 	private ProviderManager providerManager;
-
+	private GenericIntakeManager genericIntakeManager;
+	
+	public void setGenericIntakeManager(GenericIntakeManager mgr) {
+		this.genericIntakeManager = mgr;
+	}
+	
 	public void setProgramManager(ProgramManager mgr) {
 		this.programManager = mgr;
 	}
@@ -102,10 +107,16 @@ public class VaccineProviderReportAction extends BaseAction {
 		request.setAttribute("client_dob",dob);
 		request.setAttribute("client_healthCard",healthCard);
 					
-		List allergies = this.caseManagementManager.getAllergies(clientId);
-		request.setAttribute("allergies",allergies);
+		//List allergies = this.caseManagementManager.getAllergies(clientId);
+		//request.setAttribute("allergies",allergies);
 		
-		
+		Intake quickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.parseInt(clientId)); 
+		for (Entry<String, String> entry : quickIntake.getAnswerKeyValues().entrySet()) {
+		   String key = entry.getKey();
+		   String value = entry.getValue();
+		   System.out.println(key + "=" + value);
+		}
+
 		return mapping.findForward("report");
 	}	
 }
