@@ -116,10 +116,11 @@
  </patternset> 
  
  <target name="web" depends="init">
-  <javac 
+  <javac  
+         fork="true"
 	 srcdir="${src_web}"
-     excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java"
-     destdir="${classes_web}"
+         excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java"
+         destdir="${classes_web}"
 	 deprecation="on"
 	 debug="on"
          target="1.5"
