@@ -24,7 +24,7 @@ import org.oscarehr.PMmodule.model.base.BaseIntakeAnswer;
 public class IntakeAnswer extends BaseIntakeAnswer implements Comparable<IntakeAnswer> {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	public static IntakeAnswer create(IntakeNode node) {
 		IntakeAnswer answer = new IntakeAnswer();
 		answer.setNode(node);
@@ -58,10 +58,32 @@ public class IntakeAnswer extends BaseIntakeAnswer implements Comparable<IntakeA
 	public String getValue() {
 		return super.getValue() != null ? super.getValue() : "";
 	}
-
-	@Override
-	public String toString() {
-		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getValue()).append(")").toString();
+	
+	public boolean isAnswerScalar() {
+		return getNode().isAnswerScalar();
+	}
+	
+	public boolean isAnswerCompound() {
+		return getNode().isAnswerCompound();
+	}
+	
+	public boolean isParentQuestion() {
+		return getNode().getParent().isQuestion();
+	}
+	
+	public IntakeNode getQuestion() {
+		IntakeNode question = null;
+		
+		IntakeNode parent = getNode().getParent();
+		IntakeNode grandParent = getNode().getGrandParent();
+		
+		if (parent.isQuestion()) {
+			question = parent;
+		} else if (grandParent.isQuestion()) {
+			question = grandParent;
+		}
+		
+		return question;
 	}
 	
 	/**
@@ -73,6 +95,11 @@ public class IntakeAnswer extends BaseIntakeAnswer implements Comparable<IntakeA
 		compareToBuilder.append(getNode().getId(), answer.getNode().getId());
 		
 		return compareToBuilder.toComparison();
+	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getValue()).append(")").toString();
 	}
 
 }

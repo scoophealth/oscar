@@ -1,6 +1,10 @@
 <%@include file="/taglibs.jsp"%>
+<%@page import="org.oscarehr.PMmodule.model.Intake"%>
 <%@page	import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean"%>
-
+<%
+	GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
+	Intake intake = intakeEditForm.getIntake();
+%>
 <html:html xhtml="true" locale="true">
 	<head>
 		<title>Generic Intake Edit</title>
@@ -9,8 +13,6 @@
 			@import "<html:rewrite page="/css/genericIntake.css" />";
 		</style>
 
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
-		
 		<script type="text/javascript">
 			var djConfig = {
 				isDebug: false,
@@ -20,28 +22,23 @@
 		</script>
 		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
 		<script type="text/javascript">
-			dojo.require("dojo.widget.LayoutContainer");
-			dojo.require("dojo.widget.ContentPane");
-			dojo.require("dojo.widget.TabContainer");
-			dojo.require("dojo.widget.TitlePane");
+			dojo.require("dojo.widget.*");
 		</script>
+		
+		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
+		
 		<html:base />
 	</head>
 	<body>
 		<html:form action="/PMmodule/GenericIntake/Edit">
 			<html:hidden property="method" />
-			<!-- Container -->
+			
 			<div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
-				<%
-					GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
-				%>
-				<!-- Top -->
 				<div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
 					<c:out value="${sessionScope.genericIntakeEditForm.title}" />
 				</div>
-				<!-- Client -->
+
 				<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
-					<!-- Client Information -->
 					<div id="clientTable" dojoType="TitlePane" label="Client Information" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
@@ -66,13 +63,13 @@
 								</td>
 							</tr>
 							<tr>
-								<td><label>Health Card<br><html:text property="client.hin" /></label></td>
+								<td><label>Health Card #<br><html:text property="client.hin" /></label></td>
 								<td><label>Version<br><html:text property="client.ver" /></label></td>
 							</tr>
 							<tr>
 								<td><label>Email<br><html:text property="client.email" /></label></td>
-								<td><label>Phone<br><html:text property="client.phone" /></label></td>
-								<td><label>Secondary Phone<br><html:text property="client.phone2" /></label></td>
+								<td><label>Phone #<br><html:text property="client.phone" /></label></td>
+								<td><label>Secondary Phone #<br><html:text property="client.phone2" /></label></td>
 							</tr>
 							<tr>
 								<td><label>Street<br><html:text property="client.address" /></label></td>
@@ -80,11 +77,10 @@
 								<td><label>Province<br><html:text property="client.province" /></label></td>
 								<td><label>Postal Code<br><html:text property="client.postal" /></label></td>
 							</tr>
-							<!-- Case Management -->
 							<c:if test="${!empty sessionScope.genericIntakeEditForm.client.demographicNo}">
 								<tr>
 									<td>
-										<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intakeEditForm.getIntake().getClientId()%>" providerNo="<%=intakeEditForm.getIntake().getStaffId()%>" providerName="<%=intakeEditForm.getIntake().getStaffName()%>" />', '', 'width=800,height=600,resizable')" >
+										<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable')" >
 											<span>Case Management Notes</span>
 										</a>
 									</td>
@@ -92,7 +88,7 @@
 							</c:if>
 						</table>
 					</div>
-					<!-- Program Admissions -->
+					
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
@@ -113,9 +109,10 @@
 							</tr>
 						</table>
 					</div>
-					<caisi:intake base="<%=5%>" intake="<%=intakeEditForm.getIntake()%>" />
+					
+					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
 				</div>
-				<!-- Bottom -->
+				
 				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<table class="intakeTable">
 						<tr>
@@ -128,6 +125,7 @@
 							</td>
 						</tr>
 					</table>
+
 					<%@ include file="/common/messages.jsp"%>
 				</div>
 			</div>

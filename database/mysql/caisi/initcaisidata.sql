@@ -94,73 +94,77 @@ insert into `provider` (`provider_no`, `last_name`, `first_name`, `provider_type
 -- Populate intake node labels
 --
 INSERT INTO `intake_node_label` VALUES
-	(1,''),
-	(2,'Registration Intake'),
-	(3,'Follow-up Intake'),
-	(4,'Page'),
-	(5,'Section'),
-	(6,'Question'),
-	(7,'Compound Answer'),
-	(8,'Boolean'),
-	(9,'String'),
-	(10,'Date'),
-	(11,'Integer'),
-	(12,'Email'),
-	(13,'Phone');
+	(1, ''),
+	(2, 'Registration Intake'),
+	(3, 'Follow-up Intake'), 
+	(4, 'Page'),
+	(5, 'Section'),
+	(6, 'Question'),
+	(7, 'Compound Answer'),
+	(8, 'Boolean'),
+	(9, 'String'),
+	(10, 'Date'),
+	(11, 'Integer'),
+	(12, 'Email'),
+	(13, 'Phone'),
+	(14, 'Note');
 		
 --
 -- Populate intake node types
 --
 INSERT INTO `intake_node_type` VALUES
-	(1,'intake'),
-	(2,'page'),
-	(3,'section'),
-	(4,'question'),
-	(5,'answer compound'),
-	(6,'answer scalar choice'),
-	(7,'answer scalar text');
+	(1, 'intake'),
+	(2, 'page'),
+	(3, 'section'),
+	(4, 'question'),
+	(5, 'answer compound'),
+	(6, 'answer scalar choice'),
+	(7, 'answer scalar text')
+	(8, 'answer scalar note');
 
 --
 -- Populate intake node templates
 --
 INSERT INTO `intake_node_template` VALUES
-	(1,1,1,2),
-	(2,2,1,3),
-	(3,3,2,4),
-	(4,4,3,5),
-	(5,5,4,6),
-	(6,6,5,7),
-	(7,7,6,8),
-	(8,8,7,9),
-	(9,9,7,10),
-	(10,10,7,11),
-	(11,11,7,12),
-	(12,12,7,13);
+	(1, 1, 1, 2),
+	(2, 2, 1, 3),
+	(3, 3, 2, 4),
+	(4, 4, 3, 5),
+	(5, 5, 4, 6),
+	(6, 6, 5, 7),
+	(7, 7, 6, 8),
+	(8, 8, 7, 9),
+	(9, 9, 7, 10),
+	(10, 10, 7, 11),
+	(11, 11, 7, 12),
+	(12, 12, 7, 13),
+	(13, 13, 8, 14);
 
 --
 -- Populate intake answer validation
 --
 INSERT INTO `intake_answer_validation` VALUES
-	(1,'date'),
-	(2,'integer'),
-	(3,'email'),
-	(4,'phone');
+	(1, 'date'),
+	(2, 'integer'),
+	(3, 'email'),
+	(4, 'phone');
 
 --
 -- Populate intake answer element
 --
 INSERT INTO `intake_answer_element` VALUES
-	(1,7,NULL,0,'T'),
-	(2,7,NULL,1,'F'),
-	(3,8,NULL,0,''),
-	(4,9,1,0,''),
-	(5,10,2,0,''),
-	(6,11,3,0,''),
-	(7,12,4,0,'');
+	(1, 7, NULL, 0, 'T'),
+	(2, 7, NULL, 1, 'F'),
+	(3, 8, NULL, 0, ''),
+	(4, 9, 1, 0, ''),
+	(5, 10, 2, 0, ''),
+	(6, 11, 3, 0, ''),
+	(7, 12, 4, 0, ''),
+	(8, 13, NULL, 0, '');
 
 --
 -- Populate intake node
 --
 INSERT INTO `intake_node` VALUES
-	(1,1,NULL,0,NULL),
-	(2,2,NULL,0,NULL);
+	(1, 1, NULL, 0, NULL),
+	(2, 2, NULL, 0, NULL);

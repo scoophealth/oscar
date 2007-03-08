@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.model.IntakeAnswerElement;
 import org.oscarehr.PMmodule.model.Program;
 
 public class GenericIntakeEditFormBean extends ActionForm {
@@ -194,9 +195,9 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		setServiceProgramIds(new String[] {});
 
 		if (intake != null) {
-			for (String id : intake.getBooleanAnswerNodeIds()) {
+			for (String id : intake.getBooleanAnswerIds()) {
 				if (request.getParameter("answerMapped[" + id + "].value") == null) {
-					intake.setAnswerMapped(id, "F");
+					intake.setAnswerMapped(id, IntakeAnswerElement.FALSE);
 				}
 			}
 		}

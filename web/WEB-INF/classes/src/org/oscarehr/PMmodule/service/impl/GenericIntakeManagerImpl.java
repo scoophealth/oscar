@@ -76,9 +76,7 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#copyProgramIntake(java.lang.Integer, java.lang.Integer, java.lang.String)
 	 */
 	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId) {
-		IntakeNode programIntakeNode = getNode(programDAO.getProgram(programId).getIntakeProgram());
-
-		return copyIntake(programIntakeNode, clientId, programId, staffId);
+		return copyIntake(getProgramIntakeNode(programId), clientId, programId, staffId);
 	}
 
 	// Create
@@ -113,6 +111,20 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	 */
 	public Intake getMostRecentQuickIntake(Integer clientId) {
 		return getIntake(getQuickIntakeNode(), clientId, null);
+	}
+
+	/**
+	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentIndepthIntake(java.lang.Integer)
+	 */
+	public Intake getMostRecentIndepthIntake(Integer clientId) {
+		return getIntake(getIndepthIntakeNode(), clientId, null);
+	}
+
+	/**
+	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getMostRecentProgramIntake(java.lang.Integer, java.lang.Integer)
+	 */
+	public Intake getMostRecentProgramIntake(Integer clientId, Integer programId) {
+		return getIntake(getProgramIntakeNode(programId), clientId, null);
 	}
 
 	/**
@@ -183,7 +195,7 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 
 	private void createAnswers(Intake intake, List<IntakeNode> children) {
 		for (IntakeNode child : children) {
-			if (child.isScalarAnswer()) {
+			if (child.isAnswerScalar()) {
 				intake.addToanswers(IntakeAnswer.create(child));
 			}
 
@@ -205,6 +217,10 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 
 	private IntakeNode getIndepthIntakeNode() {
 		return getNode(Agency.getLocalAgency().getIntakeIndepth());
+	}
+	
+	private IntakeNode getProgramIntakeNode(Integer programId) {
+		return getNode(programDAO.getProgram(programId).getIntakeProgram());
 	}
 
 	private IntakeNode getNode(Integer nodeId) {

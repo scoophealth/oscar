@@ -76,7 +76,11 @@ public class IntakeNodeTemplate extends BaseIntakeNodeTemplate {
 		return getType().isQuestionType();
 	}
 
-	public boolean isScalarAnswer() {
+	public boolean isAnswerCompound() {
+		return getType().isCompoundAnswerType();
+	}
+
+	public boolean isAnswerScalar() {
 		return getType().isScalarAnswerType();
 	}
 
@@ -89,7 +93,7 @@ public class IntakeNodeTemplate extends BaseIntakeNodeTemplate {
 			}
 		}
 		
-		return elements.contains("T") && elements.contains("F");
+		return elements.contains(IntakeAnswerElement.TRUE) && elements.contains(IntakeAnswerElement.FALSE);
 	}
 
 	public String getLabelStr() {

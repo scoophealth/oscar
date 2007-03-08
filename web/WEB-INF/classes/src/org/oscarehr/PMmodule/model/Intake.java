@@ -22,7 +22,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.oscarehr.PMmodule.model.base.BaseIntake;
@@ -81,6 +83,39 @@ public class Intake extends BaseIntake {
 		super.addToanswers(answer);
 	}
 	
+	public Map<String, String> getAnswerKeyValues() {
+		Map<String, String> keyValues = new HashMap<String, String>();
+		
+		for (IntakeAnswer answer : getAnswers()) {
+			String key = answer.getQuestion().getLabelStr();
+			StringBuilder value = new StringBuilder();
+			
+			if (answer.isAnswerCompound()) {
+				for (IntakeNode node : answer.getNode().getChildren()) {
+					value.append(getAnswerMapped(node.getIdStr()).getValue()).append(" ");
+				}
+			} else if (answer.isAnswerScalar() && answer.isParentQuestion()) {
+				value.append(answer.getValue());
+			}
+			
+			keyValues.put(key, value.toString().trim());
+		}
+		
+		return keyValues;
+	}
+	
+	public List<String> getBooleanAnswerIds() {
+		List<String> ids = new ArrayList<String>();
+		
+		for (IntakeAnswer answer : getAnswers()) {
+			if (answer.getNode().isAnswerBoolean()) {
+				ids.add(answer.getNode().getIdStr());
+			}
+		}		
+		
+		return ids;
+	}
+	
 	public IntakeAnswer getAnswerMapped(String key) {
 		for (IntakeAnswer answer : getAnswers()) {
 			if (answer.getNode().getIdStr().equals(key)) {
@@ -100,18 +135,6 @@ public class Intake extends BaseIntake {
 		}
 		
 		throw new IllegalStateException("No answer found with key: " + key);
-	}
-	
-	public List<String> getBooleanAnswerNodeIds() {
-		List<String> ids = new ArrayList<String>();
-		
-		for (IntakeAnswer answer : getAnswers()) {
-			if (answer.getNode().isAnswerBoolean()) {
-				ids.add(answer.getNode().getIdStr());
-			}
-		}		
-		
-		return ids;
 	}
 	
 	public String getClientName() {

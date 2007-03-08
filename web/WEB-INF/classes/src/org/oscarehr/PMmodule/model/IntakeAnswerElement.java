@@ -24,6 +24,9 @@ import org.oscarehr.PMmodule.model.base.BaseIntakeAnswerElement;
 public class IntakeAnswerElement extends BaseIntakeAnswerElement implements Comparable<IntakeAnswerElement> {
 
 	private static final long serialVersionUID = 1L;
+	
+	public static final String TRUE = "T";
+	public static final String FALSE = "F";
 
 	public IntakeAnswerElement(String element) {
 		super(null, null, element);

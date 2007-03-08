@@ -84,8 +84,12 @@ public class IntakeNode extends BaseIntakeNode {
 		return getNodeTemplate().isQuestion();
 	}
 
-	public boolean isScalarAnswer() {
-		return getNodeTemplate().isScalarAnswer();
+	public boolean isAnswerCompound() {
+		return getNodeTemplate().isAnswerCompound();
+	}
+
+	public boolean isAnswerScalar() {
+		return getNodeTemplate().isAnswerScalar();
 	}
 
 	public boolean isAnswerBoolean() {
@@ -98,6 +102,10 @@ public class IntakeNode extends BaseIntakeNode {
 		}
 
 		return false;
+	}
+	
+	public IntakeNode getGrandParent() {
+		return getParent() != null ? getParent().getParent() : null;
 	}
 
 	public IntakeNodeHtmlAdapter getHtmlAdapter(int indent, Intake intake, IntakeNode node) {

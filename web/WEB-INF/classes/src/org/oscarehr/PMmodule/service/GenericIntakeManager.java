@@ -38,6 +38,10 @@ public interface GenericIntakeManager {
 	
 	public Intake getMostRecentQuickIntake(Integer clientId);
 
+	public Intake getMostRecentIndepthIntake(Integer clientId);
+
+	public Intake getMostRecentProgramIntake(Integer clientId, Integer programId);
+
 	public List<Intake> getQuickIntakes(Integer clientId);
 
 	public List<Intake> getIndepthIntakes(Integer clientId);

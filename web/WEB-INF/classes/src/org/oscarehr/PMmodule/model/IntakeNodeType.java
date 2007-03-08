@@ -39,6 +39,7 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 	private static final Integer ANSWER_COMPOUND_ID = 5;
 	private static final Integer ANSWER_SCALAR_CHOICE_ID = 6;
 	private static final Integer ANSWER_SCALAR_TEXT_ID = 7;
+	private static final Integer ANSWER_SCALAR_NOTE_ID = 8;
 
 	public IntakeNodeType(String type) {
 		super(null, type);
@@ -78,8 +79,12 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 		return isType(QUESTION_ID);
 	}
 
+	public boolean isCompoundAnswerType() {
+		return isType(ANSWER_COMPOUND_ID);
+	}
+
 	public boolean isScalarAnswerType() {
-		return isType(ANSWER_SCALAR_CHOICE_ID) || isType(ANSWER_SCALAR_TEXT_ID);
+		return isType(ANSWER_SCALAR_CHOICE_ID) || isType(ANSWER_SCALAR_TEXT_ID) || isType(ANSWER_SCALAR_NOTE_ID);
 	}
 
 	public IntakeNodeHtmlAdapter getHtmlAdapter(int indent, IntakeNode node, Intake intake) {
@@ -98,6 +103,9 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 		} else if (isType(ANSWER_SCALAR_CHOICE_ID)) {
 			htmlAdapter = new AnswerScalarChoiceHtmlAdapter(indent, node, intake);
 		} else if (isType(ANSWER_SCALAR_TEXT_ID)) {
+			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
+		} else if (isType(ANSWER_SCALAR_NOTE_ID)) {
+			// TODO Intake Create AnswerScalarNoteHtmlAdapter
 			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
 		} else {
 			throw new IllegalStateException("No html adapter for type: " + getType());

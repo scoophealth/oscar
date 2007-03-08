@@ -19,8 +19,9 @@
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
 	<class name="Provider" table="provider">
 		<id column="provider_no" name="ProviderNo" type="string">
-			<generator class="native" />
+			<generator class="assigned" />
 		</id>
+		
 		<property column="comments" name="Comments" not-null="false" type="string" />
 		<property column="phone" length="20" name="Phone" not-null="false" type="string" />
 		<property column="billing_no" length="20" name="BillingNo" not-null="false" type="string" />

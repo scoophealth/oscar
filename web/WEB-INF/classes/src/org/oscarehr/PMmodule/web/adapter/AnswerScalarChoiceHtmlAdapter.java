@@ -32,7 +32,7 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
 		if (isAnswerBoolean()) {
-			indent(preBuilder).append(createCheckBox("T")).append(EOL);
+			indent(preBuilder).append(createCheckBox(IntakeAnswerElement.TRUE)).append(EOL);
 			indent(preBuilder).append(getLabel()).append(EOL);
 		} else {
 			indent(preBuilder).append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() })).append(EOL);
