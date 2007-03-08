@@ -119,7 +119,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 			if (p!=null && p.getProgramId() != null && p.getProgramId().longValue()>0 ){
 				//logger.debug("programName="+p.getProgram().getName()+"::"+"programId="+p.getProgram().getId().toString());
 				Program program = programDao.getProgram(new Integer(p.getProgramId().intValue()));
-				if(program.getProgramStatus().equals("active"))
+				if(program.getProgramStatus()!=null && program.getProgramStatus().equals("active"))
 					pList.add(new LabelValueBean(program.getName(),program.getId().toString()));
 			}
 		}

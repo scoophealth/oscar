@@ -96,8 +96,13 @@ public class TicklerManagerImpl implements TicklerManager {
 		return customFilterDAO.getCustomFilters(provider_no);
 	}
 	
+	
 	public CustomFilter getCustomFilter(String name) {
 		return customFilterDAO.getCustomFilter(name);
+	}
+	
+	public CustomFilter getCustomFilterById(Integer id){
+		return customFilterDAO.getCustomFilterById(id);
 	}
 	
 	public void saveCustomFilter(CustomFilter filter) {
@@ -106,5 +111,9 @@ public class TicklerManagerImpl implements TicklerManager {
 	
 	public void deleteCustomFilter(String name) {
 		customFilterDAO.deleteCustomFilter(name);
+	}
+	
+	public void deleteCustomFilterById(Integer id) {
+		customFilterDAO.deleteCustomFilterById(id);
 	}
 }

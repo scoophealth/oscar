@@ -38,6 +38,8 @@ public interface CustomFilterDAO extends DAO {
 	 */
 	public CustomFilter getCustomFilter(String name);
 	
+	public CustomFilter getCustomFilterById(Integer id);
+	
 	/**
 	 * Get all custom filters
 	 * @return The list of custom filters
@@ -62,4 +64,6 @@ public interface CustomFilterDAO extends DAO {
 	 * @param name The name
 	 */
 	public void deleteCustomFilter(String name);
+	
+	public void deleteCustomFilterById(Integer id);
 }

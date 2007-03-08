@@ -91,7 +91,7 @@ public class CustomFilterAction extends DispatchAction {
 		request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
 		return mapping.findForward("customFilterList");
 	}
-	
+/*	
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("edit");
@@ -99,6 +99,39 @@ public class CustomFilterAction extends DispatchAction {
 		String name = request.getParameter("name");
 		if(name != null && !name.equals("")) {
 			CustomFilter filter = ticklerMgr.getCustomFilter(name);
+			// get the demographic
+			String demo_no=filter.getDemographic_no();
+			if(!(demo_no.equals(""))&&demo_no!=null)
+			{
+			Demographic demographic = demographicMgr.getDemographic(demo_no);
+			if(demographic != null) {
+				filter.setDemographic_webName(demographic.getFormattedName());
+			}}
+			else
+				filter.setDemographic_webName("");
+				
+			DynaActionForm filterForm = (DynaActionForm)form;
+			filterForm.set("filter",filter);
+			request.setAttribute("customFilterForm",filterForm);
+			request.setAttribute("custom_filter",filter);
+			request.setAttribute("me_no",(String)request.getSession().getAttribute("user"));
+			request.setAttribute("me",providerMgr.getProvider((String)request.getSession().getAttribute("user")).getFormattedName());
+		}
+		
+		request.setAttribute("providers",providerMgr.getProviders());
+		request.setAttribute("priorityList",CustomFilter.priorityList);
+		request.setAttribute("statusList",CustomFilter.statusList);
+		
+		return mapping.findForward("customFilterForm");
+	}
+*/	
+	public ActionForward edit(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		log.debug("edit");
+		
+		String id = request.getParameter("id");
+		if(id != null && !id.equals("")) {
+			CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
 			/* get the demographic */
 			String demo_no=filter.getDemographic_no();
 			if(!(demo_no.equals(""))&&demo_no!=null)
@@ -125,6 +158,8 @@ public class CustomFilterAction extends DispatchAction {
 		return mapping.findForward("customFilterForm");
 	}
 	
+	
+	
 	/* save a custom filter */
 	public ActionForward save(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -132,7 +167,7 @@ public class CustomFilterAction extends DispatchAction {
 		
         DynaActionForm filterForm = (DynaActionForm)form;
         CustomFilter filter = (CustomFilter)filterForm.get("filter");
-        
+                
         String[] providers = request.getParameterValues("provider");
         if(providers != null) {
 	        Set sProviders = new HashSet();
@@ -168,7 +203,9 @@ public class CustomFilterAction extends DispatchAction {
 		String[] checks = request.getParameterValues("checkbox");
 
 		for(int x=0;x<checks.length;x++) {
-			ticklerMgr.deleteCustomFilter(checks[x]);
+			//ticklerMgr.deleteCustomFilter(checks[x]);
+			ticklerMgr.deleteCustomFilterById(Integer.valueOf(checks[x]));
+			
 		}
 		return list(mapping,form,request,response);
 	}

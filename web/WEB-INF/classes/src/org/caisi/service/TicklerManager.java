@@ -126,6 +126,8 @@ public interface TicklerManager {
 	 */
 	public CustomFilter getCustomFilter(String name);
 	
+	public CustomFilter getCustomFilterById(Integer id);
+	
 	/**
 	 * Save a custom filter
 	 * @param filter The filter
@@ -137,4 +139,7 @@ public interface TicklerManager {
 	 * @param name The name
 	 */
 	public void deleteCustomFilter(String name);
+	
+	public void deleteCustomFilterById(Integer id);
+	
 }

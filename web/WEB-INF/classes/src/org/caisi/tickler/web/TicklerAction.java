@@ -159,8 +159,11 @@ public class TicklerAction extends DispatchAction {
         	{
         		for(int k=0;k<providerProgram.size();k++)
             	{
+        			String programId = Long.toString(((ProgramProvider)(providerProgram.get(k))).getProgramId());
+        			String ticklerDemoProgramId= Integer.toString(((Integer)ticklerDemoProgram.get(j)));
         			
-        			if (((ProgramProvider)(providerProgram.get(k))).getProgramId().equals(ticklerDemoProgram.get(j))){
+        			//if (((ProgramProvider)(providerProgram.get(k))).getProgramId().equals(ticklerDemoProgram.get(j))){
+        			if(programId.equals(ticklerDemoProgramId)){
         				ticklerInProgtam=true;
         			}
             	}

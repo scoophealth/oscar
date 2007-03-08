@@ -11,7 +11,7 @@
 
 	<script>
 		function search_demographic() {
-			window.open('demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
+			window.open('./ticklerPlus/demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
 		}
 	</script>	
 
@@ -50,7 +50,7 @@
                       	 <html:hidden property="filter.name"/>
                       </c:when>
                       <c:otherwise>
-                         <html:text property="filter.name"/>
+                        <html:text property="filter.name"/>        
                       </c:otherwise>
                       	</c:choose>
                       	
@@ -158,7 +158,7 @@
 				<tr>
 	              	<td class="fieldValue" colspan="3" align="left">
 					        <html:submit styleClass="button">Save</html:submit>
-					        <input type="button" class="button" value="Cancel" onclick="location.href='../CustomFilter.do';"/>
+					        <input type="button" class="button" value="Cancel" onclick="location.href='<html:rewrite action="CustomFilter"/>'"/>
 					</td>
 				</tr>
 		</html:form>

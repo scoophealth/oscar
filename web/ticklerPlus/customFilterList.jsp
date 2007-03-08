@@ -27,10 +27,14 @@
 		%>
 		<tr bgcolor="<%=bgcolor %>" align="center">
 			<td valign="middle">
-				<input type="checkbox" name="checkbox" value="<c:out value="${filter.name}"/>"/>
+				<!--  <input type="checkbox" name="checkbox" value="<c:out value="${filter.name}"/>"/>
+				-->
+				<input type="checkbox" name="checkbox" value="<c:out value="${filter.id}"/>" />
 			</td>
 			<td valign="middle">
-				<a href="../CustomFilter.do?method=edit&name=<c:out value="${filter.name}"/>"><img border="0" src="images/edit.jpg"/></a>
+				<!--  <a href="../CustomFilter.do?method=edit&name=<c:out value="${filter.name}"/>"><img border="0" src="images/edit.jpg"/></a>
+				-->
+				<a href="../CustomFilter.do?method=edit&id=<c:out value="${filter.id}"/>"><img border="0" src="images/edit.jpg"/></a>
 			</td>
 			<td>
 				<c:out value="${filter.name}"/>

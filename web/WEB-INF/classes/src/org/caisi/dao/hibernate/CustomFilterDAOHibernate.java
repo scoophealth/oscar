@@ -44,7 +44,15 @@ public class CustomFilterDAOHibernate extends HibernateDaoSupport implements
 			return null;
 		}
 	}
-
+	public CustomFilter getCustomFilterById(Integer id){
+		List results= getHibernateTemplate().find("from CustomFilter c where c.id=?", new Object[]{id});
+		if(results.size()>0) {
+			return (CustomFilter)results.get(0);
+		}
+		else
+			return null;
+	}
+	
 	public void saveCustomFilter(CustomFilter filter) {
 		getHibernateTemplate().saveOrUpdate(filter);
 	}
@@ -59,6 +67,11 @@ public class CustomFilterDAOHibernate extends HibernateDaoSupport implements
 
 	public void deleteCustomFilter(String name) {
 		CustomFilter filter = getCustomFilter(name);
+		getHibernateTemplate().delete(filter);
+	}
+	
+	public void deleteCustomFilterById(Integer id) {
+		CustomFilter filter = getCustomFilterById(id);
 		getHibernateTemplate().delete(filter);
 	}
 }
