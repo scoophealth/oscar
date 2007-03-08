@@ -28,8 +28,9 @@
 			<generator class="native" />
 		</id>
 
-		<many-to-one name="nodeTemplate" column="intake_node_template_id"
-			class="IntakeNodeTemplate" not-null="true" />
+		<many-to-one name="nodeTemplate"
+			class="IntakeNodeTemplate" column="intake_node_template_id"
+			not-null="true" lazy="false" />
 			
 		<many-to-one name="label" cascade="save-update"
 			class="IntakeNodeLabel" column="intake_node_label_id"

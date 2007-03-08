@@ -31,13 +31,11 @@
 		<property name="value" column="val" type="string" not-null="true" />
 		
 		<many-to-one name="intake"
-			column="intake_id"
-			class="Intake"
+			class="Intake" column="intake_id"
 			not-null="true" />
 		
 		<many-to-one name="node"
-			column="intake_node_id"
-			class="IntakeNode"
+			class="IntakeNode" column="intake_node_id" 
 			not-null="true" />
 	</class>
 </hibernate-mapping>
