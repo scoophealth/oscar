@@ -55,22 +55,18 @@
 	<tr>
 		<td>Allergies:</td>
 		<td>
-			<table width="100%" border="0"  cellpadding="0" cellspacing="1" >
-				<tr class="title">
-					<td><b>Update date</b></td>
-					<td><b>Allergy description</b></td>
-					<td><b>Reaction</b></td>
-				</tr>
-				<c:forEach var="allergy" items="${allergies}">
-					<tr>
-						<td bgcolor="white"><fmt:formatDate pattern="MM/dd/yy" value="${allergy.entry_date}"/></td>
-						<td bgcolor="white"><c:out value="${allergy.description}"/></td>
-						<td bgcolor="white"><c:out value="${allergy.reaction}"/></td>
-					</tr>
-				</c:forEach>
-			</table>		
-		</td>
+			<c:out value="${allergies}"/>
 	</tr>
+	<tr>
+		<td>Contraindicated Health Conditions:</td>
+		<td>
+			<c:out value="${intakeMap['Contraindicated Health Conditions']}"/>
+	</tr>	
+	<tr>
+		<td>Vaccination History:</td>
+		<td>
+			<c:out value="${intakeMap['Vaccination History']}"/>
+	</tr>		
 	<tr>
 		<td colspan="2"><a href="javascript:void(0);" onclick="window.open('oscarPrevention/index.jsp?demographic_no=<c:out value="${demographicNo}"/>','prevention','width=600,height=600');return false;">Immunization Record</a></td>
 	</tr>
