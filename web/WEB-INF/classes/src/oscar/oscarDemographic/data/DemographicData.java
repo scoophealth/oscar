@@ -465,6 +465,16 @@ public class DemographicData {
            return addZero(year_of_birth,4)+addZero(month_of_birth,2)+addZero(date_of_birth,2);
         }
         
+        
+        public Date getDOBObj(){
+            Date date = null;
+            try{
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");       
+                date = (Date)formatter.parse(addZero(year_of_birth,4)+"-"+addZero(month_of_birth,2)+"-"+addZero(date_of_birth,2));
+            }catch(Exception eg){}
+            return date;
+        }
+        
         public String getDob(String seperator){
 	   return this.getYearOfBirth() + seperator + this.getMonthOfBirth() + seperator + this.getDateOfBirth();
 	}
