@@ -503,6 +503,13 @@
 			<forward name="graph" path="/form/createpdf" />
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
 		</action>
+                <action name="FrmForm" path="/form/HSFOform" scope="request" type="oscar.form.study.HSFO.pageUtil.ManageHSFOAction" >
+                        <forward name="registration" path="/form/HSFORegistrationFrm.jsp" />
+                </action>    
+                <action name="FrmForm" path="/form/HSFOsaveform" scope="request" type="oscar.form.study.HSFO.pageUtil.SaveRegistrationAction" >
+                        <forward name="success" path="/form/HSFOform.do" />
+                </action>    
+                
 		<action name="FrmFormForm" path="/form/SetupForm" scope="request" type="oscar.form.pageUtil.FrmSetupFormAction" />
 		<action name="FrmFormForm" path="/form/SubmitForm" scope="request" type="oscar.form.pageUtil.FrmFormAction" />
 		<action input="/StartCookie.jsp" path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">
@@ -1118,6 +1125,19 @@
 		<action path="/form/AddRHWorkFlow" scope="request" name="FrmForm" type="oscar.form.pageUtil.FrmFormAddRHWorkFlowAction">
 			<forward name="success" path="/form/RHPrevention.do" />
 		</action>
+               
+                <action path="/billing/CA/BC/GenerateTeleplanFile" scope="request" name="FrmForm" 
+                        type="oscar.oscarBilling.ca.bc.pageUtil.GenerateTeleplanFileAction">
+			<forward name="success" path="/billing/CA/BC/TeleplanSubmission.jsp" />          
+		</action>
+                
+                <action path="/billing/CA/BC/SimulateTeleplanFile" scope="request" name="FrmForm" 
+                        type="oscar.oscarBilling.ca.bc.pageUtil.SimulateTeleplanFileAction">
+			<forward name="success" path="/billing/CA/BC/TeleplanSimulation.jsp" />          
+		</action>
+                <action path="/billing/CA/BC/DownloadBilling"   type="oscar.oscarBilling.ca.bc.pageUtil.DownloadFileAction" />
+                
+                
 		<action path="/Tickler" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" name="ticklerForm" input="/ticklerPlus/ticklerForm.jsp" validate="false">
 			<forward name="list" path="/ticklerPlus/ticklerList.jsp" />
 			<forward name="view" path="/ticklerPlus/ticklerView.jsp" />
