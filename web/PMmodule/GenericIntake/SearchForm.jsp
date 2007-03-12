@@ -2,7 +2,7 @@
 <%@ include file="/common/messages.jsp"%>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
-<html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm();">
+<html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
 	<html:hidden property="method" />
 	<html:hidden property="clientId" />
 	<html:hidden property="agencyId" />

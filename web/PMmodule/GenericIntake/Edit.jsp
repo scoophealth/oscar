@@ -14,15 +14,20 @@
 		</style>
 
 		<script type="text/javascript">
+			<!--
 			var djConfig = {
 				isDebug: false,
 				parseWidgets: false,
 				searchIds: ["layoutContainer", "topPane", "clientPane", "bottomPane", "clientTable", "admissionsTable"]
 			};
+			// -->
 		</script>
 		<script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
 		<script type="text/javascript">
+			<!--
 			dojo.require("dojo.widget.*");
+			dojo.require("dojo.validate.*");
+			// -->
 		</script>
 		
 		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
@@ -30,7 +35,7 @@
 		<html:base />
 	</head>
 	<body>
-		<html:form action="/PMmodule/GenericIntake/Edit">
+		<html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()">
 			<html:hidden property="method" />
 			
 			<div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
@@ -42,9 +47,10 @@
 					<div id="clientTable" dojoType="TitlePane" label="Client Information" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
-								<td><label>First Name<br><html:text property="client.firstName" /></label></td>
-								<td><label>Last Name<br><html:text property="client.lastName" /></label></td>
-								<td><label>Gender<br>
+								<td><label>First Name *<br><html:text property="client.firstName" /></label></td>
+								<td><label>Last Name *<br><html:text property="client.lastName" /></label></td>
+								<td>
+									<label>Gender<br>
 										<html:select property="client.sex">
 											<html:optionsCollection property="genders" value="value" label="label" />
 										</html:select>

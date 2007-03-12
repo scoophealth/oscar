@@ -29,16 +29,17 @@
 
 package oscar.form.study.HSFO.pageUtil;
 
-import com.sun.jdi.connect.Connector;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+
 import oscar.Misc;
 import oscar.form.study.HSFO.HSFODAO;
 import oscar.form.study.HSFO.PatientData;
