@@ -105,7 +105,7 @@ public class SaveRegistrationAction extends Action{
         String BirthDate_day = request.getParameter("BirthDate_day").toString().trim();
         Date BirthDate = null;
         
-        SimpleDateFormat formater = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
         String datestring = BirthDate_year + "-" + BirthDate_month +"-" + BirthDate_day;
         
         try {
