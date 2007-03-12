@@ -48,7 +48,7 @@
 {"select_maxformar_id", "select max(ID) from formONAR where c_finalEDB >= ? and c_finalEDB <= ? group by demographic_no"  },
 {"select_formar", "select ID, demographic_no, c_finalEDB, concat(c_lastname,\",\",c_firstname) as c_pName, pg1_age, c_gravida, c_term, pg1_homePhone, provider_no from formONAR where c_finalEDB >= ? and c_finalEDB <= ? order by c_finalEDB desc limit ? offset ?"  },
 {"search_provider", "select provider_no, last_name, first_name from provider order by last_name"},
-{"select_patientStatus", "select patient_status from demographic where demographic_no = ?"  },
+{"select_patientStatus", "select patient_status, provider_no from demographic where demographic_no = ?"  },
   };
   reportMainBean.doConfigure(dbParams,dbQueries);
 %>
@@ -77,87 +77,97 @@ function setfocus() {
    <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onClick="window.close()"></th>
   </tr>
 </table>
-
-<CENTER><table width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2">
-<tr bgcolor='<%=deepcolor%>'>
-<TH align="center" ><b>#</b></TH>
-<TH align="center" width="10%" nowrap><b><bean:message key="report.reportnewdblist.msgEDB"/></b></TH>
-<TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgName"/> </b></TH>
-<!--TH align="center" width="20%"><b>Demog' No </b></TH-->
-<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgAge"/></b></TH>
-<TH align="center" width="5%"><b><bean:message key="report.reportnewdblist.msgGravida"/></b></TH>
-<TH align="center" width="10%"><b><bean:message key="report.reportnewdblist.msgTerm"/></b></TH>
-<TH align="center" width="30%"><b><bean:message key="report.reportnewdblist.msgPhone"/></b></TH>
-<TH align="center"><b><bean:message key="report.reportnewdblist.msProvider"/></b></TH>
-</tr>
-<%
-  ResultSet rs=null ;
-  rs = reportMainBean.queryResults("search_provider");
-  while (rs.next()) {
-    providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
-  }
-  Properties arMaxId = new Properties();
-  String[] paramI =new String[2];
-String DATE_FORMAT = "yyyy-MM-dd";
-java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT);
-Calendar cal = Calendar.getInstance();
-cal.set(Integer.parseInt(startDate.substring(0,4)), Integer.parseInt(startDate.substring(5,startDate.lastIndexOf('-'))) , Integer.parseInt(startDate.substring(startDate.lastIndexOf('-')+1)) );
-cal.add(Calendar.YEAR,-1);
-  paramI[0]=sdf.format(cal.getTime()); //"0001-01-01";
-cal.set(Integer.parseInt(endDate.substring(0,4)), Integer.parseInt(endDate.substring(5,endDate.lastIndexOf('-'))) , Integer.parseInt(endDate.substring(endDate.lastIndexOf('-')+1)) );
-cal.add(Calendar.YEAR, 1);
-  paramI[1]=sdf.format(cal.getTime()); //;
-  rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
-  while (rs.next()) {
-    arMaxId.setProperty(""+rs.getInt("max(ID)"), "1");
-  }
-System.out.println("0001-01-01");
-  Properties demoProp = new Properties();
-
-  String[] param =new String[2];
-  param[0]=startDate; //"0001-01-01";
-  param[1]=endDate; //"0001-01-01";
-  int[] itemp1 = new int[2];
-  itemp1[1] = Integer.parseInt(strLimit1);
-  itemp1[0] = Integer.parseInt(strLimit2);
-  boolean bodd=false;
-  int nItems=0;
-  System.out.println(strLimit2+endDate + "00  01-01-01:" + startDate);
-  rs = reportMainBean.queryResults(param,itemp1, "select_formar");
-      System.out.println("0 0  01-01-01");
-  while (rs.next()) {
-	    System.out.println("0001-01-  01");
-    if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
-    System.out.println("0001 -01-  01");
-    if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
-    else demoProp.setProperty(rs.getString("demographic_no"), "1");
-    System.out.println("0001-01-  01");
-
-    // filter the "IN" patient from the list
-	ResultSet rs1=reportMainBean.queryResults(rs.getString("demographic_no"), "select_patientStatus");
-	if (rs1.next()) {
-		if(rs1.getString("patient_status").equals("IN")) continue;
-	}
-
-    bodd=bodd?false:true; //for the color of rows
-    nItems++;
-%>
-<tr bgcolor="<%=bodd?weakcolor:"white"%>">
-      <td><%=nItems%></td>
-      <td align="center" nowrap><%=rs.getString("c_finalEDB")!=null?rs.getString("c_finalEDB").replace('-','/'):"0001/01/01"%></td>
-      <td><%=rs.getString("c_pName")%></td>
-      <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
-      <td><%=rs.getString("pg1_age")%></td>
-      <td><%=rs.getString("c_gravida")%></td>
-      <td><%=rs.getString("c_term")%></td>
-      <td nowrap><%=rs.getString("pg1_homePhone")%></td>
-      <td><%=providerNameBean.getProperty(rs.getString("provider_no"), "")%></td>
-</tr>
-<%
-  }
-  reportMainBean.closePstmtConn();
-%>
-
+<script type="text/javascript" src="../commons/scripts/sort_table/css.js"></script>
+<script type="text/javascript" src="../commons/scripts/sort_table/common.js"></script>
+<script type="text/javascript" src="../commons/scripts/sort_table/standardista-table-sorting.js"></script>
+<CENTER><table class="sortable" width="100%" border="0" bgcolor="silver" cellspacing="2" cellpadding="2">
+    <thead>
+        <tr bgcolor='<%=deepcolor%>'>
+            <TH style="text-decoration: bold; text-align:center;" >#</TH>
+            <TH style="text-decoration: bold; text-align:center;" width="10%" nowrap><bean:message key="report.reportnewdblist.msgEDB"/></TH>
+            <TH style="text-decoration: bold; text-align:center;" width="30%"><bean:message key="report.reportnewdblist.msgName"/></TH>
+            <!--TH align="center" width="20%"><b>Demog' No </b></TH-->
+            <TH style="text-decoration: bold; text-align:center;" width="5%"><bean:message key="report.reportnewdblist.msgAge"/></TH>
+            <TH style="text-decoration: bold; text-align:center;" width="5%"><bean:message key="report.reportnewdblist.msgGravida"/></TH>
+            <TH style="text-decoration: bold; text-align:center;" width="10%"><bean:message key="report.reportnewdblist.msgTerm"/></TH>
+            <TH style="text-decoration: bold; text-align:center;" width="10%"><bean:message key="report.reportnewdblist.msgPhone"/></TH>
+            <TH style="text-decoration: bold"><bean:message key="report.reportnewdblist.msGP"/></TH>
+            <TH style="text-decoration: bold; text-align:center;"><bean:message key="report.reportnewdblist.msProvider"/></TH>
+        </tr>
+    </thead>
+    <tfoot></tfoot>
+    <tbody>
+        <%
+        ResultSet rs=null ;
+        rs = reportMainBean.queryResults("search_provider");
+        while (rs.next()) {
+        providerNameBean.setProperty(rs.getString("provider_no"), new String( rs.getString("last_name")+","+rs.getString("first_name") ));
+        }
+        Properties arMaxId = new Properties();
+        String[] paramI =new String[2];
+        String DATE_FORMAT = "yyyy-MM-dd";
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT);
+        Calendar cal = Calendar.getInstance();
+        cal.set(Integer.parseInt(startDate.substring(0,4)), Integer.parseInt(startDate.substring(5,startDate.lastIndexOf('-'))) , Integer.parseInt(startDate.substring(startDate.lastIndexOf('-')+1)) );
+        cal.add(Calendar.YEAR,-1);
+        paramI[0]=sdf.format(cal.getTime()); //"0001-01-01";
+        cal.set(Integer.parseInt(endDate.substring(0,4)), Integer.parseInt(endDate.substring(5,endDate.lastIndexOf('-'))) , Integer.parseInt(endDate.substring(endDate.lastIndexOf('-')+1)) );
+        cal.add(Calendar.YEAR, 1);
+        paramI[1]=sdf.format(cal.getTime()); //;
+        rs = reportMainBean.queryResults(paramI, "select_maxformar_id");
+        while (rs.next()) {
+        arMaxId.setProperty(""+rs.getInt("max(ID)"), "1");
+        }
+        System.out.println("0001-01-01");
+        Properties demoProp = new Properties();
+        
+        String[] param =new String[2];
+        param[0]=startDate; //"0001-01-01";
+        param[1]=endDate; //"0001-01-01";
+        int[] itemp1 = new int[2];
+        itemp1[1] = Integer.parseInt(strLimit1);
+        itemp1[0] = Integer.parseInt(strLimit2);
+        boolean bodd=false;
+        int nItems=0;
+        System.out.println(strLimit2+endDate + "00  01-01-01:" + startDate);
+        rs = reportMainBean.queryResults(param,itemp1, "select_formar");
+        System.out.println("0 0  01-01-01");
+        while (rs.next()) {
+        System.out.println("0001-01-  01");
+        if (!arMaxId.containsKey(""+rs.getInt("ID")) ) continue;
+        System.out.println("0001 -01-  01");
+        if (demoProp.containsKey(rs.getString("demographic_no")) ) continue;
+        else demoProp.setProperty(rs.getString("demographic_no"), "1");
+        System.out.println("0001-01-  01");
+        
+        String providerNo = "0";
+        // filter the "IN" patient from the list
+        ResultSet rs1=reportMainBean.queryResults(rs.getString("demographic_no"), "select_patientStatus");
+        if (rs1.next()) {
+            if(rs1.getString("patient_status").equals("IN")) continue;
+            providerNo = rs1.getString("provider_no");
+        }
+        
+        bodd=bodd?false:true; //for the color of rows
+        nItems++;
+        %>
+        <tr bgcolor="<%=bodd?weakcolor:"white"%>">
+            <td><%=nItems%></td>
+            <td align="center" nowrap><%=rs.getString("c_finalEDB")!=null?rs.getString("c_finalEDB").replace('-','/'):"0001/01/01"%></td>
+            <td><%=rs.getString("c_pName")%></td>
+            <!--td align="center" ><%=rs.getString("demographic_no")%> </td-->
+            <td><%=rs.getString("pg1_age")%></td>
+            <td><%=rs.getString("c_gravida")%></td>
+            <td><%=rs.getString("c_term")%></td>
+            <td nowrap><%=rs.getString("pg1_homePhone")%></td>
+            <td><%=providerNameBean.getProperty(providerNo, "")%></td>
+            <td><%=providerNameBean.getProperty(rs.getString("provider_no"), "")%></td>
+        </tr>
+        <%
+        }
+        reportMainBean.closePstmtConn();
+        %>
+    </tbody>
 </table>
 <br>
 <%
