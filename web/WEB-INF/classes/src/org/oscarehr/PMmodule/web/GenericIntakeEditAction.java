@@ -19,14 +19,17 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -135,7 +138,7 @@ public class GenericIntakeEditAction extends BaseAction {
 			Integer clientId = client.getDemographicNo();
 			String providerNo = getProviderNo(request);
 			Integer bedCommunityProgramId = intakeEditBean.getSelectedBedCommunityProgramId();
-			List<Integer> serviceProgramIds = intakeEditBean.getSelectedServiceProgramIds();
+			Set<Integer> serviceProgramIds = intakeEditBean.getSelectedServiceProgramIds();
 
 			admitBedCommunityProgram(clientId, providerNo, bedCommunityProgramId);
 			admitServicePrograms(clientId, providerNo, serviceProgramIds);
@@ -242,7 +245,7 @@ public class GenericIntakeEditAction extends BaseAction {
 	private SortedSet<Integer> getCurrentServiceProgramIds(Integer clientId) {
 		SortedSet<Integer> currentProgramIds = new TreeSet<Integer>();
 
-		List admissions = admissionManager.getCurrentServiceProgramAdmission(clientId);
+		List<?> admissions = admissionManager.getCurrentServiceProgramAdmission(clientId);
 		if (admissions != null) {
 			for (Object o : admissions) {
 				Admission serviceProgramAdmission = (Admission) o;
@@ -301,14 +304,20 @@ public class GenericIntakeEditAction extends BaseAction {
 		}
 	}
 
-	private void admitServicePrograms(Integer clientId, String providerNo, List<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException {
-		SortedSet<Integer> clientServicePrograms = getCurrentServiceProgramIds(clientId);
+	private void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException {
+		SortedSet<Integer> currentServicePrograms = getCurrentServiceProgramIds(clientId);
+		
+		Collection<?> discharge = CollectionUtils.subtract(currentServicePrograms, serviceProgramIds);
 
-		for (Integer serviceProgramId : serviceProgramIds) {
-			if (!clientServicePrograms.contains(serviceProgramId)) {
-				Program serviceProgram = programManager.getProgram(serviceProgramId);
-				admissionManager.processAdmission(clientId, providerNo, serviceProgram, "intake discharge", "intake admit");
-			}
+		for (Object programId : discharge) {
+			admissionManager.processDischarge((Integer) programId, clientId, "intake discharge");
+		}
+		
+		Collection<?> admit = CollectionUtils.subtract(serviceProgramIds, currentServicePrograms);
+
+		for (Object programId : admit) {
+			Program program = programManager.getProgram((Integer) programId);
+			admissionManager.processAdmission(clientId, providerNo, program, "intake discharge", "intake admit");
 		}
 	}
 

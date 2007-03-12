@@ -19,6 +19,7 @@
 package org.oscarehr.PMmodule.web.formbean;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -153,7 +154,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	// Selected service program id
 
-	public List<Integer> getSelectedServiceProgramIds() {
+	public Set<Integer> getSelectedServiceProgramIds() {
 		return convertToIntegers(serviceProgramIds);
 	}
 
@@ -227,8 +228,8 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		return labelValues;
 	}
 
-	private List<Integer> convertToIntegers(String[] sources) {
-		List<Integer> result = new ArrayList<Integer>();
+	private Set<Integer> convertToIntegers(String[] sources) {
+		Set<Integer> result = new HashSet<Integer>();
 
 		if (sources != null) {
 			for (String source : sources) {

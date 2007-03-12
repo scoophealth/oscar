@@ -267,6 +267,7 @@ public class AdmissionDaoHibernate extends HibernateDaoSupport implements Admiss
 		}
 
 		getHibernateTemplate().saveOrUpdate(admission);
+		getHibernateTemplate().flush();
 
 		if (log.isDebugEnabled()) {
 			log.debug("saveAdmission: id= " + admission.getId());
