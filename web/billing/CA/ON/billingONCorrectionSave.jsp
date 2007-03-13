@@ -51,6 +51,12 @@
 <p>
 <h1>Successful Updation of a billing Record.</h1>
 </p>
+<% if(request.getParameter("submit").equals("Submit&Correct Another")) { %>
+<center>
+	<input type='button' name='back' value='Correct Another' onclick='window.location.href="billingONCorrection.jsp?billing_no="'/>
+</center>
+<%} else { %>
 <script LANGUAGE="JavaScript">
 	self.close();
 </script>
+<%} %>

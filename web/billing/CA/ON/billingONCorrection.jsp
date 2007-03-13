@@ -535,7 +535,8 @@ if(bFlag) {
 		<td colspan="2"></td>
 	</tr>
 	<tr>
-		<td colspan="6"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
+		<td colspan="2"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"></td>
+		<td colspan="4" align='right'><input type="submit" name="submit" value="Submit&Correct Another"></td>
 	</tr>
 	<tr>
 		<td colspan="6">Billing Notes:<br>
