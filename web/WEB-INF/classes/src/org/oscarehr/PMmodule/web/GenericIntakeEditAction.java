@@ -299,8 +299,8 @@ public class GenericIntakeEditAction extends BaseAction {
 					if (bedCommunityProgram.isCommunity()) {
 						admissionManager.processDischargeToCommunity(bedCommunityProgramId, clientId, providerNo, "intake discharge","0");
 					} else {
-						admissionManager.processDischarge(currentBedCommunityProgramId, clientId, "intake discharge");
-						admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit","0");
+						admissionManager.processDischarge(currentBedCommunityProgramId, clientId, "intake discharge","0");
+						admissionManager.processAdmission(clientId, providerNo, bedCommunityProgram, "intake discharge", "intake admit");
 					}
 				}
 			}
