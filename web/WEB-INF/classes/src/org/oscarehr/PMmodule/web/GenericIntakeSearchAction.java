@@ -57,7 +57,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 		
 		// if no remote matches, search for local matches
 		if (!intakeSearchBean.isRemoteMatch()) {
-			List localMatches = localSearch(intakeSearchBean);
+			List<?> localMatches = localSearch(intakeSearchBean);
 			intakeSearchBean.setLocalMatches(localMatches);
 		}
 		
@@ -109,7 +109,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 		return matches;
 	}
 
-	private List localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
+	private List<?> localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
 		ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
 		clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
 		clientSearchBean.setLastName(intakeSearchBean.getLastName());
@@ -120,17 +120,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 	}
 		
 	private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean) {
-		Demographic client = new Demographic();
-		client.setFirstName(intakeSearchBean.getFirstName());
-		client.setLastName(intakeSearchBean.getLastName());
-		client.setYearOfBirth(intakeSearchBean.getYearOfBirth());
-		client.setMonthOfBirth(intakeSearchBean.getMonthOfBirth());
-		client.setDateOfBirth(intakeSearchBean.getDayOfBirth());
-		client.setHin(intakeSearchBean.getHealthCardNumber());
-		client.setVer(intakeSearchBean.getHealthCardVersion());
-		client.setPatientStatus("AC");
-		
-		return client;
+		return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion());
 	}
 	
 	protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {

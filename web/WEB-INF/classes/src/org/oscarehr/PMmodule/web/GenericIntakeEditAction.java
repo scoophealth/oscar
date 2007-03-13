@@ -130,13 +130,14 @@ public class GenericIntakeEditAction extends BaseAction {
 		try {
 			GenericIntakeEditFormBean intakeEditBean = (GenericIntakeEditFormBean) form;
 
+			String providerNo = getProviderNo(request);
+			
 			// save client
 			Demographic client = intakeEditBean.getClient();
-			saveClient(client);
+			saveClient(client, providerNo);
 
 			// admit client to program(s)
 			Integer clientId = client.getDemographicNo();
-			String providerNo = getProviderNo(request);
 			Integer bedCommunityProgramId = intakeEditBean.getSelectedBedCommunityProgramId();
 			Set<Integer> serviceProgramIds = intakeEditBean.getSelectedServiceProgramIds();
 
@@ -256,7 +257,9 @@ public class GenericIntakeEditAction extends BaseAction {
 		return currentProgramIds;
 	}
 
-	private void saveClient(Demographic client) throws IntegratorException {
+	private void saveClient(Demographic client, String providerNo) throws IntegratorException {
+		client.setProviderNo(providerNo);
+		
 		// local save
 		clientManager.saveClient(client);
 
