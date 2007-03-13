@@ -364,7 +364,7 @@ public class ProgramManagerViewAction extends BaseAction {
 	            	if (communityProgramId > 0) {
 	            		try {
 	            			// discharge to community program
-	            			admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged");
+	            			admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged","0");
 	            		} catch (AdmissionException e) {
 	            			ActionMessages messages = new ActionMessages();
 	            			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
