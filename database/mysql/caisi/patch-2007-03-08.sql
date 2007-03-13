@@ -1,0 +1,1 @@
+alter table admission add radioDischargeReason varchar(10) default '0';

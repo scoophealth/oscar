@@ -38,6 +38,22 @@
 		</c:if>
 		document.clientManagerForm.submit();
 	}
+	
+	function nestedReason(id) {
+		<c:if test="${empty requestScope.community_discharge}">
+			
+			document.clientManagerForm.elements['program.id'].value = id;
+			document.clientManagerForm.method.value = 'nested_discharge_select_program';
+			document.clientManagerForm.submit();
+		</c:if>
+		<c:if test="${not empty requestScope.community_discharge}">
+			var communityCtl = document.getElementById('community_id');
+			var id = communityCtl.options[communityCtl.selectedIndex].value;
+			document.clientManagerForm.elements['program.id'].value = id;
+			document.clientManagerForm.method.value = 'nested_discharge_community_select_program';
+			document.clientManagerForm.submit();
+		</c:if>					
+	}
 </script>
 
 <html:hidden property="program.id" />
@@ -125,6 +141,50 @@ Community Program:&nbsp;
 	<br />
 	<br />
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<%if(request.getAttribute("nestedReason")!=null && request.getAttribute("nestedReason").equals("true")){%>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="10" /></td>
+			<td>Client medical needs exceed what can be provided</td>
+		</tr
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="11" /></td>
+			<td>Client social/behavioural needs exceed what can be provided</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="12" /></td>
+			<td>Client withdrawl needs exceed what can be provided</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="13" /></td>
+			<td>Client mental health needs exceeds what can be provided</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="14" /></td>
+			<td>Client has other care needs which can not be provided</td>
+		</tr>		
+		<%}else{ %>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="1" /></td>
+			<td>Client requires acute care</td>
+		</tr
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="2" /></td>
+			<td>Client not interested</td>
+		</tr>
+		<tr>			
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="3" onclick="nestedReason('${admission.programId}')"> </html:radio></td>
+			<td>Client does not fit program criteria</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="4" /></td>
+			<td>Program does not have space available</td>
+		</tr>
+		<tr>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="5" /></td>
+			<td>Other</td>
+		</tr>	
+		<%} %>
+		
 		<tr class="b">
 			<td width="20%">Discharge Notes:</td>
 			<td><html:textarea cols="50" rows="7" property="admission.dischargeNotes" /></td>
