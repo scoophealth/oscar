@@ -73,7 +73,7 @@ public class ClientManagerAction extends BaseAction {
 		clientForm.set("view", new ClientManagerFormBean());
 		return edit(mapping, form, request, response);
 	}
-
+ 		
 	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
@@ -126,6 +126,12 @@ public class ClientManagerAction extends BaseAction {
 	}
 
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm clientForm = (DynaActionForm) form;
+		Admission admission = (Admission) clientForm.get("admission");
+		admission.setDischargeNotes("");
+		admission.setRadioDischargeReason("");
+		
+		clientForm.set("view", new ClientManagerFormBean());
 		return edit(mapping, form, request, response);
 	}
 
@@ -138,7 +144,7 @@ public class ClientManagerAction extends BaseAction {
 		boolean success = true;
 
 		try {
-			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes());
+			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(),admission.getRadioDischargeReason());
 		} catch (AdmissionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -155,6 +161,7 @@ public class ClientManagerAction extends BaseAction {
 
 		setEditAttributes(form, request, id);
 		admission.setDischargeNotes("");
+		admission.setRadioDischargeReason("");
 		return mapping.findForward("edit");
 	}
 
@@ -168,7 +175,7 @@ public class ClientManagerAction extends BaseAction {
 		ActionMessages messages = new ActionMessages();
 		
 		try {
-			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes());
+			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(),admission.getRadioDischargeReason());
 			logManager.log(getProviderNo(request), "write", "discharge", clientId, getIP(request));
 			
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
@@ -180,6 +187,7 @@ public class ClientManagerAction extends BaseAction {
 
 		setEditAttributes(form, request, clientId);
 		admission.setDischargeNotes("");
+		admission.setRadioDischargeReason("");
 		
 		return mapping.findForward("edit");
 	}
@@ -193,7 +201,12 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("community_discharge", new Boolean(true));
 		return mapping.findForward("edit");
 	}
-
+	
+	public ActionForward nested_discharge_community_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("nestedReason", "true");
+		return discharge_community_select_program(mapping,form,request,response);
+	}
+		
 	public ActionForward discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 
@@ -203,7 +216,12 @@ public class ClientManagerAction extends BaseAction {
 
 		return mapping.findForward("edit");
 	}
-
+	
+	public ActionForward nested_discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		request.setAttribute("nestedReason", "true");
+		return discharge_select_program(mapping,form,request,response);
+	}
+	
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 
