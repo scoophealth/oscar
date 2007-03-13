@@ -138,11 +138,11 @@ public class AdmissionManagerImpl implements AdmissionManager {
 
 			// community?
 			if (fullAdmission != null) {
-				processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes);
+				processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "");
 			} else {
 				fullAdmission = getCurrentCommunityProgramAdmission(demographicNo);
 				if (fullAdmission != null) {
-					processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes);
+					processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "");
 				}
 			}
 		}
@@ -233,7 +233,7 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		return dao.search(searchBean);
 	}
 
-	public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes) throws AdmissionException {
+	public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 
 		if (fullAdmission == null) {
@@ -243,15 +243,15 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		fullAdmission.setDischargeDate(new Date());
 		fullAdmission.setDischargeNotes(dischargeNotes);
 		fullAdmission.setAdmissionStatus("discharged");
-
+		fullAdmission.setRadioDischargeReason(radioDischargeReason);
 		saveAdmission(fullAdmission);
 	}
 
-	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes) throws AdmissionException {
+	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason) throws AdmissionException {
 		Admission currentBedAdmission = getCurrentBedProgramAdmission(demographicNo);
 
 		if (currentBedAdmission != null) {
-			processDischarge(currentBedAdmission.getProgramId().intValue(), demographicNo, notes);
+			processDischarge(currentBedAdmission.getProgramId().intValue(), demographicNo, notes, radioDischargeReason);
 			
 			BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
 			
@@ -263,7 +263,7 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		Admission currentCommunityAdmission = getCurrentCommunityProgramAdmission(demographicNo);
 
 		if (currentCommunityAdmission != null) {
-			processDischarge(currentCommunityAdmission.getProgramId().intValue(), demographicNo, notes);
+			processDischarge(currentCommunityAdmission.getProgramId().intValue(), demographicNo, notes, radioDischargeReason);
 		}
 
 		// Create and save admission object
@@ -277,7 +277,7 @@ public class AdmissionManagerImpl implements AdmissionManager {
 		admission.setTeamId(0);
 		admission.setAgencyId(0L);
 		admission.setTemporaryAdmission(false);
-
+		admission.setRadioDischargeReason(radioDischargeReason);
 		saveAdmission(admission);
 	}
 }

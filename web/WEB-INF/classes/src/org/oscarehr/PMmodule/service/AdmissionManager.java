@@ -70,8 +70,8 @@ public interface AdmissionManager  {
 
 	public List search(AdmissionSearchBean searchBean);
 	
-	public void processDischarge(Integer programId, Integer clientId, String dischargeNotes) throws AdmissionException;
+	public void processDischarge(Integer programId, Integer clientId, String dischargeNotes, String radioDischargeReason) throws AdmissionException;
 	
-	public void processDischargeToCommunity(Integer programId, Integer clientId, String providerNo, String dischargeNotes) throws AdmissionException;
+	public void processDischargeToCommunity(Integer programId, Integer clientId, String providerNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException;
 	
 }

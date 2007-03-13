@@ -81,6 +81,12 @@
 			not-null="false"
 			type="string" />
 		<property
+			column="radioDischargeReason"
+			length="10"
+			name="RadioDischargeReason"
+			not-null="false"
+			type="string" />		
+		<property
 			column="discharge_notes"
 			length="255"
 			name="DischargeNotes"

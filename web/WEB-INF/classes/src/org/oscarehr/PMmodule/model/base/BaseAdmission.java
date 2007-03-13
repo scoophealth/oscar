@@ -91,8 +91,8 @@ public abstract class BaseAdmission  implements Serializable {
 	private boolean temporaryAdmission;
 	private java.lang.String programName;
 	private java.lang.String programType;
-
-	
+	private java.lang.String radioDischargeReason;
+	private java.lang.String radioDischargeNestedReason;
 	// many to one
 	private org.oscarehr.PMmodule.model.ProgramTeam team;
 	private org.oscarehr.PMmodule.model.Demographic client;
@@ -408,7 +408,15 @@ public abstract class BaseAdmission  implements Serializable {
 		this.client = client;
 	}
 
+	
+	public java.lang.String getRadioDischargeReason() {
+		return radioDischargeReason;
+	}
 
+	public void setRadioDischargeReason(java.lang.String radioDischargeReason) {
+		this.radioDischargeReason = radioDischargeReason;
+	}	
+	
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof org.oscarehr.PMmodule.model.Admission)) return false;
