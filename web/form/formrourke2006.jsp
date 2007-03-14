@@ -31,13 +31,13 @@
 <%
     int demoNo = Integer.parseInt(request.getParameter("demographic_no"));
     int formId = Integer.parseInt(request.getParameter("formId"));    
-
+    
 	if(true) {
         out.clear();
 		if (formId == 0) {                        
 			pageContext.forward("formrourke2006p1.jsp?demographic_no=" + demoNo + "&formId=" + formId) ; 
  		} else {
-			FrmRecord rec = (new FrmRecordFactory()).factory("Rourke");
+			FrmRecord rec = (new FrmRecordFactory()).factory("Rourke2006");
 			java.util.Properties props = rec.getFormRecord(demoNo, formId);
 
 			String pageNum = props.getProperty("c_lastVisited", "p1"); //'p1'
