@@ -59,6 +59,7 @@
   ArrayList recomendations = p.getReminder();
   System.out.println("recomendations size"+warnings.size());
           
+  boolean printError = request.getAttribute("printError") != null;
 %>  
 
 
@@ -87,10 +88,13 @@ oscarPrevention
   div.ImmSet li a:visited { text-decoration:none; color:blue;}  
   
   /*h3{font-size: 100%;margin:0 0 10px;padding: 2px 0;color: #497B7B;text-align: center}*/
+  
+  div.onPrint { display: none; }
 </style>
 
 <link rel="stylesheet" type="text/css" href="../share/css/niftyCorners.css" />
 <link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
+<link rel="stylesheet" type="text/css" href="preventPrint.css" media="print" />
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
 <script type="text/javascript">
 window.onload=function(){
@@ -104,6 +108,45 @@ Rounded("div.preventionProcedure","all","transparent","#F0F0E7","small border #9
 Rounded("div.leftBox","top","transparent","#CCCCFF","small border #ccccff");
 Rounded("div.leftBox","bottom","transparent","#EEEEFF","small border #ccccff");
 
+}
+
+function display(elements) {
+
+    for( var idx = 0; idx < elements.length; ++idx )
+        elements[idx].style.display = 'block';
+}
+
+function EnablePrint(button) {
+    if( button.value == "Enable Print" ) {
+        button.value = "Print";        
+        var checkboxes = document.getElementsByName("printHP");
+        display(checkboxes);
+        var spaces = document.getElementsByName("printSp");
+        display(spaces);
+    }
+    else { 
+        if( onPrint() )
+            document.printFrm.submit();
+    }
+}
+
+function onPrint() {    
+    var checked = document.getElementsByName("printHP");    
+    var thereIsData = false;
+    
+    for( var idx = 0; idx < checked.length; ++idx ) {
+        if( checked[idx].checked ) {
+            thereIsData = true;
+            break;
+        }
+    }
+        
+    if( !thereIsData ) {   
+        alert("You should check at least one prevention by selecting a checkbox next to a prevention");
+        return false;
+    }
+    
+    return true;
 }
 </script>
 
@@ -185,6 +228,7 @@ div.headPrevention p {
     text-align: justify
     height:2em;
     font-family: sans-serif;
+    border-left: 0px;
 }
 
 div.headPrevention a {    
@@ -253,6 +297,7 @@ div.recommendations li{
 
 <body class="BodyStyle" >
 <!--  -->
+    
     <table  class="MainTable" id="scrollNumber1" >
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn"  >
@@ -299,8 +344,16 @@ div.recommendations li{
                </oscar:oscarPropertiesCheck>
             </td>
             <td valign="top" class="MainTableRightColumn">
-            <% if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
+            <%             
+                if (warnings.size() > 0 || recomendations.size() > 0  || dsProblems) { %>
                <div class="recommendations">
+                   <%
+                    if(printError) { 
+                   %>
+                    <p style="color:red; font-size:larger">An error occurred while trying to print</p>
+                   <%
+                    }
+                   %>
                <span style="font-size:larger;">Prevention Recommendations</span>               
                <ul >                                        
                     <% for (int i = 0 ;i < warnings.size(); i++){ 
@@ -319,7 +372,10 @@ div.recommendations li{
                </ul>
                </div>
            <% } %>    
+                
                <div >     
+                   <form name="printFrm" method="post"  onsubmit="return onPrint();" action="<rewrite:reWrite jspPage="printPrevention.do"/>">
+                       <input type="hidden" name="demographic_no" value="<%=demographic_no%>">
                <%                 
                  if (!oscar.OscarProperties.getInstance().getBooleanProperty("PREVENTION_CLASSIC_VIEW","yes")){
                    ArrayList hiddenlist = new ArrayList();
@@ -335,117 +391,153 @@ div.recommendations li{
                             hiddenlist.add(h2);
                         }else{    
                %>                   
-                      <div class="preventionSection"  >
-                            <div class="headPrevention">
-                               <p > 
-                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
-                               <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
-                               </a>
-                               &nbsp;
-                               <a href="#" onclick="popup(465,635,'<%=h.get("link")%>')">#</a>                              
-                               <br/>                                 
-                               </p>
-                            </div>
-                            <%     
-                            for (int k = 0; k < alist.size(); k++){
-                                Hashtable hdata = (Hashtable) alist.get(k);
-                            %>                            
-                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
-                                <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
+                
+                <div class="preventionSection"  >
+                    
+                    <%
+                    if( alist.size() > 0 ) {                                
+                    %>
+                    <div style="position: relative; float:left; padding-right:10px;">
+                        <input style="display:none;" type="checkbox" name="printHP" value="<%=i%>" checked />
+                   <%}else {%>
+                            <div style="position: relative; float:left; padding-right:25px;">
+                                <span style="display:none;" name="printSp">&nbsp;</span>
+                  <%}%>
+                        </div>
+                        <div class="headPrevention">               
+                            <p > 
+                                <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                                    <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
+                                </a>
+                                &nbsp;
+                                <a href="#" onclick="popup(465,635,'<%=h.get("link")%>')">#</a>                                 
+                                <br/>                                 
+                            </p>
+                        </div>
+                        <%     
+                        for (int k = 0; k < alist.size(); k++){
+                        Hashtable hdata = (Hashtable) alist.get(k);
+                        %>                            
+                        <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+                            <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
                                 <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
-                                </p>
-                            </div>
-                           <%}%>                           
-                      </div>                                                                      
-                   <%                      
+                            </p>
+                        </div>
+                        <%}%>                           
+                    </div>                                                                      
+                    <%                      
                         }
-                      } %>
+                    } %>
                     <a href="#" onclick="Element.toggle('otherElements'); return false;" style="font-size:xx-small;" >show/hide all other Preventions</a>                    
                     <div style="display:none;" id="otherElements">  
-                    <%for (int i = 0 ; i < hiddenlist.size(); i++){ 
+                        <%for (int i = 0 ; i < hiddenlist.size(); i++){ 
                         Hashtable h2 = (Hashtable) hiddenlist.get(i);
                         Hashtable h = (Hashtable)  h2.get("prev");
                         String prevName = (String) h.get("name");                        
                         ArrayList alist = (ArrayList)  h2.get("list");
-                    %>                 
+                        %>                 
                         <div class="preventionSection"  >
                             <div class="headPrevention">
-                               <p > 
-                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
-                               <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
-                               </a>
-                               &nbsp;
-                               <a href="#" onclick="popup(465,635,'<%=h.get("link")%>');">#</a>                              
-                               <br/>                                 
-                               </p>
+                                <p > 
+                                    <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                                        <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
+                                    </a>
+                                    &nbsp;
+                                    <a href="#" onclick="popup(465,635,'<%=h.get("link")%>');">#</a>                              
+                                    <br/>                                 
+                                </p>
                             </div>
                             <%     
                             for (int k = 0; k < alist.size(); k++){
-                                Hashtable hdata = (Hashtable) alist.get(k);
+                            Hashtable hdata = (Hashtable) alist.get(k);
                             %>                            
                             <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
                                 <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
-                                <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+                                    <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
                                 </p>
                             </div>
-                           <%}%>                           
+                            <%}%>                           
                         </div>                                                
-                    
-                    <%}%>
+                        
+                        <%}%>
                     </div>
-                  <%}else{  //OLD
+                    <%}else{  //OLD
                     if (configSets == null ){ configSets = new ArrayList(); }
                     for ( int setNum = 0; setNum < configSets.size(); setNum++){ 
-                      Hashtable setHash = (Hashtable) configSets.get(setNum);
-                      String[] prevs = (String[]) setHash.get("prevList");
-                      System.out.println("length prevs"+prevs.length);%>
-                  <div class="immSet" >                     
-                     <h2 style="display:block;"><%=setHash.get("title")%> <span ><%=setHash.get("effective")%></span></h2> 
-                     <!--a style="font-size:xx-small;" onclick="javascript:showHideItem('<%="prev"+setNum%>')" href="javascript: function myFunction() {return false; }" >show/hide</a-->                                                                                                                               
-                     <a href="#" onclick="Element.toggle('<%="prev"+setNum%>'); return false;" style="font-size:xx-small;" >show/hide</a>                    
-                     <div class="preventionSet" <%=pdc.getDisplay(setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">                        
-                        <%for (int i = 0; i < prevs.length ; i++) {
-                           Hashtable h = pdc.getPrevention(prevs[i]); %>
-                        <div class="preventionSection" >
-                            <div class="headPrevention">
-                               <p > 
-                               <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
-                               <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
-                               </a>
-                               &nbsp;
-                               <a href="<%=h.get("link")%>">#</a>                              
-                               <br/>                                 
-                               </p>
-                            </div>
-                            <%ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no);                            
-                            for (int k = 0; k < alist.size(); k++){
+                    Hashtable setHash = (Hashtable) configSets.get(setNum);
+                    String[] prevs = (String[]) setHash.get("prevList");
+                    System.out.println("length prevs"+prevs.length);%>
+                    <div class="immSet" >                     
+                        <h2 style="display:block;"><%=setHash.get("title")%> <span ><%=setHash.get("effective")%></span></h2> 
+                        <!--a style="font-size:xx-small;" onclick="javascript:showHideItem('<%="prev"+setNum%>')" href="javascript: function myFunction() {return false; }" >show/hide</a-->                                                                                                                               
+                        <a href="#" onclick="Element.toggle('<%="prev"+setNum%>'); return false;" style="font-size:xx-small;" >show/hide</a>                    
+                        <div class="preventionSet" <%=pdc.getDisplay(setHash,demographic_no)%>;"  id="<%="prev"+setNum%>">                        
+                             <%for (int i = 0; i < prevs.length ; i++) {
+                             Hashtable h = pdc.getPrevention(prevs[i]); %>
+                             <div class="preventionSection" >
+                                <div class="headPrevention">
+                                    <p > 
+                                        <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
+                                            <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
+                                        </a>
+                                        &nbsp;
+                                        <a href="<%=h.get("link")%>">#</a>                              
+                                        <br/>                                 
+                                    </p>
+                                </div>
+                                <%ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no);                            
+                                for (int k = 0; k < alist.size(); k++){
                                 Hashtable hdata = (Hashtable) alist.get(k);
-                            %>                            
-                            <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
-                                <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
-                                <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
-                                </p>
-                            </div>
-                           <%}%>                           
-                        </div>                                                
-                        <%}%>                      
-                        
-                     </div>
-                  </div><!--immSet-->
-                  <%}
-                }%>                                                      
-               </div>
+                                %>                            
+                                <div class="preventionProcedure"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&amp;demographic_no=<%=demographic_no%>','addPreventionData')" >
+                                    <p <%=r(hdata.get("refused"))%>>Age: <%=hdata.get("age")%> <br/>
+                                        <!--<%=refused(hdata.get("refused"))%>-->Date: <%=hdata.get("prevention_date")%>
+                                    </p>
+                                </div>
+                                <%}%>                           
+                            </div>                                                
+                            <%}%>                      
+                            
+                        </div>
+                    </div><!--immSet-->
+                    <%}
+                    }%>                                                      
+                </div>
             </td>
         </tr>
         <tr>
             <td class="MainTableBottomRowLeftColumn">
-            &nbsp;
+                <input type="button" class="noPrint" name="printButton" onclick="EnablePrint(this)" value="Enable Print">
+                &nbsp;
             </td>
             <td class="MainTableBottomRowRightColumn" valign="top">
-            &nbsp;
+                &nbsp;
             </td>
         </tr>
     </table>
+    <input type="hidden" id="nameAge" name="nameAge" value="<oscar:nameage demographicNo="<%=demographic_no%>"/>">
+    
+    <%
+    for (int i = 0 ; i < prevList.size(); i++){ 
+        Hashtable h = (Hashtable) prevList.get(i);
+        String prevName = (String) h.get("name");
+        ArrayList alist = pd.getPreventionData((String)h.get("name"), demographic_no);                
+        if( alist.size() > 0 ) { %>                    
+            <input type="hidden" id="preventionHeader<%=i%>" name="preventionHeader<%=i%>" value="<%=h.get("name")%>">
+    
+    <%     
+            for (int k = 0; k < alist.size(); k++){
+                Hashtable hdata = (Hashtable) alist.get(k);
+    %>                            
+                <input type="hidden" id="preventProcedureAge<%=i%>-<%=k%>" name="preventProcedureAge<%=i%>-<%=k%>" value="Age: <%=hdata.get("age")%>">
+                <input type="hidden" id="preventProcedureDate<%=i%>-<%=k%>" name="preventProcedureDate<%=i%>-<%=k%>" value="Date: <%=hdata.get("prevention_date")%>">
+    
+            <%}                    
+        }               
+    } //for there are preventions
+    
+    %>
+    </form>
 </body>
 </html:html>
 <%! 
