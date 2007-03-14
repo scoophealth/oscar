@@ -110,6 +110,7 @@ public class AddPreventionAction  extends Action {
          }else if (id != null &&  delete != null  ){  // Delete
             pd.deletePreventionData(id);               
          }else if (id != null && delete == null ){ //Update
+            addHashtoArray(extraData,id,"previousId"); 
             pd.updatetPreventionData(id,sessionUser,demographic_no,prevDate,providerNo,providerName,preventionType,refused,nextDate,neverWarn,extraData);
          }
          
