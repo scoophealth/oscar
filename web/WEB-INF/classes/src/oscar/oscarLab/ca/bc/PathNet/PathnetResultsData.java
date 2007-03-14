@@ -190,7 +190,7 @@ public class PathnetResultsData {
       String  ret = "";
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
-         String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";         
+         String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
          ret = rs.getString("d");
