@@ -191,7 +191,7 @@ public class LabResultData implements Comparable{
    
     public int compareTo(Object object) {
         int ret = 0;
-        if (this.dateTimeObr != null){
+        if (this.getDateObj() != null){
             if (this.dateTimeObr.after( ((LabResultData) object).getDateObj() )){
                 ret = -1;
             }else if(this.dateTimeObr.before( ((LabResultData) object).getDateObj() )){
