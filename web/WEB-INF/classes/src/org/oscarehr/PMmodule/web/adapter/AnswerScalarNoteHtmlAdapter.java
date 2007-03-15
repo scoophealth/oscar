@@ -33,8 +33,7 @@ public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(EOL);
-		indent(preBuilder).append(getLabel()).append(EOL);
+		indent(preBuilder).append(createLabel()).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(EOL);
 
 		return endAnswer(preBuilder);
 	}

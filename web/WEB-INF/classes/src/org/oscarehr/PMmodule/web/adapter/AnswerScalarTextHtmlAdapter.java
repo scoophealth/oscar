@@ -30,14 +30,13 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(getTextInput(getId(), getAnswerValue())).append(EOL);
-		indent(preBuilder).append(getLabel()).append(EOL);
+		indent(preBuilder).append(createLabel()).append(getTextInput(getId(), getAnswerValue())).append(EOL);
 
 		return endAnswer(preBuilder);
 	}
 
 	private String getTextInput(String id, String value) {
-		return String.format("<input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { id, value });
+		return String.format("<input type=\"text\" class=\"intakeInput\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { id, value });
 	}
 
 }

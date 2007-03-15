@@ -147,7 +147,7 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	public List<Intake> getProgramIntakes(Integer clientId) {
 		List<Intake> programIntakes = new ArrayList<Intake>();
 
-		List serviceProgramAdmissions = admissionDAO.getCurrentServiceProgramAdmission(programDAO, clientId);
+		List<?> serviceProgramAdmissions = admissionDAO.getCurrentServiceProgramAdmission(programDAO, clientId);
 		if (serviceProgramAdmissions != null) {
 			for (Object o : serviceProgramAdmissions) {
 				Admission serviceProgramAdmission = (Admission) o;

@@ -107,7 +107,8 @@ INSERT INTO `intake_node_label` VALUES
 	(11, 'Integer'),
 	(12, 'Email'),
 	(13, 'Phone'),
-	(14, 'Note');
+	(14, 'Note'),
+	(15, 'Program Intake');
 		
 --
 -- Populate intake node types
@@ -138,7 +139,8 @@ INSERT INTO `intake_node_template` VALUES
 	(10, 10, 7, 11),
 	(11, 11, 7, 12),
 	(12, 12, 7, 13),
-	(13, 13, 8, 14);
+	(13, 13, 8, 14),
+	(14, 14, 1, 15);
 
 --
 -- Populate intake answer validation

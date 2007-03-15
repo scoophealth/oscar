@@ -86,16 +86,18 @@ function setMethod(target) {
 }
 
 function hasSelection(checkBoxGroup) {
-	if (checkBoxGroup != null) {
-		if (typeof checkBoxGroup === 'object') {
-			for (i = 0; i < checkBoxGroup.length; i++) {
-				if (checkBoxGroup[i].checked) {
-					return true;
-				}
+	if (checkBoxGroup == null) {
+		return true;
+	}
+	
+	if (typeof checkBoxGroup === 'object') {
+		for (i = 0; i < checkBoxGroup.length; i++) {
+			if (checkBoxGroup[i].checked) {
+				return true;
 			}
-		} else {
-			return checkBoxGroup.checked;
 		}
+	} else {
+		return checkBoxGroup.checked;
 	}
 	
 	return false;

@@ -250,7 +250,7 @@ public class ClientManagerAction extends BaseAction {
 		
 		// for ERModule
 		if (roles.indexOf("ER Clerk") != -1) {
-			Map consentMap = (Map) request.getSession().getAttribute("er_consent_map");
+			Map<?, ?> consentMap = (Map<?, ?>) request.getSession().getAttribute("er_consent_map");
 			
 			if (consentMap == null) {
 				return mapping.findForward("consent");
@@ -282,7 +282,7 @@ public class ClientManagerAction extends BaseAction {
 		String id = request.getParameter("id");
 
 		try {
-			List results = integratorManager.getCurrentAdmissions(Long.valueOf(id).longValue());
+			List<?> results = integratorManager.getCurrentAdmissions(Long.valueOf(id).longValue());
 			request.setAttribute("admissions", results);
 		} catch (IntegratorException e) {
 			log.error(e);
@@ -296,7 +296,7 @@ public class ClientManagerAction extends BaseAction {
 		String id = request.getParameter("id");
 
 		try {
-			List results = integratorManager.getCurrentReferrals(Long.valueOf(id).longValue());
+			List<?> results = integratorManager.getCurrentReferrals(Long.valueOf(id).longValue());
 			request.setAttribute("referrals", results);
 		} catch (IntegratorException e) {
 			log.error(e);
@@ -433,7 +433,7 @@ public class ClientManagerAction extends BaseAction {
 
 		request.getSession().setAttribute("er_consent_map", consentMap);
 
-		List programDomain = providerManager.getProgramDomain(getProviderNo(request));
+		List<?> programDomain = providerManager.getProgramDomain(getProviderNo(request));
 		if (programDomain.size() > 0) {
 			boolean doAdmit = true;
 			boolean doRefer = true;
@@ -516,7 +516,7 @@ public class ClientManagerAction extends BaseAction {
 		return edit(mapping, form, request, response);
 	}
 
-	private boolean isInDomain(long programId, List programDomain) {
+	private boolean isInDomain(long programId, List<?> programDomain) {
 		for (int x = 0; x < programDomain.size(); x++) {
 			ProgramProvider p = (ProgramProvider) programDomain.get(x);
 
@@ -541,7 +541,7 @@ public class ClientManagerAction extends BaseAction {
 		// program domain
 		List<Program> programDomain = new ArrayList<Program>();
 
-		for (Iterator i = providerManager.getProgramDomain(providerNo).iterator(); i.hasNext();) {
+		for (Iterator<?> i = providerManager.getProgramDomain(providerNo).iterator(); i.hasNext();) {
 			ProgramProvider programProvider = (ProgramProvider) i.next();
 			programDomain.add(programManager.getProgram(programProvider.getProgramId()));
 		}
@@ -590,7 +590,7 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("referralHistory", clientManager.getReferrals(demographicNo));
 		}
 
-		List currentAdmissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
+		List<?> currentAdmissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
 
 		for (int x = 0; x < currentAdmissions.size(); x++) {
 			Admission admission = (Admission) currentAdmissions.get(x);

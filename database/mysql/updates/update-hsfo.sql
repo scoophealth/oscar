@@ -132,7 +132,7 @@ CREATE TABLE hsfo_patient (
   PharmacyName text,
   PharmacyLocation text,
   sel_TimeAgoDx enum('AtLeast1YrAgo', 'Under1YrAgo', 'NA', 'null') default 'NA',
-  EmrHCPId text default '',
+  EmrHCPId text,
   ConsentDate date not null,
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;

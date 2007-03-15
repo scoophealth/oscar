@@ -42,7 +42,7 @@
 				<div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
 					<c:out value="${sessionScope.genericIntakeEditForm.title}" />
 				</div>
-
+				
 				<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
 					<div id="clientTable" dojoType="TitlePane" label="Client Information" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
@@ -94,12 +94,17 @@
 							</c:if>
 						</table>
 					</div>
-					
+					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
+				</div>
+				
+				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
 								<td class="intakeBedCommunityProgramCell"><label><c:out value="${sessionScope.genericIntakeEditForm.bedCommunityProgramLabel}" /></label></td>
+								<c:if test="! empty ${sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td><label>Service Programs</label></td>
+								</c:if>
 							</tr>
 							<tr>
 								<td class="intakeBedCommunityProgramCell">
@@ -107,19 +112,16 @@
 										<html:optionsCollection property="bedCommunityPrograms" value="value" label="label" />
 									</html:select>
 								</td>
+								<c:if test="! empty ${sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td>
 									<c:forEach var="serviceProgram" items="${sessionScope.genericIntakeEditForm.servicePrograms}">
 										<html-el:multibox property="serviceProgramIds" value="${serviceProgram.value}" />&nbsp;<c:out value="${serviceProgram.label}" />
 									</c:forEach>
 								</td>
+								</c:if>
 							</tr>
 						</table>
 					</div>
-					
-					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
-				</div>
-				
-				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<table class="intakeTable">
 						<tr>
 							<td>

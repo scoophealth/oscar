@@ -48,8 +48,8 @@ public class Demographic extends BaseDemographic {
 		demographic.setFirstName(firstName);
 		demographic.setLastName(lastName);
 		demographic.setMonthOfBirth(monthOfBirth != null && monthOfBirth.length() > 0 ? monthOfBirth : DEFAULT_MONTH);
-		demographic.setDateOfBirth(dateOfBirth != null && dateOfBirth.length() > 0 ? monthOfBirth : DEFAULT_DATE);
-		demographic.setYearOfBirth(yearOfBirth != null && yearOfBirth.length() > 0 ? monthOfBirth : DEFAULT_YEAR);
+		demographic.setDateOfBirth(dateOfBirth != null && dateOfBirth.length() > 0 ? dateOfBirth : DEFAULT_DATE);
+		demographic.setYearOfBirth(yearOfBirth != null && yearOfBirth.length() > 0 ? yearOfBirth : DEFAULT_YEAR);
 		demographic.setHin(hin);
 		demographic.setVer(ver);
 		

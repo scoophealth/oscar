@@ -67,7 +67,7 @@ public class GenericIntakeDAOHibernate extends HibernateDaoSupport implements Ge
 
 		List<Intake> intakes = new ArrayList<Intake>();
 
-		List results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? order by i.createdOn desc", new Object[] { node, clientId });
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? order by i.createdOn desc", new Object[] { node, clientId });
 		if (results != null) {
 			for (Object o : results) {
 				Intake intake = (Intake) o;
@@ -91,6 +91,8 @@ public class GenericIntakeDAOHibernate extends HibernateDaoSupport implements Ge
 		}
 
 		Integer intakeId = (Integer) getHibernateTemplate().save(intake);
+		getHibernateTemplate().flush();
+
 		LOG.info("saveIntake: " + intakeId);
 
 		return intakeId;

@@ -26,8 +26,9 @@ import org.oscarehr.PMmodule.model.IntakeNode;
 
 abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 
-	protected static final String EOL = System.getProperty("line.separator");
 	protected static final String TAB = "\t";
+	protected static final String SPACE = "&nbsp";
+	protected static final String EOL = System.getProperty("line.separator");
 
 	private int indent;
 	private IntakeNode node;

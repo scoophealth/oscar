@@ -7,9 +7,9 @@ html, body {
 
 .intakeLayoutContainer {
 	width: 95%;
-	height: 95%;
-	left: 1%;
-	top: 1%;
+	height: 100%;
+	left: 0%;
+	top: 0%;
 	position: relative;
 	overflow: auto;
 }
@@ -18,16 +18,16 @@ html, body {
 	font-weight: bold;
 	font-size: 14px;
 	text-align: center;
-	padding: 5px;
+	padding: 2px;
 }
 
 .intakeChildPane {
-	padding: 5px;
+	padding: 2px;
 	overflow: auto;
 }
 
 .intakeBottomPane {
-	padding: 5px;
+	padding: 2px;
 }
 
 .intakePageContainer {
@@ -81,4 +81,8 @@ table.intakeTable label {
 
 .intakeEmptyCell {
 	width: 5%;
+}
+
+.intakeInput {
+	width: 100%;
 }
