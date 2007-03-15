@@ -185,7 +185,7 @@ public class PreventionPrintPdf {
        document.close();
     }
     
-    private boolean breakPage(boolean pageBreak, float upperYcoord) {
+    private boolean breakPage(boolean pageBreak, float upperYcoord) throws DocumentException {
         
        if( pageBreak ) {
            ct.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);           
