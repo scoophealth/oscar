@@ -87,12 +87,38 @@
 <meta http-equiv="Expires" content="Monday, 8 Aug 88 18:18:18 GMT">
 <meta http-equiv="Cache-Control" content="no-cache">
 <link rel="stylesheet" href="../web.css" />
-
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">
 <!--
 function setfocus() {
   this.focus();
 }
+
+function displayTemplate(s) {
+    var url = "scheduleDisplayTemplate.jsp?name=" + s[s.selectedIndex].value + "&providerid=<%=request.getParameter("provider_no")%>";
+    var div = "template";
+    
+    var objAjax = new Ajax.Request (                        
+                        url,
+                        {
+                            method: 'get',                                                                                                               
+                            onSuccess: function(request) {                            
+                                            while( $(div).firstChild )
+                                                $(div).removeChild($(div).firstChild);
+                                                                                                                                         
+                                            if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
+                                                $(div).updateSafari(request.responseText);
+                                            else
+                                                $(div).update(request.responseText);                                                                                            
+                                       }, 
+                            onFailure: function(request) {
+                                            $(div).innerHTML = "<h3>Error:</h3>" + request.status;
+                                        }
+                        }
+                           
+                  );
+}
+
 function selectrschedule(s) {    
     var ref = "<rewrite:reWrite jspPage="scheduletemplateapplying.jsp"/>";
     ref += "?provider_no=<%=request.getParameter("provider_no")%>&provider_name=<%=request.getParameter("provider_name")%>";    
@@ -317,8 +343,12 @@ function addDataString1() {
 <form method="post" name="schedule" action="schedulecreatedate.jsp" onSubmit="<%=bAlternate||bOrigAlt?"addDataStringB();":""%>addDataString();return(addDataString1())">
 
 <table border="0" width="100%">
+    <!-- <tr>
+        <td>&nbsp;</td><td>&nbsp;</td>
+        <td style="height: 100%; vertical-align: middle;" rowspan="2"><div style="background-color: #486ebd" id="template"></div></td>
+    </tr> -->
 <tr>
-      <td width="150" bgcolor="#009966"> 
+      <td style="vertical-align: top;" width="150" bgcolor="#009966"> 
         <!--left column-->
         <table border="0" cellspacing="0" cellpadding="0" width="100%" >
     <tr bgcolor="#486ebd"> 
@@ -341,7 +371,7 @@ function addDataString1() {
           </tr>
         </table>
 
-      </td><td>
+      </td><td style="padding-top: 5px; vertical-align: top">
 
 <center>
 <%
@@ -417,7 +447,7 @@ function addDataString1() {
                   </select>
                 <input type="button" name="command" value="<bean:message key="schedule.scheduletemplateapplying.btnDelete"/>" onClick="onBtnDelete(document.forms['schedule'].elements['select'])">
               </td>
-            </tr>
+            </tr>            
             <tr> 
               <td style="color:red" colspan="2"><%=request.getParameter("overlap") != null?msg.getMessage("schedule.scheduletemplateapplying.msgScheduleConflict"):"&nbsp;"%></td>
             </tr>
@@ -712,7 +742,7 @@ function tranbuttonb7_click() {
                 </table>
                 
                 </td><td>
-   <select size=<%=bOrigAlt||bAlternate?22:11%> name="mytemplate" >
+   <select size=<%=bOrigAlt||bAlternate?22:11%> onclick="displayTemplate(this)" name="mytemplate" >
 	<%
    ResultSet rsdemo = null;
    String param = "Public";
@@ -761,7 +791,9 @@ function tranbuttonb7_click() {
 
           <p>&nbsp;</p>
         </center>
-  </td></tr>
+  </td>
+  <td style="height: 100%; vertical-align: middle;" rowspan="2"><div style="background-color: #486ebd" id="template"></div></td>
+</tr>
 </table>
 
 
