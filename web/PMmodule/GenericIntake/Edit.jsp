@@ -94,10 +94,6 @@
 							</c:if>
 						</table>
 					</div>
-					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
-				</div>
-				
-				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
@@ -122,6 +118,10 @@
 							</tr>
 						</table>
 					</div>
+					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
+				</div>
+				
+				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<table class="intakeTable">
 						<tr>
 							<td>
