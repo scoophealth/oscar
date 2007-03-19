@@ -122,7 +122,10 @@ function do_batch_discharge(community) {
 	<display:column property="admissionDate" sortable="true" title="Admission Date" />
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
 	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
-	<display:column sortable="true" title="Team">
+
+	<display:column property="teamName" sortable="true" title="Team" />
+	
+	<display:column sortable="false" title="" >
 		<select name="x" onchange="assignTeam('<c:out value="${admission.id}"/>',this);">
 			<option value="0">&nbsp;</option>
 			<c:forEach var="team" items="${teams}">
@@ -137,6 +140,7 @@ function do_batch_discharge(community) {
 			</c:forEach>
 		</select>
 	</display:column>
+	
 </display:table>
 <br />
 <c:if test="${requestScope.allowBatchDischarge == true and program.type eq 'Bed'}">

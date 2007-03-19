@@ -103,6 +103,10 @@
 			name="TeamId"
 			not-null="false"
 			type="integer" />
+		<property
+			name="teamName"
+			type="string"
+			formula="(select t.name from program_team t where t.team_id = team_id)" />
 		<many-to-one
 			name="team"
 			class="org.oscarehr.PMmodule.model.ProgramTeam"

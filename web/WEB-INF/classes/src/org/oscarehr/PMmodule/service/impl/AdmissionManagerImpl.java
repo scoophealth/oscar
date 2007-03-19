@@ -142,7 +142,7 @@ public class AdmissionManagerImpl implements AdmissionManager {
 			} else {
 				fullAdmission = getCurrentCommunityProgramAdmission(demographicNo);
 				if (fullAdmission != null) {
-					processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "");
+					processDischarge(new Integer(fullAdmission.getProgramId().intValue()), new Integer(demographicNo), dischargeNotes, "0");
 				}
 			}
 		}

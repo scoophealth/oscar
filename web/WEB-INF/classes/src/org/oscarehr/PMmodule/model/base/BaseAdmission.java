@@ -88,6 +88,7 @@ public abstract class BaseAdmission  implements Serializable {
 	private java.lang.String dischargeNotes;
 	private java.util.Date dischargeDate;
 	private java.lang.Integer teamId;
+	private java.lang.String teamName;
 	private boolean temporaryAdmission;
 	private java.lang.String programName;
 	private java.lang.String programType;
@@ -374,7 +375,13 @@ public abstract class BaseAdmission  implements Serializable {
 		this.programType = programType;
 	}
 
+	public java.lang.String getTeamName() {
+		return teamName;
+	}
 
+	public void setTeamName(java.lang.String teamName) {
+		this.teamName = teamName;
+	}
 
 	/**
 	 * Return the value associated with the column: team_id
