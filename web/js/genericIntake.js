@@ -1,28 +1,11 @@
 function validateSearchForm() {
-	if(document.forms[0].elements['firstName'].value == '' || document.forms[0].elements['lastName'].value == '') {
-			alert('You must fill in firstname and lastname!');
-			return false;
-	}
-	
-	if (document.forms[0].elements['firstName'].value == '' && document.forms[0].elements['lastName'].value == '' &&
-		document.forms[0].elements['monthOfBirth'].value == '' && document.forms[0].elements['dayOfBirth'].value == '' && document.forms[0].elements['yearOfBirth'].value == '' &&
-		document.forms[0].elements['healthCardNumber'].value == '' && document.forms[0].elements['healthCardVersion'].value == '') {
-		
-		alert('You must use at least one of the search fields');
+	if (document.forms[0].elements['firstName'].value == '' || document.forms[0].elements['lastName'].value == '') {
+		alert('First name and last name are mandatory');
 		
 		return false;
-	}	
-		
-	return true;
-}
-function confirm_new_client() {
-	var message = "A client with a similar first and last name was found in the list bellow- are you sure this isn't the client you are looking for?"
-	if(document.forms[0].elements['existentClient'].value == 'true'){
-		if(confirm(message)) 
-			return true;
-		else 
-			return false;
 	}
+			
+	return true;
 }
 
 function validateEdit() {
@@ -77,7 +60,13 @@ function search() {
 }
 
 function createLocal() {
-	setMethod('createLocal');
+	if (confirm("A client with a similar first and last name was found. Are you sure this isn't the client you are looking for?")) {
+		setMethod('createLocal');
+		
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function updateLocal(clientId) {
