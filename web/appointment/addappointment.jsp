@@ -47,6 +47,7 @@ String [][] dbQueries=new String[][] {
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
 
     {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
+    {"search_noshows", "select appointment_date, start_time, status from appointment where status = 'N' and demographic_no = ? order by appointment_date desc" }
 
   };
 
@@ -441,7 +442,7 @@ String disabled="";
 
       }
 
-      addApptBean.closePstmtConn();
+      
 
   }
 
@@ -617,6 +618,32 @@ String disabled="";
   </td>
   </tr>
 </table>
+    
 <% } %>
+    <table align="center">
+        <tr>
+            <th colspan="2"><bean:message key="appointment.addappointment.msgNoShow" /></th>
+        </tr>
+        <tr>
+            <th style="padding-right:25px"><bean:message key="Appointment.formDate" /></th>
+            <th><bean:message key="Appointment.formStartTime" /></th>
+        </tr>
+      <%                          
+        if( bFromWL ) {
+            rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_noshows");
+        
+            while(rsdemo.next()) {
+        %>
+            <tr>
+                <td style="padding-right:25px"><%=rsdemo.getString("appointment_date")%></td>
+                <td><%=rsdemo.getString("start_time")%></td>
+            </tr>
+        <%
+            }
+            rsdemo.close();
+        }
+        addApptBean.closePstmtConn();
+        %>
+    </table>
 </body>
 </html:html>
