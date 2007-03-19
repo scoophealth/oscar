@@ -338,7 +338,7 @@ public class GenericIntakeEditAction extends BaseAction {
 		bean.setBedCommunityPrograms(getBedPrograms(), getCommunityPrograms());
 		bean.setSelectedBedCommunityProgramId(currentBedCommunityProgramId);
 
-		bean.setServiceProgramLabelValues(getServicePrograms());
+		bean.setServicePrograms(getServicePrograms());
 		bean.setSelectedServiceProgramIds(currentServiceProgramIds);
 	}
 

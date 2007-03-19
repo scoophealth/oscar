@@ -104,7 +104,7 @@ function hasSelection(checkBoxGroup) {
 		return true;
 	}
 	
-	if (typeof checkBoxGroup === 'object') {
+	if (isArray(checkBoxGroup)) {
 		for (i = 0; i < checkBoxGroup.length; i++) {
 			if (checkBoxGroup[i].checked) {
 				return true;
@@ -115,6 +115,10 @@ function hasSelection(checkBoxGroup) {
 	}
 	
 	return false;
+}
+
+function isArray(obj) {
+	return obj.constructor.toString().indexOf("Array") != -1;
 }
 
 function isEmpty(elementValue) {

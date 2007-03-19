@@ -148,7 +148,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		return servicePrograms;
 	}
 
-	public void setServiceProgramLabelValues(List<Program> programs) {
+	public void setServicePrograms(List<Program> programs) {
 		servicePrograms = convertToLabelValues(programs);
 	}
 

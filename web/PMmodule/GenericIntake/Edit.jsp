@@ -98,7 +98,7 @@
 						<table class="intakeTable">
 							<tr>
 								<td class="intakeBedCommunityProgramCell"><label><c:out value="${sessionScope.genericIntakeEditForm.bedCommunityProgramLabel}" /></label></td>
-								<c:if test="! empty ${sessionScope.genericIntakeEditForm.servicePrograms}">
+								<c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td><label>Service Programs</label></td>
 								</c:if>
 							</tr>
@@ -108,7 +108,7 @@
 										<html:optionsCollection property="bedCommunityPrograms" value="value" label="label" />
 									</html:select>
 								</td>
-								<c:if test="! empty ${sessionScope.genericIntakeEditForm.servicePrograms}">
+								<c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td>
 									<c:forEach var="serviceProgram" items="${sessionScope.genericIntakeEditForm.servicePrograms}">
 										<html-el:multibox property="serviceProgramIds" value="${serviceProgram.value}" />&nbsp;<c:out value="${serviceProgram.label}" />
