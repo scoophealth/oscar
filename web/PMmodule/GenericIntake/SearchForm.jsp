@@ -46,6 +46,7 @@
 		<br />
 		<p>The following possible matches were found in the system.</p>
 		<p>If your client is not one of these matches, choose the 'New Client' button. Otherwise, you can update the existing client file.</p>
+		<html:hidden property="existentClient" value="true" />
 		<display:table class="simple" name="requestScope.genericIntakeSearchForm.matches" uid="client" pagesize="15" requestURI="/PMmodule/GenericIntake/Search.do">
 			<display:caption>Results from: <c:out value="${requestScope.genericIntakeSearchForm.matchType}" /></display:caption>
 			<display:setProperty name="paging.banner.placement" value="bottom" />
@@ -72,7 +73,7 @@
 			</display:column>
 		</display:table>
 		<br />
-		<p><html:submit onclick="createLocal()">New Client</html:submit></p>
+		<p><html:submit onclick="if(confirm_new_client()) createLocal(); else return false;">New Client</html:submit></p>
 		<br />
 		<c:if test="${requestScope.genericIntakeSearchForm.remoteMatch}">
 			<h5>
