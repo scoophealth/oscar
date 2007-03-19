@@ -159,7 +159,9 @@ String Hour=Integer.toString(today.getHours());
 String Min=Integer.toString(today.getMinutes());
 String  eURL ="/oscarEncounter/IncomingEncounter.do?casetoEncounter=true&providerNo="+bean.providerNo+"&appointmentNo="+bean.appointmentNo+"&demographicNo="+bean.demographicNo+"&curProviderNo="+bean.providerNo+"&reason="+java.net.URLEncoder.encode(" ")+"&userName="+java.net.URLEncoder.encode(bean.patientFirstName+" "+bean.patientLastName)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+curYear+"-"+curMonth+"-"+curDay+"&startTime="+Hour+":"+Min+"&status=t";%>
 <caisirole:SecurityAccess accessName="medical encounter" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+<!-- 
 <a href='<%=bsurl%>/oscarSurveillance/CheckSurveillance.do?demographicNo=<%=bean.demographicNo%>&proceed=<%=java.net.URLEncoder.encode(eURL)%>'>Oscar Encounter</a>
+ -->
 </caisirole:SecurityAccess>
 <!-- tr><td><a href="</td></tr -->
 <tr style="background-color:#BBBBBB;"><td>Clinical Modules</td></tr>
