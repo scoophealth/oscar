@@ -88,6 +88,12 @@ setTimeout(string,time);
 	if (aList!=null){
 		allergies = aList.size() > 0;
 	}
+	
+	boolean reminders = false;
+	CaseManagementCPP cpp = (CaseManagementCPP)request.getAttribute("cpp");
+	if(cpp!=null){
+		reminders = cpp.getReminders().length() > 0;
+	}
 	//get programId
 	String pId=(String)session.getAttribute("case_program_id");
 	if (pId==null) pId="";
@@ -109,9 +115,10 @@ Version version = (Version) ctx.getBean("version");
 		<% for(int x=0;x<CaseManagementViewFormBean.tabs.length;x++) {%>
 			<%
 				String extra = "";
-				if(allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies")) {
+				if((allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies"))||(reminders && CaseManagementViewFormBean.tabs[x].equals("Reminders")) ) {
 					extra="color:red;";
 				}
+				
 			%>
 			<%if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions")){%>
 			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo="<%=request.getParameter("providerNo")%>" demoNo="<%=request.getParameter("demographicNo")%>" programId="<%=pId%>">
