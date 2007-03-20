@@ -37,9 +37,9 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.BedCheckTime;
-import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
@@ -687,11 +687,118 @@ public class ProgramManagerAction extends BaseAction {
 		}
 		
 		request.setAttribute("teams", teams);
+		
+		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
 
 		request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
 		request.setAttribute("accesses", programManager.getProgramAccesses(programId));
 		request.setAttribute("accessTypes", programManager.getAccessTypes());
 		request.setAttribute("queue", programQueueManager.getProgramQueuesByProgramId(programId));
+		
+		request.setAttribute("bed_programs",programManager.getBedPrograms());
 	}
 
+	
+	
+	public ActionForward delete_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		ProgramClientStatus status = (ProgramClientStatus) programForm.get("client_status");
+
+		if (programManager.getAllClientsInStatus(program.getId(), status.getId()).size() > 0) {
+
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.status.not_empty", program.getName()));
+			saveMessages(request, messages);
+
+			this.setEditAttributes(request, String.valueOf(program.getId()));
+			return edit(mapping, form, request, response);
+		}
+
+		programManager.deleteProgramClientStatus(String.valueOf(status.getId()));
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
+		saveMessages(request, messages);
+
+		this.setEditAttributes(request, String.valueOf(program.getId()));
+		programForm.set("function", new ProgramFunctionalUser());
+
+		return edit(mapping, form, request, response);
+	}
+	
+	public ActionForward edit_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		ProgramClientStatus status = (ProgramClientStatus) programForm.get("client_status");
+
+		ProgramClientStatus pt = programManager.getProgramClientStatus(String.valueOf(status.getId()));
+
+		if (pt == null) {
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program_status.missing"));
+			saveMessages(request, messages);
+			setEditAttributes(request, String.valueOf(program.getId()));
+			return edit(mapping, form, request, response);
+		}
+		programForm.set("client_status", pt);
+		setEditAttributes(request, String.valueOf(program.getId()));
+
+		return mapping.findForward("edit");
+	}
+	
+	public ActionForward save_status(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		ProgramClientStatus status = (ProgramClientStatus) programForm.get("client_status");
+
+		if (this.isCancelled(request)) {
+			return list(mapping, form, request, response);
+		}
+		status.setProgramId(program.getId());
+
+		if (programManager.clientStatusNameExists(program.getId(), status.getName())) {
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program_status.duplicate", status.getName()));
+			saveMessages(request, messages);
+			programForm.set("client_status", new ProgramClientStatus());
+			setEditAttributes(request, String.valueOf(program.getId()));
+			return mapping.findForward("edit");
+		}
+
+		programManager.saveProgramClientStatus(status);
+
+		logManager.log(getProviderNo(request), "write", "edit program - save status", String.valueOf(program.getId()), getIP(request));
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
+		saveMessages(request, messages);
+		programForm.set("client_status", new ProgramClientStatus());
+		setEditAttributes(request, String.valueOf(program.getId()));
+
+		return mapping.findForward("edit");
+	}
+	
+	public ActionForward assign_status_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		DynaActionForm programForm = (DynaActionForm) form;
+		Program program = (Program) programForm.get("program");
+		Admission admission = (Admission) programForm.get("admission");
+
+		Admission ad = admissionManager.getAdmission(admission.getId());
+
+		ad.setClientStatusId(admission.getClientStatusId());
+
+		admissionManager.saveAdmission(ad);
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
+		saveMessages(request, messages);
+
+		logManager.log(getProviderNo(request), "write", "edit program - assign client to status", String.valueOf(program.getId()), getIP(request));
+
+		setEditAttributes(request, String.valueOf(program.getId()));
+
+		return mapping.findForward("edit");
+	}
+	
 }

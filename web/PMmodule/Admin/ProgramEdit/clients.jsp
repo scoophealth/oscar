@@ -31,9 +31,18 @@ function assignTeam(id,selectBox) {
 	document.programManagerForm.method.value='assign_team_client';
 	document.programManagerForm.submit();
 }
+
+function assignStatus(id,selectBox) {
+	var status_id = selectBox.options[selectBox.selectedIndex].value;
+	document.programManagerForm.elements['admission.clientStatusId'].value=status_id;
+	document.programManagerForm.elements['admission.id'].value=id;
+	document.programManagerForm.method.value='assign_status_client';
+	document.programManagerForm.submit();
+}
 </script>
 <html:hidden property="admission.id" />
 <html:hidden property="admission.teamId" />
+<html:hidden property="admission.clientStatusId" />
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -69,5 +78,19 @@ function assignTeam(id,selectBox) {
 			</c:forEach>
 		</select>
 	</display:column>
-	
+	<display:column sortable="false" title="Status" >
+		<select name="y" onchange="assignStatus('<c:out value="${admission.id}"/>',this);">
+			<option value="0">&nbsp;</option>
+			<c:forEach var="status" items="${client_statuses}">
+				<c:choose>
+					<c:when test="${status.id == admission.clientStatusId}">
+						<option value="<c:out value="${status.id}"/>" selected><c:out value="${status.name}" /></option>
+					</c:when>
+					<c:otherwise>
+						<option value="<c:out value="${status.id}"/>"><c:out value="${status.name}" /></option>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</select>
+	</display:column>
 </display:table>

@@ -186,6 +186,17 @@ public class AdmissionManagerImpl implements AdmissionManager {
 				clientReferralDAO.saveClientReferral(referral);
 			}
 		}
+		
+		
+		//if they are in a service program linked to this bed program, discharge them from that service program
+		//TODO:
+		if(program.getType().equalsIgnoreCase("Bed")) {
+			List<Program> programs = programDao.getLinkedServicePrograms(newAdmission.getProgramId(),demographicNo);
+			for(Program p:programs) {
+				//discharge them from this program
+				this.processDischarge(p.getId(), demographicNo,"", "");
+			}
+		}
 	}
 
 	public void processInitialAdmission(Integer demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException, AlreadyAdmittedException {

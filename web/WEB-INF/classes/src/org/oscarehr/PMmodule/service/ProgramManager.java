@@ -29,6 +29,7 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -131,4 +132,11 @@ public interface ProgramManager
 	
 	public Program[] getCommunityPrograms();
 	public List getProgramBeans(String providerNo);
+	
+	public List<ProgramClientStatus> getProgramClientStatuses(Integer programId);
+	public ProgramClientStatus getProgramClientStatus(String statusId);	
+	public void saveProgramClientStatus(ProgramClientStatus status);
+	public void deleteProgramClientStatus(String id);
+	public boolean clientStatusNameExists(Integer programId, String statusName);
+	public List getAllClientsInStatus(Integer programId, Integer statusId);
 }

@@ -15,24 +15,28 @@ import java.io.Serializable;
 public abstract class BaseAdmission  implements Serializable {
 
 	public static String REF = "Admission";
-	public static String PROP_PROVIDER_NO = "ProviderNo";
-	public static String PROP_PROGRAM_ID = "ProgramId";
-	public static String PROP_ADMISSION_DATE = "AdmissionDate";
-	public static String PROP_ADMISSION_NOTES = "AdmissionNotes";
-	public static String PROP_TEMP_ADMISSION = "TempAdmission";
-	public static String PROP_TEAM = "team";
-	public static String PROP_CLIENT_ID = "ClientId";
-	public static String PROP_TEMP_ADMIT_DISCHARGE = "TempAdmitDischarge";
-	public static String PROP_PROGRAM_TYPE = "programType";
+	public static String PROP_CLIENT = "client";
 	public static String PROP_PROGRAM_NAME = "programName";
-	public static String PROP_DISCHARGE_NOTES = "DischargeNotes";
+	public static String PROP_TEMP_ADMIT_DISCHARGE = "TempAdmitDischarge";
+	public static String PROP_AGENCY_ID = "AgencyId";
+	public static String PROP_PROGRAM_ID = "ProgramId";
+	public static String PROP_PROGRAM_TYPE = "programType";
+	public static String PROP_TEMP_ADMISSION = "TempAdmission";
+	public static String PROP_CLIENT_STATUS = "clientStatus";
+	public static String PROP_TEAM_NAME = "teamName";
+	public static String PROP_ADMISSION_NOTES = "AdmissionNotes";
+	public static String PROP_CLIENT_ID = "ClientId";
+	public static String PROP_RADIO_DISCHARGE_REASON = "RadioDischargeReason";
+	public static String PROP_TEAM = "team";
+	public static String PROP_PROVIDER_NO = "ProviderNo";
+	public static String PROP_DISCHARGE_DATE = "DischargeDate";
 	public static String PROP_TEAM_ID = "TeamId";
+	public static String PROP_CLIENT_STATUS_ID = "ClientStatusId";
+	public static String PROP_ADMISSION_STATUS = "AdmissionStatus";
+	public static String PROP_ADMISSION_DATE = "AdmissionDate";
+	public static String PROP_DISCHARGE_NOTES = "DischargeNotes";
 	public static String PROP_ID = "Id";
 	public static String PROP_TEMPORARY_ADMISSION = "TemporaryAdmission";
-	public static String PROP_AGENCY_ID = "AgencyId";
-	public static String PROP_CLIENT = "client";
-	public static String PROP_DISCHARGE_DATE = "DischargeDate";
-	public static String PROP_ADMISSION_STATUS = "AdmissionStatus";
 
 
 	// constructors
@@ -85,17 +89,19 @@ public abstract class BaseAdmission  implements Serializable {
 	private java.lang.String tempAdmission;
 	private java.lang.Integer programId;
 	private java.lang.String tempAdmitDischarge;
+	private java.lang.String radioDischargeReason;
 	private java.lang.String dischargeNotes;
 	private java.util.Date dischargeDate;
 	private java.lang.Integer teamId;
 	private java.lang.String teamName;
+	private java.lang.Integer clientStatusId;
 	private boolean temporaryAdmission;
 	private java.lang.String programName;
 	private java.lang.String programType;
-	private java.lang.String radioDischargeReason;
-	private java.lang.String radioDischargeNestedReason;
+
 	// many to one
 	private org.oscarehr.PMmodule.model.ProgramTeam team;
+	private org.oscarehr.PMmodule.model.ProgramClientStatus clientStatus;
 	private org.oscarehr.PMmodule.model.Demographic client;
 
 
@@ -276,6 +282,23 @@ public abstract class BaseAdmission  implements Serializable {
 
 
 	/**
+	 * Return the value associated with the column: radioDischargeReason
+	 */
+	public java.lang.String getRadioDischargeReason () {
+		return radioDischargeReason;
+	}
+
+	/**
+	 * Set the value related to the column: radioDischargeReason
+	 * @param radioDischargeReason the radioDischargeReason value
+	 */
+	public void setRadioDischargeReason (java.lang.String radioDischargeReason) {
+		this.radioDischargeReason = radioDischargeReason;
+	}
+
+
+
+	/**
 	 * Return the value associated with the column: discharge_notes
 	 */
 	public java.lang.String getDischargeNotes () {
@@ -322,6 +345,40 @@ public abstract class BaseAdmission  implements Serializable {
 	 */
 	public void setTeamId (java.lang.Integer teamId) {
 		this.teamId = teamId;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: teamName
+	 */
+	public java.lang.String getTeamName () {
+		return teamName;
+	}
+
+	/**
+	 * Set the value related to the column: teamName
+	 * @param teamName the teamName value
+	 */
+	public void setTeamName (java.lang.String teamName) {
+		this.teamName = teamName;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: clientstatus_id
+	 */
+	public java.lang.Integer getClientStatusId () {
+		return clientStatusId;
+	}
+
+	/**
+	 * Set the value related to the column: clientstatus_id
+	 * @param clientStatusId the clientstatus_id value
+	 */
+	public void setClientStatusId (java.lang.Integer clientStatusId) {
+		this.clientStatusId = clientStatusId;
 	}
 
 
@@ -375,13 +432,7 @@ public abstract class BaseAdmission  implements Serializable {
 		this.programType = programType;
 	}
 
-	public java.lang.String getTeamName() {
-		return teamName;
-	}
 
-	public void setTeamName(java.lang.String teamName) {
-		this.teamName = teamName;
-	}
 
 	/**
 	 * Return the value associated with the column: team_id
@@ -401,6 +452,23 @@ public abstract class BaseAdmission  implements Serializable {
 
 
 	/**
+	 * Return the value associated with the column: clientstatus_id
+	 */
+	public org.oscarehr.PMmodule.model.ProgramClientStatus getClientStatus () {
+		return clientStatus;
+	}
+
+	/**
+	 * Set the value related to the column: clientstatus_id
+	 * @param clientStatus the clientstatus_id value
+	 */
+	public void setClientStatus (org.oscarehr.PMmodule.model.ProgramClientStatus clientStatus) {
+		this.clientStatus = clientStatus;
+	}
+
+
+
+	/**
 	 * Return the value associated with the column: client_id
 	 */
 	public org.oscarehr.PMmodule.model.Demographic getClient () {
@@ -415,15 +483,9 @@ public abstract class BaseAdmission  implements Serializable {
 		this.client = client;
 	}
 
-	
-	public java.lang.String getRadioDischargeReason() {
-		return radioDischargeReason;
-	}
 
-	public void setRadioDischargeReason(java.lang.String radioDischargeReason) {
-		this.radioDischargeReason = radioDischargeReason;
-	}	
-	
+
+
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
 		if (!(obj instanceof org.oscarehr.PMmodule.model.Admission)) return false;

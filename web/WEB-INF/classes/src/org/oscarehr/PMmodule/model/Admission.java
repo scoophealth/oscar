@@ -32,23 +32,35 @@ public class Admission extends BaseAdmission {
 	private static final long serialVersionUID = 1L;
 
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	public Admission() {
+	public Admission () {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Admission(java.lang.Long id) {
+	public Admission (java.lang.Long id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Admission(java.lang.Long id, java.lang.Long agencyId, java.lang.Long providerNo, java.lang.Integer clientId, java.lang.Integer programId) {
-		super(id, agencyId, providerNo, clientId, programId);
+	public Admission (
+		java.lang.Long id,
+		java.lang.Long agencyId,
+		java.lang.Long providerNo,
+		java.lang.Integer clientId,
+		java.lang.Integer programId) {
+
+		super (
+			id,
+			agencyId,
+			providerNo,
+			clientId,
+			programId);
 	}
+
 	/* [CONSTRUCTOR MARKER END] */
 
 	private Program program;

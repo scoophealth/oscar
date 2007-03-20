@@ -293,4 +293,9 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		return exists;
 	}
 	
+	public List<Program> getLinkedServicePrograms(Integer bedProgramId,Integer clientId) {
+		List results = this.getHibernateTemplate().find("select p from Admission a,Program p where a.ProgramId = p.id and p.type='service' and  p.bedProgramLinkId = ? and a.ClientId=?",new Object[] {bedProgramId,clientId});	
+		return results;
+	}
+	
 }

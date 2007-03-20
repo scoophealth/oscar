@@ -32,6 +32,14 @@ function assignTeam(id,selectBox) {
 	document.programManagerViewForm.submit();
 }
 
+function assignStatus(id,selectBox) {
+	var status_id = selectBox.options[selectBox.selectedIndex].value;
+	document.programManagerViewForm.elements['clientStatusId'].value=status_id;
+	document.programManagerViewForm.elements['admissionId'].value=id;
+	document.programManagerViewForm.method.value='assign_status_client';
+	document.programManagerViewForm.submit();
+}
+
 function dischargeToCommunity(id,selectBox) {
 	var com = selectBox.options[selectBox.selectedIndex].value;
 	document.programManagerViewForm.community.value=com;
@@ -104,6 +112,8 @@ function do_batch_discharge(community) {
 <input type="hidden" name="community" value="" />
 <input type="hidden" name="type" value="" />
 <input type="hidden" name="program_name" value="<c:out value="${program_name}"/>" />
+<input type="hidden" name="clientStatusId" />
+
 <div class="tabs" id="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -140,7 +150,22 @@ function do_batch_discharge(community) {
 			</c:forEach>
 		</select>
 	</display:column>
-	
+
+	<display:column sortable="false" title="Status" >
+		<select name="y" onchange="assignStatus('<c:out value="${admission.id}"/>',this);">
+			<option value="0">&nbsp;</option>
+			<c:forEach var="status" items="${client_statuses}">
+				<c:choose>
+					<c:when test="${status.id == admission.clientStatusId}">
+						<option value="<c:out value="${status.id}"/>" selected><c:out value="${status.name}" /></option>
+					</c:when>
+					<c:otherwise>
+						<option value="<c:out value="${status.id}"/>"><c:out value="${status.name}" /></option>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</select>
+	</display:column>	
 </display:table>
 <br />
 <c:if test="${requestScope.allowBatchDischarge == true and program.type eq 'Bed'}">
@@ -162,5 +187,5 @@ function do_batch_discharge(community) {
 				<option value="<c:out value="${program.id}"/>"><c:out value="${program.name}" /></option>
 			</c:if>
 		</c:forEach>
-	</select>
+	</select>	
 </c:if>

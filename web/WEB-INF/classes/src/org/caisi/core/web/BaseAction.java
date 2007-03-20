@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.caisi.service.InfirmBedProgramManager;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -66,6 +67,11 @@ public class BaseAction extends DispatchActionSupport
 	public ProgramManager getProgramManager(){
 		ProgramManager pm = (ProgramManager) getAppContext().getBean("programManager");
 		return pm;
+	}
+	
+	public AdmissionManager getAdmissionManager(){
+		AdmissionManager mgr = (AdmissionManager) getAppContext().getBean("admissionManager");
+		return mgr;
 	}
 }
 

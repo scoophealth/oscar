@@ -287,6 +287,11 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
+	<bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>	
 	<bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
@@ -656,6 +661,7 @@
 				<property name="admissionDAO" ref="admissionDao" />
 				<property name="integratorManager" ref="integratorManager" />
 				<property name="defaultRoleAccessDAO" ref="defaultRoleAccessDAO" />
+				<property name="programClientStatusDAO" ref="programClientStatusDAO" />
 			</bean>
 		</property>
 	</bean>

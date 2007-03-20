@@ -33,6 +33,7 @@ import org.codehaus.xfire.XFireRuntimeException;
 import org.oscarehr.PMmodule.dao.AdmissionDao;
 import org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO;
 import org.oscarehr.PMmodule.dao.ProgramAccessDAO;
+import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramFunctionalUserDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
@@ -44,6 +45,7 @@ import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 import org.oscarehr.PMmodule.model.FunctionalUserType;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramAccess;
+import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -62,7 +64,8 @@ public class ProgramManagerImpl implements ProgramManager {
 	private AdmissionDao admissionDAO;
 	private IntegratorManager integratorManager;
 	private DefaultRoleAccessDAO defaultRoleAccessDAO;
-
+	private ProgramClientStatusDAO clientStatusDAO;
+	
 	public void setIntegratorManager(IntegratorManager mgr) {
 		this.integratorManager = mgr;
 	}
@@ -95,6 +98,10 @@ public class ProgramManagerImpl implements ProgramManager {
 		this.defaultRoleAccessDAO = dao;
 	}
 
+	public void setProgramClientStatusDAO(ProgramClientStatusDAO dao) {
+		this.clientStatusDAO = dao;
+	}
+	
 	public Program getProgram(String programId) {
 		return dao.getProgram(Integer.valueOf(programId));
 	}
@@ -369,5 +376,29 @@ public class ProgramManagerImpl implements ProgramManager {
 
 	public DefaultRoleAccess findDefaultRoleAccess(long roleId, long accessTypeId) {
 		return defaultRoleAccessDAO.find(new Long(roleId), new Long(accessTypeId));
+	}
+	
+	public List<ProgramClientStatus> getProgramClientStatuses(Integer programId) {
+		return clientStatusDAO.getProgramClientStatuses(programId);
+	}
+	
+	public void saveProgramClientStatus(ProgramClientStatus status) {
+		clientStatusDAO.saveProgramClientStatus(status);
+	}
+	
+	public void deleteProgramClientStatus(String id) {
+		clientStatusDAO.deleteProgramClientStatus(id);
+	}
+	
+	public boolean clientStatusNameExists(Integer programId, String statusName) {
+		return clientStatusDAO.clientStatusNameExists(programId,statusName);
+	}
+	
+	public List getAllClientsInStatus(Integer programId, Integer statusId) {
+		return clientStatusDAO.getAllClientsInStatus(programId,statusId);
+	}
+	
+	public ProgramClientStatus getProgramClientStatus(String statusId) {
+		return clientStatusDAO.getProgramClientStatus(statusId);
 	}
 }

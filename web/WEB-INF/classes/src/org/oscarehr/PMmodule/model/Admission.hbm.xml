@@ -115,6 +115,19 @@
 			insert="false"
 			lazy="false"
 			not-found="ignore" />
+		<property
+			column="clientstatus_id"
+			name="ClientStatusId"
+			not-null="false"
+			type="integer" />	
+		<many-to-one
+			name="clientStatus"
+			class="org.oscarehr.PMmodule.model.ProgramClientStatus"
+			column="clientstatus_id"
+			update="false"
+			insert="false"
+			lazy="false"
+			not-found="ignore" />				
 		<many-to-one
 			name="client"
 			class="org.oscarehr.PMmodule.model.Demographic"

@@ -214,6 +214,7 @@
 			<form-property name="provider" type="org.oscarehr.PMmodule.model.ProgramProvider" />
 			<form-property name="team" type="org.oscarehr.PMmodule.model.ProgramTeam" />
 			<form-property name="queue" type="org.oscarehr.PMmodule.model.ProgramQueue" />
+			<form-property name="client_status" type="org.oscarehr.PMmodule.model.ProgramClientStatus" />
 		</form-bean>
 		<form-bean name="agencyManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="view" type="org.oscarehr.PMmodule.web.formbean.AgencyManagerViewFormBean" />

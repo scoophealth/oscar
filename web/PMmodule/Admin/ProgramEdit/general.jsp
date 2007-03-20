@@ -94,6 +94,17 @@
 		<td width="20%">Allow Batch Discharges:</td>
 		<td><html:checkbox property="program.allowBatchDischarge" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Link to Bed Program:</td>
+		<td>
+			<html-el:select property="program.bedProgramLinkId">
+				<html:option value="0">&nbsp;</html:option>
+				<c:forEach var="bp" items="${bed_programs}">
+					<html-el:option value="${bp.id}"><c:out value="${bp.name}"/></html-el:option>
+				</c:forEach>
+			</html-el:select>
+		</td>
+	</tr>	
 	<tr>
 		<td colspan="2">
 			<input type="button" value="Save" onclick="return save()" />

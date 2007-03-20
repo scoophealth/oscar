@@ -1,3 +1,4 @@
+<!-- 
 /*
 * 
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
@@ -19,49 +20,19 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
+ -->
 
-package org.oscarehr.PMmodule.dao;
-
-import java.util.List;
-
-import org.oscarehr.PMmodule.model.Program;
-
-public interface ProgramDao {
-	
-	public boolean isBedProgram(Integer programId);
-	
-	public boolean isServiceProgram(Integer programId);
-	
-	public boolean isCommunityProgram(Integer programId);
-	
-	public Program getProgram(Integer programId);
-
-	public String getProgramName(Integer programId);
-
-	public List getAllPrograms();
-
-	public List getAllActivePrograms();
-	
-	public List getProgramsByAgencyId(String agencyId);
-
-	public Program[] getBedPrograms();
-
-	public List getServicePrograms();
-
-	public Program[] getCommunityPrograms();
-	
-	public void saveProgram(Program program);
-
-	public void removeProgram(Integer programId);
-
-	public List search(Program criteria);
-
-	public void resetHoldingTank();
-
-	public Program getHoldingTankProgram();
-
-	public boolean programExists(Integer programId);
-	
-	public List<Program> getLinkedServicePrograms(Integer bedProgramId,Integer clientId);
-	
-}
+<%@ include file="/taglibs.jsp"%>
+<div class="tabs" id="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="Programs">Client Status Management</th>
+	</tr>
+</table>
+</div>
+<!--  show current staff -->
+<display:table class="simple" cellspacing="2" cellpadding="3" id="status" name="client_statuses" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
+	<display:setProperty name="paging.banner.placement" value="bottom" />
+	<display:setProperty name="basic.msg.empty_list" value="No statuses are currently defined for this program." />
+	<display:column property="name" sortable="true" title="Name" />
+</display:table>

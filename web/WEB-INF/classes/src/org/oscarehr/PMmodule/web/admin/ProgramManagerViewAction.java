@@ -37,6 +37,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -113,6 +114,7 @@ public class ProgramManagerViewAction extends BaseAction {
     	}
     
     	if (formBean.getTab().equals("Clients")) {
+    		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
     		request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
     		request.setAttribute("program_name", program.getName());
     		
@@ -151,6 +153,10 @@ public class ProgramManagerViewAction extends BaseAction {
     		request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
     	}
     
+    	if(formBean.getTab().equals("Client Status")) {
+    		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
+    	}
+    	
     	logManager.log(getProviderNo(request), "view", "program", programId, request.getRemoteAddr());
     
     	request.setAttribute("id", programId);
@@ -225,6 +231,24 @@ public class ProgramManagerViewAction extends BaseAction {
 		return view(mapping, form, request, response);
 	}
 
+	public ActionForward assign_status_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		String admissionId = request.getParameter("admissionId");
+		String statusId = request.getParameter("clientStatusId");
+		String programName = request.getParameter("program_name");
+		Admission ad = admissionManager.getAdmission(Long.valueOf(admissionId));
+
+		ad.setClientStatusId(Integer.valueOf(statusId));
+
+		admissionManager.saveAdmission(ad);
+
+		ActionMessages messages = new ActionMessages();
+		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
+		saveMessages(request, messages);
+
+		logManager.log(getProviderNo(request), "write", "edit program - assign client to status", "", getIP(request));
+		return view(mapping, form, request, response);				
+	}	
+	
 	public ActionForward batch_discharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		log.info("do batch discharge");
 		String type = request.getParameter("type");

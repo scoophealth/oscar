@@ -15,27 +15,28 @@ import java.io.Serializable;
 public abstract class BaseProgram  implements Serializable {
 
 	public static String REF = "Program";
+	public static String PROP_TYPE = "type";
+	public static String PROP_DESCR = "descr";
+	public static String PROP_AGENCY_ID = "agencyId";
+	public static String PROP_QUEUE_SIZE = "queueSize";
+	public static String PROP_MAX_ALLOWED = "maxAllowed";
+	public static String PROP_URL = "url";
+	public static String PROP_ALLOW_BATCH_ADMISSION = "allowBatchAdmission";
+	public static String PROP_ALLOW_BATCH_DISCHARGE = "allowBatchDischarge";
 	public static String PROP_PHONE = "phone";
 	public static String PROP_EMERGENCY_NUMBER = "emergencyNumber";
-	public static String PROP_TYPE = "type";
-	public static String PROP_FAX = "fax";
-	public static String PROP_ALLOW_BATCH_ADMISSION = "allowBatchAdmission";
-	public static String PROP_HOLDING_TANK = "holdingTank";
-	public static String PROP_LOCATION = "location";
-	public static String PROP_DESCR = "descr";
+	public static String PROP_BED_PROGRAM_LINK_ID = "bedProgramLinkId";
 	public static String PROP_INTAKE_PROGRAM = "intakeProgram";
-	public static String PROP_ALLOW_BATCH_DISCHARGE = "allowBatchDischarge";
+	public static String PROP_EMAIL = "email";
 	public static String PROP_NUM_OF_MEMBERS = "numOfMembers";
 	public static String PROP_PROGRAM_STATUS = "programStatus";
-	public static String PROP_NAME = "name";
-	public static String PROP_HIC = "hic";
-	public static String PROP_QUEUE_SIZE = "queueSize";
-	public static String PROP_URL = "url";
-	public static String PROP_EMAIL = "email";
+	public static String PROP_FAX = "fax";
 	public static String PROP_ADDRESS = "address";
+	public static String PROP_HOLDING_TANK = "holdingTank";
+	public static String PROP_NAME = "name";
 	public static String PROP_ID = "id";
-	public static String PROP_MAX_ALLOWED = "maxAllowed";
-	public static String PROP_AGENCY_ID = "agencyId";
+	public static String PROP_HIC = "hic";
+	public static String PROP_LOCATION = "location";
 
 
 	// constructors
@@ -113,6 +114,7 @@ public abstract class BaseProgram  implements Serializable {
 	private boolean hic;
 	private java.lang.String programStatus;
 	private java.lang.Integer intakeProgram;
+	private java.lang.Integer bedProgramLinkId;
 
 
 
@@ -474,6 +476,23 @@ public abstract class BaseProgram  implements Serializable {
 	 */
 	public void setIntakeProgram (java.lang.Integer intakeProgram) {
 		this.intakeProgram = intakeProgram;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: bed_program_link_id
+	 */
+	public java.lang.Integer getBedProgramLinkId () {
+		return bedProgramLinkId;
+	}
+
+	/**
+	 * Set the value related to the column: bed_program_link_id
+	 * @param bedProgramLinkId the bed_program_link_id value
+	 */
+	public void setBedProgramLinkId (java.lang.Integer bedProgramLinkId) {
+		this.bedProgramLinkId = bedProgramLinkId;
 	}
 
 

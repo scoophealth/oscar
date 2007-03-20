@@ -22,7 +22,9 @@
 */
 package org.caisi.core.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.service.InfirmBedProgramManager;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.service.ProgramManager;
 
 public class InfirmAction extends BaseAction
@@ -47,6 +50,8 @@ public class InfirmAction extends BaseAction
 	{
 		logger.debug("====> inside showProgram action.");
 
+		String clientStatusId = request.getParameter("infirmaryView_clientStatusId");
+		System.out.println("clientStatusId=" + clientStatusId);
 		HttpSession se = request.getSession();	
 		se.setAttribute("infirmaryView_initflag", "true");
 		String providerNo=(String) se.getAttribute("user");				
@@ -102,8 +107,16 @@ public class InfirmAction extends BaseAction
 		if (programId!=defaultprogramId) getInfirmBedProgramManager().setDefaultProgramId(providerNo,programId);
 		
 		se.setAttribute("infirmaryView_programId",String.valueOf(programId));
+		
+		//if()
 		if(programId != 0) {
 			se.setAttribute("case_program_id",String.valueOf(programId));
+		}
+		
+		if(programId != 0) {
+			ProgramManager programManager = getProgramManager();
+			se.setAttribute("program_client_statuses",programManager.getProgramClientStatuses(new Integer(programId)));
+			
 		}
 		
 		
@@ -136,8 +149,24 @@ public class InfirmAction extends BaseAction
 		//release memory
 		//List memo=(List) se.getAttribute("infirmaryView_demographicBeans");
 		//if (memo!=null) memo.clear();
-		
-		se.setAttribute("infirmaryView_demographicBeans",getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView));
+		List demographicBeans = getInfirmBedProgramManager().getDemographicByBedProgramIdBeans(programId,dt,archiveView);
+		List filteredDemographicBeans = new ArrayList();
+		if(request.getParameter("infirmaryView_clientStatusId") != null) {
+			int statusId = new Integer(request.getParameter("infirmaryView_clientStatusId")).intValue();
+			for(Iterator iter=demographicBeans.iterator();iter.hasNext();) {				
+				LabelValueBean bean = (LabelValueBean)iter.next();
+				String demographicNo = bean.getValue();
+				Admission admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
+				if(admission.getClientStatusId()==null) {admission.setClientStatusId(new Integer(0));}
+ 				if(admission.getClientStatusId().intValue() == statusId) {
+					filteredDemographicBeans.add(bean);
+				}
+			}
+			request.setAttribute("infirmaryView_clientStatusId",statusId );
+		} else {
+			filteredDemographicBeans = demographicBeans;
+		}
+		se.setAttribute("infirmaryView_demographicBeans",filteredDemographicBeans);
 		
 		/*java.util.Enumeration enu =  se.getAttributeNames();
 		while (enu.hasMoreElements())

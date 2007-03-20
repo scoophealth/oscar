@@ -41,5 +41,6 @@
 		<property name="hic" column="hic" type="boolean" not-null="false" length="1" />
 		<property name="programStatus" column="program_status" type="string" not-null="true" />
 		<property name="intakeProgram" column="intake_program" type="integer" not-null="false" length="10" />
+		<property name="bedProgramLinkId" column="bed_program_link_id" type="integer" not-null="false" length="10" />
 	</class>
 </hibernate-mapping>
