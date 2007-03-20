@@ -170,7 +170,7 @@ public class CustomFilterAction extends DispatchAction {
                 
         String[] providers = request.getParameterValues("provider");
         if(providers != null) {
-	        Set sProviders = new HashSet();
+	        Set sProviders = new HashSet();	        
 	        for(int x=0;x<providers.length;x++) {
 	        	sProviders.add(new Provider(providers[x]));
 	        }
