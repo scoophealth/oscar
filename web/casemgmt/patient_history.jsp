@@ -48,8 +48,8 @@
 	<td>Family History</td>
 </tr>
 <tr>
-	<td bgcolor="white"><html:textarea property="cpp.socialHistory" rows="4" cols="40"/></td>
-	<td bgcolor="white"><html:textarea property="cpp.familyHistory" rows="4" cols="40"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.socialHistory" rows="5" cols="45"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.familyHistory" rows="5" cols="45"/></td>
 </tr>
 
 <tr class="title">
@@ -57,15 +57,15 @@
 	<td>Past Medications</td>
 </tr>
 <tr>
-	<td bgcolor="white"><html:textarea property="cpp.medicalHistory" rows="4" cols="40"/></td>
-	<td bgcolor="white"><html:textarea property="cpp.pastMedications" rows="4" cols="40"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.medicalHistory" rows="5" cols="45"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.pastMedications" rows="5" cols="45"/></td>
 </tr>
 
 <tr class="title">
 	<td colspan="2">Other Support Systems</td>
 </tr>
 <tr>
-	<td colspan="2" bgcolor="white"><html:textarea property="cpp.otherSupportSystems" rows="4" cols="90"/></td>
+	<td colspan="2" bgcolor="white"><html:textarea property="cpp.otherSupportSystems" rows="2" cols="95"/></td>
 </tr>
 </table>
 <html:submit value="save" onclick="this.form.method.value='patientCPPSave'"/>
