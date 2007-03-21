@@ -40,7 +40,9 @@ public class CaseManagementCPP extends BaseObject {
 	
 	private String primaryPhysician="";
 	private String primaryCounsellor="";
-	
+	private String pastMedications="";
+	private String otherFileNumber="";
+	private String otherSupportSystems="";
 	
 	public CaseManagementCPP() {
 		
@@ -106,4 +108,29 @@ public class CaseManagementCPP extends BaseObject {
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
 	}
+	
+	public String getPastMedications() {
+		return pastMedications;
+	}
+
+	public void setPastMedications(String pastMedications) {
+		this.pastMedications = pastMedications;
+	}
+
+	public String getOtherFileNumber() {
+		return otherFileNumber;
+	}
+
+	public void setOtherFileNumber(String otherFileNumber) {
+		this.otherFileNumber = otherFileNumber;
+	}
+
+	public String getOtherSupportSystems() {
+		return otherSupportSystems;
+	}
+
+	public void setOtherSupportSystems(String otherSupportSystems) {
+		this.otherSupportSystems = otherSupportSystems;
+	}
+	
 }

@@ -157,18 +157,17 @@ Version version = (Version) ctx.getBean("version");
 <tr>
 	<td align="right"  valign="top" nowrap><b>Team:</b></td><td><c:out value="${requestScope.teamName}" /></td>
 </tr>
-<tr>
-	<td align="right"  valign="top" nowrap><b>Team Members:</b></td>
+<tr>	
+	<td align="right"  valign="top" nowrap></td>
 	<td><c:forEach var="tm" items="${teamMembers}">
 		<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
-	</c:forEach></td>
-	
+	</c:forEach></td>	
 </tr>
 <tr>
-	<td align="right"  valign="top" nowrap><b>Primary Physician:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
+	<td align="right"  valign="top" nowrap><b>Primary Health Care Provider:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
 </tr>
 <tr>
-	<td align="right" valign="top" nowrap><b>Primary Counsellor:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>	
+	<td align="right" valign="top" nowrap><b>Primary Counsellor/Caseworker:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>	
 </tr>
 </table>
 </td>

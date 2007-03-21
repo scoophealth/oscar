@@ -28,32 +28,45 @@
 
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
 <tr>
-	<td  bgcolor="white">Primary Physician</td>
-	<td  bgcolor="white"><html:text property="cpp.primaryPhysician"/>
+	<td bgcolor="white">Primary Health Care Provider</td>
+	<td bgcolor="white"><html:text property="cpp.primaryPhysician"/>
 </tr>
 <tr>
-	<td bgcolor="white" >Primary Counsellor</td>
-	<td  bgcolor="white"><html:text property="cpp.primaryCounsellor"/>
+	<td bgcolor="white" >Primary Counsellor/Caseworker</td>
+	<td bgcolor="white"><html:text property="cpp.primaryCounsellor"/>
 </tr>
-
+<tr>
+	<td bgcolor="white" >Other File Number</td>
+	<td bgcolor="white"><html:text property="cpp.otherFileNumber"/>
+</tr>
 <tr height="10">
 	<td  bgcolor="white" colspan="2">&nbsp;</td>
 </tr>
 
 <tr class="title">
 	<td>Social History</td>
-	<td>familyHistory</td>
+	<td>Family History</td>
 </tr>
 <tr>
-	<td bgcolor="white"><html:textarea property="cpp.socialHistory" rows="2" cols="40"/></td>
-	<td bgcolor="white"><html:textarea property="cpp.familyHistory" rows="2" cols="40"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.socialHistory" rows="4" cols="40"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.familyHistory" rows="4" cols="40"/></td>
 </tr>
+
 <tr class="title">
-	<td colspan="2">Medical History</td>
+	<td>Medical History</td>
+	<td>Past Medications</td>
 </tr>
 <tr>
-	<td colspan="2" bgcolor="white"><html:textarea property="cpp.medicalHistory" rows="4" cols="85"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.medicalHistory" rows="4" cols="40"/></td>
+	<td bgcolor="white"><html:textarea property="cpp.pastMedications" rows="4" cols="40"/></td>
 </tr>
+
+<tr class="title">
+	<td colspan="2">Other Support Systems</td>
+</tr>
+<tr>
+	<td colspan="2" bgcolor="white"><html:textarea property="cpp.otherSupportSystems" rows="4" cols="90"/></td>
+</tr>other support systems
 </table>
 <html:submit value="save" onclick="this.form.method.value='patientCPPSave'"/>
 <logic:messagesPresent message="true">

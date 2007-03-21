@@ -30,5 +30,8 @@
 		<property name="update_date" type="java.util.Date" />
 		<property name="primaryPhysician" />
 		<property name="primaryCounsellor" />
+		<property name="pastMedications" />
+		<property name="otherFileNumber" />
+		<property name="otherSupportSystems" />
 	</class>
 </hibernate-mapping>

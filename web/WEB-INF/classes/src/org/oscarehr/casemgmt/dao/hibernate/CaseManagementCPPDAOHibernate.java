@@ -48,6 +48,9 @@ public class CaseManagementCPPDAOHibernate extends HibernateDaoSupport
 		String shist=cpp.getSocialHistory()==null?"":cpp.getSocialHistory();
 		String rem=cpp.getReminders()==null?"":cpp.getReminders();
 		String mhist=cpp.getMedicalHistory()==null?"":cpp.getMedicalHistory();
+		String pm = cpp.getPastMedications()==null? "":cpp.getPastMedications();
+		String ofnum=cpp.getOtherFileNumber()==null?"":cpp.getOtherFileNumber();
+		String ossystem=cpp.getOtherSupportSystems()==null?"":cpp.getOtherSupportSystems();
 		if (tempcpp==null) tempcpp=cpp;
 		tempcpp.setFamilyHistory(fhist);
 		tempcpp.setMedicalHistory(mhist);
@@ -57,6 +60,9 @@ public class CaseManagementCPPDAOHibernate extends HibernateDaoSupport
 		tempcpp.setUpdate_date(new Date());
 		tempcpp.setPrimaryPhysician(cpp.getPrimaryPhysician());
 		tempcpp.setPrimaryCounsellor(cpp.getPrimaryCounsellor());
+		tempcpp.setOtherFileNumber(ofnum);
+		tempcpp.setOtherSupportSystems(ossystem);
+		tempcpp.setPastMedications(pm);
 		this.getHibernateTemplate().saveOrUpdate(tempcpp);
 	}
 
