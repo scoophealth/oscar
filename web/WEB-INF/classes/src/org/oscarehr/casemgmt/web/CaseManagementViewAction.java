@@ -42,6 +42,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
@@ -116,7 +119,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		request.setAttribute("casemgmt_demoName",getDemoName(demoNo));
 		request.setAttribute("casemgmt_demoAge",getDemoAge(demoNo));
 		request.setAttribute("casemgmt_demoDOB",getDemoDOB(demoNo));
-
 		
 		//get client image
 		request.setAttribute("image_filename",this.getImageFilename(demoNo, request));
@@ -130,6 +132,33 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if(tmpsavenote != null) {
 			request.setAttribute("can_restore",new Boolean(true));
 		}
+	
+		String teamName = "";
+		Admission admission = admissionMgr.getCurrentAdmission(programId, Integer.valueOf(demoNo));
+		if(admission!=null){
+		List teams = programMgr.getProgramTeams(programId);
+		for(Iterator i = teams.iterator(); i.hasNext();) {
+			ProgramTeam team = (ProgramTeam) i.next();
+			String id1 = Integer.toString(team.getId());
+			String id2 = Integer.toString(admission.getTeamId());
+			if(id1.equals(id2))
+				teamName = team.getName();
+		}
+		}		
+		request.setAttribute("teamName", teamName);
+		
+		List teamMembers = new ArrayList();
+		List ps = programMgr.getProgramProviders(programId);
+		for(Iterator j = ps.iterator(); j.hasNext();){
+			ProgramProvider pp = (ProgramProvider)j.next();
+			for(Iterator k = pp.getTeams().iterator(); k.hasNext();){
+				ProgramTeam pt = (ProgramTeam)k.next();
+				if(pt.getName().equals(teamName)){
+					teamMembers.add(pp.getProvider().getFormattedName());
+				}
+			}
+		}
+		request.setAttribute("teamMembers",teamMembers);
 		
 		/* ISSUES */
 				

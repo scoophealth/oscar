@@ -155,6 +155,16 @@ Version version = (Version) ctx.getBean("version");
 	<td align="right"  valign="top" nowrap><b>DOB:</b></td><td><c:out value="${requestScope.casemgmt_demoDOB}" /></td>
 </tr>
 <tr>
+	<td align="right"  valign="top" nowrap><b>Team:</b></td><td><c:out value="${requestScope.teamName}" /></td>
+</tr>
+<tr>
+	<td align="right"  valign="top" nowrap><b>Team Members:</b></td>
+	<td><c:forEach var="tm" items="${teamMembers}">
+		<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
+	</c:forEach></td>
+	
+</tr>
+<tr>
 	<td align="right"  valign="top" nowrap><b>Primary Physician:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
 </tr>
 <tr>

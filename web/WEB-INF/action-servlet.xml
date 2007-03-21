@@ -444,6 +444,9 @@
 		<property name="programManager">
 			<ref bean="programManager" />
 		</property>
+		<property name="admissionManager">
+			<ref bean="admissionManager" />
+		</property>
 	</bean>
 	<bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
 		<property name="caseManagementManager">

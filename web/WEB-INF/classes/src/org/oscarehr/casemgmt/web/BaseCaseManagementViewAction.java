@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -38,6 +39,8 @@ import org.oscarehr.casemgmt.model.ClientImage;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.ClientImageManager;
 import org.oscarehr.casemgmt.service.TicklerManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class BaseCaseManagementViewAction extends DispatchAction {
 	
@@ -46,7 +49,19 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 	protected ClientImageManager clientImageMgr;
 	protected RoleManager roleMgr;
 	protected ProgramManager programMgr;
+	protected AdmissionManager admissionMgr;
 	
+	public ApplicationContext getAppContext() {
+		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
+	}
+
+	public AdmissionManager getAdmissionManager() {
+		return (AdmissionManager) getAppContext().getBean("admissionManager");
+	}
+
+	public void setAdmissionManager(AdmissionManager admMgr){
+		this.admissionMgr = admMgr;
+	}
 	
 	public void setCaseManagementManager(CaseManagementManager caseManagementMgr) {
 		this.caseManagementMgr = caseManagementMgr;
