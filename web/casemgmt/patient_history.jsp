@@ -66,7 +66,7 @@
 </tr>
 <tr>
 	<td colspan="2" bgcolor="white"><html:textarea property="cpp.otherSupportSystems" rows="4" cols="90"/></td>
-</tr>other support systems
+</tr>
 </table>
 <html:submit value="save" onclick="this.form.method.value='patientCPPSave'"/>
 <logic:messagesPresent message="true">
