@@ -236,8 +236,8 @@ public class SurveyExecuteAction extends DispatchAction {
         			if(question.getType().isSetOpenEnded()) {
         				if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
         					String caisiObject = question.getType().getOpenEnded().getCaisiObject();
-        					System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum + " " + caisiObject);
-        					populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
+        					System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + 0 + "_" + questionNum + " " + caisiObject);
+        					populateWithCaisiObject(data,pageNum+"_" + 0 + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
     					}
     				}
         			if(question.getDataLink() != null && question.getDataLink().length()>0) {
@@ -246,7 +246,7 @@ public class SurveyExecuteAction extends DispatchAction {
     						format = question.getType().getDate().toString();
     					}
 
-        				populateWithDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum,question.getDataLink(),clientId,format);
+        				populateWithDataLink(data,pageNum+"_" + 0 + "_" + questionNum,question.getDataLink(),clientId,format);
 					}
         		}
         	}
@@ -414,7 +414,7 @@ public class SurveyExecuteAction extends DispatchAction {
     						format = question.getType().getDate().toString();
     					}
 
-        				saveDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum,question.getDataLink(),instance.getClientId(),format);
+        				saveDataLink(data,pageNum+"_" + 0 + "_" + questionNum,question.getDataLink(),instance.getClientId(),format);
 					}
         		}
         	}
