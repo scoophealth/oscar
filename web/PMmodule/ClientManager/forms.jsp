@@ -16,20 +16,26 @@ function updateProgramIntake(clientId, programId) {
 	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=program&clientId=" + clientId + "&programId=" + programId;
 }
 
+function updateProgramIntake(clientId) {
+	var selectBox = getElement('programWithIntakeId');
+	var programId = selectBox.options[selectBox.selectedIndex].value;
+	
+	if (programId != null) {
+		location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=program&clientId=" + clientId + "&programId=" + programId;
+		return true;
+	}
+	
+	return false;
+}
+
 function openSurvey() {
-	var selectBox = document.clientManagerForm.elements['form.formId'];
-	var index = selectBox.selectedIndex;
-	var value = selectBox.options[index].value;
+	var selectBox = getElement('form.formId');
+	var formId = selectBox.options[selectBox.selectedIndex].value;
 	
 	document.clientManagerForm.clientId.value='<c:out value="${client.demographicNo}"/>';
-	document.clientManagerForm.formId.value=value;
+	document.clientManagerForm.formId.value=formId;
 		
-	var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>';
-	url += "?method=survey&formId=" + value;
-	url += "&clientId=";
-	url += '<c:out value="${client.demographicNo}"/>';
-	
-	location.href = url;
+	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
 }
 </script>
 
@@ -120,6 +126,14 @@ function openSurvey() {
 			</td>
 		</tr>
 	</c:forEach>
+	<tr>
+		<td colspan="3">
+			<html:select property="programWithIntakeId">
+				<html:options collection="programsWithIntake" property="id" labelProperty="name" />
+			</html:select>
+			<input type="button" value="Update" onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />')" />
+		</td>
+	</tr>
 </table>
 <br />
 <br />

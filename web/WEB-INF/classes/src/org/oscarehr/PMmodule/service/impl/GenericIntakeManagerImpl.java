@@ -146,24 +146,38 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	 */
 	public List<Intake> getProgramIntakes(Integer clientId) {
 		List<Intake> programIntakes = new ArrayList<Intake>();
+		
+		for (Program program : getProgramsWithIntake(clientId)) {
+			IntakeNode node = getNode(program.getIntakeProgram());
+			List<Intake> intakes = getIntakes(node, clientId, program.getId());
 
-		List<?> serviceProgramAdmissions = admissionDAO.getCurrentServiceProgramAdmission(programDAO, clientId);
-		if (serviceProgramAdmissions != null) {
-			for (Object o : serviceProgramAdmissions) {
-				Admission serviceProgramAdmission = (Admission) o;
-
-				Program program = serviceProgramAdmission.getProgram();
-				if (program != null && program.getIntakeProgram() != null) {
-					IntakeNode node = getNode(program.getIntakeProgram());
-					List<Intake> intakes = getIntakes(node, clientId, program.getId());
-
-					programIntakes.addAll(intakes);
-				}
-			}
-		}
+			programIntakes.addAll(intakes);
+        }
 
 		return programIntakes;
 	}
+	
+	/**
+	 * @see org.oscarehr.PMmodule.service.GenericIntakeManager#getProgramsWithIntake(java.lang.Integer)
+	 */
+	public List<Program> getProgramsWithIntake(Integer clientId) {
+		List<Program> programsWithIntake = new ArrayList<Program>();
+		
+		List<?> serviceProgramAdmissions = admissionDAO.getCurrentServiceProgramAdmission(programDAO, clientId);
+		if (serviceProgramAdmissions != null) {
+			for (Object o : serviceProgramAdmissions) {
+				Admission admission = (Admission) o;
+				Program program = programDAO.getProgram(admission.getProgramId());
+				
+				if (program != null && program.getIntakeProgram() != null /* && intakeExists */) {
+					programsWithIntake.add(program);
+				}
+			}
+		}
+		
+		return programsWithIntake;
+	}
+	
 
 	// Save
 

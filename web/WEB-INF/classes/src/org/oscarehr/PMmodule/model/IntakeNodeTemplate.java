@@ -76,12 +76,28 @@ public class IntakeNodeTemplate extends BaseIntakeNodeTemplate {
 		return getType().isQuestionType();
 	}
 
+	public boolean isSection() {
+		return getType().isSectionType();
+	}
+
 	public boolean isAnswerCompound() {
 		return getType().isCompoundAnswerType();
 	}
 
 	public boolean isAnswerScalar() {
 		return getType().isScalarAnswerType();
+	}
+
+	public boolean isAnswerChoice() {
+		return getType().isChoiceAnswerType();
+	}
+
+	public boolean isAnswerText() {
+		return getType().isTextAnswerType();
+	}
+
+	public boolean isAnswerNote() {
+		return getType().isNoteAnswerType();
 	}
 
 	public boolean isAnswerBoolean() {

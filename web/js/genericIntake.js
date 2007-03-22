@@ -107,7 +107,7 @@ function hasSelection(checkBoxGroup) {
 }
 
 function isArray(obj) {
-	return obj.constructor.toString().indexOf("Array") != -1;
+	return (typeof (obj.length) == "undefined") ? false : true;
 }
 
 function isEmpty(elementValue) {

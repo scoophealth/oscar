@@ -21,6 +21,7 @@ package org.oscarehr.PMmodule.service;
 import java.util.List;
 
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.model.Program;
 
 public interface GenericIntakeManager {
 	
@@ -47,7 +48,9 @@ public interface GenericIntakeManager {
 	public List<Intake> getIndepthIntakes(Integer clientId);
 
 	public List<Intake> getProgramIntakes(Integer clientId);
-
+	
+	public List<Program> getProgramsWithIntake(Integer clientId);
+	
 	public Integer saveIntake(Intake intake);
 
 }

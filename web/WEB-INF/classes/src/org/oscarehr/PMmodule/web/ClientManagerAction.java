@@ -1,24 +1,24 @@
-/*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
+/**
+ * 
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
@@ -64,16 +64,17 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 public class ClientManagerAction extends BaseAction {
 
 	private static Log log = LogFactory.getLog(ClientManagerAction.class);
-	
+
 	// Parameter
 	public static final String ID = "id";
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 		clientForm.set("view", new ClientManagerFormBean());
+
 		return edit(mapping, form, request, response);
 	}
- 		
+
 	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
@@ -109,7 +110,7 @@ public class ClientManagerAction extends BaseAction {
 		setEditAttributes(form, request, demographicNo);
 
 		program = programManager.getProgram(program.getId());
-		
+
 		/*
 		 * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
 		 */
@@ -130,7 +131,7 @@ public class ClientManagerAction extends BaseAction {
 		Admission admission = (Admission) clientForm.get("admission");
 		admission.setDischargeNotes("");
 		admission.setRadioDischargeReason("");
-		
+
 		clientForm.set("view", new ClientManagerFormBean());
 		return edit(mapping, form, request, response);
 	}
@@ -144,7 +145,7 @@ public class ClientManagerAction extends BaseAction {
 		boolean success = true;
 
 		try {
-			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(),admission.getRadioDischargeReason());
+			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason());
 		} catch (AdmissionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -171,13 +172,13 @@ public class ClientManagerAction extends BaseAction {
 		Admission admission = (Admission) clientForm.get("admission");
 		Program program = (Program) clientForm.get("program");
 		String clientId = request.getParameter("id");
-		
+
 		ActionMessages messages = new ActionMessages();
-		
+
 		try {
-			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(),admission.getRadioDischargeReason());
+			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason());
 			logManager.log(getProviderNo(request), "write", "discharge", clientId, getIP(request));
-			
+
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
 		} catch (AdmissionException e) {
@@ -188,7 +189,7 @@ public class ClientManagerAction extends BaseAction {
 		setEditAttributes(form, request, clientId);
 		admission.setDischargeNotes("");
 		admission.setRadioDischargeReason("");
-		
+
 		return mapping.findForward("edit");
 	}
 
@@ -201,12 +202,12 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("community_discharge", new Boolean(true));
 		return mapping.findForward("edit");
 	}
-	
+
 	public ActionForward nested_discharge_community_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("nestedReason", "true");
-		return discharge_community_select_program(mapping,form,request,response);
+		return discharge_community_select_program(mapping, form, request, response);
 	}
-		
+
 	public ActionForward discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 
@@ -216,12 +217,12 @@ public class ClientManagerAction extends BaseAction {
 
 		return mapping.findForward("edit");
 	}
-	
+
 	public ActionForward nested_discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("nestedReason", "true");
-		return discharge_select_program(mapping,form,request,response);
+		return discharge_select_program(mapping, form, request, response);
 	}
-	
+
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 
@@ -241,17 +242,17 @@ public class ClientManagerAction extends BaseAction {
 
 		logManager.log(getProviderNo(request), "read", "pmm client record", id, getIP(request));
 
-		String roles = (String)request.getSession().getAttribute("userrole");
-				
+		String roles = (String) request.getSession().getAttribute("userrole");
+
 		// for Vaccine Provider
 		if (roles.indexOf("Vaccine Provider") != -1) {
-			return new ActionForward("/VaccineProviderReport.do?id=" + id,true);
+			return new ActionForward("/VaccineProviderReport.do?id=" + id, true);
 		}
-		
+
 		// for ERModule
 		if (roles.indexOf("ER Clerk") != -1) {
 			Map<?, ?> consentMap = (Map<?, ?>) request.getSession().getAttribute("er_consent_map");
-			
+
 			if (consentMap == null) {
 				return mapping.findForward("consent");
 			}
@@ -259,7 +260,7 @@ public class ClientManagerAction extends BaseAction {
 			if (consentMap.get(id) == null) {
 				return mapping.findForward("consent");
 			}
-			
+
 			request.getSession().setAttribute("er_consent_map", consentMap);
 			return mapping.findForward("er-redirect");
 		}
@@ -373,14 +374,14 @@ public class ClientManagerAction extends BaseAction {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
 		BedDemographic bedDemographic = (BedDemographic) clientForm.get("bedDemographic");
-		
+
 		// detect check box false
 		if (request.getParameter("bedDemographic.latePass") == null) {
 			bedDemographic.setLatePass(false);
 		}
-		
+
 		bedDemographicManager.saveBedDemographic(bedDemographic);
-		
+
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reservation.success"));
 		saveMessages(request, messages);
@@ -557,10 +558,10 @@ public class ClientManagerAction extends BaseAction {
 
 		if (tabBean.getTab().equals("Summary")) {
 			request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
-			
+
 			Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
 			request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
-			
+
 			Consent consent = consentManager.getMostRecentConsent(Long.valueOf(demographicNo));
 			request.setAttribute("consent", consent);
 
@@ -580,7 +581,7 @@ public class ClientManagerAction extends BaseAction {
 					request.setAttribute("remote_consent_date", clientManager.getDemographicExt(new Integer(demographicNo), "consent_dt"));
 				}
 			}
-			
+
 			request.setAttribute("referrals", clientManager.getActiveReferrals(demographicNo));
 		}
 
@@ -610,32 +611,32 @@ public class ClientManagerAction extends BaseAction {
 			// set bed program id
 			Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo));
 			Integer bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId().intValue() : null;
-			
+
 			request.setAttribute("bedProgramId", bedProgramId);
-			
+
 			// set bed demographic
 			boolean reservationExists = (bedDemographic != null);
 			bedDemographic = reservationExists ? bedDemographic : BedDemographic.create(Integer.valueOf(demographicNo), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
 			Bed reservedBed = reservationExists ? bedManager.getBed(bedDemographic.getBedId()) : null;
-			
+
 			clientForm.set("bedDemographic", bedDemographic);
-			
+
 			// set unreserved beds
 			Bed[] unreservedBeds = bedManager.getBedsByProgram(bedProgramId, false);
 			unreservedBeds = reservationExists ? (Bed[]) ArrayUtils.add(unreservedBeds, 0, reservedBed) : unreservedBeds;
 
 			clientForm.set("unreservedBeds", unreservedBeds);
-			
+
 			// set bed demographic statuses
 			clientForm.set("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
 		}
 
 		/* forms */
 		if (tabBean.getTab().equals("Forms")) {
-			// TODO Intake get lists of intake forms (quick, indepth, program)
 			request.setAttribute("quickIntakes", genericIntakeManager.getQuickIntakes(Integer.valueOf(demographicNo)));
 			request.setAttribute("indepthIntakes", genericIntakeManager.getIndepthIntakes(Integer.valueOf(demographicNo)));
 			request.setAttribute("programIntakes", genericIntakeManager.getProgramIntakes(Integer.valueOf(demographicNo)));
+			request.setAttribute("programsWithIntake", genericIntakeManager.getProgramsWithIntake(Integer.valueOf(demographicNo)));
 
 			/* survey module */
 			request.setAttribute("survey_list", surveyManager.getAllForms());

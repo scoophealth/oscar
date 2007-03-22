@@ -25,12 +25,18 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.PMmodule.web.adapter.HtmlAdapterFactory;
 import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
 
 public class IntakeTag extends SimpleTagSupport {
 
 	private int base;
 	private Intake intake;
+	private HtmlAdapterFactory adapterFactory;
+	
+	public IntakeTag() {
+		adapterFactory = new HtmlAdapterFactory();
+	}
 
 	public void setBase(int base) {
 		this.base = base;
@@ -53,7 +59,7 @@ public class IntakeTag extends SimpleTagSupport {
 	}
 
 	void toHtml(StringBuilder builder, int indent, IntakeNode node) {
-		IntakeNodeHtmlAdapter htmlAdapter = node.getHtmlAdapter(indent, intake, node);
+		IntakeNodeHtmlAdapter htmlAdapter = adapterFactory.getHtmlAdapter(indent, node, intake);
 
 		builder.append(htmlAdapter.getPreBuilder());
 

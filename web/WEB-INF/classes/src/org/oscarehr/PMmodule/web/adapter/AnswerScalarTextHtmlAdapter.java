@@ -23,6 +23,8 @@ import org.oscarehr.PMmodule.model.IntakeNode;
 
 public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter {
 	
+	private static final String CLASS_INTAKE_INPUT = "intakeInput";
+	
 	public AnswerScalarTextHtmlAdapter(int indent, IntakeNode node, Intake intake) {
 		super(indent, node, intake);
 	}
@@ -30,13 +32,24 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(createLabel()).append(getTextInput(getId(), getAnswerValue())).append(EOL);
+		indent(preBuilder).append(createLabel());
+		
+		if (isParentQuestion()) {
+			preBuilder.append(getTextInput(getId(), getAnswerValue(), true)).append(EOL);
+		} else {
+			preBuilder.append(getTextInput(getId(), getAnswerValue(), false)).append(EOL);
+		}
 
 		return endAnswer(preBuilder);
 	}
 
-	private String getTextInput(String id, String value) {
-		return String.format("<input type=\"text\" class=\"intakeInput\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { id, value });
+	private String getTextInput(String id, String value, boolean grabHorizontal) {
+		if (grabHorizontal) {
+			return String.format("<input type=\"text\" class=\"%s\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { CLASS_INTAKE_INPUT, id, value });
+		} else {
+			return String.format("<input type=\"text\" name=\"intake.answerMapped(%s).value\" value=\"%s\"></input>", new Object[] { id, value });
+		}
+		
 	}
-
+	
 }

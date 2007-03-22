@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.TreeSet;
 
 import org.oscarehr.PMmodule.model.base.BaseIntakeNode;
-import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
 
 public class IntakeNode extends BaseIntakeNode {
 
@@ -84,12 +83,28 @@ public class IntakeNode extends BaseIntakeNode {
 		return getNodeTemplate().isQuestion();
 	}
 
+	public boolean isSection() {
+		return getNodeTemplate().isSection();
+	}
+
 	public boolean isAnswerCompound() {
 		return getNodeTemplate().isAnswerCompound();
 	}
 
 	public boolean isAnswerScalar() {
 		return getNodeTemplate().isAnswerScalar();
+	}
+	
+	public boolean isAnswerChoice() {
+		return getNodeTemplate().isAnswerChoice();
+	}
+
+	public boolean isAnswerText() {
+		return getNodeTemplate().isAnswerText();
+	}
+
+	public boolean isAnswerNote() {
+		return getNodeTemplate().isAnswerNote();
 	}
 
 	public boolean isAnswerBoolean() {
@@ -107,10 +122,10 @@ public class IntakeNode extends BaseIntakeNode {
 	public IntakeNode getGrandParent() {
 		return getParent() != null ? getParent().getParent() : null;
 	}
-
-	public IntakeNodeHtmlAdapter getHtmlAdapter(int indent, Intake intake, IntakeNode node) {
-		return getNodeTemplate().getType().getHtmlAdapter(indent, node, intake);
-	}
+	
+	public String getType() {
+		return getNodeTemplate().getType().getType();
+    }
 	
 	public String getIdStr() {
 		return getId() != null ? getId().toString() : "";

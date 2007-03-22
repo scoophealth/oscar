@@ -19,28 +19,19 @@
 package org.oscarehr.PMmodule.model;
 
 import org.oscarehr.PMmodule.model.base.BaseIntakeNodeType;
-import org.oscarehr.PMmodule.web.adapter.AnswerCompoundHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.AnswerScalarChoiceHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.AnswerScalarNoteHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.AnswerScalarTextHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.IntakeHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.IntakeNodeHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.PageHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.QuestionHtmlAdapter;
-import org.oscarehr.PMmodule.web.adapter.SectionHtmlAdapter;
 
 public class IntakeNodeType extends BaseIntakeNodeType {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Integer INTAKE_ID = 1;
-	private static final Integer PAGE_ID = 2;
-	private static final Integer SECTION_ID = 3;
-	private static final Integer QUESTION_ID = 4;
-	private static final Integer ANSWER_COMPOUND_ID = 5;
-	private static final Integer ANSWER_SCALAR_CHOICE_ID = 6;
-	private static final Integer ANSWER_SCALAR_TEXT_ID = 7;
-	private static final Integer ANSWER_SCALAR_NOTE_ID = 8;
+	public static final Integer INTAKE_ID = 1;
+	public static final Integer PAGE_ID = 2;
+	public static final Integer SECTION_ID = 3;
+	public static final Integer QUESTION_ID = 4;
+	public static final Integer ANSWER_COMPOUND_ID = 5;
+	public static final Integer ANSWER_SCALAR_CHOICE_ID = 6;
+	public static final Integer ANSWER_SCALAR_TEXT_ID = 7;
+	public static final Integer ANSWER_SCALAR_NOTE_ID = 8;
 
 	public IntakeNodeType(String type) {
 		super(null, type);
@@ -76,6 +67,10 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 		return isType(PAGE_ID);
 	}
 
+	public boolean isSectionType() {
+		return isType(SECTION_ID);
+	}
+
 	public boolean isQuestionType() {
 		return isType(QUESTION_ID);
 	}
@@ -85,33 +80,19 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 	}
 
 	public boolean isScalarAnswerType() {
-		return isType(ANSWER_SCALAR_CHOICE_ID) || isType(ANSWER_SCALAR_TEXT_ID) || isType(ANSWER_SCALAR_NOTE_ID);
+		return isChoiceAnswerType() || isTextAnswerType() || isNoteAnswerType();
 	}
 
-	public IntakeNodeHtmlAdapter getHtmlAdapter(int indent, IntakeNode node, Intake intake) {
-		IntakeNodeHtmlAdapter htmlAdapter = null;
+	public boolean isChoiceAnswerType() {
+		return isType(ANSWER_SCALAR_CHOICE_ID);
+	}
 
-		if (isType(INTAKE_ID)) {
-			htmlAdapter = new IntakeHtmlAdapter(indent, node);
-		} else if (isType(PAGE_ID)) {
-			htmlAdapter = new PageHtmlAdapter(indent, node);
-		} else if (isType(SECTION_ID)) {
-			htmlAdapter = new SectionHtmlAdapter(indent, node);
-		} else if (isType(QUESTION_ID)) {
-			htmlAdapter = new QuestionHtmlAdapter(indent, node);
-		} else if (isType(ANSWER_COMPOUND_ID)) {
-			htmlAdapter = new AnswerCompoundHtmlAdapter(indent, node);
-		} else if (isType(ANSWER_SCALAR_CHOICE_ID)) {
-			htmlAdapter = new AnswerScalarChoiceHtmlAdapter(indent, node, intake);
-		} else if (isType(ANSWER_SCALAR_TEXT_ID)) {
-			htmlAdapter = new AnswerScalarTextHtmlAdapter(indent, node, intake);
-		} else if (isType(ANSWER_SCALAR_NOTE_ID)) {
-			htmlAdapter = new AnswerScalarNoteHtmlAdapter(indent, node, intake);
-		} else {
-			throw new IllegalStateException("No html adapter for type: " + getType());
-		}
+	public boolean isTextAnswerType() {
+		return isType(ANSWER_SCALAR_TEXT_ID);
+	}
 
-		return htmlAdapter;
+	public boolean isNoteAnswerType() {
+		return isType(ANSWER_SCALAR_NOTE_ID);
 	}
 
 	private boolean isType(Integer id) {
