@@ -556,6 +556,14 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			formBean.setDateFormat(String.valueOf(enum1.intValue()));
 			request.setAttribute("dateFormats",dateFormats);
 		}
+		if(question != null && question.getType().isSetOpenEnded()) {
+			//objects			
+			List<String> objects = new ArrayList<String>();
+			objects.add("Current Issues");
+			objects.add("Current Medications");
+			objects.add("Allergies");
+			request.setAttribute("caisiobjects", objects);
+		}
 		surveyForm.set("questionModel",question);
 		
 		return mapping.findForward("question_editor");

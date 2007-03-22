@@ -551,12 +551,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		}
 		cform.setNewIssueCheckList(issueList);
 		
+		if(request.getParameter("change_diagnosis") != null)
+			request.setAttribute("change_diagnosis", request.getParameter("change_diagnosis"));
+		if(request.getParameter("change_diagnosis_id") != null)
+			request.setAttribute("change_diagnosis_id", request.getParameter("change_diagnosis_id"));
+		
 
 		return mapping.findForward("IssueSearch");
 	}
 	
 
 	public ActionForward issueAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+		String changeDiagnosis = request.getParameter("change_diagnosis");
+		if(changeDiagnosis != null && changeDiagnosis.equalsIgnoreCase("true")) {
+			return this.submitChangeDiagnosis(mapping, form, request, response);
+		}
 		log.debug("issueAdd");
 		request.setAttribute("change_flag","true");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -606,6 +615,56 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		return mapping.findForward("view");
 	}
 
+	public ActionForward changeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+		log.debug("changeDiagnosis");
+		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+		String inds = (String) cform.getDeleteId();
+		
+		String demono = getDemographicNo(request);
+		request.setAttribute("demoName", getDemoName(demono));
+		request.setAttribute("demoAge", getDemoAge(demono));
+		request.setAttribute("demoDOB", getDemoDOB(demono));
+			
+		request.setAttribute("from", request.getParameter("from"));
+		request.setAttribute("change_diagnosis", new Boolean(true));
+		request.setAttribute("change_diagnosis_id", inds);
+		cform.setShowList("false");
+		cform.setSearString("");
+		return mapping.findForward("IssueSearch");	
+	}
+	
+	public ActionForward submitChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		log.debug("submitChangeDiagnosis");
+		request.setAttribute("change_flag","true");
+		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+		request.setAttribute("from", request.getParameter("from"));
+	
+		String demono = getDemographicNo(request);
+		request.setAttribute("demoName", getDemoName(demono));
+		request.setAttribute("demoAge",getDemoAge(demono));
+		request.setAttribute("demoDOB",getDemoDOB(demono));
+		
+		//get issue we're changing
+		String strIndex = request.getParameter("change_diagnosis_id");
+		int index = Integer.parseInt(strIndex);
+		System.out.println("change_diagnosis_id=" + index);
+		
+		//change issue
+		CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+		CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) cform.getNewIssueCheckList();
+		for(int x=0;x<oldList.length;x++) {
+			System.out.println("oldList[" + x + "].getIssue().getId() = "  + oldList[x].getIssue().getId());
+			if(x == index) {
+				oldList[x] = new CheckBoxBean();
+				oldList[x].setIssue(newIssueToCIssue(cform, issueList[0].getIssue()));
+			}
+		}
+		//save
+		cform.setIssueCheckList(oldList);
+
+		return mapping.findForward("view");
+	}
+	
 	public ActionForward issueDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		log.debug("issueDelete");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
