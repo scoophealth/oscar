@@ -47,6 +47,8 @@ function backToNote(from)
 <html:hidden property="providerNo"/>
 <input type="hidden" name="method" value="issueSearch"/>
 <input type="hidden" name="lastPage" value="true"/>
+<input type="hidden" name="change_diagnosis" value="<c:out value="${change_diagnosis}"/>"/>
+<input type="hidden" name="change_diagnosis_id" value="<c:out value="${change_diagnosis_id}"/>"/>
 
 <c:if test="${param.from=='casemgmt'||requestScope.from=='casemgmt'}">
 <input type="hidden" name="from" value="casemgmt" />

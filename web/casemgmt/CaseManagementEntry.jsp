@@ -345,11 +345,14 @@ if (pId==null) pId="";
 					<%submitString = "this.form.method.value='issueDelete';";
 			submitString = submitString + "this.form.deleteId.value=" + "'"
 					+ ind.intValue() + "';";
-			//System.out.println("submitString="+submitString);
+			
 
 			%>
 					<input type="submit" value="delete" onclick="<%=submitString%>">
-				</nested:equal></td>
+				</nested:equal>
+				
+					<!--  change diagnosis button -->
+				</td>
 			</tr>
 		</nested:iterate>
 	</table>

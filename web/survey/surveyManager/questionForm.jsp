@@ -59,6 +59,19 @@
 				</tr>
 				
 				<tr>
+					<td>Orientation</td>
+					<td>
+						<html:select property="questionModel.orientation">
+							<html:option value="vertical">vertical</html:option>
+							<html:option value="horizontal">horizontal</html:option>
+						</html:select>
+					</td>
+				</tr>				
+				<tr>
+					<td colspan="2"><br/></td>
+				</tr>
+				
+				<tr>
 					<td>Type:</td>
 					<td>
 						<c:set var="question" scope="page" value="${surveyForm.map.questionModel}"></c:set>
@@ -90,6 +103,17 @@
 								<tr>
 									<td>Cols:</td>
 									<td><html:text property="questionModel.type.openEnded.cols" size="4"/></td>									
+								</tr>
+								<tr>
+									<td>Pre-filled Data</td>
+									<td>
+										<html-el:select property="questionModel.type.openEnded.caisiObject">
+											<html-el:option value="">&nbsp;</html-el:option>
+											<c:forEach var="obj" items="${caisiobjects}">
+												<html-el:option value="${obj}"><c:out value="${obj}"/></html-el:option>
+											</c:forEach>
+										</html-el:select>
+									</td>
 								</tr>
 							</table>
 						<% } %>

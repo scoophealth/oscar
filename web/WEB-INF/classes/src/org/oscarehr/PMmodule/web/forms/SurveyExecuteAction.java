@@ -44,6 +44,10 @@ import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.casemgmt.model.Allergy;
+import org.oscarehr.casemgmt.model.CaseManagementIssue;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.casemgmt.web.PrescriptDrug;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
@@ -51,6 +55,7 @@ import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.web.formbean.SurveyExecuteDataBean;
 import org.oscarehr.survey.web.formbean.SurveyExecuteFormBean;
 import org.oscarehr.surveymodel.Page;
+import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
 
@@ -58,11 +63,25 @@ public class SurveyExecuteAction extends DispatchAction {
 	private Log log = LogFactory.getLog(getClass());
 
 	private SurveyManager surveyManager;
+	private CaseManagementManager cmeManager;
+	
 
 	public void setSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
 	}
 
+	public void setCaseManagementManager(CaseManagementManager mgr) {
+		this.cmeManager = mgr;
+	}
+	
+	protected String getProviderNo(HttpServletRequest request) {
+		return getProvider(request).getProviderNo();
+	}
+
+	protected Provider getProvider(HttpServletRequest request) {
+		return (Provider) request.getSession().getAttribute("provider");
+	}
+	
 	public ActionForward forwardToClientManager(HttpServletRequest request, ActionMapping mapping,ActionForm form, String clientId) {
 		/*
 		ActionForward forward =  mapping.findForward("client_manager");
@@ -112,6 +131,7 @@ public class SurveyExecuteAction extends DispatchAction {
 		DynaActionForm form = (DynaActionForm)af;
 		SurveyExecuteFormBean formBean = (SurveyExecuteFormBean)form.get("view");
 		SurveyExecuteDataBean data = (SurveyExecuteDataBean)form.get("data");
+		
 		
 		formBean.setTab("");
 		data.reset();
@@ -173,6 +193,40 @@ public class SurveyExecuteAction extends DispatchAction {
         	}
         }
         
+        //find caisiobjects
+        for(int x=0;x<model.getSurvey().getBody().getPageArray().length;x++) {
+        	Page page = model.getSurvey().getBody().getPageArray(x);
+        	int sectionNum = 0;        	
+        	int pageNum = x+1;
+        	
+        	for(Page.QContainer container: page.getQContainerArray()) {
+        		if(container.isSetSection()) {
+        			sectionNum++;
+        			int questionNum = 0;
+        			for(Question question: container.getSection().getQuestionArray()) {
+        				questionNum++;
+        				if(question.getType().isSetOpenEnded()) {
+        					if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
+        						String caisiObject = question.getType().getOpenEnded().getCaisiObject();
+        						System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum + " " + caisiObject);
+        						populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
+        					}
+        				}
+        			}
+        		} else if(container.isSetQuestion()) {
+        			Question question = container.getQuestion();
+        			int questionNum = 0;
+        			questionNum++;
+        			if(question.getType().isSetOpenEnded()) {
+        				if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
+        					String caisiObject = question.getType().getOpenEnded().getCaisiObject();
+        					System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum + " " + caisiObject);
+        					populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
+    					}
+    				}
+        		}
+        	}
+        }
         return refresh(mapping,form,request,response);
 	}
 		
@@ -329,5 +383,33 @@ public class SurveyExecuteAction extends DispatchAction {
 		}
 		
 		return "%Y-%m-%d";
+	}
+	
+	public void populateWithCaisiObject(SurveyExecuteDataBean data,String key,String caisiObject,String demographic_no,String providerNo) {
+		if(caisiObject.equals("Current Medications")) {
+			List meds = cmeManager.getPrescriptions(demographic_no, true);
+			StringBuffer str = new StringBuffer();
+			for(Iterator iter=meds.iterator();iter.hasNext();) {
+				PrescriptDrug med = (PrescriptDrug)iter.next();
+				str.append(med.getDrug_special().replaceAll("\r\n", " ")).append("\r\n");
+			}
+			data.getValues().put(key, str.toString());
+		} else if(caisiObject.equals("Current Issues")) {
+			List issues = cmeManager.getActiveIssues(providerNo, demographic_no);
+			StringBuffer str = new StringBuffer();			
+			for(Iterator iter=issues.iterator();iter.hasNext();) {
+				CaseManagementIssue issue = (CaseManagementIssue)iter.next();
+				str.append(issue.getIssue().getDescription()).append("\r\n");
+			}
+			data.getValues().put(key, str.toString());			
+		}else if(caisiObject.equals("Allergies")) {
+			List allergies = cmeManager.getAllergies(demographic_no);
+			StringBuffer str = new StringBuffer();			
+			for(Iterator iter=allergies.iterator();iter.hasNext();) {
+				Allergy med = (Allergy)iter.next();
+				str.append(med.getDescription()).append("\r\n");
+			}
+			data.getValues().put(key, str.toString());
+		}
 	}
 }

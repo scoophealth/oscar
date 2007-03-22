@@ -310,6 +310,9 @@
 		<property name="surveyManager">
 			<ref bean="oscarSurveyManager" />
 		</property>
+		<property name="caseManagementManager">
+			<ref bean="CaseManagementManager" />
+		</property>
 	</bean>
 	<bean name="/PMmodule/Reports/BasicReport" class="org.oscarehr.PMmodule.web.reports.BasicReportAction" singleton="false">
 		<property name="programManager">
