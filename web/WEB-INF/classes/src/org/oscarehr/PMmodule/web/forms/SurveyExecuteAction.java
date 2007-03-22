@@ -42,7 +42,9 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.casemgmt.model.Allergy;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
@@ -64,6 +66,7 @@ public class SurveyExecuteAction extends DispatchAction {
 
 	private SurveyManager surveyManager;
 	private CaseManagementManager cmeManager;
+	private ClientManager clientManager;
 	
 
 	public void setSurveyManager(SurveyManager mgr) {
@@ -72,6 +75,10 @@ public class SurveyExecuteAction extends DispatchAction {
 
 	public void setCaseManagementManager(CaseManagementManager mgr) {
 		this.cmeManager = mgr;
+	}
+	
+	public void setClientManager(ClientManager mgr) {
+		this.clientManager = mgr;
 	}
 	
 	protected String getProviderNo(HttpServletRequest request) {
@@ -193,7 +200,7 @@ public class SurveyExecuteAction extends DispatchAction {
         	}
         }
         
-        //find caisiobjects
+        //find caisi objects & data links
         for(int x=0;x<model.getSurvey().getBody().getPageArray().length;x++) {
         	Page page = model.getSurvey().getBody().getPageArray(x);
         	int sectionNum = 0;        	
@@ -205,14 +212,23 @@ public class SurveyExecuteAction extends DispatchAction {
         			sectionNum++;
         			int questionNum2 = 0;
         			for(Question question: container.getSection().getQuestionArray()) {
-        				questionNum++;
+        				questionNum2++;
         				if(question.getType().isSetOpenEnded()) {
         					if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
         						String caisiObject = question.getType().getOpenEnded().getCaisiObject();
         						System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum2 + " " + caisiObject);
         						populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum2,caisiObject,clientId,getProviderNo(request));
         					}
+        					
         				}
+        				if(question.getDataLink() != null && question.getDataLink().length()>0) {
+    						//load data
+        					String format = null;
+        					if(question.getType().isSetDate()) {
+        						format = question.getType().getDate().toString();
+        					}
+        					populateWithDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum2,question.getDataLink(),clientId,format);
+    					}
         			}
         		} else if(container.isSetQuestion()) {
         			Question question = container.getQuestion();        			
@@ -224,6 +240,14 @@ public class SurveyExecuteAction extends DispatchAction {
         					populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
     					}
     				}
+        			if(question.getDataLink() != null && question.getDataLink().length()>0) {
+       					String format = null;
+    					if(question.getType().isSetDate()) {
+    						format = question.getType().getDate().toString();
+    					}
+
+        				populateWithDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum,question.getDataLink(),clientId,format);
+					}
         		}
         	}
         }
@@ -357,6 +381,45 @@ public class SurveyExecuteAction extends DispatchAction {
 			instance.getData().add(dataItem);
 		}
 		
+
+		SurveyDocument model = (SurveyDocument)request.getSession().getAttribute("model");
+	       //find caisi objects & data links
+        for(int x=0;x<model.getSurvey().getBody().getPageArray().length;x++) {
+        	Page page = model.getSurvey().getBody().getPageArray(x);
+        	int sectionNum = 0;        	
+        	int pageNum = x+1;
+        	int questionNum = 0;
+        	
+        	for(Page.QContainer container: page.getQContainerArray()) {
+        		if(container.isSetSection()) {
+        			sectionNum++;
+        			int questionNum2 = 0;
+        			for(Question question: container.getSection().getQuestionArray()) {
+        				questionNum2++;        				
+        				if(question.getDataLink() != null && question.getDataLink().length()>0) {
+    						//load data
+        					String format = null;
+        					if(question.getType().isSetDate()) {
+        						format = question.getType().getDate().toString();
+        					}
+        					saveDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum2,question.getDataLink(),instance.getClientId(),format);
+    					}
+        			}
+        		} else if(container.isSetQuestion()) {
+        			Question question = container.getQuestion();        			
+        			questionNum++;        			
+        			if(question.getDataLink() != null && question.getDataLink().length()>0) {
+       					String format = null;
+    					if(question.getType().isSetDate()) {
+    						format = question.getType().getDate().toString();
+    					}
+
+        				saveDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum,question.getDataLink(),instance.getClientId(),format);
+					}
+        		}
+        	}
+        }
+		
 		surveyManager.saveFormInstance(instance);
 		
 		form.set("data",new SurveyExecuteDataBean());
@@ -407,9 +470,41 @@ public class SurveyExecuteAction extends DispatchAction {
 			StringBuffer str = new StringBuffer();			
 			for(Iterator iter=allergies.iterator();iter.hasNext();) {
 				Allergy med = (Allergy)iter.next();
-				str.append(med.getDescription()).append("\r\n");
+				str.append(med.getDescription()).append(" ").append(med.getReaction()).append("\r\n");
 			}
 			data.getValues().put(key, str.toString());
 		}
+	}
+	
+	public void populateWithDataLink(SurveyExecuteDataBean data,String key,String dataLink,String demographic_no, String format) {
+		//will make more dynamic in the future
+		Demographic client = this.clientManager.getClientByDemographicNo(demographic_no);
+		
+		if(dataLink.equals("Demographic/FirstName")) {
+			data.getValues().put(key, client.getFirstName());
+		} else if(dataLink.equals("Demographic/LastName")) {
+			data.getValues().put(key, client.getLastName());
+		} else if(dataLink.equals("Demographic/birthDate")) {
+			format = format.replaceAll("mm", "MM");
+			data.getValues().put(key,client.getFormattedDob(format));
+		}
+		
+	}
+	
+	public void saveDataLink(SurveyExecuteDataBean data,String key,String dataLink,long demographic_no, String format) {
+		Demographic client = this.clientManager.getClientByDemographicNo(String.valueOf(demographic_no));
+		
+		if(dataLink.equals("Demographic/FirstName")) {
+			String value = (String)data.getValues().get(key);
+			client.setFirstName(value);
+		} else if(dataLink.equals("Demographic/LastName")) {
+			String value = (String)data.getValues().get(key);
+			client.setLastName(value);
+		} else if(dataLink.equals("Demographic/birthDate")) {
+			format = format.replaceAll("mm", "MM");
+			String value = (String)data.getValues().get(key);
+			client.setFormattedDob(format, value);
+		}
+		clientManager.saveClient(client);
 	}
 }

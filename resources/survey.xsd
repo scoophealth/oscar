@@ -146,6 +146,7 @@
 		<xs:attribute name="row" type="xs:int" use="optional"/>
 		<xs:attribute name="column" type="xs:int" use="optional"/>
 		<xs:attribute name="orientation" type="xs:string" use="optional"/>
+		<xs:attribute name="data-link" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	

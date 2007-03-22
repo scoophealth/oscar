@@ -38,8 +38,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.util.LabelValueBean;
 import org.apache.xmlbeans.XmlOptions;
@@ -51,9 +49,6 @@ import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.service.SurveyTestManager;
 import org.oscarehr.survey.web.formbean.PageNavEntry;
 import org.oscarehr.survey.web.formbean.SurveyManagerFormBean;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import org.oscarehr.surveymodel.DateDocument;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
@@ -539,6 +534,8 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		
 		Question question = SurveyModelManager.findQuestion(surveyModel,pageNumber,Integer.parseInt(sectionId),qid);
 		
+		List<LabelValueBean> oscarVars = new ArrayList<LabelValueBean>();
+		
 		if(question != null && question.getType().isSetSelect()) {
 			Select select = question.getType().getSelect();
 			PossibleAnswers pa = select.getPossibleAnswers();
@@ -555,6 +552,8 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			}
 			formBean.setDateFormat(String.valueOf(enum1.intValue()));
 			request.setAttribute("dateFormats",dateFormats);
+			
+			oscarVars.add(new LabelValueBean("Date of Birth","Demographic/birthDate"));
 		}
 		if(question != null && question.getType().isSetOpenEnded()) {
 			//objects			
@@ -563,7 +562,12 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			objects.add("Current Medications");
 			objects.add("Allergies");
 			request.setAttribute("caisiobjects", objects);
+			
+			oscarVars.add(new LabelValueBean("First Name","Demographic/FirstName"));
+			oscarVars.add(new LabelValueBean("Last Name","Demographic/LastName"));
 		}
+		
+		request.setAttribute("oscarVars", oscarVars);
 		surveyForm.set("questionModel",question);
 		
 		return mapping.findForward("question_editor");

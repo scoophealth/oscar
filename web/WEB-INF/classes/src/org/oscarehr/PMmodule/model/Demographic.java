@@ -18,6 +18,7 @@
  */
 package org.oscarehr.PMmodule.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -149,6 +150,35 @@ public class Demographic extends BaseDemographic {
 
 	public String getFormattedDob() {
 		return this.getYearOfBirth() + SEPERATOR + this.getMonthOfBirth() + SEPERATOR + this.getDateOfBirth();
+	}
+	
+	public String getFormattedDob(String format) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, new Integer(getYearOfBirth()).intValue());
+		cal.set(Calendar.MONTH, new Integer(getMonthOfBirth()).intValue()-1);
+		cal.set(Calendar.DAY_OF_MONTH, new Integer(getDateOfBirth()).intValue());		
+		return formatter.format(cal.getTime());		
+	}
+	
+	public void setFormattedDob(String format,String value) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		try {
+			Date d = formatter.parse(value);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(d);
+			setYearOfBirth(String.valueOf(cal.get(Calendar.YEAR)));
+			String month = String.valueOf(cal.get(Calendar.MONTH)+1);
+			if(month.length()==1) {
+				month = "0" + month;
+			}
+			setMonthOfBirth(month);
+			String day = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
+			if(day.length()==1) {
+				day = "0" + day;
+			}
+			setDateOfBirth(day);
+		}catch(Exception e){}
 	}
 
 	public String getFormattedLinks() {

@@ -66,7 +66,18 @@
 							<html:option value="horizontal">horizontal</html:option>
 						</html:select>
 					</td>
-				</tr>				
+				</tr>		
+				<tr>
+					<td>Data Link</td>
+					<td>
+						<html-el:select property="questionModel.dataLink">
+							<html-el:option value="">&nbsp;</html-el:option>
+								<c:forEach var="obj" items="${oscarVars}">
+									<html-el:option value="${obj.value}"><c:out value="${obj.label}"/></html-el:option>
+								</c:forEach>							
+						</html-el:select>
+					</td>
+				</tr>												
 				<tr>
 					<td colspan="2"><br/></td>
 				</tr>
