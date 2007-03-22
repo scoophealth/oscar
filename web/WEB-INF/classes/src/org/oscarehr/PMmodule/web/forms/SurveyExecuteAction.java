@@ -198,24 +198,24 @@ public class SurveyExecuteAction extends DispatchAction {
         	Page page = model.getSurvey().getBody().getPageArray(x);
         	int sectionNum = 0;        	
         	int pageNum = x+1;
+        	int questionNum = 0;
         	
         	for(Page.QContainer container: page.getQContainerArray()) {
         		if(container.isSetSection()) {
         			sectionNum++;
-        			int questionNum = 0;
+        			int questionNum2 = 0;
         			for(Question question: container.getSection().getQuestionArray()) {
         				questionNum++;
         				if(question.getType().isSetOpenEnded()) {
         					if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
         						String caisiObject = question.getType().getOpenEnded().getCaisiObject();
-        						System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum + " " + caisiObject);
-        						populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
+        						System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum2 + " " + caisiObject);
+        						populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum2,caisiObject,clientId,getProviderNo(request));
         					}
         				}
         			}
         		} else if(container.isSetQuestion()) {
-        			Question question = container.getQuestion();
-        			int questionNum = 0;
+        			Question question = container.getQuestion();        			
         			questionNum++;
         			if(question.getType().isSetOpenEnded()) {
         				if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
