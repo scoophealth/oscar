@@ -22,6 +22,8 @@
 
 package org.oscarehr.PMmodule.model;
 
+import java.text.SimpleDateFormat;
+
 import org.oscarehr.PMmodule.model.base.BaseAdmission;
 
 /**
@@ -71,6 +73,11 @@ public class Admission extends BaseAdmission {
 
 	public Program getProgram() {
 		return program;
+	}
+	
+	public String getAdmissionDate(String format) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		return formatter.format(this.getAdmissionDate());		
 	}
 
 }

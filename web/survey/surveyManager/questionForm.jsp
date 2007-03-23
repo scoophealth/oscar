@@ -77,7 +77,18 @@
 								</c:forEach>							
 						</html-el:select>
 					</td>
-				</tr>												
+				</tr>	
+				<tr>
+					<td>Pre-filled Data</td>
+					<td>
+						<html-el:select property="questionModel.caisiObject">
+							<html-el:option value="">&nbsp;</html-el:option>
+							<c:forEach var="obj" items="${caisiobjects}">
+								<html-el:option value="${obj}"><c:out value="${obj}"/></html-el:option>
+							</c:forEach>
+						</html-el:select>
+					</td>
+				</tr>															
 				<tr>
 					<td colspan="2"><br/></td>
 				</tr>
@@ -114,17 +125,6 @@
 								<tr>
 									<td>Cols:</td>
 									<td><html:text property="questionModel.type.openEnded.cols" size="4"/></td>									
-								</tr>
-								<tr>
-									<td>Pre-filled Data</td>
-									<td>
-										<html-el:select property="questionModel.type.openEnded.caisiObject">
-											<html-el:option value="">&nbsp;</html-el:option>
-											<c:forEach var="obj" items="${caisiobjects}">
-												<html-el:option value="${obj}"><c:out value="${obj}"/></html-el:option>
-											</c:forEach>
-										</html-el:select>
-									</td>
 								</tr>
 							</table>
 						<% } %>

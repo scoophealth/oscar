@@ -28,7 +28,15 @@ public class SurveyExecuteFormBean {
 	private long id;
 	private long clientId;
 	private String description;
-	
+	private long admissionId;
+
+	public long getAdmissionId() {
+		return admissionId;
+	}
+
+	public void setAdmissionId(long admissionId) {
+		this.admissionId = admissionId;
+	}
 
 	public String getDescription() {
 		return description;

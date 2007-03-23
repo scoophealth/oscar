@@ -53,9 +53,8 @@
 	</Tr>
 	<!-- allergies -->
 	<tr>
-		<td>Allergies:</td>
-		<td>
-			<c:out value="${allergies}"/>
+		<td>Fever: <c:out value="${intakeMap['Fever']}"/></td>
+		<td>Reaction to Vaccine: <c:out value="${intakeMap['Reaction']}"/></td>
 	</tr>
 	<tr>
 		<td>Contraindicated Health Conditions:</td>

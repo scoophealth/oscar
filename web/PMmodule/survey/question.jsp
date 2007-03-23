@@ -48,6 +48,13 @@
 			hiddenElement.value="";
 		}
 	}
+	
+	function select_program(ctl) {
+		var programId = ctl.options[ctl.selectedIndex].value;
+		document.surveyExecuteForm.elements['view.admissionId'].value=programId;
+		document.surveyExecuteForm.method.value='refresh';
+		document.surveyExecuteForm.submit();
+	}
 </script>
 <td>
 <table>
@@ -98,11 +105,25 @@
 			<td>
 				<c:choose>
 					<c:when test="${question.type.select.renderType eq 'select'}">
-						<html-el:select property="data.value(${pageNumber}_${sectionId}_${question.id})">
-							<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
-								<html-el:option value="${answer}"><c:out value="${answer}"/></html-el:option>
-							</c:forEach>
-						</html-el:select>
+						
+							<c:choose>
+								<c:when test="${question.caisiObject eq 'Program Selector'}">
+									<html-el:select property="data.value(${pageNumber}_${sectionId}_${question.id})" onchange="select_program(this);">
+										<html-el:option value="0">&nbsp;</html-el:option>
+										<c:forEach var="admission" items="${admissions}">
+											<html-el:option value="${admission.id}"><c:out value="${admission.programName}"/></html-el:option>
+										</c:forEach>
+									</html-el:select>
+								</c:when>
+								<c:otherwise>
+									<html-el:select property="data.value(${pageNumber}_${sectionId}_${question.id})">
+										<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
+											<html-el:option value="${answer}"><c:out value="${answer}"/></html-el:option>
+										</c:forEach>
+									</html-el:select>								
+								</c:otherwise>
+							</c:choose>
+						
 					</c:when>
 					<c:when test="${question.type.select.renderType eq 'radio'}">
 						<table width="100%">					

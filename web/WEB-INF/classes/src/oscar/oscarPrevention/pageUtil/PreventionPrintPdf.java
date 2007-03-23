@@ -190,7 +190,7 @@ public class PreventionPrintPdf {
        if( pageBreak ) {
            ct.showTextAligned(cb, Phrase.ALIGN_CENTER, new Phrase("-" + curPage + "-"), document.right()/2f, document.bottom()-(document.bottomMargin()/2f), 0f);           
            ++curPage;
-           document.newPage();
+           try{document.newPage();}catch(Exception e){}
            if( curPage == numPages ) {
                maxLines = (numLines - totalLinesWritten) / NUMCOLS;                                       
            }

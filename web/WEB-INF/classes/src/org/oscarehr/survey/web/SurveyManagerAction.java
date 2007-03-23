@@ -535,6 +535,7 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		Question question = SurveyModelManager.findQuestion(surveyModel,pageNumber,Integer.parseInt(sectionId),qid);
 		
 		List<LabelValueBean> oscarVars = new ArrayList<LabelValueBean>();
+		List<String> objects = new ArrayList<String>();
 		
 		if(question != null && question.getType().isSetSelect()) {
 			Select select = question.getType().getSelect();
@@ -554,19 +555,24 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 			request.setAttribute("dateFormats",dateFormats);
 			
 			oscarVars.add(new LabelValueBean("Date of Birth","Demographic/birthDate"));
+			oscarVars.add(new LabelValueBean("Program Admission","Program/admissionDate"));		
 		}
 		if(question != null && question.getType().isSetOpenEnded()) {
 			//objects			
-			List<String> objects = new ArrayList<String>();
 			objects.add("Current Issues");
 			objects.add("Current Medications");
 			objects.add("Allergies");
-			request.setAttribute("caisiobjects", objects);
 			
 			oscarVars.add(new LabelValueBean("First Name","Demographic/FirstName"));
 			oscarVars.add(new LabelValueBean("Last Name","Demographic/LastName"));
+			oscarVars.add(new LabelValueBean("Program Admission Notes","Program/admissionNotes"));
+		}
+		if(question != null && question.getType().isSetSelect()) {
+			//oscarVars.add(new LabelValueBean("Program Selection","Program"));
+			objects.add("Program Selector");
 		}
 		
+		request.setAttribute("caisiobjects", objects);		
 		request.setAttribute("oscarVars", oscarVars);
 		surveyForm.set("questionModel",question);
 		

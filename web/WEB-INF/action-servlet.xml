@@ -316,6 +316,9 @@
 		<property name="clientManager">
 			<ref bean="clientManager" />
 		</property>
+		<property name="admissionManager">
+			<ref bean="admissionManager" />
+		</property>		
 	</bean>
 	<bean name="/PMmodule/Reports/BasicReport" class="org.oscarehr.PMmodule.web.reports.BasicReportAction" singleton="false">
 		<property name="programManager">

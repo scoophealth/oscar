@@ -48,6 +48,7 @@
 		<html:form action="/PMmodule/Forms/SurveyExecute">
 		<html:hidden property="view.tab"/>
 		<html:hidden property="view.id"/>
+		<html:hidden property="view.admissionId"/>
 		<input type="hidden" name="method" value="save_survey"/>
 		<h3>Survey</h3>
 		<br/>

@@ -42,8 +42,10 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.casemgmt.model.Allergy;
@@ -67,6 +69,7 @@ public class SurveyExecuteAction extends DispatchAction {
 	private SurveyManager surveyManager;
 	private CaseManagementManager cmeManager;
 	private ClientManager clientManager;
+	private AdmissionManager admissionManager;
 	
 
 	public void setSurveyManager(SurveyManager mgr) {
@@ -79,6 +82,10 @@ public class SurveyExecuteAction extends DispatchAction {
 	
 	public void setClientManager(ClientManager mgr) {
 		this.clientManager = mgr;
+	}
+	
+	public void setAdmissionManager(AdmissionManager mgr) {
+		this.admissionManager = mgr;
 	}
 	
 	protected String getProviderNo(HttpServletRequest request) {
@@ -213,40 +220,37 @@ public class SurveyExecuteAction extends DispatchAction {
         			int questionNum2 = 0;
         			for(Question question: container.getSection().getQuestionArray()) {
         				questionNum2++;
-        				if(question.getType().isSetOpenEnded()) {
-        					if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
-        						String caisiObject = question.getType().getOpenEnded().getCaisiObject();
+        				if(question.getCaisiObject() != null && question.getCaisiObject().length()>0) {
+        						String caisiObject = question.getCaisiObject();
         						System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + sectionNum + "_" + questionNum2 + " " + caisiObject);
-        						populateWithCaisiObject(data,pageNum+"_" + sectionNum + "_" + questionNum2,caisiObject,clientId,getProviderNo(request));
-        					}
-        					
+        						populateWithCaisiObject(request,data,pageNum+"_" + sectionNum + "_" + questionNum2,caisiObject,clientId,getProviderNo(request));
         				}
+        				
         				if(question.getDataLink() != null && question.getDataLink().length()>0) {
     						//load data
         					String format = null;
         					if(question.getType().isSetDate()) {
         						format = question.getType().getDate().toString();
         					}
-        					populateWithDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum2,question.getDataLink(),clientId,format);
+        					populateWithDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum2,question.getDataLink(),clientId,format,false,0);
     					}
         			}
         		} else if(container.isSetQuestion()) {
         			Question question = container.getQuestion();        			
         			questionNum++;
-        			if(question.getType().isSetOpenEnded()) {
-        				if(question.getType().getOpenEnded().getCaisiObject() != null && question.getType().getOpenEnded().getCaisiObject().length()>0) {
-        					String caisiObject = question.getType().getOpenEnded().getCaisiObject();
-        					System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + 0 + "_" + questionNum + " " + caisiObject);
-        					populateWithCaisiObject(data,pageNum+"_" + 0 + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
-    					}
+        			if(question.getCaisiObject() != null && question.getCaisiObject().length()>0) {
+    					String caisiObject = question.getCaisiObject();
+    					System.out.println("FOUND CAISI-OBJECT: " + pageNum + "_" + 0 + "_" + questionNum + " " + caisiObject);
+    					populateWithCaisiObject(request,data,pageNum+"_" + 0 + "_" + questionNum,caisiObject,clientId,getProviderNo(request));
     				}
+    				
         			if(question.getDataLink() != null && question.getDataLink().length()>0) {
        					String format = null;
     					if(question.getType().isSetDate()) {
     						format = question.getType().getDate().toString();
     					}
 
-        				populateWithDataLink(data,pageNum+"_" + 0 + "_" + questionNum,question.getDataLink(),clientId,format);
+        				populateWithDataLink(data,pageNum+"_" + 0 + "_" + questionNum,question.getDataLink(),clientId,format,false,0);
 					}
         		}
         	}
@@ -257,12 +261,53 @@ public class SurveyExecuteAction extends DispatchAction {
 	public ActionForward refresh(ActionMapping mapping, ActionForm af, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm form = (DynaActionForm)af;
 		SurveyExecuteFormBean formBean = (SurveyExecuteFormBean)form.get("view");
+		SurveyExecuteDataBean data = (SurveyExecuteDataBean)form.get("data");
 		
 		SurveyDocument model = (SurveyDocument)request.getSession().getAttribute("model");
 		
         Survey survey = model.getSurvey();
         Page[] pages = survey.getBody().getPageArray();
         List pageNames = new ArrayList();
+        
+        if(formBean.getAdmissionId() > 0) {
+        	System.out.println("ADMISSION ID=" + formBean.getAdmissionId());
+        }
+        
+        for(int x=0;x<model.getSurvey().getBody().getPageArray().length;x++) {
+        	Page page = model.getSurvey().getBody().getPageArray(x);
+        	int sectionNum = 0;        	
+        	int pageNum = x+1;
+        	int questionNum = 0;
+        	
+        	for(Page.QContainer container: page.getQContainerArray()) {
+        		if(container.isSetSection()) {
+        			sectionNum++;
+        			int questionNum2 = 0;
+        			for(Question question: container.getSection().getQuestionArray()) {
+        				questionNum2++;        				
+        				if(question.getDataLink() != null && question.getDataLink().length()>0) {
+    						//load data
+        					String format = null;
+        					if(question.getType().isSetDate()) {
+        						format = question.getType().getDate().toString();
+        					}
+        					populateWithDataLink(data,pageNum+"_" + sectionNum + "_" + questionNum2,question.getDataLink(),String.valueOf(formBean.getClientId()),format,true,formBean.getAdmissionId());
+    					}
+        			}
+        		} else if(container.isSetQuestion()) {
+        			Question question = container.getQuestion();        			
+        			questionNum++;        			
+        			if(question.getDataLink() != null && question.getDataLink().length()>0) {
+       					String format = null;
+    					if(question.getType().isSetDate()) {
+    						format = question.getType().getDate().toString();
+    					}
+
+        				populateWithDataLink(data,pageNum+"_" + 0 + "_" + questionNum,question.getDataLink(),String.valueOf(formBean.getClientId()),format,true,formBean.getAdmissionId());
+					}
+        		}
+        	}
+        }
         
         if(survey.getIntroduction() != null && !survey.getIntroduction().getIncludeOnFirstPage()) {
         	pageNames.add("Introduction");
@@ -317,6 +362,9 @@ public class SurveyExecuteAction extends DispatchAction {
         
  
         request.setAttribute("tabs",pageNames);
+        
+        List admissions = admissionManager.getCurrentAdmissions(new Integer((int)formBean.getClientId()));
+		request.setAttribute("admissions",admissions);
  
         return mapping.findForward("execute");
 	}
@@ -448,7 +496,9 @@ public class SurveyExecuteAction extends DispatchAction {
 		return "%Y-%m-%d";
 	}
 	
-	public void populateWithCaisiObject(SurveyExecuteDataBean data,String key,String caisiObject,String demographic_no,String providerNo) {
+	public void populateWithCaisiObject(HttpServletRequest request,SurveyExecuteDataBean data,String key,String caisiObject,String demographic_no,String providerNo) {
+		System.out.println("CaisObject=" + caisiObject);
+		
 		if(caisiObject.equals("Current Medications")) {
 			List meds = cmeManager.getPrescriptions(demographic_no, true);
 			StringBuffer str = new StringBuffer();
@@ -473,22 +523,41 @@ public class SurveyExecuteAction extends DispatchAction {
 				str.append(med.getDescription()).append(" ").append(med.getReaction()).append("\r\n");
 			}
 			data.getValues().put(key, str.toString());
+		}else if(caisiObject.equals("Program Selector")) {
+			System.out.println("SETTING CURRENT ADMISSIONS");
+			List admissions = admissionManager.getCurrentAdmissions(new Integer(demographic_no));
+			request.setAttribute("admissions",admissions);
 		}
 	}
 	
-	public void populateWithDataLink(SurveyExecuteDataBean data,String key,String dataLink,String demographic_no, String format) {
+	public void populateWithDataLink(SurveyExecuteDataBean data,String key,String dataLink,String demographic_no, String format,boolean refresh, long admissionId) {
 		//will make more dynamic in the future
 		Demographic client = this.clientManager.getClientByDemographicNo(demographic_no);
 		
-		if(dataLink.equals("Demographic/FirstName")) {
-			data.getValues().put(key, client.getFirstName());
-		} else if(dataLink.equals("Demographic/LastName")) {
-			data.getValues().put(key, client.getLastName());
-		} else if(dataLink.equals("Demographic/birthDate")) {
-			format = format.replaceAll("mm", "MM");
-			data.getValues().put(key,client.getFormattedDob(format));
-		}
-		
+		if(!refresh) {
+			if(dataLink.equals("Demographic/FirstName")) {
+				data.getValues().put(key, client.getFirstName());
+			} else if(dataLink.equals("Demographic/LastName")) {
+				data.getValues().put(key, client.getLastName());
+			} else if(dataLink.equals("Demographic/birthDate")) {
+				format = format.replaceAll("mm", "MM");
+				data.getValues().put(key,client.getFormattedDob(format));
+			}
+		} else {
+			if(admissionId>0) {
+				if(dataLink.equals("Program/admissionDate")) {				
+					Admission admission = admissionManager.getAdmission(admissionId);
+					format = format.replaceAll("mm", "MM");
+					data.getValues().put(key, admission.getAdmissionDate(format));							
+				}
+				if(dataLink.equals("Program/admissionNotes")) {
+					if(admissionId>0) {
+						Admission admission = admissionManager.getAdmission(admissionId);
+						data.getValues().put(key, admission.getAdmissionNotes());	
+					}				
+				}
+			}
+		}				
 	}
 	
 	public void saveDataLink(SurveyExecuteDataBean data,String key,String dataLink,long demographic_no, String format) {
