@@ -51,6 +51,9 @@ public class CaseManagementViewFormBean extends ActionForm {
 	private String note_sort = "update_date";
 	private String filter_provider = "";
 	
+	private long formId;
+	
+	
 	private int noteId;
 	private String password;
 	
@@ -223,5 +226,13 @@ public class CaseManagementViewFormBean extends ActionForm {
 
 	public void setFilter_provider(String filter_provider) {
 		this.filter_provider = filter_provider;
+	}
+
+	public long getFormId() {
+		return formId;
+	}
+
+	public void setFormId(long formId) {
+		this.formId = formId;
 	}
 }

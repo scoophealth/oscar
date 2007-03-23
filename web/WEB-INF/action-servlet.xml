@@ -456,6 +456,9 @@
 		<property name="admissionManager">
 			<ref bean="admissionManager" />
 		</property>
+		<property name="surveyManager">
+			<ref bean="oscarSurveyManager" />
+		</property>
 	</bean>
 	<bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
 		<property name="caseManagementManager">

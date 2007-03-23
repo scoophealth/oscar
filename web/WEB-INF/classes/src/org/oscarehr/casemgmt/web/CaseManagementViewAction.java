@@ -203,6 +203,11 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			request.setAttribute("providers", providers);
 			
 			request.setAttribute("Notes", sort_notes(notes,caseForm.getNote_sort()));
+			
+			
+			//UCF
+			request.setAttribute("survey_list", surveyMgr.getAllForms());
+			//request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 		}
 		
 		

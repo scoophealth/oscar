@@ -293,6 +293,31 @@ String  eURL ="/oscarEncounter/IncomingEncounter.do?casetoEncounter=true&provide
 <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/formlist.jsp?demographic_no=<%=bean.demographicNo%>'); return false;" >-old forms-</a>
 </td></tr>
 </caisirole:SecurityAccess>
+<script>
+	function openSurvey(ctl) {
+		var formId = ctl.options[ctl.selectedIndex].value;
+		if(formId == 0) {
+			return;
+		}
+		var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute"/>?method=survey&formId=' + formId + '&clientId=' + <%=bean.demographicNo%>;
+		ctl.selectedIndex=0;
+		
+		window.open(url);
+		
+	}
+</script>
+<tr style="background-color:#BBBBBB;"><td>User Created Forms</td></tr>
+<tr>
+<td>
+	<select property="view.formId" onchange="openSurvey(this);">
+		<option value="0">&nbsp;</option>
+		<c:forEach var="survey" items="${survey_list}">
+			<option value="<c:out value="${survey.formId}"/>"><c:out value="${survey.description}"/></option>
+		</c:forEach>		
+	</select>
+</td>
+</tr>
+
 
 <tr style="background-color:#BBBBBB;"><td>oscarMessenger</td></tr>
 <!-- select message -->
