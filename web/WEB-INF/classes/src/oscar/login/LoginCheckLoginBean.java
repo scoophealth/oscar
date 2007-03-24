@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 import oscar.log.LogAction;
@@ -134,7 +135,8 @@ public class LoginCheckLoginBean {
                         oscarVariables.getProperty("db_password"));
 
             accessDB = new DBHelp();
-            String sql = "select * from security where user_name = '" + username + "'";
+            
+            String sql = "select * from security where user_name = '" + StringEscapeUtils.escapeSql(username) + "'";
             ResultSet rs = accessDB.searchDBRecord(sql);
             while (rs.next()) {
                 secBean = new LoginSecurityBean();

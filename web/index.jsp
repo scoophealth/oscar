@@ -113,13 +113,13 @@ if(session.getValue("user") != null) {
 				%><img src="gatekeeper/appid/?act=image&/empty<%=System.currentTimeMillis() %>.gif" width='1' height='1'><%
 				}
 			  %><br/>
-              <html:text property="username" size="15" maxlength="15"/>
+              <input type="text" name="username" size="15" maxlength="15" autocomplete="off"/>
             </td>
 	  </tr>
           <tr>
             <td align="left">
               <bean:message key="loginApplication.formPwd"/><br/>
-              <html:password property="password" size="15" maxlength="15"/>
+              <input type="password" name="password" size="15" maxlength="15" autocomplete="off"/>
             </td>
           </tr>
           <tr>
