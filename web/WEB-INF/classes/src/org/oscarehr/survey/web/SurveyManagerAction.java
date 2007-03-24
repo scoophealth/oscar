@@ -28,7 +28,10 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -287,6 +290,21 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		request.setAttribute("QuestionTypes", questionTypes);
 		
         setSectionProperties(request,survey,formBean);
+        
+        List<String> colorList =  new ArrayList<String>();
+        colorList.add("red");
+        colorList.add("green");
+        colorList.add("blue");
+        colorList.add("yellow");
+        colorList.add("beige");
+        colorList.add("brown");
+        colorList.add("cyan");
+        colorList.add("grey");
+        colorList.add("magenta");
+        colorList.add("orange");
+        colorList.add("pink");
+        colorList.add("purple");        
+        request.setAttribute("colors", colorList);
         
 		return mapping.findForward("edit");
 	}
@@ -575,7 +593,22 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		request.setAttribute("caisiobjects", objects);		
 		request.setAttribute("oscarVars", oscarVars);
 		surveyForm.set("questionModel",question);
-		
+
+	       List<String> colorList =  new ArrayList<String>();
+	        colorList.add("red");
+	        colorList.add("green");
+	        colorList.add("blue");
+	        colorList.add("yellow");
+	        colorList.add("beige");
+	        colorList.add("brown");
+	        colorList.add("cyan");
+	        colorList.add("grey");
+	        colorList.add("magenta");
+	        colorList.add("orange");
+	        colorList.add("pink");
+	        colorList.add("purple");        
+	        request.setAttribute("colors", colorList);
+	        
 		return mapping.findForward("question_editor");
 	}
 	
@@ -637,6 +670,16 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		if(question.getType().isSetDate()) {
 			int dateFormat = Integer.parseInt(formBean.getDateFormat());
 			question.getType().setDate(DateDocument.Date.Enum.forInt(dateFormat));
+		}
+		
+		if(request.getParameter("questionModel.bold") == null) {
+			question.setBold("");
+		}
+		if(request.getParameter("questionModel.underline") == null) {
+			question.setUnderline("");
+		}
+		if(request.getParameter("questionModel.italics") == null) {
+			question.setItalics("");
 		}
 		//return null;
 		return form(mapping,form,request,response);
@@ -917,11 +960,15 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	
 	protected void setSectionProperties(HttpServletRequest request,SurveyDocument.Survey survey, SurveyManagerFormBean formBean) {
 		Enumeration e = request.getParameterNames();
+		//create a uniqeu list of sectionids;
+		Map<String,Boolean> ids = new HashMap<String,Boolean>();
+		
         while(e.hasMoreElements()) {
         	String name = (String)e.nextElement();
         	String pageName = formBean.getPage();
         	if(name.startsWith("section_description_")) {
         		String sectionId = name.substring(name.lastIndexOf("_")+1);
+        		ids.put(sectionId,true);
         		String description =request.getParameter(name);
         		
         		if(!(pageName.equalsIgnoreCase("Introduction")) && !(pageName.equalsIgnoreCase("Closing"))) {
@@ -931,6 +978,85 @@ public class SurveyManagerAction extends AbstractSurveyAction {
         			//log.debug("setting description for section " + sectionId);
         		}
         		
+        		}
+        	}
+        	
+        	if(name.startsWith("section_bold_")) {
+        		String sectionId = name.substring(name.lastIndexOf("_")+1);
+        		String description =request.getParameter(name);
+        		
+        		if(!(pageName.equalsIgnoreCase("Introduction")) && !(pageName.equalsIgnoreCase("Closing"))) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(sectionId).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setBold(description);
+        			//log.debug("setting description for section " + sectionId);
+        		}
+        		
+        		}
+        	}
+        	
+        	if(name.startsWith("section_underline_")) {
+        		String sectionId = name.substring(name.lastIndexOf("_")+1);
+        		String description =request.getParameter(name);
+        		
+        		if(!(pageName.equalsIgnoreCase("Introduction")) && !(pageName.equalsIgnoreCase("Closing"))) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(sectionId).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setUnderline(description);
+        			//log.debug("setting description for section " + sectionId);
+        		}
+        		
+        		}
+        	}
+        	
+        	if(name.startsWith("section_italics_")) {
+        		String sectionId = name.substring(name.lastIndexOf("_")+1);
+        		String description =request.getParameter(name);
+        		
+        		if(!(pageName.equalsIgnoreCase("Introduction")) && !(pageName.equalsIgnoreCase("Closing"))) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(sectionId).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setItalics(description);
+        			//log.debug("setting description for section " + sectionId);
+        		}
+        		
+        		}
+        	}
+        	
+        	if(name.startsWith("section_color_")) {
+        		String sectionId = name.substring(name.lastIndexOf("_")+1);
+        		String description =request.getParameter(name);
+        		
+        		if(!(pageName.equalsIgnoreCase("Introduction")) && !(pageName.equalsIgnoreCase("Closing"))) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(sectionId).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setColor(description);
+        			//log.debug("setting description for section " + sectionId);
+        		}
+        		
+        		}
+        	}
+        }
+        
+        for(Iterator<String> iter=ids.keySet().iterator();iter.hasNext();) {
+        	String key = iter.next();
+        	//unset the checkboxes if necessary
+        	if(request.getParameter("section_bold_" + key) == null) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(key).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setBold("");
+        		}
+        	}
+        	if(request.getParameter("section_underline_" + key) == null) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(key).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setUnderline("");
+        		}
+        	}
+        	if(request.getParameter("section_italics_" + key) == null) {
+        		Section section = SurveyModelManager.findSection(survey,formBean.getPage(),Integer.valueOf(key).intValue());
+        		if( section != null && request.getAttribute("updateSection")=="true") {
+        			section.setItalics("");
         		}
         	}
         }

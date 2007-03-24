@@ -53,7 +53,19 @@
 				<tr>
 					<td colspan="2">Question:<br/><html:textarea property="questionModel.description" rows="5" cols="50"></html:textarea></td>
 				</tr>
-				
+				<tr>
+					<td colspan="2">
+						<html:checkbox property="questionModel.bold" value="true"/>Bold&nbsp;&nbsp;
+						<html:checkbox property="questionModel.underline" value="true"/>Underline&nbsp;&nbsp;
+						<html:checkbox property="questionModel.italics" value="true"/>Italics&nbsp;&nbsp;
+      					<html-el:select property="questionModel.color">
+      						<html-el:option value="">&nbsp;</html-el:option>
+      						<c:forEach var="color" items="${colors}">
+      							<html-el:option value="${color}"><c:out value="${color}"/></html-el:option>
+      						</c:forEach>      						
+      					</html-el:select>						
+					</td>
+				</tr>
 				<tr>
 					<td colspan="2"><br/></td>
 				</tr>

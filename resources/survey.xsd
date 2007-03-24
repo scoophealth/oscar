@@ -114,6 +114,10 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:int" use="required"/>
 		<xs:attribute name="orientation" type="xs:string" use="optional"/>
+		<xs:attribute name="bold" type="xs:string" use="optional"/>
+		<xs:attribute name="underline" type="xs:string" use="optional"/>
+		<xs:attribute name="italics" type="xs:string" use="optional"/>
+		<xs:attribute name="color" type="xs:string" use="optional"/>
 	</xs:complexType>
 		
 	<xs:complexType name="question">
@@ -148,6 +152,10 @@
 		<xs:attribute name="orientation" type="xs:string" use="optional"/>
 		<xs:attribute name="data-link" type="xs:string" use="optional"/>
 		<xs:attribute name="caisi-object" type="xs:string" use="optional"/>	
+		<xs:attribute name="bold" type="xs:string" use="optional"/>
+		<xs:attribute name="underline" type="xs:string" use="optional"/>
+		<xs:attribute name="italics" type="xs:string" use="optional"/>
+		<xs:attribute name="color" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	

@@ -374,6 +374,39 @@
                      					<a href="<html:rewrite action="/SurveyManager"/>?method=remove_section&id=<c:out value="${section.id}"/>"><img src="images/delete.png" border="0"></a>
 										  	&nbsp;
                      					<input type="text" name="section_description_<%=containers[x].getSection().getId() %>"  value="<%=containers[x].getSection().getDescription() %>" size="50" />
+                     					&nbsp;&nbsp;&nbsp;&nbsp;
+                     					<%
+                     						String bold_checked="", underline_checked="", italics_checked="", selected_color="";
+                     						if(containers[x].getSection().getBold() != null && containers[x].getSection().getBold().equals("true")) {
+                     							bold_checked="checked";
+                     						}
+                     						if(containers[x].getSection().getUnderline() != null && containers[x].getSection().getUnderline().equals("true")) {
+                     							underline_checked="checked";
+                     						}
+                     						if(containers[x].getSection().getItalics() != null && containers[x].getSection().getItalics().equals("true")) {
+                     							italics_checked="checked";
+                     						}
+                     						if(containers[x].getSection().getColor() != null) {
+                     							selected_color=containers[x].getSection().getColor();
+                     							pageContext.setAttribute("selected_color",selected_color);
+                     						}
+                     					%>
+                     					<input type="checkbox" value="true" name="section_bold_<%=containers[x].getSection().getId() %>" <%=bold_checked%>/>Bold&nbsp;&nbsp;
+                     					<input type="checkbox" value="true" name="section_underline_<%=containers[x].getSection().getId() %>" <%=underline_checked%>/>Underline&nbsp;&nbsp;
+                     					<input type="checkbox" value="true" name="section_italics_<%=containers[x].getSection().getId() %>" <%=italics_checked%>/>Italics&nbsp;&nbsp;
+                     					<select name="section_color_<%=containers[x].getSection().getId() %>">
+                     						<option value="">&nbsp;</option>
+                     						<c:forEach var="color" items="${colors}">
+                     							<c:choose>
+                     								<c:when test="${selected_color eq color}">
+	                     								<option value="<c:out value="${color}"/>" selected><c:out value="${color}"/></option>
+                     								</c:when>
+                     								<c:otherwise>
+		                     							<option value="<c:out value="${color}"/>"><c:out value="${color}"/></option>
+	                     							</c:otherwise>
+	                     						</c:choose>
+                     						</c:forEach>
+                     					</select>
                      				</td>
                      				
                      			</tr>

@@ -57,12 +57,33 @@
 		<c:when test="${question.type.openEnded != null}">
 			<c:choose>
 				<c:when test="${question.type.openEnded.rows == 1}">
-					<td><c:out value="${question.description}"/></td>
+					<td>
+						<c:if test="${question.bold eq 'true'}"><b></c:if>
+						<c:if test="${question.underline eq 'true'}"><u></c:if>
+						<c:if test="${question.italics eq 'true'}"><i></c:if>
+						<c:choose>
+							<c:when test="${not empty question.color}"><span style="color:<c:out value="${question.color}"/>"><c:out value="${question.description}"/></span></c:when>
+							<c:otherwise><c:out value="${question.description}"/></c:otherwise>
+						</c:choose>
+						<c:if test="${question.bold eq 'true'}"></b></c:if>
+						<c:if test="${question.underline eq 'true'}"></u></c:if>
+						<c:if test="${question.italics eq 'true'}"></i></c:if>						
+					</td>
 					<td><html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id})" size="${question.type.openEnded.cols}"/></td>
 				</c:when>
 				<c:otherwise>
 					<td colspan="2">
-						<c:out value="${question.description}"/><br/>
+						<c:if test="${question.bold eq 'true'}"><b></c:if>
+						<c:if test="${question.underline eq 'true'}"><u></c:if>
+						<c:if test="${question.italics eq 'true'}"><i></c:if>
+						<c:choose>
+							<c:when test="${not empty question.color}"><span style="color:<c:out value="${question.color}"/>"><c:out value="${question.description}"/></span></c:when>
+							<c:otherwise><c:out value="${question.description}"/></c:otherwise>
+						</c:choose>						<c:if test="${question.bold eq 'true'}"></b></c:if>
+						<c:if test="${question.underline eq 'true'}"></u></c:if>
+						<c:if test="${question.italics eq 'true'}"></i></c:if>						
+						
+						<br/>
 						<html-el:textarea property="data.value(${pageNumber}_${sectionId}_${question.id})" rows="${question.type.openEnded.rows}" cols="${question.type.openEnded.cols}"></html-el:textarea>
 					</td>
 				</c:otherwise>
@@ -71,7 +92,19 @@
 		
 		<c:when test="${question.type.date != null}">
 			<!-- calendar -->
-			<td><c:out value="${question.description}"/>&nbsp;(<c:out value="${question.type.date}"/>)</td>
+			<td>
+						<c:if test="${question.bold eq 'true'}"><b></c:if>
+						<c:if test="${question.underline eq 'true'}"><u></c:if>
+						<c:if test="${question.italics eq 'true'}"><i></c:if>
+						<c:choose>
+							<c:when test="${not empty question.color}"><span style="color:<c:out value="${question.color}"/>"><c:out value="${question.description}"/></span></c:when>
+							<c:otherwise><c:out value="${question.description}"/></c:otherwise>
+						</c:choose>
+						<c:if test="${question.bold eq 'true'}"></b></c:if>
+						<c:if test="${question.underline eq 'true'}"></u></c:if>
+						<c:if test="${question.italics eq 'true'}"></i></c:if>						
+			
+			&nbsp;(<c:out value="${question.type.date}"/>)</td>
 			<td>
 				<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id})" styleId="f_date_c"/>	
 				&nbsp;
@@ -95,7 +128,19 @@
 		
 
 		<c:when test="${question.type.select != null}">
-			<td valign="top"><c:out value="${question.description}"/></td>
+			<td valign="top">
+						<c:if test="${question.bold eq 'true'}"><b></c:if>
+						<c:if test="${question.underline eq 'true'}"><u></c:if>
+						<c:if test="${question.italics eq 'true'}"><i></c:if>
+						<c:choose>
+							<c:when test="${not empty question.color}"><span style="color:<c:out value="${question.color}"/>"><c:out value="${question.description}"/></span></c:when>
+							<c:otherwise><c:out value="${question.description}"/></c:otherwise>
+						</c:choose>
+						<c:if test="${question.bold eq 'true'}"></b></c:if>
+						<c:if test="${question.underline eq 'true'}"></u></c:if>
+						<c:if test="${question.italics eq 'true'}"></i></c:if>						
+			
+			</td>
 			<td>
 				<c:choose>
 					<c:when test="${question.type.select.renderType eq 'select'}">

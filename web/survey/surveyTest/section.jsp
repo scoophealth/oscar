@@ -27,7 +27,28 @@
 <table border="1" width="100%">
 <tr>
 	<td colspan="2">
-		<c:out value="${section.description}"/>
+		<c:if test="${section.bold eq 'true'}">
+			<b>
+		</c:if>
+		<c:if test="${section.underline eq 'true'}">
+			<u>
+		</c:if>
+		<c:if test="${section.italics eq 'true'}">
+			<i>
+		</c:if>
+		<c:choose>
+			<c:when test="${not empty section.color}"><span style="color:<c:out value="${section.color}"/>"><c:out value="${section.description}"/></span></c:when>
+			<c:otherwise><c:out value="${section.description}"/></c:otherwise>
+		</c:choose>		
+		<c:if test="${section.bold eq 'true'}">
+			</b>
+		</c:if>
+		<c:if test="${section.underline eq 'true'}">
+			</u>
+		</c:if>
+		<c:if test="${section.italics eq 'true'}">
+			</i>
+		</c:if>		
 	</td>
 </tr>
 		<c:forEach var="question" items="${section.questionArray}">
