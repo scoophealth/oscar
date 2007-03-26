@@ -22,6 +22,7 @@
 
 package org.oscarehr.survey.web;
 
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,6 @@ import org.oscarehr.survey.service.SurveyModelManager;
 import org.oscarehr.survey.service.SurveyTestManager;
 import org.oscarehr.survey.web.formbean.SurveyExecuteDataBean;
 import org.oscarehr.survey.web.formbean.SurveyExecuteFormBean;
-
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.oscarehr.surveymodel.SurveyDocument.Survey;
@@ -96,6 +96,19 @@ public class SurveyTestAction extends AbstractSurveyAction {
 		formBean.setId(Long.parseLong(surveyId));
 		
 		org.oscarehr.survey.model.Survey surveyObj = surveyManager.getSurvey(String.valueOf(formBean.getId()));
+		String descr = surveyObj.getDescription();
+		descr = descr.replaceAll(" ","_");
+		descr = descr.toLowerCase();				
+		String path = request.getSession().getServletContext().getRealPath("/");
+		path = path + "survey" + File.separator + "scripts" + File.separator + descr + ".js";
+						
+		if(new File(path).exists()) {
+			request.getSession().setAttribute("validation_file",descr);
+		} else {
+			request.getSession().setAttribute("validation_file",null);
+		}
+		
+		
 		if(surveyObj == null)  {
 			postMessage(request,"survey.missing");
 			return mapping.findForward("manager");

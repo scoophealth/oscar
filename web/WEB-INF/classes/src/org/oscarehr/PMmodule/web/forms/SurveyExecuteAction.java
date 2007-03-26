@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.web.forms;
 
+import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
@@ -173,7 +174,17 @@ public class SurveyExecuteAction extends DispatchAction {
 		}
 		
 		formBean.setDescription(surveyObj.getDescription());
-		
+		String descr = surveyObj.getDescription();
+		descr = descr.replaceAll(" ","_");
+		descr = descr.toLowerCase();				
+		String path = request.getSession().getServletContext().getRealPath("/");
+		path = path + "survey" + File.separator + "scripts" + File.separator + descr + ".js";
+						
+		if(new File(path).exists()) {
+			request.getSession().setAttribute("validation_file",descr);
+		} else {
+			request.getSession().setAttribute("validation_file",null);
+		}
 		
 		log.debug("executing survey " + surveyObj.getFormId());
 		

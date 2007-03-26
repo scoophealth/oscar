@@ -29,6 +29,9 @@
 		<link rel="stylesheet" href="style/execute.css" type="text/css">
 		<script>
 			function clickTab(name) {
+				if(!validateForm(document.surveyTestForm,document.surveyTestForm.elements['view.tab'].value)) {
+					return;
+				}
 				document.surveyTestForm.elements['view.tab'].value=name;
 				document.surveyTestForm.method.value='refresh';
 				document.surveyTestForm.submit();
@@ -37,13 +40,24 @@
 		<script type="text/javascript" src="jsCalendar/calendar.js"></script>
         <script type="text/javascript" src="jsCalendar/lang/calendar-en.js"></script>
         <script type="text/javascript" src="jsCalendar/calendar-setup.js"></script>
+        <c:if test="${not empty sessionScope.validation_file}">
+	        <script type="text/javascript" src="survey/scripts/<c:out value="${sessionScope.validation_file}"/>.js"></script>
+	    </c:if>
         <link rel="stylesheet" type="text/css" href="jsCalendar/skins/aqua/theme.css">
+
+		<c:if test="${empty sessionScope.validation_file}">
+		<script>
+			function validateForm(form) {
+				return true;
+			}
+		</script>		
+		</c:if>
 	</head>
 	
 	<body>
 		
 		<%@ include file="/survey/messages.jsp"%>
-		<html:form action="/SurveyTest">
+		<html:form action="/SurveyTest" onsubmit="return validateForm(this,document.surveyTestForm.elements['view.tab'].value);">
 		<html:hidden property="view.tab"/>
 		<html:hidden property="view.id"/>
 		<input type="hidden" name="method" value="save"/>
