@@ -9,7 +9,7 @@
 -->
 
 <preventions>
-<!--
+
    <item 
          desc="DTaP=diphtheria, tetanus and acellular pertussis for children under 18 years of age; IPV=inactivated poliovirus"
          name="DTaP-IPV"
@@ -148,7 +148,7 @@
         layout="injection"
         atc="J07AN01"
         showIfMinRecordNum="1"/>
-   -->
+   
   <item        
         desc="Pneumovax"
         name="Pneumovax"
@@ -156,7 +156,7 @@
         layout="injection"
         atc="J07AL02"
         showIfMinRecordNum="1"/> 
-  <!--     
+       
   <item        
         desc="TdP"
         name="TdP"
@@ -227,5 +227,5 @@
         link=""
         layout="PAPMAM"
         showIfMinRecordNum="1"/>
-      -->                  
+                     
 </preventions>
