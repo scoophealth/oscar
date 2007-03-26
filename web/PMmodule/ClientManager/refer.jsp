@@ -224,10 +224,12 @@
 			<td><html:textarea cols="50" rows="7" property="referral.presentProblems" /></td>
 		</tr>
 		<c:if test="${program.type eq 'Bed' }">
+			<c:if test="${requestScope.temporaryAdmission == true}">
 			<tr class="b">
 				<td width="20%">Request Temporary Admission:</td>
 				<td><html:checkbox property="referral.temporaryAdmission" /></td>
 			</tr>
+			</c:if>
 		</c:if>
 		<tr class="b">
 			<td colspan="2"><input type="button" value="Process Referral" onclick="do_referral()" /> <input type="button" value="Cancel" onclick="document.clientManagerForm.submit()" /></td>

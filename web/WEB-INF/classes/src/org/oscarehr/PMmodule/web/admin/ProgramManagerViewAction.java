@@ -75,6 +75,8 @@ public class ProgramManagerViewAction extends BaseAction {
     		request.setAttribute("clientId", demographicNo);
     	}
     
+    	request.setAttribute("temporaryAdmission",programManager.getEnabled());
+    	
     	// need the queue to determine which tab to go to first
     	List queue = programQueueManager.getActiveProgramQueuesByProgramId(programId);
     	request.setAttribute("queue", queue);
@@ -138,7 +140,7 @@ public class ProgramManagerViewAction extends BaseAction {
     		//request.setAttribute("programs", batchAdmissionPrograms);
     		request.setAttribute("bedPrograms", batchAdmissionPrograms);    		
     		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
-    		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());
+    		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());    		
     	}
     
     	if (formBean.getTab().equals("Access")) {

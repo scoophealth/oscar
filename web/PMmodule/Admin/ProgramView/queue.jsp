@@ -82,7 +82,9 @@
 	<display:column property="clientFormattedName" sortable="true" title="Client Name" />
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
 	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
-	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+	<c:if test="${requestScope.temporaryAdmission == true}">
+		<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+	</c:if>
 	<display:column property="notes" sortable="true" title="Reason for referral" />
 	<display:column property="presentProblems" sortable="true" title="Present problems"/>
 </display:table>

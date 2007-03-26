@@ -66,6 +66,16 @@ public class ProgramManagerImpl implements ProgramManager {
 	private DefaultRoleAccessDAO defaultRoleAccessDAO;
 	private ProgramClientStatusDAO clientStatusDAO;
 	
+	private boolean enabled;
+	
+	public boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 	public void setIntegratorManager(IntegratorManager mgr) {
 		this.integratorManager = mgr;
 	}

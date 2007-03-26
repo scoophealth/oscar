@@ -130,7 +130,9 @@ function do_batch_discharge(community) {
 	</display:column>
 	<display:column property="client.formattedName" sortable="true" title="Name" />
 	<display:column property="admissionDate" sortable="true" title="Admission Date" />
+	<c:if test="${requestScope.temporaryAdmission == true}">
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+	</c:if>
 	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
 
 	<display:column property="teamName" sortable="true" title="Team" />

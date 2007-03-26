@@ -58,7 +58,7 @@ public class ClientManagerImpl implements ClientManager {
 	private IntegratorManager integratorManager;
 
 	private AdmissionManager admissionManager;
-
+	
 	public void setClientDao(ClientDao dao) {
 		this.dao = dao;
 	}

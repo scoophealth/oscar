@@ -139,4 +139,5 @@ public interface ProgramManager
 	public void deleteProgramClientStatus(String id);
 	public boolean clientStatusNameExists(Integer programId, String statusName);
 	public List getAllClientsInStatus(Integer programId, Integer statusId);
+	public boolean getEnabled();
 }

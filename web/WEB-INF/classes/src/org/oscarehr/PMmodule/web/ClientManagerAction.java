@@ -237,7 +237,8 @@ public class ClientManagerAction extends BaseAction {
 				id = String.valueOf((Long) o);
 			}
 		}
-
+		
+		
 		setEditAttributes(form, request, id);
 
 		logManager.log(getProviderNo(request), "read", "pmm client record", id, getIP(request));
@@ -362,7 +363,8 @@ public class ClientManagerAction extends BaseAction {
 
 		request.setAttribute("do_refer", new Boolean(true));
 		request.setAttribute("program", program);
-
+		request.setAttribute("temporaryAdmission",programManager.getEnabled());
+		
 		return mapping.findForward("edit");
 	}
 

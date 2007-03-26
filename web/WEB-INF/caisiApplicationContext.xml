@@ -595,7 +595,7 @@
 				<property name="clientReferralDAO" ref="clientReferralDAO" />
 				<property name="programQueueManager" ref="programQueueManager" />
 				<property name="integratorManager" ref="integratorManager" />
-				<property name="admissionManager" ref="admissionManager" />
+				<property name="admissionManager" ref="admissionManager" />				
 			</bean>
 		</property>
 	</bean>
@@ -661,7 +661,8 @@
 				<property name="admissionDAO" ref="admissionDao" />
 				<property name="integratorManager" ref="integratorManager" />
 				<property name="defaultRoleAccessDAO" ref="defaultRoleAccessDAO" />
-				<property name="programClientStatusDAO" ref="programClientStatusDAO" />
+				<property name="programClientStatusDAO" ref="programClientStatusDAO" />	
+				<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />				
 			</bean>
 		</property>
 	</bean>
