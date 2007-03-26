@@ -250,6 +250,41 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 
 		criteria.add(Expression.eq("programStatus","active"));
 
+		if(program.getManOrWoman() != null && program.getManOrWoman().length() > 0){
+			criteria.add(Expression.eq("manOrWoman", program.getManOrWoman()));
+		}
+		
+		if(program.isTransgender()) {
+			criteria.add(Expression.eq("transgender",true));
+		}
+		
+		if(program.isFirstNation()) {
+			criteria.add(Expression.eq("firstNation",true));
+		}
+		
+		if(program.isBedProgramAffiliated()){
+			criteria.add(Expression.eq("bedProgramAffiliated",true));
+		}
+		
+		if(program.isAlcohol()) {
+			criteria.add(Expression.eq("alcohol",true));
+		}
+		
+		if(program.getAbstinenceSupport()!=null && program.getAbstinenceSupport().length() > 0) {
+			criteria.add(Expression.eq("abstinenceSupport",program.getAbstinenceSupport()));
+		}
+		
+		if(program.isPhysicalHealth()){
+			criteria.add(Expression.eq("physicalHealth",true));
+		}
+		
+		if(program.isHousing()){
+			criteria.add(Expression.eq("housing",true));
+		}
+		
+		if(program.isMentalHealth()) {
+			criteria.add(Expression.eq("mentalHealth",true));
+		}
 		criteria.addOrder(Order.asc("name"));
 
 		List results = criteria.list();

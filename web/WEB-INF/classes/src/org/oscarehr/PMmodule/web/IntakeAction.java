@@ -94,7 +94,7 @@ public class IntakeAction extends BaseAction {
 		
 		if(results != null && results.length>0) {
 			request.setAttribute("localSearch", new Boolean(doLocalSearch));
-			request.setAttribute("clients",results);
+			request.setAttribute("clients",results);			
 			return mapping.findForward("pre-intake");
 		}
 

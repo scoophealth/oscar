@@ -115,7 +115,16 @@ public abstract class BaseProgram  implements Serializable {
 	private java.lang.String programStatus;
 	private java.lang.Integer intakeProgram;
 	private java.lang.Integer bedProgramLinkId;
-
+	private String manOrWoman;
+	private boolean transgender;
+	private boolean firstNation;
+	private boolean bedProgramAffiliated;
+	private boolean alcohol;
+	private String abstinenceSupport;
+	private boolean physicalHealth;
+	private boolean mentalHealth;
+	private boolean housing;
+	
 
 
 	/**
@@ -495,8 +504,85 @@ public abstract class BaseProgram  implements Serializable {
 		this.bedProgramLinkId = bedProgramLinkId;
 	}
 
+	public String getAbstinenceSupport() {
+		return abstinenceSupport;
+	}
 
+	public void setAbstinenceSupport(String abstinenceSupport) {
+		this.abstinenceSupport = abstinenceSupport;
+	}
 
+	public boolean isAlcohol() {
+		return alcohol;
+	}
+
+	public void setAlcohol(boolean alcohol) {
+		this.alcohol = alcohol;
+	}
+
+	public boolean isBedProgramAffiliated() {
+		return bedProgramAffiliated;
+	}
+
+	public void setBedProgramAffiliated(boolean bedProgramAffiliated) {
+		this.bedProgramAffiliated = bedProgramAffiliated;
+	}
+
+	public boolean isFirstNation() {
+		return firstNation;
+	}
+
+	public void setFirstNation(boolean firstNation) {
+		this.firstNation = firstNation;
+	}
+
+	public int getHashCode() {
+		return hashCode;
+	}
+
+	public void setHashCode(int hashCode) {
+		this.hashCode = hashCode;
+	}
+
+	public boolean isHousing() {
+		return housing;
+	}
+
+	public void setHousing(boolean housing) {
+		this.housing = housing;
+	}
+
+	public String getManOrWoman() {
+		return manOrWoman;
+	}
+
+	public void setManOrWoman(String manOrWoman) {
+		this.manOrWoman = manOrWoman;
+	}
+
+	public boolean isMentalHealth() {
+		return mentalHealth;
+	}
+
+	public void setMentalHealth(boolean mentalHealth) {
+		this.mentalHealth = mentalHealth;
+	}
+
+	public boolean isPhysicalHealth() {
+		return physicalHealth;
+	}
+
+	public void setPhysicalHealth(boolean physicalHealth) {
+		this.physicalHealth = physicalHealth;
+	}
+
+	public boolean isTransgender() {
+		return transgender;
+	}
+
+	public void setTransgender(boolean transgender) {
+		this.transgender = transgender;
+	}
 
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
