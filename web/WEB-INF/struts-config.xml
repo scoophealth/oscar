@@ -1271,6 +1271,7 @@
 			<forward name="execute" path="/PMmodule/survey/surveyExecute.jsp" />
 			<forward name="client_manager" path="/PMmodule/ClientManager.do?method=save_survey" redirect="false" />
 			<forward name="success" path="/PMmodule/ClientManager.do?method=edit" />
+			<forward name="close" path="/PMmodule/survey/close.jsp" />
 		</action>
 		<action path="/PMmodule/Admin/DefaultRoleAccess" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="defaultRoleAccessForm" validate="false" scope="request">
 			<forward name="list" path="page.pmm.admin.defaultroleaccess.list" />

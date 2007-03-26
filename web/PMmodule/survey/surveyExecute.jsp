@@ -31,7 +31,7 @@
 		<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/execute.css" type="text/css">
 		<script>
 			function clickTab(name) {
-				 if(!validateForm(document.surveyExecuteForm,document.surveyExecuteForm.elements['view.tab'].value)) {
+				 if(!validateForm(document.surveyExecuteForm,document.surveyExecuteForm.elements['view.tab'].value,false)) {
                                         return;
                                 }
 				document.surveyExecuteForm.elements['view.tab'].value=name;
@@ -49,7 +49,7 @@
 
 		<c:if test="${empty sessionScope.validation_file}">
 		<script>
-			function validateForm(form,tab) {
+			function validateForm(form,tab,submit) {
 				return true;
 			}
 		</script>		
@@ -60,11 +60,12 @@
 	<body>
 		
 		<%@ include file="/common/messages.jsp"%>
-		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value);">
+		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value,true);">
 		<html:hidden property="view.tab"/>
 		<html:hidden property="view.id"/>
 		<html:hidden property="view.admissionId"/>
 		<input type="hidden" name="method" value="save_survey"/>
+		<input type="hidden" name="type" value="<c:out value="${type}"/>"/>
 		<h3>Survey</h3>
 		<br/>
 
@@ -87,7 +88,11 @@
 	</div>
 	
 	<c:if test="${requestScope.introduction != null}">
-		<p><c:out value="${introduction.text }"/></p>
+		<p>
+			<pre>
+				<c:out value="${introduction.text }"/>
+			</pre>
+		</p>
 	</c:if>
 		
 		<br/>
@@ -110,7 +115,11 @@
 	</table>
 	<br/>
 	<c:if test="${requestScope.closing != null}">
-		<p><c:out value="${closing.text }"/></p>
+		<p>
+			<pre>
+				<c:out value="${closing.text }"/>
+			</pre>
+		</p>
 	</c:if>	
 	<br/>
 	<table width="50%">

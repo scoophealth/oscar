@@ -24,15 +24,16 @@
 
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<logic:present name="messages">
+<c:if test="${not empty messages}">
 	<table width="100%">
-		<logic:iterate collection="<%=(java.util.List)request.getAttribute("messages")%>" id="message">
-			<logic:equal name="message" property="active" value="true">
+		<c:forEach var="message" items="${messages}">
+			<c:if test="${message.active eq 'true'}">
 				<tr>
-					<td><font color="red" size="+1"><bean:write name="message" property="message"/>  </font></td>
-				</tr>	
-			</logic:equal>
-		</logic:iterate>
+					<td><font color="red" size="+1"><c:out value="${message.message}" escapeXml="false" /></font></td>
+				</tr>
+			</c:if>
+		</c:forEach>		
 	</table>
-</logic:present>
+</c:if>

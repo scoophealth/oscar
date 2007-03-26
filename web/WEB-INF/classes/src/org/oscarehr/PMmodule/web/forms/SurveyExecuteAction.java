@@ -153,11 +153,16 @@ public class SurveyExecuteAction extends DispatchAction {
 		
 		String surveyId = request.getParameter("formId");
 		String clientId = request.getParameter("clientId");
+		String type = request.getParameter("type");
+		request.setAttribute("type", type);
 		
 		if(surveyId == null) {
 			surveyId = String.valueOf(formBean.getId());
 			if(surveyId == null || surveyId.equals("0")) {
 				postMessage(request,"survey.missing");
+				if(type != null && type.equals("provider")) {
+					return mapping.findForward("close");
+				}
 				return forwardToClientManager(request,mapping,form, clientId);
 			}
 		}
@@ -170,6 +175,9 @@ public class SurveyExecuteAction extends DispatchAction {
 		OscarForm surveyObj = surveyManager.getForm(surveyId);
 		if(surveyObj == null)  {
 			postMessage(request,"survey.missing");
+			if(type != null && type.equals("provider")) {
+				return mapping.findForward("close");
+			}
 			return forwardToClientManager(request,mapping,form, clientId);
 		}
 		
@@ -196,11 +204,17 @@ public class SurveyExecuteAction extends DispatchAction {
         }catch(Exception e) {
         	log.error(e);
         	postMessage(request,"");
+        	if(type != null && type.equals("provider")) {
+				return mapping.findForward("close");
+			}
         	return forwardToClientManager(request,mapping,form, clientId);
         }
         
         /* load test data - if exists */
-        OscarFormInstance instance = surveyManager.getLatestForm(surveyId,clientId);
+        OscarFormInstance instance = null;
+        if(!clientId.equals("0")) {
+        	instance = surveyManager.getLatestForm(surveyId,clientId);
+        }
         if(instance != null) {
         	log.debug("loading up existing data");
         	for(Iterator iter=instance.getData().iterator();iter.hasNext();) {
@@ -275,6 +289,10 @@ public class SurveyExecuteAction extends DispatchAction {
 		SurveyExecuteDataBean data = (SurveyExecuteDataBean)form.get("data");
 		
 		SurveyDocument model = (SurveyDocument)request.getSession().getAttribute("model");
+		
+		String type = request.getParameter("type");
+		request.setAttribute("type", type);
+		
 		
         Survey survey = model.getSurvey();
         Page[] pages = survey.getBody().getPageArray();
@@ -373,9 +391,11 @@ public class SurveyExecuteAction extends DispatchAction {
         
  
         request.setAttribute("tabs",pageNames);
-        
-        List admissions = admissionManager.getCurrentAdmissions(new Integer((int)formBean.getClientId()));
-		request.setAttribute("admissions",admissions);
+
+        if(formBean.getClientId() > 0) {
+        	List admissions = admissionManager.getCurrentAdmissions(new Integer((int)formBean.getClientId()));
+        	request.setAttribute("admissions",admissions);
+        }
  
         return mapping.findForward("execute");
 	}
@@ -384,7 +404,12 @@ public class SurveyExecuteAction extends DispatchAction {
 		DynaActionForm form = (DynaActionForm)af;
 		SurveyExecuteFormBean formBean = (SurveyExecuteFormBean)form.get("view");
 		
+		String type = request.getParameter("type");
+		
 		if(this.isCancelled(request)) {
+			if(type != null && type.equals("provider")) {
+				return mapping.findForward("close");
+			}
 			return forwardToClientManager(request,mapping,form,String.valueOf(formBean.getClientId()));
 		}
 		
@@ -484,6 +509,9 @@ public class SurveyExecuteAction extends DispatchAction {
 		form.set("data",new SurveyExecuteDataBean());
 		form.set("view",new SurveyExecuteFormBean());
 		
+		if(type != null && type.equals("provider")) {
+			return mapping.findForward("close");
+		}
 		return forwardToClientManager(request,mapping,form, String.valueOf(formBean.getClientId()));
 		//request.setAttribute("survey_saved",new Boolean(true));
 		//request.setAttribute("clientId",String.valueOf(formBean.getClientId()));
