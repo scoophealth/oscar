@@ -53,16 +53,17 @@
 				</tr>
 			</table>
 		</div>
-		<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" pagesize="10" requestURI="/PMmodule/ClientManager.do">
+		
+		<display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="programs" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
-			
 			<display:column sortable="true" title="Name">
 				<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${program.agencyId}" />','<c:out value="${program.id}" />','<c:out value="${program.type}" />');"><c:out value="${program.name}" /></a>
 			</display:column>
-			<display:column property="type" sortable="true" title="Type" />
+			<display:column property="type" sortable="true" title="Type"></display:column>
 			<display:column sortable="false" title="Participation">
 				<c:out value="${program.numOfMembers}" />/<c:out value="${program.maxAllowed}" />&nbsp;(<c:out value="${program.queueSize}" /> waiting)
 			</display:column>
+			<display:column property="descr" sortable="false" title="Description"></display:column>
 		</display:table>
 	</body>
 </html:html>

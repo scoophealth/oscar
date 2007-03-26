@@ -39,12 +39,25 @@
 		var programName = form.elements['program.name'].value;
 		var typeEl = form.elements['program.type'];
 		var programType = typeEl.options[typeEl.selectedIndex].value;
+		var manOrWomanEl = form.elements['program.manOrWoman'];
+		var manOrWoman = manOrWomanEl.options[manOrWomanEl.selectedIndex].value;
+ 		var transgender = form.elements['program.transgender'].checked;
+ 		var firstNation = form.elements['program.firstNation'].checked;
+ 		var bedProgramAffiliated = form.elements['program.bedProgramAffiliated'].checked;
+ 		var alcohol = form.elements['program.alcohol'].checked;
+ 		var abstinenceSupportEl = form.elements['program.abstinenceSupport'];
+ 		var abstinenceSupport = abstinenceSupportEl.options[abstinenceSupportEl.selectedIndex].value;
+ 		var physicalHealth = form.elements['program.physicalHealth'].checked;
+ 		var mentalHealth = form.elements['program.mentalHealth'].checked;
+ 		var housing = form.elements['program.housing'].checked;		
 		
 		var url = '<html:rewrite action="/PMmodule/ClientManager.do"/>';
 			url += '?method=search_programs&program.name=' + programName + '&program.type=' + programType;
+			url += '&program.manOrWoman='+manOrWoman+'&program.transgender='+transgender+'&program.firstNation='+firstNation+'&program.bedProgramAffiliated='+bedProgramAffiliated+'&program.alcohol='+alcohol+'&program.abstinenceSupport='+abstinenceSupport+'&program.physicalHealth='+physicalHealth+'&program.mentalHealth='+mentalHealth+'&program.housing='+housing;
+			//url += '&program.manOrWoman='+manOrWoman;
 			url += '&formName=clientManagerForm&formElementName=program.name&formElementId=program.id&formElementAgencyId=program.agencyId&formElementType=program.type&submit=true';
 		
-		window.open(url, 'program_search', 'width=800, height=600');
+		window.open(url, "program_search", "width=800, height=600, scrollbars=1,location=1,status=1");
 	}
 
 	function do_referral() {
@@ -118,6 +131,61 @@
 			<html:option value="Service">Service</html:option>
 		</html:select></td>
 	</tr>
+	 
+	<tr class="b">
+		<td width="20%">Man or Woman:</td>
+		<td>
+			<html:select property="program.manOrWoman">
+				<html:option value="">&nbsp;</html:option>				
+				<html:option value="Man">Man</html:option>
+				<html:option value="Woman">Woman</html:option>
+			</html:select>
+		</td>
+	</tr>
+	
+	<tr class="b">
+		<td width="20%">Transgender:</td>
+		<td><html:checkbox property="program.transgender" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">First Nation:</td>
+		<td><html:checkbox property="program.firstNation" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Bed Program Affiliated:</td>
+		<td><html:checkbox property="program.bedProgramAffiliated" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Alcohol:</td>
+		<td><html:checkbox property="program.alcohol" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Abstinence Support?</td>
+		<td>
+			<html:select property="program.abstinenceSupport">
+				<html:option value="">&nbsp;</html:option>
+				<html:option value="Harm Reduction" />
+				<html:option value="Abstinence Support" />
+				<html:option value="Not Applicable" />			
+			</html:select>
+		</td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Physical Health:</td>
+		<td><html:checkbox property="program.physicalHealth" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Mental Health:</td>
+		<td><html:checkbox property="program.mentalHealth" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Housing:</td>
+		<td><html:checkbox property="program.housing" /></td>
+	</tr>	
+	 
+	
+	
+	
 </table>
 <table>
 	<tr>

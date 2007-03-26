@@ -105,6 +105,55 @@
 			</html-el:select>
 		</td>
 	</tr>	
+	<tr class="b">
+		<td width="20%">Man or Woman:</td>
+		<td>
+			<html:select property="program.manOrWoman">
+				<html:option value=""/>				
+				<html:option value="Man" />
+				<html:option value="Woman" />
+			</html:select>
+		</td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Transgender:</td>
+		<td><html:checkbox property="program.transgender" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">First Nation:</td>
+		<td><html:checkbox property="program.firstNation" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Bed Program Affiliated:</td>
+		<td><html:checkbox property="program.bedProgramAffiliated" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Alcohol:</td>
+		<td><html:checkbox property="program.alcohol" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Abstinence Support?</td>
+		<td>
+			<html:select property="program.abstinenceSupport">
+				<html:option value=" "/>
+				<html:option value="Harm Reduction" />
+				<html:option value="Abstinence Support" />
+				<html:option value="Not Applicable" />			
+			</html:select>
+		</td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Physical Health:</td>
+		<td><html:checkbox property="program.physicalHealth" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Mental Health:</td>
+		<td><html:checkbox property="program.mentalHealth" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Housing:</td>
+		<td><html:checkbox property="program.housing" /></td>
+	</tr>	
 	<tr>
 		<td colspan="2">
 			<input type="button" value="Save" onclick="return save()" />

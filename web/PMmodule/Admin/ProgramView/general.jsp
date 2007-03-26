@@ -70,4 +70,40 @@
 		<td width="20%">Allow Batch Discharges:</td>
 		<td><c:out value="${program.allowBatchDischarge}" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Man Or Woman:</td>
+		<td><c:out value="${program.manOrWoman}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Transgender:</td>
+		<td><c:out value="${program.transgender}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">First Nation:</td>
+		<td><c:out value="${program.firstNation}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Bed Program Affiliated:</td>
+		<td><c:out value="${program.bedProgramAffiliated}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Alcohol:</td>
+		<td><c:out value="${program.alcohol}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Abstinence Support?</td>
+		<td><c:out value="${program.abstinenceSupport}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Physical Health:</td>
+		<td><c:out value="${program.physicalHealth}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Mental Health:</td>
+		<td><c:out value="${program.mentalHealth}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Housing:</td>
+		<td><c:out value="${program.housing}" /></td>
+	</tr>
 </table>
