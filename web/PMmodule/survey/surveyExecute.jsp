@@ -31,6 +31,9 @@
 		<link rel="stylesheet" href="<c:out value="${ctx}"/>/css/execute.css" type="text/css">
 		<script>
 			function clickTab(name) {
+				 if(!validateForm(document.surveyExecuteForm,document.surveyExecuteForm.elements['view.tab'].value)) {
+                                        return;
+                                }
 				document.surveyExecuteForm.elements['view.tab'].value=name;
 				document.surveyExecuteForm.method.value='refresh';
 				document.surveyExecuteForm.submit();
@@ -40,13 +43,13 @@
         <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/lang/calendar-en.js"></script>
         <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/calendar-setup.js"></script>
         <c:if test="${not empty sessionScope.validation_file}">
-	        <script type="text/javascript" src="survey/scripts/<c:out value="${sessionScope.validation_file}"/>.js"></script>
+	        <script type="text/javascript" src="<c:out value="${ctx}"/>/survey/scripts/<c:out value="${sessionScope.validation_file}"/>.js"></script>
 	    </c:if>
         <link rel="stylesheet" type="text/css" href="jsCalendar/skins/aqua/theme.css">
 
 		<c:if test="${empty sessionScope.validation_file}">
 		<script>
-			function validateForm(form) {
+			function validateForm(form,tab) {
 				return true;
 			}
 		</script>		
@@ -57,7 +60,7 @@
 	<body>
 		
 		<%@ include file="/common/messages.jsp"%>
-		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this);">
+		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value);">
 		<html:hidden property="view.tab"/>
 		<html:hidden property="view.id"/>
 		<html:hidden property="view.admissionId"/>
