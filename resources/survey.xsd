@@ -156,6 +156,7 @@
 		<xs:attribute name="underline" type="xs:string" use="optional"/>
 		<xs:attribute name="italics" type="xs:string" use="optional"/>
 		<xs:attribute name="color" type="xs:string" use="optional"/>
+		<xs:attribute name="unit" type="xs:string" use="optional"/>
 	</xs:complexType>
 	
 	

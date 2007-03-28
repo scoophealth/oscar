@@ -69,7 +69,12 @@
 				<tr>
 					<td colspan="2"><br/></td>
 				</tr>
-				
+				<tr>
+					<td>Units (optional)</td>
+					<td>
+						<html:text property="questionModel.unit"/>
+					</td>
+				</tr>		
 				<tr>
 					<td>Orientation</td>
 					<td>
