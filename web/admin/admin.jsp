@@ -239,15 +239,18 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </security:oscarSec>
 
 <% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
-		  <br/>
-		  <b>Cookie Revolver Security Administration</b><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/cert/?act=super');return false;">Set super certificate</a><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/supercert');return false;">Generate super certificate</a><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/clear');return false;">Clear user cookie and super-cert cookie</a><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/quest/adminQuestions');return false;">Administrate security questions</a><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/policyadmin/select');return false;">Administrate security policies</a><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/banremover/show');return false;">Remove bans</a><br/>
-          <a href=# onClick ="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate matrix cards</a><br/>
+  <div class="adminBox">
+      <h3>&nbsp;2 Factor Authentication</h3>
+      <ul>
+		  <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/cert/?act=super');return false;">Set super certificate</a></li>
+          <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/supercert');return false;">Generate super certificate</a></li>
+          <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/clear');return false;">Clear user cookie and super-cert cookie</a></li>
+          <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/quest/adminQuestions');return false;">Administrate security questions</a></li>
+          <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/policyadmin/select');return false;">Administrate security policies</a></li>
+          <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/banremover/show');return false;">Remove bans</a></li>
+          <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate matrix cards</a></li>
+      </ul>
+   </div>
 <% } %>
 
 <%-- -add by caisi--%>
