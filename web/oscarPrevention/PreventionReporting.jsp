@@ -319,6 +319,7 @@ table.ele td{
                   String ineligible = (String) request.getAttribute("inEligible");
                   String done = (String) request.getAttribute("up2date");
                   String percentage = (String) request.getAttribute("percent");
+                  String percentageWithGrace = (String) request.getAttribute("percentWithGrace");
                   String followUpType = (String) request.getAttribute("followUpType");
                   ArrayList list = (ArrayList) request.getAttribute("returnReport");
                   Date asDate = (Date) request.getAttribute("asDate");
@@ -329,7 +330,11 @@ table.ele td{
                        <tr>
                        <td>&nbsp;</td>
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
-                       <td colspan="3">Up to date: <%=done%> = <%=percentage %> %</td>
+                       <td colspan="3">Up to Date: <%=done%> = <%=percentage %> % 
+                         <%if (percentageWithGrace != null){  %>
+                            <br/> With Grace <%=percentageWithGrace%> %
+                         <%}%>
+                       </td>
                        <%if (type != null ){ %>
                        <td colspan="10">&nbsp;<%=request.getAttribute("patientSet")%> </td>
                        <%}else{%>
