@@ -195,3 +195,16 @@ INSERT INTO `intake_node` VALUES
 	(1, 1, NULL, 0, NULL),
 	(2, 2, NULL, 0, NULL);
 
+--
+-- Alter agency table structure
+--
+ALTER TABLE `agency`
+	ADD COLUMN `intakes_combined` boolean NOT NULL DEFAULT 0 AFTER `id`,
+	ADD COLUMN `intake_quick` INTEGER UNSIGNED NOT NULL DEFAULT 1 AFTER `intakes_combined`,
+	ADD COLUMN `intake_indepth` INTEGER UNSIGNED DEFAULT 2 AFTER `intake_quick`;
+
+--
+-- Alter program table structure
+--
+ALTER TABLE `program`
+	ADD COLUMN `intake_program` INTEGER UNSIGNED AFTER `agency_id`;
