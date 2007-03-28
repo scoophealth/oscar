@@ -75,6 +75,7 @@ public class PreventionReportAction extends Action {
        Hashtable h =report.runReport(list,asofDate);
        request.setAttribute("up2date",h.get("up2date"));
        request.setAttribute("percent",h.get("percent"));
+       request.setAttribute("percentWithGrace",h.get("percentWithGrace"));
        request.setAttribute("returnReport",h.get("returnReport"));
        request.setAttribute("inEligible", h.get("inEligible"));
        request.setAttribute("eformSearch",h.get("eformSearch"));
