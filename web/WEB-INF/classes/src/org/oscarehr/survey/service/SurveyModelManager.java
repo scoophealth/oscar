@@ -37,6 +37,11 @@ import org.oscarehr.surveymodel.SurveyDocument.Survey;
 public class SurveyModelManager {
 
 	public static Section findSection(Survey surveyModel, String pageNumber, int  sectionId) {
+		try {
+			Integer.parseInt(pageNumber);
+		} catch(NumberFormatException e) {
+			return null;
+		}
 		Page page = surveyModel.getBody().getPageArray(Integer.parseInt(pageNumber)-1);
 		
 		for(int x=0;x<page.getQContainerArray().length;x++) {
