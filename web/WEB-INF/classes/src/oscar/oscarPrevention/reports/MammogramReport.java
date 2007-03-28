@@ -56,7 +56,7 @@ public class MammogramReport implements PreventionReport{
     
     public Hashtable runReport(ArrayList list,Date asofDate){
         int inList = 0;
-        double done= 0;
+        double done= 0,doneWithGrace = 0;
         ArrayList returnReport = new ArrayList();
         PreventionData pd = new PreventionData();
         
@@ -144,6 +144,7 @@ public class MammogramReport implements PreventionReport{
                    prd.state = "due";
                    prd.numMonths = numMonths;
                    prd.color = "yellow"; //FF00FF
+                   doneWithGrace++;
                    
                 } else if (!refused && cutoffDate.after(prevDate)){ // overdue
                    prd.rank = 2;
@@ -172,12 +173,15 @@ public class MammogramReport implements PreventionReport{
              
           }
           String percentStr = "0";
+          String percentWithGraceStr = "0";
           double eligible = list.size() - inList;
           System.out.println("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
+             double percentageWithGrace =  (done+doneWithGrace) / eligible  * 100 ;
              System.out.println("in percentage  "+percentage   +" "+( done / eligible));
              percentStr = ""+Math.round(percentage); 
+             percentWithGraceStr = ""+Math.round(percentageWithGrace);
           }
           
           Collections.sort(returnReport);
@@ -186,6 +190,7 @@ public class MammogramReport implements PreventionReport{
           
           h.put("up2date",""+Math.round(done));
           h.put("percent",percentStr);
+          h.put("percentWithGrace",percentWithGraceStr);
           h.put("returnReport",returnReport);
           h.put("inEligible", ""+inList);
           h.put("eformSearch","Mam");
