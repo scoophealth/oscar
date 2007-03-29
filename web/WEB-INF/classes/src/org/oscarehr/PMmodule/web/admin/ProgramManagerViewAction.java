@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.web.admin;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,7 @@ import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -117,7 +119,26 @@ public class ProgramManagerViewAction extends BaseAction {
     
     	if (formBean.getTab().equals("Clients")) {
     		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
-    		request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+    		
+    		//request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+    		//clients should be active
+    		List<Admission> admissions = new ArrayList<Admission>();
+    		List ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
+    		Iterator ad = ads.iterator();
+    		while(ad.hasNext()){
+    			Admission admission = (Admission)ad.next();
+    			Integer clientId = admission.getClientId();
+    			if(clientId>0){    				
+    				Demographic client = clientManager.getClientByDemographicNo(Integer.toString(clientId));
+    				if(client!=null){
+    				String clientStatus = client.getPatientStatus();
+    				if(clientStatus!=null && clientStatus.equals("AC"))
+    					admissions.add(admission);    			
+    				}
+    			}
+    		}
+    		request.setAttribute("admissions", admissions);
+    		
     		request.setAttribute("program_name", program.getName());
     		
     		List<ProgramTeam> teams = programManager.getProgramTeams(programId);
@@ -136,11 +157,23 @@ public class ProgramManagerViewAction extends BaseAction {
     				batchAdmissionPrograms.add(bedProgram);
     			}
             }
-    
+            
+    		List<Program> batchAdmissionServicePrograms = new ArrayList<Program>();
+    		List servicePrograms = new ArrayList();
+    		servicePrograms = programManager.getServicePrograms();
+    		Iterator serviceProgram= servicePrograms.iterator();
+    		while(serviceProgram.hasNext()){
+    			Program sp = (Program)serviceProgram.next();
+    			if (sp.isAllowBatchAdmission()) {
+    				batchAdmissionServicePrograms.add(sp);
+    			}            
+    		}
+    		
     		//request.setAttribute("programs", batchAdmissionPrograms);
     		request.setAttribute("bedPrograms", batchAdmissionPrograms);    		
     		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
-    		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());    		
+    		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge()); 
+    		request.setAttribute("servicePrograms",batchAdmissionServicePrograms);
     	}
     
     	if (formBean.getTab().equals("Access")) {
