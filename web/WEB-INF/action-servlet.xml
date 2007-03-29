@@ -158,6 +158,9 @@
 		<property name="programQueueManager">
 			<ref bean="programQueueManager" />
 		</property>
+		<property name="clientManager">
+			<ref bean="clientManager" />
+		</property>
 	</bean>
 	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false">
 		<property name="admissionManager">
