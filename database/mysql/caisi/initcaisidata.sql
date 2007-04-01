@@ -56,6 +56,7 @@ insert into issue (code,description,role,update_date) values('CTCMM25000','Re- A
 insert into issue (code,description,role,update_date) values('CTCMM26000','Drug Card','counsellor',Now());
 insert into issue (code,description,role,update_date) values('CTCMM27000','Suicidal Tendencies','counsellor',Now());
 insert into issue (code,description,role,update_date) values('CTCMM28000','Incident Report','counsellor',Now());
+insert into issue (code,description,role,update_date) values('CTCMM29000','Immigration','counsellor',Now());
 
 INSERT INTO issue (code,description,role,update_date) values('ICSW100','program-client conflict','CSW',Now());
 INSERT INTO issue (code,description,role,update_date) values('ICSW200','difficulties with hygeine','CSW',Now());
