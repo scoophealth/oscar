@@ -33,4 +33,5 @@ public interface CaseManagementIssueDAO extends DAO {
 	public List getActiveIssuesByDemographic(String demographic_no);
 	public void deleteIssueById(CaseManagementIssue issue);
 	public void saveAndUpdateCaseIssues(List issuelist);
+	public void saveIssue(CaseManagementIssue issue);
 }

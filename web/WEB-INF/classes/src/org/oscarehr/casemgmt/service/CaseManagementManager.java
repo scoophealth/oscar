@@ -51,6 +51,7 @@ public interface CaseManagementManager {
 	public Issue getIssue(String issue_id);
 	public void deleteIssueById(CaseManagementIssue issue);
 	public void saveAndUpdateCaseIssues(List issuelist);
+	public void saveCaseIssue(CaseManagementIssue issue);
 	public Issue getIssueInfo(Long l);
 	public List getAllIssueInfo();
 	public List getIssueInfoBySearch(String providerNo,String search,List accessRight);
@@ -92,5 +93,7 @@ public interface CaseManagementManager {
 	public boolean unlockNote(int noteId, String password);
 	
 	public boolean getEnabled();
+	
+	public void updateIssue(String demographicNo, Long originalIssueId, Long newIssueId);
 }
 

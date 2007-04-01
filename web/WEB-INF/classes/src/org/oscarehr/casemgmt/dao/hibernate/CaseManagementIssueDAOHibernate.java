@@ -81,5 +81,9 @@ public class CaseManagementIssueDAOHibernate extends HibernateDaoSupport
 		}
 
 	}
+	
+	public void saveIssue(CaseManagementIssue issue) {
+		getHibernateTemplate().saveOrUpdate(issue);
+	}
 
 }

@@ -651,17 +651,32 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		
 		//change issue
 		CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
+		
 		CheckIssueBoxBean[] issueList = (CheckIssueBoxBean[]) cform.getNewIssueCheckList();
-		for(int x=0;x<oldList.length;x++) {
-			System.out.println("oldList[" + x + "].getIssue().getId() = "  + oldList[x].getIssue().getId());
-			if(x == index) {
-				oldList[x] = new CheckBoxBean();
-				oldList[x].setIssue(newIssueToCIssue(cform, issueList[0].getIssue()));
+		CheckIssueBoxBean substitution = null;
+		
+		//find the checked issue 
+		for(CheckIssueBoxBean curr:issueList) {
+			if(curr.isChecked()) {
+				substitution = curr;
+				break;
 			}
 		}
-		//save
+		
+		if(substitution != null) {
+			for(int x=0;x<oldList.length;x++) {
+				if(x == index) {
+					Issue iss = caseManagementMgr.getIssue(String.valueOf(substitution.getIssue().getId().longValue()));
+					oldList[x].getIssue().setIssue(iss);
+					oldList[x].getIssue().setIssue_id(substitution.getIssue().getId().longValue());
+					this.caseManagementMgr.saveCaseIssue(oldList[x].getIssue());					
+				}			
+			}						
+		}
+		
 		cform.setIssueCheckList(oldList);
-
+		//updateIssueToConcern(cform);
+		
 		return mapping.findForward("view");
 	}
 	

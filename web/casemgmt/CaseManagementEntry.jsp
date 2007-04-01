@@ -345,13 +345,16 @@ if (pId==null) pId="";
 					<%submitString = "this.form.method.value='issueDelete';";
 			submitString = submitString + "this.form.deleteId.value=" + "'"
 					+ ind.intValue() + "';";
-			
-
 			%>
 					<input type="submit" value="delete" onclick="<%=submitString%>">
 				</nested:equal>
 				
 					<!--  change diagnosis button -->
+					<%submitString = "this.form.method.value='changeDiagnosis';";
+			submitString = submitString + "this.form.deleteId.value=" + "'"
+					+ ind.intValue() + "';";
+			%>					
+					<input type="submit" value="Change Diagnosis" onclick="<%=submitString%>">
 				</td>
 			</tr>
 		</nested:iterate>

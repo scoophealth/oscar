@@ -256,6 +256,10 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 	{
 		caseManagementIssueDAO.saveAndUpdateCaseIssues(issuelist);
 	}
+	
+	public void saveCaseIssue(CaseManagementIssue issue) {
+		caseManagementIssueDAO.saveIssue(issue);
+	}
 
 	public Issue getIssueInfo(Long l)
 	{
@@ -862,5 +866,37 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 			}
 		}
 		return false;
+	}
+	
+	public void updateIssue(String demographicNo, Long originalIssueId, Long newIssueId) {
+		List<CaseManagementIssue> issues = this.caseManagementIssueDAO.getIssuesByDemographic(demographicNo);
+		for(CaseManagementIssue issue:issues) {
+			boolean save=false;
+			if(issue.getIssue_id() == originalIssueId.longValue()) {
+				issue.setIssue_id(newIssueId.longValue());
+				issue.setIssue(null);
+				save=true;
+			}
+			if(save) {
+				this.caseManagementIssueDAO.saveIssue(issue);
+			}
+		}
+		
+		/*
+		String[] issueIdList = new String[1];
+		issueIdList[0] = String.valueOf(newIssueId);
+		List<CaseManagementNote> notes = this.caseManagementNoteDAO.getNotesByDemographic(demographicNo);
+		for(CaseManagementNote note:notes) {
+			Set<CaseManagementIssue> issues = note.getIssues();
+			for(CaseManagementIssue issue:issues) {
+				if(issue.getIssue().getId().equals(originalIssueId)) {
+					//update this CaseManagementIssue
+					issue.setIssue(null);
+					issue.setIssue_id(newIssueId.longValue());
+				}
+			}
+			this.caseManagementNoteDAO.saveNote(note);
+		}
+		*/
 	}
 }
