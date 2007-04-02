@@ -49,6 +49,8 @@ Record Immunization
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
 String node = request.getParameter("node").toString();
 String immName = request.getParameter("name").toString();
+System.out.println("node*************"+node);
+System.out.println("immName---------------"+immName);
 %>
 <script lanbuage="javascript">
     function changeStatus(status)

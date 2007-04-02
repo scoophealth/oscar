@@ -101,13 +101,14 @@ busy ...
     	man_review = getXMLStringWithDefault(content, "mreview", "");
     	man_review = man_review.equals("checked") ? "Y" : man_review;
     	pay_program = province.equals("ON")? "HCP" : "RMB";
-	    
-		sql="insert into billing_on_cheader1 values (" + id + ", '', 'HE', 'H', '" + hin + "', '" + ver + "', '"+dob+"','"
+	   
+		sql="insert into billing_on_cheader1 values (" + id + ", 0, 'HE', 'H', '" + hin + "', '" + ver + "', '"+dob+"','"
 				+ pay_program + "', 'P', '" + ref_num + "', '" +facilty_num + "','" + admission_date + "','','" + man_review+ "','" 
 				+location+"', " + demographic_no + ", '" + provider_no +"'," + appointment_no+ ",'"+ demographic_name+ "','"
 				+ sex + "', '" + province + "', '" + billing_date + "','" +billing_time+"','"+total+"','','"
 				+status+"','','"+visittype+"','"+provider_ohip_no+"','"+provider_rma_no+"','"+apptProvider_no+"','"
 				+asstProvider_no+"','" +creator+"','"+timestamp+"')";
+		 System.out.println(sql);
 		if(!dbObj.updateDBRecord(sql)) {
 			System.out.println("error:" + id);
 		} else {
