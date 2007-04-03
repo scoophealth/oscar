@@ -99,15 +99,17 @@ public class PreventionPrintPdf {
 
        cb.moveTo(document.left(), document.top());
        cb.lineTo(document.right(), document.top());
-
+       cb.stroke();
        cb.setFontAndSize(bf, FONTSIZE);
        
        upperYcoord = document.top() - (font.leading(LINESPACING)*2f);
+       cb.beginText();
        for( int idx = 0; idx < clinic.length; ++idx ) {
-            cb.showTextAligned(cb.ALIGN_CENTER, clinic[idx], document.right()/2f, upperYcoord,0f);
+            cb.showTextAligned(cb.ALIGN_CENTER, clinic[idx], document.right()/2f, upperYcoord,0f);                        
             upperYcoord -= font.leading(LINESPACING);
        }
 
+       cb.endText();
        cb.moveTo(document.left(), upperYcoord);
        cb.lineTo(document.right(), upperYcoord);
        cb.stroke();
