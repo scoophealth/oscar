@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
+import oscar.OscarProperties;
 
 public class dxQuickListBeanHandler {
     
@@ -53,6 +54,7 @@ public class dxQuickListBeanHandler {
     }
     
     public boolean init(String providerNo,String codingSystem) {
+        int NameLength = 10; //max length of quicklistname in quicklistuser table
         String codSys = "";
         if ( codingSystem != null ){
             codSys = " where codingSystem = '"+codingSystem+"' ";
@@ -62,6 +64,8 @@ public class dxQuickListBeanHandler {
         try {
             ResultSet rsLastUsed;
             ResultSet rs;
+            String quickListName;
+            boolean truncateName = false;
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String lastUsed = "";
@@ -70,19 +74,33 @@ public class dxQuickListBeanHandler {
             
             if(rsLastUsed.next()){
                 lastUsed = rsLastUsed.getString("quickListName");
+                truncateName = true;
             }
             else{
-                sql = "INSERT INTO quickListUser VALUES ('"+providerNo+"','default',now())";
+                lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
+                if( lastUsed == null ) {
+                    sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
+                    rs = db.GetSQL(sql);
+                    if(rs.next()) 
+                        lastUsed = rs.getString("quickListName");                                           
+                        
+                    rs.close();
+                }
+                
+                sql = "INSERT INTO quickListUser VALUES ('"+providerNo+"', '" + lastUsed + "', now())";
                 db.RunSQL(sql);
-                lastUsed = "default";
             }
-           
+            
             sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
             rs = db.GetSQL(sql);
             while(rs.next()){                
                 dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"),
                                                            rs.getString("createdByProvider"));
-                if(lastUsed.equals(rs.getString("quickListName"))){
+                quickListName = rs.getString("quickListName");
+                if( truncateName && quickListName.length() >  NameLength )
+                    quickListName = quickListName.substring(0,NameLength);
+                                    
+                if(lastUsed.equals(quickListName)){
                     //System.out.println("lastused: " + lastUsed);
                     bean.setLastUsed("Selected");
                     lastUsedQuickList = rs.getString("quickListName");
