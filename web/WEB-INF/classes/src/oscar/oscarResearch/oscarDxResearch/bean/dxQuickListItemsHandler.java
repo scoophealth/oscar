@@ -45,7 +45,7 @@ public class dxQuickListItemsHandler {
     } 
         
     public boolean init(String quickListName, String providerNo) {
-        
+        int ListNameLen = 10;
         boolean verdict = true;
         try {
             ResultSet rs;
@@ -54,16 +54,22 @@ public class dxQuickListItemsHandler {
             dxResearchCodingSystem codingSys = new dxResearchCodingSystem();
             String[] codingSystems = codingSys.getCodingSystems(); 
             String codingSystem;
+            String name;
+            
+            if( quickListName.length() > ListNameLen )
+                name = quickListName.substring(0,ListNameLen);
+            else
+                name = quickListName;
             
             //need to put the providerID as well
-            String sql = "Select quickListName, providerNo from quickListUser where quickListName='"+quickListName + "' AND providerNo ='"+providerNo+"'";
+            String sql = "Select quickListName, providerNo from quickListUser where quickListName='"+name + "' AND providerNo ='"+providerNo+"'";
             rs = db.GetSQL(sql);
             if(rs.next()){
-                sql = "Update quickListUser set lastUsed=now() where quickListName='"+quickListName + "' AND providerNo ='"+providerNo+"'";
+                sql = "Update quickListUser set lastUsed=now() where quickListName='"+name + "' AND providerNo ='"+providerNo+"'";
                 db.RunSQL(sql);
             }
             else{
-                sql = "Insert into quickListUser(quickListName, providerNo, lastUsed) VALUES ('"+quickListName+"','"+providerNo+"',now())";
+                sql = "Insert into quickListUser(quickListName, providerNo, lastUsed) VALUES ('"+name+"','"+providerNo+"',now())";
                 db.RunSQL(sql);
             }
             
