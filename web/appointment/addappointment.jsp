@@ -47,7 +47,8 @@ String [][] dbQueries=new String[][] {
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
 
     {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
-    {"search_noshows", "select appointment_date, start_time, status from appointment where status = 'N' and demographic_no = ? order by appointment_date desc" }
+    {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= now() and appt.appointment_date < date_add(now(), interval 365 day) order by appointment_date limit 5" },
+    {"search_appt_past", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date < now() and appt.appointment_date > date_sub(now(), interval 365 day) order by appointment_date desc limit 5"}
 
   };
 
@@ -603,45 +604,67 @@ String disabled="";
 " <%=disabled%>> </TD> 
       <TD></TD> 
 <% } %>
-      <TD align="right"><INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/> 
+      <TD align="right">
+          <% if(apptObj!=null) { %>
+                <input type="button" value="Paste" onclick="pasteAppt();">
+          <% } %>
+          <INPUT TYPE = "RESET" VALUE = "<bean:message key="appointment.addappointment.btnCancel"/> 
 " onClick="window.close();"> 
         <input type="button" value="<bean:message key="appointment.addappointment.btnRepeat"/> 
 " onclick="onButRepeat()" <%=disabled%>></TD> 
     </tr> 
   </TABLE> 
 </FORM> 
-<% if(apptObj!=null) { %>
-  <hr/>
-<table width="95%" align="center">
-  <tr><td>
-	<a href=# onclick="pasteAppt();">Paste</a>
-  </td>
-  </tr>
-</table>
-    
-<% } %>
-    <table align="center">
-        <tr>
-            <th colspan="2"><bean:message key="appointment.addappointment.msgNoShow" /></th>
+
+    <table style="font-size:8pt;" bgcolor="#c0c0c0" align="center">
+        <tr bgcolor="#ccccff">
+            <th style="font-family: arial, sans-serif" colspan="4"><bean:message key="appointment.addappointment.msgOverview" /></th>
         </tr>
-        <tr>
+        <tr style="font-family: arial, sans-serif" bgcolor="#ccccff">
             <th style="padding-right:25px"><bean:message key="Appointment.formDate" /></th>
-            <th><bean:message key="Appointment.formStartTime" /></th>
+            <th style="padding-right:25px"><bean:message key="Appointment.formStartTime" /></th>
+            <th style="padding-right:25px"><bean:message key="appointment.addappointment.msgProvider" /></th>
+            <th><bean:message key="appointment.addappointment.msgComments" /></th>
         </tr>
       <%                          
         if( bFromWL ) {
-            rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_noshows");
-        
+            rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_appt_future");
+            ArrayList appts = new ArrayList();
+            ApptData appt;
             while(rsdemo.next()) {
+                appt = new ApptData();
+                appt.setAppointment_date(rsdemo.getString("appointment_date"));
+                appt.setStart_time(rsdemo.getString("start_time"));
+                appt.setName(rsdemo.getString("last_name") + ", " + rsdemo.getString("first_name")); //provider name
+                appt.setStatus(rsdemo.getString("status")==null?"":(rsdemo.getString("status").equals("N")?"No Show":(rsdemo.getString("status").equals("C")?"Cancelled":"") ) );
+                appts.add(appt);
+            }
+            //we have to reverse order to start in future and move towards present
+            for( int idx = appts.size()-1; idx >= 0; --idx ) {
+                appt = (ApptData)appts.get(idx);
         %>
-            <tr>
-                <td style="padding-right:25px"><%=rsdemo.getString("appointment_date")%></td>
-                <td><%=rsdemo.getString("start_time")%></td>
+            <tr bgcolor="#eeeeff">
+                <td style="background-color: #CCFFCC; padding-right:25px"><%=appt.getAppointment_date()%></td>
+                <td style="background-color: #CCFFCC; padding-right:25px"><%=appt.getStart_time()%></td>
+                <td style="background-color: #CCFFCC; padding-right:25px"><%=appt.getName()%></td>
+                <td style="background-color: #CCFFCC;" ><%=appt.getStatus()%></td>
             </tr>
         <%
             }
             rsdemo.close();
+            rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_appt_past");
+            while(rsdemo.next()) {
+        %>
+            <tr bgcolor="#eeeeff">
+                <td style="padding-right:25px"><%=rsdemo.getString("appointment_date")%></td>
+                <td style="padding-right:25px"><%=rsdemo.getString("start_time")%></td>
+                <td style="padding-right:25px"><%=rsdemo.getString("last_name") + ",&nbsp;" + rsdemo.getString("first_name")%></td>
+                <td><%=rsdemo.getString("status")==null?"":(rsdemo.getString("status").equals("N")?"No Show":(rsdemo.getString("status").equals("C")?"Cancelled":"") )%></td>
+            </tr>
+        <%
+            }
         }
+        rsdemo.close();
         addApptBean.closePstmtConn();
         %>
     </table>
