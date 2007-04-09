@@ -40,6 +40,8 @@ public class EDoc extends TagObject implements Comparable {
     private String docPublic = "0";
     private String contentType = "";
     private String observationDate = "";
+    private String indivoIdx = null;
+    private boolean indivoRegistered = false;
     
     /** Creates a new instance of EDoc */
     public EDoc() {
@@ -227,5 +229,21 @@ public class EDoc extends TagObject implements Comparable {
     public void setObservationDate(Date observationDate) {
         String formattedDate = UtilDateUtilities.DateToString(observationDate, EDocUtil.DMS_DATE_FORMAT);
         this.observationDate = formattedDate;
+    }
+    
+    public void setIndivoIdx(String idx) {
+        indivoIdx = idx;        
+    }
+    
+    public String getIndivoIdx() {
+        return indivoIdx;
+    }
+    
+    public void registerIndivo() {
+        indivoRegistered = true;
+    }
+    
+    public boolean isInIndivo() {
+        return indivoRegistered;
     }
 }
