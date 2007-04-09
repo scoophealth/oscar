@@ -83,12 +83,26 @@ public class Send2IndivoAction extends Action{
                 String filename =  docData.getDocumentName(files[idx]);
                 EDoc doc = docData.getDoc(files[idx]);
                 String description = doc.getDescription();
-                System.out.println("Sending file to " + demoEmail);
-                if( !indivo.sendBinaryFile(path+filename,description, demoEmail) ) {
-                    errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
-                    this.saveErrors(request, errors);
-                    return mapping.findForward("error");
+                String type = doc.getType();
+                
+                if( doc.isInIndivo() ) {                   
+                    if( !indivo.updateBinaryFile(path+filename, doc.getIndivoIdx(), type, description, demoEmail) ) {
+                        errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
+                        this.saveErrors(request, errors);
+                        return mapping.findForward("error");
+                    }
                 }
+                else {                                        
+                    if( !indivo.sendBinaryFile(path+filename, type, description, demoEmail) ) {
+                        errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
+                        this.saveErrors(request, errors);
+                        return mapping.findForward("error");
+                    }
+                    System.out.println("Saving indivo Doc Idx " + indivo.getIndivoDocIdx());
+                    doc.setIndivoIdx(indivo.getIndivoDocIdx());
+                }
+                
+                EDocUtil.indivoRegister(doc);
             }                                               
             return mapping.findForward("success");
         
