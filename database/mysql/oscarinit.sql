@@ -7060,6 +7060,16 @@ create table log_letters(
     KEY date_time (`date_time`) 
  );
 
+CREATE TABLE indivoDocs (
+    id int(10) not null auto_increment primary key,
+    oscarDocNo int(10) not null,
+    indivoDocIdx varchar(255) not null,
+    docType varchar(20) not null,
+    dateSent date not null,
+    `update` char(1)
+);
+
+
 create index preventions_demographic_no on preventions (demographic_no);
 create index preventions_provider_no on preventions (provider_no(6));
 create index preventions_prevention_type on preventions (prevention_type(10));
