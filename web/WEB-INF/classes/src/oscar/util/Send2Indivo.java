@@ -28,6 +28,8 @@ package oscar.util;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.GregorianCalendar;
+import java.util.Calendar;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,6 +57,8 @@ import org.indivo.xml.phr.binarydata.ObjectFactory;
 import org.indivo.xml.phr.document.IndivoDocumentType;
 import org.indivo.xml.phr.document.DocumentHeaderType;
 import org.indivo.xml.phr.document.ContentDescriptionType;
+import org.indivo.xml.phr.document.DocumentVersionType;
+import org.indivo.xml.phr.document.VersionBodyType;
 
 import org.indivo.xml.phr.medication.Medication;
 import org.indivo.xml.phr.medication.MedicationType;
@@ -63,6 +67,7 @@ import org.indivo.xml.phr.types.CodedValueType;
 import org.indivo.xml.phr.types.CodingSystemReferenceType;
 
 import org.indivo.xml.talk.AddDocumentResultType;
+import org.indivo.xml.talk.ReadDocumentResultType;
 
 import org.w3c.dom.Element;
 
@@ -78,6 +83,7 @@ public class Send2Indivo {
     private String indivoPasswd;
     private String indivoFullName;
     private String indivoRole;
+    private String indivoDocId;
     private String sessionTicket;
     private String errorMsg;
     private Map connParams;
@@ -95,6 +101,10 @@ public class Send2Indivo {
         connParams.put(TalkClient.CERT_TRUST_KEY, TalkClient.ALL_CERTS_ACCEPTED);
     }
     
+    public String getDocumentIndex() {
+        return indivoDocId;
+    }
+    
     public void setServer(String addr) {        
         connParams.put(TalkClient.SERVER_LOCATION, addr);
     }
@@ -110,11 +120,19 @@ public class Send2Indivo {
         catch(ActionNotPerformedException e ) {
             errorMsg = e.getMessage();
             System.out.println("INDIVO Error Authenticating: " + errorMsg);
+            e.printStackTrace();
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
             System.out.println("INDIVO Authenticating Network Error: " + errorMsg);
+            e.printStackTrace();
+            return false;
+        }
+        catch( Exception e ) {
+            errorMsg = e.getMessage();
+            System.out.println("An exception occurred while authenticating " + errorMsg);
+            e.printStackTrace();
             return false;
         }
         
@@ -154,6 +172,7 @@ public class Send2Indivo {
     
     private void sendDocument(String recipientId, IndivoDocumentType doc) throws IndivoException,ActionNotPerformedException {        
         AddDocumentResultType addDocumentResultType = client.addDocument(sessionTicket,recipientId, doc);
+        indivoDocId = addDocumentResultType.getDocumentIndex();
     }
     
     /**Create a Medication Type with prescription and send it to indivo server */
@@ -188,16 +207,19 @@ public class Send2Indivo {
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
             System.out.println("JAXB Error " + errorMsg);
+            e.printStackTrace();
             return false;
         }
         catch(ActionNotPerformedException e) {
             errorMsg = e.getMessage();
             System.out.println("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
+            e.printStackTrace();
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
             System.out.println("Indivo Network Error " + errorMsg);
+            e.printStackTrace();
             return false;
         } 
 
@@ -205,15 +227,20 @@ public class Send2Indivo {
      }
     
     /**Send file to indivo as a raw sequence of bytes */
-    public boolean sendBinaryFile(String file, String description, String recipientId) {        
+    public boolean sendBinaryFile(String file, String type, String description, String recipientId ) {        
         byte[] bfile = getFile(file);
         if( bfile == null )
             return false;
         
+        GregorianCalendar calendar = new GregorianCalendar();
+        String fname = type + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
+        
         BinaryDataType binaryDataType = new BinaryDataType();
         binaryDataType.setData(bfile);
         binaryDataType.setMimeType("application/pdf");
-
+        binaryDataType.setFileDesc(description);
+        binaryDataType.setFilename(fname);
+        
         org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
         org.indivo.xml.JAXBUtils jaxbUtils              = new   org.indivo.xml.JAXBUtils();
 
@@ -224,29 +251,89 @@ public class Send2Indivo {
         try {
             Element element = jaxbUtils.marshalToElement(bd, JAXBContext.newInstance("org.indivo.xml.phr.binarydata"));
              
-            IndivoDocumentType doc = generator.generateDefaultDocument(indivoId, indivoFullName, indivoRole,  DocumentClassificationUrns.BINARYDATA, ContentTypeQNames.BINARYTYPE, element);
+            IndivoDocumentType doc = generator.generateDefaultDocument(indivoId, indivoFullName, indivoRole,  DocumentClassificationUrns.BINARYDATA, ContentTypeQNames.BINARYDATA, element);
 
             DocumentHeaderType header = doc.getDocumentHeader();
             ContentDescriptionType contentDescription = header.getContentDescription();
             contentDescription.setDescription(description);
-            sendDocument(recipientId, doc);
+            
+            sendDocument(recipientId, doc);            
         }
         catch(javax.xml.bind.JAXBException e ) {
             errorMsg = e.getMessage();
             System.out.println("JAXB Error " + errorMsg);
+            e.printStackTrace();
             return false;
         }
         catch(ActionNotPerformedException e) {
             errorMsg = e.getMessage();
             System.out.println("Indivo Unaccepted File " + file + " " + errorMsg);
+            e.printStackTrace();
             return false;
         }
         catch(IndivoException e ) {
             errorMsg = e.getMessage();
             System.out.println("Indivo Network Error " + errorMsg);
+            e.printStackTrace();
             return false;
         }        
 
+        return true;
+    }
+    
+    /**Update indivo record with new file */
+    public boolean updateBinaryFile(String file, String docIndex, String type, String description, String recipientId) {
+        byte[] bfile = getFile(file);
+        if( bfile == null )
+            return false;
+        
+        GregorianCalendar calendar = new GregorianCalendar();
+        String fname = type + calendar.get(Calendar.DAY_OF_MONTH) + "-" + String.valueOf(calendar.get(Calendar.MONTH)+1) + "-" + calendar.get(Calendar.YEAR);
+        
+        //Create new file
+        BinaryDataType binaryDataType = new BinaryDataType();
+        binaryDataType.setData(bfile);
+        binaryDataType.setMimeType("application/pdf");
+        binaryDataType.setFileDesc(description);
+        binaryDataType.setFilename(fname);
+        
+        try {
+            //Retrieve current file record from indivo
+            ReadDocumentResultType readResult = client.readDocument(sessionTicket, recipientId, docIndex);
+            IndivoDocumentType doc = readResult.getIndivoDocument();
+            DocumentVersionType version = doc.getDocumentVersion().get(doc.getDocumentVersion().size() - 1);
+            
+            //Update current record with new file info
+             org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
+             org.indivo.xml.phr.binarydata.ObjectFactory binFactory = new org.indivo.xml.phr.binarydata.ObjectFactory();
+
+             BinaryData bd = binFactory.createBinaryData(binaryDataType);
+             Element element = jaxbUtils.marshalToElement(bd, JAXBContext.newInstance("org.indivo.xml.phr.binarydata"));
+
+             VersionBodyType body = version.getVersionBody();
+             body.setAny(element);
+             version.setVersionBody(body);
+             client.updateDocument(sessionTicket, recipientId, docIndex, version);
+
+        }        
+        catch(javax.xml.bind.JAXBException e ) {
+            errorMsg = e.getMessage();
+            System.out.println("JAXB Error " + errorMsg);
+            e.printStackTrace();
+            return false;
+        }
+        catch(ActionNotPerformedException e) {
+            errorMsg = e.getMessage();
+            System.out.println("Indivo Unaccepted File " + file + " " + errorMsg);
+            e.printStackTrace();
+            return false;
+        }
+        catch(IndivoException e ) {
+            errorMsg = e.getMessage();
+            System.out.println("Indivo Network Error " + errorMsg);
+            e.printStackTrace();
+            return false;
+        }        
         return true;
     }
     
@@ -260,5 +347,13 @@ public class Send2Indivo {
     
     public void setSessionId(String session) {
         sessionTicket = session;
+    }
+    
+    public String getIndivoDocIdx() {
+        return indivoDocId; 
+    }
+    
+    public void setIndivoDocIdx(String idx) {
+        indivoDocId = idx;
     }
 }
