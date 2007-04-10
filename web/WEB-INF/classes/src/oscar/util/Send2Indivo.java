@@ -225,6 +225,65 @@ public class Send2Indivo {
 
          return true;
      }
+     
+     /**Update prescription already sent to indivo */
+      public boolean updateMedication(Prescription drug, String docIndex, String providerFname, String providerLname, String recipientId) {
+        NameType name = new NameType();
+        name.setFirstName(providerFname);
+        name.setLastName(providerLname);
+
+        ConciseContactInformationType contactInfo = new ConciseContactInformationType();
+        contactInfo.getPersonName().add(name);
+
+        MedicationType medType = new MedicationType();
+        medType.setPrescription(true);
+        medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());
+                
+        medType.setName(drug.getDrugName());
+        medType.setDuration(drug.getDuration());
+        medType.setRefills(String.valueOf(drug.getRepeat()));
+        medType.setSubstitutionPermitted(drug.getNosubs());
+        medType.setProvider(contactInfo);                
+
+        try {
+            //Retrieve current file record from indivo
+            ReadDocumentResultType readResult = client.readDocument(sessionTicket, recipientId, docIndex);
+            IndivoDocumentType doc = readResult.getIndivoDocument();
+            DocumentVersionType version = doc.getDocumentVersion().get(doc.getDocumentVersion().size() - 1);
+            
+            //Update current prescription with new med info
+            org.indivo.xml.JAXBUtils jaxbUtils = new org.indivo.xml.JAXBUtils();
+            org.indivo.xml.phr.medication.ObjectFactory medFactory = new org.indivo.xml.phr.medication.ObjectFactory();
+            
+            Medication med = medFactory.createMedication(medType);            
+            Element element = jaxbUtils.marshalToElement(med, JAXBContext.newInstance("org.indivo.xml.phr.medication"));
+            
+            VersionBodyType body = version.getVersionBody();
+            body.setAny(element);
+            version.setVersionBody(body);
+            client.updateDocument(sessionTicket, recipientId, docIndex, version);            
+        }
+        catch(javax.xml.bind.JAXBException e ) {
+            errorMsg = e.getMessage();
+            System.out.println("JAXB Error " + errorMsg);
+            e.printStackTrace();
+            return false;
+        }
+        catch(ActionNotPerformedException e) {
+            errorMsg = e.getMessage();
+            System.out.println("Indivo Unaccepted Medication " + drug.getDrugName() + " " + errorMsg);
+            e.printStackTrace();
+            return false;
+        }
+        catch(IndivoException e ) {
+            errorMsg = e.getMessage();
+            System.out.println("Indivo Network Error " + errorMsg);
+            e.printStackTrace();
+            return false;
+        } 
+
+         return true;
+     }
     
     /**Send file to indivo as a raw sequence of bytes */
     public boolean sendBinaryFile(String file, String type, String description, String recipientId ) {        
