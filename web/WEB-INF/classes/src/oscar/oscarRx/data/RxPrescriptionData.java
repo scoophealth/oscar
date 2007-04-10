@@ -286,10 +286,9 @@ public class RxPrescriptionData {
         try {
             //Get Prescription from database
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            ResultSet rs;
-            String sql = "SELECT * FROM drugs WHERE archived = 0 AND "
-            + "demographic_no = " + demographicNo + " "
-            + "ORDER BY rx_date DESC, drugId DESC";
+            ResultSet rs, rs2;
+            String sql = "SELECT *, (SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = d.drugid and docType = 'Rx' limit 1) as indivoDocIdx " 
+                    + "FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY rx_date DESC, drugId DESC";
             
             Prescription p;
             
@@ -341,7 +340,12 @@ public class RxPrescriptionData {
                     p.setRegionalIdentifier(rs.getString("regional_identifier"));
                     p.setUnit(rs.getString("unit"));
                     p.setMethod(rs.getString("method"));
-                    p.setRoute(rs.getString("route"));
+                    p.setRoute(rs.getString("route"));                                        
+                    
+                    p.setIndivoIdx(rs.getString("indivoDocIdx"));                    
+                    if( p.getIndivoIdx() != null && p.getIndivoIdx().length() > 0 )
+                        p.setRegisterIndivo();
+                    
                     lst.add(p);
                 }
             }
@@ -642,6 +646,9 @@ public class Prescription {
     String method = null;
     String unit = null; 
     String route = null;
+    private String indivoIdx = null;        //indivo document index for this prescription
+    private boolean registerIndivo = false;
+    private final String docType = "Rx";
     //RxDrugData.GCN gcn = null;
     
     public Prescription(int drugId, String providerNo, int demographicNo) {
@@ -650,7 +657,21 @@ public class Prescription {
         this.demographicNo = demographicNo;
     }
     
+    public void setIndivoIdx(String idx) {
+        indivoIdx = idx;
+    }
     
+    public String getIndivoIdx() {
+        return indivoIdx;
+    }
+    
+    public void setRegisterIndivo() {
+        registerIndivo = true;
+    }
+    
+    public boolean isRegisteredIndivo() {
+        return registerIndivo;
+    }
     
     public String getGenericName(){
         return genericName;
@@ -1127,6 +1148,30 @@ public class Prescription {
     
     public boolean Save() {
         return Save(null);
+    }
+    
+    public boolean registerIndivo() {
+        boolean ret = false;
+        try {
+            String update;
+            if( isRegisteredIndivo() )
+                update = "U";
+            else
+                update = "I";
+            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
+            String sql = "INSERT INTO indivoDocs (oscarDocNo, indivoDocIdx, docType, dateSent, `update`)" + 
+                    " VALUES(" + String.valueOf(getDrugId()) + ",'" + getIndivoIdx() + "','" + docType + 
+                    "',now(),'" + update + "')";
+            
+            db.RunSQL(sql);
+            ret = true;
+        }
+        catch(SQLException e) {
+            System.out.println("DATABASE ERROR: " + e.getMessage());
+        }
+        
+        return ret;
     }
     
     public boolean Save(String scriptId) {
