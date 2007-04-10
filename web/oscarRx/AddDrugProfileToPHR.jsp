@@ -129,7 +129,7 @@ String level2 = CddmLevels.MEDICATIONS;
             	    <td width="0%" valign="top">
             	    <div class="DivCCBreadCrumbs">
                         <% if (connected){%>
-                        &nbsp;&nbsp;<%=actorTicket%><br/>
+                        &nbsp;&nbsp;Session Id: <%=actorTicket%><br/>
                         <%}else{%>
                         <%=connectErrorMsg%>
                         <%}%>
@@ -161,23 +161,51 @@ String level2 = CddmLevels.MEDICATIONS;
                             
                             String authorFname;
                             String authorLname;
+                            boolean indivoUpdated;
                             
                             for( int idx = 0; idx < prescribedDrugs.length; ++idx ) {
                                 oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[idx];
-                                if(drug.isCurrent() == true && !drug.isArchived() ){ 
-                                    prov = new EctProviderData().getProvider(drug.getProviderNo());
-                                    if( indivoServer.sendMedication(drug, prov.getFirstName(), prov.getSurname(), patientPingId) ) {
-                                    %>
-                                            <%= drug.getRxDisplay() %><br>
-                                    <%
+                                if(drug.isCurrent() == true && !drug.isArchived() ){
+                                   indivoUpdated = false;
+                                   prov = new EctProviderData().getProvider(drug.getProviderNo());
+                                    
+                                    if( drug.isRegisteredIndivo() ) {
+                                        if( indivoServer.updateMedication(drug, drug.getIndivoIdx(), prov.getFirstName(), prov.getSurname(), patientPingId) ) {
+                                                indivoUpdated = true;                                                
+                                        }
+                                        else {
+                                        %>
+                                                An Error Occurred While Updating Medication <%=indivoServer.getErrorMsg()%>
+                                        <%
+                                                break;
+                                        }
                                     }
                                     else {
-                                    %>
-                                            An Error Occurred While Adding Medication <%=indivoServer.getErrorMsg()%>
-                                    <%
-                                            break;
-                                    }
+                                        if( indivoServer.sendMedication(drug, prov.getFirstName(), prov.getSurname(), patientPingId) ) {
+                                            drug.setIndivoIdx(indivoServer.getIndivoDocIdx());
+                                            indivoUpdated = true;                                                                                   
+                                        }
+                                        else {
+                                        %>
+                                                An Error Occurred While Adding Medication <%=indivoServer.getErrorMsg()%>
+                                        <%
+                                                break;
+                                        }
+                                    }  
                                     
+                                    if( indivoUpdated ) {
+                                        if( drug.registerIndivo() ) {
+                                     %>
+                                                <%= drug.getRxDisplay() %><br>
+                                     <%    
+                                        }
+                                        else {
+                                     %>
+                                                Error updating local database, please contact system administrator
+                                     <%
+                                        }
+                                    }
+                                  
                                 }
                             }
 
