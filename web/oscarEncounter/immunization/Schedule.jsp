@@ -29,7 +29,7 @@
 <%@ page import="oscar.oscarEncounter.immunization.pageUtil.*, java.util.*, org.w3c.dom.*" %>
 <%
 oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("EctSessionBean");
-//System.out.println(bean.demographicNo+" "+ bean.providerNo+"  this is the demoNO");
+//System.out.println(bean.demographicNo+" "+ bean.providerNo+"  this is the demoNO *****");
 String sDoc = null;
 if (bean.demographicNo != null) {
   sDoc = new EctImmImmunizationData().getImmunizations(bean.demographicNo);
@@ -38,11 +38,10 @@ if(sDoc == null){
     response.sendRedirect("loadConfig.do");
     return;
 } 
-
-
-    Document doc = UtilXML.parseXML(sDoc);
-    Element root = doc.getDocumentElement();
-    NodeList sets = root.getElementsByTagName("immunizationSet");
+Document doc = UtilXML.parseXML(sDoc);
+Element root = doc.getDocumentElement();
+NodeList sets = root.getElementsByTagName("immunizationSet");
+       
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -91,7 +90,7 @@ TD.grey{
 
     function edit(nodeName, colName){
         windowprops = "height=443,width=630,location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-        window.open('ScheduleEdit.jsp?node=' + nodeName + '&name=' + colName,"<bean:message key="oscarEncounter.immunization.Schedule.msgRecordImm"/>",windowprops);
+        window.open("ScheduleEdit.jsp?node=" + nodeName + "&name=" + colName,"<bean:message key='oscarEncounter.immunization.Schedule.msgRecordImm'/>",windowprops);
     }
 
     function returnEdit(nodeName, givenDate, refusedDate, lot, provider, comments){
@@ -230,7 +229,7 @@ TD.grey{
                             String status = set.getAttribute("status"); 
                             String showDeleted = (String) request.getAttribute("showDeleted");
                             if (showDeleted == null) {showDeleted = "";}
-                                
+                           
                             if ( (status != null && !status.equals("deleted"))  || showDeleted.equals("true") ){
                                String fontStyle = ""; 
                                if (status.equals("deleted")){ fontStyle= "style=\"text-decoration: line-through;\"";}  %> 
@@ -258,7 +257,7 @@ TD.grey{
                                   if(set.getAttribute("headers").equalsIgnoreCase("true")){%>
                                   <tr>
                                      <td class="head">&nbsp;</td><%
-
+ System.out.println("***********   are we here?");
                                      for(int j=0; j<columns.getLength(); j++){
                                         Element column = (Element)columns.item(j);%>
                                         <td class="head"><%= column.getAttribute("name") %>&nbsp;</td>
@@ -267,7 +266,7 @@ TD.grey{
                                      <td class="head"><bean:message key="oscarEncounter.immunization.Schedule.msgComments"/></td>
                                   </tr>
                                 <%}
-
+System.out.println("****************"+colCount);
                                   Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
                                   NodeList rows = rowList.getElementsByTagName("row");
 
@@ -377,7 +376,8 @@ TD.grey{
                             s += "</span>";
 
                             s += "<span style='text-align:right;width:15px'><a href=\"javascript:edit('" + id + "', '"+ colName +"');\"><img border=0 src='img/edit.gif' /></a></span>";
-
+	//s += "<span style='text-align:right;width:15px'><a href=\"javascript:edit(id,colName);\"><img border=0 src='img/edit.gif' /></a></span>";
+	//System.out.println(s);
                             s += "</span>\n";
 
                             return s;

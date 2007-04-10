@@ -144,7 +144,7 @@ String xmlString = setData.getSetXMLDoc(setId);
 
 Document xmlDoc = UtilXML.parseXML(xmlString);
 Element set = xmlDoc.getDocumentElement();
-
+//System.out.println("are you in ImmunizationSetDisplay ???????");
 String setNamed = set.getAttribute("name");
 
 int i = 0;
@@ -177,10 +177,10 @@ if(set.getAttribute("headers").equalsIgnoreCase("true"))
 
     Element rowList = (Element)set.getElementsByTagName("rowList").item(0);
     NodeList rows = rowList.getElementsByTagName("row");
-    //System.out.println("rows "+rows.getLength());
+    //System.out.println("############rows "+rows.getLength());
     for(int j=0; j<rows.getLength(); j++)
     {
-        System.out.println("Im in the loop");
+        //System.out.println("Im in the loop");
         Element row = (Element)rows.item(j);
 
         String sName = row.getAttribute("name");
@@ -262,7 +262,8 @@ String genCell(String id, Element cell)
     String refusedDate = cell.getAttribute("refusedDate");
     String lot = cell.getAttribute("lot");
     String provider = cell.getAttribute("provider");
-
+	String comments = cell.getAttribute("comments");
+	
     s += "<input type=hidden id='" + id + "_givenDate'>"
              + givenDate + "</input>"
              + "<input type=hidden id='" + id + "_refusedDate'>"
@@ -270,7 +271,9 @@ String genCell(String id, Element cell)
              + "<input type=hidden id='" + id + "_lot'>"
              + lot + "</input>"
              + "<input type=hidden id='" + id + "_provider'>"
-             + provider + "</input>";
+             + provider + "</input>"
+             +"<input type=hidden id='" + id + "_comments'>"
+             + comments + "</input>";
 
     s += "<span id='" + id + "_label'>";
     if(givenDate.length()>0)
