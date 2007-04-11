@@ -142,10 +142,11 @@ public class ClientManagerAction extends BaseAction {
 		Admission admission = (Admission) clientForm.get("admission");
 		Program p = (Program) clientForm.get("program");
 		String id = request.getParameter("id");
+		
 		boolean success = true;
 
 		try {
-			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason());
+			admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason());			
 		} catch (AdmissionException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -210,7 +211,10 @@ public class ClientManagerAction extends BaseAction {
 
 	public ActionForward discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
-
+		DynaActionForm clientForm = (DynaActionForm) form;
+		Program program = (Program) clientForm.get("program");
+		String clientId = request.getParameter("id");		
+		request.setAttribute("programId",String.valueOf(program.getId()));
 		setEditAttributes(form, request, id);
 
 		request.setAttribute("do_discharge", new Boolean(true));
@@ -219,8 +223,10 @@ public class ClientManagerAction extends BaseAction {
 	}
 
 	public ActionForward nested_discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("nestedReason", "true");
-		return discharge_select_program(mapping, form, request, response);
+		request.setAttribute("nestedReason", "true");		
+		setEditAttributes(form,request,request.getParameter("id"));
+		request.setAttribute("do_discharge", new Boolean(true));
+		return mapping.findForward("edit");
 	}
 
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

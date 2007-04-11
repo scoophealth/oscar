@@ -101,6 +101,10 @@ public class TicklerManagerImpl implements TicklerManager {
 		return customFilterDAO.getCustomFilter(name);
 	}
 	
+	public CustomFilter getCustomFilter(String name, String providerNo) {
+		return customFilterDAO.getCustomFilter(name,providerNo);
+	}
+	
 	public CustomFilter getCustomFilterById(Integer id){
 		return customFilterDAO.getCustomFilterById(id);
 	}

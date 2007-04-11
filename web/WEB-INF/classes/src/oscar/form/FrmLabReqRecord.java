@@ -59,9 +59,11 @@ public class FrmLabReqRecord extends FrmRecord {
             rs.close();
 
             //get local clinic information
-            sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_phone, clinic_fax FROM clinic";
+            sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_province, clinic_postal, clinic_phone, clinic_fax FROM clinic";
             rs = db.GetSQL(sql);
             if (rs.next()) {
+            	props.setProperty("clinicName",rs.getString("clinic_name"));
+            	props.setProperty("clinicProvince",rs.getString("clinic_province"));
                 props.setProperty("clinicAddress", rs.getString("clinic_address"));
                 props.setProperty("clinicCity", rs.getString("clinic_city"));
                 props.setProperty("clinicPC", rs.getString("clinic_postal"));
@@ -131,12 +133,15 @@ public class FrmLabReqRecord extends FrmRecord {
             }
         }
         //get local clinic information
-        sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_phone, clinic_fax FROM clinic";
+        sql = "SELECT clinic_name, clinic_address, clinic_city, clinic_postal, clinic_province, clinic_phone, clinic_fax FROM clinic";
         rs = db.GetSQL(sql);
         if (rs.next()) {
+        	props.setProperty("clinicName",rs.getString("clinic_name"));
+        	props.setProperty("clinicProvince",rs.getString("clinic_province"));
             props.setProperty("clinicAddress", rs.getString("clinic_address"));
             props.setProperty("clinicCity", rs.getString("clinic_city"));
             props.setProperty("clinicPC", rs.getString("clinic_postal"));
+            
         }
         rs.close();
 

@@ -30,19 +30,17 @@
 	}
 	
 	function do_discharge() {
-		<c:if test="${empty requestScope.community_discharge}">
+		<c:if test="${empty requestScope.community_discharge}">						
 			document.clientManagerForm.method.value = 'discharge';
 		</c:if>
-		<c:if test="${not empty requestScope.community_discharge}">
+		<c:if test="${not empty requestScope.community_discharge}">			
 			document.clientManagerForm.method.value = 'discharge_community';
 		</c:if>
 		document.clientManagerForm.submit();
 	}
 	
-	function nestedReason(id) {
-		<c:if test="${empty requestScope.community_discharge}">
-			
-			document.clientManagerForm.elements['program.id'].value = id;
+	function nestedReason() {
+		<c:if test="${empty requestScope.community_discharge}">			
 			document.clientManagerForm.method.value = 'nested_discharge_select_program';
 			document.clientManagerForm.submit();
 		</c:if>
@@ -172,7 +170,7 @@ Community Program:&nbsp;
 			<td>Client not interested</td>
 		</tr>
 		<tr>			
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="3" onclick="nestedReason('${admission.programId}')"> </html:radio></td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="3" onclick="nestedReason()" /> </td>
 			<td>Client does not fit program criteria</td>
 		</tr>
 		<tr>

@@ -328,10 +328,12 @@ var maxYear=3100;
 <%-- Dr. Hunter wants the form to say "Physician" instead of "Family Physician".  This is a quick and dirty hack to make it work.  This
      should really be rewritten more elegantly at some later point in time. --%>    
                         <br><%=oscarProps.getProperty("clinic_no", "").startsWith("1022")?"Physician:":"Family Physician:"%><br> <%=props.getProperty("provName", "")==null?"":props.getProperty("provName", "")%>&nbsp;<br>                        
+                        <input type="hidden" style="width:100%" name="clinicName" value="<%=props.getProperty("clinicName","")%>" />
+                        <%=props.getProperty("clinicName","")%>&nbsp;<br>
                         <input type="hidden" style="width:100%" name="clinicAddress" value="<%=props.getProperty("clinicAddress", "")%>"  />
                         <%=props.getProperty("clinicAddress", "")%>&nbsp;<br>
                         <input type="hidden" style="width:100%" name="clinicCity" value="<%=props.getProperty("clinicCity", "")%>"  />
-                        <%=props.getProperty("clinicCity", "")%>&nbsp;<br>
+                        <%=props.getProperty("clinicCity", "")%>,<%=props.getProperty("clinicProvince","") %><br>
                         <input type="hidden" style="width:100%" name="clinicPC" value="<%=props.getProperty("clinicPC", "")%>"  />
                         <%=props.getProperty("clinicPC", "")%>&nbsp;<br>
                     </td>

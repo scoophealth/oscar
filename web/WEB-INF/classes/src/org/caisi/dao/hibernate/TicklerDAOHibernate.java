@@ -117,7 +117,7 @@ public class TicklerDAOHibernate extends HibernateDaoSupport implements
 		if(filter.getClient() == null || filter.getClient().equals("All Clients")) {
 			includeClientClause=false;
 		}
-		if(filter.getDemographic_no()==null||filter.getDemographic_no().equals("")) {
+		if(filter.getDemographic_no()==null||filter.getDemographic_no().equals("")||filter.getDemographic_no().equalsIgnoreCase("All Clients")) {
 			includeDemographicClause=false;
 		}
 		

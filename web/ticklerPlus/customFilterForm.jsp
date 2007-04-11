@@ -147,9 +147,10 @@
                       	</c:forEach>
                       	
                       	
-                      	<c:choose>
+                      	<c:choose>  
                       	<c:when test="${custom_filter.name == '*Myticklers*'}">Myself, <c:out value="${me}"/>
-                      	</c:when>
+                      		<input name="assignee" type=hidden value="<c:out value='${me_no}'/>"/>
+                		</c:when>
                       	</c:choose>
                       	
                       	

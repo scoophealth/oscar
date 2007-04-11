@@ -22,7 +22,7 @@
 	
 	function popupBedCheckReport(programId) {
 		url = '<html:rewrite page="/PMmodule/ProgramManagerView.do?method=viewBedCheckReport&programId="/>';
-		window.open(url + programId, 'bedCheckReport', 'width=1000,height=600');
+		window.open(url + programId, 'bedCheckReport', 'width=1000,height=600,scrollbars=1');
 	}
 </script>
 

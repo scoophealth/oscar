@@ -43,6 +43,16 @@ public class CustomFilterDAOHibernate extends HibernateDaoSupport implements
 		} else {
 			return null;
 		}
+	}	
+	
+	public CustomFilter getCustomFilter(String name, String providerNo) {
+		List results = getHibernateTemplate().find("from CustomFilter c where c.name = ? and c.provider_no = ?",new Object[]{name,providerNo});
+		if(results.size()>0) {
+			return(CustomFilter)results.get(0);
+		} else {
+			return null;
+		}
+		
 	}
 	public CustomFilter getCustomFilterById(Integer id){
 		List results= getHibernateTemplate().find("from CustomFilter c where c.id=?", new Object[]{id});

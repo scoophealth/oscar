@@ -160,8 +160,8 @@ public class TicklerAction extends DispatchAction {
         		for(int k=0;k<providerProgram.size();k++)
             	{
         			String programId = Long.toString(((ProgramProvider)(providerProgram.get(k))).getProgramId());
-        			String ticklerDemoProgramId= Integer.toString(((Integer)ticklerDemoProgram.get(j)));
-        			
+        			String ticklerDemoProgramId= Integer.toString((Integer)ticklerDemoProgram.get(j));
+        			        			
         			//if (((ProgramProvider)(providerProgram.get(k))).getProgramId().equals(ticklerDemoProgram.get(j))){
         			if(programId.equals(ticklerDemoProgramId)){
         				ticklerInProgtam=true;
@@ -189,12 +189,13 @@ public class TicklerAction extends DispatchAction {
 			CustomFilter myfilter = new CustomFilter();
 			myfilter.setName("*Myticklers*");
 			myfilter.setStartDate("");
-			myfilter.setEnd_date(new Date(System.currentTimeMillis()));
+			//myfilter.setEnd_date(new Date(System.currentTimeMillis()));
+			myfilter.setEndDate("");
 			myfilter.setProvider_no(this.getProviderNo(request));
 			myfilter.setStatus("A");
 			myfilter.setPriority("");
 			myfilter.setClient("");
-			myfilter.setAssignee((String)request.getSession().getAttribute("user"));
+			myfilter.setAssignee((String)request.getSession().getAttribute("user"));			
 			myfilter.setDemographic_webName("");
 			myfilter.setDemographic_no("");
 			ticklerMgr.saveCustomFilter(myfilter);
@@ -242,7 +243,8 @@ public class TicklerAction extends DispatchAction {
 		DynaActionForm ticklerForm = (DynaActionForm)form;
         CustomFilter filter = (CustomFilter)ticklerForm.get("filter");
         String name = filter.getName();
-        CustomFilter newFilter = ticklerMgr.getCustomFilter(name);
+        //CustomFilter newFilter = ticklerMgr.getCustomFilter(name);
+        CustomFilter newFilter = ticklerMgr.getCustomFilter(name,this.getProviderNo(request));
         
         /*String filterId = Long.toString(filter.getId());
         CustomFilter newFilter = ticklerMgr.getCustomFilterById(Integer.valueOf(filterId));

@@ -126,6 +126,8 @@ public interface TicklerManager {
 	 */
 	public CustomFilter getCustomFilter(String name);
 	
+	public CustomFilter getCustomFilter(String name, String providerNo);
+	
 	public CustomFilter getCustomFilterById(Integer id);
 	
 	/**

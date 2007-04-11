@@ -38,6 +38,8 @@ public interface CustomFilterDAO extends DAO {
 	 */
 	public CustomFilter getCustomFilter(String name);
 	
+	public CustomFilter getCustomFilter(String name, String providerNo);
+		
 	public CustomFilter getCustomFilterById(Integer id);
 	
 	/**

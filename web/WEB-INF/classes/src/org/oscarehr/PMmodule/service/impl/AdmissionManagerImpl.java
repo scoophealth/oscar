@@ -245,6 +245,7 @@ public class AdmissionManagerImpl implements AdmissionManager {
 	}
 
 	public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
+		
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 
 		if (fullAdmission == null) {

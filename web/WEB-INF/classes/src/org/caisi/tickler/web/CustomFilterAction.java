@@ -142,7 +142,12 @@ public class CustomFilterAction extends DispatchAction {
 			}}
 			else
 				filter.setDemographic_webName("");
-				
+			
+			String filterName = filter.getName();
+			if(filterName!=null && filterName.equals("*Myticklers*")) {
+				filter.setAssignee(filter.getProvider_no());
+			}
+			
 			DynaActionForm filterForm = (DynaActionForm)form;
 			filterForm.set("filter",filter);
 			request.setAttribute("customFilterForm",filterForm);

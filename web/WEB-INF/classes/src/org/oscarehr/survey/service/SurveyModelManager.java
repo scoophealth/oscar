@@ -233,7 +233,8 @@ public class SurveyModelManager {
 		}
 		if(question.getType().isSetSelect()) {
 			//special case for checkboxes
-			if(question.getType().getSelect().getRenderType().equalsIgnoreCase("checkbox")) {
+			String renderType = question.getType().getSelect().getRenderType();
+			if(renderType!=null && renderType.equalsIgnoreCase("checkbox")) {
 				String[] answers = question.getType().getSelect().getPossibleAnswers().getAnswerArray();
 				for(int x=0;x<answers.length;x++) {
 					results.add(new String(pageNumber + "_" + sectionId + "_" + question.getId() + "_" + answers[x]));	
