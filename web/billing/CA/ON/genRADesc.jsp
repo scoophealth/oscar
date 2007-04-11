@@ -194,7 +194,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
 <body  onLoad="setfocus()"  topmargin="0" leftmargin="0" rightmargin="0">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" >
 <tr bgcolor="#486ebd"> 
-	<th><font face="Helvetica" color="#FFFFFF">
+        <th align="left"><form><input type="button" onclick="window.print()" value="Print"></form></th>
+	<th align="center"><font face="Helvetica" color="#FFFFFF">
 	Reconcillation Report </font></th>
 	<th align="right"><form><input type="button" onClick="popupPage(700,600,'billingClipboard.jsp')" value="Clipboard"></form></th>
 </tr>
