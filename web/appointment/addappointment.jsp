@@ -626,9 +626,10 @@ String disabled="";
             <th style="padding-right:25px"><bean:message key="appointment.addappointment.msgProvider" /></th>
             <th><bean:message key="appointment.addappointment.msgComments" /></th>
         </tr>
-      <%                          
-        if( bFromWL ) {
-            rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_appt_future");
+      <%        
+        String demoNo = request.getParameter("demographic_no");
+        if( bFromWL && demoNo != null && demoNo.length() > 0 ) {
+            rsdemo = addApptBean.queryResults(demoNo, "search_appt_future");
             ArrayList appts = new ArrayList();
             ApptData appt;
             while(rsdemo.next()) {
@@ -652,7 +653,7 @@ String disabled="";
         <%
             }
             rsdemo.close();
-            rsdemo = addApptBean.queryResults(request.getParameter("demographic_no"), "search_appt_past");
+            rsdemo = addApptBean.queryResults(demoNo, "search_appt_past");
             while(rsdemo.next()) {
         %>
             <tr bgcolor="#eeeeff">
