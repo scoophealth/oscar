@@ -71,7 +71,8 @@
         layout="injection"
         atc="J07BC01"
         minAge="0"
-        maxAge="19"/>
+        maxAge="19"
+        showIfMinRecordNum="1"/> 
         
    <item        
         desc="dTap=diphtheria, tatanus and acellular pertussis adult/adolescent formulation"
