@@ -27,6 +27,7 @@ package oscar.oscarRx.data;
 import oscar.oscarDB.*;
 import oscar.oscarRx.util.*;
 import oscar.oscarProvider.data.*;
+import oscar.OscarProperties;
 
 import java.util.*;
 import java.sql.*;
@@ -287,9 +288,9 @@ public class RxPrescriptionData {
             //Get Prescription from database
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs, rs2;
-            String sql = "SELECT *, (SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = d.drugid and docType = 'Rx' limit 1) as indivoDocIdx " 
-                    + "FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY rx_date DESC, drugId DESC";
-            
+            String sql = "SELECT * FROM drugs d WHERE d.archived = 0 AND d.demographic_no = " + demographicNo + " ORDER BY rx_date DESC, drugId DESC";
+            String indivoSql = "SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = ? and docType = 'Rx' limit 1";
+            boolean myOscarEnabled = OscarProperties.getInstance().getProperty("MY_OSCAR", "").trim().equalsIgnoreCase("YES");
             Prescription p;
             
             rs = db.GetSQL(sql);
@@ -342,9 +343,17 @@ public class RxPrescriptionData {
                     p.setMethod(rs.getString("method"));
                     p.setRoute(rs.getString("route"));                                        
                     
-                    p.setIndivoIdx(rs.getString("indivoDocIdx"));                    
-                    if( p.getIndivoIdx() != null && p.getIndivoIdx().length() > 0 )
-                        p.setRegisterIndivo();
+                    if( myOscarEnabled ) {
+                        String tmp = indivoSql.replaceFirst("\\?", rs.getString("drugid"));
+                        rs2 = db.GetSQL(tmp);
+                        
+                        if( rs2.next() ) { 
+                            p.setIndivoIdx(rs2.getString("indivoDocIdx"));                                                
+                            if( p.getIndivoIdx() != null && p.getIndivoIdx().length() > 0 )
+                                p.setRegisterIndivo();
+                        }
+                        rs2.close();
+                    }
                     
                     lst.add(p);
                 }
@@ -646,6 +655,7 @@ public class Prescription {
     String method = null;
     String unit = null; 
     String route = null;
+    boolean custom = false;
     private String indivoIdx = null;        //indivo document index for this prescription
     private boolean registerIndivo = false;
     private final String docType = "Rx";
@@ -1398,6 +1408,18 @@ public class Prescription {
      */
     public void setRoute(java.lang.String route) {
        this.route = route;
+    }
+    
+    /**
+     *Setter for property custom (does it have customized directions)
+     *@param boolean value for custom
+     */
+    public void setCustomInstr(boolean custom) {
+        this.custom = custom;
+    }
+    
+    public boolean getCustomInstr() {
+        return this.custom;
     }
     
     /**
