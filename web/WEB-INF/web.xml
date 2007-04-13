@@ -1,33 +1,35 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <!--
-	/*
-	*
-	* Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-	* This software is published under the GPL GNU General Public License.
-	* This program is free software; you can redistribute it and/or
-	* modify it under the terms of the GNU General Public License
-	* as published by the Free Software Foundation; either version 2
-	* of the License, or (at your option) any later version. *
-	* This program is distributed in the hope that it will be useful,
-	* but WITHOUT ANY WARRANTY; without even the implied warranty of
-	* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-	* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
-	* along with this program; if not, write to the Free Software
-	* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
-	*
-	* <OSCAR TEAM>
-	*
-	* This software was written for the
-	* Department of Family Medicine
-	* McMaster University
-	* Hamilton
-	* Ontario, Canada
-	*/
+    Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+    This software is published under the GPL GNU General Public License.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details. You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+    
+    <OSCAR TEAM>
+    
+    This software was written for the
+    Department of Family Medicine
+    McMaster University
+    Hamilton
+    Ontario, Canada
 -->
 <web-app id="WebApp_ID">
 	<display-name>oscar_mcmaster</display-name>
-	<!-- Login filter -->
+    
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext*.xml</param-value>
+    </context-param>
+    
 	<filter>
 		<filter-name>LoginFilter</filter-name>
 		<filter-class>oscar.oscarSecurity.LoginFilter</filter-class>
@@ -40,9 +42,6 @@
 			<param-name>cr.filter.ignore</param-name>
 			<param-value>/login.do /images/* /lab/CMLlabUpload.do /lab/CA/ON/uploadComplete.jsp</param-value>
 		</init-param>
-		<!--
-			<init-param><param-name>authStrategy</param-name><param-value>DATABASE</param-value></init-param>
-		-->
 		<init-param>
 			<param-name>cr.auth.method</param-name>
 			<param-value>CUSTOM</param-value>
@@ -63,15 +62,10 @@
 			<param-name>cr.config.provider</param-name>
 			<param-value>oscar.oscarDB.OscarHibernateProperties</param-value>
 		</init-param>
-		<!-- Hibernate properties auto-propegate 
-			to the hibernate session-factory configuration
-			(all init-params that starts with 'hibernate')
-		-->
 		<init-param>
 			<param-name>hibernate.connection.pool_size</param-name>
 			<param-value>10</param-value>
 		</init-param>
-		<!--  <init-param><param-name>hibernate.hbm2ddl.auto</param-name><param-value>update</param-value></init-param>-->
 		<init-param>
 			<param-name>hibernate.connection.autocommit</param-name>
 			<param-value>true</param-value>
@@ -85,6 +79,7 @@
 		<filter-name>PMMFilter</filter-name>
 		<filter-class>org.oscarehr.PMmodule.web.PMMFilter</filter-class>
 	</filter>
+    
 	<filter-mapping>
 		<filter-name>PMMFilter</filter-name>
 		<url-pattern>/PMmodule/*</url-pattern>
@@ -105,6 +100,7 @@
 		<filter-name>LoginFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+    
 	<listener>
 		<listener-class>oscar.login.Startup</listener-class>
 	</listener>
@@ -112,9 +108,9 @@
 		<listener-class>org.caisi.common.web.OscarDbPropertiesListener</listener-class>
 	</listener>
 	<listener>
-		<listener-class>org.caisi.common.web.CaisiSpringLoader</listener-class>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<!-- Action Servlet Configuration -->
+    
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
@@ -125,12 +121,10 @@
 		<init-param>
 			<param-name>config</param-name>
 			<param-value>/WEB-INF/struts-config.xml</param-value>
-			<!--param-value>/WEB-INF/struts-config-oscarMessenger.xml</param-value-->
 		</init-param>
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>oscarResources</param-value>
-			<!--param-value>oscar.oscarMessenger.oscarMessengerResources</param-value-->
 		</init-param>
 		<init-param>
 			<param-name>detail</param-name>
@@ -142,15 +136,11 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
-	<!-- Oscar servlets -->
-	<!-- oscar documents -->
-	<!-- Used in billing -->
 	<servlet>
 		<servlet-name>UploadDocument</servlet-name>
 		<servlet-class>oscar.DocumentMgtUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-	<!-- form pdf print -->
 	<servlet>
 		<servlet-name>pdfCreator</servlet-name>
 		<servlet-class>oscar.form.pdfservlet.FrmPDFServlet</servlet-class>
@@ -181,7 +171,6 @@
 		<servlet-class>oscar.oscarBilling.ca.bc.MSP.DocumentTeleplanReportUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-	<!-- oscar Report -->
 	<servlet>
 		<servlet-name>ScatterPlotChartServlet</servlet-name>
 		<servlet-class>oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</servlet-class>
@@ -191,22 +180,15 @@
 		<servlet-class>oscar.DocumentUploadServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>
-	<!-- Action Servlet Mapping -->
+    
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
-	<!-- oscar documents -->
 	<servlet-mapping>
 		<servlet-name>UploadDocument</servlet-name>
 		<url-pattern>/servlet/oscar.DocumentMgtUploadServlet</url-pattern>
 	</servlet-mapping>
-	<!-- Disabled because it's a security risk and because it's disabled by default
-		in Tomcat 5.  Better practice to specify each servlet individually.
-		<servlet-mapping>
-		<servlet-name>invoker</servlet-name>
-		<url-pattern>/servlet/*</url-pattern>
-		</servlet-mapping> -->
 	<servlet-mapping>
 		<servlet-name>pdfCreator</servlet-name>
 		<url-pattern>/form/createpdf</url-pattern>
@@ -231,23 +213,21 @@
 		<servlet-name>UploadTeleplanServlet</servlet-name>
 		<url-pattern>/servlet/oscar.DocumentTeleplanReportUploadServlet</url-pattern>
 	</servlet-mapping>
-	<!--oscar Report -->
 	<servlet-mapping>
 		<servlet-name>ScatterPlotChartServlet</servlet-name>
 		<url-pattern>/servlet/oscar.oscarEncounter.oscarMeasurements.pageUtil.ScatterPlotChartServlet</url-pattern>
 	</servlet-mapping>
-	<!--Used in billing -->
 	<servlet-mapping>
 		<servlet-name>DocumentUploadServlet</servlet-name>
 		<url-pattern>/servlet/oscar.DocumentUploadServlet</url-pattern>
 	</servlet-mapping>
-	<!-- The Welcome File List -->
-	<welcome-file-list>
+	
+    <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
 		<welcome-file>index.htm</welcome-file>
 	</welcome-file-list>
-	<!-- Struts Tag Library Descriptors -->
+    
 	<taglib>
 		<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
 		<taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
@@ -260,8 +240,4 @@
 		<taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
 		<taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
 	</taglib>
-	<!--  <taglib>
-		<taglib-uri>http://jakarta.apache.org/taglibs/log-1.0</taglib-uri>
-		<taglib-location>/WEB-INF/log.tld</taglib-location>
-		</taglib>-->
 </web-app>

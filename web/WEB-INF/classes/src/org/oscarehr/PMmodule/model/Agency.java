@@ -78,21 +78,8 @@ public class Agency extends BaseAgency {
 	/**
 	 * Constructor for required fields
 	 */
-	public Agency (
-		java.lang.Long id,
-		java.lang.String name,
-		boolean local,
-		boolean integratorEnabled,
-		boolean intakesCombined,
-		java.lang.Integer intakeQuick) {
-
-		super (
-			id,
-			name,
-			local,
-			integratorEnabled,
-			intakesCombined,
-			intakeQuick);
+	public Agency(java.lang.Long id, java.lang.String name, boolean local, boolean integratorEnabled, boolean intakesCombined, java.lang.Integer intakeQuick) {
+		super(id, name, local, integratorEnabled, intakesCombined, intakeQuick);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */

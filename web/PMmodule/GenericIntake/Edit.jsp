@@ -1,18 +1,16 @@
-<%@include file="/taglibs.jsp"%>
-<%@page import="org.oscarehr.PMmodule.model.Intake"%>
-<%@page	import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean"%>
+<%@ include file="/taglibs.jsp"%>
+<%@ page import="org.oscarehr.PMmodule.model.Intake"%>
+<%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean"%>
 <%
-	GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
-	Intake intake = intakeEditForm.getIntake();
+GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
+Intake intake = intakeEditForm.getIntake();
 %>
 <html:html xhtml="true" locale="true">
 	<head>
 		<title>Generic Intake Edit</title>
-		
 		<style type="text/css">
 			@import "<html:rewrite page="/css/genericIntake.css" />";
 		</style>
-
 		<script type="text/javascript">
 			<!--
 			var djConfig = {
@@ -29,9 +27,7 @@
 			dojo.require("dojo.validate.*");
 			// -->
 		</script>
-		
 		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
-		
 		<html:base />
 	</head>
 	<body>
@@ -40,11 +36,11 @@
 			
 			<div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 				<div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
-					<c:out value="${sessionScope.genericIntakeEditForm.title}" />
+                    <c:out value="${sessionScope.genericIntakeEditForm.title}" />
 				</div>
-				
+                
 				<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
-					<div id="clientTable" dojoType="TitlePane" label="Client Information" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
+					<div id="clientTable" dojoType="TitlePane" label="Client Information" title="(Fields marked with * are mandatory)" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
 								<td><label>First Name *<br><html:text property="client.firstName" /></label></td>
@@ -111,7 +107,7 @@
 								<c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td>
 									<c:forEach var="serviceProgram" items="${sessionScope.genericIntakeEditForm.servicePrograms}">
-										<html-el:multibox property="serviceProgramIds" value="${serviceProgram.value}" />&nbsp;<c:out value="${serviceProgram.label}" />
+										<html-el:multibox property="serviceProgramIds" value="${serviceProgram.value}" />&nbsp;<c:out value="${serviceProgram.label}" /><br />
 									</c:forEach>
 								</td>
 								</c:if>
@@ -125,15 +121,30 @@
 					<table class="intakeTable">
 						<tr>
 							<td>
-								<html:submit onclick="save()">Save</html:submit>
-								<html:reset>Reset</html:reset>
-							</td>
+                                <html:submit onclick="save()">Save</html:submit>&nbsp;
+                                <input type="button" value="Back" onclick="javascript:history.back()" />&nbsp;
+                                <html:reset>Reset</html:reset>
+                            </td>
 							<td align="right">
-								<html:cancel>Close</html:cancel>
-							</td>
+                                <input type="button" value="Print" onclick="javascript:window.print()"/>&nbsp;
+                                <html:cancel>Close</html:cancel>
+                            </td>
 						</tr>
+                        <logic:messagesPresent>
+                        <html:messages id="error" bundle="pmm">
+                        <tr>
+                            <td class="error"><c:out value="${error}" /></td>
+                        </tr>
+                        </html:messages>
+                        </logic:messagesPresent>
+                        <logic:messagesPresent message="true">
+                        <html:messages id="message" message="true" bundle="pmm">
+                        <tr>
+                            <td class="message"><c:out value="${message}" /></td>
+                        </tr>
+                        </html:messages>
+                        </logic:messagesPresent>
 					</table>
-
 					<%@ include file="/common/messages.jsp"%>
 				</div>
 			</div>

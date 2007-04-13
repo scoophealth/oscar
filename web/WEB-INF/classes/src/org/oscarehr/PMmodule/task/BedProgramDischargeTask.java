@@ -63,7 +63,6 @@ public class BedProgramDischargeTask extends TimerTask {
 		this.bedDemographicManager = bedDemographicManager;
 	}
 
-	
 	@Override
 	public void run() {
 		log.info("start bed program discharge task");

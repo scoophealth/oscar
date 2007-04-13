@@ -145,7 +145,6 @@
 			<ref local="dataSource" />
 		</property>
 	</bean>
-	
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
@@ -176,20 +175,17 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	
 	<!-- Generic Intake -->
 	<bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeNodeDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	
 	<bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	
 	<bean id="intakeADao" class="org.oscarehr.PMmodule.dao.hibernate.IntakeADaoHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
@@ -201,7 +197,6 @@
 		</property>
 	</bean>
 	<!-- Generic Intake -->
-
 	<bean id="consentDao" class="org.oscarehr.PMmodule.dao.hibernate.ConsentDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
@@ -377,6 +372,12 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
+    <bean id="populationReportDAO" class="org.oscarehr.common.dao.hibernate.PopulationReportDAOHibernate">
+        <property name="sessionFactory">
+            <ref local="sessionFactory" />
+        </property>
+    </bean>
+    
 	<!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
 	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory">
@@ -391,6 +392,7 @@
 			</props>
 		</property>
 	</bean>
+    
 	<!-- managers  -->
 	<bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
@@ -599,7 +601,6 @@
 			</bean>
 		</property>
 	</bean>
-	
 	<!-- Generic Intake -->
 	<bean id="genericIntakeManager" parent="baseTransactionProxy">
 		<property name="target">
@@ -632,7 +633,6 @@
 		</property>
 	</bean>
 	<!-- Generic Intake -->
-	
 	<bean id="consentManager" parent="baseTransactionProxy">
 		<property name="target">
 			<bean class="org.oscarehr.PMmodule.service.impl.ConsentManagerImpl">
@@ -854,6 +854,14 @@
 			<ref local="ClientImageDAO" />
 		</property>
 	</bean>
+    <bean id="populationReportManager" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="org.oscarehr.common.service.impl.PopulationReportManagerImpl">
+                <property name="populationReportDAO" ref="populationReportDAO" />
+            </bean>
+        </property>
+    </bean>
+    
 	<!-- ========================= SCHEDULED JOBS ========================= -->
 	<bean id="scheduledIntegratorUpdateTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
@@ -884,6 +892,7 @@
 			<value>600000</value>
 		</property>
 	</bean>
+    
 	<bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
 			<bean class="org.oscarehr.PMmodule.task.BedProgramDischargeTask">
@@ -907,6 +916,7 @@
 			<value>3600000</value>
 		</property>
 	</bean>
+    
 	<bean id="scheduledErProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
 		<property name="timerTask">
 			<bean class="org.oscarehr.PMmodule.task.ErProgramDischargeTask">
@@ -927,21 +937,40 @@
 			<value>300000</value>
 		</property>
 	</bean>
+
+    <bean id="scheduledPopulationReportTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="timerTask">
+            <bean class="org.oscarehr.common.task.PopulationReportTask" />
+        </property>
+        <property name="delay">
+            <!-- run 4 min after start -->
+            <value>240000</value>
+        </property>
+        <property name="period">
+			<!-- run every 60 mins -->
+			<value>3600000</value>
+        </property>
+    </bean>
+    
 	<bean id="scheduler" class="org.springframework.scheduling.timer.TimerFactoryBean">
 		<property name="scheduledTimerTasks">
 			<list>
 				<ref local="scheduledIntegratorUpdateTask" />
 				<ref local="scheduledBedProgramDischargeTask" />
 				<ref local="scheduledErProgramDischargeTask" />
+                <ref local="scheduledPopulationReportTask" />
 			</list>
 		</property>
 	</bean>
+    
 	<bean id="QuestionTypes" class="org.oscarehr.survey.model.QuestionTypes" singleton="true" />
+
 	<bean id="testmode" class="java.lang.String">
 		<constructor-arg>
 			<value>${testmode.enabled}</value>
 		</constructor-arg>
 	</bean>
+    
 	<bean id="version" class="org.caisi.service.impl.VersionImpl">
 		<property name="version">
 			<value>2.0.0</value>

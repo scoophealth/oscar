@@ -26,7 +26,7 @@ insert into default_role_access (role_id,access_id) values ((select role_id from
 insert into default_role_access (role_id,access_id) values ((select role_id from caisi_role where name='doctor'),(select access_id from access_type where name='master file'));
 
 -- issues
-INSERT INTO issue (code, role,update_date,description) SELECT icd9.icd9,'doctor',now(),icd9.description from icd9;
+INSERT INTO issue (code, description, role, update_date) SELECT icd10.code, icd10.short_desc, 'doctor', now() FROM icd10;
 
 INSERT INTO issue (code,description,role,update_date) values('CTCMM1000','Safety','counsellor',Now());
 INSERT INTO issue (code,description,role,update_date) values('CTCMM2000','Health','counsellor',Now());

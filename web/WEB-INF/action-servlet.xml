@@ -498,5 +498,11 @@
 		<property name="genericIntakeManager">
 			<ref bean="genericIntakeManager"/>
 		</property>
-	</bean>	
+	</bean>
+    <!-- Population Report -->
+    <bean name="/PopulationReport" class="org.oscarehr.common.web.PopulationReportAction" singleton="false">
+        <property name="populationReportManager">
+            <ref bean="populationReportManager" />
+        </property>
+    </bean>
 </beans>

@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.utility;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,6 +41,15 @@ public final class DateTimeFormatUtils {
 	
 	// Public methods
 	
+	// Timestamp
+	
+	public static final Timestamp getPast(int numYears) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.YEAR, -numYears);
+		
+		return new Timestamp(calendar.getTimeInMillis());		
+	}
+
 	// Dates
 	
 	public static final Date getFuture(Date start, Integer daysInFuture) {
@@ -67,7 +77,7 @@ public final class DateTimeFormatUtils {
 	}
 	
 	// Times
-	
+
 	public static final Date getTimeFromLong(long time) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
