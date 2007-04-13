@@ -47,6 +47,7 @@ public final class RxWriteScriptForm extends ActionForm {
     int repeat = 0;
     boolean nosubs = false;
     boolean prn = false;
+    boolean customInstr = false;
     String special = null;
     String atcCode = null;
     String regionalIdentifier = null;
@@ -226,6 +227,14 @@ public final class RxWriteScriptForm extends ActionForm {
         this.special = RHS;
     }
     
+    public void setCustomInstr(boolean c) {
+        this.customInstr = c;        
+    }
+    
+    public boolean getCustomInstr() {
+        return this.customInstr;
+    }
+    
     /**
      * Reset all properties to their default values.
      *
@@ -251,6 +260,7 @@ public final class RxWriteScriptForm extends ActionForm {
         this.nosubs = false;
         this.prn = false;
         this.special = null;
+        this.customInstr = false;
     }
     
     

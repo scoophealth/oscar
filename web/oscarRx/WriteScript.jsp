@@ -527,9 +527,14 @@ String regionalIdentifier="";
        return retval;
     }
     
+    
+    
     function writeScriptDisplay(){  
   //      alert ("f"+first);
+  
+    var disabled = document.forms.RxWriteScriptForm.customInstr.checked;
     
+    if( !disabled ) {
         if (first == false){      
             
             var frm = document.forms.RxWriteScriptForm;
@@ -605,7 +610,7 @@ String regionalIdentifier="";
              replaceScriptDisplay();
           }
           //first = false;
-        
+        }
     }
     
     function clearWarning(){
@@ -804,6 +809,8 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setUnit(rx.getUnit());
     thisForm.setMethod(rx.getMethod());
     thisForm.setRoute(rx.getRoute());
+    thisForm.setCustomInstr(rx.getCustomInstr());
+    System.out.println("SETTING FROM STASH " + rx.getCustomInstr());
     atcCode= rx.getAtcCode();
     System.out.println("route "+rx.getRoute());
 }
@@ -833,6 +840,7 @@ Prn:            <%= String.valueOf(thisForm.getPrn()) %><br>
 Special:        <%= thisForm.getSpecial() %><br>
 ATC:            <%= thisForm.getAtcCode() %>
 regional ident  <%= thisForm.getRegionalIdentifier() %>
+Custom Instruct; <%=thisForm.getCustomInstr() %>
 
 <% regionalIdentifier = thisForm.getRegionalIdentifier(); %>
 
@@ -1204,7 +1212,7 @@ int i;
                             </tr>
                             <tr>
                                 <td colspan=4>
-                                    Special Instructions:
+                                    Special Instructions:&nbsp;<html:checkbox property="customInstr" />Custom Instructions
                                     <script language=javascript>
                                         function cmdSpecial_click(){
                                             var frm = document.forms.RxWriteScriptForm;
@@ -1408,7 +1416,7 @@ int i;
             }
          }
          
-         customQty(<%=quan%>);
+         customQty(<%=quan%>);         
           writeScriptDisplay();
         </script>
         

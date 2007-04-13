@@ -43,7 +43,16 @@ public final class RxUpdateFavoriteForm extends ActionForm {
     private String repeat = null;
     private boolean nosubs = false;
     private boolean prn = false;
+    private boolean customInstr = false;
     private String special = null;
+    
+    public boolean getCustomInstr() {
+        return this.customInstr;
+    }
+    
+    public void setCustomInstr(boolean customInstr) {
+        this.customInstr = customInstr;
+    }
     
     public String getFavoriteId() {
         return (this.favoriteId);
@@ -168,6 +177,7 @@ public final class RxUpdateFavoriteForm extends ActionForm {
         this.repeat = null;
         this.nosubs = false;
         this.prn = false;
+        this.customInstr = false;
         this.special = null;
     }
     

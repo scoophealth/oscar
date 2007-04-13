@@ -53,7 +53,7 @@ public final class RxWriteScriptAction extends Action {
         MessageResources messages = getResources(request);
         
         // Setup variables
-        RxWriteScriptForm frm = (RxWriteScriptForm)form;
+        RxWriteScriptForm frm = (RxWriteScriptForm)form;        
         
         String fwd = "refresh";
         
@@ -100,7 +100,8 @@ public final class RxWriteScriptAction extends Action {
             rx.setUnit(frm.getUnit());
             rx.setMethod(frm.getMethod());
             rx.setRoute(frm.getRoute());
-            
+            rx.setCustomInstr(frm.getCustomInstr());
+            System.out.println("SAVING STASH " + rx.getCustomInstr());
                      
             bean.setStashItem(bean.getStashIndex(), rx);
          

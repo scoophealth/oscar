@@ -74,6 +74,7 @@ public final class RxUpdateFavoriteAction extends Action {
             fav.setNosubs(frm.getNosubs());
             fav.setPrn(frm.getPrn());
             fav.setSpecial(frm.getSpecial());
+            fav.setCustomInstr(frm.getCustomInstr());
 
             fav.Save();
 

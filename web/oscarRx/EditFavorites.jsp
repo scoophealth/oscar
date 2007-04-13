@@ -78,6 +78,7 @@ int i, j;
     <html:hidden property="nosubs" />
     <html:hidden property="prn" />
     <html:hidden property="special" />
+    <html:hidden property="customInstr" />
 </html:form>
 
 <html:form action="/oscarRx/deleteFavorite">
@@ -104,7 +105,8 @@ int i, j;
 
         put.nosubs.value = eval('get.fldNosubs' + rowId).checked;
         put.prn.value = eval('get.fldPrn' + rowId).checked;
-
+        put.customInstr.value = eval('get.customInstr' + rowId).checked;
+        
         put.special.value = eval('get.fldSpecial' + rowId).value;
 
         if(put.favoriteName.value==null || put.favoriteName.value.length < 1) {
@@ -293,7 +295,8 @@ int i, j;
                                         <table>
                                             <tr>
                                                 <td>
-                                                    <b>Special Instructions:</b>
+                                                    <b>Special Instructions:</b><br/>
+                                                    Custom Instructions:&nbsp;<input type="checkbox" name="customInstr<%=i%>" <% if(f.getCustomInstr()) { %>checked<%}%>>
                                                 </td>
                                                 <td width="100%" >
                                                     <textarea name="fldSpecial<%= i%>" style="width:100%" rows=5 ><%
