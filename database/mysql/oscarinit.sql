@@ -809,6 +809,7 @@ CREATE TABLE favorites (
   unit varchar(5) default 'tab',
   method varchar(5) default 'Take',
   route varchar(5) default 'PO',
+  dosage text,
   custom_instructions boolean default false,
   PRIMARY KEY  (favoriteid)
 ) TYPE=MyISAM;
