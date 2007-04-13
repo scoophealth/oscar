@@ -2,5 +2,6 @@
 #than configured with form controls
 
 alter table drugs add column dosage text;
+alter table favorites add column dosage text;
 alter table drugs add column custom_instructions boolean default false;
 alter table favorites add column custom_instructions boolean default false;
