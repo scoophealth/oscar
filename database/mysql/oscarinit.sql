@@ -581,6 +581,8 @@ CREATE TABLE drugs (
   method varchar(5) default 'Take',
   route varchar(5) default 'PO',
   create_date datetime,
+  dosage text,
+  custom_instructions boolean default false,
   PRIMARY KEY  (drugid)
 ) TYPE=MyISAM;
 
@@ -807,6 +809,7 @@ CREATE TABLE favorites (
   unit varchar(5) default 'tab',
   method varchar(5) default 'Take',
   route varchar(5) default 'PO',
+  custom_instructions boolean default false,
   PRIMARY KEY  (favoriteid)
 ) TYPE=MyISAM;
 
