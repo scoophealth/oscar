@@ -289,6 +289,14 @@
 			name="genericIntakeEditForm"
 			type="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" />
 		<!-- Generic Intake -->
+
+                
+                <!--form-bean name="SendActionForm" type="oscar.indivoMessenger.SendActionForm"/>
+                <form-bean name="NewStrutsActionForm" type="oscar.indivoMessenger.NewStrutsActionForm"/>
+                <form-bean name="CreateIndivoMessageActionForm" type="oscar.indivoMessenger.CreateIndivoMessageActionForm"/>
+                <form-bean name="DisplayIndivoMsgsActionForm" type="oscar.indivoMessenger.DisplayIndivoMsgsActionForm"/ -->
+		
+
 	</form-beans>
 	
 	<global-forwards>
@@ -505,9 +513,14 @@
 		</action>
                 <action name="FrmForm" path="/form/HSFOform" scope="request" type="oscar.form.study.HSFO.pageUtil.ManageHSFOAction" >
                         <forward name="registration" path="/form/HSFORegistrationFrm.jsp" />
+                        <forward name="flowsheet" path="/form/HSFOFlowsheet.jsp" />
+                        
                 </action>    
-                <action name="FrmForm" path="/form/HSFOsaveform" scope="request" type="oscar.form.study.HSFO.pageUtil.SaveRegistrationAction" >
+                <action name="FrmForm" path="/form/HSFOsaveform" scope="request" 
+                        type="oscar.form.study.HSFO.pageUtil.SaveRegistrationAction" 
+                        parameter="dispatch">
                         <forward name="success" path="/form/HSFOform.do" />
+                        <forward name="exit" path="/oscarEncounter/close.jsp" />
                 </action>    
                 <action name="FrmForm" path="/form/HSFOXmlTransfer" scope="request" type="oscar.form.study.HSFO.pageUtil.TransferHSFOXmlAction" >
                         <forward name="HSFORE" path="/form/hsfoxmlresult.jsp" />
@@ -1347,6 +1360,30 @@
 		<action path="/VaccineProviderReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
 			<forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
 		</action>
+
+                
+                
+                <!--
+                <action input="/indivoMessenger/DisplayIndivoMessages.jsp" name="DisplayIndivoMsgsActionForm"
+                        path="/indivoMessenger/DisplayIndivoMessages" scope="request"
+                        type="oscar.indivoMessenger.DisplayIndivoMsgsAction">
+                    <forward name="success" path="/indivoMessenger/DisplayIndivoMessages.jsp"/>
+                </action>
+                <action input="/indivoMessenger/ViewIndivoMessage.jsp" name="NewStrutsActionForm"
+                        path="/newStrutsAction" scope="request" type="oscar.indivoMessenger.NewStrutsAction">
+                        <forward name="success" path="/indivoMessenger/CreateIndivoMessage.jsp"/>
+                </action>
+                <action input="/indivoMessenger/CreateIndivoMessage.jsp" name="SendActionForm"
+                        path="/indivoMessenger/Send" scope="request" type="oscar.indivoMessenger.SendAction">
+                        <forward name="success" path="/indivoMessenger/SentIndivoMessage.jsp"/>
+                </action>
+                <action input="/indivoMessenger/ViewIndivoMessage.jsp" name="CreateIndivoMessageActionForm"
+                    path="/indivoMessenger/CreateIndivoMessage" scope="request"
+                    type="oscar.indivoMessenger.CreateIndivoMessageAction"/>
+                    -->
+
+                
+
         <!-- Population Report -->
         <action
             path="/PopulationReport"
@@ -1356,6 +1393,7 @@
             <forward name="report" path="/report/PopulationReport.jsp" />
         </action>
         <!-- Population Report -->
+
 	</action-mappings>
 	
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
