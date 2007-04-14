@@ -406,6 +406,9 @@ public static String space(int i) {
         return str.substring(str.length() - len, str.length());
     }
     public static String cutBackString(String str,int len){
+        if ( str != null && str.length() < len){
+           return str;    
+        }
         return str.substring(0,len);
     }
     
