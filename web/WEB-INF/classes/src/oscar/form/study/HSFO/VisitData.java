@@ -31,14 +31,9 @@ import java.util.Date;
  * 
  */
 public class VisitData {
-    
-    /** Creates a new instance of VisitData */
-    public VisitData() {
-    }
-    
-
 
 	VisitData registrationData;
+	int ID;
 	String Patient_Id;
 	//add by Vic for XML transfer
 	String Provider_Id;
@@ -46,7 +41,8 @@ public class VisitData {
 	Date FormEdited;
 	
 	Date VisitDate_Id;
-	String Drugcoverage; // enum('yes', 'no'
+	
+	String Drugcoverage; // enum('yes', 'no');
 	int SBP;
 	int SBP_goal;
 	int DBP;
@@ -136,14 +132,21 @@ public class VisitData {
 	Date A1C_LabresultsDate;
 	boolean locked;
 		
+        
+        /** Creates a new instance of VisitData */
+        public VisitData() {
+        }
 	
 	public VisitData getVisitData() {
 		return registrationData;
 	}
 
 	public void setVisitData(
+			int ID,
 			String Patient_Id,
 			Date VisitDate_Id,
+			Date FormCreated,
+			Date FormEdited,
 			String Drugcoverage, 
 			int SBP,
 			int SBP_goal,
@@ -234,8 +237,11 @@ public class VisitData {
 			Date A1C_LabresultsDate,
 			boolean locked) 
 	{
+		this.ID = ID;
 		this.Patient_Id = Patient_Id;
 		this.VisitDate_Id = VisitDate_Id;
+		this.FormCreated = FormCreated;
+		this.FormEdited = FormEdited;
 		this.Drugcoverage = Drugcoverage; 
 		this.SBP = SBP;
 		this.SBP_goal = SBP_goal;
@@ -950,6 +956,10 @@ public class VisitData {
 		return VisitDate_Id;
 	}
 
+        public void setVisitDateIdToday(){
+            VisitDate_Id = new Date();
+        }    
+        
 	public void setVisitDate_Id(Date visitDate_Id) {
 		VisitDate_Id = visitDate_Id;
 	}
@@ -1062,9 +1072,21 @@ public class VisitData {
 		this.locked = locked;
 	}
 
+
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int id) {
+		ID = id;
+	}
+
+
 	public String getProvider_Id() {
 		return Provider_Id;
 	}
+
 
 	public void setProvider_Id(String provider_Id) {
 		Provider_Id = provider_Id;
@@ -1086,3 +1108,4 @@ public class VisitData {
 		FormEdited = formEdited;
 	}
 }
+
