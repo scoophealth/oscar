@@ -115,7 +115,7 @@ public class PatientData {
 		this.Ethnic_White = Ethnic_White;
 		this.Ethnic_Black = Ethnic_Black;
 		this.Ethnic_EIndian = Ethnic_EIndian;
-		this.Ethnic_EIndian = Ethnic_Pakistani;
+		this.Ethnic_Pakistani = Ethnic_Pakistani;
 		this.Ethnic_SriLankan = Ethnic_SriLankan;
 		this.Ethnic_Bangladeshi = Ethnic_Bangladeshi;
 		this.Ethnic_Chinese = Ethnic_Chinese;
