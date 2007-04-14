@@ -509,7 +509,9 @@
                 <action name="FrmForm" path="/form/HSFOsaveform" scope="request" type="oscar.form.study.HSFO.pageUtil.SaveRegistrationAction" >
                         <forward name="success" path="/form/HSFOform.do" />
                 </action>    
-                
+                <action name="FrmForm" path="/form/HSFOXmlTransfer" scope="request" type="oscar.form.study.HSFO.pageUtil.TransferHSFOXmlAction" >
+                        <forward name="HSFORE" path="/form/hsfoxmlresult.jsp" />
+                </action>    
 		<action name="FrmFormForm" path="/form/SetupForm" scope="request" type="oscar.form.pageUtil.FrmSetupFormAction" />
 		<action name="FrmFormForm" path="/form/SubmitForm" scope="request" type="oscar.form.pageUtil.FrmFormAction" />
 		<action input="/StartCookie.jsp" path="/oscarEncounter/IncomingEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctIncomingEncounterAction">

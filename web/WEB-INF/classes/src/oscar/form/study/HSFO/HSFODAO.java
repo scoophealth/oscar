@@ -32,6 +32,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import oscar.oscarDB.DBHandler;
@@ -624,6 +625,211 @@ public class HSFODAO {
                 visitData.setInsul_SideEffects(result.getBoolean("Insul_SideEffects"));
                 visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday"));
                 visitData.setOften_miss(result.getInt("Often_miss"));
+                visitData.setHerbal(result.getString("Herbal"));
+                visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate"));
+                visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate"));
+                visitData.setHDL_LabresultsDate(result.getDate("HDL_LabresultsDate"));
+                visitData.setA1C_LabresultsDate(result.getDate("A1C_LabresultsDate"));
+                visitData.setLocked(result.getBoolean("Locked"));
+                patientList.add(visitData);
+                
+            }
+            result.close();
+            sql.close();
+            db.CloseConn();
+        }catch (SQLException se) {
+            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+        }catch (Exception ne) {
+            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }
+        
+        return patientList;
+    }
+    
+    public List getAllPatientId(){
+    	List reList=new ArrayList();
+    	String query = "SELECT Distinct Patient_Id FROM hsfo_patient";
+        
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            Connection connect = db.GetConnection();
+            Statement sql = connect.createStatement();
+            ResultSet result = sql.executeQuery(query);
+            System.out.println("here " + query);
+            // retrieve results and store into registrationData object
+            while(result.next() ) {
+            	reList.add(result.getString(1));
+            }
+            result.close();
+            sql.close();
+            db.CloseConn();
+        }catch (SQLException se) {
+            System.out.println("SQL Error while retreiving from the database : "+ se.toString());
+        }catch (Exception ne) {
+            System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }
+    	return reList;
+    }
+    
+    public List nullSafeRetrVisitRecord(String ID) throws SQLException {
+        
+        
+        String query = "SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id='" + ID + "' group by VisitDate_Id)";
+        
+        
+        List patientList = new LinkedList();
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            Connection connect = db.GetConnection();
+            Statement sql = connect.createStatement();
+            ResultSet result = sql.executeQuery(query);
+            System.out.println("here " + query);
+            // retrieve results and store into registrationData object
+            
+            while(result.next() ) {
+                VisitData visitData = new VisitData();
+                visitData.setPatient_Id(result.getString("Patient_Id"));
+                visitData.setProvider_Id(result.getString("provider_no"));
+                visitData.setFormCreated(result.getDate("FormCreated"));
+                visitData.setFormEdited(result.getTimestamp("FormEdited"));
+                visitData.setVisitDate_Id(result.getDate("VisitDate_Id"));
+                visitData.setDrugcoverage(result.getString("Drugcoverage"));
+                
+                visitData.setSBP(result.getInt("SBP"));
+                if (result.wasNull())
+                	visitData.setSBP(Integer.MIN_VALUE);
+                
+                visitData.setSBP_goal(result.getInt("SBP_goal"));
+                if (result.wasNull())
+                	visitData.setSBP_goal(Integer.MIN_VALUE);
+                
+                visitData.setDBP(result.getInt("DBP"));
+                if (result.wasNull())
+                	visitData.setSBP_goal(Integer.MIN_VALUE);
+                
+                visitData.setDBP_goal(result.getInt("DBP_goal"));
+                if (result.wasNull())
+                	visitData.setDBP_goal(Integer.MIN_VALUE);
+                
+                visitData.setBptru_used(result.getString("Bptru_used"));
+                
+                visitData.setWeight(result.getDouble("Weight"));
+                if (result.wasNull())
+                	visitData.setWeight(Double.MIN_VALUE);
+                
+                visitData.setWeight_unit(result.getString("Weight_unit"));
+                
+                visitData.setWaist(result.getDouble("Waist"));
+                if (result.wasNull())
+                	visitData.setWaist(Double.MIN_VALUE);
+                
+                visitData.setWaist_unit(result.getString("Waist_unit"));
+                
+                visitData.setTC_HDL(result.getDouble("TC_HDL"));
+                if (result.wasNull())
+                	visitData.setTC_HDL(Double.MIN_VALUE);
+                
+                visitData.setLDL(result.getDouble("LDL"));
+                if (result.wasNull())
+                	visitData.setLDL(Double.MIN_VALUE);
+                
+                visitData.setHDL(result.getDouble("HDL"));
+                if (result.wasNull())
+                	visitData.setHDL(Double.MIN_VALUE);
+                
+                visitData.setA1C(result.getDouble("A1C"));
+                if (result.wasNull())
+                	visitData.setA1C(Double.MIN_VALUE);
+                
+                visitData.setNextvisit(result.getString("Nextvisit"));
+                visitData.setBpactionplan(result.getBoolean("Bpactionplan"));
+                visitData.setPressureOff(result.getBoolean("PressureOff"));
+                visitData.setPatientProvider(result.getBoolean("PatientProvider"));
+                visitData.setABPM(result.getBoolean("ABPM"));
+                visitData.setHome(result.getBoolean("Home"));
+                visitData.setCommunityRes(result.getBoolean("CommunityRes"));
+                visitData.setProRefer(result.getBoolean("ProRefer"));
+                visitData.setHtnDxType(result.getString("HtnDxType"));
+                visitData.setDyslipid(result.getBoolean("Dyslipid"));
+                visitData.setDiabetes(result.getBoolean("Diabetes"));
+                visitData.setKidneyDis(result.getBoolean("KidneyDis"));
+                visitData.setObesity(result.getBoolean("Obesity"));
+                visitData.setCHD(result.getBoolean("CHD"));
+                visitData.setStroke_TIA(result.getBoolean("Stroke_TIA"));
+                visitData.setRisk_weight(result.getBoolean("Risk_weight"));
+                visitData.setRisk_activity(result.getBoolean("Risk_activity"));
+                visitData.setRisk_diet(result.getBoolean("Risk_diet"));
+                visitData.setRisk_smoking(result.getBoolean("Risk_smoking"));
+                visitData.setRisk_alcohol(result.getBoolean("Risk_alcohol"));
+                visitData.setRisk_stress(result.getBoolean("Risk_stress"));
+                visitData.setPtView(result.getString("PtView"));
+                
+                visitData.setChange_importance(result.getInt("Change_importance"));
+                if (result.wasNull())
+                	visitData.setChange_importance(Integer.MIN_VALUE);
+                
+                visitData.setChange_confidence(result.getInt("Change_confidence"));
+                if (result.wasNull())
+                	visitData.setChange_confidence(Integer.MIN_VALUE);
+                
+                visitData.setExercise_minPerWk(result.getInt("exercise_minPerWk"));
+                if (result.wasNull())
+                	visitData.setExercise_minPerWk(Integer.MIN_VALUE);
+                
+                visitData.setSmoking_cigsPerDay(result.getInt("smoking_cigsPerDay"));
+                if (result.wasNull())
+                	visitData.setSmoking_cigsPerDay(Integer.MIN_VALUE);
+                
+                visitData.setAlcohol_drinksPerWk(result.getInt("alcohol_drinksPerWk"));
+                if (result.wasNull())
+                	visitData.setAlcohol_drinksPerWk(Integer.MIN_VALUE);
+                
+                visitData.setSel_DashDiet(result.getString("sel_DashDiet"));
+                visitData.setSel_HighSaltFood(result.getString("sel_HighSaltFood"));
+                visitData.setSel_Stressed(result.getString("sel_Stressed"));
+                visitData.setLifeGoal(result.getString("LifeGoal"));
+                visitData.setFamHx_Htn(result.getBoolean("FamHx_Htn"));
+                visitData.setFamHx_Dyslipid(result.getBoolean("FamHx_Dyslipid"));
+                visitData.setFamHx_Diabetes(result.getBoolean("FamHx_Diabetes"));
+                visitData.setFamHx_KidneyDis(result.getBoolean("FamHx_KidneyDis"));
+                visitData.setFamHx_Obesity(result.getBoolean("FamHx_Obesity"));
+                visitData.setFamHx_CHD(result.getBoolean("FamHx_CHD"));
+                visitData.setFamHx_Stroke_TIA(result.getBoolean("FamHx_Stroke_TIA"));
+                visitData.setDiuret_rx(result.getBoolean("Diuret_rx"));
+                visitData.setDiuret_SideEffects(result.getBoolean("Diuret_SideEffects"));
+                visitData.setDiuret_RxDecToday(result.getString("Diuret_RxDecToday"));
+                visitData.setAce_rx(result.getBoolean("Ace_rx"));
+                visitData.setAce_SideEffects(result.getBoolean("Ace_SideEffects"));
+                visitData.setAce_RxDecToday(result.getString("Ace_RxDecToday"));
+                visitData.setArecept_rx(result.getBoolean("Arecept_rx"));
+                visitData.setArecept_SideEffects(result.getBoolean("Arecept_SideEffects"));
+                visitData.setArecept_RxDecToday(result.getString("Arecept_RxDecToday"));
+                visitData.setBeta_rx(result.getBoolean("Beta_rx"));
+                visitData.setBeta_SideEffects(result.getBoolean("Beta_SideEffects"));
+                visitData.setBeta_RxDecToday(result.getString("Beta_RxDecToday"));
+                visitData.setCalc_rx(result.getBoolean("Calc_rx"));
+                visitData.setCalc_SideEffects(result.getBoolean("Calc_SideEffects"));
+                visitData.setCalc_RxDecToday(result.getString("Calc_RxDecToday"));
+                visitData.setAnti_rx(result.getBoolean("Anti_rx"));
+                visitData.setAnti_SideEffects(result.getBoolean("Anti_SideEffects"));
+                visitData.setAnti_RxDecToday(result.getString("Anti_RxDecToday"));
+                visitData.setStatin_rx(result.getBoolean("Statin_rx"));
+                visitData.setStatin_SideEffects(result.getBoolean("Statin_SideEffects"));
+                visitData.setStatin_RxDecToday(result.getString("Statin_RxDecToday"));
+                visitData.setLipid_rx(result.getBoolean("Lipid_rx"));
+                visitData.setLipid_SideEffects(result.getBoolean("Lipid_SideEffects"));
+                visitData.setLipid_RxDecToday(result.getString("Lipid_RxDecToday"));
+                visitData.setHypo_rx(result.getBoolean("Hypo_rx"));
+                visitData.setHypo_SideEffects(result.getBoolean("Hypo_SideEffects"));
+                visitData.setHypo_RxDecToday(result.getString("Hypo_RxDecToday"));
+                visitData.setInsul_rx(result.getBoolean("Insul_rx"));
+                visitData.setInsul_SideEffects(result.getBoolean("Insul_SideEffects"));
+                visitData.setInsul_RxDecToday(result.getString("Insul_RxDecToday"));
+                
+                visitData.setOften_miss(result.getInt("Often_miss"));
+                if (result.wasNull())
+                	visitData.setOften_miss(Integer.MIN_VALUE);
+                
                 visitData.setHerbal(result.getString("Herbal"));
                 visitData.setTC_HDL_LabresultsDate(result.getDate("TC_HDL_LabresultsDate"));
                 visitData.setLDL_LabresultsDate(result.getDate("LDL_LabresultsDate"));

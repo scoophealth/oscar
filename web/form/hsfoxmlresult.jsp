@@ -1,0 +1,1 @@
+<%=(String)request.getAttribute("HSFOmessage")%>

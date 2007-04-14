@@ -40,6 +40,11 @@ public class VisitData {
 
 	VisitData registrationData;
 	String Patient_Id;
+	//add by Vic for XML transfer
+	String Provider_Id;
+	Date FormCreated;
+	Date FormEdited;
+	
 	Date VisitDate_Id;
 	String Drugcoverage; // enum('yes', 'no'
 	int SBP;
@@ -1057,9 +1062,27 @@ public class VisitData {
 		this.locked = locked;
 	}
 
+	public String getProvider_Id() {
+		return Provider_Id;
+	}
 
+	public void setProvider_Id(String provider_Id) {
+		Provider_Id = provider_Id;
+	}
 
+	public Date getFormCreated() {
+		return FormCreated;
+	}
 
+	public void setFormCreated(Date formCreated) {
+		FormCreated = formCreated;
+	}
 
+	public Date getFormEdited() {
+		return FormEdited;
+	}
 
+	public void setFormEdited(Date formEdited) {
+		FormEdited = formEdited;
+	}
 }
