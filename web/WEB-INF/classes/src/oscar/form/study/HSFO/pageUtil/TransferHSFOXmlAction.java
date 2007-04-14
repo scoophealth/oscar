@@ -1458,9 +1458,9 @@ public class TransferHSFOXmlAction extends Action
 	public ArrayList validateDoc(HsfoHbpsDataDocument doc) throws IOException,
 			XmlException
 	{
-		String rs = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n"
-				+ PrettyPrinter.indent(doc.xmlText());
-		System.out.println(rs);
+		if (logger.isInfoEnabled())
+			logger.info("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n"
+				+ PrettyPrinter.indent(doc.xmlText()));
 
 		ArrayList messageArray = new ArrayList();
 		XmlOptions option = new XmlOptions();
