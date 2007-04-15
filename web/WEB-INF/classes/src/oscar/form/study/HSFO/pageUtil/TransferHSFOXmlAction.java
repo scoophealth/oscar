@@ -212,27 +212,34 @@ public class TransferHSFOXmlAction extends Action
 		Integer demoNo = new Integer(0);
 		if (demographicNo != null)
 			demoNo = new Integer(demographicNo.trim());
-
+		ArrayList message = new ArrayList();
 		HsfoHbpsDataDocument doc = generateXML(providerNo, demoNo);
-		ArrayList message = validateDoc(doc);
-		if (message.size() != 0)
+		if (doc == null)
 		{
-			// set error message;
-			request.setAttribute("HSFOmessage", message.get(0));
-			return mapping.findForward("HSFORE");
-		}
-		String rs = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-				+ doc.xmlText();
-		// send to hsfo web
+			message.add("");
+			message.add("Patient(s) data not found in the database.");
+		} else
+		{
+			message = validateDoc(doc);
+			if (message.size() != 0)
+			{
+				// set error message;
+				request.setAttribute("HSFOmessage", message.get(0));
+				return mapping.findForward("HSFORE");
+			}
+			String rs = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+					+ doc.xmlText();
+			// send to hsfo web
 
-		try
-		{
-			message = soapHttpCall(getSiteID().intValue(), getUserId(),
-					getLoginPasswd(), rs);
-		} catch (Exception e)
-		{
-			logger.error(e);
-			throw e;
+			try
+			{
+				message = soapHttpCall(getSiteID().intValue(), getUserId(),
+						getLoginPasswd(), rs);
+			} catch (Exception e)
+			{
+				logger.error(e);
+				throw e;
+			}
 		}
 		String msg = "Code: " + (String) message.get(0) + " "
 				+ (String) message.get(1);
@@ -1427,12 +1434,19 @@ public class TransferHSFOXmlAction extends Action
 				for (int i = 0; i < patientIdList.size(); i++)
 				{
 					String pid = (String) patientIdList.get(i);
-					addPatientToSite(site, getDemographic(pid));
+					PatientData pdata = getDemographic(pid);
+					if (pdata != null && pdata.getPatient_Id() != null)
+						addPatientToSite(site, pdata);
 				}
+			if (patientIdList == null || patientIdList.size() == 0)
+				doc = null;
 		} else
 		{
-
-			addPatientToSite(site, getDemographic(demographicNo.toString()));
+			PatientData pdata = getDemographic(demographicNo.toString());
+			if (pdata != null && pdata.getPatient_Id() != null)
+				addPatientToSite(site, pdata);
+			else
+				doc = null;
 		}
 
 		// System.out.println(doc.xmlText());
@@ -1460,7 +1474,7 @@ public class TransferHSFOXmlAction extends Action
 	{
 		if (logger.isInfoEnabled())
 			logger.info("<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "\n"
-				+ PrettyPrinter.indent(doc.xmlText()));
+					+ PrettyPrinter.indent(doc.xmlText()));
 
 		ArrayList messageArray = new ArrayList();
 		XmlOptions option = new XmlOptions();
