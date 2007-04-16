@@ -30,6 +30,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page import="oscar.oscarEncounter.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="java.util.Vector;"%>
@@ -37,6 +38,10 @@
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
+    
+    String demo = (String) request.getAttribute("demographicNo"); //bean.getDemographicNo();
+                               
+    
 %>
 
 <html:html locale="true">
@@ -77,7 +82,7 @@ function check() {
     if( parentChanged ) {
         document.forms[0].elements["value(parentChanged)"].value = "true";
         
-        if( !confirm("<bean:message key="oscarEncounter.oscarMeasurements.Measurements.msgParentChanged"/> <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/>, <bean:write name="EctSessionBean" property="patientFirstName"/></logic:present>") ) 
+        if( !confirm("<bean:message key="oscarEncounter.oscarMeasurements.Measurements.msgParentChanged"/> <oscar:nameage demographicNo="<%=demo%>"/>") ) 
             ret = false;        
     }
     
@@ -102,9 +107,9 @@ function check() {
             <td class="MainTableTopRowRightColumn">
                 <table class="TopStatusBar" >                 
                     <tr>
-                        <td width=70% class="Header"  NOWRAP >                        
-                            <logic:present name="EctSessionBean"><bean:write name="EctSessionBean" property="patientLastName"/> <bean:write name="EctSessionBean" property="patientFirstName"/> <bean:write name="EctSessionBean" property="patientSex"/> <bean:write name="EctSessionBean" property="patientAge"/></logic:present>
-                        </td>                        
+                        <td width=70% class="Header"  NOWRAP >     
+                            <oscar:nameage demographicNo="<%=demo%>"/>
+                            </td>                        
                     </tr>                  
                 </table>
             </td>
@@ -113,7 +118,7 @@ function check() {
             <td class="MainTableLeftColumn"> 
             <table>
                 <tr>
-                    <td><a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'../calculators.jsp?sex=<bean:write name="EctSessionBean" property="patientSex"/>&age=<bean:write name="EctSessionBean" property="patientAge"/>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a></td>
+                    <td><a href="javascript: function myFunction() {return false; }"  onClick="popupPage(150,200,'../calculators.jsp?demo=<%=demo%>'); return false;" ><bean:message key="oscarEncounter.Index.calculators"/></a></td>
                 </tr>
             </table>
             </td>            
@@ -179,7 +184,7 @@ function check() {
                                                 <input type="hidden" name="value(numType)" value="<%=String.valueOf(i)%>"/>                                                
                                                 <input type="hidden" name="value(groupName)" value="<bean:write name="groupName"/>"/>
                                                 <input type="hidden" name="value(parentChanged)" value="false" />
-                                                <input type="hidden" name="value(demographicNo)" value="<bean:write name="EctSessionBean" property="demographicNo"/>"/>
+                                                <input type="hidden" name="value(demographicNo)" value="<%=demo%>" />
                                                 <logic:present name="css"> 
                                                     <input type="hidden" name="value(css)" value="<bean:write name="css"/>"/>
                                                 </logic:present>
