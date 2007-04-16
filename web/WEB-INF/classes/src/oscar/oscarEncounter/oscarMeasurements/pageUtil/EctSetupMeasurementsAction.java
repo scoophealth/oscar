@@ -68,25 +68,28 @@ public final class EctSetupMeasurementsAction extends Action {
         request.setAttribute("css", css);
         EctSessionBean bean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");
         
+        String demo = null;
         if (bean!=null){
             request.getSession().setAttribute("EctSessionBean", bean);
-            String demo = (String) bean.getDemographicNo();
-                               
-            oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler(groupName, demo);
-            for(int i=0; i<hd.getMeasurementTypeVector().size(); i++){
-                frm.setValue("date-" + i, today);
-            }
-            session.setAttribute("EctMeasurementsForm", frm);            
-            session.setAttribute("measurementTypes", hd);
-            Vector mInstrcVector = hd.getMeasuringInstrcHdVector();
-            for(int i=0; i<mInstrcVector.size(); i++){
-                EctMeasuringInstructionBeanHandler mInstrcs = (EctMeasuringInstructionBeanHandler) mInstrcVector.elementAt(i);
-                String mInstrcName = "mInstrcs" + i;
-                session.setAttribute(mInstrcName, mInstrcs);
-
-            }
-           
+            demo = (String) bean.getDemographicNo();
+        }else{
+            demo = request.getParameter("demographic_no");
+        }   
+        request.setAttribute("demographicNo",demo);
+        oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBeanHandler(groupName, demo);
+        for(int i=0; i<hd.getMeasurementTypeVector().size(); i++){
+            frm.setValue("date-" + i, today);
         }
+        session.setAttribute("EctMeasurementsForm", frm);            
+        session.setAttribute("measurementTypes", hd);
+        Vector mInstrcVector = hd.getMeasuringInstrcHdVector();
+        for(int i=0; i<mInstrcVector.size(); i++){
+            EctMeasuringInstructionBeanHandler mInstrcs = (EctMeasuringInstructionBeanHandler) mInstrcVector.elementAt(i);
+            String mInstrcName = "mInstrcs" + i;
+            session.setAttribute(mInstrcName, mInstrcs);
+        }
+
+        
         return (mapping.findForward("continue"));
     }
     
