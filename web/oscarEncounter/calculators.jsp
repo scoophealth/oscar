@@ -25,8 +25,26 @@
 --%>
 
 <%@ page language="java"%>
+<%@ page import="oscar.oscarDemographic.data.*, oscar.oscarDemographic.data.DemographicData.Demographic"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<%
+String sex=request.getParameter("sex");
+String age=request.getParameter("age");
+String demo=request.getParameter("demo");
+
+
+if(demo != null){
+    DemographicData dd = new DemographicData();
+    Demographic d =dd.getDemographic(demo);  
+    sex = d.getSex();
+    age = d.getAge();
+    
+}
+%>
+
+
 
 <html:html locale="true">
 <head>
@@ -53,12 +71,12 @@
       </a>
   </td></tr>
   <tr><td align="center" class="menuLayer">
-      <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%= request.getParameter("sex") %>&age=<%= request.getParameter("age")%>','CoronaryArteryDiseaseRisk');">
+      <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/CoronaryArteryDiseaseRiskPrediction.jsp?sex=<%= sex%>&age=<%=age%>','CoronaryArteryDiseaseRisk');">
          <bean:message key="oscarEncounter.Index.coronary"/>
        </a>
   </td></tr>
    <tr><td align="center" class="menuLayer">
-       <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%= request.getParameter("sex") %>&age=<%= request.getParameter("age") %>','OsteoporoticFracture');">
+       <a href="javascript: function myFunction() {return false; }" onclick="popperup(525,775,'calculators/OsteoporoticFracture.jsp?sex=<%=sex%>&age=<%=age%>','OsteoporoticFracture');">
          <bean:message key="oscarEncounter.Index.msgOsteoporotic"/>
        </a>
    </td></tr>
