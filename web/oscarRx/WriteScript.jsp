@@ -41,7 +41,7 @@
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 <script type="text/javascript" src="../share/javascript/Oscar.js"></script>
-
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <html:base/>
 
 <logic:notPresent name="RxSessionBean" scope="session">
@@ -1287,7 +1287,10 @@ int i;
                                 <div>Drug to Drug Interaction Service not available</div>                          
                         <%   }                        
                           }%>
-                                                         
+                                
+                        <div  id="renalDosing" />
+                          
+                       
                         <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
                         ACETAMINOPHEN	inhibits	BENZODIAZEPINE, long acting &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = MINOR &nbsp;&nbsp;&nbsp;EVIDENCE = POOR
                         </div>
@@ -1418,6 +1421,19 @@ int i;
          
          customQty(<%=quan%>);         
           writeScriptDisplay();
+         <oscar:oscarPropertiesCheck property="RENAL_DOSING_DS" value="yes">
+ 
+         function getRenalDosingInformation(origRequest){
+               var url = "RenalDosing.jsp";
+               var ran_number=Math.round(Math.random()*1000000);
+               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
+               //alert(params);
+               new Ajax.Updater('renalDosing',url, {method:'get',parameters:params,asynchronous:true}); 
+               //alert(origRequest.responseText);
+         }
+         getRenalDosingInformation();
+         </oscar:oscarPropertiesCheck>
+ 
         </script>
         
         </td>
