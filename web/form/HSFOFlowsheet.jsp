@@ -43,6 +43,11 @@ td.coldash{  border-right: 1px dashed #999999; }
 td.colsolid{  border-bottom: 1px solid #999999; }
 v\:* { behavior: url(#default#VML); }
 </style>
+<script language="JavaScript" type="text/javascript">
+ function popupXmlMsg(path){
+ 	window.open(path,"xmlMsg","location=1,status=1,resizable=1,scrollbars=1,width=800,height=300");
+ }
+</script>
 
 </head>
 
@@ -1473,6 +1478,10 @@ if (visitList != null){
             <input type="submit" name="Save" value="Save and Exit">
             <input type="button" name="Reset" value="Reset" onClick="confirmReset()">
             <input type="button" name="Close" value="Exit" onClick="confirmExit(document.FrmForm)">
+            <%String patient=patientData.getPatient_Id();
+              String user=(String)session.getAttribute("user");%>
+            <input type="button" onclick="popupXmlMsg('<html:rewrite action="/form/HSFOXmlTransfer.do" />?xmlHsfoProviderNo=<%=user%>&xmlHsfoDemographicNo=<%=patient%>')" 
+              value="Submit current patient's data">
           </p>
        </td>
     </tr>
