@@ -137,4 +137,27 @@ public class RxUtil {
             return null;
         }
     }
+    /**
+     * Method for calculating creatinine clearance takes age, weight in kg and CREATININE values an returns Clcr 
+     * age must be greater than zero.
+     * weight must be greater than zero
+     */
+    public static int getClcr(int age, int weight, int sCr, boolean female) throws Exception{
+      if  ( age < 0){
+          throw new Exception("age must be greater than 0");
+      }       
+      if (weight < 0){
+          throw new Exception("weight must be greater than 0");
+      }
+      if (sCr < 0){
+          throw new Exception("sCr must be greater than 0");
+      }
+      
+      double Clcr = (140 - age) * weight  /  ( sCr * 0.8 );
+      if(female){
+          Clcr = Clcr * 0.85;
+      }
+      
+      return (int) Math.round(Clcr);
+  }
 }
