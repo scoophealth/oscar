@@ -46,7 +46,7 @@ import oscar.Misc;
 import oscar.form.study.HSFO.HSFODAO;
 import oscar.form.study.HSFO.PatientData;
 import oscar.form.study.HSFO.PatientList;
-import oscar.form.study.HSFO.RecordList;
+//import oscar.form.study.HSFO.RecordList;
 import oscar.form.study.HSFO.VisitData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.util.UtilDateUtilities;
@@ -68,7 +68,7 @@ public class ManageHSFOAction extends Action{
         VisitData latestVisitData = new VisitData();
         VisitData visitData = new VisitData();
         PatientList historyList = new PatientList();
-        RecordList record = new RecordList();
+        //RecordList record = new RecordList();
         List recordList = new LinkedList();
         String forward = "registration";
         
