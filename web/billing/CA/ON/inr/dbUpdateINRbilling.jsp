@@ -146,7 +146,7 @@ if (errorCode.compareTo("") ==0){
 %>
 
 <%=errorCode%>
-<input type="button" value="Change" onClick="history.go(-1)">
+<input type="button" value="Change" onClick="history.go(-1);return false;">
 <%
 }
 apptMainBean.closePstmtConn();

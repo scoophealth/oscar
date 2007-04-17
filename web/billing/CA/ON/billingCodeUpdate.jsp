@@ -92,7 +92,7 @@ if(request.getParameter("nameF") != null) {
     if (Count ==0) {
     %>
     <p>No input selected</p>
-    <input type="button" name="back" value="back" onClick="javascript:history.go(-1)">
+    <input type="button" name="back" value="back" onClick="javascript:history.go(-1);return false;">
     <%
     }else{
     %>
@@ -125,7 +125,7 @@ if(request.getParameter("nameF") != null) {
 %>
   <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
-    history.go(-1);
+    history.go(-1);return false;
     self.opener.refresh();
 </script>
 <% } %>

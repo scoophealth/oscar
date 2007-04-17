@@ -352,7 +352,7 @@ function ClipBoard4() {
     <tr bgcolor="#486ebd">
       <td align="center" colspan="3">
 		<input type="submit" name="Submit" value="<bean:message key='demographic.demographiclabelprintsetting.btnPrintPreviewPrint'/>">
-        <input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);">
+        <input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);return false;">
       </td>
     </tr>
 </table>

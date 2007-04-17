@@ -71,7 +71,7 @@
 %>
   <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
-    history.go(-1);
+    history.go(-1);return false;
     self.opener.refresh();
 </script>
 

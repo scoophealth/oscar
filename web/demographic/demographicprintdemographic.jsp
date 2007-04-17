@@ -132,7 +132,7 @@ function setfocus() {
 <input type="button" name="button" value="<bean:message key='global.btnPrint'/>" onClick="window.print();">
 </div>
 <div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:24px; width:70px; height:20px;"> 
-<input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);">
+<input type="button" name="button" value="<bean:message key='global.btnBack'/>" onClick="javascript:history.go(-1);return false;">
 </div>
 
 </body>

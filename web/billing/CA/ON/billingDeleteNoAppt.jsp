@@ -65,7 +65,7 @@ if (billCode.substring(0,1).compareTo("B") == 0) {
 
 <h1>Sorry, cannot delete billed items.</h1>
 <form>
-<input type="button" value="Back to previous page" onClick="history.go(-1)">
+<input type="button" value="Back to previous page" onClick="history.go(-1);return false;">
 </form>
 
 <%

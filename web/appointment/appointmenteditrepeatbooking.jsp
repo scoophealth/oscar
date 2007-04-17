@@ -292,7 +292,7 @@ function onSub() {
   <INPUT TYPE="button" onclick="document.forms['groupappt'].groupappt.value='Add Group Appointment'; document.forms['groupappt'].submit();" VALUE="<bean:message key="appointment.appointmentgrouprecords.btnAddGroupAppt"/>" >
 <%    }    %>
   </TD>
-      <TD align="right"><INPUT TYPE = "button" VALUE = " <bean:message key="global.btnBack"/> " onClick="window.history.go(-1)"> <INPUT TYPE = "button" VALUE = " <bean:message key="global.btnExit"/> " onClick="onExit()"></TD>
+      <TD align="right"><INPUT TYPE = "button" VALUE = " <bean:message key="global.btnBack"/> " onClick="window.history.go(-1);return false;"> <INPUT TYPE = "button" VALUE = " <bean:message key="global.btnExit"/> " onClick="onExit()"></TD>
   </tr>
 </table>
 

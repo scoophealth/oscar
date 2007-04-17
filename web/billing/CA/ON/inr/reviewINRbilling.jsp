@@ -170,7 +170,7 @@ if (errorCode.compareTo("") != 0) {
 
 <form>
 <%=errorCode%>
-<input type=button name=back onClick="javascript:history.go(-1)">
+<input type=button name=back onClick="javascript:history.go(-1);return false;">
 </form>
 <%} else {%>
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C4D9E7"  >

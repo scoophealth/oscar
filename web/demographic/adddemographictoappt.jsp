@@ -51,7 +51,7 @@ function setfocus() {
   document.titlesearch.keyword.select();
 }
 function goback(){
- history.go(-1);
+ history.go(-1);return false;
 }
 //-->
 </script>

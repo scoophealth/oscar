@@ -99,7 +99,7 @@ function CodeAttach(File0, File1, File2) {
     if (Count ==0) {
     %>
     <p>No input selected</p>
-    <input type="button" name="back" value="back" onClick="javascript:history.go(-1)">
+    <input type="button" name="back" value="back" onClick="javascript:history.go(-1);return false;">
     <%
     }else{
     %>
@@ -132,7 +132,7 @@ function CodeAttach(File0, File1, File2) {
 %>
   <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
-    history.go(-1);
+    history.go(-1);return false;
     self.opener.refresh();
 </script>
 <% } %>

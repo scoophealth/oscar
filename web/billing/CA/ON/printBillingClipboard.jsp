@@ -112,7 +112,7 @@ function refresh() {
 <body leftmargin="0" topmargin="5" rightmargin="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr bgcolor="#000000"> 
-    <td height="40" width="20%"><form><input class=mbttn type=button name=print value=PRINT onClick=window.print()><input class=mbttn type=button name=back value=BACK onClick=history.go(-1)></form> </td>
+    <td height="40" width="20%"><form><input class=mbttn type=button name=print value=PRINT onClick=window.print()><input class=mbttn type=button name=back value=BACK onClick=history.go(-1);return false;></form> </td>
     <td width="80%" align="left" bgcolor="#000000"> 
       <p><font face="Verdana, Arial, Helvetica, sans-serif" color="#FFFFFF"><b><font face="Arial, Helvetica, sans-serif" size="4">oscar<font size="3">Billing</font></font></b></font> 
         <font color="#CCCCCC">Ciipboard </font></p>

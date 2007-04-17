@@ -166,7 +166,7 @@ String curUser_no = (String)session.getAttribute("user");
 
     if(rs.next()) {  %>
       ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedRecord"/></font>***<br>
-      <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
+      <br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
       <% return;
     }
 
@@ -187,7 +187,7 @@ String curUser_no = (String)session.getAttribute("user");
 	    ResultSet rsHin = apptMainBean.queryResults(paramNameHin, "search_hin");
 	    if(rsHin.next()) {  %>
 	      ***<font color='red'><bean:message key="demographic.demographicaddarecord.msgDuplicatedHIN"/></font>***<br>
-	      <br><a href=# onClick="history.go(-1);"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
+	      <br><a href=# onClick="history.go(-1);return false;"><b>&lt;-<bean:message key="global.btnBack"/></b></a>
       <% return;
 	    }
     }

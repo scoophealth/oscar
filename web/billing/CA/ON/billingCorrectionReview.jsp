@@ -204,6 +204,6 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.htm"
    catch (java.lang.ArrayIndexOutOfBoundsException _e0) {
  }%>
  </table>
- <form action="billingCorrectionSubmit.jsp"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"><input type="button" name="cancel" value="<bean:message key="billing.billingCorrection.btnCancel"/>" onclick="history.go(-1)"></form>
+ <form action="billingCorrectionSubmit.jsp"><input type="submit" name="submit" value="<bean:message key="billing.billingCorrection.btnSubmit"/>"><input type="button" name="cancel" value="<bean:message key="billing.billingCorrection.btnCancel"/>" onclick="history.go(-1);return false;"></form>
 </body>
 </html:html>
