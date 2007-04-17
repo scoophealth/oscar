@@ -893,7 +893,7 @@ str = sBuffer.toString();
               <input type="hidden" name="clinic_ref_code" value="<%=location1%>">
 				<input type="hidden" name="visitdate" value="<%=visitdate%>">
     <input type="button" name="Submit" value="Confirm" onDblClick="" onClick="form.submit()">
-  <!--  <input type="button" name="Submit2" value="Edit" onclick="javascript:history.go(-1)">
+  <!--  <input type="button" name="Submit2" value="Edit" onclick="javascript:history.go(-1);return false;">
   -->  <a href="billingOB.jsp?billForm=<%=request.getParameter("billForm")%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname)%>&demographic_no=<%=request.getParameter("demographic_no")%>&user_no=<%=request.getParameter("user_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("xml_appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=0">edit</a>
  <% session.setAttribute("content", content); %>
   </p>

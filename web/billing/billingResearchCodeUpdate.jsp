@@ -83,7 +83,7 @@ function CodeAttach(File0, File1, File2) {
     if (Count ==0) {
     %>
     <p>No input selected</p>
-    <input type="button" name="back" value="back" onClick="javascript:history.go(-1)">
+    <input type="button" name="back" value="back" onClick="javascript:history.go(-1);return false;">
     <%
     }else{
     %>
