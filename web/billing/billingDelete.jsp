@@ -65,7 +65,7 @@
    %>
      <p><h1>Sorry, cannot delete billed items.</h1></p>
      <form>
-<input type="button" value="Back to previous page" onClick="history.go(-1)">
+<input type="button" value="Back to previous page" onClick="history.go(-1);return false;">
 </form>
    <% }
    else{
