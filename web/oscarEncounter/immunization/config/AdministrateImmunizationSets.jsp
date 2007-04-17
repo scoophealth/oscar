@@ -135,7 +135,7 @@ function popupImmunizationSet(vheight,vwidth,varpage) { //open a new popup windo
 
                         </td>
                         <td style="text-align:right">
-                                <a href="javascript:history.go(-1);return false;"  ><bean:message key="global.btnBack"/></a> | <a href="javascript:window.close();" ><bean:message key="global.btnClose"/></a> 
+                                <a href="javascript:history.go(-1);"  ><bean:message key="global.btnBack"/></a> | <a href="javascript:window.close();" ><bean:message key="global.btnClose"/></a> 
                         </td>
                     </tr>
                 </table>

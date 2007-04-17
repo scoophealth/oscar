@@ -52,7 +52,7 @@
   				Please speak to your administrator.
   			</p>
   			<p>
-  				<a href="javascript:history.go(-1);return false;">back</a>
+  				<a href="javascript:history.go(-1);">back</a>
   			</p>
   		 </div>
   		 </td>

@@ -57,7 +57,7 @@ oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUt
                         <td>
                         </td>
                         <td style="text-align:right" NOWRAP>
-                                <a href="javascript:history.go(-1);return false;"><bean:message key="global.btnBack"/></a> | <a href="javascript:window.close();" ><bean:message key="global.btnClose"/></a> |
+                                <a href="javascript:history.go(-1);"><bean:message key="global.btnBack"/></a> | <a href="javascript:window.close();" ><bean:message key="global.btnClose"/></a> |
                         </td>
                     </tr>
                 </table>
