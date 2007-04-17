@@ -65,7 +65,7 @@ function ff(x,y,w,h,name) { //need escape to name for ' and "
 
 <script language="JavaScript">
 ff(750,10,50,20,'<span class="title"><a href=# onClick="window.print()">Print</a></span>' );
-ff(750,40,50,20,'<span class="title"><a href=# onClick="history.go(-1)">Back</a></span>' );
+ff(750,40,50,20,'<span class="title"><a href=# onClick="history.go(-1);return false;">Back</a></span>' );
 ff(192,0,300,20,'<span class="title">Antenatal Record 1</span>' );
 ff(8,68,100,20,'<span class="tdname">Name</span>' );
 ff(8,90,100,20,'<span class="tdname">Address</span>' );

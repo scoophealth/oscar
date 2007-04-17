@@ -97,7 +97,7 @@
                <div class="noprint" style="clear: left; float:left; margin-top: 15px;">
                     <html:form action="/oscarReport/reportByTemplate/generateOutFilesAction">
                         <input type="hidden" name="csv" value="<%=StringEscapeUtils.escapeHtml(csv)%>">
-                        <input type="button" value="<-- Back" onclick="javascript: history.go(-1);">
+                        <input type="button" value="<-- Back" onclick="javascript: history.go(-1);return false;">
                         <input type="button" value="Print" onclick="javascript: window.print();">
                         <input type="submit" name="getCSV" value="Export to CSV">
                         <input type="submit" name="getXLS" value="Export to XLS">

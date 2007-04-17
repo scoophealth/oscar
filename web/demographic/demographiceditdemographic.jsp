@@ -1439,7 +1439,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                   if (vLocale.getCountry().equals("BR")) { %>
                                   <input type="hidden" name="dboperation2" value="update_record_ptbr">
                                   <%}%>
-                              <input type="button" name="Button" value="<bean:message key="global.btnBack" />" onclick=history.go(-1);return false;>
+                              <input type="button" name="Button" value="<bean:message key="global.btnBack" />" onclick="history.go(-1);return false;">
                               <input type="button" name="Button" value="<bean:message key="global.btnCancel" />" onclick=self.close();>
                             </td>
                             <td  width="30%" align='center' valign="top">

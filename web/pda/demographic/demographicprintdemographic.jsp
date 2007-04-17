@@ -91,7 +91,7 @@ function setfocus() {
   <a href=# onClick="window.print();"><img src="../images/print.gif" width="16" height="16" border="0">Print</a> 
 </div>
 <div ID="blockDiv1" STYLE="position:absolute; visibility:visible; z-index:2; left:620px; top:22px; width:70px; height:20px;"> 
-  <a href=# onClick="history.go(-1);"><img src="../images/previous.gif" border="0"> Back</a> 
+  <a href=# onClick="history.go(-1);return false;"><img src="../images/previous.gif" border="0"> Back</a> 
 </div>
 
 </body>

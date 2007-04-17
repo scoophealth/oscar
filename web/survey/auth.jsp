@@ -64,7 +64,7 @@
        	 </html:messages>
 		</logic:messagesPresent>
 		<tr>
-			<td><a href="javascript:history.go(-1)">back</a></td>
+			<td><a href="javascript:history.go(-1);return false;">back</a></td>
 		</tr>
 	 </table>
 	

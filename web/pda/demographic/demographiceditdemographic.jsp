@@ -334,7 +334,7 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
       <td colspan="4">
        <table border=0  width="100%" cellpadding="0" cellspacing="0"><tr><td width="20%"> 
           <input type="hidden" name="dboperation" value="update_record">
-          &nbsp;<input type="button" name="Button" value=" Back " onclick=history.go(-1);>
+          &nbsp;<input type="button" name="Button" value=" Back " onclick="history.go(-1);return false;">
       </td><td  width="40%" align='center'>
           <input type="submit" name="displaymode" value="Update Record">
           <input type="button" name="Button" value="Cancel" onclick=self.close();>

@@ -171,7 +171,7 @@ function checkTotal() {
     <tr bgcolor="#486ebd"> 
       <td align="center" colspan="3"> 
         <input type="submit" name="Submit" value="Print Preview/Print">
-        <input type="button" name="button" value="Back" onClick="javascript:history.go(-1);">
+        <input type="button" name="button" value="Back" onClick="javascript:history.go(-1);return false;">
       </td>
     </tr>
     <input type="hidden" name="label1" value='<%=label1%>'>

@@ -88,7 +88,7 @@
                    <pre wrap="on" style="font-size: 11px;"><%=StringEscapeUtils.escapeHtml(xml)%></pre>
                </div>
                <div class="noprint" style="clear: left; float:left; margin-top: 15px;">
-                        <input type="button" value="<-- Back" onclick="javascript: history.go(-1);">
+                        <input type="button" value="<-- Back" onclick="javascript: history.go(-1);return false;">
                         <input type="button" value="Print" onclick="javascript: window.print();">
                </div>
             </td>

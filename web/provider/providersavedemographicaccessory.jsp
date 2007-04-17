@@ -79,7 +79,7 @@
 %>
   <p><h1>Successful Updaten of an demographic acce Record.</h1></p>
 <script LANGUAGE="JavaScript">
-     	//self.history.go(-1);//this.location.reload();	//self.opener.refresh();
+     	//self.history.go(-1);return false;//this.location.reload();	//self.opener.refresh();
 function dunescape(s) {
   while(s.indexOf('+')>0) {
     s = s.replace('+', ' ');
