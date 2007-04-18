@@ -65,7 +65,7 @@ public class PopulationReportDAOHibernate extends HibernateDaoSupport implements
 
 			int days = Days.standardDaysIn(cumulativeStay).getDays();
 
-			if (1 <= days && days <= 10) {
+			if (days <= 10) {
 				shelterUsages[LOW] += 1;
 			} else if (11 <= days && days <= 179) {
 				shelterUsages[MEDIUM] += 1;

@@ -1,0 +1,1 @@
+update formintakea set formCreated = null where formCreated = '0000-00-00';

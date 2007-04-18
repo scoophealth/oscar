@@ -36,12 +36,6 @@ abstract class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter
 	}
 
 	protected StringBuilder createLabel() {
-		StringBuilder builder = new StringBuilder();
-		
-		if (getLabel() != null && getLabel().length() > 0) {
-			builder.append(getLabel()).append(SPACE);
-		}
-		
-		return builder;
+		return new StringBuilder().append(getLabel()).append(SPACE);
 	}
 }
