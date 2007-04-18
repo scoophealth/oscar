@@ -64,7 +64,7 @@ public class BillingReviewPrep {
 								+ vecCode.get(i));
 				continue;
 			}
-			// if perc. code
+			// if perc. code ( This code is not added to the vector of billing codes)
 			if (fee.equals(".00") || fee.equals(""))
 				continue;
 
@@ -98,7 +98,7 @@ public class BillingReviewPrep {
 	public Vector getPercCodeReviewVec(Vector vecCode, Vector vecUnit,
 			Vector vecReviewCodeItem) {
 		Vector ret = new Vector();
-		// no perc. code
+		// no perc. code  ( perc codes are recognized in the database by having a value of .00, They are not in the vecReviewCodeItem)
 		if (vecCode.size() == vecReviewCodeItem.size())
 			return ret;
 
@@ -109,8 +109,7 @@ public class BillingReviewPrep {
 			vecCodeFee.add(((BillingReviewCodeItem) vecReviewCodeItem.get(i))
 					.getCodeFee());
 		}
-
-		for (int i = 0; i < vecCode.size(); i++) {
+		for (int i = 0; i < vecCode.size(); i++) {   //LOOP thru all the billing codes from for submission
 			if (((String) vecCode.get(i)).equals(""))
 				continue;
 
@@ -121,11 +120,10 @@ public class BillingReviewPrep {
 									.get(i)).getCodeName())) {
 				continue;
 			}
-
 			// take perc. code
 			// get fee
 			String fee = dbObj.getPercFee((String) vecCode.get(i));
-
+  
 			if (fee == null) {
 				percItem = new BillingReviewPercItem();
 				percItem.setCodeName((String) vecCode.get(i));
@@ -151,16 +149,20 @@ public class BillingReviewPrep {
 				// BigDecimal bigCodeUnit = new BigDecimal((String)
 				// vecUnit.get(i));
 				// BigDecimal bigCodeAt = new BigDecimal((String) vecAt.get(i));
+                                
+                                
+                                if (fee.equals(".00") || fee.equals("")){
+                                    continue;
+                                }
+                                
 				BigDecimal bigFee = bigCodeFee.multiply(new BigDecimal(fee));
 				// System.out.println("big fee1: " + bigFee.toString());
 				// bigFee = bigFee.multiply(bigCodeAt);
 				// System.out.println("big fee2: " + bigFee.toString());
 				bigFee = bigFee.setScale(4, BigDecimal.ROUND_HALF_UP);
 				// bigFee = bigFee.round(new MathContext(2));
-				System.out.println("big end: " + bigFee.toString());
 				vecCodeTotal.add(bigFee.toString());
 			}
-
 			// get min/max fee
 			String[] mFee = dbObj.getPercMinMaxFee((String) vecCode.get(i));
 			percItem = new BillingReviewPercItem();
@@ -173,7 +175,6 @@ public class BillingReviewPrep {
 			percItem.setVecCodeTotal(vecCodeTotal);
 			percItem.setMsg("");
 			ret.add(percItem);
-
 		}
 		return ret;
 	}
