@@ -390,7 +390,7 @@ function checkAll(formId){
                 </td-->
                 <td nowrap>
                     <% if ( result.isMDS() ){ %>
-                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getDiscipline()%></a>
+                    <a href="javascript:reportWindow('../oscarMDS/SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getDiscipline()%></a>
                     <% }else if (result.isCML()){ %>
                     <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getDiscipline()%></a>
                     <% }else {%>
