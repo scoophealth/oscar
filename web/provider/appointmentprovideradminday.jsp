@@ -182,7 +182,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
 <link rel="stylesheet" href="../receptionist/receptionistapptstyle.css" type="text/css">
 <meta http-equiv="refresh" content="180;">
-</head>
+
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script language="JavaScript">
 
@@ -324,6 +324,26 @@ function IsPopupBlocker() {
 }
 
 </SCRIPT>
+
+   <style type="text/css">    
+        #navlist{
+            margin: 0;
+            padding: 0;
+            white-space: nowrap;
+        }    
+
+        #navlist li {
+            padding-top: 0.5px;
+            padding-bottom: 0.5px;
+            padding-left: 2.5px;
+            padding-right: 2.5px;
+            display: inline; 
+        }
+
+        #navlist li:hover { color: #fff; background-color: #486ebd; }
+        #navlist li a:hover { color: #fff; background-color: #486ebd; }
+    </style>
+</head>
 <%if (org.caisi.common.IsPropertiesOn.isCaisiEnable()){%>
 <body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
 <c:import url="/SystemMessage.do?method=view" />
@@ -427,171 +447,112 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 
    java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 %>
-<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+
+
+<table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" id="firstTable">
 <tr>
-  <td VALIGN="BOTTOM" HEIGHT="20">
+  <td >
 
-    <table BORDER="0" CELLPADDING="0" CELLSPACING="0" height="20">
-      <tr>
-        <td></td><td rowspan="2" BGCOLOR="ivory" ALIGN="MIDDLE" nowrap height="20"><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true">
-         &nbsp;&nbsp;<bean:message key="global.day"/>&nbsp;&nbsp; </a></font></td>
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a></font></td>
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a></font></td>
-        <caisi:isModuleLoad moduleName="caisi">
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="../PMmodule/ClientSearch2.do" TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
-        </caisi:isModuleLoad>
-        <caisi:isModuleLoad moduleName="caisi" reverse="true">
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a></font></td>
-        </caisi:isModuleLoad>
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a></font></td>
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-
-             <%
-                //java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
-                if (vLocale.getCountry().equals("BR")) { %>
-               <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+    <ul id="navlist">
+        <li>
+            <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"><bean:message key="global.day"/></a>
+        </li>
+         <li>
+            <a href="providercontrol.jsp?year=<%=year%>&month=<%=month%>&day=1&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=month&dboperation=searchappointmentmonth" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewMonthSched"/>' ; return true"><bean:message key="global.month"/></a>
+         </li>
+         <li>
+            <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a>
+         </li>
+         <li>
+            <caisi:isModuleLoad moduleName="caisi">
+               <a HREF="../PMmodule/ClientSearch2.do" TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
+            </caisi:isModuleLoad>
+            <caisi:isModuleLoad moduleName="caisi" reverse="true">
+               <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
+            </caisi:isModuleLoad>
+        </li>
+        <li>
+            <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a>
+        </li>
+        <li>
+             <%if (vLocale.getCountry().equals("BR")) { %>
+               <a HREF="#" ONCLICK ="popupPage2('../oscar/billing/consultaFaturamentoMedico/init.do');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a>
              <% } else {%>
-				<a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a></font></td>
+                <a HREF="#" ONCLICK ="popupPage2('../billing/CA/<%=prov%>/billingReportCenter.jsp?displaymode=billreport&providerview=<%=curUser_no%>');return false;" TITLE='<bean:message key="global.genBillReport"/>' onMouseOver="window.status='<bean:message key="global.genBillReport"/>';return true"><bean:message key="global.billing"/></a>
              <% } %>
-
-<!-- doctor code block -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <!--MARK-->
-         <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
-         <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
-         </a>
-         <oscar:newUnclaimedLab>
-         <a style="color: red;" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
-         </oscar:newUnclaimedLab>
-        </font></td>
-		</security:oscarSec>
-<!-- doctor code block -->
-<!-- oscarMessenger code block -->
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
-         <oscar:newMessage providerNo="<%=curUser_no%>"/></a></font></td>
-<!--/oscarMessenger code block -->
-<!-- oscarEcounter/consultationRequest.jsp code block -->
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>">
-         <bean:message key="global.con"/></a></font>
-         </td>
-<!--/oscarEcounter code block -->
-
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap>
-        <font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-			<caisi:isModuleLoad moduleName="ticklerplus">
-				<a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true">
-					<bean:message key="global.pref"/>
-				</a>
-			</caisi:isModuleLoad>
-		</font>
-<caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
-         <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a></font>
-</caisi:isModuleLoad>
-         <!--a href="toggleReason.jsp" target="_blank">R</a-->
-        </td>
-
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" onclick="popup('700', '1000', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a></font></td>
-         <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
-   <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'><oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler></a></font></td>
-         </caisi:isModuleLoad>
-         <caisi:isModuleLoad moduleName="ticklerplus">
-         <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-         <a HREF="#" ONCLICK ="popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');return false;" TITLE='Tickler+'><oscar:newTickler providerNo="<%=curUser_no%>">Tickler+</oscar:newTickler></a></font></td>
-         </caisi:isModuleLoad>
-<!-- admin code block -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
-        <td></td><td rowspan="2" BGCOLOR="#C0C0C0" ALIGN="MIDDLE" nowrap><font FACE="VERDANA,ARIAL,HELVETICA" SIZE="2">
-		 <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;"><font color='blue'>Admin</font></a>
-         </font></td></security:oscarSec>
-<!-- admin code block -->
-
-<td></td>
-<!-- caisi menu extension point add -->
-<%int menuTagNumber=0; %> 
-<caisi:isModuleLoad moduleName="caisi">
-      <td rowspan=2 BGCOLOR='#C0C0C0' ALIGN='MIDDLE' nowrap><font
-       FACE='VERDANA,ARIAL,HELVETICA' SIZE=2>&nbsp;<a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>
-       Program</a>&nbsp;</font></td>
-      <td></td>
-	<% menuTagNumber++; %>
-</caisi:isModuleLoad>
-
-<!-- caisi menu extension point add end-->
-      </tr><tr>
-        <td valign="bottom"><img src="../images/tabs_l_active_end_alone.gif" width="14" height="20" border="0"></td>
-        <td valign="bottom"><img src="../images/tabs_r_active_end.gif" width="15" height="20" border="0"></td>
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-        
+        </li>
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
+           <li>
+               <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
+               <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
+               </a>
+               <oscar:newUnclaimedLab>
+               <a style="color: red;" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
+               </oscar:newUnclaimedLab>
+           </li>
+	</security:oscarSec>
+        <li>
+           <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>"><oscar:newMessage providerNo="<%=curUser_no%>"/></a>
+        </li>
+        <li>
+         <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>"><bean:message key="global.con"/></a>
+        </li>
+        <li>    <!-- remove this and let providerpreference check -->
+	    <caisi:isModuleLoad moduleName="ticklerplus">
+	      <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
+	    </caisi:isModuleLoad>	
+            <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
+                     <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
+            </caisi:isModuleLoad>
+        </li>
+        <li>
+           <a HREF="#" onclick="popup('700', '1000', '../dms/documentReport.jsp?function=provider&functionid=<%=curUser_no%>&curUser=<%=curUser_no%>', 'edocView');" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewEdoc"/>'><bean:message key="global.edoc"/></a>
+        </li>
+        <li>
+           <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
+             <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'><oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler></a>
+           </caisi:isModuleLoad>
+           <caisi:isModuleLoad moduleName="ticklerplus">
+             <a HREF="#" ONCLICK ="popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');return false;" TITLE='Tickler+'><oscar:newTickler providerNo="<%=curUser_no%>">Tickler+</oscar:newTickler></a>
+           </caisi:isModuleLoad>
+        </li>
+        <oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
+           <li><a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../oscarWorkflow/WorkFlowList.jsp','workflow')">WorkFlow</a></li> 
+        </oscar:oscarPropertiesCheck>
+	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
+          <li>
+	     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin</a>
+          </li>
+        </security:oscarSec>
+         
+        <%int menuTagNumber=0; %> 
         <caisi:isModuleLoad moduleName="caisi">
-		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
+           <li>    
+             <a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Program</a>
+	     <% menuTagNumber++ ; %>
+           </li>  
         </caisi:isModuleLoad>
-        
-        <caisi:isModuleLoad moduleName="caisi" reverse="true">
-    		<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>    
-        </caisi:isModuleLoad>
-        
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-<!-- oscarMessenger code block -->
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-<!--/oscarMessenger code block -->
-<!-- oscarMessenger code block -->
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-<!--/oscarMessenger code block -->
 
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-
-<!-- doctor code block -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-		</security:oscarSec>
-<!-- doctor code block -->
-<!-- admin code block -->
-		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
-        <td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-		</security:oscarSec>
-<!-- admin code block -->
-
-<!-- caisi menu extension point add begin--> 
-
-<%for (int i=0; i < menuTagNumber;i++){ %>
-	<td valign="bottom"><img src="../images/tabs_both_inactive.gif" width="15" height="20" border="0"></td>
-<%} %>
-
-<!-- caisi menu extension point add end-->
-        <td valign="bottom"><img src="../images/tabs_r_inactive_end.gif" width="17" height="20" border="0"></td>
-      </tr>
-    </table>
+    </ul>  <!--- old TABLE -->
 
   </td>
-  <td align="right" valign="bottom">
+  
   <form method="post" name="findprovider" onSubmit="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;" target="apptReception" action="receptionistfindprovider.jsp">
   <td align="right" valign="bottom">
    <INPUT TYPE="text" NAME="providername" VALUE="" WIDTH="2" HEIGHT="10" border="0" size="10" maxlength="10">-
    <INPUT TYPE="SUBMIT" NAME="Go" VALUE='<bean:message key="receptionist.appointmentreceptionistadminday.btnGo"/>' onClick="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;">
-<!-- doctor code block -->
-<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
-  <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
-  &nbsp;&nbsp;
-</security:oscarSec>
-<a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')">S</a>
+
+   <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
+   &nbsp;&nbsp;
+   <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')">S</a>
   </td></form>
-<!-- doctor code block -->
+
 </tr>
 </table>
+
+
+
+
 
 <table BORDER="0" CELLPADDING="1" CELLSPACING="0" WIDTH="100%" BGCOLOR="#C0C0C0">
   <tr><td>
