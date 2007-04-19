@@ -136,7 +136,7 @@ public class CommonLabTestValues {
    public ArrayList findUniqueLabsForPatientMDS(String demographic){
       //Need to check which labs are active
          ArrayList labList = new ArrayList();   
-         String sql = "select p.lab_type, x.observationIden " +
+         String sql = "select distinct p.lab_type, x.observationIden " +
                       "from mdsOBX x, mdsMSH m, patientLabRouting p " +
                       " where p.demographic_no = '"+demographic+"' " +
                       "and m.segmentID = p.lab_no " +
