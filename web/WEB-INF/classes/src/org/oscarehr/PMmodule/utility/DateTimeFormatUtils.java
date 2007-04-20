@@ -65,9 +65,13 @@ public final class DateTimeFormatUtils {
 	}
 
 	public static final String getStringFromDate(Date date) {
-		return format(date, DATE_FORMAT);
+		return getStringFromDate(date, DATE_FORMAT);
 	}
-	
+
+	public static final String getStringFromDate(Date date, DateFormat format) {
+		return format(date, format);
+	}
+
 	public static final Date getDateFromString(String date) {
 		return parse(date, DATE_FORMAT);
 	}

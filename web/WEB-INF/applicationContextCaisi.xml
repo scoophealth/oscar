@@ -858,6 +858,7 @@
         <property name="target">
             <bean class="org.oscarehr.common.service.impl.PopulationReportManagerImpl">
                 <property name="populationReportDAO" ref="populationReportDAO" />
+                <property name="issueDAO" ref="IssueDAO" />
             </bean>
         </property>
     </bean>

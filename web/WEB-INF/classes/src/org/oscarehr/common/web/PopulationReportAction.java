@@ -1,5 +1,7 @@
 package org.oscarehr.common.web;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -20,6 +22,8 @@ import org.oscarehr.common.service.PopulationReportManager;
 
 public class PopulationReportAction extends DispatchAction {
 
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+
 	// Forwards
 	private static final String REPORT = "report";
 	
@@ -35,7 +39,7 @@ public class PopulationReportAction extends DispatchAction {
 	}
 
 	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		// get report attributes
+		// get attributes
 		Date currentDateTime = Calendar.getInstance().getTime();
 		ShelterPopulation shelterPopulation = populationReportManager.getShelterPopulation();
 		ShelterUsage shelterUsage = populationReportManager.getShelterUsage();
@@ -43,9 +47,10 @@ public class PopulationReportAction extends DispatchAction {
 		Map<String, PopulationReportStatistic> majorMedicalConditions = populationReportManager.getMajorMedicalConditions();
 		Map<String, PopulationReportStatistic> majorMentalIllnesses = populationReportManager.getMajorMentalIllnesses();
 		Map<String, PopulationReportStatistic> seriousMedicalConditions = populationReportManager.getSeriousMedicalConditions();
+		Map<String, Map<String, String>> categoryCodeDescriptions = populationReportManager.getCategoryCodeDescriptions();
 		 
-		// set report attributes
-		request.setAttribute("date", DateTimeFormatUtils.getStringFromDate(currentDateTime));
+		// set attributes
+		request.setAttribute("date", DateTimeFormatUtils.getStringFromDate(currentDateTime, DATE_FORMAT));
 		request.setAttribute("time", DateTimeFormatUtils.getStringFromTime(currentDateTime));
 		request.setAttribute("shelterPopulation", shelterPopulation);
 		request.setAttribute("shelterUsage", shelterUsage);
@@ -53,6 +58,7 @@ public class PopulationReportAction extends DispatchAction {
 		request.setAttribute("majorMedicalConditions", majorMedicalConditions);
 		request.setAttribute("majorMentalIllnesses", majorMentalIllnesses);
 		request.setAttribute("seriousMedicalConditions", seriousMedicalConditions);
+		request.setAttribute("categoryCodeDescriptions", categoryCodeDescriptions);
 		
 		// forward to view page
 		return mapping.findForward(REPORT);

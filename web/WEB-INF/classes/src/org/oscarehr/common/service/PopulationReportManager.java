@@ -15,5 +15,6 @@ public interface PopulationReportManager {
 	public Map<String, PopulationReportStatistic> getMajorMedicalConditions();
 	public Map<String, PopulationReportStatistic> getMajorMentalIllnesses();
 	public Map<String, PopulationReportStatistic> getSeriousMedicalConditions();
-
+	public Map<String, Map<String, String>> getCategoryCodeDescriptions();
+	
 }

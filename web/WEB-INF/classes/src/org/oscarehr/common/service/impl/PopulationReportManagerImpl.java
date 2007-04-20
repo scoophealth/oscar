@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.Map.Entry;
 
+import org.oscarehr.casemgmt.dao.IssueDAO;
+import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.PopulationReportDAO;
 import org.oscarehr.common.model.Mortalities;
 import org.oscarehr.common.model.PopulationReportStatistic;
@@ -36,10 +38,15 @@ public class PopulationReportManagerImpl implements PopulationReportManager {
 	private static final int FOUR_YEARS = 4;
 	
 	private PopulationReportDAO populationReportDAO;
+	private IssueDAO issueDAO;
 	
 	public void setPopulationReportDAO(PopulationReportDAO populationReportDAO) {
 	    this.populationReportDAO = populationReportDAO;
     }
+	
+	public void setIssueDAO(IssueDAO issueDAO) {
+		this.issueDAO = issueDAO;
+	}
 	
 	public ShelterPopulation getShelterPopulation() {
 		int pastYear = populationReportDAO.getCurrentAndHistoricalPopulationSize(ONE_YEAR);
@@ -90,11 +97,33 @@ public class PopulationReportManagerImpl implements PopulationReportManager {
 
 		int populationSize = populationReportDAO.getCurrentPopulationSize();
 		
-		for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getSeriousMedicalContions().entrySet()) {
+		for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getSeriousMedicalConditions().entrySet()) {
 			incidences.put(e.getKey(), new PopulationReportStatistic(populationReportDAO.getIncidence(e.getValue()), populationSize));
         }
 		
 		return incidences;
+	}
+	
+	public Map<String, Map<String, String>> getCategoryCodeDescriptions() {
+		Map<String, Map<String, String>> categoryCodeDescription = new LinkedHashMap<String, Map<String,String>>();
+		
+		for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getAllCodes().entrySet()) {
+			String category = e.getKey();
+			SortedSet<String> codes = e.getValue();
+			
+			Map<String, String> codeDescriptions = new LinkedHashMap<String, String>();
+			
+			for (String code : codes) {
+				Issue issue = issueDAO.findIssueByCode(code);
+				String description = issue != null ? issue.getDescription() : "N/A";
+				
+				codeDescriptions.put(code, description);
+			}
+			
+			categoryCodeDescription.put(category, codeDescriptions);
+        }
+		
+		return categoryCodeDescription;
 	}
 
 }

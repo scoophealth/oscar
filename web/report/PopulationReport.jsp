@@ -1,96 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!--
-	Copyright (c) 2001-2002.
-	
-	Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved.
-	This software is published under the GPL GNU General Public License.
-	This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-	See the GNU General Public License for more details.
-	You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-	
-	OSCAR TEAM
-	
-	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
+Copyright (C) 2007.
+Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 <%@ include file="/taglibs.jsp"%>
-<html xmlns="http:‎//www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
     <title>Population Report</title>
     <style type="text/css">
-        <!--
-        body {
-            margin: 2.5% 5%;
-            font-family: sans-serif;
-        }
-        
-        h2 {
-            text-align: center;
-            text-transform: uppercase;
-        }
-        
-        table {
-            border: 1px solid black;
-            border-collapse: collapse;
-            margin: 0%;
-            padding: 0%;
-            width: 100%;
-        }
-        
-        td,th {
-            border: 1px solid black;
-            font-weight: normal;
-            margin: 0%;
-            padding: 0.2em 0.5em;
-            vertical-align: top;
-            text-align: center;
-        }
-        
-        thead th {
-            background: #666666 none repeat scroll 0%;
-            color: #FFFFFF;
-            text-transform: uppercase;
-        }
-        
-        tbody td {
-            background: #CCCCCC none repeat scroll 0%;
-        }
-        
-        tbody th {
-            background: #999999 none repeat scroll 0%;
-            width: 30%;
-        }
-        
-        tbody tr.odd td {
-            background: #EEEEEE none repeat scroll 0%;
-        }
-        
-        tbody tr.odd th {
-            background: #CCCCCC none repeat scroll 0%;
-        }
-        
-        caption {
-            font-size: 105%;
-            text-align: left;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-        -->
-    </style>
+		<!--
+		body {
+			font-family: sans-serif;
+			margin: 2.5% 5%;
+		}
+		
+		table {
+			border: 1px solid black;
+			border-collapse: collapse;
+			margin: 0%;
+			padding: 0%;
+			width: 100%;
+		}
+		
+		caption {
+			background: #B0C4DE none repeat scroll 0%;
+			border: 1px solid black;
+			padding: 0.2em 0.5em;
+			text-align: left;
+			text-transform: uppercase;
+		}
+		
+		th {
+			border: 1px solid black;
+			font-weight: normal;
+			margin: 0%;
+			padding: 0.2em 0.5em;
+			text-align: left;
+			vertical-align: middle;
+		}
+		
+		td {
+			border: 1px solid black;
+			margin: 0%;
+			padding: 0.2em 0.5em;
+			text-align: center;
+			vertical-align: middle;
+		}
+		
+		thead {
+			text-transform: uppercase;
+		}
+		
+		thead th {
+			background: #4682B4 none repeat scroll 0%;
+		}
+		
+		thead td {
+			background: #B0C4DE none repeat scroll 0%;
+		}
+		
+		tbody th {
+			background: #4682B4 none repeat scroll 0%;
+			color: #FFFFFF;
+			width: 30%;
+		}
+		
+		tbody td {
+			background: #FFFFFF none repeat scroll 0%;
+		}
+		
+		tbody tr.odd th {
+			background: #4682B4 none repeat scroll 0%;
+		}
+		
+		tbody tr.odd td {
+			background: #B0C4DE none repeat scroll 0%;
+		}
+		
+		table.header {
+			border: none;
+		}
+		
+		td.header {
+			border: none;
+		}
+		
+		thead td.header {
+			background: #F08080 none repeat scroll 0%;
+			color: #FFFFFF;
+		}
+		
+		td.notes {
+			text-align: left;
+		}
+		
+		th.notes {
+			background: #FFFFFF;
+			color: #000000;
+			width: 10%;
+		}
+		-->
+	</style>
 </head>
 <body>
-    <table>
-        <tr>
-            <td>Health of the Homeless: CAISI Population Health Report</td>
-            <td><c:out value="${date}"></c:out></td>
-        </tr>
-        <tr>
-            <td>Number of Individuals with Specific Acute and Chronic Conditions who currently reside in Toronto Shelters which are part of the CAISI Project</td>
-            <td><c:out value="${time}"></c:out></td>
-        </tr>
-    </table>
+    <table class="header">
+		<thead>
+			<tr>
+				<td class="header">Health of the Homeless: CAISI Population Health Report</td>
+	            <td class="header"><c:out value="${date}"></c:out></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="header">Number of Individuals with Specific Acute and Chronic Conditions who currently reside in Toronto Shelters which are part of the CAISI Project</td> 
+				<td class="header"><c:out value="${time}"></c:out></td>
+			</tr>
+		</tbody>
+	</table>
+    <br />
     <br />
     <!-- Shelter Population -->
     <table>
@@ -147,8 +189,8 @@
         <thead>
             <tr>
                 <th scope="col">Condition</th>
-                <th scope="col">Number of Cases in CAISI Shelters</th>
-                <th scope="col">Prevalence of Condition in CAISI Shelters</th>
+                <td scope="col">Number of Cases in CAISI Shelters</td>
+                <td scope="col">Prevalence of Condition in CAISI Shelters</td>
             </tr>
         </thead>
         <tbody>
@@ -168,8 +210,8 @@
         <thead>
             <tr>
                 <th scope="col">Condition</th>
-                <th scope="col">Number of Cases in CAISI Shelters</th>
-                <th scope="col">Prevalence of Condition in CAISI Shelters</th>
+                <td scope="col">Number of Cases in CAISI Shelters</td>
+                <td scope="col">Prevalence of Condition in CAISI Shelters</td>
             </tr>
         </thead>
         <tbody>
@@ -189,8 +231,8 @@
         <thead>
             <tr>
                 <th scope="col">Condition</th>
-                <th scope="col">Number of Cases in CAISI Shelters</th>
-                <th scope="col">Prevalence of Condition in CAISI Shelters</th>
+                <td scope="col">Number of Cases in CAISI Shelters</td>
+                <td scope="col">Prevalence of Condition in CAISI Shelters</td>
             </tr>
         </thead>
         <tbody>
@@ -203,5 +245,46 @@
             </c:forEach>
         </tbody>
     </table>
+    <br />
+    <br />
+    <!-- Notes -->
+    <table>
+        <caption>Notes on the Data</caption>
+        <tbody>
+        	<tr>
+        		<td class="notes">1) <b>List of all Shelters in the CAISI System</b>: Street Health (outreach program), Salvation Army Maxwell Meighen (shelter), Salvation Army Gateway (shelter), John Howard Society (service agency), Sherbourne Health Center (health care agency).</td>
+        	</tr>
+        	<tr>
+        		<td class="notes">2) The indicator of &quot;Intensity of Shelter Use&quot; uses values produced by New York City Health and Department of Homeless Services (2005).  As CAISI has not been operational for 4 years we are using the same values for the length of stay but only within the life of CAISI (approximately 15 months) rather than 4 years.  This means that the level of intensity reported in this report are higher than comparable New York statistics.</td>
+        	</tr>
+        	<tr>
+        		<td class="notes">3) In each case where a prevalence or incidence rate is reported, the denominator represents the number of clients <b>currently</b> in a bed program at CAISI Shelters.</td>
+        	</tr>
+        	<tr>
+        		<td class="notes">4) The specific conditions are defined using ICD-10 codes.  The numerator value is defined as the number of clients in the denominator who have been diagnosed with a condition associated with one or more of the ICD-10 codes that follow.</td>
+        	</tr>
+        </tbody>
+    </table>
+    <br />
+	<c:forEach var="categoryCodeDescription" items="${categoryCodeDescriptions}">
+		<table>
+			<caption><c:out value="${categoryCodeDescription.key}"></c:out></caption>
+			<thead>
+				<tr>
+					<th scope="col">Code</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="codeDescription" items="${categoryCodeDescription.value}">
+					<tr>
+						<th class="notes"><c:out value="${codeDescription.key}"></c:out></th>
+						<td class="notes"><c:out value="${codeDescription.value}"></c:out></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<br />
+	</c:forEach>
 </body>
 </html>
