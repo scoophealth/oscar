@@ -6552,31 +6552,35 @@ CREATE TABLE reporttemp (
 -- Table structure for table `rschedule`
 --
 
-CREATE TABLE rschedule (
-  provider_no varchar(6) NOT NULL default '',
-  sdate date NOT NULL default '0001-01-01',
-  edate date default NULL,
-  available char(1) NOT NULL default '',
-  day_of_week varchar(30) default NULL,
-  avail_hourB varchar(255) default NULL,
-  avail_hour varchar(230) default NULL,
-  creator varchar(50) default NULL,
-  PRIMARY KEY  (provider_no,sdate,available)
+CREATE TABLE `rschedule` (
+  `id` int(6) NOT NULL auto_increment,
+  `provider_no` varchar(6) NOT NULL default '',
+  `sdate` date NOT NULL default '0001-01-01',
+  `edate` date default NULL,
+  `available` char(1) NOT NULL default '',
+  `day_of_week` varchar(30) default NULL,
+  `avail_hourB` varchar(255) default NULL,
+  `avail_hour` varchar(230) default NULL,
+  `creator` varchar(50) default NULL,
+  `status` char(1) NOT NULL default '',
+  PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
 --
 -- Table structure for table `scheduledate`
 --
 
-CREATE TABLE scheduledate (
-  sdate date NOT NULL default '0001-01-01',
-  provider_no varchar(6) NOT NULL default '',
-  available char(1) NOT NULL default '',
-  priority char(1) default NULL,
-  reason varchar(255) default NULL,
-  hour varchar(255) default NULL,
-  creator varchar(50) default NULL,
-  PRIMARY KEY  (sdate,provider_no)
+CREATE TABLE `scheduledate` (
+  `id` int(6) NOT NULL auto_increment,
+  `sdate` date NOT NULL default '0001-01-01',
+  `provider_no` varchar(6) NOT NULL default '',
+  `available` char(1) NOT NULL default '',
+  `priority` char(1) default NULL,
+  `reason` varchar(255) default NULL,
+  `hour` varchar(255) default NULL,
+  `creator` varchar(50) default NULL,
+  `status` char(1) NOT NULL default '',
+  PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
 --
