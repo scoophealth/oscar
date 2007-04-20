@@ -64,9 +64,9 @@ public class MsgNewMessageTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewMessages > 0)
-                out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"red\">Msg</font>  ");
+                out.print("<span class=\"color:red;\">Msg</span>  ");
             else
-                out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">Msg</font>  ");
+                out.print("Msg  ");
         } catch(Exception p) {
             p.printStackTrace(System.out);
         }
