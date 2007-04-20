@@ -13,7 +13,7 @@ INSERT INTO encounterForm VALUES ('BC-LabourBirth','../form/formbcbirthsummo.jsp
 INSERT INTO encounterForm VALUES ('BC-NewBorn','../form/formbcnewborn.jsp?demographic_no=','formBCNewBorn', '1');
 INSERT INTO encounterForm values ('BC-WCB','../billing/CA/BC/viewformwcb.do?demographic_no=','wcb','0');
 INSERT INTO encounterForm values ('BC-INR','../form/formbcinr.jsp?demographic_no=','formBCINR','0');
-insert into encounterForm values('Chart Checklist', '../form/formbcclientchartchecklist.jsp?demographic_no=', 'formBCClientChartChecklist', 1);                                       
+insert into encounterForm values ('Chart Checklist', '../form/formbcclientchartchecklist.jsp?demographic_no=', 'formBCClientChartChecklist', 0);                                       
 
 INSERT INTO billinglocation VALUES ('00','ABBOTSFORD','BC');
 INSERT INTO billinglocation VALUES ('00','AGASSIZ/HARRISON','BC');
@@ -14857,10 +14857,10 @@ INSERT INTO billingvisit VALUES ('P','Outpatient','BC');
 INSERT INTO billingvisit VALUES ('R','Patient\'s residence','BC');
 INSERT INTO billingvisit VALUES ('Z','None of the above','BC');
 INSERT INTO billingvisit VALUES ('M','Mental Health Centre','BC');
-INSERT INTO billingvisit VALUES ('T','Practitioner\’s Office - In Publicly Administered Facility','BC');
+INSERT INTO billingvisit VALUES ('T','Practitioner\'s Office - In Publicly Administered Facility','BC');
 INSERT INTO billingvisit VALUES ('G','Hospital - Day Care (Surgery) ','BC');
 INSERT INTO billingvisit VALUES ('F','Private Medical / Surgical Facility','BC');
-INSERT INTO billingvisit VALUES ('A','Practitioner\’s Office - In Community ','BC');
+INSERT INTO billingvisit VALUES ('A','Practitioner\'s Office - In Community ','BC');
 
 
 --
@@ -23370,14 +23370,17 @@ INSERT INTO billingtypes VALUES ('ICBC',2);
 INSERT INTO billingtypes VALUES ('Pri',3);
 INSERT INTO billingtypes VALUES ('WCB',4);
 
-update billing_msp_servicecode_times set billingservice_no = '00112' where id = '13327';
-update billing_msp_servicecode_times set billingservice_no = '01200' where id = '13906';
-update billing_msp_servicecode_times set billingservice_no = '01201' where id = '13907';
-update billing_msp_servicecode_times set billingservice_no = '01205' where id = '13909';
-update billing_msp_servicecode_times set billingservice_no = '01206' where id = '13910';
-update billing_msp_servicecode_times set billingservice_no = '01207' where id = '13911';
-update billing_msp_servicecode_times set billingservice_no = '01210' where id = '13912';
-update billing_msp_servicecode_times set billingservice_no = '01211' where id = '13913';
+
+INSERT INTO `billing_msp_servicecode_times` VALUES (1,'00112',0);
+INSERT INTO `billing_msp_servicecode_times` VALUES (2,'01200',0);
+INSERT INTO `billing_msp_servicecode_times` VALUES (3,'01201',0);
+INSERT INTO `billing_msp_servicecode_times` VALUES (4,'01205',1);
+INSERT INTO `billing_msp_servicecode_times` VALUES (5,'01206',1);
+INSERT INTO `billing_msp_servicecode_times` VALUES (6,'01207',1);
+INSERT INTO `billing_msp_servicecode_times` VALUES (7,'01210',0);
+INSERT INTO `billing_msp_servicecode_times` VALUES (8,'01211',0);
+INSERT INTO `billing_msp_servicecode_times` VALUES (9,'14015',1);
+INSERT INTO `billing_msp_servicecode_times` VALUES (10,'14016',1);
 
 --
 -- Dumping data for table `billing_service_code_conditions`
