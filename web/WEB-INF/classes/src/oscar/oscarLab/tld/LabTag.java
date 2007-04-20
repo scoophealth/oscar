@@ -66,9 +66,9 @@ public class LabTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();            
             if(numNewLabs > 0)
-                out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"red\">  ");
+                out.print("<span style=\"color:red;\">  ");
             else
-                out.print("<font FACE=\"VERDANA,ARIAL,HELVETICA\" SIZE=\"2\" color=\"black\">  ");
+                out.print("<span style=\"color:black;\">  ");
         } catch(Exception p) {
             p.printStackTrace(System.out);
         }        
@@ -89,7 +89,7 @@ public class LabTag extends TagSupport {
     public int doEndTag()        throws JspException    {
        try{
           JspWriter out = super.pageContext.getOut();         
-          out.print("</font>");
+          out.print("</span>");
        }catch(Exception p) {
             p.printStackTrace(System.out);
        }
