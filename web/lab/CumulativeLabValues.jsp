@@ -269,7 +269,7 @@ function addLabToProfile2(labType,testName){
    var ran_number=Math.round(Math.random()*1000000);
    var params = "demographicNo=<%=demographic_no%>&rand="+ran_number+"&labType="+labType+"&testName="+testName;  //hack to get around ie caching the page
    ///alert(params);  //'d'+ran_number
-   new Ajax.Updater(newNode,url, {method:'get',
+   new Ajax.Updater(newNode,url, {method:'post',
                                           parameters:params,
                                           asynchronous:true,
                                            //onComplete: reRound
@@ -333,10 +333,13 @@ function addLabToList(req){
                   <%for (int i = 0 ; i < prevList.size(); i++){ 
                       Hashtable h = (Hashtable) prevList.get(i);
                       String prevName = (String) h.get("testName");
+                      String prevNameEsc = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(prevName);
                       
                       if (prevName == null){prevName ="";} %>
                      <li style="margin-top:2px;">
-                        <a title="fade=[on] header=[<%=prevName%>] body=[]"      href="javascript: function myFunction() {return false; }"  onclick="javascript:addLabToProfile2('<%=h.get("labType")%>','<%= java.net.URLEncoder.encode(prevName) %>');">                        
+                        <%-- a title="fade=[on] header=[<%=prevName%>] body=[]"      href="javascript: function myFunction() {return false; }"  onclick="javascript:addLabToProfile2('<%=h.get("labType")%>','<%= java.net.URLEncoder.encode(prevName) %>');" --%>                        
+                        <a title="fade=[on] header=[<%=prevName%>] body=[]"      href="javascript: function myFunction() {return false; }"  onclick="javascript:addLabToProfile2('<%=h.get("labType")%>','<%=prevNameEsc%>');">                        
+                        
                            <%=StringUtils.maxLenString(prevName, 13, 8, "...")%>
                         </a>
                      </li>          
