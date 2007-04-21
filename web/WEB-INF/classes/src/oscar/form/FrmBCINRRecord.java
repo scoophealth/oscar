@@ -66,6 +66,37 @@ public class FrmBCINRRecord extends FrmRecord {
 		return props;
 	}
 
+	public String getLastLabDate(int demographicNo, int existingID) throws SQLException {
+		String ret = "20/04/2002";
+		Properties props = new Properties();
+		int cId = 0;
+		if(existingID == 0) {
+			String sql = "SELECT ID FROM formBCINR WHERE demographic_no = " + demographicNo + " order by ID desc";
+			ResultSet rs = (new DBHelp()).searchDBRecord(sql);
+			if (rs.next()) {
+				cId = rs.getInt("ID");
+			}
+		} else {
+			cId = existingID;
+		}
+		
+		if(cId != 0) {
+			String sql = "SELECT * FROM formBCINR WHERE demographic_no = " + demographicNo + " AND ID = " + cId;
+			FrmRecordHelp frh = new FrmRecordHelp();
+			frh.setDateFormat(_dateFormat);
+			props = (frh).getFormRecord(sql);
+			
+			for(int i=21; i>=1; i--) {
+				String labDate = props.getProperty("date"+i, "");
+				if(labDate.length()==10) {
+					ret = labDate;
+					break;
+				}
+			}			
+		}
+		return ret;
+	}
+	
 	public Vector getINRLabData(int demographic_no) throws SQLException {
 		Vector ret = new Vector();
 		DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

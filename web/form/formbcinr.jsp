@@ -18,7 +18,7 @@
 -->
 
 <%@ page language="java"%>
-<%@ page import="oscar.form.*, oscar.form.data.*, java.util.*" %>
+<%@ page import="oscar.form.*, oscar.form.data.*, java.util.*, oscar.util.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -35,6 +35,7 @@
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
     FrmData fd = new FrmData();
+    String lastLabDate = rec.getLastLabDate(demoNo, formId);
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
@@ -540,6 +541,17 @@ function calToday(field) {
   
   <%
   Vector vecR = (new FrmBCINRRecord()).getINRLabData(demoNo);
+  // get rid of the old lab data
+  for(int i = 0; i < vecR.size(); i=i+2) {
+	  String tempDate = (String) vecR.get(i);
+	  Date dateVec = UtilDateUtilities.StringToDate(tempDate, "dd/MM/yyyy");
+	  Date dateStart = UtilDateUtilities.StringToDate(lastLabDate, "dd/MM/yyyy");
+	  if(dateVec.compareTo(dateStart) <= 0) {
+		  vecR.remove(i);
+		  vecR.remove(i);
+	  }
+  }
+  
   for(int i=1; i<21; i++) {
 	  String bgcolor = "";
 	  String labDate = props.getProperty("date"+i, "");
