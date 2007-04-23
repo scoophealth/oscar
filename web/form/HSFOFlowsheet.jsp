@@ -32,6 +32,7 @@
 <html:html>
 <head>
 <title>HSFO Registration Template</title>
+<html:base/>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <style type="text/css">
 table.formtable{ background: #fff; border-left:1px solid #ccc; border-top:1px solid #ccc; border-right:1px solid #ccc; border-bottom:1px solid #ccc; }
@@ -51,7 +52,7 @@ v\:* { behavior: url(#default#VML); }
 
 </head>
 
-<body onload="window.resizeTo(973,719)" >
+<body onload="window.resizeTo(998,719)" >
 <jsp:useBean id="patientData" class="oscar.form.study.HSFO.PatientData" scope="request"/>
 <jsp:useBean id="visitData" class="oscar.form.study.HSFO.VisitData" scope="request"/>
 <jsp:useBean id="recordList" class="oscar.form.study.HSFO.RecordList" scope="request"/>
@@ -196,7 +197,7 @@ for (int i=0; i < LineConfidencey1.length; i++)
 
 <table width="82%" border="0" cellpadding="1" cellspacing="0" class="table">
     <tr bgcolor="#FFFFFF"> 
-      <td width="40%" height="87" class="formtd"><p><font size="4" face="Arial, Helvetica, sans-serif"><img src="./images/hsfologo.jpg" width="200" height="85" /></font></p></td>
+      <td width="40%" height="87" class="formtd"><p><font size="4" face="Arial, Helvetica, sans-serif"><%--img src="./images/hsfologo.jpg" width="200" height="85" /--%></font></p></td>
       
     <td class="formtd"><font size="4" face="Arial, Helvetica, sans-serif"><strong>PATIENT 
       REGISTRATION VISIT</strong></font><font size="3" face="Arial, Helvetica, sans-serif"><em><strong><br>
@@ -245,43 +246,47 @@ if (visitList != null){
 </tr>
     <tr> 
       <td width="40%" height="796" rowspan="3" valign="top"> 
-          <table width="100%" height="100%" border="0" cellpadding="1" cellspacing="3" class="formtable" style="display:none;" id="graphtable">
+          <table width="100%" height="100%" border="0" cellpadding="1" cellspacing="3" class="formtable" <%=getDisplayIfMore1(visitList)%> id="graphtable">
           <tr> 
-            <td height="20" valign="top" class="formtd"><p align="center"><font size="2" face="Arial, Helvetica, sans-serif"><strong>Blood 
-                Pressure </strong></font></p></td>
-
+            <td valign="top" class="formtd"><div align="center"><font size="2" face="Arial, Helvetica, sans-serif"><strong>Blood 
+                Pressure </strong></font>
+                <img src="HSFOgraph.jsp?id=HSFOBPCHART"/>
+                </div>
+            </td
           </tr>
-          <tr> 
-            <td height="29">
-			  <div id="graphdiv2" class="graph"></div></td>
-          </tr>
+          
           <tr> 
             <td height="18" valign="top" class="formtd"><div align="center"><font size="2" face="Arial, Helvetica, sans-serif"><strong>BMI 
-                &amp; Waist Circumference</strong></font></div></td>
+                </strong></font>
+                <img src="HSFOgraph.jsp?id=HSFOBBMICHART"/>
+                </div>
+            </td>
           </tr>
           <tr> 
-            <td height="150"><div id="graphdiv1" class="graph"></div>
-             </td>
+            <td height="18" valign="top" class="formtd"><div align="center"><font size="2" face="Arial, Helvetica, sans-serif"><strong> 
+                Waist Circumference</strong></font>
+                <img src="HSFOgraph.jsp?id=HSFOWAISTCHART"/>
+                </div>
+            </td>
           </tr>
           <tr> 
             <td height="18" class="formtd"><div align="center"><font size="2" face="Arial, Helvetica, sans-serif"><strong>TC/HCL 
-                &amp; LDL</strong></font></div></td>
-          </tr>
-          <tr> 
-            <td height="150"><div id="graphdiv3" class="graph"></div></td>
-
+                &amp; LDL</strong></font>
+                <img src="HSFOgraph.jsp?id=HSFODLCHART"/>
+                </div>
+            </td>
           </tr>
           <tr> 
             <td height="18" class="formtd"><div align="center"><strong><font size="2" face="Arial, Helvetica, sans-serif">Lifestyle: 
-                Goal, Importance, Confidence</font></strong></div></td>
+                Goal, Importance, Confidence</font></strong>
+                <img src="HSFOgraph.jsp?id=HSFOimportanceconfidenceCHART"/>
+                </div>
+            </td>
           </tr>
-          <tr> 
-            <td height="150"><div id="graphdiv4" class="graph"></div></td>
-          </tr>
-        </table>
+       </table>
         
         
-            <table width="90%" border="0" cellpadding="1" cellspacing="3" class="formtable"  id="registartiontable">
+       <table width="90%" border="0" cellpadding="1" cellspacing="3" class="formtable"  id="registartiontable" <%=getDisplayIfLess1(visitList)%>>
 <%String isfirstrecord = (String)request.getAttribute("isFirstRecord"); %>
             <tr> 
                 <td width="75%" height="179"><p><font size="2" face="Arial, Helvetica, sans-serif">Use 
@@ -1828,4 +1833,21 @@ function checkdate(date)
 
 </body>
 </html:html>
+<%!
 
+String getDisplayIfMore1(Object[] s){
+    if(s != null && s.length > 1){
+        return "";
+    }else{
+        return "style=\"display:none;\" ";
+    }           
+}
+
+String getDisplayIfLess1(Object[] s){
+    if(s == null || s.length < 1){
+        return "";
+    }else{
+        return "style=\"display:none;\" ";
+    }
+} 
+%>
