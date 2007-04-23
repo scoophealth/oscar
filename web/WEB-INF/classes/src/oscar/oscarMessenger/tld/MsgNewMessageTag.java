@@ -64,7 +64,7 @@ public class MsgNewMessageTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewMessages > 0)
-                out.print("<span class=\"color:red;\">Msg</span>  ");
+                out.print("<span style=\"color:red;\">Msg</span>  ");
             else
                 out.print("Msg  ");
         } catch(Exception p) {
