@@ -49,6 +49,12 @@
         }
         return ret;
     }
+    function popupOscarCon(vheight,vwidth,varpage) {
+       var page = varpage;
+       windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes, screenX=0,screenY=0,top=0,left=0";
+       var popup=window.open(varpage, "<bean:message key="oscarEncounter.Index.msgOscarConsultation"/>", windowprops);
+       popup.focus();
+    }
     function onSave() {
         document.forms[0].submit.value="save";
         var ret = checkAllDates();
@@ -246,6 +252,8 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
             <input type="button" value="Print" onclick="javascript:return onPrint();"/>
+            <input type="button" value="Consult" onclick="javascript:popupOscarCon(700,960,'../oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp?de=<%=demoNo%>');"/>
+
         </td><td align='right'>
             <a href="javascript: popupPage(700,950,'../decision/annualreview/annualreviewplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&provNo=<%=provNo%>');">Annual Review Planner</a>
         </td>
