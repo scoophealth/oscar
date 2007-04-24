@@ -3,7 +3,7 @@
  *  This software is published under the GPL GNU General Public License.
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
+ *  as published by the Free Software Foundation; either version 2
  *  of the License, or (at your option) any later version. *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -140,7 +140,7 @@ public class CommonLabTestValues {
                       "from mdsOBX x, mdsMSH m, patientLabRouting p " +
                       " where p.demographic_no = '"+demographic+"' " +
                       "and m.segmentID = p.lab_no " +
-                      "and x.segmentID = m.segmentID  "; 
+                      "and x.segmentID = m.segmentID  and p.lab_type = 'MDS' "; 
                       
          System.out.println(sql);
       
@@ -185,7 +185,7 @@ public class CommonLabTestValues {
                       "and p.lab_no = m.message_id " +
                       "and pi.message_id = m.message_id " +
                       "and r.pid_id = pi.pid_id " +
-                      "and r.obr_id = x.obr_id";
+                      "and r.obr_id = x.obr_id and p.lab_type='BCP'";
          
          System.out.println(sql);
       
@@ -261,7 +261,7 @@ public class CommonLabTestValues {
          }
       } else if ( labType != null && labType.equals("MDS")){
          //String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no";
-         String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no order by dateTime";       
+         String sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where p.lab_type = 'MDS' and p.demographic_no = '"+demographicNo+"' and observationIden like '%^"+testName+"%' and  x.segmentID = m.segmentID  and m.segmentID = p.lab_no order by dateTime";       
          System.out.println(sql);
       
          try {
@@ -303,7 +303,7 @@ public class CommonLabTestValues {
             e.printStackTrace();
          }
       }else if ( labType != null && labType.equals("BCP")){
-          String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
+          String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.lab_type = 'BCP' and p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
           System.out.println(sql);
           try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
@@ -393,7 +393,7 @@ public class CommonLabTestValues {
          
       
          sql = null;
-         sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p where x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no";       
+         sql = "select *   from mdsOBX x, mdsMSH m, patientLabRouting p  where p.lab_type = 'MDS' and x.segmentID = m.segmentID and p.demographic_no = '"+demographicNo+"' and m.segmentID = p.lab_no";       
          System.out.println(sql);
       
          try {
