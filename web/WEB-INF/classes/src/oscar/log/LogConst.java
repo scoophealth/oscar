@@ -24,5 +24,8 @@ public class LogConst {
     public static final String CON_FORM = "form";
     public static final String CON_PRESCRIPTION = "prescription";
     public static final String CON_ALLERGY = "allergy";
+    public static final String CON_JASPERREPORTLETER = "jr_letter";
+    public static final String CON_TICKLER = "tickler";
+    
     
 }
