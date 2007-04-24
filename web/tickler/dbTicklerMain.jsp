@@ -24,7 +24,7 @@
  */
 -->
 
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat,oscar.log.*"  %>
 <%@ include file="../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
 <%@ include file="dbTicker.jsp" %>
@@ -40,6 +40,15 @@ if (temp == null){
         param[0] = request.getParameter("submit_form").substring(0,1);
         param[1] = temp[i];	
         int rowsAffected = apptMainBean.queryExecuteUpdate(param,"update_tickler");
+        
+        String ip = request.getRemoteAddr();
+        
+        if (param[0] != null && param[0].equals("D") ){
+	LogAction.addLog((String) session.getAttribute("user"), LogConst.DELETE, LogConst.CON_TICKLER, temp[i], ip);
+        }else{
+        LogAction.addLog((String) session.getAttribute("user"), LogConst.UPDATE, LogConst.CON_TICKLER, temp[i], ip);   
+        }
+        
 
     } 
     apptMainBean.closePstmtConn();  
