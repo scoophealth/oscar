@@ -42,7 +42,7 @@
     </table>
 <%
 String[] param=null;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     param =new String[7];
 }else {
 	param =new String[6];
@@ -53,7 +53,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
 	  param[3]=request.getParameter("mygroup_no");
 	  param[4]=request.getParameter("color_template");
 	  param[5]=request.getParameter("provider_no");
-	if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	  param[6]=request.getParameter("new_tickler_warning_window");
 	}  
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, "preference_addupdate_record");
@@ -62,7 +62,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     session.setAttribute("endhour", param[1]);
     session.setAttribute("everymin", param[2]);
     session.setAttribute("groupno", param[3]);
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
 }
 %>
@@ -77,7 +77,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
 	param[3]=request.getParameter("every_min");
 	param[4]=request.getParameter("mygroup_no");
 	param[5]=request.getParameter("color_template");
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	param[6]=request.getParameter("new_tickler_warning_window");
 }
 	
@@ -87,7 +87,7 @@ if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsProper
     session.setAttribute("endhour", param[2]);
     session.setAttribute("everymin", param[3]);
     session.setAttribute("groupno", param[4]);  
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
 }
 %>

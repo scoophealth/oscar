@@ -40,6 +40,7 @@ Intake intake = intakeEditForm.getIntake();
 				</div>
                 
 				<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
+				
 					<div id="clientTable" dojoType="TitlePane" label="Client Information" title="(Fields marked with * are mandatory)" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
@@ -79,31 +80,37 @@ Intake intake = intakeEditForm.getIntake();
 								<td><label>Province<br><html:text property="client.province" /></label></td>
 								<td><label>Postal Code<br><html:text property="client.postal" /></label></td>
 							</tr>
-							<c:if test="${!empty sessionScope.genericIntakeEditForm.client.demographicNo}">
-								<tr>
-									<td>
-										<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable')" >
-											<span>Case Management Notes</span>
-										</a>
-									</td>
-								</tr>
+							<c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+							<tr>
+								<td>
+									<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable')" >
+										<span>Case Management Notes</span>
+									</a>
+								</td>
+							</tr>
 							</c:if>
 						</table>
 					</div>
+					
+					<c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms || not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
 							<tr>
+								<c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
 								<td class="intakeBedCommunityProgramCell"><label><c:out value="${sessionScope.genericIntakeEditForm.bedCommunityProgramLabel}" /></label></td>
+								</c:if>
 								<c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td><label>Service Programs</label></td>
 								</c:if>
 							</tr>
 							<tr>
+								<c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms}">
 								<td class="intakeBedCommunityProgramCell">
 									<html:select property="bedCommunityProgramId">
 										<html:optionsCollection property="bedCommunityPrograms" value="value" label="label" />
 									</html:select>
 								</td>
+								</c:if>
 								<c:if test="${not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 								<td>
 									<c:forEach var="serviceProgram" items="${sessionScope.genericIntakeEditForm.servicePrograms}">
@@ -114,6 +121,8 @@ Intake intake = intakeEditForm.getIntake();
 							</tr>
 						</table>
 					</div>
+					</c:if>
+					
 					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
 				</div>
 				
@@ -145,7 +154,6 @@ Intake intake = intakeEditForm.getIntake();
                         </html:messages>
                         </logic:messagesPresent>
 					</table>
-					<%@ include file="/common/messages.jsp"%>
 				</div>
 			</div>
 		</html:form>

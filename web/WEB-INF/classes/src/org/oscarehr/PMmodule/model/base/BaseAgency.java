@@ -19,6 +19,7 @@ public abstract class BaseAgency  implements Serializable {
 	public static String PROP_DESCRIPTION = "description";
 	public static String PROP_LOCAL = "local";
 	public static String PROP_CONTACT_NAME = "contactName";
+	public static String PROP_INTAKE_QUICK_STATE = "intakeQuickState";
 	public static String PROP_CONTACT_EMAIL = "contactEmail";
 	public static String PROP_INTEGRATOR_JMS = "integratorJms";
 	public static String PROP_CONTACT_PHONE = "contactPhone";
@@ -30,7 +31,6 @@ public abstract class BaseAgency  implements Serializable {
 	public static String PROP_INTAKE_INDEPTH = "intakeIndepth";
 	public static String PROP_INTAKE_QUICK = "intakeQuick";
 	public static String PROP_ID = "id";
-	public static String PROP_INTAKES_COMBINED = "intakesCombined";
 
 
 	// constructors
@@ -51,18 +51,18 @@ public abstract class BaseAgency  implements Serializable {
 	 */
 	public BaseAgency (
 		java.lang.Long id,
+		java.lang.Integer intakeQuick,
+		java.lang.String intakeQuickState,
 		java.lang.String name,
 		boolean local,
-		boolean integratorEnabled,
-		boolean intakesCombined,
-		java.lang.Integer intakeQuick) {
+		boolean integratorEnabled) {
 
 		this.setId(id);
+		this.setIntakeQuick(intakeQuick);
+		this.setIntakeQuickState(intakeQuickState);
 		this.setName(name);
 		this.setLocal(local);
 		this.setIntegratorEnabled(integratorEnabled);
-		this.setIntakesCombined(intakesCombined);
-		this.setIntakeQuick(intakeQuick);
 		initialize();
 	}
 
@@ -76,6 +76,9 @@ public abstract class BaseAgency  implements Serializable {
 	private java.lang.Long id;
 
 	// fields
+	private java.lang.Integer intakeQuick;
+	private java.lang.String intakeQuickState;
+	private java.lang.Integer intakeIndepth;
 	private java.lang.String name;
 	private java.lang.String description;
 	private java.lang.String contactName;
@@ -88,9 +91,6 @@ public abstract class BaseAgency  implements Serializable {
 	private java.lang.String integratorUsername;
 	private java.lang.String integratorPassword;
 	private boolean hic;
-	private boolean intakesCombined;
-	private java.lang.Integer intakeQuick;
-	private java.lang.Integer intakeIndepth;
 
 
 
@@ -113,6 +113,57 @@ public abstract class BaseAgency  implements Serializable {
 		this.hashCode = Integer.MIN_VALUE;
 	}
 
+
+
+
+	/**
+	 * Return the value associated with the column: intake_quick
+	 */
+	public java.lang.Integer getIntakeQuick () {
+		return intakeQuick;
+	}
+
+	/**
+	 * Set the value related to the column: intake_quick
+	 * @param intakeQuick the intake_quick value
+	 */
+	public void setIntakeQuick (java.lang.Integer intakeQuick) {
+		this.intakeQuick = intakeQuick;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: intake_quick_state
+	 */
+	public java.lang.String getIntakeQuickState () {
+		return intakeQuickState;
+	}
+
+	/**
+	 * Set the value related to the column: intake_quick_state
+	 * @param intakeQuickState the intake_quick_state value
+	 */
+	public void setIntakeQuickState (java.lang.String intakeQuickState) {
+		this.intakeQuickState = intakeQuickState;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: intake_indepth
+	 */
+	public java.lang.Integer getIntakeIndepth () {
+		return intakeIndepth;
+	}
+
+	/**
+	 * Set the value related to the column: intake_indepth
+	 * @param intakeIndepth the intake_indepth value
+	 */
+	public void setIntakeIndepth (java.lang.Integer intakeIndepth) {
+		this.intakeIndepth = intakeIndepth;
+	}
 
 
 
@@ -316,57 +367,6 @@ public abstract class BaseAgency  implements Serializable {
 	 */
 	public void setHic (boolean hic) {
 		this.hic = hic;
-	}
-
-
-
-	/**
-	 * Return the value associated with the column: intakes_combined
-	 */
-	public boolean isIntakesCombined () {
-		return intakesCombined;
-	}
-
-	/**
-	 * Set the value related to the column: intakes_combined
-	 * @param intakesCombined the intakes_combined value
-	 */
-	public void setIntakesCombined (boolean intakesCombined) {
-		this.intakesCombined = intakesCombined;
-	}
-
-
-
-	/**
-	 * Return the value associated with the column: intake_quick
-	 */
-	public java.lang.Integer getIntakeQuick () {
-		return intakeQuick;
-	}
-
-	/**
-	 * Set the value related to the column: intake_quick
-	 * @param intakeQuick the intake_quick value
-	 */
-	public void setIntakeQuick (java.lang.Integer intakeQuick) {
-		this.intakeQuick = intakeQuick;
-	}
-
-
-
-	/**
-	 * Return the value associated with the column: intake_indepth
-	 */
-	public java.lang.Integer getIntakeIndepth () {
-		return intakeIndepth;
-	}
-
-	/**
-	 * Set the value related to the column: intake_indepth
-	 * @param intakeIndepth the intake_indepth value
-	 */
-	public void setIntakeIndepth (java.lang.Integer intakeIndepth) {
-		this.intakeIndepth = intakeIndepth;
 	}
 
 

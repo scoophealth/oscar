@@ -1,24 +1,23 @@
 /*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 package org.oscarehr.PMmodule.model;
 
 import java.util.Map;
@@ -33,13 +32,13 @@ public class Agency extends BaseAgency {
 	private static final long serialVersionUID = 1L;
 
 	private static Agency localAgency;
-	private static Map agencyMap;
+	private static Map<?, ?> agencyMap;
 
 	public static Agency getLocalAgency() {
 		return localAgency;
 	}
 
-	public static Map getAgencyMap() {
+	public static Map<?, ?> getAgencyMap() {
 		return agencyMap;
 	}
 
@@ -47,7 +46,7 @@ public class Agency extends BaseAgency {
 		localAgency = agency;
 	}
 
-	public static void setAgencyMap(Map map) {
+	public static void setAgencyMap(Map<?, ?> map) {
 		agencyMap = map;
 	}
 
@@ -64,32 +63,33 @@ public class Agency extends BaseAgency {
 	}
 
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	public Agency () {
+
+	public Agency() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Agency (java.lang.Long id) {
+	public Agency(java.lang.Long id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Agency(java.lang.Long id, java.lang.String name, boolean local, boolean integratorEnabled, boolean intakesCombined, java.lang.Integer intakeQuick) {
-		super(id, name, local, integratorEnabled, intakesCombined, intakeQuick);
+	public Agency(java.lang.Long id, java.lang.Integer intakeQuick, java.lang.String intakeQuickState, java.lang.String name, boolean local, boolean integratorEnabled) {
+		super(id, intakeQuick, intakeQuickState, name, local, integratorEnabled);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	public Agency(Long id, String name, boolean local, boolean integratorEnabled) {
-		super(id, name, local, integratorEnabled, false, 1);
+	public boolean areHousingProgramsVisible() {
+		return getIntakeQuickState().contains("H");
 	}
 
-	public boolean getLocal() {
-		return isLocal();
+	public boolean areServiceProgramsVisible() {
+		return getIntakeQuickState().contains("S");
 	}
 
 }

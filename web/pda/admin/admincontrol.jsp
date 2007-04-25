@@ -61,7 +61,7 @@
   }
   //operation available to the client - dboperation
   String [][] dbQueries;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     dbQueries=new String[][] {
     {"provider_add_record", "insert into provider values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?)" },
     {"provider_search_titlename", "select provider_no,first_name,last_name,specialty,sex,team,phone from provider where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit}, 

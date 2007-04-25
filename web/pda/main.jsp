@@ -58,7 +58,7 @@
   
   //operation available to the client - dboperation
   String [][] dbQueries=null;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   dbQueries=new String[][] {
     {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "}, 
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "}, 

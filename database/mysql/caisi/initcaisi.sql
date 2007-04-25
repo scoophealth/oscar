@@ -41,8 +41,8 @@ CREATE TABLE `admission` (
 DROP TABLE IF EXISTS `agency`;
 CREATE TABLE `agency` (
   `id` bigint(20) NOT NULL default '0',
-  `intakes_combined` boolean NOT NULL DEFAULT 0,
   `intake_quick` integer unsigned NOT NULL DEFAULT 1,
+  `intake_quick_state` char(2) NOT NULL DEFAULT 'HS',
   `intake_indepth` integer unsigned DEFAULT 2,
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) default NULL,

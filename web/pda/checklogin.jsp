@@ -99,7 +99,7 @@
       session.setAttribute("endhour", strPreferAuth[1]);
       session.setAttribute("everymin", strPreferAuth[2]);
       session.setAttribute("groupno", strPreferAuth[3]);
-	if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
       session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
 	}
     }

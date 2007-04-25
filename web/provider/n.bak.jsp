@@ -40,7 +40,7 @@
   int startHour=Integer.parseInt((String) session.getAttribute("starthour"));
   int endHour=Integer.parseInt((String) session.getAttribute("endhour"));
   int everyMin=Integer.parseInt((String) session.getAttribute("everymin"));
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   n_t_w_w= (String) session.getAttribute("newticklerwarningwindow");
   System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@"+n_t_w_w);
 }
@@ -126,7 +126,7 @@ function onUnbilled(url) {
 }
 function changeGroup(s) {
 	var newGroupNo = s.options[s.selectedIndex].value;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 }else popupPage(10,10, "providercontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo);
 }

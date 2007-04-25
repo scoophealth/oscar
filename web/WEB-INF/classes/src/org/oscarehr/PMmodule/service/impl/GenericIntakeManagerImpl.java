@@ -177,7 +177,6 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 		
 		return programsWithIntake;
 	}
-	
 
 	// Save
 

@@ -79,7 +79,7 @@
 <%
   //operation available to the client - dboperation
   String [][] dbOperation;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	dbOperation=new String[][] {
     {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
     {"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current='1'"},

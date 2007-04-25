@@ -42,7 +42,7 @@
 
 <%
 String [][] dbOperation;
-if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   dbOperation=new String[][] {
    {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
   {"searchappointmentday", "select appointment_no, provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "}, 

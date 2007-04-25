@@ -57,7 +57,7 @@
   int endHour=Integer.parseInt(strEndHour.trim());
   int everyMin=Integer.parseInt(strEveryMin.trim());
   String n_t_w_w=null;
-  if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+  if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
   	n_t_w_w = (String) session.getAttribute("newticklerwarningwindow");
   }
   boolean caisi = Boolean.valueOf((String)request.getParameter("caisi")).booleanValue();
@@ -73,7 +73,7 @@ function setfocus() {
 }
 function selectProvider(p,pn) {
 	  newGroupNo = p;
-<%if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){%>
+<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){%>
 	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&new_tickler_warning_window=<%=n_t_w_w%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;
 <%}else{%>
 	  this.location.href = "receptionistcontrol.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&color_template=deepblue&dboperation=updatepreference&displaymode=updatepreference&mygroup_no="+newGroupNo ;

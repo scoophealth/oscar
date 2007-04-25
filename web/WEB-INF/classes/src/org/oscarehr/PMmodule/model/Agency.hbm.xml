@@ -17,105 +17,122 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
-	<class
-		name="Agency"
-		table="agency">
-		<meta attribute="sync-DAO">false</meta>
-		<id
-			name="id"
-			type="java.lang.Long"
-			column="id">
-			<generator class="native" />
-		</id>
-		<property
-			name="name"
-			column="name"
-			type="string"
-			not-null="true"
-			length="50" />
-		<property
-			name="description"
-			column="description"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="contactName"
-			column="contact_name"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="contactEmail"
-			column="contact_email"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="contactPhone"
-			column="contact_phone"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="local"
-			column="local"
-			type="boolean"
-			not-null="true"
-			length="1" />
-		<property
-			name="integratorEnabled"
-			column="integrator_enabled"
-			type="boolean"
-			not-null="true"
-			length="1" />
-		<property
-			name="integratorUrl"
-			column="integrator_url"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="integratorJms"
-			column="integrator_jms"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="integratorUsername"
-			column="integrator_username"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="integratorPassword"
-			column="integrator_password"
-			type="string"
-			not-null="false"
-			length="255" />
-		<property
-			name="hic"
-			column="hic"
-			type="boolean"
-			not-null="false"
-			length="1" />
-		<property
-			name="intakesCombined"
-			column="intakes_combined"
-			type="boolean"
-			not-null="true"
-			length="1" />
-		<property
-			name="intakeQuick"
-			column="intake_quick"
-			type="integer"
-			not-null="true"
-			length="10" />
-		<property
-			name="intakeIndepth"
-			column="intake_indepth"
-			type="integer"
-			not-null="false"
-			length="10" />
-	</class>
+    <class
+        name="Agency"
+        table="agency"
+    >
+        <meta attribute="sync-DAO">false</meta>
+        <id
+            name="id"
+            type="java.lang.Long"
+            column="id"
+        >
+            <generator class="native" />
+        </id>
+        <property
+            name="intakeQuick"
+            column="intake_quick"
+            type="integer"
+            not-null="true"
+            length="10"
+        />
+        <property
+            name="intakeQuickState"
+            column="intake_quick_state"
+            type="string"
+            not-null="true"
+            length="2"
+        />
+        <property
+            name="intakeIndepth"
+            column="intake_indepth"
+            type="integer"
+            not-null="false"
+            length="10"
+        />
+        <property
+            name="name"
+            column="name"
+            type="string"
+            not-null="true"
+            length="50"
+        />
+        <property
+            name="description"
+            column="description"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="contactName"
+            column="contact_name"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="contactEmail"
+            column="contact_email"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="contactPhone"
+            column="contact_phone"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="local"
+            column="local"
+            type="boolean"
+            not-null="true"
+            length="1"
+        />
+        <property
+            name="integratorEnabled"
+            column="integrator_enabled"
+            type="boolean"
+            not-null="true"
+            length="1"
+        />
+        <property
+            name="integratorUrl"
+            column="integrator_url"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="integratorJms"
+            column="integrator_jms"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="integratorUsername"
+            column="integrator_username"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="integratorPassword"
+            column="integrator_password"
+            type="string"
+            not-null="false"
+            length="255"
+        />
+        <property
+            name="hic"
+            column="hic"
+            type="boolean"
+            not-null="false"
+            length="1"
+        />
+    </class>
 </hibernate-mapping>
