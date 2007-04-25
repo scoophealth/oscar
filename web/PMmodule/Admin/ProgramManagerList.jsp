@@ -25,9 +25,20 @@
 	<display:column sortable="false" title="">
 		<a onclick="return ConfirmDelete('<c:out value="${program.name}"/>')" href="<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=delete&id=<c:out value="${program.id}"/>&name=<c:out value="${program.name}"/>"> Delete </a>
 	</display:column>
+	
+	<c:choose>
+	<c:when test="${program.programStatus=='active'}">
 	<display:column sortable="false" title="">
 		<a href="<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=edit&id=<c:out value="${program.id}" />"> Edit </a>
 	</display:column>
+	</c:when>
+	<c:otherwise>
+	<display:column sortable="false" title="">
+ 		Edit 
+	</display:column>
+	</c:otherwise>
+	</c:choose>
+	
 	<display:column sortable="true" title="Name">
 		<a href="<html:rewrite action="/PMmodule/ProgramManagerView.do"/>?id=<c:out value="${program.id}" />"> <c:out value="${program.name}" /> </a>
 	</display:column>

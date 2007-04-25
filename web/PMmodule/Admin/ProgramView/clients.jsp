@@ -68,14 +68,13 @@ function do_batch_discharge(community,bed) {
 	var programBox;
 	if(community) {
 		programBox = document.programManagerViewForm.batch_discharge_community_program;
-		document.programManagerViewForm.type.value='community';
+		document.programManagerViewForm.type.value='community';		
 	} else {
-		if(bed){
-			programBox = document.programManagerViewForm.batch_discharge_program;
+		programBox = document.programManagerViewForm.batch_discharge_program;
+		if(bed){			
 			document.programManagerViewForm.type.value='bed';
 		}
-		else {
-			programBox = document.programManagerViewForm.batch_discharge_program;
+		else {			
 			document.programManagerViewForm.type.value='service';
 		}
 	}
@@ -214,8 +213,8 @@ function do_batch_discharge(community,bed) {
 		</c:forEach>
 	</select>
 	<br />
-	<!-- 
-	<input type="button" value="Batch Discharge To Community Bed Program" onclick="do_batch_discharge(true,false)" />
+	
+	<input type="button" value="Batch Discharge To Community Program" onclick="do_batch_discharge(true,false)" />
 	<select name="batch_discharge_community_program">
 		<option value="0"></option>
 		<c:forEach var="program" items="${communityPrograms}">
@@ -224,5 +223,5 @@ function do_batch_discharge(community,bed) {
 			</c:if>
 		</c:forEach>
 	</select>	
-	 -->
+	
 </c:if>
