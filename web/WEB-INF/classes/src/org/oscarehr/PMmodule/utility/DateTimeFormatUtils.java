@@ -1,25 +1,23 @@
 /*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
-
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 package org.oscarehr.PMmodule.utility;
 
 import java.sql.Timestamp;
@@ -33,33 +31,36 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public final class DateTimeFormatUtils {
-	
+
 	private static final Log log = LogFactory.getLog(DateTimeFormatUtils.class);
-	
+
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	private static final DateFormat TIME_FORMAT = DateFormat.getTimeInstance(DateFormat.SHORT);
-	
+
 	// Public methods
-	
+
 	// Timestamp
-	
+
 	public static final Timestamp getPast(int numYears) {
-		Calendar calendar = Calendar.getInstance();
+		return getPast(Calendar.getInstance(), numYears);
+	}
+
+	public static final Timestamp getPast(Calendar calendar, int numYears) {
 		calendar.add(Calendar.YEAR, -numYears);
-		
-		return new Timestamp(calendar.getTimeInMillis());		
+
+		return new Timestamp(calendar.getTimeInMillis());
 	}
 
 	// Dates
-	
+
 	public static final Date getFuture(Date start, Integer daysInFuture) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_MONTH, daysInFuture);
 		Date future = calendar.getTime();
-		
+
 		return getDateFromDate(future);
 	}
-	
+
 	public static final Date getToday() {
 		return getDateFromDate(Calendar.getInstance().getTime());
 	}
@@ -75,50 +76,50 @@ public final class DateTimeFormatUtils {
 	public static final Date getDateFromString(String date) {
 		return parse(date, DATE_FORMAT);
 	}
-	
+
 	public static final Date getDateFromDate(Date date) {
 		return parseFormat(date, DATE_FORMAT);
 	}
-	
+
 	// Times
 
 	public static final Date getTimeFromLong(long time) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(time);
 		Date date = calendar.getTime();
-		
+
 		return getTimeFromDate(date);
 	}
 
 	public static final String getStringFromTime(Date time) {
 		return format(time, TIME_FORMAT);
 	}
-	
+
 	public static final Date getTimeFromString(String time) {
 		return parse(time, TIME_FORMAT);
 	}
-	
+
 	public static final Date getTimeFromDate(Date date) {
 		return parse(format(date, TIME_FORMAT), TIME_FORMAT);
 	}
-	
+
 	// Private methods
-	
+
 	private static final Date parseFormat(Date date, DateFormat format) {
 		return parse(format(date, format), format);
 	}
-	
+
 	private static final String format(Date date, DateFormat format) {
 		return (date != null) ? format.format(date) : new String();
 	}
-	
+
 	private static final Date parse(String s, DateFormat format) {
 		try {
-	        return (s != null && s.length() > 0) ? format.parse(s) : null;
-        } catch (ParseException e) {
-        	log.error(e);
-	        throw new IllegalStateException(e);
-        }
+			return (s != null && s.length() > 0) ? format.parse(s) : null;
+		} catch (ParseException e) {
+			log.error(e);
+			throw new IllegalStateException(e);
+		}
 	}
-	
+
 }

@@ -38,67 +38,59 @@ public class OscarProperties extends Properties {
 	 * @return OscarProperties the instance of OscarProperties
 	 */
 	public static OscarProperties getInstance() {
-	       return oscarProperties;
+		return oscarProperties;
 	}
-	
+
 	static OscarProperties oscarProperties = new OscarProperties();
-        static boolean loaded = false;
+	static boolean loaded = false;
 
 	/* Do not use this constructor. Use getInstance instead */
 	/* If cant find the file, inform and continue */
-	/*private OscarProperties() {
+	/*
+	 * private OscarProperties() {
+	 * 
+	 * InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties"); try { load(is); } catch (Exception e) { System.out.println("Error, file oscar_mcmaster.properties not found."); System.out.println("This file must be placed at WEB-INF/classes."); }
+	 * 
+	 * try{ is.close(); } catch (IOException e) { System.out.println("IO error."); e.printStackTrace(); } } //OscarProperties - end
+	 * 
+	 * 
+	 */
+	private OscarProperties() {
+		System.out.println("OSCAR PROPS CONSTRUCTOR");
+	}
 
-		InputStream is = getClass().getResourceAsStream("/oscar_mcmaster.properties");
-		try {
-			load(is);
-		} catch (Exception e) {
-		       	System.out.println("Error, file oscar_mcmaster.properties not found.");
-			System.out.println("This file must be placed at WEB-INF/classes.");
+	/**
+	 * Will check the properties to see if that property is set and if its set to the value. If it is method returns true if not method returns false
+	 * 
+	 * @param key
+	 *            key of property
+	 * @param val
+	 *            value that will cause a true value to be returned
+	 * @return boolean
+	 */
+	public boolean getBooleanProperty(String key, String val) {
+		boolean prop = false;
+		String propertyValue = getProperty(key);
+		if (propertyValue != null && propertyValue.equalsIgnoreCase(val)) {
+			prop = true;
 		}
+		return prop;
+	}
 
-		try{
-			is.close();
-		} catch (IOException e) {
-			System.out.println("IO error.");
-			e.printStackTrace();
+	public void loader(String propFileName) {
+		if (!loaded) {
+			try {
+				FileInputStream fis2 = new FileInputStream(propFileName);
+				load(fis2);
+				fis2.close();
+				loaded = true;
+			} catch (Exception e) {
+				System.out.println("Error, file oscar_mcmaster.properties not found.");
+				System.out.println("This file must be placed at WEB-INF/classes.");
+				e.printStackTrace();
+			}
+
 		}
-	} //OscarProperties - end
-         *
-         *
-	*/
-        private OscarProperties() {  System.out.println("OSCAR PROPS CONSTRUCTOR"); }
-        
-        /**
-         * Will check the properties to see if that property is set and if its set to the value.  If it is method returns true if not method returns false
-         * @param key key of property
-         * @param val value that will cause a true value to be returned
-         * @return boolean
-         */
-        public boolean getBooleanProperty(String key,String val){
-           boolean prop = false;
-           String propertyValue = getProperty(key);
-           if ( propertyValue != null && propertyValue.equalsIgnoreCase(val)){
-              prop = true;
-           }
-           return prop;
-        }
-        
-        
-        public void loader(String propFileName){
-           if (!loaded){
-               
-               try{
-                    FileInputStream fis2 = new FileInputStream(propFileName) ;
-                    load(fis2);           
-                    fis2.close();
-                    loaded = true;
-               } catch (Exception e) {
-                    System.out.println("Error, file oscar_mcmaster.properties not found.");
-                    System.out.println("This file must be placed at WEB-INF/classes.");
-                    e.printStackTrace();
-               }
-               
-           }
-        }
+	}
+	
 }
-

@@ -1,5 +1,6 @@
 package org.oscarehr.common.dao.hibernate;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +9,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.Days;
 import org.joda.time.MutablePeriod;
 import org.joda.time.PeriodType;
@@ -17,6 +20,8 @@ import org.oscarehr.common.model.Stay;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class PopulationReportDAOHibernate extends HibernateDaoSupport implements PopulationReportDAO {
+	
+	private static final Log LOG = LogFactory.getLog(PopulationReportDAOHibernate.class);
 
 	private static final String HQL_CURRENT_POP_SIZE = "select count(distinct a.ClientId) from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and a.DischargeDate is null";
 	private static final String HQL_CURRENT_HISTORICAL_POP_SIZE = "select count(distinct a.ClientId) from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and ((a.DischargeDate is null) or (a.DischargeDate is not null and a.DischargeDate > ?))";
@@ -39,8 +44,9 @@ public class PopulationReportDAOHibernate extends HibernateDaoSupport implements
 
 		Map<Integer, Set<Stay>> clientIdToStayMap = new HashMap<Integer, Set<Stay>>();
 		
-		Date start = DateTimeFormatUtils.getPast(numYears);
-		Date end = DateTimeFormatUtils.getToday();
+		Calendar instant = Calendar.getInstance();
+		Date end = instant.getTime();
+		Date start = DateTimeFormatUtils.getPast(instant, numYears);
 		
 		for (Object o : getHibernateTemplate().find(HQL_GET_USAGES, start)) {
 			Object[] tuple = (Object[]) o;
@@ -53,7 +59,11 @@ public class PopulationReportDAOHibernate extends HibernateDaoSupport implements
 				clientIdToStayMap.put(clientId, new HashSet<Stay>());
 			}
 
-			clientIdToStayMap.get(clientId).add(new Stay(admission, discharge, start, end));
+			try {
+				clientIdToStayMap.get(clientId).add(new Stay(admission, discharge, start, end));
+			} catch (IllegalArgumentException e) {
+				LOG.error("client id: " + clientId);
+			}
 		}
 		
 		for (Entry<Integer, Set<Stay>> entry : clientIdToStayMap.entrySet()) {

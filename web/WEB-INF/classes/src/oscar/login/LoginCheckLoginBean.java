@@ -180,7 +180,7 @@ public class LoginCheckLoginBean {
     }
 
     public String[] getPreferences() {
-    	if (org.caisi.common.IsPropertiesOn.isCaisiEnable()){
+    	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){
         String[] temp =  new String[] { "8", "18", "15", "a" ,"disabled"};
         ResultSet rs = null;
         try {

@@ -11,12 +11,32 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.log4j.Logger;
 
+import oscar.OscarProperties;
+
 public class PopulationReportTask extends TimerTask {
 
 	private static final Logger LOG = Logger.getLogger(PopulationReportTask.class);
 
-	private static String URL = "http://localhost/oscar/PopulationReport.do";
-	private static final String FILE = System.getProperty("user.home") + "/reports/report/populationReport.html";
+	private static String URL;
+	private static String FILE;
+	
+	private static String getUrl() {
+		if (URL == null) {
+			URL = new StringBuilder("http://").append(OscarProperties.getInstance().getProperty("host")).append("/oscar/PopulationReport.do").toString();
+			LOG.debug("url: " + URL);
+		}
+		
+		return URL;
+	}
+	
+	private static String getFile() {
+		if (FILE == null) {
+			FILE = new StringBuilder().append(System.getProperty("user.home")).append("/reports/report/populationReport.html").toString();
+			LOG.debug("file: " + FILE);
+		}
+		
+		return FILE;
+	}
 
 	@Override
 	public void run() {
@@ -24,7 +44,7 @@ public class PopulationReportTask extends TimerTask {
 			LOG.info("start population report task");
 
 			HttpClient client = new HttpClient();
-			HttpMethod method = new GetMethod(URL);
+			HttpMethod method = new GetMethod(getUrl());
 
 			client.executeMethod(method);
 			writeResponseToFile(method);
@@ -38,15 +58,14 @@ public class PopulationReportTask extends TimerTask {
 	
 	private void writeResponseToFile(HttpMethod method) throws IOException {
 		InputStream is = method.getResponseBodyAsStream();
-		OutputStream os = new FileOutputStream(FILE);
+		OutputStream os = new FileOutputStream(getFile());
 
 		int read = 0;
 		byte[] buffer = new byte[1024];
 
 		while ((read = is.read(buffer)) > 0) {
 			os.write(buffer, 0, read);
-			
-			LOG.debug("wrote " + read + " bytes to " + FILE);
+			LOG.debug("wrote " + read + " bytes to " + getFile());
 		}
 
 		os.flush();

@@ -47,7 +47,6 @@ import org.caisi.model.Tickler;
 import org.caisi.service.ConsultationManager;
 import org.caisi.service.DemographicManagerTickler;
 import org.caisi.service.EChartManager;
-import org.caisi.service.ProviderManagerTickler;
 import org.caisi.service.TicklerManager;
 import org.caisi.tickler.prepared.PreparedTickler;
 import org.caisi.tickler.prepared.PreparedTicklerManager;

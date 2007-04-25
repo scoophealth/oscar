@@ -105,9 +105,6 @@
 		<listener-class>oscar.login.Startup</listener-class>
 	</listener>
 	<listener>
-		<listener-class>org.caisi.common.web.OscarDbPropertiesListener</listener-class>
-	</listener>
-	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
     
