@@ -153,7 +153,7 @@ public class ProgramManagerViewAction extends BaseAction {
     		List<Program> batchAdmissionPrograms = new ArrayList<Program>();
     		
     		for (Program bedProgram : programManager.getBedPrograms()) {
-    			if (bedProgram.isAllowBatchAdmission()) {
+    			if (bedProgram.isAllowBatchAdmission()&&bedProgram.getProgramStatus().equals("active")) {
     				batchAdmissionPrograms.add(bedProgram);
     			}
             }
@@ -164,7 +164,7 @@ public class ProgramManagerViewAction extends BaseAction {
     		Iterator serviceProgram= servicePrograms.iterator();
     		while(serviceProgram.hasNext()){
     			Program sp = (Program)serviceProgram.next();
-    			if (sp.isAllowBatchAdmission()) {
+    			if (sp.isAllowBatchAdmission()&&sp.getProgramStatus().equals("active")) {
     				batchAdmissionServicePrograms.add(sp);
     			}            
     		}
@@ -308,12 +308,34 @@ public class ProgramManagerViewAction extends BaseAction {
 					continue;
 				}
 				
-				//temporary admission will not allow batach discharge.
+				//temporary admission will not allow batach discharge from bed program.
 				if(admission.isTemporaryAdmission()==true){
 					message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
 					continue;
 				}
-					
+				
+				//in case some clients maybe is already in the community program
+				if(type.equals("community")) {
+					Integer clientId = admission.getClientId();
+					String program_type = admission.getProgramType();
+					//if discharged program is service program, 
+					//then should check if the client is in one bed program
+					if(program_type.equals("Service")) {
+						Admission admission_bed_program = admissionManager.getCurrentBedProgramAdmission(clientId);
+						if(admission_bed_program!=null){
+							if(admission_bed_program.isTemporaryAdmission()!=true){
+								message += admission.getClient().getFormattedName() + " is also in the bed program. You cannot do batch discharge for this client! \n";
+								continue;
+							}
+						}
+					}
+					//if the client is already in the community program, then cannot do batch discharge to the community program.
+					Admission admission_community_program = admissionManager.getCurrentCommunityProgramAdmission(clientId);
+					if(admission_community_program!=null) {
+						message += admission.getClient().getFormattedName() + " is already in one community program. You cannot do batch discharge for this client! \n";
+						continue;
+					}
+				}
 				// lets see if there's room first
 				Program programToAdmit = programManager.getProgram(admitToProgramId);
 				if (programToAdmit == null) {
