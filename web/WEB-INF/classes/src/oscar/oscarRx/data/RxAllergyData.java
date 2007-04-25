@@ -170,7 +170,7 @@ public class RxAllergyData {
                     s = "Generic Name";
                     break;                
                 case 12:
-                    s = "Coumpound";
+                    s = "Compound";
                     break;
                 case 13:
                     s = "Brand Name";
