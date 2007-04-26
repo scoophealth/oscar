@@ -1888,7 +1888,7 @@ CREATE TABLE formAnnualV2 (
   height varchar(4) default NULL,
   waist varchar(4) default NULL,
   lmp date default NULL,
-  BP varchar(6) default NULL,
+  BP varchar(7) default NULL,
   smokingNo tinyint(1) default NULL,
   smokingYes tinyint(1) default NULL,
   smoking varchar(100) default NULL,
