@@ -344,7 +344,7 @@ function IsPopupBlocker() {
         #navlist li a:hover { color: #fff; background-color: #486ebd; }
     </style>
 </head>
-<%if (org.caisi.common.IsPropertiesOn.isCaisiEnable()){%>
+<%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){%>
 <body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
 <c:import url="/SystemMessage.do?method=view" />
 <%}else{%>

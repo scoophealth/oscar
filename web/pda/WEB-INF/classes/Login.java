@@ -131,7 +131,7 @@ public class Login {
 
   public String[] getPreferences() {
 	  String [] temp=null;
-  if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+  if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     	temp=new String[] {"8","18","15","a","disabled"};
    }else temp=new String[] {"8","18","15","a"};
     ResultSet rs=null;
@@ -143,7 +143,7 @@ public class Login {
         temp[1] = rs.getString("end_hour");
         temp[2] = rs.getString("every_min");
         temp[3] = rs.getString("mygroup_no");
-        if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+        if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
             temp[4] = rs.getString("new_tickler_warning_window");
         }
       }
@@ -155,7 +155,7 @@ public class Login {
         temp[1] = "18";
         temp[2] = "15";
         temp[3] = "a";
-        if (org.caisi.common.IsPropertiesOn.isCaisiEnable() && org.caisi.common.IsPropertiesOn.isTicklerPlusEnable()){
+        if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
            temp[4] = "disabled";
         }
       }
