@@ -52,20 +52,20 @@
       </tr>
     </table>
 <%
-  int rowsAffected=0, datano=0;
+  int rowsAffected=0;
   StringBuffer strbuf=new StringBuffer();
   String[] param =new String[4];
   param[0]=request.getParameter("mygroup_no");
-
-	for (Enumeration e = request.getParameterNames() ; e.hasMoreElements() ;) {
-	  strbuf=new StringBuffer(e.nextElement().toString());
-		if( strbuf.toString().indexOf("data")==-1 ) continue;
-		datano=Integer.parseInt(request.getParameter(strbuf.toString()) );
-	  param[1]=request.getParameter("provider_no"+datano);
-	  param[2]=request.getParameter("last_name"+datano);
-	  param[3]=request.getParameter("first_name"+datano);
+  String[] nums = request.getParameterValues("data");
+  
+  if (nums != null){
+    for (String datano: nums){
+       param[1]=request.getParameter("provider_no"+datano);
+       param[2]=request.getParameter("last_name"+datano);
+       param[3]=request.getParameter("first_name"+datano);
 	  //System.out.println("qssssssssssssssssssssssssssssqqqqqqqqqqqqqq"+param[1]);
     rowsAffected = apptMainBean.queryExecuteUpdate(param,request.getParameter("dboperation"));
+    }
   }
 
   if (rowsAffected ==1) {
