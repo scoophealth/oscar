@@ -67,7 +67,8 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             Hashtable curform = (Hashtable) eForms.get(i);
             winName = (String)curform.get("formName") + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());
-            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + curform.get("fid") + "&demographic_no=" + bean.demographicNo + "', 'FormA" + i + "');";
+            url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + curform.get("fid") + "&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "', 'FormA" + i + "');";
+            System.out.println("SETTING EFORM URL " + url);
             key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
