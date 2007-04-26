@@ -35,7 +35,7 @@
 	FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
     FrmData fd = new FrmData();
-    String lastLabDate = rec.getLastLabDate(demoNo, formId);
+    String lastLabDate = ((FrmBCINRRecord)rec).getLastLabDate(demoNo, formId);
 
 	//get project_home
 	String project_home = request.getContextPath().substring(1);
