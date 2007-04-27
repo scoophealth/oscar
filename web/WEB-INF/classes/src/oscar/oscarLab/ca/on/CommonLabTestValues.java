@@ -101,7 +101,7 @@ public class CommonLabTestValues {
                       "and p.demographic_no = '"+demographic+"' "+ 
                       "and p.lab_no = ltr.labPatientPhysicianInfo_id "+
                       "and ltr.labPatientPhysicianInfo_id = lpp.id and  ltr.test_name is not null  and ltr.test_name != '' "+
-                      "order by title,test_name ";
+                      "order by title";
         
          System.out.println(sql);
       
