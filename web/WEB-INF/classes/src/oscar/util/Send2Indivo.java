@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
+import java.util.ResourceBundle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -186,12 +187,18 @@ public class Send2Indivo {
 
         MedicationType medType = new MedicationType();
         medType.setPrescription(true);
-        medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());
+        
+        if( drug.getCustomInstr() == false ) {           
+            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());            
+            medType.setDuration(drug.getDuration());
+            medType.setRefills(String.valueOf(drug.getRepeat()));
+            medType.setSubstitutionPermitted(drug.getNosubs());
+        }
+        else
+            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));
                 
         medType.setName(drug.getDrugName());
-        medType.setDuration(drug.getDuration());
-        medType.setRefills(String.valueOf(drug.getRepeat()));
-        medType.setSubstitutionPermitted(drug.getNosubs());
+        medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");        
         medType.setProvider(contactInfo);
 
         org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
@@ -237,13 +244,19 @@ public class Send2Indivo {
 
         MedicationType medType = new MedicationType();
         medType.setPrescription(true);
-        medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());
+        
+        if( drug.getCustomInstr() == false ) {           
+            medType.setDose(drug.getDosageDisplay() + " " + drug.getUnit());            
+            medType.setDuration(drug.getDuration());
+            medType.setRefills(String.valueOf(drug.getRepeat()));
+            medType.setSubstitutionPermitted(drug.getNosubs());
+        }
+        else
+            medType.setDose(ResourceBundle.getBundle("oscarResources").getString("Send2Indivo.prescription.Instruction"));        
                 
-        medType.setName(drug.getDrugName());
-        medType.setDuration(drug.getDuration());
-        medType.setRefills(String.valueOf(drug.getRepeat()));
-        medType.setSubstitutionPermitted(drug.getNosubs());
-        medType.setProvider(contactInfo);                
+        medType.setName(drug.getDrugName());        
+        medType.setProvider(contactInfo);    
+        medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");         
 
         try {
             //Retrieve current file record from indivo
