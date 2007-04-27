@@ -63,7 +63,8 @@ public class Send2IndivoAction extends Action{
             EDocUtil docData = new EDocUtil();                        
             
             DemographicData.Demographic demo = new DemographicData().getDemographic(request.getParameter("demoId"));
-            String demoEmail = demo.getEmail();
+            String indivoPatientId = demo.getPin();
+            System.out.println("INDIVO RECIPIENT " + indivoPatientId);
             
             EctProviderData.Provider prov = new EctProviderData().getProvider(curUser);
             String fullname = prov.getFirstName() + " " + prov.getSurname();
@@ -86,14 +87,14 @@ public class Send2IndivoAction extends Action{
                 String type = doc.getType();
                 
                 if( doc.isInIndivo() ) {                   
-                    if( !indivo.updateBinaryFile(path+filename, doc.getIndivoIdx(), type, description, demoEmail) ) {
+                    if( !indivo.updateBinaryFile(path+filename, doc.getIndivoIdx(), type, description, indivoPatientId) ) {
                         errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
                         this.saveErrors(request, errors);
                         return mapping.findForward("error");
                     }
                 }
                 else {                                        
-                    if( !indivo.sendBinaryFile(path+filename, type, description, demoEmail) ) {
+                    if( !indivo.sendBinaryFile(path+filename, type, description, indivoPatientId) ) {
                         errors.add("",new ActionMessage("indivo.sendbinFileError", description, indivo.getErrorMsg()));
                         this.saveErrors(request, errors);
                         return mapping.findForward("error");
