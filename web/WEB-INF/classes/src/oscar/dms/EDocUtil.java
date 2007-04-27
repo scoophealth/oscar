@@ -28,6 +28,8 @@ import java.util.*;
 import java.sql.*;
 import oscar.util.*;
 import oscar.oscarTags.*;
+import oscar.OscarProperties;
+
 //all SQL statements here
 public class EDocUtil extends SqlUtilBaseS {
     public static final String PUBLIC = "public";
@@ -276,9 +278,13 @@ public class EDocUtil extends SqlUtilBaseS {
     }       
     
     public static EDoc getDoc(String documentNo) {
-        String sql = "SELECT DISTINCT c.module, c.module_id, d.*, (select indivoDocIdx from indivoDocs i where i.oscarDocNo = d.document_no " + 
-                "and i.docType = 'document' limit 1) as indivoIdx FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND " + 
+        String sql = "SELECT DISTINCT c.module, c.module_id, d.* FROM document d, ctl_document c WHERE d.status=c.status AND d.status != 'D' AND " + 
                 "c.document_no=d.document_no AND c.document_no='" + documentNo + "' ORDER BY d.updatedatetime DESC";
+        
+        String indivoSql = "SELECT indivoDocIdx FROM indivoDocs i WHERE i.oscarDocNo = ? and i.docType = 'document' limit 1";
+        boolean myOscarEnabled = OscarProperties.getInstance().getProperty("MY_OSCAR", "").trim().equalsIgnoreCase("YES");
+        ResultSet rs2;
+        
         ResultSet rs = getSQL(sql);
         EDoc currentdoc = new EDoc();
         try {
@@ -295,9 +301,18 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setObservationDate(rs.getDate("observationdate"));
                 currentdoc.setHtml(rsGetString(rs, "docxml"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
-                currentdoc.setIndivoIdx(rsGetString(rs, "indivoIdx"));
-                if(currentdoc.getIndivoIdx().length() > 0 )
-                    currentdoc.registerIndivo();
+                
+                if( myOscarEnabled ) {
+                    String tmp = indivoSql.replaceFirst("\\?", rs.getString("document_no"));
+                    rs2 = getSQL(tmp);
+
+                    if( rs2.next() ) { 
+                       currentdoc.setIndivoIdx(rsGetString(rs2, "indivoDocIdx"));
+                       if(currentdoc.getIndivoIdx().length() > 0 )
+                            currentdoc.registerIndivo();
+                    }
+                    rs2.close();
+                }                                
             }
             rs.close();
         } catch (SQLException sqe) {
