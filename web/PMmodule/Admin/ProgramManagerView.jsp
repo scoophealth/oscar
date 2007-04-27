@@ -36,9 +36,10 @@
 
 					for (int i = 0; i < ProgramManagerViewFormBean.tabs.length; i++) {
 						if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase("Bed Check") && program.isService()) {
-							break;
+							//break;
+							continue;
 						}
-
+						
 						if (ProgramManagerViewFormBean.tabs[i].equalsIgnoreCase(selectedTab)) {
 				%>
 					<td style="background-color: #555;">
