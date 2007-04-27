@@ -154,13 +154,13 @@ OscarProperties props = OscarProperties.getInstance();
                         <%= patient.getCity() %> <%= patient.getPostal() %><br>
                         <%= patient.getPhone() %><br>
                         <b>
-                        <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-                        <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
-						<% } %>
-                      </b>
+                            <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
+                            <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
+                            <% } %>
+                        </b>
                     </td>
                     <td align=right valign=top><b>
-                        <%= oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy") %>
+                            <%= oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy") %>
                     </b></td>
                 </tr>
             </table>
@@ -176,20 +176,25 @@ OscarProperties props = OscarProperties.getInstance();
                         StringBuffer strRxNoNewLines = new StringBuffer();
                         for(i=0;i<bean.getStashSize();i++)
                         {
-                            rx = bean.getStashItem(i);
-                            %>
-
-                            <%= rx.getFullOutLine().replaceAll(";","<br/>") %>
-                            <hr>
-                            <%
-                            strRx += rx.getFullOutLine() + ";;";
-                            strRxNoNewLines.append(rx.getFullOutLine().replaceAll(";"," ")+ "\n");
+                        rx = bean.getStashItem(i);
+                        %>
+                        
+                        <%= rx.getFullOutLine().replaceAll(";","<br/>") %>
+                        <hr>
+                        <%
+                        strRx += rx.getFullOutLine() + ";;";
+                        strRxNoNewLines.append(rx.getFullOutLine().replaceAll(";"," ")+ "\n");
                         }
                         %>
-			<input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
-			<input type="hidden" name="rx_no_newlines" value="<%= strRxNoNewLines.toString() %>"/>
+                        
+                        <input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
+                        <input type="hidden" name="rx_no_newlines" value="<%= strRxNoNewLines.toString() %>"/>
+                        
+                        
                     </td>
                 </tr>
+                <% if ( oscar.OscarProperties.getInstance().getProperty("RX_FOOTER") != null ){ out.write(oscar.OscarProperties.getInstance().getProperty("RX_FOOTER")); }%>
+                
                 <tr valign=bottom>
                     <td height=25px width=25%>
                         Signature:
