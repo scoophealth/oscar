@@ -86,13 +86,9 @@ public class LoginCheckLoginBean {
         long date_expireDate = secBean.getDate_ExpireDate().getTime();
        	long date_now = UtilDateUtilities.now().getTime();
         long date_diff = (date_expireDate - date_now)/(24*3600*1000);
-        String expired_days = "";
-        System.out.println("************expired = " + date_expireDate);
-        System.out.println("************Now = " + date_now);
-        System.out.println("************different days = " + date_diff);
+        String expired_days = "";        
         if (secBean.getB_ExpireSet().intValue() == 1 && date_diff < 11) {
-        	expired_days = String.valueOf(date_diff);
-        	System.out.println("give warning........="+expired_days);
+        	expired_days = String.valueOf(date_diff);        	
         }
         
         StringBuffer sbTemp = new StringBuffer();
@@ -117,8 +113,7 @@ public class LoginCheckLoginBean {
             strAuth[2] = lastname;
             strAuth[3] = profession;
             strAuth[4] = rolename;
-            strAuth[5] = expired_days;
-            System.out.println("..........expired days in strAuth[5]="+strAuth[5]);
+            strAuth[5] = expired_days;            
             return strAuth;
         } else { // login failed
             return cleanNullObj(LOG_PRE + "password failed: " + username);

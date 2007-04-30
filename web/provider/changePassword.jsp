@@ -31,7 +31,7 @@
 If you are the administrator, then you can follow the following steps to change the password:
 </h4>
 <ol>
-<li>Click 'Admin' tab on the top of the login page.</li>
+<li>Click 'Admin' tab on the top of this page.</li>
 <li>Click 'Search/Edit/Delete Security Records'.</li>
 <li>Choose 'User Name' or 'Provider No.' by clicking the circle before them, input the value, then click 'Search'.</li>
 <li>Click the user name.</li>

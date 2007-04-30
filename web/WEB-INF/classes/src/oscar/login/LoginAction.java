@@ -125,6 +125,7 @@ public final class LoginAction
       session.setAttribute("userprofession", viewType);
       session.setAttribute("userrole", strAuth[4]);
       session.setAttribute("oscar_context_path", request.getContextPath());
+      session.setAttribute("expired_days",strAuth[5]);
       
       if (viewType.equalsIgnoreCase("receptionist") ||
           viewType.equalsIgnoreCase("doctor")) {
