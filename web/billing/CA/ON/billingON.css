@@ -1,9 +1,9 @@
 
 <!--
 BODY {
-	font-size: 12pt;
+	font-size: 10pt;
 	font-weight: normal;
-	line-height: 10px;
+	line-height: 12px;
 	font-style: normal;
 	color: black;
 	text-decoration: none;
@@ -85,5 +85,13 @@ a:hover {
 .smallFont {
 	font-size: 10pt;
 }
-
+.myPurple {
+        background-color: #CCCCFF;
+}
+.myLightPurple {
+        background-color: #EEEEFF;
+}
+.myWhite {
+        background-color: #FFFFFF;
+}
 -->
