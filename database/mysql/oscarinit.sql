@@ -540,11 +540,11 @@ CREATE TABLE document (
 -- Table structure for table `reportTemplates`
 --
 CREATE TABLE reportTemplates (
-  templateid varchar(40) NOT NULL,
+  templateid int(11) NOT NULL auto_increment,
   templatetitle varchar(80) NOT NULL DEFAULT '',
   templatedescription text NOT NULL,
   templatesql text NOT NULL,
-  templateparamxml text NOT NULL,
+  templatexml text NOT NULL,
   active tinyint NOT NULL DEFAULT 1,
   PRIMARY KEY (templateid)
 );
