@@ -88,7 +88,6 @@
                <%if (templates.isEmpty()) {%>
                   <div class="warning">No templates in the database, please create a template file by clicking on "Edit Templates"</div>
                <%}%>
-          <a href="editTemplates.jsp" style="color: #226d55; font-size: 10px;">Edit Templates</a>
           </div>
             </td>
         </tr>

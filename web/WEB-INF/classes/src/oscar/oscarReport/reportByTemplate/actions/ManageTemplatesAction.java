@@ -1,4 +1,4 @@
-//Action that takes place when saving the modified xml template file
+//Action that takes place when adding or editing template XML
 
 /*
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
@@ -27,11 +27,11 @@
 /*
  * GenerateReport.java
  *
- * Created on December 21, 2006, 10:47 AM
+ * Created on March 02/2007, 10:47 PM
  *
  */
 
-package oscar.oscarReport.reportByTemplate;
+package oscar.oscarReport.reportByTemplate.actions;
 
 
 import org.apache.struts.action.*;
@@ -43,13 +43,26 @@ import oscar.oscarReport.reportByTemplate.*;
  *
  * @author apavel (Paul)
  */
-public class EditTemplatesAction extends Action {
+public class ManageTemplatesAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
+         String action = request.getParameter("action");
+         String templateId = request.getParameter("templateid");
          String xmltext = request.getParameter("xmltext");
          ReportManager reportManager = new ReportManager();
-         String message = reportManager.updateTemplateXml(xmltext);
+         String message = "Error: Improper request - Action param missing";
+         if (action.equals("delete")) {
+            message = reportManager.deleteTemplate(templateId);
+            if (message.equals("")) return mapping.findForward("deleted");
+         }
+         else if (action.equals("add"))
+            message = reportManager.addTemplate(xmltext);
+         else if (action.equals("edit"))
+            message = reportManager.updateTemplate(templateId, xmltext);
          request.setAttribute("message", message);
+         request.setAttribute("action", action);
+         request.setAttribute("templateid", request.getParameter("templateid"));
+         request.setAttribute("opentext", request.getParameter("opentext"));
          return mapping.findForward("success");
     }
     

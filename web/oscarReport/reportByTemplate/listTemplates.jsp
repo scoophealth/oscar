@@ -49,6 +49,6 @@ if (templateViewId == null) templateViewId = "";
                <li class="<%=selectedTemplate%>">- <a href="reportConfiguration.jsp?templateid=<%=templateId%>"><%=templateTitle%></a></li>
            <% } %>
           </ul>
-          <a href="editTemplates.jsp" style="color: #226d55; font-size: 10px;">Edit Templates</a>
+          <a href="addEditTemplate.jsp" style="color: #226d55; font-size: 10px;">Add Template</a>
       </div>
-</form>    
+</form>     

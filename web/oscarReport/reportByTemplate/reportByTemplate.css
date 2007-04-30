@@ -45,7 +45,10 @@ table.configTable th {
    font-size: 13px;
    width: 60px;
 }
-
+a.link {
+    font-size: 10px; 
+    color: green;
+}
 
 input {
     border: 1px solid #7682b1;

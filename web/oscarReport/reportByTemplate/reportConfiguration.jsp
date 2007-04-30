@@ -144,8 +144,13 @@
                             <td><input type="submit" name="submitButton" value="Run Query"></td>
                          </tr>
                        </table>
-                       <a href="viewTemplate.jsp?templateid=<%=curreport.getTemplateId()%>" style="font-size: 10px; color: green;">View Template XML</a>
-                   </div>
+                       <a href="javascript: showHideItem('optionsDiv')" class="link">Show/Hide Options</a>
+                       <div id="optionsDiv" style="display: none;">
+                            <a href="viewTemplate.jsp?templateid=<%=curreport.getTemplateId()%>" class="link">View Template XML</a>
+                            <a href="addEditTemplate.jsp?templateid=<%=curreport.getTemplateId()%>&opentext=1" class="link">Edit Template</a>
+                            <a href="addEditTemplatesAction.do?templateid=<%=curreport.getTemplateId()%>&action=delete" onclick="return confirm('Are you sure you want to delete this report template?')" class="link">Delete Template</a>
+                       </div>
+                    </div>
                </html:form>
             </td>
         </tr>

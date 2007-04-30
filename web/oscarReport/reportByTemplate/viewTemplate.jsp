@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
-   <%--This JSP is the 'view template' jsp from the report configuraiton screen--%>
+   <%--This JSP is the 'view template XML' jsp from the report configuraiton screen--%>
 <!--  
 /*
  * 
@@ -87,6 +87,7 @@
                <div class="xmlBorderDiv">
                    <pre wrap="on" style="font-size: 11px;"><%=StringEscapeUtils.escapeHtml(xml)%></pre>
                </div>
+               <a href="addEditTemplate.jsp?templateid=<%=templateid%>" class="link">Edit Template</a>
                <div class="noprint" style="clear: left; float:left; margin-top: 15px;">
                         <input type="button" value="<-- Back" onclick="javascript: history.go(-1);return false;">
                         <input type="button" value="Print" onclick="javascript: window.print();">

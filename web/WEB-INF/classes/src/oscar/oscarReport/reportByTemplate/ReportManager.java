@@ -97,7 +97,7 @@ public class ReportManager {
             if (rs.next()) {
                 String templatetitle = rs.getString("templatetitle");
                 String templatedescription = rs.getString("templatedescription");
-                String paramXML = rs.getString("templateparamxml");
+                String paramXML = rs.getString("templatexml");
                 ArrayList params = new ArrayList();
                 if (!paramXML.equals("")) {
                     paramXML = UtilXML.escapeXML(paramXML);  //escapes anomalies such as "date >= {mydate}" the '>' character
@@ -182,13 +182,13 @@ public class ReportManager {
     }
     
     public String getTemplateXml(String templateid) {
-        String sql = "SELECT templateparamxml FROM reportTemplates WHERE templateid='" + templateid + "'";
+        String sql = "SELECT templatexml FROM reportTemplates WHERE templateid='" + templateid + "'";
         String xml = "";
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             db.CloseConn();
-            if (rs.next()) xml = rs.getString("templateparamxml");
+            if (rs.next()) xml = rs.getString("templatexml");
             if (xml == null) xml = "";
         } catch (SQLException sqe) {
             sqe.printStackTrace();
@@ -216,13 +216,13 @@ CREATE TABLE reportTemplates (
   templatetitle varchar(80) NOT NULL DEFAULT '',
   templatedescription text NOT NULL DEFAULT '',
   templatesql text NOT NULL DEFAULT '',
-  templateparamxml text NOT NULL DEFAULT '',
+  templatexml text NOT NULL DEFAULT '',
   active tinyint NOT NULL DEFAULT 1,
   PRIMARY KEY (templateid)
 );*/
     //templateid must not repeat
     public String loadInReports() {
-        String xml = getTemplateXml("globalxml");
+        String xml = getTemplateXml("1");
         if (xml == "") return "Error: Could not save the template file in the database.";
         try {
             SAXBuilder parser = new SAXBuilder();
@@ -257,8 +257,8 @@ CREATE TABLE reportTemplates (
                 } catch (Exception e) {
                     activeint = 1;
                 }
-                String sql = "INSERT INTO reportTemplates (templateid, templatetitle, templatedescription, templatesql, templateparamxml, active) " +
-                        "VALUES ('" + templateid + "', '" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
+                String sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active) " +
+                        "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + reportXML + "', " + activeint + ")";
                 //System.out.println("sql: " + sql);
                 try {
                     DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -276,6 +276,110 @@ CREATE TABLE reportTemplates (
         }
         
         return "Saved Successfully";
+    }
+    
+    public Document readXml(String xml) throws Exception {
+        SAXBuilder parser = new SAXBuilder();
+        xml = UtilXML.escapeXML(xml);  //escapes anomalies such as "date >= {mydate}" the '>' character
+        //xml  UtilXML.escapeAllXML(xml, "<param-list>");  //escapes all markup in <report> tag, otherwise can't retrieve element.getText()
+        Document doc = parser.build(new java.io.ByteArrayInputStream(xml.getBytes()));
+        if (doc.getRootElement().getName().equals("report")) {
+            Element newRoot = new Element("report-list");
+            Element oldRoot = doc.detachRootElement();
+            newRoot.setContent(oldRoot);
+            doc.removeContent();
+            doc.setRootElement(newRoot);
+        }
+        return doc;
+    }
+    
+    //returns any error messages
+    //templateId = null if adding a new template
+    public String addUpdateTemplate(String templateId, Document templateXML) {
+        try {
+            Element rootElement = templateXML.getRootElement();
+            List reports = rootElement.getChildren();
+            for (int i=0; i<reports.size(); i++) {
+                Element report = (Element) reports.get(i);
+//reading title
+                String templateTitle = StringEscapeUtils.escapeSql(report.getAttributeValue("title"));
+                if (templateTitle == null) return "Error: Attribute 'title' missing in <report> tag";
+//reading description
+                String templateDescription = StringEscapeUtils.escapeSql(report.getAttributeValue("description"));
+                if (templateDescription == null) return "Error: Attribute 'description' missing in <report> tag";
+//reading sql
+                String querysql = StringEscapeUtils.escapeSql(report.getChildText("query"));
+                if (querysql == null || querysql.length() == 0) return "Error: The sql query is missing in <report> tag";
+//reading active switch
+                String active = report.getAttributeValue("active");
+                int activeint;
+                try {
+                    activeint = Integer.parseInt(active);
+                } catch (Exception e) {
+                    activeint = 1;
+                }
+//processing XML for sql storage
+                XMLOutputter templateout = new XMLOutputter();
+                String templateXMLstr = templateout.outputString(report).trim();
+                templateXMLstr = UtilXML.unescapeXML(templateXMLstr);
+                templateXMLstr = StringEscapeUtils.escapeSql(templateXMLstr);
+                String sql = "";
+            
+                if (templateId == null) 
+                    sql = "INSERT INTO reportTemplates (templatetitle, templatedescription, templatesql, templatexml, active) " +
+                        "VALUES ('" + templateTitle + "', '" + templateDescription + "', '" + querysql + "', '" + templateXMLstr + "', " + activeint + ")";
+                else 
+                    sql = "UPDATE reportTemplates SET templatetitle='" + templateTitle + "', templatedescription='" + templateDescription + "', " +
+                        "templatesql='" + querysql + "', templatexml='" + templateXMLstr + "', active=" + activeint + " WHERE templateid='" + templateId + "'";                        
+
+                try {
+                    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                    db.RunSQL(sql);
+                    db.CloseConn();
+                } catch (SQLException sqe) {
+                    sqe.printStackTrace();
+                    System.out.println("Report Template Writing Error Caught");
+                    return "Database Error: Could not write to database";
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error parsing template file, make sure the root element is set.";
+        }
+        return "Saved Successfully";
+    }
+    
+    public String deleteTemplate(String templateid) {
+        String sql = "DELETE FROM reportTemplates WHERE templateid='" + templateid + "'";
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db.RunSQL(sql);
+            db.CloseConn();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+            return "Database Error: Could not delete template";
+        }
+        return "";
+    }
+    
+    public String addTemplate(String templateXML) {
+        try {
+            Document templateXMLdoc = readXml(templateXML);
+            return addUpdateTemplate(null, templateXMLdoc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: Error parsing file, make sure the root element is set.";
+        }
+    }
+    
+    public String updateTemplate(String templateId, String templateXML) {
+        try {
+            Document templateXMLdoc = readXml(templateXML);
+            return addUpdateTemplate(templateId, templateXMLdoc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: Error parsing file";
+        }
     }
     
 }

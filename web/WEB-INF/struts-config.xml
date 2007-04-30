@@ -159,7 +159,7 @@
 		<form-bean name="addLinkDoc" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="addEditHtmlDoc" type="oscar.dms.data.AddEditDocumentForm" />
 		<form-bean name="ManagePatientLettersForm" type="oscar.oscarReport.pageUtil.ManagePatientLettersForm" />
-		<form-bean name="ticklerForm" type="org.apache.struts.validator.DynaValidatorForm">
+                <form-bean name="ticklerForm" type="org.apache.struts.validator.DynaValidatorForm">
 			<form-property name="tickler" type="org.caisi.model.Tickler" />
 			<form-property name="filter" type="org.caisi.model.CustomFilter" />
 		</form-bean>
@@ -1342,18 +1342,23 @@
 			<forward name="success" path="/casemgmt/uploadimage.jsp" />
 		</action>
 		<!-- OSCAR Report By Template -->
-		<action input="/oscarReport/reportByTemplate/reportConfiguration.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/GenerateReportAction" scope="request" type="oscar.oscarReport.reportByTemplate.GenerateReportAction">
+		<action input="/oscarReport/reportByTemplate/reportConfiguration.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/GenerateReportAction" scope="request" type="oscar.oscarReport.reportByTemplate.actions.GenerateReportAction">
 			<forward name="success" path="/oscarReport/reportByTemplate/resultReport.jsp" />
 			<forward name="fail" path="/oscarReport/reportByTemplate/reportConfiguration.jsp" />
 		</action>
-		<action input="/oscarReport/reportByTemplate/editTemplates.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/editTemplatesAction" scope="request" type="oscar.oscarReport.reportByTemplate.EditTemplatesAction">
-			<forward name="success" path="/oscarReport/reportByTemplate/editTemplates.jsp"></forward>
-			<forward name="fail" path="/oscarReport/reportByTemplate/editTemplates.jsp"></forward>
-		</action>
-		<action input="/oscarReport/reportByTemplate/resultReport.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/generateOutFilesAction" scope="request" type="oscar.oscarReport.reportByTemplate.GenerateOutFilesAction">
+                <action input="/oscarReport/reportByTemplate/addEditTemplate.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/addEditTemplatesAction" scope="request" type="oscar.oscarReport.reportByTemplate.actions.ManageTemplatesAction">
+			<forward name="success" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>
+			<forward name="fail" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>
+                        <forward name="deleted" path="/oscarReport/reportByTemplate/homePage.jsp"></forward>
+                </action>
+		<action input="/oscarReport/reportByTemplate/resultReport.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/generateOutFilesAction" scope="request" type="oscar.oscarReport.reportByTemplate.actions.GenerateOutFilesAction">
 			<forward name="success" path="/oscarReport/reportByTemplate/resultReport.jsp"></forward>
 		</action>
+                <action input="/oscarReport/reportByTemplate/addEditTemplate.jsp" name="FrmForm" path="/oscarReport/reportByTemplate/uploadTemplates" scope="request" type="oscar.oscarReport.reportByTemplate.actions.UploadTemplates">
+                        <forward name="success" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>
+                </action>
 		<!-- END OSCAR Report By Template -->
+                
 		<action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">
 			<forward name="view" path="/provider/providercontrol.jsp" redirect="true" />
 		</action>

@@ -23,7 +23,7 @@
  * Ontario, Canada
  */
 
-package oscar.oscarReport.reportByTemplate;
+package oscar.oscarReport.reportByTemplate.actions;
 
 
 import org.apache.struts.action.*;
