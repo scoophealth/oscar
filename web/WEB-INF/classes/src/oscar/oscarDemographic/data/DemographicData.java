@@ -435,6 +435,10 @@ public class DemographicData {
         public String getPin() {
             return pin;
         }
+        
+        public String getIndivoId() {
+            return pin;
+        }
                 
         public String getAge() {
            return (String.valueOf(oscar.util.UtilDateUtilities.calcAge(year_of_birth,month_of_birth,date_of_birth)));            
