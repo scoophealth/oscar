@@ -173,6 +173,10 @@
                 <form-bean name="setProviderColour" type="org.apache.struts.action.DynaActionForm">
                     <form-property name="colour" type="java.lang.String" />
                 </form-bean>
+                <form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
+                    <form-property name="myOscarLoginId" type="java.lang.String" />
+                    <form-property name="myOscarDomain" type="java.lang.String" />
+                </form-bean>
 		<form-bean name="attachConsultation" type="org.apache.struts.action.DynaActionForm">
 			<form-property name="documents" type="java.lang.String[]" />
 			<form-property name="attachedDocs" type="java.lang.String[]" />
@@ -531,6 +535,7 @@
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
 			<forward name="success" path="/oscarEncounter/Index.jsp" />
 			<forward name="success2" path="/oscarEncounter/Index2.jsp" />
+                        <!-- <forward name="success2" path="/CaseManagementView.do" /> -->
 		</action>
 		<action path="/oscarEncounter/displayLabs" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayLabAction"></action>
 		<action path="/oscarEncounter/displayForms" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayFormAction"></action>
@@ -542,6 +547,8 @@
 		<action path="/oscarEncounter/displayDisease" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDxAction"></action>
 		<action path="/oscarEncounter/displayPrevention" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayPreventionAction"></action>
 		<action path="/oscarEncounter/displayConsultation" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConsultAction"></action>
+                <action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
+                <action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
 		<action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
 			<forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
 			<forward name="failure" path="/oscarEncounter/error.jsp" />
@@ -817,6 +824,12 @@
 		</action>
                 <action input="/provider/providerColourPicker.jsp" name="setProviderColour" path="/setProviderColour" scope="request" type="oscar.oscarProvider.pageUtil.ProEditColourAction">
                     <forward name="success" path="/provider/providerColourPicker.jsp" />
+                    <forward name="error" path="/provider/providerColourErr.jsp" />
+                    <forward name="eject" path="/index.jsp" />
+		</action>
+                <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
+                    <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
+                    <forward name="failure" path="/provider/providerIndivoIdSetter.jsp" />
                     <forward name="error" path="/provider/providerColourErr.jsp" />
                     <forward name="eject" path="/index.jsp" />
 		</action>
