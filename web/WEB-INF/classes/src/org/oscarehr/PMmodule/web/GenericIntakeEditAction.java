@@ -20,7 +20,7 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -90,7 +90,7 @@ public class GenericIntakeEditAction extends BaseAction {
 			intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
 		}
 		
-		setBeanProperties(intakeEditBean, intake, getClient(request), Agency.getLocalAgency().areHousingProgramsVisible(), Agency.getLocalAgency().areServiceProgramsVisible(), null, null);
+		setBeanProperties(intakeEditBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(), Agency.getLocalAgency().areServiceProgramsVisible(), null, null);
 
 		return mapping.findForward(EDIT);
 	}
@@ -112,7 +112,7 @@ public class GenericIntakeEditAction extends BaseAction {
 			intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
 		}
 
-		setBeanProperties(intakeEditBean, intake, getClient(clientId), Agency.getLocalAgency().areHousingProgramsVisible(), Agency.getLocalAgency().areServiceProgramsVisible(), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId));
+		setBeanProperties(intakeEditBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(), Agency.getLocalAgency().areServiceProgramsVisible(), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId));
 
 		return mapping.findForward(EDIT);
 	}
@@ -203,27 +203,52 @@ public class GenericIntakeEditAction extends BaseAction {
 	private Demographic getClient(Integer clientId) {
 		return clientManager.getClientByDemographicNo(clientId.toString());
 	}
+	
+	private Set<Program> getActiveProviderPrograms(String providerNo) {
+		Set<Program> activeProviderPrograms = new HashSet<Program>();
+		
+		for (Program providerProgram : programManager.getProgramDomain(providerNo)) {
+			if (providerProgram.isActive()) {
+				activeProviderPrograms.add(providerProgram);
+			}
+		}
+		
+		return activeProviderPrograms;
+	}
 
-	private List<Program> getBedPrograms() {
+	private List<Program> getBedPrograms(Set<Program> providerPrograms) {
 		List<Program> bedPrograms = new ArrayList<Program>();
-		Collections.addAll(bedPrograms, programManager.getBedPrograms());
+		
+		for (Program program : programManager.getBedPrograms()) {
+			if (providerPrograms.contains(program)) {
+				bedPrograms.add(program);
+			}
+		}
 
 		return bedPrograms;
 	}
 
-	private List<Program> getCommunityPrograms() {
+	private List<Program> getCommunityPrograms(Set<Program> providerPrograms) {
 		List<Program> communityPrograms = new ArrayList<Program>();
-		Collections.addAll(communityPrograms, programManager.getCommunityPrograms());
+		
+		for (Program program : programManager.getCommunityPrograms()) {
+			if (providerPrograms.contains(program)) {
+				communityPrograms.add(program);
+			}
+		}
 
 		return communityPrograms;
 	}
 
-	private List<Program> getServicePrograms() {
+	private List<Program> getServicePrograms(Set<Program> providerPrograms) {
 		List<Program> servicePrograms = new ArrayList<Program>();
 
 		for (Object o : programManager.getServicePrograms()) {
-			Program servicePorgram = (Program) o;
-			servicePrograms.add(servicePorgram);
+			Program program = (Program) o;
+			
+			if (providerPrograms.contains(program)) {
+				servicePrograms.add(program);
+			}
 		}
 
 		return servicePrograms;
@@ -332,17 +357,19 @@ public class GenericIntakeEditAction extends BaseAction {
 
 	// Bean
 
-	private void setBeanProperties(GenericIntakeEditFormBean bean, Intake intake, Demographic client, boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds) {
+	private void setBeanProperties(GenericIntakeEditFormBean bean, Intake intake, Demographic client, String providerNo, boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds) {
 		bean.setIntake(intake);
 		bean.setClient(client);
+		
+		Set<Program> providerPrograms = getActiveProviderPrograms(providerNo);
 
 		if (bedCommunityProgramsVisible) {
-			bean.setBedCommunityPrograms(getBedPrograms(), getCommunityPrograms());
+			bean.setBedCommunityPrograms(getBedPrograms(providerPrograms), getCommunityPrograms(providerPrograms));
 			bean.setSelectedBedCommunityProgramId(currentBedCommunityProgramId);
 		}
 
 		if (serviceProgramsVisible) {
-			bean.setServicePrograms(getServicePrograms());
+			bean.setServicePrograms(getServicePrograms(providerPrograms));
 			bean.setSelectedServiceProgramIds(currentServiceProgramIds);
 		}
 	}

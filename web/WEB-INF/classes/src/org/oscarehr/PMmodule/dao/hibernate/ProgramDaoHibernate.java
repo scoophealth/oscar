@@ -183,8 +183,8 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		return (Program[]) list.toArray(new Program[list.size()]);
 	}
 
-	public List getServicePrograms() {
-		List rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Service' ORDER BY p.name");
+	public List<?> getServicePrograms() {
+		List<?> rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Service' ORDER BY p.name");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getServicePrograms: # of programs: " + rs.size());

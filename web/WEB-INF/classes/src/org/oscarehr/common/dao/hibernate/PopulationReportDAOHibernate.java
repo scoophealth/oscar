@@ -23,13 +23,40 @@ public class PopulationReportDAOHibernate extends HibernateDaoSupport implements
 	
 	private static final Log LOG = LogFactory.getLog(PopulationReportDAOHibernate.class);
 
-	private static final String HQL_CURRENT_POP_SIZE = "select count(distinct a.ClientId) from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and a.DischargeDate is null";
-	private static final String HQL_CURRENT_HISTORICAL_POP_SIZE = "select count(distinct a.ClientId) from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and ((a.DischargeDate is null) or (a.DischargeDate is not null and a.DischargeDate > ?))";
+	private static final String HQL_CURRENT_POP_SIZE =
+		"select count(distinct a.ClientId) from Admission a where " +
+		"a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " +
+		"a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " +
+		"a.DischargeDate is null";
 	
-	private static final String HQL_GET_USAGES = "select a.ClientId, a.AdmissionDate, a.DischargeDate from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and ((a.DischargeDate is null) or (a.DischargeDate is not null and a.DischargeDate > ?)) order by a.ClientId";
-	private static final String HQL_GET_MORTALITIES = "select count(distinct a.ClientId) from Admission a, Program p where lower(p.type) = 'community' and lower(p.name) = 'deceased' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and a.AdmissionDate > ? and a.DischargeDate is null";
-	private static final String HQL_GET_PREVALENCE = "select count(cmi) from CaseManagementIssue cmi where cmi.resolved = false and cmi.demographic_no in (select distinct a.ClientId from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and a.DischargeDate is null order by a.ClientId) and cmi.issue.code in ";
-	private static final String HQL_GET_INCIDENCE = "select count(cmi) from CaseManagementIssue cmi where cmi.demographic_no in (select distinct a.ClientId from Admission a, Program p where lower(p.type) = 'bed' and lower(p.programStatus) = 'active' and p.id = a.ProgramId and a.DischargeDate is null order by a.ClientId) and cmi.issue.code in ";
+	private static final String HQL_CURRENT_HISTORICAL_POP_SIZE =
+		"select count(distinct a.ClientId) from Admission a where " +
+		"a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " +
+		"a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " +
+		"(a.DischargeDate is null or a.DischargeDate > ?)";
+	
+	private static final String HQL_GET_USAGES =
+		"select a.ClientId, a.AdmissionDate, a.DischargeDate from Admission a where " +
+		"a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " +
+		"a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " +
+		"(a.DischargeDate is null or a.DischargeDate > ?) " +
+		"order by a.ClientId, a.AdmissionDate";
+	
+	private static final String HQL_GET_MORTALITIES =
+		"select count(distinct a.ClientId) from Admission a where " +
+		"a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'community' and lower(p.name) = 'deceased') and " +
+		"a.AdmissionDate > ? and a.DischargeDate is null";
+	
+	private static final String HQL_GET_PREVALENCE =
+		"select count(cmi) from CaseManagementIssue cmi where " +
+		"cmi.resolved = false and " +
+		"cmi.demographic_no in (select distinct a.ClientId from Admission a where a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and a.DischargeDate is null) and " +
+		"cmi.issue.code in ";
+	
+	private static final String HQL_GET_INCIDENCE =
+		"select count(cmi) from CaseManagementIssue cmi where " +
+		"cmi.demographic_no in (select distinct a.ClientId from Admission a where a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and a.DischargeDate is null) and " +
+		"cmi.issue.code in ";
 	
 	public int getCurrentPopulationSize() {
 		return (Integer) getHibernateTemplate().find(HQL_CURRENT_POP_SIZE).iterator().next();
@@ -60,20 +87,21 @@ public class PopulationReportDAOHibernate extends HibernateDaoSupport implements
 			}
 
 			try {
-				clientIdToStayMap.get(clientId).add(new Stay(admission, discharge, start, end));
+				Stay stay = new Stay(admission, discharge, start, end);
+				clientIdToStayMap.get(clientId).add(stay);
 			} catch (IllegalArgumentException e) {
 				LOG.error("client id: " + clientId);
 			}
 		}
 		
 		for (Entry<Integer, Set<Stay>> entry : clientIdToStayMap.entrySet()) {
-			MutablePeriod cumulativeStay = new MutablePeriod(PeriodType.days());
+			MutablePeriod period = new MutablePeriod(PeriodType.days());
 
 			for (Stay stay : entry.getValue()) {
-				cumulativeStay.add(stay.getInterval());
+				period.add(stay.getInterval());
 			}
 
-			int days = Days.standardDaysIn(cumulativeStay).getDays();
+			int days = Days.standardDaysIn(period).getDays();
 
 			if (days <= 10) {
 				shelterUsages[LOW] += 1;

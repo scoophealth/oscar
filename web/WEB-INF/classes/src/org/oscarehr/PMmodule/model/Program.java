@@ -37,50 +37,30 @@ public class Program extends BaseProgram {
 	public static final String SERVICE_TYPE = "Service";
 	
 	/* [CONSTRUCTOR MARKER BEGIN] */
-	public Program () {
+	
+	public Program() {
 		super();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Program (java.lang.Integer id) {
+	public Program(java.lang.Integer id) {
 		super(id);
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Program (
-		java.lang.Integer id,
-		java.lang.Integer maxAllowed,
-		java.lang.String address,
-		java.lang.String phone,
-		java.lang.String fax,
-		java.lang.String url,
-		java.lang.String email,
-		java.lang.String emergencyNumber,
-		java.lang.String name,
-		java.lang.Long agencyId,
-		boolean holdingTank,
-		java.lang.String programStatus) {
-
-		super (
-			id,
-			maxAllowed,
-			address,
-			phone,
-			fax,
-			url,
-			email,
-			emergencyNumber,
-			name,
-			agencyId,
-			holdingTank,
-			programStatus);
+	public Program(java.lang.Integer id, java.lang.Integer maxAllowed, java.lang.String address, java.lang.String phone, java.lang.String fax, java.lang.String url, java.lang.String email, java.lang.String emergencyNumber, java.lang.String name, java.lang.Long agencyId, boolean holdingTank, java.lang.String programStatus) {
+		super(id, maxAllowed, address, phone, fax, url, email, emergencyNumber, name, agencyId, holdingTank, programStatus);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
+	
+	public boolean isActive() {
+		return getProgramStatus().equalsIgnoreCase("active");
+	}
 	
 	public boolean isFull() {
 		return getNumOfMembers() >= getMaxAllowed();

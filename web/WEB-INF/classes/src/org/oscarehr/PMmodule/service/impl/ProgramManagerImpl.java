@@ -329,12 +329,12 @@ public class ProgramManagerImpl implements ProgramManager {
 		return pp;
 	}
 
-	public List getProgramDomain(String providerNo) {
+	public List<Program> getProgramDomain(String providerNo) {
 		List<Program> programDomain = new ArrayList<Program>();
 		
-		for (Iterator i = programProviderDAO.getProgramDomain(new Long(providerNo)).iterator(); i.hasNext();) {
+		for (Iterator<?> i = programProviderDAO.getProgramDomain(new Long(providerNo)).iterator(); i.hasNext();) {
 			ProgramProvider programProvider = (ProgramProvider) i.next();
-			programDomain.add(getProgram(programProvider.getProgramId().toString()));
+			programDomain.add(getProgram(programProvider.getProgramId()));
 		}
 		
 		return programDomain;

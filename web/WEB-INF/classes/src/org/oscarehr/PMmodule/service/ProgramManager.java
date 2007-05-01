@@ -128,7 +128,7 @@ public interface ProgramManager
 	
 	public Program getHoldingTankProgram();
 	
-	public List getProgramDomain(String providerNo);
+	public List<Program> getProgramDomain(String providerNo);
 	
 	public Program[] getCommunityPrograms();
 	public List getProgramBeans(String providerNo);
