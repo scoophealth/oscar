@@ -35,13 +35,17 @@ String userlastname = (String) session.getAttribute("userlastname");
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
-<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*" %>
+<%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 
 <%
-
+for( Enumeration e = request.getParameterNames(); e.hasMoreElements(); ) {
+    String name = (String)e.nextElement();
+    System.out.println(name + " -> " + request.getParameter(name));
+}
     
 //if delete request is made
 if (request.getParameter("delDocumentNo") != null) {
@@ -391,7 +395,11 @@ function popup1(height, width, url, windowName){
                     if( module.equals("demographic") ) {
               %>
                         <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                            <input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/>
+                            <indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">    
+                                
+                                <input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/>
+                                
+                            </indivo:indivoRegistered>
                         </oscarProp:oscarPropertiesCheck>
               <%
                     }

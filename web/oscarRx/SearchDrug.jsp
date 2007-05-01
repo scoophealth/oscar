@@ -4,7 +4,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
-<%@ page import="oscar.oscarRx.data.*"%>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
+<%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
 
 
 <%
@@ -36,6 +37,7 @@ oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBea
   if (pharmacy != null){   
      prefPharmacy = pharmacy.name;                                  
   }
+  
 %>
 
 <!--  
@@ -227,11 +229,13 @@ table.hiddenLayer {
                             </td>
                         </tr>
                         <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-                        <tr>
-                            <td colspan="3">
-                            <a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record</a>                                
-                            </td>                            
-                        </tr>                        
+                            <indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">                               
+                                <tr>
+                                    <td colspan="3">
+                                        <a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record</a>                                
+                                    </td>                            
+                                </tr>                                                      
+                            </indivo:indivoRegistered>
                         </oscarProp:oscarPropertiesCheck>
                     </table>
                 </td>
