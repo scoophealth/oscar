@@ -8,6 +8,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
+<%@ page import="oscar.OscarProperties" %>
 <!--  
 /*
  * 
@@ -253,6 +254,16 @@ function isNumeric(strString){
   <tr>
     <td align="center"><a href=# onClick ="popupPage(230,860,'providerColourPicker.jsp');return false;"><bean:message key="provider.btnEditColour"/></a>
   </tr>
+  
+  <%
+    if( OscarProperties.getInstance().getProperty("MY_OSCAR", "").equalsIgnoreCase("yes") ) {
+  %>
+        <tr>
+            <td align="center"><a href=# onClick ="popupPage(230,860,'providerIndivoIdSetter.jsp');return false;"><bean:message key="provider.btnSetIndivoId"/></a>
+        </tr>
+  <%             
+    }
+  %>
 
 </table>
 
