@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarClinic.ClinicData;
 import oscar.SxmlMisc;
+import oscar.oscarProvider.data.ProviderMyOscarIdData;
 
 public class EctProviderData {
     public class Provider {
@@ -127,10 +128,7 @@ public class EctProviderData {
             if(rs.next()) {
                 String surname = rs.getString("last_name");
                 String firstName = rs.getString("first_name");
-                String comments = rs.getString("comments");
-                System.out.println("PROVIDER COMMENTS " + comments);
-                String selfLearningId = SxmlMisc.getXmlContent(comments,"xml_p_slpusername");
-                System.out.println("INDIVO ID " + selfLearningId);
+                String comments = rs.getString("comments");                                           
                 String selfLearningPasswd = SxmlMisc.getXmlContent(comments,"xml_p_slppassword");
                 
                 if(firstName.indexOf("Dr.") < 0)
@@ -144,7 +142,11 @@ public class EctProviderData {
                 String clinicPostal = clinic.getClinicPostal();
                 String clinicPhone = clinic.getClinicPhone();
                 String clinicFax = clinic.getClinicFax();
-                provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, selfLearningId, selfLearningPasswd);
+                
+                ProviderMyOscarIdData myOscar = new ProviderMyOscarIdData(providerNo);
+                String myOscarLoginId = myOscar.getMyOscarId();
+                
+                provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress, clinicCity, clinicPostal, clinicPhone, clinicFax, myOscarLoginId, selfLearningPasswd);
             }
             rs.close();
             db.CloseConn();
