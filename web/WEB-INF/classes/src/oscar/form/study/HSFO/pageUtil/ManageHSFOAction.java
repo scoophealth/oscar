@@ -120,6 +120,11 @@ public class ManageHSFOAction extends Action{
                 System.out.print(num);
                 System.out.println();
                 latestVisitData = hsfoDAO.retrieveSelectedRecord(num);
+            }else if ( request.getAttribute("formId") != null  ){   
+                Integer num = (Integer) request.getAttribute("formId");
+                System.out.print("NUUMM "+num);
+                System.out.println();
+                latestVisitData = hsfoDAO.retrieveSelectedRecord(num.intValue());
             }else{
                 latestVisitData = (VisitData)patientHistory.get(size-1);
                 //should i check to see if currently editing todays visit?
