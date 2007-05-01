@@ -848,7 +848,9 @@ public class SaveRegistrationAction extends DispatchAction{
         
         System.out.println("insert new record");
         try {
-            dao.insertVisit(visitData,(String) request.getSession().getAttribute("user"));
+           int insertId = dao.insertVisit(visitData,(String) request.getSession().getAttribute("user"));
+           System.out.println(" insert ID to "+insertId);
+           request.setAttribute("formId",new Integer(insertId));
         } catch (SQLException e) {
             e.printStackTrace();
         }
