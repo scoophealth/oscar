@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<!--  
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+-->
+
+
+<taglib>
+    <tlib-version>1.0</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <short-name>indivo</short-name>    
+    <display-name>indivotag</display-name>
+    <uri>/indivotag</uri>
+    <small-icon></small-icon>
+    <large-icon></large-icon>
+    <description>Routines specific for interfacing with an Indivo Server</description>
+    
+    <tag>
+        <name>indivoRegistered</name>
+        <tag-class>oscar.util.indivoCheck</tag-class>
+        <body-content>JSP</body-content>
+        
+        <attribute>
+            <name>provider</name>
+                <required>true</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>            
+        </attribute>
+        <attribute>
+            <name>demographic</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>            
+        </attribute>
+    </tag>
+    
+    <!-- Validators are new in JSP1.2. You may have zero or one validator
+         in a tag library. They look like this:
+      <validator>
+          <validator-class>org.your.web.app.ValidateTaglibUsage</validator-class>
+          <init-param>
+             <param-name>aparameter</param-name>
+             <param-value>value</param-value>
+             <description>Describe this parameter</description>
+	  </init-param>
+      </validator>
+   -->
+
+   <!-- listeners are new in JSP1.2. You may have as many listeners as you like
+        in a tag library. They look like this:
+     <listener>
+         <listener-class>org.your.web.app.TaglibListener1</listener-class> 
+     </listener>
+   -->
+</taglib>
