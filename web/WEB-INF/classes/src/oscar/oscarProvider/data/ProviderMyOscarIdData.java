@@ -1,0 +1,115 @@
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster University 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+
+package oscar.oscarProvider.data;
+
+import oscar.oscarDB.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * Manages MyOscar Login Id for provider 
+ * 
+ */
+public class ProviderMyOscarIdData {
+    
+    private String strColName;    
+    private String provider;
+    
+    /** Creates a new instance of ProviderColourUpdater */
+   public ProviderMyOscarIdData(String p) {
+       
+       strColName = new String("MyOscarId");
+       provider = p;       
+    }
+   
+   /**
+    *Retrieve myOscar login id for current provider first by querying property table 
+    */
+   public String getMyOscarId() {
+       String sql;
+       String myOscarId = "";
+       ResultSet rs;
+       DBHandler db;
+       
+       try {
+        db = new DBHandler(DBHandler.OSCAR_DATA);
+       
+        sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
+        rs = db.GetSQL(sql);
+            
+        if( rs.next() ) {
+            myOscarId = rs.getString("value");
+        }
+                
+        
+       }
+       catch( SQLException ex ) {
+           System.out.println(ex.getMessage());           
+       }
+       
+       return myOscarId;
+   }
+      /**
+       *set myOscar login id in property table
+       */
+   public boolean setId(String id) {
+       DBHandler db;
+       String sql;
+       ResultSet rs;
+       boolean ret = true;
+       
+       try {
+                  
+        if( idIsSet() )
+           sql = "UPDATE property SET value = '" + id + "' WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
+        else
+           sql = "INSERT INTO property (name,value,provider_no) VALUES('" + strColName + "', '" + id + "', '" + provider + "')";
+        
+        db = new DBHandler(DBHandler.OSCAR_DATA);
+        db.RunSQL(sql);
+       
+       }catch( SQLException ex ) {
+           System.out.println("Error adding provider myOscar Login Id: " + ex.getMessage());
+           ret = false;
+       }
+       
+       return ret;
+   }
+ 
+   public boolean idIsSet() throws SQLException {
+       DBHandler db;
+       String sql;
+       ResultSet rs;       
+              
+       db = new DBHandler(DBHandler.OSCAR_DATA);
+       sql = "SELECT value FROM property WHERE name = '" + strColName + "' AND provider_no = '" + provider + "'";
+       
+       rs = db.GetSQL(sql);
+       
+       return rs.next();              
+       
+   }
+}
