@@ -274,8 +274,8 @@ public class HSFODAO {
             return hasLockedVisit;
     }
     
-    public void insertVisit(VisitData visitData,String provider_no) throws SQLException {
-        
+    public int insertVisit(VisitData visitData,String provider_no) throws SQLException {
+        int id = -1;
         String TC_DHL = "";
         if (visitData.getTC_HDL_LabresultsDate() != null && !visitData.getTC_HDL_LabresultsDate().equals("")) {
             TC_DHL = "'" + visitData.getTC_HDL_LabresultsDate() + "',";
@@ -302,9 +302,27 @@ public class HSFODAO {
         }
         PreparedStatement st = null;
         String sqlstatement ="INSERT into form_hsfo_visit" +
-                "(demographic_no,provider_no,formCreated,Patient_Id,VisitDate_Id,Drugcoverage,SBP,SBP_goal,DBP,DBP_goal,Bptru_used,Weight,Weight_unit,Waist,Waist_unit,TC_HDL,LDL,HDL,A1C,Nextvisit,Bpactionplan,PressureOff,PatientProvider,ABPM,Home,CommunityRes,ProRefer,HtnDxType,Dyslipid,Diabetes,KidneyDis,Obesity,CHD,Stroke_TIA,Risk_weight,Risk_activity,Risk_diet,Risk_smoking,Risk_alcohol,Risk_stress,PtView,Change_importance,Change_confidence,Exercise_minPerWk,Smoking_cigsPerDay,Alcohol_drinksPerWk,Sel_DashDiet,Sel_HighSaltFood,Sel_Stressed,LifeGoal,FamHx_Htn,FamHx_Dyslipid,FamHx_Diabetes,FamHx_KidneyDis,FamHx_Obesity,FamHx_CHD,FamHx_Stroke_TIA,Diuret_rx,Diuret_SideEffects,Diuret_RxDecToday,Ace_rx,Ace_SideEffects,Ace_RxDecToday,Arecept_rx,Arecept_SideEffects,Arecept_RxDecToday,Beta_rx,Beta_SideEffects,Beta_RxDecToday,Calc_rx,Calc_SideEffects,Calc_RxDecToday,Anti_rx,Anti_SideEffects,Anti_RxDecToday,Statin_rx,Statin_SideEffects,Statin_RxDecToday,Lipid_rx,Lipid_SideEffects,Lipid_RxDecToday,Hypo_rx,Hypo_SideEffects,Hypo_RxDecToday,Insul_rx,Insul_SideEffects,Insul_RxDecToday,Often_miss,Herbal,TC_HDL_LabresultsDate,LDL_LabresultsDate,HDL_LabresultsDate,A1C_LabresultsDate,Locked)"+
+                "(demographic_no,provider_no,formCreated,Patient_Id,VisitDate_Id,Drugcoverage,SBP,SBP_goal,DBP,DBP_goal," +
+                "Bptru_used,Weight,Weight_unit,Waist,Waist_unit,TC_HDL,LDL,HDL,A1C,Nextvisit," +
+                "Bpactionplan,PressureOff,PatientProvider,ABPM,Home,CommunityRes,ProRefer,HtnDxType,Dyslipid,Diabetes," +
+                "KidneyDis,Obesity,CHD,Stroke_TIA,Risk_weight,Risk_activity,Risk_diet,Risk_smoking,Risk_alcohol,Risk_stress," +
+                "PtView,Change_importance,Change_confidence,Exercise_minPerWk,Smoking_cigsPerDay,Alcohol_drinksPerWk,Sel_DashDiet,Sel_HighSaltFood,Sel_Stressed,LifeGoal," +
+                "FamHx_Htn,FamHx_Dyslipid,FamHx_Diabetes,FamHx_KidneyDis,FamHx_Obesity,FamHx_CHD,FamHx_Stroke_TIA,Diuret_rx,Diuret_SideEffects,Diuret_RxDecToday," +
+                "Ace_rx,Ace_SideEffects,Ace_RxDecToday,Arecept_rx,Arecept_SideEffects,Arecept_RxDecToday,Beta_rx,Beta_SideEffects,Beta_RxDecToday,Calc_rx," +
+                "Calc_SideEffects,Calc_RxDecToday,Anti_rx,Anti_SideEffects,Anti_RxDecToday,Statin_rx,Statin_SideEffects,Statin_RxDecToday,Lipid_rx,Lipid_SideEffects," +
+                "Lipid_RxDecToday,Hypo_rx,Hypo_SideEffects,Hypo_RxDecToday,Insul_rx,Insul_SideEffects,Insul_RxDecToday,Often_miss,Herbal,TC_HDL_LabresultsDate," +
+                "LDL_LabresultsDate,HDL_LabresultsDate,A1C_LabresultsDate,Locked)"+
                 " values " +
-                "(?,?,now(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "(?,?,now(),?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?,?,?,?,?,?,?," +
+                "?,?,?,?)";
                 
         System.out.println(sqlstatement);
         try {
@@ -411,6 +429,10 @@ public class HSFODAO {
             
             //////
             st.executeUpdate();
+            ResultSet rs = st.getGeneratedKeys();
+            if(rs.next()){
+              id = rs.getInt(1);
+            }
             st.clearParameters();
             st.close();
             db.CloseConn();
@@ -421,7 +443,7 @@ public class HSFODAO {
             ne.printStackTrace();
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
         }
-        
+        return id;
     }
     
     
