@@ -2202,13 +2202,15 @@ public class IntakeCReport1Action extends BaseAction {
 			row++;
 
 			// Service Recipient Preferred Language  French
-			if (LANGUAGE_FRENCH.equalsIgnoreCase(formintakec.getPreferredLanguage())) {
+			if (formintakec.getRadioLanguageEnglish() != null && !formintakec.getRadioLanguageEnglish().equals("1") &&
+					LANGUAGE_FRENCH.equalsIgnoreCase(formintakec.getPreferredLanguage())) {
 				dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
 			}
 			row++;
 
 			// Service Recipient Preferred Language  Other
-			if (null != formintakec.getPreferredLanguage()
+			if (formintakec.getRadioLanguageEnglish() != null && !formintakec.getRadioLanguageEnglish().equals("1") &&
+					null != formintakec.getPreferredLanguage()
 					&& !"".equals(formintakec.getPreferredLanguage())
 					&& !LANGUAGE_FRENCH.equalsIgnoreCase(formintakec.getPreferredLanguage())) {
 				dataList[row][col] = Integer.toString(Integer.parseInt(dataList[row][col]) + 1);
