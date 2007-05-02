@@ -122,7 +122,11 @@
                      <input type="button" onclick="document.forms[1].submit()" value="<%=StringUtils.capitalize(action)%>">
                  </html:form>
               </div>
+              <%if (action.equals("edit")) {%>
+              <input type="button" name="done" value="Done" onclick="document.location='reportConfiguration.jsp?templateid=<%=templateid%>'">
+              <%} else {%>
               <input type="button" name="cancel" value="Cancel" onclick="document.location='homePage.jsp'">
+              <%}%>
            </td>
         </tr>
         <tr>
