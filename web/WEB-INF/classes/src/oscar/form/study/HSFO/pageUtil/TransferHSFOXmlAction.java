@@ -168,6 +168,7 @@ import oscar.OscarProperties;
 import oscar.form.study.HSFO.HSFODAO;
 import oscar.form.study.HSFO.PatientData;
 import oscar.form.study.HSFO.VisitData;
+import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
 import sun.misc.BASE64Encoder;
 
@@ -359,10 +360,17 @@ public class TransferHSFOXmlAction extends Action
 		ddd.setSignedWho(who);
 
 		TxtEmrHcpID tehid = patient.addNewTxtEmrHcpID();
-		if (pd.getEmrHCPId() == null)
+		DemographicData demoData = new DemographicData();
+		String providerId=demoData.getDemographic(patient.getEmrPatientKey()).getProviderNo();
+//		if (pd.getEmrHCPId() == null)
+//			tehid.setValue("");
+//		else
+//			tehid.setValue(pd.getEmrHCPId());
+		/*get EmrHcpId from demographic table, not hsfo_patient table*/
+		if (providerId == null)
 			tehid.setValue("");
 		else
-			tehid.setValue(pd.getEmrHCPId());
+			tehid.setValue(providerId);
 		tehid.setSignedWhen(when);
 		tehid.setSignedWho(who);
 
