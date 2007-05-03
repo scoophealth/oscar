@@ -64,7 +64,7 @@ public class MsgNewMessageTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewMessages > 0)
-                out.print("<span class='newmsg'>");
+                out.print("<span class='tabalert'>");
             else
                 out.print("<span>");
         } catch(Exception p) {

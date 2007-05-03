@@ -66,7 +66,7 @@ public class TicklerTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewLabs > 0) 
-                out.print("<span class='newtickler'>  ");
+                out.print("<span class='tabalert'>  ");
             else
                 out.print("<span>  ");
         } catch(Exception p) {
