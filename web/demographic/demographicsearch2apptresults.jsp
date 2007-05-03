@@ -209,20 +209,20 @@ var fullname="";
 function addName(demographic_no, lastname, firstname, chartno, messageID, doctorNo) {  
   fullname=lastname+","+firstname;
   document.addform.action="<%=request.getParameter("originalpage")%>?demographic_no="+demographic_no+"&name="+fullname+"&chart_no="+chartno+"&bFirstDisp=false"+"&messageID="+messageID+"&doctor_no="+doctorNo;  //+"\"" ;
-  //document.addform.submit(); // 
+  document.addform.submit();
   return true;
 }
 
 <%if(caisi) {%>
 function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
-	fullname=lastname+","+firstname;
-	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementName")%>'].value=fullname;
+  	fullname=lastname+","+firstname;
+  	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementName")%>'].value=fullname;
 	opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("elementId")%>'].value=demographic_no;
 	self.close();
 }
 <%}%>
 </SCRIPT>
- 
+
 <CENTER><table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0"> 
 	<form method="post" name="addform" action="../appointment/addappointment.jsp" >
 <tr class="title">

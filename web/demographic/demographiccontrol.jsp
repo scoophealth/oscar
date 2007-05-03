@@ -32,6 +32,7 @@
 <%@ include file="../admin/dbconnection.jsp" %>
 
 <%
+
   OscarProperties props = OscarProperties.getInstance();
 
   //operation available to the client -- dboperation
@@ -136,7 +137,6 @@
   apptMainBean.doCommand(request); //store request to a help class object Dict - function&params
   if(true) {
     out.clear();
-    //System.out.println("appointmentcontrol.jsp: -------- "+apptMainBean.whereTo());
     pageContext.forward(apptMainBean.whereTo()); //forward request&response to the target page
     return;
   }
