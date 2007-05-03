@@ -51,12 +51,11 @@ public class TicklerTag extends TagSupport {
    public int doStartTag() throws JspException    {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            //;
+
             String sql = new String("select count(*) from tickler where status = 'A' and TO_DAYS(service_date) <= TO_DAYS(now()) and task_assigned_to  = '"+ providerNo +"' ");
             ResultSet rs = db.GetSQL(sql);
             while (rs.next()) {
                numNewLabs = (rs.getInt(1));
-               //System.out.println("Labs" +numNewLabs);
             }
 
             rs.close();
@@ -66,10 +65,10 @@ public class TicklerTag extends TagSupport {
         }
         try        {
             JspWriter out = super.pageContext.getOut();
-            if(numNewLabs > 0)
-                out.print("<span style=\"color:red;\">  ");
+            if(numNewLabs > 0) 
+                out.print("<span class='newtickler'>  ");
             else
-                out.print("<span style=\"color:black;\">  ");
+                out.print("<span>  ");
         } catch(Exception p) {
             p.printStackTrace(System.out);
         }
@@ -86,11 +85,14 @@ public class TicklerTag extends TagSupport {
     }
 
 
-
     public int doEndTag()        throws JspException    {
        try{
           JspWriter out = super.pageContext.getOut();
-          out.print("</span>");
+        //ronnie 2007-4-26
+          if (numNewLabs>0)
+              out.print("<sup>"+numNewLabs+"</sup></span>");
+          else
+              out.print("</span>");
        }catch(Exception p) {
             p.printStackTrace(System.out);
        }
