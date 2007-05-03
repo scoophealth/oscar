@@ -44,5 +44,6 @@
 	.datepname { 	font-family:"Times New Roman"; font-size:12px;  }
 	.datephour { 	font-family:"Times New Roman"; font-size:12px; color:brown; }
 	.datepreason { 	font-family:"Times New Roman"; font-size:12px; color:green; }
+        .tabalert {   color:red; }
 
 
