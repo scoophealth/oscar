@@ -43,6 +43,7 @@ import oscar.OscarProperties;
 /**
  * eform_image
  * @author jay
+ *and Paul
  */
 public class DisplayImageAction extends DownloadAction{
     
@@ -55,6 +56,7 @@ public class DisplayImageAction extends DownloadAction{
                                        HttpServletResponse response)
             throws Exception {
         String fileName = request.getParameter("imagefile");
+        //if (fileName.indexOf('/') != -1) return null;  //prevents navigating away from the page.
         String home_dir = OscarProperties.getInstance().getProperty("eform_image");
         
         response.setHeader("Content-disposition","inline; filename=" + fileName);
@@ -66,6 +68,12 @@ public class DisplayImageAction extends DownloadAction{
               throw new Exception("Directory:  "+home_dir+ " does not exist");
            }
            file = new File(directory,fileName);
+           //String canonicalPath = file.getParentFile().getCanonicalPath(); //absolute path of the retrieved file
+           //System.out.println("absolutepath: " + canonicalPath);
+           if (!directory.equals(file.getParentFile())) {
+               System.out.println("SECURITY WARNING: Illegal file path detected, client attempted to navigate away from the file directory");
+               throw new Exception("Could not open file " + fileName + ".  Check the file path"); 
+           }
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception("Could not open file "+home_dir+fileName +" does "+home_dir+ " exist ?",e);
