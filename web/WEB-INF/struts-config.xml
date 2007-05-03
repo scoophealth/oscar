@@ -1046,6 +1046,9 @@
 		<action input="/eform/efmmanageformgroups.jsp" name="delGroup" path="/eforms/delGroup" scope="request" type="oscar.eform.actions.DeleteGroupAction">
 			<forward name="success" path="/eform/efmmanageformgroups.jsp" />
 		</action>
+                <action input="/eform/efmmanageformgroups.jsp" name="FrmForm" path="/eform/displayImage" scope="request" type="oscar.eform.actions.DisplayImageAction">
+                    
+                </action>
 		<action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/associateCodesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AssociateCodesAction">
 			<forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
 		</action>

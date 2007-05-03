@@ -63,7 +63,7 @@ public class EFormBase {
     public void setImagePath() {
         Properties prop = oscar.OscarProperties.getInstance();
         String projHome = prop.getProperty("project_home");
-        String output = "../../OscarDocument/" + projHome + "/eform/images/";
+        String output = "../eform/displayImage.do?imagefile=";
         StringBuffer html = new StringBuffer(formHtml);
         int pointer = StringBufferUtils.indexOfIgnoreCase(html, imageMarker, 0);
         while (pointer >= 0) {

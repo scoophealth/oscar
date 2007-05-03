@@ -32,6 +32,7 @@ package oscar.eform.actions;
 import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.activation.MimetypesFileTypeMap;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DownloadAction;
@@ -53,12 +54,9 @@ public class DisplayImageAction extends DownloadAction{
                                        HttpServletRequest request, 
                                        HttpServletResponse response)
             throws Exception {
-     
-        String contentType = "application/octet-stream";
-        //TODO: Not sure how to tell if its a jpeg gif or png!!
+        String fileName = request.getParameter("imagefile");
         String home_dir = OscarProperties.getInstance().getProperty("eform_image");
         
-        String fileName = request.getParameter("imagefile");
         response.setHeader("Content-disposition","inline; filename=" + fileName);
         
         File file = null;
@@ -72,6 +70,9 @@ public class DisplayImageAction extends DownloadAction{
             e.printStackTrace();
             throw new Exception("Could not open file "+home_dir+fileName +" does "+home_dir+ " exist ?",e);
         }
+        //gets content type from image extension
+        String contentType = new MimetypesFileTypeMap().getContentType(file);
+        //System.out.println("content type:" + contentType);
         return new FileStreamInfo(contentType, file);   
     }   
 }
