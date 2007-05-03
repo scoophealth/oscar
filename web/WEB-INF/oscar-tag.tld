@@ -39,7 +39,7 @@
 <tag>
   <name>newMessage</name>
   <tagclass>oscar.oscarMessenger.tld.MsgNewMessageTag</tagclass>
-  <bodycontent>empty</bodycontent>
+  <bodycontent>jsp</bodycontent>
   <attribute>
     <name>providerNo</name>
     <required>true</required>
