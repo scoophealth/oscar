@@ -1,3 +1,7 @@
+<%-- This page is included by "appointmentprovideradminday.jsp".
+     User defined JavaScript functions here can be found in the above file. --%>
+     
+
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <%
