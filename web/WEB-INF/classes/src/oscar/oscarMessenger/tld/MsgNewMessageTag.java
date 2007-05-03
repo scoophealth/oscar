@@ -64,16 +64,26 @@ public class MsgNewMessageTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewMessages > 0)
-                out.print("<span style=\"color:red;\">Msg</span>  ");
+                out.print("<span class='newmsg'>");
             else
-                out.print("Msg  ");
+                out.print("<span>");
         } catch(Exception p) {
             p.printStackTrace(System.out);
         }
-        return(SKIP_BODY);
+        return(EVAL_BODY_INCLUDE);
     }
 
     public int doEndTag()        throws JspException    {
+     //ronnie 2007-4-26
+       try{
+          JspWriter out = super.pageContext.getOut();
+          if (numNewMessages > 0)
+              out.print("<sup>"+numNewMessages+"</sup></span>  ");
+          else
+              out.print("</span>  ");
+       }catch(Exception p) {
+            p.printStackTrace(System.out);
+       }
        return EVAL_PAGE;
     }
 
