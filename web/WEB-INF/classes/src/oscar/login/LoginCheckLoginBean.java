@@ -77,18 +77,20 @@ public class LoginCheckLoginBean {
             return cleanNullObj(LOG_PRE + "Pin-local needed: " + username);
         }
 
-        // check if it is expired
-        if (secBean.getB_ExpireSet().intValue() == 1 && secBean.getDate_ExpireDate().before(UtilDateUtilities.now())) {
+        if (secBean.getB_ExpireSet().intValue() == 1 && ( secBean.getDate_ExpireDate() == null || secBean.getDate_ExpireDate().before(UtilDateUtilities.now() ))) {
             return cleanNullObjExpire(LOG_PRE + "Expired: " + username);
         }
-        
+        String expired_days = "";  
+        if (secBean.getB_ExpireSet().intValue() == 1 ){
         //Give warning if the password will be expired in 10 days.
-        long date_expireDate = secBean.getDate_ExpireDate().getTime();
-       	long date_now = UtilDateUtilities.now().getTime();
-        long date_diff = (date_expireDate - date_now)/(24*3600*1000);
-        String expired_days = "";        
-        if (secBean.getB_ExpireSet().intValue() == 1 && date_diff < 11) {
-        	expired_days = String.valueOf(date_diff);        	
+            
+                long date_expireDate = secBean.getDate_ExpireDate().getTime();
+                long date_now = UtilDateUtilities.now().getTime();
+                long date_diff = (date_expireDate - date_now)/(24*3600*1000);
+
+                if (secBean.getB_ExpireSet().intValue() == 1 && date_diff < 11) {
+                        expired_days = String.valueOf(date_diff);        	
+                }
         }
         
         StringBuffer sbTemp = new StringBuffer();
@@ -136,18 +138,20 @@ public class LoginCheckLoginBean {
         return new String[] { "expired" };
     }
 
-    private LoginSecurityBean getUserID() {
+    private LoginSecurityBean getUserID() throws SQLException {
         LoginSecurityBean secBean = null;
-        try {
-            if (!DBHandler.isInit())
-                DBHandler.init(oscarVariables.getProperty("db_name"), oscarVariables.getProperty("db_driver"),
-                        oscarVariables.getProperty("db_uri"), oscarVariables.getProperty("db_username"),
-                        oscarVariables.getProperty("db_password"));
+        //try {
+            //if (!DBHandler.isInit())
+            //    DBHandler.init(oscarVariables.getProperty("db_name"), oscarVariables.getProperty("db_driver"),
+            //            oscarVariables.getProperty("db_uri"), oscarVariables.getProperty("db_username"),
+            //            oscarVariables.getProperty("db_password"));
 
             accessDB = new DBHelp();
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           
             
             String sql = "select * from security where user_name = '" + StringEscapeUtils.escapeSql(username) + "'";
-            ResultSet rs = accessDB.searchDBRecord(sql);
+            ResultSet rs =  db.GetSQL(sql);
             while (rs.next()) {
                 secBean = new LoginSecurityBean();
                 secBean.setUser_name(rs.getString("user_name"));
@@ -183,10 +187,10 @@ public class LoginCheckLoginBean {
                 }
             }
             return secBean;
-        } catch (SQLException e) {
-          e.printStackTrace();
-            return null;
-        }
+        //} catch (SQLException e) {
+        // e.printStackTrace();
+        //    return null;
+        //}
     }
 
     public String[] getPreferences() {
