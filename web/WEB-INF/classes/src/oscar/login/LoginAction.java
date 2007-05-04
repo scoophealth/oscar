@@ -79,7 +79,7 @@ public final class LoginAction
     }
     catch (Exception e) {
       String newURL = mapping.findForward("error").getPath();
-      if (e.getMessage().startsWith("java.lang.ClassNotFoundException")) {
+      if (e.getMessage() != null &&  e.getMessage().startsWith("java.lang.ClassNotFoundException")) {
         newURL = newURL + "?errormsg=Database driver "
             + e.getMessage().substring(e.getMessage().indexOf(':') + 2) +
             " not found.";
