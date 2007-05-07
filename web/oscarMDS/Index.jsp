@@ -241,6 +241,16 @@ function checkAll(formId){
       f.flaggedLabs[i].checked = val;
    }
 }
+
+<%-- call parent window Ajax updater and then close the lab report window --%>
+function wrapUp() {
+    if (opener.callRefreshTabAlerts) {
+	opener.callRefreshTabAlerts("oscar_new_lab");
+	setTimeout("window.close();",100);
+    } else {
+	window.close();
+    }
+}        
 </script>
 </head>
 
@@ -262,7 +272,7 @@ function checkAll(formId){
                                 <% if (demographicNo == null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                                
-                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="window.close()">
+                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
@@ -416,7 +426,7 @@ function checkAll(formId){
                                 <% if (demographicNo == null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                                
-                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="window.close()">
+                                <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
                                 <% if (request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                             
