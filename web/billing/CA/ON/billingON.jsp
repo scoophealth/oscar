@@ -543,6 +543,14 @@ function onClickServiceCode(item) {
 	<% } %>
 }
 
+function upCaseCtrl(ctrl) {
+	var n = document.forms[0].xml_billtype.selectedIndex;  
+	var val = document.forms[0].xml_billtype[n].value; 
+	if(val.substring(0,3) == "ODP" || val.substring(0,3) == "WCB") {
+		ctrl.value = ctrl.value.toUpperCase();
+	}
+}
+
 function changeCut(dropdown) {
 	var str = dropdown.options[dropdown.selectedIndex].value;
 	var temp = new Array();
@@ -774,7 +782,7 @@ function onHistory() {
 
 				%> <input type="text" name="serviceCode<%=i%>" size="4" maxlength="15"
 							value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
-							onDblClick="scScriptAttach(this)" />x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
+							onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"/>x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
 							style="width:20px;"
 							value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>" />@ <input
 							type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
@@ -787,7 +795,7 @@ function onHistory() {
 
 				%> <input type="text" name="serviceCode<%=i%>" size="4" maxlength="15"
 							value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
-							onDblClick="scScriptAttach(this)" />x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
+							onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"/>x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
 							style="width:20px;"
 							value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>" />@ <input
 							type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
