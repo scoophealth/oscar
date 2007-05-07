@@ -65,7 +65,12 @@ String boxType = request.getParameter("boxType");
 <script type="text/javascript">
 function BackToOscar()
 {
-       window.close();
+    if (opener.callRefreshTabAlerts) {
+	opener.callRefreshTabAlerts("oscar_new_msg");
+        setTimeout("window.close()", 100);
+    } else {
+        window.close();
+    }
 }
 
 function popupViewAttach(vheight,vwidth,varpage) { //open a new popup window
