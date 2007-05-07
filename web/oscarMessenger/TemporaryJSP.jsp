@@ -64,7 +64,12 @@ Group Configurator
 <script language="javascript">
 function BackToOscar()
 {
-       window.close();
+    if (opener.callRefreshTabAlerts) {
+	opener.callRefreshTabAlerts("oscar_new_msg");
+        setTimeout("window.close()", 100);
+    } else {
+        window.close();
+    }
 }
 </script>
 

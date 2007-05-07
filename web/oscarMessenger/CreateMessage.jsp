@@ -322,7 +322,6 @@ border-right: 2px solid #cfcfcf;
 
 
 <script language="JavaScript">
-<!--
 function validatefields(){
   if (document.forms[0].message.value.length == 0){
     alert("<bean:message key="oscarMessenger.CreateMessage.msgEmptyMessage"/>");
@@ -354,7 +353,12 @@ function checkAll(form){
 
 function BackToOscar()
 {
-       window.close();
+    if (opener.callRefreshTabAlerts) {
+	opener.callRefreshTabAlerts("oscar_new_msg");
+        setTimeout("window.close()", 100);
+    } else {
+        window.close();
+    }
 }
 //-->
 </script>

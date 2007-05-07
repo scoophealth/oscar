@@ -36,12 +36,15 @@ Search Complete
 </title>
 
 <script language="JavaScript">
-<!--
 function BackToOscar()
 {
-       window.close();
+    if (opener.callRefreshTabAlerts) {
+	opener.callRefreshTabAlerts("oscar_new_msg");
+        setTimeout("window.close()", 100);
+    } else {
+        window.close();
+    }
 }
-//-->
 </script>
 </head>
 
