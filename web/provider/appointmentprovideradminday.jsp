@@ -184,6 +184,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <meta http-equiv="refresh" content="180;">
 
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">
 
 
@@ -196,9 +197,11 @@ function confirmPopupPage(height, width, queryString, doConfirm){
       popupPage(height, width, queryString);
    }
 }
+
 function setfocus() {
-  //this.focus();
+    this.focus();
 }
+
 function popupPage(vheight,vwidth,varpage) {
   var page = "" + varpage;
   windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=50,screenY=50,top=0,left=0";
@@ -275,6 +278,7 @@ function review(key) {
 function refresh() {
   document.location.reload();
 }
+
 function refresh1() {
   var u = self.location.href;
   if(u.lastIndexOf("view=1") > 0) {
@@ -283,6 +287,7 @@ function refresh1() {
     document.location.reload();
   }
 }
+
 function onUnbilled(url) {
   if(confirm("<bean:message key="provider.appointmentProviderAdminDay.onUnbilled"/>")) {
     popupPage(700,720, url);
@@ -318,21 +323,18 @@ function goZoomView(s, n) {
 function findProvider(p,m,d) {
   popupPage(300,400, "receptionistfindprovider.jsp?pyear=" +p+ "&pmonth=" +m+ "&pday=" +d+ "&providername="+ document.findprovider.providername.value );
 }
+
 //popup a new tickler warning window
-function load()
-{
-
-if ("<%=newticklerwarningwindow%>"=="enabled")
-{
-if (IsPopupBlocker()) {
-		alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
+function load() {
+    if ("<%=newticklerwarningwindow%>"=="enabled") {
+        if (IsPopupBlocker()) {
+            alert("You have a popup blocker, so you can not see the new tickler warning window. Please disable the pop blocker in your google bar, yahoo bar or IE ...");
 	} 
-var pu=window.open("../UnreadTickler.do",null,"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
-pu.focus();
-
-}
-
-	popupPageOfChangePassword();
+        var pu=window.open("../UnreadTickler.do",null,"height=120,width=250,location=no,scrollbars=no,menubars=no,toolbars=no,resizable=yes,top=500,left=700");
+        pu.focus();
+    }
+    popupPageOfChangePassword();
+    refreshAllTabAlerts();
 }
 
 function IsPopupBlocker() {
@@ -345,6 +347,24 @@ function IsPopupBlocker() {
 	}
 }
 
+<%-- Refresh tab alerts --%>
+function refreshAllTabAlerts() {
+    refreshTabAlerts("oscar_new_lab");
+    refreshTabAlerts("oscar_new_msg");
+    refreshTabAlerts("oscar_new_tickler");
+    setfocus();
+}
+
+function callRefreshTabAlerts(id) {
+    setTimeout("refreshTabAlerts('"+id+"')", 10);
+}
+
+function refreshTabAlerts(id) {
+    var url = "../provider/tabAlertsRefresh.jsp";
+    var pars = "id=" + id;
+    
+    var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
+}
 </SCRIPT>
 
    <style type="text/css">    
@@ -370,7 +390,7 @@ function IsPopupBlocker() {
 <body bgcolor="#EEEEFF" onload="load();" topmargin="0" leftmargin="0" rightmargin="0">
 <c:import url="/SystemMessage.do?method=view" />
 <%}else{%>
-<body bgcolor="#EEEEFF" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#EEEEFF" onLoad="refreshAllTabAlerts();" topmargin="0" leftmargin="0" rightmargin="0">
 <%}%>
 <%
    int numProvider=0, numAvailProvider=0;
@@ -506,25 +526,26 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
            <li>
                <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
-               <oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
+		   <span id="oscar_new_lab"></span>
                </a>
                <oscar:newUnclaimedLab>
-               <a style="color: red;" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
+               <a class="tabalert" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
                </oscar:newUnclaimedLab>
            </li>
 	</security:oscarSec>
         <li>
-           <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>"><oscar:newMessage providerNo="<%=curUser_no%>"/></a>
+            <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
+		<span id="oscar_new_msg"></span></a>
         </li>
         <li>
          <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>"><bean:message key="global.con"/></a>
         </li>
         <li>    <!-- remove this and let providerpreference check -->
 	    <caisi:isModuleLoad moduleName="ticklerplus">
-	      <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
+		<a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
 	    </caisi:isModuleLoad>	
             <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
-                     <a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
+		<a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
             </caisi:isModuleLoad>
         </li>
         <li>
@@ -532,10 +553,12 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         </li>
         <li>
            <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
-             <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'><oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler></a>
+	    <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'>
+		<span id="oscar_new_tickler"></span></a>
            </caisi:isModuleLoad>
            <caisi:isModuleLoad moduleName="ticklerplus">
-             <a HREF="#" ONCLICK ="popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');return false;" TITLE='Tickler+'><oscar:newTickler providerNo="<%=curUser_no%>">Tickler+</oscar:newTickler></a>
+	    <a HREF="#" ONCLICK ="popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');return false;" TITLE='Tickler+'>
+		<span id="oscar_new_tickler"></span></a>
            </caisi:isModuleLoad>
         </li>
         <oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
@@ -554,9 +577,9 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	     <% menuTagNumber++ ; %>
            </li>  
         </caisi:isModuleLoad>
-
+	
     </ul>  <!--- old TABLE -->
-
+    
   </td>
   
   <form method="post" name="findprovider" onSubmit="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;" target="apptReception" action="receptionistfindprovider.jsp">
