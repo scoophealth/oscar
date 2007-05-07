@@ -3,11 +3,12 @@ function validateForm(form,tab,submit) {
 	
 	
 	if(tab  == 'Page 1') {		
-		var reference = form.elements['data.value(1_2_1)'].value;
-		if(reference == '') {
-			alert('Please provide a reference number');
-			return false;
-		}
+		//var reference = form.elements['data.value(1_2_1)'].value;
+		
+		//if(reference == '') {
+		//	alert('Please provide a reference number');
+		//	return false;
+		//}
 	}
 
 	if(tab == 'Page 4') {
@@ -15,7 +16,7 @@ function validateForm(form,tab,submit) {
 		var i1 = parseInt(form.elements['data.value(4_3_1)'].value);
 		var i2 = parseInt(form.elements['data.value(4_3_2)'].value);
 		var i3 = parseInt(form.elements['data.value(4_3_3)'].value);
-		
+		alert("i1= "+i1+"  i2="+i2+"  i3=" + i3);
 		if(isNaN(i1) || isNaN(i2) || isNaN(i3)) {
 			alert('Please Enter numbers values (0-100) for question 1');
 			return false;
