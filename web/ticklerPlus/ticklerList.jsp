@@ -2,16 +2,17 @@
 
 <%@ page import="java.util.Calendar"%>
 <%
-Calendar now = Calendar.getInstance();
+                        Calendar now = Calendar.getInstance();
 			int curYear = now.get(Calendar.YEAR);
 			int curMonth = now.get(Calendar.MONTH) + 1;
 
 			%>
 
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script>
 	function batch_operation(method) {
 		var checked=false;
-		
+
 		var checkboxes=document.getElementsByName("checkbox");
 		var x=0;
 		for(x=0;x<checkboxes.length;x++) {
@@ -27,7 +28,49 @@ Calendar now = Calendar.getInstance();
 		form.method.value=method;
 		form.submit();
 	}
-	
+
+   <%-- added by Ronnie April 07 --%>
+        function createReport() {        
+                document.ticklerForm.method.value='filter';
+                document.ticklerForm.submit();                
+        }
+        
+        function updTklrList() {
+                clearInterval(check_demo_no);
+                createReport();
+        }
+        
+        function search_demographic() {
+                window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch2.jsp?query=' + document.ticklerForm.elements['filter.demographic_webName'].value,'demographic_search');
+                demo_no_orig = document.ticklerForm.elements['filter.demographic_no'].value;
+                check_demo_no = setInterval("if (demo_no_orig != document.ticklerForm.elements['filter.demographic_no'].value) updTklrList()",100);
+        }
+        
+        function clearClientFilter() {
+            document.ticklerForm.elements['filter.demographic_no'].value = "";
+            document.ticklerForm.elements['filter.demographic_webName'].value = "";
+            showClearButton();
+            createReport();
+        }
+        
+        function showClearButton() {
+            var cb = $('clear_button');
+            
+            if (document.ticklerForm.elements['filter.demographic_webName'].value=="") {
+                cb.hide();
+            } else {
+                cb.show();
+            }
+        }
+        
+        function wrapUp() {
+            if (opener.callRefreshTabAlerts) {
+                opener.callRefreshTabAlerts("oscar_new_tickler");
+                setTimeout("window.close();",100);
+            } else {
+                window.close();
+            }
+        }        
 </script>
 
 <html:form action="/Tickler">
@@ -71,13 +114,24 @@ Calendar now = Calendar.getInstance();
 		</html:select></td>
 	</tr>
 	<tr>
-		<td colspan="2" class="blueText">Client: <html:select
+		<td colspan="2" class="blueText">Client: 
+                <html:hidden property="filter.demographic_no"/>
+                <html:text property="filter.demographic_webName" size="15"/>
+                <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
+                <script language="JavaScript">showClearButton();</script>
+                <input type="button" value="Search" onclick="search_demographic();" />
+
+                <%--
+                <html:select
 			property="filter.demographic_no"
 			onchange="this.form.method.value='filter';this.form.submit();">
 			<option value="All Clients">All Clients</option>
 			<html:options collection="demographics" property="demographicNo"
 				labelProperty="formattedName" />
-		</html:select></td>
+		</html:select>
+                --%>                
+            
+            </td>
 	</tr>
 
 	<tr>
@@ -195,8 +249,7 @@ String demographic_name = "";
 			%>
 					<td ><input type="checkbox" name="checkbox"
 						value="<c:out value="${tickler.tickler_no}"/>" /></td>
-					<td><a
-						href="../Tickler.do?method=view&id=<c:out value="${tickler.tickler_no}"/>"><img
+					<td><a href="../Tickler.do?method=view&id=<c:out value="${tickler.tickler_no}"/>"><img
 						align="right" src="<c:out value="${ctx}"/>/ticklerPlus/images/<%=view_image %>" border="0" />
 					</a></td>
 
@@ -248,7 +301,7 @@ String style = "";
 <table width="100%">
 	<tr>
 		<!-- <td><a href="../provider/providercontrol.jsp">Back to Schedule Page</a></td> -->
-		<td><a href="javascript:void(0)" onclick="window.close()">Close Window</a></td>
+		<td><a href="javascript:void(0)" onclick="wrapUp();">Close Window</a></td>
 	</tr>
 </table>
 
