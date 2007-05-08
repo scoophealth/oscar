@@ -371,6 +371,7 @@ function popupSearchDemo(keyword){ // open a new popup window
                                             <td bgcolor="#EEEEFF"></td>
                                             <td bgcolor="#EEEEFF">        
                                             <input type="text" size="30" readonly style="background:#EEEEFF;border:none" value="<%=(String)demoMap.get(demoID)%>"/>
+<a href="javascript:popupViewAttach(700,960,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoID%>&displaymode=edit&dboperation=search_detail')">M</a>
                                             <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />                                            
                                             </td>
                                         </tr>
