@@ -619,7 +619,7 @@ CREATE TABLE eChart (
   encounter text,
   PRIMARY KEY  (eChartId),
   KEY demographicno (demographicNo)
-) TYPE=MyISAM;
+) TYPE=MyISAM max_rows=200000000;
 
 --
 -- Table structure for table `eform`
