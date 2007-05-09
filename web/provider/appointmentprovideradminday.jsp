@@ -352,7 +352,6 @@ function refreshAllTabAlerts() {
     refreshTabAlerts("oscar_new_lab");
     refreshTabAlerts("oscar_new_msg");
     refreshTabAlerts("oscar_new_tickler");
-    setfocus();
 }
 
 function callRefreshTabAlerts(id) {
