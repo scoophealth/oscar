@@ -25,5 +25,6 @@
 		<property name="description" />
 		<property name="role" />
 		<property name="update_date" type="java.util.Date" />
+		<property name="priority"/>
 	</class>
 </hibernate-mapping>

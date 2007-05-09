@@ -42,13 +42,15 @@ Issue Filter Create Report View:
 	</tr>
 	<%int index=0; String bgcolor="white"; %>
 	<c:forEach var="issue" items="${Issues}">
-		<%
+		<%	
+			
 			if(index++%2!=0) {
 				bgcolor="white";
 			} else {
 				bgcolor="#EEEEFF";
-			}
+			}			
 		%>
+		
 		<tr bgcolor="<%=bgcolor %>" align="center">
 			<%
 				String checked="";
@@ -66,10 +68,12 @@ Issue Filter Create Report View:
 						}
 					}
 				}
-
+				String priority = "";				
+				if("allergy".equals(issue.getIssue().getPriority()))
+					priority="yellow";
 			%>
 			<td><input type="checkbox" name="check_issue" value="<c:out value="${issue.issue_id}"/>" <%=checked %> onclick="document.caseManagementViewForm.submit();"/></td>
-			<td><c:out value="${issue.issue.description }"/></td>
+			<td bgcolor=<%=priority%>><c:out value="${issue.issue.description }"/></td>
 			<td><c:if test="${issue.acute=='true'}">acute</c:if>
 			<c:if test="${issue.acute=='false'}">chronic</c:if>
 			</td>

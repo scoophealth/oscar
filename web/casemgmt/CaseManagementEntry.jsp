@@ -23,6 +23,7 @@
  -->
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
+
 <html>
 <head>
 <title>Case Management</title>
@@ -309,10 +310,19 @@ if (pId==null) pId="";
 				<td>
 					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=disabled%>"></nested:checkbox>
 				</td>
-
 				<td>
-					<nested:write name="issueCheckList"	property="issue.issue.description" />
-				</td>
+				
+				</td>				
+					<logic:equal name="issueCheckList" property="issue.issue.priority" value="allergy">
+						<td bgcolor="yellow">
+							<nested:write name="issueCheckList"	property="issue.issue.description" />
+						</td>
+					</logic:equal>
+					<logic:notEqual name="issueCheckList" property="issue.issue.priority" value="allergy">
+						<td>
+							<nested:write name="issueCheckList"	property="issue.issue.description" />
+						</td>
+					</logic:notEqual>
 				<td>
 					<nested:select indexed="true" name="issueCheckList"	property="issue.acute" onchange="<%=submitString%>" disabled="<%=disabled%>">
 						<html:option value="true">acute</html:option>

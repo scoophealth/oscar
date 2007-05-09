@@ -34,6 +34,7 @@ public class Issue extends BaseObject {
 	private String description;
 	private String role;
 	private Date update_date;
+	private String priority;
 
 	public Issue() {
 		update_date = new Date();
@@ -79,4 +80,13 @@ public class Issue extends BaseObject {
 		this.update_date = update_date;
 	}
 
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	
 }

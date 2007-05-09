@@ -76,7 +76,12 @@ function backToNote(from)
 <tr bgcolor="<%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>" align="center">
 <td><nested:checkbox indexed="true" name="newIssueCheckList" property="checked"></nested:checkbox>
 <td><nested:write name="newIssueCheckList" property="issue.code"/></td>
-<td><nested:write name="newIssueCheckList" property="issue.description"/></td>
+<logic:equal name="newIssueCheckList" property="issue.priority" value="allergy">
+	<td bgcolor="yellow"><nested:write name="newIssueCheckList" property="issue.description"/></td>
+</logic:equal>
+<logic:notEqual name="newIssueCheckList" property="issue.priority" value="allergy">
+	<td><nested:write name="newIssueCheckList" property="issue.description"/></td>
+</logic:notEqual>
 <td><nested:write name="newIssueCheckList" property="issue.role"/></td>
 </tr>
 </nested:iterate>
