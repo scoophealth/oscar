@@ -110,7 +110,7 @@
 	<databaseap>
 		<ap-name>clinic_label</ap-name>
 		<ap-sql>SELECT * FROM clinic</ap-sql>
-		<ap-output>${clinic_name}\n${clinic_address}\n${clinic_city},${clinic_province},${clinic_postal}\nHome:${clinic_phone}\nFax:${clinic_fax}</ap-output>
+		<ap-output>${clinic_name}\n${clinic_address}\n${clinic_city},${clinic_province},${clinic_postal}\nTel:${clinic_phone}\nFax:${clinic_fax}</ap-output>
 	</databaseap>
 	<databaseap>
 		<ap-name>clinic_addressLine</ap-name>
