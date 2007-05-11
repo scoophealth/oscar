@@ -88,7 +88,6 @@ public class TicklerTag extends TagSupport {
     public int doEndTag()        throws JspException    {
        try{
           JspWriter out = super.pageContext.getOut();
-        //ronnie 2007-4-26
           if (numNewLabs>0)
               out.print("<sup>"+numNewLabs+"</sup></span>");
           else
