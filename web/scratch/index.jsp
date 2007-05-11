@@ -135,6 +135,8 @@
                 if($F('windowId') == windowId ){
                     $('curr_id').value =latestId;
                     log('window ids match');
+		    
+		    if (latestText==null) latestText="";
                     if ( $F('thetext') == decode(latestText) ){
                         log('should set clean');
                         setClean();
@@ -166,7 +168,14 @@
         return unescape(str.replace(/\+/g, " "));
     }
 
-
+    <%-- Since IE does not capture [BS] & [Del] in onKeypress event, this function takes care of it.--%>
+    function catchDel(e) {
+	if (window.event) { //Internet Explorer
+	    if (e.keyCode==8 || e.keyCode==46) { //[Backspace] or [Delete] pressed
+		setDirty();
+	    }
+	}
+    }
     </script>
    
 </head>
@@ -201,7 +210,7 @@
                    <input type="hidden" name="windowId" id="windowId" value="<%=uuid%>"/>
                    <input type="hidden" name="dirty" value="0" id="dirty"/>
                    
-                   <textarea name="scratchpad" id="thetext" style="width:100%" rows="50" cols="50" onkeypress="javascript: setDirty()"><%=text%></textarea>
+                   <textarea name="scratchpad" id="thetext" style="width:100%" rows="50" cols="50" onkeypress="javascript: setDirty()" onkeydown="javascript: catchDel(event)"><%=text%></textarea>
                    
                    <textarea style="display: none;"  id="log" rows="100" cols="100"></textarea>
                 </form>
