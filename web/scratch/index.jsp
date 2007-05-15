@@ -162,6 +162,8 @@
         dirty = 0;
         $('savebutton').disabled = 'true';
         document.title = 'clean';
+	<%-- refresh parent window scratch_pad link --%>
+	if (opener.callRefreshTabAlerts) opener.callRefreshTabAlerts("oscar_scratch");
     }
 
     function decode(str) {
