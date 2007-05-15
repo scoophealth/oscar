@@ -35,6 +35,16 @@
   <bodycontent>jsp</bodycontent>  
 </tag>
 
+<tag>
+  <name>filledScratch</name>
+  <tagclass>oscar.scratch.tld.ScratchTag</tagclass>
+  <bodycontent>jsp</bodycontent>
+  <attribute>
+    <name>providerNo</name>
+    <required>true</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+</tag>
 
 <tag>
   <name>newMessage</name>
