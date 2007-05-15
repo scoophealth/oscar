@@ -24,10 +24,9 @@
 -->
 <web-app id="WebApp_ID">
 	<display-name>oscar_mcmaster</display-name>
-    
-    <context-param>
+   <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/applicationContext*.xml</param-value>
+        <param-value>/WEB-INF/applicationContext*.xml</param-value>           
     </context-param>
     
 	<filter>
@@ -104,10 +103,13 @@
 	<listener>
 		<listener-class>oscar.login.Startup</listener-class>
 	</listener>
-	<listener>
+	<!-- <listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-    
+	</listener> -->
+        
+        <listener>
+            <listener-class>org.oscarehr.common.web.OscarSpringContextLoaderListener</listener-class>
+        </listener>
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
