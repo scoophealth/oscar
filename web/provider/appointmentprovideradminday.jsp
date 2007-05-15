@@ -352,6 +352,7 @@ function refreshAllTabAlerts() {
     refreshTabAlerts("oscar_new_lab");
     refreshTabAlerts("oscar_new_msg");
     refreshTabAlerts("oscar_new_tickler");
+    refreshTabAlerts("oscar_scratch");
 }
 
 function callRefreshTabAlerts(id) {
@@ -588,7 +589,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 
    <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
    &nbsp;&nbsp;
-   <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')">S</a>
+	  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>
   </td></form>
 
 </tr>
