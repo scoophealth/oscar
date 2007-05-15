@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+        <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/hibernate.properties</value>
+				<value>/WEB-INF/caisi.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Hibernate -->
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${hibernate.connection.driver_class}" />
+		<property name="url" value="${hibernate.connection.url}" />
+		<property name="username" value="${hibernate.connection.username}" />
+		<property name="password" value="${hibernate.connection.password}" />
+	</bean>
+	
+	<bean id="auditInterceptor" class="org.oscarehr.common.dao.hibernate.AuditInterceptor" />
+
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="entityInterceptor">
+			<ref bean="auditInterceptor"/>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<!-- only *.hbm.xml will be loaded -->
+			<list>
+				<value>classpath:/org/caisi/model</value>
+				<value>classpath:/org/oscarehr/PMmodule/model</value>
+				<value>classpath:/org/oscarehr/survey/model</value>
+				<value>classpath:/org/oscarehr/casemgmt/model</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
+			</props>
+		</property>
+		<property name="eventListeners">
+			<map>
+				<entry key="merge">
+					<bean class="org.springframework.orm.hibernate3.support.IdTransferringMergeEventListener" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingDirectoryLocations">
+			<!-- only *.hbm.xml will be loaded -->
+			<list>
+				<value>classpath:/org/caisi/model</value>
+				<value>classpath:/org/oscarehr/PMmodule/model</value>
+				<value>classpath:/org/oscarehr/survey/model</value>
+				<value>classpath:/org/oscarehr/casemgmt/model</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
+			</props>
+		</property>
+	</bean>
+        
+    <!-- DAO -->
+    <!-- Generic Intake -->
+    <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+   </bean>
+    <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.hibernate.ClientReferralDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+    <bean id="agencyDao" class="org.oscarehr.PMmodule.dao.hibernate.AgencyDaoHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+    <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.hibernate.AdmissionDaoHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+    <bean id="programDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramDaoHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+    <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDemographicDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>  
+    <bean id="providerDao" class="org.oscarehr.PMmodule.dao.hibernate.ProviderDaoHibernate">
+                <property name="sessionFactory">
+                        <ref bean="sessionFactory" />
+                </property>
+    </bean>
+    <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+    <bean id="clientDao" class="org.oscarehr.PMmodule.dao.hibernate.ClientDaoHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+    <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+    </bean>
+     <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementIssueDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        
+    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+        <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementNoteDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementCPPDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.hibernate.AllergyDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.hibernate.PrescriptionDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.IssueDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.hibernate.EncounterFormDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.hibernate.EchartDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.hibernate.MessagetblDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.hibernate.ProviderSignitureDaoHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.hibernate.RoleProgramAccessDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="ClientImageDAO" class="org.oscarehr.casemgmt.dao.hibernate.ClientImageDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="roleDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoleDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementTmpSaveDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>   
+         <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.hibernate.TicklerDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.hibernate.SurveyDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramProviderDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>	
+        <bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramFunctionalUserDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>	
+	<bean id="programAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramAccessDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>	
+	<bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.DefaultRoleAccessDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>	
+        <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="providerDefaultProgramDao" class="org.caisi.dao.hibernate.HibernateProviderDefaultProgramDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="bedProgramDao" class="org.caisi.dao.hibernate.HibernateBedProgramDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>	
+        <bean id="demographicDAOT" class="org.caisi.dao.hibernate.DemographicDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+    
+    <!-- managers  -->        
+        
+     <bean id="programQueueManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.ProgramQueueManagerImpl">
+				<property name="programQueueDao" ref="programQueueDao" />
+				<property name="clientReferralDAO" ref="clientReferralDAO" />
+			</bean>
+		</property>
+     </bean>     
+    <bean id="admissionManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.AdmissionManagerImpl">
+				<property name="admissionDao" ref="admissionDao" />
+				<property name="programDao" ref="programDao" />
+				<property name="programQueueDao" ref="programQueueDao" />
+				<property name="clientReferralDAO" ref="clientReferralDAO" />
+				<property name="bedDemographicManager" ref="bedDemographicManager" />
+			</bean>
+		</property>
+     </bean>
+     <bean id="bedDemographicManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl">
+				<property name="bedDemographicDAO" ref="bedDemographicDAO" />
+				<property name="providerDAO" ref="providerDao" />
+				<property name="bedDAO" ref="bedDAO" />
+				<property name="demographicDAO" ref="clientDao" />
+				<property name="roomDAO" ref="roomDAO" />
+				<property name="programDAO" ref="programDao" />
+			</bean>
+		</property>
+      </bean>
+      <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="CaseManagementManagerTarget" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.impl.CaseManagementManagerImpl">
+		<property name="caseManagementNoteDAO">
+			<ref local="CaseManagementNoteDAO" />
+		</property>
+		<property name="caseManagementIssueDAO">
+			<ref local="CaseManagementIssueDAO" />
+		</property>
+		<property name="caseManagementCPPDAO">
+			<ref local="CaseManagementCPPDAO" />
+		</property>
+		<property name="allergyDAO">
+			<ref local="AllergyDAO" />
+		</property>
+		<property name="prescriptionDAO">
+			<ref local="PrescriptionDAO" />
+		</property>
+		<property name="issueDAO">
+			<ref local="IssueDAO" />
+		</property>
+		<property name="encounterFormDAO">
+			<ref local="EncounterFormDAO" />
+		</property>
+		<property name="messagetblDAO">
+			<ref local="MessagetblDAO" />
+		</property>
+		<property name="echartDAO">
+			<ref local="EchartDAO" />
+		</property>
+		<property name="providerSignitureDao">
+			<ref local="ProviderSignitureDao" />
+		</property>
+		<property name="providerDAO">
+			<ref local="providerDao" />
+		</property>
+		<property name="demographicDAO">
+			<ref local="clientDao" />
+		</property>
+		<property name="roleProgramAccessDAO">
+			<ref local="RoleProgramAccessDAO" />
+		</property>
+		<property name="clientImageDAO">
+			<ref local="ClientImageDAO" />
+		</property>
+		<property name="roleManager">
+			<ref local="roleManager" />
+		</property>
+		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />
+		<property name="admissionManager">
+                    <ref local="admissionManager" />
+                </property> 
+		<property name="enabled" value="${casemgmt.note.password.enabled}" />		
+	</bean>
+        <bean id="roleManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
+				<property name="roleDAO" ref="roleDAO" />
+			</bean>
+		</property>
+	</bean>
+        <bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="ticklerManagerTarget" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.impl.TicklerManagerImpl">
+		<property name="ticklerDAO">
+			<ref local="ticklerDAO" />
+		</property>
+	</bean>
+	<bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="ClientImageManagerTarget" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.impl.ClientImageManagerImpl">
+		<property name="clientImageDAO">
+			<ref bean="ClientImageDAO" />
+		</property>
+	</bean>
+        <bean id="oscarSurveyManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl">
+				<property name="surveyDAO" ref="oscarSurveyDAO" />
+			</bean>
+		</property>
+	</bean>
+        <bean id="programManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.ProgramManagerImpl">
+				<property name="programDao">
+                                    <ref bean="programDao" />
+                                </property> 
+				<property name="programProviderDAO" ref="programProviderDAO" />
+				<property name="programFunctionalUserDAO" ref="programFunctionalUserDAO" />
+				<property name="programTeamDAO" ref="programTeamDAO" />
+				<property name="programAccessDAO" ref="programAccessDAO" />
+				<property name="admissionDAO" ref="admissionDao" />
+				<property name="integratorManager" ref="integratorManager" />
+				<property name="defaultRoleAccessDAO" ref="defaultRoleAccessDAO" />
+				<property name="programClientStatusDAO" ref="programClientStatusDAO" />	
+				<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />				
+			</bean>
+		</property>
+	</bean>
+        <bean id="clientManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.ClientManagerImpl">
+				<property name="clientDao" >
+                                    <ref bean="clientDao" />
+                                </property>
+				<property name="clientReferralDAO">
+                                    <ref bean="clientReferralDAO" />
+                                </property> 
+				<property name="programQueueManager" >
+                                    <ref bean="programQueueManager" />
+                                </property>
+				<property name="integratorManager">
+                                    <ref bean="integratorManager" />                                
+                                </property> 
+				<property name="admissionManager">
+                                    <ref bean="admissionManager" />
+                                </property> 
+			</bean>
+		</property>
+        </bean>
+        <bean id="integratorManager" class="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl">
+		<property name="agencyDao" >
+                    <ref bean="agencyDao" />
+                </property>
+		<property name="clientManager">
+                    <ref bean="clientManager" />
+                </property> 
+        </bean>
+        <bean id="infirmBedProgramManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl" autowire="byType" />
+		</property>
+	</bean>
+</beans>
