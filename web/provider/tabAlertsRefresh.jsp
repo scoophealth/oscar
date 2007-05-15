@@ -29,14 +29,17 @@
 -->
 <%
     String curUser_no = (String) session.getAttribute("user");
-    String msg_tickler = request.getParameter("id");
+    String tab = request.getParameter("id");
     
-    if (msg_tickler.equals("oscar_new_lab")) { %>
+    if (tab.equals("oscar_new_lab")) { %>
 	<oscar:newLab providerNo="<%=curUser_no%>"><bean:message key="global.lab"/></oscar:newLab>
 <%  }
-    if (msg_tickler.equals("oscar_new_msg")) { %>
+    if (tab.equals("oscar_new_msg")) { %>
         <oscar:newMessage providerNo="<%=curUser_no%>">Msg</oscar:newMessage>
 <%  }
-    if (msg_tickler.equals("oscar_new_tickler")) { %>
+    if (tab.equals("oscar_new_tickler")) { %>
         <oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler>
+<%  }
+    if (tab.equals("oscar_scratch")) { %>
+	<oscar:filledScratch providerNo="<%=curUser_no%>">S</oscar:filledScratch>
 <%  } %>
