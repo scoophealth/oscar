@@ -51,7 +51,7 @@ public class ScratchTag extends TagSupport {
             String sql = new String("SELECT scratch_text FROM scratch_pad WHERE provider_no = '" + providerNo + "' order by id desc limit 1");
             ResultSet rs = db.GetSQL(sql);
 	    while (rs.next()) {
-		if (rs.getString(1).trim().isEmpty()) scratchFilled = false;
+		if (rs.getString(1).trim().length()==0) scratchFilled = false;
 		else scratchFilled = true;
 	    }
 
