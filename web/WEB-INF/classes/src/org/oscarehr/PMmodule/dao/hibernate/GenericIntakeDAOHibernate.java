@@ -86,10 +86,6 @@ public class GenericIntakeDAOHibernate extends HibernateDaoSupport implements Ge
 	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#saveIntake(org.oscarehr.PMmodule.model.Intake)
 	 */
 	public Integer saveIntake(Intake intake) {
-		if (intake.getId() != null) {
-			throw new IllegalArgumentException("Cannot update an existing intake (id: " + intake.getId() + ")");
-		}
-
 		Integer intakeId = (Integer) getHibernateTemplate().save(intake);
 		getHibernateTemplate().flush();
 

@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 
@@ -128,7 +129,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 
     	StringBuilder parameters = new StringBuilder(PARAM_START);
     	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);
-    	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK);
+    	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
     	
     	return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
@@ -136,7 +137,7 @@ public class GenericIntakeSearchAction extends BaseAction {
 	protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId) {
 		StringBuilder parameters = new StringBuilder(PARAM_START);
 		parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.UPDATE).append(PARAM_AND);
-		parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(GenericIntakeEditAction.QUICK).append(PARAM_AND);
+		parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(Intake.QUICK).append(PARAM_AND);
 		parameters.append(GenericIntakeEditAction.CLIENT_ID).append(PARAM_EQUALS).append(clientId);
 		
 		return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);

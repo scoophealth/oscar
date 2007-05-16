@@ -1,5 +1,6 @@
 package org.oscarehr.common.task;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,18 +23,20 @@ public class PopulationReportTask extends TimerTask {
 	
 	private static String getUrl() {
 		if (URL == null) {
-			URL = new StringBuilder("http://").append(OscarProperties.getInstance().getProperty("host")).append("/oscar/PopulationReport.do").toString();
-			LOG.debug("url: " + URL);
+			URL = new StringBuilder("https://").append(OscarProperties.getInstance().getProperty("host")).append("/oscar/PopulationReport.do").toString();
 		}
+		
+		LOG.info("request url: " + URL);
 		
 		return URL;
 	}
 	
 	private static String getFile() {
 		if (FILE == null) {
-			FILE = new StringBuilder().append(System.getProperty("user.home")).append("/reports/report/populationReport.html").toString();
-			LOG.debug("file: " + FILE);
+			FILE = new StringBuilder().append(System.getProperty("user.home")).append(File.separator).append("reports").append(File.separator).append("report").append(File.separator).append("populationReport.html").toString();
 		}
+		
+		LOG.info("write file: " + FILE);
 		
 		return FILE;
 	}
@@ -65,7 +68,6 @@ public class PopulationReportTask extends TimerTask {
 
 		while ((read = is.read(buffer)) > 0) {
 			os.write(buffer, 0, read);
-			LOG.debug("wrote " + read + " bytes to " + getFile());
 		}
 
 		os.flush();

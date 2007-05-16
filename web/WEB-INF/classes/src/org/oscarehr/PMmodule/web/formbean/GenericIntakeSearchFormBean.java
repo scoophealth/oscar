@@ -149,7 +149,7 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 		return isRemoteMatch() ? "Integrator" : "Agency";
 	}
 
-	public void setLocalMatches(List matches) {
+	public void setLocalMatches(List<?> matches) {
 		if (matches != null && matches.size() > 0) {
 			this.localMatch = true;
 

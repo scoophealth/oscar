@@ -197,7 +197,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <c:forEach varStatus="status" var="condition" items="${majorMedicalConditions}">
             <c:choose><c:when test="${status.index % 2 == 0}"><tr></c:when><c:otherwise><tr class="odd"></c:otherwise></c:choose>
                 <th scope="row"><c:out value="${condition.key}"></c:out></th>
-                <td><c:out value="${condition.value.count}"></c:out></td>
+                <td><c:choose><c:when test="${condition.value.count > 0 && condition.value.count < 5}">1 - 5</c:when><c:otherwise><c:out value="${condition.value.count}"></c:out></c:otherwise></c:choose></td>
                 <td><c:out value="${condition.value.percent}"></c:out></td>
             </tr>
             </c:forEach>
@@ -218,7 +218,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <c:forEach varStatus="status" var="condition" items="${majorMentalIllnesses}">
             <c:choose><c:when test="${status.index % 2 == 0}"><tr></c:when><c:otherwise><tr class="odd"></c:otherwise></c:choose>
                 <th scope="row"><c:out value="${condition.key}"></c:out></th>
-                <td><c:out value="${condition.value.count}"></c:out></td>
+                <td><c:choose><c:when test="${condition.value.count > 0 && condition.value.count < 5}">1 - 5</c:when><c:otherwise><c:out value="${condition.value.count}"></c:out></c:otherwise></c:choose></td>
                 <td><c:out value="${condition.value.percent}"></c:out></td>
             </tr>
             </c:forEach>
@@ -239,7 +239,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <c:forEach varStatus="status" var="condition" items="${seriousMedicalConditions}">
             <c:choose><c:when test="${status.index % 2 == 0}"><tr></c:when><c:otherwise><tr class="odd"></c:otherwise></c:choose>
                 <th scope="row"><c:out value="${condition.key}"></c:out></th>
-                <td><c:out value="${condition.value.count}"></c:out></td>
+                <td><c:choose><c:when test="${condition.value.count > 0 && condition.value.count < 5}">1 - 5</c:when><c:otherwise><c:out value="${condition.value.count}"></c:out></c:otherwise></c:choose></td>
                 <td><c:out value="${condition.value.percent}"></c:out></td>
             </tr>
             </c:forEach>
@@ -252,7 +252,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <caption>Notes on the Data</caption>
         <tbody>
         	<tr>
-        		<td class="notes">1) <b>List of all Shelters in the CAISI System</b>: Street Health (outreach program), Salvation Army Maxwell Meighen (shelter), Salvation Army Gateway (shelter), John Howard Society (service agency), Sherbourne Health Center (health care agency).</td>
+        		<td class="notes">1) <b>List of all Shelters in the CAISI System</b>: John Howard Society (service agency), Salvation Army Gateway (shelter), Salvation Army Maxwell Meighen (shelter), Seaton House (shelter), Sherbourne Health Center (health care agency), Street Health (outreach program).</td>
         	</tr>
         	<tr>
         		<td class="notes">2) The indicator of &quot;Intensity of Shelter Use&quot; uses values produced by New York City Health and Department of Homeless Services (2005).  As CAISI has not been operational for 4 years we are using the same values for the length of stay but only within the life of CAISI (approximately 15 months) rather than 4 years.  This means that the level of intensity reported in this report are higher than comparable New York statistics.</td>

@@ -55,7 +55,6 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private String[] serviceProgramIds;
 
 	private Intake intake;
-	private Integer addIntakeNodeId;
 
 	public GenericIntakeEditFormBean() {
 		genders = GenericIntakeConstants.GENDERS;
@@ -176,14 +175,6 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	public void setIntake(Intake intake) {
 		this.intake = intake;
-	}
-
-	public Integer getAddIntakeNodeId() {
-		return addIntakeNodeId;
-	}
-
-	public void setAddIntakeNodeId(Integer addIntakeNodeId) {
-		this.addIntakeNodeId = addIntakeNodeId;
 	}
 
 	public String getTitle() {

@@ -35,6 +35,10 @@ public class Intake extends BaseIntake {
 	
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
+	public static final String QUICK = "quick";
+	public static final String INDEPTH = "indepth";
+	public static final String PROGRAM = "program";
+	
 	public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId) {
 		Intake intake = new Intake();
 		intake.setNode(node);
@@ -163,6 +167,18 @@ public class Intake extends BaseIntake {
 	
 	public String getCreatedOnStr() {
 		return DATE_FORMAT.format(getCreatedOn().getTime());
+	}
+	
+	public String getType() {
+		String type = PROGRAM;
+		
+		if (getNode().getId().equals(1)) {
+			type = QUICK;
+		} else if (getNode().getId().equals(2)) {
+			type = INDEPTH;
+		}
+		
+		return type;
 	}
 
 	@Override

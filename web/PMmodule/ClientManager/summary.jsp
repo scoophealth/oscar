@@ -30,6 +30,11 @@ function updateQuickIntake(clientId) {
 	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=quick&clientId=" + clientId;
 }
 
+function printQuickIntake(clientId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&clientId=" + clientId;
+	window.open(url, 'quickIntakePrint', 'width=1024,height=768,scrollbars=1');
+}
+
 function openConsent(){
 	var url = '<html:rewrite action="/PMmodule/Consent.do"/>';
 		url += '?method=form&id='+ '<c:out value="${client.demographicNo}"/>';
@@ -57,7 +62,7 @@ function showEMPILinks() {
 		}
 		
 		XMLHttpRequestObject.send(null);
-	}		
+	}
 }
 </script>
 
@@ -169,12 +174,12 @@ function showEMPILinks() {
 		<c:if test="${mostRecentQuickIntake != null}">
 			<td><c:out value="${mostRecentQuickIntake.createdOnStr}" /></td>
 			<td><c:out value="${mostRecentQuickIntake.staffName}" /></td>
-			<td><input type="button" value="Update" onclick="javascript:updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td><input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />&nbsp;<input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</c:if>
 		<c:if test="${mostRecentQuickIntake == null}">
 			<td><span style="color:red">None found</span></td>
 			<td></td>
-			<td><input type="button" value="Create" onclick="javascript:updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td><input type="button" value="Create" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</c:if>
 	</tr>
 </table>
@@ -209,14 +214,14 @@ function showEMPILinks() {
 					<td><span style="color:red"></span></td>
 					<td></td>
 					<td></td>
-					<td><input type="button" value="New Consent" onclick="javascript:openConsent()" /></td>
+					<td><input type="button" value="New Consent" onclick="openConsent()" /></td>
 				</c:when>
 				<c:otherwise>
 					<td><fmt:formatDate value="${consent.dateSigned}" pattern="yyyy-MM-dd kk:mm" /></td>
 					<td><c:out value="${consent.providerName}" /></td>
 					<td><c:out value="${consent.status}" /></td>
 					<td><c:out value="${consent.exclusionString}" /></td>
-					<td><input type="button" value="Update" onclick="javascript:openConsent()" /></td>
+					<td><input type="button" value="Update" onclick="openConsent()" /></td>
 				</c:otherwise>
 			</c:choose>
 		</tr>

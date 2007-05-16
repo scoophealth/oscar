@@ -191,7 +191,7 @@ public class ProgramManagerImpl implements ProgramManager {
 
 	// TODO: Implement this method for real
 	public Agency getAgencyByProgram(String programId) {
-		return new Agency(new Long(0), 1, "HS", "", true, false);
+		return new Agency(new Long(0), 1, "HS", "HS", "", true, false);
 	}
 
 	public List getProgramProviders(String programId) {

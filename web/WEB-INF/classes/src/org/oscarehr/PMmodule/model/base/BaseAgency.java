@@ -28,6 +28,7 @@ public abstract class BaseAgency  implements Serializable {
 	public static String PROP_INTEGRATOR_PASSWORD = "integratorPassword";
 	public static String PROP_NAME = "name";
 	public static String PROP_HIC = "hic";
+	public static String PROP_INTAKE_INDEPTH_STATE = "intakeIndepthState";
 	public static String PROP_INTAKE_INDEPTH = "intakeIndepth";
 	public static String PROP_INTAKE_QUICK = "intakeQuick";
 	public static String PROP_ID = "id";
@@ -53,6 +54,7 @@ public abstract class BaseAgency  implements Serializable {
 		java.lang.Long id,
 		java.lang.Integer intakeQuick,
 		java.lang.String intakeQuickState,
+		java.lang.String intakeIndepthState,
 		java.lang.String name,
 		boolean local,
 		boolean integratorEnabled) {
@@ -60,6 +62,7 @@ public abstract class BaseAgency  implements Serializable {
 		this.setId(id);
 		this.setIntakeQuick(intakeQuick);
 		this.setIntakeQuickState(intakeQuickState);
+		this.setIntakeIndepthState(intakeIndepthState);
 		this.setName(name);
 		this.setLocal(local);
 		this.setIntegratorEnabled(integratorEnabled);
@@ -79,6 +82,7 @@ public abstract class BaseAgency  implements Serializable {
 	private java.lang.Integer intakeQuick;
 	private java.lang.String intakeQuickState;
 	private java.lang.Integer intakeIndepth;
+	private java.lang.String intakeIndepthState;
 	private java.lang.String name;
 	private java.lang.String description;
 	private java.lang.String contactName;
@@ -163,6 +167,23 @@ public abstract class BaseAgency  implements Serializable {
 	 */
 	public void setIntakeIndepth (java.lang.Integer intakeIndepth) {
 		this.intakeIndepth = intakeIndepth;
+	}
+
+
+
+	/**
+	 * Return the value associated with the column: intake_indepth_state
+	 */
+	public java.lang.String getIntakeIndepthState () {
+		return intakeIndepthState;
+	}
+
+	/**
+	 * Set the value related to the column: intake_indepth_state
+	 * @param intakeIndepthState the intake_indepth_state value
+	 */
+	public void setIntakeIndepthState (java.lang.String intakeIndepthState) {
+		this.intakeIndepthState = intakeIndepthState;
 	}
 
 

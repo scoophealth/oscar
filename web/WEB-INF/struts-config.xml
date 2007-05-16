@@ -822,16 +822,16 @@
 			<forward name="error" path="/provider/providerFaxErr.jsp" />
 			<forward name="eject" path="/index.jsp" />
 		</action>
-                <action input="/provider/providerColourPicker.jsp" name="setProviderColour" path="/setProviderColour" scope="request" type="oscar.oscarProvider.pageUtil.ProEditColourAction">
-                    <forward name="success" path="/provider/providerColourPicker.jsp" />
-                    <forward name="error" path="/provider/providerColourErr.jsp" />
-                    <forward name="eject" path="/index.jsp" />
+		<action input="/provider/providerColourPicker.jsp" name="setProviderColour" path="/setProviderColour" scope="request" type="oscar.oscarProvider.pageUtil.ProEditColourAction">
+			<forward name="success" path="/provider/providerColourPicker.jsp" />
+			<forward name="error" path="/provider/providerColourErr.jsp" />
+			<forward name="eject" path="/index.jsp" />
 		</action>
-                <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
-                    <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
-                    <forward name="failure" path="/provider/providerIndivoIdSetter.jsp" />
-                    <forward name="error" path="/provider/providerColourErr.jsp" />
-                    <forward name="eject" path="/index.jsp" />
+		<action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
+			<forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
+			<forward name="failure" path="/provider/providerIndivoIdSetter.jsp" />
+            <forward name="error" path="/provider/providerColourErr.jsp" />
+            <forward name="eject" path="/index.jsp" />
 		</action>
 		<action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
 			<forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
@@ -1274,7 +1274,7 @@
 			parameter="method"
 			name="genericIntakeSearchForm"
 			scope="request">
-			<forward name="searchForm" path="page.genericIntake.searchForm" />
+			<forward name="searchForm" path="page.genericIntake.search" />
 			<forward name="intakeEdit" path="/PMmodule/GenericIntake/Edit.do" redirect="true" />
 		</action>
 		<action
@@ -1283,9 +1283,8 @@
 			parameter="method"
 			name="genericIntakeEditForm"
 			scope="session">
-			<forward name="edit" path="/PMmodule/GenericIntake/Edit.jsp" />
-			<forward name="clientEdit" path="/PMmodule/ClientManager.do?method=edit" redirect="true" />
-			<forward name="providerView" path="/PMmodule/ProviderInfo.do?method=view" redirect="true" />
+			<forward name="edit" path="/PMmodule/GenericIntake/Edit.jsp" redirect="true" />
+            <forward name="print" path="/PMmodule/GenericIntake/Print.jsp" redirect="true" />
 		</action>
 		<!-- Generic Intake -->
 

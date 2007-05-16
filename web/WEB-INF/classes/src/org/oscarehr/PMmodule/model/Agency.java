@@ -78,18 +78,34 @@ public class Agency extends BaseAgency {
 	/**
 	 * Constructor for required fields
 	 */
-	public Agency(java.lang.Long id, java.lang.Integer intakeQuick, java.lang.String intakeQuickState, java.lang.String name, boolean local, boolean integratorEnabled) {
-		super(id, intakeQuick, intakeQuickState, name, local, integratorEnabled);
+	public Agency(java.lang.Long id, java.lang.Integer intakeQuick, java.lang.String intakeQuickState, java.lang.String intakeIndepthState, java.lang.String name, boolean local, boolean integratorEnabled) {
+		super(id, intakeQuick, intakeQuickState, intakeIndepthState, name, local, integratorEnabled);
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
 
-	public boolean areHousingProgramsVisible() {
-		return getIntakeQuickState().contains("H");
+	public boolean areHousingProgramsVisible(String intakeType) {
+		boolean visible = false;
+
+		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeQuickState().contains("H");
+		} else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeIndepthState().contains("H");
+		}
+
+		return visible;
 	}
 
-	public boolean areServiceProgramsVisible() {
-		return getIntakeQuickState().contains("S");
+	public boolean areServiceProgramsVisible(String intakeType) {
+		boolean visible = false;
+
+		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeQuickState().contains("S");
+		} else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeIndepthState().contains("S");
+		}
+
+		return visible;
 	}
 
 }

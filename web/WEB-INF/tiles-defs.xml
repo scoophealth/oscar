@@ -96,14 +96,14 @@
 	
 	<!-- Generic Intake -->
 	<definition
-		name="page.genericIntake.searchForm"
+		name="page.genericIntake.search"
 		path="/PMmodule/layout.jsp">
 		<put
 			name="navigation"
 			value="/PMmodule/navigation.jsp" />
 		<put
 			name="body"
-			value="/PMmodule/GenericIntake/SearchForm.jsp" />
+			value="/PMmodule/GenericIntake/Search.jsp" />
 	</definition>
 	<!-- Generic Intake -->
 	

@@ -28,6 +28,21 @@ function updateProgramIntake(clientId) {
 	return false;
 }
 
+function printQuickIntake(clientId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=quick&clientId=" + clientId;
+	window.open(url, 'quickIntakePrint', 'width=1024,height=768,scrollbars=1');
+}
+
+function printIndepthIntake(clientId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=indepth&clientId=" + clientId;
+	window.open(url, 'indepthIntakePrint', 'width=1024,height=768,scrollbars=1');
+}
+
+function printProgramIntake(clientId, programId) {
+	url = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=print&type=program&clientId=" + clientId + "&programId=" + programId;
+	window.open(url, 'programIntakePrint', 'width=1024,height=768,scrollbars=1');
+}
+
 function openSurvey() {
 	var selectBox = getElement('form.formId');
 	var formId = selectBox.options[selectBox.selectedIndex].value;
@@ -58,7 +73,7 @@ function openSurvey() {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><input type="button" value="View" onclick="alert('Not yet implemented');" /></td>
+			<td><input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
@@ -89,7 +104,7 @@ function openSurvey() {
 		<tr>
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
-			<td><input type="button" value="View" onclick="alert('Not yet implemented');" /></td>
+			<td><input type="button" value="Print Preview" onclick="printIndepthIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</tr>
 	</c:forEach>
 	<tr>
@@ -121,7 +136,7 @@ function openSurvey() {
 			<td width="20%"><c:out value="${intake.createdOnStr}" /></td>
 			<td><c:out value="${intake.staffName}" /></td>
 			<td>
-				<input type="button" value="View" onclick="alert('Not yet implemented');" />
+				<input type="button" value="Print Preview" onclick="printProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
 				<input type="button" value="Update" onclick="updateProgramIntake('<c:out value="${client.demographicNo}" />', '<c:out value="${intake.programId}" />')" />
 			</td>
 		</tr>

@@ -51,6 +51,13 @@
             length="10"
         />
         <property
+            name="intakeIndepthState"
+            column="intake_indepth_state"
+            type="string"
+            not-null="true"
+            length="2"
+        />
+        <property
             name="name"
             column="name"
             type="string"
