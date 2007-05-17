@@ -83,14 +83,10 @@ public class indivoCheck extends TagSupport {
             e.printStackTrace();
         }
         
-        if (conditionMet) {
-            System.out.println("Condition Met");            
+        if (conditionMet)         
             return (EVAL_BODY_INCLUDE);
-        }    
-        else {
-            System.out.println("Condition NOT Met");            
-            return (SKIP_BODY);
-        }
+        else
+            return (SKIP_BODY);        
 
     }
 
