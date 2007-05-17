@@ -97,15 +97,16 @@ public class HSFODAO {
             st.setString(26,patientData.getSel_TimeAgoDx() );
             st.setString(27,patientData.getEmrHCPId() );
             st.setDate(28,new java.sql.Date(patientData.getConsentDate().getTime()) );
-
             st.executeUpdate();
             st.clearParameters();
             st.close();        
             db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
+            se.printStackTrace();
         }catch (Exception ne) {
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
+            ne.printStackTrace();
         }
     }
     
