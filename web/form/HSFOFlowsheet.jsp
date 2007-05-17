@@ -48,6 +48,28 @@ v\:* { behavior: url(#default#VML); }
  function popupXmlMsg(path){
  	window.open(path,"xmlMsg","location=1,status=1,resizable=1,scrollbars=1,width=800,height=300");
  }
+ 
+ function flipview(){
+    var regtable= document.getElementById('registartiontable');
+    var formtable = document.getElementById('graphtable');
+    //alert(formtable.style.display);
+    //alert(regtable.style.display);
+    
+    if (regtable.style.display == "none"){
+      //alert("regtable");
+        regtable.style.display = "";
+       formtable.style.display = "none";
+       return false;
+    }
+    
+    if (formtable.style.display == "none"){
+        //alert("formtable");
+       formtable.style.display = "";
+       regtable.style.display = "none";
+       return false;
+    }
+ }
+ 
 </script>
 
 </head>
@@ -232,6 +254,10 @@ if (visitList != null){
         <div align="left"><font size="2" face="Arial, Helvetica, sans-serif">Patient 
           ID/Name
           <input name="Patient_Id" type="text" size="8" value="<%= patientData.getPatient_Id() %>"> 
+          
+          <%if (visitList != null){%>
+<a href="javascript: function myFunction() {return false; }" onclick="flipview();" style="text-decoration: none;">Switch View</a>
+          <%}%>
           <input name="SiteCode" type="hidden" value="20">
           <input name="ID" type="hidden" value="<%= visitData.getID() %>">
  <%String goback = (String)request.getAttribute("goback");
@@ -1510,8 +1536,7 @@ function confirmReset()
 	return false;
 }
 
-function confirmExit(frm)
-{
+function confirmExit(frm){
 	if(window.confirm("Are you SURE you want to exit without saving? Click OK to continue, Cancel to return to the form and save."))
 	{
 	//closing script
@@ -1519,9 +1544,121 @@ function confirmExit(frm)
 	else
 	return false;
 }
-function checkform ()
-{
+function checkform (){
 form1 = document.getElementById('form1');
+
+        if (form1.LName.value == "") {
+    alert( "Please enter patient's last name." );
+    form1.LName.focus();
+    return false ;
+  }
+  if (form1.FName.value == "") {
+    alert( "Please enter patient's first name." );
+    form1.FName.focus();
+    return false ;
+  }
+  if (form1.Patient_Id.value == "") {
+    alert( "Please enter patient's registration ID." );
+    form1.Patient_Id.focus();
+    return false ;
+  }
+
+  if (form1.Height.value == "") {
+    alert( "Please enter patient's height." );
+    form1.Height.focus();
+    return false ;
+  } else if (isNaN(parseFloat(form1.Height.value))) {
+    alert( "Please enter patient's height in NNN.N format." );
+    form1.Height.focus();
+    return false ;
+  } else if (form1.Height.value <40 || form1.Height.value > 250) {
+    alert( "Please enter patient's height between 40 and 250." );
+    form1.Height.focus();
+    return false ;
+	}
+	
+	if (!/^\d\d\d\d$/.test(form1.consentDate_year.value) || form1.consentDate_year.value=="") {
+    alert( "Please enter patient's year of consent." );
+    form1.consentDate_year.focus();
+    return false ;
+	}
+	if (!/^\d\d\d\d$/.test(form1.BirthDate_year.value) || form1.BirthDate_year.value=="") {
+    alert( "Please enter patient's year of birth." );
+    form1.BirthDate_year.focus();
+    return false ;
+	}
+	if (!/^\d\d\d\d$/.test(form1.VisitDate_Id_year.value) || form1.VisitDate_Id_year.value=="") {
+    alert( "Please enter patient's year of last visit." );
+    form1.VisitDate_Id_year.focus();
+    return false ;
+	}
+	if (form1.EmrHCPId1.value=="") {
+    alert( "Please enter patient's Study ID of MD." );
+    form1.EmrHCPId1.focus();
+    return false ;
+	}
+	if (form1.EmrHCPId2.value=="") {
+    alert( "Please enter patient's MD's last name." );
+    form1.EmrHCPId2.focus();
+    return false ;
+	}
+	if (form1.PostalCode.value=="" || !/^\D\d\D$/.test(form1.PostalCode.value)) {
+    alert( "Please enter patient's postal code." );
+    form1.PostalCode.focus();
+    return false ;
+	}
+	if (!form1.Sex[0].checked &&
+	!form1.Sex[1].checked) {
+	alert( "Please select patient's sex." );
+	return false;
+	}
+	if (!form1.Height_unit[0].checked &&
+	!form1.Height_unit[1].checked) {
+	alert( "Please select patient's height measurement." );
+        form1.Height_unit[0].focus();
+	return false;
+	}
+	if (form1.PharmacyName.value=="") {
+    alert( "Please enter patient's pharmacy name." );
+    form1.PharmacyName.focus();
+    return false ;
+	}
+	if (form1.PharmacyLocation.value=="") {
+    alert( "Please enter patient's pharmacy address." );
+    form1.PharmacyLocation.focus();
+    return false ;
+	}
+	if (!form1.Ethnic_White.checked && !form1.Ethnic_Black.checked && !form1.Ethnic_EIndian.checked && !form1.Ethnic_Pakistani.checked && !form1.Ethnic_SriLankan.checked && !form1.Ethnic_Bangladeshi.checked && !form1.Ethnic_Chinese.checked && !form1.Ethnic_Japanese.checked && !form1.Ethnic_Korean.checked && !form1.Ethnic_FirstNation.checked && !form1.Ethnic_Other.checked && !form1.Ethnic_Hispanic.checked && !form1.Ethnic_Refused.checked && !form1.Ethnic_Unknown.checked){
+	alert( "Please select patient's ethnicity." );
+    form1.PharmacyLocation.focus();
+    return false ;
+	}
+	if (!form1.sel_TimeAgoDx[0].checked &&
+	!form1.sel_TimeAgoDx[1].checked && !form1.sel_TimeAgoDx[2].checked) {
+	alert( "Please select patient's diagnosis period." );
+	return false;
+	}
+	if (!form1.Change_importance.value=="" && (form1.Change_importance.value<1 || form1.Change_importance.value>10 || /\D/.test(form1.Change_importance.value))) {
+    alert( "Please check lifestyle change is between 1 and 10" );
+    form1.Change_importance.focus();
+    return false ;
+	}
+	if (!form1.Change_confidence.value=="" && (form1.Change_confidence.value<1 || form1.Change_confidence.value>10 || /\D/.test(form1.Change_confidence.value))) {
+    alert( "Please check confidence is between 1 and 10" );
+    form1.Change_confidence.focus();
+    return false ;
+	}
+	
+        if (form1.consentDate_year.value<2007) {
+    alert( "Please check that the year of consent is greater than 2006" );
+    form1.consentDate_year.focus();
+    return false ;
+	}
+	if (form1.BirthDate_year.value<1901) {
+    alert( "Please check that the year of birth is greater than 1900" );
+    form1.BirthDate_year.focus();
+    return false ;
+	}
    
 	if (!/^\d\d\d\d$/.test(form1.VisitDate_Id_year.value) || form1.VisitDate_Id_year.value=="") {
     alert( "Please enter patient's year of last visit." );
@@ -1590,7 +1727,7 @@ form1 = document.getElementById('form1');
 	}
 	if (!form1.alcohol_drinksPerWk.value =="" && (form1.alcohol_drinksPerWk.value<0 || form1.alcohol_drinksPerWk.value>99 || isNaN(parseFloat(form1.alcohol_drinksPerWk.value)))) {
     alert( "Please check that alcohol per week is between 0 and 99" );
-    document.form1.alcohol_drinksPerWk.focus();
+    form1.alcohol_drinksPerWk.focus();
     return false ;
 	}
 	if (!form1.Often_miss.value =="" && (form1.Often_miss.value<0 || form1.Often_miss.value>42 || isNaN(parseFloat(form1.Often_miss.value)))) {
