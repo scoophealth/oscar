@@ -40,7 +40,7 @@ public class RxProviderData {
             String sql = "SELECT * FROM provider WHERE provider_no = '" + providerNo + "'";
             rs = db.GetSQL(sql);
 
-            String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null ;
+            String providerClinicPhone=null, surname=null, firstName=null,  clinicName=null, clinicAddress=null, clinicCity=null, clinicPostal=null, clinicPhone=null, clinicFax=null,clinicProvince = null ;
             if (rs.next()) {
                 surname = rs.getString("last_name");
                 firstName = rs.getString("first_name");
@@ -66,6 +66,7 @@ public class RxProviderData {
                 clinicCity = rs.getString("clinic_city");
                 clinicPostal = rs.getString("clinic_postal");
                 clinicPhone = rs.getString("clinic_phone");
+                clinicProvince = rs.getString("clinic_province");
                 
                 if( clinicFax == null )
                     clinicFax = rs.getString("clinic_fax");
@@ -74,7 +75,7 @@ public class RxProviderData {
             if((clinicPhone.length()>15) && (providerClinicPhone != null && !providerClinicPhone.equals(""))) clinicPhone = providerClinicPhone;
 
             provider = new Provider(providerNo, surname, firstName, clinicName, clinicAddress,
-                    clinicCity, clinicPostal, clinicPhone, clinicFax);
+                    clinicCity, clinicPostal, clinicPhone, clinicFax, clinicProvince);
 
             rs.close();
             db.CloseConn();
@@ -95,6 +96,7 @@ public class RxProviderData {
         String clinicPostal;
         String clinicPhone;
         String clinicFax;
+        String clinicProvince;
 
         public Provider(String providerNo, String surname, String firstName,
         String clinicName, String clinicAddress, String clinicCity,
@@ -109,6 +111,22 @@ public class RxProviderData {
             this.clinicPhone = clinicPhone;
             this.clinicFax = clinicFax;
         }
+        
+        public Provider(String providerNo, String surname, String firstName,
+        String clinicName, String clinicAddress, String clinicCity,
+        String clinicPostal, String clinicPhone, String clinicFax,String clinicProvince){
+            this.providerNo = providerNo;
+            this.surname = surname;
+            this.firstName = firstName;
+            this.clinicName = clinicName;
+            this.clinicAddress = clinicAddress;
+            this.clinicCity = clinicCity;
+            this.clinicPostal = clinicPostal;
+            this.clinicPhone = clinicPhone;
+            this.clinicFax = clinicFax;
+            this.clinicProvince = clinicProvince;
+        }
+        
 
         public String getProviderNo(){
             return this.providerNo;
@@ -145,5 +163,11 @@ public class RxProviderData {
         public String getClinicFax(){
             return this.clinicFax;
         }
+        
+        public String getClinicProvince(){
+            return this.clinicProvince;
+        }
+
+        
     }
 }
