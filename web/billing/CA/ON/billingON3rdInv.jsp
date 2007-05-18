@@ -1,7 +1,8 @@
 <%
 String invNo = request.getParameter("billingNo");
 Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
-Properties propClinic = privateObj.getLocalClinicAddr();
+oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
+//Properties propClinic = privateObj.getLocalClinicAddr( (String) session.getAttribute("user"));
 Properties prop3rdPart = privateObj.get3rdPartBillProp(invNo);
 Properties prop3rdPayMethod = privateObj.get3rdPayMethod();
 
@@ -17,20 +18,27 @@ BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) aL.get(0);
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Invoice - <%=invNo %></title>
 </head>
 <body>
 
 <table width="100%" border="0">
 <tr>
 <td>
+    <%--
 <b><%=propClinic.getProperty("clinic_name", "") %></b><br/>
 <%=propClinic.getProperty("clinic_address", "") %><br/>
 <%=propClinic.getProperty("clinic_city", "") %>,
 <%=propClinic.getProperty("clinic_province", "") %><br/>
 <%=propClinic.getProperty("clinic_postal", "") %><br/>
 Tel.: <%=propClinic.getProperty("clinic_phone", "") %><br/>
-
+--%>
+<b><%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %></b><br>
+<%= provider.getClinicAddress() %><br>
+<%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<%= provider.getClinicPostal() %><br>
+Tel: <%= provider.getClinicPhone() %><br>
+Fax: <%= provider.getClinicFax() %><br>
 </td>
 <td align="right" valign="top">
 <font size="+2"><b>Invoice - <%=invNo %></b></font><br/>

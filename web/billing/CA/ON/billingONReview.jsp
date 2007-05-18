@@ -19,7 +19,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page errorPage="errorpage.jsp"
+<%@ page
 	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
@@ -49,19 +49,49 @@
 		vecServiceParam[1] = new Vector();
 		vecServiceParam[2] = new Vector();
 	} else {
+                //This will find data in the checkboxes/ "1","1" is the default 1 unit and 100% of the fee item
 		vecServiceParam = prepObj.getRequestFormCodeVec(request, "xml_", "1", "1");
 	}
 	
-	//System.out.println(vecServiceParam[0] + ":" + vecServiceParam[1] + vecServiceParam[2] + " :::" + vecServiceParam.length);
+	System.out.println("line1=="+vecServiceParam[0] + ":" + vecServiceParam[1] + vecServiceParam[2] + " :::" + vecServiceParam.length);
+        System.out.println("numItem "+BillingDataHlp.FIELD_SERVICE_NUM);
+        
+        //This finds data in the PINK AREA
 	Vector[] vecServiceParam0 = prepObj.getRequestCodeVec(request, "serviceCode", "serviceUnit", "serviceAt", BillingDataHlp.FIELD_SERVICE_NUM);
-	//System.out.println(vecServiceParam0[0] +":"+vecServiceParam0[1] +" :: :" + vecServiceParam0.length);
-	vecServiceParam[0].addAll(vecServiceParam0[0]);
+	System.out.println("line2=="+vecServiceParam0[0] +":"+vecServiceParam0[1] +" :: :" + vecServiceParam0.length);
+	
+        vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
-	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
-					vecServiceParam[2]);
-	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);
+        /////// hack used to order the billing codes
+        /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable 
+        /////// But should cause that much of a performance hit. It's generally under 3 items
+        Vector v = new Vector();
+        for (int ii = 0 ; ii< vecServiceParam[0].size(); ii++){
+            Hashtable h = new Hashtable();
+            h.put("serviceCode",vecServiceParam[0].get(ii));
+            h.put("serviceUnit",vecServiceParam[1].get(ii));
+            h.put("serviceAt",vecServiceParam[2].get(ii));
+            v.add(h);
+        }
+        Collections.sort(v,new BillingSortComparator());
+        
+        vecServiceParam[0] = new Vector();
+        vecServiceParam[1] = new Vector();
+        vecServiceParam[2] = new Vector();
+        
+        for (int ii = 0; ii < v.size(); ii++){
+            Hashtable h = (Hashtable) v.get(ii);
+            vecServiceParam[0].add((String) h.get("serviceCode") );
+            vecServiceParam[1].add((String) h.get("serviceUnit"));
+            vecServiceParam[2].add((String) h.get("serviceAt"));
+        }
+        ///////--------
+	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2]);
+	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);  //LINE CAUSING ERROR
 
+        
+        
 	Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
 			String dxDesc = prepObj.getDxDescription(request.getParameter("dxCode"));
 			String clinicview = oscarVariables.getProperty("clinic_view", "");
@@ -178,17 +208,17 @@
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
-	<!--
+	
 	var bClick = false;
 	    function onSave() {
 	        //alert(document.forms[0].submit[0].value);
 	        var ret = true;
-	        if(ret==true && bClick) {
-	            ret = confirm("Are you sure you want to save?");
-	        }
-	        if(!ret) {
+	        //if(ret==true && bClick) {
+	        //    ret = confirm("Are you sure you want to save?");
+	        //}
+	        //if(!ret) {
 	        	bClick = false;
-	        }
+	        //}
 	        return ret;
 	    }
 	    function onClickSave() {
@@ -215,7 +245,7 @@
 		     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
 		}
 		
-	//-->
+	
 
 </script>
 	
@@ -229,7 +259,7 @@
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myDarkGreen">
 			<tr>
-				<td><b><font color="#FFFFFF">Confirmation </font></b></td>
+				<td><b><font color="#FFFFFF">&nbsp;Confirmation </font></b></td>
 				<td align="right"><input type="hidden" name="addition" value="Confirm" /></td>
 			</tr>
 		</table>
@@ -482,9 +512,9 @@ function onCheckMaster() {
 			<tr>
 
 				<td colspan='3' align='center' bgcolor="silver">
-				<input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
-				<input type="submit" name="button" value="Back to Edit"	style="width: 120px;" />
-				</td>
+                                    <input type="submit" name="button" value="Back to Edit"	style="width: 120px;" />
+                                    <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
+                                </td>
 			</tr>
 		</table>
 		</td>
@@ -513,13 +543,24 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
 	List al = pObj.getPaymentType();
 	
 	Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
-	Properties propClinic = privateObj.getLocalClinicAddr();
-	String strClinicAddr = propClinic.getProperty("clinic_name", "") + "\n" 
+	//Properties propClinic = privateObj.getLocalClinicAddr();
+        oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
+	 
+                /*
+                = propClinic.getProperty("clinic_name", "") + "\n" 
 		+ propClinic.getProperty("clinic_address", "") + "\n" 
 		+ propClinic.getProperty("clinic_city", "") + ", " + propClinic.getProperty("clinic_province", "") + "\n" 
 		+ propClinic.getProperty("clinic_postal", "") + "\n" 
 		+ "Tel: " + propClinic.getProperty("clinic_phone", "") + "\n" 
 		+ "Fax: " + propClinic.getProperty("clinic_fax", "") ;
+                */
+        String strClinicAddr = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") +"\n"
+                             + provider.getClinicAddress() +"\n"
+                             + provider.getClinicCity() +","+ provider.getClinicProvince()+"\n"
+                             + provider.getClinicPostal() +"\n"
+                             + "Tel: "+provider.getClinicPhone() +"\n"
+                             + "Fax: "+provider.getClinicFax() ;
+                
 %>
 <tr><td>
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
