@@ -29,7 +29,6 @@
 		form.submit();
 	}
 
-   <%-- added by Ronnie April 07 --%>
         function createReport() {        
                 document.ticklerForm.method.value='filter';
                 document.ticklerForm.submit();                
@@ -115,22 +114,22 @@
 	</tr>
 	<tr>
 		<td colspan="2" class="blueText">Client: 
-                <html:hidden property="filter.demographic_no"/>
-                <html:text property="filter.demographic_webName" size="15"/>
-                <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
-                <script language="JavaScript">showClearButton();</script>
-                <input type="button" value="Search" onclick="search_demographic();" />
-
-                <%--
-                <html:select
-			property="filter.demographic_no"
+		
+		<oscar:oscarPropertiesCheck property="clientdropbox" value="on">
+		    <html:select property="filter.demographic_no"
 			onchange="this.form.method.value='filter';this.form.submit();">
 			<option value="All Clients">All Clients</option>
-			<html:options collection="demographics" property="demographicNo"
-				labelProperty="formattedName" />
-		</html:select>
-                --%>                
-            
+			<html:options collection="demographics" property="demographicNo" labelProperty="formattedName" />
+		    </html:select>
+		</oscar:oscarPropertiesCheck>
+		
+		<oscar:oscarPropertiesCheck property="clientdropbox" value="off" defaultVal="true">
+		    <html:hidden property="filter.demographic_no"/>
+		    <html:text property="filter.demographic_webName" size="15"/>
+		    <span id="clear_button"><input type="button" value="Clear" onclick="clearClientFilter();" /></span>
+		    <script language="JavaScript">showClearButton();</script>
+		    <input type="button" value="Search" onclick="search_demographic();" />
+		</oscar:oscarPropertiesCheck>
             </td>
 	</tr>
 
