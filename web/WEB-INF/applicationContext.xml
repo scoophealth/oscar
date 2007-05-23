@@ -464,4 +464,131 @@
 			<bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl" autowire="byType" />
 		</property>
 	</bean>
+
+
+	<!-- TicklerPlus -->
+	
+	<bean id="ticklerDAOT" class="org.caisi.dao.hibernate.TicklerDAOHibernate">
+	    <property name="sessionFactory">
+		<ref bean="sessionFactory" />
+	    </property>
+	</bean>
+	<bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	    <property name="transactionManager">
+		<ref bean="transactionManager" />
+	    </property>
+	    <property name="target">
+		<ref local="ticklerManagerTargetT" />
+	    </property>
+	    <property name="transactionAttributes">
+		<props>
+		    <prop key="save*">PROPAGATION_REQUIRED</prop>
+		    <prop key="remove*">PROPAGATION_REQUIRED</prop>
+		    <prop key="*">PROPAGATION_REQUIRED</prop>
+		</props>
+	    </property>
+	</bean>
+	<bean id="customFilterDAOT" class="org.caisi.dao.hibernate.CustomFilterDAOHibernate">
+	    <property name="sessionFactory">
+		<ref bean="sessionFactory" />
+	    </property>
+	</bean>        
+	<bean id="ticklerManagerTargetT" class="org.caisi.service.impl.TicklerManagerImpl">
+	    <property name="ticklerDAO">
+		<ref local="ticklerDAOT" />
+	    </property>
+	    <property name="customFilterDAO">
+		<ref local="customFilterDAOT" />
+	    </property>
+	</bean>
+        <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="demographicManagerTarget" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="demographicManagerTarget" class="org.caisi.service.impl.DemographicManagerImplTickler">
+	    <property name="demographicDAO">
+		<ref bean="demographicDAOT" />
+	    </property>
+	</bean>
+	<bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" singleton="true">
+	</bean>
+	<bean id="consultationManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="consultationManagerTarget" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+        <bean id="consultationDAOT" class="org.caisi.dao.hibernate.ConsultationDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="chartDAOT" class="org.caisi.dao.hibernate.EChartDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="consultationManagerTarget" class="org.caisi.service.impl.ConsultationManagerImpl">
+		<property name="consultationDAO">
+			<ref local="consultationDAOT" />
+		</property>
+	</bean>
+        <bean id="chartManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<ref local="chartManagerTarget" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="chartManagerTarget" class="org.caisi.service.impl.EChartManagerImpl">
+		<property name="chartDAO">
+			<ref local="chartDAOT" />
+		</property>
+	</bean>
+        <bean id="providerManager" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.oscarehr.PMmodule.service.impl.ProviderManagerImpl">
+				<property name="providerDao">
+                                    <ref bean="providerDao" />
+                                </property> 
+				<property name="agencyDAO">
+                                    <ref bean="agencyDao" />
+                                </property> 
+				<property name="programProviderDAO" ref="programProviderDAO" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="version" class="org.caisi.service.impl.VersionImpl">
+		<property name="version">
+			<value>2.0.0</value>
+		</property>
+	</bean>
 </beans>
