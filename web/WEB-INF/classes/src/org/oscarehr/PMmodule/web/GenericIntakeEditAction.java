@@ -139,11 +139,13 @@ public class GenericIntakeEditAction extends BaseAction {
 		Intake intake = formBean.getIntake();
 		String intakeType = intake.getType();
 		Demographic client = formBean.getClient();
-		Integer clientId = client.getDemographicNo();
+		//Integer clientId = client.getDemographicNo();
+		Integer clientId = 0;
 		String providerNo = getProviderNo(request);
 
 		try {
 			saveClient(client, providerNo);
+			clientId = client.getDemographicNo();
 			admitBedCommunityProgram(clientId, providerNo, formBean.getSelectedBedCommunityProgramId());
 			admitServicePrograms(clientId, providerNo, formBean.getSelectedServiceProgramIds());
 			saveIntake(intake, clientId);
