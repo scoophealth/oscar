@@ -25,6 +25,7 @@ package oscar.oscarReport.data;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import oscar.OscarProperties;
 import oscar.oscarDB.DBHandler;
 //import oscar.oscarEncounter.util.StringQuote;
 //import oscar.oscarMessenger.util.*;
@@ -66,6 +67,11 @@ public class VisitReportData {
        try{
              DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
              String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
+             System.out.println(sql);
+             if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
+                sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and creator='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
+             }
+             System.out.println(sql);
              ResultSet rs = db.GetSQL(sql);
              while (rs.next()){
                 retval = rs.getString("visit");
@@ -98,7 +104,12 @@ public class VisitReportData {
 	       try{
 	             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 	             String sql = "select Right(visittype, 1) visit, count(*) n from billing where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
-	             ResultSet rs = db.GetSQL(sql);
+                     System.out.println(sql);
+                     if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
+                        sql = "select Right(visittype, 1) visit, count(*) n from billing_on_cheader1 where status<>'D' and appointment_no<>'0' and apptProvider_no='"+ providerNo +"' and billing_date>='" + dateBegin + "' and billing_date<='" + dateEnd + "' group by visittype";
+                     }
+                     System.out.println(sql);
+                     ResultSet rs = db.GetSQL(sql);
 	             while (rs.next()){
 	                retval = rs.getString("visit");
 	                retcount =rs.getString("n");
