@@ -57,17 +57,21 @@ param3[4] = "1994";
 param3[5] = dateBegin;
 param3[6] = dateEnd ;
 rs = null;
-rs = apptMainBean.queryResults(param, "count_larrykain_clinic");
+String newBilling = "";
+if (OscarProperties.getInstance().getBooleanProperty("isNewONbilling","true")){
+    newBilling = "_new";  //I've added the coresponding queries to dbReport.jsp with the suffix _new /count
+}
+rs = apptMainBean.queryResults(param, "count_larrykain_clinic"+newBilling);
 while(rs.next()){
 cTotal = rs.getString("n");
 }
 rs = null;
-rs = apptMainBean.queryResults(param2, "count_larrykain_hospital");
+rs = apptMainBean.queryResults(param2, "count_larrykain_hospital"+newBilling);
 while(rs.next()){
 hTotal = rs.getString("n");
 }
 rs = null;
-rs = apptMainBean.queryResults(param3, "count_larrykain_other");
+rs = apptMainBean.queryResults(param3, "count_larrykain_other"+newBilling);
 while(rs.next()){
 oTotal = rs.getString("n");
 }
