@@ -1300,11 +1300,10 @@ int i;
                         
                         <script language=javascript>
                             function submitPending(stashId, action){
-                                
-                                var frm = document.forms.RxStashForm;
-                                frm.stashId.value = stashId;
-                                frm.action.value = action;
-                                frm.submit();
+                                var frm = document.getElementsByName("RxStashForm");                                                               
+                                frm[0].elements["stashId"].value = stashId;
+                                frm[0].elements["action"].value = action;
+                                frm[0].submit();
                             }
                         </script>
                     <!--6a-->
