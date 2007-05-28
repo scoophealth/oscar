@@ -2,91 +2,106 @@
 <!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" 
 "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
 <taglib>
-	<tlibversion>1.0</tlibversion>
-	<jspversion>1.1</jspversion>
-	<shortname>CaisiTags</shortname>
-	<uri>http://www.caisi.ca</uri>
-	<info>Caisi Tags Library</info>
-	<tag>
-		<name>isModuleLoad</name>
-		<tagclass>oscar.caisi.IsModuleLoadTag</tagclass>
-		<bodycontent>jsp</bodycontent>
-		<info>Module whether exist</info>
-		<attribute>
-			<name>moduleName</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>reverse</name>
-			<required>no</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<name>RateTag</name>
-		<tagclass>org.oscarehr.PMmodule.common.RateTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>Page Rate Tag</info>
-	</tag>
-	<tag>
-		<name>OscarTag</name>
-		<tagclass>org.oscarehr.PMmodule.common.OscarTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>Oscar Tag</info>
-	</tag>
-	<tag>
-		<name>CaisiRoleLink</name>
-		<tagclass>org.oscarehr.PMmodule.common.CaisiRoleLinkTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>Caisi Role link Tag</info>
-	</tag>
-	<tag>
-		<name>OscarDemographicLink</name>
-		<tagclass>org.oscarehr.PMmodule.common.OscarDemographicLinkTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>Oscar Demographic link Tag</info>
-		<attribute>
-			<name>demographicNo</name>
-			<required>yes</required>
-			<rtexprvalue>yes</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<name>CaseManagementLink</name>
-		<tagclass>org.oscarehr.PMmodule.common.CaseManagementLinkTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>CAISI Case Management link Tag</info>
-		<attribute>
-			<name>demographicNo</name>
-			<required>yes</required>
-			<rtexprvalue>yes</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>providerNo</name>
-			<required>yes</required>
-			<rtexprvalue>yes</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>providerName</name>
-			<required>no</required>
-			<rtexprvalue>yes</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<name>intake</name>
-		<tagclass>org.oscarehr.PMmodule.common.IntakeTag</tagclass>
-		<bodycontent>empty</bodycontent>
-		<info>Intake Tag</info>
-		<attribute>
-			<name>base</name>
-			<required>yes</required>
-			<rtexprvalue>yes</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>intake</name>
-			<required>yes</required>
-			<rtexprvalue>yes</rtexprvalue>
-		</attribute>
-	</tag>
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>CaisiTags</shortname>
+    <uri>http://www.caisi.ca</uri>
+    <info>Caisi Tags Library</info>
+<tag>
+    <name>isModuleLoad</name>
+    <tagclass>oscar.caisi.IsModuleLoadTag</tagclass>
+    <bodycontent>jsp</bodycontent>
+    <info>Module whether exist</info>
+    <attribute>
+	<name>moduleName</name>
+	<required>true</required>
+	<rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>reverse</name>
+	<required>no</required>
+	<rtexprvalue>true</rtexprvalue>
+    </attribute>
+</tag>
+<tag>
+    <name>RateTag</name>
+    <tagclass>org.oscarehr.PMmodule.common.RateTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>Page Rate Tag</info>
+</tag>
+<tag>
+    <name>OscarTag</name>
+    <tagclass>org.oscarehr.PMmodule.common.OscarTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>Oscar Tag</info>
+</tag>
+<tag>
+    <name>CaisiRoleLink</name>
+    <tagclass>org.oscarehr.PMmodule.common.CaisiRoleLinkTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>Caisi Role link Tag</info>
+</tag>
+<tag>
+    <name>OscarDemographicLink</name>
+    <tagclass>org.oscarehr.PMmodule.common.OscarDemographicLinkTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>Oscar Demographic link Tag</info>
+    <attribute>
+	<name>demographicNo</name>
+	<required>yes</required>
+	<rtexprvalue>yes</rtexprvalue>
+    </attribute>
+</tag>
+<tag>
+    <name>CaseManagementLink</name>
+    <tagclass>org.oscarehr.PMmodule.common.CaseManagementLinkTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>CAISI Case Management link Tag</info>
+    <attribute>
+	<name>demographicNo</name>
+	<required>yes</required>
+	<rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>providerNo</name>
+	<required>yes</required>
+	<rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>providerName</name>
+	<required>no</required>
+	<rtexprvalue>yes</rtexprvalue>
+    </attribute>
+</tag>
+<tag>
+    <name>intake</name>
+    <tagclass>org.oscarehr.PMmodule.common.IntakeTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <info>Intake Tag</info>
+    <attribute>
+	<name>base</name>
+	<required>yes</required>
+	<rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+	<name>intake</name>
+	<required>yes</required>
+	<rtexprvalue>yes</rtexprvalue>
+    </attribute>
+</tag>
+<tag>
+  <name>ProgramExclusiveView</name>
+  <tagclass>org.caisi.core.web.tld.programExclusiveViewTag</tagclass>
+  <bodycontent>jsp</bodycontent>
+  <attribute>
+    <name>providerNo</name>
+    <required>true</required>
+    <rtexprvalue>true</rtexprvalue>
+  </attribute>
+   <attribute>
+     <name>value</name>
+     <required>true</required>
+     <rtexprvalue>true</rtexprvalue>     
+   </attribute>
+</tag>
 </taglib>
