@@ -124,7 +124,7 @@ public abstract class BaseProgram  implements Serializable {
 	private boolean physicalHealth;
 	private boolean mentalHealth;
 	private boolean housing;
-	
+	private String exclusiveView;
 
 
 	/**
@@ -582,6 +582,14 @@ public abstract class BaseProgram  implements Serializable {
 
 	public void setTransgender(boolean transgender) {
 		this.transgender = transgender;
+	}
+	
+	public String getExclusiveView() {
+		return exclusiveView;
+	}
+	
+	public void setExclusiveView(String exclusive_view) {
+		this.exclusiveView = exclusive_view;
 	}
 
 	public boolean equals (Object obj) {
