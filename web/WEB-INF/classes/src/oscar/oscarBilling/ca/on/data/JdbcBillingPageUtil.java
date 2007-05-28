@@ -356,7 +356,19 @@ public class JdbcBillingPageUtil {
 		}
 		return retval;
 	}
-
+	
+//	 @ OSCARSERVICE
+	public boolean delBillingFavouriteList(String name, String providerNo) {
+		boolean retval = true;
+		String sql = "delete from billing_on_favourite where name='" + name + "' and provider_no='" + providerNo + "'";
+		retval = dbObj.updateDBRecord(sql);
+		if (!retval) {
+			_logger.error("delBillingFavouriteList(sql = " + sql + ")");
+		}
+		return retval;
+	}
+	// @ OSCARSERVICE
+	
 	public boolean updateBillingFavouriteList(String name, String list, String providerNo) {
 		boolean retval = false;
 		String sql = "update billing_on_favourite set service_dx='" + list + "', provider_no='" + providerNo
