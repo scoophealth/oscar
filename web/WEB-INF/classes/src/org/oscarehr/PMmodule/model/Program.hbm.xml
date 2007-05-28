@@ -51,5 +51,6 @@
 		<property name="physicalHealth" column="physicalHealth" type="boolean" not-null="false" length="1"/>
 		<property name="mentalHealth" column="mentalHealth" type="boolean" not-null="false" length="1"/>
 		<property name="housing" column="housing" type="boolean" not-null="false" length="1"/>
+		<property name="exclusiveView" column="exclusive_view" type="string" not-null="false" length="20"/>
 	</class>
 </hibernate-mapping>
