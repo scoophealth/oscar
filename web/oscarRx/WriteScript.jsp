@@ -1288,7 +1288,7 @@ int i;
                         <%   }                        
                           }%>
                                 
-                        <div  id="renalDosing" />
+                          <div  id="renalDosing"></div>
                           
                        
                         <!--<div style="background-color:yellow;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
