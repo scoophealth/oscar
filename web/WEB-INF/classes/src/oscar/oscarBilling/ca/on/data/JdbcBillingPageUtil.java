@@ -318,7 +318,7 @@ public class JdbcBillingPageUtil {
 	// name : code|dx|
 	public List getBillingFavouriteList() {
 		List retval = new Vector();
-		String sql = "select * from billing_on_favourite order by name ";
+		String sql = "select * from billing_on_favourite where deleted=false order by name ";
 		ResultSet rslocal = dbObj.searchDBRecord(sql);
 		try {
 			while (rslocal.next()) {
@@ -333,7 +333,7 @@ public class JdbcBillingPageUtil {
 
 	public List getBillingFavouriteOne(String name) {
 		List retval = new Vector();
-		String sql = "select * from billing_on_favourite where name='" + name + "' ";
+		String sql = "select * from billing_on_favourite where name='" + name + "' and deleted=false";
 		ResultSet rslocal = dbObj.searchDBRecord(sql);
 		try {
 			while (rslocal.next()) {
@@ -349,7 +349,7 @@ public class JdbcBillingPageUtil {
 	public int addBillingFavouriteList(String name, String list, String providerNo) {
 		int retval = 0;
 		String sql = "insert into billing_on_favourite values(\\N, '" + name + "', '" + list + "', '" + providerNo
-				+ "', \\N)";
+				+ "', \\N, 0)";
 		retval = dbObj.saveBillingRecord(sql);
 		if (retval == 0) {
 			_logger.error("addBillingFavouriteList(sql = " + sql + ")");
@@ -360,7 +360,7 @@ public class JdbcBillingPageUtil {
 //	 @ OSCARSERVICE
 	public boolean delBillingFavouriteList(String name, String providerNo) {
 		boolean retval = true;
-		String sql = "delete from billing_on_favourite where name='" + name + "' and provider_no='" + providerNo + "'";
+		String sql = "update billing_on_favourite set deleted=true where name='" + name + "' and provider_no='" + providerNo + "'";
 		retval = dbObj.updateDBRecord(sql);
 		if (!retval) {
 			_logger.error("delBillingFavouriteList(sql = " + sql + ")");
