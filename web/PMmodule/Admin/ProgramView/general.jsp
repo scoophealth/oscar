@@ -106,4 +106,8 @@
 		<td width="20%">Housing:</td>
 		<td><c:out value="${program.housing}" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Exclusive View:</td>
+		<td><c:out value="${program.exclusiveView}" /></td>
+	</tr>
 </table>

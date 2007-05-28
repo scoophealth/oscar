@@ -154,6 +154,15 @@
 		<td width="20%">Housing:</td>
 		<td><html:checkbox property="program.housing" /></td>
 	</tr>	
+	<tr class="b">
+		<td width="20%">Exclusive View:</td>
+		<td><html:select property="program.exclusiveView">
+			<html:option value="no">No</html:option>
+			<html:option value="appointment">Appointment View</html:option>
+		    </html:select>
+		    (Selecting "No" allows users to switch views)
+		</td>
+	</tr>	
 	<tr>
 		<td colspan="2">
 			<input type="button" value="Save" onclick="return save()" />
