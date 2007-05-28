@@ -147,6 +147,31 @@
 					msg = "You can <font color='red'>NOT</font> save the name. Please search the name first.";
 				}
 			} else if (request.getParameter("submit") != null && request.getParameter("submit").equals("Search")) {
+//				 @ OSCARSERVICE
+				if (request.getParameter("action").equals("Delete"))
+				{
+					// delete the service code
+					String name = request.getParameter("name");
+					if (name == null || name.equals(""))
+					{
+						msg = "nothing to delete, please choose a name.";
+						action = "search";
+					}else {
+					boolean ni = dbObj.delBillingFavouriteList(name, user_no);
+					if (ni) {
+						msg = name + " is deleted.<br>"
+								+ "Type in a name and search first to see if it is available.";
+						action = "search";
+						prop.setProperty("name", name);
+					} else {
+						msg = name + " is <font color='red'>NOT</font> deleted. Action failed! Try edit it again.";
+						action = "edit" + name;
+						prop.setProperty("name", name);						
+					  }
+					}
+				}
+				// @ OSCARSERVICE
+				else{
 				// check the input data
 				if (request.getParameter("name") == null) {
 					msg = "Please type in a right name.";
@@ -185,6 +210,7 @@
 						action = "add" + name;
 					}
 				}
+				}
 			}
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
@@ -219,6 +245,15 @@
 	        var ret = checkServiceCode();
 	        return ret;
 	    }
+	    
+	    // @ OSCARSERVICE
+		function onDelete() {
+			var ret = false;
+			ret = confirm("Are you sure you want to Delete?");
+			return ret;
+		}
+		// @ OSCARSERVICE
+	    
 	    function onSave() {
 	        //document.forms[0].submit.value="Save";
 	        var ret = checkServiceCode();
@@ -329,7 +364,9 @@
 			<%}
 				%>
 		</select></td>
-		<td><input type="hidden" name="submit" value="Search"> <input type="submit" name="action" value=" Edit "></td>
+		<td><input type="hidden" name="submit" value="Search"> <input type="submit" name="action" value=" Edit ">
+			<input type="submit" name="action" value="Delete" onClick="javascript:return onDelete();">
+		</td>
 	</tr>
 </form>
 </table>
