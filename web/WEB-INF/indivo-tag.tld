@@ -34,8 +34,8 @@
     <tlib-version>1.0</tlib-version>
     <jsp-version>1.2</jsp-version>
     <short-name>indivo</short-name>    
-    <display-name>indivotag</display-name>
     <uri>/indivotag</uri>
+    <display-name>indivotag</display-name>
     <small-icon></small-icon>
     <large-icon></large-icon>
     <description>Routines specific for interfacing with an Indivo Server</description>
