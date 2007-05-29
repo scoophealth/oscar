@@ -87,7 +87,9 @@ function submitStatus(ctrl) {
   		
   	</c:forEach>
   </select>
-  <a href='providercontrol.jsp?infirmaryView_isOscar=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>| Oscar View</a>
+  <caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="no">
+    <a href='providercontrol.jsp?infirmaryView_isOscar=true&<%=session.getAttribute("infirmaryView_OscarQue") %>'>| Oscar View</a>
+  </caisi:ProgramExclusiveView>
 </logic:notEqual>
   
 <logic:equal name="infirmaryView_isOscar" value="true">

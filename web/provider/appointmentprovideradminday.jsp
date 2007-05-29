@@ -625,6 +625,9 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
     <caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="appointment">
 	<% session.setAttribute("infirmaryView_isOscar", "true"); %>
     </caisi:ProgramExclusiveView>
+    <caisi:ProgramExclusiveView providerNo="<%=curUser_no%>" value="case-management">
+	<% session.setAttribute("infirmaryView_isOscar", "false"); %>
+    </caisi:ProgramExclusiveView>
 </caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
 <logic:notEqual name="infirmaryView_isOscar" value="false">
