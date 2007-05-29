@@ -41,5 +41,5 @@
         <oscar:newTickler providerNo="<%=curUser_no%>"><bean:message key="global.tickler"/></oscar:newTickler>
 <%  }
     if (tab.equals("oscar_scratch")) { %>
-	<oscar:filledScratch providerNo="<%=curUser_no%>">S</oscar:filledScratch>
+	<img src='<oscar:filledScratch providerNo="<%=curUser_no%>"></oscar:filledScratch>' border='0' align="absbottom" title='Scratch Pad'>
 <%  } %>

@@ -24,7 +24,6 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.scratch.tld;
 
-import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.jsp.*;
@@ -34,7 +33,7 @@ import oscar.oscarDB.DBHandler;
 public class ScratchTag extends TagSupport {
 
     public ScratchTag()    {
-        scratchFilled = true;
+        scratchFilled = false;
     }
 
     public void setProviderNo(String providerNo1)    {
@@ -51,8 +50,8 @@ public class ScratchTag extends TagSupport {
             String sql = new String("SELECT scratch_text FROM scratch_pad WHERE provider_no = '" + providerNo + "' order by id desc limit 1");
             ResultSet rs = db.GetSQL(sql);
 	    while (rs.next()) {
-		if (rs.getString(1).trim().length()==0) scratchFilled = false;
-		else scratchFilled = true;
+		if (rs.getString(1).trim().length()>0) scratchFilled = true;
+		else scratchFilled = false;
 	    }
 
             rs.close();
@@ -63,22 +62,16 @@ public class ScratchTag extends TagSupport {
         try        {
             JspWriter out = super.pageContext.getOut();
             if(scratchFilled)
-                out.print("<span class='tabalert'>");
+                out.print("../images/notepad.gif");
             else
-                out.print("<span>");
+                out.print("../images/notepad_blank.gif");
         } catch(Exception p) {
             p.printStackTrace(System.out);
         }
         return(EVAL_BODY_INCLUDE);
     }
 
-    public int doEndTag()        throws JspException    {
-       try{
-          JspWriter out = super.pageContext.getOut();
-              out.print("</span>");
-       }catch(Exception p) {
-            p.printStackTrace(System.out);
-       }
+    public int doEndTag() throws JspException {
        return EVAL_PAGE;
     }
 
