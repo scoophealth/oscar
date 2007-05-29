@@ -106,6 +106,31 @@
 		  awnd.focus();
 }
         //-->
+        
+        function validateNum(el){
+   var val = el.value;
+   var tval = ""+val;
+   if (isNaN(val)){   
+      alert("Item value must be numeric.");
+      el.select();
+      el.focus();
+      return false;
+   }
+   if ( val >= 99999.99 ){
+     alert("Item value must be below $100000");
+     el.select();
+     el.focus();
+     return false;
+   }
+   decLen = tval.indexOf(".");
+   if (decLen != -1  &&   ( tval.length - decLen ) > 3  ){
+      alert("Item value has a maximum of 2 decimal places");
+      el.select();
+      el.focus();
+      return false;
+   }  
+   return true;
+}
     </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></head>
 
@@ -345,7 +370,10 @@ String proFirst="", proLast="", proOHIP="", proNo="";
       <td width="50%"><font face="Arial, Helvetica, sans-serif" size="1"><%=serviceDesc%></font></td>
        <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_billing_unit<%=rowCount%>" value="<%=billingunit%>"><input type="text" style="font-size:80%;" name="billingunit<%=rowCount-1%>" value="<%=billingunit%>" size="5" maxlength="5"></font></td>
       <td width="13%"> 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><input type="hidden" name="xml_billing_amount<%=rowCount%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"><input type="text" style="font-size:80%;" size="5" maxlength="5" name="billingamount<%=rowCount-1%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"></font></div>
+        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2">
+        <input type="hidden" name="xml_billing_amount<%=rowCount%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>">
+        <input type="text" style="font-size:80%;" size="8" maxlength="8" name="billingamount<%=rowCount-1%>" value="<%=billAmount.substring(0,billAmount.length()-2) + "." + billAmount.substring(billAmount.length()-2)%>"  onchange="javascript:validateNum(this)">
+        </font></div>
       </td>
     </tr>
 <%
@@ -354,12 +382,19 @@ String proFirst="", proLast="", proOHIP="", proNo="";
 <% if (rowCount < 5) { %>
 <% for (int i=rowCount; i<5; i++){ %>
  <tr> 
-      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="servicecode<%=i%>" value=""></font></td>
-   
+      <td width="25%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="servicecode<%=i%>" value=""></font></td>   
       <td width="50%"><font face="Arial, Helvetica, sans-serif" size="2">&nbsp;</font></td>
-        <td width="12%"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="billingunit<%=i%>" value="" size="5" maxlength="5"></font></td>
+      <td width="12%">
+        <font face="Arial, Helvetica, sans-serif" size="2">
+            <input type="text" style="font-size:80%;" name="billingunit<%=i%>" value="" size="5" maxlength="5">
+        </font>
+      </td>
       <td width="13%"> 
-        <div align="right"><font face="Arial, Helvetica, sans-serif" size="2"><input type="text" style="font-size:80%;" name="billingamount<%=i%>" value="" size="5" maxlength="5"></font></div>
+        <div align="right">
+            <font face="Arial, Helvetica, sans-serif" size="2">
+            <input type="text" style="font-size:80%;" name="billingamount<%=i%>" value="" size="8" maxlength="8" onchange="javascript:validateNum(this)">
+            </font>
+        </div>
       </td>
     </tr>
 <% }
