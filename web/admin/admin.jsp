@@ -295,6 +295,10 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingManageReferralDoc.jsp');return false;">Manage Referral Doc</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a></li>
           <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a></li>
+          <oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="yes">
+          <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/TeleplanSimulation.jsp');return false;">Simulate Submission File2</a></li>
+          <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/TeleplanSubmission.jsp');return false;">Generate Teleplan File2</a></li>
+          </oscar:oscarPropertiesCheck>
           <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a></li>
           <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">MSP Reconcilliation Reports</a></li>
           <li><a href="#" onClick="popUpBillStatus(375,425,'../billing/CA/BC/billingAccountReports.jsp');return false;">Accounting Reports</a></li>
