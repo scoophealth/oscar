@@ -33,6 +33,7 @@
 <%@taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite"%>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@page import="oscar.oscarDemographic.data.*"%>
 <%@page import="java.text.*, java.util.*, oscar.oscarBilling.ca.bc.data.*,oscar.oscarBilling.ca.bc.pageUtil.*,oscar.*,oscar.entities.*"%>
 <%!
@@ -1367,104 +1368,61 @@ function formPopupHide(){
                 </tr>
               <%}              %>
               </table>
-              <table width="100%" border="0" cellpadding="2" cellspacing="2" bgcolor="#CCCCFF">
+              <!-- ONSCREEN DX CODE DISPLAY -->
+              <table width="100%" border="3" cellpadding="2" cellspacing="2" bgcolor="#CCCCFF">
                 <tr>
-                  <td width="91%" height="103" valign="top">
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
+                  <td  height="103" valign="top" width="10">
+                    <table border="2" cellspacing="0" cellpadding="0" height="67" bgcolor="#EEEEFF">
                       <tr>
-                        <td>
-                          <b>
-                            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+                        <th align="left">
                               <a href="#" id="pop2" onClick="formPopup(this.id,'Layer2');return false;">
                                 <bean:message key="billing.diagnostic.code"/>
-                              </a>
-                            </font>
-                          </b>
-                        </td>
-                        <td>
-                          <b>                          </b>
-                        </td>
+                              </a>   
+                        </th>
                       </tr>
                       <tr>
                         <td>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                             <html:text property="xml_diagnostic_detail1" size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
-                          </font>
-                        </td>
-                        <td>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                             <html:text property="xml_diagnostic_detail2" size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
-                          </font>
-                        </td>
-                        <td>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
                         </td>
                       </tr>
                       <tr>
                         <td>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
                             <html:text property="xml_diagnostic_detail3" size="25" onkeypress="return grabEnter(event,'ScriptAttach()')"/>
-                          </font>
-                        </td>
-                        <td>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
                         </td>
                       </tr>
                       <tr>
-                        <td colspan="2">
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                            <a href="javascript:ScriptAttach()">
-                              <img src="../../../images/search_dx_code.jpg" border="0">
-                            </a>
-                          </font>
-                          <font face="Verdana, Arial, Helvetica, sans-serif" size="1">&nbsp;                          </font>
+                        <td>
+                            <a href="javascript:ScriptAttach()"><img src="../../../images/search_dx_code.jpg" border="0"></a> 
                         </td>
                       </tr>
                     </table>
                   </td>
-                  <td width="9%">
-                    <!--
-                      <table width="20%" border="0" cellspacing="0" cellpadding="0" height="67" bgcolor="#CEFFCE">
-                      <tr>
-                      <td><b><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Research
-                      <font color="#FF0000">(optional)</font></font></b></td>
-                      <td><b></b></td>
-                      </tr>
-                      <tr>
-                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                      <input type="hidden" name="xml_research1" size="10" datafld='xml_research1'>
-                      </font></td>
-                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                      </font></td>
-                      </tr>
-                      <tr>
-                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                      <input type="hidden" name="xml_research2" size="10" datafld='xml_research2'>
-                      </font></td>
-                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                      </font></td>
-                      </tr>
-                      <tr>
-                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                      <input type="hidden" name="xml_research3" size="10"  datafld='xml_research3'>
-                      </font></td>
-                      <td><font face="Verdana, Arial, Helvetica, sans-serif" size="1">
-                      </font></td>
-                      </tr>
-                      <tr>
-                      <td colspan="2"><a href="javascript:ResearchScriptAttach()"><img src="../images/research_code.jpg" border="0"></a>
-                      </td>
-                      </tr>
-                      </table>
-                    -->
+                  <td align="left" width="*" valign="top">
+                      <div id="DX_REFERENCE"></div>
+                       <oscar:oscarPropertiesCheck property="BILLING_DX_REFERENCE" value="yes">
+                         <script type="text/javascript">
+                         function getDxInformation(origRequest){
+                               var url = "DxReference.jsp";
+                               var ran_number=Math.round(Math.random()*1000000);
+                               var params = "demographicNo=<%=bean.getPatientNo()%>&rand="+ran_number;  //hack to get around ie caching the page
+                               //alert(params);
+                               new Ajax.Updater('DX_REFERENCE',url, {method:'get',parameters:params,asynchronous:true}); 
+                               //alert(origRequest.responseText);
+                         }
+                         getDxInformation();
+                         </script>
+                       </oscar:oscarPropertiesCheck>
+                     
                   </td>
                 </tr>
               </table>
+              <!-- ONSCREEN DX CODE DISPLAY END-->
+              
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td colspan="2">
