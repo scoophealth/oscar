@@ -30,6 +30,8 @@ CREATE TABLE `admission` (
   `team_id` int(10) default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
   `agency_id` int(11) default '0',
+  `radioDischargeReason` varchar(10) default '0',
+  `clientstatus_id` bigint(20) DEFAULT 0,
   PRIMARY KEY  (`am_id`),
   KEY `FK1A21809DAA8624B` (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -37,13 +39,13 @@ CREATE TABLE `admission` (
 --
 -- Table structure for table `agency`
 --
-
 DROP TABLE IF EXISTS `agency`;
 CREATE TABLE `agency` (
   `id` bigint(20) NOT NULL default '0',
   `intake_quick` integer unsigned NOT NULL DEFAULT 1,
   `intake_quick_state` char(2) NOT NULL DEFAULT 'HS',
   `intake_indepth` integer unsigned DEFAULT 2,
+  `intake_indepth_state` CHAR(2) NOT NULL DEFAULT 'HS',
   `name` varchar(50) NOT NULL default '',
   `description` varchar(255) default NULL,
   `contact_name` varchar(255) default NULL,
@@ -220,6 +222,9 @@ CREATE TABLE `casemgmt_cpp` (
   `update_date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   `primaryPhysician` varchar(255) default NULL,
   `primaryCounsellor` varchar(255) default NULL,
+  `otherFileNumber` varchar(100) default null,
+  `otherSupportSystems` varchar(255) default null,
+  `pastMedications` varchar(255) default null,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -329,6 +334,8 @@ CREATE TABLE `client_referral` (
   `temporary_admission_flag` tinyint(1) default NULL,
   `completion_date` datetime default NULL,
   `source_agency_id` bigint(20) default NULL,
+  `present_problems` varchar(255) default NULL,
+  `radioRejectionReason` varchar(10) default '0',
   PRIMARY KEY  (`referral_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1579,6 +1586,7 @@ CREATE TABLE `issue` (
   `description` varchar(255) NOT NULL default '',
   `role` varchar(100) NOT NULL default '',
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `priority` CHAR(10) DEFAULT NULL,
   PRIMARY KEY  (`issue_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1608,6 +1616,17 @@ CREATE TABLE `program` (
   `allow_batch_discharge` tinyint(1) default NULL,
   `hic` tinyint(1) default NULL,
   `program_status` varchar(8) NOT NULL default 'active',
+  `bed_program_link_id` int(10) default 0,
+  `manOrWoman` varchar(6) default null,
+  `transgender`  tinyint(1)default 0,
+  `firstNation`  tinyint(1)default 0,
+  `bedProgramAffiliated` tinyint(1) default 0,
+  `alcohol` tinyint(1) default 0,
+  `abstinenceSupport` varchar(20) default null,
+  `physicalHealth` tinyint(1) default 0,
+  `mentalHealth` tinyint(1) default 0,
+  `housing` tinyint(1) default 0,
+  `exclusive_view` varchar(20) not null default 'no',
   PRIMARY KEY  (`program_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -1699,6 +1718,7 @@ CREATE TABLE `program_queue` (
   `status` varchar(30) default NULL,
   `referral_id` bigint(20) default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
+  `present_problems` varchar(255) default NULL,
   PRIMARY KEY  (`queue_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1855,6 +1875,7 @@ CREATE TABLE `system_message` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `pmm_log`;
 create table pmm_log (
     id bigint not null auto_increment,
     provider_no varchar(255),
@@ -1865,3 +1886,54 @@ create table pmm_log (
     ip varchar(30),
     primary key (id)
 );
+
+--
+-- Table structure for table 'icd10'
+--
+DROP TABLE IF EXISTS icd10;
+CREATE TABLE icd10 (
+    code CHAR(6) NOT NULL,
+    short_desc VARCHAR(40) NOT NULL,
+    long_desc VARCHAR(255) NOT NULL,
+    PRIMARY KEY(code)
+) ENGINE = InnoDB;
+
+--
+-- Table structure for table `program_clientstatus`
+--
+DROP TABLE IF EXISTS `program_clientstatus`;
+CREATE TABLE `program_clientstatus` (
+  `clientstatus_id` bigint(20) NOT NULL auto_increment,
+  `name` varchar(255) default NULL,
+  `program_id` bigint(20) default NULL,
+  PRIMARY KEY  (`clientstatus_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+drop table if exists tickler_update;
+create table tickler_update (
+	id int(10) not null auto_increment,
+	tickler_no int(10) not null,
+	status char(1) not null,
+	provider_no varchar(6) not null,
+	update_date datetime not null,
+	primary key(id)
+) TYPE MyISAM;
+
+drop table if exists tickler_comments;
+create table tickler_comments (
+	id int(10) not null auto_increment,
+	tickler_no int(10) not null,
+	message text,
+	provider_no varchar(6) not null,
+	update_date datetime not null,
+	primary key(id)
+) TYPE MyISAM;
+
+
+
+-- Caisi Alter Oscar
+alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL default '' after color_template;
+
+-- Update formintakea table
+update formintakea set formCreated = null where formCreated = '0000-00-00';
+
