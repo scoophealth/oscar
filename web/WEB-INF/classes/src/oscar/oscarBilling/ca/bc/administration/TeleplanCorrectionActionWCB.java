@@ -110,7 +110,7 @@ public class TeleplanCorrectionActionWCB
       String status = data.getStatus();
       if (!StringUtils.isNullOrEmpty(status)) {
         status = msp.NOTSUBMITTED.equals(data.getStatus())?msp.WCB:status;
-        msp.updateBillingStatus(data.getBillingNo(), status);
+        msp.updateBillingStatus(data.getBillingNo(), status,data.getId());
       }
       BillingHistoryDAO dao = new BillingHistoryDAO();
       //If the adjustment amount field isn't empty, create an archive of the adjustment

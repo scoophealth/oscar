@@ -132,14 +132,10 @@ public class BillingReProcessBillAction
     String submit = frm.getSubmit();
     String secondSQL = null;
 
-    if ( (submit.equals("Resubmit Bill") ||
-          submit.equals("Reprocess and Resubmit Bill")) ||
-        billingStatus.equals("O")) {
+    if ( (submit.equals("Resubmit Bill") || submit.equals("Reprocess and Resubmit Bill")) || billingStatus.equals("O")) {
       billingStatus = "O";
-      secondSQL = "update billing set status = 'O' where billing_no ='" +
-          frm.getBillNumber() + "'";
-    }
-    else if (submit.equals("Settle Bill")) {
+      secondSQL = "update billing set status = 'O' where billing_no ='" + frm.getBillNumber() + "'";
+    } else if (submit.equals("Settle Bill")) {
       billingStatus = "S";
     }
 
@@ -157,8 +153,7 @@ public class BillingReProcessBillAction
       oinAddress4 = "";
       oinPostalcode = "";
 
-    }
-    else { //other provinces
+    } else { //other provinces
       oinInsurerCode = hcType;
       hcNo = "000000000";
       name_verify = "0000";
@@ -170,14 +165,12 @@ public class BillingReProcessBillAction
       try {
         dateRecieved = dateRecieved.trim();
         Integer.parseInt(dateRecieved);
-      }
-      catch (Exception e) {
+      }catch (Exception e) {
         e.printStackTrace();
         dateRecieved = "";
       }
 
-      originalMSPNumber = constructOriginalMSPNumber(dataCenterId, seqNum,
-          dateRecieved);
+      originalMSPNumber = constructOriginalMSPNumber(dataCenterId, seqNum,dateRecieved);
     }
     /**
      * Check the bill type, if it has been changed by the user
@@ -207,8 +200,7 @@ public class BillingReProcessBillAction
           }
         }
       }
-    }
-    else{
+    } else {
       throw new RuntimeException("BILLING BC - " + new java.util.Date().toString() + " - billingmaster_no " + billingmasterNo + " doesnt't seem to have a type");
     }
 
@@ -233,8 +225,7 @@ public class BillingReProcessBillAction
       String fmtStr = NumberFormat.getCurrencyInstance().format(amtTemp);
       billingServicePrice = fmtStr.substring(1,fmtStr.length());
 
-    }
-    catch(NumberFormatException e){
+    } catch(NumberFormatException e){
       e.printStackTrace();
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
     }
@@ -302,8 +293,8 @@ public class BillingReProcessBillAction
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
       db.RunSQL(providerSQL);
-      if (!StringUtils.isNullOrEmpty(billingStatus)) {
-        msp.updateBillingStatus(frm.getBillNumber(), billingStatus);
+      if (!StringUtils.isNullOrEmpty(billingStatus)) {  //What if billing status is null?? the status just doesn't get updated but everything else does??'
+        msp.updateBillingStatus(frm.getBillNumber(), billingStatus,billingmasterNo);
       }
       BillingHistoryDAO dao = new BillingHistoryDAO();
       //If the adjustment amount field isn't empty, create an archive of the adjustment
