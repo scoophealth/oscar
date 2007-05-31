@@ -38,16 +38,18 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
 import oscar.oscarBilling.ca.bc.data.BillingNote;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarBilling.ca.bc.data.BillingHistoryDAO;
-import oscar.oscarEncounter.data.EctPatientData;
 import oscar.oscarEncounter.data.EChartDAO;
 import oscar.oscarEncounter.data.Echart;
-import oscar.entities.BillHistory;
 import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public class BillingSaveBillingAction
@@ -70,6 +72,13 @@ public class BillingSaveBillingAction
         getSession().getAttribute("billingSessionBean");
     //  oscar.oscarBilling.data.BillingStoreData bsd = new oscar.oscarBilling.data.BillingStoreDate();
     //  bsd.storeBilling(bean);
+    
+    
+    
+    
+    
+    
+    
     oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
     String billStatus = as.billStatus(bean.getApptStatus());
 
@@ -85,12 +94,14 @@ public class BillingSaveBillingAction
         "dataCenterId");
     String billingMasterId = "";
 
+    
+    ///Update Appointment information
     System.out.println("appointment_no: " + bean.getApptNo());
     System.out.println("BillStatus:" + billStatus);
     String sql = "update appointment set status='" + billStatus +
         "' where appointment_no='" + bean.getApptNo() + "'";
 
-    try {
+    try {  
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL(sql);
       db.CloseConn();
@@ -102,61 +113,31 @@ public class BillingSaveBillingAction
                          " date " + curDate);
       e.printStackTrace();
     }
+    ////End of updating appt information
 
     char billingAccountStatus = 'O';
+    
     if (bean.getBillingType().equals("DONOTBILL")) {
       bean.setBillingType("MSP"); //RESET this to MSP to get processed
       billingAccountStatus = 'N';
-    }
-    else if (bean.getBillingType().equals("WCB")) {
+    }else if (bean.getBillingType().equals("WCB")) {
       billingAccountStatus = 'O';
-    }
-    else if(MSPReconcile.BILLTYPE_PRI.equals(bean.getBillingType())){
+    }else if(MSPReconcile.BILLTYPE_PRI.equals(bean.getBillingType())){
      billingAccountStatus = 'P';
     }
-
-    //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
-    String billingSQL = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)"
-        + " values('\\N'," +
-        "'" + bean.getPatientNo() + "'," +
-        "'" + bean.getBillingProvider() + "', " +
-        "'" + bean.getApptNo() + "'," +
-        "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientName()) + "'," +
-        "'" + bean.getPatientPHN() + "'," +
-        "'" + curDate + "'," +
-        "'" + bean.getServiceDate() + "'," +
-        "'" + bean.getGrandtotal() + "'," +
-        "'" + billingAccountStatus + "'," + //status
-        "'" + bean.getPatientDoB() + "'," +
-        "'" + bean.getAdmissionDate() + "'," +
-        "'" + oscar.util.UtilMisc.mysqlEscape(bean.getVisitType()) + "'," +
-        "'" + bean.getBillingPracNo() + "'," +
-        "'" + bean.getApptProviderNo() + "'," +
-        "'" + bean.getCreator() + "'," +
-        "'" + bean.getBillingType() + "')";
-
-    try {
-      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-      db.RunSQL(billingSQL);
-      rs = db.GetSQL("SELECT LAST_INSERT_ID()");
-
-      if (rs.next()) {
-        billingid = rs.getString(1);
-      }
-      rs.close();
-      db.CloseConn();
-
-    }
-    catch (SQLException e) {
-      System.out.println(e.getMessage());
-    }
+    
+    
+    String billingSQL = insertIntoBilling(bean, curDate, billingAccountStatus);
+    
 
     ArrayList billItem = bean.getBillItem();
+    
     char paymentMode = (bean.getEncounter().equals("E") && !bean.getBillingType().equals("ICBC") && !bean.getBillingType().equals("WCB")) ? 'E' : '0';
 
     String billedAmount;
     if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri")) {
       for (int i = 0; i < billItem.size(); i++) {
+        billingid = getInsertIdFromBilling(billingSQL);  
         if (paymentMode == 'E') {
           billedAmount = "0.00";
         }
@@ -409,6 +390,8 @@ public class BillingSaveBillingAction
     //////////////
     if (bean.getBillingType().equals("WCB")) {
       //Keep in mind that the first billingId was set way up at the top
+      //NOT ANY MORE  
+      billingid = getInsertIdFromBilling(billingSQL);    
       DBHandler db = null;
       String status = new String(new char[] {billingAccountStatus});
       WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
@@ -521,6 +504,48 @@ public class BillingSaveBillingAction
     }
     return af; //(mapping.findForward("success"));
   }
+
+    private String getInsertIdFromBilling(final String billingSQL) {
+        String billingId ="";
+        try {
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          db.RunSQL(billingSQL);
+          java.sql.ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID()");
+          if (rs.next()) {
+            billingId = rs.getString(1);
+          }
+          rs.close();
+          db.CloseConn();
+        }
+        catch (SQLException e) {
+          System.out.println(e.getMessage());
+        }
+        return billingId;
+    }
+
+    private String insertIntoBilling(final oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean, final String curDate, final char billingAccountStatus) {
+
+        //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
+        String billingSQL = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)"
+            + " values('\\N'," +
+            "'" + bean.getPatientNo() + "'," +
+            "'" + bean.getBillingProvider() + "', " +
+            "'" + bean.getApptNo() + "'," +
+            "'" + oscar.util.UtilMisc.mysqlEscape(bean.getPatientName()) + "'," +
+            "'" + bean.getPatientPHN() + "'," +
+            "'" + curDate + "'," +
+            "'" + bean.getServiceDate() + "'," +
+            "'" + bean.getGrandtotal() + "'," +
+            "'" + billingAccountStatus + "'," + //status
+            "'" + bean.getPatientDoB() + "'," +
+            "'" + bean.getAdmissionDate() + "'," +
+            "'" + oscar.util.UtilMisc.mysqlEscape(bean.getVisitType()) + "'," +
+            "'" + bean.getBillingPracNo() + "'," +
+            "'" + bean.getApptProviderNo() + "'," +
+            "'" + bean.getCreator() + "'," +
+            "'" + bean.getBillingType() + "')";
+        return billingSQL;
+    }
 
   private String createBillingMasterInsertString(BillingSessionBean bean,
                                                  String billingid,
