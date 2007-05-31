@@ -117,7 +117,9 @@
  
  <target name="web" depends="init">
   <javac  
-         fork="true"
+         fork="true" 
+         memoryinitialsize="128m" 
+         memorymaximumsize="256m"
 	 srcdir="${src_web}"
          excludes="oscar/oscarMessenger/data/MsgRemoteMessageData.java"
          destdir="${classes_web}"
