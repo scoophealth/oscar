@@ -479,7 +479,7 @@ String disabled="";
   <INPUT TYPE="hidden" NAME="displaymode" value=""> 
   <table border=0 cellspacing=0 cellpadding=0 width="100%" > 
     <tr bgcolor="<%=deepcolor%>"> 
-      <th><font face="Helvetica"><bean:message key="appointment.addappointment.msgMainLabel"/></font></th> 
+      <th><font face="Helvetica"><bean:message key="appointment.addappointment.msgMainLabel"/> (<%=userfirstname%> <%=userlastname%>)</font></th> 
     </tr> 
   </table> 
   <table border="0" cellpadding="0" cellspacing="0" width="100%"> 
