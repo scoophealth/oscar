@@ -1116,8 +1116,8 @@ public class MSPReconcile {
    * @param billingNo String
    * @param stat String
    */
-  public void updateBillingStatus(String billingNo, String stat) {
-    updateBillingStatusHlp(billingNo, stat);
+  public void updateBillingStatus(String billingNo, String stat,String billingMasterNo) {
+    updateBillingStatusHlp2(billingMasterNo, stat);
     String paymentMethod = this.PAYTYPE_ELECTRONIC;
     if (this.BILLPATIENT.equals(stat) || this.PAIDPRIVATE.equals(stat)) {
       this.updateBillTypeHlp(billingNo, BILLTYPE_PRI);
@@ -1139,6 +1139,19 @@ public class MSPReconcile {
     updatePaymentMethodHlp(billingNo, paymentMethod);
   }
 
+  //Only updates only the billingmaster status
+  private void updateBillingStatusHlp2(String billingNo, String stat) {
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      db.RunSQL("update billingmaster set billingstatus = '" + stat +
+                "' where billingmaster_no = '" + billingNo + "'");
+      db.CloseConn();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
   private void updateBillingStatusHlp(String billingNo, String stat) {
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
