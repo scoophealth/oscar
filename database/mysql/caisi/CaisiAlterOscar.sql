@@ -1,1 +1,0 @@
-alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL default '' after color_template;
