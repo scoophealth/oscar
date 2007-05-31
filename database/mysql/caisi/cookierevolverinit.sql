@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS `cr_cert`;
-CREATE TABLE `cr_cert` (
+CREATE TABLE IF NOT EXISTS `cr_cert` (
   `cert_id` varchar(37) NOT NULL default '',
   `user_specific` tinyint(1) default NULL,
   `static_ip` tinyint(1) default NULL,
@@ -16,16 +15,14 @@ CREATE TABLE `cr_cert` (
   PRIMARY KEY  (`cert_id`)
 ) TYPE=MyISAM;
 
-DROP TABLE IF EXISTS `cr_machine`;
-CREATE TABLE `cr_machine` (
+CREATE TABLE IF NOT EXISTS `cr_machine` (
   `machine_id` varchar(37) NOT NULL default '',
   `ip` varchar(15) default NULL,
   `machine_name` varchar(255) default NULL,
   PRIMARY KEY  (`machine_id`)
 ) TYPE=MyISAM;
 
-DROP TABLE IF EXISTS `cr_policy`;
-CREATE TABLE `cr_policy` (
+CREATE TABLE IF NOT EXISTS `cr_policy` (
   `policy_id` varchar(37) NOT NULL default '',
   `static_ip` tinyint(1) default NULL,
   `ip` varchar(15) default NULL,
@@ -47,8 +44,7 @@ CREATE TABLE `cr_policy` (
   PRIMARY KEY  (`policy_id`)
 ) TYPE=MyISAM;
 
-DROP TABLE IF EXISTS 'cr_securityquestion';
-CREATE TABLE `cr_securityquestion` (
+CREATE TABLE IF NOT EXISTS `cr_securityquestion` (
   `question_id` varchar(37) NOT NULL default '',
   `user_id` varchar(128) default NULL,
   `question` varchar(255) default NULL,
@@ -56,8 +52,7 @@ CREATE TABLE `cr_securityquestion` (
   PRIMARY KEY  (`question_id`)
 ) TYPE=MyISAM;
 
-DROP TABLE IF EXISTS `cr_user`;
-CREATE TABLE `cr_user` (
+CREATE TABLE IF NOT EXISTS `cr_user` (
   `user_id` varchar(64) NOT NULL default '',
   `password_digest` varchar(128) default NULL,
   `disabled` tinyint(1) default NULL,
@@ -66,8 +61,7 @@ CREATE TABLE `cr_user` (
   PRIMARY KEY  (`user_id`)
 ) TYPE=MyISAM;
 
-DROP TABLE IF EXISTS `cr_userrole`;
-CREATE TABLE `cr_userrole` (
+CREATE TABLE IF NOT EXISTS `cr_userrole` (
   `user_id` varchar(64) NOT NULL default '',
   `user_role` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`user_id`,`user_role`)
