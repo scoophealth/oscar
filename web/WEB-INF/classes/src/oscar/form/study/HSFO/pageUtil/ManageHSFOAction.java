@@ -204,19 +204,22 @@ public class ManageHSFOAction extends Action{
                                 double bmi= 0.0;
                                 double height=0.0;
 
+                                if (heightunit != null){
                                 //convert height to meter
-                                if (heightunit.equals("cm")) {
-                                    height = heightr/100;
-                                } else {
-                                    //1 inch = 0.0254 meter
-                                    height= heightr * 0.0254;
+                                    if (heightunit.equals("cm")) {
+                                        height = heightr/100;
+                                    } else {
+                                        //1 inch = 0.0254 meter
+                                        height= heightr * 0.0254;
+                                    }
                                 }
-
-                                if (weightunit.equals("kg")) {
-                                    bmi = weight/height;
-                                } else {
-                                    //1 kilogram = 2.20462262 pound
-                                    bmi = (weight/2.20462262)/height;
+                                if (weightunit != null){
+                                    if (weightunit.equals("kg")) {
+                                        bmi = weight/height;
+                                    } else {
+                                        //1 kilogram = 2.20462262 pound
+                                        bmi = (weight/2.20462262)/height;
+                                    }
                                 }
                                 BMIHash[c]  = new Hashtable();
                                 BMIHash[c].put("data",bmi);
