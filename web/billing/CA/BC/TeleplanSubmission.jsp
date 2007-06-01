@@ -247,9 +247,9 @@ function showHideLayers() { //v3.0
         </html-el:link>
     </td>
     <td>
-        <html:link action="/billing/CA/BC/DownloadBilling?filename=${billAct.htmlfilename}" >
+        <html-el:link action="/billing/CA/BC/DownloadBilling?filename=${billAct.htmlfilename}" >
             <c:out value="${billAct.htmlfilename}"/>
-        </html:link>
+        </html-el:link>
     </td>
     </tr>
 </c:forEach> 
