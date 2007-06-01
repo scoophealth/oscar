@@ -335,93 +335,111 @@
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 
 <script type="text/javascript" language="JavaScript">
-
-            <!--
-window.focus();
-
 function setfocus() {
     this.focus();
 }
+
 function gotoBillingOB() {
   if(self.location.href.lastIndexOf("?") > 0) {
     a = self.location.href.substring(self.location.href.lastIndexOf("?"));
   }
   self.location.href = "billingOB.jsp" + a ;
 }
+
 function findObj(n, d) { //v4.0
-	var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
-	d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
-	if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+	var p,i,x;
+	if(!d) d=document;
+	if((p=n.indexOf("?"))>0&&parent.frames.length) {
+	    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);
+	}
+	if(!(x=d[n])&&d.all) x=d.all[n];
+	for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
 	for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=findObj(n,d.layers[i].document);
-	if(!x && document.getElementById) x=document.getElementById(n); return x;
+	if(!x && document.getElementById) x=document.getElementById(n);
+	return x;
 }
 
 function showHideLayers() { //v3.0
 	var i,p,v,obj,args=showHideLayers.arguments;
-	for (i=0; i<(args.length-2); i+=3) if ((obj=findObj(args[i]))!=null) { v=args[i+2];
-	if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
-	obj.visibility=v; }
+	for (i=0; i<(args.length-2); i+=3) {
+	    if ((obj=findObj(args[i]))!=null) {
+		v=args[i+2];
+		if (obj.style) {
+		    obj=obj.style;
+		    v=(v=='show')?'visible':(v='hide')?'hidden':v;
+		}
+		obj.visibility=v;
+	    }
+	}
 }
-    function onNext() {
-        //document.forms[0].submit.value="save";
-        var ret = checkAllDates();
-        if(ret==true) {
-            //ret = confirm("Are you sure you want to save this form?");
-        }
-        return ret;
+
+function onNext() {
+    //document.forms[0].submit.value="save";
+    var ret = checkAllDates();
+    if(ret==true) {
+	//ret = confirm("Are you sure you want to save this form?");
     }
-    function checkAllDates() {
-	    //document.forms[0].serviceDate0.value = document.forms[0].serviceDate0.value.toUpperCase();
-	    //document.forms[0].serviceDate1.value = document.forms[0].serviceDate1.value.toUpperCase();
-	    //document.forms[0].serviceDate2.value = document.forms[0].serviceDate2.value.toUpperCase();
-        var b = true;
-		if(document.forms[0].dxCode.value.length!=3 && document.forms[0].dxCode.value.length!=0){
-        	alert("Wrong dx code!");
-            b = false;
-        	return b;
-        } else if(document.forms[0].xml_provider.value=="000000"){
-        	alert("Please select a provider.");
-            b = false;
-        	return b;
-        } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")){
-        	alert("Need an admission date.");
-            b = false;
-        } 
+    if 	(document.titlesearch.services_checked.value<=0) { //no services checked
+	ret = false;
+	alert("You haven't selected any billing item yet!");
+    }
+    return ret;
+}
 
-		if(document.forms[0].xml_vdate.value.length>0) {
-        	b = checkServiceDate(document.forms[0].xml_vdate.value);
-        } 
+function checkAllDates() {
+	//document.forms[0].serviceDate0.value = document.forms[0].serviceDate0.value.toUpperCase();
+	//document.forms[0].serviceDate1.value = document.forms[0].serviceDate1.value.toUpperCase();
+	//document.forms[0].serviceDate2.value = document.forms[0].serviceDate2.value.toUpperCase();
+    var b = true;
+    if(document.forms[0].dxCode.value.length!=3 && document.forms[0].dxCode.value.length!=0) {
+	alert("Wrong dx code!");
+	b = false;
+	return b;
+    } else if(document.forms[0].xml_provider.value=="000000"){
+	alert("Please select a provider.");
+	b = false;
+	return b;
+    } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")) {
+	alert("Need an admission date.");
+	b = false;
+    } 
 
-        //if(!isInteger(document.forms[0].dxCode.value)) {
-        //	alert("Wrong dx code!");
-        //    b = false;
-        //}
-        if(document.forms[0].referralCode.value.length>0) {
-          if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
-        	alert("Wrong referral code!");
-            b = false;
-          }
-        }
+    if(document.forms[0].xml_vdate.value.length>0) {
+	b = checkServiceDate(document.forms[0].xml_vdate.value);
+    } 
+
+    //if(!isInteger(document.forms[0].dxCode.value)) {
+    //	alert("Wrong dx code!");
+    //    b = false;
+    //}
+
+    if(document.forms[0].referralCode.value.length>0) {
+	if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
+	    alert("Wrong referral code!");
+	    b = false;
+	}
+    }
+	
 <%for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) { %>
-       	if(document.forms[0].serviceCode<%=i%>.value.length>0) {
-       		if(!document.forms[0].serviceCode<%=i%>.value.startsWith('_')) {
-	           if(document.forms[0].serviceCode<%=i%>.value.length!=5) {
-		         	alert("Wrong service code!");
-	             	b = false;
-	           }
-           }
-        }
-<% } %>
-
-        return b;
+    if(document.forms[0].serviceCode<%=i%>.value.length>0) {
+	if(!document.forms[0].serviceCode<%=i%>.value.startsWith('_')) {
+	    if(document.forms[0].serviceCode<%=i%>.value.length!=5) {
+		alert("Wrong service code!");
+		b = false;
+	    }
+	}
     }
+<% } %>
+    return b;
+}
+
 function checkServiceDate(s) {
 	var calDate=new Date();
 	varYear = calDate.getFullYear();
 	varMonth = calDate.getMonth()+1;
 	varDate = calDate.getDate();
-    var str_date = s; //document.forms[0].xml_appointment_date.value;
-    var yyyy = str_date.substring(0, str_date.indexOf("-"));
+	var str_date = s; //document.forms[0].xml_appointment_date.value;
+	var yyyy = str_date.substring(0, str_date.indexOf("-"));
 	var mm = str_date.substring(eval(str_date.indexOf("-")+1), str_date.lastIndexOf("-"));
 	var dd = str_date.substring(eval(str_date.lastIndexOf("-")+1));
 	var bWrongDate = false;
@@ -444,52 +462,55 @@ function checkServiceDate(s) {
 	}
 }
     
-    function isInteger(s){
-        var i;
-        for (i = 0; i < s.length; i++){
-            // Check that current character is number.
-            var c = s.charAt(i);
-            if (((c < "0") || (c > "9"))) return false;
-        }
-        // All characters are numbers.
-        return true;
+function isInteger(s){
+    var i;
+    for (i = 0; i < s.length; i++){
+	// Check that current character is number.
+	var c = s.charAt(i);
+	if (((c < "0") || (c > "9"))) return false;
     }
+    // All characters are numbers.
+    return true;
+}
 
-    function isServiceCode(s){
-        // temp for 0.
-    	if(s.length==0) return true;
-    	if(s.length!=5) return false;
-        if((s.charAt(0) < "A") || (s.charAt(0) > "Z")) return false;
-        if((s.charAt(4) < "A") || (s.charAt(4) > "Z")) return false;
+function isServiceCode(s){
+    // temp for 0.
+    if(s.length==0) return true;
+    if(s.length!=5) return false;
+    if((s.charAt(0) < "A") || (s.charAt(0) > "Z")) return false;
+    if((s.charAt(4) < "A") || (s.charAt(4) > "Z")) return false;
 
-        var i;
-        for (i = 1; i < s.length-1; i++){
-            // Check that current character is number.
-            var c = s.charAt(i);
-            if (((c < "0") || (c > "9"))) return false;
-        }
-        return true;
+    var i;
+    for (i = 1; i < s.length-1; i++){
+	// Check that current character is number.
+	var c = s.charAt(i);
+	if (((c < "0") || (c > "9"))) return false;
     }
+    return true;
+}
+
 function isChecked(s) {
     for (var i =0; i <document.forms[0].elements.length; i++) {
         if (document.forms[0].elements[i].name.indexOf(s)==0 && document.forms[0].elements[i].name.length==14) {
             if (document.forms[0].elements[i].checked) {
 				return true;
-			}
+	    }
     	}
-	}
-	return false;
+    }
+    return false;
 }
+
 var remote=null;
 function rs(n,u,w,h,x) {
-  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
-  remote=window.open(u,n,args);
-  //if (remote != null) {
-  //  if (remote.opener == null)
-  //    remote.opener = self;
-  //}
-  //if (x == 1) { return remote; }
+    args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+    remote=window.open(u,n,args);
+    //if (remote != null) {
+    //  if (remote.opener == null)
+    //    remote.opener = self;
+    //}
+    //if (x == 1) { return remote; }
 }
+
 var awnd=null;
 function referralScriptAttach(elementName) {
      var d = elementName;
@@ -499,6 +520,7 @@ function referralScriptAttach(elementName) {
      awnd=rs('att',('searchRefDoc.jsp?param='+t0),600,600,1);
      awnd.focus();
 }
+
 function referralScriptAttach2(elementName, name2) {
      var d = elementName;
      t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
@@ -506,16 +528,18 @@ function referralScriptAttach2(elementName, name2) {
      awnd=rs('att',('searchRefDoc.jsp?param='+t0+'&param2='+t1),600,600,1);
      awnd.focus();
 }
+
 function dxScriptAttach(name2) {
 	ff = eval("document.forms[0].elements['" +name2+"']");
 	f0 = ff.value;
-    f1 = escape("document.forms[0].elements[\'"+name2+"\'].value");
+	f1 = escape("document.forms[0].elements[\'"+name2+"\'].value");
 	awnd=rs('att','billingDigSearch.jsp?name='+f0 + '&search=&name2='+f1,600,600,1);
 	awnd.focus();
 }
+
 function scScriptAttach(nameF) {
 	f0 = escape(nameF.value);
-    f1 = escape("document.forms[0].elements[\'"+nameF.name + "\'].value");
+	f1 = escape("document.forms[0].elements[\'"+nameF.name + "\'].value");
 	awnd=rs('att','billingCodeSearch.jsp?name='+f0 + '&search=&name1=&name2=&nameF='+f1,600,600,1);
 	awnd.focus();
 }
@@ -531,6 +555,8 @@ function onDblClickServiceCode(item) {
 	} 
 	<% } %>
 }
+
+<!--
 function onClickServiceCode(item) {
 	//alert(item.id);
 	if(document.forms[0].serviceCode0.value=="") {
@@ -542,13 +568,12 @@ function onClickServiceCode(item) {
 	} 
 	<% } %>
 }
+//-->
 
 function upCaseCtrl(ctrl) {
 	var n = document.forms[0].xml_billtype.selectedIndex;  
 	var val = document.forms[0].xml_billtype[n].value; 
-	if(val.substring(0,3) == "ODP" || val.substring(0,3) == "WCB") {
-		ctrl.value = ctrl.value.toUpperCase();
-	}
+	if(val.substring(0,3) == "ODP" || val.substring(0,3) == "WCB") ctrl.value = ctrl.value.toUpperCase();
 }
 
 function changeCut(dropdown) {
@@ -589,27 +614,27 @@ function changeCut(dropdown) {
 }
 
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
-  var page = "" + varpage;
-  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-  var popup=window.open(page, "billingfavourite", windowprops);
-  if (popup != null) {
-    if (popup.opener == null) {
-      popup.opener = self;
+    var page = "" + varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+    var popup=window.open(page, "billingfavourite", windowprops);
+    if (popup != null) {
+	if (popup.opener == null) popup.opener = self;
+	popup.focus();
     }
-    popup.focus();
-  }
 }
+
 function onClickRefDoc() { 
-  if (!document.forms[0].rfcheck.checked) {
-    document.forms[0].referralCode.value="";
-    document.forms[0].referralDocName.value="";
-    document.forms[0].referralSpet.value="";
-  } else {
-    document.forms[0].referralCode.value="<%=r_doctor_ohip%>";
-    document.forms[0].referralDocName.value="<%=r_doctor%>";
-    document.forms[0].referralSpet.value="<%=referSpet%>";
-  }
+    if (!document.forms[0].rfcheck.checked) {
+	document.forms[0].referralCode.value="";
+	document.forms[0].referralDocName.value="";
+	document.forms[0].referralSpet.value="";
+    } else {
+	document.forms[0].referralCode.value="<%=r_doctor_ohip%>";
+	document.forms[0].referralDocName.value="<%=r_doctor%>";
+	document.forms[0].referralSpet.value="<%=referSpet%>";
+    }
 }
+
 function onChangePrivate() { 
 	var n = document.forms[0].xml_billtype.selectedIndex;  
 	var val = document.forms[0].xml_billtype[n].value; 
@@ -622,30 +647,40 @@ function onChangePrivate() {
 <% } %>
   	}
 }
+
 function showHideBox(layerName, iState) { // 1 visible, 0 hidden
-    if(document.layers)	   //NN4+
-    {
-       document.layers[layerName].visibility = iState ? "show" : "hide";
-    } else if(document.getElementById)	  //gecko(NN6) + IE 5+
-    {
+    if(document.layers)	{   //NN4+
+	document.layers[layerName].visibility = iState ? "show" : "hide";
+    } else if(document.getElementById) {  //gecko(NN6) + IE 5+
         var obj = document.getElementById(layerName);
         obj.style.visibility = iState ? "visible" : "hidden";
-    } else if(document.all)	// IE 4
-    {
+    } else if(document.all) {	// IE 4
         document.all[layerName].style.visibility = iState ? "visible" : "hidden";
     }
 }
+
 function onHistory() { 
     var dd = document.forms[0].day.value;
     //alert(dd);
     popupPage("800","640","billingONHistorySpec.jsp?demographic_no=<%=demo_no%>&demo_name=<%=demoname%>&orderby=appointment_date&day=" + dd);
 }
-//-->
 
-  </script>
+function prepareServicesChecked() {
+    document.titlesearch.services_checked.value = <%=request.getParameter("services_checked")%>;
+}
+
+function refreshServicesChecked(chkd) {
+    if (chkd) {
+	document.titlesearch.services_checked.value++;
+    } else {
+	document.titlesearch.services_checked.value--;
+    }
+}
+
+</script>
 </head>
 
-<body onload="setfocus();" topmargin="0">
+<body onload="setfocus();prepareServicesChecked();" topmargin="0">
 <div id="Instrdiv" class="demo1">
    <table bgcolor='#007FFF' width='99%'>
      <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
@@ -715,28 +750,28 @@ function onHistory() {
 
 
 <form method="post" name="titlesearch" action="billingONReview.jsp" onsubmit="return onNext();">
+    <input type="hidden" name="services_checked">
+    
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myDarkGreen">
 			<tr>
-				<td><b><font color="#FFFFFF">Ontario Billing</font> </b></td>
-				<td align="right"><a href=# onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;"><font color="#FFFFFF">Edit</font></a> <select
-					name="cutlist" id="cutlist" onchange="changeCut(this)">
-					<option selected="selected" value="">- SUPER CODES -</option>
-					<% //
-			List sL = tdbObj.getBillingFavouriteList();
-			System.out.println("s:" + sL.size());
-			for (int i = 0; i < sL.size(); i = i + 2) {
-
-				%>
-					<option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
-					<%}
-
-			%>
-				</select></td>
-				<td align="right" width="10%" nowrap><input type="submit" name="submit" value="Next" style="width: 120px;" /> <input
-					type="button" name="button" value="Exit" style="width: 120px;" onclick="self.close();" /></td>
+			    <td><b><font color="#FFFFFF">Ontario Billing</font> </b></td>
+			    <td align="right"><a href=# onclick="popupPage(460,680,'billingONfavourite.jsp'); return false;"><font color="#FFFFFF">Edit</font></a> 
+			    <select	name="cutlist" id="cutlist" onchange="changeCut(this)">
+				<option selected="selected" value="">- SUPER CODES -</option>
+				<% //
+				List sL = tdbObj.getBillingFavouriteList();
+				System.out.println("s:" + sL.size());
+				for (int i = 0; i < sL.size(); i = i + 2) { %>
+				    <option value="<%=(String) sL.get(i+1)%>"><%=(String) sL.get(i)%></option>
+				<% } %>
+			    </select></td>
+			    <td align="right" width="10%" nowrap>
+				<input type="submit" name="submit" value="Next" style="width: 120px;" />
+				<input type="button" name="button" value="Exit" style="width: 120px;" onclick="self.close();" />&nbsp;
+			    </td>
 			</tr>
 		</table>
 		</td>
@@ -1017,7 +1052,7 @@ if(bMoreAddr) {
 
 				%>
 					<tr <%=bgcolor%>>
-						<td align="left" nowrap><input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked"
+						<td align="left" nowrap><input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked" onclick="refreshServicesChecked(checked);"
 							<%=request.getParameter("xml_"+serviceCode)!=null?request.getParameter("xml_"+serviceCode):""%> 
 							<%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> /> <b><font
 							size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
@@ -1071,7 +1106,7 @@ if(bMoreAddr) {
 
 				%>
 					<tr <%=bgcolor%>>
-						<td align="left" nowrap><input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked"
+						<td align="left" nowrap><input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked" onclick="refreshServicesChecked(checked);"
 							<%=request.getParameter("xml_"+serviceCode)!=null?request.getParameter("xml_"+serviceCode):""%> 
 							 <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> /> <b><font
 							size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
@@ -1125,7 +1160,7 @@ if(bMoreAddr) {
 
 				%>
 					<tr <%=bgcolor%>>
-						<td align="left" nowrap><input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked"
+						<td align="left" nowrap><input type="checkbox" id="xml_<%=serviceCode%>" name="xml_<%=serviceCode%>" value="checked" onclick="refreshServicesChecked(checked);"
 							<%=request.getParameter("xml_"+serviceCode)!=null?request.getParameter("xml_"+serviceCode):""%>
 							 <%=bSingleClick? "onClick='onClickServiceCode(this)'" :""%> /> <b><font
 							size="-1" color="<%=premiumFlag.equals("A")? "#993333" : "black"%>"><span
