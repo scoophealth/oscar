@@ -173,17 +173,49 @@
 						
 					</c:when>
 					<c:when test="${question.type.select.renderType eq 'radio'}">
-						<table width="100%">					
-							<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
-								<tr><td><html-el:radio property="data.value(${pageNumber}_${sectionId}_${question.id})" value="${answer}"/>&nbsp;<c:out value="${answer}"/></td></tr>
-							</c:forEach>
-							<c:if test="${question.type.select.otherAnswer eq true}">
-								<tr><td><html-el:radio property="data.value(${pageNumber}_${sectionId}_${question.id})" value="other"/>&nbsp;Other&nbsp;<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id}_other_value)"/></td></tr>
-							</c:if>
+						<table width="100%">
+						<c:choose>
+							<c:when test="${question.type.select.orientation eq 'horizontal'}">					
+								<tr>
+								<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
+									<td><html-el:radio property="data.value(${pageNumber}_${sectionId}_${question.id})" value="${answer}"/>&nbsp;<c:out value="${answer}"/></td>
+								</c:forEach>
+								<c:if test="${question.type.select.otherAnswer eq true}">
+									<td><html-el:radio property="data.value(${pageNumber}_${sectionId}_${question.id})" value="other"/>&nbsp;Other&nbsp;<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id}_other_value)"/></td>
+								</c:if>
+								</tr>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
+									<tr><td><html-el:radio property="data.value(${pageNumber}_${sectionId}_${question.id})" value="${answer}"/>&nbsp;<c:out value="${answer}"/></td></tr>
+								</c:forEach>
+								<c:if test="${question.type.select.otherAnswer eq true}">
+									<tr><td><html-el:radio property="data.value(${pageNumber}_${sectionId}_${question.id})" value="other"/>&nbsp;Other&nbsp;<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id}_other_value)"/></td></tr>
+								</c:if>
+							</c:otherwise>
+						</c:choose>
 						</table>
 					</c:when>
 					<c:when test="${question.type.select.renderType eq 'checkbox'}">
-						<table width="100%">					
+						<table width="100%">
+							<c:choose>
+							<c:when test="${question.type.select.orientation eq 'horizontal'}">
+								<tr>
+								<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
+								<td>
+									<html-el:hidden property="data.value(checkbox_${pageNumber}_${sectionId}_${question.id}_${answer})" />
+									<html-el:checkbox property="data.value(${pageNumber}_${sectionId}_${question.id}_${answer})" value="${answer}" onclick="select_checkbox('${pageNumber}_${sectionId}_${question.id}_${answer}')"/>&nbsp;<c:out value="${answer}"/>
+								</td>
+								</c:forEach>
+							
+								<c:if test="${question.type.select.otherAnswer eq true}">
+								<td>
+									<html-el:hidden property="data.value(checkbox_${pageNumber}_${sectionId}_${question.id}_other)" />								
+									<html-el:checkbox property="data.value(${pageNumber}_${sectionId}_${question.id}_other)" value="other"  onclick="select_checkbox('${pageNumber}_${sectionId}_${question.id}_other')"/>&nbsp;Other&nbsp;<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id}_other_value)"/>
+								</td>
+							</c:if>
+							</c:when>
+							<c:otherwise>					
 							<c:forEach var="answer" items="${question.type.select.possibleAnswers.answerArray}">
 								<tr><td>
 									<html-el:hidden property="data.value(checkbox_${pageNumber}_${sectionId}_${question.id}_${answer})" />
@@ -197,6 +229,8 @@
 									<html-el:checkbox property="data.value(${pageNumber}_${sectionId}_${question.id}_other)" value="other"  onclick="select_checkbox('${pageNumber}_${sectionId}_${question.id}_other')"/>&nbsp;Other&nbsp;<html-el:text property="data.value(${pageNumber}_${sectionId}_${question.id}_other_value)"/>
 								</td></tr>
 							</c:if>
+							</c:otherwise>
+						</c:choose>
 						</table>
 					</c:when>
 				</c:choose>
@@ -204,6 +238,6 @@
 		</c:when>
 		
 	</c:choose>
-</tR>
+</tr>
 </table>
 </td>
