@@ -374,28 +374,38 @@ function showHideLayers() { //v3.0
 }
 
 function onNext() {
-    //document.forms[0].submit.value="save";
     var ret = checkAllDates();
-    if(ret==true) {
-	//ret = confirm("Are you sure you want to save this form?");
-    }
-    if 	(document.titlesearch.services_checked.value<=0) { //no services checked
+
+    if 	(document.titlesearch.services_checked.value<=0) {
 	ret = false;
 	alert("You haven't selected any billing item yet!");
+    }
+    else if (!checkDxCode(document.titlesearch.dxCode.value)) {
+	ret = false;
+	alert ("Wrong Dx code!");
+	document.titlesearch.dxCode.focus();
+    }
+    else if (!checkDxCode(document.titlesearch.dxCode1.value)) {
+	ret = false;
+	alert ("Wrong Dx1 code!");
+	document.titlesearch.dxCode1.focus();
+    }
+    else if (!checkDxCode(document.titlesearch.dxCode2.value)) {
+	ret = false;
+	alert ("Wrong Dx2 code!");
+	document.titlesearch.dxCode2.focus();
+    }   
+    else if (document.titlesearch.dxCode.value=="" && document.titlesearch.dxCode1.value=="" && document.titlesearch.dxCode2.value=="") {
+	ret = confirm("You didn't enter a diagnostic code. Continue?");
+	if (!ret) document.titlesearch.dxCode.focus();
     }
     return ret;
 }
 
 function checkAllDates() {
-	//document.forms[0].serviceDate0.value = document.forms[0].serviceDate0.value.toUpperCase();
-	//document.forms[0].serviceDate1.value = document.forms[0].serviceDate1.value.toUpperCase();
-	//document.forms[0].serviceDate2.value = document.forms[0].serviceDate2.value.toUpperCase();
     var b = true;
-    if(document.forms[0].dxCode.value.length!=3 && document.forms[0].dxCode.value.length!=0) {
-	alert("Wrong dx code!");
-	b = false;
-	return b;
-    } else if(document.forms[0].xml_provider.value=="000000"){
+
+    if(document.forms[0].xml_provider.value=="000000"){
 	alert("Please select a provider.");
 	b = false;
 	return b;
@@ -407,11 +417,6 @@ function checkAllDates() {
     if(document.forms[0].xml_vdate.value.length>0) {
 	b = checkServiceDate(document.forms[0].xml_vdate.value);
     } 
-
-    //if(!isInteger(document.forms[0].dxCode.value)) {
-    //	alert("Wrong dx code!");
-    //    b = false;
-    //}
 
     if(document.forms[0].referralCode.value.length>0) {
 	if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
@@ -727,7 +732,7 @@ function refreshServicesChecked(chkd) {
 		<td width="6%"><a href="#" onclick="showHideLayers('Layer2','','hide');return false">X</a></td>
 	</tr>
 
-	<%String ctldiagcode = "", ctldiagcodename = "";
+	<%String ctldiagcode = "", ctldiagcodename = "", ctldiagcodeList = "|";
 			ctlCount = 0;
 			sql = "select d.diagnostic_code dcode, d.description des from diagnosticcode d, ctl_diagcode c where c.diagnostic_code=d.diagnostic_code and c.servicetype='"
 					+ ctlBillForm + "' order by d.description";
@@ -735,6 +740,8 @@ function refreshServicesChecked(chkd) {
 			while (rs.next()) {
 				ctldiagcode = rs.getString("dcode");
 				ctldiagcodename = rs.getString("des");
+				ctldiagcodeList = ctldiagcodeList + ctldiagcode + "|";
+				ctlCount++;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 		<td width="18%"><b><font size="-1" color="#7A388D"><a href="#"
@@ -742,11 +749,20 @@ function refreshServicesChecked(chkd) {
 		<td colspan="2"><font size="-2" color="#7A388D"><a href="#"
 			onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"> <%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0, 55)%></a></font></td>
 	</tr>
-	<%}
-
-			%>
+			<% } %>
 </table>
 </div>
+<script type="text/javascript" language="JavaScript">
+function checkDxCode(codeCheck) {
+    if (codeCheck!="") {
+	codeFind = "|" + codeCheck + "|";
+	codeList = "<%=ctldiagcodeList%>";
+	return (codeList.indexOf(codeFind)!=-1);
+    } else {
+	return true;
+    }
+}
+</script>
 
 
 <form method="post" name="titlesearch" action="billingONReview.jsp" onsubmit="return onNext();">
@@ -859,7 +875,6 @@ function refreshServicesChecked(chkd) {
 									onclick="dxScriptAttach('dxCode2')">Search</a></td>
 							</tr>
 						</table>
-
 
 						<a href="javascript:referralScriptAttach2('referralCode','referralDocName')">Refer. Doctor #</a> <%String checkRefBox = "";
 			String refName = "";
