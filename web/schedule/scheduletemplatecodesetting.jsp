@@ -152,7 +152,7 @@ function checkInput() {
           <td><font color="red">Confirm:</font></td>
           <td>
               <input type="radio" name="confirm" value="Yes" <%=((bEdit && dataBean.getProperty("confirm").equals("Yes"))? "checked" : "")%>>Yes
-			  <input type="radio" name="confirm" value="No" <%=(bEdit? (dataBean.getProperty("confirm").equals("No")? "checked" : "") : "checked")%>>No
+			  <input type="radio" name="confirm" value="No" <%=(bEdit? (dataBean.getProperty("confirm").equals("N")? "checked" : "") : "checked")%>>No
            </td>
             </tr>
           </table>
