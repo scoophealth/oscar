@@ -229,6 +229,7 @@
 
 			//int CountService = 0;
 			//int Count2 = 0;
+
 			sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
 					+ ctlBillForm + "' and c.service_group ='" + "Group1" + "' order by c.service_order";
 			rs = dbObj.searchDBRecord(sql);
@@ -293,7 +294,7 @@
 				propT.setProperty("servicePercentage", rs.getString("percentage"));
 				vecCodeCol3.add(propT);
 			}
-			//System.out.println(" * ******************************" + sql);
+
 			sql = "select service_code,status from ctl_billingservice_premium where ";
 			for (int i = 0; i < vecCodeCol3.size(); i++) {
 				sql += (i == 0 ? "" : " or ") + "service_code='"
@@ -335,6 +336,7 @@
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 
 <script type="text/javascript" language="JavaScript">
+<!--
 function setfocus() {
     this.focus();
 }
@@ -376,28 +378,30 @@ function showHideLayers() { //v3.0
 function onNext() {
     var ret = checkAllDates();
 
-    if 	(document.titlesearch.services_checked.value<=0) {
-	ret = false;
-	alert("You haven't selected any billing item yet!");
-    }
-    else if (!checkDxCode(document.titlesearch.dxCode.value)) {
-	ret = false;
-	alert ("Wrong Dx code!");
-	document.titlesearch.dxCode.focus();
-    }
-    else if (!checkDxCode(document.titlesearch.dxCode1.value)) {
-	ret = false;
-	alert ("Wrong Dx1 code!");
-	document.titlesearch.dxCode1.focus();
-    }
-    else if (!checkDxCode(document.titlesearch.dxCode2.value)) {
-	ret = false;
-	alert ("Wrong Dx2 code!");
-	document.titlesearch.dxCode2.focus();
-    }   
-    else if (document.titlesearch.dxCode.value=="" && document.titlesearch.dxCode1.value=="" && document.titlesearch.dxCode2.value=="") {
-	ret = confirm("You didn't enter a diagnostic code. Continue?");
-	if (!ret) document.titlesearch.dxCode.focus();
+    if (ret) {
+	if (!existServiceCode() && document.forms[0].services_checked.value<=0) {
+	    ret = false;
+	    alert("You haven't selected any billing item yet!");
+	}
+	else if (!checkDxCode(document.forms[0].dxCode.value)) {
+	    ret = false;
+	    alert ("Wrong Dx code!");
+	    document.forms[0].dxCode.focus();
+	}
+	else if (!checkDxCode(document.forms[0].dxCode1.value)) {
+	    ret = false;
+	    alert ("Wrong Dx1 code!");
+	    document.forms[0].dxCode1.focus();
+	}
+	else if (!checkDxCode(document.forms[0].dxCode2.value)) {
+	    ret = false;
+	    alert ("Wrong Dx2 code!");
+	    document.forms[0].dxCode2.focus();
+	}   
+	else if (document.forms[0].dxCode.value=="" && document.forms[0].dxCode1.value=="" && document.forms[0].dxCode2.value=="") {
+	    ret = confirm("You didn't enter a diagnostic code. Continue?");
+	    if (!ret) document.forms[0].dxCode.focus();
+	}
     }
     return ret;
 }
@@ -408,33 +412,17 @@ function checkAllDates() {
     if(document.forms[0].xml_provider.value=="000000"){
 	alert("Please select a provider.");
 	b = false;
-	return b;
     } else if(document.forms[0].xml_visittype.options[2].selected && (document.forms[0].xml_vdate.value=="" || document.forms[0].xml_vdate.value=="0000-00-00")) {
 	alert("Need an admission date.");
 	b = false;
-    } 
-
-    if(document.forms[0].xml_vdate.value.length>0) {
+    } else if(document.forms[0].xml_vdate.value.length>0) {
 	b = checkServiceDate(document.forms[0].xml_vdate.value);
-    } 
-
-    if(document.forms[0].referralCode.value.length>0) {
+    } else if(document.forms[0].referralCode.value.length>0) {
 	if(document.forms[0].referralCode.value.length!=6 || !isInteger(document.forms[0].referralCode.value)) {
 	    alert("Wrong referral code!");
 	    b = false;
 	}
     }
-	
-<%for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) { %>
-    if(document.forms[0].serviceCode<%=i%>.value.length>0) {
-	if(!document.forms[0].serviceCode<%=i%>.value.startsWith('_')) {
-	    if(document.forms[0].serviceCode<%=i%>.value.length!=5) {
-		alert("Wrong service code!");
-		b = false;
-	    }
-	}
-    }
-<% } %>
     return b;
 }
 
@@ -466,7 +454,18 @@ function checkServiceDate(s) {
 		return true;
 	}
 }
+
+function existServiceCode() {
+    b = false;
     
+    if (document.forms[0].serviceCode0.value!="") b=true;
+<% for (int i = 1; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) { %>
+    else if (document.forms[0].serviceCode<%=i%>.value!="") b=true;
+<% } %>
+
+    return b;
+}
+
 function isInteger(s){
     var i;
     for (i = 0; i < s.length; i++){
@@ -550,7 +549,6 @@ function scScriptAttach(nameF) {
 }
 
 function onDblClickServiceCode(item) {
-	//alert(item.id);
 	if(document.forms[0].serviceCode0.value=="") {
 		document.forms[0].serviceCode0.value = item.id.substring(3);
 	} 
@@ -561,9 +559,7 @@ function onDblClickServiceCode(item) {
 	<% } %>
 }
 
-<!--
 function onClickServiceCode(item) {
-	//alert(item.id);
 	if(document.forms[0].serviceCode0.value=="") {
 		document.forms[0].serviceCode0.value = item.id.substring(4);
 	} 
@@ -573,7 +569,6 @@ function onClickServiceCode(item) {
 	} 
 	<% } %>
 }
-//-->
 
 function upCaseCtrl(ctrl) {
 	var n = document.forms[0].xml_billtype.selectedIndex;  
@@ -671,21 +666,22 @@ function onHistory() {
 }
 
 function prepareServicesChecked() {
-    document.titlesearch.services_checked.value = <%=request.getParameter("services_checked")%>;
+    document.forms[0].services_checked.value = <%=request.getParameter("services_checked")%>;
 }
 
 function refreshServicesChecked(chkd) {
     if (chkd) {
-	document.titlesearch.services_checked.value++;
+	document.forms[0].services_checked.value++;
     } else {
-	document.titlesearch.services_checked.value--;
+	document.forms[0].services_checked.value--;
     }
 }
-
+//-->
 </script>
 </head>
 
 <body onload="setfocus();prepareServicesChecked();" topmargin="0">
+
 <div id="Instrdiv" class="demo1">
    <table bgcolor='#007FFF' width='99%'>
      <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
@@ -766,8 +762,6 @@ function checkDxCode(codeCheck) {
 
 
 <form method="post" name="titlesearch" action="billingONReview.jsp" onsubmit="return onNext();">
-    <input type="hidden" name="services_checked">
-    
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
@@ -1227,6 +1221,7 @@ if(bMoreAddr) {
 	<input type="hidden" name="appointment_date" value="<%=request.getParameter("appointment_date")%>" />
 	<input type="hidden" name="assgProvider_no" value="<%=assgProvider_no%>" />
 	<input type="hidden" name="billForm" value="<%=ctlBillForm%>" />
+        <input type="hidden" name="services_checked">
 
 </table>
 

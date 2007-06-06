@@ -252,7 +252,6 @@
 </head>
 
 <body topmargin="0">
-
 <form method="post" name="titlesearch" action="billingONSave.jsp" onsubmit="return onSave();">
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
@@ -347,12 +346,34 @@
 		<td align="center">
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 
+<%  boolean serviceCodeValid = true;
+    String serviceCodeValue = "";
+    for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
+	serviceCodeValue = request.getParameter("serviceCode" + i);
+	if (!serviceCodeValue.equals("")) {
+	    sql = "select distinct(service_code) from billingservice where service_code='" + serviceCodeValue + "'";
+	    rs = dbObj.searchDBRecord(sql);
+	    if (!rs.next()) {
+		serviceCodeValid = false;
+		%>
+		<tr class="myErrorText"><td align=center>
+		    &nbsp;<br>
+		    Service code "<%=serviceCodeValue%>" is invalid. Please go back to correct it.
+		</td></tr>  
+		<%
+	    }
+	}
+    }
+
+    if (serviceCodeValid) {
+%>
+
 			<%--= msg --%>
 			<tr class="myYellow">
 				<td colspan='3'>Calculation</td>
 				<td>Description</td>
 			</tr>
-			<% 
+<% }
 			//Vector[] vecServiceParam = prepObj.getRequestCodeVec(request, "serviceDate", "serviceUnit", "serviceAt", 8);
 			//Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
 			//				vecServiceParam[2]);
@@ -376,6 +397,7 @@
 						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
 						String codeFee = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
 						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
+if (serviceCodeValid) {
 			%>
 			<tr class="myGreen">
 				<td align='center' width='3%'><%=""+n %></td>
@@ -387,17 +409,18 @@
 				</td>
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
 			</tr>
-			<% 
+<% }
 						nCode++;
 					} 
 					//System.out.println("vecPercCodeItem end: " + codeName);
 					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
+if (serviceCodeValid) {
 			%>
 			<tr class="myPink">
 				<td align='center' ><%="&nbsp;" %></td>
 				<td align='right' ><%=codeName %> (1)</td>
 				<td align='right'>
-				<% 
+<% }
 						bPerc = true;
 						BillingReviewPercItem percItem = (BillingReviewPercItem)vecPercCodeItem.get(nPerc);
 						String percFee = percItem.getCodeFee();
@@ -406,9 +429,11 @@
 						String codeUnit = (String)percItem.getCodeUnit();
 						for(int j=0; j<vecPercTotal.size(); j++) {
 							String percTotal = (Float.parseFloat((String)vecPercTotal.get(j)) )*Integer.parseInt(codeUnit) + "";
+if (serviceCodeValid) {
 				%>
 						<input type="checkbox" name="percCode_<%=i %>" value="<%=percTotal %>" onclick="onCheckMaster();" /> <%=percTotal %><font size='-2'>(<%=vecPercFee.get(j) %>x<%=percFee %>x<%=codeUnit %>)</font> | 
-				<%		} 
+<% }		} 
+if (serviceCodeValid) {
 				%> = <input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="0.00" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
@@ -416,7 +441,7 @@
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %>
 				</td>
 			</tr>
-			<% 
+<% }
 						nPerc++;
 						vecPercNo.add(""+i);
 						String nMin = percItem.getCodeMinFee();
@@ -428,6 +453,7 @@
 					}
 					//System.out.println(i + "end: " + nCode);
 				}
+if (serviceCodeValid) {
 			%>
 			<tr>
 				<td align='right' colspan='3' class="myGreen">Total: <input type="text" name="total" size="5" value="0.00" />
@@ -509,17 +535,21 @@ function onCheckMaster() {
 </script>
 
 			</tr>
+<% } %>
 			<tr>
 
 				<td colspan='3' align='center' bgcolor="silver">
                                     <input type="submit" name="button" value="Back to Edit"	style="width: 120px;" />
+<% if (serviceCodeValid) { %>
                                     <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
+<% } %>
                                 </td>
 			</tr>
 		</table>
 		</td>
 	</tr>
-<% if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
+<% if (serviceCodeValid) {
+   if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
 	<tr>
 			<td >
 			Billing Notes:<br>
@@ -536,8 +566,8 @@ function onCheckMaster() {
 			<textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea>
 			</td>
 	</tr>
-<% } %>
-<%//
+<% } } %>
+<%
 if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) {
 	JdbcBillingPageUtil pObj = new JdbcBillingPageUtil();
 	List al = pObj.getPaymentType();
@@ -561,7 +591,7 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
                              + "Tel: "+provider.getClinicPhone() +"\n"
                              + "Fax: "+provider.getClinicFax() ;
                 
-%>
+if (serviceCodeValid) { %>
 <tr><td>
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 			<tr class="myYellow">
@@ -592,7 +622,7 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
 			<td class="myGreen">
 			Payment Method:<br/>
 			<% for(int i=0; i<al.size(); i=i+2) { %>
-			<input type="radio" name="payMethod" value="<%=al.get(i) %>"/><%=al.get(i+1) %><br/>
+			    <input type="radio" name="payMethod" value="<%=al.get(i) %>"/><%=al.get(i+1) %><br/>
 			<% } %>
 			</td></tr>
 			<tr>
@@ -605,7 +635,7 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
 		</table>
 
 </td></tr>
-<% } %>
+<% } } %>
 	<%for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
 				String temp = e.nextElement().toString();
 %>
