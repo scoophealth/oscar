@@ -82,6 +82,9 @@ a:hover {
 .myError {
 	background-color: #FF0000;
 }
+.myErrorText {
+	color: red;
+}
 .smallFont {
 	font-size: 10pt;
 }
