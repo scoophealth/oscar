@@ -1,4 +1,4 @@
-#insert into encounterform values("Discharge Summary","../form/formDischargeSummary.jsp?demographic_no=","formDischargeSummary",1);
+insert into encounterForm values("Discharge Summary","../form/formDischargeSummary.jsp?demographic_no=","formDischargeSummary",1);
 
 DROP TABLE IF EXISTS `formDischargeSummary`;
 CREATE TABLE `formDischargeSummary` (

@@ -148,7 +148,10 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             ResultSet rs2 = db.GetSQL(sql2);
             if(rs2.next()){
             	if(rs2.isFirst()) {
-            		props.setProperty("admitDate",rs2.getString("admission_date").substring(0,9));
+            		String admitDate = rs2.getString("admission_date").substring(0,10);
+            		String admitDate_r = admitDate.replace("-", "/");
+            		props.setProperty("admitDate",admitDate_r);
+            		
             		//props.setProperty("dischargeDate",rs2.getString("discharge_date").substring(0,9));
             		props.setProperty("admissionNotes",rs2.getString("admission_notes"));            	
             	}
@@ -191,7 +194,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             
             StringBuffer prescriptions = new StringBuffer();
             //select d.rx_date,d.special,d.end_date, d.archived,d.BN,d.GCN_SEQNO,d.customName from Drug d where d.demographic_no = ? ORDER BY d.rx_date DESC, d.id DESC";
-            String sql5 = "SELECT special from DRUGS where demographic_no="+demographicNo;
+            String sql5 = "SELECT special from drugs where demographic_no="+demographicNo;
             ResultSet rs5 = db.GetSQL(sql5);
             while(rs5.next()) {
             	if(rs5.isFirst()) {
