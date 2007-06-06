@@ -9224,6 +9224,9 @@ INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','W990A','Premium
 INSERT INTO ctl_billingservice VALUES ('General Practice','MFP','B994A','Premium','Group3','A',35);
 INSERT INTO ctl_billingservice VALUES ('Service','TST','A007A',' Description 3','Group3','A',1);
 INSERT INTO ctl_billingservice VALUES ('Service','TST','A008A',' Description 3','Group3','A',2);
+INSERT INTO ctl_billingservice VALUES ('PRIVATE','PRI','A007A',' Group 1 Name','Group1','A',1);
+INSERT INTO ctl_billingservice VALUES ('PRIVATE','PRI','A007A',' Group 2 Name','Group2','A',1);
+INSERT INTO ctl_billingservice VALUES ('PRIVATE','PRI','A007A',' Group 3 Name','Group3','A',1);
 
 --
 -- Dumping data for table 'ctl_billingservice_premium'
