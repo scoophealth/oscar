@@ -340,8 +340,8 @@ var maxYear=9900;
      <td width="5%">
       <input type="text" name="dischargeDate" style="width:100%" size="10" maxlength="12" value="<%= props.getProperty("dischargeDate", "") %>"/>
 	 </td>
-	 <td width="5%" align="right">Program: </td>
-	 <td width="25%"><input type="text" name="programName" style="width:100%" value="<%= props.getProperty("programName", "") %>"/></td>
+	 <td width="5%" align="right">Program Name: </td>
+	 <td width="25%"><input type="text" name="programName" readonly style="width:100%" value="<%= props.getProperty("programName", "") %>"/></td>
 	 </tr>
 	 
 	 <tr width="100%">
