@@ -173,7 +173,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             rs3.close();
             
             StringBuffer issues = new StringBuffer();
-            String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo;
+            String sql4 = "SELECT issue_id from casemgmt_issue where demographic_no="+demographicNo+" and resolved=0";
             ResultSet rs4 = db.GetSQL(sql4);
             while(rs4.next()) {
             	String sql5 = "SELECT description from issue where issue_id="+rs4.getString("issue_id");
@@ -194,7 +194,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             
             StringBuffer prescriptions = new StringBuffer();
             //select d.rx_date,d.special,d.end_date, d.archived,d.BN,d.GCN_SEQNO,d.customName from Drug d where d.demographic_no = ? ORDER BY d.rx_date DESC, d.id DESC";
-            String sql5 = "SELECT special from drugs where demographic_no="+demographicNo;
+            String sql5 = "SELECT special from drugs where demographic_no="+demographicNo+" and archived=0 ORDER BY rx_date DESC, drugid DESC";
             ResultSet rs5 = db.GetSQL(sql5);
             while(rs5.next()) {
             	if(rs5.isFirst()) {
