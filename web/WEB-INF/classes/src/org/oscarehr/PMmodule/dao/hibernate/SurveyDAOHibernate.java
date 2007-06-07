@@ -69,7 +69,7 @@ public class SurveyDAOHibernate extends HibernateDaoSupport implements
 	}
 	
 	public List getAllForms() {
-		return this.getHibernateTemplate().find("from OscarForm f where f.status = " + OscarForm.STATUS_ACTIVE);
+		return this.getHibernateTemplate().find("from OscarForm f where f.status = " + OscarForm.STATUS_ACTIVE+" order by description ASC");
 	}
 
 	public List getCurrentForms(String formId, List clients) {
