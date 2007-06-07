@@ -138,7 +138,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 } 
                  */                                               
                 if(prevs4.size() > 0){
-                   Hashtable hMMR  = (Hashtable) prevs4.get(prevs4.size()-1);
+                   Hashtable hMMR  = (Hashtable) prevs4.get(0);  //Changed to get first MMR value instead of last value
                    if ( hMMR.get("refused") != null && ((String) hMMR.get("refused")).equals("1")){
                       refused = true;
                    }
