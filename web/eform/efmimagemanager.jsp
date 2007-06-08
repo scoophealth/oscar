@@ -96,12 +96,13 @@
               <th><bean:message key="eform.uploadimages.msgImgAction"/></th>
               </tr> 
         <%
-          OscarProperties op = OscarProperties.getInstance();
-          String project_home = op.getProperty("project_home");
+          //OscarProperties op = OscarProperties.getInstance();
+          //String project_home = op.getProperty("project_home");
           ArrayList images = EFormUtil.listImages();
           request.setAttribute("images", images);
           for (int i=0; i<images.size(); i++) {
-              String fileURL="/OscarDocument/" + project_home + "/eform/images/"+images.get(i);
+              String fileURL="../eform/displayImage.do?imagefile="+images.get(i);
+              //String fileURL="/OscarDocument/" + project_home + "/eform/images/"+images.get(i);
               String curimage = (String) images.get(i);
         %>
               <tr style="background-color: <%= ((i%2) == 1)?"#F2F2F2":"white"%>;">
