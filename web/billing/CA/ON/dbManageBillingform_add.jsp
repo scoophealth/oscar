@@ -34,16 +34,17 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 
 <%
 String group1="",group2="", group3="";
-String typeid = "", type="";
+String typeid = "", type="", billtype="";
 
 typeid = request.getParameter("typeid");
 type = request.getParameter("type");
 group1 = request.getParameter("group1");
 group2 = request.getParameter("group2");
 group3 = request.getParameter("group3");
+billtype = request.getParameter("billtype");
 
 if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("") == 0 || group3.compareTo("") == 0) {
-	String errormsg = "Error: Type Description, Groups Descrption  must be entered.";
+	String errormsg = "Error: Type Description, Groups Descrption must be entered.";
 %>
 
 <jsp:forward page='../../../dms/errorpage.jsp' >
@@ -52,7 +53,7 @@ if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("")
 	<jsp:param name="typeid" value='<%=typeid%>' />
 	<jsp:param name="group1" value='<%=group1%>' />
 	<jsp:param name="group2" value='<%=group2%>' />
-	<jsp:param name="group2" value='<%=group3%>' />
+	<jsp:param name="group3" value='<%=group3%>' />
 </jsp:forward>
 
 <%
@@ -93,11 +94,14 @@ if (type.compareTo("") == 0 || group1.compareTo("") == 0 || group2.compareTo("")
 	param3[2]="A";
 	int recordAffected = apptMainBean.queryExecuteUpdate(param3,"save_ctldiagcode");
 
+	if (!billtype.equals("no")) {
+	    String[] param4 =new String[2];
+	    param4[0]=typeid;
+	    param4[1]=billtype;
+	    int recordAffected1 = apptMainBean.queryExecuteUpdate(param4,"save_ctlbilltype");
+	}
+	
 	apptMainBean.closePstmtConn();
-%>
 
-<% response.sendRedirect("manageBillingform.jsp"); %>
-
-<%
-}
-%> 
+response.sendRedirect("manageBillingform.jsp");
+} %>

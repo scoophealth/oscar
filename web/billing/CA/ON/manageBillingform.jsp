@@ -105,6 +105,7 @@ String reportAction=request.getParameter("reportAction")==null?"":request.getPar
 	SPAN.bold             {font-weight: bold  ;                                                                                            background-color: #666699   ;}
 	-->
 </style>  
+<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <script language="JavaScript">
 <!--
 function popupPage(vheight,vwidth,varpage) { //open a new popup window
@@ -133,9 +134,9 @@ function setfocus() {
    
 function valid(form){
 	if (validateServiceType(form)){
-		form.action = "dbManageBillingform_add.jsp"
-		form.submit()
-	} else{}
+		form.action = "dbManageBillingform_add.jsp";
+		form.submit();
+	}
 }
 
 function validateServiceType() {
@@ -155,18 +156,37 @@ function refresh() {
   }
 }
 
+function manageType(stype,stype_name) {
+    url  = "manageBillingform_billtype.jsp";
+    pars = "type_id=" + stype + "&type_name=" + stype_name;
+    
+    var myAjax = new Ajax.Updater("manage_type", url, {method:"get", parameters:pars});
+    showManageType(true);
+}
+
 function onUnbilled(url) {
   if(confirm("<bean:message key="billing.manageBillingform.msgDeleteBillingConfirm"/>")) {
     popupPage(700,720, url);
   }
 }
 
+function showManageType(cmd) {
+    var p = $("manage_type");
+    if (cmd) p.show();
+    else p.hide();
+}
+
+function manageBillType(id,oldtype,newtype) {
+    url = "dbManageBillingform_billtype.jsp";
+    pars = "?servicetype="+id+"&billtype_old="+oldtype+"&billtype="+newtype;
+    popupPage(700,720,url+pars);
+}
 //-->
 </script>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
 </head>
 
-<body leftmargin="0" topmargin="5" rightmargin="0">
+<body leftmargin="0" topmargin="5" rightmargin="0" onload="showManageType(false);">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 <tr bgcolor="#000000"> 

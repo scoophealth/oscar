@@ -33,11 +33,25 @@ if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp"
 <%@ include file="dbBilling.jsp" %>
 
 <%
-String typeid = request.getParameter("servicetype");
-int rowsAffected0 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbillservice");	    
-int recordAffected = apptMainBean.queryExecuteUpdate(typeid,"delete_ctldiagcode");
-int recordAffected1 = apptMainBean.queryExecuteUpdate(typeid,"delete_ctlbilltype");
+String servicetype="", billtype="", billtype_old="";
+String[] param = new String[2];
 
+servicetype = request.getParameter("servicetype");
+billtype = request.getParameter("billtype");
+billtype_old = request.getParameter("billtype_old");
+
+if (billtype.equals("no")) {
+    int recordAffected = apptMainBean.queryExecuteUpdate(servicetype,"delete_ctlbilltype");
+}
+else if (billtype_old.equals("no")) {
+    param[0]=servicetype;
+    param[1]=billtype;
+    int recordAffected = apptMainBean.queryExecuteUpdate(param,"save_ctlbilltype");
+} else {
+    param[0]=billtype;
+    param[1]=servicetype;
+    int recordAffected = apptMainBean.queryExecuteUpdate(param,"update_ctlbilltype");
+}
 apptMainBean.closePstmtConn();
 %>
 

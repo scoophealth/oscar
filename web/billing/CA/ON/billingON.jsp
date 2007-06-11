@@ -295,6 +295,13 @@
 				vecCodeCol3.add(propT);
 			}
 
+			sql = "select billtype from ctl_billingtype where servicetype='" + ctlBillForm +"'";
+			rs = dbObj.searchDBRecord(sql);
+			String defaultBillType = "";
+			if (rs.next()) {
+			    defaultBillType = rs.getString("billtype");
+			}
+
 			sql = "select service_code,status from ctl_billingservice_premium where ";
 			for (int i = 0; i < vecCodeCol3.size(); i++) {
 				sql += (i == 0 ? "" : " or ") + "service_code='"
@@ -681,7 +688,6 @@ function refreshServicesChecked(chkd) {
 </head>
 
 <body onload="setfocus();prepareServicesChecked();" topmargin="0">
-
 <div id="Instrdiv" class="demo1">
    <table bgcolor='#007FFF' width='99%'>
      <tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
@@ -689,7 +695,7 @@ function refreshServicesChecked(chkd) {
    </table>
 </div>
 <div id="Layer1"
-	style="position:absolute; left:360px; top:165px; width:410px; height:200px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+	style="position:absolute; left:360px; top:165px; width:410px; height:210px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr bgcolor="#393764">
 		<td width="96%" height="7" bgcolor="#FFCC00"><font size="-2" face="Geneva, Arial, Helvetica, san-serif"
@@ -720,7 +726,7 @@ function refreshServicesChecked(chkd) {
 </table>
 </div>
 <div id="Layer2"
-	style="position:absolute; left:1px; top:26px; width:332px; height:600px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
+	style="position:absolute; left:1px; top:26px; width:332px; height:660px; z-index:2; background-color: #FFCC00; layer-background-color: #FFCC00; border: 1px none #000000; visibility: hidden">
 <table width="98%" border="0" cellspacing="0" cellpadding="0" align=center>
 	<tr>
 		<td width="18%"><b><font size="-2">Dx Code</font></b></td>
@@ -940,8 +946,8 @@ function checkDxCode(codeCheck) {
 						</select></td>
 
 						<td width="30%"><b>Billing Type</b></td>
-						<td width="20%"><%String srtBillType = request.getParameter("xml_billtype") != null ? request.getParameter("xml_billtype")
-					: "";
+						<td width="20%"><%String srtBillType = request.getParameter("xml_billtype")!=null ? request.getParameter("xml_billtype") : defaultBillType;
+						                         
 
 			%> <select name="xml_billtype" onchange="onChangePrivate();">
 							<option value="ODP | Bill OHIP" <%=srtBillType.startsWith("ODP")?"selected" : ""%>>Bill OHIP</option>
