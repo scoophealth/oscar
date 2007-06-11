@@ -511,7 +511,7 @@ CREATE TABLE demographic (
   phone varchar(20) DEFAULT NULL,
   phone2 varchar(20) DEFAULT NULL,
   email varchar(100) DEFAULT NULL,
-  pin varchar(10) DEFAULT NULL,
+  pin varchar(255) DEFAULT NULL,
   year_of_birth varchar(4) DEFAULT NULL,
   month_of_birth char(2) DEFAULT NULL,
   date_of_birth char(2) DEFAULT NULL,
