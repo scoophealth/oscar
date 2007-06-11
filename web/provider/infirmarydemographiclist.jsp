@@ -20,7 +20,7 @@
 	{ %>
 		<p><b>no client in this program.</b></p>
 		<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
-		<a href="<html:rewrite action="/ArchiveView.do"/>">Click Here For Archive View</a>
+		<b>You are in Case Management View! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
 		<%} else {%>
 		<b>You are in the archive view ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
 		<%} %>
@@ -28,12 +28,19 @@
 	int k=0;
 
 	%>
-	<table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
-	<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
-	<a href="<html:rewrite action="/ArchiveView.do"/>">Click Here For Archive View</a>
-	<%} else {%>
-	<b>You are in the archive view ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
-	<%} %>
+<table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
+<tr><td>
+<%if(session.getAttribute("archiveView")==null || session.getAttribute("archiveView")=="false") { %>
+<b>You are in Case Management View! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>">Click here for Archive View</a>
+<%} else {%>
+<b>You are in Archive View ! </b>&nbsp; <a href="<html:rewrite action="/ArchiveView.do"/>?method=cmm">Back to Case Management View</a>
+<%} %>
+</td></tr>
+<tr>
+	<td width='1'  title='null'><font color='white'></font></td></tr>
+</table>
+
+<table border="1" cellpadding="0" bgcolor="<%=userAvail?"#486ebd":"silver"%>" cellspacing="0" width="100%">
 <logic:iterate id="de" name="infirmaryView_demographicBeans" type="org.apache.struts.util.LabelValueBean">
 <tr>
 	<td width='1'  title='null'><font color='white'></font></td>
