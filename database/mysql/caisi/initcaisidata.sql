@@ -16174,5 +16174,3 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("Z999","Dep on unspec en
 INSERT INTO issue (code, description, role, update_date)
 	SELECT icd10.code, icd10.short_desc, 'doctor', now() FROM icd10;
 
-update admission set clientstatus_id=0;
-
