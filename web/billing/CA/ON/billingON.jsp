@@ -342,6 +342,7 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
 <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
 
+<script type="text/javascript" src="../../../share/javascript/prototype.js"></script>
 <script type="text/javascript" language="JavaScript">
 <!--
 function setfocus() {
@@ -683,6 +684,10 @@ function refreshServicesChecked(chkd) {
 	document.forms[0].services_checked.value--;
     }
 }
+
+function hide_codedesc() {
+    $("code_desc").hide();
+}
 //-->
 </script>
 </head>
@@ -734,7 +739,7 @@ function refreshServicesChecked(chkd) {
 		<td width="6%"><a href="#" onclick="showHideLayers('Layer2','','hide');return false">X</a></td>
 	</tr>
 
-	<%String ctldiagcode = "", ctldiagcodename = "", ctldiagcodeList = "|";
+	<%String ctldiagcode = "", ctldiagcodename = "", ctldiagcodeList = "|", ctldiagcode_past = "";
 			ctlCount = 0;
 			sql = "select d.diagnostic_code dcode, d.description des from diagnosticcode d, ctl_diagcode c where c.diagnostic_code=d.diagnostic_code and c.servicetype='"
 					+ ctlBillForm + "' order by d.description";
@@ -743,13 +748,14 @@ function refreshServicesChecked(chkd) {
 				ctldiagcode = rs.getString("dcode");
 				ctldiagcodename = rs.getString("des");
 				ctldiagcodeList = ctldiagcodeList + ctldiagcode + "|";
+				if (ctldiagcode.equals(dxCode)) ctldiagcode_past = ctldiagcodename;
 				ctlCount++;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 		<td width="18%"><b><font size="-1" color="#7A388D"><a href="#"
-			onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"><%=ctldiagcode%></a></font></b></td>
+			onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');hide_codedesc();return false;"><%=ctldiagcode%></a></font></b></td>
 		<td colspan="2"><font size="-2" color="#7A388D"><a href="#"
-			onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');return false;"> <%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0, 55)%></a></font></td>
+			onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');hide_codedesc();return false;"> <%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0, 55)%></a></font></td>
 	</tr>
 			<% } %>
 </table>
@@ -820,45 +826,22 @@ function checkDxCode(codeCheck) {
 		<table border="1" cellspacing="0" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF"
 			bgcolor="#FFFFFF">
 			<tr>
-				<td width="50%">
+				<td width="46%">
 
 				<table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF"
 					class="myIvory">
 					<tr><td colspan="2"  class="myPink">Specialist billing   &nbsp;&nbsp;&nbsp;&nbsp;
            			<a href=# title="Double click shaded fields for drop down or calculation" onClick="showHideBox('Instrdiv',1);return false;"><font color='red'>Instruction</font></a>
-					</td></tr>
-					<tr>
-						<td nowrap width="33%" align="center" class="myPink"><b>Code &nbsp; Time &nbsp;%</b><br />
-						<%for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM / 2; i++) {
-
-				%> <input type="text" name="serviceCode<%=i%>" size="4" maxlength="15"
-							value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
-							onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"/>x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
-							style="width:20px;"
-							value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>" />@ <input
-							type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
-							value="<%=request.getParameter("serviceAt"+i)!=null?request.getParameter("serviceAt"+i):""%>" /><br />
-						<%}
-
-			%></td>
-						<td align="center" width="33%" class="myPink"><b>Code &nbsp; Time &nbsp;%</b><br />
-						<%for (int i = BillingDataHlp.FIELD_SERVICE_NUM / 2; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
-
-				%> <input type="text" name="serviceCode<%=i%>" size="4" maxlength="15"
-							value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
-							onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"/>x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
-							style="width:20px;"
-							value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>" />@ <input
-							type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
-							value="<%=request.getParameter("serviceAt"+i)!=null?request.getParameter("serviceAt"+i):""%>" /><br />
-						<%}
-
-			%></td>
-						<td valign="top" rowspan="2">
+					</td>
+						<td valign="top" rowspan="2">						
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
+							<tr><td width="15%">&nbsp;</td>
+							<td nowrap><font size="-2">
+							    <div id="code_desc"><%=ctldiagcode_past!=""?ctldiagcode_past.substring(0,32):""%>...</div>
+							</font></td></tr>
 							<tr>
 								<td><a href="#" onclick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a></td>
-								<td><input type="text" name="dxCode" size="5" maxlength="5" ondblClick="dxScriptAttach('dxCode')"
+								<td><input type="text" name="dxCode" size="5" maxlength="5" ondblClick="dxScriptAttach('dxCode')" onChange="hide_codedesc();"
 									value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>" /> <a href=#
 									onclick="dxScriptAttach('dxCode')">Search</a></td>
 							</tr>
@@ -895,6 +878,34 @@ function checkDxCode(codeCheck) {
 						<input type="text" name="referralSpet" size="2" maxlength="2" value="<%=referSpet==null?"":referSpet%>">
 						<br />
 						<input type="text" name="referralDocName" size="22" maxlength="30" value="<%=refName%>"></td>
+				    </tr>
+					<tr>
+						<td nowrap width="33%" align="center" class="myPink"><b>Code &nbsp; Time &nbsp;%</b><br />
+						<%for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM / 2; i++) {
+
+				%> <input type="text" name="serviceCode<%=i%>" size="4" maxlength="15"
+							value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
+							onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"/>x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
+							style="width:20px;"
+							value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>" />@ <input
+							type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
+							value="<%=request.getParameter("serviceAt"+i)!=null?request.getParameter("serviceAt"+i):""%>" /><br />
+						<%}
+
+			%></td>
+						<td nowrap width="33%" align="center" class="myPink"><b>Code &nbsp; Time &nbsp;%</b><br />
+						<%for (int i = BillingDataHlp.FIELD_SERVICE_NUM / 2; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
+
+				%> <input type="text" name="serviceCode<%=i%>" size="4" maxlength="15"
+							value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
+							onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"/>x <input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2"
+							style="width:20px;"
+							value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>" />@ <input
+							type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
+							value="<%=request.getParameter("serviceAt"+i)!=null?request.getParameter("serviceAt"+i):""%>" /><br />
+						<%}
+
+			%></td>
 					</tr>
 				</table>
 
