@@ -1614,3 +1614,9 @@ CREATE TABLE billing_on_ext (
   key (billing_no)
 ) TYPE=MyISAM;
 
+CREATE TABLE ctl_billingtype (
+    servicetype varchar(10) not null,
+    billtype    varchar(5)  not null,
+    primary key (servicetype)
+);
+
