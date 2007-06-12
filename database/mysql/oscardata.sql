@@ -103,6 +103,8 @@ INSERT INTO ctl_doctype VALUES ('demographic','consult','A');
 INSERT INTO ctl_doctype VALUES ('demographic','insurance','A');
 INSERT INTO ctl_doctype VALUES ('demographic','legal','A');
 INSERT INTO ctl_doctype VALUES ('demographic','oldchart','A');
+INSERT INTO ctl_doctype VALUES ('demographic','radiology','A');
+INSERT INTO ctl_doctype VALUES ('demographic','pathology','A');
 INSERT INTO ctl_doctype VALUES ('demographic','others','A');
 INSERT INTO ctl_doctype VALUES ('provider','resource','A');
 INSERT INTO ctl_doctype VALUES ('provider','desktop','A');
@@ -1275,9 +1277,9 @@ INSERT INTO validations(name, maxValue, minValue, maxLength) values( 'Integer: 1
 insert into `secRole` values(1, 'receptionist');
 insert into `secRole` values(2, 'doctor');
 insert into `secRole` values(3, 'admin');
-
 insert into `secRole` values(4, 'locum');
 insert into `secRole` values(5, 'nurse');
+insert into `secRole` values(6, 'Vaccine Provider');
 
 insert into `secUserRole` values('999998', 'doctor');
 insert into `secUserRole` values('999998', 'admin');

@@ -29,7 +29,7 @@ CREATE TABLE formGrowthChart(
   demographic_no int(10) NOT NULL default '0' ,
   provider_no int(10)  default NULL ,
   formCreated date  default NULL ,
-  formEdited timestamp   ,
+  formEdited timestamp,
   patientName varchar(80),
   recordNo varchar(10),
   motherStature varchar(80),
@@ -88,17 +88,17 @@ create table labReportInformation(
   total_CType varchar(5),
   total_DType  varchar(5)
 );
-   
+
 create table labPatientPhysicianInfo(
   id int(10) NOT NULL auto_increment primary key,
   labReportInfo_id int(10),
-  accession_num varchar(64) , 
-  physician_account_num varchar(30) , 
+  accession_num varchar(64),
+  physician_account_num varchar(30),
   service_date varchar(10),
   patient_first_name varchar(100),
   patient_last_name varchar(100),
-  patient_sex char(1), 
-  patient_health_num varchar(20), 
+  patient_sex char(1),
+  patient_health_num varchar(20),
   patient_dob varchar(15),
   lab_status char(1),
   doc_num varchar(50),
@@ -123,22 +123,22 @@ create table labTestResults(
   notUsed1 varchar(255),
   notUsed2 varchar(255),
   test_name varchar(255),
-  abn char(1),             
-  minimum varchar(65),     
-  maximum varchar(65),     
-  units varchar(65),       
+  abn char(1),
+  minimum varchar(65),
+  maximum varchar(65),
+  units varchar(65),
   result varchar(65),
-  description text,      
-  location_id  varchar(10),  
+  description text,
+  location_id  varchar(10),
   last char(1)
-); 
+);
 
 CREATE TABLE formONAR(
   ID int(10) NOT NULL  auto_increment,
-  demographic_no int(10) NOT NULL default '0' ,
-  provider_no int(10)  default NULL ,
-  formCreated date  default NULL ,
-  formEdited timestamp   ,
+  demographic_no int(10) NOT NULL default '0',
+  provider_no int(10)  default NULL,
+  formCreated date  default NULL,
+  formEdited timestamp,
   c_lastName varchar(80),
   c_firstName varchar(80),
   c_address varchar(80),
@@ -1531,6 +1531,7 @@ CREATE TABLE billing_on_favourite (
   service_dx varchar(255) default '',
   provider_no varchar(6) default null,
   timestamp timestamp,
+  deleted boolean NOT NULL default false,
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 

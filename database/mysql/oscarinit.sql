@@ -544,7 +544,7 @@ CREATE TABLE reportTemplates (
   templatetitle varchar(80) NOT NULL DEFAULT '',
   templatedescription text NOT NULL,
   templatesql text NOT NULL,
-  templatexml text NOT NULL,
+  templatexml text NOT NULL DEFAULT '',
   active tinyint NOT NULL DEFAULT 1,
   PRIMARY KEY (templateid)
 );
@@ -619,7 +619,7 @@ CREATE TABLE eChart (
   encounter text,
   PRIMARY KEY  (eChartId),
   KEY demographicno (demographicNo)
-) TYPE=MyISAM max_rows=200000000;
+) TYPE=MyISAM MAX_ROWS=200000000 AVG_ROW_LENGTH=9000;
 
 --
 -- Table structure for table `eform`
@@ -7075,6 +7075,12 @@ CREATE TABLE indivoDocs (
     docType varchar(20) not null,
     dateSent date not null,
     `update` char(1)
+);
+
+CREATE TABLE ctl_billingtype (
+    servicetype varchar(10) not null,
+    billtype    varchar(5)  not null,
+    primary key (servicetype)
 );
 
 
