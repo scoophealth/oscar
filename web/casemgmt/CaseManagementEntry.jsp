@@ -324,25 +324,26 @@ if (pId==null) pId="";
 						</td>
 					</logic:notEqual>
 				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issue.acute" onchange="<%=submitString%>" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList"	property="issue.acute" disabled="<%=disabled%>">
 						<html:option value="true">acute</html:option>
 						<html:option value="false">chronic</html:option>
 					</nested:select>	
 				</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList" property="issue.certain" onchange="<%=submitString%>" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList" property="issue.certain"  disabled="<%=disabled%>">
 						<html:option value="true">certain</html:option>
 						<html:option value="false">uncertain</html:option>
 					</nested:select>
 				</td>
 				<td>
-					<nested:select indexed="true" name="issueCheckList"	property="issue.major" onchange="<%=submitString%>" disabled="<%=disabled%>">
+					<nested:select indexed="true" name="issueCheckList"	property="issue.major" disabled="<%=disabled%>">
 						<html:option value="true">major</html:option>
 						<html:option value="false">not major</html:option>
 					</nested:select>
-				</td>
+				</td>				
 				<td>
-					<nested:select indexed="true" name="issueCheckList" property="issue.resolved" onchange="<%=submitString%>" disabled="<%=disabled%>">
+					<!-- removed onchange="<%=submitString%>" before disabled="<%=disabled %>" FOR THE ABOVE LINEs in this table -->
+					 <nested:select indexed="true" name="issueCheckList" property="issue.resolved"  disabled="<%=disabled%>">										 	
 						<html:option value="true">resolved</html:option>
 						<html:option value="false">unresolved</html:option>
 					</nested:select>
@@ -369,7 +370,6 @@ if (pId==null) pId="";
 			</tr>
 		</nested:iterate>
 	</table>
-
 	<br>
 	<br>
 	<nested:submit value="add new issue"

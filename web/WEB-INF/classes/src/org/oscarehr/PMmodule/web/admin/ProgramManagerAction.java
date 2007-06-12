@@ -487,9 +487,8 @@ public class ProgramManagerAction extends BaseAction {
 				saveMessages(request, messages);
 				setEditAttributes(request, String.valueOf(program.getId()));
 				return mapping.findForward("edit");
-			}	
-			
-			int numQueue = programQueueManager.getProgramQueuesByProgramId(String.valueOf(program.getId())).size();
+			}
+			int numQueue = programQueueManager.getActiveProgramQueuesByProgramId(String.valueOf(program.getId())).size();
 			if (numQueue > 0) {
 				ActionMessages messages = new ActionMessages();
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.client_in_the_queue", program.getName(), String.valueOf(numQueue)));
