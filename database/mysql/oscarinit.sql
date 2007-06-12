@@ -7077,11 +7077,7 @@ CREATE TABLE indivoDocs (
     `update` char(1)
 );
 
-CREATE TABLE ctl_billingtype (
-    servicetype varchar(10) not null,
-    billtype    varchar(5)  not null,
-    primary key (servicetype)
-);
+
 
 
 create index preventions_demographic_no on preventions (demographic_no);
