@@ -1934,6 +1934,3 @@ create table tickler_comments (
 -- Caisi Alter Oscar
 alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL default '' after color_template;
 
--- Update formintakea table
-update formintakea set formCreated = null where formCreated = '0000-00-00';
-
