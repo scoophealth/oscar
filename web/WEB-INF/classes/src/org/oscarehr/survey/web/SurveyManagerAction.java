@@ -730,10 +730,12 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		String surveyId = request.getParameter("id");
 		if(surveyId != null) {
 			Survey survey = surveyManager.getSurvey(surveyId);
+			if(survey.getStatus()==1) {
 			long instanceId = surveyLaunchManager.launch(survey);
 			survey.setLaunchedInstanceId(instanceId);
 			surveyManager.saveSurvey(survey);
 			surveyManager.updateStatus(surveyId,Survey.STATUS_LAUNCHED);
+			}
 		}
 		return list(mapping,form,request,response);
 	}
