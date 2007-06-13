@@ -123,15 +123,15 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
   }
   else { 
     String[] param2 =new String[10];
-    param2[0]=scheduleRscheduleBean.provider_no; // or use request.getParameter("provider_no");
-    param2[1]=scheduleRscheduleBean.sdate;
-    param2[2]=scheduleRscheduleBean.edate;
-    param2[3]=scheduleRscheduleBean.available;
-    param2[4]=scheduleRscheduleBean.day_of_week;
-    param2[5]=scheduleRscheduleBean.avail_hourB;
-    param2[6]=scheduleRscheduleBean.avail_hour;
-    param2[7]=scheduleRscheduleBean.creator;
-    param2[8]= "";
+    param2[1]=scheduleRscheduleBean.provider_no; // or use request.getParameter("provider_no");
+    param2[2]=scheduleRscheduleBean.sdate;
+    param2[3]=scheduleRscheduleBean.edate;
+    param2[4]=scheduleRscheduleBean.available;
+    param2[5]=scheduleRscheduleBean.day_of_week;
+    param2[6]=scheduleRscheduleBean.avail_hourB;
+    param2[7]=scheduleRscheduleBean.avail_hour;
+    param2[8]=scheduleRscheduleBean.creator;
+    param2[0]= "";
     param2[9]=scheduleRscheduleBean.active;
     rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"add_rschedule");
   }
@@ -165,14 +165,14 @@ if(request.getParameter("bFirstDisp")==null || request.getParameter("bFirstDisp"
     m = cal.get(Calendar.MONTH)+1;
     d = cal.get(Calendar.DATE);
     if(scheduleDateBean.get(y+"-"+MyDateFormat.getDigitalXX(m)+"-"+MyDateFormat.getDigitalXX(d)) ==null && scheduleRscheduleBean.getDateAvail(cal)) {
-      param3[0]=y+"-"+m+"-"+d;
-      param3[1]=provider_no;
-      param3[2]="1";
-      param3[3]="b";
-      param3[4]=scheduleRscheduleBean.getSiteAvail(cal);
-      param3[5]=scheduleRscheduleBean.getDateAvailHour(cal);//SxmlMisc.getXmlContent(scheduleRscheduleBean.avail_hour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">");
-      param3[6]=user_name;
-      param3[7]="";
+      param3[1]=y+"-"+m+"-"+d;
+      param3[2]=provider_no;
+      param3[3]="1";
+      param3[4]="b";
+      param3[5]=scheduleRscheduleBean.getSiteAvail(cal);
+      param3[6]=scheduleRscheduleBean.getDateAvailHour(cal);//SxmlMisc.getXmlContent(scheduleRscheduleBean.avail_hour, ("<"+weekdaytag[i]+">"),"</"+weekdaytag[i]+">");
+      param3[7]=user_name;
+      param3[0]="";
       param3[8]=scheduleRscheduleBean.active;
       rowsAffected = scheduleMainBean.queryExecuteUpdate(param3,"add_scheduledate");
     }
