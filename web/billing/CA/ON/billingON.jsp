@@ -43,12 +43,10 @@
 
 			boolean bSingleClick = oscarVariables.getProperty("onBillingSingleClick", "").equals("yes") ? true : false;
 			boolean bHospitalBilling = false;
-			String clinicview = bHospitalBilling ? oscarVariables.getProperty("clinic_hospital", "") : oscarVariables
-					.getProperty("clinic_view", "");
+			String clinicview = bHospitalBilling ? oscarVariables.getProperty("clinic_hospital", "") : oscarVariables.getProperty("clinic_view", "");
 			String clinicNo = oscarVariables.getProperty("clinic_no", "").trim();
 			String visitType = bHospitalBilling ? "02" : oscarVariables.getProperty("visit_type", "");
-			if (visitType.startsWith("00") || visitType.equals(""))
-				clinicview = "0000";
+			if (visitType.startsWith("00") || visitType.equals(""))	clinicview = "0000";
 			String appt_no = request.getParameter("appointment_no");
 			String demoname = request.getParameter("demographic_name");
 			String demo_no = request.getParameter("demographic_no");
@@ -208,6 +206,9 @@
 			} else {
 				clinicview = clinicview == null ? "" : clinicview;
 			}
+
+			String cv = OscarProperties.getInstance().getProperty("clinic_view");
+			clinicview = (cv==null) ? clinicview : cv ;
 
 			String visitdate = null;
 			paraName = request.getParameter("xml_vdate");
@@ -748,7 +749,7 @@ function hide_codedesc() {
 				ctldiagcode = rs.getString("dcode");
 				ctldiagcodename = rs.getString("des");
 				ctldiagcodeList = ctldiagcodeList + ctldiagcode + "|";
-				if (ctldiagcode.equals(dxCode)) ctldiagcode_past = ctldiagcodename;
+				if (ctldiagcode.equals(dxCode)) ctldiagcode_past = ctldiagcodename.trim();
 				ctlCount++;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
@@ -837,7 +838,9 @@ function checkDxCode(codeCheck) {
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
 							<tr><td width="15%">&nbsp;</td>
 							<td nowrap><font size="-2">
-							    <div id="code_desc"><%=ctldiagcode_past!=""?ctldiagcode_past.substring(0,32):""%>...</div>
+							    <div id="code_desc">
+								<%=(!ctldiagcode_past.equals("") && ctldiagcode_past.length()>32)?ctldiagcode_past.substring(0,32)+"...":ctldiagcode_past%>
+							    </div>
 							</font></td></tr>
 							<tr>
 								<td><a href="#" onclick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a></td>
@@ -982,9 +985,7 @@ function checkDxCode(codeCheck) {
 							for (int i = 0; i < lLocation.size(); i = i + 2) {
 								billLocationNo = (String) lLocation.get(i);
 								billLocation = (String) lLocation.get(i + 1);
-				String strLocation = request.getParameter("xml_location") != null ? request
-						.getParameter("xml_location") : clinicview;
-
+				String strLocation = request.getParameter("xml_location") != null ? request.getParameter("xml_location") : clinicview;
 				%>
 							<option value="<%=billLocationNo + "|" + billLocation%>"
 								<%=strLocation.startsWith(billLocationNo)?"selected":""%>><%=billLocation%></option>
