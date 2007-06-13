@@ -210,7 +210,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                             <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, 'SearchPatient.do?labType=MDS&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(pd.getPatientName())%>', 'searchPatientWindow')">
                         <% } %>
 &nbsp;
-			<a href="javascript:popupStart(400,850,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoNo%>&last_name=<%=demoNo%>&first_name=<%=demoNo%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')" class="Field2">Appt Hist</a>
+			<a href="javascript:popupStart(400,850,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoNo%>&last_name=<%=demoNo%>&first_name=<%=demoNo%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')" style="font-size: 12px;" class="Field2">Appt Hist</a>
 &nbsp;
                         <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demoNo%>"/></i></span>
 
