@@ -27,6 +27,7 @@
 if(session.getValue("user") == null) response.sendRedirect("../../../logout.jsp");
 %>
 
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, java.net.*,oscar.MyDateFormat"  %>
 <%@ include file="../../../admin/dbconnection.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /> 
@@ -50,7 +51,7 @@ apptMainBean.closePstmtConn();
     </tr>
     <tr><td>&nbsp;</td>
 	<td class="white">
-	    <p>&nbsp;<br>Default Billing Type :<br>
+	    <p>&nbsp;<br><bean:message key="billing.manageBillingform_add.formDefaultBillType"/> :<br>
 		<input type="hidden" name="bill_servicetype" value="<%=type_id%>">
 		<input type="hidden" name="billtype_old" value="<%=billtype%>">
 		<select name="billtype_new">
