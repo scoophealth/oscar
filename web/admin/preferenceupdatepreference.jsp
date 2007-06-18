@@ -66,7 +66,7 @@
     </table>
   <table cellspacing="0" cellpadding="2" width="100%" border="0">
     <form method="post" action="admincontrol.jsp" name="updatearecord" >
-      <%
+<%
   ResultSet rs = apptMainBean.queryResults(request.getParameter("keyword"), request.getParameter("dboperation"));
   if(rs==null) {
     out.println("<tr><td>failed</td></tr></form>");
@@ -75,7 +75,7 @@
     // the cursor of ResultSet only goes through once from top
 %>
       <tr> 
-        <td width="50%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
+        <td width="40%" align="right"><bean:message key="admin.provider.formProviderNo"/>: </td>
         <td> 
           <% String provider_no = rs.getString("provider_no"); %>
           <%= provider_no %> 
@@ -108,6 +108,20 @@
         <td align="right"><bean:message key="admin.preference.formGroupNo"/>: </td>
         <td> 
           <input type="text" name="mygroup_no" value="<%= rs.getString("mygroup_no") %>">
+        </td>
+      </tr>
+      <tr> 
+        <td align="right"><bean:message key="admin.preference.defaultForm"/>: </td>
+        <td>
+	  <select name="default_servicetype">
+	      <option value="no">-- no --</option>
+<%  ResultSet rs1 = apptMainBean.queryResults("preference_list_servicetype");
+    while (rs1.next()) { %>
+	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(rs.getString("default_servicetype"))?"selected":""%>>
+		<%=rs1.getString("servicetype_name")%>
+	      </option>
+<%  } %>
+	  </select>	    
         </td>
       </tr>
       <tr> 

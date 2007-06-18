@@ -108,6 +108,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"provider_search_detail", "select * from provider where provider_no=?"},
     {"provider_delete", "delete from provider where provider_no=? and provider_no!='super'"},
     {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex =?,dob=?, address=?,phone=?,work_phone=?,ohip_no =?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity = ? where provider_no=? and provider_no!='super'"},
+    
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
@@ -117,18 +118,21 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_delete", "delete from demographic where demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
+    
     {"security_add_record", "insert into security (user_name,password,provider_no,pin,b_ExpireSet,date_ExpireDate,b_LocalLockSet,b_RemoteLockSet) values(?,?,?,?,?,?,?,?)" },
     {"security_search_titlename", "select * from security where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"security_search_detail", "select * from security where security_no=?"},
     {"security_delete", "delete from security where security_no=? and provider_no!='super'"},
     {"security_update_record", "update security set user_name=?,password=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,color_template,new_tickler_warning_window) values(?,?,?,?,?,?,?)" },
+    
+    {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,default_servicetype,color_template,new_tickler_warning_window) values(?,?,?,?,?,?,?,?)" },
     {"preference_search_titlename", "select * from preference where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"preference_search_detail", "select * from preference where preference_no=?"},
+    {"preference_list_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
     {"preference_delete", "delete from preference where preference_no=?"},
-    {"preference_update_record", "update preference set provider_no=?,start_hour=?,end_hour=?,every_min=?,mygroup_no=?,color_template=?,new_tickler_warning_window=? where preference_no=?" },
-    {"preference_addupdate_record", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, color_template=?,new_tickler_warning_window=? where provider_no=? "},
-
+    {"preference_update_record", "update preference set provider_no=?,start_hour=?,end_hour=?,every_min=?,mygroup_no=?,default_servicetype=?,color_template=?,new_tickler_warning_window=? where preference_no=?" },
+    {"preference_addupdate_record", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=?, new_tickler_warning_window=? where provider_no=? "},
+    
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchmygroupall", "select * from mygroup order by mygroup_no"},
@@ -145,6 +149,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"provider_search_detail", "select * from provider where provider_no=?"},
     {"provider_delete", "delete from provider where provider_no=? and provider_no!='super'"},
     {"provider_update_record", "update provider set last_name=?,first_name=?, provider_type=?, specialty=?,team=?,sex =?,dob=?, address=?,phone=?,work_phone=?,ohip_no =?,rma_no=?,billing_no=?,hso_no=?,status=?, comments=?, provider_activity = ? where provider_no=? and provider_no!='super'"},
+    
     {"demographic_search_titlename", "select demographic_no,first_name,last_name,roster_status,sex,year_of_birth,month_of_birth,date_of_birth  from demographic where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"demographic_search_detail", "select * from demographic where demographic_no=?"},
     {"demographic_update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
@@ -154,18 +159,21 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"demographic_delete", "delete from demographic where demographic_no=?"},
     {"demographic_search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
     {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
+    
     {"security_add_record", "insert into security (user_name,password,provider_no,pin,b_ExpireSet,date_ExpireDate,b_LocalLockSet,b_RemoteLockSet) values(?,?,?,?,?,?,?,?)" },
     {"security_search_titlename", "select * from security where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"security_search_detail", "select * from security where security_no=?"},
     {"security_delete", "delete from security where security_no=? and provider_no!='super'"},
     {"security_update_record", "update security set user_name=?,password=?,provider_no=?,pin=?,b_ExpireSet=?,date_ExpireDate=?,b_LocalLockSet=?,b_RemoteLockSet=? where security_no=?" },
-    {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,color_template) values(?,?,?,?,?,?)" },
+    
+    {"preference_add_record", "insert into preference (provider_no,start_hour,end_hour,every_min,mygroup_no,default_servicetype,color_template) values(?,?,?,?,?,?,?)" },
     {"preference_search_titlename", "select * from preference where "+fieldname+ " "+regularexp+" ? " +orderby + " "+limit},
     {"preference_search_detail", "select * from preference where preference_no=?"},
+    {"preference_list_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
     {"preference_delete", "delete from preference where preference_no=?"},
-    {"preference_update_record", "update preference set provider_no=?,start_hour=?,end_hour=?,every_min=?,mygroup_no=?,color_template=? where preference_no=?" },
-    {"preference_addupdate_record", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, color_template=? where provider_no=? "},
-
+    {"preference_update_record", "update preference set provider_no=?,start_hour=?,end_hour=?,every_min=?,mygroup_no=?,default_servicetype=?,color_template=? where preference_no=?" },
+    {"preference_addupdate_record", "update preference set start_hour=?, end_hour=?, every_min=?, mygroup_no=?, default_servicetype=?, color_template=? where provider_no=? "},
+    
     {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
     {"searchmygroupprovider", "select provider_no, last_name, first_name from mygroup where mygroup_no=? "},
     {"searchmygroupall", "select * from mygroup order by mygroup_no"},
@@ -195,6 +203,7 @@ if(session.getAttribute("user") == null ) //|| !((String) session.getValue("user
     {"Security_Delete" , "securitydelete.jsp"},
     {"Security_Update_Record" , "securityupdate.jsp"},
     {"Preference_Add_Record" , "preferenceaddpreference.jsp"},
+    {"Preference_Add_Record_Pre" , "preferenceaddarecord.jsp"},
     {"Preference_Search" , "preferencesearchresults.jsp"},
     {"Preference_Update" , "preferenceupdatepreference.jsp"},
     {"Preference_Delete" , "preferencedelete.jsp"},

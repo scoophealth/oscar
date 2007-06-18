@@ -45,18 +45,19 @@
   //if action is good, then give me the result
   String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-    param =new String[7];
+    param =new String[8];
 }else{
-	param =new String[6];
+	param =new String[7];
 }
 	  param[0]=request.getParameter("provider_no");
 	  param[1]=request.getParameter("start_hour");
 	  param[2]=request.getParameter("end_hour");
 	  param[3]=request.getParameter("every_min");
 	  param[4]=request.getParameter("mygroup_no");
-	  param[5]=request.getParameter("color_template");
+	  param[5]=request.getParameter("default_servicetype");
+	  param[6]=request.getParameter("color_template");
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  param[6]=request.getParameter("new_tickler_warning_window");
+	  param[7]=request.getParameter("new_tickler_warning_window");
 }	  
 	  int[] nparam=new int[1];
 	  nparam[0]=Integer.parseInt(request.getParameter("preference_no"));

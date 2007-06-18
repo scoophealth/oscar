@@ -216,7 +216,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.preference"/></h3>
       <ul>
-         <li><a href="preferenceaddarecord.jsp"><bean:message key="admin.admin.btnAddPreference"/></a></li>
+         <li><a href="admincontrol.jsp?displaymode=Preference_Add_Record_Pre"><bean:message key="admin.admin.btnAddPreference"/></a></li>
          <li><a href="preferencesearchrecordshtm.jsp"><bean:message key="admin.admin.btnSearchPreference"/></a></li>
       </ul>
   </div>

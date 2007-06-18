@@ -27,6 +27,14 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
+<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
+<%
+  if(session.getValue("user") == null)
+    response.sendRedirect("../logout.htm");
+  //call the bean's queryResults() method to get the record data for updating
+%>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
@@ -72,7 +80,7 @@
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
     <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
       <tr> 
-        <td width="50%" align="right"><bean:message key="admin.preference.formProviderNo"/><font color="red"> :</font> 
+        <td width="40%" align="right"><bean:message key="admin.preference.formProviderNo"/><font color="red"> :</font> 
         </td>
         <td> 
           <input type="text" name="provider_no" >
@@ -109,6 +117,18 @@
         </td>
         <td> 
           <input type="text" name="mygroup_no" value="">
+        </td>
+      </tr>
+      <tr> 
+        <td align="right"><bean:message key="admin.preference.defaultForm"/>: </td>
+        <td>
+	  <select name="default_servicetype">
+	      <option value="no">-- no --</option>
+<%  ResultSet rs1 = apptMainBean.queryResults("preference_list_servicetype");
+    while (rs1.next()) { %>
+	      <option value="<%=rs1.getString("servicetype")%>"><%=rs1.getString("servicetype_name")%></option>
+<%  } %>
+	  </select>	    
         </td>
       </tr>
       <tr>
