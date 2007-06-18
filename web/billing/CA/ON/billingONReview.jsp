@@ -351,7 +351,7 @@
     for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
 	serviceCodeValue = request.getParameter("serviceCode" + i);
 	if (!serviceCodeValue.equals("")) {
-	    sql = "select distinct(service_code) from billingservice where service_code='" + serviceCodeValue + "'";
+	    sql = "select distinct(service_code) from billingservice where region='ON' and service_code='" + serviceCodeValue + "'";
 	    rs = dbObj.searchDBRecord(sql);
 	    if (!rs.next()) {
 		serviceCodeValid = false;
