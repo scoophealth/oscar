@@ -751,9 +751,6 @@ function hide_codedesc() {
 </head>
 
 <body onload="setfocus();prepareServicesChecked();" topmargin="0">
-    
-    <input type=button value="Ronnie Test" onclick="window.open(location.href);self.close();">
-    
 <div id="Instrdiv" class="demo1">
     <table bgcolor='#007FFF' width='99%'>
 	<tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
