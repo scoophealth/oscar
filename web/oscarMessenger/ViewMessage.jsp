@@ -114,29 +114,11 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
   
 }
 
-//debug
-function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
-      var page = "" + varpage;
-      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
-            openWindows[name] = window.open(page, name, windowprops);
-
-            if (openWindows[name] != null) {
-                if (openWindows[name].opener == null) {
-                    openWindows[name].opener = self;
-                    alert("PageAlert");
-                }
-                openWindows[name].focus();
-            }
-    }
-
-
 function popupStart(vheight,vwidth,varpage,windowname) {
     var page = varpage;
     windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
     var popup=window.open(varpage, windowname, windowprops);
 }
-//debug
-
 
 function popupSearchDemo(keyword){ // open a new popup window
     var vheight = 700;
