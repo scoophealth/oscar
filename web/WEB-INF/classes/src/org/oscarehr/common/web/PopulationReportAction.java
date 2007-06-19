@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.model.Mortalities;
-import org.oscarehr.common.model.PopulationReportStatistic;
+import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.common.model.ShelterPopulation;
 import org.oscarehr.common.model.ShelterUsage;
 import org.oscarehr.common.service.PopulationReportManager;
@@ -44,9 +44,9 @@ public class PopulationReportAction extends DispatchAction {
 		ShelterPopulation shelterPopulation = populationReportManager.getShelterPopulation();
 		ShelterUsage shelterUsage = populationReportManager.getShelterUsage();
 		Mortalities mortalities = populationReportManager.getMortalities();
-		Map<String, PopulationReportStatistic> majorMedicalConditions = populationReportManager.getMajorMedicalConditions();
-		Map<String, PopulationReportStatistic> majorMentalIllnesses = populationReportManager.getMajorMentalIllnesses();
-		Map<String, PopulationReportStatistic> seriousMedicalConditions = populationReportManager.getSeriousMedicalConditions();
+		Map<String, ReportStatistic> majorMedicalConditions = populationReportManager.getMajorMedicalConditions();
+		Map<String, ReportStatistic> majorMentalIllnesses = populationReportManager.getMajorMentalIllnesses();
+		Map<String, ReportStatistic> seriousMedicalConditions = populationReportManager.getSeriousMedicalConditions();
 		Map<String, Map<String, String>> categoryCodeDescriptions = populationReportManager.getCategoryCodeDescriptions();
 		 
 		// set attributes

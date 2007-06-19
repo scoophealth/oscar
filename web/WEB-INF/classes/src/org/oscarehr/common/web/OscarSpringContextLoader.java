@@ -1,5 +1,4 @@
 /*
- *
  * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License.
  * This program is free software; you can redistribute it and/or
@@ -18,11 +17,7 @@
  * OscarSpringContextLoader.java
  *
  * Created on May 4, 2007, 10:42 AM
- *
- *
- *
  */
-
 package org.oscarehr.common.web;
 
 import javax.servlet.ServletContext;
@@ -41,65 +36,64 @@ import org.springframework.beans.BeanUtils;
 import oscar.OscarProperties;
 
 /**
- *
  * @author rjonasz
  */
 public class OscarSpringContextLoader extends ContextLoader {
-    private final Log log = LogFactory.getLog(OscarSpringContextLoader.class);
-    private final String CONTEXTNAME = "WEB-INF/applicationContext";
-    private final String PROPERTYNAME = "ModuleNames";
-    /** Creates a new instance of OscarSpringContextLoader */
-    public OscarSpringContextLoader() {
-    }
-    
-    protected WebApplicationContext createWebApplicationContext(
-                        ServletContext servletContext, ApplicationContext parent) throws BeansException {
+	
+	private final Log log = LogFactory.getLog(OscarSpringContextLoader.class);
+	private final String CONTEXTNAME = "WEB-INF/applicationContext";
+	private final String PROPERTYNAME = "ModuleNames";
 
-                String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
-                Class contextClass = DEFAULT_CONTEXT_CLASS;
-                if (contextClassName != null) {
-                        try {
-                                contextClass = Class.forName(contextClassName, true, Thread.currentThread().getContextClassLoader());
-                        }
-                        catch (ClassNotFoundException ex) {
-                                throw new ApplicationContextException("Failed to load context class [" + contextClassName + "]", ex);
-                        }
-                        if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
-                                throw new ApplicationContextException("Custom context class [" + contextClassName +
-                                                "] is not of type ConfigurableWebApplicationContext");
-                        }
-                }
+	/** Creates a new instance of OscarSpringContextLoader */
+	public OscarSpringContextLoader() {}
 
+	protected WebApplicationContext createWebApplicationContext(ServletContext servletContext, ApplicationContext parent) throws BeansException {
+		Class contextClass = DEFAULT_CONTEXT_CLASS;
+		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
+		
+		if (contextClassName != null) {
+			try {
+				contextClass = Class.forName(contextClassName, true, Thread.currentThread().getContextClassLoader());
+			} catch (ClassNotFoundException ex) {
+				throw new ApplicationContextException("Failed to load context class [" + contextClassName + "]", ex);
+			}
+			
+			if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
+				throw new ApplicationContextException("Custom context class [" + contextClassName + "] is not of type ConfigurableWebApplicationContext");
+			}
+		}
 
-                ConfigurableWebApplicationContext wac =
-                                (ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
-                wac.setParent(parent);
-                wac.setServletContext(servletContext);
-                
-                //to load various contexts, we need to get Modules property
-                String modules = (String)OscarProperties.getInstance().get(PROPERTYNAME);
-                String[] moduleList = new String[0];
-                
-                if( modules != null ) {
-                    modules = modules.trim();
-                    if( modules.length() > 0 )
-                        moduleList = modules.split(",");
-                }
-                
-                //now we create an array of application context file names
-                String[] configLocations = new String[moduleList.length+1];
-                
-                //always load applicationContext.xml
-                configLocations[0] = CONTEXTNAME + ".xml";
-                log.info("Preparing " + configLocations[0]);
-                
-                for( int idx = 0; idx < moduleList.length; ++idx ) {
-                    configLocations[idx+1] = CONTEXTNAME + moduleList[idx] + ".xml";
-                    log.info("Preparing " + configLocations[idx+1]);
-                }
+		ConfigurableWebApplicationContext wac = (ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
+		wac.setParent(parent);
+		wac.setServletContext(servletContext);
 
-                wac.setConfigLocations(configLocations);
-                wac.refresh();
-                return wac;
-        }
+		// to load various contexts, we need to get Modules property
+		String modules = (String) OscarProperties.getInstance().get(PROPERTYNAME);
+		String[] moduleList = new String[0];
+
+		if (modules != null) {
+			modules = modules.trim();
+			
+			if (modules.length() > 0) {
+				moduleList = modules.split(",");
+			}
+		}
+
+		// now we create an array of application context file names
+		String[] configLocations = new String[moduleList.length + 1];
+
+		// always load applicationContext.xml
+		configLocations[0] = CONTEXTNAME + ".xml";
+		log.info("Preparing " + configLocations[0]);
+
+		for (int idx = 0; idx < moduleList.length; ++idx) {
+			configLocations[idx + 1] = CONTEXTNAME + moduleList[idx] + ".xml";
+			log.info("Preparing " + configLocations[idx + 1]);
+		}
+
+		wac.setConfigLocations(configLocations);
+		wac.refresh();
+		
+		return wac;
+	}
 }

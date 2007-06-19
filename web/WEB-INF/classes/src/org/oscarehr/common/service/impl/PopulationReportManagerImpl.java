@@ -27,7 +27,7 @@ import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.common.dao.PopulationReportDAO;
 import org.oscarehr.common.model.Mortalities;
-import org.oscarehr.common.model.PopulationReportStatistic;
+import org.oscarehr.common.model.ReportStatistic;
 import org.oscarehr.common.model.ShelterPopulation;
 import org.oscarehr.common.model.ShelterUsage;
 import org.oscarehr.common.service.PopulationReportManager;
@@ -68,37 +68,37 @@ public class PopulationReportManagerImpl implements PopulationReportManager {
 		return new Mortalities(count, size);
 	}
 	
-	public Map<String, PopulationReportStatistic> getMajorMedicalConditions() {
-		Map<String, PopulationReportStatistic> prevalences = new LinkedHashMap<String, PopulationReportStatistic>();
+	public Map<String, ReportStatistic> getMajorMedicalConditions() {
+		Map<String, ReportStatistic> prevalences = new LinkedHashMap<String, ReportStatistic>();
 		
 		int populationSize = populationReportDAO.getCurrentPopulationSize();
 		
 		for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getMajorMedicalConditions().entrySet()) {
-			prevalences.put(e.getKey(), new PopulationReportStatistic(populationReportDAO.getPrevalence(e.getValue()), populationSize));
+			prevalences.put(e.getKey(), new ReportStatistic(populationReportDAO.getPrevalence(e.getValue()), populationSize));
         }
 		
 		return prevalences;
 	}
 	
-	public Map<String, PopulationReportStatistic> getMajorMentalIllnesses() {
-		Map<String, PopulationReportStatistic> prevalences = new LinkedHashMap<String, PopulationReportStatistic>();
+	public Map<String, ReportStatistic> getMajorMentalIllnesses() {
+		Map<String, ReportStatistic> prevalences = new LinkedHashMap<String, ReportStatistic>();
 
 		int populationSize = populationReportDAO.getCurrentPopulationSize();
 		
 		for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getMajorMentalIllness().entrySet()) {
-			prevalences.put(e.getKey(), new PopulationReportStatistic(populationReportDAO.getPrevalence(e.getValue()), populationSize));
+			prevalences.put(e.getKey(), new ReportStatistic(populationReportDAO.getPrevalence(e.getValue()), populationSize));
         }
 		
 		return prevalences;
 	}
 	
-	public Map<String, PopulationReportStatistic> getSeriousMedicalConditions() {
-		Map<String, PopulationReportStatistic> incidences = new LinkedHashMap<String, PopulationReportStatistic>();
+	public Map<String, ReportStatistic> getSeriousMedicalConditions() {
+		Map<String, ReportStatistic> incidences = new LinkedHashMap<String, ReportStatistic>();
 
 		int populationSize = populationReportDAO.getCurrentPopulationSize();
 		
 		for (Entry<String, SortedSet<String>> e : PopulationReportCodes.getSeriousMedicalConditions().entrySet()) {
-			incidences.put(e.getKey(), new PopulationReportStatistic(populationReportDAO.getIncidence(e.getValue()), populationSize));
+			incidences.put(e.getKey(), new ReportStatistic(populationReportDAO.getIncidence(e.getValue()), populationSize));
         }
 		
 		return incidences;

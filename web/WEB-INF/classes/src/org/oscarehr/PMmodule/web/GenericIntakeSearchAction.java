@@ -36,7 +36,7 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 
-public class GenericIntakeSearchAction extends BaseAction {
+public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	
 	private static Log LOG = LogFactory.getLog(GenericIntakeSearchAction.class);
 	
@@ -125,20 +125,20 @@ public class GenericIntakeSearchAction extends BaseAction {
 	}
 	
 	protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {
-		request.getSession().setAttribute(GenericIntakeEditAction.CLIENT, client);
+		request.getSession().setAttribute(CLIENT, client);
 
     	StringBuilder parameters = new StringBuilder(PARAM_START);
-    	parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.CREATE).append(PARAM_AND);
-    	parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
+    	parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
+    	parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
     	
     	return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }
 
 	protected ActionForward forwardIntakeEditUpdate(ActionMapping mapping, Integer clientId) {
 		StringBuilder parameters = new StringBuilder(PARAM_START);
-		parameters.append(GenericIntakeEditAction.METHOD).append(PARAM_EQUALS).append(GenericIntakeEditAction.UPDATE).append(PARAM_AND);
-		parameters.append(GenericIntakeEditAction.TYPE).append(PARAM_EQUALS).append(Intake.QUICK).append(PARAM_AND);
-		parameters.append(GenericIntakeEditAction.CLIENT_ID).append(PARAM_EQUALS).append(clientId);
+		parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_UPDATE).append(PARAM_AND);
+		parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK).append(PARAM_AND);
+		parameters.append(CLIENT_ID).append(PARAM_EQUALS).append(clientId);
 		
 		return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
 	}

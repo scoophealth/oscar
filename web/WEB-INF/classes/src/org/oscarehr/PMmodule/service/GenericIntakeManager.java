@@ -18,39 +18,41 @@
  */
 package org.oscarehr.PMmodule.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.common.model.ReportStatistic;
 
 public interface GenericIntakeManager {
+
+	// Edit
 	
 	public Intake copyQuickIntake(Integer clientId, String staffId);
-	
 	public Intake copyIndepthIntake(Integer clientId, String staffId);
-	
 	public Intake copyProgramIntake(Integer clientId, Integer programId, String staffId);
 	
 	public Intake createQuickIntake(String providerNo);
-
 	public Intake createIndepthIntake(String providerNo);
-
 	public Intake createProgramIntake(Integer programId, String providerNo);
-	
+
 	public Intake getMostRecentQuickIntake(Integer clientId);
-
 	public Intake getMostRecentIndepthIntake(Integer clientId);
-
 	public Intake getMostRecentProgramIntake(Integer clientId, Integer programId);
 
 	public List<Intake> getQuickIntakes(Integer clientId);
-
 	public List<Intake> getIndepthIntakes(Integer clientId);
-
 	public List<Intake> getProgramIntakes(Integer clientId);
 	
 	public List<Program> getProgramsWithIntake(Integer clientId);
 	
 	public Integer saveIntake(Intake intake);
+	
+	// Report
+	
+	public Map<String, SortedSet<ReportStatistic>> getQuestionStatistics(String intakeType, Integer programId, Date startDate, Date endDate);
 
 }

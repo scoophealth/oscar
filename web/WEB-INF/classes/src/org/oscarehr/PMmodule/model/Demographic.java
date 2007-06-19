@@ -37,8 +37,9 @@ public class Demographic extends BaseDemographic {
 	private static final String DEFAULT_MONTH = "01";
 	private static final String DEFAULT_DATE = "01";
 	private static final String DEFAULT_YEAR = "1900";
-	private static final String DEFAULT_SEX = "D";
+	private static final String DEFAULT_SEX = "M";
 	private static final String DEFAULT_PATIENT_STATUS = "AC";
+	private static final String DEFAULT_HEATH_CARD_TYPE = "ON";
 	private static final String DEFAULT_FUTURE_DATE = "2100-01-01";
 	
 	private static final String SEPERATOR = "-";
@@ -56,7 +57,7 @@ public class Demographic extends BaseDemographic {
 		
 		demographic.setChartNo(StringUtils.EMPTY);
 		demographic.setFamilyDoctor(StringUtils.EMPTY);
-		demographic.setHcType(StringUtils.EMPTY);
+		demographic.setHcType(DEFAULT_HEATH_CARD_TYPE);
 		demographic.setPcnIndicator(StringUtils.EMPTY);
 		demographic.setPatientStatus(DEFAULT_PATIENT_STATUS);
 		demographic.setPin(StringUtils.EMPTY);

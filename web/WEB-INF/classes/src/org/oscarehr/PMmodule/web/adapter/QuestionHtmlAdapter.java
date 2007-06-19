@@ -31,11 +31,11 @@ public class QuestionHtmlAdapter extends AbstractHtmlAdapter {
 	 */
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
-
+				
 		indent(preBuilder).append("<tr>").append(EOL);
 		beginTag();
 		
-		for (int i = 0; i < getNestedQuestionLevel(); i++) {
+		for (int i = 0; i < getDistanceToQuestionLevel(); i++) {
 			indent(preBuilder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
         }
 		

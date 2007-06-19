@@ -30,11 +30,11 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
-
+		
 		if (isAnswerBoolean()) {
-			indent(preBuilder).append(createLabel()).append(createCheckBox(IntakeAnswerElement.TRUE)).append(EOL);
+			indent(preBuilder).append(startLabel(false)).append(createCheckBox(IntakeAnswerElement.TRUE)).append(endLabel(true)).append(EOL);
 		} else {
-			indent(preBuilder).append(createLabel()).append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() })).append(EOL);
+			indent(preBuilder).append(startLabel(true)).append(String.format("<select name=\"intake.answerMapped(%s).value\">", new Object[] { getId() })).append(EOL);
 			beginTag();
 
 			indent(preBuilder).append(createOption("", "Declined")).append(EOL);
@@ -47,9 +47,9 @@ public class AnswerScalarChoiceHtmlAdapter extends AbstractAnswerScalarHtmlAdapt
 			}
 
 			endTag();
-			indent(preBuilder).append("</select>").append(EOL);
+			indent(preBuilder).append("</select>").append(endLabel(false)).append(EOL);
 		}
-
+		
 		return endAnswer(preBuilder);
 	}
 	

@@ -15,6 +15,7 @@ class PopulationReportCodes {
 	static final String SCHIZOPHRENIA = "Schizophrenia";
 	static final String BIPOLAR = "Bipolar Disease";
 	static final String DEPRESSION = "Depression";
+	static final String COGNITIVE_DISABILITY = "Cognitive Disability";
 	static final String PNEUMONIA = "Pneumonia";
 	static final String INFLUENZA = "Influenza";
 
@@ -26,6 +27,7 @@ class PopulationReportCodes {
  	private static final String[] schizophreniaCodes = { "F062", "F200", "F201", "F202", "F203", "F204", "F205", "F206", "F208", "F209", "F21", "F220", "F228", "F229", "F230", "F231", "F232", "F233", "F238", "F239", "F24", "F250", "F251", "F252", "F258", "F259", "F601" };
 	private static final String[] bipolarCodes = { "F310", "F311", "F312", "F313", "F314", "F315", "F316", "F317", "F318", "F319" };
 	private static final String[] depressionCodes = { "F204", "F320", "F321", "F322", "F323", "F328", "F329", "F330", "F331", "F332", "F333", "F334", "F338", "F339", "F340", "F341", "F412" };
+	private static final String[] cognitiveDisabilityCodes = { "F000", "F001", "F002", "F009", "F010", "F011", "F012", "F013", "F018", "F019", "F020", "F021", "F022", "F023", "F024", "F028", "F03", "F04", "F050", "F051", "F058", "F059", "F060", "F061", "F062", "F063", "F064", "F065", "F066", "F067", "F068", "F069", "F070", "F071", "F072", "F078", "F079", "F09", "F700", "F701", "F708", "F709", "F710", "F711", "F718", "F719", "F720", "F721", "F728", "F729", "F730", "F731", "F738", "F739", "F780", "F781", "F788", "F789", "F790", "F791", "F798", "F799", "F83", "F840", "F841", "F842", "F843", "F844", "F845", "F848", "F849", "F88", "F89", "F99", "G300", "G301", "G308", "G309", "G310", "G311", "G312", "G318", "G319", "G320", "G328" };
 	private static final String[] pneumoniaCodes = { "J120", "J121", "J122", "J128", "J129", "J13", "J14", "J150", "J151", "J152", "J153", "J154", "J155", "J156", "J157", "J158", "J159", "J160", "J168", "J170", "J171", "J172", "J173", "J178", "J180", "J181", "J182", "J188", "J189", "B052", "B012", "J851" };
 	private static final String[] influenzaCodes = { "J09", "J100", "J101", "J108", "J110", "J111", "J118" };
 	
@@ -51,6 +53,7 @@ class PopulationReportCodes {
 			majorMentalIllness.put(SCHIZOPHRENIA, toSet(schizophreniaCodes));
 			majorMentalIllness.put(BIPOLAR, toSet(bipolarCodes));
 			majorMentalIllness.put(DEPRESSION, toSet(depressionCodes));
+			majorMentalIllness.put(COGNITIVE_DISABILITY, toSet(cognitiveDisabilityCodes));
 		}
 		
 	    return majorMentalIllness;

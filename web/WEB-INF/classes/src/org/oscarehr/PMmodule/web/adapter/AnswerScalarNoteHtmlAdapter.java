@@ -24,7 +24,7 @@ import org.oscarehr.PMmodule.model.IntakeNode;
 public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter {
 	
 	private static final Integer COLS = 50;
-	private static final Integer ROWS = 7;
+	private static final Integer ROWS = 5;
 	
 	public AnswerScalarNoteHtmlAdapter(int indent, IntakeNode node, Intake intake) {
 		super(indent, node, intake);
@@ -33,14 +33,13 @@ public class AnswerScalarNoteHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(createLabel()).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(EOL);
+		indent(preBuilder).append(startLabel(true)).append(getTextInput(getId(), COLS, ROWS, getAnswerValue())).append(endLabel(false)).append(EOL);
 
 		return endAnswer(preBuilder);
 	}
 
 	private String getTextInput(String id, Integer cols, Integer rows, String value) {
 		return String.format("<textarea name=\"intake.answerMapped(%s).value\" cols=\"%s\" rows=\"%s\">%s</textarea>", new Object[] { id, cols, rows, value });
-		
 	}
 
 }

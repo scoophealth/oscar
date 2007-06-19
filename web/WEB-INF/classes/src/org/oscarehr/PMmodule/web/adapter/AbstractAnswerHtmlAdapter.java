@@ -35,7 +35,7 @@ abstract class AbstractAnswerHtmlAdapter extends AbstractHtmlAdapter {
 		indent(builder).append("<tr>").append(EOL);
 		beginTag();
 
-		for (int i = 0; i < getNestedQuestionLevel(); i++) {
+		for (int i = 0; i < getDistanceToQuestionLevel() - 1; i++) {
 			indent(builder).append("<td class=\"intakeEmptyCell\"></td>").append(EOL);
         }
 

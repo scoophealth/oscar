@@ -1,13 +1,62 @@
-<html>
-	<head>
-		<title>Generic Intake Report</title>
-		<style type="text/css">
-			<link rel="stylesheet" type="text/css" href="<html:rewrite page="/css/genericIntake.css" />" />
-		</style>
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />" />
-	</head>
-	<body>
-		<h1>Coming Soon!</h1>
-		<!-- Intake Report Table -->
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+Copyright (C) 2007.
+Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+<%@ include file="/taglibs.jsp"%>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<title>Generic Intake Report</title>
+	<style type="text/css">
+		@import "<html:rewrite page="/css/genericIntakeReport.css" />";
+	</style>
+</head>
+<body>
+    <table class="header">
+        <thead>
+            <tr>
+                <td class="header"><c:out value="${intakeType}"></c:out> Intake Report ( <c:out value="${startDate}"></c:out> / <c:out value="${endDate}"></c:out> )</td>
+            </tr>
+        </thead>
+    </table>
+    <br />
+    <br />
+    <c:forEach var="question" items="${questionStatistics}">
+    <table>
+        <caption><c:out value="${question.key}"></c:out></caption>
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <td scope="col">Count / Total</td>
+                <td scope="col">Percent</td>
+            </tr>
+        </thead>
+        <tbody>
+            <c:forEach var="statistic" items="${question.value}">
+            <tr>
+                <th><c:out value="${statistic.label}"></c:out></th>
+                <td><c:out value="${statistic.count}"></c:out> / <c:out value="${statistic.size}"></c:out></td>
+                <td><c:out value="${statistic.percent}"></c:out></td>
+            </tr>
+            </c:forEach>
+        </tbody>
+    </table>
+    <br />
+    </c:forEach>
+</body>
 </html>

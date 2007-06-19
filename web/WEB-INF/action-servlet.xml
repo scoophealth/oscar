@@ -2,503 +2,500 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
     "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
-		<property name="ticklerManager">
-			<ref bean="ticklerManagerT" />
-		</property>
-		<property name="demographicManager">
-			<ref bean="demographicManagerT" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="preparedTicklerManager">
-			<ref bean="preparedTicklerManagerT" />
-		</property>
-		<property name="consultationManager">
-			<ref bean="consultationManager" />
-		</property>
-		<property name="chartManager">
-			<ref bean="chartManagerT" />
-		</property>
-	</bean>
-	<bean name="/CustomFilter" class="org.caisi.tickler.web.CustomFilterAction" singleton="false">
-		<property name="ticklerManager">
-			<ref bean="ticklerManagerT" />
-		</property>
-		<property name="demographicManager">
-			<ref bean="demographicManagerT" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-	</bean>
-	<bean name="/UnreadTickler" class="org.caisi.tickler.web.UnreadTicklerAction" singleton="false">
-		<property name="ticklerManager">
-			<ref bean="ticklerManagerT" />
-		</property>
-	</bean>
-	<bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false">
-		<property name="systemMessageManager">
-			<ref bean="SystemMessageManager" />
-		</property>
-	</bean>
-	<bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false">
-		<property name="issueAdminManager">
-			<ref bean="issueAdminManager" />
-		</property>
-		<property name="caisiRoleManager">
-			<ref bean="CaisiRoleManager" />
-		</property>
-	</bean>
-	<bean name="/CaisiRole" class="org.caisi.core.web.RoleAction" singleton="false">
-		<property name="caisiRoleManager">
-			<ref bean="CaisiRoleManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false">
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false">
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="consentManager">
-			<ref bean="consentManager" />
-		</property>
-		<property name="bedManager">
-			<ref bean="bedManager" />
-		</property>
-		<property name="bedDemographicManager">
-			<ref bean="bedDemographicManager" />
-		</property>
-		<property name="formsManager">
-			<ref bean="formsManager" />
-		</property>
-		<property name="genericIntakeManager">
-			<ref bean="genericIntakeManager" />
-		</property>
-		<property name="intakeAManager">
-			<ref bean="intakeAManager" />
-		</property>
-		<property name="intakeCManager">
-			<ref bean="intakeCManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="programQueueManager">
-			<ref bean="programQueueManager" />
-		</property>
-		<property name="surveyManager">
-			<ref bean="oscarSurveyManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/ProgramManager" class="org.oscarehr.PMmodule.web.admin.ProgramManagerAction" singleton="false">
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="bedCheckTimeManager">
-			<ref bean="bedCheckTimeManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="programQueueManager">
-			<ref bean="programQueueManager" />
-		</property>
-		<property name="roleManager">
-			<ref bean="roleManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false">
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="bedManager">
-			<ref bean="bedManager" />
-		</property>
-		<property name="bedDemographicManager">
-			<ref bean="bedDemographicManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="programQueueManager">
-			<ref bean="programQueueManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false">
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="agencyManager">
-			<ref bean="agencyManager" />
-		</property>
-		<property name="bedManager">
-			<ref bean="bedManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="roomManager">
-			<ref bean="roomManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false">
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/IntakeA" class="org.oscarehr.PMmodule.web.IntakeAAction2" singleton="false">
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="intakeAManager">
-			<ref bean="intakeAManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/IntakeC" class="org.oscarehr.PMmodule.web.IntakeCAction2" singleton="false">
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="intakeCManager">
-			<ref bean="intakeCManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Consent" class="org.oscarehr.PMmodule.web.ConsentAction" singleton="false">
-		<property name="consentManager">
-			<ref bean="consentManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/StaffManager" class="org.oscarehr.PMmodule.web.admin.StaffManagerAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-		<property name="roleManager">
-			<ref bean="roleManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Intake" class="org.oscarehr.PMmodule.web.IntakeAction" singleton="false">
-		<property name="intakeAManager">
-			<ref bean="intakeAManager" />
-		</property>
-		<property name="intakeCManager">
-			<ref bean="intakeCManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Forms/FollowUp" class="org.oscarehr.PMmodule.web.forms.FollowUpAction" singleton="false">
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="formsManager">
-			<ref bean="formsManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="logManager">
-			<ref bean="logManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Reports/ProgramActivityReport" class="org.oscarehr.PMmodule.web.reports.ActivityReportAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Forms/SurveyExecute" class="org.oscarehr.PMmodule.web.forms.SurveyExecuteAction" singleton="false">
-		<property name="surveyManager">
-			<ref bean="oscarSurveyManager" />
-		</property>
-		<property name="caseManagementManager">
-			<ref bean="CaseManagementManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>		
-	</bean>
-	<bean name="/PMmodule/Reports/BasicReport" class="org.oscarehr.PMmodule.web.reports.BasicReportAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="roleManager">
-			<ref bean="roleManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Reports/ExitInterviewReport" class="org.oscarehr.PMmodule.web.reports.ExitInterviewReportAction" singleton="false">
-		<property name="consentManager">
-			<ref bean="consentManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Reports/ExitInterviewReportDetailed" class="org.oscarehr.PMmodule.web.reports.ExitInterviewReportDetailedAction" singleton="false">
-		<property name="consentManager">
-			<ref bean="consentManager" />
-		</property>
-	</bean>
-	<bean name="/PMmodule/Admin/DefaultRoleAccess" class="org.oscarehr.PMmodule.web.admin.DefaultRoleAccessAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="roleManager">
-			<ref bean="roleManager" />
-		</property>
-	</bean>
-	
-	<!-- Generic Intake -->
-	<bean
-		name="/PMmodule/GenericIntake/Search"
-		class="org.oscarehr.PMmodule.web.GenericIntakeSearchAction"
-		singleton="false">
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="genericIntakeManager">
-			<ref bean="genericIntakeManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-	</bean>
-	<bean
-		name="/PMmodule/GenericIntake/Edit"
-		class="org.oscarehr.PMmodule.web.GenericIntakeEditAction"
-		singleton="false">
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="genericIntakeManager">
-			<ref bean="genericIntakeManager" />
-		</property>
-		<property name="integratorManager">
-			<ref bean="integratorManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-	</bean>
-	<!-- Generic Intake -->
-	
-	<bean name="/SurveyManager" class="org.oscarehr.survey.web.SurveyManagerAction" singleton="false">
-		<property name="surveyManager">
-			<ref bean="surveyManager" />
-		</property>
-		<property name="surveyTestManager">
-			<ref bean="surveyTestManager" />
-		</property>
-		<property name="surveyLaunchManager">
-			<ref bean="surveyLaunchManager" />
-		</property>
-		<property name="questionTypes">
-			<ref bean="QuestionTypes" />
-		</property>
-		<property name="userManager">
-			<ref bean="surveyUserManager" />
-		</property>
-	</bean>
-	<bean name="/SurveyTest" class="org.oscarehr.survey.web.SurveyTestAction" singleton="false">
-		<property name="surveyManager">
-			<ref bean="surveyManager" />
-		</property>
-		<property name="surveyTestManager">
-			<ref bean="surveyTestManager" />
-		</property>
-		<property name="userManager">
-			<ref bean="surveyUserManager" />
-		</property>
-	</bean>
-	<!--  ER -->
-	<bean name="/ReceptionistReport" class="org.oscarehr.er.ReceptionistReportAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="caseManagementManager">
-			<ref bean="CaseManagementManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-	</bean>
-	<!--  CASE MANAGEMENT -->
-	<bean name="/CaseManagementView" class="org.oscarehr.casemgmt.web.CaseManagementViewAction" singleton="false">
-		<property name="caseManagementManager">
-			<ref bean="CaseManagementManager" />
-		</property>
-		<property name="ticklerManager">
-			<ref bean="ticklerManager" />
-		</property>
-		<property name="clientImageManager">
-			<ref bean="ClientImageManager" />
-		</property>
-		<property name="roleManager">
-			<ref bean="roleManager" />
-		</property>
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="surveyManager">
-			<ref bean="oscarSurveyManager" />
-		</property>
-	</bean>
-	<bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
-		<property name="caseManagementManager">
-			<ref bean="CaseManagementManager" />
-		</property>
-	</bean>
-	<bean name="/ClientImage" class="org.oscarehr.casemgmt.web.ClientImageAction" singleton="false">
-		<property name="clientImageManager">
-			<ref bean="ClientImageManager" />
-		</property>
-	</bean>
-	<bean name="/ArchiveView" class="org.oscarehr.casemgmt.web.ArchiveViewAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-	</bean>
-	<!--  Vaccine -->
-	<bean name="/VaccineProviderReport" class="org.oscarehr.vaccine.VaccineProviderReportAction" singleton="false">
-		<property name="programManager">
-			<ref bean="programManager" />
-		</property>
-		<property name="clientManager">
-			<ref bean="clientManager" />
-		</property>
-		<property name="admissionManager">
-			<ref bean="admissionManager" />
-		</property>
-		<property name="caseManagementManager">
-			<ref bean="CaseManagementManager" />
-		</property>
-		<property name="providerManager">
-			<ref bean="providerManager" />
-		</property>
-		<property name="genericIntakeManager">
-			<ref bean="genericIntakeManager"/>
-		</property>
-	</bean>
+    <bean name="/Tickler" class="org.caisi.tickler.web.TicklerAction" singleton="false">
+        <property name="ticklerManager">
+            <ref bean="ticklerManagerT" />
+        </property>
+        <property name="demographicManager">
+            <ref bean="demographicManagerT" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="preparedTicklerManager">
+            <ref bean="preparedTicklerManagerT" />
+        </property>
+        <property name="consultationManager">
+            <ref bean="consultationManager" />
+        </property>
+        <property name="chartManager">
+            <ref bean="chartManagerT" />
+        </property>
+    </bean>
+    <bean name="/CustomFilter" class="org.caisi.tickler.web.CustomFilterAction" singleton="false">
+        <property name="ticklerManager">
+            <ref bean="ticklerManagerT" />
+        </property>
+        <property name="demographicManager">
+            <ref bean="demographicManagerT" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+    </bean>
+    <bean name="/UnreadTickler" class="org.caisi.tickler.web.UnreadTicklerAction" singleton="false">
+        <property name="ticklerManager">
+            <ref bean="ticklerManagerT" />
+        </property>
+    </bean>
+    <bean name="/SystemMessage" class="org.caisi.core.web.SystemMessageAction" singleton="false">
+        <property name="systemMessageManager">
+            <ref bean="SystemMessageManager" />
+        </property>
+    </bean>
+    <bean name="/issueAdmin" class="org.caisi.core.web.IssueAdminAction" singleton="false">
+        <property name="issueAdminManager">
+            <ref bean="issueAdminManager" />
+        </property>
+        <property name="caisiRoleManager">
+            <ref bean="CaisiRoleManager" />
+        </property>
+    </bean>
+    <bean name="/CaisiRole" class="org.caisi.core.web.RoleAction" singleton="false">
+        <property name="caisiRoleManager">
+            <ref bean="CaisiRoleManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false">
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false">
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="consentManager">
+            <ref bean="consentManager" />
+        </property>
+        <property name="bedManager">
+            <ref bean="bedManager" />
+        </property>
+        <property name="bedDemographicManager">
+            <ref bean="bedDemographicManager" />
+        </property>
+        <property name="formsManager">
+            <ref bean="formsManager" />
+        </property>
+        <property name="genericIntakeManager">
+            <ref bean="genericIntakeManager" />
+        </property>
+        <property name="intakeAManager">
+            <ref bean="intakeAManager" />
+        </property>
+        <property name="intakeCManager">
+            <ref bean="intakeCManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="programQueueManager">
+            <ref bean="programQueueManager" />
+        </property>
+        <property name="surveyManager">
+            <ref bean="oscarSurveyManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/ProgramManager" class="org.oscarehr.PMmodule.web.admin.ProgramManagerAction" singleton="false">
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="bedCheckTimeManager">
+            <ref bean="bedCheckTimeManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="programQueueManager">
+            <ref bean="programQueueManager" />
+        </property>
+        <property name="roleManager">
+            <ref bean="roleManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false">
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="bedManager">
+            <ref bean="bedManager" />
+        </property>
+        <property name="bedDemographicManager">
+            <ref bean="bedDemographicManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="programQueueManager">
+            <ref bean="programQueueManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false">
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="agencyManager">
+            <ref bean="agencyManager" />
+        </property>
+        <property name="bedManager">
+            <ref bean="bedManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="roomManager">
+            <ref bean="roomManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false">
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/IntakeA" class="org.oscarehr.PMmodule.web.IntakeAAction2" singleton="false">
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="intakeAManager">
+            <ref bean="intakeAManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/IntakeC" class="org.oscarehr.PMmodule.web.IntakeCAction2" singleton="false">
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="intakeCManager">
+            <ref bean="intakeCManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Consent" class="org.oscarehr.PMmodule.web.ConsentAction" singleton="false">
+        <property name="consentManager">
+            <ref bean="consentManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/StaffManager" class="org.oscarehr.PMmodule.web.admin.StaffManagerAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+        <property name="roleManager">
+            <ref bean="roleManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Intake" class="org.oscarehr.PMmodule.web.IntakeAction" singleton="false">
+        <property name="intakeAManager">
+            <ref bean="intakeAManager" />
+        </property>
+        <property name="intakeCManager">
+            <ref bean="intakeCManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Forms/FollowUp" class="org.oscarehr.PMmodule.web.forms.FollowUpAction" singleton="false">
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="formsManager">
+            <ref bean="formsManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="logManager">
+            <ref bean="logManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Reports/ProgramActivityReport" class="org.oscarehr.PMmodule.web.reports.ActivityReportAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Forms/SurveyExecute" class="org.oscarehr.PMmodule.web.forms.SurveyExecuteAction" singleton="false">
+        <property name="surveyManager">
+            <ref bean="oscarSurveyManager" />
+        </property>
+        <property name="caseManagementManager">
+            <ref bean="CaseManagementManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Reports/BasicReport" class="org.oscarehr.PMmodule.web.reports.BasicReportAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="roleManager">
+            <ref bean="roleManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Reports/ExitInterviewReport" class="org.oscarehr.PMmodule.web.reports.ExitInterviewReportAction" singleton="false">
+        <property name="consentManager">
+            <ref bean="consentManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Reports/ExitInterviewReportDetailed" class="org.oscarehr.PMmodule.web.reports.ExitInterviewReportDetailedAction" singleton="false">
+        <property name="consentManager">
+            <ref bean="consentManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/Admin/DefaultRoleAccess" class="org.oscarehr.PMmodule.web.admin.DefaultRoleAccessAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="roleManager">
+            <ref bean="roleManager" />
+        </property>
+    </bean>
+    <!-- Generic Intake -->
+    <bean name="/PMmodule/GenericIntake/Search" class="org.oscarehr.PMmodule.web.GenericIntakeSearchAction" singleton="false">
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="genericIntakeManager">
+            <ref bean="genericIntakeManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/GenericIntake/Edit" class="org.oscarehr.PMmodule.web.GenericIntakeEditAction" singleton="false">
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="genericIntakeManager">
+            <ref bean="genericIntakeManager" />
+        </property>
+        <property name="integratorManager">
+            <ref bean="integratorManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+    </bean>
+    <bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false">
+        <property name="genericIntakeManager">
+            <ref bean="genericIntakeManager" />
+        </property>
+    </bean>
+    <!-- Generic Intake -->
+    <bean name="/SurveyManager" class="org.oscarehr.survey.web.SurveyManagerAction" singleton="false">
+        <property name="surveyManager">
+            <ref bean="surveyManager" />
+        </property>
+        <property name="surveyTestManager">
+            <ref bean="surveyTestManager" />
+        </property>
+        <property name="surveyLaunchManager">
+            <ref bean="surveyLaunchManager" />
+        </property>
+        <property name="questionTypes">
+            <ref bean="QuestionTypes" />
+        </property>
+        <property name="userManager">
+            <ref bean="surveyUserManager" />
+        </property>
+    </bean>
+    <bean name="/SurveyTest" class="org.oscarehr.survey.web.SurveyTestAction" singleton="false">
+        <property name="surveyManager">
+            <ref bean="surveyManager" />
+        </property>
+        <property name="surveyTestManager">
+            <ref bean="surveyTestManager" />
+        </property>
+        <property name="userManager">
+            <ref bean="surveyUserManager" />
+        </property>
+    </bean>
+    <!--  ER -->
+    <bean name="/ReceptionistReport" class="org.oscarehr.er.ReceptionistReportAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="caseManagementManager">
+            <ref bean="CaseManagementManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+    </bean>
+    <!--  CASE MANAGEMENT -->
+    <bean name="/CaseManagementView" class="org.oscarehr.casemgmt.web.CaseManagementViewAction" singleton="false">
+        <property name="caseManagementManager">
+            <ref bean="CaseManagementManager" />
+        </property>
+        <property name="ticklerManager">
+            <ref bean="ticklerManager" />
+        </property>
+        <property name="clientImageManager">
+            <ref bean="ClientImageManager" />
+        </property>
+        <property name="roleManager">
+            <ref bean="roleManager" />
+        </property>
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="surveyManager">
+            <ref bean="oscarSurveyManager" />
+        </property>
+    </bean>
+    <bean name="/CaseManagementEntry" class="org.oscarehr.casemgmt.web.CaseManagementEntryAction" singleton="false">
+        <property name="caseManagementManager">
+            <ref bean="CaseManagementManager" />
+        </property>
+    </bean>
+    <bean name="/ClientImage" class="org.oscarehr.casemgmt.web.ClientImageAction" singleton="false">
+        <property name="clientImageManager">
+            <ref bean="ClientImageManager" />
+        </property>
+    </bean>
+    <bean name="/ArchiveView" class="org.oscarehr.casemgmt.web.ArchiveViewAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+    </bean>
+    <!--  Vaccine -->
+    <bean name="/VaccineProviderReport" class="org.oscarehr.vaccine.VaccineProviderReportAction" singleton="false">
+        <property name="programManager">
+            <ref bean="programManager" />
+        </property>
+        <property name="clientManager">
+            <ref bean="clientManager" />
+        </property>
+        <property name="admissionManager">
+            <ref bean="admissionManager" />
+        </property>
+        <property name="caseManagementManager">
+            <ref bean="CaseManagementManager" />
+        </property>
+        <property name="providerManager">
+            <ref bean="providerManager" />
+        </property>
+        <property name="genericIntakeManager">
+            <ref bean="genericIntakeManager" />
+        </property>
+    </bean>
     <!-- Population Report -->
     <bean name="/PopulationReport" class="org.oscarehr.common.web.PopulationReportAction" singleton="false">
         <property name="populationReportManager">

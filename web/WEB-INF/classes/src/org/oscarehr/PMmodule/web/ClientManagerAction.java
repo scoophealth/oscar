@@ -213,7 +213,6 @@ public class ClientManagerAction extends BaseAction {
 		String id = request.getParameter("id");
 		DynaActionForm clientForm = (DynaActionForm) form;
 		Program program = (Program) clientForm.get("program");
-		String clientId = request.getParameter("id");		
 		request.setAttribute("programId",String.valueOf(program.getId()));
 		setEditAttributes(form, request, id);
 

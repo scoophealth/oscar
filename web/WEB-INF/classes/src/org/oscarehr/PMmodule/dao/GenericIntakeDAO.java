@@ -18,15 +18,20 @@
  */
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.oscarehr.common.model.ReportStatistic;
 
 public interface GenericIntakeDAO {
 
 	/**
-	 * Get most recent intake with given node for given client
+	 * Get most recent intake for given node with given client
 	 * 
 	 * @param node
 	 *            node
@@ -36,10 +41,10 @@ public interface GenericIntakeDAO {
 	 *            program id
 	 * @return Most recent intake
 	 */
-	public Intake getIntake(IntakeNode node, Integer clientId, Integer programId);
+	public Intake getLatestIntake(IntakeNode node, Integer clientId, Integer programId);
 
 	/**
-	 * Get intakes with given node for given client
+	 * Get intakes for given node with given client
 	 * 
 	 * @param node
 	 *            node
@@ -52,12 +57,37 @@ public interface GenericIntakeDAO {
 	public List<Intake> getIntakes(IntakeNode node, Integer clientId, Integer programId);
 
 	/**
-	 * Save a new intake
+	 * Save an intake
 	 * 
 	 * @param intake
-	 *            new intake
+	 *            intake
 	 * @return saved intake id
 	 */
 	public Integer saveIntake(Intake intake);
+
+	/**
+	 * Get most recent intake ids for given node
+	 * 
+	 * @param nodeId
+	 *            node
+	 * @param startDate
+	 *            start date
+	 * @param endDate
+	 *            end date
+	 * @return Most recent intakes
+	 */
+	public SortedSet<Integer> getLatestIntakeIds(Integer nodeId, Date startDate, Date endDate);
+
+	/**
+	 * Get map of (id, element) tuple to element count for given intake and answer ids
+	 * 
+	 * @param answerIds
+	 *            answer ids
+	 * @param intakeIds
+	 *            intake ids
+	 * 
+	 * @return Map of (id, element) tuple to element count
+	 */
+	public SortedMap<Integer, SortedMap<String, ReportStatistic>> getReportStatistics(Set<Integer> answerIds, Set<Integer> intakeIds);
 
 }

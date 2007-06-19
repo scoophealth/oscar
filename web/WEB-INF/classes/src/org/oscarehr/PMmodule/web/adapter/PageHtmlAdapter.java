@@ -32,8 +32,13 @@ public class PageHtmlAdapter extends AbstractHtmlAdapter {
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = super.getPreBuilder();
 
-		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" >").append(EOL);
+		indent(preBuilder).append("<div dojoType=\"ContentPane\" label=\"").append(getLabel()).append("\" class=\"intakePage\" >").append(EOL);
 		beginTag();
+		
+		if (!hasSections()) {
+			indent(preBuilder).append("<table class=\"intakeTable\">").append(EOL);
+			beginTag();
+		}
 
 		return preBuilder;
 	}
@@ -43,6 +48,11 @@ public class PageHtmlAdapter extends AbstractHtmlAdapter {
 	 */
 	public StringBuilder getPostBuilder() {
 		StringBuilder postBuilder = super.getPostBuilder();
+
+		if (!hasSections()) {
+			endTag();
+			indent(postBuilder).append("</table> <!-- End Question Table -->").append(EOL);
+		}
 
 		endTag();
 		indent(postBuilder).append("</div> <!-- End Page -->").append(EOL);

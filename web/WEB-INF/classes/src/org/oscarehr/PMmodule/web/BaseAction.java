@@ -54,7 +54,7 @@ import org.oscarehr.PMmodule.service.SurveyManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class BaseAction extends DispatchAction {
+public abstract class BaseAction extends DispatchAction {
 
 	protected static final String PARAM_START = "?";
 	protected static final String PARAM_EQUALS = "=";

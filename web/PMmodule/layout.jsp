@@ -39,6 +39,7 @@
 		</script>
 		
 		<script type="text/javascript" language="JavaScript">
+            dojo.require("dojo.date.format");
 			dojo.require("dojo.widget.*");
 			dojo.require("dojo.validate.*");
 		</script>

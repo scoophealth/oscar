@@ -47,22 +47,9 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
 
-public class GenericIntakeEditAction extends BaseAction {
+public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
-
-	// Session Attributes
-	public static final String CLIENT = "client";
-
-	// Parameters
-	public static final String METHOD = "method";
-	public static final String TYPE = "type";
-	public static final String CLIENT_ID = "clientId";
-	public static final String PROGRAM_ID = "programId";
-
-	// Method parameter values
-	public static final String CREATE = "create";
-	public static final String UPDATE = "update";
 
 	// Forwards
 	private static final String EDIT = "edit";
@@ -139,16 +126,13 @@ public class GenericIntakeEditAction extends BaseAction {
 		Intake intake = formBean.getIntake();
 		String intakeType = intake.getType();
 		Demographic client = formBean.getClient();
-		//Integer clientId = client.getDemographicNo();
-		Integer clientId = 0;
 		String providerNo = getProviderNo(request);
 
 		try {
 			saveClient(client, providerNo);
-			clientId = client.getDemographicNo();
-			admitBedCommunityProgram(clientId, providerNo, formBean.getSelectedBedCommunityProgramId());
-			admitServicePrograms(clientId, providerNo, formBean.getSelectedServiceProgramIds());
-			saveIntake(intake, clientId);
+			admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
+			admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+			saveIntake(intake, client.getDemographicNo());
 		} catch (Exception e) {
 			LOG.error(e);
 
@@ -157,30 +141,9 @@ public class GenericIntakeEditAction extends BaseAction {
 			saveErrors(request, messages);
 		}
 		
-		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId));
+		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()));
 
 		return mapping.findForward(EDIT);
-	}
-
-	// Parameter
-
-	private String getType(HttpServletRequest request) {
-		return getParameter(request, TYPE);
-	}
-
-	private Integer getClientId(HttpServletRequest request) {
-		return Integer.valueOf(getParameter(request, CLIENT_ID));
-	}
-
-	private Integer getProgramId(HttpServletRequest request) {
-		return Integer.valueOf(getParameter(request, PROGRAM_ID));
-	}
-
-	// Session Attribute
-
-	private Demographic getClient(HttpServletRequest request) {
-		Demographic client = (Demographic) getSessionAttribute(request, CLIENT);
-		return (client != null) ? client : new Demographic();
 	}
 
 	// Adapt

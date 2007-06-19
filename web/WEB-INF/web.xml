@@ -103,13 +103,10 @@
 	<listener>
 		<listener-class>oscar.login.Startup</listener-class>
 	</listener>
-	<!-- <listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener> -->
-        
-        <listener>
-            <listener-class>org.oscarehr.common.web.OscarSpringContextLoaderListener</listener-class>
-        </listener>
+    <listener>
+        <listener-class>org.oscarehr.common.web.OscarSpringContextLoaderListener</listener-class>
+    </listener>
+    
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>

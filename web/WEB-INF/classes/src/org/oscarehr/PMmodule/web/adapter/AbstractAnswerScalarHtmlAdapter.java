@@ -36,13 +36,42 @@ abstract class AbstractAnswerScalarHtmlAdapter extends AbstractAnswerHtmlAdapter
 		return isParentQuestion() ? endRow(endCell(builder)) : builder;
 	}
 
-	protected StringBuilder createLabel() {
+	protected StringBuilder startLabel(boolean printLabelBefore) {
 		StringBuilder labelBuilder = new StringBuilder();
 		
-		if (StringUtils.isNotBlank(getLabel())) {
-			labelBuilder.append(getLabel()).append(SPACE);
+		labelBuilder.append("<label>");
+		
+		if (printLabelBefore) {
+			printLabel(labelBuilder);
+			labelBuilder.append(SPACE);
 		}
 		
 		return labelBuilder;
 	}
+	
+	protected StringBuilder endLabel(boolean printLabelAfter) {
+		StringBuilder labelBuilder = new StringBuilder();
+		
+		if (printLabelAfter) {
+			labelBuilder.append(SPACE);
+			printLabel(labelBuilder);
+		}
+		
+		labelBuilder.append("</label>");
+		
+		return labelBuilder;
+	}
+	
+	private StringBuilder printLabel(StringBuilder builder) {
+		// builder.append(" [").append(getId()).append("] ");
+		
+		String label = getLabel(); 
+		
+		if (StringUtils.isNotBlank(label)) {
+			builder.append(label);
+		}
+		
+		return builder;
+	}
+	
 }

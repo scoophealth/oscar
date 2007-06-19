@@ -27,7 +27,7 @@ import org.oscarehr.PMmodule.model.IntakeNode;
 abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 
 	protected static final String TAB = "\t";
-	protected static final String SPACE = "&nbsp";
+	protected static final String SPACE = " ";
 	protected static final String EOL = System.getProperty("line.separator");
 
 	private int indent;
@@ -87,6 +87,10 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.hasPages();
 	}
 
+	protected boolean hasSections() {
+		return node.hasSections();
+	}
+
 	protected String getId() {
 		return node.getIdStr();
 	}
@@ -95,7 +99,7 @@ abstract class AbstractHtmlAdapter implements IntakeNodeHtmlAdapter {
 		return node.getLabelStr();
 	}
 	
-	protected int getNestedQuestionLevel() {
+	protected int getDistanceToQuestionLevel() {
 		return node.getLevel() - node.getQuestionLevel();
 	}
 	

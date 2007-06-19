@@ -33,12 +33,10 @@ Intake intake = intakeEditForm.getIntake();
 	<body class="edit">
 		<html:form action="/PMmodule/GenericIntake/Edit" onsubmit="return validateEdit()">
 			<html:hidden property="method" />
-			
 			<div id="layoutContainer" dojoType="LayoutContainer" layoutChildPriority="top-bottom" class="intakeLayoutContainer">
 				<div id="topPane" dojoType="ContentPane" layoutAlign="top" class="intakeTopPane">
                     <c:out value="${sessionScope.genericIntakeEditForm.title}" />
 				</div>
-                
 				<div id="clientPane" dojoType="ContentPane" layoutAlign="client" class="intakeChildPane">
 				
 					<div id="clientTable" dojoType="TitlePane" label="Client Information" title="(Fields marked with * are mandatory)" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
@@ -83,7 +81,7 @@ Intake intake = intakeEditForm.getIntake();
 							<c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
 							<tr>
 								<td>
-									<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable')" >
+									<a href="javascript:void(0);" onclick="window.open('<caisi:CaseManagementLink demographicNo="<%=intake.getClientId()%>" providerNo="<%=intake.getStaffId()%>" providerName="<%=intake.getStaffName()%>" />', '', 'width=800,height=600,resizable=1,scrollbars=1')" >
 										<span>Case Management Notes</span>
 									</a>
 								</td>
@@ -91,7 +89,6 @@ Intake intake = intakeEditForm.getIntake();
 							</c:if>
 						</table>
 					</div>
-					
 					<c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms || not empty sessionScope.genericIntakeEditForm.servicePrograms}">
 					<div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 						<table class="intakeTable">
@@ -122,10 +119,9 @@ Intake intake = intakeEditForm.getIntake();
 						</table>
 					</div>
 					</c:if>
-					
+					<br />
 					<caisi:intake base="<%=5%>" intake="<%=intake%>" />
 				</div>
-				
 				<div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
 					<table class="intakeTable">
                         <logic:messagesPresent>

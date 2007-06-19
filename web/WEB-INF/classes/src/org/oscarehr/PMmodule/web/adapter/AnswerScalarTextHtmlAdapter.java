@@ -32,13 +32,7 @@ public class AnswerScalarTextHtmlAdapter extends AbstractAnswerScalarHtmlAdapter
 	public StringBuilder getPreBuilder() {
 		StringBuilder preBuilder = startAnswer(super.getPreBuilder());
 
-		indent(preBuilder).append(createLabel());
-		
-		if (isParentQuestion()) {
-			preBuilder.append(getTextInput(getId(), getAnswerValue(), true)).append(EOL);
-		} else {
-			preBuilder.append(getTextInput(getId(), getAnswerValue(), false)).append(EOL);
-		}
+		indent(preBuilder).append(startLabel(true)).append(getTextInput(getId(), getAnswerValue(), isParentQuestion())).append(endLabel(false)).append(EOL);
 
 		return endAnswer(preBuilder);
 	}

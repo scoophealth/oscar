@@ -10,7 +10,6 @@ body.edit {
 .intakeLayoutContainer {
 	width: 100%;
 	height: 100%;
-	overflow: auto;
 }
 
 .intakeTopPane {
@@ -34,12 +33,16 @@ body.edit {
 	height: 100%;
 }
 
+.intakePage {
+	overflow: auto;
+}
+
 .intakeSectionLabel {
 	color: #000;
+	font-size: 12px;
 	font-weight: bold;
 	background: url("images/soriaBarBg.gif") repeat-x top left #85aeec;
 	border: 1px solid #84a3d1;
-	font-size: 0.9em;
 }
 
 .intakeSectionContainer {
@@ -47,13 +50,10 @@ body.edit {
 	border: 1px solid #84a3d1;
 }
 
-.intakeSection {
-	overflow: auto;
-}
-
 table.intakeTable {
 	width: 100%;
-	font-size: 10px;
+	font-size: 12px;
+	overflow: auto;
 }
 
 table.intakeTable td {
@@ -61,7 +61,7 @@ table.intakeTable td {
 }
 
 table.intakeTable label {
-	font-size: 12px;
+	font-size: 10px;
 	font-weight: bold;
 }
 
