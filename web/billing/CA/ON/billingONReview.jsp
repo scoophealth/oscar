@@ -208,44 +208,39 @@
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
-	
-	var bClick = false;
-	    function onSave() {
-	        //alert(document.forms[0].submit[0].value);
-	        var ret = true;
-	        //if(ret==true && bClick) {
-	        //    ret = confirm("Are you sure you want to save?");
-	        //}
-	        //if(!ret) {
-	        	bClick = false;
-	        //}
-	        return ret;
-	    }
-	    function onClickSave() {
-			bClick = true;
-	    }
-		function popupPage(vheight,vwidth,varpage) {
-		  var page = "" + varpage;
-		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-		  var popup=window.open(page, "billcorrection", windowprops);
-		    if (popup != null) {
-		    if (popup.opener == null) {
-		      popup.opener = self;
-		    }
-		    popup.focus();
-		  }
-		}
-		function settlePayment() {
-		  document.forms[0].payment.value = document.forms[0].total.value;
-		}
-		
-		function scriptAttach(elementName) {
-		     var d = elementName;
-		     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
-		     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
-		}
-		
-	
+var bClick = false;
+
+function onSave() {
+    var ret = true;
+    bClick = false;
+    return ret;
+}
+
+function onClickSave() {
+    bClick = true;
+}
+
+function popupPage(vheight,vwidth,varpage) {
+    var page = "" + varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+    var popup=window.open(page, "billcorrection", windowprops);
+    if (popup != null) {
+	if (popup.opener == null) {
+	    popup.opener = self;
+	}
+	popup.focus();
+    }
+}
+
+function settlePayment() {
+    document.forms[0].payment.value = document.forms[0].total.value;
+}
+
+function scriptAttach(elementName) {
+    var d = elementName;
+    t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+    popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
+}
 
 </script>
 	
@@ -539,10 +534,11 @@ function onCheckMaster() {
 			<tr>
 
 				<td colspan='3' align='center' bgcolor="silver">
-                                    <input type="submit" name="button" value="Back to Edit"	style="width: 120px;" />
+                                    <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
 <% if (serviceCodeValid) { %>
                                     <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
 <% } %>
+				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
                                 </td>
 			</tr>
 		</table>

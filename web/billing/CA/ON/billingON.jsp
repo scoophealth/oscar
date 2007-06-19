@@ -79,14 +79,7 @@
 				if (dv!=null) ctlBillForm = dv;
 			    }
 			}
-			sql = "select distinct(diagnostic_code) from diagnosticcode where region='ON'";
-			rs = dbObj.searchDBRecord(sql);
-			char[] cdcArray = new char[dxCodeLength];
-			while (rs.next()) {
-			    cdcArray[Integer.parseInt(rs.getString("diagnostic_code"))] = '1';
-			}
-			String ctldiagcodeList = new String(cdcArray);
-
+			
 			GregorianCalendar now = new GregorianCalendar();
 			int curYear = now.get(Calendar.YEAR);
 			int curMonth = (now.get(Calendar.MONTH) + 1);
@@ -216,6 +209,20 @@
 
 			String paraName = request.getParameter("dxCode");
 			String dxCode = getDefaultValue(paraName, vecHistD, "diagnostic_code");
+
+			// create diagnostic code list for validation of user entries
+			// show diagnostic code description for previously selected code
+			sql = "select distinct(diagnostic_code),description from diagnosticcode where region='ON'";
+			rs = dbObj.searchDBRecord(sql);
+			char[] cdcArray = new char[dxCodeLength];
+			String ctldiagcode_past = "";
+			while (rs.next()) {
+			    cdcArray[Integer.parseInt(rs.getString("diagnostic_code"))] = '1';
+			    if (rs.getString("diagnostic_code").equals(dxCode)) {
+				ctldiagcode_past = rs.getString("description").trim();
+			    }
+			}
+			String ctldiagcodeList = new String(cdcArray);
 
 			//visitType
 			paraName = request.getParameter("xml_visittype");
@@ -717,8 +724,9 @@ function onHistory() {
     popupPage("800","640","billingONHistorySpec.jsp?demographic_no=<%=demo_no%>&demo_name=<%=demoname%>&orderby=appointment_date&day=" + dd);
 }
 
-function prepareServicesChecked() {
+function prepareBack() {
     document.forms[0].services_checked.value = <%=request.getParameter("services_checked")%>;
+    document.forms[0].url_back.value = location.href;
 }
 
 function refreshServicesChecked(chkd) {
@@ -750,7 +758,7 @@ function hide_codedesc() {
 </script>
 </head>
 
-<body onload="setfocus();prepareServicesChecked();" topmargin="0">
+<body onload="setfocus();prepareBack();" topmargin="0">
 <div id="Instrdiv" class="demo1">
     <table bgcolor='#007FFF' width='99%'>
 	<tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
@@ -798,7 +806,7 @@ function hide_codedesc() {
 	    <td width="6%"><a href="#" onclick="showHideLayers('Layer2','','hide');return false">X</a></td>
 	</tr>
 <%
-			String ctldiagcode = "", ctldiagcodename = "", ctldiagcode_past = "";
+			String ctldiagcode = "", ctldiagcodename = "";
 			ctlCount = 0;
 			sql = "select d.diagnostic_code dcode, d.description des from diagnosticcode d, ctl_diagcode c where c.diagnostic_code=d.diagnostic_code and c.servicetype='"
 					+ ctlBillForm + "' order by d.description";
@@ -806,7 +814,6 @@ function hide_codedesc() {
 			while (rs.next()) {
 				ctldiagcode = rs.getString("dcode");
 				ctldiagcodename = rs.getString("des");
-				if (ctldiagcode.equals(dxCode)) ctldiagcode_past = ctldiagcodename.trim();
 				ctlCount++;
 %>
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
@@ -821,7 +828,7 @@ function hide_codedesc() {
 		</font>
 	    </td>
 	</tr>
-<%}%>
+			<%}%>
 </table>
 </div>
 
@@ -1280,6 +1287,7 @@ function hide_codedesc() {
     <input type="hidden" name="billForm" value="<%=ctlBillForm%>" />
     <input type="hidden" name="curBillForm" value="<%=ctlBillForm%>" />
     <input type="hidden" name="services_checked">
+    <input type="hidden" name="url_back">
 
 </table>
 

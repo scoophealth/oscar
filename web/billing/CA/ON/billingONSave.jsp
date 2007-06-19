@@ -31,18 +31,18 @@
 			//String user_no = (String) session.getAttribute("user");
 			String apptNo = request.getParameter("appointment_no");
 
-			if (request.getParameter("submit") != null && "Back to Edit".equals(request.getParameter("button"))) {
-%>
-<jsp:forward page="billingON.jsp" />
-<%}
+			if (request.getParameter("submit") != null && "Back to Edit".equals(request.getParameter("button"))) { %>
+			    <jsp:forward page="billingON.jsp" />
+<%			}
 
 			// save the billing if needed
 			boolean ret = false;
 			if (request.getParameter("submit") != null
 					&& ("Settle & Print Invoice".equals(request.getParameter("submit"))
-							|| "Save & Print Invoice".equals(request.getParameter("submit"))
-							|| "Save".equals(request.getParameter("submit")) || "Save and Back".equals(request
-							.getParameter("submit")))) {
+					    || "Save & Print Invoice".equals(request.getParameter("submit"))
+					    || "Save".equals(request.getParameter("submit"))
+					    || "Save and Back".equals(request.getParameter("submit"))
+					    || "Save & Add Another Bill".equals(request.getParameter("submit")))) {
 				BillingSavePrep bObj = new BillingSavePrep();
 				Vector vecObj = bObj.getBillingClaimObj(request);
 				ret = bObj.addABillingRecord(vecObj);
@@ -62,7 +62,12 @@
 				%>
 				<p>
 				<h1>Successful Addition of a billing Record.</h1>
-				<% if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
+				<% if (request.getParameter("submit") != null && "Save & Add Another Bill".equals(request.getParameter("submit"))) { %>
+				    <script LANGUAGE="JavaScript">
+					self.location.href="<%=request.getParameter("url_back")%>";
+				    </script>
+				<% }
+				if(!"Settle & Print Invoice".equals(request.getParameter("submit")) && !"Save & Print Invoice".equals(request.getParameter("submit"))) { %>
 					<a href="billingON3rdInv.jsp?billingNo=<%=billingNo%>"> Print invoice</a>
 				<% } %>
 				</p>
