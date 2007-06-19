@@ -64,6 +64,7 @@
 				<h1>Successful Addition of a billing Record.</h1>
 				<% if (request.getParameter("submit") != null && "Save & Add Another Bill".equals(request.getParameter("submit"))) { %>
 				    <script LANGUAGE="JavaScript">
+					self.opener.refresh();
 					self.location.href="<%=request.getParameter("url_back")%>";
 				    </script>
 				<% }
