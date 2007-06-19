@@ -31,9 +31,12 @@ boolean bFirstDisp=true; //this is the first time to display the window
 if (request.getParameter("bFirstDisp")!=null) bFirstDisp= (request.getParameter("bFirstDisp")).equals("true");
 %>
 <%@ page language="java" import="oscar.oscarDemographic.data.*, java.util.Enumeration" %>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+
 
 <html:html locale="true">
 <head>
@@ -111,6 +114,28 @@ function popup(demographicNo, msgId, providerNo, action) { //open a new popup wi
   
 }
 
+//debug
+function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
+      var page = "" + varpage;
+      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+            openWindows[name] = window.open(page, name, windowprops);
+
+            if (openWindows[name] != null) {
+                if (openWindows[name].opener == null) {
+                    openWindows[name].opener = self;
+                    alert("PageAlert");
+                }
+                openWindows[name].focus();
+            }
+    }
+
+
+function popupStart(vheight,vwidth,varpage,windowname) {
+    var page = varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes";
+    var popup=window.open(varpage, windowname, windowprops);
+}
+//debug
 
 
 function popupSearchDemo(keyword){ // open a new popup window
@@ -332,8 +357,12 @@ function popupSearchDemo(keyword){ // open a new popup window
                                 DemographicData demoData = new  DemographicData();
                                 DemographicData.Demographic demo =  demoData.getDemographic(demographic_no);
                                 String demoName = "";
+                                String demoLastName = "";
+                                String demoFirstName = "";
                                 if ( demo != null ) {
                                     demoName = demo.getLastName()+", "+demo.getFirstName();
+                                    demoLastName = demo.getLastName();
+                                    demoFirstName = demo.getLastName();
                                                                        
                                 } %> 
                                 <tr>
@@ -372,8 +401,19 @@ function popupSearchDemo(keyword){ // open a new popup window
                                             <td bgcolor="#EEEEFF">        
                                             <input type="text" size="30" readonly style="background:#EEEEFF;border:none" value="<%=(String)demoMap.get(demoID)%>"/>
 <a href="javascript:popupViewAttach(700,960,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoID%>&displaymode=edit&dboperation=search_detail')">M</a>
-                                            <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />                                            
+                                            <input type="button" class="ControlPushButton" name="writeEncounter" value="Write to encounter" onclick="popup( '<%=demoID%>','<%=request.getAttribute("viewMessageId")%>','<%=request.getAttribute("providerNo")%>','writeToEncounter')" />
+                                    
+
+
                                             </td>
+                                         </tr>
+                                         <tr>
+                                           <td bgcolor="#EEEEFF">        
+                                           </td>
+                                           <td bgcolor="#EEEEFF">
+<a href="javascript:popupStart(400,850,'../demographic/demographiccontrol.jsp?demographic_no=<%=demoID%>&last_name=<%=demoLastName%>&first_name=<%=demoFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25','ApptHist')" title="Click to see appointment history">Next Appt: <oscar:nextAppt demographicNo="<%=demoID%>"/></a>
+
+                                           </td>
                                         </tr>
                                         <%}
                                     }
