@@ -1,5 +1,4 @@
 <%
-
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.jsp");
   String DONOTBOOK = "Do_Not_Book";
   String curProvider_no = request.getParameter("provider_no");
@@ -45,6 +44,7 @@ String [][] dbQueries=new String[][] {
     {"search_appt", "select count(appointment_no) AS n from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
     {"search_appt_name", "select name from appointment where appointment_date = ? and provider_no = ? and status !='C' and ((start_time>= ? and start_time<= ?) or (end_time>= ? and end_time<= ?) or (start_time<= ? and end_time>= ?) )" }, 
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " }, 
+    {"search_provider_name", "select last_name,first_name from provider where provider_no= ? " },
 
     {"search_demographic_statusroster", "select patient_status,roster_status from demographic where demographic_no = ? " }, 
     {"search_appt_future", "select appt.appointment_date, appt.start_time, appt.status, p.last_name, p.first_name from appointment appt, provider p where appt.provider_no = p.provider_no and appt.demographic_no = ? and appt.appointment_date >= now() and appt.appointment_date < date_add(now(), interval 365 day) order by appointment_date limit 5" },
@@ -352,6 +352,14 @@ function pasteAppt() {
       if(apptName.equalsIgnoreCase(DONOTBOOK)) bDnb = true;
   }
   
+  // select provider lastname & firstname
+  String pLastname = "";
+  String pFirstname = "";
+  ResultSet rspvd = addApptBean.queryResults(curProvider_no, "search_provider_name");
+  if (rspvd.next()) {
+      pLastname = rspvd.getString("last_name");
+      pFirstname = rspvd.getString("first_name");
+  }
 %>
 <body  background="../images/gray_bg.jpg" bgproperties="fixed"  onLoad="setfocus()" topmargin="0"  leftmargin="0" rightmargin="0"> 
 <%
@@ -479,7 +487,7 @@ String disabled="";
   <INPUT TYPE="hidden" NAME="displaymode" value=""> 
   <table border=0 cellspacing=0 cellpadding=0 width="100%" > 
     <tr bgcolor="<%=deepcolor%>"> 
-      <th><font face="Helvetica"><bean:message key="appointment.addappointment.msgMainLabel"/> (<%=userfirstname%> <%=userlastname%>)</font></th> 
+      <th><font face="Helvetica"><bean:message key="appointment.addappointment.msgMainLabel"/> (<%=pFirstname%> <%=pLastname%>)</font></th> 
     </tr> 
   </table> 
   <table border="0" cellpadding="0" cellspacing="0" width="100%"> 
