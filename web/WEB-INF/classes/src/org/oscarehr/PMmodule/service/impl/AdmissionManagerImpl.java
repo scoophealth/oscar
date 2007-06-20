@@ -70,6 +70,10 @@ public class AdmissionManagerImpl implements AdmissionManager {
 	    this.bedDemographicManager = bedDemographicManager;
     }
 	
+	public List getAdmissions_archiveView(String programId, Integer demographicNo) {
+		return dao.getAdmissions_archiveView(Integer.valueOf(programId), demographicNo);
+	}
+	
 	public Admission getAdmission(String programId, Integer demographicNo) {
 		return dao.getAdmission(Integer.valueOf(programId), demographicNo);
 	}

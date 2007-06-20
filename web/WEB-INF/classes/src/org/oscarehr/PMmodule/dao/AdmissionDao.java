@@ -29,6 +29,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.AdmissionSearchBean;
 
 public interface AdmissionDao {
+	public List getAdmissions_archiveView(Integer programId, Integer demographicNo);
 	
 	public Admission getAdmission(Integer programId, Integer demographicNo);
 

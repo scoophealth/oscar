@@ -159,28 +159,37 @@ public class InfirmAction extends BaseAction
 			}
 			else {
 			Admission admission = new Admission();
+			List admissions = new ArrayList();	
+			Integer csi;
 			for(Iterator iter=demographicBeans.iterator();iter.hasNext();) {				
 				LabelValueBean bean = (LabelValueBean)iter.next();
 				String demographicNo = bean.getValue();
 				admission = null;
+				admissions = null;				
 				//admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
 				if(archiveView!=null && archiveView.equals("true")){
-					admission = getAdmissionManager().getAdmission_archiveView(String.valueOf(programId), new Integer(demographicNo));
+					admissions = getAdmissionManager().getAdmissions_archiveView(String.valueOf(programId), new Integer(demographicNo));
+					for(Iterator i1=admissions.iterator();i1.hasNext();) {
+						admission = (Admission)i1.next();
+						csi = admission.getClientStatusId();
+						if(csi==null)
+							csi = 0;
+						if(statusId!=null && statusId.equals(csi.toString())){
+							filteredDemographicBeans.add(bean);
+							break;
+						}				
+					}
+				
 				}
 				else {
 					admission = getAdmissionManager().getCurrentAdmission(String.valueOf(programId), new Integer(demographicNo));
-				
+					csi = admission.getClientStatusId();
+					if(csi==null)
+						csi=0; 				
+					if(statusId!=null && statusId.equals(csi.toString())){
+						filteredDemographicBeans.add(bean);
+					}				
 				}
-				//if(admission.getClientStatusId()==null) { 
-				//	admission.setClientStatusId(new Integer(0));
-				//}
-				Integer csi = admission.getClientStatusId();
-				if(csi==null)
-					csi=0;
- 				//if(statusId!=null && statusId.equals(admission.getClientStatusId().toString())) {
-				if(statusId!=null && statusId.equals(csi.toString())){
-					filteredDemographicBeans.add(bean);
-				}				
 			}
 			request.setAttribute("infirmaryView_clientStatusId",statusId );
 			}

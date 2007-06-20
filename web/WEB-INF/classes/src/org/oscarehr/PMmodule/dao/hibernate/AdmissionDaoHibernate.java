@@ -41,7 +41,7 @@ public class AdmissionDaoHibernate extends HibernateDaoSupport implements Admiss
 
 	private Log log = LogFactory.getLog(AdmissionDaoHibernate.class);
 	
-	public Admission getAdmission_archiveView(Integer programId, Integer demographicNo) {
+	public List getAdmissions_archiveView(Integer programId, Integer demographicNo) {
 		Admission admission = null;
 
 		if (programId == null || programId <= 0) {
@@ -52,18 +52,18 @@ public class AdmissionDaoHibernate extends HibernateDaoSupport implements Admiss
 			throw new IllegalArgumentException();
 		}
 
-		String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=? order by am_id DSC";
+		String queryStr = "FROM Admission a WHERE admission_status='discharged' and a.ProgramId=? AND a.ClientId=? order by am_id DESC";
 		List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
-
+		/*
 		if (!rs.isEmpty()) {
 			admission = ((Admission) rs.get(0));
 		}
-
+		 */
 		if (log.isDebugEnabled()) {
 			log.debug((admission != null) ? "getAdmission:" + admission.getId() : "getAdmission: not found");
 		}
 
-		return admission;
+		return rs;
 	}
 	public Admission getAdmission(Integer programId, Integer demographicNo) {
 		Admission admission = null;

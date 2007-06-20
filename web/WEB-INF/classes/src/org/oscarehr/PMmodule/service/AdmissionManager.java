@@ -33,7 +33,7 @@ import org.oscarehr.PMmodule.model.AdmissionSearchBean;
 import org.oscarehr.PMmodule.model.Program;
 
 public interface AdmissionManager  {
-	public Admission getAdmission_archiveView(String programId, Integer demographicNo);
+	public List getAdmissions_archiveView(String programId, Integer demographicNo);
 	
 	public Admission getAdmission(String programId, Integer demographicNo);
 	
