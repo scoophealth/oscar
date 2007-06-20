@@ -54,6 +54,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	// Forwards
 	private static final String EDIT = "edit";
 	private static final String PRINT = "print";
+	private static final String CLIENT_EDIT = "clientEdit";
 
 	public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
@@ -146,6 +147,17 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		return mapping.findForward(EDIT);
 	}
 
+	public ActionForward clientEdit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
+		
+		Integer clientEditId = formBean.getClient().getDemographicNo();
+		
+		StringBuilder parameters = new StringBuilder(PARAM_START);
+     	parameters.append(CLIENT_EDIT_ID).append(PARAM_EQUALS).append(clientEditId);
+
+		return createRedirectForward(mapping, CLIENT_EDIT, parameters);
+	}
+	
 	// Adapt
 
 	private Demographic getClient(Integer clientId) {

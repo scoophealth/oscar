@@ -144,7 +144,14 @@ Intake intake = intakeEditForm.getIntake();
                                 <html:reset>Reset</html:reset>
                             </td>
 							<td align="right">
-                                <input type="button" value="Close" onclick="history.go(-1)" />
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+                                        <html:submit onclick="clientEdit()">Close</html:submit>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="button" value="Close" onclick="history.go(-1)" />
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
 						</tr>
 					</table>

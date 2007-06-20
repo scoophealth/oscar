@@ -17,6 +17,7 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	protected static final String METHOD = "method";
 	protected static final String TYPE = "type";
 	protected static final String CLIENT_ID = "clientId";
+	protected static final String CLIENT_EDIT_ID = "id";
 	protected static final String PROGRAM_ID = "programId";
 	protected static final String START_DATE = "startDate";
 	protected static final String END_DATE = "endDate";
