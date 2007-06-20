@@ -37,13 +37,13 @@
     {"search_rschedule_future1", "select * from rschedule where provider_no=?  and sdate >? and status = 'A' order by sdate" }, 
     {"search_rschedule_overlaps", "select count(id) from rschedule where provider_no=? and ((sdate <? and edate >=?) or (? < sdate and sdate < ?) or (? < edate and edate <= ?) or ( ? < sdate and edate <= ?) or (sdate = ? and sdate = ?) or (edate = ? and edate <= ?) or (sdate = ? and edate != ?)) and status = 'A'" },
     {"search_rschedule_exists", "select count(id) from rschedule where provider_no=? and sdate =? and edate =? and status = 'A'" },
-    {"add_rschedule", "insert into rschedule values(?,?,?,?,?,?,?,?,?,?)" },
+    {"add_rschedule", "insert into rschedule (provider_no, sdate, edate, available, day_of_week, avail_hourB, avail_hour, creator, status) values(?,?,?,?,?,?,?,?,?)" },
     {"delete_rschedule", "update rschedule set status = 'D' where provider_no=? and available=? and sdate=?" },
     {"update_rschedule", "update rschedule set edate=?, day_of_week=?, day_of_month=?, day_of_year=?, creator=? where provider_no=? and available=? and sdate=?" },
     {"update_rschedule1", "update rschedule set day_of_week=?, avail_hourB=?, avail_hour=?, creator=? where provider_no=? and available=? and sdate=?" },
  
     {"search_scheduledate_c", "select * from scheduledate where priority='c' and status = 'A' and provider_no=?" }, 
-    {"add_scheduledate", "insert into scheduledate values(?,?,?,?,?,?,?,?,?)" }, 
+    {"add_scheduledate", "insert into scheduledate (sdate, provider_no, available, priority, reason, hour, creator, status) values(?,?,?,?,?,?,?,?)" }, 
     {"delete_scheduledate", "update scheduledate set status = 'D' where sdate=? and provider_no=? " }, // and priority=? 
     {"delete_scheduledate_b", "update scheduledate set status = 'D' where provider_no=? and priority='b' and sdate>=? and sdate<=?" }, 
     {"delete_scheduledate_all", "update scheduledate set status = 'D' where provider_no=? and sdate>=? and sdate<=?" }, 
