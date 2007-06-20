@@ -725,7 +725,7 @@ function onHistory() {
 }
 
 function prepareBack() {
-    document.forms[0].services_checked.value = <%=request.getParameter("services_checked")%>;
+    document.forms[0].services_checked.value = "<%=request.getParameter("services_checked")%>";
     document.forms[0].url_back.value = location.href;
 }
 
