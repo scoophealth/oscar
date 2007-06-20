@@ -163,7 +163,14 @@ public class InfirmAction extends BaseAction
 				LabelValueBean bean = (LabelValueBean)iter.next();
 				String demographicNo = bean.getValue();
 				admission = null;
-				admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
+				//admission = getAdmissionManager().getAdmission(String.valueOf(programId), new Integer(demographicNo));
+				if(archiveView!=null && archiveView.equals("true")){
+					admission = getAdmissionManager().getAdmission_archiveView(String.valueOf(programId), new Integer(demographicNo));
+				}
+				else {
+					admission = getAdmissionManager().getCurrentAdmission(String.valueOf(programId), new Integer(demographicNo));
+				
+				}
 				//if(admission.getClientStatusId()==null) { 
 				//	admission.setClientStatusId(new Integer(0));
 				//}

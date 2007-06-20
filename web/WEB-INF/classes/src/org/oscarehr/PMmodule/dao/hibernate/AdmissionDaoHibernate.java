@@ -40,7 +40,31 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class AdmissionDaoHibernate extends HibernateDaoSupport implements AdmissionDao {
 
 	private Log log = LogFactory.getLog(AdmissionDaoHibernate.class);
+	
+	public Admission getAdmission_archiveView(Integer programId, Integer demographicNo) {
+		Admission admission = null;
 
+		if (programId == null || programId <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		if (demographicNo == null || demographicNo <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		String queryStr = "FROM Admission a WHERE a.ProgramId=? AND a.ClientId=? order by am_id DSC";
+		List rs = getHibernateTemplate().find(queryStr, new Object[] { programId, demographicNo });
+
+		if (!rs.isEmpty()) {
+			admission = ((Admission) rs.get(0));
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug((admission != null) ? "getAdmission:" + admission.getId() : "getAdmission: not found");
+		}
+
+		return admission;
+	}
 	public Admission getAdmission(Integer programId, Integer demographicNo) {
 		Admission admission = null;
 
