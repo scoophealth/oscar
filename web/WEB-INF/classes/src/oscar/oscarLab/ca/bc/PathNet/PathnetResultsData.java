@@ -115,19 +115,21 @@ public class PathnetResultsData {
             // for the provider number if unable to find correct provider
                        
             
-          sql  ="select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, providerLabRouting.status " +
-                "from hl7_message m, hl7_pid pid, providerLabRouting " +
-                "where m.message_id = pid.message_id and providerLabRouting.lab_no = m.message_id "+                        
+          sql  ="select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, providerLabRouting.status " +
+                "from hl7_pid pid, providerLabRouting " +
+                "where providerLabRouting.lab_no = pid.message_id  "+                        
                 " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                 " AND providerLabRouting.lab_type = 'BCP' " +
                 " AND pid.patient_name like '"+patientLastName+"%^"+patientFirstName+"%' AND pid.external_id like '%"+patientHealthNumber+"%' ";
          } else {                                                                                 
             
-            sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id " +
-                "from hl7_message m, hl7_pid pid, patientLabRouting " +
-                "where m.message_id = pid.message_id  and patientLabRouting.lab_no = m.message_id "+             
+            sql = "select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id " +
+                "from hl7_pid pid, patientLabRouting " +
+                "where  patientLabRouting.lab_no = pid.message_id "+             
                 "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"' "; //group by mdsMSH.segmentID";
          }
+         
+          
                
          System.out.println(sql);
          ResultSet rs = db.GetSQL(sql);
