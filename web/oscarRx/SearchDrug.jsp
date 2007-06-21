@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/oscarProperties-tag.tld" prefix="oscarProp" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
 <%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
@@ -228,7 +228,7 @@ table.hiddenLayer {
                                <a href="javascript: function myFunction() {return false; }"  onClick="showpic('Layer1');"  id="Calcs" ><%=prefPharmacy%></a>                               
                             </td>
                         </tr>
-                        <oscarProp:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+                        <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
                             <indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">                               
                                 <tr>
                                     <td colspan="3">
@@ -236,7 +236,7 @@ table.hiddenLayer {
                                     </td>                            
                                 </tr>                                                      
                             </indivo:indivoRegistered>
-                        </oscarProp:oscarPropertiesCheck>
+                        </oscar:oscarPropertiesCheck>
                     </table>
                 </td>
             </tr>
