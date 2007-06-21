@@ -116,14 +116,18 @@ public class DosingRecomendation {
                     }
                 } 
 
-            }else if (toParse.indexOf("&gt;") != -1){ // greater than style
+            }else if (toParse.indexOf("&gt;") != -1 ||  toParse.indexOf(">") != -1 ){ // greater than style
                 toParse = toParse.replaceFirst("&gt;","");
+                toParse = toParse.replaceFirst(">","");
+                
                 int gt = Integer.parseInt(toParse);
                 if(val >= gt){
                     valueInRange = true;
                 }          
-            }else if (toParse.indexOf("&lt;") != -1){ // less than style
+            }else if (toParse.indexOf("&lt;") != -1  ||  toParse.indexOf("<") != -1 ){ // less than style
                 toParse = toParse.replaceFirst("&lt;","");
+                toParse = toParse.replaceFirst("<","");
+                
                 int lt = Integer.parseInt(toParse);           
                 if(val <= lt){
                     valueInRange = true;
