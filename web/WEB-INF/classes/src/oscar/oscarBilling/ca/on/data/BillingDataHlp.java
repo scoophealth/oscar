@@ -99,5 +99,8 @@ public final class BillingDataHlp {
 		vecPaymentType.add("Short/Long Term Disability");
 		vecPaymentType.add("IFH");
 		vecPaymentType.add("Interm Federal Health");
+		vecPaymentType.add("NOT");
+		vecPaymentType.add("Do Not Bill");
+		
 	}
 }

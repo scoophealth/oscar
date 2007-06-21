@@ -60,7 +60,12 @@ public class BillingCorrectionPrep {
 			ch1Obj
 					.setStatus(requestData.getParameter("status").substring(0,
 							1));
+			
 			ch1Obj.setPay_program(requestData.getParameter("payProgram"));
+			if(requestData.getParameter("status").substring(0,1).equals("N")){
+				ch1Obj.setPay_program("NOT");				
+			}
+						
 			ch1Obj.setRef_num(requestData.getParameter("rdohip"));
 			ch1Obj.setVisittype(requestData.getParameter("visittype"));
 
