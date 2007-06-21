@@ -142,7 +142,7 @@ public class RxUtil {
      * age must be greater than zero.
      * weight must be greater than zero
      */
-    public static int getClcr(int age, int weight, int sCr, boolean female) throws Exception{
+    public static int getClcr(int age, double weight, double sCr, boolean female) throws Exception{
       if  ( age < 0){
           throw new Exception("age must be greater than 0");
       }       
