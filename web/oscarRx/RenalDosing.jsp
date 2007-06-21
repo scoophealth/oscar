@@ -16,27 +16,27 @@ Demographic demographic = demoData.getDemographic(demographicNo);
 
 int age = demographic.getAgeInYears();
 boolean female = demographic.isFemale();
-int weight = -1;
+double weight = -1;
 Hashtable measurementHash = EctMeasurementsDataBeanHandler.getLast(demographicNo, "WT");
 
 String wt= null;
 Date  wtDate = null;
 if (measurementHash != null && measurementHash.get("value") != null){
-    weight = Integer.parseInt((String) measurementHash.get("value"));
+    weight = Double.parseDouble((String) measurementHash.get("value"));
     wtDate = (Date) measurementHash.get("dateObserved_date");
 }
 
-int measurementsCr = -1;
+double measurementsCr = -1;
 Date measurementsCrDate = null;
 
 measurementHash = EctMeasurementsDataBeanHandler.getLast(demographicNo, "sCr");
 if (measurementHash != null && measurementHash.get("value") != null){
-    measurementsCr = Integer.parseInt((String) measurementHash.get("value"));
+    measurementsCr = Double.parseDouble((String) measurementHash.get("value"));
     measurementsCrDate = (Date) measurementHash.get("dateObserved_date");
 }
 
 
-int sCr = -1;
+double sCr = -1;
 Date sCrDate = null;
 
 CommonLabTestValues lab = new CommonLabTestValues();
@@ -48,7 +48,7 @@ if(labs != null && labs.size() >0 ){
     String sCrStr = (String) hash.get("result");
     sCrDate = (Date) hash.get("collDateDate");
     try{
-        sCr = Integer.parseInt(sCrStr);
+        sCr = Double.parseDouble(sCrStr);
     }catch(Exception e){}
 }
 
@@ -154,7 +154,7 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
     </table>
     
     
-    <div style="width:350px; float:left;">
+    <div style="width:410px; float:left;">
         
         <!--
         <div style="float:left; border: 1px yellow solid;" >Clcr <%=Clcr%> =</div> <div style="float:left;" > (140 - <%=age%>[age] ) X <%=weight%>[kg] ) <hr/> (<%=sCr%> sCr [umol/L] X 0.8)   <% if(female){%> X 0.85 <%}%> </div>
@@ -163,20 +163,20 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
             <tr>
                 <th rowspan=2 valign="middle">Clcr <%=setNA(equate,Clcr)%> =</th> 
                 <td align="center">
-                    (140 - <%=setNA(ageb,age)%>[age] ) X <%=setNA(weightb,weight)%>  
-                    
+                    (140 - <%=setNA(ageb,age)%>[age] ) X <%=setNA(weightb,weight)%> 
                     <a href="javascript: function myFunction() {return false; }"  onclick="popup(500,1000,'/oscar/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=Renal Dosing&amp;demographic_no=<%=demographicNo%>','dddsfds'); return false;">
                     [kg <%=UtilDateUtilities.DateToString( wtDate , "yyyy-MMM-dd")%>] 
-                    </a>
-                    )
+                    </a> X 1.23 
+                    
                 </td>
+                <td nowrap rowspan="2"> X 0.85 </td>
             </tr>
             <tr>
-                <td align="center" style="border-top: 2px black solid;">(<%=setNA(sCrb,sCr)%> sCr 
+                <td align="center" style="border-top: 2px black solid;"><%=setNA(sCrb,sCr)%> sCr 
                     <a href="javascript: function myFunction() {return false; }"  onclick="popup(500,1000,'/oscar/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=Renal Dosing&amp;demographic_no=<%=demographicNo%>','dddsfds'); return false;">
                         [umol/L <%=UtilDateUtilities.DateToString( sCrDate , "yyyy-MMM-dd")%>]
                     </a>
-                X 0.8)   <% if(female){%> X 0.85 <%}%> </td> 
+                   <% if(female){%> X 0.85 <%}%> </td> 
             </tr>
         </table>
     </div>
@@ -191,6 +191,13 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
   <%!
   
   String setNA(boolean valb, int value){
+       if (valb){
+           return ""+value;
+       }
+       return "<span style=\"color:orange\">N/A</span>";
+  }
+  
+  String setNA(boolean valb, double value){
        if (valb){
            return ""+value;
        }
