@@ -10,8 +10,8 @@
 
 <root>
     <medication name="metformin" atccode="A10BA02">
-        <dose clcrrange="&gt;50">give 50% of dose</dose>
-        <dose clcrrange="10-50">give 25% of dose</dose>
+        <dose clcrrange="50-60">give 50% of dose</dose>
+        <dose clcrrange="10-49">give 25% of dose</dose>
         <dose clcrrange="&lt;10">AVOID</dose>
         <moreinfo>    
             Normal dose: 500-850 mg BID
