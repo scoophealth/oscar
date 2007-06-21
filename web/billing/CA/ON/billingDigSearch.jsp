@@ -64,8 +64,9 @@
 <script LANGUAGE="JavaScript">
 <!--
 function CodeAttach(File2) {
-
-      self.close();
+      if (self.opener.callChangeCodeDesc) self.opener.callChangeCodeDesc();
+      setTimeout("self.close();",100);
+      
       <%if(request.getParameter("name2")!=null) {%>
       self.opener.<%=request.getParameter("name2")%> = File2.substring(0,3);
       <%} else {%>
