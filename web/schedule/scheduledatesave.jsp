@@ -55,23 +55,22 @@
   //add R schedule date if it is available
   if(request.getParameter("Submit")!=null && request.getParameter("Submit").equals(" Delete ")) {
     if(scheduleRscheduleBean.getDateAvail(request.getParameter("date"))) {
-      String[] param3 =new String[9];
+      String[] param3 =new String[8];
       param3[0]=request.getParameter("date");
       param3[1]=provider_no;
       param3[2]="1";
       param3[3]="b";
       param3[4]="";
       param3[5]=scheduleRscheduleBean.getDateAvailHour(request.getParameter("date"));
-      param3[6]=user_name;
-      param3[7]="";
-      param3[8]=scheduleRscheduleBean.active;
+      param3[6]=user_name;      
+      param3[7]=scheduleRscheduleBean.active;
       rowsAffected = scheduleMainBean.queryExecuteUpdate(param3,"add_scheduledate");
     }
   }
   scheduleDateBean.remove(request.getParameter("date") );
   
 if(request.getParameter("Submit")!=null && request.getParameter("Submit").equals(" Save ")) {
-  String[] param2 =new String[9];
+  String[] param2 =new String[8];
   param2[0]=request.getParameter("date");
   param2[1]=provider_no;
   param2[2]=available;
@@ -79,8 +78,7 @@ if(request.getParameter("Submit")!=null && request.getParameter("Submit").equals
   param2[4]=reason;
   param2[5]=hour;
   param2[6]=user_name;
-  param2[7]="";
-  param2[8]=scheduleRscheduleBean.active;
+  param2[7]=scheduleRscheduleBean.active;
   rowsAffected = scheduleMainBean.queryExecuteUpdate(param2,"add_scheduledate");
   
   scheduleDateBean.put(request.getParameter("date"), new HScheduleDate(available, priority, reason, hour, user_name) );
