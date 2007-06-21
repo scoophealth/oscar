@@ -39,10 +39,6 @@
 			String sql = null;
 			ResultSet rs = null;
 
-		     /* If more than 3-digit diagnostic codes are used, change dxCodeLength as follow:
-		      * 4-digit -> 10000, 5-digit -> 100000 */			
-			int dxCodeLength = 1000;
-			
 			String strToday = UtilDateUtilities.getToday("yyyy-MM-dd");
 
 			boolean bSingleClick = oscarVariables.getProperty("onBillingSingleClick", "").equals("yes") ? true : false;
@@ -209,20 +205,6 @@
 
 			String paraName = request.getParameter("dxCode");
 			String dxCode = getDefaultValue(paraName, vecHistD, "diagnostic_code");
-
-			// create diagnostic code list for validation of user entries
-			// show diagnostic code description for previously selected code
-			sql = "select distinct(diagnostic_code),description from diagnosticcode where region='ON'";
-			rs = dbObj.searchDBRecord(sql);
-			char[] cdcArray = new char[dxCodeLength];
-			String ctldiagcode_past = "";
-			while (rs.next()) {
-			    cdcArray[Integer.parseInt(rs.getString("diagnostic_code"))] = '1';
-			    if (rs.getString("diagnostic_code").equals(dxCode)) {
-				ctldiagcode_past = rs.getString("description").trim();
-			    }
-			}
-			String ctldiagcodeList = new String(cdcArray);
 
 			//visitType
 			paraName = request.getParameter("xml_visittype");
@@ -436,29 +418,13 @@ function showHideLayers() { //v3.0
 
 function onNext() {
     var ret = checkAllDates();
-
     if (ret) {
 	if (!existServiceCode() && document.forms[0].services_checked.value<=0) {
 	    ret = false;
 	    alert("You haven't selected any billing item yet!");
 	}
-	else if (!checkDxCode(document.forms[0].dxCode)) {
-	    ret = false;
-	    alert ("Wrong Dx code!");
-	    document.forms[0].dxCode.focus();
-	}
-	else if (!checkDxCode(document.forms[0].dxCode1)) {
-	    ret = false;
-	    alert ("Wrong Dx1 code!");
-	    document.forms[0].dxCode1.focus();
-	}
-	else if (!checkDxCode(document.forms[0].dxCode2)) {
-	    ret = false;
-	    alert ("Wrong Dx2 code!");
-	    document.forms[0].dxCode2.focus();
-	}   
-	else if (document.forms[0].dxCode.value=="" && document.forms[0].dxCode1.value=="" && document.forms[0].dxCode2.value=="") {
-	    ret = confirm("You didn't enter a diagnostic code. Continue?");
+	else if (document.forms[0].dxCode.value=="") {
+	    ret = confirm("You didn't enter a diagnostic code in the Dx box. Continue?");
 	    if (!ret) document.forms[0].dxCode.focus();
 	}
     }
@@ -697,12 +663,11 @@ function onClickRefDoc() {
 function onChangePrivate() { 
 	var n = document.forms[0].xml_billtype.selectedIndex;  
 	var val = document.forms[0].xml_billtype[n].value; 
-  	//alert(document.forms[0].xml_billtype.value);
   	if(val.substring(0,3) == "PAT" || val.substring(0,3) == "OCF" || val.substring(0,3) == "ODS" || val.substring(0,3) == "CPP" || val.substring(0,3) == "STD") {
-  		self.location.href = "billingON.jsp?billForm=<%="PRI"%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
+  		self.location.href = "billingON.jsp?curBillForm=<%="PRI"%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
   	} else {
 <% if(ctlBillForm.equals("PRI")) {%>  	
-  		self.location.href = "billingON.jsp?billForm=<%=oscarVariables.getProperty("default_view", "").trim()%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
+  		self.location.href = "billingON.jsp?curBillForm=<%=oscarVariables.getProperty("default_view", "").trim()%>&hotclick=<%=URLEncoder.encode("","UTF-8")%>&appointment_no=<%=request.getParameter("appointment_no")%>&demographic_name=<%=URLEncoder.encode(demoname,"UTF-8")%>&demographic_no=<%=request.getParameter("demographic_no")%>&xml_billtype="+val.substring(0,3)+"&apptProvider_no=<%=request.getParameter("apptProvider_no")%>&providerview=<%=request.getParameter("apptProvider_no")%>&appointment_date=<%=request.getParameter("appointment_date")%>&status=<%=request.getParameter("status")%>&start_time=<%=request.getParameter("start_time")%>&bNewForm=1";
 <% } %>
   	}
 }
@@ -726,6 +691,7 @@ function onHistory() {
 
 function prepareBack() {
     document.forms[0].services_checked.value = "<%=request.getParameter("services_checked")%>";
+    if (document.forms[0].services_checked.value=="null") document.forms[0].services_checked.value = 0;
     document.forms[0].url_back.value = location.href;
 }
 
@@ -737,28 +703,21 @@ function refreshServicesChecked(chkd) {
     }
 }
 
-function checkDxCode(codeCheck) {
-    if (codeCheck.value!="") {
-	codeList = "<%=ctldiagcodeList%>";
-	codeLength = "<%=dxCodeLength%>".length - 1;
-	if (codeCheck.value.length<codeLength) {
-	    leadZero = "0000".substring(4-codeLength+codeCheck.value.length);
-	    codeCheck.value = leadZero + codeCheck.value;
-	}
-	return (codeList.charAt(codeCheck.value)==1);
-    } else {
-	return true;
-    }
+function callChangeCodeDesc() {
+    setTimeout("changeCodeDesc();",10);
 }
 
-function hide_codedesc() {
-    $("code_desc").hide();
+function changeCodeDesc() {
+    var url  = "billingON_dx_desc.jsp";
+    var pars = "diagnostic_code=" + document.forms[0].dxCode.value;
+    
+    var descAjax = new Ajax.Updater("code_desc",url, {method: "get", parameters: pars});
 }
 //-->
 </script>
 </head>
 
-<body onload="setfocus();prepareBack();" topmargin="0">
+<body onload="setfocus();prepareBack();changeCodeDesc();" topmargin="0">
 <div id="Instrdiv" class="demo1">
     <table bgcolor='#007FFF' width='99%'>
 	<tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
@@ -819,12 +778,12 @@ function hide_codedesc() {
 	<tr bgcolor=<%=ctlCount%2==0 ? "#FFFFFF" : "#EEEEFF"%>>
 	    <td width="18%">
 		<b><font size="-1" color="#7A388D">
-		    <a href="#"	onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');hide_codedesc();return false;"><%=ctldiagcode%></a>
+		    <a href="#"	onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');changeCodeDesc();return false;"><%=ctldiagcode%></a>
 		</font></b>
 	    </td>
 	    <td colspan="2">
 		<font size="-2" color="#7A388D">
-		    <a href="#" onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');hide_codedesc();return false;"> <%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0, 55)%></a>
+		    <a href="#" onclick="document.forms[0].dxCode.value='<%=ctldiagcode%>';showHideLayers('Layer2','','hide');changeCodeDesc();return false;"> <%=ctldiagcodename.length() < 56 ? ctldiagcodename : ctldiagcodename.substring(0, 55)%></a>
 		</font>
 	    </td>
 	</tr>
@@ -904,9 +863,7 @@ function hide_codedesc() {
 					    <tr>
 						<td width="15%">&nbsp;</td>
 						<td nowrap><font size="-2">
-						    <div id="code_desc">
-							<%=(!ctldiagcode_past.equals("") && ctldiagcode_past.length()>32)?ctldiagcode_past.substring(0,32)+"...":ctldiagcode_past%>
-						    </div>
+						    <div id="code_desc"></div>
 						</font></td>
 					    </tr>
 					    <tr>
@@ -914,9 +871,9 @@ function hide_codedesc() {
 						    <a href="#" onclick="showHideLayers('Layer2','','show','Layer1','','hide'); return false;">Dx</a>
 						</td>
 						<td>
-						    <input type="text" name="dxCode" size="5" maxlength="5" ondblClick="dxScriptAttach('dxCode')" onChange="hide_codedesc();"
+						    <input type="text" name="dxCode" size="5" maxlength="5" ondblClick="dxScriptAttach('dxCode')" onchange="changeCodeDesc();"
 							   value="<%=request.getParameter("dxCode")!=null?request.getParameter("dxCode"):dxCode%>" />
-						    <a href=# onclick="dxScriptAttach('dxCode')">Search</a>
+						    <a href=# onclick="dxScriptAttach('dxCode');">Search</a>
 						</td>
 					    </tr>
 					    <tr>
