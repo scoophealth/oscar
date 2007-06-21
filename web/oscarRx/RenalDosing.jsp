@@ -78,6 +78,8 @@ if  ( weight > 0){ weightb = true;}
 if  ( sCr > 0){    sCrb = true;}
 
 
+System.out.println("age "+ageb+ " weightb "+ weightb+ " scrb "+sCrb);
+
 int Clcr = 0;
 if (ageb & weightb & sCrb){
     equate = true;
@@ -140,7 +142,7 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
         <%for (int i = 0; i < list.size(); i++){
         Hashtable h = (Hashtable) list.get(i); 
         String sel = "";
-        if ( rd.valueInRangeOfDose(Clcr , h)){
+        if ( rd.valueInRangeOfDose(Clcr , h) & ageb & weightb & sCrb){
         sel = "class=\"selected\" ";   
         }
         
@@ -169,14 +171,16 @@ Clcr = {(140 - <%=age%> ) X <%=weight%>[kg] )} / (sCr [umol/L] X 0.8)   <% if(fe
                     </a> X 1.23 
                     
                 </td>
-                <td nowrap rowspan="2"> X 0.85 </td>
+                 <% if(female){%> 
+                   <td nowrap rowspan="2"> X 0.85 </td>
+                 <%}%>
             </tr>
             <tr>
                 <td align="center" style="border-top: 2px black solid;"><%=setNA(sCrb,sCr)%> sCr 
                     <a href="javascript: function myFunction() {return false; }"  onclick="popup(500,1000,'/oscar/oscarEncounter/oscarMeasurements/SetupMeasurements.do?groupName=Renal Dosing&amp;demographic_no=<%=demographicNo%>','dddsfds'); return false;">
                         [umol/L <%=UtilDateUtilities.DateToString( sCrDate , "yyyy-MMM-dd")%>]
                     </a>
-                   <% if(female){%> X 0.85 <%}%> </td> 
+                </td> 
             </tr>
         </table>
     </div>
