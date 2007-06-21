@@ -83,6 +83,7 @@
     {"search_ctl_diagnostic_code", "select diagnosticcode.diagnostic_code dcode, diagnosticcode.description des from diagnosticcode, ctl_diagcode where ctl_diagcode.diagnostic_code=diagnosticcode.diagnostic_code and ctl_diagcode.servicetype=? order by diagnosticcode.description"},
     {"search_diagnostic_code", "select * from diagnosticcode where diagnostic_code like ?"},
     {"search_diagnostic_text", "select * from diagnosticcode where description like ?"},
+    {"search_diagnostic_desc", "select description from diagnosticcode where diagnostic_code = ?"},
     {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time "}, 
     {"search_demograph", "select *  from demographic where demographic_no=?"},
     {"search_encounter", "select * from encounter where demographic_no = ? order by encounter_date desc, encounter_time desc"},
