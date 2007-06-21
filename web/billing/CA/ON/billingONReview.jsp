@@ -341,15 +341,17 @@ function scriptAttach(elementName) {
 		<td align="center">
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 
-<%  boolean serviceCodeValid = true;
-    String serviceCodeValue = "";
+<%  boolean codeValid = true;
+    
+    //validation of user entered service codes
+    String serviceCodeValue = null;
     for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
 	serviceCodeValue = request.getParameter("serviceCode" + i);
 	if (!serviceCodeValue.equals("")) {
-	    sql = "select distinct(service_code) from billingservice where region='ON' and service_code='" + serviceCodeValue + "'";
+	    sql = "select distinct(service_code) from billingservice where service_code='" + serviceCodeValue.trim() + "'";
 	    rs = dbObj.searchDBRecord(sql);
 	    if (!rs.next()) {
-		serviceCodeValid = false;
+		codeValid = false;
 		%>
 		<tr class="myErrorText"><td align=center>
 		    &nbsp;<br>
@@ -359,8 +361,28 @@ function scriptAttach(elementName) {
 	    }
 	}
     }
+    
+    //validation of diagnostic code (dxcode)
+    String dxCodeValue = null;
+    for (int i = 0; i < 3; i++) {
+	if (i==0) dxCodeValue=request.getParameter("dxCode");
+	else dxCodeValue=request.getParameter("dxCode" + i);
+	if (!dxCodeValue.equals("")) {
+	    sql = "select diagnostic_code from diagnosticcode where diagnostic_code='" + dxCodeValue.trim() +"'";
+	    rs = dbObj.searchDBRecord(sql);
+	    if (!rs.next()) {
+		codeValid = false;
+		%>
+		<tr class="myErrorText"><td align=center>
+		    &nbsp;<br>
+		    Diagnostic code "<%=dxCodeValue%>" is invalid. Please go back to correct it.
+		</td></tr>
+		<%
+	    }
+	}
+    }
 
-    if (serviceCodeValid) {
+    if (codeValid) {
 %>
 
 			<%--= msg --%>
@@ -392,7 +414,7 @@ function scriptAttach(elementName) {
 						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
 						String codeFee = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
 						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
-if (serviceCodeValid) {
+if (codeValid) {
 			%>
 			<tr class="myGreen">
 				<td align='center' width='3%'><%=""+n %></td>
@@ -409,7 +431,7 @@ if (serviceCodeValid) {
 					} 
 					//System.out.println("vecPercCodeItem end: " + codeName);
 					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
-if (serviceCodeValid) {
+if (codeValid) {
 			%>
 			<tr class="myPink">
 				<td align='center' ><%="&nbsp;" %></td>
@@ -424,11 +446,11 @@ if (serviceCodeValid) {
 						String codeUnit = (String)percItem.getCodeUnit();
 						for(int j=0; j<vecPercTotal.size(); j++) {
 							String percTotal = (Float.parseFloat((String)vecPercTotal.get(j)) )*Integer.parseInt(codeUnit) + "";
-if (serviceCodeValid) {
+if (codeValid) {
 				%>
 						<input type="checkbox" name="percCode_<%=i %>" value="<%=percTotal %>" onclick="onCheckMaster();" /> <%=percTotal %><font size='-2'>(<%=vecPercFee.get(j) %>x<%=percFee %>x<%=codeUnit %>)</font> | 
 <% }		} 
-if (serviceCodeValid) {
+if (codeValid) {
 				%> = <input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="0.00" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
@@ -448,7 +470,7 @@ if (serviceCodeValid) {
 					}
 					//System.out.println(i + "end: " + nCode);
 				}
-if (serviceCodeValid) {
+if (codeValid) {
 			%>
 			<tr>
 				<td align='right' colspan='3' class="myGreen">Total: <input type="text" name="total" size="5" value="0.00" />
@@ -535,16 +557,16 @@ function onCheckMaster() {
 
 				<td colspan='3' align='center' bgcolor="silver">
                                     <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
-<% if (serviceCodeValid) { %>
+<% if (codeValid) { %>
                                     <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
-<% } %>
 				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
+<% } %>
                                 </td>
 			</tr>
 		</table>
 		</td>
 	</tr>
-<% if (serviceCodeValid) {
+<% if (codeValid) {
    if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
 	<tr>
 			<td >
@@ -587,7 +609,7 @@ if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_bill
                              + "Tel: "+provider.getClinicPhone() +"\n"
                              + "Fax: "+provider.getClinicFax() ;
                 
-if (serviceCodeValid) { %>
+if (codeValid) { %>
 <tr><td>
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 			<tr class="myYellow">
