@@ -547,6 +547,7 @@ public class MSPReconcile {
         + demoQuery
         + billingType
         + " order by b.billing_date desc";
+    System.out.println("SQL "+p);
     billSearch.list = new ArrayList();
     billSearch.count = 0;
     billSearch.justBillingMaster = new ArrayList();
@@ -1108,6 +1109,12 @@ public class MSPReconcile {
     }
   }
 
+  //Updates the status of a bill but doesn't change it's type.  Created because a WCB bill can not be 
+  //a WCB type Bill and a PRIVATE bill at the same time.
+  public void updateBillingStatusWCB(String billingNo, String stat,String billingMasterNo) {
+    updateBillingStatusHlp2(billingMasterNo, stat);
+  }
+  
   /**
    * Updates the status of a the specified bill and adjusts the state of
    * of associated bill parameters including: bill type, payment method
