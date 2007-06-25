@@ -348,8 +348,9 @@ function scriptAttach(elementName) {
     for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
 	serviceCodeValue = request.getParameter("serviceCode" + i);
 	if (!serviceCodeValue.equals("")) {
-	    sql = "select distinct(service_code) from billingservice where service_code='" + serviceCodeValue.trim() + "'";
-	    rs = dbObj.searchDBRecord(sql);
+	    sql = "select distinct(service_code) from billingservice where service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "'";
+	   System.out.println(sql);
+            rs = dbObj.searchDBRecord(sql);
 	    if (!rs.next()) {
 		codeValid = false;
 		%>
