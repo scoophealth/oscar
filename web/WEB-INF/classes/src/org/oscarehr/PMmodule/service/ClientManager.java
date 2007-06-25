@@ -67,5 +67,7 @@ public interface ClientManager  {
 	public void saveDemographicExt(Integer demographicNo, String key, String value);
 	public void removeDemographicExt(String id);
 	public void removeDemographicExt(Integer demographicNo, String key);
+	
+	public boolean isOutsideOfDomainEnabled();
 }
 

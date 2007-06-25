@@ -59,6 +59,16 @@ public class ClientManagerImpl implements ClientManager {
 
 	private AdmissionManager admissionManager;
 	
+	private boolean outsideOfDomainEnabled;
+	
+	public boolean isOutsideOfDomainEnabled() {
+		return outsideOfDomainEnabled;
+	}
+
+	public void setOutsideOfDomainEnabled(boolean outsideOfDomainEnabled) {
+		this.outsideOfDomainEnabled = outsideOfDomainEnabled;
+	}
+
 	public void setClientDao(ClientDao dao) {
 		this.dao = dao;
 	}
@@ -91,6 +101,7 @@ public class ClientManagerImpl implements ClientManager {
 	}
 
 	public List search(ClientSearchFormBean criteria) {
+		//return dao.search(criteria);
 		return dao.search(criteria);
 	}
 

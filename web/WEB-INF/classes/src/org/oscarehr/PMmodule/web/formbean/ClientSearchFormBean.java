@@ -47,7 +47,7 @@ public class ClientSearchFormBean {
 	private List programDomain;
 	
 	public ClientSearchFormBean() {
-		setSearchOutsideDomain(true);
+		//setSearchOutsideDomain(true);
 		setSearchUsingSoundex(true);
 	}
 	

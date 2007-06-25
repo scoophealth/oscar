@@ -45,6 +45,11 @@ public class ClientSearchAction2 extends BaseAction {
 	}
 	
 	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		if(clientManager.isOutsideOfDomainEnabled()) 
+			request.getSession().setAttribute("outsideOfDomainEnabled","true");
+		else
+			request.getSession().setAttribute("outsideOfDomainEnabled","false");
+		
 		return mapping.findForward("form");
 	}
 	
@@ -55,7 +60,7 @@ public class ClientSearchAction2 extends BaseAction {
 		/* do the search */
 		formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
 		request.setAttribute("clients",clientManager.search(formBean));
-
+		
 		if(formBean.isSearchOutsideDomain()) {
 			logManager.log(getProviderNo(request),"read","out of domain client search","",request.getRemoteAddr());
 		}
