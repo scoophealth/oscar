@@ -9,6 +9,8 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="java.util.*, java.text.*,java.sql.*, java.net.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.OscarProperties" %>
+<jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
+<%@ include file="../admin/dbconnection.jsp" %>
 <!--  
 /*
  * 
@@ -33,11 +35,21 @@
  * Hamilton 
  * Ontario, Canada 
  */
---><head><title><bean:message key="provider.providerpreference.title"/></title></head>
+-->
+<%
+String [][] dbQueries=new String[][] {
+    {"search_pref_defaultbill", "select default_servicetype from preference where provider_no = ?"},
+    {"list_bills_servicetype", "select distinct servicetype, servicetype_name from ctl_billingservice where status='A'"},
+};
+apptMainBean.doConfigure(dbParams,dbQueries);
+%>
+
+<head><title><bean:message key="provider.providerpreference.title"/></title></head>
 
 <html:html locale="true">
 <meta http-equiv="Cache-Control" content="no-cache" >
 
+<script type="text/javascript" src="../share/javascript/prototype.js"></script>
 <script language="JavaScript">
 
 function setfocus() {
@@ -119,27 +131,30 @@ function popupPage(vheight,vwidth,varpage) { //open a new popup window
     }
   }
 }
-function isNumeric(strString){
-        var validNums = "0123456789";
-        var strChar;
-        var retval = true;
-        if(strString.length == 0){
-          retval = false;
-        }
-        for (i = 0; i < strString.length && retval == true; i++){
-           strChar = strString.charAt(i);
-           if (validNums.indexOf(strChar) == -1){
-              retval = false;
-           }
-        }
-         return retval;
-   }
 
+function isNumeric(strString) {
+    var validNums = "0123456789";
+    var strChar;
+    var retval = true;
+    if(strString.length == 0){
+    retval = false;
+    }
+    for (i = 0; i < strString.length && retval == true; i++){
+	strChar = strString.charAt(i);
+	if (validNums.indexOf(strChar) == -1){
+	    retval = false;
+	}
+    }
+    return retval;
+}
 
+function showHideBillPref() {
+    $("billingONpref").toggle();
+}
 
 </script>
 
-<body bgproperties="fixed"  onLoad="setfocus();" topmargin="0"leftmargin="0" rightmargin="0">
+<body bgproperties="fixed"  onLoad="setfocus();showHideBillPref();" topmargin="0"leftmargin="0" rightmargin="0">
 <FORM NAME = "UPDATEPRE" METHOD="post" ACTION="providercontrol.jsp" onSubmit="return(checkTypeInAll())">
 <table border=0 cellspacing=0 cellpadding=0 width="100%" >
   <tr bgcolor="<%=deepcolor%>"> 
@@ -224,8 +239,6 @@ function isNumeric(strString){
   </tr>
 </TABLE>
 
-</FORM>
-
 <table width="100%" BGCOLOR="eeeeee">
   <tr> 
     <TD align="center"><a href=# onClick ="popupPage(230,600,'providerchangepassword.jsp');return false;"><bean:message key="provider.btnChangePassword"/></a> &nbsp;&nbsp;&nbsp; <!--| a href=# onClick ="popupPage(350,500,'providercontrol.jsp?displaymode=savedeletetemplate');return false;"><bean:message key="provider.btnAddDeleteTemplate"/></a> | <a href=# onClick ="popupPage(200,500,'providercontrol.jsp?displaymode=savedeleteform');return false;"><bean:message key="provider.btnAddDeleteForm"/></a></td>
@@ -245,8 +258,34 @@ function isNumeric(strString){
   </tr>
   
   <tr>
-    <td align="center"><a href=# onClick ="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=request.getParameter("provider_no")%>');return false;">Edit Billing Preferences</a>
+    <td align="center">
+<% String br = OscarProperties.getInstance().getProperty("billregion");
+   if (br.equals("BC")) { %>
+	<a href=# onClick ="popupPage(230,400,'../billing/CA/BC/viewBillingPreferencesAction.do?providerNo=<%=request.getParameter("provider_no")%>');return false;"><bean:message key="provider.btnBillPreference"/></a>
+<% } else { %>
+	<a href=# onClick ="showHideBillPref();return false;"><bean:message key="provider.btnBillPreference"/></a>
+<% } %>
     </td>
+  </tr>
+  <tr>
+      <td align="center">
+	  <div id="billingONpref">
+          <bean:message key="provider.labelDefaultBillForm"/>: 
+	  <select name="default_servicetype">
+	      <option value="no">-- no --</option>
+<%  ResultSet rs = apptMainBean.queryResults(request.getParameter("provider_no"),"search_pref_defaultbill");
+    if (rs.next()) {
+        ResultSet rs1 = apptMainBean.queryResults("list_bills_servicetype");
+        while (rs1.next()) { %>
+	      <option value="<%=rs1.getString("servicetype")%>" <%=rs1.getString("servicetype").equals(rs.getString("default_servicetype"))?"selected":""%>>
+		<%=rs1.getString("servicetype_name")%>
+	      </option>
+<%  }	} 
+    apptMainBean.closePstmtConn(); 
+%>
+	  </select>	    
+	  </div>
+      </td>
   </tr>
   <tr>
     <td align="center"><a href=# onClick ="popupPage(230,860,'providerFax.jsp');return false;"><bean:message key="provider.btnEditFaxNumber"/></a>
@@ -266,6 +305,7 @@ function isNumeric(strString){
   %>
 
 </table>
+</FORM>
 
 </body>
 </html:html>
