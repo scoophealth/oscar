@@ -52,18 +52,19 @@
 <%
 String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-    param =new String[7];
+    param =new String[8];
 }else {
-	param =new String[6];
+	param =new String[7];
 }
 	  param[0]=request.getParameter("start_hour");
 	  param[1]=request.getParameter("end_hour");
 	  param[2]=request.getParameter("every_min");
 	  param[3]=request.getParameter("mygroup_no");
-	  param[4]=request.getParameter("color_template");
-	  param[5]=request.getParameter("provider_no");
+	  param[4]=request.getParameter("default_servicetype");
+	  param[5]=request.getParameter("color_template");
+	  param[6]=request.getParameter("provider_no");
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-	  param[6]=request.getParameter("new_tickler_warning_window");
+	  param[7]=request.getParameter("new_tickler_warning_window");
 }
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected >=1) { //Successful Update of a Preference Record.
@@ -71,6 +72,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("endhour", param[1]);
     session.setAttribute("everymin", param[2]);
     session.setAttribute("groupno", param[3]);
+    session.setAttribute("default_servicetype", param[4]);
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
 }
@@ -87,9 +89,10 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	param[2]=request.getParameter("end_hour");
 	param[3]=request.getParameter("every_min");
 	param[4]=request.getParameter("mygroup_no");
-	param[5]=request.getParameter("color_template");
+	param[5]=request.getParameter("default_servicetype");
+	param[6]=request.getParameter("color_template");
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-	param[6]=request.getParameter("new_tickler_warning_window");
+	param[7]=request.getParameter("new_tickler_warning_window");
 }	
   rowsAffected = apptMainBean.queryExecuteUpdate(param, "add_preference");
   if (rowsAffected ==1) { //Successful add of a Preference Record.
@@ -97,6 +100,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("endhour", param[2]);
     session.setAttribute("everymin", param[3]);
     session.setAttribute("groupno", param[4]);
+    session.setAttribute("default_servicetype", param[5]);
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
 }
