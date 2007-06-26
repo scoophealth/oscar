@@ -524,6 +524,20 @@ public class ClientManagerAction extends BaseAction {
 		return edit(mapping, form, request, response);
 	}
 
+    public ActionForward view_referral(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String referralId = request.getParameter("referralId");
+        ClientReferral referral = clientManager.getClientReferral(referralId);
+        Agency agency = agencyManager.getAgency("" + referral.getAgencyId());
+        Demographic client = clientManager.getClientByDemographicNo("" + referral.getClientId());
+
+        DynaActionForm clientForm = (DynaActionForm) form;
+        clientForm.set("referral", referral);
+        clientForm.set("agency", agency);
+        clientForm.set("client", client);
+
+        return mapping.findForward("view_referral");
+    }
+
 	private boolean isInDomain(long programId, List<?> programDomain) {
 		for (int x = 0; x < programDomain.size(); x++) {
 			ProgramProvider p = (ProgramProvider) programDomain.get(x);

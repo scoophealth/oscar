@@ -25,6 +25,13 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
+
+<script type="text/javascript">
+    function popupReferralInfo(referralId) {
+        url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_referral&referralId="/>';
+        window.open(url + referralId, 'referral', 'width=500,height=600');
+    }
+</script>
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
@@ -76,6 +83,11 @@
 <display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referralHistory" requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	
+    <display:column sortable="false">
+        <a href="javascript:void(0)" onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
+            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
+        </a>
+    </display:column>
 	<display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="referralDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Referral Date" />

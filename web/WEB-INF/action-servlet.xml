@@ -71,6 +71,7 @@
         <property name="clientManager">
             <ref bean="clientManager" />
         </property>
+        <property name="agencyManager" ref="agencyManager"/>
         <property name="consentManager">
             <ref bean="consentManager" />
         </property>

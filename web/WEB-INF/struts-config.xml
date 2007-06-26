@@ -245,6 +245,7 @@
             <form-property name="referral" type="org.oscarehr.PMmodule.model.ClientReferral" />
             <form-property name="unreservedBeds" type="org.oscarehr.PMmodule.model.Bed[]" />
             <form-property name="bedDemographicStatuses" type="org.oscarehr.PMmodule.model.BedDemographicStatus[]" />
+            <form-property name="agency" type="org.oscarehr.PMmodule.model.Agency"/>
             <form-property name="programWithIntakeId" type="java.lang.String" />
         </form-bean>
         <form-bean name="staffManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
@@ -1204,6 +1205,7 @@
             <forward name="integrator_admissions" path="/PMmodule/integrator/admissions.jsp" />
             <forward name="integrator_referrals" path="/PMmodule/integrator/referrals.jsp" />
             <forward name="links" path="/PMmodule/ClientManager/links.jsp" />
+            <forward name="view_referral" path="/PMmodule/ClientManager/view_referral.jsp"/>
         </action>
         <action path="/PMmodule/ProviderInfo" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="view" path="page.pmm.provider.view" />
