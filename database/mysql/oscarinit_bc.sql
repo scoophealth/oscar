@@ -1093,6 +1093,7 @@ CREATE TABLE formBCNewBorn(
   c_l varchar(4),
   pg1_eddByDate date,
   pg1_bloodGrpRh varchar(20),
+  pg1_bloodRh varchar(6),
   pg1_RhAntib varchar(20),
   pg1_HBsAg varchar(20),
   c_riskFactor varchar(255),
@@ -1138,6 +1139,7 @@ CREATE TABLE formBCNewBorn(
   pg1_delRomPassY tinyint(1),
   pg1_delRomBreast tinyint(1),
   pg1_delRomFormula tinyint(1),
+  pg1_delRomDonorMilk tinyint(1),
   pg1_routProBldRh tinyint(1),
   pg1_routProBldOther tinyint(1),
   pg1_routProEyeEryth tinyint(1),
@@ -1424,9 +1426,12 @@ CREATE TABLE formBCNewBorn(
   pg3_11List12 varchar(200),
   pg3_11Date13 date,
   pg3_11List13 varchar(200),
-  pg3_Signature varchar(80),
+  pg3_Signature varchar(80),  
   PRIMARY KEY (ID)
 ) TYPE=MyISAM;
+
+
+
 --
 -- Table structure for table 'formWCB'
 --
