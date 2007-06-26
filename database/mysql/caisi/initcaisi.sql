@@ -41,7 +41,7 @@ CREATE TABLE `admission` (
 --
 DROP TABLE IF EXISTS `agency`;
 CREATE TABLE `agency` (
-  `id` bigint(20) NOT NULL default '0',
+  `id` bigint(20) NOT NULL default '0',  
   `intake_quick` integer unsigned NOT NULL DEFAULT 1,
   `intake_quick_state` char(2) NOT NULL DEFAULT 'HS',
   `intake_indepth` integer unsigned DEFAULT 2,
@@ -722,7 +722,7 @@ CREATE TABLE `formintakea` (
   `ID` bigint(11) NOT NULL auto_increment,
   `demographic_no` bigint(11) NOT NULL default '0',
   `provider_no` bigint(11) default '0',
-  `formCreated` date default '0000-00-00',
+  `formCreated` date default NULL,
   `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `assessDate` varchar(24) default '',
   `assessStartTime` varchar(24) default '',
@@ -1625,7 +1625,7 @@ CREATE TABLE `program` (
   `abstinenceSupport` varchar(20) default null,
   `physicalHealth` tinyint(1) default 0,
   `mentalHealth` tinyint(1) default 0,
-  `housing` tinyint(1) default 0,
+  `housing` tinyint(1) default 0,  
   `exclusive_view` varchar(20) not null default 'no',
   PRIMARY KEY  (`program_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -1928,6 +1928,55 @@ create table tickler_comments (
 	update_date datetime not null,
 	primary key(id)
 ) TYPE MyISAM;
+
+DROP TABLE IF EXISTS `formDischargeSummary`;
+CREATE TABLE `formDischargeSummary` (
+  `id` bigint(11) NOT NULL auto_increment,
+  `demographic_no` bigint(11) NOT NULL default '0',  
+  `formCreated` date default NULL,
+  `formEdited` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  `clientName` varchar(60) default NULL,
+  `birthDate` date default NULL,
+  `ohip` varchar(25) default NULL,
+  `admitDate` date default NULL,
+  `dischargeDate` date default NULL,
+  `programName` varchar(70) default NULL,
+  `allergies` varchar(255) default NULL,
+  `admissionNotes` varchar(255) default NULL,
+  `currentIssues` varchar(255) default NULL,
+  `briefSummary` varchar(255) default NULL,
+  `dischargePlan` varchar(255) default NULL,
+  `followUpAppointment` char(1) default NULL,
+  `doctor1` varchar(30) default NULL,
+  `phoneNumber1` varchar(30) default NULL,
+  `date1` varchar(20) default NULL,
+  `location1` varchar(100) default NULL,
+  `doctor2` varchar(30) default NULL,
+  `phoneNumber2` varchar(30) default NULL,
+  `date2` varchar(20) default NULL,
+  `location2` varchar(100) default NULL,
+  `doctor3` varchar(30) default NULL,
+  `phoneNumber3` varchar(30) default NULL,
+  `date3` varchar(20) default NULL,
+  `location3` varchar(100) default NULL,
+  `prescriptionSummary` varchar(255) default NULL,
+  `prescriptionProvided` char(1) default NULL,  
+  `coveredByODB` char(1) default NULL,  
+  `ODBFormReqired` char(1) default NULL,
+  `counsellorName` varchar(30) default NULL,
+  `followUpRequired` char(1) default NULL,  
+  `followUpRequiredDetail` varchar(255) default NULL,
+  `changeMedications` varchar(255) default NULL,
+  `referrals` varchar(255) default NULL,
+  `program` varchar(255) default NULL,
+  `referralMade` varchar(255) default NULL,
+  `outcome` varchar(255) default NULL,  
+  `provider_no` bigint(11) NOT NULL default '0',
+  `providerName` varchar(60) default NULL,
+  `signature` varchar(25) default NULL,
+  `signatureDate` varchar(20) default NULL,
+  PRIMARY KEY  (`id`)  
+);
 
 
 

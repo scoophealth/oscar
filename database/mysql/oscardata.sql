@@ -1070,7 +1070,7 @@ INSERT INTO oscarcommlocations VALUES (145,'Oscar Users',NULL,1,'<?xml version=\
 -- Dumping data for table 'preference'
 --
 
-INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue');
+INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue','');
 
 --
 -- Dumping data for table 'prescribe'
@@ -1286,13 +1286,13 @@ insert into `secUserRole` values('999998', 'admin');
 insert into `secUserRole` values('999997', 'receptionist');
 
 insert into `secPrivilege` values(1, '*', 'All rights.');
-insert into `secPrivilege` values(\N, 'r', 'Read');
-insert into `secPrivilege` values(\N, 'w', 'Write');
-insert into `secPrivilege` values(\N, 'd', 'Delete');
-insert into `secPrivilege` values(\N, 'o', 'No rights.');
-insert into `secPrivilege` values(\N, 'or', 'Only Read');
-insert into `secPrivilege` values(\N, 'ow', 'Only Write');
-insert into `secPrivilege` values(\N, 'od', 'Only Delete');
+insert into `secPrivilege` values(2, 'r', 'Read');
+insert into `secPrivilege` values(3, 'w', 'Write');
+insert into `secPrivilege` values(4, 'd', 'Delete');
+insert into `secPrivilege` values(5, 'o', 'No rights.');
+insert into `secPrivilege` values(6, 'or', 'Only Read');
+insert into `secPrivilege` values(7, 'ow', 'Only Write');
+insert into `secPrivilege` values(8, 'od', 'Only Delete');
 
 insert into `secObjectName` values('_appointment');
 insert into `secObjectName` values('_admin');

@@ -16173,4 +16173,11 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("Z999","Dep on unspec en
 --
 INSERT INTO issue (code, description, role, update_date)
 	SELECT icd10.code, icd10.short_desc, 'doctor', now() FROM icd10;
+--
+-- Sherbourne Summary Discharge Form
+--
+insert into encounterForm values("Discharge Summary","../form/formDischargeSummary.jsp?demographic_no=","formDischargeSummary",1);
+
+
+
 
