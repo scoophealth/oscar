@@ -27,6 +27,11 @@
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 
 <script type="text/javascript">
+    function popupAdmissionInfo(admissionId) {
+        url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_admission&admissionId="/>';
+        window.open(url + admissionId, 'admission', 'width=600,height=600');
+    }
+
     function popupReferralInfo(referralId) {
         url = '<html:rewrite page="/PMmodule/ClientManager.do?method=view_referral&referralId="/>';
         window.open(url + referralId, 'referral', 'width=500,height=600');
@@ -42,8 +47,13 @@
 <display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissionHistory" requestURI="/PMmodule/ClientManager.do">
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
-	
-	<display:column property="programName" sortable="true" title="Program Name" />
+
+    <display:column sortable="false">
+        <a href="javascript:void(0)" onclick="popupAdmissionInfo('<c:out value="${admission.id}" />')">
+            <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
+        </a>
+    </display:column>
+    <display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="admissionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Admission Date" />
 	<display:column property="dischargeDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Discharge Date" />

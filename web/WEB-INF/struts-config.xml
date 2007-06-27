@@ -1206,6 +1206,7 @@
             <forward name="integrator_referrals" path="/PMmodule/integrator/referrals.jsp" />
             <forward name="links" path="/PMmodule/ClientManager/links.jsp" />
             <forward name="view_referral" path="/PMmodule/ClientManager/view_referral.jsp"/>
+            <forward name="view_admission" path="/PMmodule/ClientManager/view_admission.jsp"/>
         </action>
         <action path="/PMmodule/ProviderInfo" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="view" path="page.pmm.provider.view" />

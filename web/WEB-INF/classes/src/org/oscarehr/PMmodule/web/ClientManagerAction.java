@@ -538,7 +538,21 @@ public class ClientManagerAction extends BaseAction {
         return mapping.findForward("view_referral");
     }
 
-	private boolean isInDomain(long programId, List<?> programDomain) {
+    public ActionForward view_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String admissionId = request.getParameter("admissionId");
+        Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
+        Agency agency = agencyManager.getAgency("" + admission.getAgencyId());
+        Demographic client = clientManager.getClientByDemographicNo("" + admission.getClientId());
+
+        DynaActionForm clientForm = (DynaActionForm) form;
+        clientForm.set("admission", admission);
+        clientForm.set("client", client);
+        clientForm.set("agency", agency);
+
+        return mapping.findForward("view_admission");
+    }
+
+    private boolean isInDomain(long programId, List<?> programDomain) {
 		for (int x = 0; x < programDomain.size(); x++) {
 			ProgramProvider p = (ProgramProvider) programDomain.get(x);
 
