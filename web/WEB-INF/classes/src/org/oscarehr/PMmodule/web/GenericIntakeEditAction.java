@@ -132,7 +132,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		try {
 			saveClient(client, providerNo);
 			admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
-			admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+			if(!formBean.getSelectedServiceProgramIds().isEmpty())
+				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
 			saveIntake(intake, client.getDemographicNo());
 		} catch (Exception e) {
 			LOG.error(e);
