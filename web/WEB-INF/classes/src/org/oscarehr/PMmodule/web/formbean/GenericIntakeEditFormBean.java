@@ -46,6 +46,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private LabelValueBean[] genders;
 	private LabelValueBean[] months;
 	private LabelValueBean[] days;
+	private LabelValueBean[] provinces;
 
 	private List<LabelValueBean> bedCommunityPrograms;
 	private String bedCommunityProgramId;
@@ -60,6 +61,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		genders = GenericIntakeConstants.GENDERS;
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
+		provinces = GenericIntakeConstants.PROVINCES;
 	}
 
 	public String getMethod() {
@@ -90,7 +92,15 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		return days;
 	}
 
-	// Bed/Community programs
+	public LabelValueBean[] getProvinces() {
+		return provinces;
+	}
+
+	public void setProvinces(LabelValueBean[] provinces) {
+		this.provinces = provinces;
+	}
+	
+	//	 Bed/Community programs
 
 	public List<LabelValueBean> getBedCommunityPrograms() {
 		return bedCommunityPrograms;

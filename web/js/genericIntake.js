@@ -30,6 +30,28 @@ function validateEdit() {
 		}
 	}
 	
+	// only allow numbers to be entered
+	var healthCardNo = getElement('client.hin');
+	var healthCardVersion = getElement('client.ver');
+	if(isNaN(healthCardNo.value))
+    {
+    	alert("Please enter only digit characters in the \"Health Card #\" field.");
+		document.forms[0].elements['client.hin'].focus();
+		return false;
+    }
+	if(healthCardVersion.value!="" && !isNaN(healthCardVersion.value) )
+    {
+    	alert("Please enter only alpha characters in the \"Version\" field.");
+		document.forms[0].elements['client.ver'].focus();
+		return false;
+    }
+	if(!checkChar(healthCardVersion)){
+		return error(healthCardVersion, "P!!lease enter only alpha characters in the \"Version\" field.");
+		
+	}
+	document.forms[0].elements['client.ver'].value = healthCardVersion.value.toUpperCase();
+	
+	
 	var email = getElement('client.email');
 	
 	if (!isEmpty(email.value) && !dojo.validate.isEmailAddress(email.value)) {
@@ -127,4 +149,26 @@ function error(element, msg) {
 	alert(msg);
 	
 	return false;
+}
+
+// only allow numbers to be entered
+function checkChar(checkString) {
+	var checkOK = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";	
+	var allValid = true;
+	var checkStr = checkString.value;	
+	for (i = 0;  i < checkStr.length;  i++){	
+		ch = checkStr.charAt(i);
+		for (j = 0;  j < checkOK.length;  j++) 
+			if (ch == checkOK.charAt(j)) 		
+				break;
+				
+		if (j == checkOK.length) {
+			allValid = false;
+			break;
+		}						
+	}
+	if (!allValid)		
+		return false;
+	else
+		return true;
 }

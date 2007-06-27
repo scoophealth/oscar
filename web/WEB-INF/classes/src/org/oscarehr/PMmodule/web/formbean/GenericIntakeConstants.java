@@ -7,7 +7,7 @@ public class GenericIntakeConstants {
 	public static final LabelValueBean EMPTY = new LabelValueBean("", ""); 
 	
 	public static final LabelValueBean[] GENDERS = new LabelValueBean[] {
-    	new LabelValueBean("", "D"),
+    	//new LabelValueBean("", "D"),
     	new LabelValueBean("Male", "M"),
     	new LabelValueBean("Female", "F"),
     	new LabelValueBean("Transgendered", "T")
@@ -33,6 +33,14 @@ public class GenericIntakeConstants {
     	new LabelValueBean("21", "21"), new LabelValueBean("22", "22"), new LabelValueBean("23", "23"), new LabelValueBean("24", "24"),
     	new LabelValueBean("25", "25"), new LabelValueBean("26", "26"), new LabelValueBean("27", "27"), new LabelValueBean("28", "28"),
     	new LabelValueBean("29", "29"), new LabelValueBean("30", "30"), new LabelValueBean("31", "31")
+    };
+	
+	public static final LabelValueBean[] PROVINCES = new LabelValueBean[] { 
+		new LabelValueBean("Ontario", "ON"), new LabelValueBean("Alberta", "AB"),
+    	new LabelValueBean("British Columbia", "BC"), new LabelValueBean("Manitoba", "MB"),
+    	new LabelValueBean("Newfoundland", "NL"), new LabelValueBean("New Brunswick", "NB"),
+    	new LabelValueBean("Yukon", "YT"), new LabelValueBean("Nova Scotia", "NS"),
+    	new LabelValueBean("Prince Edward Island", "PE"), new LabelValueBean("Saskatchewan", "SK")
     };
 	
 }

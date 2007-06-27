@@ -52,6 +52,30 @@ Intake intake = intakeEditForm.getIntake();
 									</label>
 								</td>
 								<td>
+									<table>
+										<tr>
+											<td>
+												<label>Birth Date<br>
+													<html:select property="client.monthOfBirth">
+														<html:optionsCollection property="months" value="value" label="label" />
+													</html:select>
+												</label>
+											</td>
+											<td>
+												<label>&nbsp;<br>
+													<html:select property="client.dateOfBirth">
+														<html:optionsCollection property="days" value="value" label="label" />
+													</html:select>
+												</label>
+											</td>
+											<td>
+												<label>&nbsp;<br>
+													<html:text property="client.yearOfBirth" size="4" />&nbsp;(YYYY)
+												</label>
+											</td>									
+										</tr>
+									</table>
+								<!-- 
 									<label>Birth Date<br>
 										<html:select property="client.monthOfBirth">
 											<html:optionsCollection property="months" value="value" label="label" />
@@ -61,11 +85,12 @@ Intake intake = intakeEditForm.getIntake();
 										</html:select>&nbsp;
 										<html:text property="client.yearOfBirth" size="4" />&nbsp;(YYYY)
 									</label>
+								 -->
 								</td>
 							</tr>
 							<tr>
-								<td><label>Health Card #<br><html:text property="client.hin" /></label></td>
-								<td><label>Version<br><html:text property="client.ver" /></label></td>
+								<td><label>Health Card #<br><html:text property="client.hin" size="10" maxlength="10"/></label></td>
+								<td><label>Version<br><html:text property="client.ver" size="2" maxlength="2" /></label></td>
 							</tr>
 							<tr>
 								<td><label>Email<br><html:text property="client.email" /></label></td>
@@ -75,7 +100,13 @@ Intake intake = intakeEditForm.getIntake();
 							<tr>
 								<td><label>Street<br><html:text property="client.address" /></label></td>
 								<td><label>City<br><html:text property="client.city" /></label></td>
-								<td><label>Province<br><html:text property="client.province" /></label></td>
+								<td><label>Province<br>
+										<html:select property="client.province">
+											<html:optionsCollection property="provinces" value="value" label="label" />
+										</html:select>
+									</label>
+								</td>
+								<!-- <td><label>Province<br><html:text property="client.province" /></label></td> -->
 								<td><label>Postal Code<br><html:text property="client.postal" /></label></td>
 							</tr>
 							<c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
