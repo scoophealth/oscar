@@ -331,4 +331,50 @@ public class StringUtils {
         return ret.toString();
    }
   
+   
+
+   /**
+    * Strips linebreaks
+    * Converts multiple line breaks to one line break
+    * Added by johnchwk Jun 2007
+    */
+    public static String lineBreaks (String str){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(str);
+        int strlen = (stringBuffer.length()-1);
+        int i = 1 ;
+        int k = 0;
+        boolean space = false;
+        while ((i <= strlen) && (i > 0)){
+                k = 0;
+        // Delete consecutive line breaks
+                while (((stringBuffer.charAt(i) == '\n') || (stringBuffer.charAt(i) == '\r')) && (i < strlen)) {
+                        stringBuffer.deleteCharAt(i);
+                        strlen--;
+                        k++;
+                }
+        // Two or more line breaks converted to one line break
+                if ((k >= 2) && (!space) && (stringBuffer.charAt(i) != ' ')) {
+                        stringBuffer.insert(i,"\n");
+                        strlen++;
+                        i++;
+                } 
+        // Line break and no spaces on either side of line break so insert space else the two words will get concatenated
+                else if ((k == 1) && (!space) && (stringBuffer.charAt(i) != ' ') && k < 2) {
+                        stringBuffer.insert(i," ");
+                        strlen++;
+                        i++;
+                }
+                if (stringBuffer.charAt(i) == ' ') {
+                        space = true;
+                } else {
+                        space = false;
+                }
+                i++;
+
+        }
+	return stringBuffer.toString();
+    }
+
+
 }
