@@ -70,7 +70,7 @@ if("unbilled".equals(action)) {
     vecHeader.add("DESCRIPTION");
     vecHeader.add("COMMENTS");
     sql = "select * from appointment where provider_no='" + providerview + "' and appointment_date >='" + xml_vdate 
-            + "' and appointment_date<='" + xml_appointment_date + "' and (status='P' or status='H' or status='PV' or status='PS' or status='E' or status='ES' or status='EV')" 
+            + "' and appointment_date<='" + xml_appointment_date + "' and (status='P' or status='H' or status='HS' or status='PV' or status='PS' or status='E' or status='ES' or status='EV')" 
             + " and demographic_no != 0 order by appointment_date , start_time ";
     System.out.println(sql);
     rs = dbObj.searchDBRecord(sql);
