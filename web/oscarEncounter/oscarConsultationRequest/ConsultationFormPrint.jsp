@@ -550,10 +550,11 @@
             </tr>
             <tr>
                 <td class="fillLine">
-        <%=reqFrm.reasonForConsultation %>
+                    <%=reqFrm.reasonForConsultation %>
                     &nbsp;<br>
                 </td>
             </tr>
+            <% if(getlen(reqFrm.clinicalInformation) > 1) {%>	
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgClinicalInfom"/>:
@@ -561,10 +562,12 @@
             </tr>
             <tr>
                 <td class="fillLine">
-        <%=divy(reqFrm.clinicalInformation) %>
+                    <%=divy(reqFrm.clinicalInformation) %>
                     &nbsp;<br>
                 </td>
             </tr>
+            <%}%>
+            <% if(getlen(reqFrm.concurrentProblems) > 1) {%>	
             <tr>
                 <td class="subTitles">
 	            <% if(props.getProperty("significantConcurrentProblemsTitle", "").length() > 1) { 
@@ -576,10 +579,12 @@
             </tr>
             <tr>
                 <td class="fillLine">
-        <%=divy(reqFrm.concurrentProblems) %>
+                    <%=divy(reqFrm.concurrentProblems) %>
                     &nbsp;<br>
                 </td>
             </tr>
+            <%}%>
+            <% if(getlen(reqFrm.currentMedications) > 1) {%>	
             <tr>
                 <td class="subTitles">
 		            <% if(props.getProperty("currentMedicationsTitle", "").length() > 1) { 
@@ -591,10 +596,12 @@
             </tr>
             <tr>
                 <td class="fillLine">
-        <%=divy(reqFrm.currentMedications) %>
+                    <%=divy(reqFrm.currentMedications) %>
                     &nbsp;<br>
                 </td>
             </tr>
+            <%}%>
+            <% if(getlen(reqFrm.allergies) > 1) {%>	
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAllergies"/>
@@ -602,10 +609,11 @@
             </tr>
             <tr>
                 <td class="fillLine">
-        <%=divy(reqFrm.allergies) %>
+                    <%=divy(reqFrm.allergies) %>
                     &nbsp;<br>
                 </td>
             </tr>
+            <%}%>
             <tr>
                 <td class="subTitles">
                     <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgAssociated"/> : <%=reqFrm.getProviderName(reqFrm.providerNo) %>
@@ -650,6 +658,12 @@ public String divy (String str){
     i++;
     }
 return stringBuffer.toString();
+}
+
+public int getlen (String str){
+	if (str == null)
+            return 0;
+	return str.length();
 }
 
 public String formatEmail(oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestUtil reqFrm){
