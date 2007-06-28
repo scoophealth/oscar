@@ -47,25 +47,20 @@ package oscar.oscarEncounter.oscarConsultationRequest.pageUtil;
 
 import java.io.IOException;
 
-import java.io.PrintStream;
-
 import java.sql.ResultSet;
 
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 
-import javax.servlet.ServletRequest;
-
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
+import org.oscarehr.common.IsPropertiesOn;
 
 import oscar.oscarDB.DBHandler;
 
 import oscar.oscarMessenger.util.MsgStringQuote;
-
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 
 import oscar.OscarProperties;
 
@@ -294,9 +289,12 @@ public class EctConsultationFormRequestAction
         submission.equals("Submit Consultation Request And Print Preview")) {
 
       request.setAttribute("reqId", requestId);
-
-      return mapping.findForward("print");
-
+      if (IsPropertiesOn.propertiesOn("CONSULT_PRINT_ALT")) {
+        return mapping.findForward("printalt");   
+      }else{
+        return  mapping.findForward("print");   
+      }
+      
     }
     else if (submission.equals("Update And Fax") ||
              submission.equals("Submit And Fax")) {
