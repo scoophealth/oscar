@@ -178,12 +178,12 @@
         }
 
         td.title4{
-        font-size:10pt;
+        font-size:12pt;
         font-family: arial, verdana, tahoma, helvetica, sans serif;
         }
 
         td.address{
-        font-size:8pt;
+        font-size:10pt;
         font-family: arial, verdana, tahoma, helvetica, sans serif;
         }
 
