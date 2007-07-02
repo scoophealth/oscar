@@ -57,6 +57,7 @@
             <tr class="b">
                 <td width="20%">Agency:</td>
                 <td><bean:write name="clientManagerForm" property="agency.name"/></td>
+                <td><c:out 
             </tr>
             <tr class="b">
                 <td width="20%">Client status:</td>
