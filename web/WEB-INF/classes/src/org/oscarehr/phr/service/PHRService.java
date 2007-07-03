@@ -42,6 +42,7 @@ public interface PHRService {
     
     PHRAuthentication authenticate(String userId,String password);
     boolean validAuthentication(PHRAuthentication auth);
+    boolean canAuthenticate(String providerNo);
     void retrieveDocuments(PHRAuthentication auth,String providerNo) throws Exception; 
     void setPhrDocumentDAO(PHRDocumentDAO phrDocumentDAO);
  
