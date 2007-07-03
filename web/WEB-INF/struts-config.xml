@@ -1353,6 +1353,20 @@
             <forward name="report" path="/report/PopulationReport.jsp" />
         </action>
         <!-- Population Report -->
+        <!-- PHR -->
+        
+        <action path="/PhrRetrieve" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="report" path="/PMmodule/vaccine/vaccine_provider_report.jsp" />
+	</action>
+        <action path="/phr/PhrMessage" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="view"   path="/phr/msg/DisplayPHRMessages.jsp"/> 
+            <forward name="login"  path="/indivoMessenger/LoginIndivo.jsp"/>
+            <forward name="read"  path="/phr/msg/ReadPHRMessage.jsp"/>
+            <forward name="create" path="/phr/msg/CreatePHRMessage.jsp"/>
+        </action>
+                
+        
+        
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
     <message-resources parameter="oscarResources" />

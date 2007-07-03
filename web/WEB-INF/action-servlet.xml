@@ -503,4 +503,22 @@
             <ref bean="populationReportManager" />
         </property>
     </bean>
+    
+     <!-- Indivo -->
+        <bean name="/PhrRetrieve" class="org.oscarehr.phr.web.PHRRetrieveAsyncAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+	</bean>
+        
+        <bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+            <property name="phrDocumentDAO">
+			<ref bean="phrDocumentDAO" />
+	    </property>
+        </bean>
+    
+    
 </beans>
