@@ -97,6 +97,8 @@
 
                         Admission admission = (Admission) form.get("admission");
                         String dischargeReason = admission.getRadioDischargeReason();
+                        if(dischargeReason==null) 
+                        	dischargeReason="0";
                         DischargeReason reason = DischargeReason.values()[Integer.valueOf(dischargeReason)];
                     %>
                     <bean:message bundle="pmm" key="<%="discharge.reason." + reason.toString()%>"/></td>
