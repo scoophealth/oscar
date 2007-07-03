@@ -1,0 +1,241 @@
+/*
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *
+ *  Jason Gallagher
+ *
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada
+ *
+ * PHRDocument.java
+ *
+ * Created on May 29, 2007, 3:50 PM
+ *
+ */
+
+package org.oscarehr.phr.model;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
+/**
+ *
+ * @author jay
+ */
+public class PHRDocument implements Serializable{
+    
+    public static final int TYPE_NOT_SET = 0;
+    //for senderOscar and receiverOscar
+    public static final int TYPE_PROVIDER = 1;
+    public static final int TYPE_DEMOGRAPHIC = 2;
+    //for status sent msgs
+
+    
+    
+    public static final String PHR_ROLE_PROVIDER = "provider";
+    public static final String PHR_ROLE_DEMOGRAPHIC = "patient";
+    
+    public static final int STATUS_SENT = PHRAction.STATUS_SENT;
+    public static final int STATUS_SENT_PENDING = PHRAction.STATUS_SENT_PENDING;
+    public static final int STATUS_NOT_SET = PHRAction.STATUS_NOT_SET;
+    
+    private int id;
+    private String phrIndex;
+    private String phrClassification;
+    private Date dateCreated;
+    private Date dateSent;
+    private String senderOscar;
+    private int senderType;
+    private String senderPhr;
+    private String receiverOscar;
+    private int receiverType;
+    private String receiverPhr;
+    private String docSubject;
+    private String docContent;
+    private int status;
+    private int sent;
+    private Map exts;
+    /**
+     * Creates a new instance of PHRDocument
+     */
+    public PHRDocument() {
+    }
+    
+    public PHRAction getAction(int actionType) {
+        PHRAction action = new PHRAction();
+        action.setActionType(actionType);
+        action.setDateQueued(new Date());
+        action.setDocContent(this.getDocContent());
+        action.setReceiverOscar(this.getReceiverOscar());
+        action.setReceiverType(this.getReceiverType());
+        action.setReceiverPhr(this.getReceiverPhr());
+        action.setSenderOscar(this.getSenderOscar());
+        action.setSenderType(this.getSenderType());
+        action.setSenderPhr(this.getSenderPhr());
+        action.setPhrClassification(this.getPhrClassification());
+        action.setSent(this.getSent());
+        return action;
+    }
+    
+    public PHRAction getAction2(int actionType) {    
+        PHRAction action = new PHRAction();
+        action.setActionType(actionType);
+        action.setDateQueued(new Date());
+        action.setDocContent(this.getDocContent());
+        
+        action.setReceiverOscar(this.getSenderOscar());
+        action.setReceiverType(this.getSenderType());
+        action.setReceiverPhr(this.getSenderPhr());
+       
+        action.setSenderOscar(this.getReceiverOscar());
+        action.setSenderType(this.getReceiverType());
+        action.setSenderPhr(this.getReceiverPhr());
+        action.setPhrClassification(this.getPhrClassification());
+        action.setPhrIndex(this.getPhrIndex());
+        action.setSent(this.getSent());
+        return action;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPhrIndex() {
+        return phrIndex;
+    }
+
+    public void setPhrIndex(String phrIndex) {
+        this.phrIndex = phrIndex;
+    }
+
+    public String getPhrClassification() {
+        return phrClassification;
+    }
+
+    public void setPhrClassification(String phrClassification) {
+        this.phrClassification = phrClassification;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateSent() {
+        return dateSent;
+    }
+
+    public void setDateSent(Date dateSent) {
+        this.dateSent = dateSent;
+    }
+
+    public String getSenderOscar() {
+        return senderOscar;
+    }
+
+    public void setSenderOscar(String senderOscar) {
+        this.senderOscar = senderOscar;
+    }
+
+    public int getSenderType() {
+        return senderType;
+    }
+
+    public void setSenderType(int senderType) {
+        this.senderType = senderType;
+    }
+
+    public String getSenderPhr() {
+        return senderPhr;
+    }
+
+    public void setSenderPhr(String senderPhr) {
+        this.senderPhr = senderPhr;
+    }
+
+    public String getReceiverOscar() {
+        return receiverOscar;
+    }
+
+    public void setReceiverOscar(String receiverOscar) {
+        this.receiverOscar = receiverOscar;
+    }
+
+    public int getReceiverType() {
+        return receiverType;
+    }
+
+    public void setReceiverType(int receiverType) {
+        this.receiverType = receiverType;
+    }
+
+    public String getReceiverPhr() {
+        return receiverPhr;
+    }
+
+    public void setReceiverPhr(String receiverPhr) {
+        this.receiverPhr = receiverPhr;
+    }
+
+    public String getDocSubject() {
+        return docSubject;
+    }
+
+    public void setDocSubject(String docSubject) {
+        this.docSubject = docSubject;
+    }
+
+    public String getDocContent() {
+        return docContent;
+    }
+
+    public void setDocContent(String docContent) {
+        this.docContent = docContent;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getSent() {
+        return sent;
+    }
+
+    public void setSent(int sent) {
+        this.sent = sent;
+    }
+    
+    public Map getExts(){
+        return exts;
+    }
+    
+    public void setExts(Map exts){
+        this.exts = exts;
+    }
+    
+}
