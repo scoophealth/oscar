@@ -97,7 +97,7 @@
 
                         Admission admission = (Admission) form.get("admission");
                         String dischargeReason = admission.getRadioDischargeReason();
-                        if(dischargeReason==null) 
+                        if(dischargeReason==null || dischargeReason=="") 
                         	dischargeReason="0";
                         DischargeReason reason = DischargeReason.values()[Integer.valueOf(dischargeReason)];
                     %>
