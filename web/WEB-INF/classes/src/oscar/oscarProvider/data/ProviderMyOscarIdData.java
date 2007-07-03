@@ -35,14 +35,16 @@ import java.sql.SQLException;
  */
 public class ProviderMyOscarIdData {
     
-    private String strColName;    
+    private String strColName = "MyOscarId";    
     private String provider;
     
     /** Creates a new instance of ProviderColourUpdater */
    public ProviderMyOscarIdData(String p) {
-       
-       strColName = new String("MyOscarId");
        provider = p;       
+    }
+   
+   public ProviderMyOscarIdData() {
+         
     }
    
    /**
@@ -112,4 +114,27 @@ public class ProviderMyOscarIdData {
        return rs.next();              
        
    }
+   
+   //get provider number knowing the indivo id
+  public String getProviderNo(String myOscarId) {
+      String sql = "";
+      String providerNo = "";
+      ResultSet rs = null;
+      DBHandler db;
+      
+      try {
+          db = new DBHandler(DBHandler.OSCAR_DATA);
+          
+          sql = "SELECT provider_no FROM property WHERE name = '" + strColName + "' AND value = '" + myOscarId+ "'";
+          System.out.println(sql);
+          rs = db.GetSQL(sql);
+          
+          if( rs.next() ) {
+              providerNo = rs.getString("provider_no");
+          }
+      } catch( SQLException ex ) {
+          System.out.println(ex.getMessage());
+      }
+      return providerNo;
+  }
 }
