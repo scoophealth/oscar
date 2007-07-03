@@ -493,5 +493,16 @@ public class ProviderData {
             return null;
         }        
     }
+    
+    public String getMyOscarId() {
+         if (myOscarId == null) this.initMyOscarId();
+         return myOscarId;
+    }
+ 
+    public void initMyOscarId() {
+         ProviderMyOscarIdData myOscar = new ProviderMyOscarIdData(this.getProvider_no());
+         this.myOscarId = myOscar.getMyOscarId();
+    }
+    private String myOscarId = null;
    
 }
