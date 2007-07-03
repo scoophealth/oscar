@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>	
+     
+        <bean id="phrService" class="org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl">
+            <property name="phrDocumentDAO">
+			<ref bean="phrDocumentDAO" />
+	    </property>
+            <property name="phrActionDAO">
+                        <ref bean="phrActionDAO"/>
+            </property>
+        </bean>
+        <bean id="phrDocumentDAO" class="org.oscarehr.phr.dao.hibernate.PHRDocumentDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        <bean id="phrDocumentExtDAO" class="org.oscarehr.phr.dao.hibernate.PHRDocumentExtDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+         <bean id="phrActionDAO" class="org.oscarehr.phr.dao.hibernate.PHRActionDAOHibernate">
+                <property name="sessionFactory">
+                        <ref bean="sessionFactory"/>
+                </property>
+        </bean>
+</beans>
