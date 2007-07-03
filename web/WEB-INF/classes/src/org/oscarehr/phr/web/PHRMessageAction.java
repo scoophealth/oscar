@@ -51,13 +51,13 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
  *
  * @author jay
  */
-public class PHRMessageAction extends  DispatchAction {  //IndivoAction{
+public class PHRMessageAction extends  PHRLoginAction {  
     
     private static Log log = LogFactory.getLog(PHRMessageAction.class);
     
-    
     PHRDocumentDAO phrDocumentDAO;
     PHRService phrService;
+    
     /** Creates a new instance of PHRMessageAction */
     public PHRMessageAction() {
     }
@@ -67,9 +67,10 @@ public class PHRMessageAction extends  DispatchAction {  //IndivoAction{
         
     }
     
-     public void setPhrService(PHRService phrService){
-        this.phrService = phrService;
-     }
+    public void setPhrService(PHRService phrService){
+      super.setPhrService(phrService);
+      this.phrService = phrService;
+    }
     
     public ActionForward unspecified(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
