@@ -68,7 +68,6 @@ import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
 import org.w3c.dom.Element;
 import oscar.OscarProperties;
-import oscar.indivoMessenger.IndivoRetrieveAsyncAction;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarProvider.data.ProviderData;
