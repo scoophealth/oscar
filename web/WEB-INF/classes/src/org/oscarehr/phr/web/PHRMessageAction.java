@@ -32,12 +32,13 @@ package org.oscarehr.phr.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
-import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
@@ -51,6 +52,10 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
  * @author jay
  */
 public class PHRMessageAction extends IndivoAction{
+    
+    private static Log log = LogFactory.getLog(PHRMessageAction.class);
+    
+    
     PHRDocumentDAO phrDocumentDAO;
     PHRService phrService;
     /** Creates a new instance of PHRMessageAction */
