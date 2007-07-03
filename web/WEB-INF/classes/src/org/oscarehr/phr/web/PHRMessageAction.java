@@ -37,12 +37,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
-import oscar.indivoMessenger.IndivoAction;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
@@ -51,7 +51,7 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
  *
  * @author jay
  */
-public class PHRMessageAction extends IndivoAction{
+public class PHRMessageAction extends  DispatchAction {  //IndivoAction{
     
     private static Log log = LogFactory.getLog(PHRMessageAction.class);
     
