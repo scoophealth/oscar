@@ -1,3 +1,6 @@
+<%@ page import="org.apache.struts.validator.DynaValidatorForm" %>
+<%@ page import="org.oscarehr.PMmodule.model.Admission" %>
+<%@ page import="org.oscarehr.PMmodule.model.base.DischargeReason" %>
 <!--
 /*
 *
@@ -43,6 +46,10 @@
                 <td><bean:write name="clientManagerForm" property="client.formattedName"/></td>
             </tr>
             <tr class="b">
+                <td width="20%">Provider name:</td>
+                <td><bean:write name="clientManagerForm" property="provider.formattedName"/></td>
+            </tr>
+            <tr class="b">
                 <td width="20%">Program name:</td>
                 <td><bean:write name="clientManagerForm" property="admission.programName"/></td>
             </tr>
@@ -56,8 +63,7 @@
             </tr>
             <tr class="b">
                 <td width="20%">Agency:</td>
-                <td><bean:write name="clientManagerForm" property="agency.name"/></td>
-                <td><c:out 
+                <td><c:out value="${agency.name}" /></td>
             </tr>
             <tr class="b">
                 <td width="20%">Client status:</td>
@@ -85,7 +91,15 @@
             </tr>
             <tr class="b">
                 <td width="20%">Discharge reason:</td>
-                <td><bean:write name="clientManagerForm" property="admission.radioDischargeReason"/></td>
+                <td>
+                    <%
+                        DynaValidatorForm form = (DynaValidatorForm)session.getAttribute("clientManagerForm");
+
+                        Admission admission = (Admission) form.get("admission");
+                        String dischargeReason = admission.getRadioDischargeReason();
+                        DischargeReason reason = DischargeReason.values()[Integer.valueOf(dischargeReason)];
+                    %>
+                    <bean:message bundle="pmm" key="<%="discharge.reason." + reason.toString()%>"/></td>
             </tr>
             <tr class="b">
                 <td width="20%">Discharge notes:</td>
@@ -94,30 +108,6 @@
 
         </table>
 
-        <!--
-	public static String REF = "Admission";
-	public static String PROP_CLIENT = "client";
-	public static String PROP_PROGRAM_NAME = "programName";
-	public static String PROP_TEMP_ADMIT_DISCHARGE = "TempAdmitDischarge";
-	public static String PROP_AGENCY_ID = "AgencyId";
-	public static String PROP_PROGRAM_ID = "ProgramId";
-	public static String PROP_PROGRAM_TYPE = "programType";
-	public static String PROP_TEMP_ADMISSION = "TempAdmission";
-	public static String PROP_CLIENT_STATUS = "clientStatus";
-	public static String PROP_TEAM_NAME = "teamName";
-	public static String PROP_ADMISSION_NOTES = "AdmissionNotes";
-	public static String PROP_CLIENT_ID = "ClientId";
-	public static String PROP_RADIO_DISCHARGE_REASON = "RadioDischargeReason";
-	public static String PROP_TEAM = "team";
-	public static String PROP_PROVIDER_NO = "ProviderNo";
-	public static String PROP_DISCHARGE_DATE = "DischargeDate";
-	public static String PROP_TEAM_ID = "TeamId";
-	public static String PROP_CLIENT_STATUS_ID = "ClientStatusId";
-	public static String PROP_ADMISSION_STATUS = "AdmissionStatus";
-	public static String PROP_ADMISSION_DATE = "AdmissionDate";
-	public static String PROP_DISCHARGE_NOTES = "DischargeNotes";
-	public static String PROP_ID = "Id";
-	public static String PROP_TEMPORARY_ADMISSION = "TemporaryAdmission";        -->
 
 
     </html:form>
