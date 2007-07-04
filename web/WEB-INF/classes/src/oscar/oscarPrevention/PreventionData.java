@@ -277,13 +277,12 @@ public class PreventionData {
                h.put("type",rs.getString("prevention_type"));
                System.out.println("id set to "+rs.getString("id"));
                h.put("provider_no",rs.getString("provider_no")); 
-               h.put("provider_name",rs.getString("provider_name"));
-               h.put("prevention_date",rs.getString("prevention_date"));
+               h.put("provider_name",rs.getString("provider_name"));          
+               h.put("prevention_date",blankIfNull(rs.getString("prevention_date")));
                java.util.Date date = null;
                
                try{               
-                  DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                  date = (java.util.Date)formatter.parse(rs.getString("prevention_date"));
+                   date = rs.getDate("prevention_date");
                   h.put("prevention_date_asDate",date);
                }catch(Exception pe){}
                String age = "N/A";   
@@ -299,6 +298,12 @@ public class PreventionData {
             System.out.println(e.getMessage());
         }
       return list;
+   }
+   
+   private static String blankIfNull(String s){
+       if ( s == null)
+           return "";
+       return s;
    }
    
    
