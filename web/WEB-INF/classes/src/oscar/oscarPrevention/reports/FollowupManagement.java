@@ -32,7 +32,8 @@ package oscar.oscarPrevention.reports;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
 import oscar.util.UtilDateUtilities;
 
@@ -41,6 +42,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class FollowupManagement {
+    private static Log log = LogFactory.getLog(FollowupManagement.class);
     final public String LETTER1 = "L1";
     final public String LETTER2 = "L2";
     final public String PHONE1 = "P1";
@@ -84,7 +86,7 @@ public class FollowupManagement {
     }
 
     private void writeProcedure(final String followUpType, final String followUpValue, final String demographicNo, final String providerNo,final Date dateObserved,final String comment ) {        
-        System.out.println("Calling WriteProcedure for "+demographicNo);
+        log.debug("Calling WriteProcedure for "+demographicNo);
         Hashtable measure = new Hashtable();
         measure.put("value",followUpValue);
         measure.put("type",followUpType);

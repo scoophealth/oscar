@@ -37,6 +37,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -49,7 +51,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class ChildImmunizationReport implements PreventionReport{
-    
+    private static Log log = LogFactory.getLog(ChildImmunizationReport.class);
     /** Creates a new instance of ChildImmunizationReport */
     public ChildImmunizationReport() {
     }
@@ -64,9 +66,9 @@ public class ChildImmunizationReport implements PreventionReport{
         int dontInclude = 0;
           for (int i = 0; i < list.size(); i ++){//for each  element in arraylist 
              ArrayList fieldList = (ArrayList) list.get(i);  
-             System.out.println("list "+list.size());
+             log.debug("list "+list.size());
              String demo = (String) fieldList.get(0);  
-             System.out.println("fieldList "+fieldList.size());
+             log.debug("fieldList "+fieldList.size());
 
              //search   prevention_date prevention_type  deleted   refused 
              ArrayList  prevs1 = pd.getPreventionData("DTaP-IPV",demo);                                                                             
@@ -77,7 +79,7 @@ public class ChildImmunizationReport implements PreventionReport{
              int numHib  = prevs2.size();  //4             
              int numMMR  = prevs4.size();  //1   
              
-             System.out.println("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());  
+             log.debug("prev1 "+prevs1.size()+ " prevs2 "+ prevs2.size() +" prev4 "+prevs4.size());  
              
              DemographicData dd = new DemographicData();
              DemographicData.Demographic demoData = dd.getDemographic(demo);
@@ -168,10 +170,10 @@ public class ChildImmunizationReport implements PreventionReport{
                 //bonusEl.set(Calendar.YEAR,( bonusEl.get(Calendar.YEAR) - 1) );                
                 //Date beginingOfYear  = bonusEl.getTime();
                                                 
-                //System.out.println("\n\n\n prevDate "+prevDate);
-                //System.out.println("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
-                //System.out.println("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
-               // System.out.println("ASOFDATE "+asofDate);
+                //log.debug("\n\n\n prevDate "+prevDate);
+                //log.debug("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
+                //log.debug("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
+               // log.debug("ASOFDATE "+asofDate);
                                                                                                                                 
                 Date dob = dd.getDemographicDOB(demo);
                 Calendar cal = Calendar.getInstance();
@@ -179,7 +181,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 cal.add(Calendar.YEAR, 2);
                 Date twoYearsAfterDOB = cal.getTime();
                 
-                //System.out.println("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
+                //log.debug("twoYearsAfterDOB date "+twoYearsAfterDOB+ " "+lastDate.before(twoYearsAfterDOB) );
                 if (!refused && (totalImmunizations >= recommTotal  ) && lastDate.before(twoYearsAfterDOB) ){//&& endOfYear.after(prevDate)){                  
                    prd.bonusStatus = "Y";
                    done++;
@@ -235,10 +237,10 @@ public class ChildImmunizationReport implements PreventionReport{
           }
           String percentStr = "0";
           double eligible = list.size() - inList - dontInclude;
-          System.out.println("eligible "+eligible+" done "+done);
+          log.debug("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
-             System.out.println("in percentage  "+percentage   +" "+( done / eligible));
+             log.debug("in percentage  "+percentage   +" "+( done / eligible));
              percentStr = ""+Math.round(percentage); 
           }
         
@@ -253,7 +255,7 @@ public class ChildImmunizationReport implements PreventionReport{
           h.put("inEligible", ""+inList);
           h.put("eformSearch","CHI");
           h.put("followUpType","CIMF");
-          System.out.println("set returnReport "+returnReport);
+          log.debug("set returnReport "+returnReport);
           return h;
     }
           
@@ -289,7 +291,7 @@ public class ChildImmunizationReport implements PreventionReport{
           if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
-              System.out.println("getting followup data for "+prd.demographicNo);
+              log.debug("getting followup data for "+prd.demographicNo);
               
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
@@ -299,9 +301,9 @@ public class ChildImmunizationReport implements PreventionReport{
                   return this.LETTER1;
               }else{ //There has been contact
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
-                  System.out.println("fluData "+measurementData.getDataField());
-                  System.out.println("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
-                  System.out.println("toString: "+measurementData.toString());
+                  log.debug("fluData "+measurementData.getDataField());
+                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
+                  log.debug("toString: "+measurementData.toString());
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
                   prd.lastFollupProcedure = measurementData.getDataField();
                   
@@ -335,7 +337,7 @@ public class ChildImmunizationReport implements PreventionReport{
                 //Do nothing
               prd.nextSuggestedProcedure = "----";
           }else{
-               System.out.println("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+               log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
           }
        }
        return null;         

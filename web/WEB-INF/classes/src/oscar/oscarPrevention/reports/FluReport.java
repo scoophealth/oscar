@@ -37,6 +37,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarPrevention.PreventionData;
@@ -48,7 +50,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class FluReport implements PreventionReport {
-    
+    private static Log log = LogFactory.getLog(FluReport.class);
     /** Creates a new instance of FluReport */
     public FluReport() {
     }
@@ -131,18 +133,18 @@ public class FluReport implements PreventionReport {
                 bonusEl.set(Calendar.YEAR,( bonusEl.get(Calendar.YEAR) - 1) );                
                 Date beginingOfYear  = bonusEl.getTime();
                                                 
-                System.out.println("\n\n\n prevDate "+prevDate);
-                System.out.println("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
-                System.out.println("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
-                System.out.println("ASOFDATE "+asofDate);
+                log.debug("\n\n\n prevDate "+prevDate);
+                log.debug("bonusEl date "+beginingOfYear+ " "+beginingOfYear.before(prevDate));
+                log.debug("bonusEl date "+endOfYear+ " "+endOfYear.after(prevDate));                
+                log.debug("ASOFDATE "+asofDate);
                 if (!refused && beginingOfYear.before(prevDate) && endOfYear.after(prevDate)){
                    prd.bonusStatus = "Y";
                    done++;
                 }
                 //outcomes        
-                System.out.println("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
-                System.out.println("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
-                System.out.println("cutoff Date  ("+cutoffDate.toString()+" ) before Prev ("+prevDate.toString() +" ) "+cutoffDate.before(prevDate));
+                log.debug("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
+                log.debug("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
+                log.debug("cutoff Date  ("+cutoffDate.toString()+" ) before Prev ("+prevDate.toString() +" ) "+cutoffDate.before(prevDate));
                 if (!refused && dueDate.after(prevDate) && cutoffDate.before(prevDate)){ // overdue
                    prd.rank = 2;
                    prd.lastDate = prevDateStr;                
@@ -179,10 +181,10 @@ public class FluReport implements PreventionReport {
           }
           String percentStr = "0";
           double eligible = list.size() - inList;
-          System.out.println("eligible "+eligible+" done "+done);
+          log.debug("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
-             System.out.println("in percentage  "+percentage   +" "+( done / eligible));
+             log.debug("in percentage  "+percentage   +" "+( done / eligible));
              percentStr = ""+Math.round(percentage); 
           }
           
@@ -197,7 +199,7 @@ public class FluReport implements PreventionReport {
           h.put("eformSearch","Flu");
           h.put("followUpType","FLUF");
           
-          System.out.println("set returnReport "+returnReport);
+          log.debug("set returnReport "+returnReport);
           return h;
     }
     
@@ -232,7 +234,7 @@ public class FluReport implements PreventionReport {
           if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
-              System.out.println("getting FLUF data for "+prd.demographicNo);
+              log.debug("getting FLUF data for "+prd.demographicNo);
               
               Collection fluFollowupData = measurementData.getMeasurementsDataVector();
               //NO Contact
@@ -242,15 +244,15 @@ public class FluReport implements PreventionReport {
                   return this.LETTER1;
               }else{ //There has been contact
                   EctMeasurementsDataBean fluData = (EctMeasurementsDataBean) fluFollowupData.iterator().next();
-                  System.out.println("fluData "+fluData.getDataField());
-                  System.out.println("lastFollowup "+fluData.getDateObservedAsDate()+ " last procedure "+fluData.getDateObservedAsDate());
-                  System.out.println("CUTTOFF DATE : "+cuttoffDate);
-                  System.out.println("toString: "+fluData.toString());
+                  log.debug("fluData "+fluData.getDataField());
+                  log.debug("lastFollowup "+fluData.getDateObservedAsDate()+ " last procedure "+fluData.getDateObservedAsDate());
+                  log.debug("CUTTOFF DATE : "+cuttoffDate);
+                  log.debug("toString: "+fluData.toString());
                   prd.lastFollowup = fluData.getDateObservedAsDate();
                   prd.lastFollupProcedure = fluData.getDataField();
                   if ( fluData.getDateObservedAsDate().before(cuttoffDate)){
                       prd.nextSuggestedProcedure = this.LETTER1;
-                      System.out.println("returning letter 1");
+                      log.debug("returning letter 1");
                       return this.LETTER1;
                   }else{ //AFTER CUTOFF DATE
                       //IS Last 
@@ -258,7 +260,7 @@ public class FluReport implements PreventionReport {
                       int num = UtilDateUtilities.getNumMonths(fluData.getDateObservedAsDate(),today.getTime());
                       if (num > 1 && prd.lastFollupProcedure.equals(this.LETTER1)){
                           prd.nextSuggestedProcedure = this.PHONE1;
-                          System.out.println("returning PHONE 1");
+                          log.debug("returning PHONE 1");
                           return this.PHONE1;
                       }else{
                           //NEED TO RETURN A MESSAGE THAT LAST DATE WAS WITHIN A MONTH
@@ -279,7 +281,7 @@ public class FluReport implements PreventionReport {
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
           }else{
-               System.out.println("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+               log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
           }
        }
        return null;         

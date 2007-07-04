@@ -38,6 +38,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 import oscar.oscarPrevention.PreventionData;
@@ -49,7 +51,7 @@ import oscar.util.UtilDateUtilities;
  * @author jay
  */
 public class FOBTReport implements PreventionReport{
-    
+    private static Log log = LogFactory.getLog(FOBTReport.class);
     /** Creates a new instance of MammogramReport */
     public FOBTReport() {
     }
@@ -109,7 +111,7 @@ public class FOBTReport implements PreventionReport{
                 cal2.add(Calendar.MONTH,-6);
                 Date cutoffDate2 = cal2.getTime();
                 
-                System.out.println("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
+                log.debug("cut 1 "+cutoffDate.toString()+ " cut 2 "+cutoffDate2.toString());
                
                 // if prevDate is less than as of date and greater than 2 years prior 
                 Calendar bonusEl = Calendar.getInstance();
@@ -117,9 +119,9 @@ public class FOBTReport implements PreventionReport{
                 bonusEl.add(Calendar.YEAR,-2);
                 Date bonusStartDate = bonusEl.getTime();
                 
-                System.out.println("\n\n\n prevDate "+prevDate);
-                System.out.println("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
-                System.out.println("asofDate date"+asofDate+" "+asofDate.after(prevDate));
+                log.debug("\n\n\n prevDate "+prevDate);
+                log.debug("bonusEl date "+bonusStartDate+ " "+bonusEl.after(prevDate));
+                log.debug("asofDate date"+asofDate+" "+asofDate.after(prevDate));
                 if (!refused && bonusStartDate.before(prevDate) && asofDate.after(prevDate)){
                    prd.bonusStatus = "Y";
                    done++;
@@ -135,9 +137,9 @@ public class FOBTReport implements PreventionReport{
                 
                 
                 //outcomes        
-                System.out.println("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
-                System.out.println("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
-                System.out.println("cutoff Date  ("+cutoffDate.toString()+" ) before Prev ("+prevDate.toString() +" ) "+cutoffDate.before(prevDate));
+                log.debug("due Date "+dueDate.toString()+" cutoffDate "+cutoffDate.toString()+" prevDate "+prevDate.toString());
+                log.debug("due Date  ("+dueDate.toString()+" ) After Prev ("+prevDate.toString() +" ) "+dueDate.after(prevDate));
+                log.debug("cutoff Date  ("+cutoffDate.toString()+" ) before Prev ("+prevDate.toString() +" ) "+cutoffDate.before(prevDate));
                 if (!refused && dueDate.after(prevDate) && cutoffDate.before(prevDate)){ // overdue
                    prd.rank = 2;
                    prd.lastDate = prevDateStr;                
@@ -175,11 +177,11 @@ public class FOBTReport implements PreventionReport{
           String percentStr = "0";
           String percentWithGraceStr = "0";
           double eligible = list.size() - inList;
-          System.out.println("eligible "+eligible+" done "+done);
+          log.debug("eligible "+eligible+" done "+done);
           if (eligible != 0){
              double percentage = ( done / eligible ) * 100;
              double percentageWithGrace =  (done+doneWithGrace) / eligible  * 100 ;
-             System.out.println("in percentage  "+percentage   +" "+( done / eligible));
+             log.debug("in percentage  "+percentage   +" "+( done / eligible));
              percentStr = ""+Math.round(percentage);
              percentWithGraceStr = ""+Math.round(percentageWithGrace);
           }
@@ -195,7 +197,7 @@ public class FOBTReport implements PreventionReport{
           h.put("inEligible", ""+inList);
           h.put("eformSearch","FOBT");
           h.put("followUpType","FOBF");
-          System.out.println("set returnReport "+returnReport);
+          log.debug("set returnReport "+returnReport);
           return h;
     }
           
@@ -234,7 +236,7 @@ public class FOBTReport implements PreventionReport{
           if (prd.state.equals("No Info") || prd.state.equals("due") || prd.state.equals("Overdue")){
               // Get LAST contact method
               EctMeasurementsDataBeanHandler measurementDataHandler = new EctMeasurementsDataBeanHandler(prd.demographicNo,measurementType);
-              System.out.println("getting followup data for "+prd.demographicNo);
+              log.debug("getting followup data for "+prd.demographicNo);
               
               Collection followupData = measurementDataHandler.getMeasurementsDataVector();
               //NO Contact
@@ -244,9 +246,9 @@ public class FOBTReport implements PreventionReport{
                   return this.LETTER1;
               }else{ //There has been contact
                   EctMeasurementsDataBean measurementData = (EctMeasurementsDataBean) followupData.iterator().next();
-                  System.out.println("fluData "+measurementData.getDataField());
-                  System.out.println("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
-                  System.out.println("toString: "+measurementData.toString());
+                  log.debug("fluData "+measurementData.getDataField());
+                  log.debug("lastFollowup "+measurementData.getDateObservedAsDate()+ " last procedure "+measurementData.getDateObservedAsDate());     
+                  log.debug("toString: "+measurementData.toString());
                   prd.lastFollowup = measurementData.getDateObservedAsDate();
                   prd.lastFollupProcedure = measurementData.getDataField();
                   
@@ -296,7 +298,7 @@ public class FOBTReport implements PreventionReport{
                 //Do nothing
               prd.nextSuggestedProcedure = "----";
           }else{
-               System.out.println("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+               log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
           }
        }
        return null;         

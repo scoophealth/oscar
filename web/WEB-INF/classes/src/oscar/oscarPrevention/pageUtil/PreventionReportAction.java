@@ -32,6 +32,8 @@ package oscar.oscarPrevention.pageUtil;
 import java.util.*;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarPrevention.reports.PreventionReport;
 import oscar.oscarPrevention.reports.PreventionReportFactory;
 import oscar.oscarReport.data.*;
@@ -43,7 +45,7 @@ import oscar.util.*;
  * @author Jay Gallagher
  */
 public class PreventionReportAction extends Action {
-   
+   private static Log log = LogFactory.getLog(PreventionReportAction.class);
    
    public PreventionReportAction() {
    }
@@ -63,7 +65,7 @@ public class PreventionReportAction extends Action {
        RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
        ArrayList list = demoQ.buildQuery(frm);
       
-       System.out.println("set size "+list.size());
+       log.debug("set size "+list.size());
        
        if (asofDate == null){
           Calendar today = Calendar.getInstance();
@@ -85,7 +87,7 @@ public class PreventionReportAction extends Action {
        request.setAttribute("patientSet",setName);
        request.setAttribute("prevention",prevention);
        
-       System.out.println("setting prevention type to "+prevention);
+       log.debug("setting prevention type to "+prevention);
        
        return (mapping.findForward("success"));
    }   
