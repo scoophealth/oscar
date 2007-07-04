@@ -124,7 +124,7 @@
         guideline=""
         graphable="no"
         value_name="Positive"
-        ds_rules="diab-ACR.drl"/>
+    />
     <item
         measurement_type="HpAI"
         display_name="Hep A IgG"
