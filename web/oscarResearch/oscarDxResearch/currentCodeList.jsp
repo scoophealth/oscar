@@ -3,7 +3,13 @@
 <% response.setHeader("Cache-Control","no-cache");%>
 <ul<%
    String demoNO = request.getParameter("demographicNo");
+   String maxlen = request.getParameter("maxlen");
+   int len = -1;
    
+   try{
+      len = Integer.parseInt(maxlen);         
+   }catch(Exception e){}   
+      
    dxResearchBeanHandler dxResearchBeanHand = new dxResearchBeanHandler(demoNO);
    Vector patientDx = dxResearchBeanHand.getDxResearchBeanVector();
    
@@ -12,6 +18,10 @@
    //Iterator iter = list.iterator();
    for ( int i = 0; i < patientDx.size(); i++){
       dxResearchBean code = (dxResearchBean)patientDx.get(i);  // code.getEnd_date() code.getStart_date()
-   %>><li>- <%=code.getDescription()%>  </li<%
+      String desc = code.getDescription();
+      if (len != -1){
+         desc = org.apache.commons.lang.StringUtils.abbreviate(desc,len) ;
+      }
+   %>><li>- <%=desc%>  </li<%
    }%>
 ></ul>     
