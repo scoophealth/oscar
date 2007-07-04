@@ -305,6 +305,7 @@ div.recommendations li{
                        <div class="wrapper" id="dxFullListing"  >
                        <jsp:include page="../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
                           <jsp:param name="demographicNo" value="<%=demographic_no%>"/>
+                          <jsp:param name="maxlen" value="15"/>
                        </jsp:include>
                        </div>
                 </div>
