@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <project name="oscar" 
          default="dist">
-  <property name="catalina" location="/usr/local/tomcat" />
+  <property environment="env"/>
+
+  <property name="catalina" location="${env.CATALINA_HOME}" />
   <property file="tomcat.properties" />
   <property name="webapp.name" value="oscar"/>
   
-  <property environment="env"/>
   <path id="classpath.path">
    <fileset dir="${catalina}/common/lib">
     <include name="*.jar"/>
