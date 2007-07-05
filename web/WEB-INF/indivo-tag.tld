@@ -59,6 +59,28 @@
         </attribute>
     </tag>
     
+    <tag>
+        <name>setcolor</name>
+        <tag-class>org.oscarehr.phr.taglib.SetColor</tag-class>
+        <body-content>JSP</body-content>
+        
+        <attribute>
+            <name>newMessagesCss</name>
+            <required>false</required>
+            <type>String</type>
+        </attribute>
+        <attribute>
+            <name>noNewMessagesCss</name>
+            <required>false</required>
+            <type>String</type>
+        </attribute>
+        <attribute>
+            <name>noAuthorizationCss</name>
+            <required>false</required>
+            <type>String</type>
+        </attribute>
+    </tag>
+    
     <!-- Validators are new in JSP1.2. You may have zero or one validator
          in a tag library. They look like this:
       <validator>
