@@ -52,6 +52,7 @@
         <property column="phr_index"          name="phrIndex"          length="70"  type="string" />
         <property column="doc_content"        name="docContent"                     type="text" />
         <property column="sent"               name="sent"              length="1"   type="integer" />
+        <property column="phr_type"           name="phrType"           length="100" type="string"  />
     </class>
 </hibernate-mapping>
 <!--
@@ -71,6 +72,7 @@
     private String phrIndex;  //if updating
     private String docContent;
     private int sent;
+    private String phrType;
 
 
 | Field              | Type         | Null | Key | Default | Extra          |
@@ -90,9 +92,5 @@
 | phr_index          | varchar(70)  | YES  |     | NULL    |                |
 | doc_content        | text         | YES  |     | NULL    |                |
 | sent               | tinyint(1)   | YES  |     | 0       |                |
-
-
-
-
-
+| phr_type           | varchar(100) | YES  |     | NULL    |                |
 -->

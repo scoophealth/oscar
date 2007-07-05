@@ -11,6 +11,7 @@ package org.oscarehr.phr.model;
 
 import java.io.StringReader;
 import java.util.Date;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -68,6 +69,7 @@ public class PHRAction {
     private String phrIndex;  //if updating
     private String docContent;
     private int sent;
+    private String phrType;
 
     /** Creates a new instance of PHRAction */
     public PHRAction() {
@@ -80,6 +82,22 @@ public class PHRAction {
         JAXBElement docEle = (JAXBElement) unmarshaller.unmarshal(strr);
         IndivoDocumentType doc = (IndivoDocumentType) docEle.getValue();
         return doc;
+    }
+    
+    public boolean sameOscarObject(PHRAction action) {
+        if (action.getPhrClassification().equals(this.getPhrClassification()) && (action.getOscarId().equals(this.getOscarId()))) {
+            return true;
+        }
+        return false;
+    }
+    
+    public static List updateIndexes(String classification, String oscarId, String newPhrIndex, List<PHRAction> actions) {
+        for (PHRAction action :actions) {
+            if (action.getPhrClassification().equals(classification) && (action.getOscarId().equals(oscarId))) {
+                action.setPhrIndex(newPhrIndex);
+            }
+        }
+        return actions;
     }
     
     public int getId() {
@@ -200,6 +218,14 @@ public class PHRAction {
 
     public void setOscarId(String oscarId) {
         this.oscarId = oscarId;
+    }
+    
+    public String getPhrType() {
+        return phrType;
+    }
+
+    public void setPhrType(String phrType) {
+        this.phrType = phrType;
     }
     
 }
