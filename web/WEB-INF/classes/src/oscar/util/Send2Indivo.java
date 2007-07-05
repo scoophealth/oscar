@@ -256,6 +256,11 @@ public class Send2Indivo {
                 
         medType.setName(drug.getDrugName());        
         medType.setProvider(contactInfo);    
+        /*medType.setRoute();
+        CodedValueType cvt = new CodedValueType();
+        cvt.
+        CodingSystemReferenceType csrt = new CodingSystemReferenceType();
+        csrt.*/
         medType.setInstructions("<pre>" + drug.getSpecial() + "</pre>");         
 
         try {
@@ -310,7 +315,7 @@ public class Send2Indivo {
         BinaryDataType binaryDataType = new BinaryDataType();
         binaryDataType.setData(bfile);
         binaryDataType.setMimeType("application/pdf");
-        binaryDataType.setFileDesc(description);
+        binaryDataType.setFileDescription(description);
         binaryDataType.setFilename(fname);
         
         org.indivo.xml.phr.DocumentGenerator generator  = new   org.indivo.xml.phr.DocumentGenerator();
@@ -366,7 +371,7 @@ public class Send2Indivo {
         BinaryDataType binaryDataType = new BinaryDataType();
         binaryDataType.setData(bfile);
         binaryDataType.setMimeType("application/pdf");
-        binaryDataType.setFileDesc(description);
+        binaryDataType.setFileDescription(description);
         binaryDataType.setFilename(fname);
         
         try {
