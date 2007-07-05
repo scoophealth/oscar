@@ -387,6 +387,7 @@
         <action input="/oscarMessenger/ViewMessage.jsp" path="/oscarMessenger/WriteToEncounter" scope="request" type="oscar.oscarMessenger.pageUtil.MsgWriteToEncounterAction">
             <forward name="success" path="/oscarEncounter/IncomingEncounter.do" />
         </action>
+ <!--OSCAR RX Module ======================= -->
         <action name="RxChoosePatientForm" path="/oscarRx/choosePatient" scope="request" type="oscar.oscarRx.pageUtil.RxChoosePatientAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
         </action>
@@ -458,6 +459,9 @@
         </action>
         <action input="/oscarRx/SelectPharacy.jsp" path="/oscarRx/LinkPharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+        </action>
+        <action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="finished" path="/phr/response.jsp"/>
         </action>
         <action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
             <forward name="failure" path="/errorpage.jsp" />
@@ -1087,6 +1091,7 @@
         <action input="/billing/CA/BC/billingSVCTrayAssoc.jsp" name="supServiceCodeAssocActionForm" path="/billing/CA/BC/supServiceCodeAssocAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocAction" validate="false">
             <forward name="success" path="/billing/CA/BC/billingSVCTrayAssoc.jsp"></forward>
         </action>
+<!--DMS Module======================= -->
         <action input="/dms/documentReport.jsp" name="eDocsAddEditDocument" path="/dms/addEditDocument" type="oscar.dms.actions.AddEditDocumentAction" scope="request" validate="false">
             <forward name="successAdd" path="/dms/documentReport.jsp"></forward>
             <forward name="failAdd" path="/dms/documentReport.jsp"></forward>
@@ -1108,6 +1113,10 @@
             <forward name="success" path="/dms/closeWindow.html" />
             <forward name="failed" path="/dms/addedithtmldocument.jsp" />
         </action>
+        <action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/SendDocToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="finished" path="/phr/response.jsp"/>
+        </action>
+        
         <action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
             <forward name="success" path="/scratch/index.jsp" />
         </action>
@@ -1342,6 +1351,7 @@
             <forward name="success" path="/oscarReport/reportByTemplate/addEditTemplate.jsp"></forward>
         </action>
         <!-- END OSCAR Report By Template -->
+        
         <action path="/ArchiveView" type="org.springframework.web.struts.DelegatingActionProxy" scope="request" parameter="method">
             <forward name="view" path="/provider/providercontrol.jsp" redirect="true" />
         </action>
