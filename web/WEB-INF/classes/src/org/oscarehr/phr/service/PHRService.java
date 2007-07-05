@@ -32,7 +32,10 @@ import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRMessage;
+import oscar.dms.EDoc;
+import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 /**
  *
@@ -46,13 +49,18 @@ public interface PHRService {
     void retrieveDocuments(PHRAuthentication auth,String providerNo) throws Exception; 
     void setPhrDocumentDAO(PHRDocumentDAO phrDocumentDAO);
  
-    //public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws Exception;
-    //public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug, String oldPhrDrugIndex) throws Exception;
-    void sendQueuedDocuments(PHRAuthentication auth,String providerNo) throws Exception ;
+    public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws Exception;
+    public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug, String oldPhrDrugIndex) throws Exception;
+    
+    public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception;
+    public void sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception;
+    
+    void sendQueuedDocuments(PHRAuthentication auth, String providerNo) throws Exception;
     void setPhrActionDAO(PHRActionDAO phrActionDAO);
     public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception;
     public void sendUpdateMessage(PHRMessage msg) throws Exception;
+    public String getPhrIndex(String classification, String oscarId);
     public boolean isIndivoRegistered(String classification, String oscarId);
-   
+    public boolean hasUnreadMessages(String providerNo);
     
 }
