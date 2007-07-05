@@ -33,6 +33,7 @@
 				<value>classpath:/org/oscarehr/PMmodule/model</value>
 				<value>classpath:/org/oscarehr/survey/model</value>
 				<value>classpath:/org/oscarehr/casemgmt/model</value>
+                                <value>classpath:/org/oscarehr/phr/model</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -591,4 +592,69 @@
 			<value>2.0.0</value>
 		</property>
 	</bean>
+         <!-- Indivo -->    
+        <bean id="phrService" class="org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl">
+            <property name="phrDocumentDAO">
+			<ref bean="phrDocumentDAO" />
+	    </property>
+            <property name="phrActionDAO">
+                        <ref bean="phrActionDAO"/>
+            </property>
+        </bean>
+        <bean id="phrConstants" class="org.oscarehr.phr.indivo.IndivoConstantsImpl">
+        </bean>
+        <bean id="phrDocumentDAO" class="org.oscarehr.phr.dao.hibernate.PHRDocumentDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+                
+	</bean>
+        <bean id="phrDocumentExtDAO" class="org.oscarehr.phr.dao.hibernate.PHRDocumentExtDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+        
+        <bean name="phrActionDAO" class="org.oscarehr.phr.dao.hibernate.PHRActionDAOHibernate">
+                <property name="sessionFactory">
+                        <ref bean="sessionFactory"/>
+                </property>
+        </bean>
+        <bean name="/PhrRetrieve" class="oscar.indivoMessenger.IndivoRetrieveAsyncAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+	</bean>
+        
+        <bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+            <property name="phrDocumentDAO">
+			<ref bean="phrDocumentDAO" />
+	    </property>
+        </bean>
+        <bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+            <property name="phrConstants">
+                <ref bean="phrConstants" />
+            </property>
+        </bean>
+        <bean name="/dms/SendDocToPhr" class="oscar.dms.actions.SendDocToPhrAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+            <property name="phrConstants">
+                <ref bean="phrConstants" />
+            </property>
+        </bean>
+        
+        <bean name="/sendQueuedDocs" class="oscar.indivo.SendQueuedDocsAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+        </bean>
+        
 </beans>
