@@ -53,6 +53,7 @@ import org.indivo.xml.phr.message.MessageType;
 import org.indivo.xml.phr.record.IndivoRecordType;
 import org.indivo.xml.talk.AddDocumentResultType;
 import org.indivo.xml.talk.AuthenticateResultType;
+import org.indivo.xml.talk.ReadDocumentResultType;
 import org.indivo.xml.talk.ReadResultType;
 import org.indivo.xml.talk.SendMessageResultType;
 import org.indivo.xml.talk.UpdateDocumentResultType;
@@ -63,14 +64,18 @@ import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.indivo.IndivoAuthentication;
 import org.oscarehr.phr.indivo.IndivoConstantsImpl;
 import org.oscarehr.phr.model.PHRAction;
+import org.oscarehr.phr.model.PHRBinaryData;
 import org.oscarehr.phr.model.PHRDocument;
+import org.oscarehr.phr.model.PHRMedication;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
 import org.w3c.dom.Element;
 import oscar.OscarProperties;
+import oscar.dms.EDoc;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.data.EctProviderData;
 import oscar.oscarProvider.data.ProviderData;
+import oscar.oscarRx.data.RxPrescriptionData;
 
 /**
  *
@@ -131,6 +136,48 @@ public class IndivoServiceImpl  implements PHRService{
         
     }
     
+    public void sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {
+        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+        PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_ADD);
+        action.setSent(PHRAction.STATUS_SENT_PENDING);
+        action.setOscarId(document.getDocId());
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
+    
+    public void sendUpdateBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document, String phrDocIndex) throws Exception {
+        PHRBinaryData phrBinaryData = new PHRBinaryData(sender, recipientOscarId, recipientType, recipientPhrId, document);
+        PHRAction action = phrBinaryData.getAction(PHRAction.ACTION_UPDATE);
+        action.setSent(PHRAction.STATUS_SENT_PENDING);
+        action.setOscarId(document.getDocId());
+        
+        //set which phrIndex to update
+        action.setPhrIndex(phrDocIndex);
+        
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
+    
+    public void sendAddMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug) throws Exception {
+        PHRMedication medication = new PHRMedication(prov, demographicNo, demographicPhrId, drug);
+        PHRAction action = medication.getAction(PHRAction.ACTION_ADD);
+        action.setSent(PHRAction.STATUS_SENT_PENDING);
+        action.setOscarId(drug.getDrugId() + "");
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
+    
+    public void sendUpdateMedication(EctProviderData.Provider prov, String demographicNo, String demographicPhrId, RxPrescriptionData.Prescription drug, String phrDrugIndex) throws Exception {
+        PHRMedication medication = new PHRMedication(prov, demographicNo, demographicPhrId, drug);
+        PHRAction action = medication.getAction(PHRAction.ACTION_UPDATE);
+        action.setSent(PHRAction.STATUS_SENT_PENDING);
+        //set which phrIndex to update
+        action.setPhrIndex(phrDrugIndex);
+        action.setOscarId(drug.getDrugId()+"");
+        //write action to phr_actions table
+        phrActionDAO.save(action);
+    }
+    
      public void sendAddMessage(String subject, String priorThreadMessage, String messageBody, ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId) throws Exception{
         PHRMessage message = new PHRMessage(subject, priorThreadMessage, messageBody, sender, recipientOscarId, recipientType, recipientPhrId);
         PHRAction action = message.getAction(PHRAction.ACTION_ADD);
@@ -143,8 +190,11 @@ public class IndivoServiceImpl  implements PHRService{
      }
      
      public boolean isIndivoRegistered(String classification, String oscarId) {
-        phrActionDAO.isIndivoRegistered(classification, oscarId);
-        return true;
+         return phrActionDAO.isIndivoRegistered(classification, oscarId);
+     }
+     
+     public String getPhrIndex(String classification, String oscarId) {
+         return phrActionDAO.getPhrIndex(classification, oscarId);
      }
     
     
@@ -212,12 +262,14 @@ public class IndivoServiceImpl  implements PHRService{
             } else if (action.getActionType() == PHRAction.ACTION_ADD) {
                 //if adding
                 IndivoDocumentType doc = action.getPhrDocument();
-                
+                if (action.getPhrClassification().equals(constants.DOCTYPE_BINARYDATA()))
+                    doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
                 AddDocumentResultType result = client.addDocument(auth.getToken(), action.getReceiverPhr(), doc);
                 String resultIndex = result.getDocumentIndex();
                 action.setPhrIndex(result.getDocumentIndex());
                 //updates indexes to handle the case where two operations on this file are queued
                 phrActionDAO.updatePhrIndexes(action.getPhrClassification(), action.getOscarId(), action.getSenderOscar(), resultIndex);
+                actions = PHRAction.updateIndexes(action.getPhrClassification(), action.getOscarId(), resultIndex, actions);
                 updated = true;
             //if updating
             }else if (action.getPhrClassification().equalsIgnoreCase(constants.DOCTYPE_MESSAGE()) && action.getActionType() == PHRAction.ACTION_UPDATE) {    
@@ -249,18 +301,26 @@ public class IndivoServiceImpl  implements PHRService{
             } else if (action.getActionType() == PHRAction.ACTION_UPDATE) {
                 if (action.getPhrIndex() == null) throw new Exception("Error: PHR index not set");
                 IndivoDocumentType doc = action.getPhrDocument();
+                if (action.getPhrClassification().equals(constants.DOCTYPE_BINARYDATA()))
+                    doc = PHRBinaryData.mountDocument(action.getOscarId(), doc);
                 Element documentElement = DocumentUtils.getDocumentAnyElement(doc);
                 //Retrieve current file record from indivo
                 log.debug("phr index "+action.getPhrIndex());
                 //ReadDocumentResultType readResult = client.readDocument(auth.getToken(), action.getSenderPhr(), action.getPhrIndex());
                 //IndivoDocumentType phrDoc = readResult.getIndivoDocument();
                 
-                PHRDocument phrd = phrDocumentDAO.getDocumentByIndex(action.getPhrIndex());
-                JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
-                Unmarshaller unmarshaller = docContext.createUnmarshaller();
+                IndivoDocumentType phrDoc = null;
+                if (action.getPhrClassification().equals(constants.DOCTYPE_MESSAGE())) {
+                    PHRDocument phrd = phrDocumentDAO.getDocumentByIndex(action.getPhrIndex());
+                    JAXBContext docContext = JAXBContext.newInstance(IndivoDocumentType.class.getPackage().getName());
+                    Unmarshaller unmarshaller = docContext.createUnmarshaller();
        
-                JAXBElement jaxment = (JAXBElement) unmarshaller.unmarshal(new StringReader(phrd.getDocContent()));
-                IndivoDocumentType phrDoc = (IndivoDocumentType)  jaxment.getValue();
+                    JAXBElement jaxment = (JAXBElement) unmarshaller.unmarshal(new StringReader(phrd.getDocContent()));
+                    phrDoc = (IndivoDocumentType) jaxment.getValue();
+                } else {
+                    ReadDocumentResultType readResult = client.readDocument(auth.getToken(), action.getReceiverPhr(), action.getPhrIndex());
+                    phrDoc = readResult.getIndivoDocument();
+                }
                 
                 DocumentVersionType version = phrDoc.getDocumentVersion().get(phrDoc.getDocumentVersion().size() - 1);
 
@@ -268,7 +328,11 @@ public class IndivoServiceImpl  implements PHRService{
                 VersionBodyType body = version.getVersionBody();
                 body.setAny(documentElement);
                 version.setVersionBody(body);
-                client.updateDocument(auth.getToken(),auth.getUserId(), action.getPhrIndex(), version); 
+                if (action.getPhrClassification().equals(constants.DOCTYPE_MESSAGE())) {
+                    client.updateDocument(auth.getToken(),auth.getUserId(), action.getPhrIndex(), version); 
+                } else {
+                    client.updateDocument(auth.getToken(), action.getReceiverPhr(), action.getPhrIndex(), version);
+                }
                 updated = true;
             }else{
                 log.debug("NOTHING IS GETTING CALLED FOR THIS ");
@@ -319,7 +383,15 @@ public class IndivoServiceImpl  implements PHRService{
         }
     }
     
+    public int countUnreadMessages(String providerNo) {
+        PHRConstants phrConstants = new IndivoConstantsImpl();
+        return phrDocumentDAO.countUnreadDocuments(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+    }
     
+    public boolean hasUnreadMessages(String providerNo) {
+        if (countUnreadMessages(providerNo) > 0) return true;
+        return false;
+    }
         private TalkClient getTalkClient() throws Exception{
             Map m = new HashMap();
             String indivoServer = OscarProperties.getInstance().getProperty("INDIVO_SERVER");           
