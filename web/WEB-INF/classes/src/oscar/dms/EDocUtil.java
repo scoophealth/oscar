@@ -23,11 +23,14 @@
 
 package oscar.dms;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import oscar.oscarDB.DBHandler;
 import java.util.*;
 import java.sql.*;
 import oscar.util.*;
-import oscar.oscarTags.*;
 import oscar.OscarProperties;
 
 //all SQL statements here
@@ -301,6 +304,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 currentdoc.setObservationDate(rs.getDate("observationdate"));
                 currentdoc.setHtml(rsGetString(rs, "docxml"));
                 currentdoc.setStatus(rsGetString(rs, "status").charAt(0));
+                currentdoc.setContentType(rsGetString(rs, "contenttype"));
                 
                 if( myOscarEnabled ) {
                     String tmp = indivoSql.replaceFirst("\\?", rs.getString("document_no"));
@@ -351,6 +355,34 @@ public class EDocUtil extends SqlUtilBaseS {
         String nowTimeR = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
         String dateTimeStamp = nowDateR + " " + nowTimeR;
         return dateTimeStamp;
+    }
+    
+    public byte[] getFile(String fpath) {
+        byte[] fdata = null;
+        try {
+            //first we get length of file and allocate mem for file
+            File file = new File(fpath);
+            long length = file.length();
+            fdata = new byte[(int)length];
+            //System.out.println("Size of file is " + length);
+
+            //now we read file into array buffer
+            FileInputStream fis = new FileInputStream(file);
+            fis.read(fdata);
+            fis.close();
+
+        }
+        catch( NullPointerException ex ) {
+            ex.printStackTrace();
+        }
+        catch( FileNotFoundException ex ) {
+            ex.printStackTrace();
+        }
+        catch( IOException ex ) {
+            ex.printStackTrace();
+        }
+
+        return fdata;
     }
 
 }

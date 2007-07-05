@@ -25,6 +25,7 @@ package oscar.dms;
 import oscar.oscarTags.*;
 import oscar.util.*;
 import java.util.Date;
+import oscar.OscarProperties;
 
 public class EDoc extends TagObject implements Comparable {
     private String docId;
@@ -92,6 +93,12 @@ public class EDoc extends TagObject implements Comparable {
             String filenamePrefix = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "yyyyMMdd") + UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HHmmss");
             this.fileName = filenamePrefix + fileName;
         }
+    }
+    
+    public String getFilePath() {
+        String path = OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
+        return (path + "/" + this.getFileName());
+        
     }
     
     //Getter/Setter methods...
