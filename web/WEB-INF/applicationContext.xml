@@ -620,12 +620,7 @@
                         <ref bean="sessionFactory"/>
                 </property>
         </bean>
-        <bean name="/PhrRetrieve" class="oscar.indivoMessenger.IndivoRetrieveAsyncAction" singleton="false">
-            <property name="phrService">
-                <ref bean="phrService" />
-            </property>
-	</bean>
-        
+
         <bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
             <property name="phrService">
                 <ref bean="phrService" />
@@ -648,12 +643,6 @@
             </property>
             <property name="phrConstants">
                 <ref bean="phrConstants" />
-            </property>
-        </bean>
-        
-        <bean name="/sendQueuedDocs" class="oscar.indivo.SendQueuedDocsAction" singleton="false">
-            <property name="phrService">
-                <ref bean="phrService" />
             </property>
         </bean>
         
