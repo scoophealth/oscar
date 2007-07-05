@@ -48,7 +48,7 @@ public class IndivoConstantsImpl implements PHRConstants {
     public String DOCTYPE_MESSAGE() {
         return DocumentClassificationUrns.MESSAGE;
     }
-    public String DOCTYPE_DOCUMENT() {
+    public String DOCTYPE_BINARYDATA() {
         return DocumentClassificationUrns.BINARYDATA;
     }
     
