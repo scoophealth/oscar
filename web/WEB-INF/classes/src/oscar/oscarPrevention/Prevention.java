@@ -31,12 +31,15 @@ package oscar.oscarPrevention;
 
 import java.text.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class Prevention {
+   private static Log log = LogFactory.getLog(Prevention.class); 
       
    String sex;
    String name= null;  // Not really needed but handy for testing
@@ -182,7 +185,7 @@ public class Prevention {
       if (vec != null){
        PreventionItem p = (PreventionItem)  vec.get(vec.size()-1);  // Get date from return object
        lastDate = p.getDatePreformed();
-       System.out.println("getting last date preformed of a "+preventionType+" :"+lastDate.toString());
+       log.debug("getting last date preformed of a "+preventionType+" :"+lastDate.toString());
       }
       
       return lastDate; // 
@@ -191,7 +194,7 @@ public class Prevention {
    public boolean isNextDateSet(String preventionType){      
       boolean isSet = true;
       Date nextDate = getNextPreventionDate(preventionType);
-      System.out.println("IS SET WHAT DOES IT HAVE "+nextDate);      
+      log.debug("IS SET WHAT DOES IT HAVE "+nextDate);      
       if ( nextDate == null ){
          isSet = false;
       }      
@@ -201,7 +204,7 @@ public class Prevention {
    public boolean isPassedNextDate(String preventionType){      
       boolean isPassed = true;
       Date nextDate = getNextPreventionDate(preventionType);
-      System.out.println(nextDate);
+      log.debug(nextDate);
       if (nextDate != null){
          Calendar cal = Calendar.getInstance();
          if (!cal.getTime().after(nextDate)){
@@ -217,7 +220,7 @@ public class Prevention {
       if (vec != null){
        PreventionItem p = (PreventionItem)  vec.get(vec.size()-1);  // Get date from return object
        nextDate = p.getNextDate();
-       System.out.println("getting next date preformed of a "+preventionType+" :"+nextDate);
+       log.debug("getting next date preformed of a "+preventionType+" :"+nextDate);
       }      
       return nextDate; // 
    }
@@ -228,7 +231,7 @@ public class Prevention {
       if (vec != null){
        PreventionItem p = (PreventionItem)  vec.get(vec.size()-1);  // Get date from return object
        ispreventionnever = p.getNeverVal();       
-       System.out.println("getting never of a "+preventionType+" :"+ispreventionnever);
+       log.debug("getting never of a "+preventionType+" :"+ispreventionnever);
       }      
       return ispreventionnever; // 
    }
@@ -244,8 +247,8 @@ public class Prevention {
       try{
          retval = getNumMonths(getLastPreventionDate(preventionType),Calendar.getInstance().getTime());      
       }catch(Exception e){
-         System.out.println("Probably no record of this prevention");
-         System.out.println(e.getMessage());
+         log.debug("Probably no record of this prevention");
+         log.debug(e.getMessage(),e);
          retval = -1;
       }            
       return retval;
@@ -262,6 +265,13 @@ public class Prevention {
       return retval;
    }
    
+   public Vector getPreventionData(String preventionType){
+       Vector a =  (Vector) preventionTypes.get(preventionType);
+       if ( a == null ){
+           a = new Vector();
+       }
+       return a;
+   }
    
    public int getAgeInMonthsLastPreventionTypeGiven(String preventionType){
       return getNumMonths(DOB,getLastPreventionDate(preventionType));         
@@ -269,7 +279,7 @@ public class Prevention {
    
    private int getNumMonths(Date dStart, Date dEnd) {
         int i = 0;
-        System.out.println("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+        log.debug("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dStart);
         while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
@@ -313,7 +323,7 @@ public class Prevention {
       Calendar date2= new GregorianCalendar(1980, Calendar.MARCH, 1);
       Date d2 = date2.getTime();
       Prevention p = new Prevention();
-      System.out.println(p.getNumMonths(date1,date2));
+      log.debug(p.getNumMonths(date1,date2));
       
    }
    
