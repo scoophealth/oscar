@@ -31,6 +31,8 @@ import java.io.*;
 import java.util.*;
 import org.jdom.*;
 import org.jdom.input.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.*;
 import oscar.oscarDemographic.data.*;
 
@@ -39,7 +41,7 @@ import oscar.oscarDemographic.data.*;
  * @author Jay Gallagher
  */
 public class PreventionDisplayConfig {
-   
+    private static Log log = LogFactory.getLog(PreventionDisplayConfig.class);
     static PreventionDisplayConfig preventionDisplayConfig = new PreventionDisplayConfig();
    
     Hashtable prevHash = null;
@@ -68,7 +70,7 @@ public class PreventionDisplayConfig {
         if (prevHash == null) {
             loadPreventions();
         }
-        System.out.println("getting " + s);
+        log.debug("getting " + s);
         return (Hashtable) prevHash.get(s);
     }
 
@@ -81,7 +83,7 @@ public class PreventionDisplayConfig {
     public void loadPreventions() {
       prevList = new ArrayList();
       prevHash = new Hashtable(); 
-      System.out.println("STARTING2");
+      log.debug("STARTING2");
       
       try{
          InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarPrevention/PreventionItems.xml");               
@@ -275,11 +277,11 @@ public class PreventionDisplayConfig {
 //    }
 
     public ArrayList getConfigurationSets() {
-        System.out.println("returning config sets");
+        log.debug("returning config sets");
         if (configList == null) {
             loadConfigurationSets();
         }
-        System.out.println("returning config sets" + configList);
+        log.debug("returning config sets" + configList);
         return configList;
     }
 
@@ -323,7 +325,7 @@ public class PreventionDisplayConfig {
     }
     
 //    public void loadConfigurationSets2() {
-//        System.out.println("Loading config sets");
+//        log.debug("Loading config sets");
 //        getPreventions();
 //        configHash = new Hashtable();
 //        configList = new ArrayList();
@@ -385,7 +387,7 @@ public class PreventionDisplayConfig {
     public String getDisplay(Hashtable setHash, String Demographic_no) {
         String display = "style=\"display:none;\"";
         DemographicData dData = new DemographicData();
-        System.out.println("demoage " + Demographic_no);
+        log.debug("demoage " + Demographic_no);
         DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);
         try {
             String minAgeStr = (String) setHash.get("minAge");
@@ -394,10 +396,10 @@ public class PreventionDisplayConfig {
             int demoAge = demograph.getAgeInYears();
             String demoSex = demograph.getSex();
             boolean inAgeGroup = true;
-            System.out.println("min age " + minAgeStr + " max age " + maxAgeStr + " sex " + sex + " demoAge " + demoAge
+            log.debug("min age " + minAgeStr + " max age " + maxAgeStr + " sex " + sex + " demoAge " + demoAge
                     + " demoSex " + demoSex);
             if (minAgeStr != null && maxAgeStr != null) { // between ages
-                System.out.println("HERE1");
+                log.debug("HERE1");
                 int minAge = Integer.parseInt(minAgeStr);
                 int maxAge = Integer.parseInt(maxAgeStr);
                 if (minAge <= demoAge && maxAge >= demoAge) {
@@ -406,7 +408,7 @@ public class PreventionDisplayConfig {
                     inAgeGroup = false;
                 }
             } else if (minAgeStr != null) { // older than
-                System.out.println("HERE2");
+                log.debug("HERE2");
                 int minAge = Integer.parseInt(minAgeStr);
                 if (minAge <= demoAge) {
                     display = "";
@@ -414,7 +416,7 @@ public class PreventionDisplayConfig {
                     inAgeGroup = false;
                 }
             } else if (maxAgeStr != null) { // younger than
-                System.out.println("HERE3");
+                log.debug("HERE3");
                 int maxAge = Integer.parseInt(maxAgeStr);
                 if (maxAge >= demoAge) {
                     display = "";
@@ -425,7 +427,7 @@ public class PreventionDisplayConfig {
                 // not?
 
             if (sex != null && inAgeGroup) {
-                System.out.println("HERE4");
+                log.debug("HERE4");
                 if (sex.equals(demoSex)) {
                     display = "";
                 } else {
@@ -442,14 +444,14 @@ public class PreventionDisplayConfig {
        Enumeration e = h.keys();//elements();
        while(e.hasMoreElements()){
           
-          System.out.println(e.nextElement());
+          log.debug(e.nextElement());
        }
     }
     
     public boolean display(Hashtable setHash, String Demographic_no,int numberOfPrevs) {
         boolean display = false;
         DemographicData dData = new DemographicData();
-        System.out.println("demoage " + Demographic_no);
+        log.debug("demoage " + Demographic_no);
         DemographicData.Demographic demograph = dData.getDemographic(Demographic_no);
         try {
             String minAgeStr = (String) setHash.get("minAge");
@@ -459,7 +461,7 @@ public class PreventionDisplayConfig {
             int demoAge = demograph.getAgeInYears();
             String demoSex = demograph.getSex();
             boolean inAgeGroup = true;
-            //System.out.println("min age " + minAgeStr + " max age " + maxAgeStr + " sex " + sex + " demoAge " + demoAge
+            //log.debug("min age " + minAgeStr + " max age " + maxAgeStr + " sex " + sex + " demoAge " + demoAge
             //        + " demoSex " + demoSex);
             
             if (minNumPrevs != null){
@@ -472,7 +474,7 @@ public class PreventionDisplayConfig {
             if(!display){
             
                if (minAgeStr != null && maxAgeStr != null) { // between ages
-                   //System.out.println("HERE1");
+                   //log.debug("HERE1");
                    int minAge = Integer.parseInt(minAgeStr);
                    int maxAge = Integer.parseInt(maxAgeStr);
                    if (minAge <= demoAge && maxAge >= demoAge) {
@@ -481,7 +483,7 @@ public class PreventionDisplayConfig {
                        inAgeGroup = false;
                    }
                } else if (minAgeStr != null) { // older than
-                   //System.out.println("HERE2");
+                   //log.debug("HERE2");
                    int minAge = Integer.parseInt(minAgeStr);
                    if (minAge <= demoAge) {
                        display = true;
@@ -489,7 +491,7 @@ public class PreventionDisplayConfig {
                        inAgeGroup = false;
                    }
                } else if (maxAgeStr != null) { // younger than
-                   //System.out.println("HERE3");
+                   //log.debug("HERE3");
                    int maxAge = Integer.parseInt(maxAgeStr);
                    if (maxAge >= demoAge) {
                        display = true;
@@ -500,7 +502,7 @@ public class PreventionDisplayConfig {
                    // not?
             
                if (sex != null && inAgeGroup) {
-                   //System.out.println("HERE4");
+                   //log.debug("HERE4");
                    if (sex.equals(demoSex)) {
                        display = true;
                    } else {
@@ -528,7 +530,7 @@ public class PreventionDisplayConfig {
      * response.encodeURL( (String) h.get("name")) %>&demographic_no=<%=demographic_no%>','addPreventionData')">.add</a>
      * </div> </div> <%ArrayList alist =
      * pd.getPreventionData((String)h.get("name"), demographic_no);
-     * System.out.println("alist "+alist.size()); for (int k = 0; k <
+     * log.debug("alist "+alist.size()); for (int k = 0; k <
      * alist.size(); k++){ Hashtable hdata = (Hashtable) alist.get(k); %> <div
      * style="float:left; border: thin solid red ; margin-left:3px;"
      * onClick="javascript:popup(465,635,'AddPreventionData.jsp?id=<%=hdata.get("id")%>&demographic_no=<%=demographic_no%>','addPreventionData')" >

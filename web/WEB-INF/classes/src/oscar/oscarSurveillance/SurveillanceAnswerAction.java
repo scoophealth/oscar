@@ -34,6 +34,8 @@ import java.io.*;
 import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
 
 /**
@@ -41,7 +43,7 @@ import org.apache.struts.action.*;
  * @author  Jay Gallagher
  */
 public class SurveillanceAnswerAction extends Action {
-   
+   private static Log log = LogFactory.getLog(SurveillanceAnswerAction.class);
    /** Creates a new instance of SurveillanceAnswerAction */
    public SurveillanceAnswerAction() {
    }
@@ -66,7 +68,7 @@ public class SurveillanceAnswerAction extends Action {
       
       survey.processAnswer(provider, demographic,answer);
       
-      System.out.println("Survey: "+surveyId+" answer "+answer);
+      log.debug("Survey: "+surveyId+" answer "+answer);
       
       String proceed = frm.getProceed();
       String proceedURL = URLDecoder.decode(proceed, "UTF-8");      
@@ -82,7 +84,7 @@ public class SurveillanceAnswerAction extends Action {
                request.setAttribute("currentSurveyNum",  currentSurveyNum);
                forward = mapping.findForward("survey");
                String newURL = forward.getPath()+"?demographicNo="+demographic+"&proceed="+URLEncoder.encode(proceed, "UTF-8");  
-               System.out.println("sending to: "+newURL);
+               log.debug("sending to: "+newURL);
                forward.setPath(newURL);                                 
                forward.setRedirect(true);
             }

@@ -33,6 +33,8 @@ import java.io.*;
 import java.net.*;
 import org.drools.*;
 import org.drools.io.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.*;
 
 /**
@@ -40,7 +42,7 @@ import oscar.*;
  * @author Jay Gallagher
  */
 public class PreventionDS {
-   
+   private static Log log = LogFactory.getLog(PreventionDS.class);
    static PreventionDS preventionDS= new PreventionDS();
    static boolean loaded = false;
    static RuleBase ruleBase = null;
@@ -63,7 +65,7 @@ public class PreventionDS {
         if ( preventionPath != null){
         File file = new File(OscarProperties.getInstance().getProperty("PREVENTION_FILE"));
            if(file.isFile() || file.canRead()) {
-               System.out.println("Loading from file "+file.getName());
+               log.debug("Loading from file "+file.getName());
                FileInputStream fis = new FileInputStream(file);
                ruleBase = RuleBaseLoader.loadFromInputStream(fis);
                fileFound = true;
@@ -72,7 +74,7 @@ public class PreventionDS {
         
         if (!fileFound){                  
          URL url = PreventionDS.class.getResource( "/oscar/oscarPrevention/prevention.drl" );  //TODO: change this so it is configurable;
-         System.out.println("loading from URL "+url.getFile());            
+         log.debug("loading from URL "+url.getFile());            
          ruleBase = RuleBaseLoader.loadFromUrl( url );
         }
       }catch(Exception e){
@@ -95,7 +97,7 @@ public class PreventionDS {
    
    ///
 //         URL url = Prevs.class.getResource( "prevention.drl" );
-//      System.out.println(url.getFile());
+//      log.debug(url.getFile());
 //      
 //      //RuleBase ruleBase = RuleBaseBuilder.buildFromUrl( url );
 //      RuleBase ruleBase = RuleBaseLoader.loadFromUrl( url );
@@ -112,9 +114,9 @@ public class PreventionDS {
 //      
 //      PreventionItem pi = new PreventionItem("DTaP IPV",new GregorianCalendar(2005, Calendar.MARCH, 1).getTime());
 //      p[1].addPreventionItem(pi, "DTaP IPV");
-//      System.out.println("should be 1 "+p[1].getNumberOfPreventionType("DTaP IPV"));
+//      log.debug("should be 1 "+p[1].getNumberOfPreventionType("DTaP IPV"));
 //      
-//      System.out.println("should be ?? "+p[1].getHowManyMonthsSinceLast("DTaP IPV"));
+//      log.debug("should be ?? "+p[1].getHowManyMonthsSinceLast("DTaP IPV"));
 //      
 //      for ( int k = 0; k < p.length; k++){
 //         long start = System.currentTimeMillis();
@@ -126,11 +128,11 @@ public class PreventionDS {
 //         long end = System.currentTimeMillis();
 //         
 //         ArrayList alist = p[k].getWarnings();
-//         System.out.println(p[k].getName()+" "+"size:"+alist.size()+ " at months : "+p[k].getAgeInMonths() + " time :"+(end-start));
+//         log.debug(p[k].getName()+" "+"size:"+alist.size()+ " at months : "+p[k].getAgeInMonths() + " time :"+(end-start));
 //
 //         for (int i = 0; i < alist.size(); i++){         
 //            String s = (String) alist.get(i);
-//            System.out.println(s);
+//            log.debug(s);
 //         }
 //        
 //      }
