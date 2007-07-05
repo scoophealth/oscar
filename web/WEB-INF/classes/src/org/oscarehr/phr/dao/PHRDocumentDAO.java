@@ -47,5 +47,6 @@ public interface PHRDocumentDAO {
     
     public List getReferencedMessages(PHRDocument doc);
     public List getReferencedMessagesById(String id);
+    public int countUnreadDocuments(String classification, String providerNo);
     
 }
