@@ -30,6 +30,8 @@ package oscar.oscarSurveillance;
 
 import java.io.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.*;
 
 /**
@@ -37,6 +39,7 @@ import oscar.*;
  * @author  Jay Gallagher
  */
 public class SurveyInfo {
+   private static Log log = LogFactory.getLog(SurveyInfo.class);
    
    /** Creates a new instance of SurveyInfo */
    public SurveyInfo() {
@@ -47,7 +50,7 @@ public class SurveyInfo {
       ArrayList list = new ArrayList();
       
       String fileDir = OscarProperties.getInstance().getProperty("surveillance_directory");
-      System.out.println("Opening directory "+fileDir );
+      log.debug("Opening directory "+fileDir );
       File dir = new File(fileDir);
                                 
       String[] children = dir.list();

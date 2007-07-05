@@ -35,6 +35,8 @@ import java.net.*;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.drools.*;
 import org.drools.io.*;
 import oscar.OscarProperties;
@@ -49,6 +51,8 @@ import oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper;
  * @author jay
  */
 public class MeasurementFlowSheet {
+    
+    private static Log log = LogFactory.getLog(MeasurementFlowSheet.class);
     
     ArrayList list = null;
     String name = null;
@@ -147,7 +151,7 @@ public class MeasurementFlowSheet {
         //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
         File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
            if(file.isFile() || file.canRead()) {
-               System.out.println("Loading from file "+file.getName());
+               log.debug("Loading from file "+file.getName());
                FileInputStream fis = new FileInputStream(file);
                ruleBase = RuleBaseLoader.loadFromInputStream(fis);
                fileFound = true;
@@ -156,7 +160,7 @@ public class MeasurementFlowSheet {
         
         if (!fileFound){                  
          URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/"+string );  //TODO: change this so it is configurable;
-         System.out.println("loading from URL "+url.getFile());            
+         log.debug("loading from URL "+url.getFile());            
          ruleBase = RuleBaseLoader.loadFromUrl( url );
         }
       }catch(Exception e){
@@ -183,7 +187,7 @@ public class MeasurementFlowSheet {
             //if (measurementDirPath.charAt(measurementDirPath.length()) != /)
             File file = new File(OscarProperties.getInstance().getProperty("MEASUREMENT_DS_DIRECTORY")+string);
                if(file.isFile() || file.canRead()) {
-                   System.out.println("Loading from file "+file.getName());
+                   log.debug("Loading from file "+file.getName());
                    FileInputStream fis = new FileInputStream(file);
                    ruleBase = RuleBaseLoader.loadFromInputStream(fis);
                    fileFound = true;
@@ -192,7 +196,7 @@ public class MeasurementFlowSheet {
 
             if (!fileFound){                  
              URL url = MeasurementFlowSheet.class.getResource( "/oscar/oscarEncounter/oscarMeasurements/flowsheets/decisionSupport/"+string );  //TODO: change this so it is configurable;
-             System.out.println("loading from URL "+url.getFile());            
+             log.debug("loading from URL "+url.getFile());            
              measurementRuleBase = RuleBaseLoader.loadFromUrl( url );
             }
         }catch(Exception e){

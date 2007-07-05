@@ -31,6 +31,8 @@ package oscar.oscarEncounter.oscarMeasurements.data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.DBHandler;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
 
@@ -39,7 +41,7 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
  * @author Jay Gallagher
  */
 public class MeasurementTypes {
-    
+    private static Log log = LogFactory.getLog(MeasurementTypes.class);
     static MeasurementTypes measurementTypes = new MeasurementTypes();
     boolean loaded = false;
     Hashtable byId = null;
@@ -75,15 +77,15 @@ public class MeasurementTypes {
     }
 
     public void reInit(){
-        System.out.println("Reloading measurement types");
+        log.debug("Reloading measurement types");
         loaded = false;
         measurementTypes.loadMeasurementTypes();
     }
     
     private synchronized void loadMeasurementTypes() {
-        System.out.println("LOADING GETS CALLED");
+        log.debug("LOADING GETS CALLED");
         if (!loaded){
-            System.out.println("LOADING RUNS");
+            log.debug("LOADING RUNS");
             byId = new Hashtable();
             byType = new Hashtable();
 
@@ -93,7 +95,7 @@ public class MeasurementTypes {
 
                ResultSet rs = db.GetSQL(sql);        
                while(rs.next()){                
-                  //System.out.println("validation "+rs.getString("validation"));  
+                  //log.debug("validation "+rs.getString("validation"));  
                   EctMeasurementTypesBean ret = null;
                   ret = new EctMeasurementTypesBean(rs.getInt("id"), rs.getString("type"), 
                                                      rs.getString("typeDisplayName"), 
@@ -112,7 +114,7 @@ public class MeasurementTypes {
                 notifyAll();
             }
             catch(SQLException e) {
-                System.out.println(e.getMessage());
+                log.debug(e.getMessage());
             }
         }
             //return ret;
@@ -126,7 +128,7 @@ public class MeasurementTypes {
             ResultSet rs = db.GetSQL(sqlValidation);
             if (rs.next()){ 
                 validation = rs.getString("name");
-                //System.out.println("setting validation to "+validation);
+                //log.debug("setting validation to "+validation);
             }
             rs.close();            
             db.CloseConn();
@@ -135,14 +137,5 @@ public class MeasurementTypes {
         }
         return validation;
     }
-        
-        
-        
-        
-  
-    
-    
-    
-  
-    
+     
 }

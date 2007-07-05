@@ -37,6 +37,8 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.struts.action.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -44,6 +46,7 @@ import org.apache.struts.action.*;
  * @author  Jay Gallagher
  */
 public class CheckSurveillanceAction extends Action {
+   private static Log log = LogFactory.getLog(CheckSurveillanceAction.class);
    
    /** Creates a new instance of checkSurveillanceAction */
    public CheckSurveillanceAction() {
@@ -67,17 +70,17 @@ public class CheckSurveillanceAction extends Action {
                     forward.setRedirect(true);
                                                                  
       SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
-      System.out.println("Number of surveys "+sMaster.numSurveys());
+      log.debug("Number of surveys "+sMaster.numSurveys());
       if(!sMaster.surveysEmpty()){              
          ArrayList surveys = sMaster.getCurrentSurveys();
       
          String demographic_no = frm.getDemographicNo();
-         System.out.println("getting demog num "+demographic_no);
+         log.debug("getting demog num "+demographic_no);
          String provider_no = (String) request.getSession().getAttribute("user");
          int i = 0;
          if ( request.getAttribute("currentSurveyNum") != null ){
             i = Integer.parseInt( ((String) request.getAttribute("currentSurveyNum")) );
-            //System.out.println("survey starting from "+i);
+            //log.debug("survey starting from "+i);
          }
          
          for (    ;  i < surveys.size() ; i++){
@@ -94,7 +97,7 @@ public class CheckSurveillanceAction extends Action {
          }
       }           
       long endTime = System.currentTimeMillis();
-      System.out.println("Surveillance took "+ (endTime - startTime) +" milli-seconds forwarding to: "+forward.getPath());
+      log.debug("Surveillance took "+ (endTime - startTime) +" milli-seconds forwarding to: "+forward.getPath());
       
       return forward;                                
    }

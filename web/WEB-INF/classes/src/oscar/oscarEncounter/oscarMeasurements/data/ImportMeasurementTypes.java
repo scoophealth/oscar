@@ -31,6 +31,8 @@ package oscar.oscarEncounter.oscarMeasurements.data;
 
 import java.io.InputStream;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -43,6 +45,8 @@ import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
  * @author jay
  */
 public class ImportMeasurementTypes {
+    
+    private static Log log = LogFactory.getLog(ImportMeasurementTypes.class);
     
     /**
      * Creates a new instance of ImportMeasurementTypes
@@ -68,7 +72,7 @@ public class ImportMeasurementTypes {
            //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
            List meas = root.getChildren("measurement");
            
-           System.out.println("measurement size "+meas.size());
+           log.debug("measurement size "+meas.size());
            for (int i = 0; i < meas.size(); i++){
                Element e = (Element) meas.get(i);
                EctMeasurementTypesBean mtb = new EctMeasurementTypesBean();
@@ -88,10 +92,10 @@ public class ImportMeasurementTypes {
                vb.setMinLength(v.getAttributeValue("minLength"));
                mtb.addValidationRule(vb);
                if(!fmtu.measurementTypeKeyIsFound(mtb)){
-                  System.out.println("Needed to add"+mtb.getType());
+                  log.debug("Needed to add"+mtb.getType());
                   fmtu.addMeasurementType(mtb, "");
                }else{
-                   System.out.println("Didn't Need to add"+mtb.getType());
+                  log.debug("Didn't Need to add"+mtb.getType());
                }
                //TODO: check about isTrue
                

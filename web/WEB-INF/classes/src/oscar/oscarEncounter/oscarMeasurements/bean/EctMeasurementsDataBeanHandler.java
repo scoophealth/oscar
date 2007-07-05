@@ -30,10 +30,12 @@ import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarEncounter.oscarMeasurements.data.MeasurementTypes;
 
 public class EctMeasurementsDataBeanHandler {
-    
+    private static Log log = LogFactory.getLog(EctMeasurementsDataBeanHandler.class);
     Vector measurementsDataVector = new Vector();
  
     public EctMeasurementsDataBeanHandler(String demo) {
@@ -55,7 +57,7 @@ public class EctMeasurementsDataBeanHandler {
                         "AND mt.measuringInstruction = m.measuringInstruction AND mt.validation = v.id ORDER BY m.type ASC," +
                         "m.dateEntered DESC";
             
-            System.out.println(" EctMeasurementDataBeanHandler sql: " + sql);
+            log.debug(" EctMeasurementDataBeanHandler sql: " + sql);
             ResultSet rs;
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -64,7 +66,7 @@ public class EctMeasurementsDataBeanHandler {
                         canPlot = "true";
                     else
                         canPlot = null;
-                    //System.out.println("canPlot value: " + canPlot);
+                    //log.debug("canPlot value: " + canPlot);
                     EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("demographicNo"), 
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
@@ -77,7 +79,7 @@ public class EctMeasurementsDataBeanHandler {
             db.CloseConn();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            log.debug(e.getMessage());
             verdict = false;
         }
         return verdict;
@@ -91,7 +93,7 @@ public class EctMeasurementsDataBeanHandler {
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = mt.type " +
                         "GROUP BY mt.type ORDER BY m.type ASC";
             
-            System.out.println(" EctMeasurementDataBeanHandler sql: " + sql);
+            log.debug(" EctMeasurementDataBeanHandler sql: " + sql);
             ResultSet rs;
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -101,7 +103,7 @@ public class EctMeasurementsDataBeanHandler {
                     data.setTypeDisplayName(rs.getString("typeDisplayName"));
                     data.setTypeDescription(rs.getString("typeDescription"));
                     data.setMeasuringInstrc(rs.getString("measuringInstruction"));
-                    //System.out.println("Measurments: " + rs.getString("type") + " " + rs.getString("typeDisplayName") + " " + rs.getString("typeDescription"));
+                    //log.debug("Measurments: " + rs.getString("type") + " " + rs.getString("typeDisplayName") + " " + rs.getString("typeDescription"));
                     measurementsDataVector.add(data);                
             }
 
@@ -109,7 +111,7 @@ public class EctMeasurementsDataBeanHandler {
             db.CloseConn();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             verdict = false;
         }
         return verdict;
@@ -117,7 +119,7 @@ public class EctMeasurementsDataBeanHandler {
     
     
     public boolean init(String demo, String type) {
-        System.out.print("Getting type "+type+" for demograph "+demo);
+        log.debug("Getting type "+type+" for demograph "+demo);
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -130,7 +132,7 @@ public class EctMeasurementsDataBeanHandler {
                         " WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
                         "AND v.id = "+mBean.getValidation()+" GROUP BY m.id ORDER BY m.dateObserved DESC," +
                         "m.dateEntered DESC";
-                System.out.println("sql: " + sql);
+                log.debug("sql: " + sql);
                 ResultSet rs;
                 String canPlot = null;
                 rs = db.GetSQL(sql);
@@ -139,7 +141,7 @@ public class EctMeasurementsDataBeanHandler {
                             canPlot = "true";
                         else
                             canPlot = null;
-                        //System.out.println("canPlot value: " + canPlot);
+                        //log.debug("canPlot value: " + canPlot);
                         EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), mBean.getTypeDisplayName(),mBean.getTypeDesc(), rs.getString("demographicNo"), 
                                                                                    rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                    rs.getString("dataField"), rs.getString("measuringInstruction"), 
@@ -157,7 +159,7 @@ public class EctMeasurementsDataBeanHandler {
             db.CloseConn();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            log.debug(e.getMessage());
             verdict = false;
         }
         return verdict;
@@ -175,7 +177,7 @@ public class EctMeasurementsDataBeanHandler {
                         "measurementType mt WHERE m.demographicNo='" + demo + "' AND m.type = '" + type + "' AND m.providerNo= p.provider_no " +
                         "AND m.type = mt.type AND mt.validation = v.id GROUP BY m.id ORDER BY m.dateObserved DESC," +
                         "m.dateEntered DESC";
-            System.out.println("sql: " + sql);
+            log.debug("sql: " + sql);
             ResultSet rs;
             String canPlot = null;
             for(rs = db.GetSQL(sql); rs.next(); )
@@ -184,7 +186,7 @@ public class EctMeasurementsDataBeanHandler {
                         canPlot = "true";
                     else
                         canPlot = null;
-                    //System.out.println("canPlot value: " + canPlot);
+                    //log.debug("canPlot value: " + canPlot);
                     EctMeasurementsDataBean data = new EctMeasurementsDataBean(rs.getInt("id"), rs.getString("type"), rs.getString("typeDisplayName"), rs.getString("typeDescription"), rs.getString("demographicNo"), 
                                                                                rs.getString("provider_first"), rs.getString("provider_last"), 
                                                                                rs.getString("dataField"), rs.getString("measuringInstruction"), 
@@ -198,7 +200,7 @@ public class EctMeasurementsDataBeanHandler {
             db.CloseConn();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             verdict = false;
         }
         return verdict;
@@ -259,7 +261,7 @@ public class EctMeasurementsDataBeanHandler {
 //            }
 //        }
 //        catch(SQLException e) {
-//            System.out.println(e.getMessage());
+//            log.debug(e.getMessage());
 //            return null;
 //        }
 //    }
@@ -268,7 +270,7 @@ public class EctMeasurementsDataBeanHandler {
     
     private static Hashtable getHashfromSQL(String sql){       
         Hashtable data = null;
-        System.out.println(sql);
+        log.debug(sql);
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql); 
@@ -291,7 +293,7 @@ public class EctMeasurementsDataBeanHandler {
             db.CloseConn();
         }
         catch(SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
         return data;
     }

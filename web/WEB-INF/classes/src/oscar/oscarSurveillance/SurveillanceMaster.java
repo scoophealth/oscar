@@ -34,6 +34,8 @@ import java.io.*;
 import java.util.*;
 import org.apache.commons.digester.*;
 import org.xml.sax.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.*;
 
 /**
@@ -41,6 +43,7 @@ import oscar.*;
  * @author Jay Gallagher
  */
 public   class SurveillanceMaster {
+    private static Log log = LogFactory.getLog(SurveillanceMaster.class);
    
    static SurveillanceMaster surveillanceMaster = new SurveillanceMaster();
    static boolean loaded = false;
@@ -81,7 +84,7 @@ public   class SurveillanceMaster {
            
    /** Creates a new instance of SurveillanceMaster */
    protected SurveillanceMaster() {
-      System.out.println("SurveillanceMaster Initialized");
+      log.debug("SurveillanceMaster Initialized");
       
    }
      
@@ -105,7 +108,7 @@ public   class SurveillanceMaster {
     * @param s Survey
     */   
    public void addSurvey(Survey s){
-      System.out.println("addSurvey(Survey s) gets called");
+      log.debug("addSurvey(Survey s) gets called");
       if (surveyList == null){
          clearSurveys();
       }
@@ -129,8 +132,8 @@ public   class SurveillanceMaster {
       if(surveyList != null){
       for (int i = 0 ; i < surveyList.size();i++){
          Survey s = (Survey) surveyList.get(i);
-         System.out.println("title "+ s.getSurveyTitle()+ " randomness "+s.getRandomness()+" period "+s.getPeriod());
-         System.out.println("survey Question: "+s.getSurveyQuestion());
+         log.debug("title "+ s.getSurveyTitle()+ " randomness "+s.getRandomness()+" period "+s.getPeriod());
+         log.debug("survey Question: "+s.getSurveyQuestion());
          s.displayProvidersInSurvey();    
          s.displayAnswers2();
       }
@@ -208,9 +211,9 @@ public   class SurveillanceMaster {
             input = new FileInputStream(filename) ;
          }catch(Exception eio){ 
             if (input == null){
-               System.out.println("OSCAR SURVEILLANCE ERROR:  could not find file :"+filename);
+               log.debug("OSCAR SURVEILLANCE ERROR:  could not find file :"+filename,eio);
             }
-            eio.printStackTrace(); 
+            //eio.printStackTrace(); 
             surveyList = new ArrayList();
             surveyTable = new Hashtable();
          }
@@ -226,13 +229,13 @@ public   class SurveillanceMaster {
          if(surveyList == null){
             surveyList  = new ArrayList();
             surveyTable = new Hashtable();
-            System.out.println("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
+            log.debug("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
          }
       }else{
          surveyList  = new ArrayList();
          surveyTable = new Hashtable();
       }
-      System.out.println(numSurveys());
+      log.debug(numSurveys());
       displaySurveys();
       
    }

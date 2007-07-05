@@ -34,6 +34,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
 
@@ -42,6 +44,8 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandle
  * @author jay
  */
 public class MeasurementInfo {
+    private static Log log = LogFactory.getLog(MeasurementInfo.class);
+    
     ArrayList warning = null;
     Hashtable warningHash = new Hashtable();
     ArrayList recommendations = null;
@@ -178,7 +182,7 @@ public class MeasurementInfo {
         //   Date date = (Date) h.get("dateObserved_date");
         //   numMonths = getNumMonths(date, Calendar.getInstance().getTime());
         //}
-        System.out.println("Returning the number of months "+numMonths);
+        log.debug("Returning the number of months "+numMonths);
         return numMonths;
     }
     
@@ -195,14 +199,14 @@ public class MeasurementInfo {
                e.printStackTrace();    
             } 
         }
-        System.out.println("Returning the number of months "+value);
+        log.debug("Returning the number of months "+value);
         return value;
     }
     
     
     private int getNumMonths(Date dStart, Date dEnd) {
         int i = 0;
-        System.out.println("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
+        log.debug("Getting the number of months between "+dStart.toString()+ " and "+dEnd.toString() );        
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dStart);
         while (calendar.getTime().before(dEnd) || calendar.getTime().equals(dEnd)) {
@@ -213,4 +217,11 @@ public class MeasurementInfo {
         if (i < 0) { i = 0; }
         return i;
    }
+    
+   
+    private void debug(String s){
+        log.debug(s);
+    } 
+    
+    
 }

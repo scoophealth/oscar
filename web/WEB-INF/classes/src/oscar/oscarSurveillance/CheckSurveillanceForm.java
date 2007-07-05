@@ -32,12 +32,15 @@ package oscar.oscarSurveillance;
 
 
 import org.apache.struts.action.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
  * @author  Jay Gallagher
  */
 public class CheckSurveillanceForm extends ActionForm {
+   private static Log log = LogFactory.getLog(CheckSurveillanceForm.class);
    
    String proceed =null;
    String demographicNo = null;
@@ -67,7 +70,7 @@ public class CheckSurveillanceForm extends ActionForm {
     * @return Value of property demographicNo.
     */
    public java.lang.String getDemographicNo() {
-      System.out.println("CheckSurveillanceForm.getDemographicNo called :"+demographicNo);
+      log.debug("CheckSurveillanceForm.getDemographicNo called :"+demographicNo);
       return demographicNo;
    }
    
@@ -76,7 +79,7 @@ public class CheckSurveillanceForm extends ActionForm {
     * @param demographicNo New value of property demographicNo.
     */
    public void setDemographicNo(java.lang.String demographicNo) {
-      System.out.println("CheckSurveillanceForm.setDemographicNo called :"+demographicNo);
+      log.debug("CheckSurveillanceForm.setDemographicNo called :"+demographicNo);
       this.demographicNo = demographicNo;
    }
    

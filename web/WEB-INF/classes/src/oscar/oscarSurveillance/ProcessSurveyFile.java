@@ -31,7 +31,8 @@ package oscar.oscarSurveillance;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.*;
 import oscar.oscarDB.*;
 
@@ -40,6 +41,7 @@ import oscar.oscarDB.*;
  * @author  Jay Gallagher
  */
 public class ProcessSurveyFile{
+   private static Log log = LogFactory.getLog(ProcessSurveyFile.class);
    
    
    
@@ -113,9 +115,9 @@ public class ProcessSurveyFile{
                SurveillanceMaster sm = SurveillanceMaster.getInstance();
                Survey survey = sm.getSurveyById(surveyId);
                String sql = survey.getExportQuery() + " '"+surveyId+"' ";
-                 System.out.println("sql "+sql);
+                 log.debug("sql "+sql);
                String exp = survey.getExportString();
-                 System.out.println("xp "+exp);
+                 log.debug("xp "+exp);
                
                rs = db.GetSQL(sql);  
                

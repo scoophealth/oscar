@@ -33,6 +33,8 @@ package oscar.oscarSurveillance;
 
 import java.sql.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.*;
 
 /**
@@ -40,6 +42,7 @@ import oscar.oscarDB.*;
  * @author  Jay Gallagher
  */
 public class Survey {
+   private static Log log = LogFactory.getLog(Survey.class);
    
    static long seed = 0;
    
@@ -78,7 +81,7 @@ public class Survey {
    private void initRandom(){
       while (seed == System.currentTimeMillis());
       seed = System.currentTimeMillis();
-      System.out.println("setting seed "+seed );
+      log.debug("setting seed "+seed );
       random =  new Random(seed);      
    }
    
@@ -90,7 +93,7 @@ public class Survey {
       if (status != null && status.equals("D")){
          isdeffered = true;
       }    
-      System.out.println("Patient deffered: "+isdeffered +" status was "+status);
+      log.debug("Patient deffered: "+isdeffered +" status was "+status);
       return isdeffered; // true;  //TODO
    }
    
@@ -99,17 +102,17 @@ public class Survey {
       if (status != null && ( status.equals("P") || status.equals("A") || status.equals("C")) ){
          patientseen = true;
       }
-      System.out.println("Was patient seen in this period: "+patientseen+ " status was "+status);
+      log.debug("Was patient seen in this period: "+patientseen+ " status was "+status);
       return patientseen ;//false;  //TODO    
    }
    
    boolean doesPatientMeetCriteria(String demographic_no){
       boolean doespatientmeetcriteria = true;
       if (hasPatientCriteria()){
-          System.out.println("Survey "+surveyTitle+" has patientCriteria");
+          log.debug("Survey "+surveyTitle+" has patientCriteria");
           doespatientmeetcriteria = isDemographicSelected(demographic_no,patientCriteria);
       }
-      System.out.println("Does patient Meet Criteria "+doespatientmeetcriteria);
+      log.debug("Does patient Meet Criteria "+doespatientmeetcriteria);
       return doespatientmeetcriteria; //TODO
    }
    
@@ -127,7 +130,7 @@ public class Survey {
             if (rs.next()) {
                num = rs.getInt("demoCount");
             }
-            System.out.println(" num of demos that match criteria "+num);
+            log.debug(" num of demos that match criteria "+num);
             if (num == 0){
                isdemographicSelected = false;
             }            
@@ -135,7 +138,7 @@ public class Survey {
             db.CloseConn();
             
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
        return isdemographicSelected;
     }
@@ -150,7 +153,7 @@ public class Survey {
       if (randomValue == 0){
          isPatientSelect = true;
       }          
-      System.out.println("Is Patient Randomly Selected :"+isPatientSelect);
+      log.debug("Is Patient Randomly Selected :"+isPatientSelect);
       return  isPatientSelect; //true; //TODO
    }
    
@@ -292,7 +295,7 @@ public class Survey {
    
    public void setAnswer(String surveyDataId,String answer){
       Answer a = getAnswerByString(answer);
-      System.out.println("Answer a :"+a.answerString +" answer "+answer);
+      log.debug("Answer a :"+a.answerString +" answer "+answer);
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          String sql = "update surveyData set "
@@ -391,7 +394,7 @@ public class Survey {
       if ( providersParticipating != null){
       for (int i = 0; i < providersParticipating.size(); i++){
          String pro = (String) providersParticipating.get(i);
-         System.out.println(pro);
+         log.debug(pro);
       }
       }
    }
@@ -430,7 +433,7 @@ public class Survey {
    }
    
    public void addAnswer(String answerString,String answerValue, String answerStatus){
-      System.out.println("adding answer ");
+      log.debug("adding answer ");
       if (answers == null || answerTable == null){
          clearAnswers();
       }
@@ -494,9 +497,9 @@ public class Survey {
       for ( int i = 0 ; i < answers.size(); i++){                  
          Answer a =  (Answer) answers.get(i);
          if (a != null){
-         System.out.println(" answer "+a.answerString +" value "+ a.answerValue +" status "+a.answerStatus);
+         log.debug(" answer "+a.answerString +" value "+ a.answerValue +" status "+a.answerStatus);
          }else{
-            System.out.println(" NO answers ");
+            log.debug(" NO answers ");
          }
       }
    }
@@ -507,9 +510,9 @@ public class Survey {
          String s = (String) e.nextElement();
          Answer a =  getAnswerByString(s);
          if (a != null){
-         System.out.println("2 answer "+a.answerString +" value "+ a.answerValue +" status "+a.answerStatus);
+         log.debug("2 answer "+a.answerString +" value "+ a.answerValue +" status "+a.answerStatus);
          }else{
-            System.out.println(" NO answers ");
+            log.debug(" NO answers ");
          }
       }
    }

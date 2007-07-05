@@ -29,6 +29,8 @@
 package oscar.oscarEncounter.oscarMeasurements.util;
 
 import java.util.Collection;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -38,7 +40,7 @@ import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandle
  * @author jay
  */
 public class MeasurementDSHelper {
-    
+    private static Log log = LogFactory.getLog(MeasurementDSHelper.class);
     
     EctMeasurementsDataBean mdb = null;
     java.util.Date dob = null;
@@ -51,13 +53,13 @@ public class MeasurementDSHelper {
     }
     
     public MeasurementDSHelper(String demo){
-        System.out.println("sdfsdf ==" +demo);
+        log.debug("sdfsdf ==" +demo);
         demographic_no = demo;
         DemographicData dd = new DemographicData();
         dob = dd.getDemographicDOB(demo);
         sex = dd.getDemographicSex(demo);
    
-        System.out.println("goin out");
+        log.debug("goin out");
     }
     
     public MeasurementDSHelper(EctMeasurementsDataBean mdb) {
@@ -70,7 +72,7 @@ public class MeasurementDSHelper {
     
     public boolean setMeasurement(String measurementType){
         boolean setM = false;
-        System.out.println("demo "+this.demographic_no+" type "+measurementType);
+        log.debug("demo "+this.demographic_no+" type "+measurementType);
         EctMeasurementsDataBeanHandler mdbh = new  EctMeasurementsDataBeanHandler(this.demographic_no, measurementType);
         Collection col = mdbh.getMeasurementsDataVector();
         if (col.size() >0){
@@ -114,7 +116,7 @@ public class MeasurementDSHelper {
     }
     
     public double getDataAsDouble() {
-        System.out.println("dataAsDouble");
+        log.debug("dataAsDouble");
         double ret = -1;
         try{
            ret = Double.parseDouble(mdb.getDataField());
@@ -122,7 +124,7 @@ public class MeasurementDSHelper {
             e.printStackTrace();
             problem =true;
         }  
-        //System.out.println("DOUBLE val : "+ret);
+        log.debug("DOUBLE val : "+ret);
         return ret;
     }       
     
@@ -130,7 +132,7 @@ public class MeasurementDSHelper {
         double ret = -1;
         try{
            String data = mdb.getDataField();
-           //System.out.println("Trying to parse "+data);
+           log.debug("Trying to parse "+data);
            ret = Double.parseDouble(  data.split(delimiter)[number]  );
         }catch(Exception e){
             e.printStackTrace();
@@ -140,7 +142,7 @@ public class MeasurementDSHelper {
     }
         
     public void setIndicationColor(String c){
-        //System.out.println("SETTING COLOUR TO "+c);
+        log.debug("SETTING COLOUR TO "+c);
         mdb.setIndicationColour(c);
     }
 

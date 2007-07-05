@@ -28,18 +28,19 @@ package oscar.oscarEncounter.pageUtil;
 import oscar.eform.*;
 import oscar.util.DateUtils;
 import oscar.util.StringUtils;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.sql.Date;
-import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.util.MessageResources;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 //import oscar.oscarSecurity.CookieSecurity;
 
 public class EctDisplayEFormAction extends EctDisplayAction {
+    private static Log log = LogFactory.getLog(EctDisplayEFormAction.class);
     //private final static String BGCOLOUR = "11CC00";
     private String cmd = "eforms";
     
@@ -68,7 +69,7 @@ public class EctDisplayEFormAction extends EctDisplayAction {
             winName = (String)curform.get("formName") + bean.demographicNo;            
             hash = Math.abs(winName.hashCode());
             url = "popupPage( 700, 800, '" + hash + "', '" + request.getContextPath() + "/eform/efmformadd_data.jsp?fid=" + curform.get("fid") + "&demographic_no=" + bean.demographicNo + "&parentAjaxId=" + cmd + "', 'FormA" + i + "');";
-            System.out.println("SETTING EFORM URL " + url);
+            log.debug("SETTING EFORM URL " + url);
             key = StringUtils.maxLenString((String)curform.get("formName"), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + " (new)";
             key = StringEscapeUtils.escapeJavaScript(key);
             js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";
