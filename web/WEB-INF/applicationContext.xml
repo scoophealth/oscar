@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-        <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" >
 		<property name="locations">
 			<list>
 				<value>/WEB-INF/hibernate.properties</value>
@@ -13,10 +13,10 @@
 	<!-- Hibernate -->
 	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="${hibernate.connection.driver_class}" />
-		<property name="url" value="${hibernate.connection.url}" />
-		<property name="username" value="${hibernate.connection.username}" />
-		<property name="password" value="${hibernate.connection.password}" />
+		<property name="driverClassName" value="${db_driver}" />  <!-- hibernate.connection.driver_class -->
+		<property name="url" value="${db_uri}${db_name}" />       <!-- hibernate.connection.url-->
+		<property name="username" value="${db_username}" />       <!-- hibernate.connection.username -->
+		<property name="password" value="${db_password}" />       <!-- hibernate.connection.password -->
 	</bean>
 	
 	<bean id="auditInterceptor" class="org.oscarehr.common.dao.hibernate.AuditInterceptor" />
