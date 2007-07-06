@@ -30,11 +30,15 @@ import java.io.IOException;
 import oscar.oscarDB.DBHandler;
 import java.util.*;
 import java.sql.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.util.*;
 import oscar.OscarProperties;
 
 //all SQL statements here
 public class EDocUtil extends SqlUtilBaseS {
+    static Log log = LogFactory.getLog(EDocUtil.class);
+    
     public static final String PUBLIC = "public";
     public static final String PRIVATE = "private";
     public static final String SORT_DATE = "d.updatedatetime DESC, d.updatedatetime DESC";
@@ -238,7 +242,7 @@ public class EDocUtil extends SqlUtilBaseS {
                 sql = sql + " AND c.module_id='" + moduleid + "' AND d.public=0 AND d.doctype='" + docType + "'";
         }
         sql = sql + " ORDER BY " + sort;
-        System.out.println("sql list: " + sql);
+        log.debug("sql list: " + sql);
         ResultSet rs = getSQL(sql);
         ArrayList resultDocs = new ArrayList();
         try {

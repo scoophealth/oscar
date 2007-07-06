@@ -30,6 +30,8 @@ package oscar.oscarLab.ca.bc.PathNet;
 
 import java.sql.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.*;
 import oscar.oscarLab.ca.on.*;
 
@@ -38,7 +40,7 @@ import oscar.oscarLab.ca.on.*;
  * @author Jay Gallagher
  */
 public class PathnetResultsData {
-   
+   static Log log = LogFactory.getLog(PathnetResultsData.class); 
    
    public PathnetResultsData() {
    }
@@ -91,14 +93,14 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in CMLPopulate:"+e);                  
+         log.error("exception in CMLPopulate:"+sql,e);                  
          e.printStackTrace();
       }      
       return labResults;
    }
    /////
    public ArrayList populatePathnetResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-      //System.out.println("populateCMLResultsData getting called now");
+      //log.debug("populateCMLResultsData getting called now");
       if ( providerNo == null) { providerNo = ""; }
       if ( patientFirstName == null) { patientFirstName = ""; }
       if ( patientLastName == null) { patientLastName = ""; }
@@ -131,7 +133,7 @@ public class PathnetResultsData {
          
           
                
-         System.out.println(sql);
+         log.debug(sql);
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
             LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);            
@@ -178,7 +180,7 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in CMLPopulate:"+e);                  
+         log.error("exception in CMLPopulate:"+sql,e);                  
          e.printStackTrace();
       }      
       return labResults;
@@ -190,9 +192,10 @@ public class PathnetResultsData {
    
    public String findPathnetObservationDate(String labId){
       String  ret = "";
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
-         String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
+         sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
          ret = rs.getString("d");
@@ -200,17 +203,18 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("exception in MDSResultsData:"+sql,e);                  
       }
       return ret;
    }
    
    public boolean isLabLinkedWithPatient(String labId){
       boolean ret = false;
+      String sql= null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
          //String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";         
-         String sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = 'BCP' ";
+         sql = "select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type  = 'BCP' ";
          ResultSet rs = db.GetSQL(sql);
          if(rs.next()){
             String demo =  rs.getString("demographic_no");
@@ -221,7 +225,7 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in isLabLinkedWithPatient:"+e);                  
+         log.error("exception in isLabLinkedWithPatient:"+sql,e);                  
          
       }
       return ret;
@@ -239,9 +243,10 @@ public class PathnetResultsData {
    
    public String findPathnetOrderingProvider(String labId){
       String  ret = "";
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
-         String sql = "select ordering_provider from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
+         sql = "select ordering_provider from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
          ret = justGetDocName(rs.getString("ordering_provider"));
@@ -249,15 +254,16 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("exception in MDSResultsData:"+sql,e);                  
       }
       return ret;
    }
    public String findPathnetStatus(String labId){
       String ret = "";
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
-         String sql = "select min(obr.result_status) as stat from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";         
+         sql = "select min(obr.result_status) as stat from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and pid.message_id = '"+labId+"'";         
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
          ret = rs.getString("stat");
@@ -265,7 +271,7 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("exception in MDSResultsData:"+sql,e);                  
       }
       return ret;
    }
@@ -273,9 +279,10 @@ public class PathnetResultsData {
    
    public String findPathnetDisipline(String labId){
       StringBuffer ret = new StringBuffer();
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                  
-         String sql = "select distinct diagnostic_service_sect_id from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
+         sql = "select distinct diagnostic_service_sect_id from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";         
          ResultSet rs = db.GetSQL(sql);
          boolean first = true;
          while(rs.next()){
@@ -286,16 +293,17 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("exception in MDSResultsData:"+sql,e);                  
       }
       return ret.toString();
    }
    
     public int findPathnetAdnormalResults(String labId){
       int count = 0;
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);                
-         String sql = "select abnormal_flags from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and ( obx.abnormal_flags = 'A' or obx.abnormal_flags = 'H' or obx.abnormal_flags = 'HH' or obx.abnormal_flags = 'L' )     and pid.message_id ='"+labId+"'";         
+         sql = "select abnormal_flags from hl7_pid pid, hl7_obr obr, hl7_obx obx where obr.pid_id = pid.pid_id and obx.obr_id = obr.obr_id and ( obx.abnormal_flags = 'A' or obx.abnormal_flags = 'H' or obx.abnormal_flags = 'HH' or obx.abnormal_flags = 'L' )     and pid.message_id ='"+labId+"'";         
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
          count++;
@@ -303,7 +311,7 @@ public class PathnetResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("exception in MDSResultsData:"+sql,e);                  
       }
       return count;
    }

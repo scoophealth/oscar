@@ -26,11 +26,15 @@ package oscar.oscarMDS.data;
 import oscar.oscarDB.*;
 import java.util.*;
 import java.sql.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarLab.ca.on.*;
 import oscar.util.UtilDateUtilities;
 
 
 public class MDSResultsData {
+   static Log log = LogFactory.getLog(MDSResultsData.class); 
+    
    public ArrayList segmentID;
    public ArrayList acknowledgedStatus;
    
@@ -96,7 +100,7 @@ public class MDSResultsData {
          db.CloseConn();                  
          
       }catch(Exception e){
-         System.out.println("exception in CMLPopulate:"+e);                  
+         log.error("exception in populateCMLResultsData:"+sql,e);                  
          e.printStackTrace();
       }
       
@@ -106,7 +110,7 @@ public class MDSResultsData {
    
    
    public ArrayList populateCMLResultsData(String providerNo, String demographicNo, String patientFirstName, String patientLastName, String patientHealthNumber, String status) {
-      //System.out.println("populateCMLResultsData getting called now");
+      //log.debug("populateCMLResultsData getting called now");
       if ( providerNo == null) { providerNo = ""; }
       if ( patientFirstName == null) { patientFirstName = ""; }
       if ( patientLastName == null) { patientLastName = ""; }
@@ -141,7 +145,7 @@ public class MDSResultsData {
          }
          
          
-         System.out.println(sql);
+         log.debug(sql);
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
             LabResultData lbData = new LabResultData(LabResultData.CML);
@@ -194,7 +198,7 @@ public class MDSResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in CMLPopulate:"+e);                  
+         log.error("exception in populateCMLResultsData:"+sql,e);                  
          e.printStackTrace();
       }
       
@@ -203,10 +207,11 @@ public class MDSResultsData {
    
    public int findCMLAdnormalResults(String labId){
       int count = 0;
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                   
-         String sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
+         sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
          
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
@@ -215,7 +220,7 @@ public class MDSResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("exception in MDSResultsData:"+sql,e);                  
       }
       return count;
    }
@@ -310,7 +315,7 @@ public class MDSResultsData {
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);
+         log.error("exception in populateMDSResultsData:"+sql,e);
       }
    }
    
@@ -371,7 +376,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
          rs.close();
          db.CloseConn();
       }catch(Exception e){         
-         System.out.println("exception in MDSResultsData:"+e);
+         log.error("exception in MDSResultsData:"+sql,e);
          e.printStackTrace();
       }
       return labResults;
@@ -392,7 +397,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
       
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         //System.out.println("populateMDSResultsData2 demo"+demographicNo);
+         //log.debug("populateMDSResultsData2 demo"+demographicNo);
          if ( demographicNo == null) {
             // note to self: lab reports not found in the providerLabRouting table will not show up - need to ensure every lab is entered in providerLabRouting, with '0'
             // for the provider number if unable to find correct provider
@@ -430,7 +435,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
             
          }
          
-         System.out.println("sql "+sql);
+         log.debug("sql "+sql);
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
             LabResultData lData = new LabResultData(LabResultData.MDS);
@@ -498,8 +503,8 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("Error processing MDS lab, segment # "+seqId); 
-         System.out.println("exception in MDSResultsData:"+e);
+         log.error("Error processing MDS lab, segment # "+seqId); 
+         log.error("exception in MDSResultsData:"+sql,e);
          e.printStackTrace();
       }
       return labResults;
@@ -518,11 +523,11 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
    
    
    public static boolean updateReportStatus(Properties props, int labNo, int providerNo, char status, String comment) {
-      
+      String sql = null;
       try {
          DBPreparedHandler db = new DBPreparedHandler( props.getProperty("db_driver"), props.getProperty("db_uri")+props.getProperty("db_name"), props.getProperty("db_username"), props.getProperty("db_password") );
          // handles the case where this provider/lab combination is not already in providerLabRouting table
-         String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?)";
+         sql = "insert ignore into providerLabRouting (provider_no, lab_no, status, comment) values ('"+providerNo+"', '"+labNo+"', '"+status+"', ?)";
          if ( db.queryExecuteUpdate(sql, new String[] { comment }) == 0 ) {
             // handles the case where it is
             sql = "update providerLabRouting set status='"+status+"', comment=? where provider_no='"+providerNo+"' and lab_no='"+labNo+"'";
@@ -534,7 +539,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
          db.closeConn();
          return true;
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData.updateReportStatus():"+e);
+         log.error("exception in MDSResultsData.updateReportStatus():"+sql,e);
          e.printStackTrace();
          return false;
       }
@@ -542,7 +547,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
    
    public static boolean updateLabRouting(String[] flaggedLabs, String selectedProviders) {
       boolean result;
-      
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          
@@ -564,7 +569,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
          }
          
          // delete old entries
-         String sql = "delete from providerLabRouting where provider_no='0' and lab_no in ("+deleteString+")";
+         sql = "delete from providerLabRouting where provider_no='0' and lab_no in ("+deleteString+")";
          result = db.RunSQL(sql);
          
          // add new entries
@@ -573,34 +578,35 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
          db.CloseConn();
          return result;
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData.updateLabRouting():"+e);
+         log.error("exception in MDSResultsData.updateLabRouting():"+sql,e);
          return false;
       }
    }
    
    public static String searchPatient(String labNo) {
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          
-         String sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
+         sql = "select demographic_no from patientLabRouting where lab_no='"+labNo+"'";
          ResultSet rs = db.GetSQL(sql);
          db.CloseConn();
          rs.next();
          return rs.getString("demographic_no");
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData.searchPatient():"+e);
+         log.error("exception in MDSResultsData.searchPatient():"+sql,e);
          return "0";
       }
    }
    
    public static boolean updatePatientLabRouting(String labNo, String demographicNo) {
       boolean result;
-      
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          
          // delete old entries
-         String sql = "delete from patientLabRouting where lab_no='"+labNo+"'";
+         sql = "delete from patientLabRouting where lab_no='"+labNo+"'";
          result = db.RunSQL(sql);
          
          // add new entries
@@ -609,7 +615,7 @@ public ArrayList populateMDSResultsData2(String demographicNo, String consultati
          db.CloseConn();
          return result;
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData.updateLabRouting():"+e);
+         log.error("exception in MDSResultsData.updateLabRouting():"+sql,e);
          return false;
       }
    }
