@@ -32,6 +32,8 @@ import java.sql.*;
 import java.text.*;
 import java.util.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.*;
 import oscar.oscarLab.ca.on.*;
 import oscar.util.*;
@@ -41,6 +43,7 @@ import oscar.util.*;
  * @author Jay Gallagher
  */
 public class CMLLabTest {
+      private static Log log = LogFactory.getLog(CMLLabTest.class);
    
       public String locationId = null; //  2. (e.g. 70 = CML Mississauga)
       public String printDate  = null; //  3. YYYYMMDD
@@ -107,10 +110,10 @@ public class CMLLabTest {
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs = db.GetSQL("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");                   
-         System.out.println("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");                   
+         log.debug("select demographic_no from patientLabRouting where lab_no = '"+labId+"' and lab_type = 'CML'");                   
          if (rs.next()){                                    
             String d = rs.getString("demographic_no");
-            System.out.println("dd "+d);
+            log.debug("dd "+d);
             if ( !"0".equals(d)){
                this.demographicNo = d;
             }                        
@@ -121,13 +124,13 @@ public class CMLLabTest {
       }catch(Exception e){
          e.printStackTrace();
       }
-      System.out.println("going out "+this.demographicNo);
+      log.debug("going out "+this.demographicNo);
    }
    
    public void populateLab(String labid){
       labID = labid;
       
-      System.out.println("lab id "+labid);
+      log.debug("lab id "+labid);
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs = db.GetSQL("select * from labPatientPhysicianInfo where id = '"+labid+"'"); 
@@ -156,7 +159,7 @@ public class CMLLabTest {
             this.pPhone = rs.getString("patient_phone");
             this.docPhone = rs.getString("doc_phone");
             this.collectionDate = rs.getString("collection_date");                                                                                                
-            System.out.println(" lab id "+labReportInfoId);
+            log.debug(" lab id "+labReportInfoId);
          }
          
          rs.close();
@@ -167,12 +170,12 @@ public class CMLLabTest {
       }
       
       if (labReportInfoId != null){
-         System.out.println(" filling labReport Info");
+         log.debug(" filling labReport Info");
          populateLabReportInfo(labReportInfoId);
       }
       
       if (labid != null){         
-         System.out.println("Filling lab Result DAta");
+         log.debug("Filling lab Result DAta");
          this.labResults =  populateLabResultData(labid);
       }
       
@@ -195,7 +198,7 @@ public class CMLLabTest {
             String title = rs.getString("title");
             count += title.length();
             alist.add(title);
-            System.out.println("line "+title);                                    
+            log.debug("line "+title);                                    
          }      
          
          if(alist.size() == 1 ){
@@ -270,10 +273,10 @@ public class CMLLabTest {
       try{
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs = db.GetSQL("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");          
-         System.out.println("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
+         log.debug("select * from labTestResults where labPatientPhysicianInfo_id = '"+labid+"'");
          while (rs.next()){             
             String lineType = rs.getString("line_type");
-            System.out.println("line "+lineType);
+            log.debug("line "+lineType);
             if (lineType != null){
                LabResult labRes = new LabResult();
                                              
@@ -311,19 +314,20 @@ public class CMLLabTest {
    
    public int findCMLAdnormalResults(String labId){
       int count = 0;
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                   
-         String sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
+         sql = "select id from labTestResults where abn = 'A' and labPatientPhysicianInfo_id = '"+labId+"'";
          
          ResultSet rs = db.GetSQL(sql);
          while(rs.next()){
-         count++;
+            count++;
          }
          rs.close();
          db.CloseConn();
       }catch(Exception e){
-         System.out.println("exception in MDSResultsData:"+e);                  
+         log.error("sql: "+sql,e);                  
       }
       return count;
    }
@@ -392,16 +396,16 @@ public class CMLLabTest {
       ArrayList groups = new ArrayList();
       String currentGroup = "";
       GroupResults gResults = null;
-      System.out.println("start getGroupResults ... list size: "+list.size());
+      log.debug("start getGroupResults ... list size: "+list.size());
       for ( int i = 0; i < list.size(); i++){
          LabResult lab = (LabResult) list.get(i);
-            System.out.println(" lab title "+lab.title+ " currentGroup "+currentGroup);
+            log.debug(" lab title "+lab.title+ " currentGroup "+currentGroup);
          if ( currentGroup.equals(lab.title) && gResults != null){              
-            System.out.println("old");
+            log.debug("old");
             gResults.addLabResult(lab);
             gResults.groupName =  lab.title;
          }else{
-            System.out.println("new");
+            log.debug("new");
             gResults = new GroupResults();            
             gResults.groupName = currentGroup = lab.title;
             groups.add(gResults);
