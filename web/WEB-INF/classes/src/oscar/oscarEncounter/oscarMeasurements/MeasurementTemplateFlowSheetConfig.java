@@ -33,13 +33,14 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
-import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypesBean;
-import oscar.oscarEncounter.oscarMeasurements.bean.EctValidationsBean;
+import oscar.oscarEncounter.oscarMeasurements.data.ImportMeasurementTypes;
 import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
 
 /**
@@ -47,6 +48,8 @@ import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
  * @author jay
  */
 public class MeasurementTemplateFlowSheetConfig {
+    
+    private static Log log = LogFactory.getLog(MeasurementTemplateFlowSheetConfig.class);
     
     ArrayList dxTriggers = new ArrayList();
     Hashtable dxTrigHash = new Hashtable();
@@ -80,24 +83,24 @@ public class MeasurementTemplateFlowSheetConfig {
         
         //should i search run thru the list of possible flowsheets?
         //or should i run thru the list of dx codes for the patient?
-        System.out.println("TRiggers size "+dxTriggers.size());
+        log.debug("TRiggers size "+dxTriggers.size());
         for (int i =0; i < dxTriggers.size(); i++){            
             String dx = (String) dxTriggers.get(i);
-            System.out.println("Checking dx "+dx);
+            log.debug("Checking dx "+dx);
             if (coll.contains(dx) && !alist.contains(dx)){
-                System.out.println("coll contains "+dx);
+                log.debug("coll contains "+dx);
                 ArrayList flowsheets = getFlowsheetForDxCode(dx);
-                System.out.println("Size of flowsheets for "+dx+" is "+flowsheets.size());
+                log.debug("Size of flowsheets for "+dx+" is "+flowsheets.size());
                 for (int j = 0; j < flowsheets.size(); j++){ 
                    String flowsheet = (String) flowsheets.get(j) ;
                    if(!alist.contains(flowsheet)){
-                       System.out.println("adding flowsheet "+flowsheet);
+                      log.debug("adding flowsheet "+flowsheet);
                       alist.add(flowsheet);
                    }
                 }
             }
         }
-        System.out.println("alist size "+alist.size());
+        log.debug("alist size "+alist.size());
         return alist;
     }
 
@@ -111,33 +114,22 @@ public class MeasurementTemplateFlowSheetConfig {
     
     
     void loadFlowsheets(){
-//        try{
-//            System.out.println("getting resources");
-//        Enumeration en = this.getClass().getClassLoader().getResources("oscar/oscarEncounter/oscarMeasurements/flowsheets/");
-//        
-//        while(en.hasMoreElements()){
-//            URL url = (URL) en.nextElement();
-//            Object obj = url.getContent();
-//            System.out.println(obj.getClass().getName());
-//            System.out.println(url);
-//            File file = new File(url.getFile());
-//            System.out.println("Does this work and is this a directory "+ file.isDirectory());
-//        }
-//        System.out.println("Did it have any");
-//        }catch(Exception e2){
-//            e2.printStackTrace();
-//        }
-//               
         
         flowsheets = new Hashtable();
         EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml");               
-        MeasurementFlowSheet d = createflowsheet(mType,is);
-        flowsheets.put(d.getName(),d);
-        String[] dxTrig = d.getDxTriggers();
-        addTriggers(dxTrig,d.getName());
-        flowsheetDisplayNames.put(d.getName(),d.getDisplayName());
+        //TODO: Will change this when there are more flowsheets
+        String[] flowsheetsArray = {"oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml",
+                                    "oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml",
+                                    "oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml"};             
         
+        for ( int i = 0; i < flowsheetsArray.length;i++){        
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream(flowsheetsArray[i]);               
+            MeasurementFlowSheet d = createflowsheet(mType,is);
+            flowsheets.put(d.getName(),d);
+            String[] dxTrig = d.getDxTriggers();
+            addTriggers(dxTrig,d.getName());
+            flowsheetDisplayNames.put(d.getName(),d.getDisplayName());
+        }
     }
     
     public ArrayList getFlowsheetForDxCode(String code){
@@ -176,35 +168,9 @@ public class MeasurementTemplateFlowSheetConfig {
            Element root = doc.getRootElement();
            
            //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
-           List meas = root.getChildren("measurement");
-           for (int i = 0; i < meas.size(); i++){
-               Element e = (Element) meas.get(i);
-               EctMeasurementTypesBean mtb = new EctMeasurementTypesBean();
-               mtb.setType(e.getAttributeValue("type"));
-               mtb.setTypeDesc(e.getAttributeValue("typeDesc"));
-               mtb.setTypeDisplayName(e.getAttributeValue("typeDisplayName"));
-               mtb.setMeasuringInstrc(e.getAttributeValue("measuringInstrc"));
-               Element v = e.getChild("validationRule");
-               EctValidationsBean vb = new EctValidationsBean();
-               vb.setName(v.getAttributeValue("name"));
-               vb.setMaxValue(v.getAttributeValue("maxValue"));
-               vb.setMinValue(v.getAttributeValue("minValue"));
-               vb.setIsDate(v.getAttributeValue("isDate"));
-               vb.setIsNumeric(v.getAttributeValue("isNumeric"));
-               vb.setRegularExp(v.getAttributeValue("regularExp"));
-               vb.setMaxLength(v.getAttributeValue("maxLength"));
-               vb.setMinLength(v.getAttributeValue("minLength"));
-               mtb.addValidationRule(vb);
-               if(!fmtu.measurementTypeKeyIsFound(mtb)){
-                  System.out.println("Needed to add"+mtb.getType());
-                  fmtu.addMeasurementType(mtb, "");
-               }else{
-                   System.out.println("Didn't Need to add"+mtb.getType());
-               }
-               //TODO: check about isTrue
-               
-           }           
-           
+           ImportMeasurementTypes importMeamsurementTypes = new ImportMeasurementTypes();
+           importMeamsurementTypes.importMeasurements(root);
+                      
            List indi = root.getChildren("indicator"); // key="LOW" colour="blue">
            for (int i = 0; i < indi.size(); i++){           
              Element e = (Element) indi.get(i);
@@ -223,7 +189,7 @@ public class MeasurementTemplateFlowSheetConfig {
              }    
              
              if (h.get("measurement_type") != null){
-                System.out.println("ADDING "+h.get("measurement_type"));      
+                log.debug("ADDING "+h.get("measurement_type"));      
                 d.addMeasurement(""+h.get("measurement_type"));
                 d.addMeasurementInfo(""+h.get("measurement_type"),mType.getMeasurementType(""+h.get("measurement_type")));
                 d.addMeasurementFlowSheetInfo(""+h.get("measurement_type"),h);
