@@ -520,5 +520,22 @@
 	    </property>
         </bean>
     
+         
+        <bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+            <property name="phrConstants">
+                <ref bean="phrConstants" />
+            </property>
+        </bean>
+        <bean name="/dms/SendDocToPhr" class="oscar.dms.actions.SendDocToPhrAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+            <property name="phrConstants">
+                <ref bean="phrConstants" />
+            </property>
+        </bean>
     
 </beans>
