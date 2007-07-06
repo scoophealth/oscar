@@ -54,6 +54,7 @@ import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
@@ -530,25 +531,34 @@ public class ClientManagerAction extends BaseAction {
         Agency agency = agencyManager.getAgency("" + referral.getAgencyId());
         Demographic client = clientManager.getClientByDemographicNo("" + referral.getClientId());
 
+        Long providerNo = referral.getProviderNo();
+        Provider provider = providerManager.getProvider("" + providerNo);
         DynaActionForm clientForm = (DynaActionForm) form;
+
         clientForm.set("referral", referral);
         clientForm.set("agency", agency);
         clientForm.set("client", client);
 
+        clientForm.set("provider", provider);
+        
         return mapping.findForward("view_referral");
     }
 
     public ActionForward view_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String admissionId = request.getParameter("admissionId");
         Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
-        Agency agency = agencyManager.getAgency("" + admission.getAgencyId());
+        Agency agency = agencyManager.getAgency("" + admission.getAgencyId());        
         Demographic client = clientManager.getClientByDemographicNo("" + admission.getClientId());
+        Long providerNo = admission.getProviderNo();
+        Provider provider = providerManager.getProvider("" + providerNo);
 
         DynaActionForm clientForm = (DynaActionForm) form;
         clientForm.set("admission", admission);
         clientForm.set("client", client);
         clientForm.set("agency", agency);
+        clientForm.set("provider", provider);
 
+        
         return mapping.findForward("view_admission");
     }
 

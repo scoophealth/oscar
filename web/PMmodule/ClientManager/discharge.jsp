@@ -1,3 +1,4 @@
+<%@ page import="org.oscarehr.PMmodule.model.base.DischargeReason" %>
 <!--
 	Copyright (c) 2001-2002.
 	
@@ -141,45 +142,45 @@ Community Program:&nbsp;
 	<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<%if(request.getAttribute("nestedReason")!=null && request.getAttribute("nestedReason").equals("true")){%>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="10" /></td>
-			<td>Client medical needs exceed what can be provided</td>
+            <td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.MEDICAL_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.MEDICAL_NEEDS_EXCEED_PROVISION"/></td>
 		</tr
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="11" /></td>
-			<td>Client social/behavioural needs exceed what can be provided</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.SOCIAL_BEHAVIOUR_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.SOCIAL_BEHAVIOUR_NEEDS_EXCEED_PROVISION"/></td>
 		</tr>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="12" /></td>
-			<td>Client withdrawl needs exceed what can be provided</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.WITHDRAWAL_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.WITHDRAWAL_NEEDS_EXCEED_PROVISION"/></td>
 		</tr>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="13" /></td>
-			<td>Client mental health needs exceeds what can be provided</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.MENTAL_HEALTH_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.MENTAL_HEALTH_NEEDS_EXCEED_PROVISION"/></td>
 		</tr>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="14" /></td>
-			<td>Client has other care needs which can not be provided</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.OTHER_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.OTHER_NEEDS_EXCEED_PROVISION"/></td>
 		</tr>		
 		<%}else{ %>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="1" /></td>
-			<td>Client requires acute care</td>
-		</tr
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.REQUIRES_ACUTE_CARE.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.REQUIRES_ACUTE_CARE"/></td>
+		</tr>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="2" /></td>
-			<td>Client not interested</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.NOT_INTERESTED.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.NOT_INTERESTED"/></td>
 		</tr>
 		<tr>			
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="3" onclick="nestedReason()" /> </td>
-			<td>Client does not fit program criteria</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.DOES_NOT_FIT_CRITERIA.ordinal()%>" onclick="nestedReason()" /> </td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.DOES_NOT_FIT_CRITERIA"/></td>
 		</tr>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="4" /></td>
-			<td>Program does not have space available</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.NO_SPACE_AVAILABLE.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.NO_SPACE_AVAILABLE"/></td>
 		</tr>
 		<tr>
-			<td width="5%"><html:radio property="admission.radioDischargeReason" value="5" /></td>
-			<td>Other</td>
+			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.OTHER.ordinal()%>" /></td>
+			<td><bean:message  bundle="pmm" key="discharge.reason.OTHER"/></td>
 		</tr>	
 		<%} %>
 		
