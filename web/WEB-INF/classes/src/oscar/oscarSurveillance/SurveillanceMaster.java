@@ -222,8 +222,8 @@ public   class SurveillanceMaster {
             digester.parse(input);
             input.close();
          } 
-         catch (SAXException e) { e.printStackTrace(); }
-         catch(Exception eio2){ eio2.printStackTrace(); }
+         catch (SAXException e) { log.error("filename :"+filename,e); }
+         catch(Exception eio2){ log.error("filename :"+filename,eio2); }
          
       
          if(surveyList == null){
