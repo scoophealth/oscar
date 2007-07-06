@@ -12,6 +12,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts.action.ActionForm;
 
@@ -81,6 +83,7 @@ import oscar.util.StringUtils;
 
 public class TeleplanCorrectionActionWCB
     extends org.apache.struts.action.Action {
+    static Log log = LogFactory.getLog(TeleplanCorrectionActionWCB.class);
 
   private static final String sql_biling = "update_wcb_billing", //set it to be billed again in billing
 
@@ -108,6 +111,12 @@ public class TeleplanCorrectionActionWCB
           getAttribute("apptMainBean");
       MSPReconcile msp = new MSPReconcile();
       String status = data.getStatus();
+      
+      log.debug("adj amount "+data.getAdjAmount());
+      if( request.getParameter("settle") != null && request.getParameter("settle").equals("Settle Bill")){
+          status = "S";
+      }
+      
       if (!StringUtils.isNullOrEmpty(status)) {
         status = msp.NOTSUBMITTED.equals(data.getStatus())?msp.WCB:status;
         msp.updateBillingStatusWCB(data.getBillingNo(), status,data.getId());
