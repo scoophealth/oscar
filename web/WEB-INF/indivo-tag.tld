@@ -60,7 +60,7 @@
     </tag>
     
     <tag>
-        <name>setcolor</name>
+        <name>setColor</name>
         <tag-class>org.oscarehr.phr.taglib.SetColor</tag-class>
         <body-content>JSP</body-content>
         

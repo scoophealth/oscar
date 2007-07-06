@@ -24,8 +24,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class SetColor extends TagSupport {
     
     private String newMessagesHtml = "<font color=\"red\">";
-    private String noNewMessagesHtml = "<font color=\"green\">";
-    private String noAuthorizationHtml = "<font color=\"black\">";
+    private String noNewMessagesHtml = "<font color=\"black\">";
+    private String noAuthorizationHtml = "<font color=\"grey\">";
     private String closingHtml = "</font>";
     //private PHRService phrService = null;
     
