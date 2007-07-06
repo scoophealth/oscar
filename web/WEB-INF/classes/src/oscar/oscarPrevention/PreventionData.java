@@ -29,12 +29,13 @@
 package oscar.oscarPrevention;
 
 import java.sql.*;
-import java.text.*;
 import java.util.*;
 import oscar.oscarDB.*;
 import oscar.oscarDemographic.data.*;
 import oscar.util.*;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarProvider.data.ProviderData;
 
 /**
@@ -42,6 +43,7 @@ import oscar.oscarProvider.data.ProviderData;
  * @author Jay Gallagher
  */
 public class PreventionData {
+    private static Log log = LogFactory.getLog(PreventionData.class);
    /*
   create table preventions(
       id int(10) NOT NULL auto_increment primary key,  
@@ -73,12 +75,13 @@ public class PreventionData {
    }
    
    public void insertPreventionData(String creator, String demoNo, String date, String providerNo, String providerName, String preventionType,String refused,String nextDate,String neverWarn,ArrayList list){
-      try {
+      String sql = null;
+       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
-         String sql = "Insert into preventions (creator,demographic_no,prevention_date,provider_no,provider_name,prevention_type,refused,creation_date,next_date,never) values "
+         sql = "Insert into preventions (creator,demographic_no,prevention_date,provider_no,provider_name,prevention_type,refused,creation_date,next_date,never) values "
          + "('"+creator+"','"+demoNo+"','"+date+"','"+providerNo+"','"+providerName+"','"+preventionType+"','"+refused+"',now(),'"+nextDate+"','"+neverWarn+"')";            
-         System.out.println(sql);            
+         log.debug(sql);            
          db.RunSQL(sql);                                                
          rs = db.GetSQL("select Last_insert_id()");
          int insertId = -1;
@@ -96,33 +99,37 @@ public class PreventionData {
             }
          }         
          db.CloseConn();            
-      } catch (SQLException e) {
-         System.out.println(e.getMessage());
+      } catch (SQLException e) { 
+         log.error(e.getMessage(),e);
+         log.error(sql);
       }
    }
    
       
    public void addPreventionKeyValue(String preventionId, String keyval, String val){
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
-         String sql = "Insert into preventionsExt (prevention_id,keyval,val) values "
+         sql = "Insert into preventionsExt (prevention_id,keyval,val) values "
          + "('"+preventionId+"','"+keyval+"','"+StringEscapeUtils.escapeSql(val)+"')";            
-         System.out.println(sql);            
+         log.debug(sql);            
          db.RunSQL(sql);                                                
          db.CloseConn();            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         log.error(e.getMessage(),e);
+         log.error(sql);
       }
    }
    
    public Hashtable getPreventionKeyValues(String preventionId){
       Hashtable h = new Hashtable();
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
-         String sql = "select * from  preventionsExt where prevention_id = '"+preventionId+"'";         
-         System.out.println(sql);            
+         sql = "select * from  preventionsExt where prevention_id = '"+preventionId+"'";         
+         log.debug(sql);            
          rs = db.GetSQL(sql);                                                
          while(rs.next()){
             String key = rs.getString("keyval");
@@ -133,35 +140,40 @@ public class PreventionData {
          }
          db.CloseConn();            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         log.error(e.getMessage(),e);
+         log.error(sql);
       }
       return h;
    }
    
    
    public void deletePreventionData(String id){
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
-         String sql = "update preventions set deleted = '1' where id = '"+id+"' ";  //TODO: logg this in the Deletion record table or generic logging table
-         System.out.println(sql);
+         sql = "update preventions set deleted = '1' where id = '"+id+"' ";  //TODO: logg this in the Deletion record table or generic logging table
+         log.debug(sql);
          db.RunSQL(sql);                                       
          db.CloseConn();            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         log.error(e.getMessage(),e);
+         log.error(sql);
       }
    }
    
    public void setNextPreventionDate(String date,String id){
+      String sql = null;
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
-         String sql = "update preventions set next_date = '"+date+"' where id = '"+id+"' ";  
-         System.out.println(sql);
+         sql = "update preventions set next_date = '"+date+"' where id = '"+id+"' ";  
+         log.debug(sql);
          db.RunSQL(sql);                                       
          db.CloseConn();            
       } catch (SQLException e) {
-         System.out.println(e.getMessage());
+         log.error(e.getMessage(),e);
+         log.error(sql);
       }
    }
    
@@ -190,12 +202,12 @@ public class PreventionData {
    
    public ArrayList getPreventionDataFromExt(String extKey, String extVal){
       ArrayList list = new ArrayList();
-         
+      String sql = null;   
       try {
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
          ResultSet rs;
-         String sql = "Select prevention_id from preventionsExt where  keyval = '"+extKey+"' and val = '"+extVal+"'" ;            
-         System.out.println(sql); 
+         sql = "Select prevention_id from preventionsExt where  keyval = '"+extKey+"' and val = '"+extVal+"'" ;            
+         log.debug(sql); 
          rs = db.GetSQL(sql);
          while (rs.next()){     
            Hashtable hash = getPreventionById(rs.getString("prevention_id"));
@@ -205,7 +217,8 @@ public class PreventionData {
          }        
          db.CloseConn();            
        } catch (SQLException e) {
-           System.out.println(e.getMessage());
+           log.error(e.getMessage(),e);
+           log.error(sql);
        }
        return list;
    }
@@ -227,7 +240,7 @@ public class PreventionData {
         ArrayList list = new ArrayList();
         DBHandler dbhandler = null;
         try {
-            //System.out.println("e-DATE: "+date);
+            //log.debug("e-DATE: "+date);
             dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
             
             PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(sql);
@@ -250,7 +263,8 @@ public class PreventionData {
             pstmt.close();
             
         }catch(Exception e){
-            e.printStackTrace();
+            log.error(e.getMessage(),e);
+            log.error(sql);
         }
         return list;
    }
@@ -260,22 +274,22 @@ public class PreventionData {
    
    public ArrayList getPreventionData(String preventionType,String demoNo){
       ArrayList list = new ArrayList();
-      
+      String sql = null;
       DemographicData dd = new DemographicData();
       java.util.Date dob = dd.getDemographicDOB(demoNo);
       
       try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "Select * from preventions where  demographic_no = '"+demoNo+"' and prevention_type like '"+preventionType+"' and deleted != 1 order by prevention_date" ;            
-            System.out.println(sql);            
+            sql = "Select * from preventions where  demographic_no = '"+demoNo+"' and prevention_type like '"+preventionType+"' and deleted != 1 order by prevention_date" ;            
+            log.debug(sql);            
             rs = db.GetSQL(sql);
             while (rs.next()){
                Hashtable h = new Hashtable();
                h.put("id", rs.getString("id"));               
                h.put("refused",rs.getString("refused"));
                h.put("type",rs.getString("prevention_type"));
-               System.out.println("id set to "+rs.getString("id"));
+               log.debug("id set to "+rs.getString("id"));
                h.put("provider_no",rs.getString("provider_no")); 
                h.put("provider_name",rs.getString("provider_name"));          
                h.put("prevention_date",blankIfNull(rs.getString("prevention_date")));
@@ -295,7 +309,8 @@ public class PreventionData {
             
             db.CloseConn();            
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(),e);
+            log.error(sql);
         }
       return list;
    }
@@ -308,13 +323,14 @@ public class PreventionData {
    
    
    public String getPreventionComment(String id){
-       System.out.println("Calling getPreventionComment "+id);
+       log.debug("Calling getPreventionComment "+id);
        String comment = null;
+       String sql = null;
        try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "Select val from preventionsExt where  prevention_id = '"+id+"' and keyval = 'comments' " ;            
-            System.out.println(sql);            
+            sql = "Select val from preventionsExt where  prevention_id = '"+id+"' and keyval = 'comments' " ;            
+            log.debug(sql);            
             rs = db.GetSQL(sql);
             if (rs.next()){
                comment = rs.getString("val");
@@ -324,7 +340,8 @@ public class PreventionData {
             }            
             db.CloseConn();            
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(),e);
+            log.error(sql);
         }
        return comment;
    }
@@ -333,14 +350,14 @@ public class PreventionData {
       DemographicData dd = new DemographicData();
       java.util.Date dob = dd.getDemographicDOB(demoNo);
       String sex = dd.getDemographicSex(demoNo);
-      
+      String sql = null;
       Prevention p = new Prevention(sex,dob);
       
       try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "Select * from preventions where  demographic_no = '"+demoNo+"'  and deleted != 1 order by prevention_type,prevention_date" ;            
-            System.out.println(sql);            
+            sql = "Select * from preventions where  demographic_no = '"+demoNo+"'  and deleted != 1 order by prevention_type,prevention_date" ;            
+            log.debug(sql);            
             rs = db.GetSQL(sql);
             while (rs.next()){
                PreventionItem pi = new PreventionItem( rs.getString("prevention_type"),rs.getDate("prevention_date"),rs.getString("never"), rs.getDate("next_date") ) ;
@@ -349,29 +366,31 @@ public class PreventionData {
             
             db.CloseConn();            
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(),e);
+            log.error(sql);
         }
       return p;
    }
    
    public Hashtable  getPreventionById(String id){
+      String sql = null;
       Hashtable h = null;
       try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "Select * from preventions where  id = '"+id+"' " ;            
-            System.out.println(sql);            
+            sql = "Select * from preventions where  id = '"+id+"' " ;            
+            log.debug(sql);            
             rs = db.GetSQL(sql);
             if (rs.next()){
                h = new Hashtable();
-               System.out.println("preventionType"+rs.getString("prevention_type"));
+               log.debug("preventionType"+rs.getString("prevention_type"));
                addToHashIfNotNull(h,"id", rs.getString("id"));
                addToHashIfNotNull(h,"provider_no",rs.getString("provider_no"));
                addToHashIfNotNull(h,"demographicNo", rs.getString("demographic_no"));
                addToHashIfNotNull(h,"creationDate", rs.getString("creation_date"));
                addToHashIfNotNull(h,"preventionDate", rs.getString("prevention_date"));
                addToHashIfNotNull(h,"prevention_date_asDate",rs.getDate("prevention_date"));
-               //System.out.println(rs.getDate("prevention_date"));
+               //log.debug(rs.getDate("prevention_date"));
                addToHashIfNotNull(h,"providerName", rs.getString("provider_name"));
                addToHashIfNotNull(h,"preventionType", rs.getString("prevention_type"));
                addToHashIfNotNull(h,"deleted", rs.getString("deleted"));
@@ -379,15 +398,14 @@ public class PreventionData {
                addToHashIfNotNull(h,"next_date", rs.getString("next_date"));
                addToHashIfNotNull(h,"never",rs.getString("never"));          
                
-               System.out.println("1"+h.get("preventionType")+" "+h.size());
-               System.out.println("2"+h.get("preventionType"));
-               
-               System.out.println("id"+h.get("id"));
+               log.debug("1"+h.get("preventionType")+" "+h.size());
+               log.debug("id"+h.get("id"));
             }
             
             db.CloseConn();            
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(),e);
+            log.error(sql);
         }
       return h;
    }
