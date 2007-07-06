@@ -218,7 +218,7 @@
 
 			paraName = request.getParameter("xml_location");
 			String xml_location = getDefaultValue(paraName, vecHist, "clinic_ref_code");
-			xml_location = paraName != null && !"".equals(paraName)? paraName : "0000";
+			xml_location = paraName != null && !"".equals(paraName)? paraName : "0000";                   
 			if (!"".equals(xml_location)) {
 				clinicview = xml_location;
 			} else {
@@ -264,7 +264,7 @@
 				propT.setProperty("serviceCode", rs.getString("service_code"));
 				propT.setProperty("serviceDesc", rs.getString("description"));
 				propT.setProperty("serviceDisp", rs.getString("value"));
-				propT.setProperty("servicePercentage", rs.getString("percentage"));
+				propT.setProperty("servicePercentage", noNull(rs.getString("percentage")));
 				//propT.setProperty("headerTitle1",rs.getString("service_group_name"));
 				vecCodeCol1.add(propT);
 			}
@@ -280,30 +280,34 @@
 					propPremium.setProperty(rs.getString("service_code"), "A");
 				}
 			}
-
 			sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
 					+ ctlBillForm + "' and c.service_group ='" + "Group2" + "' order by c.service_order";
-			rs = dbObj.searchDBRecord(sql);
+                        rs = dbObj.searchDBRecord(sql);
+                        
 			while (rs.next()) {
 				propT = new Properties();
 				headerTitle2 = rs.getString("service_group_name");
 				propT.setProperty("serviceCode", rs.getString("service_code"));
 				propT.setProperty("serviceDesc", rs.getString("description"));
 				propT.setProperty("serviceDisp", rs.getString("value"));
-				propT.setProperty("servicePercentage", rs.getString("percentage"));
+				propT.setProperty("servicePercentage", noNull(rs.getString("percentage")));
 				vecCodeCol2.add(propT);
 			}
 
-			sql = "select service_code,status from ctl_billingservice_premium where ";
-			for (int i = 0; i < vecCodeCol2.size(); i++) {
+                        if (vecCodeCol2.size() > 0){
+                            sql = "select service_code,status from ctl_billingservice_premium where ";
+                            for (int i = 0; i < vecCodeCol2.size(); i++) {
+
 				sql += (i == 0 ? "" : " or ") + "service_code='"
 						+ ((Properties) vecCodeCol2.get(i)).getProperty("serviceCode") + "'";
-			}
-			rs = dbObj.searchDBRecord(sql);
-			while (rs.next()) {
-				propPremium.setProperty(rs.getString("service_code"), "A");
-			}
-
+                            }
+                        
+                            rs = dbObj.searchDBRecord(sql);
+                            while (rs.next()) {
+                                    propPremium.setProperty(rs.getString("service_code"), "A");
+                            }
+                        }   
+                        
 			sql = "select c.service_group_name, c.service_order,b.service_code, b.description, b.value, b.percentage from billingservice b, ctl_billingservice c where c.service_code=b.service_code and c.status='A' and c.servicetype ='"
 					+ ctlBillForm + "' and c.service_group ='" + "Group3" + "' order by c.service_order";
 			rs = dbObj.searchDBRecord(sql);
@@ -313,7 +317,7 @@
 				propT.setProperty("serviceCode", rs.getString("service_code"));
 				propT.setProperty("serviceDesc", rs.getString("description"));
 				propT.setProperty("serviceDisp", rs.getString("value"));
-				propT.setProperty("servicePercentage", rs.getString("percentage"));
+				propT.setProperty("servicePercentage", noNull(rs.getString("percentage")));
 				vecCodeCol3.add(propT);
 			}
 
@@ -323,32 +327,22 @@
 			if (rs.next()) {
 			    defaultBillType = rs.getString("billtype");
 			}
+                        
+                        if (vecCodeCol3.size() > 0){
+                            sql = "select service_code,status from ctl_billingservice_premium where ";
+                            for (int i = 0; i < vecCodeCol3.size(); i++) {
 
-			sql = "select service_code,status from ctl_billingservice_premium where ";
-			for (int i = 0; i < vecCodeCol3.size(); i++) {
 				sql += (i == 0 ? "" : " or ") + "service_code='"
 						+ ((Properties) vecCodeCol3.get(i)).getProperty("serviceCode") + "'";
-			}
-			rs = dbObj.searchDBRecord(sql);
-			while (rs.next()) {
-				propPremium.setProperty(rs.getString("service_code"), "A");
-			}
-
+                            }
+                            rs = dbObj.searchDBRecord(sql);
+                            while (rs.next()) {
+			      propPremium.setProperty(rs.getString("service_code"), "A");
+                            }
+                        }
 			// create msg
 			msg += errorMsg + warningMsg;
 			//System.out.println(" * ******************************" + sql);
-%>
-
-<%! String getDefaultValue(String paraName, Vector vec, String propName) {
-	String ret = "";
-	if (paraName != null && !"".equals(paraName)) {
-	    ret = paraName;
-	}
-	else if (vec != null && vec.size() > 0 && vec.get(0) != null) {
-	    ret = ((Properties) vec.get(0)).getProperty(propName, "");
-	}
-	return ret;
-    }
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -719,9 +713,11 @@ function changeCodeDesc() {
 
 <body onload="setfocus();prepareBack();changeCodeDesc();" topmargin="0">
 <div id="Instrdiv" class="demo1">
+
     <table bgcolor='#007FFF' width='99%'>
 	<tr><th align='right'><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="red">X</font></a></th></tr>
 	<tr><th><a href=# onclick="showHideBox('Instrdiv',0); return false;"><font color="#66FF66">Double clicking any code below will move up to specialist billing.</font><br>&nbsp;</a></th></tr>
+
    </table>
 </div>
 <div id="Layer1" style="position:absolute; left:360px; top:165px; width:410px; height:210px; z-index:1; background-color: #FFCC00; layer-background-color: #FFCC00;
@@ -908,7 +904,12 @@ function changeCodeDesc() {
 				refName = r_doctor;
 				refNo = r_doctor_ohip;
 			}
-%>
+
+
+			%>
+                 
+     
+
 					<input type="checkbox" name="rfcheck" value="checked" <%=checkRefBox%> onclick="onClickRefDoc()" /><br />
 					<input type="text" name="referralCode" size="5" maxlength="6" value="<%=refNo%>">&nbsp;
 					<input type="text" name="referralSpet" size="2" maxlength="2" value="<%=referSpet==null?"":referSpet%>"><br />
@@ -1260,35 +1261,38 @@ function changeCodeDesc() {
 </form>
 
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
-    <tr>
-	<td>
-	    <table border="1" cellspacing="0" cellpadding="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%">
-		<tr class="myYellow" align="center">
-		    <th nowrap>Serial No.</th>
-		    <th nowrap>Billing Date</th>
-		    <th nowrap>Appt/Adm Date</th>
-		    <th nowrap>Service Code</th>
-		    <th nowrap>Dx</th>
-		    <th>Create Date</th>
-		</tr>
-		
-<%// new billing records
-    for (int i = 0; i < aL.size(); i = i + 2) {
-	BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
-	BillingItemData iobj = (BillingItemData) aL.get(i + 1);
-%>
-		<tr <%=i%4==0? "class=\"myGreen\"":""%> align="center">
-		    <td><%=obj.getId()%></td>
-		    <td><%=obj.getBilling_date()%></td>
-		    <td><%=iobj.getService_date()%></td>
-		    <td><%=iobj.getService_code()%></td>
-		    <td><%=iobj.getDx()%></td>
-		    <td><%=obj.getUpdate_datetime().substring(0, 10)%></td>
-		</tr>
-<%  } %>
-	    </table>
-	</td>
-    </tr>
+	<tr>
+		<td>
+		<table border="1" cellspacing="0" cellpadding="0" bordercolorlight="#99A005" bordercolordark="#FFFFFF" width="100%">
+			<tr class="myYellow" align="center">
+				<th nowrap>Serial No.</th>
+				<th nowrap>Billing Date</th>
+				<th nowrap>Appt/Adm Date</th>
+				<th nowrap>Service Code</th>
+				<th nowrap>Dx</th>
+				<th>Create Date</th>
+			</tr>
+			<%// new billing records
+			for (int i = 0; i < aL.size(); i = i + 2) {
+				BillingClaimHeader1Data obj = (BillingClaimHeader1Data) aL.get(i);
+				BillingItemData iobj = (BillingItemData) aL.get(i + 1);
+				//System.out.println(i + obj.getBilling_date());
+
+				%>
+			<tr <%=i%4==0? "class=\"myGreen\"":""%> align="center">
+				<td class="smallFont" ><%=obj.getId()%></td>
+				<td class="smallFont" ><%=obj.getBilling_date()%></td>
+				<td class="smallFont" ><%=iobj.getService_date()%></td>
+				<td class="smallFont" ><%=iobj.getService_code()%></td>
+				<td class="smallFont" ><%=iobj.getDx()%></td>
+				<td class="smallFont" ><%=obj.getUpdate_datetime().substring(0, 10)%></td>
+			</tr>
+			<%}
+
+		%>
+		</table>
+		</td>
+	</tr>
 </table>
 
 <script type="text/javascript">
@@ -1297,6 +1301,28 @@ Calendar.setup( { inputField : "xml_vdate", ifFormat : "%Y-%m-%d", showsTime :fa
     Calendar.setup( { inputField : "service_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "service_date_cal", singleClick : true, step : 1 } );
 <%} %>
 </script>
+
+<%!String getDefaultValue(String paraName, Vector vec, String propName) {
+		String ret = "";
+		if (paraName != null && !"".equals(paraName)) {
+			ret = paraName;
+                        System.out.println("HERE 1 "+ret);
+		} else if (vec != null && vec.size() > 0 && vec.get(0) != null) {
+			ret = ((Properties) vec.get(0)).getProperty(propName, "");
+                        System.out.println("HERE 2 "+propName+" "+ret);
+		}   
+		//System.out.println("paraName:" + paraName + " propName:" + propName + " :" + ret);
+		return ret;
+	}
+
+
+        String noNull(String str){
+            if (str != null){
+               return str;    
+            }
+            return "";
+        }
+	%>
 
 </body>
 </html>
