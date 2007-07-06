@@ -10,6 +10,8 @@
                         <ref bean="phrActionDAO"/>
             </property>
         </bean>
+         <bean id="phrConstants" class="org.oscarehr.phr.indivo.IndivoConstantsImpl">
+        </bean>
         <bean id="phrDocumentDAO" class="org.oscarehr.phr.dao.hibernate.PHRDocumentDAOHibernate">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
@@ -25,4 +27,5 @@
                         <ref bean="sessionFactory"/>
                 </property>
         </bean>
+        
 </beans>
