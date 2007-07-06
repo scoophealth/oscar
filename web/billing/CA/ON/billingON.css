@@ -7,8 +7,12 @@ BODY {
 	font-style: normal;
 	color: black;
 	text-decoration: none;
-	font-family: "Times New Roman", Times, serif;
-	background-attachment: fixed
+ 	font-family: "Times New Roman", Times, serif;
+        //font-family: verdana, sans-serif;
+
+	background-attachment: fixed;
+        margin:0;
+        padding:0;
 }
 
 TD,TH {
