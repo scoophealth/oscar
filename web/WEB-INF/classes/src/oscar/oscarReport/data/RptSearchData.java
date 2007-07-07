@@ -45,7 +45,7 @@ public class RptSearchData {
          try{
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select distinct roster_status from demographic order by roster_status");
+              rs = db.GetSQL("select distinct roster_status from demographic where roster_status is not null order by roster_status");
 
               while (rs.next()) {
                 retval.add( rs.getString("roster_status") );
@@ -64,7 +64,7 @@ public class RptSearchData {
          try{
               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
               java.sql.ResultSet rs;
-              rs = db.GetSQL("select distinct patient_status from demographic order by patient_status");
+              rs = db.GetSQL("select distinct patient_status from demographic where patient_status is not null order by patient_status");
 
               while (rs.next()) {
                 retval.add( rs.getString("patient_status") );
