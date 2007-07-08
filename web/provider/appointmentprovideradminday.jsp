@@ -1006,6 +1006,11 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 	  <%}}%>
       <oscar:oscarPropertiesCheck property="SHOW_APPT_REASON" value="yes">| <b><%=reason%></b></oscar:oscarPropertiesCheck>
 	  </security:oscarSec>
+	 
+	  <!-- add one link to caisi Program Management Module -->
+	  <!--<a href=# onClick="popupPage(700, 1048,'../PMmodule/ClientManager.do?id=<%=demographic_no%>')" title="Program Management">|P</a>-->
+	  <a href='../PMmodule/ClientManager.do?id=<%=demographic_no%>' title="Program Management">|P</a>
+       
           <%
      //out.print(monthDay + " " + demBday);
       if(isBirthday(monthDay,demBday)){%>
