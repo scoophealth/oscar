@@ -1259,7 +1259,9 @@
         </action>
         <action path="/PMmodule/GenericIntake/Edit" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="genericIntakeEditForm" scope="session">
             <forward name="edit" path="/PMmodule/GenericIntake/Edit.jsp" redirect="true" />
-            <forward name="print" path="/PMmodule/GenericIntake/Print.jsp" redirect="true" />
+            <!--  <forward name="print" path="/PMmodule/GenericIntake/Print.jsp" redirect="true" />
+            -->
+            <forward name="print" path="/PMmodule/GenericIntake/PrintPreview.jsp" redirect="true" />
             <forward name="clientEdit" path="/PMmodule/ClientManager.do" redirect="true" />
         </action>
         <action path="/PMmodule/GenericIntake/Report" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
