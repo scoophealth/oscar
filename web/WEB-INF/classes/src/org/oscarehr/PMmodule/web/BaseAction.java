@@ -224,13 +224,9 @@ public abstract class BaseAction extends DispatchAction {
 	}
 
 	protected String getProviderNo(HttpServletRequest request) {
-		return getProvider(request).getProviderNo();
+		return ((Provider) request.getSession().getAttribute("provider")).getProviderNo();
 	}
 
-	protected Provider getProvider(HttpServletRequest request) {
-		return (Provider) request.getSession().getAttribute("provider");
-	}
-	
 	protected String getParameter(HttpServletRequest request, String parameterName) {
 		return request.getParameter(parameterName);
 	}
