@@ -134,23 +134,23 @@
                             &nbsp;
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/indivoMessenger/DisplayIndivoMessages?orderby=0" >
+                            <html-el:link action="/phr/PhrMessage?orderby=0" >
                             
                                 <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                             <html-el:link action="/indivoMessenger/DisplayIndivoMessages?orderby=1" >
+                             <html-el:link action="/phr/PhrMessage?orderby=1" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/indivoMessenger/DisplayIndivoMessages?orderby=2" >
+                            <html-el:link action="/phr/PhrMessage?orderby=2" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgSubject"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
-                            <html-el:link action="/indivoMessenger/DisplayIndivoMessages?orderby=3" >
+                            <html-el:link action="/phr/PhrMessage?orderby=3" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                             </html-el:link>
                         </th>                                    
