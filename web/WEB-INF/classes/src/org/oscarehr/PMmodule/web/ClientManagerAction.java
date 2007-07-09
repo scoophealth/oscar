@@ -54,10 +54,10 @@ import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.Intake;
-import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
@@ -563,21 +563,23 @@ public class ClientManagerAction extends BaseAction {
     }
 
     public ActionForward update_sharing_opting(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-	String sharingOptinChecked = request.getParameter("state");
-	if (sharingOptinChecked != null) {
-	    int id = Integer.parseInt(request.getParameter("id"));
-        
-            String value=null;
+		String sharingOptinChecked = request.getParameter("state");
+		if (sharingOptinChecked != null) {
+			int id = Integer.parseInt(request.getParameter("id"));
 
-            if ("true".equals(sharingOptinChecked)) value=Demographic.OptingStatus.OPTED_IN.name();
-            else if ("false".equals(sharingOptinChecked)) value=Demographic.OptingStatus.OPTED_OUT.name();
-            else throw(new IllegalStateException("Unexpected state, sharingOptinCheckbox state = "+sharingOptinChecked));            
-            
-            clientManager.saveDemographicExt(id, Demographic.SHARING_OPTING_KEY, value);
+			String value = null;
+
+			if ("true".equals(sharingOptinChecked)) value = Demographic.OptingStatus.OPTED_IN.name();
+			else if ("false".equals(sharingOptinChecked)) value = Demographic.OptingStatus.OPTED_OUT.name();
+			else throw (new IllegalStateException("Unexpected state, sharingOptinCheckbox state = " + sharingOptinChecked));
+
+			clientManager.saveDemographicExt(id, Demographic.SHARING_OPTING_KEY, value);
+
+			logManager.log(getProviderNo(request), "update", "DataSharingOpting:"+value, String.valueOf(id), request);
+		}
+
+		return(unspecified(mapping, form, request, response));
 	}
-
-	return (unspecified(mapping, form, request, response));
-    }
 
     private boolean isInDomain(long programId, List<?> programDomain) {
 		for (int x = 0; x < programDomain.size(); x++) {
