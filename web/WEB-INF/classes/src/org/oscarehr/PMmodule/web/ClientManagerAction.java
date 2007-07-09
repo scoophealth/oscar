@@ -606,7 +606,7 @@ public class ClientManagerAction extends BaseAction {
 		if (sharingOptingStatus!=null) sharingOptingStatusValue=sharingOptingStatus.getValue();
 		else sharingOptingStatusValue="none";
 		request.setAttribute("sharingOptingStatus", sharingOptingStatusValue);
-		boolean sharingOptingStatusChecked=Demographic.OptingStatus.IMPLICIT_OPTED_IN.name().equals(sharingOptingStatusValue) || Demographic.OptingStatus.OPTED_IN.name().equals(sharingOptingStatusValue); 
+		boolean sharingOptingStatusChecked=Demographic.OptingStatus.IMPLICITLY_OPTED_IN.name().equals(sharingOptingStatusValue) || Demographic.OptingStatus.OPTED_IN.name().equals(sharingOptingStatusValue); 
 		request.setAttribute("sharingOptingCheckBoxState", sharingOptingStatusChecked?"checked=\"checked\"":"");
 
 		String providerNo = getProviderNo(request);

@@ -47,8 +47,8 @@ public class Demographic extends BaseDemographic {
 	public static final String SHARING_OPTING_KEY="SHARE_OPT";
 	
 	public enum OptingStatus {
-	    IMPLICIT_OPTED_IN,
-	    IMPLICIT_OPTED_OUT,
+	    IMPLICITLY_OPTED_IN,
+	    IMPLICITLY_OPTED_OUT,
 	    OPTED_IN,
 	    OPTED_OUT
 	}
