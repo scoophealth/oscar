@@ -30,6 +30,8 @@
 package oscar.oscarBilling.ca.bc.Teleplan;
 
 import java.sql.ResultSet;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.oscarDB.DBHandler;
 
 /**
@@ -37,6 +39,7 @@ import oscar.oscarDB.DBHandler;
  * @author jay
  */
 public class TeleplanSequenceDAO {
+    static Log log = LogFactory.getLog(TeleplanSequenceDAO.class);
     
     /** Creates a new instance of TeleplanSequenceDAO */
     public TeleplanSequenceDAO() {
@@ -91,7 +94,7 @@ public class TeleplanSequenceDAO {
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String query = "select value from property where name='teleplan_sequence'  " ;
-            System.out.println("1st billing query "+query);
+            log.debug("1st billing query "+query);
             ResultSet rs = db.GetSQL(query);
         while (rs.next()){
             String value = rs.getString("value");
