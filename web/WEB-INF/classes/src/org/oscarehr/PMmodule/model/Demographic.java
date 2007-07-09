@@ -44,6 +44,15 @@ public class Demographic extends BaseDemographic {
 	
 	private static final String SEPERATOR = "-";
 
+	public static final String SHARING_OPTING_KEY="SHARE_OPT";
+	
+	public enum OptingStatus {
+	    IMPLICIT_OPTED_IN,
+	    IMPLICIT_OPTED_OUT,
+	    OPTED_IN,
+	    OPTED_OUT
+	}
+	
 	public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
 		Demographic demographic = new Demographic();
 		
@@ -106,7 +115,7 @@ public class Demographic extends BaseDemographic {
 
 	/* [CONSTRUCTOR MARKER BEGIN] */
 	
-	@Override
+    @Override
 	protected void initialize() {
 		links = StringUtils.EMPTY;
 	}
@@ -234,3 +243,4 @@ public class Demographic extends BaseDemographic {
 	}
 
 }
+
