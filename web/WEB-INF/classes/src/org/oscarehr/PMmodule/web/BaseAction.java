@@ -223,10 +223,6 @@ public abstract class BaseAction extends DispatchAction {
 		this.surveyManager = mgr;
 	}
 
-	protected String getIP(HttpServletRequest request) {
-		return request.getRemoteAddr();
-	}
-	
 	protected String getProviderNo(HttpServletRequest request) {
 		return getProvider(request).getProviderNo();
 	}

@@ -39,7 +39,7 @@ public class LogManagerImpl implements LogManager {
 		this.logDAO = dao;
 	}
 	
-	public void log(String providerNo, String accessType, String entity, String entityId, String ip) {		
+	public void log(String providerNo, String accessType, String entity, String entityId, ServletRequest request) {		
 		Log log = new Log();
 		//log.setId(new LogPK(providerNo,new Date()));
 		log.setProviderNo(providerNo);
@@ -47,13 +47,8 @@ public class LogManagerImpl implements LogManager {
 		log.setAction(accessType);
 		log.setContent(entity);
 		log.setContentId(entityId);
-		log.setIp(ip);
+		log.setIp(request.getRemoteAddr());
 	
 		logDAO.saveLog(log);
 	}
-
-    public void log(String providerNo, String accessType, String entity, String entityId, ServletRequest request) {
-        log(providerNo, accessType, entity, entityId, request.getRemoteAddr());
-    }
-
 }

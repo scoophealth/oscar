@@ -297,7 +297,7 @@ public class IntakeCAction2 extends BaseAction {
 
 		setAttributes(request, form);
 
-		logManager.log(getProviderNo(request), "read", "intakec", demographicNo, request.getRemoteAddr());
+		logManager.log(getProviderNo(request), "read", "intakec", demographicNo, request);
 		request.setAttribute("demographicNo", demographicNo);
 		
 		return mapping.findForward("form");

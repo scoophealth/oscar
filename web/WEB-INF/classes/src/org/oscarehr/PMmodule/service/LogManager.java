@@ -25,6 +25,5 @@ package org.oscarehr.PMmodule.service;
 import javax.servlet.ServletRequest;
 
 public interface LogManager {
-	public void log(String providerNo, String accessType, String entity, String entityId, String ip);
-        public void log(String providerNo, String accessType, String entity, String entityId, ServletRequest request);
+	public void log(String providerNo, String accessType, String entity, String entityId, ServletRequest request);
 }

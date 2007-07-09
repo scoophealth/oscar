@@ -192,7 +192,7 @@ public class ProgramManagerViewAction extends BaseAction {
     		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
     	}
     	
-    	logManager.log(getProviderNo(request), "view", "program", programId, request.getRemoteAddr());
+    	logManager.log(getProviderNo(request), "view", "program", programId, request);
     
     	request.setAttribute("id", programId);
     
@@ -243,7 +243,7 @@ public class ProgramManagerViewAction extends BaseAction {
 			saveMessages(request, messages);
 		}
 
-		logManager.log(getProviderNo(request), "view", "admit to program", clientId, request.getRemoteAddr());
+		logManager.log(getProviderNo(request), "view", "admit to program", clientId, request);
 
 		return view(mapping, form, request, response);
 	}
@@ -262,7 +262,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign client to team", "", getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign client to team", "", request);
 		return view(mapping, form, request, response);
 	}
 
@@ -280,7 +280,7 @@ public class ProgramManagerViewAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign client to status", "", getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign client to status", "", request);
 		return view(mapping, form, request, response);				
 	}	
 	

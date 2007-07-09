@@ -55,7 +55,7 @@ public class ProgramManagerAction extends BaseAction {
 	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("programs", programManager.getAllPrograms());
 
-		logManager.log(getProviderNo(request), "read", "full program list", "", getIP(request));
+		logManager.log(getProviderNo(request), "read", "full program list", "", request);
 
 		return mapping.findForward("list");
 	}
@@ -121,7 +121,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign role", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign role", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -148,7 +148,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign team", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign team", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -171,7 +171,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign client to team", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign client to team", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -220,7 +220,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.deleted", name));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "delete program", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "delete program", String.valueOf(program.getId()), request);
 
 		return list(mapping, form, request, response);
 	}
@@ -236,7 +236,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - delete access", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - delete access", String.valueOf(program.getId()), request);
 
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 		programForm.set("access", new ProgramAccess());
@@ -254,7 +254,7 @@ public class ProgramManagerAction extends BaseAction {
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
-		logManager.log(getProviderNo(request), "write", "edit program - delete function user", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - delete function user", String.valueOf(program.getId()), request);
 
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -273,7 +273,7 @@ public class ProgramManagerAction extends BaseAction {
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 			saveMessages(request, messages);
 
-			logManager.log(getProviderNo(request), "write", "edit program - delete provider", String.valueOf(program.getId()), getIP(request));
+			logManager.log(getProviderNo(request), "write", "edit program - delete provider", String.valueOf(program.getId()), request);
 		}
 		this.setEditAttributes(request, String.valueOf(program.getId()));
 		programForm.set("provider", new ProgramProvider());
@@ -368,7 +368,7 @@ public class ProgramManagerAction extends BaseAction {
 		programForm.set("provider", pp);
 		request.setAttribute("providerName", pp.getProvider().getFormattedName());
 
-		logManager.log(getProviderNo(request), "write", "edit program - edit provider", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - edit provider", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -413,7 +413,7 @@ public class ProgramManagerAction extends BaseAction {
 		fullQueue.setStatus("removed");
 		programQueueManager.saveProgramQueue(fullQueue);
 
-		logManager.log(getProviderNo(request), "write", "edit program - queue removal", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - queue removal", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -448,7 +448,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign team (removal)", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign team (removal)", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -521,7 +521,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -559,7 +559,7 @@ public class ProgramManagerAction extends BaseAction {
 
 		programManager.saveProgramAccess(access);
 
-		logManager.log(getProviderNo(request), "write", "access", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "access", String.valueOf(program.getId()), request);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -596,7 +596,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - save function user", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - save function user", String.valueOf(program.getId()), request);
 
 		programForm.set("function", new ProgramFunctionalUser());
 		setEditAttributes(request, String.valueOf(program.getId()));
@@ -629,7 +629,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - save provider", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - save provider", String.valueOf(program.getId()), request);
 		programForm.set("provider", new ProgramProvider());
 		setEditAttributes(request, String.valueOf(program.getId()));
 
@@ -657,7 +657,7 @@ public class ProgramManagerAction extends BaseAction {
 
 		programManager.saveProgramTeam(team);
 
-		logManager.log(getProviderNo(request), "write", "edit program - save team", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - save team", String.valueOf(program.getId()), request);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -767,7 +767,7 @@ public class ProgramManagerAction extends BaseAction {
 
 		programManager.saveProgramClientStatus(status);
 
-		logManager.log(getProviderNo(request), "write", "edit program - save status", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - save status", String.valueOf(program.getId()), request);
 
 		ActionMessages messages = new ActionMessages();
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
@@ -793,7 +793,7 @@ public class ProgramManagerAction extends BaseAction {
 		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", program.getName()));
 		saveMessages(request, messages);
 
-		logManager.log(getProviderNo(request), "write", "edit program - assign client to status", String.valueOf(program.getId()), getIP(request));
+		logManager.log(getProviderNo(request), "write", "edit program - assign client to status", String.valueOf(program.getId()), request);
 
 		setEditAttributes(request, String.valueOf(program.getId()));
 
