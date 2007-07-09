@@ -45,7 +45,10 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
+
+import oscar.OscarProperties;
 
 public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
@@ -245,9 +248,17 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 	private void saveClient(Demographic client, String providerNo) throws IntegratorException {
 		client.setProviderNo(providerNo);
 		
+		Demographic.OptingStatus defaultOptingStatus=null;
+		
+		String optingDefaultString=OscarProperties.getInstance().getProperty("DATA_SHARING_OPTING_DEFAULT");
+		// yes I know this step is silly since I convert it back to a string later but it ensures it's a valid option.
+		if (optingDefaultString!=null) defaultOptingStatus=Demographic.OptingStatus.valueOf(optingDefaultString);
+		
 		// local save
 		clientManager.saveClient(client);
-
+		
+		if (defaultOptingStatus!=null) clientManager.saveDemographicExt(client.getDemographicNo(), Demographic.SHARING_OPTING_KEY, defaultOptingStatus.name());
+		
 		// remote save
 		try {
 			integratorManager.saveClient(client);
