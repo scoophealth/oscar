@@ -163,7 +163,7 @@ public class IntakeAAction2 extends BaseAction {
 		request.setAttribute("programDomainBed",this.getProgramDomain_Bed(origProgramDomain));
 		request.setAttribute("programDomainService",this.getProgramDomain_Service(origProgramDomain));
 
-		logManager.log(getProviderNo(request),"read","intakea",demographicNo,request);
+		logManager.log("read","intakea",demographicNo,request);
 	   	request.setAttribute("demographicNo",demographicNo);
 		return mapping.findForward("form");
 	}

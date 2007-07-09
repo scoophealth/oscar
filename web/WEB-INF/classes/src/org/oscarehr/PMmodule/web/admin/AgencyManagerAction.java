@@ -131,7 +131,7 @@ public class AgencyManagerAction extends BaseAction {
 		request.setAttribute("id", agency.getId());
 		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
 
-		logManager.log(getProviderNo(request), "write", "agency", agency.getId().toString(), request);
+		logManager.log("write", "agency", agency.getId().toString(), request);
 
 		return mapping.findForward(FORWARD_EDIT);
 	}

@@ -100,7 +100,7 @@ public class StaffManagerAction extends BaseAction {
 		StaffManagerViewFormBean formBean = (StaffManagerViewFormBean)providerForm.get("view");
 		
 		request.setAttribute("providers",providerManager.getProviders());
-		logManager.log(getProviderNo(request),"read","full provider list","",request);
+		logManager.log("read","full provider list","",request);
 		return mapping.findForward("list");
 	}
 	

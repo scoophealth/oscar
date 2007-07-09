@@ -128,7 +128,7 @@ public class FollowUpAction extends DispatchAction {
 		theForm.setProviderNo(Long.valueOf(getProviderNo(request)));		
 		inputForm.set("intake",theForm);
 
-		logManager.log(getProviderNo(request),"read","followupform",demographicNo,request);
+		logManager.log("read","followupform",demographicNo,request);
 	   	request.setAttribute("demographicNo",demographicNo);
 		return mapping.findForward("form");
 	}

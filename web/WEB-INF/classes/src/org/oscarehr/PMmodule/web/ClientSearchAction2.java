@@ -62,7 +62,7 @@ public class ClientSearchAction2 extends BaseAction {
 		request.setAttribute("clients",clientManager.search(formBean));
 		
 		if(formBean.isSearchOutsideDomain()) {
-			logManager.log(getProviderNo(request),"read","out of domain client search","",request);
+			logManager.log("read","out of domain client search","",request);
 		}
 				
 		return mapping.findForward("form");

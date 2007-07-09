@@ -24,10 +24,11 @@ package org.oscarehr.PMmodule.service.impl;
 
 import java.util.Date;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.oscarehr.PMmodule.dao.LogDAO;
 import org.oscarehr.PMmodule.model.Log;
+import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.LogManager;
 
 
@@ -39,10 +40,13 @@ public class LogManagerImpl implements LogManager {
 		this.logDAO = dao;
 	}
 	
-	public void log(String providerNo, String accessType, String entity, String entityId, ServletRequest request) {		
+	public void log(String accessType, String entity, String entityId, HttpServletRequest request) {		
 		Log log = new Log();
 		//log.setId(new LogPK(providerNo,new Date()));
-		log.setProviderNo(providerNo);
+		
+		Provider provider=(Provider) request.getSession().getAttribute("provider");
+		if (provider!=null) log.setProviderNo(provider.getProviderNo());
+		
 		log.setDateTime(new Date());
 		log.setAction(accessType);
 		log.setContent(entity);

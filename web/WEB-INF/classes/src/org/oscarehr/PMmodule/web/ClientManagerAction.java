@@ -97,7 +97,7 @@ public class ClientManagerAction extends BaseAction {
 			saveMessages(request, messages);
 		}
 
-		logManager.log(getProviderNo(request), "write", "admit", demographicNo, request);
+		logManager.log("write", "admit", demographicNo, request);
 
 		setEditAttributes(form, request, demographicNo);
 		return mapping.findForward("edit");
@@ -159,7 +159,7 @@ public class ClientManagerAction extends BaseAction {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
-			logManager.log(getProviderNo(request), "write", "discharge", id, request);
+			logManager.log("write", "discharge", id, request);
 		}
 
 		setEditAttributes(form, request, id);
@@ -179,7 +179,7 @@ public class ClientManagerAction extends BaseAction {
 
 		try {
 			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason());
-			logManager.log(getProviderNo(request), "write", "discharge", clientId, request);
+			logManager.log("write", "discharge", clientId, request);
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
@@ -247,7 +247,7 @@ public class ClientManagerAction extends BaseAction {
 		
 		setEditAttributes(form, request, id);
 
-		logManager.log(getProviderNo(request), "read", "pmm client record", id, request);
+		logManager.log("read", "pmm client record", id, request);
 
 		String roles = (String) request.getSession().getAttribute("userrole");
 
@@ -353,7 +353,7 @@ public class ClientManagerAction extends BaseAction {
 		clientForm.set("program", new Program());
 		clientForm.set("referral", new ClientReferral());
 		setEditAttributes(form, request, id);
-		logManager.log(getProviderNo(request), "write", "referral", id, request);
+		logManager.log("write", "referral", id, request);
 
 		return mapping.findForward("edit");
 	}
@@ -575,7 +575,7 @@ public class ClientManagerAction extends BaseAction {
 
 			clientManager.saveDemographicExt(id, Demographic.SHARING_OPTING_KEY, value);
 
-			logManager.log(getProviderNo(request), "update", "DataSharingOpting:"+value, String.valueOf(id), request);
+			logManager.log("update", "DataSharingOpting:"+value, String.valueOf(id), request);
 		}
 
 		return(unspecified(mapping, form, request, response));
