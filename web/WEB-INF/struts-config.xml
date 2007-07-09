@@ -1157,6 +1157,10 @@
         <action path="/billing/CA/BC/SimulateTeleplanFile" scope="request" name="FrmForm" type="oscar.oscarBilling.ca.bc.pageUtil.SimulateTeleplanFileAction">
             <forward name="success" path="/billing/CA/BC/TeleplanSimulation.jsp" />
         </action>
+        <action input="/billing/CA/BC/teleplan/ManageTeleplan.jsp" name="FrmForm" path="/billing/CA/BC/ManageTeleplan" parameter="method" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ManageTeleplanAction">
+            <forward name="success" path="/billing/CA/BC/teleplan/ManageTeleplan.jsp"/>
+            <forward name="submission" path="/billing/CA/BC/TeleplanSubmission.jsp" />
+        </action>
         <action path="/billing/CA/BC/DownloadBilling" type="oscar.oscarBilling.ca.bc.pageUtil.DownloadFileAction" />
         <action path="/Tickler" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" name="ticklerForm" input="/ticklerPlus/ticklerForm.jsp" validate="false">
             <forward name="list" path="/ticklerPlus/ticklerList.jsp" />
