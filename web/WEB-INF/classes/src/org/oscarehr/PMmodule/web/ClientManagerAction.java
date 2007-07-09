@@ -97,7 +97,7 @@ public class ClientManagerAction extends BaseAction {
 			saveMessages(request, messages);
 		}
 
-		logManager.log(getProviderNo(request), "write", "admit", demographicNo, getIP(request));
+		logManager.log(getProviderNo(request), "write", "admit", demographicNo, request);
 
 		setEditAttributes(form, request, demographicNo);
 		return mapping.findForward("edit");
@@ -159,7 +159,7 @@ public class ClientManagerAction extends BaseAction {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
-			logManager.log(getProviderNo(request), "write", "discharge", id, getIP(request));
+			logManager.log(getProviderNo(request), "write", "discharge", id, request);
 		}
 
 		setEditAttributes(form, request, id);
@@ -179,7 +179,7 @@ public class ClientManagerAction extends BaseAction {
 
 		try {
 			admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason());
-			logManager.log(getProviderNo(request), "write", "discharge", clientId, getIP(request));
+			logManager.log(getProviderNo(request), "write", "discharge", clientId, request);
 
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
 			saveMessages(request, messages);
@@ -247,7 +247,7 @@ public class ClientManagerAction extends BaseAction {
 		
 		setEditAttributes(form, request, id);
 
-		logManager.log(getProviderNo(request), "read", "pmm client record", id, getIP(request));
+		logManager.log(getProviderNo(request), "read", "pmm client record", id, request);
 
 		String roles = (String) request.getSession().getAttribute("userrole");
 
@@ -353,7 +353,7 @@ public class ClientManagerAction extends BaseAction {
 		clientForm.set("program", new Program());
 		clientForm.set("referral", new ClientReferral());
 		setEditAttributes(form, request, id);
-		logManager.log(getProviderNo(request), "write", "referral", id, getIP(request));
+		logManager.log(getProviderNo(request), "write", "referral", id, request);
 
 		return mapping.findForward("edit");
 	}
@@ -562,6 +562,23 @@ public class ClientManagerAction extends BaseAction {
         return mapping.findForward("view_admission");
     }
 
+    public ActionForward update_sharing_opting(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	String sharingOptinChecked = request.getParameter("state");
+	if (sharingOptinChecked != null) {
+	    int id = Integer.parseInt(request.getParameter("id"));
+        
+            String value=null;
+
+            if ("true".equals(sharingOptinChecked)) value=Demographic.OptingStatus.OPTED_IN.name();
+            else if ("false".equals(sharingOptinChecked)) value=Demographic.OptingStatus.OPTED_OUT.name();
+            else throw(new IllegalStateException("Unexpected state, sharingOptinCheckbox state = "+sharingOptinChecked));            
+            
+            clientManager.saveDemographicExt(id, Demographic.SHARING_OPTING_KEY, value);
+	}
+
+	return (unspecified(mapping, form, request, response));
+    }
+
     private boolean isInDomain(long programId, List<?> programDomain) {
 		for (int x = 0; x < programDomain.size(); x++) {
 			ProgramProvider p = (ProgramProvider) programDomain.get(x);
@@ -581,6 +598,14 @@ public class ClientManagerAction extends BaseAction {
 
 		request.setAttribute("id", demographicNo);
 		request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
+		
+		DemographicExt sharingOptingStatus=clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.SHARING_OPTING_KEY);
+		String sharingOptingStatusValue=null;
+		if (sharingOptingStatus!=null) sharingOptingStatusValue=sharingOptingStatus.getValue();
+		else sharingOptingStatusValue="none";
+		request.setAttribute("sharingOptingStatus", sharingOptingStatusValue);
+		boolean sharingOptingStatusChecked=Demographic.OptingStatus.IMPLICIT_OPTED_IN.name().equals(sharingOptingStatusValue) || Demographic.OptingStatus.OPTED_IN.name().equals(sharingOptingStatusValue); 
+		request.setAttribute("sharingOptingCheckBoxState", sharingOptingStatusChecked?"checked=\"checked\"":"");
 
 		String providerNo = getProviderNo(request);
 
