@@ -64,6 +64,11 @@ function showEMPILinks() {
 		XMLHttpRequestObject.send(null);
 	}
 }
+
+function updateSharingOpting(state) {
+	location.href = '/oscar/PMmodule/ClientManager.do' + "?method=update_sharing_opting&state="+state+"&id=<c:out value='${client.demographicNo}'/>";
+}
+
 </script>
 
 <div class="tabs">
@@ -108,6 +113,12 @@ function showEMPILinks() {
 	<tr>
 		<th width="20%">EMPI</th>
 		<td><span id='empi_links'>Loading...</span></td>
+	</tr>
+	<tr>
+		<th width="20%">Opt-In to share data</th>
+		<td>
+			<input name="sharingOptingCheckBox" type="checkbox" <c:out value="${sharingOptingCheckBoxState}" /> onclick="updateSharingOpting(this.checked);"> &nbsp;&nbsp;&nbsp;&nbsp; (current opting status : <c:out value="${sharingOptingStatus}" />)
+		</td>
 	</tr>
 </table>
 
