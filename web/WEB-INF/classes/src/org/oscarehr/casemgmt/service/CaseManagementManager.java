@@ -30,6 +30,8 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.Issue;
 
+import org.oscarehr.PMmodule.model.Provider;
+
 public interface CaseManagementManager {
 	
 	public String saveNote(CaseManagementCPP cpp, CaseManagementNote note,String cproviderNo, String userName,String lastStr,String roleName);
@@ -41,6 +43,7 @@ public interface CaseManagementManager {
 	public CaseManagementNote getNote(String note_id);
 	public List filterNotes(List notes, String providerNo, String programId);
 	
+        public void updateAppointment(String apptId, String status, String type);
 	
 	public List getIssues(String providerNo,String demographic_no,List accessRight);
 	public List getActiveIssues(String providerNo,String demographic_no,List accessRight);
