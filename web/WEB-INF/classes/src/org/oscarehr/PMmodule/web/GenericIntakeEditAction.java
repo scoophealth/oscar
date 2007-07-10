@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.caisi.util.PropertiesUtils;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -47,6 +46,8 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
+
+import oscar.OscarProperties;
 
 public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
@@ -248,7 +249,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		
 		Demographic.OptingStatus defaultOptingStatus=null;
 		
-		String optingDefaultString=PropertiesUtils.getProperties().getProperty("DATA_SHARING_OPTING_DEFAULT");
+		String optingDefaultString=OscarProperties.getInstance().getProperty("DATA_SHARING_OPTING_DEFAULT");
 		// yes I know this step is silly since I convert it back to a string later but it ensures it's a valid option.
 		if (optingDefaultString!=null) defaultOptingStatus=Demographic.OptingStatus.valueOf(optingDefaultString);
 		
