@@ -1,0 +1,110 @@
+<%@ include file="/taglibs.jsp" %>
+<%@ page import="org.caisi.model.*,org.oscarehr.PMmodule.model.*,org.springframework.context.*,org.springframework.web.context.support.*,org.caisi.service.Version" %>
+<%@ page import="java.util.Date" %>
+
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+<security:oscarSec roleName="<%=roleName$%>" objectName="_tasks" rights="r" reverse="<%=true%>" >
+<%response.sendRedirect("noRights.html");%>
+</security:oscarSec>
+
+<%
+	ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(application);
+	Version version = (Version)ctx.getBean("version");
+	pageContext.setAttribute("version",version);
+%>
+<c:if test="${requestScope.from ne 'CaseMgmt'}">
+<html>
+<head>
+	<title>TicklerPlus</title>	
+</head>
+<body>
+</c:if>
+
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
+	<table width="100%" border="1" cellpadding="0" cellspacing="1"
+		bgcolor="#C0C0C0">
+		<tr>
+			
+			<th>Demographic Name</th>
+			<th>Provider Name</th>				
+			<th>Date</th>
+			<th>Priority</th>
+			<th>Task Assigned To</th>
+			<th>Status</th>
+			<th>Message</th>
+		</tr>
+
+		<tr>
+			<%int index = 0;
+			String bgcolor;
+			String view_image;
+
+			%>
+			<c:forEach var="tickler" items="${ticklers}">				
+				<tr align="center">
+					<%
+String demographic_name = "";
+			String provider_name = "";
+			String assignee_name = "";
+			String status = "Active";
+			String late_status = "b";			
+			Tickler temp = (Tickler) pageContext.getAttribute("tickler");
+			if (temp != null) {
+				Demographic demographic = (Demographic) temp.getDemographic();
+				if (demographic != null) {
+					demographic_name = demographic.getLastName() + ","
+							+ demographic.getFirstName();
+				}
+				Provider provider = (Provider) temp.getProvider();
+				if (provider != null) {
+					provider_name = provider.getLastName() + ","
+							+ provider.getFirstName();
+				}
+				Provider assignee = (Provider) temp.getAssignee();
+				if (assignee != null) {
+					assignee_name = assignee.getLastName() + ","
+							+ assignee.getFirstName();
+				}
+				switch (temp.getStatus()) {
+				case 'A':
+					status = "Active";
+					break;
+				case 'D':
+					status = "Deleted";
+					break;
+				case 'C':
+					status = "Completed";
+					break;
+				}
+				// add by PINE_SOFT
+				// get system date
+				Date sysdate = new java.util.Date();
+				Date service_date = (Date) temp.getService_date();
+
+				if (!sysdate.before(service_date)) {
+					late_status = "a";
+				}
+			}
+
+			%>					
+
+					<td><%=demographic_name%></td>
+					<td><%=provider_name%></td>
+					<td><c:out value="${tickler.service_date}" /></td>
+					<td><c:out value="${tickler.priority}" /></td>
+					<td><%=assignee_name%></td>
+					<td><%=status%></td>
+					<td><c:out value="${tickler.message}" /></td>
+				</tr>
+			</c:forEach>
+		</tr>
+		
+	</table>
+
+</body>
+</html>
+

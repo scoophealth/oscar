@@ -45,6 +45,11 @@
                 check_demo_no = setInterval("if (demo_no_orig != document.ticklerForm.elements['filter.demographic_no'].value) updTklrList()",100);
         }
         
+        function printTickler() {
+        	window.open
+        }
+        
+        
         function clearClientFilter() {
             document.ticklerForm.elements['filter.demographic_no'].value = "";
             document.ticklerForm.elements['filter.demographic_webName'].value = "";
@@ -141,8 +146,15 @@
 			<html:options collection="customFilters" property="name" />
 		</html:select></td>
 
+		<!-- 
+		<td><input type="button" value="Print Preview" onclick="location.href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' " /></td>
+		-->
+		<!-- the following only works in Firefox, not in IE
+		<td><input type="button" value="Print Preview" onClick="window.open('<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp','Tickler Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes')" /> </td>
+		 -->
+		 
+		<td><a href='<c:out value="${ctx}"/>/ticklerPlus/ticklerPrint.jsp' onClick="window.open(this.href,'Tickler Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes');return false;">Print Preview</a> </td>
 		
-		<td></td>
 	</tr>
 
 
