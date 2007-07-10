@@ -41,6 +41,8 @@ import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.casemgmt.service.ClientImageManager;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ProviderManager;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -51,7 +53,12 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 	
 	protected CaseManagementManager caseManagementMgr;
 	protected ClientImageManager clientImageMgr;
+        protected ProviderManager providerMgr;
 	
+        public void setProviderManager(ProviderManager pmgr ) {
+            this.providerMgr = pmgr;
+        }
+        
 	public void setClientImageManager(ClientImageManager mgr) {
 		this.clientImageMgr = mgr;
 	}
@@ -100,6 +107,12 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		String providerNo = getProviderNo(request);
 		if (providerNo == null)	return "";
 		return caseManagementMgr.getProviderName(providerNo);
+	}
+        
+        protected Provider getProvider(HttpServletRequest request) {
+		String providerNo = getProviderNo(request);
+		if (providerNo == null)	return null;                
+		return providerMgr.getProvider(providerNo);
 	}
 
 		
@@ -229,7 +242,7 @@ public class BaseCaseManagementEntryAction extends DispatchAction {
 		uList.add(cIssue);
 		caseManagementMgr.saveAndUpdateCaseIssues(uList);
 		// add new issues to ongoing concern
-		caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
+		//caseManagementMgr.addNewIssueToConcern((String) cform.getDemoNo(), iss.getDescription());
 		return cIssue;
 	}
 	
