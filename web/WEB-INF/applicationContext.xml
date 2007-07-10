@@ -179,6 +179,11 @@
 			<ref bean="sessionFactory" />
 		</property>
 	</bean>
+        <bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.hibernate.AppointmentDAOHibernate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
         <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.hibernate.MessagetblDAOHibernate">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
@@ -338,6 +343,9 @@
 		</property>
 		<property name="echartDAO">
 			<ref local="EchartDAO" />
+		</property>
+                <property name="apptDAO">
+			<ref local="ApptDAO" />
 		</property>
 		<property name="providerSignitureDao">
 			<ref local="ProviderSignitureDao" />
