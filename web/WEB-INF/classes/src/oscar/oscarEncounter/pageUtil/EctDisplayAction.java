@@ -43,8 +43,8 @@ public class EctDisplayAction extends Action {
     private static Hashtable Actions = null;
     protected static String dateFormat = "dd-MMM-yyyy";
     protected static final String ELLIPSES = "...";
-    protected static final int MAX_LEN_TITLE = 16;
-    protected static final int CROP_LEN_TITLE = 13;
+    protected static final int MAX_LEN_TITLE = 12;
+    protected static final int CROP_LEN_TITLE = 9;
     protected static final int MAX_LEN_KEY = 12;
     protected static final int CROP_LEN_KEY = 9;
     
@@ -62,6 +62,9 @@ public class EctDisplayAction extends Action {
             Actions.put("Dx", "/oscarEncounter/displayDisease.do");
             Actions.put("preventions", "/oscarEncounter/displayPrevention.do");
             Actions.put("consultation", "/oscarEncounter/displayConsultation.do");
+            Actions.put("allergies", "/oscarEncounter/displayAllergy.do");
+            Actions.put("issues", "/oscarEncounter/displayIssues.do");
+            Actions.put("Rx", "/oscarEncounter/displayRx.do");
             Actions.put("success", "/oscarEncounter/LeftNavBarDisplay.jsp");
             Actions.put("error", "/oscarEncounter/LeftNavBarError.jsp");
         }                
