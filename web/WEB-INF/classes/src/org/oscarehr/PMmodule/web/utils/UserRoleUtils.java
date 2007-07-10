@@ -8,6 +8,10 @@ public class UserRoleUtils {
 	public static final String USER_ROLE_SESSION_KEY = "userrole";
 	public static final String USER_SEPARATOR = ",";
 
+	public enum Roles {
+		doctor, admin, reception, nurse, external
+	}
+	
 	/**
 	 * This method will return an array of strings representing
 	 * the roles as extracted from the session. If there are no
