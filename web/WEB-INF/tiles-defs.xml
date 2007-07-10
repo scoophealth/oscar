@@ -283,13 +283,27 @@
 			value="/survey/surveyManager/importForm.jsp" />
 	</definition>
 	<definition
-		name="page.casemgmt.view"
-		path="/casemgmt/encounterLayout.jsp">
+		name="page.newcasemgmt.view"
+		path="/casemgmt/newEncounterLayout.jsp">
+                <put
+                        name="header"
+                        value="/casemgmt/newEncounterHeader.jsp" />
 		<put
 			name="navigation"
-			value="/casemgmt/navigation.jsp" />
+			value="/casemgmt/newNavigation.jsp" />
 		<put
 			name="body"
-			value="/casemgmt/CaseManagementView.jsp" />
-	</definition>
+			value="/casemgmt/newCaseManagementView.jsp" />                
+	</definition> 
+        <definition
+                name="page.casemgmt.view"
+                path="/casemgmt/encounterLayout.jsp">
+                <put
+                        name="navigation"
+                        value="/casemgmt/navigation.jsp" />
+                <put
+                        name="body"
+                        value="/casemgmt/CaseManagementView.jsp" />
+        </definition>
+
 </tiles-definitions>
