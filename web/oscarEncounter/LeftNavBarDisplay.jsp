@@ -1,7 +1,8 @@
 <%@page contentType="text/html"%>
 <%-- <%@page pageEncoding="UTF-8"%> --%>
 <%@page import="oscar.oscarEncounter.pageUtil.NavBarDisplayDAO, oscar.util.*"%>
-
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <%
     long startTime = System.currentTimeMillis();
     NavBarDisplayDAO dao = (NavBarDisplayDAO)request.getAttribute("DAO");
@@ -31,7 +32,7 @@
                 menuWidth *= 2;
             }
 %>
-            <div id=menu<%=rh%> class='menu' style='width: <%=menuWidth%>;' onclick='event.cancelBubble = true;'>
+            <div id=menu<%=rh%> class='menu' style='width: <%=menuWidth%>;px' onclick='event.cancelBubble = true;'>
             <h3 style='text-align:center'><%=dao.getMenuHeader()%></h3>
 <%            
             for(int idx = 0; idx < num; ++idx) {
@@ -87,18 +88,18 @@
      <%     
             if( expand && j == 0 ) {
      %>
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img id="<%=request.getAttribute("navbarName")%>topimg" src="../oscarMessenger/img/collapse.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img id="<%=request.getAttribute("navbarName")%>topimg" src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
      <%
             }
             if( expand && j == numToDisplay ) {
      %>
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-numToDisplay-1 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>midimg" src="graphics/expand.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-numToDisplay-1 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>midimg" src="<c:out value="${ctx}"/>/oscarEncounter/graphics/expand.gif"/></a>
      <%
             }
             
             if( j == dao.numItems()-1 && j > numToDisplay ) {
      %>           
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="../oscarMessenger/img/collapse.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
      <%
             }            
      %>
