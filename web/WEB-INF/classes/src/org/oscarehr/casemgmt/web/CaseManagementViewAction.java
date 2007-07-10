@@ -23,6 +23,7 @@
 package org.oscarehr.casemgmt.web;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,7 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
+import java.util.Set; 
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +44,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
+import org.caisi.model.Role;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -75,10 +78,21 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	public ActionForward setHideActiveIssues(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return view(mapping,form,request,response);
 	}
+        
+        public ActionForward saveAndExit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            return save(mapping, form, request, response);
+        }
 	
+        public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
+            CaseManagementCPP cpp=caseForm.getCpp();
+            String providerNo = getProviderNo(request);
+            caseManagementMgr.saveCPP(cpp,providerNo);
+            return null;
+        }
 
 	/*save CPP for patient*/
-	public ActionForward patientCPPSave(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ActionForward patientCPPSave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("patientCPPSave");
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
 		CaseManagementCPP cpp=caseForm.getCpp();
@@ -98,18 +112,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 	 * 						readonly
 	 */
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                long start = System.currentTimeMillis();
+                long current = 0;
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
 		String tab = request.getParameter("tab");
 		if(tab == null) {
 			tab = CaseManagementViewFormBean.tabs[0];
 		}		
-		
 		HttpSession se=request.getSession();
 		
 		String providerNo = getProviderNo(request);
 		String demoNo=getDemographicNo(request);
-
-		
 		//need to check to see if the client is in our program domain
 		//if not...don't show this screen!
 		if(!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo)) {
@@ -123,15 +136,23 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		//get client image
 		request.setAttribute("image_filename",this.getImageFilename(demoNo, request));
 
-		
 		String programId = (String)request.getSession().getAttribute("case_program_id");
+                
 		if(programId == null || programId.length() == 0 ) {
 			programId = "0";
 		}
+                
+                //check to see if there is an unsaved note
+                //if there is see if casemanagemententry has already handled it
+                //if it has, disregard unsaved note; if it has not then set attribute
 		String tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demoNo,programId);
 		if(tmpsavenote != null) {
-			request.setAttribute("can_restore",new Boolean(true));
-		}
+                        String restoring = (String)se.getAttribute("restoring");
+                        if( restoring == null )
+                            request.setAttribute("can_restore",new Boolean(true));
+                        else
+		           se.setAttribute("restoring", null);
+                }
 	
 		String teamName = "";
 		Admission admission = admissionMgr.getCurrentAdmission(programId, Integer.valueOf(demoNo));
@@ -175,15 +196,20 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			else
 				request.setAttribute("Issues",issues);
 			*/
+                        current = System.currentTimeMillis();
+                        System.out.println("GET ISSUES " + String.valueOf(current-start));
+                        start = current;
 			request.setAttribute("Issues",caseManagementMgr.filterIssues(issues,providerNo,programId));
-			
+                        current = System.currentTimeMillis();
+                        System.out.println("FILTER ISSUES " + String.valueOf(current-start));
+                        start = current;
 			
 			/* PROGRESS NOTES */			
 			List notes = null;
 			
-			//filter the notes by the checked issues
+			//filter the notes by the checked issues                        
 			String[] checked_issues = request.getParameterValues("check_issue");
-			if(checked_issues != null) {
+			if(checked_issues != null && checked_issues[0].trim().length() > 0 ) {                                
 				//need to apply a filter
 				request.setAttribute("checked_issues",checked_issues);
 				notes = caseManagementMgr.getNotes(this.getDemographicNo(request),checked_issues);
@@ -195,13 +221,30 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			
 			//apply role based access
 			//if(request.getSession().getAttribute("archiveView")!="true")
-				notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
+                        current = System.currentTimeMillis();
+                        System.out.println("GET NOTES " + String.valueOf(current-start));
+                        start = current;
+			notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
+                        current = System.currentTimeMillis();
+                        System.out.println("FILTER NOTES " + String.valueOf(current-start));
+                        start = current;
 			
 			//apply provider filter
 			Set providers = new HashSet();
-			notes = applyProviderFilter(notes,providers,caseForm.getFilter_provider());
+			notes = applyProviderFilters(notes,providers,caseForm.getFilter_providers());
+                        current = System.currentTimeMillis();
+                        System.out.println("FILTER NOTES PROVIDER " + String.valueOf(current-start));
+                        start = current;
 			request.setAttribute("providers", providers);
-			
+                        
+                        //apply if we are filtering on role
+                        List roles = roleMgr.getRoles();                        
+                        request.setAttribute("roles", roles);
+                        String[] roleId = caseForm.getFilter_roles();
+                        if( roleId != null && roleId.length > 0 )
+                            notes = applyRoleFilter(notes, roleId );
+			            
+                        
 			request.setAttribute("Notes", sort_notes(notes,caseForm.getNote_sort()));
 			
 			
@@ -265,9 +308,23 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		se.setAttribute("casemgmt_msgBeans", this.caseManagementMgr.getMsgBeans(new Integer(getDemographicNo(request))));
 		
 		//readonly access to define creat a new note button in jsp. 
-		se.setAttribute("readonly",new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only","access",providerNo,demoNo,(String)se.getAttribute("case_program_id"))));
-		
-		return mapping.findForward("page.casemgmt.view");
+		se.setAttribute("readonly",new Boolean(this.caseManagementMgr.hasAccessRight("note-read-only","access",providerNo,demoNo,(String)se.getAttribute("case_program_id"))));		                
+                
+		//if we have just saved a note, remove saveNote flag
+                Boolean saved =  (Boolean)se.getAttribute("saveNote");
+                if( saved != null && saved == true ) {
+                    request.setAttribute("saveNote", saved);
+                    se.removeAttribute("saveNote");
+                }
+                current = System.currentTimeMillis();
+                System.out.println("THE END " + String.valueOf(current-start));
+                    
+                String useNewCaseMgmt = (String)request.getSession().getAttribute("newCaseManagement");
+                if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") )
+                    return mapping.findForward("page.newcasemgmt.view");
+                else
+                    return mapping.findForward("page.casemgmt.view");
+              
 	}
 	
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -306,6 +363,9 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		if(field.equals("roleName")) {
 			Collections.sort(notes, CaseManagementNote.getRoleComparator());
 		}
+                if(field.equals("update_date_asc")) {
+                        Collections.reverse(notes);
+                }
 
 		return notes;
 	}
@@ -340,6 +400,25 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return mapping.findForward("unlockForm");
 	}
 	
+        public ActionForward do_unlock_ajax(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+                String password = request.getParameter("password");
+		int noteId = Integer.parseInt(request.getParameter("noteId"));                
+		
+                CaseManagementNote note = this.caseManagementMgr.getNote(request.getParameter("noteId"));
+                request.setAttribute("Note", note);
+		
+                boolean success = caseManagementMgr.unlockNote(noteId,password);
+		request.setAttribute("success",new Boolean(success));
+		
+		if(success) {
+                    Map unlockedNoteMap = this.getUnlockedNotesMap(request);
+                    unlockedNoteMap.put(new Long(noteId),new Boolean(success));
+                    request.getSession().setAttribute("unlockedNoteMap",unlockedNoteMap);                                            
+                }                
+                
+                return mapping.findForward("unlock_ajax");
+            
+        }
 	public ActionForward do_unlock(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
 		
@@ -368,6 +447,24 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		return map;
 	}
 	
+        protected List applyRoleFilter(List notes, String[] roleId ) {
+            
+            //if no filter return everything
+            if( Arrays.binarySearch(roleId, "a") >= 0 )
+                return notes;
+            
+            List filteredNotes = new ArrayList();
+            
+            for( Iterator iter = notes.listIterator(); iter.hasNext(); ) {
+                CaseManagementNote note = (CaseManagementNote)iter.next();
+                
+                if( Arrays.binarySearch(roleId, note.getReporter_caisi_role()) >= 0 )
+                    filteredNotes.add(note);
+            }
+            
+            return filteredNotes;
+        }
+        
 	/*
 	 * This method extracts a unique list of providers, and optionally
 	 * filters out all notes belonging to providerNo (arg2).
@@ -394,4 +491,33 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		
 		return filteredNotes;
 	}
+        
+        /*
+	 * This method extracts a unique list of providers, and optionally
+	 * filters out all notes belonging to providerNo (arg2).
+	 */
+	protected List applyProviderFilters(List notes, Set providers, String[] providerNo) {
+		boolean filter = false;
+		List filteredNotes = new ArrayList();
+		
+		if(providerNo != null && Arrays.binarySearch(providerNo, "a") < 0) {
+                    filter = true;
+		}
+		
+		for(Iterator iter = notes.iterator();iter.hasNext();) {
+			CaseManagementNote note = (CaseManagementNote)iter.next();
+			providers.add(note.getProvider());
+			if(!filter) {
+				//no filter, add all
+				filteredNotes.add(note);
+                                
+			} else {
+                            if( Arrays.binarySearch(providerNo, note.getProvider_no()) >=0) 
+				//correct provider 
+				filteredNotes.add(note);
+			}
+		}
+		
+		return filteredNotes;
+	}        
 }
