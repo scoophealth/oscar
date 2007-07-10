@@ -33,6 +33,7 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO;
 import org.oscarehr.casemgmt.dao.ClientImageDAO;
 import org.oscarehr.casemgmt.dao.EchartDAO;
+import org.oscarehr.casemgmt.dao.ApptDAO;
 import org.oscarehr.casemgmt.dao.EncounterFormDAO;
 import org.oscarehr.casemgmt.dao.IssueDAO;
 import org.oscarehr.casemgmt.dao.MessagetblDAO;
@@ -54,6 +55,7 @@ public class BaseCaseManagementManager {
 	protected EncounterFormDAO encounterFormDAO;
 	protected MessagetblDAO messagetblDAO;
 	protected EchartDAO echartDAO;
+        protected ApptDAO apptDAO;
 	protected ProviderDao providerDAO;
 	protected ClientDao demographicDAO;
 	protected ProviderSignitureDao providerSignitureDao;
@@ -76,6 +78,10 @@ public class BaseCaseManagementManager {
 	public void setEchartDAO(EchartDAO echartDAO) {
 		this.echartDAO = echartDAO;
 	}
+        
+        public void setApptDAO(ApptDAO apptDAO) {
+                this.apptDAO = apptDAO;
+        }
 
 	public void setEncounterFormDAO(EncounterFormDAO dao) {
 		this.encounterFormDAO = dao;
