@@ -36,7 +36,7 @@ public class ProgramProviderDAOHibernate extends HibernateDaoSupport implements 
 	private Log log = LogFactory.getLog(ProgramProviderDAOHibernate.class);
 
 	public List getProgramProviders(Long programId) {
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId.intValue() < 0) {
 			throw new IllegalArgumentException();
 		}
 
