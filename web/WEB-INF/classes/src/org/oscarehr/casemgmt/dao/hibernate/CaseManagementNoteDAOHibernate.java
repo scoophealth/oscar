@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +39,8 @@ import org.oscarehr.casemgmt.dao.CaseManagementNoteDAO;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import oscar.OscarProperties;
 
 public class CaseManagementNoteDAOHibernate extends HibernateDaoSupport
 		implements CaseManagementNoteDAO {
@@ -52,7 +55,10 @@ public class CaseManagementNoteDAOHibernate extends HibernateDaoSupport
 	}
 	
 	public List getNotesByDemographic(String demographic_no) {
-		return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.demographic_no = ? ORDER BY cmn.update_date DESC", new Object[] {demographic_no});
+                String sql;
+                sql = "from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid)";
+                
+		return this.getHibernateTemplate().find(sql, new Object[] {demographic_no});
 	}
 	
 	public List getNotesByDemographic(String demographic_no,String[] issues) {
@@ -66,13 +72,17 @@ public class CaseManagementNoteDAOHibernate extends HibernateDaoSupport
 				list += issues[x];
 			}
 		}
-		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") ORDER BY cmn.update_date DESC";
+		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.update_date DESC";
 		
 		return this.getHibernateTemplate().find(hql,demographic_no);
 	}
 
 	public void saveNote(CaseManagementNote note) {
-		this.getHibernateTemplate().saveOrUpdate(note);
+                if( note.getUuid() == null ) {
+                    UUID uuid = UUID.randomUUID();
+                    note.setUuid(uuid.toString());
+                }
+		this.getHibernateTemplate().save(note);
 	}
 
 	public List search(CaseManagementSearchBean searchBean) {
