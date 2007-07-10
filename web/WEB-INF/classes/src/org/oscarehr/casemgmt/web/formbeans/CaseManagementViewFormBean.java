@@ -50,6 +50,8 @@ public class CaseManagementViewFormBean extends ActionForm {
 	
 	private String note_sort = "update_date";
 	private String filter_provider = "";
+        private String filter_providers[];
+        private String filter_roles[];
 	
 	private long formId;
 	
@@ -219,6 +221,14 @@ public class CaseManagementViewFormBean extends ActionForm {
 	public void setNoteId(int noteId) {
 		this.noteId = noteId;
 	}
+        
+        public String[] getFilter_providers() {
+            return this.filter_providers;
+        }
+        
+        public void setFilter_providers( String[] provs ) {
+            this.filter_providers = provs;
+        }
 
 	public String getFilter_provider() {
 		return filter_provider;
@@ -226,6 +236,14 @@ public class CaseManagementViewFormBean extends ActionForm {
 
 	public void setFilter_provider(String filter_provider) {
 		this.filter_provider = filter_provider;
+	}
+        
+        public String[] getFilter_roles() {
+		return filter_roles;
+	}
+
+	public void setFilter_roles(String[] filter_roles) {
+		this.filter_roles = filter_roles;
 	}
 
 	public long getFormId() {
