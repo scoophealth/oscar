@@ -22,9 +22,10 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.io.Serializable;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 
-public class CheckBoxBean
+public class CheckBoxBean implements Serializable
 {
 	private String checked = "off";
 	private CaseManagementIssue issue = new CaseManagementIssue();

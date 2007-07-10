@@ -22,10 +22,11 @@
 
 package org.oscarehr.casemgmt.web;
 
+import java.io.Serializable;
 import org.oscarehr.casemgmt.model.Issue;
 
 
-public class CheckIssueBoxBean
+public class CheckIssueBoxBean implements Serializable
 {
 	private boolean isChecked = false;
 	private Issue issue = new Issue();
