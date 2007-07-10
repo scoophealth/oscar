@@ -21,7 +21,20 @@
 * Toronto, Ontario, Canada 
 */
  -->
+<%@ include file="/casemgmt/taglibs.jsp" %>
 
 <!--  logic:redirect forward="/admissionListAction.admit"  / -->
 
-<jsp:forward  page="/CaseManagementView.do"  />
+<%
+    String useNewCaseMgmt = (String)session.getAttribute("newCaseManagement");
+    if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") ) {
+%>
+        <jsp:forward page="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&chain=list" />
+<%
+    }
+    else {
+%>
+        <jsp:forward  page="/CaseManagementView.do"  />
+<%
+    }
+%>
