@@ -83,6 +83,24 @@ You have no rights to access the data!
     return;
   }
 %>
+
+<!-- check to see if new case management is request -->
+<oscar:oscarPropertiesCheck property="CASEMANAGEMENT" value="yes">
+<%
+    session.setAttribute("newCaseManagement", "true");
+%>
+    <caisi:isModuleLoad moduleName="caisi" reverse="true">
+        <%
+            session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
+            session.setAttribute("casemgmt_oscar_bean", bean);
+            session.setAttribute("casemgmt_bean_flag", "true");
+            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
+            response.sendRedirect(hrefurl);            
+        %>                                
+    </caisi:isModuleLoad>
+</oscar:oscarPropertiesCheck>
+				
+
 <!-- add by caisi  --> 
 
 <caisi:isModuleLoad moduleName="caisi">
@@ -1092,9 +1110,8 @@ white-space: nowrap;
                                 url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
                         %>
                             <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
-
-<a href="javascript:popupPage(400,850,'ApptHist','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&last_name=<%=bean.patientLastName%>&first_name=<%=bean.patientFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')" style="font-size: 11px;" title="Click to see appointment history"><span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span></a>
- 
+                            <span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
+                    
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             
                             <form style="display:inline;" name="ksearch" >
