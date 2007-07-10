@@ -465,6 +465,9 @@
         <property name="caseManagementManager">
             <ref bean="CaseManagementManager" />
         </property>
+        <property name="providerManager">
+            <ref bean="providerManager"/>
+        </property>
     </bean>
     <bean name="/ClientImage" class="org.oscarehr.casemgmt.web.ClientImageAction" singleton="false">
         <property name="clientImageManager">
@@ -476,6 +479,12 @@
             <ref bean="programManager" />
         </property>
     </bean>
+    <bean name="/oscarEncounter/displayIssues" class="oscar.oscarEncounter.pageUtil.EctDisplayIssuesAction" singleton="false">
+        <property name="caseManagementManager">
+            <ref bean="CaseManagementManager" />
+        </property>
+     </bean>
+
     <!--  Vaccine -->
     <bean name="/VaccineProviderReport" class="org.oscarehr.vaccine.VaccineProviderReportAction" singleton="false">
         <property name="programManager">
