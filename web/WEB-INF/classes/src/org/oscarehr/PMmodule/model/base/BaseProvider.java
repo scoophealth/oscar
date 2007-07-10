@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.model.base;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 
 /**
@@ -411,7 +412,22 @@ public abstract class BaseProvider  implements Serializable {
 	public void setRmaNo (java.lang.String _rmaNo) {
 		this._rmaNo = _rmaNo;
 	}
-
+        
+        public ComparatorName ComparatorName() {
+            return new ComparatorName();
+        }
+        
+        public class ComparatorName implements Comparator, Serializable{
+            
+            public int compare( Object o1, Object o2 ) {
+                BaseProvider bp1 = (BaseProvider)o1;
+                BaseProvider bp2 = (BaseProvider)o2;
+                String lhs = bp1.getLastName() + bp1.getFirstName();
+                String rhs = bp2.getLastName() + bp2.getFirstName();
+                
+                return lhs.compareTo(rhs);
+            }
+        }
 
 	public boolean equals (Object obj) {
 		if (null == obj) return false;
