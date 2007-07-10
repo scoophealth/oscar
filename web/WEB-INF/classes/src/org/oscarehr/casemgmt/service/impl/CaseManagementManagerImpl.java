@@ -32,7 +32,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.struts.util.LabelValueBean;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import org.caisi.model.Role;
+import org.caisi.model.Appointment;
+
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
@@ -50,7 +53,10 @@ import org.oscarehr.casemgmt.model.Messagetbl;
 
 public class CaseManagementManagerImpl extends BaseCaseManagementManager implements org.oscarehr.casemgmt.service.CaseManagementManager {
 
-
+        public void updateAppointment(String apptId, String status, String type) {
+            
+            apptDAO.updateAppointmentStatus(apptId, status, type);
+        }    
 
 	public String saveNote(CaseManagementCPP cpp, CaseManagementNote note,
 			String cproviderNo, String userName, String lastStr,String roleName)
@@ -60,9 +66,10 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 		String noteStr = note.getNote();
 		String noteHistory = note.getHistory();
 		Date now = new Date();
+                note.setUpdate_date(now);
 		// process noteStr, remove existing signed on string
 		// noteStr = removeSignature(noteStr);
-		if (note.isSigned())
+		/*if (note.isSigned())
 		{
 			// add the time, signiture and role at the end of note
 			String rolename="";
@@ -104,11 +111,14 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 		
 		
 		caseManagementNoteDAO.saveNote(note);
-		return echartDAO.saveEchart(note, cpp, userName, lastStr);
+		return null; //echartDAO.saveEchart(note, cpp, userName, lastStr);
 
 	}
 
-
+        /*public net.sf.hibernate.Session getSession() {
+            //org.oscarehr.casemgmt.dao.hibernate.CaseManagementNoteDAOHibernate h = this.caseManagementNoteDAO.;
+            
+        }*/
 
 	public List getNotes(String demographic_no)
 	{
@@ -274,7 +284,7 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 	public void saveCPP(CaseManagementCPP cpp, String providerNo)
 	{
 		caseManagementCPPDAO.saveCPP(cpp);
-		echartDAO.saveCPPIntoEchart(cpp, providerNo);
+		//echartDAO.saveCPPIntoEchart(cpp, providerNo);
 	}
 
 	public List getIssueInfoBySearch(String providerNo, String search,
@@ -632,7 +642,7 @@ public class CaseManagementManagerImpl extends BaseCaseManagementManager impleme
 		if(ppList == null || ppList.isEmpty()) {
 			return new ArrayList();
 		}
-		
+		                
 		ProgramProvider pp = (ProgramProvider)ppList.get(0);
 		Role role = pp.getRole();
 		
