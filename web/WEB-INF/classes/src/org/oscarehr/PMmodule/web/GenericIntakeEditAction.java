@@ -46,12 +46,7 @@ import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.context.ApplicationContext;
-
-import oscar.OscarProperties;
 
 public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
@@ -248,7 +243,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		return currentProgramIds;
 	}
 	
-	private void saveClient(Demographic client, String providerNo) throws IntegratorException {
+	private void saveClient(Demographic client, String providerNo) {
 		client.setProviderNo(providerNo);
 		
 		Demographic.OptingStatus defaultOptingStatus=null;
