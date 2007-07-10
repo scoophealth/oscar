@@ -35,13 +35,15 @@
 		<property name="reporter_caisi_role" />
 		<property name="reporter_program_team" />
 		<property name="history" />
-		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" not-found='ignore' insert="false" lazy="false" />
-		<set name="issues" table="casemgmt_issue_notes">
+                <property name="uuid" />
+		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" not-found='ignore' insert="false" lazy="false" />                
+		<set name="issues" table="casemgmt_issue_notes" lazy="false">
 			<key column="note_id" />
 			<many-to-many column="id" class="org.oscarehr.casemgmt.model.CaseManagementIssue" />
 		</set>
 		<property name="roleName" type="string" formula="(select r.name from caisi_role r where r.role_id = reporter_caisi_role)" />
 		<property name="programName" type="string" formula="(select p.name from program p where p.program_id = program_no)" />
+                <property name="revision" type="string" formula="(select count(cmn.uuid) from casemgmt_note cmn where cmn.uuid = uuid)" />
 		<property name="password" type="string" column="password" />
 		<property name="locked" type="boolean" column="locked" />
 	</class>

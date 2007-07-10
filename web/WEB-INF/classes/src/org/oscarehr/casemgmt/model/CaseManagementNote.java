@@ -49,10 +49,12 @@ public class CaseManagementNote extends BaseObject {
 	private String reporter_caisi_role;
 	private String reporter_program_team;
 	private String history;	
-	private Provider provider;	
+	private Provider provider;        
 	private Set issues = new HashSet();
 	private String roleName;
 	private String programName;
+        private String uuid;
+        private String revision;
 	
 	private String password;
 	private boolean locked;
@@ -131,7 +133,7 @@ public class CaseManagementNote extends BaseObject {
 	}
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
-	}
+	}       
 	public String getProvider_no() {
 		return provider_no;
 	}
@@ -151,7 +153,8 @@ public class CaseManagementNote extends BaseObject {
 	}
 	public void setProvider(Provider provider) {
 		this.provider = provider;
-	}
+	}               
+        
 	public Set getIssues() {
 		return issues;
 	}
@@ -230,7 +233,22 @@ public class CaseManagementNote extends BaseObject {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
+        
+        public void setUuid( String uuid ) {
+            this.uuid = uuid;
+        }
 	
+        public String getUuid() {
+            return this.uuid;
+        }
+        
+        public void setRevision( String rev ) {
+            this.revision = rev;
+        }
+        
+        public String getRevision() {
+            return this.revision;
+        }
 	
 	public String getProviderName() {
 		if(getProvider() == null) {
