@@ -35,6 +35,7 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
+import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	
@@ -58,7 +59,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		
 		// if no remote matches, search for local matches
 		if (!intakeSearchBean.isRemoteMatch()) {
-			List<?> localMatches = localSearch(intakeSearchBean);
+			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external.name());
+			List<?> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
 			intakeSearchBean.setLocalMatches(localMatches);
 		}
 		
@@ -110,14 +112,14 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		return matches;
 	}
 
-	private List<?> localSearch(GenericIntakeSearchFormBean intakeSearchBean) {
+	private List<?> localSearch(GenericIntakeSearchFormBean intakeSearchBean, boolean allowOnlyOptins) {
 		ClientSearchFormBean clientSearchBean = new ClientSearchFormBean();
 		clientSearchBean.setFirstName(intakeSearchBean.getFirstName());
 		clientSearchBean.setLastName(intakeSearchBean.getLastName());
 		clientSearchBean.setSearchOutsideDomain(true);
 		clientSearchBean.setSearchUsingSoundex(true);
 
-		return clientManager.search(clientSearchBean);
+		return clientManager.search(clientSearchBean, allowOnlyOptins);
 	}
 		
 	private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean) {

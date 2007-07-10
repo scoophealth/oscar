@@ -87,7 +87,7 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 	/*
 	 * use program_client table to do domain based search
 	 */
-	public List search(ClientSearchFormBean bean) {
+	public List search(ClientSearchFormBean bean, boolean returnOptinsOnly) {
 		Criteria criteria = getSession().createCriteria(Demographic.class);
 		String firstName = "";
 		String lastName = "";
@@ -158,6 +158,9 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		criteria.addOrder(Order.asc("LastName"));
 		List results = criteria.list();
 
+// TODO : determine the best way to filter results here
+// options are post sql filtering or joining on the sql query
+				
 		if (log.isDebugEnabled()) {
 			log.debug("search: # of results=" + results.size());
 		}

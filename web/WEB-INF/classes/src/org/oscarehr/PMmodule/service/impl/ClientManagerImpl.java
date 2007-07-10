@@ -100,9 +100,8 @@ public class ClientManagerImpl implements ClientManager {
 		return dao.getClients();
 	}
 
-	public List search(ClientSearchFormBean criteria) {
-		//return dao.search(criteria);
-		return dao.search(criteria);
+	public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
+		return dao.search(criteria, returnOptinsOnly);
 	}
 
 	public java.util.Date getMostRecentIntakeADate(String demographicNo) {

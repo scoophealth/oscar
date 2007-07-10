@@ -43,7 +43,7 @@ public interface ClientDao {
 
 	public List getClients();
 
-	public List search(ClientSearchFormBean criteria);
+	public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly);
 
 	public Date getMostRecentIntakeADate(Integer demographicNo);
 

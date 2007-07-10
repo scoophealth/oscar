@@ -22,10 +22,12 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +36,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 
 public class ClientSearchAction2 extends BaseAction {
 	
@@ -59,7 +62,8 @@ public class ClientSearchAction2 extends BaseAction {
 		
 		/* do the search */
 		formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
-		request.setAttribute("clients",clientManager.search(formBean));
+		boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external.name());
+		request.setAttribute("clients",clientManager.search(formBean, allowOnlyOptins));
 		
 		if(formBean.isSearchOutsideDomain()) {
 			logManager.log("read","out of domain client search","",request);

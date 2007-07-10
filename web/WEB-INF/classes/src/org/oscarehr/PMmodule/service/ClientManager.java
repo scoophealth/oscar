@@ -38,7 +38,7 @@ public interface ClientManager  {
 
 	public List getClients();
 		
-	public List search(ClientSearchFormBean criteria);
+	public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly);
 
 	public java.util.Date getMostRecentIntakeADate(String demographicNo);
 	

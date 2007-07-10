@@ -38,6 +38,7 @@ import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.PreIntakeForm;
+import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 
 public class IntakeAction extends BaseAction {
 
@@ -86,7 +87,9 @@ public class IntakeAction extends BaseAction {
 			searchBean.setSearchOutsideDomain(true);
 			searchBean.setSearchUsingSoundex(true);
 			
-			List resultList = clientManager.search(searchBean);
+			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external.name());
+
+			List resultList = clientManager.search(searchBean,allowOnlyOptins);
 			results = (Demographic[])resultList.toArray(new Demographic[resultList.size()]);
 			log.debug("local search found " + results.length + " match(es)");		
 			
