@@ -254,7 +254,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		Demographic.OptingStatus defaultOptingStatus=null;
 		
 		String optingDefaultString=PropertiesUtils.getProperties().getProperty("DATA_SHARING_OPTING_DEFAULT");
-System.err.println("VALUE : "+optingDefaultString);
 		// yes I know this step is silly since I convert it back to a string later but it ensures it's a valid option.
 		if (optingDefaultString!=null) defaultOptingStatus=Demographic.OptingStatus.valueOf(optingDefaultString);
 		
