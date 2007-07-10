@@ -755,70 +755,7 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="surveyUserManager" class="org.oscarehr.survey.service.impl.UserManagerOscar" />
-	<bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-		<property name="transactionManager">
-			<ref local="transactionManager" />
-		</property>
-		<property name="target">
-			<ref local="CaseManagementManagerTarget" />
-		</property>
-		<property name="transactionAttributes">
-			<props>
-				<prop key="*">PROPAGATION_REQUIRED</prop>
-			</props>
-		</property>
-	</bean>
-	<bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.impl.CaseManagementManagerImpl">
-		<property name="caseManagementNoteDAO">
-			<ref local="CaseManagementNoteDAO" />
-		</property>
-		<property name="caseManagementIssueDAO">
-			<ref local="CaseManagementIssueDAO" />
-		</property>
-		<property name="caseManagementCPPDAO">
-			<ref local="CaseManagementCPPDAO" />
-		</property>
-		<property name="allergyDAO">
-			<ref local="AllergyDAO" />
-		</property>
-		<property name="prescriptionDAO">
-			<ref local="PrescriptionDAO" />
-		</property>
-		<property name="issueDAO">
-			<ref local="IssueDAO" />
-		</property>
-		<property name="encounterFormDAO">
-			<ref local="EncounterFormDAO" />
-		</property>
-		<property name="messagetblDAO">
-			<ref local="MessagetblDAO" />
-		</property>
-		<property name="echartDAO">
-			<ref local="EchartDAO" />
-		</property>
-		<property name="providerSignitureDao">
-			<ref local="ProviderSignitureDao" />
-		</property>
-		<property name="providerDAO">
-			<ref local="providerDao" />
-		</property>
-		<property name="demographicDAO">
-			<ref local="clientDao" />
-		</property>
-		<property name="roleProgramAccessDAO">
-			<ref local="RoleProgramAccessDAO" />
-		</property>
-		<property name="clientImageDAO">
-			<ref local="ClientImageDAO" />
-		</property>
-		<property name="roleManager">
-			<ref local="roleManager" />
-		</property>
-		<property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO" />
-		<property name="admissionManager" ref="admissionManager" />
-		<property name="enabled" value="${casemgmt.note.password.enabled}" />		
-	</bean>
+	<bean id="surveyUserManager" class="org.oscarehr.survey.service.impl.UserManagerOscar" />	
 	<bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 		<property name="transactionManager">
 			<ref local="transactionManager" />
