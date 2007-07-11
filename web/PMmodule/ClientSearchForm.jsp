@@ -46,7 +46,9 @@
 				</tr>
 				
 				<tr>
-					<th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
+					<!--  <th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
+					-->
+					<th>Search all clients <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
 					<c:if test="${sessionScope.outsideOfDomainEnabled=='true'}">
 						<td><html:checkbox property="criteria.searchOutsideDomain" /></td>
 					</c:if>
