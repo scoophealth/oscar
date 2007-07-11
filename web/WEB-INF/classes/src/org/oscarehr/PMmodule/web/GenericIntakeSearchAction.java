@@ -59,7 +59,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		
 		// if no remote matches, search for local matches
 		if (!intakeSearchBean.isRemoteMatch()) {
-			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external.name());
+			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 			List<?> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
 			intakeSearchBean.setLocalMatches(localMatches);
 		}

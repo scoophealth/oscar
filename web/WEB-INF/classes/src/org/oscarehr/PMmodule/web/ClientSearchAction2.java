@@ -62,7 +62,7 @@ public class ClientSearchAction2 extends BaseAction {
 		
 		/* do the search */
 		formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
-		boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external.name());
+		boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 		request.setAttribute("clients",clientManager.search(formBean, allowOnlyOptins));
 		
 		if(formBean.isSearchOutsideDomain()) {

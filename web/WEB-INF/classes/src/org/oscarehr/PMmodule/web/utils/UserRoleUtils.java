@@ -32,6 +32,14 @@ public class UserRoleUtils {
 	 * This method checks to see if the currently logged in user has the role.
 	 * This method is inefficient and just iterates through all the roles right now.
 	 */
+	public static boolean hasRole(HttpServletRequest request, Roles role) {
+		return(hasRole(request,role.name()));
+	}
+		
+	/**
+	 * This method checks to see if the currently logged in user has the role.
+	 * This method is inefficient and just iterates through all the roles right now.
+	 */
 	public static boolean hasRole(HttpServletRequest request, String role) {
 		
 		for (String temp : getUserRoles(request)) {

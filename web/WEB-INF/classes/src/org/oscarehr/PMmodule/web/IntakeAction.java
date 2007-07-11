@@ -87,7 +87,7 @@ public class IntakeAction extends BaseAction {
 			searchBean.setSearchOutsideDomain(true);
 			searchBean.setSearchUsingSoundex(true);
 			
-			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external.name());
+			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 
 			List resultList = clientManager.search(searchBean,allowOnlyOptins);
 			results = (Demographic[])resultList.toArray(new Demographic[resultList.size()]);
