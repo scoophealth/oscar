@@ -66,7 +66,7 @@ function showEMPILinks() {
 }
 
 function updateSharingOpting(state) {
-	location.href = '/oscar/PMmodule/ClientManager.do' + "?method=update_sharing_opting&state="+state+"&id=<c:out value='${client.demographicNo}'/>";
+	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=update_sharing_opting&state="+state+"&id=<c:out value='${client.demographicNo}'/>";
 }
 
 </script>
