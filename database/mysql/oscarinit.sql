@@ -6972,8 +6972,6 @@ CREATE TABLE `reportFilter` (
   INDEX `report_id` (`report_id`)
 ) ;
 
-
-
 CREATE TABLE `demographicExt` (
   `id` int(10) NOT NULL auto_increment,
   `demographic_no` int(10) default NULL,
@@ -6982,7 +6980,8 @@ CREATE TABLE `demographicExt` (
   `value` text,
   `date_time` datetime default NULL,
   `hidden` char(1) default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  INDEX (demographic_no)
 ) ;
 
 CREATE TABLE `relationships` (
