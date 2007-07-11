@@ -1,5 +1,46 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
+<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.oscarehr.PMmodule.service.ClientManager"%>
+<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
+<%@page import="org.oscarehr.PMmodule.model.DemographicExt"%>
+
+<%
+	// This section is an obnoxtious security check with not so glamourous user feedback, but I don't really
+	// care right now as it would be a hacker or improper use that triggers this.
+	// As for a better security architecture, that will have to wait for refactoring of the entire system.
+
+	boolean userHasExternalRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+	if (userHasExternalRole)
+	{
+		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+		ClientManager clientManager = (ClientManager) applicationContext.getBean("clientManager");
+		DemographicExt demographicExt=clientManager.getDemographicExt(Integer.parseInt(request.getParameter("id")), Demographic.SHARING_OPTING_KEY);
+		boolean allowed=false;
+		
+		if (demographicExt!=null)
+		{
+			Demographic.OptingStatus optingStatus=Demographic.OptingStatus.valueOf(demographicExt.getValue());
+			if (optingStatus==Demographic.OptingStatus.IMPLICITLY_OPTED_IN || optingStatus==Demographic.OptingStatus.OPTED_IN)
+			{
+				allowed=true;
+			}
+		}
+			
+		if (!allowed)
+		{
+			// the status won't take affect but it's good practice to put it here, it's the dodgy nested includes which break this.
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN, "You do not have the required roles to access this resource.");
+			// as a result we'll manually print a forbidden.
+			%>
+				<span>You do not have the required roles to access this resource.</span>
+			<%
+			return;
+		}
+	}
+%>
 <html:form action="/PMmodule/ClientManager.do">
 	
 	<html:hidden property="view.tab" />
