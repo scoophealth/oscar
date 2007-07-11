@@ -704,4 +704,28 @@ public class SqlUtils {
         ret.append(")");
         return ret.toString();
     }
+ 
+    /**
+     * This method will return a string similar 
+     * to "(?,?,?,?)". The intent is that this 
+     * method will be used to build "in clauses"
+     * like select * from foo where x in (?,?,?)
+     * for prepared statements.
+     */
+    public static String constructInClauseForPreparedStatements(int numberOfParameters)
+    {
+    	if (numberOfParameters<=0) throw(new IllegalArgumentException("Don't call this method if the numberOfParameters is <1 it doesn't make sense."));
+    	
+    	StringBuilder sb=new StringBuilder();
+    	sb.append('(');
+
+    	for (int i=0; i<numberOfParameters; i++)
+    	{
+    		if (i>0) sb.append(',');
+    		sb.append('?');
+    	}
+    	
+    	sb.append(')');
+    	return(sb.toString());
+    }
 }
