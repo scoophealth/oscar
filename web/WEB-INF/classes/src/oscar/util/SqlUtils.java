@@ -30,13 +30,20 @@ import java.sql.*;
 import java.sql.Date;
 import java.text.*;
 import java.util.*;
-import java.util.Enumeration;
+import java.util.logging.Level;
+
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.*;
+import org.oscarehr.PMmodule.web.ClientSearchAction2;
+
 import oscar.oscarDB.*;
 
 public class SqlUtils {
-    static Category cat = Category.getInstance(SqlUtils.class.getName());
+	private static Log logger = LogFactory.getLog(SqlUtils.class);
+	
+	static Category cat = Category.getInstance(SqlUtils.class.getName());
     
     Connection conn = null;
     
@@ -728,4 +735,48 @@ public class SqlUtils {
     	sb.append(')');
     	return(sb.toString());
     }
+    
+	/**
+	 * This method will close the resources passed in.
+	 * Pass in null for anything you don't want closed.
+	 * All exceptions will be logged at WARN level but not 
+	 * rethrown. Note that if you retrieved the connection
+	 * from something like hibernate/jpa you should 
+	 * not close the connection, let the entityManager / sessionManager do that, 
+	 * just close the statement and resultset.
+	 */
+	public static void closeResources(Connection c, Statement s, ResultSet rs) {
+
+		if (rs != null) {
+			try {
+				rs.close();
+			}
+			catch (SQLException e) {
+				logger.warn("Error closing ResultSet.", e);
+			}
+		}
+
+		if (s != null) {
+			try {
+				s.close();
+			}
+			catch (SQLException e) {
+				logger.warn("Error closing Statement.", e);
+			}
+		}
+
+		if (c != null) {
+			try {
+				c.close();
+			}
+			catch (Exception e) {
+				if (e.getMessage().toLowerCase().indexOf("already closed") >= 0) {
+					// I don't care.
+				}
+				else {
+					logger.warn("Error closing Connection.", e);
+				}
+			}
+		}
+	}
 }
