@@ -283,6 +283,7 @@ CREATE TABLE `casemgmt_note` (
   `history` mediumtext NOT NULL,
   `password` varchar(255) default NULL,
   `locked` char(1) default NULL,
+  `uuid` char(36) default NULL,
   PRIMARY KEY  (`note_id`),
   KEY `FKA8D537806CCA0FC` (`provider_no`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
