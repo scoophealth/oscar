@@ -1,10 +1,30 @@
 /*
- * SetColor.java
+ *  Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
+ *  This software is published under the GPL GNU General Public License.
+ *  This program is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *  GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * Created on July 3, 2007, 9:39 AM
+ *  Jason Gallagher
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ *  This software was written for the
+ *  Department of Family Medicine
+ *  McMaster University
+ *  Hamilton
+ *  Ontario, Canada
+ *
+ * PHRMessageAction.java
+ *
+ * Created on June 4, 2007, 4:51 PM
+ *
  */
 
 package org.oscarehr.phr.taglib;
@@ -25,18 +45,18 @@ public class SetColor extends TagSupport {
     
     private String newMessagesHtml = "<font color=\"red\">";
     private String noNewMessagesHtml = "<font color=\"black\">";
-    private String noAuthorizationHtml = "<font color=\"grey\">";
+    private String noAuthorizationHtml = "<font color=\"gray\">";
     private String closingHtml = "</font>";
     //private PHRService phrService = null;
     
     public int doStartTag() {
         PHRService phrService = (PHRService) getAppContext()
 				.getBean("phrService");
-        PHRAuthentication phrAuth = (PHRAuthentication) pageContext.getSession().getAttribute("phrAuth");
+        PHRAuthentication phrAuth = (PHRAuthentication) pageContext.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
         String providerNo = (String) pageContext.getSession().getAttribute("user");
-        System.out.println("provider: " + providerNo);
-        System.out.println("phrAuth: " + phrAuth);
-        System.out.println("validAuth: " + phrService.validAuthentication(phrAuth));
+        //System.out.println("provider: " + providerNo);
+        //System.out.println("phrAuth: " + phrAuth);
+        //System.out.println("validAuth: " + phrService.validAuthentication(phrAuth));
         try {
             if (phrAuth == null || !phrService.validAuthentication(phrAuth) || providerNo == null) {
                 pageContext.getOut().print(noAuthorizationHtml);
