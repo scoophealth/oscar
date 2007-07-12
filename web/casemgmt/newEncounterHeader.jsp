@@ -46,8 +46,12 @@
         famDocSurname = prov.getSurname();
         ProviderColourUpdater colourUpdater = new ProviderColourUpdater(bean.familyDoctorNo);
         famDocColour = colourUpdater.getColour();
-        //we calculate inverse of provider colour for text
-        int num = Integer.parseInt(famDocColour.substring(1), 16);      //strip leading # sign and convert
+        //we calculate inverse of provider colour for text        
+        int base = 16;
+        if( famDocColour.length() == 0 )
+            famDocColour = "#CCCCFF";   //default blue if no preference set
+            
+        int num = Integer.parseInt(famDocColour.substring(1), base);      //strip leading # sign and convert        
         int inv = ~num;                                                 //get inverse
         inverseFamDocColour = Integer.toHexString(inv).substring(2);    //strip 2 leading digits as html colour codes are 24bits
     }
