@@ -525,11 +525,12 @@
                 <ref bean="phrService" />
             </property>
             <property name="phrDocumentDAO">
-			<ref bean="phrDocumentDAO" />
-	    </property>
+                <ref bean="phrDocumentDAO" />
+            </property>
+            <property name="phrConstants">
+                <ref bean="phrConstants" />
+            </property>
         </bean>
-    
-         
         <bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
             <property name="phrService">
                 <ref bean="phrService" />
@@ -546,5 +547,11 @@
                 <ref bean="phrConstants" />
             </property>
         </bean>
-    
+        <bean name="/phr/Login" class="org.oscarehr.phr.web.PHRLoginAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
+        </bean>
+        <bean name="/phr/Logout" class="org.oscarehr.phr.web.PHRLogoutAction" singleton="false">
+        </bean>
 </beans>

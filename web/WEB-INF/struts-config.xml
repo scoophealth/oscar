@@ -1385,7 +1385,10 @@
             <forward name="read"  path="/phr/msg/ReadPHRMessage.jsp"/>
             <forward name="create" path="/phr/msg/CreatePHRMessage.jsp"/>
         </action>
-                
+        <action path="/phr/Login" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+        </action>
+        <action path="/phr/Logout" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+        </action>
         
         
     </action-mappings>
