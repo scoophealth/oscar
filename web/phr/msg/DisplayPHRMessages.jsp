@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
-<%@ page import="oscar.indivoMessenger.*"%>
+
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 
