@@ -3,8 +3,8 @@ function phrActionPopup(url) {
 }
 
 function phrActionPopup(url, windowName){   
-  var height = 100;
-  var width = 200;
+  var height = 200;
+  var width = 350;
   var top = 300;
   var left = 400;
   var page = url;
