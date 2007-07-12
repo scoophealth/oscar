@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
+import org.oscarehr.phr.PHRConstants;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
@@ -51,12 +52,17 @@ import oscar.oscarProvider.data.ProviderMyOscarIdData;
  *
  * @author jay
  */
-public class PHRMessageAction extends  PHRLoginAction {  
+public class PHRMessageAction extends DispatchAction {  
     
     private static Log log = LogFactory.getLog(PHRMessageAction.class);
     
     PHRDocumentDAO phrDocumentDAO;
     PHRService phrService;
+    PHRConstants phrConstants;
+    
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+       return super.execute(mapping, form, request, response);
+    }
     
     /** Creates a new instance of PHRMessageAction */
     public PHRMessageAction() {
@@ -64,11 +70,13 @@ public class PHRMessageAction extends  PHRLoginAction {
     
     public void setPhrDocumentDAO(PHRDocumentDAO phrDocumentDAO) {
         this.phrDocumentDAO = phrDocumentDAO;
-        
     }
     
-    public void setPhrService(PHRService phrService){
-      super.setPhrService(phrService);
+    public void setPhrConstants(PHRConstants phrConstants) {
+        this.phrConstants = phrConstants;
+    }
+    
+    public void setPhrService(PHRService phrService) {
       this.phrService = phrService;
     }
     
@@ -79,24 +87,24 @@ public class PHRMessageAction extends  PHRLoginAction {
     }
     
     public ActionForward viewMessages(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        PHRAuthentication auth  = (PHRAuthentication) request.getAttribute("INDIVO_AUTH"); 
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
         log.debug("AUTH "+auth);
         String indivoId   = auth.getUserId();
-        String ticket     = auth.getToken();
+        String ticket     = auth.getToken();*/
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocuments("urn:org:indivo:document:classification:message", providerNo);
+        List docs = phrDocumentDAO.getDocuments(phrConstants.DOCTYPE_MESSAGE(), providerNo);
  
-        if(docs  != null){
+        if(docs != null) {
             request.getSession().setAttribute("indivoMessages", docs);
-        } 
+        }
         return mapping.findForward("view");
     }
-     
+    
     public ActionForward read(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        PHRAuthentication auth  = (PHRAuthentication) request.getAttribute("INDIVO_AUTH"); 
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
         log.debug("AUTH "+auth);
         String indivoId   = auth.getUserId();
-        String ticket     = auth.getToken();
+        String ticket     = auth.getToken();*/
         String providerNo = (String) request.getSession().getAttribute("user");
         String id = request.getParameter("id");
         PHRDocument doc = phrDocumentDAO.getDocumentById(id);
@@ -122,10 +130,10 @@ public class PHRMessageAction extends  PHRLoginAction {
     // Reply is a create but displays the message being re 
     // 
     public ActionForward reply(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        PHRAuthentication auth  = (PHRAuthentication) request.getAttribute("INDIVO_AUTH"); 
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
         log.debug("AUTH "+auth);
         String indivoId   = auth.getUserId();
-        String ticket     = auth.getToken();
+        String ticket     = auth.getToken();*/
         String providerNo = (String) request.getSession().getAttribute("user");
         String id = request.getParameter("id");
         
@@ -181,7 +189,7 @@ public class PHRMessageAction extends  PHRLoginAction {
     }
     
     public ActionForward createMessage(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        PHRAuthentication auth  = (PHRAuthentication) request.getAttribute("INDIVO_AUTH"); 
+        //PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
         String demographicNo = request.getParameter("demographicNo");
         String provNo = (String) request.getSession().getAttribute("user");
         DemographicData dd = new DemographicData();

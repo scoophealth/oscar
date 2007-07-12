@@ -40,6 +40,8 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.indivo.IndivoException;
+import org.indivo.client.ActionNotPerformedException;
 import org.indivo.client.TalkClient;
 import org.indivo.client.TalkClientImpl;
 import org.indivo.xml.phr.DocumentUtils;
@@ -118,22 +120,30 @@ public class IndivoServiceImpl  implements PHRService{
         return true;
     }
     
-    public PHRAuthentication authenticate(String providerNo,String password){
-        EctProviderData.Provider prov = new EctProviderData().getProvider(providerNo);
-        String indivoId = prov.getIndivoId();
-        AuthenticateResultType authResult = null;
-        PHRAuthentication auth =null;
-        try{
-           TalkClient client = getTalkClient();
-           authResult = client.authenticate(indivoId, password);
-           log.debug("actor ticket "+authResult.getActorTicket());
-           auth = new IndivoAuthentication(authResult);
-           auth.setProviderNo(providerNo);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return auth;
+    public PHRAuthentication authenticate(String providerNo,String password) throws Exception {
+        ProviderData providerData = new ProviderData();
+        PHRAuthentication phrAuth = null;
+        providerData.setProvider_no(providerNo);
+        String indivoId = providerData.getMyOscarId();
+        TalkClient client = getTalkClient();  //also throws Exception
+        AuthenticateResultType authResult = client.authenticate(indivoId, password);
+        //Throws IndivoException & ActionNotPerformedException
+        //could be incorrect password or server down
+        //distinguish like this: if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
+        log.debug("actor ticket "+authResult.getActorTicket());
+        phrAuth = new IndivoAuthentication(authResult);
+        phrAuth.setProviderNo(providerNo);
+        return phrAuth;
         
+        /*
+     * @throws ActionNotPerformedException
+     *             If there is a null result. Can be caused for a number of
+     *             reasons such as: the actor performing the action isn't
+     *             authorized, the record the action is being performed on
+     *             doesn't exist, the password is incorrect, etc.
+     * @throws IndivoException
+     *             If there is an error in the communication to the server.
+        */
     }
     
     public void sendAddBinaryData(ProviderData sender, String recipientOscarId, int recipientType, String recipientPhrId, EDoc document) throws Exception {

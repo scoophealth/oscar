@@ -37,9 +37,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
-import org.oscarehr.phr.indivo.service.impl.IndivoServiceImpl;
 import org.oscarehr.phr.service.PHRService;
 
 /**
@@ -60,69 +60,99 @@ public class PHRLoginAction extends DispatchAction {
         this.phrService = phrService;
     }
      
-     
-     /*
-        Check to make sure user has and indivo Id ( if not return )
-         Check for valid ticket (if valid continue on )
-            Check for password in request (if not forward to login )
-                Authenicate with indivo (if auth, put ticket in session)
-                      foward to login
-     */
-    public ActionForward execute(ActionMapping mapping, ActionForm  form, HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
        HttpSession session = request.getSession();
        
-       String curUserNo = (String) session.getAttribute("user");
-       
-       
-       String intendedAction = request.getRequestURL().toString()+"?"+request.getQueryString();
-       String nextAction = request.getParameter("nextAction");
-       
-       log.debug("intendedAction "+intendedAction+" nextAction "+nextAction);
-       if (nextAction != null && !nextAction.equals(null)){
-           intendedAction = nextAction;
+       String providerNo = (String) session.getAttribute("user");
+       PHRAuthentication phrAuth = null;
+       String forwardTo = (String) request.getParameter("forwardto");
+       //ActionForward af = new ActionForward();
+       //af.setPath(forwardTo);
+       //af.setRedirect(true);
+       ActionRedirect ar = new ActionRedirect(forwardTo);
+       //log.debug("Request URI: " + forwardTo);
+       //log.debug("from request uri: " + (String) request.getParameter("forwardto"));
+       //log.debug("referrer header: " + request.getHeader("referer"));
+       if (!phrService.canAuthenticate(providerNo)) {
+           //TODO: Need to add message about how to set up a account
+           request.setAttribute("phrUserLoginErrorMsg", "You have not registered for MyOSCAR");
+           request.setAttribute("phrTechLoginErrorMsg", "No MyOSCAR information in the database");
+           return ar;
        }
        
-       if (!phrService.canAuthenticate(curUserNo)){//Need to add message about how to set up a account
-           return (mapping.findForward("login"));
+       try {
+           phrAuth = phrService.authenticate(providerNo, request.getParameter("phrPassword"));
+       } catch (Exception e) {
+           e.printStackTrace();
+            if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class) {
+                //server probably offline
+                log.warn("Connection to MyOSCAR server refused");
+                ar.addParameter("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
+                ar.addParameter("phrTechLoginErrorMsg", e.getMessage());
+                return ar;
+            }
+            //assume wrong password at this point, but could be due to problems on the server
+            //log.warn("indivo Exception cause: " + e.getMessage());
+            //log.warn("canonical name: " + e.getClass().getCanonicalName());
+            //log.warn("getname: " + e.getCause().getClass().getName());
+            //log.warn("getname2: " + e.getClass().getName());
+            //log.warn("service server wrong");
+           
+           //server probably offline
+           log.debug("exception");
+           ar.addParameter("phrUserLoginErrorMsg", "Incorrect password");
+           ar.addParameter("phrTechLoginErrorMsg", e.getMessage());
+           return ar;
        }
-       
-       PHRAuthentication  auth = (PHRAuthentication) session.getAttribute("INDIVO_AUTH");
-       log.debug("AUTH CHECK "+auth);
-       if (!phrService.validAuthentication(auth)){
-           log.debug("not valid authentication");
-           String indivoPass = (String) request.getParameter("indivoPW");
-           if (indivoPass == null){
-               log.debug("returning to login");
-               request.setAttribute("nextAction",intendedAction);
-               return (mapping.findForward("login"));
-           }else{
-               //Should catch the exception so that error can be displayed to user
-               log.debug("Trying to authenticate");
-               auth = phrService.authenticate( curUserNo, indivoPass);
-               if ( auth == null){
-                   log.debug("not valid authentication  2 sending to login");
-                   request.setAttribute("nextAction",intendedAction);
-                   return (mapping.findForward("login"));
-               } 
-               log.debug("Set sessino var");
-               session.setAttribute("INDIVO_AUTH",auth);
-               
-               
-           }
-       }
-       
-       String method = (String) request.getAttribute("method");
-       request.setAttribute("INDIVO_AUTH",auth);
-       
-       if (nextAction != null && !nextAction.equals(null)){
-           ActionForward af = new ActionForward();
-           af.setPath(nextAction);
-           af.setRedirect(true);
-           return af;
-       }
-
-       return super.execute(mapping,   form,  request,  response);
+       session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
+       log.debug("Correct user/pass, auth success");
+       return ar;
     }
+       //String intendedAction = request.getRequestURL().toString()+"?"+request.getQueryString();
+       //String nextAction = request.getParameter("nextAction");
+       
+       //log.debug("intendedAction "+intendedAction+" nextAction "+nextAction);
+       //if (nextAction != null && !nextAction.equals(null)){
+       //    intendedAction = nextAction;
+       //}
+       
+//       PHRAuthentication  auth = (PHRAuthentication) session.getAttribute("INDIVO_AUTH");
+//       log.debug("AUTH CHECK "+auth);
+//       if (!phrService.validAuthentication(auth)){
+//           log.debug("not valid authentication");
+//           String indivoPass = (String) request.getParameter("indivoPW");
+//           if (indivoPass == null){
+//               log.debug("returning to login");
+//               request.setAttribute("nextAction",intendedAction);
+//               return (mapping.findForward("login"));
+//           }else{
+//               //Should catch the exception so that error can be displayed to user
+//               log.debug("Trying to authenticate");
+//               auth = phrService.authenticate( curUserNo, indivoPass);
+//               if ( auth == null){
+//                   log.debug("not valid authentication  2 sending to login");
+//                   request.setAttribute("nextAction",intendedAction);
+//                   return (mapping.findForward("login"));
+//               } 
+//               log.debug("Set sessino var");
+//               session.setAttribute("INDIVO_AUTH",auth);
+//               
+//               
+//           }
+//       }
+//       
+//       String method = (String) request.getAttribute("method");
+//       request.setAttribute("INDIVO_AUTH",auth);
+//       
+//       if (nextAction != null && !nextAction.equals(null)){
+//           ActionForward af = new ActionForward();
+//           af.setPath(nextAction);
+//           af.setRedirect(true);
+//           return af;
+//       }
+//
+//       return super.execute(mapping, form, request, response);
+//    }
     
         
 }

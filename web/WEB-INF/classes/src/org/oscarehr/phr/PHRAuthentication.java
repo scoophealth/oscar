@@ -36,6 +36,8 @@ import java.util.Date;
  */
 public interface PHRAuthentication {
    
+    static final String SESSION_PHR_AUTH = "PHR_AUTH";
+    
     public String getToken();
     public String getUserId();    
     public String getRole();

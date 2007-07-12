@@ -21,9 +21,9 @@
  *  Hamilton
  *  Ontario, Canada
  *
- * PHRRetrieveAsyncAction.java
+ * PHRLoginAction.java
  *
- * Created on May 28, 2007, 4:39 PM
+ * Created on April 16, 2007, 3:28 PM
  *
  */
 
@@ -31,12 +31,14 @@ package org.oscarehr.phr.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionRedirect;
+import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
 
@@ -44,38 +46,21 @@ import org.oscarehr.phr.service.PHRService;
  *
  * @author jay
  */
-public class PHRRetrieveAsyncAction extends Action {
-    
-    private static Log log = LogFactory.getLog(PHRRetrieveAsyncAction.class);
-    PHRService phrService = null;
+public class PHRLogoutAction extends DispatchAction {
+     private static Log log = LogFactory.getLog("poi");
     
     /**
-     * Creates a new instance of PHRRetrieveAsyncAction
+     * Creates a new instance of PHRLoginAction
      */
-    public PHRRetrieveAsyncAction() {
+    public PHRLogoutAction() {
     }
     
-    
-    public ActionForward execute(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
-        PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        if (auth != null){
-            String providerNo = (String) request.getSession().getAttribute("user");
-            try{
-                phrService.retrieveDocuments(auth,providerNo);
-                phrService.sendQueuedDocuments(auth,providerNo) ;
-            }catch(Exception e){
-                e.printStackTrace();
-                request.getSession().removeAttribute("INDIVO_AUTH");
-            }
-        }else{
-            log.error("String Auth object was null");
-        }
-        return null;
+     
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+       HttpSession session = request.getSession();
+       session.removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+       String forwardTo = (String) request.getParameter("forwardto");
+       ActionRedirect ar = new ActionRedirect(forwardTo);
+       return ar;
     }
-    
-    public void setPhrService(PHRService pServ){
-        this.phrService = pServ;
-    }
-    
 }
