@@ -27,6 +27,13 @@
 <%@ page language="java"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<%
+	long loadPage = System.currentTimeMillis();
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
 <html:html locale="true">
   <head>
   	<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>	
@@ -34,7 +41,8 @@
     <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/css/print.css" media="print" />
     <html:base />
     <title>Case Management</title>
-    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache" >
+    <meta http-equiv="refresh" content="300;">
     <script type="text/javascript" language=javascript>
     </script>
   </head> 
