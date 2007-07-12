@@ -43,7 +43,7 @@ import oscar.oscarRx.data.RxPrescriptionData;
  */
 public interface PHRService {
     
-    PHRAuthentication authenticate(String userId,String password);
+    PHRAuthentication authenticate(String providerNo,String password) throws Exception;
     boolean validAuthentication(PHRAuthentication auth);
     boolean canAuthenticate(String providerNo);
     void retrieveDocuments(PHRAuthentication auth,String providerNo) throws Exception; 
