@@ -24,11 +24,10 @@
 package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 //import oscar.oscarMDS.data.MDSResultsData;
 import java.util.Properties;
@@ -36,31 +35,45 @@ import oscar.*;
 import oscar.oscarLab.ca.on.*;
 
 public class ReportStatusUpdateAction extends Action {
-   
-   public ReportStatusUpdateAction() {
-   }
-   
-   public ActionForward execute(ActionMapping mapping,
-   ActionForm form,
-   HttpServletRequest request,
-   HttpServletResponse response)
-   throws ServletException, IOException {
-      // System.out.println("inside ReportStatusUpdateAction");
-      
-      int labNo = Integer.parseInt(request.getParameter("segmentID"));
-      int providerNo = Integer.parseInt(request.getParameter("providerNo"));
-      char status = request.getParameter("status").charAt(0);
-      String comment = request.getParameter("comment");
-      String lab_type = request.getParameter("labType");
-      Properties props = OscarProperties.getInstance();
-      
-      try {
-         CommonLabResultData.updateReportStatus(props, labNo, providerNo, status, comment,lab_type);
-         //MDSResultsData.updateReportStatus(props, labNo, providerNo, status, comment);
-         return mapping.findForward("success");
-      } catch (Exception e) {
-         System.out.println("exception in ReportStatusUpdateAction:"+e);
-         return mapping.findForward("failure");
-      }
-   }
+    
+    Logger logger = Logger.getLogger(ReportStatusUpdateAction.class);
+    
+    public ReportStatusUpdateAction() {
+    }
+    
+    public ActionForward execute(ActionMapping mapping,
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        int labNo = Integer.parseInt(request.getParameter("segmentID"));
+        String multiID = request.getParameter("multiID");
+        int providerNo = Integer.parseInt(request.getParameter("providerNo"));
+        char status = request.getParameter("status").charAt(0);
+        String comment = request.getParameter("comment");
+        String lab_type = request.getParameter("labType");
+        Properties props = OscarProperties.getInstance();
+        
+        try {
+            CommonLabResultData data = new CommonLabResultData();
+            data.updateReportStatus(props, labNo, providerNo, status, comment,lab_type);
+            //MDSResultsData.updateReportStatus(props, labNo, providerNo, status, comment);
+            if (multiID != null){
+                String[] id = multiID.split(",");
+                int i=0;
+                int idNum = Integer.parseInt(id[i]);
+                while(idNum != labNo){
+                    data.updateReportStatus(props, idNum, providerNo, 'F', "", lab_type);
+                    i++;
+                    idNum = Integer.parseInt(id[i]);
+                }
+                
+            }
+            return mapping.findForward("success");
+        } catch (Exception e) {
+            logger.error("exception in ReportStatusUpdateAction",e);
+            return mapping.findForward("failure");
+        }
+    }
 }

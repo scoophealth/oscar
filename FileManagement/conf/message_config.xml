@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<message-configuration id="HL7_upload" version="1.0">
+	<handler name="MDS" className="MDSHandler"/>
+	<handler name="CML" className="CMLHandler"/>
+	<handler name="GDML" className="GDMLHandler"/>
+	<handler name="PATHL7" className="PATHL7Handler"/>
+</message-configuration>

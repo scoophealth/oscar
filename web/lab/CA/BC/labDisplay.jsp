@@ -11,11 +11,6 @@ if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 
 PathnetLabTest lab = new PathnetLabTest();
 lab.populateLab(request.getParameter("segmentID"));
-System.out.println("num labs "+lab.labResults.size());
-for (int i = 0 ; i < lab.labResults.size(); i++){
-    System.out.println(i);
-}
-
 
 String AbnFlag = "";
 %>
@@ -189,6 +184,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                 <tr>
                     <td align="left" class="MainTableTopRowRightColumn" width="100%">                        
                         <input type="hidden" name="segmentID" value="<%= request.getParameter("segmentID") %>"/>
+                        <input type="hidden" name="multiID" value="<%= request.getParameter("multiID") %>" />
                         <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>"/>
                         <input type="hidden" name="status" value="A"/>
                         <input type="hidden" name="comment" value=""/>
@@ -198,7 +194,6 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% } %>
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
-                        <% System.out.println(" >>> "+lab.getDemographicNo()); %>
                         <% if ( lab.getDemographicNo() != null && !lab.getDemographicNo().equals("") && !lab.getDemographicNo().equalsIgnoreCase("null")){ %>
                         <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=lab.getDemographicNo()%>','msg')"/>
                         <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=lab.getDemographicNo()%>','tickler')"/>
@@ -212,9 +207,36 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                     </td>
                 </tr>
             </table>
-
-
             <table width="100%" border="1" cellspacing="0" cellpadding="3" bgcolor="#9999CC" bordercolordark="#bfcbe3">
+                            <%
+                            if (request.getParameter("multiID") != null){
+                                String[] multiID = request.getParameter("multiID").split(",");
+                                if (multiID.length > 1){
+                                    %>
+                                    <tr>
+                                        <td class="Cell" colspan="2" align="middle">
+                                            <div class="Field2">
+                                                Version:&#160;&#160;
+                                                <%
+                                                for (int i=0; i < multiID.length; i++){
+                                                    if (multiID[i].equals(request.getParameter("segmentID"))){
+                                                        %><u>v<%= i+1 %></u>&#160;<%
+                                                    }else{
+                                                        if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
+                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        }else{
+                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        }
+                                                    }
+                                                }
+                                                %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <%
+                                }
+                            }
+                            %>                                
                 <tr>
                     <td width="66%" align="middle" class="Cell">
                         <div class="Field2">
@@ -262,7 +284,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                         </td>
                                                         <td colspan="2" nowrap>
                                                             <div class="FieldData" nowrap="nowrap">
-                                                                <%=lab.pDOB%>
+                                                                <%=lab.pDOB%>                                                  
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -272,7 +294,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                                                 <strong><bean:message key="oscarMDS.segmentDisplay.formAge"/>: </strong><%=lab.getAge()%>
                                                                 <%
                                                                 try{
-                                                                    lab.getAge();
+                                                                    lab.getAge();                                                                    
                                                                     }catch(Exception e){ e.printStackTrace(); }
                                                                 
                                                                 %>
@@ -442,35 +464,57 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         </table>
                     </td>
                 </tr>
-                <tr>
-                    <td align="center" bgcolor="white" colspan="2">
-                        <table width="100%" height="20" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td align="center" bgcolor="white">
-                                    <div class="FieldData">
-                                        <center>
-                                            <!-- <table width="90%" border="0" cellpadding="0" cellspacing="0"> -->
-                                                <% ArrayList statusArray = lab.getStatusArray(request.getParameter("segmentID")); 
-                                                                System.out.println("size of status array "+statusArray.size());
-                                                   for (int i=0; i < statusArray.size(); i++) { 
-                                                    ReportStatus rs = (ReportStatus) statusArray.get(i); %>
-                                                    <%= rs.getProviderName() %> :
-                                                    <font color="red"><%= rs.getStatus() %></font>
-                                                        <% if ( rs.getStatus().equals("Acknowledged") ) { %>
-                                                           <%= rs.getTimestamp() %>, 
-                                                           <%= ( rs.getComment().equals("") ? "no comment" : "comment : "+rs.getComment() ) %>
-                                                        <%} %>                                                
-                                                    <br>                                                                                                                                                     
-                                                <% } %>
-                                                   
-                                            <!-- </table> -->                                   
-                                        </center>
-                                    </div>
+                <% if (!lab.status.equals("U")){ %>
+                            <tr>                                                                
+                                <td align="center" bgcolor="white" colspan="2">
+                                    <%String[] multiID = request.getParameter("multiID").split(",");
+                                    boolean startFlag = false; 
+                                    ArrayList statusArray;
+                                    for (int j=multiID.length-1; j >=0; j--){
+                                        statusArray = lab.getStatusArray(multiID[j]);
+                                        
+                                        if (multiID[j].equals(request.getParameter("segmentID")))
+                                            startFlag = true;                                                              
+                                        if (startFlag){
+                                            if (statusArray.size() > 0){%>
+
+
+                                                <table width="100%" height="20" cellpadding="2" cellspacing="2">
+                                                    <tr>
+                                                        <% if (multiID.length > 1){ %>
+                                                            <td align="center" bgcolor="white" width="20%" valign="top">
+                                                                <div class="FieldData">
+                                                                    <b>Version:</b> v<%= j+1 %>
+                                                                </div>
+                                                            </td>
+                                                            <td align="left" bgcolor="white" width="80%" valign="top">
+                                                        <% }else{ %>
+                                                            <td align="center" bgcolor="white">
+                                                        <% } %>
+                                                            <div class="FieldData">
+                                                                <!--center-->   
+                                                                <% for (int i=0; i < statusArray.size(); i++) { 
+                                                                    ReportStatus rs = (ReportStatus) statusArray.get(i); %>
+                                                                    <%= rs.getProviderName() %> :
+                                                                    <font color="red"><%= rs.getStatus() %></font>
+                                                                    <% if ( rs.getStatus().equals("Acknowledged") ) { %>
+                                                                        <%= rs.getTimestamp() %>, 
+                                                                        <%= ( rs.getComment().equals("") ? "no comment" : "comment : "+rs.getComment() ) %>
+                                                                    <% } %>
+                                                                    <br>
+                                                                <% } %>
+
+                                                                <!--/center-->
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            <%}    
+                                        }
+                                    }%>
                                 </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                            </tr>          
+                <% } %>
             </table>
       
         
@@ -484,7 +528,6 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                String highlight = "#E0E0FF";
                
                ArrayList groupLabs = lab.getResults(lab.pid);
-               
      	       for(i=0;i<groupLabs.size();i++){
                    linenum=0;
                    PathnetLabTest.GroupResults gResults = (PathnetLabTest.GroupResults) groupLabs.get(i);
@@ -519,20 +562,17 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         
                         <%
                         //int linenum = 1;
-                        System.out.println("before getLabResults");
                         ArrayList labs = gResults.getLabResults();
-                        System.out.println("is labs null "+labs);
                         String currentService = "";
                         for ( int l =0 ; l < labs.size() ; l++){
                             PathnetLabTest.LabResult thisResult = (PathnetLabTest.LabResult) labs.get(l);
-                            System.out.println("got lab result");
+                            //PATHL7LabTest.LabResult thisResult = (PATHL7LabTest.LabResult) labs.get(l);
                             String lineClass = "NormalRes";
                             if ( thisResult.abn != null && ( thisResult.abn.equals("A") || thisResult.abn.startsWith("H")) ){
                                 lineClass = "AbnormalRes";
                             }else if ( thisResult.abn != null && thisResult.abn.equals("L")){
                                 lineClass = "HiLoRes";
                             }
-                            System.out.println("after abn check");
                             if (thisResult.isLabResult()){                               
                                if(!currentService.equals(thisResult.service_name)){%>
                                

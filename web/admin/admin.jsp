@@ -431,6 +431,8 @@ function popUpBillStatus(vheight,vwidth,varpage) {
         </li>
         <% } } %>
         <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
+        <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/ALL/testUploader.jsp');return false;">HL7 Lab Upload</a></li>
+        <li><a href="#" onclick ="popupPage(800,1000,'../oscarKeys/keyGen.jsp');return false;">Key Pair Generator</a></li>
       </ul>
   </div>
   </security:oscarSec>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <!--
     Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved.
@@ -177,7 +177,23 @@
 		<load-on-startup>0</load-on-startup>
 	</servlet>
     
-	<servlet-mapping>
+    <servlet>
+        <servlet-name>FileUpload</servlet-name>
+        <servlet-class>FileUpload</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FileUpload2</servlet-name>
+        <servlet-class>FileUpload2</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Uploader</servlet-name>
+        <servlet-class>Uploader</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>newUploader</servlet-name>
+        <servlet-class>oscar.newOscarLab.Uploader</servlet-class>
+    </servlet>
+    <servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
@@ -218,6 +234,22 @@
 		<url-pattern>/servlet/oscar.DocumentUploadServlet</url-pattern>
 	</servlet-mapping>
 	
+    <servlet-mapping>
+        <servlet-name>FileUpload</servlet-name>
+        <url-pattern>/FileUpload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FileUpload2</servlet-name>
+        <url-pattern>/FileUpload2</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Uploader</servlet-name>
+        <url-pattern>/Uploader</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>newUploader</servlet-name>
+        <url-pattern>/newUploader</url-pattern>
+    </servlet-mapping>
     <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>

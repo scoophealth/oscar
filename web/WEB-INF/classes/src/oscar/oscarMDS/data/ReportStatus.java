@@ -37,13 +37,16 @@ public class ReportStatus {
     private String comment;
 
     private String timestamp;
+    
+    private String segmentID;
 
-    public ReportStatus(String pName, String pNo, String s, String c, String t) {
+    public ReportStatus(String pName, String pNo, String s, String c, String t, String sID) {
         providerName = pName;
         providerNo = pNo;
         status = s;
         comment = c;
-
+        segmentID = sID;
+        
         GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
 
@@ -61,11 +64,12 @@ public class ReportStatus {
     }
 
  
-    public ReportStatus (String pName, String pNo, String s, String c, long t) {
+    public ReportStatus (String pName, String pNo, String s, String c, long t, String sID) {
         providerName = pName;
         providerNo = pNo;
         status = s;
         comment = c;
+        segmentID = sID;
         
         GregorianCalendar cal = new GregorianCalendar(Locale.ENGLISH);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy HH:mm", Locale.ENGLISH);
@@ -94,5 +98,9 @@ public class ReportStatus {
 
     public String getTimestamp() {
         return timestamp;
+    }
+    
+    public String getID(){
+        return segmentID;
     }
 }

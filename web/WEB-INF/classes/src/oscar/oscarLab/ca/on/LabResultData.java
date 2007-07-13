@@ -11,9 +11,9 @@
  *  GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  *  Jason Gallagher
- * 
+ *
  *  This software was written for the
  *  Department of Family Medicine
  *  McMaster University
@@ -29,6 +29,7 @@ package oscar.oscarLab.ca.on;
 
 import java.util.Date;
 import java.util.Comparator;
+import org.apache.log4j.Logger;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
 import oscar.util.UtilDateUtilities;
@@ -39,168 +40,206 @@ import oscar.util.UtilDateUtilities;
  * @author Jay Gallagher
  */
 public class LabResultData implements Comparable{
-   
-   public static String CML = "CML";
-   public static String MDS = "MDS";
-   public static String EXCELLERIS = "BCP"; //EXCELLERIS
-   public String segmentID;
-   public String labPatientId;
-   public String acknowledgedStatus;
-
-   public String healthNumber;
-   public String patientName;
-   public String sex;
-   public String resultStatus;
-   public String dateTime;
-   private Date dateTimeObr;
-   public String priority;
-   public String requestingClient;
-   public String discipline;
-   public String reportStatus;   
-   public boolean abn = false;
-   public String labType; // ie CML or MDS
-   public boolean finalRes = true;
-   public boolean isMatchedToPatient = true;
-   
-   public LabResultData() {
-   }
-   
-   public LabResultData(String labT) {
-      if (CML.equals(labT)){
-         labType = CML;
-      }else if (MDS.equals(labT)){
-         labType = MDS;
-      }else if (EXCELLERIS.equals(labT)){
-          labType = EXCELLERIS;
-      }
-      
-   }
-   
-   
-   public boolean isAbnormal(){ 
-       if (EXCELLERIS.equals(this.labType)){
-          PathnetResultsData prd = new PathnetResultsData();
-          if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
-               this.abn= true;
-          }
-       }else if(CML.equals(this.labType)){
-          CMLLabTest cml = new CMLLabTest(); 
-          if (cml.findCMLAdnormalResults(this.segmentID) > 0){
-               this.abn= true;
-          }
-       }
-       
-       return abn ; 
-       
-       
-   }
-   
-   
-   public boolean isFinal(){ return finalRes ;}
-   
-   public boolean isMDS(){
-      boolean ret = false;
-      if (MDS.equals(labType)){ ret = true; }
-      return ret;
-   }
-   
-   public boolean isCML(){
-      boolean ret = false;
-      if (CML.equals(labType)){ ret = true; }
-      return ret;
-   }   
-   
-   public String getDiscipline(){
-       if (CML.equals(this.labType)){
-         CMLLabTest cml = new CMLLabTest();  
-         this.discipline = cml.getDiscipline(this.segmentID);
-       }else if (EXCELLERIS.equals(this.labType)){
-          PathnetResultsData prd = new PathnetResultsData();
-          this.discipline = prd.findPathnetDisipline(this.segmentID);
-       }
-       
-       return this.discipline;
-   }
-   
-   public String getPatientName(){
-       return this.patientName;
-   }
-   
-   public String getHealthNumber(){
-       return this.healthNumber;
-   }
- 
-   public String getSex(){
-       return this.sex;
-   }
-   
-   public boolean isMatchedToPatient(){
+    
+    Logger logger = Logger.getLogger(LabResultData.class );
+    
+    public static String CML = "CML";
+    public static String MDS = "MDS";
+    public static String EXCELLERIS = "BCP"; //EXCELLERIS
+    
+    //HL7TEXT handles all messages types recieved as a hl7 formatted string
+    public static String HL7TEXT = "HL7";
+    
+    public String segmentID;
+    public String labPatientId;
+    public String acknowledgedStatus;
+    
+    public String accessionNumber;
+    public String healthNumber;
+    public String patientName;
+    public String sex;
+    public String resultStatus;
+    public int finalResultsCount = 0;
+    public String dateTime;
+    private Date dateTimeObr;
+    public String priority;
+    public String requestingClient;
+    public String discipline;
+    public String reportStatus;
+    public boolean abn = false;
+    public String labType; // ie CML or MDS
+    public boolean finalRes = true;
+    public boolean isMatchedToPatient = true;
+    public String multiLabId;
+    
+    public LabResultData() {
+    }
+    
+    public LabResultData(String labT) {
+        if (CML.equals(labT)){
+            labType = CML;
+        }else if (MDS.equals(labT)){
+            labType = MDS;
+        }else if (EXCELLERIS.equals(labT)){
+            labType = EXCELLERIS;
+        }else if (HL7TEXT.equals(labT)){
+            labType = HL7TEXT;
+        }
+        
+    }
+    
+    
+    public boolean isAbnormal(){
+        if (EXCELLERIS.equals(this.labType)){
+            PathnetResultsData prd = new PathnetResultsData();
+            if (prd.findPathnetAdnormalResults(this.segmentID) > 0){
+                this.abn= true;
+            }
+        }else if(CML.equals(this.labType)){
+            CMLLabTest cml = new CMLLabTest();
+            if (cml.findCMLAdnormalResults(this.segmentID) > 0){
+                this.abn= true;
+            }
+        }
+        
+        return abn ;
+        
+        
+    }
+    
+    
+    public boolean isFinal(){ return finalRes ;}
+    
+    public boolean isMDS(){
+        boolean ret = false;
+        if (MDS.equals(labType)){ ret = true; }
+        return ret;
+    }
+    
+    public boolean isCML(){
+        boolean ret = false;
+        if (CML.equals(labType)){ ret = true; }
+        return ret;
+    }
+    
+    public boolean isHL7TEXT(){
+        boolean ret = false;
+        if (HL7TEXT.equals(labType)){ ret = true; }
+        return ret;
+    }
+    
+    public String getDiscipline(){
+        if (CML.equals(this.labType)){
+            CMLLabTest cml = new CMLLabTest();
+            this.discipline = cml.getDiscipline(this.segmentID);
+        }else if (EXCELLERIS.equals(this.labType)){
+            PathnetResultsData prd = new PathnetResultsData();
+            this.discipline = prd.findPathnetDisipline(this.segmentID);
+        }
+        
+        return this.discipline;
+    }
+    
+    public String getPatientName(){
+        return this.patientName;
+    }
+    
+    public String getHealthNumber(){
+        return this.healthNumber;
+    }
+    
+    public String getSex(){
+        return this.sex;
+    }
+    
+    public boolean isMatchedToPatient(){
 //       if (EXCELLERIS.equals(this.labType)){
 //          PathnetResultsData prd = new PathnetResultsData();
 //          this.isMatchedToPatient = prd.isLabLinkedWithPatient(this.segmentID);
 //       }
-       CommonLabResultData commonLabResultData = new CommonLabResultData();
-       this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
-       return this.isMatchedToPatient;
-   }
+        CommonLabResultData commonLabResultData = new CommonLabResultData();
+        this.isMatchedToPatient = commonLabResultData.isLabLinkedWithPatient(this.segmentID,this.labType);
+        return this.isMatchedToPatient;
+    }
     
-   
-   public String getDateTime(){  
-      if (EXCELLERIS.equals(this.labType)){
-          PathnetResultsData prd = new PathnetResultsData();
-          this.dateTime = prd.findPathnetObservationDate(this.segmentID);
-      }
-      return this.dateTime;
-   }
-   
-   
-   
-   public String getReportStatus(){
-      if (EXCELLERIS.equals(this.labType)){
-          PathnetResultsData prd = new PathnetResultsData();
-          this.reportStatus = prd.findPathnetStatus(this.segmentID);
-      }
-      return this.reportStatus;
-   }
-            
-   public String getPriority(){
-       return this.priority;
-   }
-   
-   
-     
-   public String getRequestingClient(){
-       if (EXCELLERIS.equals(this.labType)){
-          PathnetResultsData prd = new PathnetResultsData();
-          this.requestingClient = prd.findPathnetOrderingProvider(this.segmentID);
-      }
-       return this.requestingClient;
-   }
-
-   public Date getDateObj(){
-       if (EXCELLERIS.equals(this.labType)){    
-          this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
-       }
-     
-      return this.dateTimeObr;
-   }
-   
-   public void setDateObj(Date d){
-       this.dateTimeObr = d;
-   }
+    
+    public String getDateTime(){
+        if (EXCELLERIS.equals(this.labType)){
+            PathnetResultsData prd = new PathnetResultsData();
+            this.dateTime = prd.findPathnetObservationDate(this.segmentID);
+        }
+        return this.dateTime;
+    }
+    
+    public int getAckCount(){
+        CommonLabResultData data = new CommonLabResultData();
+        return data.getAckCount(this.segmentID, this.labType);
+    }
+    
+    public int getMultipleAckCount(){
+        String[] multiId = this.multiLabId.split(",");
+        CommonLabResultData data = new CommonLabResultData();
+        int count = 0;
+        for (int i=0; i < multiId.length; i++){
+            count = count + data.getAckCount(multiId[i], this.labType);
+        }
+        return count;
+    }   
+    
+    
+    public String getReportStatus(){
+        if (EXCELLERIS.equals(this.labType)){
+            PathnetResultsData prd = new PathnetResultsData();
+            this.reportStatus = prd.findPathnetStatus(this.segmentID);
+        }
+        return this.reportStatus;
+    }
+    
+    public String getPriority(){
+        return this.priority;
+    }
+    
+    
+    
+    public String getRequestingClient(){
+        if (EXCELLERIS.equals(this.labType)){
+            PathnetResultsData prd = new PathnetResultsData();
+            this.requestingClient = prd.findPathnetOrderingProvider(this.segmentID);
+        }
+        return this.requestingClient;
+    }
+    
+    public Date getDateObj(){
+        if (EXCELLERIS.equals(this.labType)){
+            this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
+        }else if(HL7TEXT.equals(this.labType)){
+            this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
+        }
+        
+        return this.dateTimeObr;
+    }
+    
+    public void setDateObj(Date d){
+        this.dateTimeObr = d;
+    }
    
     public int compareTo(Object object) {
+        //int ret = 1;
         int ret = 0;
         if (this.getDateObj() != null){
             if (this.dateTimeObr.after( ((LabResultData) object).getDateObj() )){
                 ret = -1;
             }else if(this.dateTimeObr.before( ((LabResultData) object).getDateObj() )){
                 ret = 1;
+            }else if(this.finalResultsCount > ((LabResultData) object).finalResultsCount){
+                ret = -1;
+            }else if(this.finalResultsCount < ((LabResultData) object).finalResultsCount){
+                ret = 1;
             }
         }
         return ret;
     }
-                
+    
     public CompareId getComparatorId() {
         return new CompareId();
     }
@@ -223,8 +262,8 @@ public class LabResultData implements Comparable{
                 return 0;
         }
     }
-   
-   
+    
+    
 }
 
 

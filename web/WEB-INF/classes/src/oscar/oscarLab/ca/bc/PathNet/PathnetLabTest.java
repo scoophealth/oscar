@@ -11,9 +11,9 @@
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
- * 
+ *
  * Jason Gallagher
- * 
+ *
  * This software was written for the
  * Department of Family Medicine
  * McMaster University
@@ -31,6 +31,7 @@ package oscar.oscarLab.ca.bc.PathNet;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import org.apache.log4j.Logger;
 import oscar.oscarDB.*;
 import oscar.oscarLab.ca.on.*;
 import oscar.util.*;
@@ -40,371 +41,382 @@ import oscar.util.*;
  * @author Jay Gallagher
  */
 public class PathnetLabTest {
-String
+    
+    Logger logger = Logger.getLogger(PathnetLabTest.class);
+    
+    String
 //select_pid_information = "SELECT patient_name, external_id, date_of_birth, patient_address, sex, home_number  FROM hl7_pid WHERE hl7_pid.pid_id='@pid'",
-select_header_information = "SELECT DISTINCT filler_order_number, requested_date_time, observation_date_time, ordering_provider, result_copies_to FROM hl7_obr WHERE pid_id = '@pid'",
-select_lab_results = "SELECT hl7_obr.filler_order_number, hl7_obr.universal_service_id, hl7_obr.ordering_provider, hl7_obr.results_report_status_change, hl7_obr.diagnostic_service_sect_id, hl7_obr.result_status, hl7_obr.result_copies_to, hl7_obr.note as obrnote, hl7_obx.set_id, hl7_obx.observation_identifier, hl7_obx.observation_results, hl7_obx.units, hl7_obx.reference_range, hl7_obx.abnormal_flags, hl7_obx.observation_result_status, hl7_obx.note as obxnote FROM hl7_obr left join hl7_obx on hl7_obr.obr_id=hl7_obx.obr_id WHERE hl7_obr.pid_id='@pid' ORDER BY hl7_obr.diagnostic_service_sect_id",
-select_signed = "SELECT hl7_pid.pid_id, hl7_link.status, hl7_link.provider_no, hl7_link.signed_on, provider.last_name, provider.first_name FROM hl7_pid left join hl7_link on hl7_pid.pid_id=hl7_link.pid_id left join provider on provider.provider_no=hl7_link.provider_no WHERE hl7_pid.pid_id='@pid';",
-update_lab_report_signed = "UPDATE hl7_link SET hl7_link.status='S', hl7_link.provider_no='@provider_no', hl7_link.signed_on=NOW() WHERE hl7_link.pid_id='@pid';",
-update_lab_report_viewed = "UPDATE hl7_link SET hl7_link.status='A' WHERE hl7_link.pid_id='@pid' AND hl7_link.status!='S';",
-select_doc_notes = "SELECT hl7_message.notes FROM hl7_pid, hl7_message WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;",
-update_doc_notes = "UPDATE hl7_pid, hl7_message SET hl7_message.notes='@notes' WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;";
- 
-
-public String pName = "";          //  5. Patient: First name
-public String pSex = "";                //  7. Sex ‘F’ or ‘M’
-public String pHealthNum = "";          //  8. Patient: Health number
-public String pDOB = "";                //  9. Patient: Birth date
-public String pPhone = "";
-public String patientLocation = "";
-public String pid = null;
-
-public String serviceDate = "";
-public String status = ""; //.equals("F") ? "Final" : "Partial") 
-public String docNum = "";
-public String accessionNum = "";
-public String docName = "";
-public String demographicNo = null ;
-public String ccedDocs = "";
-public String locationId = "";
-
-public ArrayList labResults = new ArrayList();
-
+            select_header_information = "SELECT DISTINCT filler_order_number, requested_date_time, observation_date_time, ordering_provider, result_copies_to FROM hl7_obr WHERE pid_id = '@pid'",
+            select_lab_results = "SELECT hl7_obr.filler_order_number, hl7_obr.universal_service_id, hl7_obr.ordering_provider, hl7_obr.results_report_status_change, hl7_obr.diagnostic_service_sect_id, hl7_obr.result_status, hl7_obr.result_copies_to, hl7_obr.note as obrnote, hl7_obx.set_id, hl7_obx.observation_identifier, hl7_obx.observation_results, hl7_obx.units, hl7_obx.reference_range, hl7_obx.abnormal_flags, hl7_obx.observation_result_status, hl7_obx.note as obxnote FROM hl7_obr left join hl7_obx on hl7_obr.obr_id=hl7_obx.obr_id WHERE hl7_obr.pid_id='@pid' ORDER BY hl7_obr.diagnostic_service_sect_id",
+            select_signed = "SELECT hl7_pid.pid_id, hl7_link.status, hl7_link.provider_no, hl7_link.signed_on, provider.last_name, provider.first_name FROM hl7_pid left join hl7_link on hl7_pid.pid_id=hl7_link.pid_id left join provider on provider.provider_no=hl7_link.provider_no WHERE hl7_pid.pid_id='@pid';",
+            update_lab_report_signed = "UPDATE hl7_link SET hl7_link.status='S', hl7_link.provider_no='@provider_no', hl7_link.signed_on=NOW() WHERE hl7_link.pid_id='@pid';",
+            update_lab_report_viewed = "UPDATE hl7_link SET hl7_link.status='A' WHERE hl7_link.pid_id='@pid' AND hl7_link.status!='S';",
+            select_doc_notes = "SELECT hl7_message.notes FROM hl7_pid, hl7_message WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;",
+            update_doc_notes = "UPDATE hl7_pid, hl7_message SET hl7_message.notes='@notes' WHERE hl7_pid.pid_id='@pid' AND hl7_pid.message_id=hl7_message.message_id;";
+    
+    
+    public String pName = "";          //  5. Patient: First name
+    public String pSex = "";                //  7. Sex ‘F’ or ‘M’
+    public String pHealthNum = "";          //  8. Patient: Health number
+    public String pDOB = "";                //  9. Patient: Birth date
+    public String pPhone = "";
+    public String patientLocation = "";
+    public String pid = null;
+    
+    public String serviceDate = "";
+    public String status = ""; //.equals("F") ? "Final" : "Partial")
+    public String docNum = "";
+    public String accessionNum = "";
+    public String docName = "";
+    public String demographicNo = null ;
+    public String ccedDocs = "";
+    public String locationId = "";
+    
+    public ArrayList labResults = new ArrayList();
+    
 //ArrayList labs = gResults.getLabResults();
 //for ( int l =0 ; l < labs.size() ; l++){
 //                            CMLLabTest.LabResult thisResult = (CMLLabTest.LabResult) labs.get(l);
-//                                <td valign="top" align="left"><a href="labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=BCP"><%=thisResult.testName %></a></td>                                         
+//                                <td valign="top" align="left"><a href="labValues.jsp?testName=<%=thisResult.testName%>&demo=<%=lab.getDemographicNo()%>&labType=BCP"><%=thisResult.testName %></a></td>
 //                        <%}/*for lab.size*/%>
 //                            <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=BCP&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(lab.pLastName+", "+lab.pFirstName )%>', 'searchPatientWindow')">
-
-
-
-   public PathnetLabTest() {
-   }
-   
-public ArrayList getStatusArray(String labID){
-      CommonLabResultData comLab = new CommonLabResultData();
-      return comLab.getStatusArray(labID,"BCP");
-   }
-
-public ArrayList getGroupResults(ArrayList labResults){
-   return new ArrayList();   
-}
-
-public String getDemographicNo(){
-      return demographicNo;
-   }
-   
-   public Properties sepDocNameNum(String s){
-      Properties h = new Properties();
-      int i = s.indexOf("^");
-      if (i != -1){
-         String num = s.substring(0,i);
-         String name = s.substring(i+1).replaceAll("\\^", " ");
-         h.put("num", num);
-         h.put("name",name);
-      }
-      return h;
-   }
-   
-   public String justGetDocName(String s){
-      String ret = s;
-      int i = s.indexOf("^");
-      if (i != -1){         
-         ret = s.substring(i+1).replaceAll("\\^", " ");;         
-      }
-      return ret;
-   }
-   
-   public String getFirstVal(String s,String delimiter){
-      String ret = s;
-      int i = s.indexOf(delimiter);
-      if (i != -1){
-         ret = s.substring(0,i);
-      }
-      return ret;
-   }
-   
-   public String getFirstValDash(String s){
-      return getFirstVal(s,"-");      
-   }
-      
-   public String getFirstValSpace(String s){
-      return getFirstVal(s," ");
-   }
-   
-   public String getDemographicNumByLabId(String id){
-      String ret = null;
-      try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         String select_demoNo = "select demographic_no from patientLabRouting where lab_type = 'BCP' and lab_no = '"+id+"'";
-         ResultSet rs  = db.GetSQL(select_demoNo);
-         if(rs.next()){          
-             ret = rs.getString("demographic_no");
-         }
-         if (ret != null && ret.equals("0")){
-             ret = null;
-         }
-         rs.close();
-         db.CloseConn();
-      }catch(Exception e){
-         e.printStackTrace();
-      }    
-      return ret;
-   }
-   
-   public void populateLab(String labid){      
-      System.out.println("lab id "+labid); 
-      demographicNo = getDemographicNumByLabId(labid);
-      try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         String select_pid_information = "SELECT pid_id, patient_name, external_id, date_of_birth, patient_address, sex, home_number,sending_facility  FROM hl7_pid, hl7_msh WHERE hl7_pid.message_id = '"+labid+"' and hl7_msh.message_id = hl7_pid.message_id";
-         ResultSet rs = db.GetSQL(select_pid_information);
-         if(rs.next()){
-            pName = removeCarat(rs.getString("patient_name"));                        
-            pSex = rs.getString("sex");
-            pHealthNum = rs.getString("external_id");
-            pDOB = getFirstValSpace ( rs.getString("date_of_birth") );
-            pPhone = rs.getString("home_number");
-            patientLocation = rs.getString("sending_facility");
-            pid = rs.getString("pid_id");
-         }
-         rs.close();
-         String select_obr_information = "SELECT * from hl7_obr WHERE pid_id = '"+pid+"'";
-         rs = db.GetSQL(select_obr_information);
-         if(rs.next()){            
-            serviceDate = rs.getString("results_report_status_change");            
-            status = rs.getString("result_status"); //.equals("F") ? "Final" : "Partial") 
-            Properties p = sepDocNameNum(rs.getString("ordering_provider")); 
-            docNum = p.getProperty("num","");
-            accessionNum = getFirstValDash(rs.getString("filler_order_number"));
-            docName = p.getProperty("name",rs.getString("ordering_provider"));
-            String ccs = rs.getString("result_copies_to");
-            String docs[] = ccs.split("~");
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < docs.length; i++){
-               sb.append(justGetDocName(docs[i]));
-               if (i < (docs.length - 1)){
-                  sb.append(", ");
-               }
+    
+    
+    
+    public PathnetLabTest() {
+    }
+    
+    public ArrayList getStatusArray(String labID){
+        CommonLabResultData comLab = new CommonLabResultData();
+        return comLab.getStatusArray(labID,"BCP");
+    }
+    
+    public ArrayList getGroupResults(ArrayList labResults){
+        return new ArrayList();
+    }
+    
+    public String getDemographicNo(){
+        return demographicNo;
+    }
+    
+    public Properties sepDocNameNum(String s){
+        Properties h = new Properties();
+        int i = s.indexOf("^");
+        if (i != -1){
+            String num = s.substring(0,i);
+            String name = s.substring(i+1).replaceAll("\\^", " ");
+            h.put("num", num);
+            h.put("name",name);
+        }
+        return h;
+    }
+    
+    public String justGetDocName(String s){
+        String ret = s;
+        int i = s.indexOf("^");
+        if (i != -1){
+            ret = s.substring(i+1).replaceAll("\\^", " ");;
+        }
+        return ret;
+    }
+    
+    public String getFirstVal(String s,String delimiter){
+        String ret = s;
+        int i = s.indexOf(delimiter);
+        if (i != -1){
+            ret = s.substring(0,i);
+        }
+        return ret;
+    }
+    
+    public String getFirstValDash(String s){
+        return getFirstVal(s,"-");
+    }
+    
+    public String getFirstValSpace(String s){
+        return getFirstVal(s," ");
+    }
+    
+    public String getDemographicNumByLabId(String id){
+        String ret = null;
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String select_demoNo = "select demographic_no from patientLabRouting where lab_type = 'BCP' and lab_no = '"+id+"'";
+            ResultSet rs  = db.GetSQL(select_demoNo);
+            if(rs.next()){
+                ret = rs.getString("demographic_no");
             }
-            ccedDocs = sb.toString();
-         }
-         
-         db.CloseConn();
-      }catch(Exception e){
-         e.printStackTrace();
-      }
-   }
-   
-   
-   public String getAge(){       
-      return getAge(this.pDOB);
-   }
-   
-   public String getAge(String s){       
-       String age = "N/A";
-       try {
-          // Some examples
-          DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-          java.util.Date date = (java.util.Date)formatter.parse(s);
-          age = UtilDateUtilities.calcAge(date);
-       } catch (ParseException e) {
-       }
-      return age;      
-   }
-   
-   public static String removeCarat(String s){
-      if(s!=null){
-         return s.replaceAll("\\^", " ");
-      }
-      return s;
-   }
-   
-   
-   /////////
-   public ArrayList getResultsOld(String pid){
-      ArrayList list = new ArrayList();
-      try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
-         ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-         
-         System.out.println("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
-	 boolean other = true;
-	 String section = "";
-	 while(rs.next()){
-            GroupResults gr = new GroupResults();
-            gr.groupName = rs.getString("diagnostic_service_sect_id")+ " " +rs.getString("universal_service_id").substring(rs.getString("universal_service_id").indexOf("^"));
-            String obrId = rs.getString("obr_id");
-      
-            ResultSet rs2 = db.GetSQL("select set_id, observation_date_time,observation_result_status, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
-            System.out.println("select set_id, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
-            while(rs2.next()){
-               LabResult l = new LabResult();
-               l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
-               l.result = rs2.getString("observation_results");
-               l.abn = rs2.getString("abnormal_flags");
-               l.minimum = rs2.getString("reference_range");
-               l.maximum =rs2.getString("reference_range");
-               l.units =rs2.getString("units");
-               l.timeStamp = rs2.getString("observation_date_time");
-               l.resultStatus = rs2.getString("observation_result_status");
-               l.notes = rs2.getString("obxnote");
-               if( l.notes != null ){
-                  l.notes = l.notes.replaceAll("\\\\\\.br\\\\", " ");
-               }
-               System.out.println(" adding Lab Result");
-               gr.addLabResult(l);                 
+            if (ret != null && ret.equals("0")){
+                ret = null;
             }
-            rs2.close();
-            list.add(gr);                        
-	}
-	rs.close();	
-        db.CloseConn();        
-      }catch(Exception e){e.printStackTrace();}
-      return list;
-      }
-   /////////
-   
-   public ArrayList getResults(String pid){
-      ArrayList list = new ArrayList();
-      try{
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
-         ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");         
-         System.out.println("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
-	 boolean other = true;
-	 String section = "";
-         GroupResults gr = null;         
-	 while(rs.next()){
-            String gName = rs.getString("diagnostic_service_sect_id");
-            if (gr == null || !gName.equals(gr.groupName)){
-               gr = new GroupResults();
-               gr.groupName = gName; //rs.getString("diagnostic_service_sect_id"); //+ " " +rs.getString("universal_service_id").substring(rs.getString("universal_service_id").indexOf(" "));   
-               list.add(gr);
-            }     
-            gr.addHeaderResults(rs.getString("note"));
-            String obrId = rs.getString("obr_id");      
-            ResultSet rs2 = db.GetSQL("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
-                   System.out.println("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
-            while(rs2.next()){
-               LabResult l = new LabResult();
-               l.service_name = rs2.getString("universal_service_id").substring(rs2.getString("universal_service_id").indexOf("^")+1);
-               l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
-               l.result = rs2.getString("observation_results");
-               if( l.result != null ){
-                  l.result = l.result.replaceAll("\\\\\\.br\\\\", "<br/>");
-               }
-               l.abn = rs2.getString("abnormal_flags");
-               l.minimum = rs2.getString("reference_range");
-               l.maximum =rs2.getString("reference_range");
-               l.units =rs2.getString("units");
-               l.timeStamp = rs2.getString("observation_date_time");
-               l.resultStatus = rs2.getString("observation_result_status");
-               l.notes = rs2.getString("obxnote");
-               if( l.notes != null ){
-                  l.notes = l.notes.replaceAll("\\\\\\.br\\\\", "<br/>");
-               }
-               System.out.println(" adding Lab Result");
-               gr.addLabResult(l);                 
-            }
-            rs2.close();            
-	}
-	rs.close();	
-        db.CloseConn();        
-      }catch(Exception e){e.printStackTrace();}
-      return list;
-      }
-   
-   /////////
-      
-   
-   public class LabResult{
-      
-      boolean labResult = true;
-      
-      public boolean isLabResult(){ return labResult ;}
-      public boolean isLabResultComment(){ return labResult ;}
-     
-      
-      ///   
-      public String service_name = null;
-      public String title = null;       //  2. Title
-      public String notUsed1 = null;    //  3. Not used ?
-      public String notUsed2 = null;    //  4. Not used ?
-      public String testName = null;    //  5. Test name
-      public String abn  = null;     //  6. Normal/Abnormal ‘N’ or ‘A’
-      public String minimum = null;     //  7. Minimum
-      public String maximum = null;     //  8. Maximum
-      public String units = null;       //  9. Units
-      public String result = null;      // 10. Result
-      public String locationId = "";  // 11. Location Id (Test performed at …)
-      public String last = null;        // 12. Last ‘Y’ or ‘N’
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
+    
+    public void populateLab(String labid){
 
-      public String timeStamp = "";
-      public String resultStatus = "";
-      //String title = null;       // 2. Title
-      //String notUsed1 = null;    // 3. not used ?
-      public String description = null; // 4. Description/Comment
-      //String locationId = null;  // 5. Location Id
-      //String last = null;        // 6. Last ‘Y’ or ‘N’
-      
-      public String notes = null;
-      
-      ///
-      public String getReferenceRange(){
-         String retval ="";
-         if (minimum != null && maximum != null){
-            if (!minimum.equals("") && !maximum.equals("")){
-               if (minimum.equals(maximum)){
-                 retval = minimum;
-               }else{
-                  retval = minimum + " - " + maximum;
-               }
+        demographicNo = getDemographicNumByLabId(labid);
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String select_pid_information = "SELECT pid_id, patient_name, external_id, date_of_birth, patient_address, sex, home_number,sending_facility  FROM hl7_pid, hl7_msh WHERE hl7_pid.message_id = '"+labid+"' and hl7_msh.message_id = hl7_pid.message_id";
+            ResultSet rs = db.GetSQL(select_pid_information);
+            if(rs.next()){
+                pName = removeCarat(rs.getString("patient_name"));
+                pSex = rs.getString("sex");
+                pHealthNum = rs.getString("external_id");
+                pDOB = getFirstValSpace( rs.getString("date_of_birth") );
+                pPhone = rs.getString("home_number");
+                patientLocation = rs.getString("sending_facility");
+                pid = rs.getString("pid_id");
             }
-         }
-         return retval;
-      }
-      
-   }
-   
-   public class GroupResults{
-      public String groupName = null;
-      private ArrayList labResults = null;
-      public ArrayList headerResults = null;
-      
-      public void addLabResult(LabResult l){
-         System.out.println(" addLabResult");
-         if (labResults == null){ labResults = new ArrayList(); }                  
-         labResults.add(l);
-      }
-      
-      public void addHeaderResults(String s){
-         boolean add = true;
-         System.out.println(s);
-         if (headerResults == null){ headerResults = new ArrayList(); }         
-         if ( headerResults.size() > 0){
-            String h = (String) headerResults.get((headerResults.size()-1));
-            //System.out.println("check :"+h.replaceAll("\\\\\\.br\\\\", "<br/>"));
-            if(h.equals(s.replaceAll("\\\\\\.br\\\\", "<br/>"))){
-               add = false;
+            rs.close();
+            String select_obr_information = "SELECT * from hl7_obr WHERE pid_id = '"+pid+"'";
+            rs = db.GetSQL(select_obr_information);
+            if(rs.next()){
+                serviceDate = rs.getString("results_report_status_change");
+                status = rs.getString("result_status"); //.equals("F") ? "Final" : "Partial")
+                Properties p = sepDocNameNum(rs.getString("ordering_provider"));
+                docNum = p.getProperty("num","");
+                accessionNum = justGetAccessionNumber(rs.getString("filler_order_number"));
+                docName = p.getProperty("name",rs.getString("ordering_provider"));
+                String ccs = rs.getString("result_copies_to");
+                String docs[] = ccs.split("~");
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < docs.length; i++){
+                    sb.append(justGetDocName(docs[i]));
+                    if (i < (docs.length - 1)){
+                        sb.append(", ");
+                    }
+                }
+                ccedDocs = sb.toString();
             }
-         }
-         if(add){
-            headerResults.add(s.replaceAll("\\\\\\.br\\\\", "<br/>"));
-         }
-      }
-      
-      public ArrayList getLabResults(){
-         if (labResults == null){ labResults = new ArrayList(); }
-         return labResults;
-      }
-      
-      public ArrayList getHeaderResults(){
-         if (headerResults == null){ headerResults = new ArrayList(); }
-         return headerResults;
-      }
-      
-   }
+            
+            db.CloseConn();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    
+    public String getAge(){
+        return getAge(this.pDOB);
+    }
+    
+    public String getAge(String s){
+        String age = "N/A";
+        try {
+            // Some examples
+            DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            java.util.Date date = (java.util.Date)formatter.parse(s);
+            age = UtilDateUtilities.calcAge(date);
+        } catch (ParseException e) {
+        }
+        return age;
+    }
+    
+    public static String removeCarat(String s){
+        if(s!=null){
+            return s.replaceAll("\\^", " ");
+        }
+        return s;
+    }
+    
+    public String justGetAccessionNumber(String s){
+        String[] ss = s.split("-");       
+        if (ss.length == 3)
+            return ss[0];
+        else
+            return ss[1];
+    }
+    
+    /////////
+    public ArrayList getResultsOld(String pid){
+        ArrayList list = new ArrayList();
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
+            ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
+            
+            logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id from hl7_obr where pid_id = '"+pid+"' ");
+            boolean other = true;
+            String section = "";
+            while(rs.next()){
+                GroupResults gr = new GroupResults();
+                gr.groupName = rs.getString("diagnostic_service_sect_id")+ " " +rs.getString("universal_service_id").substring(rs.getString("universal_service_id").indexOf("^"));
+                String obrId = rs.getString("obr_id");
+                
+                ResultSet rs2 = db.GetSQL("select set_id, observation_date_time,observation_result_status, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
+                logger.info("select set_id, observation_identifier, observation_results, units, reference_range, abnormal_flags, observation_result_status, note as obxnote from hl7_obx where obr_id = '"+obrId+"'");
+                while(rs2.next()){
+                    LabResult l = new LabResult();
+                    l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
+                    l.result = rs2.getString("observation_results");
+                    l.abn = rs2.getString("abnormal_flags");
+                    l.minimum = rs2.getString("reference_range");
+                    l.maximum =rs2.getString("reference_range");
+                    l.units =rs2.getString("units");
+                    l.timeStamp = rs2.getString("observation_date_time");
+                    l.resultStatus = rs2.getString("observation_result_status");
+                    l.notes = rs2.getString("obxnote");
+                    if( l.notes != null ){
+                        l.notes = l.notes.replaceAll("\\\\\\.br\\\\", " ");
+                    }
+                    gr.addLabResult(l);
+                }
+                rs2.close();
+                list.add(gr);
+            }
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){e.printStackTrace();}
+        return list;
+    }
+    /////////
+    
+    public ArrayList getResults(String pid){
+        ArrayList list = new ArrayList();
+        try{
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            //ResultSet rs = db.GetSQL(select_lab_results.replaceAll("@pid", pid));
+            ResultSet rs = db.GetSQL("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
+            logger.info("select diagnostic_service_sect_id, universal_service_id, set_id, obr_id,note from hl7_obr where pid_id = '"+pid+"' ");
+            boolean other = true;
+            String section = "";
+            GroupResults gr = null;
+            while(rs.next()){
+                String gName = rs.getString("diagnostic_service_sect_id");
+                if (gr == null || !gName.equals(gr.groupName)){
+                    gr = new GroupResults();
+                    gr.groupName = gName; //rs.getString("diagnostic_service_sect_id"); //+ " " +rs.getString("universal_service_id").substring(rs.getString("universal_service_id").indexOf(" "));
+                    list.add(gr);
+                }
+                gr.addHeaderResults(rs.getString("note"));
+                String obrId = rs.getString("obr_id");
+                ResultSet rs2 = db.GetSQL("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
+                logger.info("select x.set_id, universal_service_id, x.observation_date_time, x.observation_result_status, x.observation_identifier, x.observation_results, x.units, x.reference_range, x.abnormal_flags, x.observation_result_status, x.note as obxnote from hl7_obx x, hl7_obr where hl7_obr.obr_id = '"+obrId+"' and hl7_obr.obr_id = x.obr_id ");
+                while(rs2.next()){
+                    LabResult l = new LabResult();
+                    l.service_name = rs2.getString("universal_service_id").substring(rs2.getString("universal_service_id").indexOf("^")+1);
+                    l.testName = rs2.getString("observation_identifier").substring(rs2.getString("observation_identifier").indexOf("^")+1);
+                    l.result = rs2.getString("observation_results");
+                    if( l.result != null ){
+                        l.result = l.result.replaceAll("\\\\\\.br\\\\", "<br/>");
+                    }
+                    l.abn = rs2.getString("abnormal_flags");
+                    l.minimum = rs2.getString("reference_range");
+                    l.maximum =rs2.getString("reference_range");
+                    l.units =rs2.getString("units");
+                    l.timeStamp = rs2.getString("observation_date_time");
+                    l.resultStatus = rs2.getString("observation_result_status");
+                    l.notes = rs2.getString("obxnote");
+                    if( l.notes != null ){
+                        l.notes = l.notes.replaceAll("\\\\\\.br\\\\", "<br/>");
+                    }
+                    gr.addLabResult(l);
+                }
+                rs2.close();
+            }
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){e.printStackTrace();}
+        return list;
+    }
+    
+    /////////
+    
+    
+    public class LabResult{
+        
+        boolean labResult = true;
+        
+        public boolean isLabResult(){ return labResult ;}
+        public boolean isLabResultComment(){ return labResult ;}
+        
+        
+        ///
+        public String service_name = null;
+        public String title = null;       //  2. Title
+        public String notUsed1 = null;    //  3. Not used ?
+        public String notUsed2 = null;    //  4. Not used ?
+        public String testName = null;    //  5. Test name
+        public String abn  = null;     //  6. Normal/Abnormal ‘N’ or ‘A’
+        public String minimum = null;     //  7. Minimum
+        public String maximum = null;     //  8. Maximum
+        public String units = null;       //  9. Units
+        public String result = null;      // 10. Result
+        public String locationId = "";  // 11. Location Id (Test performed at …)
+        public String last = null;        // 12. Last ‘Y’ or ‘N’
+        
+        public String timeStamp = "";
+        public String resultStatus = "";
+        //String title = null;       // 2. Title
+        //String notUsed1 = null;    // 3. not used ?
+        public String description = null; // 4. Description/Comment
+        //String locationId = null;  // 5. Location Id
+        //String last = null;        // 6. Last ‘Y’ or ‘N’
+        
+        public String notes = null;
+        
+        ///
+        public String getReferenceRange(){
+            String retval ="";
+            if (minimum != null && maximum != null){
+                if (!minimum.equals("") && !maximum.equals("")){
+                    if (minimum.equals(maximum)){
+                        retval = minimum;
+                    }else{
+                        retval = minimum + " - " + maximum;
+                    }
+                }
+            }
+            return retval;
+        }
+        
+    }
+    
+    public class GroupResults{
+        public String groupName = null;
+        private ArrayList labResults = null;
+        public ArrayList headerResults = null;
+        
+        public void addLabResult(LabResult l){
+            if (labResults == null){ labResults = new ArrayList(); }
+            labResults.add(l);
+        }
+        
+        public void addHeaderResults(String s){
+            boolean add = true;
+
+            if (headerResults == null){ headerResults = new ArrayList(); }
+            if ( headerResults.size() > 0){
+                String h = (String) headerResults.get((headerResults.size()-1));
+
+                if(h.equals(s.replaceAll("\\\\\\.br\\\\", "<br/>"))){
+                    add = false;
+                }
+            }
+            if(add){
+                headerResults.add(s.replaceAll("\\\\\\.br\\\\", "<br/>"));
+            }
+        }
+        
+        public ArrayList getLabResults(){
+            if (labResults == null){ labResults = new ArrayList(); }
+            return labResults;
+        }
+        
+        public ArrayList getHeaderResults(){
+            if (headerResults == null){ headerResults = new ArrayList(); }
+            return headerResults;
+        }
+        
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
 }

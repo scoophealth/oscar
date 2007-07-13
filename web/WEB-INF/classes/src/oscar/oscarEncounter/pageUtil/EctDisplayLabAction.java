@@ -94,6 +94,9 @@ public class EctDisplayLabAction extends EctDisplayAction {
             }else if (result.isCML()){ 
                 labDisplayName = result.getDiscipline();
                 url = request.getContextPath() + "/lab/CA/ON/CMLDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;                 
+            }else if (result.isHL7TEXT()){
+                labDisplayName = result.getDiscipline();
+                url = request.getContextPath() + "/lab/CA/ALL/labDisplay.jsp?providerNo="+bean.providerNo+"&segmentID="+result.segmentID;
             }else {
                 labDisplayName = result.getDiscipline();
                 url = request.getContextPath() + "/lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+bean.providerNo;                

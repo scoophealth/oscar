@@ -191,6 +191,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                 <tr>
                     <td align="left" class="MainTableTopRowRightColumn" width="100%">                        
                         <input type="hidden" name="segmentID" value="<%= request.getParameter("segmentID") %>">
+                        <input type="hidden" name="multiID" value="<%= request.getParameter("multiID") %>" />
                         <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>">
                         <input type="hidden" name="status" value="A">
                         <input type="hidden" name="comment" value="">
@@ -218,6 +219,35 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
 
             <table width="100%" border="1" cellspacing="0" cellpadding="3" bgcolor="#9999CC" bordercolordark="#bfcbe3">
+                <%
+                if (request.getParameter("multiID") != null){
+                    String[] multiID = request.getParameter("multiID").split(",");
+                    if (multiID.length > 1){
+                        %>
+                        <tr>
+                            <td class="Cell" colspan="2" align="middle">
+                                <div class="Field2">
+                                    Version:&#160;&#160;
+                                    <%
+                                    for (int i=0; i < multiID.length; i++){
+                                        if (multiID[i].equals(request.getParameter("segmentID"))){
+                                            %><u>v<%= i+1 %></u>&#160;<%
+                                        }else{
+                                            if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
+                                                %><a href="SegmentDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>">v<%= i+1 %></a>&#160;<%
+                                            }else{
+                                                %><a href="SegmentDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>&status=<%=request.getParameter("status")%>">v<%= i+1 %></a>&#160;<%
+                                            }
+                                        }
+                                    }
+                                    %>
+                                </div>
+                            </td>
+                        </tr>
+                        <%
+                    }
+                }
+                %>                
                 <tr>
                     <td width="66%" align="middle" class="Cell">
                         <div class="Field2">
@@ -451,43 +481,60 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         </table>
                     </td>
                 </tr>
-                <tr>
-                    <td align="center" bgcolor="white" colspan="2">
-                        <table width="100%" height="20" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td align="center" bgcolor="white">
-                                    <div class="FieldData">
-                                        <center>
-                                            <!-- <table width="90%" border="0" cellpadding="0" cellspacing="0"> -->
-                                                <% for (int i=0; i < mDSSegmentData.statusArray.size(); i++) { 
-                                                    ReportStatus rs = (ReportStatus) mDSSegmentData.statusArray.get(i); %>
-                                                <!--    <tr>
-                                                        <td width="20%">
-                                                            <div class="FieldData"> -->
-                                                                <%= rs.getProviderName() %> :
-                                                <!--            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="FieldData"> -->
-                                                                <font color="red"><%= rs.getStatus() %></font>
+                <tr>                                                                
+                                <td align="center" bgcolor="white" colspan="2">
+                                    <%String[] multiID = request.getParameter("multiID").split(",");
+                                    boolean startFlag = false;                                    
+                                    for (int j=multiID.length-1; j >=0; j--){
+                                        MDSSegmentData currentData = new MDSSegmentData();
+                                        currentData.populateMDSSegmentData(multiID[j]);
+                                        
+                                        if (multiID[j].equals(request.getParameter("segmentID")))
+                                            startFlag = true;                                                              
+                                        if (startFlag){
+                                            if (currentData.statusArray.size() > 0){%>
+
+                                                <table width="100%" height="20" cellpadding="2" cellspacing="2">
+                                                    <tr>
+                                                        <% if (multiID.length > 1){ %>
+                                                            <td align="center" bgcolor="white" width="20%" valign="top">
+                                                                <div class="FieldData">
+                                                                    <b>Version:</b> v<%= j+1 %>
+                                                                </div>
+                                                            </td>
+                                                            <td align="left" bgcolor="white" width="80%" valign="top">
+                                                        <% }else{ %>
+                                                            <td align="center" bgcolor="white">
+                                                        <% } %>
+                                                            <div class="FieldData">
+                                                                <!--center-->            
+                                                                <% for (int i=0; i < currentData.statusArray.size(); i++) { 
+                                                                    ReportStatus rs = (ReportStatus) currentData.statusArray.get(i); %>
+                                                                    <%= rs.getProviderName() %> :
+                                                                    <font color="red"><%= rs.getStatus() %></font>
                                                                     <% if ( rs.getStatus().equals("Acknowledged") ) { %>
                                                                         <%= rs.getTimestamp() %>, 
                                                                         <%= ( rs.getComment().equals("") ? "no comment" : "comment : "+rs.getComment() ) %>
                                                                     <% } %>
-                                                <!--            </div>
+                                                                    <br>
+                                                                <% } 
+                                                                if (currentData.statusArray.size() == 0){
+                                                                    %><font color="red">N/A</font><%
+                                                                }
+                                                                %>
+
+                                                                <!--/center-->
+                                                            </div>
                                                         </td>
-                                                    </tr> -->
-                                                    <br>
-                                                <% } %>
-                                            <!-- </table> -->                                   
-                                        </center>
-                                    </div>
+                                                    </tr>
+                                                </table>
+
+                                            <%}
+                                        }
+                                    }%>
                                 </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
+                            </tr> 
+             </table>
       
         
         

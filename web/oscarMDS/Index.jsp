@@ -1,6 +1,7 @@
 <%@ page language="java" %>
 <%@ page import="java.util.*" %>
 <%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*" %>
+<%@ page import="org.apache.commons.collections.MultiHashMap" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
@@ -15,12 +16,27 @@
     String ackStatus = request.getParameter("status");
     String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
 
-    if ( ackStatus == null ) { ackStatus = "N"; } // default to only new lab reports
+    if ( ackStatus == null || ackStatus.equals("")) { ackStatus = "N"; } // default to only new lab reports
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
         
-    ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
+    ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);    
+    Collections.sort(labs);
+
+    LinkedHashMap accessionMap = new LinkedHashMap();
+    LabResultData result;
+    for( int i = 0; i < labs.size(); i++ ) {
+        result = (LabResultData) labs.get(i);
+        if (result.accessionNumber == null || result.accessionNumber.equals("")){
+            accessionMap.put("noAccessionNum"+i+result.labType, result);
+        }else{
+            if (!accessionMap.containsKey(result.accessionNumber+result.labType))
+                accessionMap.put(result.accessionNumber+result.labType, result);
+        }
+    }        
+    labs = new ArrayList(accessionMap.values());
+    
     int pageNum = 1;
     if ( request.getParameter("pageNum") != null ) {
         pageNum = Integer.parseInt(request.getParameter("pageNum"));
@@ -178,7 +194,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
 
 
 <script type="text/javascript" language=javascript>
-
+ 
 function popupStart(vheight,vwidth,varpage) {
     popupStart(vheight,vwidth,varpage,"helpwindow");
 }
@@ -217,19 +233,30 @@ function checkSelected() {
 
 function submitFile(){
    aBoxIsChecked = false;    
+   submitLabs = true;
     if (document.reassignForm.flaggedLabs.length == undefined) {
         if (document.reassignForm.flaggedLabs.checked == true) {
-            aBoxIsChecked = true;
+            if (document.reassignForm.ackStatus.value == "false"){
+                aBoxIsChecked = confirm("The lab for "+document.reassignForm.patientName.value+" has not been attached to a demographic, would you like to file it anyways?");
+            }else{
+                aBoxIsChecked = true;
+            }
         }
     } else {
         for (i=0; i < document.reassignForm.flaggedLabs.length; i++) {
             if (document.reassignForm.flaggedLabs[i].checked == true) {
-                aBoxIsChecked = true;
+                if (document.reassignForm.ackStatus[i].value == "false"){
+                    aBoxIsChecked = confirm("The lab for "+document.reassignForm.patientName[i].value+" has not been attached to a demographic, would you like to file it anyways?");
+                    if(!aBoxIsChecked)
+                        break;
+                }else{
+                    aBoxIsChecked = true;
+                }
             }
         }
     }
     if (aBoxIsChecked) {
-       document.reassignForm.action = '../oscarLab/FileLabs.do';
+       document.reassignForm.action = '../oscarMDS/FileLabs.do';
        document.reassignForm.submit();
     }
 }
@@ -258,7 +285,7 @@ function wrapUp() {
     <form name="reassignForm" method="post" action="ReportReassign.do" id="lab_form">
         <table  oldclass="MainTable" id="scrollNumber1" border="0" name="encounterTable" cellspacing="0" cellpadding="3" width="100%">
             <tr oldclass="MainTableTopRow">
-                <td class="MainTableTopRowRightColumn" colspan="9" align="left">                       
+                <td class="MainTableTopRowRightColumn" colspan="10" align="left">                       
                     <table width="100%">
                         <tr>                        
                             <td align="left" valign="center" width="30%">
@@ -279,8 +306,10 @@ function wrapUp() {
                                 <% if (demographicNo == null && labs.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
-                                    <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
-                                <% } %>
+                                    <% if (ackStatus.equals("N")) {%>
+                                        <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
+                                    <% } 
+                                }%>
                             </td>                            
                             <td align="center" valign="center" width="40%" class="Nav">
                                 &nbsp;&nbsp;&nbsp;
@@ -341,7 +370,9 @@ function wrapUp() {
                 <th align="left" valign="bottom" class="cell">
                     <bean:message key="oscarMDS.index.msgReportStatus"/>
                 </th>
-
+                <th align="left" valign="bottom" class="cell">
+                    Ack #
+                </th>
             </tr>
 
         <%  
@@ -353,12 +384,11 @@ function wrapUp() {
             if ( labs.size() < endIndex ) {
                 endIndex = labs.size();
             }
-
-            System.out.println("pagenum :"+pageNum+ " startIndex "+startIndex+" endIndex "+endIndex +" total size "+labs.size());
+           
             for (int i = startIndex; i < endIndex; i++) {
                 
                 
-                LabResultData result =  (LabResultData) labs.get(i);
+                result =  (LabResultData) labs.get(i);
                 
                 String segmentID        = (String) result.segmentID;
                 String status           = (String) result.acknowledgedStatus;
@@ -369,21 +399,26 @@ function wrapUp() {
                 if (!result.isMatchedToPatient()){
                    bgcolor = "#FFCC00";    
                 }
+                
                 %>
-
+               
             <tr bgcolor="<%=bgcolor%>" class="<%= (result.isAbnormal() ? "AbnormalRes" : "NormalRes" ) %>">
                 <td nowrap>
                     <input type="checkbox" name="flaggedLabs" value="<%=segmentID%>"> 
-                    <input type="hidden" name="labType<%=segmentID%><%=result.labType%>" value="<%=result.labType%>"/>
+                    <input type="hidden" name="labType<%=segmentID+result.labType%>" value="<%=result.labType%>"/>
+                    <input type="hidden" name="ackStatus" value="<%= result.isMatchedToPatient() %>" />
+                    <input type="hidden" name="patientName" value="<%= result.patientName %>"/>
                     <%=result.getHealthNumber() %>
                 </td>
                 <td nowrap>                                    
                     <% if ( result.isMDS() ){ %>
-                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
                     <% }else if (result.isCML()){ %>
-                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                    <% }else if (result.isHL7TEXT()){ %>
+                    <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <% }else {%>
-                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <!--a href="javascript:reportWindow('../lab/CA/BC/report.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')">2</a-->
                     <% }%>
                 </td>
@@ -408,6 +443,9 @@ function wrapUp() {
                 <td nowrap>                                    
                     <%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
                 </td>
+                <td nowrap>
+                    <%= result.getAckCount() %>&#160<% if (result.multiLabId != null && !result.multiLabId.equals(result.segmentID)) { %>(<%= result.getMultipleAckCount() %>)<%}%>
+                </td>
             </tr>
          <% } 
          
@@ -419,7 +457,7 @@ function wrapUp() {
             </tr>
          <% } %>
             <tr class="MainTableBottomRow">
-                <td class="MainTableBottomRowRightColumn" bgcolor="#003399" colspan="9" align="left">                       
+                <td class="MainTableBottomRowRightColumn" bgcolor="#003399" colspan="10" align="left">                       
                     <table width="100%">
                         <tr> 
                             <td align="left" valign="middle" width="30%">                                
@@ -433,8 +471,10 @@ function wrapUp() {
                                 <% if (demographicNo == null && labs.size() > 0) { %>
                                     <!-- <input type="button" class="smallButton" value="Reassign" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')"> -->
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
-                                    <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
-                                <% } %>
+                                    <% if (ackStatus.equals("N")) {%>
+                                        <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
+                                    <% } 
+                                } %>
                             </td>
                             <td align="center" valign="middle" width="40%">
                                 <div class="Nav">

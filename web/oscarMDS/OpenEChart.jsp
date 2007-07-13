@@ -52,8 +52,6 @@ function popupPage(vheight,vwidth,varpage) {
   }
 }
 
-popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&status=');
-window.close();
 </script>
 
 </head>
