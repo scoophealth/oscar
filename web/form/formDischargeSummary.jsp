@@ -1,9 +1,30 @@
-
+<!-- 
+/**
+ * Copyright (C) 2007.
+ * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+ -->
+ 
 <%@ page language="java"%>
 <%@ page import="oscar.util.*, oscar.form.*, oscar.form.data.*" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ page import="org.springframework.context.*,org.springframework.web.context.support.*" %>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 
 <%
@@ -66,6 +87,7 @@
         document.forms[0].target = "apptProviderSearch";
         document.forms[0].action = "/<%=project_home%>/form/formname.do" ;
 	}
+	
     function onPrint() {
         document.forms[0].submit.value="print"; //printAR1
         var ret = checkAllDates();
@@ -256,6 +278,7 @@ var maxYear=9900;
 </script>
 
 <body bgproperties="fixed" topmargin="0" leftmargin="1" rightmargin="1">
+<c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <html:form action="/form/formname">
 <input type="hidden" name="demographic_no" value="<%= props.getProperty("demographic_no", "0") %>" />
 <input type="hidden" name="formCreated" value="<%= props.getProperty("formCreated", "") %>" />
@@ -280,18 +303,15 @@ var maxYear=9900;
 <%
   }
 %>
-            <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
+            <input type="button" value="Exit" onclick="javascript:return onExit();"/>            
+            <%
+            String appPath = request.getContextPath();            
+            %> 
+            <input type="button" value="Print Preview" onclick="location.href='<%= appPath %>/form/formDischargeSummaryPrint.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>&user=<%=provNo%>' " />
+            <!-- 
+            <a href='<%=appPath %>/form/formDischargeSummaryPrint.jsp' onClick="window.open(this.href,'Discharge Summary Form Print Preview','width=800,height=600,toolbar=no,location=no,directories=no,status=no,menubar=yes,scrollbars=yes,copyhistory=no,resizable=yes');return false;">Print Preview</a> 
+            -->
         </td>
-<%
-  if (!bView) {
-%>
-        <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
-        </td>
-<%
-  }
-%>
     </tr>
 </table>
 
@@ -323,14 +343,6 @@ var maxYear=9900;
 	 </td>
     </tr>    
 
-<!--
-<table border="0" cellspacing="0" cellpadding="0" width="100%" >
-  <tr bgcolor="#486ebd">
-    <th align=CENTER  ><font face="Arial, Helvetica, sans-serif" color="#FFFFFF">&nbsp;</font></th>
-</tr>
-</table>
-  -->
-
     <tr width="100%">
      <td width="5%" align="left">Admit Date:</td>
      <td width="10%">
@@ -356,7 +368,7 @@ var maxYear=9900;
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
 <td colspan="3">Admitting Diagnosis/Primary Diagnosis:
-		<textarea  name="admissionNotes" readonly style="width:100%" cols="20" rows="3" @oscar.formDB dbType="text"/><%= props.getProperty("admissionNotes", "") %></textarea>
+		<textarea  name="admissionNotes" style="width:100%" cols="20" rows="3" @oscar.formDB dbType="text"/><%= props.getProperty("admissionNotes", "") %></textarea>
 </td>
 </tr>
 <tr>
@@ -453,13 +465,12 @@ var maxYear=9900;
 
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
-	<td>
-		<table width="100%" border="1"  cellspacing="0" cellpadding="0" >
-		<tr><td>Summary of Current Medication Upon Discharge:</td></tr>
-		<tr><td><textarea name="prescriptionSummary" readonly="true" style="width:100%" cols="30" rows="7" @oscar.formDB dbType="text"/><%= props.getProperty("prescriptionSummary", "") %></textarea></td></tr>
-		</table>
+	<td width="50%">
+		Current Medications:
+		<textarea name="prescriptionSummary" readonly="true" style="width:100%" cols="30" rows="7" @oscar.formDB dbType="text"/><%= props.getProperty("prescriptionSummary", "") %></textarea>
+		
 	</td>
-	<td>
+	<td width="50%">
 		<table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 		<tr>
 			<td>Prescription Provided:</td>
@@ -530,6 +541,7 @@ var maxYear=9900;
 			</td>
 			<td>Completed</td>					
 		</tr>
+	<!-- 
 		<tr>
 			<td>Counselling Provided by:</td>
 			<td><input type="text" name="counsellorName" style="width:100%" size="26" maxlength="26" value="<%= props.getProperty("counsellorName", "") %>"/><td>
@@ -542,6 +554,7 @@ var maxYear=9900;
 		<tr>
 			<td>Follow-up Required:</td>
 			<td align="right">
+	
 			<%if(props.getProperty("followUpRequired","").equals("1")){%>
 			<input type="radio" name="followUpRequired" value="1" checked />
 			<%}else { %>
@@ -564,32 +577,51 @@ var maxYear=9900;
 			<td>If yes, please specify:</td>
 			<td colspan="6"><input type="text" name="followUpRequiredDetail" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("followUpRequiredDetail", "") %>"/><td>						
 		</tr>
+	-->
 		<tr>
 			<td>Changes in Medications (include explanation):</td>
-			<td colspan="6"><input type="text" name="changeMedications" style="width:100%" size="60" maxlength="60" value="<%= props.getProperty("changeMedications", "") %>"/><td>					
+			<td colspan="6"><input type="text" name="changeMedications" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("changeMedications", "") %>"/><td>					
 		</tr>
 		</table>
 	</td>
 </tr>
-<tr>
-	<td colspan="2">Referrals made/pending:
-		<textarea name="referrals" style="width:100%" cols="30" rows="3" @oscar.formDB dbType="text"/><%= props.getProperty("referrals", "") %></textarea>
-	</td>
-</tr>
 </table>
+
 <table width="100%" border="1"  cellspacing="0" cellpadding="0" >
 <tr>
-	<td>Program:
-		<textarea name="program" style="width:100%" cols="30" rows="5" @oscar.formDB dbType="text"/><%= props.getProperty("program", "") %></textarea>
-	</td>
-	<td>Referral Made:
-		<textarea name="referralMade" style="width:100%" cols="30" rows="5" @oscar.formDB dbType="text"/><%= props.getProperty("referralMade", "") %></textarea>
-	</td>
-	<td>Outcome:
-		<textarea name="outcome" style="width:100%" cols="30" rows="5" @oscar.formDB dbType="text"/><%= props.getProperty("outcome", "") %></textarea>
+	<td colspan="3">Referrals:
 	</td>
 </tr>
-
+<tr>
+	<td>Program:</td>
+	<td>Referral Made:</td>
+	<td>Outcome:</td>
+<tr>
+<tr>	
+	<td><input type="text" name="referralProgram1" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralProgram1", "") %>" /></td>
+	<td><input type="text" name="referralMade1" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralMade1","") %>" /></td>
+	<td><input type="text" name="referralOutcome1" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralOutcome1","") %>" /></td>
+</tr>
+<tr>	
+	<td><input type="text" name="referralProgram2" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralProgram2", "") %>" /></td>
+	<td><input type="text" name="referralMade2" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralMade2","") %>" /></td>
+	<td><input type="text" name="referralOutcome2" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralOutcome2","") %>" /></td>
+</tr>
+<tr>	
+	<td><input type="text" name="referralProgram3" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralProgram3", "") %>" /></td>
+	<td><input type="text" name="referralMade3" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralMade3","") %>" /></td>
+	<td><input type="text" name="referralOutcome3" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralOutcome3","") %>" /></td>
+</tr>
+<tr>	
+	<td><input type="text" name="referralProgram4" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralProgram4", "") %>" /></td>
+	<td><input type="text" name="referralMade4" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralMade4","") %>" /></td>
+	<td><input type="text" name="referralOutcome4" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralOutcome4","") %>" /></td>
+</tr>
+<tr>	
+	<td><input type="text" name="referralProgram5" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralProgram5", "") %>" /></td>
+	<td><input type="text" name="referralMade5" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralMade5","") %>" /></td>
+	<td><input type="text" name="referralOutcome5" style="width:100%" size="255" maxlength="255" value="<%= props.getProperty("referralOutcome5","") %>" /></td>
+</tr>
 </table>
 
 <table>
@@ -598,7 +630,7 @@ var maxYear=9900;
      <td>
 		<input type="text" name="providerName" readonly="true" style="width:100%" size="30" maxlength="30" value="<%= props.getProperty("providerName", "") %>" />
 	 </td>
-	<td>Physician's Signature:</td>
+	<td>Provider's Signature:</td>
 	<td>
 		<input type="text" name="signature" size="25" maxlength="25" value="<%= props.getProperty("signature", "") %>" @oscar.formDB />
 	</td>
@@ -622,17 +654,8 @@ var maxYear=9900;
   }
 %>
             <input type="button" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="button" value="Print" onclick="javascript:window.print();"/>
+            <input type="button" value="Print Preview" onclick="location.href='<%= appPath %>/form/formDischargeSummaryPrint.jsp' " />
         </td>
-<%
-  if (!bView) {
-%>
-        <td align="right">
-            <a href="javascript: popupFixedPage(700,950,'../decision/antenatal/antenatalplanner.jsp?demographic_no=<%=demoNo%>&formId=<%=formId%>');">Planner</a>
-        </td>
-<%
-  }
-%>
     </tr>
 </table>
 
