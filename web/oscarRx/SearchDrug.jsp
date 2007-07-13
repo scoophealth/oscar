@@ -5,7 +5,7 @@
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
-<%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData"%>
+<%@ page import="oscar.oscarRx.data.*, oscar.oscarProvider.data.ProviderMyOscarIdData, oscar.oscarDemographic.data.DemographicData, oscar.OscarProperties"%>
 
 
 <%
@@ -30,14 +30,17 @@
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
 
-<% RxPharmacyData pharmacyData = new RxPharmacyData();
-  RxPharmacyData.Pharmacy pharmacy ;                                  
-  pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));                                  
-  String prefPharmacy = "";
-  if (pharmacy != null){   
-     prefPharmacy = pharmacy.name;                                  
-  }
-  
+<%  RxPharmacyData pharmacyData = new RxPharmacyData();
+    RxPharmacyData.Pharmacy pharmacy ;                                  
+    pharmacy = pharmacyData.getPharmacyFromDemographic(Integer.toString(bean.getDemographicNo()));                                  
+    String prefPharmacy = "";
+    if (pharmacy != null){   
+	prefPharmacy = pharmacy.name;                                  
+    }
+    
+    String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
+    if (drugref_route==null) drugref_route = "";
+    String[] d_route = ("Oral,"+drugref_route).split(",");
 %>
 
 <!--  
@@ -86,91 +89,103 @@ table.hiddenLayer {
 </style>
 <script type="text/javascript">
 
-    function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
-      var page = varpage;
-      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=40,screenY=10,top=10,left=60";
-      var popup=window.open(varpage, "oscarDoc", windowprops);
-      if (popup != null) {
-        if (popup.opener == null) {
-          popup.opener = self;
-        }
-      }
+function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
+    var page = varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=40,screenY=10,top=10,left=60";
+    var popup=window.open(varpage, "oscarDoc", windowprops);
+    if (popup != null) {
+	if (popup.opener == null) {
+	    popup.opener = self;
+	}
     }
-    
-    
-    function goDOC(){
-       if (document.RxSearchDrugForm.searchString.value.length == 0){
-          popupDrugOfChoice(720,700,'http://doc.oscartools.org/')
-       }else{
-          //var docURL = "http://resource.oscarmcmaster.org/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
-          var docURL = "http://doc.oscartools.org/search?SearchableText="+document.RxSearchDrugForm.searchString.value;          
-          popupDrugOfChoice(720,700,docURL);                               
-       }
-    }     
+}
 
-    function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup window
-      var page = varpage;
-      windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=40,screenY=10,top=10,left=60";
-      var popup=window.open(varpage,varPageName, windowprops);
-      if (popup != null) {
-        if (popup.opener == null) {
-          popup.opener = self;
-        }
-      }
+function goDOC(){
+    if (document.RxSearchDrugForm.searchString.value.length == 0){
+	popupDrugOfChoice(720,700,'http://doc.oscartools.org/')
+    }else{
+	//var docURL = "http://resource.oscarmcmaster.org/oscarResource/DoC/OSCAR_search/OSCAR_search_results?title="+document.RxSearchDrugForm.searchString.value+"&SUBMIT=GO";
+	var docURL = "http://doc.oscartools.org/search?SearchableText="+document.RxSearchDrugForm.searchString.value;          
+	popupDrugOfChoice(720,700,docURL);                               
     }
-    
-    function customWarning(){
-        if (confirm('This feature will allow you to manually enter a drug.'
-               + '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
-               + '\n  *  Known Dosage Forms / Routes'
-               + '\n  *  Drug Allergy Information'
-               + '\n  *  Drug-Drug Interaction Information'
-               + '\n  *  Drug Information'
-               + '\n\nAre you sure you wish to use this feature?')==true) {
-            window.location.href = 'chooseDrug.do?demographicNo=<%= response.encodeURL(Integer.toString(bean.getDemographicNo())) %>';
-        }
+}     
+
+function popupWindow(vheight,vwidth,varpage,varPageName) { //open a new popup window
+    var page = varpage;
+    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=40,screenY=10,top=10,left=60";
+    var popup=window.open(varpage,varPageName, windowprops);
+    if (popup != null) {
+	if (popup.opener == null) {
+	    popup.opener = self;
+	}
     }
-
-    function isEmpty(){  
-        if (document.RxSearchDrugForm.searchString.value.length == 0){
-            alert("Search Field is Empty");
-            document.RxSearchDrugForm.searchString.focus();
-            return false;
-        }
-        return true;
-    }
+}
     
-    function showpic(picture){
-     if (document.getElementById){ // Netscape 6 and IE 5+      
-        var targetElement = document.getElementById(picture);                
-        var bal = document.getElementById("Calcs");
+function customWarning(){
+    if (confirm('This feature will allow you to manually enter a drug.'
+	+ '\nWarning: Only use this feature if absolutely necessary, as you will lose the following functionality:'
+	+ '\n  *  Known Dosage Forms / Routes'
+	+ '\n  *  Drug Allergy Information'
+	+ '\n  *  Drug-Drug Interaction Information'
+	+ '\n  *  Drug Information'
+	+ '\n\nAre you sure you wish to use this feature?')==true) {
+	window.location.href = 'chooseDrug.do?demographicNo=<%= response.encodeURL(Integer.toString(bean.getDemographicNo())) %>';
+    }
+}
 
-        var offsetTrail = document.getElementById("Calcs");
-        var offsetLeft = 0;
-        var offsetTop = 0;
-        while (offsetTrail) {
-           offsetLeft += offsetTrail.offsetLeft;
-           offsetTop += offsetTrail.offsetTop;
-           offsetTrail = offsetTrail.offsetParent;
-        }
-        if (navigator.userAgent.indexOf("Mac") != -1 && 
-           typeof document.body.leftMargin != "undefined") {
-           offsetLeft += document.body.leftMargin;
-           offsetTop += document.body.topMargin;
-        }
-            
-        targetElement.style.left = offsetLeft +bal.offsetWidth;        
-        targetElement.style.top = offsetTop;	
-        targetElement.style.visibility = 'visible';        
-     }
-  }
+function showpic(picture){
+    if (document.getElementById){ // Netscape 6 and IE 5+      
+	var targetElement = document.getElementById(picture);                
+	var bal = document.getElementById("Calcs");
 
-  function hidepic(picture){
-     if (document.getElementById){ // Netscape 6 and IE 5+
-        var targetElement = document.getElementById(picture);
-        targetElement.style.visibility = 'hidden';
-     }
-  }
+	var offsetTrail = document.getElementById("Calcs");
+	var offsetLeft = 0;
+	var offsetTop = 0;
+	while (offsetTrail) {
+	    offsetLeft += offsetTrail.offsetLeft;
+	    offsetTop += offsetTrail.offsetTop;
+	    offsetTrail = offsetTrail.offsetParent;
+	}
+	if (navigator.userAgent.indexOf("Mac") != -1 && 
+	    typeof document.body.leftMargin != "undefined") {
+	    offsetLeft += document.body.leftMargin;
+	    offsetTop += document.body.topMargin;
+	}
+	targetElement.style.left = offsetLeft +bal.offsetWidth;        
+	targetElement.style.top = offsetTop;	
+	targetElement.style.visibility = 'visible';        
+    }
+}
+
+function hidepic(picture){
+    if (document.getElementById){ // Netscape 6 and IE 5+
+	var targetElement = document.getElementById(picture);
+	targetElement.style.visibility = 'hidden';
+    }
+}
+  
+function isEmpty(){  
+    if (document.RxSearchDrugForm.searchString.value.length == 0){
+	alert("Search Field is Empty");
+	document.RxSearchDrugForm.searchString.focus();
+	return false;
+    }
+    return true;
+}
+    
+function buildRoute() {
+        pickRoute = "";
+<% for (int i=0; i<d_route.length; i++) { %>
+	if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
+<% } %>
+	document.forms[2].searchRoute.value = pickRoute;
+}
+
+function processData() {
+    if (isEmpty()) buildRoute();
+    else return false;
+}
+
 </script>
 </head>
 
@@ -396,31 +411,40 @@ table.hiddenLayer {
                 </td>
             </tr>
                 <tr>
- 		            <td>
+ 		   <td>
                       <div class="DivContentSectionHead"><bean:message key="SearchDrug.section3Title"/></div>
                     </td>
                 </tr>
 
             <tr>
  		   <td>
-                      <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="return isEmpty()">
+                      <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="return processData();">
                       <html:hidden property="demographicNo" value="<%= new Integer(patient.getDemographicNo()).toString()%>" />
                       <table>
                         <tr valign="center">
-                          <td>
-                            <bean:message key="SearchDrug.drugSearchTextBox"/>
-                          </td>
-                          <td>
-                            <html:text property="searchString" size="16" maxlength="16"/>&nbsp;<a href="javascript:goDOC();">Drug of Choice</a>                            
-                          </td>
+			    <td>
+				<bean:message key="SearchDrug.drugSearchTextBox"/><br>
+				<html:text property="searchString" size="16" maxlength="16"/>
+			    </td>
+			    <td width=100>
+				<a href="javascript:goDOC();">Drug of Choice</a>                            
+			    </td>
+			    <td>
+				<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">
+				    <bean:message key="SearchDrug.drugSearchRouteLabel"/><br>
+				    <%  for (int i=0; i<d_route.length; i++) { %>
+				    <input type=checkbox name=route<%=i%> value="<%=d_route[i].trim()%>"><%=d_route[i].trim()%> &nbsp;</input>
+				    <%  } %>
+				    <html:hidden property="searchRoute"/>
+				</oscar:oscarPropertiesCheck>
+			    </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td colspan=3>
                             <html:submit property="submit" value="Search" styleClass="ControlPushButton"/>
-                          </td>
-                          <td>
-                            <input type=button class="ControlPushButton"  onclick="javascript:document.forms.RxSearchDrugForm.searchString.value='';document.forms.RxSearchDrugForm.searchString.focus();" value="Reset" />
-                            <input type=button class="ControlPushButton"  onclick="javascript:customWarning();" value="Custom Drug" /> 
+			    &nbsp;&nbsp;&nbsp;
+                            <input type=button class="ControlPushButton"  onclick="searchString.value='';searchRoute.value='';searchString.focus();" value="Reset" />
+                            <input type=button class="ControlPushButton"  onclick="customWarning();" value="Custom Drug" /> 
                           </td>
                         </tr>
                       </table>

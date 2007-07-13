@@ -2,7 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+<%@ page import="java.util.*,oscar.oscarRx.data.*,oscar.oscarRx.pageUtil.*, oscar.OscarProperties" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <logic:notPresent name="RxSessionBean" scope="session">
@@ -58,6 +59,15 @@ ArrayList brand = drugSearch.getBrand();
 ArrayList gen = drugSearch.getGen();
 ArrayList afhcClass = drugSearch.getAfhcClass();
 int i;
+
+String drugref_route = OscarProperties.getInstance().getProperty("drugref_route");
+if (drugref_route==null) drugref_route = "";
+String[] d_route = ("Oral,"+drugref_route).split(",");
+String[] selRoute = new String[d_route.length];
+
+for (int j=0; j<selRoute.length; j++) {
+    selRoute[j] = request.getParameter("route"+j)!=null? "checked" : "";
+}
 %>
 
 
@@ -109,6 +119,19 @@ int i;
         }
         return true;
     }
+    
+    function buildRoute() {
+        pickRoute = "";
+<% for (int j=0; j<d_route.length; j++) { %>
+	if (document.forms[0].route<%=j%>.checked) pickRoute += " "+document.forms[0].route<%=j%>.value;
+<% } %>
+	document.forms[0].searchRoute.value = pickRoute;
+    }
+
+    function processData() {
+	if (isEmpty()) buildRoute();
+        else return false;
+    }
 </script>
 
 </head>
@@ -144,29 +167,36 @@ int i;
                   </tr>
                   <tr>
                     <td>
-                    <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="return isEmpty()">
+                    <html:form action="/oscarRx/searchDrug" focus="searchString" onsubmit="processData();">
       
                     <html:hidden property="demographicNo" />
                     <table>
                         <tr>
-                          <td>
-                            <bean:message key="ChooseDrug.searchAgain"/>
-                          </td>
-                          <td>
-                            <html:text property="searchString" size="16" maxlength="16"/> <a href="javascript:goDOC();">Drug Of Choice</a>
-                            
-                            <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
-                          </td>
+			    <td>
+				<bean:message key="ChooseDrug.searchAgain"/><br>
+				<html:text property="searchString" size="16" maxlength="16"/>
+			    <!--<html:hidden property="otcExcluded" value="true"/>OTC Excluded-->
+			    </td>
+			    <td width=100>
+				<a href="javascript:goDOC();">Drug of Choice</a>                            
+			    </td>
+			    <td>
+				<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">				
+				    <bean:message key="SearchDrug.drugSearchRouteLabel"/><br>
+				    <%  for (int j=0; j<d_route.length; j++) { %>
+				    <input type=checkbox <%=selRoute[j]%> name=route<%=j%> value="<%=d_route[j].trim()%>"><%=d_route[j].trim()%> &nbsp;</input>
+				    <%  } %>
+				    <html:hidden property="searchRoute"/>
+				</oscar:oscarPropertiesCheck>
+			    </td>
                         </tr>
                         <tr>
-                          <td>
-                            <html:submit property="submit" value="Search" styleClass="ControlPushButton" />
-                          </td>
-                          <td>
-                            <input type=button class="ControlPushButton"  onclick="javascript:document.forms.RxSearchDrugForm.searchString.value='';document.forms.RxSearchDrugForm.searchString.focus();" value="Reset" />
-                            <input type=button class="ControlPushButton"  onclick="javascript:customWarning();" value="Custom Drug" />                            
-                          </td>
-                          
+			    <td colspan=3>
+				<html:submit property="submit" value="Search" styleClass="ControlPushButton" />
+				&nbsp;&nbsp;&nbsp;
+				<input type=button class="ControlPushButton"  onclick="javascript:document.forms.RxSearchDrugForm.searchString.value='';document.forms.RxSearchDrugForm.searchString.focus();" value="Reset" />
+				<input type=button class="ControlPushButton"  onclick="javascript:customWarning();" value="Custom Drug" />                            
+			    </td>
                         </tr>
                      </table>
                     </html:form>
