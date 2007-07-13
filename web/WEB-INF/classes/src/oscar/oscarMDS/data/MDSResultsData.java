@@ -544,26 +544,30 @@ public class MDSResultsData {
         String  ret = "";
         String accessionNum = findMDSAccessionNumber(labId);
         int orderNum;
-        LinkedList labs = new LinkedList();
-        ArrayList nums = new ArrayList();
+
+        ArrayList labs = new ArrayList();
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql ="select segmentID, messageConID from mdsMSH where messageConID like '%"+accessionNum+"%'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
+                MultiLabObject mlo = new MultiLabObject();
+                
                 //make sure the labs are in the correct order
                 accessionNum = rs.getString("messageConID");
-                orderNum = Integer.parseInt(accessionNum.substring(accessionNum.lastIndexOf("-")+1))-1;
-                labs.add(orderNum, rs.getString("segmentID"));           
+                orderNum = Integer.parseInt(accessionNum.substring(accessionNum.lastIndexOf("-")+1));
+                mlo.init(rs.getString("segmentID"), orderNum);
+                labs.add(mlo);           
             }           
             rs.close();
             db.CloseConn();
             
+            Collections.sort(labs);
             for (int i=0; i < labs.size(); i++){
                 if (ret.equals(""))
-                    ret = (String) labs.get(i);
+                    ret = ( (MultiLabObject) labs.get(i) ).getId();
                 else
-                    ret = ret+","+( (String) labs.get(i) );
+                    ret = ret+","+( (MultiLabObject) labs.get(i) ).getId();
             }
             
         }catch(Exception e){
@@ -702,4 +706,30 @@ public class MDSResultsData {
         }
     }
     
+}
+
+class MultiLabObject implements Comparable{
+    String labId;
+    int orderNo;
+    
+    public void MultiLabObject(){}
+    
+    public void init(String id, int no){
+        labId = id;
+        orderNo = no;        
+    }
+    
+    public String getId(){
+        return this.labId;
+    }
+    
+    public int compareTo(Object object) {
+        int ret = 0;
+        if (this.orderNo < ((MultiLabObject) object).orderNo){
+            ret = -1;
+        }else if(this.orderNo > ((MultiLabObject) object).orderNo){
+            ret = 1;
+        }
+        return ret;
+    }
 }
