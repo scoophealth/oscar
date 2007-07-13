@@ -287,6 +287,23 @@ public class RxDrugData {
         return drugSearch;        
     }
     
+    public DrugSearch listDrugByRoute(String searchStr, String searchRoute){
+        DrugSearch drugSearch = new DrugSearch();
+        RxDrugRef drugRef = new RxDrugRef();
+        Vector vec= new Vector();
+        //Vector vec = drugRef.list_drugs(searchStr,hashtable);        
+        try{
+            vec  = drugRef.list_drug_element_route(searchStr, searchRoute);
+        }catch(Exception connEx){
+            drugSearch.failed = true;
+            drugSearch.errorMessage = connEx.getMessage();
+        }                
+        if (!drugSearch.failed){            
+            drugSearch.processResult(vec);                         
+        }
+        return drugSearch;        
+    }
+
     public DrugSearch listDrugFromElement(String searchStr){
         DrugSearch drugSearch = new DrugSearch();
         RxDrugRef drugRef = new RxDrugRef();

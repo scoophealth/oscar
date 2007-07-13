@@ -34,6 +34,7 @@ public final class RxSearchDrugForm extends ActionForm {
     
     private String demographicNo = null;
     private String searchString = null;
+    private String searchRoute = null;
     private String genericString = null;
     private String otcExcluded = null;
     private String ahfsString = null;
@@ -82,6 +83,14 @@ public final class RxSearchDrugForm extends ActionForm {
     
     public void setSearchString(String searchString) {
         this.searchString = searchString;
+    }
+    
+    public String getSearchRoute() {
+        return (this.searchRoute);
+    }
+    
+    public void setSearchRoute(String searchRoute) {
+        this.searchRoute = searchRoute;
     }
     
     /**

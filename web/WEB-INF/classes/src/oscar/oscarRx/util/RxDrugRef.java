@@ -185,7 +185,7 @@ public class RxDrugRef {
      
      /**
      returns all matching search element names, ids and categoeis for the given searchString
-     Search is case insesnitive
+     Search is case insensitive
      */
      public Vector list_drug_element(String searchStr) throws Exception{
          Vector params = new Vector();
@@ -193,6 +193,18 @@ public class RxDrugRef {
          Vector vec = (Vector) callWebserviceLite("list_search_element",params);             
          return vec;		         
      }	
+     
+     /**
+     returns all matching search element names, ids and categoeis for the given searchString
+     Search is limited by the given searchForm, and is case insensitive
+     */
+     public Vector list_drug_element_route(String searchStr, String searchRoute) throws Exception{
+         Vector params = new Vector();
+         params.addElement(searchStr);
+	 params.addElement(searchRoute);
+         Vector vec = (Vector) callWebserviceLite("list_search_element_route",params);
+         return vec;		         
+     }
      
      public Vector listComponents(String drugId){
         Vector params = new Vector();

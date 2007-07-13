@@ -57,7 +57,9 @@ public final class RxSearchDrugAction extends Action {
             RxSearchDrugForm reqForm = (RxSearchDrugForm) form;
             String genericSearch = reqForm.getGenericSearch();
             String searchString = reqForm.getSearchString();
-                        
+	    String searchRoute = reqForm.getSearchRoute();
+	    if (searchRoute==null) searchRoute = "";
+
             RxDrugData drugData = new RxDrugData();             
                                    
             java.util.Vector vec = new java.util.Vector();
@@ -66,7 +68,10 @@ public final class RxSearchDrugAction extends Action {
             try{
                 if (genericSearch != null ){                    
                     drugSearch = drugData.listDrugFromElement(genericSearch);
-                }else{
+                }
+		else if (!searchRoute.equals("")){
+		    drugSearch = drugData.listDrugByRoute(searchString, searchRoute);
+		} else {
                     drugSearch = drugData.listDrug(searchString);
                 }
             }catch(Exception connEx){                
