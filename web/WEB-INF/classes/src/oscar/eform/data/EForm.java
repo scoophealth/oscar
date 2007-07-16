@@ -28,8 +28,9 @@
 package oscar.eform.data;
 
 import oscar.eform.*;
-import oscar.eform.data.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.util.StringBufferUtils;
 import oscar.util.UtilDateUtilities;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler;
@@ -37,6 +38,7 @@ import oscar.oscarEncounter.oscarMeasurements.util.WriteNewMeasurements;
 import org.apache.struts.action.*;
 
 public class EForm extends EFormBase {
+    private static Log log = LogFactory.getLog(EForm.class);
     
     private String parentAjaxId = null;
     
@@ -225,14 +227,14 @@ public class EForm extends EFormBase {
         int markerLoc;
         int pointer = 0;
         while ((markerLoc = StringBufferUtils.indexOfIgnoreCase(html, marker, pointer)) >= 0) {
-            System.out.println("===============START CYCLE===========");
+            log.debug("===============START CYCLE===========");
             pointer = (markerLoc + marker.length());  //move to the AP string
             apName = getAPstr(html, pointer);  //gets varname from oscarDB=varname
             pointer++;
-            System.out.println("AP ====" + apName);
+            log.debug("AP ====" + apName);
             curAP = EFormLoader.getInstance().getAP(apName);
             if (curAP == null) {
-                System.out.println("SWITCHING TO MEASUREMENTS");
+                log.debug("SWITCHING TO MEASUREMENTS");
                 curAP = getMeasurement(apName);
                 if (curAP == null) continue;
             }
@@ -244,9 +246,9 @@ public class EForm extends EFormBase {
             }
             html = putValue(curAP, fieldType, pointer, html);
             //html.insert(pointer, dbValue(curAP, fieldType));
-            System.out.println("Marker ==== " + markerLoc);
-            System.out.println("FIELD TYPE ====" + fieldType);
-            System.out.println("=================End Cycle==============");
+            log.debug("Marker ==== " + markerLoc);
+            log.debug("FIELD TYPE ====" + fieldType);
+            log.debug("=================End Cycle==============");
         }
         formHtml = html.toString();
     }
@@ -263,13 +265,13 @@ public class EForm extends EFormBase {
         int open = html.substring(0, pointer).lastIndexOf("<");
         int close = html.substring(pointer).indexOf(">") + pointer + 1;
         String tag = html.substring(open, close);
-        System.out.println("TAG ====" + tag);
+        log.debug("TAG ====" + tag);
         int start;  //<input type="^text".....
         int end;    //<input type="text^"....
         String typeStr = null;
         if (tag.substring(1, 9).equalsIgnoreCase("textarea")) return "textarea";
         if (tag.substring(1, 7).equalsIgnoreCase("select")) return "select";
-        System.out.println("TAG PROCESS ====" + tag.substring(1,9));
+        log.debug("TAG PROCESS ====" + tag.substring(1,9));
         if ((start = tag.toLowerCase().indexOf(" type=")) >= 0) {
             start += 6;                     //account for type=...
             if (tag.charAt(start) == '\"') {  //account for type="..."
@@ -296,7 +298,7 @@ public class EForm extends EFormBase {
         //replace ${demographic} with demogrpahicNo
         if (sql != null) {
             sql = DatabaseAP.parserReplace("demographic", demographicNo, sql);
-            System.out.println("SQL----" + sql);
+            log.debug("SQL----" + sql);
             ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
             sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
             ArrayList values = EFormUtil.getValues(names, sql);
@@ -318,7 +320,7 @@ public class EForm extends EFormBase {
                 if (valueLoc < 0 || valueLoc > selectEnd) {
                     valueLoc = nextIndex(html, " VALUE=" + output, " VALUE=\"" + output, pointer);
                 }
-                System.out.println("VALUELOC====" + output);
+                log.debug("VALUELOC====" + output);
                 if (valueLoc < 0 || valueLoc > selectEnd) return html;
                 pointer = nextSpot(html, valueLoc);
                 html = html.insert(pointer, " selected");
@@ -349,7 +351,7 @@ public class EForm extends EFormBase {
         data = EctMeasurementsDataBeanHandler.getLast(demographicNo, type);
         if (data == null) return null;
         output = (String) data.get(field);
-        System.out.println("FIELD-------------------------------------------------=\"" + field + "\"");
+        log.debug("FIELD-------------------------------------------------=\"" + field + "\"");
         DatabaseAP curAP = new DatabaseAP();
         curAP.setApName(apName);
         curAP.setApOutput(output);
