@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.UnknownHostException;
 import java.util.TimerTask;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -43,6 +44,7 @@ public class PopulationReportTask extends TimerTask {
 
 	@Override
 	public void run() {
+
 		try {
 			LOG.info("start population report task");
 
@@ -52,9 +54,13 @@ public class PopulationReportTask extends TimerTask {
 			client.executeMethod(method);
 			writeResponseToFile(method);
 			method.releaseConnection();
-			
+
 			LOG.info("end population report task");
-		} catch (Throwable t) {
+		}
+		catch (UnknownHostException e) {
+			LOG.error("Error running population report task, unknown host, host="+e.getMessage());
+		}
+		catch (Throwable t) {
 			LOG.error("error running population report task", t);
 		}
 	}
