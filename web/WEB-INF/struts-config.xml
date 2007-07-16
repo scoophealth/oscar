@@ -1269,7 +1269,7 @@
             parameter="method"
             name="genericIntakeSearchForm"
             scope="request">
-            <forward name="searchForm" path="page.genericIntake.searchForm" />
+            <forward name="searchForm" path="page.genericIntake.search" />
             <forward name="intakeEdit" path="/PMmodule/GenericIntake/Edit.do" redirect="true" />
         </action>
         <action
