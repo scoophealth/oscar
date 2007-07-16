@@ -1280,6 +1280,7 @@ insert into `secRole` values(3, 'admin');
 insert into `secRole` values(4, 'locum');
 insert into `secRole` values(5, 'nurse');
 insert into `secRole` values(6, 'Vaccine Provider');
+insert into `secRole` values(null, 'external');
 
 insert into `secUserRole` values('999998', 'doctor');
 insert into `secUserRole` values('999998', 'admin');
