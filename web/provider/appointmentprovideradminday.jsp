@@ -1008,9 +1008,10 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 	  </security:oscarSec>
 	 
 	  <!-- add one link to caisi Program Management Module -->
-	  <!--<a href=# onClick="popupPage(700, 1048,'../PMmodule/ClientManager.do?id=<%=demographic_no%>')" title="Program Management">|P</a>-->
-	  <a href='../PMmodule/ClientManager.do?id=<%=demographic_no%>' title="Program Management">|P</a>
-       
+	  <caisi:isModuleLoad moduleName="caisi">
+	  	<!--<a href=# onClick="popupPage(700, 1048,'../PMmodule/ClientManager.do?id=<%=demographic_no%>')" title="Program Management">|P</a>-->
+	  	<a href='../PMmodule/ClientManager.do?id=<%=demographic_no%>' title="Program Management">|P</a>
+    </caisi:isModuleLoad>   
           <%
      //out.print(monthDay + " " + demBday);
       if(isBirthday(monthDay,demBday)){%>
