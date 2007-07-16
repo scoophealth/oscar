@@ -157,6 +157,14 @@
 			name="body"
 			value="/PMmodule/reports/ActivityReport.jsp" />
 	</definition>
+	<definition name="page.report.clientlistsreportform" path="/PMmodule/layout.jsp">
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/reports/ClientListsReportForm.jsp" />
+	</definition>
+	<definition name="page.report.clientlistsreport" path="/PMmodule/layout.jsp">
+		<put name="navigation" value="/PMmodule/navigation.jsp" />
+		<put name="body" value="/PMmodule/reports/ClientListsReport.jsp" />
+	</definition>
 	<definition
 		name="page.pmm.erconsent"
 		path="/PMmodule/layout.jsp">

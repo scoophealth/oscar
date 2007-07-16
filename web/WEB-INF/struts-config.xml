@@ -258,6 +258,9 @@
         <form-bean name="activityReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ActivityReportFormBean" />
         </form-bean>
+        <form-bean name="clientListsReportForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
+        </form-bean>
         <form-bean name="surveyExecuteForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="view" type="org.oscarehr.survey.web.formbean.SurveyExecuteFormBean" />
             <form-property name="data" type="org.oscarehr.survey.web.formbean.SurveyExecuteDataBean" />
@@ -283,12 +286,8 @@
             <form-property name="clientImage" type="org.oscarehr.casemgmt.web.formbeans.ClientImageFormBean" />
         </form-bean>
         <!-- Generic Intake -->
-        <form-bean
-            name="genericIntakeSearchForm"
-            type="org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean" />
-        <form-bean
-            name="genericIntakeEditForm"
-            type="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" />
+        <form-bean name="genericIntakeSearchForm" type="org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean" />
+        <form-bean name="genericIntakeEditForm" type="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean" />
         <!-- Generic Intake -->
 
                 
@@ -1317,6 +1316,10 @@
         </action>
         <action path="/PMmodule/Reports/ExitInterviewReportDetailed" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" validate="false">
             <forward name="form" path="page.report.exitinterviewformdetailed" />
+        </action>
+        <action path="/PMmodule/Reports/ClientListsReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="clientListsReportForm" scope="request" validate="false">
+            <forward name="form" path="page.report.clientlistsreportform" />
+            <forward name="report" path="page.report.clientlistsreport" />
         </action>
         <action path="/SurveyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyForm" scope="session">
             <forward name="edit" path=".view.survey.form" />

@@ -348,6 +348,8 @@
             <ref bean="consentManager" />
         </property>
     </bean>
+    <bean name="/PMmodule/Reports/ClientListsReport" class="org.oscarehr.PMmodule.web.reports.ClientListsReportAction" singleton="false">
+    </bean>
     <bean name="/PMmodule/Admin/DefaultRoleAccess" class="org.oscarehr.PMmodule.web.admin.DefaultRoleAccessAction" singleton="false">
         <property name="programManager">
             <ref bean="programManager" />
