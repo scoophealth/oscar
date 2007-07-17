@@ -59,18 +59,23 @@ userlastname = (String) session.getAttribute("userlastname");
     </tr>
 </table>
 <%
-String billCode = "";
+
 String apptNo = request.getParameter("appointment_no");
 ResultSet rsprovider = null;
 // String proNO = request.getParameter("xml_provider");
-String billNo ="";
+
 rsprovider = null;
 rsprovider = apptMainBean.queryResults(apptNo, "search_bill_beforedelete");
+ArrayList<String> billCodeList = new ArrayList();
+boolean cannotDelete = false;
 while(rsprovider.next()){
-    billCode = rsprovider.getString("status");
-    billNo = rsprovider.getString("billing_no");
+    String billCode = rsprovider.getString("status");
+    if (billCode.substring(0,1).equals("B")){
+        cannotDelete = true;
+    }
+    billCodeList.add(rsprovider.getString("billing_no"));
 }
-if (billCode.substring(0,1).compareTo("B") == 0) {
+if (cannotDelete) {
 %>
 <p><h1>Sorry, cannot delete billed items.</h1></p>
 <form>
@@ -78,19 +83,23 @@ if (billCode.substring(0,1).compareTo("B") == 0) {
 </form>
 <% } else{
     
-    
-    int rowsAffected=0;
-    rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
-    apptMainBean.queryExecuteUpdate(billNo,"delete_bill_master");
-    
+    boolean updateApptStatus = false;
+    for (String billNo:billCodeList){
+       int rowsAffected=0;
+       rowsAffected = apptMainBean.queryExecuteUpdate(billNo,"delete_bill");
+       apptMainBean.queryExecuteUpdate(billNo,"delete_bill_master");
+       if (rowsAffected == 1){
+          updateApptStatus = true;    
+       }
+    }
    
-    if (rowsAffected ==1) {
+    if (updateApptStatus) {
         oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
         String unbillStatus = as.unbillStatus(request.getParameter("status"));
         String[] param1 =new String[2];
         param1[0]=unbillStatus;
         param1[1]=request.getParameter("appointment_no");
-        rowsAffected = apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
+        apptMainBean.queryExecuteUpdate(param1,"updateapptstatus");
 %>
 <p><h1>Successful Addition of a billing Record.</h1></p>
 <script LANGUAGE="JavaScript">
