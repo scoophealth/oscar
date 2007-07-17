@@ -23,6 +23,7 @@
  */
 package oscar.oscarBilling.ca.bc.pageUtil;
 
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,15 +34,13 @@ import java.util.GregorianCalendar;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
 import oscar.oscarBilling.ca.bc.MSP.MSPBillingNote;
@@ -54,7 +53,7 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public class BillingSaveBillingAction
     extends Action {
-
+  private static Log log = LogFactory.getLog(BillingSaveBillingAction.class);
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
                                HttpServletRequest request,
@@ -90,14 +89,15 @@ public class BillingSaveBillingAction
     String curDate = String.valueOf(curYear) + "-" + String.valueOf(curMonth) +
         "-" + String.valueOf(curDay);
     String billingid = "";
+    ArrayList<String> billingIds = new ArrayList();
     String dataCenterId = OscarProperties.getInstance().getProperty(
         "dataCenterId");
     String billingMasterId = "";
-
+   
     
     ///Update Appointment information
-    System.out.println("appointment_no: " + bean.getApptNo());
-    System.out.println("BillStatus:" + billStatus);
+    log.debug("appointment_no: " + bean.getApptNo());
+    log.debug("BillStatus:" + billStatus);
     String sql = "update appointment set status='" + billStatus +
         "' where appointment_no='" + bean.getApptNo() + "'";
 
@@ -108,8 +108,8 @@ public class BillingSaveBillingAction
 
     }
     catch (SQLException e) {
-      System.out.println(e.getMessage());
-      System.out.println("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() +
+      log.error(e.getMessage(),e);
+      log.error("LLLOOK: APPT ERROR FOR demo:" + bean.getPatientName() +
                          " date " + curDate);
       e.printStackTrace();
     }
@@ -132,12 +132,14 @@ public class BillingSaveBillingAction
 
     ArrayList billItem = bean.getBillItem();
     
-    char paymentMode = (bean.getEncounter().equals("E") && !bean.getBillingType().equals("ICBC") && !bean.getBillingType().equals("WCB")) ? 'E' : '0';
+    char paymentMode = (bean.getEncounter().equals("E") && !bean.getBillingType().equals("ICBC") && !bean.getBillingType().equals("Pri") && !bean.getBillingType().equals("WCB")) ? 'E' : '0';
 
     String billedAmount;
     if (bean.getBillingType().equals("MSP") || bean.getBillingType().equals("ICBC") || bean.getBillingType().equals("Pri")) {
-      for (int i = 0; i < billItem.size(); i++) {
+      for (int i = 0; i < billItem.size(); i++) { 
         billingid = getInsertIdFromBilling(billingSQL);  
+        log.debug("billing id "+billingid+"   sql "+billingSQL);
+        billingIds.add(billingid);
         if (paymentMode == 'E') {
           billedAmount = "0.00";
         }
@@ -258,9 +260,9 @@ public class BillingSaveBillingAction
             db.CloseConn();
           }
           catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(),e);
           }
-          System.out.println(sql);
+          log.debug(sql);
         }
         else {
 
@@ -359,9 +361,9 @@ public class BillingSaveBillingAction
             db.CloseConn();
           }
           catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage(),e);
           }
-          System.out.println(sql);
+          log.debug(sql);
         }
 
       }
@@ -371,7 +373,7 @@ public class BillingSaveBillingAction
           n.addNote(billingMasterId, bean.getCreator(), bean.getNotes());
         }
         catch (SQLException e) {
-          System.out.println(e.getMessage());
+          log.error(e.getMessage(),e);
         }
       }
       if (bean.getMessageNotes() != null ||
@@ -381,7 +383,7 @@ public class BillingSaveBillingAction
           n.addNote(billingMasterId, bean.getCreator(), bean.getMessageNotes());
         }
         catch (SQLException e) {
-          System.out.println(e.getMessage());
+          log.error(e.getMessage(),e);
         }
 
       }
@@ -391,7 +393,8 @@ public class BillingSaveBillingAction
     if (bean.getBillingType().equals("WCB")) {
       //Keep in mind that the first billingId was set way up at the top
       //NOT ANY MORE  
-      billingid = getInsertIdFromBilling(billingSQL);    
+      billingid = getInsertIdFromBilling(billingSQL);  
+      billingIds.add(billingid);
       DBHandler db = null;
       String status = new String(new char[] {billingAccountStatus});
       WCBForm wcb = (WCBForm) request.getSession().getAttribute("WCBForm");
@@ -436,12 +439,13 @@ public class BillingSaveBillingAction
         //The billingmaster table as well
         if (wcb.getW_extrafeeitem() != null &&
             wcb.getW_extrafeeitem().trim().length() != 0) {
-          System.out.println("Adding Second billing item");
+          log.debug("Adding Second billing item");
           String secondWCBBillingId = null;
           String secondBillingAmt = this.getFeeByCode(wcb.getW_extrafeeitem());
           //save entry in billing table
           db.RunSQL(billingSQL);
           secondWCBBillingId = this.getLastInsertId(db);
+          billingIds.add(secondWCBBillingId);
           //Link new billing record to billing line in billingmaster table
           String secondBillingMaster = createBillingMasterInsertString(bean,
               secondWCBBillingId, billingAccountStatus, wcb.getW_payeeno());
@@ -474,6 +478,7 @@ public class BillingSaveBillingAction
         }
       }
       catch (SQLException e) {
+        log.error(e.getMessage(),e);
         e.printStackTrace();
       }
 
@@ -483,6 +488,7 @@ public class BillingSaveBillingAction
             db.CloseConn();
           }
           catch (SQLException ex) {
+            log.error(ex.getMessage(),ex);  
             ex.printStackTrace();
           }
         }
@@ -491,7 +497,7 @@ public class BillingSaveBillingAction
     }
 
     ////////////////////
-    //      System.out.println("Service count : "+ billItem.size());
+    //      log.debug("Service count : "+ billItem.size());
     ActionForward af = mapping.findForward("success");
     if (frm.getSubmit().equals("Another Bill")) {
       bean.setBillForm("GP");
@@ -499,7 +505,13 @@ public class BillingSaveBillingAction
 
     }
     else if (frm.getSubmit().equals("Save & Print Receipt")) {
-      af = new ActionForward("/billing/CA/BC/billingView.do?billing_no=" + billingid + "&receipt=yes");
+      StringBuffer stb = new StringBuffer();
+      for(String s:billingIds){
+          log.debug("String "+s);
+          stb.append("billing_no="+s+"&");
+      }
+      log.debug("FULL STRING "+stb.toString());
+      af = new ActionForward("/billing/CA/BC/billingView.do?"+stb.toString()+ "receipt=yes");
       af.setRedirect(true);
     }
     return af; //(mapping.findForward("success"));
@@ -518,7 +530,8 @@ public class BillingSaveBillingAction
           db.CloseConn();
         }
         catch (SQLException e) {
-          System.out.println(e.getMessage());
+          log.error(e.getMessage(),e);
+          e.printStackTrace();
         }
         return billingId;
     }
@@ -526,8 +539,8 @@ public class BillingSaveBillingAction
     private String insertIntoBilling(final oscar.oscarBilling.ca.bc.pageUtil.BillingSessionBean bean, final String curDate, final char billingAccountStatus) {
 
         //TODO STILL NEED TO ADD EXTRA FIELDS for dotes and bill type
-        String billingSQL = "insert into billing (billing_no,demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)"
-            + " values('\\N'," +
+        String billingSQL = "insert into billing (demographic_no, provider_no,appointment_no, demographic_name,hin,update_date, billing_date, total, status, dob, visitdate, visittype, provider_ohip_no, apptProvider_no, creator,billingtype)"
+            + " values(" +
             "'" + bean.getPatientNo() + "'," +
             "'" + bean.getBillingProvider() + "', " +
             "'" + bean.getApptNo() + "'," +
@@ -570,7 +583,8 @@ public class BillingSaveBillingAction
       }
     }
     catch (SQLException ex) {
-      ex.printStackTrace();
+       log.error(ex.getMessage(),ex);
+       ex.printStackTrace();
     }
     finally {
       if (db != null) {
@@ -578,6 +592,7 @@ public class BillingSaveBillingAction
           db.CloseConn();
         }
         catch (SQLException ex1) {
+          log.error(ex1.getMessage(),ex1);  
           ex1.printStackTrace();
         }
       }
@@ -586,6 +601,7 @@ public class BillingSaveBillingAction
           rs.close();
         }
         catch (SQLException ex2) {
+          log.error(ex2.getMessage(),ex2);  
           ex2.printStackTrace();
         }
       }
@@ -608,13 +624,13 @@ public class BillingSaveBillingAction
 
     String wcbEchartEntry = "\n\n[WCB Clinical Info - CLAIM# - " + wcb.getW_wcbno() + " @ " + echart.getTimeStampToString() + "]\n" + wcb.getW_clinicinfo();
     echart.setEncounter(wcbEchartEntry);
-    System.out.println("wcbEchartEntry=" + wcbEchartEntry);
+    log.debug("wcbEchartEntry=" + wcbEchartEntry);
     dao.addEchartEntry(echart);
   }
 
   public String convertDate8Char(String s) {
     String sdate = "00000000", syear = "", smonth = "", sday = "";
-    System.out.println("s=" + s);
+    log.debug("s=" + s);
     if (s != null) {
 
       if (s.indexOf("-") != -1) {
@@ -631,14 +647,14 @@ public class BillingSaveBillingAction
           sday = "0" + sday;
         }
 
-        System.out.println("Year" + syear + " Month" + smonth + " Day" + sday);
+        log.debug("Year" + syear + " Month" + smonth + " Day" + sday);
         sdate = syear + smonth + sday;
 
       }
       else {
         sdate = s;
       }
-      System.out.println("sdate:" + sdate);
+      log.debug("sdate:" + sdate);
     }
     else {
       sdate = "00000000";

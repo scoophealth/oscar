@@ -28,7 +28,8 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDemographic.data.*;
@@ -38,6 +39,7 @@ import oscar.oscarBilling.ca.bc.MSP.MSPReconcile;
 
 public final class BillingViewAction
     extends Action {
+    private static Log log = LogFactory.getLog(BillingViewAction.class);
 
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
@@ -60,17 +62,24 @@ public final class BillingViewAction
       bean.loadBilling(request.getParameter("billing_no"));
       oscar.oscarBilling.ca.bc.pageUtil.BillingBillingManager bmanager = new
           BillingBillingManager();
-      ArrayList billItem = bmanager.getBillView(request.getParameter(
-          "billing_no"));
-      System.out.println("Calling getGrandTotal");
+      ArrayList billItem = new ArrayList();
+      String[] billingN = request.getParameterValues("billing_no");
+      
+      for (int i = 0; i < billingN.length; i++){
+          log.debug("billn "+i+" "+billingN[i]);
+         ArrayList tempBillItem = bmanager.getBillView(billingN[i]);
+         billItem.addAll(tempBillItem);
+      }
+      
+      log.debug("Calling getGrandTotal");
       bean.setBillItem(billItem);
 
       // bean.setSubTotal(bmanager.getSubTotal(billItem));
       bean.calculateSubtotal();
-      System.out.println("GrandTotal" + bmanager.getGrandTotal(billItem));
+      log.debug("GrandTotal" + bmanager.getGrandTotal(billItem));
       oscar.oscarDemographic.data.DemographicData demoData = new oscar.
           oscarDemographic.data.DemographicData();
-      System.out.println("Calling Demo");
+      log.debug("Calling Demo");
 
       oscar.oscarDemographic.data.DemographicData.Demographic demo = demoData.
           getDemographic(bean.getPatientNo());
@@ -85,7 +94,7 @@ public final class BillingViewAction
       bean.setPatientHCType(demo.getHCType());
       bean.setPatientAge(demo.getAge());
       frm.setBillingNo(bean.getBillingNo());
-      System.out.println("End Demo Call");
+      log.debug("End Demo Call");
       //Loading bill Recipient Data
       List billRecipList = bean.getBillRecipient(request.getParameter(
           "billing_no"));
