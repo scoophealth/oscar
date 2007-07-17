@@ -1,3 +1,4 @@
+<%@page import="java.util.List" %>
 <%@ include file="/taglibs.jsp" %>
 
 <div class="h4">
@@ -17,7 +18,7 @@ report criteria placeholder, not complete yet
 
 			<tr>
 				<th>Seen by provider</th>
-				<td>role drop down and provider drop down</td>
+				<td>role drop down and provider drop down <%=((List)request.getAttribute("providers")).size()%></td>
 			</tr>
 
 			<tr>
