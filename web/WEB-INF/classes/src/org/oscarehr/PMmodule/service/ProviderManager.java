@@ -24,6 +24,7 @@ package org.oscarehr.PMmodule.service;
 
 import java.util.List;
 
+import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Provider;
 
 
@@ -33,14 +34,14 @@ public interface ProviderManager
 	
 	public String getProviderName(String providerNo);
 	
-	public List getProviders();
+	public List<Provider> getProviders();
 	
-	public List search(String name);
+	public List<Provider> search(String name);
 	
 	public List getProgramDomain(String providerNo);
 	
-	public List getAgencyDomain(String providerNo);
+	public List<Agency> getAgencyDomain(String providerNo);
 	
-	public List getProvidersByType(String type);
+	public List<Provider> getProvidersByType(String type);
 
 }

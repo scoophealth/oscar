@@ -34,10 +34,10 @@ public interface ProviderDao {
 
 	public String getProviderName(String providerNo);
 
-	public List getProviders();
+	public List<Provider> getProviders();
 
-	public List search(String name);
+	public List<Provider> search(String name);
 
-	public List getProvidersByType(String type);
+	public List<Provider> getProvidersByType(String type);
 	
 }

@@ -81,8 +81,9 @@ public class ProviderDaoHibernate extends HibernateDaoSupport implements Provide
 		return providerName;
 	}
 
-	public List getProviders() {
-		List rs = getHibernateTemplate().find("FROM  Provider p ORDER BY p.LastName");
+    public List<Provider> getProviders() {
+    	@SuppressWarnings("unchecked")
+		List<Provider> rs = getHibernateTemplate().find("FROM  Provider p ORDER BY p.LastName");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getProviders: # of results=" + rs.size());
@@ -90,12 +91,13 @@ public class ProviderDaoHibernate extends HibernateDaoSupport implements Provide
 		return rs;
 	}
 
-	public List search(String name) {
+	public List<Provider> search(String name) {
 		Criteria c = this.getSession().createCriteria(Provider.class);
 		c.add(Restrictions.or(Expression.like("FirstName", name + "%"), Expression.like("LastName", name + "%")));
 		c.addOrder(Order.asc("ProviderNo"));
 
-		List results = c.list();
+		@SuppressWarnings("unchecked")
+		List<Provider> results = c.list();
 
 		if (log.isDebugEnabled()) {
 			log.debug("search: # of results=" + results.size());
@@ -103,8 +105,9 @@ public class ProviderDaoHibernate extends HibernateDaoSupport implements Provide
 		return results;
 	}
 
-	public List getProvidersByType(String type) {
-		List results = this.getHibernateTemplate().find("from Provider p where p.ProviderType = ?", type);
+	public List<Provider> getProvidersByType(String type) {
+		@SuppressWarnings("unchecked")
+		List<Provider> results = this.getHibernateTemplate().find("from Provider p where p.ProviderType = ?", type);
 
 		if (log.isDebugEnabled()) {
 			log.debug("getProvidersByType: type=" + type + ",# of results=" + results.size());

@@ -63,12 +63,12 @@ public class ProviderManagerImpl implements ProviderManager
 		return dao.getProviderName(providerNo);
 	}
 	
-	public List getProviders()
+	public List<Provider> getProviders()
 	{
 		return dao.getProviders();
 	}
 	
-	public List search(String name) {
+	public List<Provider> search(String name) {
 		return dao.search(name);
 	}
 	
@@ -76,14 +76,14 @@ public class ProviderManagerImpl implements ProviderManager
 		return programProviderDAO.getProgramDomain(Long.valueOf(providerNo));
 	}
 	
-	public List getAgencyDomain(String providerNo) {
+	public List<Agency> getAgencyDomain(String providerNo) {
 		Agency localAgency =  agencyDAO.getLocalAgency();
-		List agencies = new ArrayList();
+		List<Agency> agencies = new ArrayList<Agency>();
 		agencies.add(localAgency);
 		return agencies;
 	}
 	
-	public List getProvidersByType(String type) {
+	public List<Provider> getProvidersByType(String type) {
 		return dao.getProvidersByType(type);
 	}
 }
