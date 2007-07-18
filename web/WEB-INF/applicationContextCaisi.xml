@@ -307,11 +307,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementNoteDAOHibernate">
-		<property name="sessionFactory">
-			<ref local="sessionFactory" />
-		</property>
-	</bean>
+	
 	<bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementIssueDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
