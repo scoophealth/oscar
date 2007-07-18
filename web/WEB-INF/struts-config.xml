@@ -545,6 +545,9 @@
         <action path="/oscarEncounter/displayDisease" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayDxAction"></action>
         <action path="/oscarEncounter/displayPrevention" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayPreventionAction"></action>
         <action path="/oscarEncounter/displayConsultation" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayConsultAction"></action>
+        <action path="/oscarEncounter/displayAllergy" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayAllergyAction"></action>
+        <action path="/oscarEncounter/displayRx" scope="request" type="oscar.oscarEncounter.pageUtil.EctDisplayRxAction"></action>
+        <action path="/oscarEncounter/displayIssues" scope="request" type="org.springframework.web.struts.DelegatingActionProxy"></action>
         <action input="/Index.jsp" path="/oscarEncounter/SaveEncounter" scope="request" type="oscar.oscarEncounter.pageUtil.EctSaveEncounterAction">
             <forward name="saveAndStay" path="/oscarEncounter/Index.jsp?saved=true" />
             <forward name="failure" path="/oscarEncounter/error.jsp" />
@@ -1341,18 +1344,22 @@
         <action path="/CaseManagementView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementView.jsp" name="caseManagementViewForm">
             <forward name="view" path="/casemgmt/CaseManagementView.jsp" />
             <forward name="page.casemgmt.view" path="page.casemgmt.view" />
+            <forward name="page.newcasemgmt.view" path="page.newcasemgmt.view" />
             <forward name="domain-error" path="/casemgmt/domain-error.jsp" />
             <forward name="unlockForm" path="/casemgmt/unlockNoteForm.jsp" />
             <forward name="unlockSuccess" path="/casemgmt/unlockNoteSuccess.jsp" />
             <forward name="unlockError" path="/casemgmt/unlockNoteError.jsp" />
+            <forward name="unlock_ajax" path="/casemgmt/unlockAjax.jsp" />
         </action>
         <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
             <forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />
-            <forward name="list" path="/casemgmt/CaseManagementView.do?method=view" redirect="true" />
+            <forward name="list" path="/CaseManagementView.do?method=view" redirect="true" />
             <forward name="IssueSearch" path="/casemgmt/IssueSearch.jsp" />
             <forward name="NoDemoERR" path="/casemgmt/noDemo.jsp" />
             <forward name="windowClose" path="/casemgmt/close.jsp" />
             <forward name="historyview" path="/casemgmt/historyview.jsp" />
+            <forward name="issueAutoCompletion" path="/casemgmt/IssueList.jsp" />
+            <forward name="issueList_ajax" path="/casemgmt/noteIssueList.jsp" />
         </action>
         <action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
             <forward name="success" path="/casemgmt/uploadimage.jsp" />
