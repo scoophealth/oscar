@@ -48,11 +48,11 @@ public interface ProgramManager
 	
 	public String getProgramName(String programId);
 	
-	public List getAllPrograms();
+	public List<Program> getAllPrograms();
 	
-	public List getAllActivePrograms();
+	public List<Program> getAllActivePrograms();
 	
-	public List getProgramsByAgencyId(String agencyId);
+	public List<Program> getProgramsByAgencyId(String agencyId);
 	
 	public Program[] getBedPrograms();
 		

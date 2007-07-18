@@ -38,11 +38,11 @@ public interface ProgramDao {
 
 	public String getProgramName(Integer programId);
 
-	public List getAllPrograms();
+	public List<Program> getAllPrograms();
 
-	public List getAllActivePrograms();
+	public List<Program> getAllActivePrograms();
 	
-	public List getProgramsByAgencyId(String agencyId);
+	public List<Program> getProgramsByAgencyId(String agencyId);
 
 	public Program[] getBedPrograms();
 

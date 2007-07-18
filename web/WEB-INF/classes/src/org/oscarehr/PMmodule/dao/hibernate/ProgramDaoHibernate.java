@@ -136,8 +136,9 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		return name;
 	}
 
-	public List getAllPrograms() {
-		List rs = getHibernateTemplate().find("FROM Program p WHERE p.type != ? ORDER BY p.name ", "community");
+	public List<Program> getAllPrograms() {
+		@SuppressWarnings("unchecked")
+		List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.type != ? ORDER BY p.name ", "community");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getAllPrograms: # of programs: " + rs.size());
@@ -146,8 +147,9 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		return rs;
 	}
 
-	public List getAllActivePrograms() {
-		List rs = getHibernateTemplate().find("FROM Program p WHERE p.type != ? and p.programStatus = 'active' ORDER BY p.Name", "community");
+	public List<Program> getAllActivePrograms() {
+		@SuppressWarnings("unchecked")
+		List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.type != ? and p.programStatus = 'active' ORDER BY p.Name", "community");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getAllPrograms: # of programs: " + rs.size());
@@ -156,14 +158,15 @@ public class ProgramDaoHibernate extends HibernateDaoSupport implements ProgramD
 		return rs;
 	}
 	
-	public List getProgramsByAgencyId(String agencyId) {
+    public List<Program> getProgramsByAgencyId(String agencyId) {
 		if (agencyId == null || agencyId.length() <= 0) {
 			return null;
 		}
 
 		String queryStr = "FROM Program p WHERE p.agencyId = ? AND p.type != 'community' ORDER BY p.name";
 
-		List rs = getHibernateTemplate().find(queryStr, agencyId);
+		@SuppressWarnings("unchecked")
+		List<Program> rs = getHibernateTemplate().find(queryStr, agencyId);
 
 		if (log.isDebugEnabled()) {
 			log.debug("getProgramsByAgencyId: # of programs: " + rs.size());

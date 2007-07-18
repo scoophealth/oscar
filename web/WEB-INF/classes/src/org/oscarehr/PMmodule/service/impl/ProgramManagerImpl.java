@@ -146,15 +146,15 @@ public class ProgramManagerImpl implements ProgramManager {
 		return dao.getProgramName(Integer.valueOf(programId));
 	}
 
-	public List getAllPrograms() {
+	public List<Program> getAllPrograms() {
 		return dao.getAllPrograms();
 	}
 
-	public List getAllActivePrograms() {
+	public List<Program> getAllActivePrograms() {
 		return dao.getAllActivePrograms();
 	}
 	
-	public List getProgramsByAgencyId(String agencyId) {
+	public List<Program> getProgramsByAgencyId(String agencyId) {
 		return dao.getProgramsByAgencyId(agencyId);
 	}
 
