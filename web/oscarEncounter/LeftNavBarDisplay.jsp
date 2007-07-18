@@ -88,18 +88,18 @@
      <%     
             if( expand && j == 0 ) {
      %>
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img id="<%=request.getAttribute("navbarName")%>topimg" src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img id="<%=request.getAttribute("navbarName")%>topimg" src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
      <%
             }
             if( expand && j == numToDisplay ) {
      %>
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-numToDisplay-1 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>midimg" src="<c:out value="${ctx}"/>/oscarEncounter/graphics/expand.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;" title="<%=dao.numItems()-numToDisplay-1 + " more items"%>"><img id="<%=request.getAttribute("navbarName")%>midimg" src="<c:out value="${ctx}"/>/oscarEncounter/graphics/expand.gif"/></a>
      <%
             }
             
             if( j == dao.numItems()-1 && j > numToDisplay ) {
      %>           
-                <a style="width: 2%; margin: 0px; padding: 0px; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
+                <a style="width: 2%; margin: 0px; padding-bottom: 0px; padding-right: 10px; vertical-align: bottom; display: inline; float: right;" href="#" onclick="listDisplay('<%=request.getAttribute("navbarName")%>'); return false;"><img src="<c:out value="${ctx}"/>/oscarMessenger/img/collapse.gif"/></a>
      <%
             }            
      %>
