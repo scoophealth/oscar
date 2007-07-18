@@ -66,7 +66,12 @@ public class GenerateOutFilesAction extends Action {
             for (int x=0; x<data.length; x++) {
                 HSSFRow row = sheet.createRow((short)x);
                 for (int y=0; y<data[x].length; y++) {
-                    row.createCell((short)y).setCellValue(data[x][y]);
+                    try{
+                       double d = Double.parseDouble(data[x][y]);
+                        row.createCell((short)y).setCellValue(d);
+                    }catch(Exception e){
+                       row.createCell((short)y).setCellValue(data[x][y]);
+                    }
                 }
             }
             try {    
