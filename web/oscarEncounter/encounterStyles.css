@@ -263,9 +263,9 @@ TH {
 }
 
 div.leftBox{
-   width:99%;
+   width:100%;
    margin-top: 2px;
-   margin-left:3px;
+   /*margin-left:3px;
    margin-right:1px;   
    /*float: left;*/
    border-left: 1px solid #6699cc;   
@@ -316,7 +316,7 @@ div.leftBox ul{
 }
 
 div.leftBox li {
-padding-right: 15px;
+/*padding-right: 15px;*/
 white-space: nowrap;
 }
 
