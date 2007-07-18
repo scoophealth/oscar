@@ -55,10 +55,8 @@ public class CaseManagementNoteDAOHibernate extends HibernateDaoSupport
 	}
 	
 	public List getNotesByDemographic(String demographic_no) {
-                String sql;
-                sql = "from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid)";
-                
-		return this.getHibernateTemplate().find(sql, new Object[] {demographic_no});
+            
+                return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] {demographic_no});
 	}
 	
 	public List getNotesByDemographic(String demographic_no,String[] issues) {
