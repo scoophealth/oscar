@@ -298,6 +298,9 @@ public class EForm extends EFormBase {
         //replace ${demographic} with demogrpahicNo
         if (sql != null) {
             sql = DatabaseAP.parserReplace("demographic", demographicNo, sql);
+            if (providerNo != null){
+                sql = DatabaseAP.parserReplace("provider", providerNo, sql);
+            }
             log.debug("SQL----" + sql);
             ArrayList names = DatabaseAP.parserGetNames(output); //a list of ${apName} --> apName
             sql = DatabaseAP.parserClean(sql);  //replaces all other ${apName} expressions with 'apName'
