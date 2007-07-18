@@ -166,11 +166,14 @@ if ((k/2)*2==k){ %>
     <!-- doctor code block -->
     <% if(bShowEncounterLink) {
 	String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+rsAppointNO+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(reason)+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+apptime.getHours()+":"+apptime.getMinutes()+"&status="+status;%>
+	<!-- open CME in current window
+        <a href="#" onclick="location.href='../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>'" title="<bean:message key="global.encounter"/>">  
+        --> 
 	<a href=# onClick="popupPage(700,980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
 	 |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
-    <% } %>
-
-    <!-- billing code block -->
+    <% } %>    
+    
+    <!-- billing code block -->    
     <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
 
     <%= bShortcutForm?"<a href=# onClick='popupPage2( \"../form/forwardshortcutname.jsp?formname="+formName+"&demographic_no="+demographic_no+"\")' title='form'>|"+formNameShort+"</a>" : ""%>
@@ -178,14 +181,16 @@ if ((k/2)*2==k){ %>
     <% if(status.indexOf('B')==-1) {
 	//java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.action.Action.LOCALE_KEY);
 	if (vLocale.getCountry().equals("BR")) { %>
-	    <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=rsAppointNO%>");return false;' title="Faturamento">|FAT|</a>
+	    <!-- get rid of billing link from case management view because of caisi bug 925 -->
+	    <!-- <a href=# onClick='popupPage(700,1000, "../oscar/billing/procedimentoRealizado/init.do?appId=<%=rsAppointNO%>");return false;' title="Faturamento">|FAT|</a> -->
 	<%}else {%>
-	    <a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rsAppointNO%>&demographic_name=<%=URLEncoder.encode(de.getLabel())%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=apptime.getHours()+":"+apptime.getMinutes()%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>
+	   <!-- <a href=# onClick='popupPage(700,1000, "../billing.do?billRegion=<%=URLEncoder.encode(prov)%>&billForm=<%=URLEncoder.encode(oscarVariables.getProperty("default_view"))%>&hotclick=<%=URLEncoder.encode("")%>&appointment_no=<%=rsAppointNO%>&demographic_name=<%=URLEncoder.encode(de.getLabel())%>&status=<%=status%>&demographic_no=<%=demographic_no%>&providerview=<%=curProvider_no[nProvider]%>&user_no=<%=curUser_no%>&apptProvider_no=<%=curProvider_no[nProvider]%>&appointment_date=<%=year+"-"+month+"-"+day%>&start_time=<%=apptime.getHours()+":"+apptime.getMinutes()%>&bNewForm=1");return false;' title="<bean:message key="global.billing"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnB"/></a>  --> 
         <%}
     } %>
-    </security:oscarSec>
+    </security:oscarSec> 
     <!-- billing code block -->
-
+	
+	
     <security:oscarSec roleName="<%=roleName$%>" objectName="_masterLink" rights="r">     
     <% if (vLocale.getCountry().equals("BR")) {%>
     	<a href=# onClick="popupPage2('../demographic/demographiccontrol.jsp?demographic_no=<%=demographic_no%>&displaymode=edit&dboperation=search_detail_ptbr');return false;"
