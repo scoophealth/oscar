@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -47,6 +48,7 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -544,5 +546,31 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		List rs = getHibernateTemplate().find(q, new Object[] {demoNo, dt, dt, defdt});
 		return rs;
 	}
+
+	public List<Demographic> findByReportCriteria(ClientListsReportFormBean x) {
+
+		StringBuilder sqlCommand=new StringBuilder();
+		sqlCommand.append("from Demographic");
+		int parameterCounter=0;
+		
+//		String temp=StringUtils.trimToNull(x.getProviderId());
+//		if (temp!=null)
+//		{
+//			if (parameterCounter==0) sqlCommand.append(" where");
+//			else sqlCommand.append(" and");
+//			
+//			sqlCommand.append(" provider_no=?");			
+//			parameterCounter++;
+//		}
+		
+		sqlCommand.append(" order by last_name,first_name");
+		
+		
+		Query q = getSession().createQuery(sqlCommand.toString());
+		List<Demographic> results = q.list();
+
+		return results;
+	}
+
 
 }

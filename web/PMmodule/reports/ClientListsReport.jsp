@@ -1,3 +1,5 @@
+<%@page import="java.util.List" %>
+<%@page import="org.oscarehr.PMmodule.model.*" %>
 <%@ include file="/taglibs.jsp" %>
 
 <div class="h4">
@@ -7,18 +9,25 @@
 
 	<html:form action="/PMmodule/Reports/ClientListsReport">
 
-report placeholder, not completed yet
 		<table border="0" cellspacing="2" cellpadding="3">
 			<tr>
 				<th>Last name, First name</th>				
 				<th>Date of birth</th>				
 				<th>Program</th>				
 			</tr>
-			<tr>
-				<td>fake, data</td>				
-				<td>fake DOB</td>				
-				<td>fake program</td>				
-			</tr>
+			<%
+				List<Demographic> demographics=(List<Demographic>)request.getAttribute("demographics");
+				for (Demographic demographic : demographics)
+				{
+					%>
+						<tr>
+							<td><%=demographic.getFormattedName()%></td>				
+							<td><%=demographic.getFormattedDob()%></td>				
+							<td>fake program placeholder</td>				
+						</tr>
+					<%
+				}
+			%>
 		</table>
 			
 			<html:submit value="go back to form" />

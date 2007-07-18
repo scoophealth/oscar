@@ -43,6 +43,7 @@ import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.ProgramQueueManager;
+import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 
 public class ClientManagerImpl implements ClientManager {
@@ -262,5 +263,9 @@ public class ClientManagerImpl implements ClientManager {
 
 	public void removeDemographicExt(Integer demographicNo, String key) {
 		dao.removeDemographicExt(demographicNo, key);
+	}
+	
+	public List<Demographic> findByReportCriteria(ClientListsReportFormBean x) {
+		return(dao.findByReportCriteria(x));
 	}
 }

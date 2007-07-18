@@ -4,18 +4,18 @@ import java.lang.reflect.Method;
 
 public class ClientListsReportFormBean {
 
-	private int providerId;
+	private String providerId;
 	private String seenStartDate;
 	private String seenEndDate;
-	private int programId;
+	private String programId;
 	private String enrolledStartDate;
 	private String enrolledEndDate;
 	
-	public int getProviderId() {
+	public String getProviderId() {
     
     	return providerId;
     }
-	public void setProviderId(int providerId) {
+	public void setProviderId(String providerId) {
     
     	this.providerId = providerId;
     }
@@ -37,11 +37,11 @@ public class ClientListsReportFormBean {
     }
 	
 	
-	public int getProgramId() {
+	public String getProgramId() {
     
     	return programId;
     }
-	public void setProgramId(int programId) {
+	public void setProgramId(String programId) {
     
     	this.programId = programId;
     }

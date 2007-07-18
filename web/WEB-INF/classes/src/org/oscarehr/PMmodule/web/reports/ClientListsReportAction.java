@@ -10,8 +10,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.ActivityReportFormBean;
@@ -31,6 +33,13 @@ public class ClientListsReportAction extends DispatchAction {
 	public void setProgramManager(ProgramManager programManager) {
     
     	this.programManager = programManager;
+    }
+
+	private ClientManager clientManager;
+	
+	public void setClientManager(ClientManager clientManager) {
+    
+    	this.clientManager = clientManager;
     }
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -56,6 +65,9 @@ DynaActionForm reportForm = (DynaActionForm)form;
 ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
 System.err.println("form:"+form.toString());
 System.err.println("formBean:"+formBean.toString());
+
+		List<Demographic> demographics=clientManager.findByReportCriteria(formBean);
+		request.setAttribute("demographics", demographics);
 
 		return mapping.findForward("report");
 	}

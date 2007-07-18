@@ -29,6 +29,7 @@ import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
+import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 
 
@@ -69,5 +70,7 @@ public interface ClientManager  {
 	public void removeDemographicExt(Integer demographicNo, String key);
 	
 	public boolean isOutsideOfDomainEnabled();
+	
+	public List<Demographic> findByReportCriteria(ClientListsReportFormBean x);
 }
 

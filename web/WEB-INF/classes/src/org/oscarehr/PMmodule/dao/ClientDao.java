@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
+import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 
 public interface ClientDao {
@@ -70,5 +71,6 @@ public interface ClientDao {
 	public void removeDemographicExt(Integer demographicNo, String key);
 
 	public List getProgramIdByDemoNo(String demoNo);
-	
+
+	public List<Demographic> findByReportCriteria(ClientListsReportFormBean x);
 }
