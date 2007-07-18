@@ -79,7 +79,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
             String tmp = issue.getIssue().getDescription();
             String strTitle = StringUtils.maxLenString(tmp, MAXLEN, CROP, ELLIPSES);
             
-            item.setTitle(tmp);
+            item.setTitle(strTitle);
             item.setLinkTitle(tmp);
             url = "$('check_issue').value=" + issue.getIssue_id() + ";document.caseManagementViewForm.submit();return false;";
             item.setURL(url);
