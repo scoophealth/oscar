@@ -29,7 +29,7 @@
 		<property name="resolved" />
 		<property name="type" />
 		<property name="update_date" type="java.util.Date" />
-		<set name="notes" table="casemgmt_issue_notes" inverse="true">
+		<set name="notes" table="casemgmt_issue_notes" lazy="true" inverse="true">
 			<key column="id" />
 			<many-to-many column="note_id" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
 		</set>
