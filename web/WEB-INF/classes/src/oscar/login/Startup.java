@@ -85,6 +85,9 @@ public class Startup implements ServletContextListener {
 			if (echartSwitch != null && echartSwitch.equalsIgnoreCase("yes")) {
 				sc.getServletContext().setAttribute("useNewEchart", true);
 			}
+                        
+                        
+                        p.setProperty("OSCAR_START_TIME",""+System.currentTimeMillis());
 		} catch (Exception e) {
 			System.out.println("*** No Property File ***");
 			System.out.println("Property file not found at:");
