@@ -170,9 +170,25 @@
 	<databaseap>
 		<ap-name>provider_name</ap-name>
 		<ap-sql>SELECT provider.last_name, provider.first_name 
-			FROM provider, demographic 
+                        FROM provider, demographic 
 			WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
 		<ap-output>${last_name}, ${first_name}</ap-output>
+	</databaseap>
+        
+        <databaseap>
+		<ap-name>current_user</ap-name>
+		<ap-sql>SELECT provider.last_name, provider.first_name 
+			FROM provider 
+			WHERE provider.provider_no=${provider} </ap-sql>
+		<ap-output>${last_name}, ${first_name}</ap-output>
+	</databaseap>
+        
+        <databaseap>
+		<ap-name>doctor_work_phone</ap-name>
+		<ap-sql>SELECT provider.work_phone
+			FROM provider, demographic 
+			WHERE demographic.demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+		<ap-output>${work_phone}</ap-output>
 	</databaseap>
 
 </eformap-config>
