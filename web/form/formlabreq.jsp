@@ -305,7 +305,6 @@ var maxYear=3100;
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <% } %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint(false);"/>
             <input type="submit" value="Print Pdf" onclick="javascript:return onPrint(true);"/>
         </td>
     </tr>
@@ -922,7 +921,6 @@ var maxYear=3100;
             <input type="submit" value="Save and Exit" onclick="javascript:return onSaveExit();"/>
             <% } %>
             <input type="submit" value="Exit" onclick="javascript:return onExit();"/>
-            <input type="submit" value="Print" onclick="javascript:return onPrint(false);"/>
             <input type="submit" value="Print Pdf" onclick="javascript:return onPrint(true);"/>
         </td>
     </tr>
