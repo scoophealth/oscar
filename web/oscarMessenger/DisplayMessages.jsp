@@ -151,10 +151,28 @@ function BackToOscar()
         window.close();
     }
 }
+
+function uload(){
+    if (opener.callRefreshTabAlerts) {
+	opener.callRefreshTabAlerts("oscar_new_msg");
+        setTimeout("window.close()", 100);
+        return false;
+    }
+    return true;
+}
+
+function checkAll(formId){
+   var f = document.getElementById(formId);
+   var val = f.checkA.checked;
+   for (i =0; i < f.messageNo.length; i++){
+      f.messageNo[i].checked = val;
+   }
+}
+
 </script>
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" onload="window.focus()">
+<body class="BodyStyle" vlink="#0000FF" onload="window.focus()" onunload="return uload()">
 <!--  -->
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
@@ -264,13 +282,13 @@ function BackToOscar()
                                     }
                                 %>
 
-                         <html:form action="<%=strutsAction%>" >
+                         <html:form action="<%=strutsAction%>" styleId="msgList" >
 
 
                             <table border="0" width="80%" cellspacing="1">
                                 <tr>
-                                    <th bgcolor="#DDDDFF" width="75">
-                                    &nbsp;
+                                    <th align="left" bgcolor="#DDDDFF" width="75">
+                                       <input type="checkbox" name="checkAll2" onclick="checkAll('msgList')" id="checkA" />
                                     </th>
                                     <th align="left" bgcolor="#DDDDFF">
                                       <% if (moreMessages.equals("true")){%>
