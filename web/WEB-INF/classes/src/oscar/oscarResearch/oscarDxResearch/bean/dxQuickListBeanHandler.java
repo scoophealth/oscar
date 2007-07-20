@@ -69,36 +69,24 @@ public class dxQuickListBeanHandler {
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String lastUsed = "";
-            String sql = "Select quickListName FROM quickListUser where providerNo='"+ providerNo +"' order by lastUsed DESC limit 1";
-            rsLastUsed = db.GetSQL(sql);
+            String sql;
             
-            if(rsLastUsed.next()){
-                lastUsed = rsLastUsed.getString("quickListName");
-                truncateName = true;
+            lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
+            if( lastUsed == null ) {
+                sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
+                rs = db.GetSQL(sql);
+                if(rs.next()) 
+                    lastUsed = rs.getString("quickListName");                                           
+
+                rs.close();
             }
-            else{
-                lastUsed = OscarProperties.getInstance().getProperty("DX_QUICK_LIST_DEFAULT");
-                if( lastUsed == null ) {
-                    sql = "SELECT DISTINCT quickListName FROM quickList ORDER BY quickListName LIMIT 1";
-                    rs = db.GetSQL(sql);
-                    if(rs.next()) 
-                        lastUsed = rs.getString("quickListName");                                           
-                        
-                    rs.close();
-                }
-                
-                sql = "INSERT INTO quickListUser VALUES ('"+providerNo+"', '" + lastUsed + "', now())";
-                db.RunSQL(sql);
-            }
-            
+
             sql = "Select quickListName, createdByProvider from quickList "+codSys+" group by quickListName";            
             rs = db.GetSQL(sql);
             while(rs.next()){                
                 dxQuickListBean bean = new dxQuickListBean(rs.getString("quickListName"),
                                                            rs.getString("createdByProvider"));
                 quickListName = rs.getString("quickListName");
-                if( truncateName && quickListName.length() >  NameLength )
-                    quickListName = quickListName.substring(0,NameLength);
                                     
                 if(lastUsed.equals(quickListName)){
                     //System.out.println("lastused: " + lastUsed);
