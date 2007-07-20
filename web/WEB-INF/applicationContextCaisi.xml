@@ -673,7 +673,7 @@
 	</bean>
 	<bean id="admissionManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.AdmissionManagerImpl">
+			<bean class="org.oscarehr.PMmodule.service.AdmissionManager">
 				<property name="admissionDao" ref="admissionDao" />
 				<property name="programDao" ref="programDao" />
 				<property name="programQueueDao" ref="programQueueDao" />
@@ -698,7 +698,7 @@
 	</bean>
 	<bean id="logManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.LogManagerImpl">
+			<bean class="org.oscarehr.PMmodule.service.LogManager">
 				<property name="logDAO" ref="logDAO" />
 			</bean>
 		</property>

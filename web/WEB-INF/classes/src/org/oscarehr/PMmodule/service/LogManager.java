@@ -22,8 +22,36 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
-public interface LogManager {
-	public void log(String accessType, String entity, String entityId, HttpServletRequest request);
+import org.oscarehr.PMmodule.dao.LogDAO;
+import org.oscarehr.PMmodule.model.Log;
+import org.oscarehr.PMmodule.model.Provider;
+
+
+public class LogManager {
+
+	private LogDAO logDAO;
+	
+	public void setLogDAO(LogDAO dao) {
+		this.logDAO = dao;
+	}
+	
+	public void log(String accessType, String entity, String entityId, HttpServletRequest request) {		
+		Log log = new Log();
+		//log.setId(new LogPK(providerNo,new Date()));
+		
+		Provider provider=(Provider) request.getSession().getAttribute("provider");
+		if (provider!=null) log.setProviderNo(provider.getProviderNo());
+		
+		log.setDateTime(new Date());
+		log.setAction(accessType);
+		log.setContent(entity);
+		log.setContentId(entityId);
+		log.setIp(request.getRemoteAddr());
+	
+		logDAO.saveLog(log);
+	}
 }
