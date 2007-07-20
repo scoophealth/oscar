@@ -698,7 +698,7 @@
 	</bean>
 	<bean id="logManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.LogManager">
+			<bean class="org.oscarehr.PMmodule.service.impl.LogManagerImpl">
 				<property name="logDAO" ref="logDAO" />
 			</bean>
 		</property>
