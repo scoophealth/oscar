@@ -139,6 +139,9 @@
         <property name="roleManager">
             <ref bean="roleManager" />
         </property>
+        <property name="providerManager">
+        	<ref bean="providerManager" />
+        </property>
     </bean>
     <bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false">
         <property name="admissionManager">
