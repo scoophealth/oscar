@@ -151,9 +151,7 @@ public class FrmDischargeSummaryRecord extends FrmRecord {
             		String admitDate = rs2.getString("admission_date").substring(0,10);
             		String admitDate_r = admitDate.replace("-", "/");
             		props.setProperty("admitDate",admitDate_r);
-            		
-            		//props.setProperty("dischargeDate",rs2.getString("discharge_date").substring(0,9));
-            		props.setProperty("admissionNotes",rs2.getString("admission_notes"));            	
+            		            		
             	}
             }
             rs2.close();
