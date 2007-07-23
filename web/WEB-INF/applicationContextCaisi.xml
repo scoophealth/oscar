@@ -90,6 +90,7 @@
 	</bean>
 	
 	<!-- DAO -->
+	
 	<bean id="ticklerDAOT" class="org.caisi.dao.hibernate.TicklerDAOHibernate">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
@@ -143,6 +144,11 @@
 	<bean id="accessTypeDAO" class="org.caisi.dao.jdbc.AccessTypeDAOJdbc">
 		<property name="dataSource">
 			<ref local="dataSource" />
+		</property>
+	</bean>
+	<bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramSignatureDaoHibernate">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
 		</property>
 	</bean>
 	<bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate">
@@ -659,7 +665,8 @@
 				<property name="integratorManager" ref="integratorManager" />
 				<property name="defaultRoleAccessDAO" ref="defaultRoleAccessDAO" />
 				<property name="programClientStatusDAO" ref="programClientStatusDAO" />	
-				<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />				
+				<property name="enabled" value="${pmm.refer.temporaryAdmission.enabled}" />
+				<property name="programSignatureDao" ref="programSignatureDao" />				
 			</bean>
 		</property>
 	</bean>
