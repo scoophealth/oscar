@@ -212,6 +212,7 @@
             <form-property name="removeId" type="java.lang.String" />
             <form-property name="function" type="org.oscarehr.PMmodule.model.ProgramFunctionalUser" />
             <form-property name="program" type="org.oscarehr.PMmodule.model.Program" />
+            <form-property name="programFirstSignature" type="org.oscarehr.PMmodule.model.ProgramSignature" />
             <form-property name="provider" type="org.oscarehr.PMmodule.model.ProgramProvider" />
             <form-property name="team" type="org.oscarehr.PMmodule.model.ProgramTeam" />
             <form-property name="queue" type="org.oscarehr.PMmodule.model.ProgramQueue" />
@@ -1200,6 +1201,7 @@
             <forward name="list" path="page.pmm.admin.list" />
             <forward name="edit" path="page.pmm.admin.edit" />
             <forward name="timeout" path="/PMmodule/Timeout.jsp" />
+            <forward name="programSignatures" path="/PMmodule/Admin/ProgramSignatures.jsp"/>
         </action>
         <action path="/PMmodule/ProgramManagerView" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="programManagerViewForm" scope="session">
             <forward name="view" path="page.pmm.admin.view" />
