@@ -1,4 +1,6 @@
 <%@ include file="/taglibs.jsp"%>
+<%@ page import="org.oscarehr.PMmodule.model.ProgramSignature" %>
+<%@ page import="org.oscarehr.PMmodule.model.Program" %>
 <script>
 	function save() {
 		if(document.programManagerForm.elements['program.maxAllowed'].value <= 0) {
@@ -9,9 +11,47 @@
 		document.programManagerForm.method.value='save';
 		document.programManagerForm.submit()
 	}
+	
+	function getProgramSignatures(id) {
+		var url = '<html:rewrite action="/PMmodule/ProgramManager.do"/>?method=programSignatures&programId=';
+		window.open(url + id, 'signature', 'width=600,height=600,scrollbars=1');
+		
+	}
 </script>
 <html:hidden property="program.numOfMembers" />
 <html:hidden property="program.agencyId" value="0" />
+<html:hidden property="program.id"/>
+<%
+Program p = (Program)request.getAttribute("oldProgram");
+%>
+<input type="hidden" name="old_maxAllowed" value="<%=p.getMaxAllowed() %>"/>
+<input type="hidden" name="old_name" value="<%=p.getName()%>" />
+<input type="hidden" name="old_descr" value="<%=p.getDescr()%>" />
+<input type="hidden" name="old_type" value="<%=p.getType()%>" />
+<input type="hidden" name="old_address" value="<%=p.getAddress()%>" />
+<input type="hidden" name="old_phone" value="<%=p.getPhone()%>" />
+<input type="hidden" name="old_fax" value="<%=p.getFax() %>" />
+<input type="hidden" name="old_url" value="<%=p.getUrl()%>" />
+<input type="hidden" name="old_email" value="<%=p.getEmail()%>" />
+<input type="hidden" name="old_emergencyNumber" value="<%=p.getEmergencyNumber()%>" />
+<input type="hidden" name="old_location" value="<%=p.getLocation()%>" />
+<input type="hidden" name="old_programStatus" value="<%=p.getProgramStatus()%>" />
+<input type="hidden" name="old_bedProgramLinkId" value="<%=p.getBedProgramLinkId()%>" />
+<input type="hidden" name="old_manOrWoman" value="<%=p.getManOrWoman() %>" />
+<input type="hidden" name="old_abstinenceSupport" value="<%=p.getAbstinenceSupport() %>" />
+<input type="hidden" name="old_exclusiveView" value="<%=p.getExclusiveView() %>" />
+<input type="hidden" name="old_holdingTank" value="<%=p.isHoldingTank() %>" />
+<input type="hidden" name="old_allowBatchAdmission" value="<%=p.isAllowBatchAdmission() %>" />
+<input type="hidden" name="old_allowBatchDischarge" value="<%=p.isAllowBatchDischarge() %>" />
+<input type="hidden" name="old_hic" value="<%=p.isHic() %>" />
+<input type="hidden" name="old_transgender" value="<%=p.isTransgender() %>" />
+<input type="hidden" name="old_firstNation" value="<%=p.isFirstNation() %>" />
+<input type="hidden" name="old_bedProgramAffiliated" value="<%=p.isBedProgramAffiliated() %>" />
+<input type="hidden" name="old_alcohol" value="<%=p.isAlcohol()%>" />
+<input type="hidden" name="old_physicalHealth" value="<%=p.isPhysicalHealth() %>" />
+<input type="hidden" name="old_mentalHealth" value="<%=p.isMentalHealth() %>" />
+<input type="hidden" name="old_housing" value="<%=p.isHousing() %>" />
+
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 	<tr>
@@ -171,3 +211,31 @@
 		</td>
 	</tr>
 </table>
+
+ </br>
+ <div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+	<tr>
+		<th title="sinatures">Signature</th>
+	</tr>
+</table>
+</div>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr class="b">
+		<td>&nbsp;</td>
+		<td>Provider Name</td>
+		<td>Role</td>
+		<td>Date</td>
+	</tr>
+	<tr class="b">		
+		<td>
+			<a href="javascript:void(0)" onClick="getProgramSignatures('<c:out value="${id}"/>')">
+				<img alt="View details" src="<c:out value='${ctx}' />/images/details.gif" border="0"/>
+			</a>
+		</td>		
+		<td><c:out value="${programFirstSignature.providerName}"/></td>
+		<td><c:out value="${programFirstSignature.caisiRoleName}" /></td>
+		<td><c:out value="${programFirstSignature.updateDate}" /></td>
+	</tr>
+</table>
+
