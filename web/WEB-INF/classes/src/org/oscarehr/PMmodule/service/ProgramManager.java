@@ -32,6 +32,7 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 
 public interface ProgramManager 
@@ -139,5 +140,10 @@ public interface ProgramManager
 	public void deleteProgramClientStatus(String id);
 	public boolean clientStatusNameExists(Integer programId, String statusName);
 	public List getAllClientsInStatus(Integer programId, Integer statusId);
+	
 	public boolean getEnabled();
+	
+	public ProgramSignature getProgramFirstSignature(Integer programId);	
+	public List<ProgramSignature> getProgramSignatures(Integer programId);
+	public void saveProgramSignature(ProgramSignature ps);
 }

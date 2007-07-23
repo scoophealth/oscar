@@ -37,6 +37,7 @@ import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProgramFunctionalUserDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.dao.ProgramSignatureDao;
 import org.oscarehr.PMmodule.dao.ProgramTeamDAO;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.model.AccessType;
@@ -48,6 +49,7 @@ import org.oscarehr.PMmodule.model.ProgramAccess;
 import org.oscarehr.PMmodule.model.ProgramClientStatus;
 import org.oscarehr.PMmodule.model.ProgramFunctionalUser;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.ProgramSignature;
 import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
@@ -65,6 +67,7 @@ public class ProgramManagerImpl implements ProgramManager {
 	private IntegratorManager integratorManager;
 	private DefaultRoleAccessDAO defaultRoleAccessDAO;
 	private ProgramClientStatusDAO clientStatusDAO;
+	private ProgramSignatureDao programSignatureDao;
 	
 	private boolean enabled;
 	
@@ -74,8 +77,16 @@ public class ProgramManagerImpl implements ProgramManager {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
-	}
+	}	
 	
+	public ProgramSignatureDao getProgramSignatureDao() {
+		return programSignatureDao;
+	}
+
+	public void setProgramSignatureDao(ProgramSignatureDao programSignatureDao) {
+		this.programSignatureDao = programSignatureDao;
+	}
+
 	public void setIntegratorManager(IntegratorManager mgr) {
 		this.integratorManager = mgr;
 	}
@@ -410,5 +421,17 @@ public class ProgramManagerImpl implements ProgramManager {
 	
 	public ProgramClientStatus getProgramClientStatus(String statusId) {
 		return clientStatusDAO.getProgramClientStatus(statusId);
+	}
+	
+	public ProgramSignature getProgramFirstSignature(Integer programId) {
+		return programSignatureDao.getProgramFirstSignature(programId);
+	}
+	
+	public List<ProgramSignature> getProgramSignatures(Integer programId) {
+		return programSignatureDao.getProgramSignatures(programId);
+	}
+	
+	public void saveProgramSignature(ProgramSignature programSignature) {
+		programSignatureDao.saveProgramSignature(programSignature);
 	}
 }

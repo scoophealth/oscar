@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.RedirectingActionForward;
 import org.apache.struts.actions.DispatchAction;
+import org.caisi.service.CaisiRoleManager;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.AgencyManager;
@@ -79,7 +80,8 @@ public abstract class BaseAction extends DispatchAction {
 	protected RoleManager roleManager;
 	protected RoomManager roomManager;
 	protected SurveyManager surveyManager;
-
+	protected CaisiRoleManager providerCaisiRoleManager;
+	
 	public void addError(HttpServletRequest req, String message) {
 		ActionMessages msgs = getErrors(req);
 		msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", message));

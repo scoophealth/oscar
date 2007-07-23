@@ -616,7 +616,5 @@ public abstract class BaseProgram  implements Serializable {
 
 	public String toString () {
 		return super.toString();
-	}
-
-
+	}	
 }
