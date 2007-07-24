@@ -38,7 +38,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.apache.struts.action.DynaActionForm;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -349,13 +348,13 @@ public class ProgramManagerViewAction extends BaseAction {
 
 				admission.setDischargeDate(new Date());
 				admission.setDischargeNotes("Batch discharge");
-				admission.setAdmissionStatus("discharged");
+				admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 				admissionManager.saveAdmission(admission);
 
 				Admission newAdmission = new Admission();
 				newAdmission.setAdmissionDate(new Date());
 				newAdmission.setAdmissionNotes("Batch Admit");
-				newAdmission.setAdmissionStatus("current");
+				newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
 				newAdmission.setClientId(admission.getClientId());
 				newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
 				newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));

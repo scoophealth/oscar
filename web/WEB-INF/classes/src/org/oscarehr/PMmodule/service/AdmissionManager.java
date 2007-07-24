@@ -163,7 +163,7 @@ public class AdmissionManager {
 		}
 		
 		newAdmission.setAdmissionNotes(admissionNotes);
-		newAdmission.setAdmissionStatus("current");
+		newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(Long.valueOf(providerNo));
@@ -219,7 +219,7 @@ public class AdmissionManager {
 			newAdmission.setAdmissionDate(admissionDate);
 		}
 		newAdmission.setAdmissionNotes(admissionNotes);
-		newAdmission.setAdmissionStatus("current");
+		newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
 		newAdmission.setClientId(demographicNo);
 		newAdmission.setProgramId(program.getId());
 		newAdmission.setProviderNo(Long.valueOf(providerNo));
@@ -256,7 +256,7 @@ public class AdmissionManager {
 
 		fullAdmission.setDischargeDate(new Date());
 		fullAdmission.setDischargeNotes(dischargeNotes);
-		fullAdmission.setAdmissionStatus("discharged");
+		fullAdmission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 		fullAdmission.setRadioDischargeReason(radioDischargeReason);
 		saveAdmission(fullAdmission);
 	}
@@ -284,7 +284,7 @@ public class AdmissionManager {
 		Admission admission = new Admission();
 		admission.setAdmissionDate(new Date());
 		admission.setAdmissionNotes(notes);
-		admission.setAdmissionStatus("current");
+		admission.setAdmissionStatus(Admission.STATUS_CURRENT);
 		admission.setClientId(demographicNo);
 		admission.setProgramId(communityProgramId);
 		admission.setProviderNo(Long.valueOf(providerNo));
