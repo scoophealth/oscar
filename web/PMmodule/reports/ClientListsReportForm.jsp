@@ -15,7 +15,7 @@
 				<th>Status</th>
 				<td>
 					<select name="form.admissionStatus" >
-						<option value="">all</option>
+						<option value="">any</option>
 						<option value="<%=Admission.STATUS_CURRENT%>"><%=Admission.STATUS_CURRENT%></option>
 						<option value="<%=Admission.STATUS_DISCHARGED%>"><%=Admission.STATUS_DISCHARGED%></option>
 					</select>
@@ -26,14 +26,15 @@
 				<th>Seen by provider</th>
 				<td>
 					<select name="form.providerId" >
-					<%
-						for (Provider provider : (List<Provider>)request.getAttribute("providers"))
-						{
-							%>
-								<option value="<%=provider.getProviderNo()%>"><%=provider.getFormattedName()%></option>
-							<%						
-						}
-					%>
+						<option value="">any</option>
+						<%
+							for (Provider provider : (List<Provider>)request.getAttribute("providers"))
+							{
+								%>
+									<option value="<%=provider.getProviderNo()%>"><%=provider.getFormattedName()%></option>
+								<%						
+							}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -47,14 +48,15 @@
 				<th>Enrolled in program</th>
 				<td>
 					<select name="form.programId" >
-					<%
-						for (Program program : (List<Program>)request.getAttribute("programs"))
-						{
-							%>
-								<option value="<%=program.getId()%>"><%=program.getName()%> - <%=program.getDescr()%></option>
-							<%						
-						}
-					%>
+						<option value="">any</option>
+						<%
+							for (Program program : (List<Program>)request.getAttribute("programs"))
+							{
+								%>
+									<option value="<%=program.getId()%>"><%=program.getName()%> - <%=program.getDescr()%></option>
+								<%						
+							}
+						%>
 					</select>
 				</td>
 			</tr>
