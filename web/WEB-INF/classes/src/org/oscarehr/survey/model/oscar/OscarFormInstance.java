@@ -22,11 +22,12 @@
 
 package org.oscarehr.survey.model.oscar;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public class OscarFormInstance {
+public class OscarFormInstance implements Serializable {
 	private Long id;
 	private long formId;
 	private String description;
