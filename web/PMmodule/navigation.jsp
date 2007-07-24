@@ -99,6 +99,9 @@ function getIntakeReport(type) {
             <div>
                 <html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
             </div>
+            <div>
+                <html:link action="/PMmodule/Reports/ClientListsReport">Client Lists Report</html:link>
+            </div>
         </div>
         </c:if>
         
@@ -144,5 +147,8 @@ function getIntakeReport(type) {
 			<span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Oscar Medical</a></span>
 		</div>
 		</c:if>
+		<div>
+			<span><a href='<%=request.getContextPath()%>/logout.jsp'>Logout</a></span>
+		</div>
     </div>
 </div>
