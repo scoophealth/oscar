@@ -547,26 +547,28 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		return rs;
 	}
 
-	public List<Demographic> findByReportCriteria(ClientListsReportFormBean x) {
+    public List<Demographic> findByReportCriteria(ClientListsReportFormBean x) {
 
 		StringBuilder sqlCommand=new StringBuilder();
-		sqlCommand.append("from Demographic");
-		int parameterCounter=0;
+		sqlCommand.append("select {demographic.*} from demographic {demographic},admission where demographic_no=client_id");
 		
-//		String temp=StringUtils.trimToNull(x.getProviderId());
-//		if (temp!=null)
-//		{
-//			if (parameterCounter==0) sqlCommand.append(" where");
-//			else sqlCommand.append(" and");
-//			
-//			sqlCommand.append(" provider_no=?");			
-//			parameterCounter++;
-//		}
+		// filter by provider
+		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and admission.provider_no=?");			
+		
+
 		
 		sqlCommand.append(" order by last_name,first_name");
 		
 		
-		Query q = getSession().createQuery(sqlCommand.toString());
+		Query q = getSession().createSQLQuery(sqlCommand.toString()).addEntity("demographic", Demographic.class);
+		
+		// filter by provider
+		String temp;
+		int parameterPosition=0;
+		if ((temp=StringUtils.trimToNull(x.getProviderId()))!=null) q.setParameter(parameterPosition++, temp);			
+		
+		
+		@SuppressWarnings("unchecked")
 		List<Demographic> results = q.list();
 
 		return results;
