@@ -550,10 +550,11 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
     public List<Demographic> findByReportCriteria(ClientListsReportFormBean x) {
 
 		StringBuilder sqlCommand=new StringBuilder();
-		sqlCommand.append("select {demographic.*} from demographic {demographic},admission where demographic_no=client_id");
+		// this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
+		sqlCommand.append("select {demographic.*} from demographic {demographic},admission,intake where demographic_no=admission.client_id and demographic_no=intake.client_id");
 		
 		// filter by provider
-		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and admission.provider_no=?");			
+		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and intake.staff_id=?");			
 		
 
 		
