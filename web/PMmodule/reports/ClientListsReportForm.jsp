@@ -13,7 +13,13 @@
 		<table border="0" cellspacing="2" cellpadding="3">
 			<tr>
 				<th>Status</th>
-				<td>active/inactive/all (not yet implemented)</td>
+				<td>
+					<select name="form.admissionStatus" >
+						<option value="">all</option>
+						<option value="<%=Admission.STATUS_CURRENT%>"><%=Admission.STATUS_CURRENT%></option>
+						<option value="<%=Admission.STATUS_DISCHARGED%>"><%=Admission.STATUS_DISCHARGED%></option>
+					</select>
+				</td>
 			</tr>
 
 			<tr>

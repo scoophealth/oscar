@@ -556,8 +556,6 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		// filter by provider
 		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and intake.staff_id=?");			
 		
-
-		
 		sqlCommand.append(" order by last_name,first_name");
 		
 		

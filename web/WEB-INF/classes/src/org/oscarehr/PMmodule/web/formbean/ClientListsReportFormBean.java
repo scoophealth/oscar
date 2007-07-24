@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 public class ClientListsReportFormBean {
 
 	private String providerId;
+	private String admissionStatus;
 	private String seenStartDate;
 	private String seenEndDate;
 	private String programId;
@@ -63,6 +64,14 @@ public class ClientListsReportFormBean {
     	this.enrolledStartDate = enrolledStartDate;
     }
 	
+	public String getAdmissionStatus() {
+    
+    	return admissionStatus;
+    }
+	public void setAdmissionStatus(String admissionStatus) {
+    
+    	this.admissionStatus = admissionStatus;
+    }
 	/**
 	 * This is a rather inefficient but convenient toString method which
 	 * prints out all the variables of the object (or is suppose to).
