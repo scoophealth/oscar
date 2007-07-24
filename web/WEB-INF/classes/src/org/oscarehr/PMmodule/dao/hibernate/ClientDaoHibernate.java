@@ -553,8 +553,14 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		// this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
 		sqlCommand.append("select {demographic.*} from demographic {demographic},admission,intake where demographic_no=admission.client_id and demographic_no=intake.client_id");
 		
-		// filter by provider
+		// status
+		if (StringUtils.trimToNull(x.getAdmissionStatus())!=null) sqlCommand.append(" and admission.admission_status=?");			
+
+		// provider
 		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and intake.staff_id=?");			
+		
+		// program
+		if (StringUtils.trimToNull(x.getProgramId())!=null) sqlCommand.append(" and admission.program_id=?");			
 		
 		sqlCommand.append(" order by last_name,first_name");
 		
@@ -564,7 +570,15 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		// filter by provider
 		String temp;
 		int parameterPosition=0;
+
+		// status
+		if ((temp=StringUtils.trimToNull(x.getAdmissionStatus()))!=null) q.setParameter(parameterPosition++, temp);			
+		
+		// provider 
 		if ((temp=StringUtils.trimToNull(x.getProviderId()))!=null) q.setParameter(parameterPosition++, temp);			
+		
+		// program 
+		if ((temp=StringUtils.trimToNull(x.getProgramId()))!=null) q.setParameter(parameterPosition++, temp);			
 		
 		
 		@SuppressWarnings("unchecked")
