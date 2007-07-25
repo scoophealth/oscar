@@ -114,7 +114,7 @@
 			<ref bean="sessionFactory" />
 		</property>
     </bean>
-    <bean id="clientDao" class="org.oscarehr.PMmodule.dao.hibernate.ClientDaoHibernate">
+    <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>
@@ -441,7 +441,7 @@
 	</bean>
         <bean id="clientManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.ClientManagerImpl">
+			<bean class="org.oscarehr.PMmodule.service.ClientManager">
 				<property name="clientDao" >
                                     <ref bean="clientDao" />
                                 </property>

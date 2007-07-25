@@ -22,55 +22,247 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.dao.ClientDao;
+import org.oscarehr.PMmodule.dao.ClientReferralDAO;
+import org.oscarehr.PMmodule.dao.ClientDao.ClientListsReportResults;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
+import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 
+public class ClientManager {
 
-public interface ClientManager  {
-	
-	public Demographic getClientByDemographicNo(String demographicNo);
+	private static Log log = LogFactory.getLog(ClientManager.class);
 
-	public List getClients();
-		
-	public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly);
+	private ClientDao dao;
 
-	public java.util.Date getMostRecentIntakeADate(String demographicNo);
-	
-	public java.util.Date getMostRecentIntakeCDate(String demographicNo);
-	
-	public String getMostRecentIntakeAProvider(String demographicNo);
-	public String getMostRecentIntakeCProvider(String demographicNo);
+	private ClientReferralDAO referralDAO;
 
-	/* V2.0 */
-	public List getReferrals();	
-	public List getReferrals(String clientId);
-	public List getActiveReferrals(String clientId);
-	public ClientReferral getReferralToRemoteAgency(long clientId, long agencyId, long programId);
-	public ClientReferral getClientReferral(String id);
-	public void saveClientReferral(ClientReferral referral);
-	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException;
-	public void processRemoteReferral(ClientReferral referral);
-	public List searchReferrals(ClientReferral referral);
+	private ProgramQueueManager queueManager;
+
+	private IntegratorManager integratorManager;
+
+	private AdmissionManager admissionManager;
 	
-	public void saveClient(Demographic client);
+	private boolean outsideOfDomainEnabled;
 	
-	public DemographicExt getDemographicExt(String id);
-	public List getDemographicExtByDemographicNo(Integer demographicNo);
-	public DemographicExt getDemographicExt(Integer demographicNo, String key);
-	public void updateDemographicExt(DemographicExt de);
-	public void saveDemographicExt(Integer demographicNo, String key, String value);
-	public void removeDemographicExt(String id);
-	public void removeDemographicExt(Integer demographicNo, String key);
+	public boolean isOutsideOfDomainEnabled() {
+		return outsideOfDomainEnabled;
+	}
+
+	public void setOutsideOfDomainEnabled(boolean outsideOfDomainEnabled) {
+		this.outsideOfDomainEnabled = outsideOfDomainEnabled;
+	}
+
+	public void setClientDao(ClientDao dao) {
+		this.dao = dao;
+	}
+
+	public void setClientReferralDAO(ClientReferralDAO dao) {
+		this.referralDAO = dao;
+	}
+
+	public void setProgramQueueManager(ProgramQueueManager mgr) {
+		this.queueManager = mgr;
+	}
+
+	public void setAdmissionManager(AdmissionManager mgr) {
+		this.admissionManager = mgr;
+	}
+
+	public void setIntegratorManager(IntegratorManager mgr) {
+		this.integratorManager = mgr;
+	}
+
+	public Demographic getClientByDemographicNo(String demographicNo) {
+		if (demographicNo == null || demographicNo.length() == 0) {
+			return null;
+		}
+		return dao.getClientByDemographicNo(Integer.valueOf(demographicNo));
+	}
+
+	public List getClients() {
+		return dao.getClients();
+	}
+
+	public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
+		return dao.search(criteria, returnOptinsOnly);
+	}
+
+	public java.util.Date getMostRecentIntakeADate(String demographicNo) {
+		return dao.getMostRecentIntakeADate(Integer.valueOf(demographicNo));
+	}
+
+	public java.util.Date getMostRecentIntakeCDate(String demographicNo) {
+		return dao.getMostRecentIntakeCDate(Integer.valueOf(demographicNo));
+	}
+
+	public String getMostRecentIntakeAProvider(String demographicNo) {
+		return dao.getMostRecentIntakeAProvider(Integer.valueOf(demographicNo));
+	}
+
+	public String getMostRecentIntakeCProvider(String demographicNo) {
+		return dao.getMostRecentIntakeCProvider(Integer.valueOf(demographicNo));
+	}
+
+	public List getReferrals() {
+		return referralDAO.getReferrals();
+	}
+
+	public List getReferrals(String clientId) {
+		return referralDAO.getReferrals(Long.valueOf(clientId));
+	}
+
+	public List getActiveReferrals(String clientId) {
+		List results = referralDAO.getActiveReferrals(Long.valueOf(clientId));
+		for (Iterator iter = results.iterator(); iter.hasNext();) {
+			ClientReferral referral = (ClientReferral) iter.next();
+			if (referral.getAgencyId().longValue() > 0) {
+				try {
+					Program p = integratorManager.getProgram(referral.getAgencyId(), referral.getProgramId());
+					referral.setProgramName(p.getName());
+				} catch (org.codehaus.xfire.XFireRuntimeException ex) {
+					log.error(ex);
+					referral.setProgramName("<Unavailable>");
+				} catch (IntegratorNotEnabledException e) {
+					log.error(e);
+					referral.setProgramName("<Unavailable>");
+				}
+			}
+		}
+		return results;
+	}
+
+	public ClientReferral getClientReferral(String id) {
+		return referralDAO.getClientReferral(Long.valueOf(id));
+	}
+
+	/*
+	 * This should always be a new one. add the queue to the program.
+	 */
+	public void saveClientReferral(ClientReferral referral) {
+
+		referralDAO.saveClientReferral(referral);
+
+		if (referral.getStatus().equalsIgnoreCase("active")) {
+			ProgramQueue queue = new ProgramQueue();
+			queue.setAgencyId(referral.getAgencyId());
+			queue.setClientId(referral.getClientId());
+			queue.setNotes(referral.getNotes());
+			queue.setProgramId(referral.getProgramId());
+			queue.setProviderNo(referral.getProviderNo());
+			queue.setReferralDate(referral.getReferralDate());
+			queue.setStatus("active");
+			queue.setReferralId(referral.getId());
+			queue.setTemporaryAdmission(referral.isTemporaryAdmission());
+			queue.setPresentProblems(referral.getPresentProblems());
+			
+			queueManager.saveProgramQueue(queue);
+		}
+	}
+
+	public List searchReferrals(ClientReferral referral) {
+		return referralDAO.search(referral);
+	}
+
+	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException {
+		Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
+		if (currentAdmission != null) {
+			referral.setStatus("rejected");
+			referral.setCompletionNotes("Client currently admitted");
+			referral.setCompletionDate(new Date());
+			
+			saveClientReferral(referral);
+			throw new AlreadyAdmittedException();
+		}
+
+		ProgramQueue queue = queueManager.getActiveProgramQueue(String.valueOf(referral.getProgramId()), String.valueOf(referral.getClientId()));
+		if (queue != null) {
+			referral.setStatus("rejected");
+			referral.setCompletionNotes("Client already in queue");
+			referral.setCompletionDate(new Date());
+			
+			saveClientReferral(referral);
+			throw new AlreadyQueuedException();
+		}
+
+		saveClientReferral(referral);
+	}
+
+	public void processRemoteReferral(ClientReferral referral) {
+		/*
+		 * Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getId()),id); if(currentAdmission != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client currently admitted"); referral.setCompletionDate(new Date()); } ProgramQueue queue =
+		 * queueManager.getActiveProgramQueue(String.valueOf(program.getId()),id); if(queue != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client already in queue"); referral.setCompletionDate(new Date()); }
+		 */
+		ProgramQueue queue = new ProgramQueue();
+		queue.setAgencyId(referral.getSourceAgencyId());
+		queue.setClientId(referral.getClientId());
+		queue.setNotes(referral.getNotes());
+		queue.setProgramId(referral.getProgramId());
+		queue.setProviderNo(referral.getProviderNo());
+		queue.setReferralDate(referral.getReferralDate());
+		queue.setStatus("active");
+		queue.setReferralId(referral.getId());
+		queue.setTemporaryAdmission(referral.isTemporaryAdmission());
+		queueManager.saveProgramQueue(queue);
+
+		referral.setStatus("active");
+
+		// send back jms message
+		integratorManager.sendReferral(referral.getSourceAgencyId(), referral);
+	}
+
+	public void saveClient(Demographic client) {
+		dao.saveClient(client);
+	}
+
+	public ClientReferral getReferralToRemoteAgency(long clientId, long agencyId, long programId) {
+		referralDAO.getReferralToRemoteAgency(clientId, agencyId, programId);
+		return null;
+	}
+
+	public DemographicExt getDemographicExt(String id) {
+		return dao.getDemographicExt(Integer.valueOf(id));
+	}
+
+	public List getDemographicExtByDemographicNo(Integer demographicNo) {
+		return dao.getDemographicExtByDemographicNo(demographicNo);
+	}
+
+	public DemographicExt getDemographicExt(Integer demographicNo, String key) {
+		return dao.getDemographicExt(demographicNo, key);
+	}
+
+	public void updateDemographicExt(DemographicExt de) {
+		dao.updateDemographicExt(de);
+	}
+
+	public void saveDemographicExt(Integer demographicNo, String key, String value) {
+		dao.saveDemographicExt(demographicNo, key, value);
+	}
+
+	public void removeDemographicExt(String id) {
+		dao.removeDemographicExt(Integer.valueOf(id));
+	}
+
+	public void removeDemographicExt(Integer demographicNo, String key) {
+		dao.removeDemographicExt(demographicNo, key);
+	}
 	
-	public boolean isOutsideOfDomainEnabled();
-	
-	public List<Demographic> findByReportCriteria(ClientListsReportFormBean x);
+	public List<ClientListsReportResults> findByReportCriteria(ClientListsReportFormBean x) {
+		return(dao.findByReportCriteria(x));
+	}
 }
-

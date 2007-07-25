@@ -1,5 +1,7 @@
 <%@page import="java.util.List" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
+<%@page import="org.oscarehr.PMmodule.dao.*" %>
+<%@page import="org.apache.commons.lang.time.*" %>
 <%@ include file="/taglibs.jsp" %>
 
 <div class="h4">
@@ -16,14 +18,14 @@
 				<th>Program</th>				
 			</tr>
 			<%
-				List<Demographic> demographics=(List<Demographic>)request.getAttribute("demographics");
-				for (Demographic demographic : demographics)
+				List<ClientDao.ClientListsReportResults> reportResults=(List<ClientDao.ClientListsReportResults>)request.getAttribute("reportResults");
+				for (ClientDao.ClientListsReportResults clientListsReportResults : reportResults)
 				{
 					%>
 						<tr>
-							<td><%=demographic.getFormattedName()%></td>				
-							<td><%=demographic.getFormattedDob()%></td>				
-							<td>fake program placeholder</td>				
+							<td><%=clientListsReportResults.lastName+", "+clientListsReportResults.firstName%></td>				
+							<td><%=DateFormatUtils.ISO_DATE_FORMAT.format(clientListsReportResults.dateOfBirth)%></td>				
+							<td><%=clientListsReportResults.programName%></td>				
 						</tr>
 					<%
 				}

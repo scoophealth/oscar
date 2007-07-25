@@ -10,6 +10,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.ClientDao.ClientListsReportResults;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
@@ -62,8 +63,8 @@ public class ClientListsReportAction extends DispatchAction {
 		DynaActionForm reportForm = (DynaActionForm)form;
 		ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
 
-		List<Demographic> demographics=clientManager.findByReportCriteria(formBean);
-		request.setAttribute("demographics", demographics);
+		List<ClientListsReportResults> reportResults=clientManager.findByReportCriteria(formBean);
+		request.setAttribute("reportResults", reportResults);
 
 		return mapping.findForward("report");
 	}
