@@ -308,6 +308,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/ScheduleOfBenefitsUpload.jsp');return false;">Upload Schedule Of Benefits</a></li>
           <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/addEditServiceCode.jsp');return false;">Manage Billing Service Code</a></li>
           <li><a href="#" onclick ="popupPage(300,600,'../billing/CA/ON/billingONEditPrivateCode.jsp');return false;">Manage Private Billing Code</a></li>
+          <li><a href="../admin/gstControl.jsp">Manage GST Control</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/manageBillingLocation.jsp');return false;"><bean:message key="admin.admin.btnAddBillingLocation"/></a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/ON/manageBillingform.jsp');return false;"><bean:message key="admin.admin.btnManageBillingForm"/></a></li>
           <li><a href="#" onclick ="popupPage(700,700,'../billing/CA/ON/billingOHIPsimulation.jsp?html=');return false;"><bean:message key="admin.admin.btnSimulationOHIPDiskette"/></a></li>

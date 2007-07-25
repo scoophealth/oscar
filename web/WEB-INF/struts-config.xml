@@ -104,6 +104,7 @@
         <form-bean name="RptViewAllQueryByExamplesForm" type="oscar.oscarReport.pageUtil.RptViewAllQueryByExamplesForm" />
         <form-bean name="RptByExamplesFavoriteForm" type="oscar.oscarReport.pageUtil.RptByExamplesFavoriteForm" />
         <form-bean name="RptByExamplesAllFavoritesForm" type="oscar.oscarReport.pageUtil.RptByExamplesAllFavoritesForm" />
+        <form-bean name="GstControlForm" type="oscar.oscarBilling.ca.on.administration.GstControlForm" /> 
         <form-bean name="ObecForm" type="oscar.oscarReport.pageUtil.ObecForm" />
         <form-bean name="RptSelectCDMReportForm" type="oscar.oscarReport.oscarMeasurements.pageUtil.RptSelectCDMReportForm" />
         <form-bean name="RptInitializePatientsMetGuidelineCDMReportForm" type="oscar.oscarReport.oscarMeasurements.pageUtil.RptInitializePatientsMetGuidelineCDMReportForm" />
@@ -764,6 +765,9 @@
         <action input="/oscarReport/RptByExample.jsp" name="RptByExampleForm" path="/oscarReport/RptByExample" scope="request" type="oscar.oscarReport.pageUtil.RptByExampleAction">
             <forward name="success" path="/oscarReport/RptByExample.jsp" />
         </action>
+        <action input="/admin/gstControl.jsp" name="GstControlForm" path="/admin/GstControl" scope="request" type="oscar.oscarBilling.ca.on.administration.GstControlAction"> 
+ 	    <forward name="success" path="/admin/admin.jsp" /> 
+ 	</action>
         <action input="/oscarReport/RptViewAllQueryByExamples.jsp" name="RptViewAllQueryByExamplesForm" path="/oscarReport/RptViewAllQueryByExamples" scope="request" type="oscar.oscarReport.pageUtil.RptViewAllQueryByExamplesAction">
             <forward name="success" path="/oscarReport/RptViewAllQueryByExamples.jsp" />
         </action>

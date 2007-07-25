@@ -21,8 +21,9 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
 <%@ page
 	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*,oscar.appt.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.administration.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*, java.util.Properties"%> 
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -39,6 +40,14 @@
 			String color = "";
 			String premiumFlag = "";
 			String service_form = "";
+%> 
+ 
+<% 
+Properties gstProp = new Properties(); 
+GstControlAction db = new GstControlAction(); 
+gstProp = db.readDatabase(); 
+String flag = gstProp.getProperty("gstFlag", ""); 
+String percent = gstProp.getProperty("gstPercent", "");
 %>
 
 <%//
@@ -233,7 +242,7 @@ function popupPage(vheight,vwidth,varpage) {
 }
 
 function settlePayment() {
-    document.forms[0].payment.value = document.forms[0].total.value;
+    document.forms[0].payment.value = document.forms[0].finaltotal.value;
 }
 
 function scriptAttach(elementName) {
@@ -242,11 +251,32 @@ function scriptAttach(elementName) {
     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
 }
 
+function showtotal(){ 
+ 	var subtotal = document.getElementById("total").value; 
+  	
+ 	<% if (flag.equals("1")) {%> 
+ 	var percent = <%=percent%>/100; 
+ 	var gst = subtotal * percent; 
+ 	
+ 	gst *= 100; 
+ 	gst = Math.round(gst); 
+ 	gst /= 100; 
+ 	
+ 	document.getElementById("gsttotal").value = gst; 
+ 	var total = subtotal * 1 + gst; 
+ 	total *= 100; 
+ 	total = Math.round(total); 
+ 	total /= 100; 
+ 	document.getElementById("finaltotal").value = total; 
+ 	<%} else {%> 
+ 	document.getElementById("finaltotal").value = subtotal; 
+ 	<%}%> 
+ 	} 
 </script>
 	
 </head>
 
-<body topmargin="0">
+<body topmargin="0"  onload="showtotal()">
 <form method="post" name="titlesearch" action="billingONSave.jsp" onsubmit="return onSave();">
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
@@ -474,7 +504,7 @@ if (codeValid) {
 if (codeValid) {
 			%>
 			<tr>
-				<td align='right' colspan='3' class="myGreen">Total: <input type="text" name="total" size="5" value="0.00" />
+				<td align='right' colspan='3' class="myGreen">Total: <input type="text" id="total" name="total" size="5" value="0.00" />
 				<input type="hidden" name="totalItem" value="<%=vecServiceParam[0].size() %>" /></td>
 <script Language="JavaScript">
 <!--
@@ -632,6 +662,10 @@ if (codeValid) { %>
 			<textarea name="comment" value="" cols=60 rows=4></textarea>
 			</td>
 			<td align="right">
+                        <% if (flag.equals("1")) { %> 
+ 	                GST <%=percent%>%:<input type="text" disabled id="gsttotal" value="0.00" size="6" /><br> 
+ 	                <%}%> 
+ 	                Total:<input type="text" disabled id="finaltotal" value="0.00" size="6" /><br>    
 			Payments:<input type="text" name="payment" value="0.00" size="6" onDblClick="settlePayment();" /><br/>
 			Refunds:<input type="text" name="refund" value="0.00" size="6"/>
 			</td>

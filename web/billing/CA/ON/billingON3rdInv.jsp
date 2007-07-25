@@ -9,12 +9,18 @@ Properties prop3rdPayMethod = privateObj.get3rdPayMethod();
 BillingCorrectionPrep billObj = new BillingCorrectionPrep();
 List aL = billObj.getBillingRecordObj(invNo);
 BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) aL.get(0);
+Properties gstProp = new Properties(); 
+GstControlAction db = new GstControlAction(); 
+gstProp = db.readDatabase(); 
+
+String flag = gstProp.getProperty("gstFlag", ""); 
+String percent = gstProp.getProperty("gstPercent", "");
 %>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@ page import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.*" %>
+<%@ page import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.*,oscar.oscarBilling.ca.on.administration.*" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -95,17 +101,36 @@ Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %></td>
 </table>
 
 <hr/>
-<table width="100%" border="0">
-<tr align="right"><td width="86%">Total:</td><td><%=ch1Obj.getTotal() %></td></tr>
-<tr align="right"><td>Payments:</td><td><%=prop3rdPart.getProperty("payment","0.00") %></td></tr>
-<tr align="right"><td>Refunds:</td><td><%=prop3rdPart.getProperty("refund","0.00") %></td></tr>
+
 <% 
 BigDecimal bdBal = new BigDecimal(ch1Obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP);
+BigDecimal bdTotal = new BigDecimal(ch1Obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP); 
+BigDecimal bdGST = new BigDecimal("0"); 
+BigDecimal hundred = new BigDecimal("100"); 
+BigDecimal bdPercent = new BigDecimal(percent).setScale(2, BigDecimal.ROUND_HALF_UP); 
+if( flag.equals("1")){ 
+bdPercent = bdPercent.divide(hundred).setScale(2, BigDecimal.ROUND_HALF_UP); 
+bdGST = bdBal.multiply(bdPercent).setScale(2, BigDecimal.ROUND_HALF_UP); 
+bdBal = bdBal.add(bdGST).setScale(2, BigDecimal.ROUND_HALF_UP); 
+bdTotal = bdBal; 
+} 
 BigDecimal bdPay = new BigDecimal(prop3rdPart.getProperty("payment","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal bdRef = new BigDecimal(prop3rdPart.getProperty("refund","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
 bdBal = bdBal.subtract(bdPay);
 bdBal = bdBal.subtract(bdRef);
 %>
+
+<table width="100%" border="0"> 
+<% if ( flag.equals("1")){ %> 
+<tr align="right"><td width="86%">GST <%=percent%>%:</td><td><%=bdGST%></td></tr> 
+<tr align="right"><td width="86%">Subtotal:</td><td><%=ch1Obj.getTotal()%></td></tr> 
+<tr align="right"><td width="86%">Total:</td><td><%=bdTotal%></td></tr> 
+<%} else {%> 
+<tr align="right"><td width="86%">Total:</td><td><%=ch1Obj.getTotal()%></td></tr> 
+<%}%> 
+<tr align="right"><td>Payments:</td><td><%=prop3rdPart.getProperty("payment","0.00") %></td></tr> 
+<tr align="right"><td>Refunds:</td><td><%=prop3rdPart.getProperty("refund","0.00") %></td></tr> 
+        
 <tr align="right"><td><b>Balance:</b></td><td><%=bdBal %></td></tr>
 <tr align="right"><td>(<%=prop3rdPayMethod.getProperty(prop3rdPart.getProperty("payMethod",""), "") %>)</td><td></td></tr>
 </table>
