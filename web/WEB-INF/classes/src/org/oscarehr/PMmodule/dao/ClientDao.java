@@ -595,7 +595,7 @@ public class ClientDao extends HibernateDaoSupport {
 			
 			// filter by provider
 			String temp;
-			int parameterPosition=0;
+			int parameterPosition=1;
 
 			// status
 			if ((temp=StringUtils.trimToNull(x.getAdmissionStatus()))!=null) ps.setString(parameterPosition++, temp);			
