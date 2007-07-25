@@ -22,7 +22,9 @@
 
 package org.oscarehr.PMmodule.web.formbean;
 
-public class ErConsentFormBean {
+import java.io.Serializable;
+
+public class ErConsentFormBean implements Serializable{
 	
 	private String consentReason;
 	private String consentType;
