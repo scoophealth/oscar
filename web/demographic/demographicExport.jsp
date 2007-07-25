@@ -215,6 +215,10 @@ clear: left;
                </div>               
                
                </html:form>
+               <html:form action="/demographic/DemographicExport2" method="get" onsubmit="patientSet.value = document.forms[0].patientSet.value;">
+		   <html:hidden property="patientSet"/>
+		   <input type="submit" value="Export (Spec 2.0)" />               
+               </html:form>
                
             </td>
         </tr>

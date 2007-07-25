@@ -988,6 +988,9 @@
         <action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction">
             <forward name="success" path="/demographic/demographicExport.jsp" />
         </action>
+        <action input="/demographic/demographicExport.jsp" name="DemographicExportForm" path="/demographic/DemographicExport2" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicExportAction2">
+            <forward name="success" path="/demographic/demographicExport.jsp" />
+        </action>
         <action input="/oscarReport/demographicSetEdit.jsp" name="DemographicSetEditForm" path="/report/DemographicSetEdit" scope="request" type="oscar.oscarReport.pageUtil.DemographicSetEditAction">
             <forward name="success" path="/oscarReport/demographicSetEdit.jsp" />
         </action>
