@@ -9,7 +9,7 @@ public class UserRoleUtils {
 	public static final String USER_SEPARATOR = ",";
 
 	public enum Roles {
-		doctor, admin, reception, nurse, external
+		doctor, admin, receptionist, nurse, external
 	}
 	
 	/**
