@@ -40,7 +40,7 @@
 			</tr>
 
 			<tr>
-				<th>Seen during time</th>
+				<th>Seen between</th>
 				<td>Start Date <input type="text" name="form.seenStartDate" size="15" /> (yyyy-mm-dd) - End Date <input type="text" name="form.seenEndDate" size="15" /> (yyyy-mm-dd)</td>
 			</tr>
 
@@ -62,7 +62,7 @@
 			</tr>
 
 			<tr>
-				<th>Enrolled during time</th>
+				<th>Enrolled between</th>
 				<td>Start Date <input type="text" name="form.enrolledStartDate" size="15" /> (yyyy-mm-dd) - End Date <input type="text" name="form.enrolledEndDate" size="15" /> (yyyy-mm-dd)</td>
 			</tr>
 

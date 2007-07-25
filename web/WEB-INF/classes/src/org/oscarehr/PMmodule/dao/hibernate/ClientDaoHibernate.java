@@ -559,12 +559,18 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		// provider
 		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and intake.staff_id=?");			
 		
+		// seen date
+		if (StringUtils.trimToNull(x.getSeenStartDate())!=null) sqlCommand.append(" and intake.creation_date>=?");			
+		if (StringUtils.trimToNull(x.getSeenEndDate())!=null) sqlCommand.append(" and intake.creation_date<=?");			
+		
 		// program
 		if (StringUtils.trimToNull(x.getProgramId())!=null) sqlCommand.append(" and admission.program_id=?");			
 		
-		sqlCommand.append(" order by last_name,first_name");
+		// admission date
+		if (StringUtils.trimToNull(x.getEnrolledStartDate())!=null) sqlCommand.append(" and admission.admission_date>=?");			
+		if (StringUtils.trimToNull(x.getEnrolledEndDate())!=null) sqlCommand.append(" and admission.admission_date<=?");			
 		
-		
+		sqlCommand.append(" order by last_name,first_name");		
 		Query q = getSession().createSQLQuery(sqlCommand.toString()).addEntity("demographic", Demographic.class);
 		
 		// filter by provider
@@ -577,9 +583,18 @@ public class ClientDaoHibernate extends HibernateDaoSupport implements ClientDao
 		// provider 
 		if ((temp=StringUtils.trimToNull(x.getProviderId()))!=null) q.setParameter(parameterPosition++, temp);			
 		
+		// seen date 
+		// yes I know the date format is crap and is error prone and will return bad messages to the user, I don't care right now, we'll fix it after a re-write
+		if ((temp=StringUtils.trimToNull(x.getSeenStartDate()))!=null) q.setParameter(parameterPosition++, temp);			
+		if ((temp=StringUtils.trimToNull(x.getSeenEndDate()))!=null) q.setParameter(parameterPosition++, temp);							
+		
 		// program 
 		if ((temp=StringUtils.trimToNull(x.getProgramId()))!=null) q.setParameter(parameterPosition++, temp);			
 		
+		// admission date 
+		// yes I know the date format is crap and is error prone and will return bad messages to the user, I don't care right now, we'll fix it after a re-write
+		if ((temp=StringUtils.trimToNull(x.getEnrolledStartDate()))!=null) q.setParameter(parameterPosition++, temp);			
+		if ((temp=StringUtils.trimToNull(x.getEnrolledEndDate()))!=null) q.setParameter(parameterPosition++, temp);					
 		
 		@SuppressWarnings("unchecked")
 		List<Demographic> results = q.list();
