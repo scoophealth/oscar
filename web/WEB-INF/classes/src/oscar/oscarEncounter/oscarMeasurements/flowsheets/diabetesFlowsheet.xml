@@ -96,7 +96,7 @@
     <item
         measurement_type="LDL"
         display_name="LDL"
-        guideline="LDL &lt; 2.5"
+        guideline="LDL &lt; 2.0"
         graphable="yes"
         value_name="LDL"
         ds_rules="diab-LDL.drl"/>
