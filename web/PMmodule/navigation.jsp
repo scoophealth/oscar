@@ -1,8 +1,13 @@
 <%@ include file="/taglibs.jsp"%>
-
+<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.caisi.service.Version"%>
+
+<%
+	boolean userHasExternalOrReceptionistRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+	userHasExternalOrReceptionistRole=userHasExternalOrReceptionistRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.receptionist);
+%>
 
 <script type="text/javascript">
 function getIntakeReport(type) {
@@ -73,9 +78,16 @@ function getIntakeReport(type) {
             <div>
                 <html:link action="/PMmodule/ClientSearch2.do">Client Search</html:link>
             </div>
-            <div>
-    			<html:link action="/PMmodule/GenericIntake/Search.do">New Client</html:link>
-            </div>
+            <%
+            	if (!userHasExternalOrReceptionistRole)
+            	{
+		            %>
+		            <div>
+		    			<html:link action="/PMmodule/GenericIntake/Search.do">New Client</html:link>
+		            </div>
+		            <%
+		        }
+		    %>
 		</div>
 
         <c:if test="${sessionScope.userrole eq 'ER Clerk' or sessionScope.userrole eq 'Vaccine Provider'}">
