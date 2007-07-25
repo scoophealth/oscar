@@ -14,7 +14,7 @@
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>
         <java:condition>m.setMeasurement("LDL") == true</java:condition>       
-        <java:condition>m.getDataAsDouble() &lt; 2.5</java:condition>       
+        <java:condition>m.getDataAsDouble() &lt; 2.0</java:condition>       
         <java:consequence>     
               System.out.println("LDL RULES IS GETTING RUN"+m.getDataAsDouble());           
               m.setInRange(true);

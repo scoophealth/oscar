@@ -13,7 +13,7 @@
         <parameter identifier="m">
             <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
         </parameter>
-        <java:condition>m.getDataAsDouble() &gt;= 2.5</java:condition>       
+        <java:condition>m.getDataAsDouble() &gt;= 2.0</java:condition>       
         <java:condition>m.getDataAsDouble() &lt; 3.5</java:condition> 
         <java:consequence>     
               System.out.println("LDL 1 RULES IS GETTING RUN");           
