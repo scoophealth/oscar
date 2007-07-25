@@ -59,12 +59,8 @@ public class ClientListsReportAction extends DispatchAction {
 
 	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-System.err.println("I guess I should do some reporting here eh?");
-
-DynaActionForm reportForm = (DynaActionForm)form;
-ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
-System.err.println("form:"+form.toString());
-System.err.println("formBean:"+formBean.toString());
+		DynaActionForm reportForm = (DynaActionForm)form;
+		ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
 
 		List<Demographic> demographics=clientManager.findByReportCriteria(formBean);
 		request.setAttribute("demographics", demographics);

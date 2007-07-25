@@ -11,67 +11,88 @@ public class ClientListsReportFormBean {
 	private String programId;
 	private String enrolledStartDate;
 	private String enrolledEndDate;
-	
+	private String specificIssue;
+
 	public String getProviderId() {
-    
-    	return providerId;
-    }
+
+		return providerId;
+	}
+
 	public void setProviderId(String providerId) {
-    
-    	this.providerId = providerId;
-    }
+
+		this.providerId = providerId;
+	}
+
 	public String getSeenEndDate() {
-    
-    	return seenEndDate;
-    }
+
+		return seenEndDate;
+	}
+
 	public void setSeenEndDate(String seenEndDate) {
-    
-    	this.seenEndDate = seenEndDate;
-    }
+
+		this.seenEndDate = seenEndDate;
+	}
+
 	public String getSeenStartDate() {
-    
-    	return seenStartDate;
-    }
+
+		return seenStartDate;
+	}
+
 	public void setSeenStartDate(String seenStartDate) {
-    
-    	this.seenStartDate = seenStartDate;
-    }
-	
-	
+
+		this.seenStartDate = seenStartDate;
+	}
+
 	public String getProgramId() {
-    
-    	return programId;
-    }
+
+		return programId;
+	}
+
 	public void setProgramId(String programId) {
-    
-    	this.programId = programId;
-    }
-	
+
+		this.programId = programId;
+	}
+
 	public String getEnrolledEndDate() {
-    
-    	return enrolledEndDate;
-    }
+
+		return enrolledEndDate;
+	}
+
 	public void setEnrolledEndDate(String enrolledEndDate) {
-    
-    	this.enrolledEndDate = enrolledEndDate;
-    }
+
+		this.enrolledEndDate = enrolledEndDate;
+	}
+
 	public String getEnrolledStartDate() {
-    
-    	return enrolledStartDate;
-    }
+
+		return enrolledStartDate;
+	}
+
 	public void setEnrolledStartDate(String enrolledStartDate) {
-    
-    	this.enrolledStartDate = enrolledStartDate;
-    }
-	
+
+		this.enrolledStartDate = enrolledStartDate;
+	}
+
 	public String getAdmissionStatus() {
-    
-    	return admissionStatus;
-    }
+
+		return admissionStatus;
+	}
+
 	public void setAdmissionStatus(String admissionStatus) {
-    
-    	this.admissionStatus = admissionStatus;
-    }
+
+		this.admissionStatus = admissionStatus;
+	}
+
+	public String getSpecificIssue() {
+
+		return specificIssue;
+	}
+
+	public void setSpecificIssue(String specificIssue) {
+
+		this.specificIssue = specificIssue;
+	}
+
 	/**
 	 * This is a rather inefficient but convenient toString method which
 	 * prints out all the variables of the object (or is suppose to).

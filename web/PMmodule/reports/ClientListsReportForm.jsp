@@ -67,8 +67,8 @@
 			</tr>
 
 			<tr>
-				<th>Specific issues</th>
-				<td>ICD-10 issues? (not yet implemented)</td>
+				<th>Specific issue</th>
+				<td><input type="text" name="form.specificIssue" size="15" disabled="disabled" /></td>
 			</tr>
 
 			<tr>
