@@ -107,8 +107,8 @@ public class EctDisplayDocsAction extends EctDisplayAction {
                         
         hash = Math.abs(winName.hashCode());
         url = "popupPage(700,800,'" + hash + "', '" + request.getContextPath() + "/dms/documentGetFile.jsp?document=" + StringEscapeUtils.escapeJavaScript(dispFilename) + "&type=" + dispStatus + "&doc_no=" + dispDocNo + "');";
-        item.setLinkTitle(title);
-        item.setTitle(title);
+        item.setLinkTitle(title + serviceDateStr);
+        item.setTitle(title + serviceDateStr);
         key = StringUtils.maxLenString(curDoc.getDescription(), MAX_LEN_KEY, CROP_LEN_KEY, ELLIPSES) + "(" + serviceDateStr + ")";
         key = StringEscapeUtils.escapeJavaScript(key);
         js = "itemColours['" + key + "'] = '" + BGCOLOUR + "'; autoCompleted['" + key + "'] = \"" + url + "\"; autoCompList.push('" + key + "');";        
