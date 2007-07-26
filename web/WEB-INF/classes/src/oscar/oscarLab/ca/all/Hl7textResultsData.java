@@ -30,6 +30,7 @@ public class Hl7textResultsData {
     public String getMatchingLabs(String lab_no){
         String sql = "SELECT lab_no FROM hl7TextInfo WHERE accessionNum !='' AND accessionNum=(SELECT accessionNum FROM hl7TextInfo WHERE lab_no='"+lab_no+"') ORDER BY final_result_count";
         String ret = "";
+        logger.info(sql);
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
@@ -40,6 +41,7 @@ public class Hl7textResultsData {
                     ret = ret+","+rs.getString("lab_no");
             }
             rs.close();
+            db.CloseConn();
         }catch(Exception e){
             logger.error("Exception in HL7 getMatchingLabs: ", e);
         }
@@ -140,27 +142,28 @@ public class Hl7textResultsData {
             logger.info(sql);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
+
                 LabResultData lbData = new LabResultData(LabResultData.HL7TEXT);
                 lbData.labType = LabResultData.HL7TEXT;
                 lbData.segmentID = rs.getString("lab_no");
-                               
+
                 if (demographicNo == null && !providerNo.equals("0")) {
                     lbData.acknowledgedStatus = rs.getString("status");
                 } else {
                     lbData.acknowledgedStatus ="U";
                 }
-                
+
                 lbData.accessionNumber = rs.getString("accessionNum");
                 lbData.healthNumber = rs.getString("health_no");
                 lbData.patientName = rs.getString("last_name")+" "+rs.getString("first_name");
                 lbData.sex = rs.getString("sex");
-                
+
                 lbData.resultStatus = rs.getString("result_status");
                 if (lbData.resultStatus.equals("A"))
                     lbData.abn = true;
                 
                 lbData.dateTime = rs.getString("obr_date");
-                
+
                 //priority
                 lbData.priority = rs.getString("priority");
                 if (lbData.priority.equals(""))
@@ -168,12 +171,13 @@ public class Hl7textResultsData {
                 
                 lbData.requestingClient = rs.getString("requesting_client");
                 lbData.reportStatus =  rs.getString("report_status");
-                
+
                 if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
                     lbData.finalRes = true;
                 }else{
                     lbData.finalRes = false;
                 }
+
                 lbData.discipline = rs.getString("discipline");
                 lbData.finalResultsCount = rs.getInt("final_result_count");
                 lbData.multiLabId = getMatchingLabs(lbData.segmentID);
