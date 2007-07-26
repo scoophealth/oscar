@@ -5,8 +5,8 @@
 <%@ page import="org.caisi.service.Version"%>
 
 <%
-	boolean userHasExternalOrReceptionistRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
-	userHasExternalOrReceptionistRole=userHasExternalOrReceptionistRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.receptionist);
+	boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+	userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.erclerk);
 %>
 
 <script type="text/javascript">
@@ -79,7 +79,7 @@ function getIntakeReport(type) {
                 <html:link action="/PMmodule/ClientSearch2.do">Client Search</html:link>
             </div>
             <%
-            	if (!userHasExternalOrReceptionistRole)
+            	if (!userHasExternalOrErClerkRole)
             	{
 		            %>
 		            <div>
