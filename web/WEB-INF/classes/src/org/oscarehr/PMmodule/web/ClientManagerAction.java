@@ -569,8 +569,8 @@ public class ClientManagerAction extends BaseAction {
 
 			String value = null;
 
-			if ("true".equals(sharingOptinChecked)) value = Demographic.OptingStatus.OPTED_IN.name();
-			else if ("false".equals(sharingOptinChecked)) value = Demographic.OptingStatus.OPTED_OUT.name();
+			if ("true".equals(sharingOptinChecked)) value = Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name();
+			else if ("false".equals(sharingOptinChecked)) value = Demographic.OptingStatus.EXPLICITLY_OPTED_OUT.name();
 			else throw (new IllegalStateException("Unexpected state, sharingOptinCheckbox state = " + sharingOptinChecked));
 
 			clientManager.saveDemographicExt(id, Demographic.SHARING_OPTING_KEY, value);
@@ -606,7 +606,7 @@ public class ClientManagerAction extends BaseAction {
 		if (sharingOptingStatus!=null) sharingOptingStatusValue=sharingOptingStatus.getValue();
 		else sharingOptingStatusValue="none";
 		request.setAttribute("sharingOptingStatus", sharingOptingStatusValue);
-		boolean sharingOptingStatusChecked=Demographic.OptingStatus.IMPLICITLY_OPTED_IN.name().equals(sharingOptingStatusValue) || Demographic.OptingStatus.OPTED_IN.name().equals(sharingOptingStatusValue); 
+		boolean sharingOptingStatusChecked=Demographic.OptingStatus.IMPLICITLY_OPTED_IN.name().equals(sharingOptingStatusValue) || Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name().equals(sharingOptingStatusValue); 
 		request.setAttribute("sharingOptingCheckBoxState", sharingOptingStatusChecked?"checked=\"checked\"":"");
 
 		String providerNo = getProviderNo(request);

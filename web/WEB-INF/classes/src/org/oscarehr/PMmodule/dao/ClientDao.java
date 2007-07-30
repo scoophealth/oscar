@@ -248,7 +248,7 @@ public class ClientDao extends HibernateDaoSupport {
 
 			ps.setString(1, Demographic.SHARING_OPTING_KEY);
 			ps.setString(2, Demographic.OptingStatus.IMPLICITLY_OPTED_IN.name());
-			ps.setString(3, Demographic.OptingStatus.OPTED_IN.name());
+			ps.setString(3, Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name());
 			
 			int positionCounter=4;
 			for (Demographic demographic : tempList)

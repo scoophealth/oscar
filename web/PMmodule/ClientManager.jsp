@@ -23,7 +23,7 @@
 		if (demographicExt!=null)
 		{
 			Demographic.OptingStatus optingStatus=Demographic.OptingStatus.valueOf(demographicExt.getValue());
-			if (optingStatus==Demographic.OptingStatus.IMPLICITLY_OPTED_IN || optingStatus==Demographic.OptingStatus.OPTED_IN)
+			if (optingStatus==Demographic.OptingStatus.IMPLICITLY_OPTED_IN || optingStatus==Demographic.OptingStatus.EXPLICITLY_OPTED_IN)
 			{
 				allowed=true;
 			}

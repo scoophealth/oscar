@@ -49,8 +49,8 @@ public class Demographic extends BaseDemographic {
 	public enum OptingStatus {
 	    IMPLICITLY_OPTED_IN,
 	    IMPLICITLY_OPTED_OUT,
-	    OPTED_IN,
-	    OPTED_OUT
+	    EXPLICITLY_OPTED_IN,
+	    EXPLICITLY_OPTED_OUT
 	}
 	
 	public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
