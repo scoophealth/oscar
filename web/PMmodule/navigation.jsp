@@ -6,7 +6,7 @@
 
 <%
 	boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
-	userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.erclerk);
+	userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.er_clerk);
 %>
 
 <script type="text/javascript">

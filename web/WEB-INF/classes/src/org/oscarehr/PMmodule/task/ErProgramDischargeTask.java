@@ -34,6 +34,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 
 public class ErProgramDischargeTask extends TimerTask {
 
@@ -61,7 +62,7 @@ public class ErProgramDischargeTask extends TimerTask {
 		log.debug("running ErProgramDischargeTask");
 		
 		// get all "ER" Service programs
-		List providers = providerManager.getProvidersByType("er_clerk");
+		List providers = providerManager.getProvidersByType(UserRoleUtils.Roles.er_clerk.name());
 		for (Iterator i = providers.iterator(); i.hasNext();) {
 			Provider provider = (Provider) i.next();
 
