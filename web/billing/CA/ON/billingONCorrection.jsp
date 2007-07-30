@@ -543,6 +543,11 @@ if(bFlag) {
 			<textarea name="comment" value="" cols=60 rows=4><%=comment %></textarea>
 		</td>
 	</tr>
+        <tr>
+		<td>
+		<a href="billingON3rdInv.jsp?billingNo=<%=billNo%>">Reprint</a>
+		</td>
+	</tr>
 </table>
 <%=htmlPaid %>
 <form>
