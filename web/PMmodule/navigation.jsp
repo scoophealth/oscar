@@ -89,15 +89,6 @@ function getIntakeReport(type) {
 		        }
 		    %>
 		</div>
-
-        <c:if test="${sessionScope.userrole eq 'ER Clerk' or sessionScope.userrole eq 'Vaccine Provider'}">
-            <%
-            String oscarContextPath = (String) session.getAttribute("oscar_context_path");
-            %>
-            <div>
-                <a href="<%=oscarContextPath%>/logout.jsp">Logout</a>
-            </div>
-        </c:if>
         
         <c:if test="${sessionScope.userrole ne 'ER Clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
         <div>
