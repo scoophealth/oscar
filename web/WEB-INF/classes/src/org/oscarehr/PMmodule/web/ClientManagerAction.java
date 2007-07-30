@@ -60,6 +60,7 @@ import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
+import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 
 public class ClientManagerAction extends BaseAction {
@@ -257,7 +258,7 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		// for ERModule
-		if (roles.indexOf("ER Clerk") != -1) {
+		if (roles.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
 			Map<?, ?> consentMap = (Map<?, ?>) request.getSession().getAttribute("er_consent_map");
 
 			if (consentMap == null) {
