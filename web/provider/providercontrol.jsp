@@ -28,6 +28,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ page  import="java.util.*,java.net.*"  errorPage="errorpage.jsp"%>
+<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils" %>
 
 <caisi:isModuleLoad moduleName="caisi"><%
 	String isOscar = request.getParameter("infirmaryView_isOscar");
@@ -45,7 +46,7 @@
 %>
 
 <%
-	if(roleName$.indexOf("ER Clerk") != -1) {
+	if(roleName$.indexOf(UserRoleUtils.Roles.er_clerk.name()) != -1) {
 		response.sendRedirect("er_clerk.jsp");
 	}
 %>
