@@ -917,34 +917,7 @@ public class ProgramManagerAction extends BaseAction {
 		) 
 		
 			changed = true;
-		/*
-		 
-			
-						
-			 ||
-			
-			!program1.getBedProgramLinkId().equals(program2.getBedProgramLinkId()) || 
-			!program1.getManOrWoman().equals(program2.getManOrWoman()) 
-		 * (program1.getHoldingTank().equals(program2.getHoldingTank()) &&
 		
-			(program1.getHoldingTank() == program2.getHoldingTank()) &&
-			(program1.getProgramStatus() == program2.getProgramStatus()) &&
-			(program1.getIntakeProgram() == program2.getIntakeProgram()) &&
-			 &&
-			(program1.isHoldingTank()&program2.isHoldingTank()) &&
-			(program1.isAllowBatchAdmission()&program2.isAllowBatchAdmission()) &&
-			(program1.isAllowBatchDischarge()&program2.isAllowBatchDischarge()) &&
-			(program1.isHic()&program2.isHic()) &&
-			(program1.isTransgender()&program2.isTransgender()) &&
-			(program1.isFirstNation()&program2.isFirstNation()) &&
-			(program1.isBedProgramAffiliated()&program2.isBedProgramAffiliated()) && 
-			(program1.isAlcohol()&program2.isAlcohol()) && 
-			
-			(program1.isPhysicalHealth()&program2.isPhysicalHealth()) &&
-			(program1.isMentalHealth()&program2.isMentalHealth()) &&
-			(program1.isHousing()&program2.isHousing()) &&
-		
-			*/
 		return changed;			
 	}
 	
