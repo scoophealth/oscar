@@ -90,7 +90,7 @@ function getIntakeReport(type) {
 		    %>
 		</div>
         
-        <c:if test="${sessionScope.userrole ne 'ER Clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
+        <c:if test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
         <div>
             <span>Reporting Tools</span>
             <div>
@@ -145,7 +145,7 @@ function getIntakeReport(type) {
         }
         %>
         
-        <c:if test="${sessionScope.userrole ne 'ER Clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
+        <c:if test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
 		<div>
 			<span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Oscar Medical</a></span>
 		</div>
