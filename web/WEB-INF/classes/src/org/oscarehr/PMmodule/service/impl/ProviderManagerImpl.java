@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.oscarehr.PMmodule.dao.AgencyDao;
+import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.ProviderManager;
 
 
@@ -39,6 +41,7 @@ public class ProviderManagerImpl implements ProviderManager
 	private ProviderDao dao;
 	private AgencyDao agencyDAO;
 	private ProgramProviderDAO programProviderDAO;
+	private OscarSecurityDAO oscarSecurityDAO; 
 	
 	
 	public void setProviderDao(ProviderDao dao)	{
@@ -51,6 +54,10 @@ public class ProviderManagerImpl implements ProviderManager
 	
 	public void setProgramProviderDAO(ProgramProviderDAO dao) {
 		this.programProviderDAO = dao;
+	}
+	
+	public void setOscarSecurityDAO(OscarSecurityDAO oscarSecurityDAO) {
+		this.oscarSecurityDAO = oscarSecurityDAO;
 	}
 	
 	public Provider getProvider(String providerNo)
@@ -86,4 +93,10 @@ public class ProviderManagerImpl implements ProviderManager
 	public List<Provider> getProvidersByType(String type) {
 		return dao.getProvidersByType(type);
 	}
+	
+	public List<SecUserRole> getSecUserRoles(String providerNo) {
+		return oscarSecurityDAO.getUserRoles(providerNo);
+	}
+
+	
 }

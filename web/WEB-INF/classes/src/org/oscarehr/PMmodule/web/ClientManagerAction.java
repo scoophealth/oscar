@@ -611,7 +611,7 @@ public class ClientManagerAction extends BaseAction {
 		request.setAttribute("sharingOptingCheckBoxState", sharingOptingStatusChecked?"checked=\"checked\"":"");
 
 		String providerNo = getProviderNo(request);
-
+		
 		// program domain
 		List<Program> programDomain = new ArrayList<Program>();
 

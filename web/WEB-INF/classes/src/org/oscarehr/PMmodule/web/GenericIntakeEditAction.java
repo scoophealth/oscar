@@ -63,7 +63,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 		String intakeType = getType(request);
 		String providerNo = getProviderNo(request);
-
+		
 		Intake intake = null;
 
 		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {

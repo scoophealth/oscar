@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.model.SecUserRole;
 
 
 public interface ProviderManager 
@@ -43,5 +44,7 @@ public interface ProviderManager
 	public List<Agency> getAgencyDomain(String providerNo);
 	
 	public List<Provider> getProvidersByType(String type);
+	
+	public List<SecUserRole> getSecUserRoles(String providerNo);
 
 }

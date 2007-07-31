@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -44,8 +45,10 @@ public class ErProgramDischargeTask extends TimerTask {
 
 	private AdmissionManager admissionManager;
 
-	private int lengthOfStay = 60 * 24;
-
+	//the clients will stay in the service program for 3 days, 
+	//then will be automatically discharged.
+	private int lengthOfStay = 60 * 24 * 3; //minutes	
+	
 	public void setProviderManager(ProviderManager mgr) {
 		this.providerManager = mgr;
 	}
@@ -60,19 +63,42 @@ public class ErProgramDischargeTask extends TimerTask {
 
 	public void run() {
 		log.debug("running ErProgramDischargeTask");
+		//log.info("Running ErProgramDischargeTask.............");
 		
-		// get all "ER" Service programs
-		List providers = providerManager.getProvidersByType(UserRoleUtils.Roles.er_clerk.name());
+		// get all "ER" Service programs		
+		//List providers = providerManager.getProvidersByType("er_clerk");
+		List providers = providerManager.getProviders();
+		boolean er_clerk = false;
+		
 		for (Iterator i = providers.iterator(); i.hasNext();) {
 			Provider provider = (Provider) i.next();
-
-			// they should only have 1 service program
-			List programDomain = providerManager.getProgramDomain(provider.getProviderNo());
-			ProgramProvider programProvider = (ProgramProvider) programDomain.get(0);
-
+			
+			er_clerk = false;			
+			List<SecUserRole> roles = providerManager.getSecUserRoles(provider.getProviderNo());
+			for(Iterator ii = roles.iterator(); ii.hasNext();) {
+				SecUserRole secUserRole = (SecUserRole) ii.next();
+				if(UserRoleUtils.Roles.er_clerk.name().equals(secUserRole.getRoleName())) {
+					er_clerk = true;
+				}
+			}
+			
+			if(!er_clerk)
+				continue;
+			
+			// ER Clerks, they should only have 1 service program
+			List programDomain = null;
+			programDomain = providerManager.getProgramDomain(provider.getProviderNo());
+			
+			ProgramProvider programProvider = null;
+			if(programDomain.size() > 0) {
+				programProvider = (ProgramProvider) programDomain.get(0);
+			}
 			if (programProvider != null) {
 				// loop clients in the ER program
 				List programAdmissions = admissionManager.getCurrentAdmissionsByProgramId(programProvider.getProgramId().toString());
+				
+				if(programAdmissions == null) 
+					continue;
 				
 				for (Iterator j = programAdmissions.iterator(); j.hasNext();) {
 					Admission admission = (Admission) j.next();
