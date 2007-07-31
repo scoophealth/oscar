@@ -125,32 +125,42 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    cdsDt.PersonNameStandard.LegalName legalName = demo.addNewNames().addNewLegalName();
 	    cdsDt.PersonNameStandard.LegalName.FirstName firstName = legalName.addNewFirstName();
 	    cdsDt.PersonNameStandard.LegalName.LastName  lastName  = legalName.addNewLastName();
-
-	    cdsDt.HealthCard healthCard = demo.addNewHealthCard();
-	    cdsDt.AddressStructured address = demo.addNewAddress().addNewStructured();
-	    cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
-	    cdsDt.PhoneNumber phoneWork = demo.addNewPhoneNumber();
-
 	    firstName.setPart(demographic.getFirstName());
 	    lastName.setPart(demographic.getLastName());
 	    demo.setGender(cdsDt.Gender.Enum.forString(demographic.getSex()));
-	    healthCard.setNumber(demographic.getJustHIN());
-	    healthCard.setVersion(demographic.getVersionCode());
-	    address.setLine1(demographic.getAddress());
-	    address.setCity(demographic.getCity());
-	    address.setCountrySubdivisionCode(demographic.getProvince());
-	    address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
-	    phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
-	    phoneResident.setPhoneNumber(demographic.getPhone());
-	    if (demoExt.get("hPhoneExt")!=null) phoneResident.setExtension((String)demoExt.get("hPhoneExt"));
-	    phoneWork.setPhoneNumberType(cdsDt.PhoneNumberType.W);
-	    phoneWork.setPhoneNumber(demographic.getPhone());
-	    if (demoExt.get("wPhoneExt")!=null) phoneWork.setExtension((String)demoExt.get("wPhoneExt"));
-	    demoExt = null;
 
 	    Calendar c = Calendar.getInstance();
 	    c.setTime(UtilDateUtilities.StringToDate(demographic.getDob("-")));
 	    demo.setDateOfBirth(c);
+
+	    if (demographic.getJustHIN()!=null && !demographic.getJustHIN().trim().equals("")) {
+		cdsDt.HealthCard healthCard = demo.addNewHealthCard();
+		healthCard.setNumber(demographic.getJustHIN());
+		if (demographic.getVersionCode()!=null && !demographic.getVersionCode().trim().equals("")) healthCard.setVersion(demographic.getVersionCode());
+	    }
+	    if (  demographic.getAddress()!=null && !demographic.getAddress().trim().equals("") ||
+		  demographic.getCity()!=null && !demographic.getCity().trim().equals("") ||
+		  demographic.getProvince()!=null && !demographic.getProvince().trim().equals("") ||
+		  demographic.getPostal()!=null && !demographic.getPostal().trim().equals(""))      {
+		cdsDt.AddressStructured address = demo.addNewAddress().addNewStructured();
+		if (demographic.getAddress()!=null && !demographic.getAddress().trim().equals("")) address.setLine1(demographic.getAddress());
+		if (demographic.getCity()!=null && !demographic.getCity().trim().equals("")) address.setCity(demographic.getCity());
+		if (demographic.getProvince()!=null && !demographic.getProvince().trim().equals("")) address.setCountrySubdivisionCode(demographic.getProvince());
+		if (demographic.getPostal()!=null && !demographic.getPostal().trim().equals("")) address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
+	    }
+	    if (demographic.getPhone()!=null && !demographic.getPhone().trim().equals("")) {
+		cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
+		phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
+		phoneResident.setPhoneNumber(demographic.getPhone());
+		if (demoExt.get("hPhoneExt")!=null) phoneResident.setExtension((String)demoExt.get("hPhoneExt"));
+	    }
+	    if (demographic.getPhone2()!=null && !demographic.getPhone2().trim().equals("")) {
+		cdsDt.PhoneNumber phoneWork = demo.addNewPhoneNumber();
+		phoneWork.setPhoneNumberType(cdsDt.PhoneNumberType.W);
+		phoneWork.setPhoneNumber(demographic.getPhone2());
+		if (demoExt.get("wPhoneExt")!=null) phoneWork.setExtension((String)demoExt.get("wPhoneExt"));
+	    }
+	    demoExt = null;
 
 	    // IMUNIZATIONS
 	    ArrayList prevList2 = pd.getPreventionData(demoNo);                           
@@ -226,6 +236,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 		inFiles[i] = i+"-"+lastName.getPart()+firstName.getPart()+"-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".xml";
 		files[i] = new File(directory,inFiles[i]);
+		if (files[i].exists()) files[i].delete();
 	    }catch(Exception e){
 		e.printStackTrace();
 	    }
