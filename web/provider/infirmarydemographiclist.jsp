@@ -5,8 +5,7 @@
 	todayDate.setHours(23);
 	todayDate.setMinutes(59);
 	todayDate.setSeconds(59);
-	//System.out.println(todayDate);
-	//System.out.println((java.util.Date) session.getAttribute("infirmaryView_date"));
+	
 	if (((String)session.getAttribute("infirmaryView_programId")).equalsIgnoreCase("0"))
 	{%>
 	<p><b>No Assigned Program.</b></p>
@@ -209,7 +208,8 @@ if ((k/2)*2==k){ %>
     <% } %>
     <!-- doctor code block -->  
 <%}%>
-
+<% if(isBirthday(monthDay,demBday)){%> | <img src="../images/cake.gif" height="20" /> <%}%>
+														
     <td width='1'></td>
 </tr>
 </logic:iterate>
