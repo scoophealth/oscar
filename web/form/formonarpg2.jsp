@@ -47,7 +47,14 @@
 <%
   boolean bView = false;
   if (request.getParameter("view") != null && request.getParameter("view").equals("1")) bView = true; 
-%>
+  %> 
+ 
+  <% 
+    FrmARBloodWorkTest ar1BloodWorkTest = new FrmARBloodWorkTest(demoNo, formId); 
+    java.util.Properties ar1Props = ar1BloodWorkTest.getAr1Props(); 
+    int ar1BloodWorkTestListSize = ar1BloodWorkTest.getAr1BloodWorkTestListSize(); 
+    String ar1CompleteSignal = "AR1 labs Complete"; 
+  %>
 
 <html:html locale="true">
 <% response.setHeader("Cache-Control","no-cache");%>
@@ -723,6 +730,18 @@ function calToday(field) {
         <td><input type="text" name="c_riskFactors7" size="20" maxlength="50" style="width:100%"  value="<%= props.getProperty("c_riskFactors7", "") %>"></td>
         <td><input type="text" name="c_planManage7" size="60" maxlength="100" style="width:100%"  value="<%= props.getProperty("c_planManage7", "") %>"></td>
     </tr>
+    <tr> 
+ 	 <td colspan="2" style="background-color:green; color:#FFFFFF; font-weight:bold;"> 
+ 	 <% 
+        	if(ar1BloodWorkTestListSize == 9){ 
+ 	 %>         
+ 	 <%=ar1CompleteSignal%> 
+ 	 <% 
+ 	 } 
+ 	 %>      
+ 	</td> 
+    </tr> 
+        
 </table>
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
     <tr>
@@ -1059,9 +1078,27 @@ function calToday(field) {
                     <td><input type="text" name="ar2_uGA2" class="spe" onDblClick="calcWeek(this)" size="5" maxlength="10" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uGA2", "")) %>"></td>
                     <td><input type="text" name="ar2_uResults2" size="50" maxlength="50" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_uResults2", "")) %>"></td>
                     <td>ABO/Rh</td>
-			        <td><input type="text" name="ar2_bloodGroup" size="2" maxlength="6" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_bloodGroup", "")) %>">
-			        /<input type="text" name="ar2_rh" size="1" maxlength="6" value="<%= UtilMisc.htmlEscape(props.getProperty("ar2_rh", "")) %>"></td>
-                </tr>
+<%
+	String abo = "";
+	String rh ="";
+	if(UtilMisc.htmlEscape(props.getProperty("ar2_bloodGroup", "")).equals("") ){
+		abo = UtilMisc.htmlEscape(ar1Props.getProperty("pg1_labABO", ""));
+	}else{
+		abo = UtilMisc.htmlEscape(props.getProperty("ar2_bloodGroup", ""));
+	}
+
+	if(UtilMisc.htmlEscape(props.getProperty("ar2_rh", "")).equals("")){
+		rh = UtilMisc.htmlEscape(ar1Props.getProperty("pg1_labRh", ""));
+	}else{
+		rh = UtilMisc.htmlEscape(props.getProperty("ar2_rh", ""));
+	}
+%>                    
+			        <td>
+			        	<input type="text" name="ar2_bloodGroup" size="2" maxlength="6" value="<%=abo%>">
+			        	/<input type="text" name="ar2_rh" size="1" maxlength="6" value="<%=rh%>">
+			        </td>
+ 	                    
+                            </tr>
                 <tr>
                     <td><input type="text" name="ar2_uDate3" id="ar2_uDate3" class="spe" onDblClick="calToday(this)" size="10" maxlength="10" value="<%= props.getProperty("ar2_uDate3", "") %>">
 					<img src="../images/cal.gif" id="ar2_uDate3_cal"> 
