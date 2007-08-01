@@ -84,7 +84,16 @@
 				admin = true;
 			}
 			
+			boolean isExternal=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+			
 			for (int x = 0; x < ClientManagerFormBean.tabs.length; x++) {
+				
+				if (isExternal)
+				{
+					// "Bed Reservation", "Forms", "Refer"
+					if ("Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Forms".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Refer".equalsIgnoreCase(ClientManagerFormBean.tabs[x])) continue;
+				}
+					
 				if (!admin && ClientManagerFormBean.tabs[x].equalsIgnoreCase("refer")) {
 					Boolean b = (Boolean) request.getAttribute("isInProgramDomain");
 					if (b == null) {

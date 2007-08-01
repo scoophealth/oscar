@@ -118,7 +118,15 @@ function updateSharingOpting(state) {
 	<tr>
 		<th width="20%">Opt-In to share data</th>
 		<td>
-			<input name="sharingOptingCheckBox" type="checkbox" <c:out value="${sharingOptingCheckBoxState}" /> onclick="updateSharingOpting(this.checked);"> &nbsp;&nbsp;&nbsp;&nbsp; (current opting status : <c:out value="${sharingOptingStatus}" />)
+			<%
+				if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
+				{
+					%>
+						<input name="sharingOptingCheckBox" type="checkbox" <c:out value="${sharingOptingCheckBoxState}" /> onclick="updateSharingOpting(this.checked);"> &nbsp;&nbsp;&nbsp;&nbsp; 
+					<%
+				}
+			%>
+			(current opting status : <c:out value="${sharingOptingStatus}" />)
 		</td>
 	</tr>
 </table>
@@ -243,7 +251,16 @@ function updateSharingOpting(state) {
 					<td><c:out value="${consent.providerName}" /></td>
 					<td><c:out value="${consent.status}" /></td>
 					<td><c:out value="${consent.exclusionString}" /></td>
-					<td><input type="button" value="Update" onclick="openConsent()" /></td>
+					<td>
+						<%
+							if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
+							{
+								%>
+								<input type="button" value="Update" onclick="openConsent()" />
+								<%
+							}
+						%>			
+					</td>
 				</c:otherwise>
 			</c:choose>
 		</tr>
