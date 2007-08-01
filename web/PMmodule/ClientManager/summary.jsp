@@ -3,6 +3,7 @@
 <%@page import="org.oscarehr.PMmodule.model.Admission"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
+<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
 
 <script>
@@ -185,7 +186,17 @@ function updateSharingOpting(state) {
 		<c:if test="${mostRecentQuickIntake != null}">
 			<td><c:out value="${mostRecentQuickIntake.createdOnStr}" /></td>
 			<td><c:out value="${mostRecentQuickIntake.staffName}" /></td>
-			<td><input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />&nbsp;<input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
+			<td>
+				<%
+					if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
+					{
+						%>
+						<input type="button" value="Update" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" />&nbsp;
+						<%
+					}
+				%>			
+				<input type="button" value="Print Preview" onclick="printQuickIntake('<c:out value="${client.demographicNo}" />')" />
+			</td>
 		</c:if>
 		<c:if test="${mostRecentQuickIntake == null}">
 			<td><span style="color:red">None found</span></td>
