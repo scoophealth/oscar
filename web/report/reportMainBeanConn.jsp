@@ -41,7 +41,7 @@
     {"search_form_demo", "select demographic_no from form group by demographic_no"},
 
     {"search_demo_active", "select * from demographic where end_date = '0001-01-01' order by last_name limit ? offset ?"},
-    {"search_waiting_list", "select * from waitingListName"},
+    {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") + "' and is_history='N' " },
   };
 
   reportMainBean.doConfigure(dbParams,dbQueries);

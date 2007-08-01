@@ -30,12 +30,15 @@ package oscar.oscarWaitingList.bean;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import oscar.oscarDB.DBHandler;
+import oscar.oscarWaitingList.util.WLWaitingListUtil;
 
 public class WLWaitingListBeanHandler {
     
-    Vector waitingListVector = new Vector();
+    List waitingListArrayList = new ArrayList();
     String waitingListName ="";
     
     public WLWaitingListBeanHandler(String waitingListID) {
@@ -48,28 +51,32 @@ public class WLWaitingListBeanHandler {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             
-            String sql = "SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, d.phone, w.listID, w.position, w.note, w.onListSince FROM waitingList w, demographic d WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' ORDER BY w.position";
-            ResultSet rs;        
+            String sql = " SELECT CONCAT(d.last_name, ', ', d.first_name) AS patientName, d.demographic_no, " + 
+            			 " d.phone, w.listID, w.position, w.note, w.onListSince FROM waitingList w, demographic d " + 
+            			 " WHERE w.demographic_no = d.demographic_no AND w.listID='"+ waitingListID + "' " + 
+            			 " AND w.is_history = 'N' " + " ORDER BY w.position ";
+            ResultSet rs;      
+            String onListSinceDateOnly = "";
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
+            	onListSinceDateOnly = rs.getString("onListSince").substring(0, 10);//2007-01-01
+            	
                 WLPatientWaitingListBean wLBean = new WLPatientWaitingListBean( rs.getString("demographic_no"),
                                                                                 rs.getString("listID"),
                                                                                 rs.getString("position"),
                                                                                 rs.getString("patientName"), 
                                                                                 rs.getString("phone"),
                                                                                 rs.getString("note"),
-                                                                                rs.getString("onListSince"));   
-                
-                waitingListVector.add(wLBean);
+                                                                                onListSinceDateOnly);   
+                waitingListArrayList.add(wLBean);
             }                            
-            rs.close();        
             
-            sql = "SELECT * FROM waitingListName where ID='"+waitingListID+"'";
+            sql = "SELECT * FROM waitingListName where ID="+waitingListID + " AND is_history = 'N' ";
             rs = db.GetSQL(sql);
             if(rs.next()){
                 waitingListName = rs.getString("name");
             }
-            
+            rs.close();        
             db.CloseConn();
         }
         catch(SQLException e) {
@@ -83,24 +90,25 @@ public class WLWaitingListBeanHandler {
                 
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT demographic_no FROM waitingList WHERE listID='" + waitingListID + "'";
+            String sql = " SELECT demographic_no FROM waitingList WHERE listID=" + waitingListID + 
+                         " AND is_history = 'N' ";
             ResultSet rs;
             boolean needUpdate = false;
             //go thru all the patient on the list
             for(rs = db.GetSQL(sql); rs.next();){
                 
                 //check if the patient has an appointment already
-                sql = "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no='"
-                      + rs.getString("demographic_no") + "'";
+                sql = "select a.demographic_no, a.appointment_date, wl.onListSince from appointment a, waitingList wl where a.appointment_date >= wl.onListSince AND a.demographic_no=wl.demographic_no AND a.demographic_no="
+                      + rs.getString("demographic_no") + "";
                 
                 ResultSet rsCheck = db.GetSQL(sql);        
                 
                 if(rsCheck.next())
                 {                
-                    //delete patient from the waitinglist
+                    //delete patient from the waitingList
                     //System.out.println("patient to be deleted: " + rs.getString("demographic_no"));
-                    sql = "DELETE FROM waitingList WHERE demographic_no='"+ rs.getString("demographic_no") +"' AND listID='" + waitingListID +"'";
-                    db.RunSQL(sql);    
+                	
+                	WLWaitingListUtil.removeFromWaitingList(waitingListID, rs.getString("demographic_no"));
                     needUpdate = true;
                 }
                 rsCheck.close();
@@ -108,11 +116,13 @@ public class WLWaitingListBeanHandler {
             rs.close();
             //update the list
             if(needUpdate){
-                sql = "SELECT * FROM waitingList WHERE listID='" + waitingListID + "' ORDER BY onListSince";
+                sql = " SELECT * FROM waitingList WHERE listID=" + waitingListID + "  AND is_history = 'N' ORDER BY onListSince";
                 int i=1;            
                 for(rs = db.GetSQL(sql); rs.next();){                    
-                    sql =   "UPDATE waitingList SET position ='"+ Integer.toString(i) + "' WHERE listID='" + waitingListID 
-                            +"' AND demographic_no='" + rs.getString("demographic_no") +"'";
+                    sql =   " UPDATE waitingList SET position="+ i + 
+                    		" WHERE listID=" + waitingListID + 
+                            " AND demographic_no=" + rs.getString("demographic_no") +
+                            " AND is_history = 'N' ";
                     //System.out.println("update query from waiting list view: " + sql);
                     db.RunSQL(sql);
                     i++;
@@ -128,8 +138,8 @@ public class WLWaitingListBeanHandler {
         
     
     
-    public Vector getWaitingListVector(){
-        return waitingListVector;
+    public List getWaitingListArrayList(){
+        return waitingListArrayList;
     }    
     
     public String getWaitingListName(){

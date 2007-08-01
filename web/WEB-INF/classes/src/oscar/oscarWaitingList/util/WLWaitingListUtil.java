@@ -27,8 +27,9 @@
 package oscar.oscarWaitingList.util;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.util.*;
-import java.lang.*;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -44,77 +45,272 @@ import oscar.oscarProvider.bean.*;
 import oscar.util.*;
 
 public class WLWaitingListUtil {
-        
-    static public void removeFromWaitingList(String waitingListID, String demographicNo) {
-        System.out.println("removing waiting list: " + waitingListID + " for patient " + demographicNo);
+    //Modified this method in Feb 2007 to ensure that all records cannot be deleted except hidden.    
+    static public synchronized void  removeFromWaitingList(String waitingListID, String demographicNo) {
+        System.out.println("WLWaitingListUtil.removeFromWaitingList(): removing waiting list: " + waitingListID + " for patient " + demographicNo);
+        DBHandler db = null;
         try{
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql;
-            ResultSet rs;
+	        sql = " update  waitingList set is_history = 'Y' " + 
+		          " where demographic_no = " + demographicNo + 
+		          " and   listID = " + waitingListID;
+	        
+            db.RunSQL(sql);  
+            //update the waiting list positions           
+            rePositionWaitingList(db, waitingListID);
             
-            
-            sql = "DELETE FROM waitingList WHERE demographic_no='"+ demographicNo +"' AND listID='" + waitingListID +"'";
-            db.RunSQL(sql);                
-            
-            
-            //update the list            
-            sql = "SELECT * FROM waitingList WHERE listID='" + waitingListID + "' ORDER BY onListSince";
-            int i=1;            
-            for(rs = db.GetSQL(sql); rs.next();){                    
-                sql =   "UPDATE waitingList SET position ='"+ Integer.toString(i) + "' WHERE listID='" + waitingListID 
-                        +"' AND demographic_no='" + rs.getString("demographic_no") +"'";
-                //System.out.println("update query from waiting list view: " + sql);
-                db.RunSQL(sql);
-                i++;
-            }                            
-            rs.close();            
-            db.CloseConn();
-        }
-    
-        catch(SQLException e) {
-            System.out.println(e.getMessage());         
-        }        
+        }catch(SQLException e) {
+            System.out.println("WLWaitingListUtil.removeFromWaitingList():" + e.getMessage());         
+	    }finally{
+	    	try{
+	            db.CloseConn();
+	    	}catch(Exception ex2){
+	        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
+	    	}
+	    }
+        
     } 
     
-        static public void add2WaitingList(String waitingListID, String waitingListNote, String demographicNo) {
+        static public synchronized void add2WaitingList(
+        		String waitingListID, String waitingListNote, String demographicNo, String onListSince) {
             
-            //String[] paramWLPosition = new String[1];
-           // paramWLPosition[0] = request.getParameter("list_id");
-            //if(paramWLPosition[0].compareTo("")!=0){
-                //ResultSet rsWL = apptMainBean.queryResults(paramWLPosition, "search_waitingListPosition");
-                /*if(rsWL.next()){
-                    String[] paramWL = new String[4];
-                    paramWL[0] = request.getParameter("list_id");
-                    paramWL[1] = request.getParameter("demographic_no");
-                    paramWL[2] = request.getParameter("waiting_list_note");
-                    //System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
-                    paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
-                    apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
-                }
-            }*/
-        System.out.println("update waiting list: " + waitingListID + " for patient " + demographicNo);
+        DBHandler db = null;
+        ResultSet rs = null;
+        System.out.println("WLWaitingListUtil.add2WaitingList(): insert into waitingList: " + waitingListID + " for patient " + demographicNo);
         if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
             try{
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                String sql = "select max(position) as position from waitingList where listID='" + waitingListID + "'";
-                ResultSet rs = db.GetSQL(sql);
+                waitingListNote = org.apache.commons.lang.StringEscapeUtils.escapeSql(waitingListNote);
 
+                db = new DBHandler(DBHandler.OSCAR_DATA);
+                String sql = " select max(position) as position from waitingList where listID=" + waitingListID + 
+                			 "  AND is_history = 'N' ";
+                rs = db.GetSQL(sql);
+                String nxPos = "1";
                 if(rs.next()){
-                    String nxPos = Integer.toString(rs.getInt("position") + 1);
-                    waitingListNote = org.apache.commons.lang.StringEscapeUtils.escapeSql(waitingListNote);
-                    sql = "insert into waitingList values('"+ waitingListID + "','"
-                                                            + demographicNo + "','"
-                                                            + waitingListNote + "','"
-                                                            + nxPos + "', now())";
-                    db.RunSQL(sql);
+                	nxPos = Integer.toString(rs.getInt("position") + 1);
                 }
-                rs.close();            
-                db.CloseConn();
-            }
+                System.out.println("WLWaitingListUtil.add2WaitingList(): position = " + nxPos);
+                
+                if(onListSince == null  ||  onListSince.length() <= 0){
+	                sql = " insert into waitingList " + 
+		          	  " (listID, demographic_no, note, position, onListSince, is_history) " +	
+		          	  " values("+ waitingListID + "," + demographicNo + ",'" + 
+		          	  waitingListNote + "'," + nxPos + ", now() , 'N')";
+                }else{
+	                sql = " insert into waitingList " + 
+		          	  " (listID, demographic_no, note, position, onListSince, is_history) " +	
+		          	  " values("+ waitingListID + "," + demographicNo + ",'" + 
+		          	  waitingListNote + "'," + nxPos + ",'" + onListSince + "', 'N')";
+                }
+                System.out.println("WLWaitingListUtil.add2WaitingList(): insert sql = " + sql);
 
+                db.RunSQL(sql);
+
+		        //update the waiting list positions
+		        rePositionWaitingList(db, waitingListID);
+                
+            }
             catch(SQLException e) {
-                System.out.println(e.getMessage());         
-            }        
+                System.out.println("WLWaitingListUtil.add2WaitingList():" + e.getMessage());         
+	        }finally{
+	        	try{
+		            rs.close(); 
+		            db.CloseConn();
+	        	}catch(Exception ex2){
+	            	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
+	        	}
+	        }
         }
     }
-}
+        
+    /*
+     * This method adds the Waiting List note to the same position in the waitingList table but
+     * do not delete previous ones - later on DisplayWaitingList.jsp will display only the most
+     * current Waiting List Note record.
+     */
+	static public synchronized void updateWaitingListRecord(String waitingListID, String waitingListNote, 
+			String demographicNo, String onListSince) {
+	    
+	    System.out.println("WLWaitingListUtil.updateWaitingListRecord(): waitingListID: " + waitingListID + " for patient " + demographicNo);
+	    DBHandler db = null;
+	    ResultSet rs = null;
+	    if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
+		    try{
+		        db = new DBHandler(DBHandler.OSCAR_DATA);
+	             
+	            int pos = 1;
+	            String sql = " SELECT * FROM waitingList " + 
+				             " where demographic_no = " + demographicNo + 
+				             " and   listID = " + waitingListID + 
+					         " AND is_history = 'N' ";
+		        if(db == null){
+		        	System.out.println("WLWaitingListUtil.updateWaitingListRecord(): dbHandler == null");    
+		        	return;
+		        }
+	            rs = db.GetSQL(sql); 
+	            if(rs == null){
+		        	System.out.println("WLWaitingListUtil.updateWaitingListRecord(): result set == null");    
+		        	return;
+	            }
+	            while(rs.next()){
+	            	pos = rs.getInt("position");
+	            }
+		        
+		        waitingListNote = org.apache.commons.lang.StringEscapeUtils.escapeSql(waitingListNote);
+		        
+	        
+		        //set all previous records 'is_history' fielf to 'N' --> to keep as record but never display
+		        sql = " update  waitingList set is_history = 'Y' " + 
+		                     " where demographic_no = " + demographicNo + 
+		                     " and   listID = " + waitingListID;
+	
+	            db.RunSQL(sql);
+	            System.out.println("WLWaitingListUtil.updateWaitingListRecord(): update sql = " + sql);
+	            
+                sql = " insert into waitingList " + 
+		          	  " (listID, demographic_no, note, position, onListSince, is_history) " +	
+		          	  " values("+ waitingListID + "," + demographicNo + ",'" + 
+		          	  waitingListNote + "'," + pos + ", '" + onListSince + "', 'N')";
+	
+		        System.out.println("WLWaitingListUtil.updateWaitingListRecord(): insert sql = " + sql);
+		        db.RunSQL(sql);
+		        
+		        //update the waiting list positions
+		        rePositionWaitingList(db, waitingListID);
+	            
+	        }
+	
+	        catch(SQLException e) {
+	            System.out.println("WLWaitingListUtil.updateWaitingListRecord():" + e.getMessage());         
+	        }finally{
+	        	try{
+		            rs.close(); 
+		            db.CloseConn();
+	        	}catch(Exception ex2){
+	            	System.out.println("WLWaitingListUtil.updateWaitingListRecord(1):" + ex2.getMessage()); 
+	        	}
+	        }
+	    }
+	}//end of updateWaitingListRecord()
+	
+	
+    /*
+     * This method adds the Waiting List note to the same position in the waitingList table but
+     * do not delete previous ones - later on DisplayWaitingList.jsp will display only the most
+     * current Waiting List Note record.
+     */
+	static public synchronized void updateWaitingList(String id, String waitingListID, String waitingListNote, 
+			String demographicNo, String onListSince) {
+	    
+	    System.out.println("WLWaitingListUtil.updateWaitingList(): waitingListID: " + waitingListID + " for patient " + demographicNo);
+	    DBHandler db = null;
+	    ResultSet rs = null;
+	    if(!waitingListID.equalsIgnoreCase("0")&&!demographicNo.equalsIgnoreCase("0")){
+		    try{
+		        db = new DBHandler(DBHandler.OSCAR_DATA);
+		        String sql = "";
+		        if(db == null){
+		        	System.out.println("WLWaitingListUtil.updateWaitingList(): dbHandler == null");    
+		        	return;
+		        }
+		        
+		        waitingListNote = org.apache.commons.lang.StringEscapeUtils.escapeSql(waitingListNote);
+		        
+		        if(id != null  &&  !id.equals("")){
+		        	
+			        sql = " update  waitingList set listID = " + waitingListID + ", " +
+		                  " note = '" + waitingListNote + "', " + 
+		                  " onListSince = '" + onListSince + "' " +
+		                  " where id=" + id;
+		            System.out.println("WLWaitingListUtil.updateWaitingList(): update sql = " + sql);
+
+			        db.RunSQL(sql);
+		        	
+		        }
+	        }
+	
+	        catch(SQLException e) {
+	            System.out.println("WLWaitingListUtil.updateWaitingList():" + e.getMessage());         
+	        }finally{
+	        	try{
+		            rs.close(); 
+		            db.CloseConn();
+	        	}catch(Exception ex2){
+	            	System.out.println("WLWaitingListUtil.updateWaitingList(1):" + ex2.getMessage()); 
+	        	}
+	        }
+	    }
+	}//end of updateWaitingListRecord()
+	
+	
+	static private void rePositionWaitingList(DBHandler db, String waitingListID){
+		
+        int i=1;  
+        String sql = "";
+        ResultSet rs = null;
+        try{
+            sql = " SELECT * FROM waitingList WHERE listID=" + waitingListID + " AND is_history='N' ORDER BY onListSince";
+            rs = db.GetSQL(sql);
+            
+            while( rs.next()){     
+            	
+                sql =   " UPDATE waitingList SET position="+ i + 
+                		" WHERE listID=" + waitingListID + 
+                        " AND demographic_no=" + rs.getString("demographic_no") + 
+                        " AND is_history = 'N' ";
+                System.out.println("WLWaitingListUtil.rePositionWaitingList(2): " + sql);
+                db.RunSQL(sql);
+                i++;
+            }   
+            
+        }catch(SQLException sqlex){
+        	System.out.println("WLWaitingListUtil.rePositionWaitingList(2):" + sqlex.getMessage()); 
+        }catch(Exception ex){
+        	System.out.println("WLWaitingListUtil.rePositionWaitingList(2):" + ex.getMessage()); 
+        }finally{
+        	try{
+	            rs.close(); 
+        	}catch(Exception ex2){
+            	System.out.println("WLWaitingListUtil.rePositionWaitingList():" + ex2.getMessage()); 
+        	}
+        }
+	}
+        
+	static public synchronized void rePositionWaitingList(String waitingListID){
+		
+        int i=1;  
+        String sql = "";
+        ResultSet rs = null;
+        DBHandler db = null;
+        try{
+            db = new DBHandler(DBHandler.OSCAR_DATA);
+        	
+            sql = " SELECT * FROM waitingList WHERE listID=" + waitingListID + " AND is_history='N' ORDER BY onListSince";
+            rs = db.GetSQL(sql);
+            
+            while( rs.next()){     
+            	
+                sql =   " UPDATE waitingList SET position="+ i + 
+                		" WHERE listID=" + waitingListID + 
+                        " AND demographic_no=" + rs.getString("demographic_no") + 
+                        " AND is_history = 'N' ";
+                System.out.println("WLWaitingListUtil.rePositionWaitingList(1): " + sql);
+                db.RunSQL(sql);
+                i++;
+            }   
+        }catch(SQLException sqlex){
+        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + sqlex.getMessage()); 
+        }catch(Exception ex){
+        	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex.getMessage()); 
+        }finally{
+        	try{
+	            rs.close(); 
+	            db.CloseConn();
+        	}catch(Exception ex2){
+            	System.out.println("WLWaitingListUtil.rePositionWaitingList(1):" + ex2.getMessage()); 
+        	}
+        }
+	}
+	
+}//end of class WLWaitingListUtil

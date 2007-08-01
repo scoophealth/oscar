@@ -140,7 +140,9 @@
         <form-bean name="CheckSurveillanceForm" type="oscar.oscarSurveillance.CheckSurveillanceForm" />
         <form-bean name="SurveillanceAnswerForm" type="oscar.oscarSurveillance.SurveillanceAnswerForm" />
         <form-bean name="CreateSurveillanceFileForm" type="oscar.oscarSurveillance.CreateSurveillanceFileForm" />
-        <form-bean name="WLWaitingListForm" type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm" />
+        <form-bean name="WLWaitingListForm" type="org.apache.struts.validator.LazyValidatorForm" /> 
+ 	<!-- form-bean name="WLWaitingListForm" type="oscar.oscarWaitingList.pageUtil.WLWaitingListForm" /--> 
+ 	<form-bean name="WLWaitingListNameForm" type="org.apache.struts.validator.LazyValidatorForm" /> 
         <form-bean name="PreventionReportForm" type="oscar.oscarPrevention.pageUtil.PreventionReportForm" />
         <form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm" />
         <form-bean name="newLabUploadForm" type="oscar.oscarLab.ca.all.upload.LabUploadForm" />
@@ -961,9 +963,23 @@
         <action path="/oscarWaitingList/SetupDisplayPatientWaitingList" scope="request" type="oscar.oscarWaitingList.pageUtil.WLSetupDisplayPatientWaitingListAction">
             <forward name="continue" path="/oscarWaitingList/DisplayPatientWaitingList.jsp" />
         </action>
-        <action path="/oscarWaitingList/SetupDisplayWaitingList" scope="request" type="oscar.oscarWaitingList.pageUtil.WLSetupDisplayWaitingListAction">
-            <forward name="continue" path="/oscarWaitingList/DisplayWaitingList.jsp" />
-        </action>
+        <action path="/oscarWaitingList/SetupDisplayWaitingList"    
+ 	         type="oscar.oscarWaitingList.pageUtil.WLSetupDisplayWaitingListAction" 
+ 	               scope="request"  
+ 	               input="/oscarWaitingList/DisplayWaitingList.jsp" 
+ 	               name="WLWaitingListForm"> 
+ 	          <forward name="continue" path="/oscarWaitingList/DisplayWaitingList.jsp" /> 
+ 	          <forward name="failure" path="/oscarWaitingList/DisplayWaitingList.jsp" /> 
+ 	</action> 
+ 	<action path="/oscarWaitingList/WLEditWaitingListNameAction"    
+ 	        type="oscar.oscarWaitingList.pageUtil.WLEditWaitingListNameAction" 
+ 	        scope="request"  
+ 	        input="/oscarWaitingList/EditWaitingListName.jsp" 
+ 	        name="WLWaitingListNameForm"> 
+ 	        <forward name="continue" path="/oscarWaitingList/EditWaitingListName.jsp" /> 
+ 	        <forward name="editSuccess" path="/oscarWaitingList/SetupDisplayWaitingList.do" /> 
+ 	        <forward name="failure" path="/oscarWaitingList/EditWaitingListName.jsp" /> 
+ 	</action> 
         <action input="/oscarWaitingList/WLDisplayPatientWaitingList.jsp" name="WLWaitingListForm" path="/oscarWaitingList/WLWaitingList" scope="request" type="oscar.pageUtil.WLWaitingListAction">
             <forward name="success" path="/oscarWaitingList/WLDisplayPatientWaitingList.jsp" />
         </action>

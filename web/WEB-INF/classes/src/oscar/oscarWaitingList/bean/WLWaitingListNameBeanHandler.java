@@ -29,32 +29,40 @@ package oscar.oscarWaitingList.bean;
 import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.Collection;
 import oscar.oscarDB.DBHandler;
 
 public class WLWaitingListNameBeanHandler {
     
-    Vector waitingListNameVector = new Vector();
+    List waitingListNameList = new ArrayList();
+    List waitingListNames = new ArrayList();
     
-    public WLWaitingListNameBeanHandler() {
-        init();
+    public WLWaitingListNameBeanHandler(String groupNo, String providerNo) {
+        init(groupNo, providerNo);
     }
 
-    public boolean init() {
+    public boolean init(String groupNo, String providerNo) {
         
         boolean verdict = true;
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             
-            String sql = "SELECT * FROM waitingListName";
+            String sql = " SELECT * FROM waitingListName WHERE group_no='" + groupNo + "' " +
+                         " AND is_history='N'";
             ResultSet rs;
             
             for(rs = db.GetSQL(sql); rs.next(); )
             {                
-                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   rs.getString("name"),
-                                                                            rs.getString("ID"));                   
-                waitingListNameVector.add(wLBean);
+                WLWaitingListNameBean wLBean = new WLWaitingListNameBean(   rs.getString("ID"),
+                                                                            rs.getString("name"),
+                                                                            rs.getString("group_no"),
+                                                                            rs.getString("provider_no"),
+                                                                            rs.getString("create_date"));                   
+                waitingListNameList.add(wLBean);
+                waitingListNames.add(rs.getString("name"));
             }                            
             rs.close();                                
             db.CloseConn();
@@ -66,9 +74,13 @@ public class WLWaitingListNameBeanHandler {
         return verdict;
     }
         
-    public Vector getWaitingListNameVector(){
-        return waitingListNameVector;
+    public List getWaitingListNameList(){
+        return waitingListNameList;
     }    
         
+    public List getWaitingListNames(){
+        return waitingListNames;
+    }    
+
 }
 

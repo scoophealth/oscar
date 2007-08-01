@@ -37,7 +37,9 @@
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy 
-    WLWaitingListUtil.removeFromWaitingList(request.getParameter("listId"), request.getParameter("demographicNo"));
+    String waitingListId = request.getParameter("listId");
+    //String removeFlag = request.getParameter("remove");
+    WLWaitingListUtil.removeFromWaitingList(waitingListId, request.getParameter("demographicNo"));
 
 %>
 
@@ -56,7 +58,7 @@
 <table>
     <tr>
         <td> Update waiting list </td> 
-        <script language="javascript">            
+        <script language="javascript">   
             window.opener.location.reload();
             self.close();
         </script>

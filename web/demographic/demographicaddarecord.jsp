@@ -254,12 +254,14 @@ String curUser_no = (String)session.getAttribute("user");
 
                 if(rsWL.next()){
                     System.out.println("max position: " + Integer.toString(rsWL.getInt("position")));
-                    String[] paramWL = new String[4];
+                    String[] paramWL = new String[6]; 
                     paramWL[0] = request.getParameter("list_id");
                     paramWL[1] = rs.getString("demographic_no");
                     paramWL[2] = request.getParameter("waiting_list_note");
                     paramWL[3] = Integer.toString(rsWL.getInt("position") + 1);
-                    apptMainBean.queryExecuteUpdate(paramWL, "add2waitinglist");
+                    paramWL[4] = request.getParameter("waiting_list_referral_date");
+                    paramWL[5] = "N"; 
+                    apptMainBean.queryExecuteUpdate(paramWL, "add2WaitingList");
                 }
             }
         }

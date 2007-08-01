@@ -36,44 +36,47 @@ import oscar.oscarDB.DBHandler;
  */
 public class WaitingList{
 	
-	static WaitingList wL = new WaitingList();
-        static private boolean found = false;
-        static private boolean initialized = false;
+   private WaitingList() {
+       
+   }
 
-	
-        private WaitingList() {
-            checkWaitingListTable();
-        }
-
-        /**
-	 * @return WaitingList the instance of WaitingList
-	 */
+    /**
+	* @return WaitingList the instance of WaitingList 
+	*/
 	public static WaitingList getInstance() {
-            if(!initialized){
-                wL = new WaitingList();
-                initialized = true;
-            }
-	       return wL;
+	   return new WaitingList();
 	}
 
-        public void checkWaitingListTable(){           
-           try{
-               DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-               String sql = "SELECT * FROM waitingListName limit 1";
-               ResultSet rs = db.GetSQL(sql);
-               if(rs.next()){
-                   found = true;
-               }
-               
-           } catch (Exception e) {
-                e.printStackTrace();
-                found = false;
-           }                          
-        }
+    public boolean checkWaitingListTable(){       
+       DBHandler db = null;
+       ResultSet rs = null;
+       try{
+           db = new DBHandler(DBHandler.OSCAR_DATA);
+           String sql = "SELECT * FROM waitingListName where is_history = 'N' limit 1 ";
+           rs = db.GetSQL(sql);
+           if(rs.next()){
+               return true;
+           }
+           
+       } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+            
+       }finally{
+    	   try{
+    		   if(rs != null){
+    			   rs.close(); 
+    		   }
+    		   db.CloseConn();
+    	   }catch(Exception ex2){
+    		   System.out.println("WaitingList.checkWaitingListTable():" + ex2.getMessage()); 
+    	   }
+       }
+       return false;
+    }
         
-        public boolean getFound(){
-            System.out.println("found:" + found);
-            return found;
-        }
+    public boolean getFound(){
+        return checkWaitingListTable();
+    }
 }
 

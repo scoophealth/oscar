@@ -245,7 +245,8 @@ TH {
 }
 .Title
 {
-    font-weight:bold;    
+    font-weight:bold;  
+    font-size:110%;  
     color:white;
     background-color:#6699cc;
 }
@@ -260,6 +261,27 @@ TH {
 .data {
     background-color:#F7F7F7;
     font-size:80%;
+}
+
+.data2 {
+    background-color:#F7F7F7;
+    color:#3366CC;
+    font-size: 9px;
+}
+.data3 {
+    color:#15120B;
+    font-size: 11px;
+}
+.data4 {
+    background-color:#F7F7F7;
+    color:#3366CC;
+    font-size: 12px;
+}
+
+.data5 {
+	background-color:#FDFEC7;	
+    color:#3366CC;
+    font-size: 9px;
 }
 
 div.leftBox{

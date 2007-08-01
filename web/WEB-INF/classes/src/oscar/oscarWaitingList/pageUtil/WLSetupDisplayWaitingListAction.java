@@ -35,10 +35,14 @@ import java.util.Collection;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.*;
+
 import org.apache.struts.action.*;
+import org.apache.struts.validator.LazyValidatorForm;
+
 import oscar.oscarDB.DBHandler;
 import oscar.OscarProperties;
 import oscar.oscarWaitingList.bean.*;
+import oscar.oscarWaitingList.util.WLWaitingListUtil;
 import oscar.oscarProvider.bean.*;
 import oscar.util.*;
 
@@ -50,25 +54,147 @@ public final class WLSetupDisplayWaitingListAction extends Action {
                                  HttpServletResponse response)
         throws Exception {
         
+    	
+        System.out.println("\n\nWLSetupDisplayWaitingListAction/execute(): just entering.");
+        
+        String update = request.getParameter("update");
+        String remove = request.getParameter("remove");//actually not used for now, may in future?
+        
+        String waitingListId = "";
+        String demographicNo = "";
+        String waitingListNote = "";
+        String onListSince = "";
+        String groupNo = "";
+        String providerNo = "";
+        
+        System.out.println("\n\nWLSetupDisplayWaitingListAction/execute(): update = " + update);
+        System.out.println("\n\nWLSetupDisplayWaitingListAction/execute(): remove = " + remove);
+
+    	LazyValidatorForm wlForm = (LazyValidatorForm)form;
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): after  (LazyValidatorForm)form ");
+
+        
+        String demographicNumSelected =  request.getParameter("demographicNumSelected");
+        String wlNoteSelected = request.getParameter("wlNoteSelected");
+        String onListSinceSelected =  request.getParameter("onListSinceSelected");
+
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): demographicNumSelected = "+ demographicNumSelected);
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): wlNoteSelected = "+ wlNoteSelected);
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): onListSinceSelected = "+ onListSinceSelected);
+        
+        
+        if(request.getParameter("waitingListId") != null){
+        	waitingListId = (String) request.getParameter("waitingListId");
+        }
+        
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);
+        if( update != null  &&  update.equalsIgnoreCase("Y") ){
+	        
+            demographicNo = request.getParameter(demographicNumSelected);
+            waitingListNote = request.getParameter(wlNoteSelected);
+            onListSince = request.getParameter(onListSinceSelected);
+//	        demographicNo = (String)wlForm.get(demographicNumSelected);
+//	        waitingListNote = (String)wlForm.get(wlNoteSelected);
+//	        onListSince =  (String)wlForm.get(onListSinceSelected);
+
+        	if(waitingListId == null && wlForm.get("selectedWL") != null){
+        		waitingListId = (String)wlForm.get("selectedWL");
+        	}
+        	
+        	if(waitingListId != null){
+		        try{
+		        	if( demographicNo != null  &&  !demographicNo.equals("")  && 
+		        		waitingListNote != null  &&  !waitingListNote.equals("")  &&  
+		        		onListSince != null  &&  !onListSince.equals("")){
+		        		WLWaitingListUtil.updateWaitingListRecord(waitingListId, waitingListNote, demographicNo, onListSince);
+		        	}
+		        	else{
+		        		WLWaitingListUtil.rePositionWaitingList(waitingListId);
+		        	}
+	
+		        }catch(Exception ex){
+		            System.out.println("WLUpdateDisplayWaitingListAction/execute(): Exception: "+ ex);
+		        	return (mapping.findForward("failure"));
+		        }
+        	}
+    	}else if(( update == null  ||  update.equals(""))  &&  remove == null ){ 
+    		if(waitingListId != null  &&  waitingListId.length() > 0){
+    			WLWaitingListUtil.rePositionWaitingList(waitingListId);
+    		}
+    	}//end of if( !update.equalsIgnoreCase("Y") ) -- could be remove also ???
+        
         HttpSession session = request.getSession();
-        String waitingListId = (String) request.getParameter("waitingListId");
-        System.out.println("waitingListId: "+ waitingListId);
-        WLWaitingListBeanHandler hd = new WLWaitingListBeanHandler(waitingListId);
+        
+        
+        if(session.getAttribute("groupno") != null){
+        	groupNo = (String)session.getAttribute("groupno");
+        }
+        providerNo = (String)session.getAttribute("user");
+        
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): providerNo = "+ providerNo);
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): groupno = "+ groupNo);
+
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): waitingListId = "+ waitingListId);
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): demographicNo = "+ demographicNo);
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): waitingListNote = "+ waitingListNote);
+        System.out.println("WLSetupDisplayWaitingListAction/execute(): onListSince = "+ onListSince);
+
+        WLWaitingListBeanHandler hd = null;
+        WLWaitingListNameBeanHandler wlNameHd = null;
+        Collection allProviders = null;
+        String nbPatients = "";
+        String today = "";
+        
+        if(waitingListId != null  &&  waitingListId.length() > 0){
+        	hd = new WLWaitingListBeanHandler(waitingListId);
+        }else{
+        	//even though waitingListId is null, still need to create hd for hd.getWaitingListArrayList()
+        	// to display in DisplayWaitingList.jsp
+        	hd = new WLWaitingListBeanHandler(waitingListId);
+        }
+        
+        if(groupNo != null  &&  providerNo != null){
+        	wlNameHd = new WLWaitingListNameBeanHandler(groupNo, providerNo);
+        }
         ProviderNameBeanHandler phd = new ProviderNameBeanHandler();
-        WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler();
-        //Vector allWaitingListName = wlNameHd.getWaitingListNameVector();
-        phd.setThisGroupProviderVector((String) session.getAttribute("groupno"));
-        Collection allProviders = phd.getThisGroupProviderVector();
-        String nbPatients = Integer.toString(hd.getWaitingListVector().size());
-        String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
-             
+        
+        
+        if(groupNo != null){
+        	phd.setThisGroupProviderVector(groupNo);
+        	allProviders = phd.getThisGroupProviderVector();
+        
+        	System.out.println("WLSetupDisplayWaitingListAction/execute(): allProviders.size() = "+ allProviders.size());
+        
+        	if(hd != null){
+        		nbPatients = Integer.toString(hd.getWaitingListArrayList().size());
+        	}else{
+        		nbPatients = "0";
+        	}
+        	
+        }
+        
+        today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
+        
         request.setAttribute("WLId", waitingListId);
-        session.setAttribute( "waitingList", hd );            
-        session.setAttribute("waitingListName", hd.getWaitingListName());
+        session.setAttribute( "waitingList", hd );     
+        if(hd != null){
+        	session.setAttribute("waitingListName", hd.getWaitingListName());
+        }else{
+        	session.setAttribute("waitingListName", null);
+        }
+        if(wlNameHd != null){
+        	session.setAttribute("waitingListNames", wlNameHd.getWaitingListNames());
+        }else{
+        	session.setAttribute("waitingListNames", null);
+        }
         session.setAttribute("allProviders", allProviders);
+        
         session.setAttribute("nbPatients", nbPatients);
+
         //session.setAttribute("allWaitingListName", allWaitingListName);
         session.setAttribute("today", today);
+        
         return (mapping.findForward("continue"));
     }
+
 }

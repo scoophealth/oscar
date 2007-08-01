@@ -1,0 +1,198 @@
+// -----------------------------------------------------------------------------------------------------------------------
+// *
+// *
+// * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+// * This software is published under the GPL GNU General Public License. 
+// * This program is free software; you can redistribute it and/or 
+// * modify it under the terms of the GNU General Public License 
+// * as published by the Free Software Foundation; either version 2 
+// * of the License, or (at your option) any later version. * 
+// * This program is distributed in the hope that it will be useful, 
+// * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+// * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+// * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+// * along with this program; if not, write to the Free Software 
+// * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+// * 
+// * <OSCAR TEAM>
+// * Date         Implemented By  Company                 Comments
+// * 29-09-2004   Ivy Chan        iConcept Technologies   initial version
+// * This software was written for the 
+// * Department of Family Medicine 
+// * McMaster Unviersity 
+// * Hamilton 
+// * Ontario, Canada 
+// *
+// -----------------------------------------------------------------------------------------------------------------------
+package oscar.oscarWaitingList.pageUtil;
+
+import java.util.*;
+import java.util.Collection;
+import javax.servlet.http.*;
+
+import org.apache.struts.action.*;
+import org.apache.struts.validator.LazyValidatorForm;
+
+import oscar.oscarWaitingList.bean.*;
+import oscar.oscarWaitingList.util.WLWaitingListNameUtil;
+import oscar.oscarWaitingList.util.WLWaitingListUtil;
+import oscar.oscarProvider.bean.*;
+import oscar.util.*;
+
+public final class WLEditWaitingListNameAction extends Action {
+
+	private String message ="";
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response)
+        throws Exception {
+        
+    	
+        System.out.println("WLEditWaitingListNameAction/execute(): just entering.");
+        HttpSession session = request.getSession();
+    	LazyValidatorForm wlnForm = (LazyValidatorForm)form;
+    	ActionMessages msgs = new ActionMessages();
+
+        String edit = request.getParameter("edit");
+        String actionChosen = request.getParameter("actionChosen");
+        String providerNo = (String)session.getAttribute("user");
+        String groupNo ="";
+        String wlNewName = (String)wlnForm.get("wlNewName");
+        String wlChangedName = (String)wlnForm.get("wlChangedName");
+        String selectedWL = (String)wlnForm.get("selectedWL");
+        String selectedWL2 = (String)wlnForm.get("selectedWL2");
+        int successCode = 0;
+        request.setAttribute("message", "");
+        setMessage("");
+        
+        System.out.println("WLEditWaitingListNameAction/execute(): edit = "+ edit);
+        System.out.println("WLEditWaitingListNameAction/execute(): actionChosen = "+ actionChosen);
+        System.out.println("WLEditWaitingListNameAction/execute(): selectedWL = "+ selectedWL);
+        System.out.println("WLEditWaitingListNameAction/execute(): selectedWL2 = "+ selectedWL2);
+
+        if(edit != null  &&  !edit.equals("")){
+        	
+        	if( wlNewName == null  ||  wlNewName.length()<= 0 ){
+        		wlNewName = wlChangedName;
+        	}
+            if(session.getAttribute("groupno") != null){
+            	groupNo = (String)session.getAttribute("groupno");
+            }
+
+
+	        try{
+	        	if( actionChosen != null  &&  actionChosen.length() > 0  &&
+	        		providerNo != null  &&  providerNo.length() > 0 ){
+	        		
+	        		if(actionChosen.equalsIgnoreCase("create")){
+	        			if(wlNewName != null  &&  wlNewName.length() > 0){
+	        				try{
+	        					WLWaitingListNameUtil.createWaitingListName(wlNewName, groupNo, providerNo);
+	        					successCode = 1;
+	        				}catch(Exception ex1){
+	        					if(ex1.getMessage().equals("wlNameExists")){
+	        						setMessage("oscar.waitinglistname.wlNameExists");
+	        						//msgs.add(ActionMessages.GLOBAL_MESSAGE, 
+	        						//		 new ActionMessage("oscar.waitinglistname.wlNameExists"));
+	        					}else{
+	        						setMessage("oscar.waitinglistname.error");
+	        						//msgs.add(ActionMessages.GLOBAL_MESSAGE, 
+	        						//		 new ActionMessage("oscar.waitinglistname.error"));
+	        					}
+	        				}
+	        			}
+	        		}else if(actionChosen.equalsIgnoreCase("change")){
+	        			if( selectedWL != null  &&  selectedWL.length() > 0  &&
+	        				wlNewName != null  &&  wlNewName.length() > 0){
+	        				try{
+	        					WLWaitingListNameUtil.updateWaitingListName(selectedWL, wlNewName, groupNo, providerNo);
+	        					successCode = 2;
+	        				}catch(Exception ex2){
+	        					if(ex2.getMessage().equals("wlNameExists")){
+	        						setMessage("oscar.waitinglistname.wlNameExists");
+	        						//msgs.add(ActionMessages.GLOBAL_MESSAGE, 
+	        						//		 new ActionMessage("oscar.waitinglistname.noSuchWL"));
+	        					}else{
+	        						setMessage("oscar.waitinglistname.error");
+	        						//msgs.add(ActionMessages.GLOBAL_MESSAGE, 
+	        						//		 new ActionMessage("oscar.waitinglistname.error"));
+	        					}
+	        				}
+	        			}
+	        		}else if(actionChosen.equalsIgnoreCase("remove")){
+	        			if(selectedWL2 != null  &&  selectedWL2.length() > 0){
+	        				System.out.println("WLEditWaitingListNameAction/execute(): selectedWL2 = "+ selectedWL2);
+	        				try{
+		        				WLWaitingListNameUtil.removeFromWaitingListName(selectedWL2, groupNo);
+	        					successCode = 3;
+	        				}catch(Exception ex3){
+	        					if(ex3.getMessage().equals("wlNameUsed")){
+	        						setMessage("oscar.waitinglistname.wlNameUsed");
+	        						//msgs.add(ActionMessages.GLOBAL_MESSAGE, 
+	        						//		 new ActionMessage("oscar.waitinglistname.wlNameUsed"));
+	        					}else{
+	        						setMessage("oscar.waitinglistname.error");
+	        						//msgs.add(ActionMessages.GLOBAL_MESSAGE, 
+	        						//		 new ActionMessage("oscar.waitinglistname.error"));
+	        					}
+	        				}
+	        			}
+	        		}
+	        		else{
+	        			successCode = 0;
+	        		}
+	        	}
+
+	        }catch(Exception ex){
+	            System.out.println("WLEditWaitingListNameAction/execute(): Exception: "+ ex);
+	            setMessage("oscar.waitinglistname.error");
+				//msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("oscar.waitinglistname.error"));
+	        	return (mapping.findForward("failure"));
+	        }
+        
+        }
+        
+        if(successCode == 1){
+        	setMessage("oscar.waitinglistname.createSuccess");
+			//msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("oscar.waitinglistname.createSuccess"));
+        }else if(successCode == 2){
+        	setMessage("oscar.waitinglistname.editSuccess");
+			//msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("oscar.waitinglistname.editSuccess"));
+        }else if(successCode == 3){
+        	setMessage("oscar.waitinglistname.removeSuccess");
+			//msgs.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("oscar.waitinglistname.removeSuccess"));
+        }
+        else{
+        	
+        }
+
+        System.out.println("WLEditWaitingListNameAction/execute(): groupNo = "+ groupNo);
+        System.out.println("WLEditWaitingListNameAction/execute(): providerNo = "+ providerNo);
+        System.out.println("WLEditWaitingListNameAction/execute(): wlNewName = "+ wlNewName);
+
+
+        WLWaitingListNameBeanHandler wlNameHd = new WLWaitingListNameBeanHandler(groupNo, providerNo);
+        
+        String today = UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy-MM-dd");
+        
+        session.setAttribute("waitingListNames", wlNameHd.getWaitingListNameList());
+        
+        session.setAttribute("today", today);
+        
+        System.out.println("WLEditWaitingListNameAction/execute(): getMessage() = "+ getMessage());
+        request.setAttribute("message", getMessage());
+        //saveMessages(request, msgs); //<-- since only one message is needed each time, this function is not needed
+        
+        return (mapping.findForward("continue"));
+    }
+    
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+    
+
+}

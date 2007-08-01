@@ -35,11 +35,18 @@ import oscar.oscarDB.DBHandler;
 public class WLWaitingListNameBean{
 
        String waitingListName;
-       String id;
+       String ID;
+       String groupNo;
+       String providerNo;
+       String createdDate;
        
-       public WLWaitingListNameBean(String waitingListName, String id){
+       public WLWaitingListNameBean(String nameId, String waitingListName, String groupNo,
+    		                        String providerNo, String createdDate ){
            this.waitingListName = waitingListName;
-           this.id = id;
+           this.ID = nameId;
+           this.groupNo = groupNo;
+           this.providerNo = providerNo;
+           this.createdDate = createdDate;
        }
               
        public String getWaitingListName(){
@@ -47,7 +54,18 @@ public class WLWaitingListNameBean{
        }
     
        public String getId(){
-           return id;
+           return ID;
        }
-              
+
+		public String getGroupNo() {
+			return groupNo;
+		}
+       
+		public String getProviderNo() {
+			return providerNo;
+		}
+
+		public String getCreatedDate() {
+			return createdDate;
+		}
 }

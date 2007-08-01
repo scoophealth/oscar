@@ -88,7 +88,9 @@ You have no rights to access the data!
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="../share/calendar/calendar-setup.js"></script>
-
+  <!-- calendar stylesheet --> 
+  <link rel="stylesheet" type="text/css" media="all" href="../share/calendar/calendar.css" title="win2k-cold-1" />
+        
 <link rel="stylesheet" type="text/css" href="../oscarEncounter/encounterStyles.css">
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 
@@ -533,8 +535,12 @@ div.demographicWrapper {
                     <a href='demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&last_name=<%=URLEncoder.encode(rs.getString("last_name"))%>&first_name=<%=URLEncoder.encode(rs.getString("first_name"))%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25'><bean:message key="demographic.demographiceditdemographic.btnApptHist"/></a>
                 </td></tr>
                 <%
+                    String wLReadonly = ""; 
                     WaitingList wL = WaitingList.getInstance();
-                    if(wL.getFound()){
+                   if(!wL.getFound()){ 
+                        wLReadonly = "readonly"; 
+                        }
+                   if(wLReadonly.equals("")){ 
                 %>
                 <tr><td>
                     <a href="../oscarWaitingList/SetupDisplayPatientWaitingList.do?demographic_no=<%=rs.getString("demographic_no")%>">Waiting List</a>
@@ -1302,20 +1308,34 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                               </td>
                             </tr>
                             <%}%>
-                            <%if(wL.getFound()){%>
+
                             <tr valign="top">
-                              <td align="right" nowrap><b>Waiting List: </b></td>
-                              <td align="left" >
+                            <td colspan="4"> 
+ 	                    <table border="1" width="100%"> 
+ 	                       <tr> 
+ 	                           <td align="right" width="16%"  nowrap ><b>Waiting List:</b></td> 
+ 	                           <td align="left" width="31%"> 
                               <%
                                 ResultSet rsWLStatus = apptMainBean.queryResults(demographic_no,"search_wlstatus");
-                                String listID = "", wlnote="";
+ 	                        String wlId="", listID="", wlnote=""; 
+ 	                        String wlReferralDate=""; 
                                 if (rsWLStatus.next()){
+                                    wlId = rsWLStatus.getString("id"); 
                                     listID = rsWLStatus.getString("listID");
                                     wlnote = rsWLStatus.getString("note");
+                                    wlReferralDate = rsWLStatus.getString("onListSince"); 
+                                    if(wlReferralDate != null  &&  wlReferralDate.length()>10){ 
+                                        wlReferralDate = wlReferralDate.substring(0, 11);
+                                    }
                                 }
                                %>
+                               <input type="hidden" name="wlId" value="<%=wlId%>">
                                 <select name="list_id">
+                                  <%if(wLReadonly.equals("")){%>
                                   <option value="0" >--Select Waiting List--</option>
+                                  <%}else{%>
+                                  <option value="0" >--Please Create Waiting List Name first--</option> 
+                                  <%} %>
                                   <%
                                       ResultSet rsWL = apptMainBean.queryResults("search_waiting_list");
                                       while (rsWL.next()) {
@@ -1329,10 +1349,22 @@ document.updatedelete.r_doctor_ohip.value = refNo;
                               </td>
                               <td align="right" nowrap><b>Waiting List Note: </b></td>
                               <td align="left">
-                                <input type="text" name="waiting_list_note" value="<%=wlnote%>" >
-                              </td>
+    	                        <input type="text" name="waiting_list_note" value="<%=wlnote%>"   size="34" <%=wLReadonly%>> 
+ 	                      </td> 
+ 	                          </tr> 
+ 	                          <tr> 
+ 	                            <td colspan="2" >&nbsp;</td> 
+ 	                            <td align="right" nowrap><b>Date of request: </b></td> 
+ 	                            <td align="left"> 
+ 	                            <input type="text" name="waiting_list_referral_date" id="waiting_list_referral_date"  size="11" 
+ 	                                               value="<%=wlReferralDate%>"  <%=wLReadonly%> ><img src="../images/cal.gif" id="referral_date_cal">(yyyy-mm-dd) 
+ 	                             </td> 
+ 	                    
+ 	                           </tr> 
+ 	                            </table> 
+ 	                            </td> 
                             </tr>
-                            <%}%>
+ 
                             <tr valign="top">
                               <td align="right" nowrap><b><bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: </b></td>
                               <td align="left" >
@@ -1484,6 +1516,11 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
             </td>
         </tr>
     </table>
+    
+	     
+ <script type="text/javascript"> 
+Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 }); 
+</script>     
 </body>
 </html:html>
 

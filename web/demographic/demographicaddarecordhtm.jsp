@@ -16,7 +16,7 @@
     {"search_provider", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
     {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
     {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
-    {"search_waiting_list", "select * from waitingListName order by name"},
+    {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") +"' and is_history='N'  order by name"}
   };
   String[][] responseTargets=new String[][] {  };
   addDemoBean.doConfigure(dbParams,dbQueries,responseTargets);
@@ -905,31 +905,53 @@ document.forms[1].r_doctor_ohip.value = refNo;
     </tr>
     <%}%>
     <%
+        String wLReadonly = ""; 
         WaitingList wL = WaitingList.getInstance();
-        if(wL.getFound()){
+        if(!wL.getFound()){ 
+            wLReadonly = "readonly";
+            }
     %>
-    <tr valign="top">
-      <td align="right" nowrap><b>Add patient to waiting list: </b></td>
-      <td align="left" >
-        <select name="list_id">
-          <option value="" ></option>
-          <%
-              ResultSet rsWL = addDemoBean.queryResults("search_waiting_list");
-              while (rsWL.next()) {
-            %>
-                      <option value="<%=rsWL.getString("ID")%>">
-                      <%=rsWL.getString("name")%></option>
-                      <%
-              }
-            %>
-        </select>
-      </td>
-      <td align="right" nowrap><b>Waiting List Note: </b></td>
-      <td align="left">
-        <input type="text" name="waiting_list_note" >
-      </td>
+     <tr> 
+         <td colspan="4"> 
+                 <table border="1" width="100%"> 
+                             <tr valign="top"> 
+                               <td align="right"  width="15%" nowrap><b>Add patient to<br/> waiting list: </b></td> 
+                               <td align="left"  width="38%"> 
+                                 <select name="list_id"> 
+                                <% if(wLReadonly.equals("")){ %> 
+                                        <option value="0" >--Select Waiting List--</option> 
+                                <%}else{ %>   
+                                        <option value="0" >--Please Create Waiting List Name first--</option> 
+                                <%} %> 
+                                   <% 
+                                       ResultSet rsWL = addDemoBean.queryResults("search_waiting_list"); 
+                                       while (rsWL.next()) { 
+                                    %> 
+                                               <option value="<%=rsWL.getString("ID")%>"> 
+                                               <%=rsWL.getString("name")%></option> 
+                                               <% 
+                                       } 
+                                     %> 
+                                 </select> 
+                               </td> 
+                               <td align="right" nowrap><b>Waiting List Note: </b></td> 
+                               <td align="left"> 
+                                 <input type="text" name="waiting_list_note" size="36" <%=wLReadonly%> > 
+                               </td> 
+                             </tr> 
+                              
+                             <tr> 
+                                  <td colspan="2" align="right">&nbsp;</td> 
+                                      <td align="right" nowrap><b>*Date of request: </b></td> 
+                                      <td align="left"> 
+                                        <input type="text" name="waiting_list_referral_date"  id="waiting_list_referral_date"  value="" size="12" <%=wLReadonly%> > 
+                                        <img src="../images/cal.gif" id="referral_date_cal">(yyyy-mm-dd) 
+                                      </td> 
+                             </tr> 
+                         </table>                             
+         </td> 
     </tr>
-    <%}%>
+
     <tr valign="top">
       <td align="right"><b><bean:message key="demographic.demographicaddrecordhtm.formDateJoined"/></b><b>: </b></td>
       <td align="left" >
@@ -1015,5 +1037,9 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
 </td></tr></table>
  * <font face="Courier New, Courier, mono" size="-1"><bean:message key="demographic.demographicaddrecordhtm.formDateFormat"/> </font>
 <% addDemoBean.closePstmtConn(); %>
+ 
+<script type="text/javascript"> 
+Calendar.setup({ inputField : "waiting_list_referral_date", ifFormat : "%Y-%m-%d", showsTime :false, button : "referral_date_cal", singleClick : true, step : 1 }); 
+</script> 
 </body>
 </html:html>
