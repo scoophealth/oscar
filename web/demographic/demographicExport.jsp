@@ -101,6 +101,13 @@ function disableifchecked(ele,nextDate){
     }
 }
 
+function checkSelect(slct) {
+    if (slct==-1) {
+	alert("Please select a Patient Set");
+	return false;
+    }
+    else return true;
+}
 </SCRIPT>
 
 
@@ -201,7 +208,7 @@ clear: left;
                &nbsp;
             </td>
             <td valign="top" class="MainTableRightColumn">
-               <html:form action="/demographic/DemographicExport" method="get">
+               <html:form action="/demographic/DemographicExport" method="get" onsubmit="return checkSelect(patientSet.value);">
                <div>
                   Patient Set:
                   <html:select property="patientSet">
@@ -215,7 +222,7 @@ clear: left;
                </div>               
                
                </html:form>
-               <html:form action="/demographic/DemographicExport2" method="get" onsubmit="patientSet.value = document.forms[0].patientSet.value;">
+               <html:form action="/demographic/DemographicExport2" method="get" onsubmit="patientSet.value = document.forms[0].patientSet.value;return checkSelect(patientSet.value);">
 		   <html:hidden property="patientSet"/>
 		   <input type="submit" value="Export (Spec 2.0)" />               
                </html:form>
