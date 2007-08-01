@@ -33,6 +33,21 @@ Demographic Report tool
 <script type="text/javascript" src="../share/calendar/lang/<bean:message key="global.javascript.calendar"/>" ></script>      
 <script type="text/javascript" src="../share/calendar/calendar-setup.js" ></script>      
 
+<script language="JavaScript">
+function checkQuery() {
+    var ret = false;
+    var chks = document.forms[0].select;
+    for (var i=0; i<chks.length; i++) {
+	if (chks[i].checked) {
+	    ret = true;
+	    break;
+	}
+    }
+    if (!ret) alert("Please select at least one field");
+    return ret;
+}
+</script>
+
 <style type="text/css" media="print">
 .MainTable {
     display:none;
@@ -80,15 +95,15 @@ Demographic Report tool
 
 </head>
 
-<body class="BodyStyle" vlink="#0000FF" >
-<!--  -->
+<body class="BodyStyle" vlink="#0000FF">
+
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn">
                 oscarReport
             </td>
             <td class="MainTableTopRowRightColumn">
-            <html:form action="/report/DemographicReport" >
+            <html:form action="/report/DemographicReport" onsubmit="return checkQuery();">
                 <table class="TopStatusBar">
                     <tr>
                         <td >
