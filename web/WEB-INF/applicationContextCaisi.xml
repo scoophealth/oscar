@@ -650,6 +650,7 @@
 				<property name="providerDao" ref="providerDao" />
 				<property name="agencyDAO" ref="agencyDao" />
 				<property name="programProviderDAO" ref="programProviderDAO" />
+				<property name="oscarSecurityDAO" ref="oscarSecurityDAO" />
 			</bean>
 		</property>
 	</bean>
@@ -686,6 +687,7 @@
 				<property name="programQueueDao" ref="programQueueDao" />
 				<property name="clientReferralDAO" ref="clientReferralDAO" />
 				<property name="bedDemographicManager" ref="bedDemographicManager" />
+				<property name="programClientStatusDAO" ref="programClientStatusDAO" />
 			</bean>
 		</property>
 	</bean>
