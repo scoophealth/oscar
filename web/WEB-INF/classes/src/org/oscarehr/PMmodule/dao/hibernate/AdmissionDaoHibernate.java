@@ -377,4 +377,35 @@ public class AdmissionDaoHibernate extends HibernateDaoSupport implements Admiss
 		logger.debug(rs);
 		return rs;
 	}
+	
+	public Integer getLastClientStatusFromAdmissionByProgramIdAndClientId(Integer programId, Integer demographicId) {
+		if (programId == null || programId <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		if (demographicId == null || demographicId <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		List results = this.getHibernateTemplate().find("from Admission a where a.ProgramId = ? and a.ClientId = ? and a.AdmissionStatus='discharged' order by a.Id DESC", new Object[] { programId, demographicId });
+		if(results.isEmpty())
+			return 0;
+		
+		Admission admission = null;
+		ListIterator listIterator = results.listIterator();
+		while (listIterator.hasNext()) {
+			try {
+				admission = (Admission) listIterator.next();
+				return admission.getClientStatusId();				
+			} catch (Exception ex) {
+				return 0;
+			}
+		}
+	
+		if (log.isDebugEnabled()) {
+			log.debug("getAdmissionsByProgramIdAndClientId: programId= " + programId + ",demographicId=" + demographicId + ",# results=" + results.size());
+		}
+
+		return 0;
+	}
 }

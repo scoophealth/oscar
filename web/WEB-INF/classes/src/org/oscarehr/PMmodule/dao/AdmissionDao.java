@@ -61,4 +61,6 @@ public interface AdmissionDao {
 	
 	public List getClientIdByProgramDate(int programId, Date dt);
 	
+	public Integer getLastClientStatusFromAdmissionByProgramIdAndClientId(Integer programId, Integer demographicNo);
+	
 }
