@@ -189,7 +189,8 @@ function addressSelect() {
 
                      <tr>
                         <td width=440px><div class="DivContentPadding">
-                        <iframe name=preview width=440px height=580px src="Preview.jsp"
+                        <!-- modified by vic, hsfo -->
+                        <iframe name=preview width=440px height=580px src="<%= (session.getAttribute("hsfo_RxDx")==null ||((Integer)session.getAttribute("hsfo_RxDx")).intValue()<0)?"Preview.jsp":"HsfoPreview.jsp" %>"
                             align=center border=0 frameborder=0></iframe></div>
                         </td>
 

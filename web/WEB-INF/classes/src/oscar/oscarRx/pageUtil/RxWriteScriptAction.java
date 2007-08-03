@@ -23,6 +23,7 @@
  */
 package oscar.oscarRx.pageUtil;
 
+import oscar.form.study.HSFO.HSFODAO;
 import oscar.oscarRx.data.*;
 import oscar.oscarRx.util.*;
 
@@ -124,6 +125,26 @@ public final class RxWriteScriptAction extends Action {
                     rx = null;
                 }
                 
+                // added by vic, hsfo
+                if (request.getParameter("hsfo_initDx")==null || Integer.parseInt(request.getParameter("hsfo_initDx")) <0){
+                	request.getSession().setAttribute("hsfo_RxDx", -1);
+                }
+                else{ 
+                	// hsfo_initDx < 0 means patient is not enrolled.
+                    String[] rxDxes = request.getParameterValues("hsfo_dx");
+                    int hsfoRxDx = 0;
+                	for (int j=0; j<rxDxes.length; j++)
+                		hsfoRxDx += Integer.parseInt(rxDxes[j],10);
+
+                	System.out.println("hsfo_RxDx = "+hsfoRxDx);
+               	
+                	HSFODAO hsfoDao = new HSFODAO();
+                	hsfoDao.updatePatientDx(String.valueOf(bean.getDemographicNo()), hsfoRxDx);
+
+                	request.getSession().setAttribute("hsfo_RxDx", hsfoRxDx);
+                	                   
+                }
+                 
                 fwd = "viewScript";
             }
         }        

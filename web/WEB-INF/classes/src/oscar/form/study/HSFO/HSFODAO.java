@@ -453,9 +453,92 @@ public class HSFODAO {
             return new java.sql.Date(date.getTime());
         }
         return null;
-    }
-    
-    
+	}
+	// added by vic, hsfo
+	public void updatePatientDx(String patientId, int hsfoRxDx) {
+		String sql = "UPDATE hsfo_patient SET RxDx=?  WHERE Patient_Id=?";
+
+		DBHandler db = null;
+		PreparedStatement ps = null;
+		try {
+			db = new DBHandler(DBHandler.OSCAR_DATA);
+			Connection connect = db.GetConnection();
+			ps = connect.prepareStatement(sql);
+			ps.setInt(1, hsfoRxDx);
+			ps.setString(2, patientId);
+
+			ps.execute();
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			
+			if (ps != null)
+				try {
+					ps.close();
+				} catch (SQLException e) {
+				}
+			if (db != null)
+				try {
+					db.CloseConn();
+				} catch (SQLException e) {
+				}
+		}
+	
+	}
+
+	// added by vic, hsfo
+	/**
+	 * Get the Dx code of the patient.
+	 * 
+	 * @return -1 if patient is not enrolled or hsfo is not enabled.
+	 */
+	public int retrievePatientDx(String patientId) {
+		// return -1 if hsfo is not enabled
+		String hsfo = oscar.OscarProperties.getInstance().getProperty("hsfo.loginSiteCode");
+		if (hsfo==null)
+			return -1;
+		
+		String sql = "SELECT RxDx FROM hsfo_patient WHERE Patient_Id=?";
+
+		DBHandler db = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			db = new DBHandler(DBHandler.OSCAR_DATA);
+			Connection connect = db.GetConnection();
+			ps = connect.prepareStatement(sql);
+			ps.setString(1, patientId);
+
+			ps.execute();
+
+			rs = ps.getResultSet();
+			if (rs.next()) {
+				return rs.wasNull() ? 0 : rs.getInt(1);
+			} else
+				return -1;
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			if (ps != null)
+				try {
+					ps.close();
+				} catch (SQLException e) {
+				}
+			if (db != null)
+				try {
+					db.CloseConn();
+				} catch (SQLException e) {
+				}
+		}
+
+	}
     public PatientData retrievePatientRecord(String ID) throws SQLException {
         PatientData patientData = new PatientData();
         
