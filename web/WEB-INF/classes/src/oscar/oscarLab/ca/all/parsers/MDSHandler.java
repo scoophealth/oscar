@@ -453,7 +453,11 @@ public class MDSHandler implements MessageHandler {
     public String getHealthNum(){
         try{
             String healthNum = getString(terser.get("/.PID-19-1"));
-            return(healthNum.substring(1, healthNum.indexOf(" ")));
+            int end = healthNum.indexOf(" ");
+            if (end > 0)
+                return(healthNum.substring(1, healthNum.indexOf(" ")));
+            else 
+                return(healthNum.substring(1));
         }catch(Exception e){
             return("");
         }
