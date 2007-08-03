@@ -189,6 +189,10 @@ public class DefaultGenericHandler implements MessageHandler {
         return(obxSegs.size());
     }
     
+    public String getOBXIdentifier(int i, int j){
+        return(getOBXField(i, j, 3, 0, 1));
+    }
+    
     public String getOBXName(int i, int j){
         return(getOBXField(i, j, 3, 0, 2));
     }

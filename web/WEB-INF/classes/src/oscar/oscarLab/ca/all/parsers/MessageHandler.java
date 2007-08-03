@@ -71,6 +71,11 @@ public interface MessageHandler {
     public String getObservationHeader( int i, int j);
     
     /**
+     *  Return the identifier from the OBX Segment
+     */
+    public String getOBXIdentifier( int i, int j);
+    
+    /**
      *  Return the name of the OBX Segment specified by j in the ith OBR group
      */
     public String getOBXName( int i, int j);

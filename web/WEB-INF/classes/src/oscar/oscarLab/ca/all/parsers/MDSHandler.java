@@ -180,13 +180,16 @@ public class MDSHandler implements MessageHandler {
         return(obxSegs.size());
     }
     
+    public String getOBXIdentifier(int i, int j){
+        return(getOBXField("3-1", i, j));
+    }
+    
     public String getOBXName(int i, int j){
         return(getOBXField("3-2", i, j));
     }
     
     public String getOBXResult(int i, int j){
-        String obxNum = getOBXField("4-1", i, j);
-        return(getOBXField("5-1", i, j)+" :   "+obxNum.substring(obxNum.indexOf("-", obxNum.indexOf("-")+1)+1));
+        return(getOBXField("5-1", i, j));
     }
     
     public String getOBXReferenceRange(int i, int j){

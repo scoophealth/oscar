@@ -114,6 +114,23 @@ public class GDMLHandler implements MessageHandler {
         }
     }
     
+    public String getOBXIdentifier(int i, int j){
+        
+        try{
+            Terser t = new Terser(msg);
+            Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+            String ident = getString(t.get(obxSeg, 3, 0, 1, 1 ));
+            String subIdent = t.get(obxSeg, 3, 0, 1, 2);
+            
+            if (subIdent != null)
+                ident = ident+"&"+subIdent;
+           
+            return(ident);
+        }catch(Exception e){
+            return("");
+        }
+    }
+    
     public String getOBXName(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));

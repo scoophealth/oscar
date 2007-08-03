@@ -314,6 +314,14 @@ public class PATHL7Handler implements MessageHandler {
         }
     }
     
+    public String getOBXIdentifier(int i, int j){
+        try{
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getIdentifier().getValue()));
+        }catch(Exception e){
+            return("");
+        }
+    }
+    
     public String getOBXName(int i, int j){
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue()));
