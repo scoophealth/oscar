@@ -130,7 +130,7 @@ String regionalIdentifier="";
         var frm = document.forms.RxWriteScriptForm;
         
         // added by vic, hsfo
-        if (document.getElementById("hsfoPop").style.display == "none"){
+        if (action=="updateAndPrint" && document.getElementById("hsfoPop").style.display == "none"){
 	        var dx = parseInt(frm.hsfo_initDx.value,10);
 	        if (dx>=0 && dx!=7) {
 	        	var inputs = document.getElementsByTagName("INPUT");
