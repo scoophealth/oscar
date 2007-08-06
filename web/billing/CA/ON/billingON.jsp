@@ -924,7 +924,7 @@ function changeCodeDesc() {
 					       value="<%=request.getParameter("serviceCode"+i)!=null?request.getParameter("serviceCode"+i):""%>"
 					       onDblClick="scScriptAttach(this)" onBlur="upCaseCtrl(this)"
 					       />x 
-					<input type="text" name="serviceUnit<%=i%>" size="2" maxlength="2" style="width:20px;"
+					<input type="text" name="serviceUnit<%=i%>" size="2" maxlength="4" style="width:20px;"
 					       value="<%=request.getParameter("serviceUnit"+i)!=null?request.getParameter("serviceUnit"+i):""%>"
 					       />@ 
 					<input type="text" name="serviceAt<%=i%>" size="3" maxlength="4" style="width:30px"
