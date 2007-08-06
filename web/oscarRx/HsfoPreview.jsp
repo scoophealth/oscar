@@ -56,6 +56,7 @@
         //document.forms[0].submit.value="print";
         //var ret = checkAllDates();
         //if(ret==true) {
+        	// params are set in session at the page bottom
             document.forms[0].action = "../form/createpdf?__title=Rx&__cfgfile=oscarRxPrintCfgPg1&__template=a6blank";
             document.forms[0].target="_blank";
         //}
@@ -173,12 +174,18 @@ OscarProperties props = OscarProperties.getInstance();
                 <tr valign=top>
                     <td colspan=2 height=180px>
                     
-                        <%
+                        <% 
+                        int dx = Integer.parseInt(request.getParameter("dxCode"), 10);
+                        // persist dx code to DB
+                        oscar.form.study.HSFO.HSFODAO hsfoDAO = new oscar.form.study.HSFO.HSFODAO();
+                        hsfoDAO.updatePatientDx(String.valueOf(bean.getDemographicNo()),dx);
+                                   			
                         String strRx = "";
                         StringBuffer strRxNoNewLines = new StringBuffer();
                         for(i=0;i<bean.getStashSize();i++)
                         {
                         rx = bean.getStashItem(i);
+                        
                         %>
                         <hr>
                         <%= rx.getFullOutLine().replaceAll(";","<br/>") %>
@@ -186,6 +193,7 @@ OscarProperties props = OscarProperties.getInstance();
                         strRx += rx.getFullOutLine() + ";;";
                         strRxNoNewLines.append(rx.getFullOutLine().replaceAll(";"," ")+ "\n");
                         }
+                        
                         %>
                         
                         <input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>
@@ -198,16 +206,13 @@ OscarProperties props = OscarProperties.getInstance();
                 <tr valign=bottom>
                     <td colspan=2 height=25px >
                     	<table width="100%" border="0" cellspacing="0" style="border-bottom:1px gray solid; font:8pt Verdana, Arial, Helvetica, sans-serif">
-                          <tr align="left">
-                          <td colspan="3">
-                            <span style="font:16pt bold Verdana, Arial, Helvetica, sans-serif;">D</span>x
-                           </td>
-                          </tr>
-                          <tr >
-                          <% int dx = ((Integer)session.getAttribute("hsfo_RxDx")).intValue(); %>
-                            <td width="35%"><input type="checkbox" onchange="return false" <%= (dx&1)!=0?"checked":"" %> > Hypertension</td>
-                            <td width="31%"><input type="checkbox" onchange="return false" <%= (dx&2)!=0?"checked":"" %> > Diabetes</td>
-                            <td><input type="checkbox" onchange="return false" <%= (dx&4)!=0?"checked":"" %> > Dyslipidemia</td>
+                          <tr><td colspan="3">
+                            <span style="font: bold 16pt;">D</span>x
+                          </td></tr>
+                          <tr >                          
+                            <td width="35%"><input type="checkbox" onclick="return false" <%= (dx&1)!=0?"checked":"" %> > Hypertension</td>
+                            <td width="31%"><input type="checkbox" onclick="return false" <%= (dx&2)!=0?"checked":"" %> > Diabetes</td>
+                            <td><input type="checkbox" onclick="return false" <%= (dx&4)!=0?"checked":"" %> > Dyslipidemia</td>
                           </tr>
                           <tr>
                             <td colspan="3"><div align="center">Heart & Stroke Hypertension Management Initiative</div></td>

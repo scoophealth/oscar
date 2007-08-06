@@ -129,24 +129,7 @@ String regionalIdentifier="";
         
         var frm = document.forms.RxWriteScriptForm;
         
-        // added by vic, hsfo
-        if (action=="updateAndPrint" && document.getElementById("hsfoPop").style.display == "none"){
-	        var dx = parseInt(frm.hsfo_initDx.value,10);
-	        if (dx>=0 && dx!=7) {
-	        	var inputs = document.getElementsByTagName("INPUT");
-	        	for (var i=0; i<inputs.length; i++) {
-	        	  if (inputs[i].type=="button"||inputs[i].type=="submit")
-	        	    inputs[i].style.visibility="hidden";
-	        	}
-	        	frm.hsfo_submit.style.visibility="visible";
-				document.getElementById("hsfo_Hypertension").checked = dx&1;
-				document.getElementById("hsfo_Diabetes").checked = dx&2;  
-				document.getElementById("hsfo_Dyslipidemia").checked = dx&4;
-	        	document.getElementById("hsfoPop").style.display = "block";
-				return;    
-	        }
-        }
-
+        
         if(frm.repeat.value.length < 1 || isNaN(parseInt(frm.repeat.value))){
             frm.repeat.value = 0;
         }
@@ -776,26 +759,7 @@ String regionalIdentifier="";
 
 <html:form action="/oscarRx/writeScript">
 
-<!-- added by vic, hsfo -->
-<div id="hsfoPop" style="position:absolute; display:none; border:groove; background-color: ivory; top: 500px; left:300px;">
-<%
-	int hsfo_patient_id = bean.getDemographicNo();
-	oscar.form.study.HSFO.HSFODAO hsfoDAO = new oscar.form.study.HSFO.HSFODAO();
-	int dx = hsfoDAO.retrievePatientDx(String.valueOf(hsfo_patient_id));
-	// the hsfo_initDx will be used in submitForm()
-	out.print("<input type=hidden name='hsfo_initDx' value='" + dx + "' >");
-%>
-<table>
-<tr><td colspan="3"><b>Please check the corresponding symptom(s) for the enrolled patient.</b></td></tr>
-<tr>
-<td><input type="checkbox" id="hsfo_Hypertension" name="hsfo_dx" value="1"> Hypertension</td>
-<td><input type="checkbox" id="hsfo_Diabetes" name="hsfo_dx" value="2"> Diabetes</td>
-<td><input type="checkbox" id="hsfo_Dyslipidemia" name="hsfo_dx" value="4"> Dyslipidemia</td>
-</tr>
-<tr><td colspan="3"><input type="button" name="hsfo_submit" value="submit" onclick="submitForm('updateAndPrint');"></td></tr>
-</table>
-</div>
-<!-- end of add -->
+
 <html:hidden property="action" />
 <%
 
