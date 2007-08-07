@@ -1,5 +1,8 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ include file="/common/messages.jsp"%>
+<%@page import="oscar.OscarProperties" %>
+<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
+
 <script>
 	function resetClientFields() {
 		var form = document.clientSearchForm2;
@@ -64,9 +67,25 @@
 			</table>
 			<table>
 				<tr>
-					<td align="center"><html:submit value="search" /></td>
+					<%
+						String externalConsentPhrase=OscarProperties.getInstance().getProperty("EXTERNAL_PROVIDER_CONSENT_NOTIFICATION_PHRASE");
+						boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
+						userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.er_clerk);
+						if (externalConsentPhrase!=null && userHasExternalOrErClerkRole)
+						{
+							%>
+							<td align="center"><input type="submit" value="search" name="search_with_consent" onclick="return confirm('<%=externalConsentPhrase%>')" /></td>
+							<td align="center"><input type="submit" value="emergency" name="emergency_search" /></td>
+							<%
+						}
+						else
+						{
+							%>
+							<td align="center"><html:submit value="search" /></td>
+							<%
+						}
+					%>
 					<td align="center"><input type="button" name="reset" value="reset" onclick="javascript:resetClientFields();" /></td>
-					<td align="center"><input type="button" name="advsearch" value="Advanced Search" onclick="alert('Not yet implemented');" /></td>
 				</tr>
 			</table>
 		</div>
@@ -80,7 +99,7 @@
 			<display:setProperty name="basic.msg.empty_list" value="No clients found." />
 			
 			<display:column sortable="true" title="Name">
-				<a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.demographicNo}"/>"><c:out value="${client.formattedName}" /></a>
+				<a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.demographicNo}"/>&consent=<c:out value="${consent}"/>"><c:out value="${client.formattedName}" /></a>
 			</display:column>
 			<display:column sortable="true" title="Date of Birth">
 				<c:out value="${client.yearOfBirth}" />/<c:out value="${client.monthOfBirth}" />/<c:out value="${client.dateOfBirth}" />

@@ -50,7 +50,8 @@ public class Demographic extends BaseDemographic {
 	    IMPLICITLY_OPTED_IN,
 	    IMPLICITLY_OPTED_OUT,
 	    EXPLICITLY_OPTED_IN,
-	    EXPLICITLY_OPTED_OUT
+	    EXPLICITLY_OPTED_OUT,
+	    INCAPACITATED_EMERGENCY
 	}
 	
 	public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {

@@ -22,26 +22,21 @@
 
 package org.oscarehr.PMmodule.web;
 
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 
 public class ClientSearchAction2 extends BaseAction {
-	
-	private static Log log = LogFactory.getLog(ClientSearchAction2.class);
-	
 	
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return form(mapping,form,request,response);
@@ -57,6 +52,7 @@ public class ClientSearchAction2 extends BaseAction {
 	}
 	
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
 		DynaActionForm searchForm = (DynaActionForm)form;
 		ClientSearchFormBean formBean = (ClientSearchFormBean)searchForm.get("criteria");
 		
@@ -64,6 +60,15 @@ public class ClientSearchAction2 extends BaseAction {
 		formBean.setProgramDomain((List)request.getSession().getAttribute("program_domain"));
 		boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 		request.setAttribute("clients",clientManager.search(formBean, allowOnlyOptins));
+		
+		// sort out the consent type used to search
+		String consentSearch=StringUtils.trimToNull(request.getParameter("search_with_consent"));
+		String emergencySearch=StringUtils.trimToNull(request.getParameter("emergency_search"));
+		String consent=null;
+		if (consentSearch!=null && emergencySearch!=null) throw(new IllegalStateException("This is an unexpected state, both search_with_consent and emergency_search are not null."));
+		else if (consentSearch!=null) consent=Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name();
+		else if (emergencySearch!=null) consent=Demographic.OptingStatus.INCAPACITATED_EMERGENCY.name();
+		request.setAttribute("consent", consent);
 		
 		if(formBean.isSearchOutsideDomain()) {
 			logManager.log("read","out of domain client search","",request);

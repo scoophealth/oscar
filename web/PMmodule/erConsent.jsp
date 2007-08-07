@@ -23,7 +23,7 @@
  -->
 
 <%@ include file="/taglibs.jsp" %>
-<%@ page import="org.oscarehr.PMmodule.web.formbean.*" %>
+<%@page import="org.oscarehr.PMmodule.web.formbean.*" %>
 		<style>
 			.sortable {
 				background-color: #555;
@@ -50,37 +50,24 @@
 				location.href='<html:rewrite action="/PMmodule/ClientSearch2"/>';
 			}
 			
-			function explicit() {
+			function submit() {
 				var reason = document.clientManagerForm.elements['erconsent.consentReason'].value;
 				if(reason == '') {
 					alert('Please provide a reason client is visiting your agency');
 					return false;
 				}
-				document.clientManagerForm.elements['erconsent.consentType'].value='explicit';
 				document.clientManagerForm.method.value='submit_erconsent';
 				document.clientManagerForm.submit();
 			}
 			
-			function implied() {
-				var reason = document.clientManagerForm.elements['erconsent.consentReason'].value;
-				if(reason == '') {
-					alert('Please provide a reason client is visiting your agency');
-					return false;
-				}
-				document.clientManagerForm.elements['erconsent.consentType'].value='implied';
-				document.clientManagerForm.method.value='submit_erconsent';
-				document.clientManagerForm.submit();
-			}
 		</script>
 		
 		<br/><br/><br/>
 		<html:form action="/PMmodule/ClientManager.do">
 			<input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>"/>
 			<input type="hidden" name="method" value="submit_erconsent"/>	
-			<html:hidden property="erconsent.consentType"/>
+			<input type="hidden" name="erconsent.consentType" value="<%=request.getParameter("consent") %>">
 			
-			<p>If appropriate, please ask client if you have their explicit consent to view their CAISI record.</p>
-			<br>
 			<table width="100%" cellpadding="3" cellspacing="4">
 				<tr>
 					<td>Please enter reason client is visiting your agency (presenting problem):</td>
@@ -91,8 +78,7 @@
 					<td><html:textarea property="erconsent.consentReason" rows="8" cols="80"></html:textarea></td>
 				<tr>
 					<td>
-						<input type="button" value="Implied Consent" onclick="implied()"/>
-						<input type="button" value="Explicit Consent" onclick="explicit()"/>
+						<input type="button" value="submit" onclick="submit()"/>
 						<input type="button" value="Cancel" onclick="cancel()"/>
 					</td>
 			</table>
