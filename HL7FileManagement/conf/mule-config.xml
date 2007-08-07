@@ -12,7 +12,7 @@
 	<connector name="myFileConnector" className="org.mule.providers.file.FileConnector">
 	    <properties>
             <property name="outputPattern" value="${ORIGINALNAME}"/>
-			<property name="pollingFrequency" value="60000"/>
+			<property name="pollingFrequency" value="1000"/>
 	    </properties>
 	</connector>
 
@@ -31,7 +31,7 @@
         <mule-descriptor name="UploaderUMO" implementation="org.mule.custom.Uploader">
             <inbound-router>
                 <endpoint address="file:///${incomingHL7dir}?connector=myFileConnector" transformers="FileToByteArray">
-					<filter pattern="*.hl7,*.xml" className="org.mule.custom.providers.file.filters.BusyFilter"/>
+					<filter pattern="*.hl7,*.xml,*.HL7,*.XML" className="org.mule.custom.providers.file.filters.BusyFilter"/>
 					<properties>
 						<property name="keyLocation" value="${keyLocation}" />
 						<property name="oscarURL" value="${oscarURL}"/>
