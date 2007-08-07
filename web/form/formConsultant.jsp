@@ -15,18 +15,10 @@
     FrmRecord rec = (new FrmRecordFactory()).factory(formClass);
     java.util.Properties props = rec.getFormRecord(demoNo, formId);
     FrmConsultantRecord rec1 = new FrmConsultantRecord();
-    java.util.Properties choiceprops = rec1.getDoctors();   // Retrieve all doctors into choiceprops
-
     String doctor_name = rec1.getProvName(provNo);          // Retrieve the doctors name from provNo
 
     props.setProperty("formId", ""+formId);
     props.setProperty("provNo", ""+provNo);
-    String initialbill;
-    initialbill = props.getProperty("billingreferral_no","");   // If form exists, set initial billingreferral_no
-    
-    if (initialbill != "")
-        choiceprops = rec1.getDocInfo(choiceprops, initialbill);    //If form exists, grab doctor info
-        
     int i, k;
     String doctor, bill;
     String project_home = request.getContextPath().substring(1);
@@ -49,7 +41,7 @@
         <input type="hidden" name="form_class" value="<%=formClass%>" />
         <input type="hidden" name="form_link" value="<%=formLink%>" />
         <input type="hidden" name="formId" value="<%=formId%>" />
-        <input type="hidden" name="provider_no" value="<%=request.getParameter("provNo")%>" />
+        <input type="hidden" name="provider_no" value="<%=provNo%>" />
         <input type="hidden" name="submit" value="exit"/>
         <input type="hidden" name="billingreferral_no" value="<%=props.getProperty("billingreferral_no", "")%>" />
         <input type="hidden" name="doc_name" value="<%=doctor_name%>" />
@@ -95,116 +87,8 @@
                         <TR>
                             <TD align="left">To:</TD>
                             <TD align="left">
-                                <DIV id="selectName" style="position: absolute;">
-                                    <% if (formId <= 0) { %>
-                                    <SELECT name ="toNames" ONCHANGE="docChoice(this.form.toNames.selectedIndex)">
-                                        <OPTION SELECTED VALUE="none"> -- Choose a Doctor -- </OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                       
-                                        doctor = "";
-                                        while( k > 0 ){
-                                            i++;
-                                            k--;
-                                            doctor = choiceprops.getProperty(i + "to_name","");
-                                        %>
-                                        <OPTION value="<%=doctor%>"><%=doctor%></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                    <% } else { %>
-                                    <SELECT name ="toNames" ONCHANGE="docChoice(this.form.toNames.selectedIndex)">
-                                        <OPTION SELECTED value="initial"><%=choiceprops.getProperty("to_name","")%></OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                       
-                                        doctor = "";
-                                        bill = "";
-                                        while( k > 0 ){
-                                            i++;
-                                            k--;
-                                            doctor = choiceprops.getProperty(i + "to_name","");
-                                        %>
-                                        <OPTION value="<%=doctor%>"><%=doctor%></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                    <% } %>
-                                </DIV>
-                                <DIV id="selectBill" style="visibility: hidden; position: absolute;">
-                                    <SELECT name ="toBill">
-                                        <OPTION SELECTED VALUE="none">&nbsp;</OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                       
-                                        bill = "";
-                                        while( k > 0 ){
-                                            i++;
-                                            k--;
-                                            bill = choiceprops.getProperty(i + "billingreferral_no","");
-                                        %>
-                                        <OPTION value="<%=bill%>"></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                </DIV>
-                                <DIV id="selectAddress1" style="visibility: hidden; position: absolute;">
-                                    <SELECT name ="toAddress1">
-                                        <OPTION SELECTED VALUE="none">&nbsp;</OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                        
-                                        String address1 = "";
-                                        while( k > 0 ){
-                                        i++;
-                                        k--;
-                                        address1 = choiceprops.getProperty(i + "to_address1","");
-                                        %>
-                                        <OPTION value="<%= address1%>" ><%=address1%></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                </DIV>
-                                <DIV id="selectAddress2" style="visibility: hidden; position: absolute;">
-                                    <SELECT name ="toAddress2">
-                                        <OPTION SELECTED VALUE="none">&nbsp;</OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                       
-                                        String address2 = "";
-                                        while( k > 0 ){
-                                            i++;
-                                            k--;
-                                            address2 = choiceprops.getProperty(i + "to_address2","");
-                                        %>
-                                        <OPTION value="<%= address2%>"></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                </DIV>
-                                <DIV id="selectPhone" style="visibility: hidden; position: absolute;">
-                                    <SELECT name ="toPhone">
-                                        <OPTION SELECTED VALUE="none">&nbsp;</OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                       
-                                        String phone = "";
-                                        while( k > 0 ){
-                                            i++;
-                                            k--;
-                                            phone = choiceprops.getProperty(i + "to_phone","");
-                                        %>
-                                        <OPTION value="<%= phone%>"></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                </DIV>
-                                <DIV id="selectFax" style="visibility: hidden; position: absolute;">
-                                    <SELECT name ="toFax">
-                                        <OPTION SELECTED VALUE="none">&nbsp;</OPTION>
-                                        <% i = 0; k = Integer.parseInt(choiceprops.getProperty("n", ""));                                        
-                                       
-                                        String fax = "";
-                                        while( k > 0 ){
-                                            i++;
-                                            k--;
-                                            fax = choiceprops.getProperty(i + "to_fax","");
-                                        %>
-                                        <OPTION value="<%= fax%>"></OPTION>
-                                        <% } %>
-                                    </SELECT>
-                                </DIV>
-                                <DIV id="chosenName" style="visibility: hidden;">
-                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 90%; " type="text">&nbsp;</INPUT>
-                                </DIV>
+                                
+                                    <INPUT name="t_name" style="border: none; font-size: 13px; text-decoration: underline; width: 80%; " type="text">&nbsp;</INPUT><span id="searching"><a href="javascript:search('billingreferral_no', 't_name', 't_address1', 't_address2', 't_phone', 't_fax')"><small>Search #</small></a></span>
                                 
                             </TD>
                         </TR>
@@ -297,8 +181,6 @@
             </TABLE>
         </center>
         <br>
-        
-        
                 <div id="textDiv" style="visibility: hidden; font-size: 13px; font-family: arial, helvetica, sans-serif; align: left; position: absolute;">
                 </div>
                 <% if (formId <= 0){ %>
@@ -313,18 +195,17 @@ Sincerely,
                 </div>
                 <%} else {%>
                 <script type="text/javascript">
-                document.forms[0].t_name.value = "<%=choiceprops.getProperty("to_name","")%>";
-                document.forms[0].t_address1.value = "<%=choiceprops.getProperty("to_address1","")%>";
-                document.forms[0].t_address2.value = "<%=choiceprops.getProperty("to_address2","")%>";
-                document.forms[0].t_phone.value = "<%=choiceprops.getProperty("to_phone","")%>";
-                document.forms[0].t_fax.value = "<%=choiceprops.getProperty("to_fax","")%>";
+                document.forms[0].t_name.value = "<%=props.getProperty("t_name","")%>";
+                document.forms[0].t_address1.value = "<%=props.getProperty("t_address1","")%>";
+                document.forms[0].t_address2.value = "<%=props.getProperty("t_address2","")%>";
+                document.forms[0].t_phone.value = "<%=props.getProperty("t_phone","")%>";
+                document.forms[0].t_fax.value = "<%=props.getProperty("t_fax","")%>";
                 </script>
 <div id="textareaDiv" style="position: relative;">
     <textarea id="comments" name="comments" class="ta1" rows="60">
 <%= props.getProperty("comments", "")%>
     </textarea>
-</div>
-                
+</div> 
                 <%}%>
         <div id="buttons">
             <input id="savebut" type="submit" value="Save" onclick="javascript: return onSave();" />
@@ -378,29 +259,27 @@ Sincerely,
 <script type="text/javascript">
       function onPrint() {
         document.forms[0].submit.value="save";
-        setVisibility('chosenName', 'visible');
-        setVisibility('selectName', 'hidden');
         setVisibility('buttons', 'hidden');
         setVisibility('textareaDiv', 'hidden');
         setVisibility('textDiv', 'visible');
+        setVisibility('searching', 'hidden');
         str1 = document.getElementById("comments").value;
         str2 = str1.replace(/\n/g, "<br>");
         
         
         document.getElementById("textDiv").innerHTML = str2;
-        setStyle('textDiv', 'position', 'relative');
-        setStyle('textareaDiv', 'position', 'absolute');
+        setStyle('textDiv', 'position', 'absolute');
+        setStyle('textareaDiv', 'position', 'relative');
         window.print();
 
         if( ret = confirm("Do you wish to make changes?"))
         {        
-        setStyle('textareaDiv', 'position', 'relative');
+        setStyle('textareaDiv', 'position', 'absolute');
         setStyle('textDiv', 'position', 'absolute');
         setVisibility('textDiv', 'hidden');
         setVisibility('textareaDiv', 'visible');
-        setVisibility('chosenName', 'hidden');
-        setVisibility('selectName', 'visible');
         setVisibility('buttons', 'visible');
+        setVisibility('searching', 'visible');
         }
         else{
         setVisibility('buttons', 'visible');
@@ -440,16 +319,7 @@ Sincerely,
         var obj = document.getElementById(objId);
         obj.style.visibility = sVisibility;
     }
-function docChoice(index)
-{
-    document.forms[0].billingreferral_no.value = document.forms[0].toBill.options[index].value;
-    document.forms[0].t_name.value = document.forms[0].toNames.options[index].value;
-    document.forms[0].t_address1.value = document.forms[0].toAddress1.options[index].value;
-    document.forms[0].t_address2.value = document.forms[0].toAddress2.options[index].value;
-    document.forms[0].t_phone.value = document.forms[0].toPhone.options[index].value;
-    document.forms[0].t_fax.value = document.forms[0].toFax.options[index].value;
- 
-}
+
 function countLines(strtocount, cols) {
     var hard_lines = 1;
     var last = 0;
@@ -471,6 +341,20 @@ function cleanForm() {
         the_form[x].rows = countLines(the_form[x].value,the_form[x].cols) +1;
     }
     setTimeout("cleanForm();", 300);
+}
+function rs(n,u,w,h,x) {
+  args="width="+w+",height="+h+",resizable=yes,scrollbars=yes,status=0,top=60,left=30";
+  remote=window.open(u,n,args);
+}
+function search(billno, toname, toaddress1, toaddress2, tophone, tofax) {
+     t0 = escape("document.forms[0].elements[\'"+billno+"\'].value");
+     t2 = escape("document.forms[0].elements[\'"+toname+"\'].value");
+     t3 = escape("document.forms[0].elements[\'"+toaddress1+"\'].value");
+     t4 = escape("document.forms[0].elements[\'"+toaddress2+"\'].value");
+     t5 = escape("document.forms[0].elements[\'"+tophone+"\'].value");
+     t6 = escape("document.forms[0].elements[\'"+tofax+"\'].value");
+     //rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2),600,600,1);
+     rs('att',('../billing/CA/ON/searchRefDoc.jsp?param='+t0+'&toname='+t2+'&toaddress1='+t3+'&toaddress2='+t4+'&tophone='+t5+'&tofax='+t6),600,600,1);
 }
 
 
