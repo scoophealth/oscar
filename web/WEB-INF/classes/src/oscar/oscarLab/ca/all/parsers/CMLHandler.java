@@ -48,6 +48,13 @@ public class CMLHandler implements MessageHandler {
         return("CML");
     }
     
+    public String getMsgDate(){
+        return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+    }
+    
+    public String getMsgPriority(){
+        return("");
+    }
     
     /**
      *  Methods to get information about the Observation Request

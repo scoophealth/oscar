@@ -46,10 +46,17 @@ public class PATHL7Handler implements MessageHandler {
     public String getMsgType(){
         return("PATHL7");
     }
-    
+        
+    public String getMsgPriority(){
+        return("");
+    }
     /*
      *  MSH METHODS
      */
+    
+    public String getMsgDate(){
+        return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+    }
     
     /*
      *  PID METHODS

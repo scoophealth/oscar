@@ -10,7 +10,7 @@
 package oscar.oscarLab.ca.all.upload;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.text.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -19,6 +19,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.all.parsers.Factory;
 import oscar.oscarLab.ca.all.parsers.MDSHandler;
 import oscar.oscarLab.ca.all.parsers.MessageHandler;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
@@ -51,8 +52,9 @@ public class MessageUploader {
             String sex = h.getSex();
             String hin = h.getHealthNum();
             String resultStatus = "";
-            String obrDate = h.getServiceDate();
-            String priority = "";
+            String obrDate = h.getMsgDate();
+            String priority = h.getMsgPriority();
+            logger.info("PRIORITY: "+priority);
             String requestingClient = h.getDocName();
             String reportStatus = h.getOrderStatus();
             String accessionNum = h.getAccessionNum();
@@ -126,8 +128,9 @@ public class MessageUploader {
                 MDSHandler mds = (MDSHandler) h;
                 String formType = mds.getFormType();
                 String clientNum = mds.getClientRef();
-                String date = mds.getMSHDate();
-                String time = mds.getMSHTime();
+                java.util.Date unformattedDate = UtilDateUtilities.getDateFromString(mds.getMsgDate(), "yyyy-MM-dd HH:mm:ss");
+                String date = UtilDateUtilities.DateToString( unformattedDate, "dd-MMM-yyyy  HH:mm:ss");
+                 
                 String healthCardVC = mds.getHealthNumVersion();
                 String name = lastName.toUpperCase()+", "+firstName.toUpperCase();
                 
@@ -136,7 +139,7 @@ public class MessageUploader {
                 String procDateTime = dateFormat.format(dateObject);
                 
                 retVal = procDateTime+"  REC  "+reportStatus+"  "+formType+"  "+accessionNum+"  "+hin+"  "
-                        +healthCardVC+"  "+name+"  "+clientNum+"  "+date+"  "+time;
+                        +healthCardVC+"  "+name+"  "+clientNum+"  "+date;
             }
             
             

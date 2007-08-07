@@ -31,6 +31,16 @@ public interface MessageHandler {
     public String getMsgType();
     
     /**
+     *  Return the date and time of the message
+     */
+    public String getMsgDate();
+    
+    /**
+     *  Returns the priority of the message stored in the obr segments
+     */
+    public String getMsgPriority();
+        
+    /**
      *  Return the number of OBR Segments in the message
      */
     public int getOBRCount();    

@@ -97,6 +97,21 @@ public class DefaultGenericHandler implements MessageHandler {
         return(null);
     }
     
+    public String getMsgDate(){
+        
+        try{
+            String dateString = formatDateTime(getString(terser.get("/.MSH-7-1")));           
+            return(dateString);
+        }catch(Exception e){
+            return("");
+        }
+        
+    }
+    
+    public String getMsgPriority(){
+        return("");
+    }
+    
     /**
      *  Methods to get information about the Observation Request
      */

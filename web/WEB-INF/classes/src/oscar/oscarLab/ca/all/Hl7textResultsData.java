@@ -165,9 +165,20 @@ public class Hl7textResultsData {
                 lbData.dateTime = rs.getString("obr_date");
 
                 //priority
-                lbData.priority = rs.getString("priority");
-                if (lbData.priority.equals(""))
+                String priority = rs.getString("priority");
+                
+                if(priority != null && !priority.equals("")){
+                    switch ( priority.charAt(0) ) {
+                        case 'C' : lbData.priority = "Critical"; break;
+                        case 'S' : lbData.priority = "Stat\\Urgent"; break;
+                        case 'U' : lbData.priority = "Unclaimed"; break;
+                        case 'A' : lbData.priority = "ASAP"; break;
+                        case 'L' : lbData.priority = "Alert"; break;
+                        default: lbData.priority = "Routine"; break;
+                    }
+                }else{
                     lbData.priority = "----";
+                }
                 
                 lbData.requestingClient = rs.getString("requesting_client");
                 lbData.reportStatus =  rs.getString("report_status");

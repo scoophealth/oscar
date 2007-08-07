@@ -102,6 +102,29 @@ public class MDSHandler implements MessageHandler {
         return("MDS");
     }
     
+    public String getMsgPriority(){
+        
+        int i=1;
+        String priority = "R";
+        try{            
+            priority = terser.get("/.OBR-27-1");
+            while(priority != null){
+                i++;
+                priority = terser.get("/.OBR"+i+"-27-1");
+                if (!priority.equalsIgnoreCase("R")){
+                    break;
+                }
+            }
+        }catch(Exception e){
+            // ignore exceptions
+        }
+        
+        if (priority.startsWith("AL"))
+            priority = "L";
+        
+        return priority;
+    }
+    
     /**
      *  Methods to get information about the Observation Request
      */
@@ -456,7 +479,7 @@ public class MDSHandler implements MessageHandler {
             int end = healthNum.indexOf(" ");
             if (end > 0)
                 return(healthNum.substring(1, healthNum.indexOf(" ")));
-            else 
+            else
                 return(healthNum.substring(1));
         }catch(Exception e){
             return("");
@@ -608,54 +631,16 @@ public class MDSHandler implements MessageHandler {
         return(retVal);
     }
     
-    public String getMSHDate(){
+    public String getMsgDate(){
         
         try{
-            String dateString = getString(terser.get("/.MSH-7-1"));
-            String year = dateString.substring(0,4);
-            int monthNum = new Integer(dateString.substring(4,6));
-            String date = dateString.substring(6, 8);
-            String month = "";
-            switch(monthNum){
-                case 1: month = "JAN"; break;
-                case 2: month = "FEB"; break;
-                case 3: month = "MAR"; break;
-                case 4: month = "APR"; break;
-                case 5: month = "MAY"; break;
-                case 6: month = "JUN"; break;
-                case 7: month = "JUL"; break;
-                case 8: month = "AUG"; break;
-                case 9: month = "SEP"; break;
-                case 10: month = "OCT"; break;
-                case 11: month = "NOV"; break;
-                case 12: month = "DEC"; break;
-            }
-            
-            return(date+"-"+month+"-"+year);
+            String dateString = formatDateTime(getString(terser.get("/.MSH-7-1")));
+            return(dateString);
         }catch(Exception e){
             return("");
         }
         
-    }
-    
-    public String getMSHTime(){
-        
-        try{
-            String timeString = getString(terser.get("/.MSH-7-1"));
-            String hour = timeString.substring(8,10);
-            String min = timeString.substring(10,12);
-            String sec = timeString.substring(12);
-            
-            if (sec.equals(""))
-                sec = "00";
-            
-            return(hour+":"+min+":"+sec);
-        }catch(Exception e){
-            return("");
-        }
-        
-    }
-    
+    }   
     
     private String getOBXField(String field, int i, int j){
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);

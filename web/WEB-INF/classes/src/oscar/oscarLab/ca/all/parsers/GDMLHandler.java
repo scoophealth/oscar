@@ -48,6 +48,26 @@ public class GDMLHandler implements MessageHandler {
         return("GDML");
     }
     
+    public String getMsgDate(){
+        return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+    }
+    
+    public String getMsgPriority(){
+        String priority = "R";
+        for (int i=0; i < getOBRCount(); i++){
+            try{
+            if (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getPriority().getValue()).equals("S")){
+                priority="S";
+                break;
+            }
+            }catch(Exception e){
+                logger.error("Error finding priority", e);
+            }
+        }
+        
+        return priority;
+    }
+    
     /**
      *  Methods to get information about the Observation Request
      */
@@ -124,7 +144,7 @@ public class GDMLHandler implements MessageHandler {
             
             if (subIdent != null)
                 ident = ident+"&"+subIdent;
-           
+            
             return(ident);
         }catch(Exception e){
             return("");
