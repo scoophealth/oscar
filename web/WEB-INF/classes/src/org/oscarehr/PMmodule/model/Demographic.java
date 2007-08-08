@@ -54,6 +54,10 @@ public class Demographic extends BaseDemographic {
 	    INCAPACITATED_EMERGENCY
 	}
 	
+	public enum PatientStatus {
+		IN,DE,IC,ID,MO,FI
+	}
+	
 	public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
 		Demographic demographic = new Demographic();
 		

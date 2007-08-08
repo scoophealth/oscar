@@ -16,7 +16,14 @@
 				<td>
 					<select name="form.admissionStatus" >
 						<option value="">any</option>
-						<option value="AC">AC</option>
+						<%
+							for (Demographic.PatientStatus patientStatus : Demographic.PatientStatus.values())
+							{
+								%>
+									<option value="<%=patientStatus.name()%>"><%=patientStatus.name()%></option>
+								<%
+							}
+						%>
 					</select>
 				</td>
 			</tr>
