@@ -1013,10 +1013,10 @@ border-right: 2px solid #cfcfcf;
             </div>                
         </td>
 
-        <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:3px;" >
+        <td  bgcolor="#003399" style="text-align:right;height:34px;padding-left:2px;" >
                 <table name="tileTable" style="width:100%;vertical-align:middle;border-collapse:collapse;" >
                     <tr>
-                        <td class="Header" style="width:100%;padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-weight:bold;" NOWRAP >
+                        <td class="Header" style="width:100%;height:30px;padding-left:2px;padding-right:2px;border-right:2px solid #003399;text-align:left;font-weight:bold;" NOWRAP >
                         <%
                             String winName = "Master" + bean.demographicNo;
                             String url;
@@ -1025,8 +1025,8 @@ border-right: 2px solid #cfcfcf;
                             else
                                 url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
                         %>
-                            <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
-                            <span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
+                            <a href="#" style="font-size: 11px;text-decoration:none" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
+<a href="javascript:popupPage(400,850,'ApptHist','../demographic/demographiccontrol.jsp?demographic_no=<%=bean.demographicNo%>&last_name=<%=bean.patientLastName%>&first_name=<%=bean.patientFirstName%>&orderby=appointment_date&displaymode=appt_history&dboperation=appt_history&limit1=0&limit2=25')" style="font-size: 11px;text-decoration:none;" title="Click to see appointment history"><span style="margin-left:20px;">Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></span></a>
                     
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             
