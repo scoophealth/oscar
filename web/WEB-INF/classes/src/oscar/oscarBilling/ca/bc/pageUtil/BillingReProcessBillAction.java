@@ -224,7 +224,7 @@ public class BillingReProcessBillAction
       double amtTemp = dblBillAmount * dblUnit;
       String fmtStr = NumberFormat.getCurrencyInstance().format(amtTemp);
       billingServicePrice = fmtStr.substring(1,fmtStr.length());
-
+      billingServicePrice = billingServicePrice.replaceAll(",","");
     } catch(NumberFormatException e){
       e.printStackTrace();
       throw new RuntimeException("BC BILLING - Exception when attempting to multiply Bill Amount by Unit ");
