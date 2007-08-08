@@ -1,0 +1,104 @@
+
+<!--
+BODY {
+	font-size: 10pt;
+	font-weight: normal;
+	line-height: 12px;
+	font-style: normal;
+	color: black;
+	text-decoration: none;
+ 	//font-family: "Times New Roman", Times, serif;
+        font-family: verdana, sans-serif;
+
+	background-attachment: fixed;
+        margin:0;
+        padding:0;
+}
+
+TD {
+	font-weight: normal;
+}
+
+TR {
+	font-weight: normal;
+}
+
+.bodytext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-style: normal;
+	line-height: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	color: #003366;
+	text-decoration: none
+}
+
+.bg {
+	background-color: #FFF;
+	border: 1px #000000 solid;
+}
+
+.tableHeader {
+	background-color: #000000;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;;
+	color: #645FCD;
+	font-weight: bold;
+}
+
+a:visited {
+	text-decoration: none;;
+	color: #645FCD;
+	font-weight: bold
+}
+
+a:hover {
+	COLOR: red;
+	font-weight: bolder;
+}
+
+.myYellow {
+	background-color: #EAEAFF;
+}
+
+.myGreen {
+	background-color: #CCCCFF;
+}
+
+.myDarkGreen {
+	background-color: #000000;
+}
+
+.myIvory {
+	background-color: ivory;
+}
+.myPink {
+	background-color: pink;
+}
+.myError {
+	background-color: #FF0000;
+}
+.myErrorText {
+	color: red;
+}
+.smallFont {
+	font-size: 10pt;
+}
+.myPurple {
+        background-color: #CCCCFF;
+}
+.myLightPurple {
+        background-color: #EEEEFF;
+}
+.myWhite {
+        background-color: #FFFFFF;
+}
+-->
