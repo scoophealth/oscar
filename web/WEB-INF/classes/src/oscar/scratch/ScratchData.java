@@ -28,6 +28,8 @@
 
 package oscar.scratch;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
@@ -71,7 +73,7 @@ public class ScratchData {
         return retval;
     }
     
-    public String insert(String providerNo,String text){
+    public String insert2(String providerNo,String text){
         String scratch_id = null;
         try {
             //Get Provider from database
@@ -85,6 +87,32 @@ public class ScratchData {
                scratch_id = Integer.toString( rs.getInt(1) );
             }
             rs.close();
+            db.CloseConn();
+        } catch (SQLException e) {
+           e.printStackTrace();
+        }
+        return scratch_id;
+    }
+    
+    
+    public String insert(String providerNo,String text){
+        String scratch_id = null;
+        try {
+            //Get Provider from database
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+             String sql = "INSERT into scratch_pad (provider_no, scratch_text,date_time ) values (?,?,now())";
+             Connection conn = db.GetConnection();
+             PreparedStatement pstat = conn.prepareStatement(sql);
+              pstat.setString(1,providerNo);
+              pstat.setString(2,text);
+              pstat.executeUpdate();
+            
+              ResultSet rs = pstat.getGeneratedKeys();
+               if(rs.next()){
+                  scratch_id = ""+rs.getInt(1);
+               }
+              rs.close();
+             pstat.close();
             db.CloseConn();
         } catch (SQLException e) {
            e.printStackTrace();
