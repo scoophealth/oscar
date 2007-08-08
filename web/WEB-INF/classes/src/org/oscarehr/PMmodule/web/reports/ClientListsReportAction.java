@@ -11,13 +11,11 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
 import org.oscarehr.PMmodule.dao.ClientDao.ClientListsReportResults;
-import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
-import org.oscarehr.PMmodule.web.formbean.ActivityReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 
 public class ClientListsReportAction extends DispatchAction {

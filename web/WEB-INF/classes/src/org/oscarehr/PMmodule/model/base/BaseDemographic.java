@@ -36,37 +36,6 @@ import java.io.Serializable;
 
 public abstract class BaseDemographic  implements Serializable {
 
-	public static String REF = "Demographic";
-	public static String PROP_HC_RENEW_DATE = "HcRenewDate";
-	public static String PROP_YEAR_OF_BIRTH = "YearOfBirth";
-	public static String PROP_POSTAL = "Postal";
-	public static String PROP_CITY = "City";
-	public static String PROP_MONTH_OF_BIRTH = "MonthOfBirth";
-	public static String PROP_ROSTER_STATUS = "RosterStatus";
-	public static String PROP_PROVIDER_NO = "ProviderNo";
-	public static String PROP_FIRST_NAME = "FirstName";
-	public static String PROP_CHART_NO = "ChartNo";
-	public static String PROP_PCN_INDICATOR = "PcnIndicator";
-	public static String PROP_ADDRESS = "Address";
-	public static String PROP_VER = "Ver";
-	public static String PROP_PHONE2 = "Phone2";
-	public static String PROP_SEX = "Sex";
-	public static String PROP_DATE_OF_BIRTH = "DateOfBirth";
-	public static String PROP_END_DATE = "EndDate";
-	public static String PROP_EFF_DATE = "EffDate";
-	public static String PROP_HIN = "Hin";
-	public static String PROP_PHONE = "Phone";
-	public static String PROP_HC_TYPE = "HcType";
-	public static String PROP_PIN = "Pin";
-	public static String PROP_FAMILY_DOCTOR = "FamilyDoctor";
-	public static String PROP_EMAIL = "Email";
-	public static String PROP_DATE_JOINED = "DateJoined";
-	public static String PROP_DEMOGRAPHIC_NO = "DemographicNo";
-	public static String PROP_PATIENT_STATUS = "PatientStatus";
-	public static String PROP_PROVINCE = "Province";
-	public static String PROP_LAST_NAME = "LastName";
-
-
 	// constructors
 	public BaseDemographic () {
 		initialize();
@@ -95,8 +64,6 @@ public abstract class BaseDemographic  implements Serializable {
 	}
 
 	protected void initialize () {}
-
-
 
 	private int hashCode = Integer.MIN_VALUE;
 
