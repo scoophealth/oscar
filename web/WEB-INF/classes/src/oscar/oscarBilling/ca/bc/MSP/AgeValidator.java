@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public class AgeValidator
     extends ServiceCodeValidator {
-  private int maxAge = 100;
+  private int maxAge = 150;
   private int minAge = 0;
   private int inputAge;
   public AgeValidator() {
