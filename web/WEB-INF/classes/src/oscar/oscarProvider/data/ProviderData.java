@@ -504,5 +504,21 @@ public class ProviderData {
          this.myOscarId = myOscar.getMyOscarId();
     }
     private String myOscarId = null;
+    
+    public String getDefaultBillingView(String providerNo){
+        String defaultView = null;
+         try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select default_servicetype from preference where provider_no='" + providerNo + "'";
+            ResultSet rs = db.GetSQL(sql);   
+               if (rs.next() && rs.getString("default_servicetype")!=null) {
+		   defaultView = rs.getString("default_servicetype");
+               } 
+         }catch (Exception e){
+             e.printStackTrace();
+         }
+         return defaultView;
+    }
+    
    
 }
