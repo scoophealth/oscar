@@ -199,6 +199,12 @@ function rs(n,u,w,h,x) {
 
 
 var awnd=null;
+
+function scriptAttach(elementName) {
+      var d = elementName;
+      popupPage('600', '700', 'onSearch3rdBillAddr.jsp');
+    }
+
 </script>
 <link rel="stylesheet" href="../billing/billing.css" type="text/css">
   <style type="text/css">
@@ -274,7 +280,7 @@ var awnd=null;
                     <td valign="top">
                       <table width="100%" border="0" cellspacing="2" cellpadding="2">
                         <tr>
-                          <td colspan="6" class="secHead">Billing To  </td>
+                          <td colspan="6" class="secHead">Billing To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>] </td>
                         </tr>
                         <tr>
                           <td colspan="6">
