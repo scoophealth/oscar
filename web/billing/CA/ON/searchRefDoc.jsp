@@ -64,7 +64,7 @@
 	  	prop.setProperty("first_name",rs.getString("first_name"));
 	  	prop.setProperty("specialty",rs.getString("specialty"));
 	  	prop.setProperty("phone",rs.getString("phone"));
-                prop.getProperty("to_fax", rs.getString("fax")); 
+                prop.setProperty("to_fax", rs.getString("fax")); 
                 prop.setProperty("to_name", rs.getString("to_name")); 
                 prop.setProperty("to_address1", rs.getString("to_address1")); 
                 prop.setProperty("to_address2", rs.getString("to_address2")); 
