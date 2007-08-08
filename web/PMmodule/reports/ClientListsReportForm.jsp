@@ -16,8 +16,7 @@
 				<td>
 					<select name="form.admissionStatus" >
 						<option value="">any</option>
-						<option value="<%=Admission.STATUS_CURRENT%>"><%=Admission.STATUS_CURRENT%></option>
-						<option value="<%=Admission.STATUS_DISCHARGED%>"><%=Admission.STATUS_DISCHARGED%></option>
+						<option value="AC">AC</option>
 					</select>
 				</td>
 			</tr>

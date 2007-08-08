@@ -563,17 +563,18 @@ public class ClientDao extends HibernateDaoSupport {
 
 		StringBuilder sqlCommand=new StringBuilder();
 		// this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
-		sqlCommand.append("select * from demographic,admission,intake,program where demographic_no=admission.client_id and demographic_no=intake.client_id and admission.program_id=program.program_id");
+		//sqlCommand.append("select * from demographic,admission,intake,program where demographic_no=admission.client_id and demographic_no=intake.client_id and admission.program_id=program.program_id");
+		sqlCommand.append("select * from demographic,encounter,admission where demographic.demographic_no=encounter.demographic_no and demographic.demographic_no=admission.client_id");
 		
 		// status
-		if (StringUtils.trimToNull(x.getAdmissionStatus())!=null) sqlCommand.append(" and admission.admission_status=?");			
+		if (StringUtils.trimToNull(x.getAdmissionStatus())!=null) sqlCommand.append(" and demographic.patient_status=?");			
 
 		// provider
-		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and intake.staff_id=?");			
+		if (StringUtils.trimToNull(x.getProviderId())!=null) sqlCommand.append(" and encounter.provider_no=?");			
 		
 		// seen date
-		if (StringUtils.trimToNull(x.getSeenStartDate())!=null) sqlCommand.append(" and intake.creation_date>=?");			
-		if (StringUtils.trimToNull(x.getSeenEndDate())!=null) sqlCommand.append(" and intake.creation_date<=?");			
+		if (StringUtils.trimToNull(x.getSeenStartDate())!=null) sqlCommand.append(" and encounter.encounter_date>=?");			
+		if (StringUtils.trimToNull(x.getSeenEndDate())!=null) sqlCommand.append(" and encounter.encounter_date<=?");			
 		
 		// program
 		if (StringUtils.trimToNull(x.getProgramId())!=null) sqlCommand.append(" and admission.program_id=?");			
