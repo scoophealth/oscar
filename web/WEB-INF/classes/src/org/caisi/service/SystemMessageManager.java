@@ -25,10 +25,31 @@ package org.caisi.service;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.caisi.dao.SystemMessageDAO;
 import org.caisi.model.SystemMessage;
+import org.caisi.service.SystemMessageManager;
 
-public interface SystemMessageManager {
-	public SystemMessage getMessage(String messageId);
-	public void saveSystemMessage(SystemMessage msg);
-	public List getMessages();
+public class SystemMessageManager {
+
+	private static Log log = LogFactory.getLog(SystemMessageManager.class);
+	
+	
+	private SystemMessageDAO dao = null;
+	
+	public SystemMessage getMessage(String messageId) {
+		return dao.getMessage(Long.valueOf(messageId));
+	}
+	public void setSystemMessageDAO(SystemMessageDAO dao) {
+		this.dao = dao;
+	}
+	public void saveSystemMessage(SystemMessage msg) {
+		dao.saveMessage(msg);
+	}
+	
+	public List getMessages() {
+		return dao.getMessages();
+	}
+
 }

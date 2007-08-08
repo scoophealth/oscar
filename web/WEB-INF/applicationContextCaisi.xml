@@ -116,7 +116,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="SystemMessageDAO" class="org.caisi.dao.hibernate.SystemMessageDAOHibernate">
+	<bean id="SystemMessageDAO" class="org.caisi.dao.SystemMessageDAO">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
@@ -494,7 +494,7 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="SystemMessageManagerTarget" class="org.caisi.service.impl.SystemMessageManagerImpl">
+	<bean id="SystemMessageManagerTarget" class="org.caisi.service.SystemMessageManager">
 		<property name="systemMessageDAO">
 			<ref local="SystemMessageDAO" />
 		</property>

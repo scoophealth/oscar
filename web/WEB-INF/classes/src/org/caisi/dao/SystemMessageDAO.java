@@ -24,33 +24,26 @@ package org.caisi.dao;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.caisi.dao.SystemMessageDAO;
 import org.caisi.model.SystemMessage;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-/**
- * Data Access Object (DAO) to interface with the 'system_message' table
- * added to oscar by caisi-core plugin.
- * 
- * @author marc dumontier marc@mdumontier.com
- *
- */
-public interface SystemMessageDAO {
+public class SystemMessageDAO extends HibernateDaoSupport  {
+
+	private static Log log = LogFactory.getLog(SystemMessageDAO.class);
 	
-	/**
-	 * Retrieve a single message using it's primary identifier
-	 * @param id the Id
-	 * @return The Message
-	 */
-	public SystemMessage getMessage(Long id);
+	public SystemMessage getMessage(Long id) {
+		return (SystemMessage)this.getHibernateTemplate().get(SystemMessage.class,id);
+	}
 	
-	/**
-	 * Return all messages
-	 * @return List of messages
-	 */
-	public List getMessages();
+	public List getMessages() {
+		return this.getHibernateTemplate().find("from SystemMessage sm order by sm.expiry_date desc");
+	}
 	
-	/**
-	 * Save a message
-	 * @param mesg The message
-	 */
-	public void saveMessage(SystemMessage mesg);
+	public void saveMessage(SystemMessage mesg) {
+		this.getHibernateTemplate().saveOrUpdate(mesg);
+	}
+
 }
