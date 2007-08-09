@@ -48,7 +48,7 @@
     <item
         measurement_type="Hb"
         display_name="Hb"
-        guideline="What is this value? what is the diff between HbA1C, Hb, A1C "
+        guideline=""
         graphable="yes"
         value_name="Hb"/>    
     
