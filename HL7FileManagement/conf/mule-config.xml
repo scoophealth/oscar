@@ -11,7 +11,7 @@
 
 	<connector name="myFileConnector" className="org.mule.providers.file.FileConnector">
 	    <properties>
-            <property name="outputPattern" value="${ORIGINALNAME}"/>
+            <property name="outputPattern" value="${DATE}_${ORIGINALNAME}"/>
 			<property name="pollingFrequency" value="60000"/>
 	    </properties>
 	</connector>
