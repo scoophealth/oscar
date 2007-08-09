@@ -38,7 +38,7 @@ public class Demographic extends BaseDemographic {
 	private static final String DEFAULT_DATE = "01";
 	private static final String DEFAULT_YEAR = "1900";
 	private static final String DEFAULT_SEX = "M";
-	private static final String DEFAULT_PATIENT_STATUS = "AC";
+	private static final String DEFAULT_PATIENT_STATUS = PatientStatus.AC.name();
 	private static final String DEFAULT_HEATH_CARD_TYPE = "ON";
 	private static final String DEFAULT_FUTURE_DATE = "2100-01-01";
 	
@@ -55,7 +55,7 @@ public class Demographic extends BaseDemographic {
 	}
 	
 	public enum PatientStatus {
-		IN,DE,IC,ID,MO,FI
+		AC,IN,DE,IC,ID,MO,FI
 	}
 	
 	public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
