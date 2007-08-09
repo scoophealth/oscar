@@ -1690,6 +1690,18 @@ form1 = document.getElementById('form1');
     form1.Weight.focus();
     return false ;
 	}
+	//add by victor for waist unit null bug
+	if (form1.Weight.value !="" && !form1.Weight_unit[0].checked &&!form1.Weight_unit[1].checked)
+	{
+	alert( "Please choose the weight unit" );
+    form1.Weight.focus();
+    }
+	if (form1.Waist.value !="" && !form1.Waist_unit[0].checked &&!form1.Waist_unit[1].checked)
+	{
+	alert( "Please choose the waist unit" );
+    form1.Waist.focus();
+    }
+	//end of add
 	if (!form1.Waist.value =="" && (form1.Waist.value<15 || form1.Waist.value>200 || isNaN(parseFloat(form1.Waist.value)))) {
     alert( "Please check that waist is between 15 and 200" );
     form1.Waist.focus();

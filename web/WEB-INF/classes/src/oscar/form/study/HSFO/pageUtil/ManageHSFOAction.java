@@ -226,8 +226,9 @@ public class ManageHSFOAction extends Action{
                                 BMIHash[c].put("date",visitdata.getVisitDate_Id());
                                 c++;
                             }
-
-                            if (visitdata.getWaist() != 0) {
+                            //modified by victor for waist_unit null bug,2007
+                            //if (visitdata.getWaist() != 0{
+                            if (visitdata.getWaist() != 0 && visitdata.getWaist_unit()!=null) {
                                 double waistv = visitdata.getWaist();
                                 String waistunit = visitdata.getWaist_unit();
                                 double waist=0.0;
