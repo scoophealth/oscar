@@ -48,4 +48,28 @@ public class RedirectLinkTrackingDao {
 			session.close();
 		}
 	}
+	
+	/**
+	 * delete any row with date older thant the given date.
+	 */
+	public void deleteOldEntries(Date date)
+	{
+		Session session = sessionFactory.openSession();
+		Connection c = null;
+		PreparedStatement ps = null;
+		try {
+			c = session.connection();
+			ps = c.prepareStatement("delete from RedirectLinkTracking where date<?");
+			ps.setTimestamp(1, new Timestamp(date.getTime()));
+			ps.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw (new HibernateException(e));
+		}
+		finally {
+			// don't close hibernate connections.
+			SqlUtils.closeResources(null, ps, null);
+			session.close();
+		}		
+	}
 }
