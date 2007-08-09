@@ -64,8 +64,10 @@ public class HSFODAO {
                 "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) " ;
         
         System.out.println(sqlstatement);
+        DBHandler db = null;
+		
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
             st = connect.prepareStatement(sqlstatement);
             
@@ -99,15 +101,27 @@ public class HSFODAO {
             st.setDate(28,new java.sql.Date(patientData.getConsentDate().getTime()) );
             st.executeUpdate();
             st.clearParameters();
-            st.close();        
-            db.CloseConn();
+            //st.close();        
+            //db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
             se.printStackTrace();
         }catch (Exception ne) {
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
             ne.printStackTrace();
-        }
+        }finally {
+			
+			if (st != null)
+				try {
+					st.close();
+				} catch (SQLException e) {
+				}
+			if (db != null)
+				try {
+					db.CloseConn();
+				} catch (SQLException e) {
+				}
+		}
     }
     
     public void updatePatient(PatientData patientData) throws SQLException {
@@ -143,8 +157,9 @@ public class HSFODAO {
                 ",ConsentDate = ? " + //28'" + new java.sql.Date(patientData.getConsentDate().getTime()) +
                 " WHERE Patient_Id= ? ";  //29'" + patientData.getPatient_Id() +"'";
         System.out.println(sqlstatement);
+        DBHandler db =null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
             st = connect.prepareStatement(sqlstatement);
             
@@ -183,13 +198,25 @@ public class HSFODAO {
             
             st.executeUpdate();
             st.clearParameters();
-            st.close();
-            db.CloseConn();
+            //st.close();
+            //db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
-        }
+        }finally {
+			
+			if (st != null)
+				try {
+					st.close();
+				} catch (SQLException e) {
+				}
+			if (db != null)
+				try {
+					db.CloseConn();
+				} catch (SQLException e) {
+				}
+		}
         
     }
     
@@ -199,19 +226,33 @@ public class HSFODAO {
             PreparedStatement st = null;
 	    String sqlstatement ="UPDATE form_hsfo_visit SET locked=true where ID=" + ID;
 	    System.out.println(sqlstatement);
+	    DBHandler db=null;
 	    try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                db = new DBHandler(DBHandler.OSCAR_DATA);
                 Connection connect = db.GetConnection();
 	        st = connect.prepareStatement(sqlstatement);
 	        st.executeUpdate();
-                db.CloseConn();
+                //db.CloseConn();
             }catch (SQLException se) {
 				System.out.println("SQL Error while inserting into the database : "+ se.toString());
 	    }catch (Exception ne) {
 			 System.out.println("Other Error while inserting into the database : "+ ne.toString());
        	    }
-	    st.clearParameters();
-	    st.close();
+	    	finally {
+			
+	    		if (st != null)
+	    			try {
+	    				st.clearParameters();
+	    				st.close();
+	    			} catch (SQLException e) {
+				}
+	    		if (db != null)
+	    			try {
+					db.CloseConn();
+	    			} catch (SQLException e) {
+				}
+		}
+	    //st.close();
 	 }
 	
     
@@ -220,23 +261,43 @@ public class HSFODAO {
         String sqlstatement ="select distinct VisitDate_Id  from form_hsfo_visit where demographic_no = ? " ;
         int i = 0;
         System.out.println(sqlstatement);
+        DBHandler db =null;
+        ResultSet rs=null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
             st = connect.prepareStatement(sqlstatement);
             st.setString(1,demographic_no);
-            ResultSet rs = st.executeQuery();
+            rs = st.executeQuery();
             while(rs.next()){
                 i++;
             }
-            db.CloseConn();
+            //db.CloseConn();
         }catch (SQLException se) {
                             System.out.println("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
                      System.out.println("Other Error while inserting into the database : "+ ne.toString());
         }
-        st.clearParameters();
-        st.close();
+        finally {
+        	if (rs != null)
+    			try {
+    				
+    				rs.close();
+    			} catch (SQLException e) {
+			}
+    		if (st != null)
+    			try {
+    				st.clearParameters();
+    				st.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
+        }
+        
         return i;
         
     }
@@ -255,23 +316,42 @@ public class HSFODAO {
             PreparedStatement st = null;
 	    String sqlstatement ="select * from form_hsfo_visit where locked=true and demographic_no = ?";
 	    System.out.println(sqlstatement);
+	    DBHandler db=null;
+	    ResultSet rs =null;
 	    try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                db = new DBHandler(DBHandler.OSCAR_DATA);
                 Connection connect = db.GetConnection();
 	        st = connect.prepareStatement(sqlstatement);
                 st.setString(1,demographic_no);
-	        ResultSet rs = st.executeQuery();
+	        rs = st.executeQuery();
                 if(rs.next()){
                     hasLockedVisit = true;
                 }
-                db.CloseConn();
+                //db.CloseConn();
             }catch (SQLException se) {
 				System.out.println("SQL Error while inserting into the database : "+ se.toString());
 	    }catch (Exception ne) {
 			 System.out.println("Other Error while inserting into the database : "+ ne.toString());
        	    }
-	    st.clearParameters();
-	    st.close();
+	    	finally {
+	    	if (rs != null)
+	    			try {
+	    				
+	    				rs.close();
+	    			} catch (SQLException e) {
+				}
+    		if (st != null)
+    			try {
+    				
+    				st.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
+        }
             return hasLockedVisit;
     }
     
@@ -326,8 +406,9 @@ public class HSFODAO {
                 "?,?,?,?)";
                 
         System.out.println(sqlstatement);
+        DBHandler db =null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
             st = connect.prepareStatement(sqlstatement);
             //////
@@ -435,14 +516,28 @@ public class HSFODAO {
               id = rs.getInt(1);
             }
             st.clearParameters();
-            st.close();
-            db.CloseConn();
+            //st.close();
+            //db.CloseConn();
         }catch (SQLException se) {
             se.printStackTrace();
             System.out.println("SQL Error while inserting into the database : "+ se.toString());
         }catch (Exception ne) {
             ne.printStackTrace();
             System.out.println("Other Error while inserting into the database : "+ ne.toString());
+        }
+        finally {
+			
+    		if (st != null)
+    			try {
+    				
+    				st.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
         }
         return id;
     }
@@ -545,11 +640,14 @@ public class HSFODAO {
         
         String query = "SELECT * FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
         System.out.println("query: " + query);
+        DBHandler db =null;
+        Statement sql =null;
+        ResultSet result =null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
-            Statement sql = connect.createStatement();
-            ResultSet result = sql.executeQuery(query);
+            sql = connect.createStatement();
+            result = sql.executeQuery(query);
             System.out.println("here " + query);
             // retrieve results and store into registrationData object
             while(result.next() ) {
@@ -587,13 +685,31 @@ public class HSFODAO {
                 System.out.println(patientData.getPatient_Id() + patientData.getFName() + patientData.getLName());
                 
             }
-            result.close();
-            sql.close();
-            db.CloseConn();
+            //result.close();
+            //sql.close();
+            //db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
             System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }finally {
+        	if (result != null)
+    			try {
+    				
+    				result.close();
+    			} catch (SQLException e) {
+			}
+    		if (sql != null)
+    			try {
+    				
+    				sql.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
         }
         return patientData;
     }
@@ -605,24 +721,45 @@ public class HSFODAO {
         
         String query = "SELECT FName FROM hsfo_patient WHERE Patient_Id='" + ID + "'";
         System.out.println("query: " + query);
+        DBHandler db =null;
+        Statement sql =null;
+        ResultSet result =null;
         try {
-           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           db = new DBHandler(DBHandler.OSCAR_DATA);
            Connection connect = db.GetConnection();
-           Statement sql = connect.createStatement();
-           ResultSet result = sql.executeQuery(query);
+           sql = connect.createStatement();
+           result = sql.executeQuery(query);
            System.out.println("here " + query);
            // retrieve results and store into registrationData object
            System.out.println("first");
            if(result.next() ) {
               isFirstRecord = false;
            }
-           result.close();
-           sql.close();
-           db.CloseConn();
+//           result.close();
+//           sql.close();
+//           db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
             System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }finally {
+        	if (result != null)
+    			try {
+    				
+    				result.close();
+    			} catch (SQLException e) {
+			}
+    		if (sql != null)
+    			try {
+    				
+    				sql.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
         }
         return isFirstRecord;
     }
@@ -729,26 +866,47 @@ public class HSFODAO {
         
         PatientList StorageList = new PatientList();
         List patientList = new LinkedList();
+        DBHandler db =null;
+        PreparedStatement query =null;
+        ResultSet rs =null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
             
-            PreparedStatement query = connect.prepareStatement("SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id = ? group by VisitDate_Id)");
+            query = connect.prepareStatement("SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id = ? group by VisitDate_Id)");
             query.setString(1,ID);
             
-            ResultSet rs = query.executeQuery();
+            rs = query.executeQuery();
             while (rs.next()){
                patientList.add(parseVisitData(rs)); 
             }
-            rs.close();
-            query.clearParameters();
-            query.close();
-            
-            db.CloseConn();
+//            rs.close();
+//            query.clearParameters();
+//            query.close();
+//            
+//            db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
             System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }finally {
+        	if (rs != null)
+    			try {
+    				
+    				rs.close();
+    			} catch (SQLException e) {
+			}
+    		if (query != null)
+    			try {
+    				
+    				query.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
         }
         
         return patientList;
@@ -767,6 +925,7 @@ public class HSFODAO {
 		 
                  System.out.println("query1: " + query);
 		 String timestamp="";
+		 try {
 		 try {
 		 ResultSet result = sql.executeQuery(query);
 		 // retrieve results and store into registrationData object
@@ -886,21 +1045,36 @@ public class HSFODAO {
 		 }catch (Exception ne) {
 			 System.out.println("Other Error while retreiving to the database : "+ ne.toString());
 		 }
+		 }finally {
+	        	
+	    		if (sql != null)
+	    			try {
+	    				
+	    				sql.close();
+	    			} catch (SQLException e) {
+				}
+	    		if (db != null)
+	    			try {
+					db.CloseConn();
+	    			} catch (SQLException e) {
+				}
+	        }
 		
-	     sql.close();
-	     db.CloseConn();
+	     
 	     return visitData;
 	 }
 
      //check if this is a new record
      public boolean isRecordExists(Date visitdate,String demographicNo) {
          boolean isRecordExists = false;
+         PreparedStatement sql =null;
+         DBHandler db = null;
          try{
             int ID=0;
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
             String query = "SELECT ID FROM form_hsfo_visit WHERE VisitDate_Id= ? and demographic_no = ?";
-            PreparedStatement sql = connect.prepareStatement(query);
+            sql = connect.prepareStatement(query);
             sql.setDate(1,new java.sql.Date(visitdate.getTime()));
             sql.setString(2,demographicNo);
             System.out.println("query: " + query);
@@ -910,11 +1084,24 @@ public class HSFODAO {
                 isRecordExists = true;
             }
             System.out.println("ID retrieved: " + ID); 
-            sql.close();
-            db.CloseConn();
+//            sql.close();
+//            db.CloseConn();
          }catch(Exception e ){
                 
-         }
+         }finally {
+	        	
+	    		if (sql != null)
+	    			try {
+	    				
+	    				sql.close();
+	    			} catch (SQLException e) {
+				}
+	    		if (db != null)
+	    			try {
+					db.CloseConn();
+	    			} catch (SQLException e) {
+				}
+	        }
         return isRecordExists;
      }
     
@@ -1032,9 +1219,20 @@ public class HSFODAO {
 				System.out.println("SQL Error while retreiving from the database : "+ se.toString());
 		 }catch (Exception ne) {
 			 System.out.println("Other Error while retreiving to the database : "+ ne.toString());
-		 }
-	     sql.close();
-	     db.CloseConn();
+		 }finally {
+	        	
+	    		if (sql != null)
+	    			try {
+	    				
+	    				sql.close();
+	    			} catch (SQLException e) {
+				}
+	    		if (db != null)
+	    			try {
+					db.CloseConn();
+	    			} catch (SQLException e) {
+				}
+	        }
 	     return visitData;
 	 }
 	 
@@ -1043,24 +1241,44 @@ public class HSFODAO {
     public List getAllPatientId(){
     	List reList=new ArrayList();
     	String query = "SELECT Distinct Patient_Id FROM hsfo_patient";
-        
+    	DBHandler db =null;
+    	Statement sql=null;
+    	ResultSet result =null;
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
-            Statement sql = connect.createStatement();
-            ResultSet result = sql.executeQuery(query);
+            sql = connect.createStatement();
+            result = sql.executeQuery(query);
             System.out.println("here " + query);
             // retrieve results and store into registrationData object
             while(result.next() ) {
             	reList.add(result.getString(1));
             }
-            result.close();
-            sql.close();
-            db.CloseConn();
+//            result.close();
+//            sql.close();
+//            db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
             System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }finally {
+        	if (result != null)
+    			try {
+    				
+    				result.close();
+    			} catch (SQLException e) {
+			}
+    		if (sql != null)
+    			try {
+    				
+    				sql.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
         }
     	return reList;
     }
@@ -1069,14 +1287,16 @@ public class HSFODAO {
         
         
         String query = "SELECT * FROM form_hsfo_visit where ID in (SELECT max(ID) FROM form_hsfo_visit WHERE Patient_Id='" + ID + "' group by VisitDate_Id)";
-        
+        DBHandler db =null;
+    	Statement sql=null;
+    	ResultSet result =null;
         
         List patientList = new LinkedList();
         try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection connect = db.GetConnection();
-            Statement sql = connect.createStatement();
-            ResultSet result = sql.executeQuery(query);
+            sql = connect.createStatement();
+            result = sql.executeQuery(query);
             System.out.println("here " + query);
             // retrieve results and store into registrationData object
             
@@ -1233,13 +1453,31 @@ public class HSFODAO {
                 patientList.add(visitData);
                 
             }
-            result.close();
-            sql.close();
-            db.CloseConn();
+//            result.close();
+//            sql.close();
+//            db.CloseConn();
         }catch (SQLException se) {
             System.out.println("SQL Error while retreiving from the database : "+ se.toString());
         }catch (Exception ne) {
             System.out.println("Other Error while retreiving to the database : "+ ne.toString());
+        }finally {
+        	if (result != null)
+    			try {
+    				
+    				result.close();
+    			} catch (SQLException e) {
+			}
+    		if (sql != null)
+    			try {
+    				
+    				sql.close();
+    			} catch (SQLException e) {
+			}
+    		if (db != null)
+    			try {
+				db.CloseConn();
+    			} catch (SQLException e) {
+			}
         }
         
         return patientList;
