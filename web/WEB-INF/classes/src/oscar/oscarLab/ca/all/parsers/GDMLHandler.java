@@ -56,10 +56,10 @@ public class GDMLHandler implements MessageHandler {
         String priority = "R";
         for (int i=0; i < getOBRCount(); i++){
             try{
-            if (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getPriority().getValue()).equals("S")){
-                priority="S";
-                break;
-            }
+                if (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getPriority().getValue()).equals("S")){
+                    priority="S";
+                    break;
+                }
             }catch(Exception e){
                 logger.error("Error finding priority", e);
             }
@@ -243,21 +243,36 @@ public class GDMLHandler implements MessageHandler {
      *  Methods to get information from observation notes
      */
     public int getOBRCommentCount(int i){
-        /*try {
+        try {
             int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
-            return(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getNTEReps());
-        } catch (Exception e) {*/
-        return(0);
-        // }
+            if (lastOBX == 0 && getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX().getValueType().getValue()).equals("FT"))
+                return(1);
+            else
+                return(0);
+        } catch (Exception e) {
+            return(0);
+        }
+        
     }
     
     public String getOBRComment(int i, int j){
-       /* try {
-            int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getNTE(j).getComment(0).getValue()));
-        } catch (Exception e) {*/
-        return("");
-        //}
+        String comment = "";
+        try {
+            Terser terser = new Terser(msg);
+            
+            int k = 0;            
+            String nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,k,1,1);
+            while(nextComment != null){
+                comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
+                k++;
+                nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,k,1,1);
+            }
+            
+        } catch (Exception e) {
+            logger.info("getOBRComment error", e);
+            comment = "";
+        }
+        return comment;
     }
     
     /**
@@ -288,12 +303,14 @@ public class GDMLHandler implements MessageHandler {
             String comment = "";
             String nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,k,1,1);
             
+            // check the reference range for comments first
             while(nextComment != null){
                 comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
                 k++;
                 nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,k,1,1);
             }
             
+            // check the results field for the comment
             if (comment.equals("")){
                 k = 0;
                 nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j+1).getOBX(),5,k,1,1);
@@ -303,7 +320,7 @@ public class GDMLHandler implements MessageHandler {
                     nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j+1).getOBX(),5,k,1,1);
                 }
             }
-            
+
             return(comment);
             
         }catch(Exception e){
