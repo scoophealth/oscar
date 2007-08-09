@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-        <bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" >
+   <bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" >
 		<property name="locations">
 			<list>
 				<value>/WEB-INF/hibernate.properties</value>
@@ -73,6 +73,9 @@
 	</bean>
         
     <!-- DAO -->
+    
+    <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName" />
+    
     <!-- Generic Intake -->
     <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate">
 		<property name="sessionFactory">

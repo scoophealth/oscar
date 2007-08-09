@@ -7139,3 +7139,4 @@ create index survey_date_index on surveyData (survey_date);
 create index answer_index on surveyData (answer(10));
 create index processed_index on surveyData (processed);
 
+create table RedirectLink (id int primary key auto_increment, url varchar(255) not null);
