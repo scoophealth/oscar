@@ -509,7 +509,8 @@ public class MDSHandler implements MessageHandler {
     
     public String getPatientLocation(){
         try{
-            return(getString(terser.get("/.PV1-3-1-1")));
+            return(getString(terser.get("/.MSH-3-1")));
+            //return(getString(terser.get("/.PV1-3-1-1")));
         }catch(Exception e){
             return("");
         }
@@ -536,7 +537,7 @@ public class MDSHandler implements MessageHandler {
     
     public String getClientRef(){
         try{
-            String clientNum = getString(getString(terser.get("/.MSH-10-1")));
+            String clientNum = getString(terser.get("/.MSH-10-1"));
             int firstDash = clientNum.indexOf("-");
             return(clientNum.substring(0, firstDash));
         }catch(Exception e){
@@ -554,7 +555,7 @@ public class MDSHandler implements MessageHandler {
     
     public String getAccessionNum(){
         try{
-            String accessionNum = getString(getString(terser.get("/.MSH-10-1")));
+            String accessionNum = getString(terser.get("/.MSH-10-1"));
             int firstDash = accessionNum.indexOf("-");
             int secondDash = accessionNum.indexOf("-", firstDash+1);
             return(accessionNum.substring(firstDash+1, secondDash));
