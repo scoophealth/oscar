@@ -57,7 +57,7 @@
         //var ret = checkAllDates();
         //if(ret==true) {
         	// params are set in session at the page bottom
-            document.forms[0].action = "../form/createpdf?__title=Rx&__cfgfile=oscarRxPrintCfgPg1&__template=a6blank";
+            document.forms[0].action = "../form/createpdf?__title=<%= oscar.form.pdfservlet.FrmPDFServlet.HSFO_RX_DATA_KEY %>";
             document.forms[0].target="_blank";
         //}
        return ret;
@@ -179,12 +179,35 @@ OscarProperties props = OscarProperties.getInstance();
                         // persist dx code to DB
                         oscar.form.study.HSFO.HSFODAO hsfoDAO = new oscar.form.study.HSFO.HSFODAO();
                         hsfoDAO.updatePatientDx(String.valueOf(bean.getDemographicNo()),dx);
-                                   			
+                        
+            			java.util.HashMap params = new java.util.HashMap();
+            			params.put("clinicName", provider.getClinicName().replaceAll("\\(\\d{6}\\)",""));
+            			params.put("clinicAddress", provider.getClinicAddress());
+            			params.put("clinicCity", provider.getClinicCity());
+            			params.put("clinicZip", provider.getClinicPostal());
+            			params.put("clinicPhone", provider.getClinicPhone());
+            			params.put("clinicFax", provider.getClinicFax());
+            			params.put("rxDate", oscar.oscarRx.util.RxUtil.Today());
+            			params.put("patientName", patient.getFirstName()+" "+patient.getSurname());
+            			params.put("patientAddress", patient.getAddress());
+            			params.put("patientCity", patient.getCity());
+            			params.put("patientZip", patient.getPostal());
+            			params.put("patientPhone", patient.getPhone());
+            			params.put("patientHealthInsNo", patient.getHin());
+            			params.put("doctorName", doctorName);
+            			params.put("dxCode", dx);
+            			
+           				oscar.form.pdfservlet.HsfoRxDataHolder rdh = new oscar.form.pdfservlet.HsfoRxDataHolder();
+            			rdh.setParams(params);
+            			rdh.setOutlines(new java.util.ArrayList());
+            			
                         String strRx = "";
                         StringBuffer strRxNoNewLines = new StringBuffer();
                         for(i=0;i<bean.getStashSize();i++)
                         {
                         rx = bean.getStashItem(i);
+                        // added by vic, hsfo
+                        rdh.getOutlines().add(new oscar.form.pdfservlet.HsfoRxDataHolder.ValueBean(rx.getFullOutLine().replaceAll(";","\n")));
                         
                         %>
                         <hr>
@@ -194,6 +217,9 @@ OscarProperties props = OscarProperties.getInstance();
                         strRxNoNewLines.append(rx.getFullOutLine().replaceAll(";"," ")+ "\n");
                         }
                         
+                        // added by vic, hsfo
+                        // set the data to session in case user wants to generate PDF
+                        session.setAttribute(oscar.form.pdfservlet.FrmPDFServlet.HSFO_RX_DATA_KEY, rdh);
                         %>
                         
                         <input type="hidden" name="rx" value="<%= StringEscapeUtils.escapeHtml(strRx.replaceAll(";","\\\n")) %>"/>

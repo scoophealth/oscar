@@ -43,6 +43,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import oscar.form.graphic.*;
 
 import com.lowagie.text.Document;
@@ -65,6 +70,7 @@ import com.lowagie.text.pdf.PdfWriter;
  */
 public class FrmPDFServlet extends HttpServlet {
         
+	public static final String HSFO_RX_DATA_KEY = "hsfo.rx.data";
     /**
      *
      *
@@ -139,6 +145,24 @@ public class FrmPDFServlet extends HttpServlet {
             }
         }
         
+	}
+
+	// added by vic, hsfo
+	private ByteArrayOutputStream generateHsfoRxPDF(HttpServletRequest req){
+		HsfoRxDataHolder rx = (HsfoRxDataHolder) req.getSession()
+		.getAttribute(HSFO_RX_DATA_KEY);
+
+    	JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(rx.getOutlines());
+    	InputStream is = Thread.currentThread().getContextClassLoader()
+    							.getResourceAsStream("/oscar/form/prop/Hsfo_Rx.jasper");
+
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	try {
+			JasperRunManager.runReportToPdfStream(is, baos, rx.getParams(), ds);
+		} catch (JRException e) {
+			throw new RuntimeException(e);
+		}
+    	return baos;
     }
     
     /**
@@ -146,6 +170,10 @@ public class FrmPDFServlet extends HttpServlet {
      */
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx)
     throws DocumentException, java.io.IOException {
+		// added by vic, hsfo
+		if (HSFO_RX_DATA_KEY.equals(req.getParameter("__title")))
+			return generateHsfoRxPDF(req);
+
         final String PAGESIZE = "printPageSize";
         Document document = new Document();
         //document = new Document(psize, 50, 50, 50, 50);
