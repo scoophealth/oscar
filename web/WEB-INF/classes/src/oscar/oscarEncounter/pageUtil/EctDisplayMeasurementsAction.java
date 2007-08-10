@@ -91,6 +91,12 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
             Dao.addPopUpUrl(url);
             Dao.addPopUpText(tmp);            
         }
+        
+        //if there are none, we tell user
+        if( bean.measurementGroupNames.size() == 0) {
+            Dao.addPopUpUrl("");
+            Dao.addPopUpText("None");
+        }            
 
         //finally we add specific measurements to module item list
         String demo = (String) bean.getDemographicNo();
@@ -117,7 +123,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 item.setLinkTitle(title + " " + data.getDataField() + " " + formattedDate);
                 title = padd(title, data.getDataField());
                 String tmp = "<span class=\"measureCol1\">" + title + "</span>";
-                tmp += "<span class=\"measureCol2\">" + data.getDataField() + "</span>";
+                tmp += "<span class=\"measureCol2\">" + data.getDataField() + "</span>&nbsp;";
                 tmp += "<span class=\"measureCol3\">" + formattedDate + "</span><br style=\"clear:both\">";
                 item.setTitle(tmp);                       
                 item.setDate(date);            
@@ -125,7 +131,7 @@ public class EctDisplayMeasurementsAction extends EctDisplayAction {
                 Dao.addItem(item);
             }
         }
-        
+        Dao.sortItems(NavBarDisplayDAO.DATESORT_ASC);
         return true;
         
   }
