@@ -1088,7 +1088,7 @@
         <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/newLabUpload" scope="request" type="oscar.oscarLab.ca.all.upload.LabUploadAction">
             <forward name="success" path="/lab/CA/ALL/uploadComplete.jsp" />
         </action>
-        <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/insideLabUpload" scope="request" type="oscar.oscarLab.ca.all.upload.InsideLabUploadAction">
+        <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/CA/ALL/insideLabUpload" scope="request" type="oscar.oscarLab.ca.all.upload.InsideLabUploadAction">
             <forward name="success" path="/lab/CA/ALL/testUploader.jsp" />
         </action>
         <action input="/demographic/demographicImport.jsp" name="CMLLabUploadForm" path="/lab/CMLlabUpload" scope="request" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadAction">
