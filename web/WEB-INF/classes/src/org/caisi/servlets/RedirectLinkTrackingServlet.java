@@ -1,8 +1,10 @@
 package org.caisi.servlets;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.caisi.dao.RedirectLinkDao;
+import org.caisi.dao.RedirectLinkTrackingDao;
+import org.caisi.model.RedirectLink;
+import org.oscarehr.PMmodule.model.Provider;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import oscar.OscarProperties;
 
@@ -25,7 +33,8 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet
 	private static final long REDIRECT_CLEANING_PERIOD = DateUtils.MILLIS_PER_HOUR*6;
 	private static long dataRetentionTimeMillis=-1;
 	private static RedirectCleaningTimerTask redirectCleaningTimerTask = null;	
-	
+	private static RedirectLinkTrackingDao redirectLinkTrackingDao=null;
+	private static RedirectLinkDao redirectLinkDao=null;
 	
 	public static class RedirectCleaningTimerTask extends TimerTask
 	{
@@ -37,8 +46,8 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet
             {
 				if (dataRetentionTimeMillis==-1) return;
 				
-// delete old redirect entries
-// TODO here
+				// delete old redirect entries
+				redirectLinkTrackingDao.deleteOldEntries(new Date(System.currentTimeMillis()-dataRetentionTimeMillis));
             }
             catch (Exception e)
             {
@@ -49,8 +58,15 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet
 		}
 	}
 	
-	public void init() throws ServletException
+	public void init(ServletConfig servletConfig) throws ServletException
 	{
+		super.init(servletConfig);
+		
+		// yes I know I'm setting static variables in an instance method but it's okay.
+		WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletConfig.getServletContext());
+		redirectLinkTrackingDao=(RedirectLinkTrackingDao)webApplicationContext.getBean("redirectLinkTrackingDao");
+		redirectLinkDao=(RedirectLinkDao)webApplicationContext.getBean("redirectLinkDao");
+		
 		logger.info("REDIRECT_CLEANING_PERIOD=" + REDIRECT_CLEANING_PERIOD);
 
 		String temp=StringUtils.trimToNull(OscarProperties.getInstance().getProperty("REDIRECT_TRACKING_DATA_RETENTION_MILLIS"));
@@ -77,8 +93,43 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet
 	{
 		try
 		{
-// lookup redirect and send them there, low throughput no caching required
-// TODO here
+			// lookup redirectLink
+			int redirectLinkId=-1;
+			try
+			{
+				redirectLinkId=Integer.parseInt(request.getParameter("redirectLinkId"));
+			}
+			catch (NullPointerException e)
+			{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				return;
+			}
+			catch (NumberFormatException e)
+			{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				return;				
+			}
+			
+			RedirectLink redirectLink=redirectLinkDao.find(redirectLinkId);
+			if (redirectLink==null)
+			{
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return;				
+			}
+			
+			// get provider
+			Provider provider = (Provider) request.getSession().getAttribute("provider");
+			if (provider==null)
+			{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				return;				
+			}
+
+			// track redirect
+			redirectLinkTrackingDao.addInstanceOfRedirect(new Date(), Integer.parseInt(provider.getProvider_no()), redirectLinkId);
+			
+			// send redirect
+			response.sendRedirect(redirectLink.getUrl());
 		}
 		catch (Exception e)
 		{

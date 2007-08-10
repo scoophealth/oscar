@@ -4,9 +4,6 @@ import org.caisi.model.RedirectLink;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class RedirectLinkDao {
 
@@ -20,6 +17,17 @@ public class RedirectLinkDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 
 		this.sessionFactory = sessionFactory;
+	}
+
+	public RedirectLink find(int id) {
+
+		Session session = sessionFactory.openSession();
+		try {
+			return((RedirectLink)session.get(RedirectLink.class, id));
+		}
+		finally {
+			session.close();
+		}
 	}
 
 	public void save(RedirectLink redirectLink) {
