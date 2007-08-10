@@ -138,6 +138,13 @@ border-bottom: 2px solid #cfcfcf;
 border-right: 2px solid #cfcfcf;
 }
 
+tr.newMessage {
+
+}
+
+tr.newMessage td {
+     font-weight: bold;
+}
 
 </style>
 
@@ -378,13 +385,20 @@ function checkAll(formId){
                                     break;
                                 }   //messageid
                                 %>
+                                
                                 <!--   for loop Control Initiliation variabe changed to nextMessage   -->
                             <%for (int i = 0; i < theMessages2.size() ; i++) {  
                                         oscar.oscarMessenger.data.MsgDisplayMessage dm;
                                         dm = (oscar.oscarMessenger.data.MsgDisplayMessage) theMessages2.get(i);
-                            %>
+                                        String key = "oscarMessenger.DisplayMessages.msgStatus"+dm.status.substring(0,1).toUpperCase()+dm.status.substring(1); 
+                                        %>
+                                        
+                                <% if ("oscarMessenger.DisplayMessages.msgStatusNew".equals(key)){%>        
+                                <tr class="newMessage">
+                                <%}else{%>
                                 <tr>
-                                    <td bgcolor="#EEEEFF" width="75">
+                                <%}%>
+                                    <td bgcolor="#EEEEFF"  width="75">
                                     <%if (pageType != 1){%>
                                         <html:checkbox property="messageNo" value="<%=dm.messageId %>" />
                                      <% } %>
@@ -399,8 +413,7 @@ function checkAll(formId){
 
                                     </td>
                                     <td bgcolor="#EEEEFF">
-                                    <% String key = "oscarMessenger.DisplayMessages.msgStatus"+dm.status.substring(0,1).toUpperCase()+dm.status.substring(1); %>
-                                    <bean:message key="<%= key %>"/>
+                                     <bean:message key="<%= key %>"/>
                                     </td>
                                     <td bgcolor="#EEEEFF">
                                         <%
