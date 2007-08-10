@@ -54,7 +54,7 @@ if(outcome != null){
     </head>
 
     <body>       
-        <form method='POST' name="UPLOAD" enctype="multipart/form-data" action='/oscar/lab/insideLabUpload.do'>
+        <form method='POST' name="UPLOAD" enctype="multipart/form-data" action='../../insideLabUpload.do'>
             <table align="center" class="MainTable">
                 <tr class="MainTableTopRow">
                     <td class="MainTableTopRowLeftColumn" width="175" >
