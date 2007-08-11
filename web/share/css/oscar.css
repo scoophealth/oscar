@@ -1,308 +1,151 @@
-  
-
 /*
-
  * 
-
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
-
  * This software is published under the GPL GNU General Public License. 
-
  * This program is free software; you can redistribute it and/or 
-
  * modify it under the terms of the GNU General Public License 
-
  * as published by the Free Software Foundation; either version 2 
-
  * of the License, or (at your option) any later version. * 
-
  * This program is distributed in the hope that it will be useful, 
-
  * but WITHOUT ANY WARRANTY; without even the implied warranty of 
-
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-
  * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-
  * along with this program; if not, write to the Free Software 
-
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-
  * 
-
  * <OSCAR TEAM>
-
  * 
-
  * This software was written for the 
-
  * Department of Family Medicine 
-
  * McMaster Unviersity 
-
  * Hamilton 
-
  * Ontario, Canada 
-
  */
-
-
-
-Body
-
-{
-
+Body {
 	padding-right: 0px;
-
 	padding-left: 0px;
-
 	padding-bottom: 0px;
-
 	margin: 0px;
-
 	padding-top: 0px;
-
 	font-family: Verdana;
-
 }
 
-Table
-
-{
-
+Table {
 	padding-right: 0px;
-
 	padding-left: 0px;
-
 	padding-bottom: 0px;
-
 	margin: 0px;
-
 	padding-top: 0px;
-
 	font-family: Verdana;
-
 }
 
-
-
-TD.Section
-
-{
-
+TD.Section {
 	font-weight: bold;
-
 	font-size: 14px;
-
 	border-bottom: 1px dashed #d4d4d4;
-
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-
 }
 
-
-
-TD.Header
-
-{
-
+TD.Header {
 	font-size: 12px;
-
 	border-bottom: solid 1px #d4d4d4;
-
 	border-left: solid 1px #d4d4d4;
-
 	border-right: solid 1px #d4d4d4;
-
 }
 
-
-
-TD.Text
-
-{
-
+TD.Text {
 	font-size: 12px;
-
 }
 
-
-
-.regtext
-
-{
-
+.regtext {
 	font-size: 12px;
-
 	font-family: Verdana;
-
 }
 
-A:hover
-
-{
-
-    cursor: hand; 
-
+A:hover {
+	cursor: hand;
 	color: #0000CD;
-
 	text-decoration: underline;
-
 }
 
-A
-
-{
-
-    cursor: hand; 
-
+A {
+	cursor: hand;
 	color: #0000CD;
-
 	font-family: Verdana;
-
 	text-decoration: none;
-
 }
 
-.LargeTitle
-
-{
-
+.LargeTitle {
 	font-weight: bold;
-
 	color: #272727;
-
 	text-indent: 10px;
-
 }
 
-.Title
-
-{
-
+.Title {
 	font-weight: bold;
-
 	color: #272727;
-
 }
 
-.LightBG
-
-{
-
+.LightBG {
 	background-color: #f6f6f6;
-
 }
 
-.DarkBG
-
-{
-
+.DarkBG {
 	background-color: #D4D4D4;
-
 }
 
-.FormLabel
-
-{
-
+.FormLabel {
 	padding-left: 5px;
-
 	text-indent: 4px;
-
 	text-align: left;
-
 }
 
-.SmallTitle.Title
-
-{
-
+.SmallTitle .Title {
 	font-weight: bold;
-
 	font-size: 10px;
-
 }
 
-.SmallerText
-
-{
-
+.SmallerText {
 	font-size: smaller;
-
 }
 
-Select
-
-{
-
+Select {
 	font-size: 11px;
-
 	color: #000000;
-
 	font-family: Verdana;
-
 }
 
-Option
-
-{
-
+Option {
 	font-size: 11px;
-
 	color: #000000;
-
 	font-family: Verdana;
-
 }
 
-Input
-
-{
-
+Input {
 	font-size: 11px;
-
 	color: #000000;
-
 	font-family: Verdana;
-
 }
 
-TextArea
-
-{
-
+TextArea {
 	font-size: 11px;
-
 	color: #000000;
-
 	font-family: Verdana;
-
 }
 
-.HiddenList
-
-{
-
+.HiddenList {
 	border-right: #d4d4d4 1px solid;
-
 	border-top: #d4d4d4 1px solid;
-
 	border-left: #d4d4d4 1px solid;
-
 	border-bottom: #d4d4d4 1px solid;
-
 	font-family: Verdana;
-
 	background-color: #99ccff;
-
 }
 
-.InnerSectionHead{
-background-color: #EEEEFF;
+.InnerSectionHead {
+	background-color: #EEEEFF;
 }
 
-.SectionHead{
-background-color: #CCCCFF;
+.SectionHead {
+	background-color: #CCCCFF;
 }
-
