@@ -118,15 +118,24 @@ public class RedirectLinkTrackingServlet extends javax.servlet.http.HttpServlet
 			}
 			
 			// get provider
-			Provider provider = (Provider) request.getSession().getAttribute("provider");
-			if (provider==null)
+			int providerId=-1;
+			try
+			{
+				providerId=Integer.parseInt((String)request.getSession().getAttribute("user"));
+			}
+			catch (NullPointerException e)
+			{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+				return;
+			}
+			catch (NumberFormatException e)
 			{
 				response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 				return;				
 			}
 
 			// track redirect
-			redirectLinkTrackingDao.addInstanceOfRedirect(new Date(), Integer.parseInt(provider.getProvider_no()), redirectLinkId);
+			redirectLinkTrackingDao.addInstanceOfRedirect(new Date(), providerId, redirectLinkId);
 			
 			// send redirect
 			response.sendRedirect(redirectLink.getUrl());

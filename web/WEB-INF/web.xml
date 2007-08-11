@@ -193,6 +193,12 @@
         <servlet-name>newUploader</servlet-name>
         <servlet-class>oscar.newOscarLab.Uploader</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>redirectLinkTracking</servlet-name>
+        <servlet-class>org.caisi.servlets.RedirectLinkTrackingServlet</servlet-class>
+    </servlet>
+    
+    
     <servlet-mapping>
 		<servlet-name>action</servlet-name>
 		<url-pattern>*.do</url-pattern>
@@ -250,6 +256,12 @@
         <servlet-name>newUploader</servlet-name>
         <url-pattern>/newUploader</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>redirectLinkTracking</servlet-name>
+        <url-pattern>/redirectLinkTracking</url-pattern>
+    </servlet-mapping>
+    
+    
     <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
