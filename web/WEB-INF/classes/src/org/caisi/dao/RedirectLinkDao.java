@@ -1,6 +1,9 @@
 package org.caisi.dao;
 
+import java.util.List;
+
 import org.caisi.model.RedirectLink;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -42,4 +45,22 @@ public class RedirectLinkDao {
 			session.close();
 		}
 	}
+
+
+    public List<RedirectLink> findAll() {
+
+		Session session = sessionFactory.openSession();
+		try {
+			Query query=session.createQuery("from RedirectLink");
+			
+			@SuppressWarnings("unchecked")
+			List<RedirectLink> results=query.list();
+			
+			return(results);
+		}
+		finally {
+			session.close();
+		}
+	}
+
 }

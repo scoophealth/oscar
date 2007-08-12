@@ -26,4 +26,33 @@
 	RedirectLinkDao redirectLinkDao = (RedirectLinkDao) applicationContext.getBean("redirectLinkDao");
 	List<RedirectLink> links=redirectLinkDao.findAll();
 %>
-Place holder for reports on a link
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/oscar.css" title="default" />
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/reporting.css" title="default" />
+	<title></title>
+</head>
+<body>
+	<table class="genericTable">
+		<thead>
+			<tr>
+				<td class="Header">Tracked Url</td>
+				<td class="Header">&nbsp;</td>
+			</tr>
+		</thead>
+		<tbody>
+		<%
+			for (RedirectLink redirectLink : links)
+			{
+				%>
+					<tr>
+						<td class="Section"><a href="<%=redirectLink.getUrl()%>"><%=redirectLink.getUrl()%></a></td>
+						<td class="Section"><a href="LinkTrackingReports.jsp?redirectLinkId=<%=redirectLink.getId()%>">Get Reports</a></td>
+					</tr>
+				<%
+			}
+		%>
+		</tbody>
+	</table>
+</body>
+</html>
