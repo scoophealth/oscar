@@ -32,7 +32,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class RoleDAOHibernate extends HibernateDaoSupport implements RoleDAO {
 
-	private Log log = LogFactory.getLog(ProviderDaoHibernate.class);
+	private Log log = LogFactory.getLog(RoleDAOHibernate.class);
 
 	
 	public List getRoles() {
