@@ -208,7 +208,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="providerDao" class="org.oscarehr.PMmodule.dao.hibernate.ProviderDaoHibernate">
+	<bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
