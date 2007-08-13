@@ -396,7 +396,11 @@ public class AdmissionDaoHibernate extends HibernateDaoSupport implements Admiss
 		while (listIterator.hasNext()) {
 			try {
 				admission = (Admission) listIterator.next();
-				return admission.getClientStatusId();				
+				Integer clientStatusId = admission.getClientStatusId();
+				if(clientStatusId == null )
+					return 0;
+				else
+					return clientStatusId;
 			} catch (Exception ex) {
 				return 0;
 			}

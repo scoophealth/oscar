@@ -24,7 +24,16 @@ public class ProgramClientStatusDAOHibernate extends HibernateDaoSupport
 	}
 	
 	public ProgramClientStatus getProgramClientStatus(String id) {
-		return (ProgramClientStatus)this.getHibernateTemplate().get(ProgramClientStatus.class,new Integer(id));
+		if(id == null || Integer.valueOf(id) < 0){
+			throw new IllegalArgumentException();
+		}
+		
+		ProgramClientStatus pcs = null;
+		pcs = (ProgramClientStatus)this.getHibernateTemplate().get(ProgramClientStatus.class,new Integer(id));
+		if(pcs != null)
+			return pcs;
+		else 
+			return null;
 	}
 
 	public void deleteProgramClientStatus(String id) {
