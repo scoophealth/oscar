@@ -109,4 +109,62 @@ public class RedirectLinkTrackingDao {
 		
 		return(result);
 	}
+    
+    /**
+     * This method is used to count the providers
+     * who have or have not used the link. 
+     * @param have should be true for providers who have used the link or false for providers who have not used the link
+     */
+    public int countProvidersWhoHaveUsedLink(boolean have, int redirectLinkId) {
+		Session session = sessionFactory.openSession();
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs=null;
+		try {
+			c = session.connection();
+			ps = c.prepareStatement("select count(provider_no) from provider where provider_no "+(have?"":"not")+" in (select provider_no from RedirectLinkTracking where redirectLinkId=?)");
+			ps.setInt(1, redirectLinkId);
+			rs=ps.executeQuery();
+
+			rs.next();
+			
+			return(rs.getInt(1));
+		}
+		catch (SQLException e) {
+			throw (new HibernateException(e));
+		}
+		finally {
+			// don't close hibernate connections.
+			SqlUtils.closeResources(null, ps, rs);
+			session.close();
+		}		
+	}
+
+    /**
+     * This method is used to count the number of times this link was used.
+     */
+    public int countRedirects(int redirectLinkId) {
+		Session session = sessionFactory.openSession();
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs=null;
+		try {
+			c = session.connection();
+			ps = c.prepareStatement("select count(*) from RedirectLinkTracking where redirectLinkId=?");
+			ps.setInt(1, redirectLinkId);
+			rs=ps.executeQuery();
+
+			rs.next();
+			
+			return(rs.getInt(1));
+		}
+		catch (SQLException e) {
+			throw (new HibernateException(e));
+		}
+		finally {
+			// don't close hibernate connections.
+			SqlUtils.closeResources(null, ps, rs);
+			session.close();
+		}		
+	}
 }

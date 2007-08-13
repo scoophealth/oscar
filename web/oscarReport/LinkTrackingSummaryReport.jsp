@@ -24,6 +24,46 @@
 <%
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	RedirectLinkDao redirectLinkDao = (RedirectLinkDao) applicationContext.getBean("redirectLinkDao");
-	List<RedirectLink> links=redirectLinkDao.findAll();
+	RedirectLinkTrackingDao redirectLinkTrackingDao = (RedirectLinkTrackingDao) applicationContext.getBean("redirectLinkTrackingDao");
+	
+	int redirectLinkId=Integer.parseInt(request.getParameter("redirectLinkId"));
+	RedirectLink redirectLink=redirectLinkDao.find(redirectLinkId);
 %>
-Place holder for reports on a link
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/oscar.css" title="default" />
+	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/reporting.css" title="default" />
+	<title></title>
+</head>
+<body>
+
+	Summary for : <%=redirectLink.getUrl()%>
+	<br /><br />
+	
+	<table class="genericTable">
+		<tbody>
+			<%
+				int countTotalRedirects=redirectLinkTrackingDao.countRedirects(redirectLinkId);
+				int countProvidersWhoHaveUsedLink=redirectLinkTrackingDao.countProvidersWhoHaveUsedLink(true, redirectLinkId);
+				int countProvidersWhoHaveNotUsedLink=redirectLinkTrackingDao.countProvidersWhoHaveUsedLink(false, redirectLinkId);
+			%>
+			<tr>
+				<td class="Header">Total times link was used </td>
+				<td class="Section"><%=countTotalRedirects %></td>
+			</tr>
+			<tr>
+				<td class="Header"># of providers who have used link </td>
+				<td class="Section"><%=countProvidersWhoHaveUsedLink %></td>
+			</tr>
+			<tr>
+				<td class="Header"># of providers who have never used link </td>
+				<td class="Section"><%=countProvidersWhoHaveNotUsedLink %></td>
+			</tr>
+			<tr>
+				<td class="Header">Avg times link was used </td>
+				<td class="Section"><%=countTotalRedirects/countProvidersWhoHaveUsedLink%></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
