@@ -171,7 +171,7 @@ CREATE TABLE `caisi_form_data` (
   `page_number` bigint(20) default NULL,
   `section_id` bigint(20) default NULL,
   `question_id` bigint(20) default NULL,
-  `value` varchar(255) default NULL,
+  `value` text default NULL,
   `data_key` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
   KEY `FKC253B2E74497F4E` (`instance_id`)
@@ -1842,7 +1842,7 @@ CREATE TABLE `survey_test_data` (
   `page_number` bigint(20) default NULL,
   `section_id` bigint(20) default NULL,
   `question_id` bigint(20) default NULL,
-  `value` varchar(255) default NULL,
+  `value` text default NULL,
   `data_key` varchar(255) default NULL,
   `type` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
