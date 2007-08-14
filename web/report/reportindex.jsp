@@ -550,18 +550,6 @@ String today = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.ge
         <td></td>
     </tr>
     
-    
-     <tr>
-        <td width="2"><%=j%><%j++;%></td>
-        <td width="1"></td>
-        <td width="300"><a href="../oscarReport/TrackedLinks.jsp">Link Tracking Reports</a></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-    
-    
     <tr>
         <td colspan='3' align="left"><input type="button" name="Button" value="<bean:message key="report.reportindex.btnCancel"/>" onClick="window.close()"></td>
         <td></td>
