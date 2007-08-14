@@ -32,10 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.struts.util.LabelValueBean;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import org.caisi.model.Role;
-import org.caisi.model.Appointment;
-
 import org.oscarehr.PMmodule.model.AccessType;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.DefaultRoleAccess;
@@ -115,11 +112,6 @@ public class CaseManagementManager extends BaseCaseManagementManager {
 		return null; //echartDAO.saveEchart(note, cpp, userName, lastStr);
 
 	}
-
-        /*public net.sf.hibernate.Session getSession() {
-            //org.oscarehr.casemgmt.dao.hibernate.CaseManagementNoteDAOHibernate h = this.caseManagementNoteDAO.;
-            
-        }*/
 
 	public List getNotes(String demographic_no)
 	{

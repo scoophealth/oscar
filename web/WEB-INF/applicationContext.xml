@@ -148,7 +148,7 @@
 			</props>
 		</property>
 	</bean>
-        <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementNoteDAOHibernate">
+        <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>
