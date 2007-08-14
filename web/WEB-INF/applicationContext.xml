@@ -320,7 +320,7 @@
 			</props>
 		</property>
 	</bean>
-	<bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.impl.CaseManagementManagerImpl">
+	<bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager">
 		<property name="caseManagementNoteDAO">
 			<ref local="CaseManagementNoteDAO" />
 		</property>
