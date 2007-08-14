@@ -73,11 +73,6 @@
 			</tr>
 
 			<tr>
-				<th>Specific issue</th>
-				<td><input type="text" name="form.specificIssue" size="15" disabled="disabled" /></td>
-			</tr>
-
-			<tr>
 				<td align="center" colspan="2">
 					<html:submit value="Generate Report" />
 		    	</td>
