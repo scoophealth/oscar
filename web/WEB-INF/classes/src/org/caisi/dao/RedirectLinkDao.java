@@ -8,19 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-public class RedirectLinkDao {
-
-	private SessionFactory sessionFactory = null;
-
-	public SessionFactory getSessionFactory() {
-
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-
-		this.sessionFactory = sessionFactory;
-	}
+public class RedirectLinkDao extends AbstractDao{
 
 	public RedirectLink find(int id) {
 

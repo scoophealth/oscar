@@ -76,6 +76,7 @@
     
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName" />
     <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName" />
+    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao" autowire="byName" />
     
     <!-- Generic Intake -->
     <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate">
