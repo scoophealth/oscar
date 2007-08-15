@@ -7142,3 +7142,5 @@ create index processed_index on surveyData (processed);
 create table RedirectLink (id int primary key auto_increment, url varchar(255) not null);
 create table RedirectLinkTracking (date datetime not null, provider_no int not null, redirectLinkId int not null, index(redirectLinkId,date));
 
+create table IssueGroup (id int primary key auto_increment, name varchar(255) not null);
+create table IssueGroupIssues (issueGroupId int not null, issue_id int not null, unique(issueGroupId,issue_id));
