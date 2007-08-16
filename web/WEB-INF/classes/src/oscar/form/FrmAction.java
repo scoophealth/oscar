@@ -22,6 +22,7 @@ import java.util.Properties;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -32,6 +33,9 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 
 public final class FrmAction extends Action {
+    
+    Logger log = Logger.getLogger(FrmAction.class);
+    
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         int newID = 0;
