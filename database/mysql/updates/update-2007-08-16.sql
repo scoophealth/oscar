@@ -124,3 +124,7 @@ CREATE TABLE `formLabReq07` (
 	PRIMARY KEY  (`ID`)
 ) ENGINE=MyISAM;
 
+# This is the SQL query to add the LabReq07 form.  
+# If you want this to appear in your forms list, change the 0 to 1 at the end of the query.
+
+INSERT INTO encounterForm (form_name, form_value, form_table, hidden) VALUES ('Lab Req 2007', '../form/formlabreq07.jsp?demographic_no=', 'formLabReq07', 0);
