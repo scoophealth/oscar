@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+    The test must be mapped to the specified loinc_code in the
+    measurementMap table in the database.
+
+    A test is represented by:
+        <map loinc_code='loinc#' name='TEST NAME' />
+    A blank line is represented by:
+        <map loinc_code="NULL" name="NULL" />
+    A header is represented by:        
+        <map loinc_code="NULL" name="HEADER NAME" />
+-->
+<measurements id="specs" version="1.0">
+	<map loinc_code="718-7" name="HEMOGLOBIN" />
+	<map loinc_code="4544-3" name="HEMATOCRIT" />
+        <map loinc_code="12227-5" name="WHITE BLOOD CELL COUNT" />
+        <map loinc_code="789-8" name="RED BLOOD CELL COUNT" />
+        <map loinc_code="787-2" name="MCV" />
+        <map loinc_code="785-6" name="MCH" />
+        <map loinc_code="786-4" name="MCHC" />
+        <map loinc_code="14196-0" name="RETICULOCYTE COUNT" />
+        <map loinc_code="4537-7" name="SEDIMENTATION RATE (ESR)" />
+        <map loinc_code="777-3" name="PLATELET COUNT" />
+        <map loinc_code="788-0" name="RDW" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="751-8" name="ABSOLUTE:      NEUTS" />
+        <map loinc_code="731-0" name="     (A)       LYMPH" />
+        <map loinc_code="742-7" name="     (A)       MONO" />
+        <map loinc_code="711-2" name="     (A)       EOS" />
+        <map loinc_code="704-7" name="     (A)       BASO" />
+        <map loinc_code="30229-9" name="     (A)       BAND" />
+        <map loinc_code="748-4" name="     (A)       MYELO" />
+        <map loinc_code="739-3" name="     (A)       META" />
+        <map loinc_code="781-5" name="     (A)       PROMYELO" />
+        <map loinc_code="708-8" name="     (A)       BLASTS" />        
+        <map loinc_code="43743-4" name="     (A)       ATYP LYMPHS" />
+        <map loinc_code="729-4" name="     (A)       OTHER" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="6742-1" name="RBC" />
+        <map loinc_code="11156-7" name="WBC" />
+        <map loinc_code="9317-9" name="PLATELETS" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="4551-8" name="HEMOGLOBIN A2" />
+        <map loinc_code="X100111" name="ABNORMAL HEMOGLOBIN" />
+        <map loinc_code="4576-5" name="HEMOGLOBIN F" />
+        <map loinc_code="4563-3" name="HEMOGLOBIN C" />
+        <map loinc_code="4575-5" name="HEMOGLOBIN E" />
+        <map loinc_code="4625-0" name="HEMOGLOBIN S" />
+        <map loinc_code="6301-6" name="INR" />
+        <map loinc_code="3173-2" name="APTT (AUTOMATED)" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="883-9" name="BLOOD GROUP" />
+        <map loinc_code="10331-7" name="Rh" />
+        <map loinc_code="8061-4" name="ANTIBODY SCREEN:" />
+        <map loinc_code="25514-1" name="RUBELLA-IGG" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="31418-7" name="INF MONO HETERO ANTIBODIES" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="2276-4" name="FERRITIN" />
+        <map loinc_code="14798-3" name="IRON" />
+        <map loinc_code="14800-7" name="IRON BINDING CAPACITY(TIBC)" />
+        <map loinc_code="14801-5" name="SATURATION" />
+        <map loinc_code="14685-2" name="VITAMIN B12" />
+        <map loinc_code="4544-3" name="HEMATOCRIT" />
+        <map loinc_code="14731-4" name="RBC FOLATE" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="NULL" name=" URINALYSIS: CHEMICAL" />
+        <map loinc_code="5778-6" name="       COLOUR" />
+        <map loinc_code="5767-9" name="       APPEARANCE" />
+        <map loinc_code="2349-9" name="       GLUCOSE" />
+        <map loinc_code="2514-8" name="       KETONE" />
+        <map loinc_code="5811-5" name="       SPECIFIC GRAVITY" />
+        <map loinc_code="X100222" name="       BLOOD" />
+        <map loinc_code="2756-5" name="       pH" />
+        <map loinc_code="5804-0" name="       PROTEIN" />
+        <map loinc_code="5802-4" name="       NITRITE" />
+        <map loinc_code="5799-2" name="       LEUCOCYTE ESTERASE" />
+        <map loinc_code="NULL" name="NULL" />        
+        <map loinc_code="NULL" name=" URINALYSIS: MICROSCOPIC" />
+        <map loinc_code="13945-1" name="       RBC" />
+        <map loinc_code="5821-4" name="       WBC" />
+        <map loinc_code="5787-7" name="       EPITHELIAL CELLS" />
+        <map loinc_code="5769-5" name="       BACTERIA" />
+        <map loinc_code="5817-2" name="       CRYSTALS" />
+        <map loinc_code="25155-3" name="       CYSTINE CRYSTALS" />
+        <map loinc_code="33021-7" name="       TYROSINE CRYSTALS" />
+        <map loinc_code="25163-7" name="       LEUCINE CRYSTALS" />
+        <map loinc_code="25153-8" name="       CHOLESTEROL CRYSTALS" />
+        <map loinc_code="25146-2" name="       BILIRUBIN CRYSTALS" />
+        <map loinc_code="9842-6" name="       CASTS" />
+        <map loinc_code="5820-6" name="       WBC CASTS" />                    
+        <map loinc_code="5807-3" name="       RBC CASTS" />
+        <map loinc_code="38995-7" name="       CELLULAR CASTS" />
+        <map loinc_code="5793-5" name="       GRANULAR CASTS" />
+        <map loinc_code="5796-8" name="       HYALINE CASTS" />
+        <map loinc_code="5819-8" name="       WAXY CASTS" />
+        <map loinc_code="5789-3" name="       FATTY CASTS" />
+        <map loinc_code="X100444" name="       OTHER" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="2112-1" name="PREGNANCY TEST-URINE" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="14771-0" name="GLUCOSE-FASTING" />
+        <map loinc_code="4548-4" name="HbA1C" />
+        <map loinc_code="14682-9" name="CREATININE" />
+        <map loinc_code="2951-2" name="SODIUM" />
+        <map loinc_code="2823-3" name="POTASSIUM" />
+        <map loinc_code="2075-0" name="CHLORIDE" />
+        <map loinc_code="X100555" name="LIPID TARGET VALUES" />
+        <map loinc_code="14927-8" name="TRIGLYCERIDES" />
+        <map loinc_code="14647-2" name="CHOLESTEROL" />
+        <map loinc_code="22748-8" name="LDL CHOLESTEROL(CALCULATED)" />
+        <map loinc_code="14646-4" name="HDL CHOLESTEROL" />
+        <map loinc_code="9322-9" name="CHOLESTEROL/HDL RATIO" />
+        <map loinc_code="14934-4" name="URATE" />
+        <map loinc_code="14631-6" name="TOTAL BILIRUBIN" />
+        <map loinc_code="14629-0" name="DIRECT BILIRUBIN:CONJUGATED" />
+        <map loinc_code="1920-8" name="ASPARTATE TRANSAMINASE(AST)" />
+        <map loinc_code="1742-6" name="ALANINE TRANSAMINASE (ALT)" />
+        <map loinc_code="6768-6" name="ALKALINE PHOSPHATASE" />
+        <map loinc_code="2324-2" name="GAMMA-GLUTAMYLTRANSFERASE" />
+        <map loinc_code="2532-0" name="LACTATE DEHYDROGENASE (LD)" />
+        <map loinc_code="2000-8" name="CALCIUM" />
+        <map loinc_code="1751-7" name="ALBUMIN" />
+        <map loinc_code="14895-7" name="IMMUNOFIXATION - SERUM" />
+        <map loinc_code="2601-3" name="MAGNESIUM" />
+        <map loinc_code="3016-3" name="THYROTROPIN (SENSITIVE TSH)" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="14563-1" name="OCCULT BLOOD-FECES #1" />
+        <map loinc_code="14564-9" name="OCCULT BLOOD-FECES #2" />
+        <map loinc_code="14565-6" name="OCCULT BLOOD-FECES #3" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="NULL" name="ALBUMIN CREATININE RATIO RANDOM URINE" />
+        <map loinc_code="X10024" name="  MICROALBUMIN" />
+        <map loinc_code="14683-7" name="  CREATININE" />
+        <map loinc_code="13705-9" name="  MICROALBUMIN/CREATININE RATIO" />
+        <map loinc_code="NULL" name="NULL" />
+        <map loinc_code="1988-5" name="C-REACTIVE PROTEIN" />
+        
+</measurements>
