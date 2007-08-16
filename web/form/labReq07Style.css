@@ -1,0 +1,195 @@
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+
+
+BODY {
+	font-size: 10pt;
+	background-color: white;
+	font-family: Arial, Tahoma, Verdana;
+}
+
+TABLE {
+	font-size: 10pt;
+	border-spacing: 0;
+}
+TABLE TD {
+	padding: 0;
+}
+
+table.outerTable {
+    padding: 0;
+    border-spacing: 0;
+    border: 1.25px solid black;
+    
+}
+td.outerTable {
+    border: 1px solid black;
+    padding: 0;
+    vertical-align: top;
+}
+
+table.topTable td {
+    padding: 3px;
+    padding-top: 0px;
+    vertical-align: top;
+}
+
+.borderGray {
+    border: 1px solid gray;
+}
+
+.borderGrayBottomRight {
+    border: 1px solid gray;
+    border-left: 0px;
+    border-top: 0px;
+}
+.borderGrayTopBottom {
+    border: 1px solid gray;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.borderBlackTopBottom {
+    border: 1px solid black;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.subHeading {
+    font-size: 10px;
+}
+
+.labArea {
+    background-color: #d8eae5;
+}
+
+table.topTable td {
+    padding: 2px;
+    padding-top: 0px;
+    padding-left: 5px;
+    vertical-align: top;
+    font-size: 12px;
+}
+
+td.bottomTableTd {
+    padding: 0px;
+    vertical-align: top;
+    border: 1px solid black;
+}
+
+table.bottomInnerTable {
+    width: 100%;
+}
+
+table.bottomInnerTable th {
+    background-color: #c8d0d9;
+    border-bottom: 1px solid black;
+}
+
+.checkboxTd {
+    border: 1px solid #bebebe;
+    border-left: 0px;
+    border-top: 0px;
+    text-align: center;
+    padding: 0px;
+}
+
+.checkboxLabelTd {
+    border-bottom: 1px solid #bebebe;
+    text-align: left;
+    padding: 0px;
+    padding-left: 10px;
+    font-size: 11px
+}
+
+.checkboxLabelTd2 {
+    border: 1px solid #bebebe;
+    border-top: 0px;
+    border-right: 0px;
+    text-align: left;
+    padding: 0px;
+    padding-left: 2px;
+    font-size: 11px
+}
+
+.checkboxLabelTd input, .checkboxLabelTd2 input{
+    font-size: 9px;
+}
+
+.subSectionHeading {
+    background-color: #e2e4e7;
+}
+
+.bottomEndSection {
+    border-bottom: 1.5px solid black;
+}
+
+
+.Head {
+    background-color:#BBBBBB;
+    padding-top:3px;
+    padding-bottom:3px;
+    width:100%;
+    font-size:12pt;
+}
+
+.Head INPUT {
+    width: 100px;
+}
+
+.Head A {
+    font-size:12pt;
+}
+
+
+.TableWithBorder {
+    border-width:2px;
+    border-style:solid;
+    border-color:#999999;
+}
+
+.title {
+	font-weight: bold;
+	font-size: 12pt;
+}
+
+.lab {
+	background-color: #CD9B9B;
+}
+
+.testType {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: #CD9B9B;
+}
+
+.testType A {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 10pt;
+}
+
+.code {
+    font-size:7pt;
+}
