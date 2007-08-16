@@ -42,10 +42,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import oscar.form.graphic.*;
@@ -63,6 +60,7 @@ import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfImportedPage;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -71,6 +69,7 @@ import com.lowagie.text.pdf.PdfWriter;
 public class FrmPDFServlet extends HttpServlet {
         
 	public static final String HSFO_RX_DATA_KEY = "hsfo.rx.data";
+        Logger log = Logger.getLogger(FrmPDFServlet.class);
     /**
      *
      *
@@ -166,7 +165,23 @@ public class FrmPDFServlet extends HttpServlet {
     }
     
     /**
+     * the form txt file has lines in the form:
      *
+     * For Checkboxes:
+     * ie.  ohip : left, 76, 193, 0, BaseFont.ZAPFDINGBATS, 8, \u2713
+     * requestParamName : alignment, Xcoord, Ycoord, 0, font, fontSize, textToPrint[if empty, prints the value of the request param]
+     * NOTE: the Xcoord and Ycoord refer to the bottom-left corner of the element
+     * 
+     * For single-line text:
+     * ie. patientCity  : left, 242, 261, 0, BaseFont.HELVETICA, 12
+     * See checkbox explanation
+     *
+     * For multi-line text (textarea)
+     * ie.  aci : left, 20, 308, 0, BaseFont.HELVETICA, 8, _, 238, 222, 10
+     * requestParamName : alignment, bottomLeftXcoord, bottomLeftYcoord, 0, font, fontSize, _, topRightXcoord, topRightYcoord, spacingBtwnLines
+     *
+     *NOTE: When working on these forms in linux, it helps to load the PDF file into gimp, switch to pt. coordinate system and use the mouse to find the coordinates. 
+     *Prepare to be bored!
      */
     protected ByteArrayOutputStream generatePDFDocumentBytes(final HttpServletRequest req, final ServletContext ctx)
     throws DocumentException, java.io.IOException {
@@ -256,11 +271,11 @@ public class FrmPDFServlet extends HttpServlet {
             PdfReader reader = null;
             try {
                 reader = new PdfReader(propFilename);
-                System.out.println("Found template at " + propFilename);
+                log.info("Found template at " + propFilename);
             } catch (Exception dex) {
-                System.out.println("change path to inside oscar from :" + propFilename);                 
+                log.debug("change path to inside oscar from :" + propFilename);                 
                 reader = new PdfReader("/oscar/form/prop/" + template);
-                System.out.println("Found template at /oscar/form/prop/" + template);                
+                log.debug("Found template at /oscar/form/prop/" + template);                
             }
             
             // retrieve the total number of pages
@@ -395,6 +410,12 @@ public class FrmPDFServlet extends HttpServlet {
                         cb.endText();
                     }
                 }
+                /* used to remove elements of the PDF file
+                log.debug("Writing rectangle")
+                Rectangle rec = new Rectangle(243, 791-140, 289, 791-129);
+                rec.setBackgroundColor(java.awt.Color.WHITE);
+                cb.rectangle(rec);*/
+                
                 
                 //graphic
                 if (i == 1 && cfgGraphicFileNo > 0) {                    
@@ -545,26 +566,26 @@ public class FrmPDFServlet extends HttpServlet {
         String propFilename = oscar.OscarProperties.getInstance().getProperty("pdfFORMDIR", "") + "/" + cfgFilename;
         
         try {
-            System.out.println("1Looking for the prop file! " + propFilename);
+            log.debug("1Looking for the prop file! " + propFilename);
             InputStream is = new FileInputStream(propFilename); //getServletContext().getResourceAsStream(propFilename);            
             if (is != null) {
-                System.out.println("2Found the prop file! " + cfgFilename);
+                log.debug("2Found the prop file! " + cfgFilename);
                 ret.load(is);
                 is.close();
             } else {
-                System.out.println("3Can't open the prop file! " + cfgFilename);
+                log.warn("3Can't open the prop file! " + cfgFilename);
             }
         } catch (Exception e) {
             try {
                 String propPath = "/WEB-INF/classes/oscar/form/prop/";
                 InputStream is = getServletContext().getResourceAsStream(propPath + cfgFilename);
                 if (is != null) {
-                    System.out.println("found prop file " + propPath + cfgFilename);
+                    log.debug("found prop file " + propPath + cfgFilename);
                     ret.load(is);
                     is.close();
                 }
             } catch (Exception ee) {
-                System.out.println("Can't find the prop file! " + cfgFilename);
+                log.warn("Can't find the prop file! " + cfgFilename);
             }
         }
         return ret;
