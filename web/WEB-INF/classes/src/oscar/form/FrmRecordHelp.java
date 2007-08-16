@@ -27,7 +27,8 @@ import oscar.util.JDBCUtil;
 import oscar.util.UtilDateUtilities;
 
 public class FrmRecordHelp {
-    private String _dateFormat = "yyyy/MM/dd";
+    private String _dateFormat = "yyyy/MM/dd";  
+    private String _newDateFormat = "yyyy-MM-dd"; //handles both date formats, but yyyy/MM/dd is displayed to avoid deprecation
 
     public void setDateFormat(String s) {// "dd/MM/yyyy"
         _dateFormat = s;
@@ -152,11 +153,14 @@ public class FrmRecordHelp {
             }
 
             if (md.getColumnTypeName(i).equalsIgnoreCase("date")) {
-                java.util.Date d;
+            java.util.Date d;
                 if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
                     d = UtilDateUtilities.Today();
                 } else {
-                    d = UtilDateUtilities.StringToDate(value, _dateFormat);
+                    if (value.indexOf('/') != -1)
+                        d = UtilDateUtilities.StringToDate(value, _dateFormat);
+                    else
+                        d = UtilDateUtilities.StringToDate(value, _newDateFormat);
                 }
                 if (d == null)
                     rs.updateNull(name);
