@@ -11,10 +11,6 @@ MDSSegmentData mDSSegmentData = new MDSSegmentData();
 
 CMLLabTest lab = new CMLLabTest();
 lab.populateLab(request.getParameter("segmentID"));
-System.out.println("num labs "+lab.labResults.size());
-for (int i = 0 ; i < lab.labResults.size(); i++){
-    System.out.println(i);
-}
 
 /*
 String ackStatus = request.getParameter("status");
@@ -220,6 +216,35 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
 
             <table width="100%" border="1" cellspacing="0" cellpadding="3" bgcolor="#9999CC" bordercolordark="#bfcbe3">
+                <%
+                            if (lab.multiLabId != null){
+                                String[] multiID = lab.multiLabId.split(",");
+                                if (multiID.length > 1){
+                                    %>
+                                    <tr>
+                                        <td class="Cell" colspan="2" align="middle">
+                                            <div class="Field2">
+                                                Version:&#160;&#160;
+                                                <%
+                                                for (int i=0; i < multiID.length; i++){
+                                                    if (multiID[i].equals(request.getParameter("segmentID"))){
+                                                        %>v<%= i+1 %>&#160;<%
+                                                    }else{
+                                                        if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
+                                                            %><a href="CMLDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=lab.multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        }else{
+                                                            %><a href="CMLDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=lab.multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        }
+                                                    }
+                                                }
+                                                %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <%
+                                }
+                            }
+                 %>
                 <tr>
                     <td width="66%" align="middle" class="Cell">
                         <div class="Field2">
@@ -458,35 +483,58 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         </table>
                     </td>
                 </tr>
-                <tr>
-                    <td align="center" bgcolor="white" colspan="2">
-                        <table width="100%" height="20" border="0" cellpadding="0" cellspacing="0">
-                            <tr>
-                                <td align="center" bgcolor="white">
-                                    <div class="FieldData">
-                                        <center>
-                                            <!-- <table width="90%" border="0" cellpadding="0" cellspacing="0"> -->
-                                                <% ArrayList statusArray = lab.getStatusArray(); 
-                                                                System.out.println("size of status array "+statusArray.size());
-                                                   for (int i=0; i < statusArray.size(); i++) { 
-                                                    ReportStatus rs = (ReportStatus) statusArray.get(i); %>
-                                                    <%= rs.getProviderName() %> :
-                                                    <font color="red"><%= rs.getStatus() %></font>
-                                                        <% if ( rs.getStatus().equals("Acknowledged") ) { %>
-                                                           <%= rs.getTimestamp() %>, 
-                                                           <%= ( rs.getComment().equals("") ? "no comment" : "comment : "+rs.getComment() ) %>
-                                                        <%} %>                                                
-                                                    <br>                                                                                                                                                     
-                                                <% } %>
-                                                   
-                                            <!-- </table> -->                                   
-                                        </center>
-                                    </div>
+                <% if (!lab.status.equals("U")){ %>
+                            <tr>                                                                
+                                <td align="center" bgcolor="white" colspan="2">
+                                    <%String[] multiID = lab.multiLabId.split(",");
+                                    boolean startFlag = false; 
+                                    for (int j=multiID.length-1; j >=0; j--){
+                                        if (multiID[j].equals(request.getParameter("segmentID")))
+                                            startFlag = true;                                                              
+                                        if (startFlag){
+                                            ArrayList statusArray = lab.getStatusArray(multiID[j]);
+                                            if (statusArray.size() > 0){%>
+
+                                                <table width="100%" height="20" cellpadding="2" cellspacing="2">
+                                                    <tr>
+                                                        <% if (multiID.length > 1){ %>
+                                                            <td align="center" bgcolor="white" width="20%" valign="top">
+                                                                <div class="FieldData">
+                                                                    <b>Version:</b> v<%= j+1 %>
+                                                                </div>
+                                                            </td>
+                                                            <td align="left" bgcolor="white" width="80%" valign="top">
+                                                        <% }else{ %>
+                                                            <td align="center" bgcolor="white">
+                                                        <% } %>
+                                                            <div class="FieldData">
+                                                                <!--center-->   
+                                                                    <% for (int i=0; i < statusArray.size(); i++) { 
+                                                                        ReportStatus report = (ReportStatus) statusArray.get(i); %>
+                                                                        <%= report.getProviderName() %> :
+                                                                        <font color="red"><%= report.getStatus() %></font>
+                                                                        <% if ( report.getStatus().equals("Acknowledged") ) { %>
+                                                                            <%= report.getTimestamp() %>, 
+                                                                            <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
+                                                                        <% } %>
+                                                                        <br>
+                                                                    <% } 
+                                                                    if (statusArray.size() == 0){
+                                                                        %><font color="red">N/A</font><%
+                                                                    }
+                                                                    %>
+
+                                                                <!--/center-->
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            <%}    
+                                        }
+                                    }%>
                                 </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                            </tr>          
+                <% } %>
             </table>
       
         

@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import oscar.util.UtilDateUtilities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.text.*;
 
 /**
@@ -148,8 +149,7 @@ public class MDSHandler implements MessageHandler {
     }
     
     public String getOBRName(int i){
-        // the MDS local table is not available so the corresponding lab names are unknown
-        String obrCode;
+        /*String obrCode;
         i++;
         try{
             if (i == 1){
@@ -160,7 +160,11 @@ public class MDSHandler implements MessageHandler {
             return("TEST "+i+": "+obrCode);
         }catch(Exception e){
             return("TEST "+i+":");
-        }
+        }*/
+        
+        // the MDS local table is not available so the corresponding lab names are unknown
+        // NO NAMES FOR MDS OBR SEGMENTS
+        return("");
     }
     
     public String getTimeStamp(int i, int j){
@@ -248,15 +252,13 @@ public class MDSHandler implements MessageHandler {
     }
     
     public int getOBXFinalResultCount(){
-        int obrCount = getOBRCount();
-        int obxCount;
         int count = 0;
-        for (int i=0; i < obrCount; i++){
-            obxCount = getOBXCount(i);
-            for (int j=0; j < obxCount; j++){
-                if (getOBXResultStatus(i, j).equals("Final") || getOBXResultStatus(i, j).equals("Changed to Final"))
-                    count++;
-            }
+        try {
+            String accessionNum = getString(terser.get("/.MSH-10-1"));
+            // must reverse the order of the labs so subtract the number from a large integer
+            count = 100 - Integer.parseInt(accessionNum.substring(accessionNum.lastIndexOf("-")));
+        } catch (Exception e) {
+            logger.error("could not retrieve message ordering number", e);
         }
         return count;
     }
@@ -518,7 +520,9 @@ public class MDSHandler implements MessageHandler {
     
     public String getServiceDate(){
         try{
-            return(formatDateTime(getString(terser.get("/.PV1-44-1"))));
+            UtilDateUtilities dateUtil = new UtilDateUtilities();
+            Date mshDate = dateUtil.StringToDate(getMsgDate(), "yyyy-MM-dd hh:mm:ss");
+            return( dateUtil.DateToString(mshDate, "dd-MMM-yyyy") );
         }catch(Exception e){
             return("");
         }

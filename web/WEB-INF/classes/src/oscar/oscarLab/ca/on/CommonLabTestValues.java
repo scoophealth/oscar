@@ -251,6 +251,46 @@ public class CommonLabTestValues {
         return labList;
     }
     
+    /**
+     *  Returns hashtables with the following characteristics
+     *  //first field is lab_no,
+     *  //second field is result
+     *  //third field is observation date
+     */
+    public ArrayList findValuesByLoinc(String demographicNo, String loincCode, Connection conn){
+        ArrayList labList = new ArrayList();
+            
+        String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal FROM measurements m " +
+                "JOIN measurementsExt e1 ON m.id = e1.measurement_id AND e1.keyval='lab_no' " +
+                "JOIN measurementsExt e2 ON m.id = e2.measurement_id AND e2.keyval='identifier' " +
+                "JOIN measurementsExt e3 ON m.id = e3.measurement_id AND e3.keyval='abnormal', measurementMap " +
+                "WHERE e2.val = ident_code AND LOINC_CODE='"+loincCode+"' AND demographicNo='"+demographicNo+"' " +
+                "ORDER BY dateObserved DESC";
+        try {
+            //DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            //ResultSet rs = db.GetSQL(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()){
+                Hashtable h = new Hashtable();
+                h.put("lab_no", rs.getString("lab_no"));
+                h.put("result", rs.getString("dataField"));
+                h.put("date", rs.getString("dateObserved"));
+                h.put("abn", rs.getString("abnormal"));
+                labList.add(h);
+            }
+            rs.close();
+            pstmt.close();
+            //db.CloseConn();
+        }catch(Exception e){
+            logger.error("exception in CommonLabTestValues.findValuesByLoinc()", e);
+            
+        }
+
+        return labList;
+    }
+    
     /**Returns hashtable with the following characteristics
      * //first field is testName,
      * //second field is abn : abnormal or normal, A or N
@@ -276,7 +316,7 @@ public class CommonLabTestValues {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
-                    String testNam = rs.getString("test_name");
+                    String testNam = rs.getString("test_name");                    
                     String abn = rs.getString("abn");
                     String result = rs.getString("result");
                     String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
@@ -309,7 +349,7 @@ public class CommonLabTestValues {
                 while(rs.next()){
                     
                     String testNam = rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));  //reportname or observationIden
-
+                    
                     String abn = rs.getString("abnormalFlags");            //abnormalFlags from mdsOBX
                     String result = rs.getString("observationValue");     //mdsOBX observationValue
                     String segId = rs.getString("segmentID");
@@ -350,7 +390,7 @@ public class CommonLabTestValues {
                 while(rs.next()){
                     // |   |  |
                     String testNam = rs.getString("observation_identifier").substring(rs.getString("observation_identifier").indexOf('^')+1);
-
+                    
                     String abn = rs.getString("abnormal_flags");            //abnormalFlags from mdsOBX
                     String result = rs.getString("observation_results");     //mdsOBX observationValue
                     String segId = rs.getString("lab_no");
@@ -375,53 +415,10 @@ public class CommonLabTestValues {
                 
             }
             
-        }else if ( labType != null && labType.equals("HL7")){
-            String sql = "SELECT lab_no FROM patientLabRouting WHERE demographic_no='"+demographicNo+"' AND lab_type='HL7'";
-            
-            logger.info(sql);
-            Factory f = new Factory();
-            boolean breakFlag = false;
-            
-            try {
-                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                ResultSet rs = db.GetSQL(sql);
-                while(rs.next()){
-                    MessageHandler h = f.getInstance().getHandler(rs.getString("lab_no"));
-                    for (int i=0; i < h.getOBRCount(); i++){
-                        for (int j=0; j < h.getOBXCount(i); j++){
-                            if (h.getOBXName(i, j).equals(testName)){
-                                
-                                Hashtable t = new Hashtable();
-                                t.put("testName",h.getOBXName(i, j));
-                                t.put("abn", h.getOBXAbnormalFlag(i, j));
-                                t.put("result",h.getOBXResult(i, j));
-                                t.put("range",h.getOBXReferenceRange(i, j));
-                                t.put("units",h.getOBXUnits(i, j));
-                                t.put("collDate",h.getTimeStamp(i, j));
-                                t.put("collDateDate",UtilDateUtilities.getDateFromString(h.getTimeStamp(i, j), "yyyy-MM-dd HH:mm:ss"));
-                                labList.add(t);
-                                breakFlag = true;
-                                break;
-                            }
-                        }
-                        if(breakFlag){break;}
-                    }
-                    if (breakFlag){break;}
-                }
-                
-                rs.close();
-                db.CloseConn();
-            }catch(Exception e){
-                logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
-                
-            }
         }
+        
         return labList;
-    }
-    
-    
-    
-    
+    }    
     
     /**Returns hashtable with the following characteristics
      * //first field is testName,
@@ -487,7 +484,7 @@ public class CommonLabTestValues {
                 int second = rs.getString("observationIden").substring(first+1).indexOf('^');
                 String testNam = rs.getString("observationIden").substring(first+1,second+first+1);
                 
-                                String abn = rs.getString("abnormalFlags");            //abnormalFlags from mdsOBX
+                String abn = rs.getString("abnormalFlags");            //abnormalFlags from mdsOBX
                 String result = rs.getString("observationValue");     //mdsOBX observationValue
                 String segId = rs.getString("segmentID");
                 String range = "";

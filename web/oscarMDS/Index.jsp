@@ -1,6 +1,6 @@
 <%@ page language="java" %>
 <%@ page import="java.util.*" %>
-<%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*" %>
+<%@ page import="oscar.oscarMDS.data.*,oscar.oscarLab.ca.on.*,oscar.util.StringUtils, oscar.util.UtilDateUtilities" %>
 <%@ page import="org.apache.commons.collections.MultiHashMap" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -20,22 +20,72 @@
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
-        
     ArrayList labs = comLab.populateLabResultsData(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);    
     Collections.sort(labs);
 
+    HashMap labMap = new HashMap();
     LinkedHashMap accessionMap = new LinkedHashMap();
     LabResultData result;
     for( int i = 0; i < labs.size(); i++ ) {
         result = (LabResultData) labs.get(i);
+        labMap.put(result.segmentID, result);
+        ArrayList labNums = new ArrayList();
         if (result.accessionNumber == null || result.accessionNumber.equals("")){
-            accessionMap.put("noAccessionNum"+i+result.labType, result);
+            labNums.add(result.segmentID);
+            accessionMap.put("noAccessionNum"+i+result.labType, labNums);
+        }else if (!accessionMap.containsKey(result.accessionNumber+result.labType)){
+            labNums.add(result.segmentID);
+            accessionMap.put(result.accessionNumber+result.labType, labNums);
+            
+        // Different MDS Labs may have the same accession Number if they are seperated
+        // by two years. So accession numbers are limited to matching only if their
+        // labs are within one year of eachother
         }else{
-            if (!accessionMap.containsKey(result.accessionNumber+result.labType))
-                accessionMap.put(result.accessionNumber+result.labType, result);
+            labNums = (ArrayList) accessionMap.get(result.accessionNumber+result.labType);
+            boolean matchFlag = false;
+            for (int j=0; j < labNums.size(); j++){
+                LabResultData matchingResult = (LabResultData) labMap.get(labNums.get(j));
+
+                Date dateA = result.getDateObj();
+                Date dateB = matchingResult.getDateObj();
+                int monthsBetween = 0;
+                if (dateA.before(dateB)){
+                    monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+                }else{
+                    monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
+                }
+
+                if (monthsBetween < 4){
+                    matchFlag = true;
+                    break;
+                }
+            }
+            if (!matchFlag){
+                labNums.add(result.segmentID);
+                accessionMap.put(result.accessionNumber+result.labType, labNums);
+            }
         }
     }        
-    labs = new ArrayList(accessionMap.values());
+    ArrayList labArrays = new ArrayList(accessionMap.values());
+    labs.clear();
+    for (int i=0; i < labArrays.size(); i++){
+        ArrayList labNums = (ArrayList) labArrays.get(i);
+        // must sort through in reverse to keep the labs in the correct order
+        for (int j=labNums.size()-1; j >= 0; j--){
+            labs.add(labMap.get(labNums.get(j)));
+        }
+    }
+    Collections.sort(labs);
+    /*HashMap labMap = new HashMap();
+    ArrayList labNoArray = new ArrayList();
+    for (int i=0; i < labs.size(); i++){
+        LabResultData result = (LabResultData) labs.get(i);       
+        String[] matchingLabs = comLab.getMatchingLabs(result.segmentID, result.labType).split(",");
+        labMap.put(result.segmentID+result.labType, result);
+        if (!labNoArray.contains(matchingLabs[matchingLabs.length-1]+result.labType)){
+            labNoArray.add(matchingLabs[matchingLabs.length-1]+result.labType);
+        }
+    }*/
     
     int pageNum = 1;
     if ( request.getParameter("pageNum") != null ) {
@@ -300,6 +350,7 @@ function wrapUp() {
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                                
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
+                                <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
                                 <% if (demographicNo == null && request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>
@@ -308,7 +359,7 @@ function wrapUp() {
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                     <% if (ackStatus.equals("N")) {%>
                                         <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
-                                    <% } 
+                                    <% }
                                 }%>
                             </td>                            
                             <td align="center" valign="center" width="40%" class="Nav">
@@ -383,17 +434,17 @@ function wrapUp() {
             int endIndex = startIndex+20;            
             if ( labs.size() < endIndex ) {
                 endIndex = labs.size();
+                //endIndex = labNoArray.size();
             }
            
             for (int i = startIndex; i < endIndex; i++) {
                 
                 
                 result =  (LabResultData) labs.get(i);
+                //LabResultData result = (LabResultData) labMap.get(labNoArray.get(i));
                 
                 String segmentID        = (String) result.segmentID;
                 String status           = (String) result.acknowledgedStatus;
-
-                String resultStatus     = (String) result.resultStatus; 
 
                 String bgcolor = i % 2 == 0 ? "#e0e0ff" : "#ccccff" ;
                 if (!result.isMatchedToPatient()){
@@ -412,13 +463,13 @@ function wrapUp() {
                 </td>
                 <td nowrap>                                    
                     <% if ( result.isMDS() ){ %>
-                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('SegmentDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%= result.getPatientName()%></a>
                     <% }else if (result.isCML()){ %>
-                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('../lab/CA/ON/CMLDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <% }else if (result.isHL7TEXT()){ %>
-                    <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <% }else {%>
-                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&multiID=<%=result.multiLabId%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
+                    <a href="javascript:reportWindow('../lab/CA/BC/labDisplay.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')"><%=(String) result.getPatientName()%></a>
                     <!--a href="javascript:reportWindow('../lab/CA/BC/report.jsp?segmentID=<%=segmentID%>&providerNo=<%=providerNo%>&searchProviderNo=<%=searchProviderNo%>&status=<%=status%>')">2</a-->
                     <% }%>
                 </td>
@@ -438,13 +489,14 @@ function wrapUp() {
                     <%= (String) result.getRequestingClient()%>
                 </td>
                 <td nowrap>
-                    <%= (String) result.getDiscipline()%>
+                    <%= StringUtils.maxLenString(( (String) result.getDiscipline() ), 13, 10, "...") %>
                 </td>
                 <td nowrap>                                    
                     <%= ( (String) ( result.isFinal() ? "Final" : "Partial") )%>
                 </td>
                 <td nowrap>
-                    <%= result.getAckCount() %>&#160<% if (result.multiLabId != null && !result.multiLabId.equals(result.segmentID)) { %>(<%= result.getMultipleAckCount() %>)<%}%>
+                    <% int multiLabCount = result.getMultipleAckCount(); %>
+                    <%= result.getAckCount() %>&#160<% if ( multiLabCount >= 0 ) { %>(<%= result.getMultipleAckCount() %>)<%}%>
                 </td>
             </tr>
          <% } 
@@ -465,6 +517,7 @@ function wrapUp() {
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnSearch"/>" onClick="window.location='Search.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                                
                                 <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnClose"/>" onClick="wrapUp()">
+                                <input type="button" class="smallButton" value="Forwarding Rules" onClick="javascript:reportWindow('ForwardingRules.jsp?providerNo=<%= providerNo %>')">
                                 <% if (request.getParameter("fname") != null) { %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnDefaultView"/>" onClick="window.location='Index.jsp?providerNo=<%= providerNo %>'">
                                 <% } %>                             
@@ -473,23 +526,26 @@ function wrapUp() {
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="checkSelected()">
                                     <% if (ackStatus.equals("N")) {%>
                                         <input type="button" class="smallButton" value="File" onclick="submitFile()"/>
-                                    <% } 
+                                    <% }
                                 } %>
                             </td>
                             <td align="center" valign="middle" width="40%">
                                 <div class="Nav">
                                 <% if ( pageNum > 1 || labs.size() > endIndex ) {
+                                 //if (pageNum > 1 || labNoArray.size() > endIndex ) {
                                     if ( pageNum > 1 ) { %>
                                         <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum-1%>&startIndex=<%=startIndex-20%>">< <bean:message key="oscarMDS.index.msgPrevious"/></a>
                                  <% } else { %>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                  <% } %>                                   
                                     <%int count = 1;
-                                      for( int i =0; i < labs.size(); i = i +20){%>
+                                      for( int i =0; i < labs.size(); i = i +20){
+                                      //for ( int i=0; i < labNoArray.size(); i = i+20){%>
                                       <a style="text-decoration:none;" href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=count%>&startIndex=<%=i%>">[<%=count%>]</a>                                      
                                       <%count++;
                                       }%>                                                                              
-                                 <% if ( labs.size() > endIndex ) { %>
+                                 <% if ( labs.size() > endIndex ) { 
+                                    //if ( labNoArray.size() > endIndex ) {%>
                                         <a href="Index.jsp?providerNo=<%=providerNo%><%= (demographicNo == null ? "" : "&demographicNo="+demographicNo ) %>&searchProviderNo=<%=searchProviderNo%>&status=<%=ackStatus%><%= (request.getParameter("lname") == null ? "" : "&lname="+request.getParameter("lname")) %><%= (request.getParameter("fname") == null ? "" : "&fname="+request.getParameter("fname")) %><%= (request.getParameter("hnum") == null ? "" : "&hnum="+request.getParameter("hnum")) %>&pageNum=<%=pageNum+1%>&startIndex=<%=startIndex+20%>"><bean:message key="oscarMDS.index.msgNext"/> ></a>
                                  
                                  <% } else { %>

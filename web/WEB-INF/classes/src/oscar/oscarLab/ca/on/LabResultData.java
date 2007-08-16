@@ -27,11 +27,14 @@
 
 package oscar.oscarLab.ca.on;
 
+import java.sql.ResultSet;
 import java.util.Date;
 import java.util.Comparator;
 import org.apache.log4j.Logger;
+import oscar.oscarDB.DBHandler;
 import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.oscarLab.ca.on.CML.CMLLabTest;
+import oscar.oscarMDS.data.MDSResultsData;
 import oscar.util.UtilDateUtilities;
 
 
@@ -164,10 +167,10 @@ public class LabResultData implements Comparable{
     
     
     public String getDateTime(){
-        if (EXCELLERIS.equals(this.labType)){
+       /* if (EXCELLERIS.equals(this.labType)){
             PathnetResultsData prd = new PathnetResultsData();
             this.dateTime = prd.findPathnetObservationDate(this.segmentID);
-        }
+        }*/
         return this.dateTime;
     }
     
@@ -177,21 +180,26 @@ public class LabResultData implements Comparable{
     }
     
     public int getMultipleAckCount(){
-        String[] multiId = this.multiLabId.split(",");
+        //String[] multiId = this.multiLabId.split(",");
         CommonLabResultData data = new CommonLabResultData();
+        String[] multiId = data.getMatchingLabs(this.segmentID, this.labType).split(",");
         int count = 0;
-        for (int i=0; i < multiId.length; i++){
-            count = count + data.getAckCount(multiId[i], this.labType);
+        if (multiId.length == 1){
+            count = -1;
+        }else{
+            for (int i=0; i < multiId.length; i++){
+                count = count + data.getAckCount(multiId[i], this.labType);
+            }
         }
         return count;
-    }   
+    }
     
     
     public String getReportStatus(){
-        if (EXCELLERIS.equals(this.labType)){
+       /* if (EXCELLERIS.equals(this.labType)){
             PathnetResultsData prd = new PathnetResultsData();
             this.reportStatus = prd.findPathnetStatus(this.segmentID);
-        }
+        }*/
         return this.reportStatus;
     }
     
@@ -202,10 +210,10 @@ public class LabResultData implements Comparable{
     
     
     public String getRequestingClient(){
-        if (EXCELLERIS.equals(this.labType)){
+        /*if (EXCELLERIS.equals(this.labType)){
             PathnetResultsData prd = new PathnetResultsData();
             this.requestingClient = prd.findPathnetOrderingProvider(this.segmentID);
-        }
+        }*/
         return this.requestingClient;
     }
     
@@ -214,6 +222,21 @@ public class LabResultData implements Comparable{
             this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
         }else if(HL7TEXT.equals(this.labType)){
             this.dateTimeObr = UtilDateUtilities.getDateFromString(this.getDateTime(), "yyyy-MM-dd HH:mm:ss");
+        }else if(CML.equals(this.labType)){
+            String date="";
+            String sql = "select print_date, print_time from labReportInformation, labPatientPhysicianInfo where labPatientPhysicianInfo.id = '"+this.segmentID+"' and labReportInformation.id = labPatientPhysicianInfo.labReportInfo_id ";
+            try{
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs = db.GetSQL(sql);
+                if(rs.next()){
+                    date=rs.getString("print_date")+rs.getString("print_time");
+                }
+                rs.close();
+                db.CloseConn();
+            }catch(Exception e){
+                logger.error("Error in getDateObj (CML message)", e);
+            }
+            this.dateTimeObr = UtilDateUtilities.getDateFromString(date, "yyyyMMddHH:mm");
         }
         
         return this.dateTimeObr;
@@ -222,7 +245,7 @@ public class LabResultData implements Comparable{
     public void setDateObj(Date d){
         this.dateTimeObr = d;
     }
-   
+    
     public int compareTo(Object object) {
         //int ret = 1;
         int ret = 0;

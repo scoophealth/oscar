@@ -33,6 +33,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.*;
 import oscar.OscarProperties;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 /**
  *
@@ -96,13 +97,16 @@ public class ABCDParser {
          
       }
      
-      
+      /*
       String sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES (?, ?, 'N','CML')";
         PreparedStatement pstmt = conn.prepareStatement(sql);                 
             pstmt.setString(1,providerNo ); // location_id
             pstmt.setString(2,labId );  // printDate                    
             pstmt.executeUpdate();                                      
-            pstmt.close();                       
+            pstmt.close();   
+      */
+      ProviderLabRouting router = new ProviderLabRouting();
+      router.route(labId, providerNo, conn, "CML");
    }
    
    /////

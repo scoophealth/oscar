@@ -71,6 +71,7 @@ public class PathnetLabTest {
     public String demographicNo = null ;
     public String ccedDocs = "";
     public String locationId = "";
+    public String multiLabId = "";
     
     public ArrayList labResults = new ArrayList();
     
@@ -159,6 +160,8 @@ public class PathnetLabTest {
     
     public void populateLab(String labid){
 
+        PathnetResultsData data = new PathnetResultsData();
+        multiLabId = data.getMatchingLabs(labid);
         demographicNo = getDemographicNumByLabId(labid);
         try{
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);

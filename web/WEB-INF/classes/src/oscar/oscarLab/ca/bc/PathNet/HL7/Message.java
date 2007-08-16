@@ -11,6 +11,7 @@ import java.text.*;
 import java.util.*;
 import org.apache.commons.lang.*;
 import org.apache.log4j.*;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 
 import oscar.oscarLab.ca.bc.PathNet.HL7.V2_3.MSH;
 import oscar.oscarLab.ca.bc.PathNet.HL7.V2_3.PID;
@@ -166,13 +167,15 @@ public class Message {
                         }
                     }                    
                     /////
-                                                            
+                                          
+                    ProviderLabRouting routing = new ProviderLabRouting();
                     if (listOfProviderNo.size() > 0) {  // provider found in database
                        for(int p = 0; p < listOfProviderNo.size(); p++){
                           String prov = (String) listOfProviderNo.get(p);
-                          sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+parent+"', 'N','BCP')";
-                          System.out.println(" size "+listOfProviderNo.size()+" "+sql);
-                          db.RunSQL(sql);
+                          //sql ="insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov+"', '"+parent+"', 'N','BCP')";
+                          //System.out.println(" size "+listOfProviderNo.size()+" "+sql);
+                          //db.RunSQL(sql);
+                          routing.route(parent, prov, db.GetConnection(), "BCP");
                        }
                        addedToProviderLabRouting =true;
                     }   // provider not found                                                          
@@ -321,13 +324,15 @@ public class Message {
           if ( rs.next() ) {
              String prov_no  = rs.getString("provider_no");                                        
              if ( prov_no != null && !prov_no.trim().equals("")){
-                sql = "select status from providerLabRouting where lab_type = 'BCP' and provider_no = '"+prov_no+"' and lab_no = '"+lab_no+"'";                               
+                sql = "select status from providerLabRouting where lab_type = 'BCP' and provider_no ='"+prov_no+"' and lab_no = '"+lab_no+"'";                               
                 System.out.println(sql);
                 ResultSet rs2 = db.GetSQL(sql);
                 if ( !rs2.next() ) {                            
-                   sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov_no+"', '"+lab_no+"', 'N','BCP')";
-                   System.out.println(sql);
-                   db.RunSQL(sql);
+                   //sql = "insert into providerLabRouting (provider_no, lab_no, status,lab_type) VALUES ('"+prov_no+"', '"+lab_no+"', 'N','BCP')";
+                   //System.out.println(sql);
+                   //db.RunSQL(sql);
+                   ProviderLabRouting router = new ProviderLabRouting();
+                   router.route(lab_no, prov_no, db.GetConnection(), "BCP");
                 } else {
                    System.out.println("prov was "+prov_no);
                 }

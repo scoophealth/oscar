@@ -37,7 +37,7 @@ int curYear = cal.get(Calendar.YEAR);
 int curMonth = (cal.get(Calendar.MONTH)+1);
 int curDay = cal.get(Calendar.DAY_OF_MONTH);
 
-// System.out.println("Redirecting to: ../oscarEncounter/IncomingEncounter.do?demographicNo="+request.getParameter("demographicNo")+"&reason=Lab+Results-Notes&curDate="+curYear+"-"+curMonth+"-"+curDay+"&status="); 
+//System.out.println("Redirecting to: ../oscarEncounter/IncomingEncounter.do?demographicNo="+request.getParameter("demographicNo")+"&reason=Lab+Results-Notes&curDate="+curYear+"-"+curMonth+"-"+curDay+"&status="); 
 
 %>
 
@@ -49,9 +49,12 @@ function popupPage(vheight,vwidth,varpage) {
     if (popup.opener == null) {
       popup.opener = self; 
     }
+    window.close();
   }
 }
 
+popupPage(700, 980, '../oscarEncounter/IncomingEncounter.do?demographicNo=<%=request.getParameter("demographicNo")%>&reason=Lab+Results-Notes&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&status=');
+//window.close();
 </script>
 
 </head>

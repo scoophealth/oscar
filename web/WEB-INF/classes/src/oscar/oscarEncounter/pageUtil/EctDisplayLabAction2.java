@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.log4j.Logger;
+import oscar.OscarProperties;
 import oscar.util.*;
 import oscar.oscarLab.ca.on.*;
 import java.io.IOException;
@@ -70,7 +71,12 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
         Dao.setMenuHeader(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuHeading"));
         
         winName = "AllLabs" + bean.demographicNo;
-        url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "')";
+        
+        if (OscarProperties.getInstance().getBooleanProperty("HL7TEXT_LABS","yes")){
+            url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues3.jsp?demographic_no=" + bean.demographicNo + "')";            
+        }else{
+            url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "')";
+        }
         Dao.addPopUpUrl(url);
         Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1"));
         
@@ -101,8 +107,8 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
         for (int j=0; j < labs.size(); j++){
             result = (LabResultData) labs.get(j);
             Date date = result.getDateObj();
-            //String formattedDate = DateUtils.getDate(date,dateFormat);
-            String formattedDate = DateUtils.getDate(date);
+            String formattedDate = DateUtils.getDate(date,"dd-MMM-yyyy");
+            //String formattedDate = DateUtils.getDate(date);
             func = new StringBuffer("popupPage(700,960,'");
             
             if ( result.isMDS() ){

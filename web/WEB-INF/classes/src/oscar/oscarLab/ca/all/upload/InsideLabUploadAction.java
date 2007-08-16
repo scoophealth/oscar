@@ -9,10 +9,12 @@
 
 package oscar.oscarLab.ca.all.upload;
 
+import java.io.*;
 import javax.servlet.http.*;
 import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import org.apache.struts.upload.FormFile;
+import oscar.oscarLab.FileUploadCheck;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 import oscar.oscarLab.ca.all.util.Utilities;
 
@@ -22,25 +24,43 @@ public class InsideLabUploadAction extends Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
-        request.setAttribute("outcome", "failure");
+        String filename = importFile.getFileName();
+        String proNo = (String) request.getSession().getAttribute("user");
+        String outcome = "failure";
         
         try{
+            InputStream is = importFile.getInputStream();
+            
             
             String type = request.getParameter("type");
             if (type.equals("OTHER"))
                 type = request.getParameter("otherType");
             
             Utilities u = new Utilities();
-            String filePath = u.saveFile(importFile.getInputStream(), importFile.getFileName());
+            String filePath = u.saveFile(is, filename);
+            is.close();
             
-            MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
-            if((msgHandler.parse(filePath)) != null)
-                request.setAttribute("outcome", "success");
+            is = new FileInputStream(filePath);
+            FileUploadCheck fileC = new FileUploadCheck();
+            boolean fileUploadedSuccessfully = fileC.addFile(filename,is,proNo);            
+            is.close();
+            
+            if (fileUploadedSuccessfully){
+                logger.info("filePath"+filePath);
+                MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
+                if((msgHandler.parse(filePath)) != null)
+                    outcome = "success";
+                
+            }else{
+                outcome = "uploaded previously";
+            }
             
         }catch(Exception e){
             logger.error("Error: "+e);
+            outcome = "exception";
         }
         
+        request.setAttribute("outcome", outcome);
         return mapping.findForward("success");
     }
     

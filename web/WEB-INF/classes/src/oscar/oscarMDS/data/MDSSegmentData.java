@@ -252,6 +252,7 @@ public class MDSSegmentData {
     public String descriptiveStatus(String status) {
         switch (status.charAt(0)) {
             case 'A' : return "Acknowledged";
+            case 'F' : return "Filed but not acknowledged";
             case 'U' : return "N/A";
             default  : return "Not Acknowledged";
         }

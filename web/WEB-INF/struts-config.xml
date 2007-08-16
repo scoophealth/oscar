@@ -494,6 +494,15 @@
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/oscarMDS/OpenEChart.jsp" />
         </action>
+        <action input="/ForwardingRules.jsp" path="/oscarMDS/ForwardingRules" scope="request" type="oscar.oscarLab.pageUtil.ForwardingRulesAction">
+            <forward name="failure" path="/errorpage.jsp" />
+            <forward name="success" path="/oscarMDS/ForwardingRules.jsp" />
+        </action>
+        
+        <action input="/labforwardingrules.jsp" path="/admin/ForwardingRules" scope="request" type="oscar.oscarLab.pageUtil.ForwardingRulesAction">
+            <forward name="failure" path="/errorpage.jsp" />
+            <forward name="success" path="/admin/labforwardingrules.jsp" />
+        </action>
         <action input="/form/study/forwardstudyname.jsp" name="FrmStudyForm" path="/form/study/studyname" scope="request" type="oscar.form.study.FrmStudyAction">
             <forward name="exit" path="/oscarEncounter/close.jsp" />
             <forward name="print" path="/oscarEncounter/formType2DiabetesPrint.jsp" />

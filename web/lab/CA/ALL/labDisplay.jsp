@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,
 java.sql.*,
 oscar.oscarDB.*,
-oscar.oscarLab.ca.all.AcknowledgementData,
+oscar.oscarLab.ca.all.*,
 oscar.oscarLab.ca.all.util.*,
 oscar.oscarLab.ca.all.parsers.*,
 oscar.oscarMDS.data.ReportStatus,
@@ -37,6 +37,8 @@ if (ackList != null){
     }
 }
 MessageHandler handler = Factory.getInstance().getHandler(request.getParameter("segmentID"));
+Hl7textResultsData data = new Hl7textResultsData();
+String multiLabId = data.getMatchingLabs(request.getParameter("segmentID"));
 
 %>
 
@@ -187,7 +189,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             <tr>
                                 <td align="left" class="MainTableTopRowRightColumn" width="100%">                        
                                     <input type="hidden" name="segmentID" value="<%= request.getParameter("segmentID") %>"/>
-                                    <input type="hidden" name="multiID" value="<%= request.getParameter("multiID") %>" />
+                                    <input type="hidden" name="multiID" value="<%= multiLabId %>" />
                                     <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>"/>
                                     <input type="hidden" name="status" value="A"/>
                                     <input type="hidden" name="comment" value=""/>
@@ -202,7 +204,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=demographicID%>','tickler')"/>
                                     <% } %>
                                     <% if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart%>                            
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getPatientName())%>', 'searchPatientWindow')">
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
                                     <span class="Field2"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=demographicID%>"/></i></span>
                                 </td>
@@ -210,32 +212,32 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         </table>
                         <table width="100%" border="1" cellspacing="0" cellpadding="3" bgcolor="#9999CC" bordercolordark="#bfcbe3">
                             <%
-                            if (request.getParameter("multiID") != null){
-    String[] multiID = request.getParameter("multiID").split(",");
-    if (multiID.length > 1){
-                            %>
-                            <tr>
-                                <td class="Cell" colspan="2" align="middle">
-                                    <div class="Field2">
-                                        Version:&#160;&#160;
-                                        <%
-                                        for (int i=0; i < multiID.length; i++){
-                                            if (multiID[i].equals(request.getParameter("segmentID"))){
-                                        %><u>v<%= i+1 %></u>&#160;<%
-                                            }else{
-                                                if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
-                                        %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>">v<%= i+1 %></a>&#160;<%
-                                                }else{
-                                        %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>">v<%= i+1 %></a>&#160;<%
+                            if (multiLabId != null){
+                                String[] multiID = multiLabId.split(",");
+                                if (multiID.length > 1){
+                                    %>
+                                    <tr>
+                                        <td class="Cell" colspan="2" align="middle">
+                                            <div class="Field2">
+                                                Version:&#160;&#160;
+                                                <%
+                                                for (int i=0; i < multiID.length; i++){
+                                                    if (multiID[i].equals(request.getParameter("segmentID"))){
+                                                        %>v<%= i+1 %>&#160;<%
+                                                    }else{
+                                                        if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
+                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        }else{
+                                                            %><a href="labDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>">v<%= i+1 %></a>&#160;<%
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        }
-                                        %>
-                                    </div>
-                                </td>
-                            </tr>
-                            <%
-                            }
+                                                %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <%
+                                }
                             }
                             %>
                             <tr>
@@ -270,7 +272,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                                                             <% if ( request.getParameter("searchProviderNo") == null ) { // we were called from e-chart%>
                                                                             <a href="javascript:window.close()">
                                                                             <% } else { // we were called from lab module%>
-                                                                            <a href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getPatientName())%>', 'searchPatientWindow')">
+                                                                            <a href="javascript:popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                                                                 <% } %>
                                                                                 <%=handler.getPatientName()%>
                                                                             </a>
@@ -471,66 +473,66 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             </tr>
                             <tr>                                                                
                                 <td align="center" bgcolor="white" colspan="2">
-                                    <%String[] multiID = request.getParameter("multiID").split(",");
+                                    <%String[] multiID = multiLabId.split(",");
                                     ReportStatus report;          
                                     boolean startFlag = false;
                                     for (int j=multiID.length-1; j >=0; j--){
-                                    ackList = ackData.getAcknowledgements(multiID[j]);                                        
-                                    if (multiID[j].equals(request.getParameter("segmentID")))
-                                    startFlag = true;                                                              
-                                    if (startFlag){
-                                    if (ackList.size() > 0){%>
-                                    <table width="100%" height="20" cellpadding="2" cellspacing="2">
-                                        <tr>
-                                            <% if (multiID.length > 1){ %>
-                                            <td align="center" bgcolor="white" width="20%" valign="top">
-                                                <div class="FieldData">
-                                                    <b>Version:</b> v<%= j+1 %>
-                                                </div>
-                                            </td>
-                                            <td align="left" bgcolor="white" width="80%" valign="top">
-                                            <% }else{ %>
-                                            <td align="center" bgcolor="white">
-                                                <% } %>
-                                                <div class="FieldData">
-                                                    <!--center-->          
-                                                    <% for (int i=0; i < ackList.size(); i++) {
-                                                report = (ReportStatus) ackList.get(i); %>
-                                                    <%= report.getProviderName() %> :
-                                                    
-                                                    <% String ackStatus = report.getStatus();
-                                                    if(ackStatus.equals("A")){
-                                                        ackStatus = "Acknowledged";
-                                                    }else if(ackStatus.equals("F")){
-                                                        ackStatus = "Filed but not Acknowledged";
-                                                    }else{
-                                                        ackStatus = "Not Acknowledged";
-                                                    }                                                                             
-                                                    %>
-                                                    <font color="red"><%= ackStatus %></font>
-                                                    <% if ( ackStatus.equals("Acknowledged") ) { %>
-                                                    <%= report.getTimestamp() %>, 
-                                                    <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
-                                                    <% } %>
-                                                    <br>
-                                                    <% }
-                                            if (ackList.size() == 0){
-                                                    %><font color="red">N/A</font><%
-                                                    }
-                                                    %>
-                                                    <!--/center-->
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    
-                                    <%}
-                                    }
+                                        ackList = ackData.getAcknowledgements(multiID[j]);                                        
+                                        if (multiID[j].equals(request.getParameter("segmentID")))
+                                            startFlag = true;                                                              
+                                        if (startFlag)
+                                            if (ackList.size() > 0){{%>
+                                                <table width="100%" height="20" cellpadding="2" cellspacing="2">
+                                                    <tr>
+                                                        <% if (multiID.length > 1){ %>
+                                                            <td align="center" bgcolor="white" width="20%" valign="top">
+                                                                <div class="FieldData">
+                                                                    <b>Version:</b> v<%= j+1 %>
+                                                                </div>
+                                                            </td>
+                                                            <td align="left" bgcolor="white" width="80%" valign="top">
+                                                        <% }else{ %>
+                                                            <td align="center" bgcolor="white">
+                                                        <% } %>
+                                                            <div class="FieldData">
+                                                                <!--center-->          
+                                                                    <% for (int i=0; i < ackList.size(); i++) { 
+                                                                        report = (ReportStatus) ackList.get(i); %>
+                                                                        <%= report.getProviderName() %> :
+
+                                                                        <% String ackStatus = report.getStatus(); 
+                                                                            if(ackStatus.equals("A")){
+                                                                                ackStatus = "Acknowledged"; 
+                                                                            }else if(ackStatus.equals("F")){
+                                                                                ackStatus = "Filed but not Acknowledged";
+                                                                            }else{
+                                                                                ackStatus = "Not Acknowledged";
+                                                                            }                                                                             
+                                                                        %>
+                                                                        <font color="red"><%= ackStatus %></font>
+                                                                        <% if ( ackStatus.equals("Acknowledged") ) { %>
+                                                                            <%= report.getTimestamp() %>, 
+                                                                            <%= ( report.getComment().equals("") ? "no comment" : "comment : "+report.getComment() ) %>
+                                                                        <% } %>
+                                                                        <br>
+                                                                    <% } 
+                                                                    if (ackList.size() == 0){
+                                                                        %><font color="red">N/A</font><%
+                                                                    }
+                                                                    %>
+                                                                <!--/center-->
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            <%}
+                                        }
                                     }%>
                                 </td>
                             </tr>    
                         </table>   
-                        
+                       
                         
                         <% int i=0;
                         int j=0;
@@ -574,59 +576,65 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             </tr>
                             
                             <%
-                            
+
                             for ( j=0; j < OBRCount; j++){
-                                if (handler.getObservationHeader(j, k).equals(headers.get(i))){%>
-                                    <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
-                                        <td valign="top" align="left"><%=handler.getOBRName(j)%></td>
-                                        <td colspan="6">&nbsp;</td>
-                                    </tr>
-                                    <%
-
-                                    for (k=0; k < handler.getOBXCount(j); k++){
-                                        if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !handler.getOBXName(j, k).equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<-- DNS only needed for MDS messages
-
-                                            String lineClass = "NormalRes";
-                                            String abnormal = handler.getOBXAbnormalFlag(j, k);
-                                            if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
-                                                lineClass = "AbnormalRes";
-                                            }else if ( abnormal != null && abnormal.startsWith("L")){
-                                                lineClass = "HiLoRes";
-                                            }%>
-                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                <td valign="top" align="left">&nbsp; &nbsp;<u><%=handler.getOBXName( j, k) %></u></td>                                         
-                                                <td align="right"><%= handler.getOBXResult( j, k) %></td>
-                                                <td align="center">
-                                                    <%if (handler.isOBXAbnormal( j, k)) {%>
-                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
-                                                    <%}else{%>
-                                                    <%= "N"%>
-                                                    <%}%>
-                                                </td>
-                                                <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
-                                                <td align="left"><%=handler.getOBXUnits( j, k) %></td>
-                                                <td align="center"><%= handler.getTimeStamp(j, k) %></td>
-                                                <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
+                                
+                                boolean obrFlag = false;
+                                for (k=0; k < handler.getOBXCount(j); k++){ 
+                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !handler.getOBXName(j, k).equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<-- only needed for MDS messages
+                                        
+                                        if(!obrFlag){%>
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
+                                                <td valign="top" align="left"><%=handler.getOBRName(j)%></td>
+                                                <td colspan="6">&nbsp;</td>
                                             </tr>
-
-                                            <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
-                                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                                    <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
-                                                </tr>
-                                            <%}
+                                            <%obrFlag = true;
                                         }
-                                    }  
-                                    for (k=0; k < handler.getOBRCommentCount(j); k++){%>
-                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
-                                            <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
+                                        
+                                        String lineClass = "NormalRes";
+                                        String abnormal = handler.getOBXAbnormalFlag(j, k);
+                                        if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
+                                            lineClass = "AbnormalRes";
+                                        }else if ( abnormal != null && abnormal.startsWith("L")){
+                                            lineClass = "HiLoRes";
+                                        }%>
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                            <td valign="top" align="left">&nbsp; &nbsp;<u><%=handler.getOBXName( j, k) %></u></td>                                         
+                                            <td align="right"><%= handler.getOBXResult( j, k) %></td>
+                                            <td align="center">
+                                                <%if (handler.isOBXAbnormal( j, k)) {%>
+                                                    <%= handler.getOBXAbnormalFlag(j, k)%>
+                                                <%}else{%>
+                                                    <%= "N"%>
+                                                <%}%>
+                                            </td>
+                                            <td align="left"><%=handler.getOBXReferenceRange( j, k)%></td>
+                                            <td align="left"><%=handler.getOBXUnits( j, k) %></td>
+                                            <td align="center"><%= handler.getTimeStamp(j, k) %></td>
+                                            <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
                                         </tr>
-                                    <%}
-                                }
-                            }                             
                             
-                        %></table>
+                                        <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                                <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
+                                            </tr>
+                                        <%}
+                                    }
+                                }                                                             
+                            }                             
+                                                        
+                            for ( j=0; j< OBRCount; j++){    
+                                if (handler.getObservationHeader(j, 0).equals(headers.get(i))) {%>
+                                <%for (k=0; k < handler.getOBRCommentCount(j); k++){%>
+                                <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
+                                    <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
+                                </tr>
+                            <%}
+                            }
+                            }%>
+                        </table>
                         <% // end for headers
-                        }  // for i=0... (headers)%>
+                        }  // for i=0... (headers) %>
                         
                         <table width="100%" border="0" cellspacing="0" cellpadding="3" class="MainTableBottomRowRightColumn" bgcolor="#003399">
                             <tr>
@@ -636,8 +644,8 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% } %>
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
-                                    <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart%>                            
-                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getPatientName())%>', 'searchPatientWindow')">
+                                    <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>                            
+                                    <input type="button" value=" <bean:message key="oscarMDS.segmentDisplay.btnEChart"/> " onClick="popupStart(360, 680, '../../../oscarMDS/SearchPatient.do?labType=HL7&segmentID=<%= request.getParameter("segmentID")%>&name=<%=java.net.URLEncoder.encode(handler.getLastName()+", "+handler.getFirstName())%>', 'searchPatientWindow')">
                                     <% } %>
                                 </td>
                                 <td width="50%" valign="center" align="left">

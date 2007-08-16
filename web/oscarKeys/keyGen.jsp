@@ -166,8 +166,8 @@ if (message != null){
                                     <select name="type" id="selection" onClick="selectOther()">
                                         <option value="MDS">MDS</option>
                                         <option value="CML">CML</option>
-                                        <option value="GDML">GDML</option>
-                                        <option value="PATHL7">PathNet</option>
+                                        <option value="PATHL7">EXCELLERIS</option>
+                                        <option value="GDML">GDML -- TESTING DO NOT USE</option>                                        
                                         <option value="OTHER">Other</option>
                                     </select>
                                 </td>

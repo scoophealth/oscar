@@ -49,7 +49,13 @@ public class CMLHandler implements MessageHandler {
     }
     
     public String getMsgDate(){
-        return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+        try {
+            //return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+            return(formatDateTime(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue()));
+        } catch (Exception e) {
+            logger.error("Could not retrieve message date", e);
+            return("");
+        }
     }
     
     public String getMsgPriority(){

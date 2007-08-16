@@ -16,6 +16,7 @@ if ( request.getParameter("searchProviderNo") == null || request.getParameter("s
 mDSSegmentData.populateMDSSegmentData(request.getParameter("segmentID"));
 
 CommonLabResultData clrd = new CommonLabResultData();
+String multiLabId = clrd.getMatchingLabs(request.getParameter("segmentID"), "MDS");
  String demoNo = clrd.getDemographicNo(request.getParameter("segmentID"),"MDS");
 
 PatientData.Patient pd = new PatientData().getPatient(request.getParameter("segmentID"));
@@ -191,7 +192,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                 <tr>
                     <td align="left" class="MainTableTopRowRightColumn" width="100%">                        
                         <input type="hidden" name="segmentID" value="<%= request.getParameter("segmentID") %>">
-                        <input type="hidden" name="multiID" value="<%= request.getParameter("multiID") %>" />
+                        <input type="hidden" name="multiID" value="<%= multiLabId %>" />
                         <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>">
                         <input type="hidden" name="status" value="A">
                         <input type="hidden" name="comment" value="">
@@ -220,8 +221,8 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 
             <table width="100%" border="1" cellspacing="0" cellpadding="3" bgcolor="#9999CC" bordercolordark="#bfcbe3">
                 <%
-                if (request.getParameter("multiID") != null){
-                    String[] multiID = request.getParameter("multiID").split(",");
+                if (multiLabId != null){
+                    String[] multiID = multiLabId.split(",");
                     if (multiID.length > 1){
                         %>
                         <tr>
@@ -231,12 +232,12 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                                     <%
                                     for (int i=0; i < multiID.length; i++){
                                         if (multiID[i].equals(request.getParameter("segmentID"))){
-                                            %><u>v<%= i+1 %></u>&#160;<%
+                                            %>v<%= i+1 %>&#160;<%
                                         }else{
                                             if ( request.getParameter("searchProviderNo") != null ) { // null if we were called from e-chart
-                                                %><a href="SegmentDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>">v<%= i+1 %></a>&#160;<%
+                                                %><a href="SegmentDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>&searchProviderNo=<%=request.getParameter("searchProviderNo")%>&status=<%=request.getParameter("status")%>">v<%= i+1 %></a>&#160;<%
                                             }else{
-                                                %><a href="SegmentDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=request.getParameter("multiID")%>&providerNo=<%=request.getParameter("providerNo")%>&status=<%=request.getParameter("status")%>">v<%= i+1 %></a>&#160;<%
+                                                %><a href="SegmentDisplay.jsp?segmentID=<%=multiID[i]%>&multiID=<%=multiLabId%>&providerNo=<%=request.getParameter("providerNo")%>&status=<%=request.getParameter("status")%>">v<%= i+1 %></a>&#160;<%
                                             }
                                         }
                                     }
@@ -483,7 +484,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                 </tr>
                 <tr>                                                                
                                 <td align="center" bgcolor="white" colspan="2">
-                                    <%String[] multiID = request.getParameter("multiID").split(",");
+                                    <%String[] multiID = multiLabId.split(",");
                                     boolean startFlag = false;                                    
                                     for (int j=multiID.length-1; j >=0; j--){
                                         MDSSegmentData currentData = new MDSSegmentData();

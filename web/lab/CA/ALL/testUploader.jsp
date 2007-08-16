@@ -11,6 +11,10 @@ String outcome = (String) request.getAttribute("outcome");
 if(outcome != null){
     if(outcome.equals("success"))
 %><script type="text/javascript">alert("Lab uploaded successfully");</script><%
+    else if(outcome.equals("uploaded previously"))
+%><script type="text/javascript">alert("Lab has already been uploaded");</script><%    
+    else if(outcome.equals("exception"))
+%><script type="text/javascript">alert("Exception uploading the lab");</script><%
     else
 %><script type="text/javascript">alert("Failed to upload lab");</script><%
 }
@@ -92,8 +96,8 @@ if(outcome != null){
                                     <select name="type" onClick="selectOther()">
                                         <option value="MDS">MDS</option>
                                         <option value="CML">CML</option>
-                                        <option value="GDML">GDML</option>
-                                        <option value="PATHL7">PathNet</option>
+                                        <option value="PATHL7">EXCELLERIS</option>
+                                        <option value="GDML">GDML -- TESTING DO NOT USE</option>
                                         <option value="OTHER">Other</option>
                                     </select>
                                 </td>

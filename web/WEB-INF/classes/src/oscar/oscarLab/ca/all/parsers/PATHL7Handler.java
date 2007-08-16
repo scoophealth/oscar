@@ -55,7 +55,12 @@ public class PATHL7Handler implements MessageHandler {
      */
     
     public String getMsgDate(){
-        return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+        try {
+            //return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
+            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
+        } catch (HL7Exception ex) {
+            return ("");
+        }
     }
     
     /*
@@ -212,7 +217,8 @@ public class PATHL7Handler implements MessageHandler {
     
     public String getServiceDate(){
         try{
-            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
+            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getResultsRptStatusChngDateTime().getTimeOfAnEvent().getValue())));
+            //return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
         }catch(Exception e){
             return("");
         }
