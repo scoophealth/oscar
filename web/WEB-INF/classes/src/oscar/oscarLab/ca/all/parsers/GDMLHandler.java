@@ -76,24 +76,13 @@ public class GDMLHandler implements MessageHandler {
     }
     
     public int getOBXCount(int i){
-        int count = 0;
         try{
-            
-            int trueCount = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps();
-            // an OBX segment marked with a value type of "FT" is a comment and
-            // should not be counted, segments marked with "CE" should also not
-            // be countedit only occurs as the last OBX in an OBR group
-            for (int j=0; j < trueCount; j++){
-                String valueType = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue();
-                if (valueType != null && !valueType.equals("FT") && !valueType.equals("CE"))
-                    count++;
-            }
-            
+            return(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps());
         }catch(Exception e){
             logger.error("GDMLHandler getOBXCount error", e);
+            return (0);
         }
         
-        return count;
     }
     
     public String getOBRName(int i){
@@ -125,8 +114,8 @@ public class GDMLHandler implements MessageHandler {
     public String getOBXAbnormalFlag(int i, int j){
         
         try{
-            int obxNum = findOBXNum(i, j);            
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX().getAbnormalFlags(0).getValue()));
+            
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
         }catch(Exception e){
             return("");
         }
@@ -143,53 +132,72 @@ public class GDMLHandler implements MessageHandler {
     public String getOBXIdentifier(int i, int j){
         
         try{
-            int obxNum = findOBXNum(i, j);
+            
             Terser t = new Terser(msg);
-            Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX();
+            Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
             String ident = getString(t.get(obxSeg, 3, 0, 1, 1 ));
             String subIdent = t.get(obxSeg, 3, 0, 1, 2);
             
             if (subIdent != null)
                 ident = ident+"&"+subIdent;
             
+            logger.info("returning obx identifier: "+ident);
             return(ident);
         }catch(Exception e){
+            logger.error("error returning obx identifier", e);
             return("");
         }
     }
     
     public String getOBXName(int i, int j){
+        String ret = "";
         try{
-            int obxNum = findOBXNum(i, j);
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX().getObservationIdentifier().getText().getValue()));
+            // leave the name blank if the value type is 'FT' this is because it
+            // is a comment, if the name is blank the obx segment will not be displayed
+            if (!msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue().equals("FT"))
+                ret = getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue());
         }catch(Exception e){
-            return("");
+            logger.error("Error returning OBX name", e);
         }
+        
+        return ret;
     }
     
     public String getOBXResult(int i, int j){
         try{
-            int obxNum = findOBXNum(i, j);
+            
             Terser terser = new Terser(msg);
-            return(getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX(),5,0,1,1)));
+            return(getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
     }
     
     public String getOBXReferenceRange(int i, int j){
+        String ret = "";
         try{
-            int obxNum = findOBXNum(i, j);
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX().getReferencesRange().getValue()).replaceAll("\\\\\\.br\\\\", ""));
+            Terser terser = new Terser(msg);
+            
+            
+            // if there are no units specified for the obx they are stored in the
+            // second componet of the reference range along with the reference range
+            if (getOBXUnits(i, j).equals(""))
+                ret = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,0,2,1).replaceAll("\\\\\\.br\\\\", "");
+            
+            // may have to fall back to original reference range if the second
+            // component is empty as well as the units
+            if (ret == null || ret.equals("") || ret.equalsIgnoreCase("null"))
+                ret = (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()).replaceAll("\\\\\\.br\\\\", ""));
         }catch(Exception e){
-            return("");
+            ret = "";
         }
+        return ret;
     }
     
     public String getOBXUnits(int i, int j){
         try{
-            int obxNum = findOBXNum(i, j);
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX().getUnits().getIdentifier().getValue()));
+            
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUnits().getIdentifier().getValue()));
         }catch(Exception e){
             return("");
         }
@@ -197,9 +205,9 @@ public class GDMLHandler implements MessageHandler {
     
     public String getOBXResultStatus(int i, int j){
         try{
-            int obxNum = findOBXNum(i, j);
+            
             // result status is stored in the wrong field.... i think
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX().getNatureOfAbnormalTest().getValue()));
+            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getNatureOfAbnormalTest().getValue()));
         }catch(Exception e){
             return("");
         }
@@ -257,8 +265,8 @@ public class GDMLHandler implements MessageHandler {
     public int getOBRCommentCount(int i){
         try {
             int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
-            //if (lastOBX == 0 && getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX().getValueType().getValue()).equals("FT"))
-            if (getOBXCount(i) == 0 && getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX().getValueType().getValue()).equals("FT"))
+
+            if (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX().getValueType().getValue()).equals("FT"))
                 return(1);
             else
                 return(0);
@@ -293,56 +301,36 @@ public class GDMLHandler implements MessageHandler {
      *  Methods to get information from observation notes
      */
     public int getOBXCommentCount(int i, int j){
+        int count = 0;
         try{
-            int obxNum = findOBXNum(i, j);
-            Terser terser = new Terser(msg);
-            int trueOBXCount = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps();
-            int obxCount = getOBXCount(i);
             
-            if ( obxNum+1 == obxCount && obxCount != trueOBXCount )
-                return(1);
-            else if(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX(),7,1,1,1) != null)
-                return(1);
-            else
-                return(0);
+            Terser terser = new Terser(msg);
+            String comment = "";
+            while(comment != null){
+                count++;
+                comment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,count,1,1);
+            }
+            
+            
         }catch(Exception e){
             return(0);
         }
+        return count-1;
     }
     
     public String getOBXComment(int i, int j, int k){
+        String comment = "";
         try{
             k++;
-            int obxNum = findOBXNum(i, j);
+            
             Terser terser = new Terser(msg);
-            String comment = "";
-            String nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX(),7,k,1,1);
             
-            // check the reference range for comments first
-            while(nextComment != null){
-                comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
-                k++;
-                nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum).getOBX(),7,k,1,1);
-            }
-            
-            // check the results field for the comment
-            if (comment.equals("")){
-                k = 0;
-                nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum+1).getOBX(),5,k,1,1);
-                while(nextComment != null){
-                    comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
-                    k++;
-                    nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(obxNum+1).getOBX(),5,k,1,1);
-                }
-            }
-            
-            return(comment);
+            comment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,k,1,1).replaceAll("\\\\\\.br\\\\", "<br />");
             
         }catch(Exception e){
             logger.error("Cannot return comment", e);
-            
-            return("");
         }
+        return comment;
     }
     
     
@@ -532,7 +520,8 @@ public class GDMLHandler implements MessageHandler {
             return(docNames);
             
         } catch (Exception e) {
-            logger.error("Could not retrieve cc'd docs", e);
+            //ignore error... it will occur when the zdr segment is not present
+            //logger.error("Could not retrieve cc'd docs", e);
             return("");
         }
         
@@ -565,25 +554,6 @@ public class GDMLHandler implements MessageHandler {
         }
         
         return(nums);
-    }
-    
-    private int findOBXNum(int i, int j){
-        int count = 0;
-        try{
-            int trueCount = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps();
-            int k = 0;
-            
-            while (k < trueCount && count != j){
-                String valueType = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(k).getOBX().getValueType().getValue();
-                if (valueType != null && !valueType.equals("FT") && !valueType.equals("CE"))
-                    count++;
-                
-                k++;
-            }
-        }catch(Exception e){
-            logger.error("Error retrieveing obx num", e);
-        }
-        return count;
     }
     
     private String getFullDocName(XCN docSeg){

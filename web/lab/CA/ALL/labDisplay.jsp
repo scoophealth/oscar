@@ -581,7 +581,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                 
                                 boolean obrFlag = false;
                                 for (k=0; k < handler.getOBXCount(j); k++){ 
-                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !handler.getOBXName(j, k).equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<-- only needed for MDS messages
+                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !handler.getOBXName(j, k).equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
                                         
                                         if(!obrFlag){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
@@ -615,17 +615,24 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                         </tr>
                             
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
-                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
+                                            <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                 <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
                                             </tr>
                                         <%}
                                     }
                                 }                                                             
-                            }                             
+                            //}                             
                                                         
-                            for ( j=0; j< OBRCount; j++){    
+                            //for ( j=0; j< OBRCount; j++){    
                                 if (handler.getObservationHeader(j, 0).equals(headers.get(i))) {%>
-                                <%for (k=0; k < handler.getOBRCommentCount(j); k++){%>
+                                <%for (k=0; k < handler.getOBRCommentCount(j); k++){
+                                    if(!obrFlag){%>
+                                        <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
+                                            <td valign="top" align="left"><%=handler.getOBRName(j)%></td>
+                                            <td colspan="6">&nbsp;</td>
+                                        </tr>
+                                        <%obrFlag = true;
+                                    }%>
                                 <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                     <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBRComment(j, k)%></pre></td>
                                 </tr>

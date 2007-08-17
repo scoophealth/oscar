@@ -69,16 +69,14 @@ public class Hl7textResultsData {
                 
             }
             // loop through the measurements for the lab and insert them
+
             for (int i=0; i < h.getOBRCount(); i++){
                 for (int j=0; j < h.getOBXCount(i); j++){
                     
                     String result = h.getOBXResult(i, j);
-                    if (!result.equals("") && !result.equals("DNR")){
-                        
+                    if (!result.equals("") && !result.equals("DNR") && !h.getOBXName(i, j).equals("")){
+                        logger.info("obx("+j+") should be inserted");
                         String identifier = h.getOBXIdentifier(i, j);
-                        //String abnormal = "N";
-                        //if (h.isOBXAbnormal(i, j))
-                        //    abnormal = "A";
                         String abnormal = h.getOBXAbnormalFlag(i, j);
                         if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
                             abnormal = "A";
