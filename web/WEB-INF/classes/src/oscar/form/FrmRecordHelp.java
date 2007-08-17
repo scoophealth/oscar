@@ -157,7 +157,7 @@ public class FrmRecordHelp {
                 if (md.getColumnName(i).equalsIgnoreCase("formEdited")) {
                     d = UtilDateUtilities.Today();
                 } else {
-                    if (value.indexOf('/') != -1)
+                    if ((value == null) || (value.indexOf('/') != -1))
                         d = UtilDateUtilities.StringToDate(value, _dateFormat);
                     else
                         d = UtilDateUtilities.StringToDate(value, _newDateFormat);
