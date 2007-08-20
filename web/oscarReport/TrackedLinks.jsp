@@ -24,19 +24,15 @@
 	RedirectLinkDao redirectLinkDao = (RedirectLinkDao) applicationContext.getBean("redirectLinkDao");
 	List<RedirectLink> links=redirectLinkDao.findAll();
 %>
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/oscar.css" title="default" />
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/reporting.css" title="default" />
-	<title></title>
-</head>
-<body>
+
+<%@include file="/layouts/caisi_html_top.jspf"%>
+
 	<table class="genericTable">
 		<thead>
 			<tr>
-				<td class="Header">Tracked Url</td>
-				<td class="Header">&nbsp;</td>
-				<td class="Header">&nbsp;</td>
+				<td class="genericTableHeader">Tracked Url</td>
+				<td class="genericTableHeader">&nbsp;</td>
+				<td class="genericTableHeader">&nbsp;</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -44,15 +40,15 @@
 			for (RedirectLink redirectLink : links)
 			{
 				%>
-					<tr>
-						<td class="Section"><a href="<%=redirectLink.getUrl()%>"><%=redirectLink.getUrl()%></a></td>
-						<td class="Section"><a href="LinkTrackingDetailedReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Detailed Report</a></td>
-						<td class="Section"><a href="LinkTrackingSummaryReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Summary Report</a></td>
+					<tr class="genericTableRow">
+						<td class="genericTableData"><a href="<%=redirectLink.getUrl()%>"><%=redirectLink.getUrl()%></a></td>
+						<td class="genericTableData"><a href="LinkTrackingDetailedReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Detailed Report</a></td>
+						<td class="genericTableData"><a href="LinkTrackingSummaryReport.jsp?redirectLinkId=<%=redirectLink.getId()%>">Summary Report</a></td>
 					</tr>
 				<%
 			}
 		%>
 		</tbody>
 	</table>
-</body>
-</html>
+	
+<%@include file="/layouts/caisi_html_bottom.jspf"%>

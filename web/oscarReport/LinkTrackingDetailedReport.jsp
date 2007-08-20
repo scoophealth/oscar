@@ -35,22 +35,16 @@
 	
 	List<RedirectLinkTracking> trackingResults=redirectLinkTrackingDao.findByRedirectLinkId(redirectLinkId);
 %>
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/oscar.css" title="default" />
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/reporting.css" title="default" />
-	<title></title>
-</head>
-<body>
 
-	Details for : <%=redirectLink.getUrl()%>
-	<br /><br />
+<%@include file="/layouts/caisi_html_top.jspf"%>
+	
+	<h1>Details for : <%=redirectLink.getUrl()%></h1>
 	
 	<table class="genericTable">
 		<thead>
 			<tr>
-				<td class="Header">Date</td>
-				<td class="Header">Provider</td>
+				<td class="genericTableHeader">Date</td>
+				<td class="genericTableHeader">Provider</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -58,17 +52,18 @@
 			for (RedirectLinkTracking redirectLinkTracking : trackingResults)
 			{
 				%>
-					<tr>
-						<td class="Section"><%=DateFormatUtils.ISO_DATETIME_FORMAT.format(redirectLinkTracking.date)%></td>
+					<tr class="genericTableRow">
+						<td class="genericTableData"><%=DateFormatUtils.ISO_DATETIME_FORMAT.format(redirectLinkTracking.date)%></td>
 						<%
 							Provider provider=providerDao.getProvider(String.valueOf(redirectLinkTracking.providerNo));
 						%>
-						<td class="Section"><%=provider.getFormattedName()%></td>
+						<td class="genericTableData"><%=provider.getFormattedName()%></td>
 					</tr>
 				<%
 			}
 		%>
 		</tbody>
 	</table>
-</body>
-</html>
+	
+<%@include file="/layouts/caisi_html_bottom.jspf"%>
+

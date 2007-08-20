@@ -29,16 +29,10 @@
 	int redirectLinkId=Integer.parseInt(request.getParameter("redirectLinkId"));
 	RedirectLink redirectLink=redirectLinkDao.find(redirectLinkId);
 %>
-<html>
-<head>
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/oscar.css" title="default" />
-	<link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/share/css/reporting.css" title="default" />
-	<title></title>
-</head>
-<body>
 
-	Summary for : <%=redirectLink.getUrl()%>
-	<br /><br />
+<%@include file="/layouts/caisi_html_top.jspf"%>
+
+	<h1>Summary for : <%=redirectLink.getUrl()%></h1>
 	
 	<table class="genericTable">
 		<tbody>
@@ -47,23 +41,23 @@
 				int countProvidersWhoHaveUsedLink=redirectLinkTrackingDao.countProvidersWhoHaveUsedLink(true, redirectLinkId);
 				int countProvidersWhoHaveNotUsedLink=redirectLinkTrackingDao.countProvidersWhoHaveUsedLink(false, redirectLinkId);
 			%>
-			<tr>
-				<td class="Header">Total times link was used </td>
-				<td class="Section"><%=countTotalRedirects %></td>
+			<tr class="genericTableRow">
+				<td class="genericTableHeader">Total times link was used </td>
+				<td class="genericTableData"><%=countTotalRedirects %></td>
 			</tr>
-			<tr>
-				<td class="Header"># of providers who have used link </td>
-				<td class="Section"><%=countProvidersWhoHaveUsedLink %></td>
+			<tr class="genericTableRow">
+				<td class="genericTableHeader"># of providers who have used link </td>
+				<td class="genericTableData"><%=countProvidersWhoHaveUsedLink %></td>
 			</tr>
-			<tr>
-				<td class="Header"># of providers who have never used link </td>
-				<td class="Section"><%=countProvidersWhoHaveNotUsedLink %></td>
+			<tr class="genericTableRow">
+				<td class="genericTableHeader"># of providers who have never used link </td>
+				<td class="genericTableData"><%=countProvidersWhoHaveNotUsedLink %></td>
 			</tr>
-			<tr>
-				<td class="Header">Avg times link was used </td>
-				<td class="Section"><%=countTotalRedirects/countProvidersWhoHaveUsedLink%></td>
+			<tr class="genericTableRow">
+				<td class="genericTableHeader">Avg times link was used </td>
+				<td class="genericTableData"><%=countTotalRedirects/countProvidersWhoHaveUsedLink%></td>
 			</tr>
 		</tbody>
 	</table>
-</body>
-</html>
+
+<%@include file="/layouts/caisi_html_bottom.jspf"%>

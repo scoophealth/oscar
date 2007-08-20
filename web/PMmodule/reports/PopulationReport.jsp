@@ -21,11 +21,33 @@
 * Toronto, Ontario, Canada 
 */
  -->
-<html>
-	<head>
-		<title>Population Report Generator</title>
-	</head>
-	<body>	
-		Population Report
-	</body>
-</html>
+<%@page import="java.util.*"%>
+<%@page import="org.springframework.web.context.WebApplicationContext"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="org.caisi.dao.*"%>
+<%@page import="org.caisi.model.*"%>
+<%
+	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+	IssueGroupDao issueGroupDao = (IssueGroupDao) applicationContext.getBean("issueGroupDao");
+	
+	List<IssueGroup> issueGroups=issueGroupDao.findAll();
+%>
+
+<%@include file="/layouts/caisi_html_top.jspf"%>
+
+	<h1>Population Report</h1>
+	
+	<table class="genericTable">
+		<tr class="genericTableRow">
+			<%
+				for (IssueGroup issueGroup : issueGroups)
+				{
+					%>
+						<td class="genericTableData"><%=issueGroup.getName()%></td>
+					<%
+				}
+			%>
+		</tr>
+	</table>
+	
+<%@include file="/layouts/caisi_html_bottom.jspf"%>
