@@ -126,7 +126,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="CaisiRoleDAO" class="org.caisi.dao.hibernate.CaisiRoleDAOHibernate">
+	<bean id="CaisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
@@ -646,7 +646,7 @@
 	</bean>
 	<bean id="providerManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.ProviderManagerImpl">
+			<bean class="org.oscarehr.PMmodule.service.ProviderManager">
 				<property name="providerDao" ref="providerDao" />
 				<property name="agencyDAO" ref="agencyDao" />
 				<property name="programProviderDAO" ref="programProviderDAO" />

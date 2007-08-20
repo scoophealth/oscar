@@ -585,7 +585,7 @@
 	</bean>
         <bean id="providerManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.ProviderManagerImpl">
+			<bean class="org.oscarehr.PMmodule.service.ProviderManager">
 				<property name="providerDao">
                                     <ref bean="providerDao" />
                                 </property> 

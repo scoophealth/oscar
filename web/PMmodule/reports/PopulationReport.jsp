@@ -28,15 +28,12 @@
 <%@page import="org.caisi.model.*"%>
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
+<%@page import="org.oscarehr.PMmodule.web.*"%>
 <%
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
-	IssueGroupDao issueGroupDao = (IssueGroupDao) applicationContext.getBean("issueGroupDao");
-	
-	List<IssueGroup> issueGroups=issueGroupDao.findAll();
-	
 	int programId=Integer.parseInt(request.getParameter("programId"));
-	ProgramDao programDao = (ProgramDao) applicationContext.getBean("programDao");
-	Program program=programDao.getProgram(programId);
+	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(applicationContext, programId);
+	Program program=populationReportUIBean.getProgram();
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
@@ -45,15 +42,36 @@
 	
 	<table class="genericTable">
 		<tr class="genericTableRow">
+			<td class="genericTableHeader">Role Provider</td>
+			<td class="genericTableHeader">Encounter Type</td>
 			<%
-				for (IssueGroup issueGroup : issueGroups)
+				for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
 				{
 					%>
-						<td class="genericTableData"><%=issueGroup.getName()%></td>
+						<td class="genericTableHeader"><%=issueGroup.getName()%></td>
 					<%
 				}
 			%>
 		</tr>
+		<%
+			for (CaisiRole caisiRole : populationReportUIBean.getCaisiRoles())
+			{
+				%>
+					<tr class="genericTableRow">
+						<td class="genericTableHeader"><%=caisiRole.getName()%></td>
+						<td class="genericTableHeader">TODO : enounter Type</td>
+						<%
+							for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
+							{
+								%>
+									<td class="genericTableHeader">TODO : numeric data</td>
+								<%
+							}
+						%>
+					</tr>
+				<%
+			}
+		%>
 	</table>
 	
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

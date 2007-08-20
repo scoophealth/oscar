@@ -26,13 +26,49 @@ import java.util.List;
 
 import org.caisi.model.CaisiRole;
 import org.caisi.model.Role;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface CaisiRoleDAO {
-	public CaisiRole getRole(Long id);
-	public CaisiRole getRoleByProviderNo(String provider_no);
-	public List getRolesByRole(String role);
-	public void saveRoleAssignment(CaisiRole role);
-	public void saveRole(Role role);
-	public boolean hasExist(String roleName);
-	public List getRoles();
+public class CaisiRoleDAO extends HibernateDaoSupport {
+
+	public CaisiRole getRole(Long id) {
+		return (CaisiRole)this.getHibernateTemplate().get(CaisiRole.class,id);
+	}
+
+	public CaisiRole getRoleByProviderNo(String provider_no) {
+		return (CaisiRole)this.getHibernateTemplate().find("from CaisiRole cr where cr.provider_no = ?",new Object[] {provider_no}).get(0);
+	}
+
+	public List getRolesByRole(String role) {
+		return this.getHibernateTemplate().find("from CaisiRole cr where cr.role = ?",new Object[] {role});
+	}
+
+	public void saveRoleAssignment(CaisiRole role) {
+		this.getHibernateTemplate().saveOrUpdate(role);
+	}
+
+	public void saveRole(Role role) {
+		this.getHibernateTemplate().saveOrUpdate(role);
+/*
+		SQLQuery query = getSession().createSQLQuery("insert into acces_type (name,type) values (\'write " + role.getName() + " issues\',\'access\'");
+		query.executeUpdate();
+		
+		query = getSession().createSQLQuery("insert into acces_type (name,type) values (\'read " + role.getName() + " issues\',\'access\'");
+		query.executeUpdate();
+		
+		query = getSession().createSQLQuery("insert into acces_type (name,type) values (\'read " + role.getName() + " notes\',\'access\'");
+		query.executeUpdate();
+*/
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+    public List<CaisiRole> getRoles() {
+		return this.getHibernateTemplate().find("from Role");
+	}
+	public boolean hasExist(String roleName) {
+		String q="from Role r where lower(r.name)=lower(?)";
+		List rs=getHibernateTemplate().find(q,roleName);
+		if (rs.size()>0) return true;
+		else return false;
+	}
 }

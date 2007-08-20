@@ -22,29 +22,80 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.oscarehr.PMmodule.dao.AgencyDao;
+import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
+import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.model.SecUserRole;
+import org.oscarehr.PMmodule.service.ProviderManager;
 
 
-public interface ProviderManager 
+public class ProviderManager
 {
-	public Provider getProvider(String providerNo);
+	private ProviderDao dao;
+	private AgencyDao agencyDAO;
+	private ProgramProviderDAO programProviderDAO;
+	private OscarSecurityDAO oscarSecurityDAO; 
 	
-	public String getProviderName(String providerNo);
 	
-	public List<Provider> getProviders();
+	public void setProviderDao(ProviderDao dao)	{
+		this.dao = dao;
+	}
 	
-	public List<Provider> search(String name);
+	public void setAgencyDAO(AgencyDao dao) {
+		this.agencyDAO = dao;
+	}
 	
-	public List getProgramDomain(String providerNo);
+	public void setProgramProviderDAO(ProgramProviderDAO dao) {
+		this.programProviderDAO = dao;
+	}
 	
-	public List<Agency> getAgencyDomain(String providerNo);
+	public void setOscarSecurityDAO(OscarSecurityDAO oscarSecurityDAO) {
+		this.oscarSecurityDAO = oscarSecurityDAO;
+	}
 	
-	public List<Provider> getProvidersByType(String type);
+	public Provider getProvider(String providerNo)
+	{
+		return dao.getProvider(providerNo);
+	}
 	
-	public List<SecUserRole> getSecUserRoles(String providerNo);
+	public String getProviderName(String providerNo)
+	{
+		return dao.getProviderName(providerNo);
+	}
+	
+	public List<Provider> getProviders()
+	{
+		return dao.getProviders();
+	}
+	
+	public List<Provider> search(String name) {
+		return dao.search(name);
+	}
+	
+	public List getProgramDomain(String providerNo) {
+		return programProviderDAO.getProgramDomain(Long.valueOf(providerNo));
+	}
+	
+	public List<Agency> getAgencyDomain(String providerNo) {
+		Agency localAgency =  agencyDAO.getLocalAgency();
+		List<Agency> agencies = new ArrayList<Agency>();
+		agencies.add(localAgency);
+		return agencies;
+	}
+	
+	public List<Provider> getProvidersByType(String type) {
+		return dao.getProvidersByType(type);
+	}
+	
+	public List<SecUserRole> getSecUserRoles(String providerNo) {
+		return oscarSecurityDAO.getUserRoles(providerNo);
+	}
 
+	
 }
