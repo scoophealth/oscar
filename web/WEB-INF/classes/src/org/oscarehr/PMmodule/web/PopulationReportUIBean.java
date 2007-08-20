@@ -2,11 +2,11 @@ package org.oscarehr.PMmodule.web;
 
 import java.util.List;
 
-import org.caisi.dao.CaisiRoleDAO;
 import org.caisi.dao.IssueGroupDao;
-import org.caisi.model.CaisiRole;
 import org.caisi.model.IssueGroup;
+import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.Program;
 import org.springframework.context.ApplicationContext;
 
@@ -39,9 +39,9 @@ public class PopulationReportUIBean {
 		return(programDao.getProgram(programId));	
 	}
 		
-	public List<CaisiRole> getCaisiRoles()
+	public List<Role> getRoles()
 	{
-		CaisiRoleDAO caisiRoleDAO = (CaisiRoleDAO) applicationContext.getBean("CaisiRoleDAO");
-		return(caisiRoleDAO.getRoles());
+		RoleDAO roleDAO = (RoleDAO) applicationContext.getBean("roleDAO");
+		return(roleDAO.getRoles());
 	}
 }

@@ -54,11 +54,11 @@
 			%>
 		</tr>
 		<%
-			for (CaisiRole caisiRole : populationReportUIBean.getCaisiRoles())
+			for (Role role : populationReportUIBean.getRoles())
 			{
 				%>
 					<tr class="genericTableRow">
-						<td class="genericTableHeader"><%=caisiRole.getName()%></td>
+						<td class="genericTableHeader"><%=role.getName()%></td>
 						<td class="genericTableHeader">TODO : enounter Type</td>
 						<%
 							for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())

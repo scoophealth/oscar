@@ -238,7 +238,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="roleDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoleDAOHibernate">
+	<bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO">
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>
