@@ -29,6 +29,7 @@
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.PMmodule.web.*"%>
+<%@page import="org.caisi.util.*"%>
 <%
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	int programId=Integer.parseInt(request.getParameter("programId"));
@@ -52,24 +53,55 @@
 					<%
 				}
 			%>
+			<td class="genericTableHeader">Total</td>
 		</tr>
 		<%
 			for (Role role : populationReportUIBean.getRoles())
 			{
-				%>
-					<tr class="genericTableRow">
-						<td class="genericTableHeader"><%=role.getName()%></td>
-						<td class="genericTableHeader">TODO : enounter Type</td>
-						<%
-							for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
-							{
-								%>
-									<td class="genericTableHeader">TODO : numeric data</td>
-								<%
-							}
-						%>
-					</tr>
+				boolean hasPrintedRole=false;
+				for (EncounterUtil.EncounterType encounterType : EncounterUtil.EncounterType.values())
+				{
+					%>
+						<tr class="genericTableRow">
+							<td class="genericTableHeader">
+							<%
+								String temp="";
+								if (!hasPrintedRole)
+								{
+									temp=role.getName();
+									hasPrintedRole=true;
+								}
+							%>
+							<%=temp%>
+							</td>
+							<td class="genericTableData"><%=encounterType %></td>
+							<%
+								for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
+								{
+									%>
+										<td class="genericTableData">TODO : numeric data</td>
+									<%
+								}
+							%>
+							<td class="genericTableData">TODO : numeric data</td>
+						</tr>
+					<%
+				}
+			%>
+			<tr class="genericTableRow">
+				<td class="genericTableHeader"></td>
+				<td class="genericTableHeader">Total</td>
 				<%
+					for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
+					{
+						%>
+							<td class="genericTableData">TODO : numeric data</td>
+						<%
+					}
+				%>
+				<td class="genericTableData">TODO : numeric data</td>
+			</tr>
+		<%
 			}
 		%>
 	</table>
