@@ -213,7 +213,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-	<bean id="programDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramDaoHibernate">
+	<bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" >
 		<property name="sessionFactory">
 			<ref local="sessionFactory" />
 		</property>

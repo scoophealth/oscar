@@ -106,7 +106,7 @@ function getIntakeReport(type) {
                 <html:link action="/PMmodule/Reports/ClientListsReport">Client Lists Report</html:link>
             </div>
             <div>
-                <a href="<%=request.getContextPath()%>/PMmodule/reports/PopulationReport.jsp">Population Report</a>
+                <a href="<%=request.getContextPath()%>/PMmodule/reports/PopulationReportForm.jsp">Population Report</a>
             </div>
         </div>
         </c:if>

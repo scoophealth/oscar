@@ -77,6 +77,7 @@
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName" />
     <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName" />
     <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao" autowire="byName" />
+    <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName" />
     
     <!-- Generic Intake -->
     <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate">
@@ -95,11 +96,6 @@
 		</property>
     </bean>
     <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.hibernate.AdmissionDaoHibernate">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
-		</property>
-    </bean>
-    <bean id="programDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramDaoHibernate">
 		<property name="sessionFactory">
 			<ref bean="sessionFactory" />
 		</property>
