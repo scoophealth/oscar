@@ -656,7 +656,7 @@
 	</bean>
 	<bean id="programManager" parent="baseTransactionProxy">
 		<property name="target">
-			<bean class="org.oscarehr.PMmodule.service.impl.ProgramManagerImpl">
+			<bean class="org.oscarehr.PMmodule.service.ProgramManager">
 				<property name="programDao" ref="programDao" />
 				<property name="programProviderDAO" ref="programProviderDAO" />
 				<property name="programFunctionalUserDAO" ref="programFunctionalUserDAO" />

@@ -26,16 +26,22 @@
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.dao.*"%>
 <%@page import="org.caisi.model.*"%>
+<%@page import="org.oscarehr.PMmodule.model.*"%>
+<%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%
 	WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 	IssueGroupDao issueGroupDao = (IssueGroupDao) applicationContext.getBean("issueGroupDao");
 	
 	List<IssueGroup> issueGroups=issueGroupDao.findAll();
+	
+	int programId=Integer.parseInt(request.getParameter("programId"));
+	ProgramDao programDao = (ProgramDao) applicationContext.getBean("programDao");
+	Program program=programDao.getProgram(programId);
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
 
-	<h1>Population Report</h1>
+	<h1>Population Report : <%=program.getName() %></h1>
 	
 	<table class="genericTable">
 		<tr class="genericTableRow">
