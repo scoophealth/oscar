@@ -232,11 +232,13 @@ function ShowElementById(ele){
 
 
 function checkDebitRequest(){
-	if (document.ReProcessBilling.submissionCode.value == "E" ){
-	  ShowElementById('DEBITREQUEST');
-	}else{
-     HideElementById('DEBITREQUEST');
-	}
+   if (document.ReProcessBilling.submissionCode.value == "E" ){
+      ShowElementById('DEBITREQUEST');
+      ShowElementById('submitButton');
+   }else{
+      HideElementById('DEBITREQUEST');
+      HideElementById('submitButton');
+   }
 }
 
 function showRecord(){
@@ -956,9 +958,14 @@ document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
 
           </td>
        </tr>
-<%
-}
-%>
+<%}else{%>
+       <tr>
+          <td colspan="4"  class="bCellData">
+            <input type="submit" name="submit" id="submitButton" style="display:none;" value="Reprocess and Resubmit Bill" onClick="checkSubmitType()">
+          </td>
+       </tr>
+
+<%}%>
 
 
   </table>
