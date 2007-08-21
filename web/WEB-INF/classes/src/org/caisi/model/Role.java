@@ -24,7 +24,7 @@ package org.caisi.model;
 
 import java.util.Date;
 
-public class Role extends BaseObject {
+public class Role extends BaseObject implements Comparable<Role>{
 	private Long id;
 	private String name="";
 	private String oscar_name;
@@ -57,5 +57,8 @@ public class Role extends BaseObject {
 	public void setOscar_name(String oscar_name) {
 		this.oscar_name = oscar_name;
 	}
+	public int compareTo(Role o) {
+	    return(name.compareTo(o.name));
+    }
 	
 }

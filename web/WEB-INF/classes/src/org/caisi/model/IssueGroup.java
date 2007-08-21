@@ -2,7 +2,7 @@ package org.caisi.model;
 
 import org.apache.commons.lang.StringUtils;
 
-public class IssueGroup {
+public class IssueGroup implements Comparable<IssueGroup>{
 
 	private int id=0;
 	private String name=null;
@@ -25,4 +25,8 @@ public class IssueGroup {
 		if (name==null) throw(new IllegalArgumentException("Can not be null."));
 		this.name = name;
 	}
+
+	public int compareTo(IssueGroup o) {
+	   return(name.compareTo(o.name));
+    }
 }

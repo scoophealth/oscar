@@ -35,6 +35,8 @@
 	int programId=Integer.parseInt(request.getParameter("programId"));
 	PopulationReportUIBean populationReportUIBean=new PopulationReportUIBean(applicationContext, programId);
 	Program program=populationReportUIBean.getProgram();
+	
+	PopulationReportDataObjects.RoleDataGrid roleDataGrid=populationReportUIBean.getRoleDataGrid();
 %>
 
 <%@include file="/layouts/caisi_html_top.jspf"%>
@@ -56,52 +58,34 @@
 			<td class="genericTableHeader">Total</td>
 		</tr>
 		<%
-			for (Role role : populationReportUIBean.getRoles())
+			for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
 			{
 				boolean hasPrintedRole=false;
-				for (EncounterUtil.EncounterType encounterType : EncounterUtil.EncounterType.values())
+				for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
 				{
-					%>
-						<tr class="genericTableRow">
-							<td class="genericTableHeader">
-							<%
-								String temp="";
-								if (!hasPrintedRole)
-								{
-									temp=role.getName();
-									hasPrintedRole=true;
-								}
-							%>
-							<%=temp%>
-							</td>
-							<td class="genericTableData"><%=encounterType %></td>
-							<%
-								for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
-								{
-									%>
-										<td class="genericTableData">TODO : numeric data</td>
-									<%
-								}
-							%>
-							<td class="genericTableData">TODO : numeric data</td>
-						</tr>
-					<%
-				}
-			%>
-			<tr class="genericTableRow">
-				<td class="genericTableHeader"></td>
-				<td class="genericTableHeader">Total</td>
-				<%
-					for (IssueGroup issueGroup : populationReportUIBean.getIssueGroups())
+					String tempRoleName="";
+					if (!hasPrintedRole)
 					{
-						%>
-							<td class="genericTableData">TODO : numeric data</td>
-						<%
+						tempRoleName=roleEntry.getKey().getName();
+						hasPrintedRole=true;
 					}
+
 				%>
-				<td class="genericTableData">TODO : numeric data</td>
-			</tr>
-		<%
+					<tr class="genericTableRow">
+						<td class="genericTableHeader"><%=tempRoleName %></td>
+						<td class="genericTableData"><%=encounterEntry.getKey().name() %></td>
+						<%					
+							for (Map.Entry<IssueGroup, Integer> issueGroupEntry : encounterEntry.getValue().entrySet())
+							{
+								%>
+									<td class="genericTableData"><%=issueGroupEntry.getValue() %></td>
+								<%							
+							}
+						%>
+						<td class="genericTableData"><%=encounterEntry.getValue().getTotalOfAllValues() %></td>
+					</tr>							
+				<%
+				}
 			}
 		%>
 	</table>
