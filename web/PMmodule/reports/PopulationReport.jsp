@@ -75,10 +75,10 @@
 						<td class="genericTableHeader"><%=tempRoleName %></td>
 						<td class="genericTableData"><%=encounterEntry.getKey().name() %></td>
 						<%					
-							for (Map.Entry<IssueGroup, Integer> issueGroupEntry : encounterEntry.getValue().entrySet())
+							for (Integer issueGroupEntry : encounterEntry.getValue().values())
 							{
 								%>
-									<td class="genericTableData"><%=issueGroupEntry.getValue() %></td>
+									<td class="genericTableData"><%=issueGroupEntry %></td>
 								<%							
 							}
 						%>
@@ -86,8 +86,38 @@
 					</tr>							
 				<%
 				}
+				%>
+				<tr class="genericTableRow">
+					<td class="genericTableHeader"></td>
+					<td class="genericTableHeader">Sub Total</td>
+					<%					
+						PopulationReportDataObjects.EncounterTypeDataRow encounterTypeDataRow=roleEntry.getValue().getIssueGroupTotals();
+						for (Integer issueGroupEntry : encounterTypeDataRow.values())
+						{
+							%>
+								<td class="genericTableData"><%=issueGroupEntry %></td>
+							<%							
+						}
+					%>
+					<td class="genericTableData"><%=encounterTypeDataRow.getTotalOfAllValues() %></td>
+				</tr>							
+			<%
 			}
 		%>
+		<tr class="genericTableRow">
+			<td class="genericTableHeader">Total</td>
+			<td class="genericTableData"></td>
+			<%					
+				PopulationReportDataObjects.EncounterTypeDataRow encounterTypeDataRow=roleDataGrid.getIssueGroupTotals();
+				for (Integer issueGroupEntry : encounterTypeDataRow.values())
+				{
+					%>
+						<td class="genericTableData"><%=issueGroupEntry %></td>
+					<%							
+				}
+			%>
+			<td class="genericTableData"><%=encounterTypeDataRow.getTotalOfAllValues() %></td>
+		</tr>							
 	</table>
 	
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

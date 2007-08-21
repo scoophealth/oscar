@@ -1,6 +1,8 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.caisi.dao.IssueGroupDao;
 import org.caisi.model.IssueGroup;
@@ -30,10 +32,10 @@ public class PopulationReportUIBean {
 		issueGroupDao = (IssueGroupDao) applicationContext.getBean("issueGroupDao");		
 	}
 	
-	private List<IssueGroup> allIssueGroups=null;
-	public List<IssueGroup> getIssueGroups()
+	private Set<IssueGroup> allIssueGroups=null;
+	public Set<IssueGroup> getIssueGroups()
 	{
-		if (allIssueGroups==null) allIssueGroups=issueGroupDao.findAll();
+		if (allIssueGroups==null) allIssueGroups=new TreeSet<IssueGroup>(issueGroupDao.findAll());
 		return(allIssueGroups);
 	}
 	
