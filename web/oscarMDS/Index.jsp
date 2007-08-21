@@ -16,7 +16,7 @@
     String ackStatus = request.getParameter("status");
     String demographicNo = request.getParameter("demographicNo"); // used when searching for labs by patient instead of provider
 
-    if ( ackStatus == null || ackStatus.equals("")) { ackStatus = "N"; } // default to only new lab reports
+    if ( ackStatus == null ) { ackStatus = "N"; } // default to new labs only
     if ( providerNo == null ) { providerNo = ""; }
     if ( searchProviderNo == null ) { searchProviderNo = providerNo; }
     //mDSData.populateMDSResultsData2(searchProviderNo, demographicNo, request.getParameter("fname"), request.getParameter("lname"), request.getParameter("hnum"), ackStatus);
