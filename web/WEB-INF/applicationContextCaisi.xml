@@ -374,7 +374,7 @@
 			<ref local="sessionFactory" />
 		</property>
 	</bean>
-    <bean id="populationReportDAO" class="org.oscarehr.common.dao.hibernate.PopulationReportDAOHibernate">
+    <bean id="populationReportDAO" class="org.oscarehr.common.dao.PopulationReportDAO">
         <property name="sessionFactory">
             <ref local="sessionFactory" />
         </property>
