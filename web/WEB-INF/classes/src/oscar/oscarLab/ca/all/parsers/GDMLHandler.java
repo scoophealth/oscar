@@ -11,7 +11,13 @@ package oscar.oscarLab.ca.all.parsers;
 
 import ca.uhn.hl7v2.model.Segment;
 import ca.uhn.hl7v2.model.Structure;
+import ca.uhn.hl7v2.model.v23.segment.OBR;
+import ca.uhn.hl7v2.model.v23.segment.OBX;
+import java.sql.ResultSet;
+import java.util.*;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -22,7 +28,6 @@ import ca.uhn.hl7v2.parser.*;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 import java.text.*;
-import java.util.ArrayList;
 
 
 /**
@@ -33,6 +38,9 @@ public class GDMLHandler implements MessageHandler {
     
     Logger logger = Logger.getLogger(GDMLHandler.class);
     static ORU_R01 msg = null;
+    ArrayList headers = null;
+    HashMap obrSegMap = null;
+    ArrayList obrSegKeySet = null;
     
     /** Creates a new instance of CMLHandler */
     public GDMLHandler(){
@@ -42,6 +50,91 @@ public class GDMLHandler implements MessageHandler {
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
+        
+        ArrayList labs = getMatchingGDMLLabs(hl7Body);
+        headers = new ArrayList();
+        obrSegMap = new LinkedHashMap();
+        obrSegKeySet = new ArrayList();
+        
+        logger.info("number of labs: "+labs.size());
+        for (int i=0; i < labs.size(); i++){
+            msg = (ORU_R01) p.parse(((String) labs.get(i)).replaceAll("\n", "\r\n"));
+            int obrCount = msg.getRESPONSE().getORDER_OBSERVATIONReps();
+            
+            logger.info("lab("+i+") obrCount: "+obrCount);
+            for (int j=0; j < obrCount; j++){
+                
+                // ADD OBR SEGMENTS AND THEIR OBX SEGMENTS TO THE OBRSEGMAP
+                OBR obrSeg = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBR();
+                ArrayList obxSegs = (ArrayList) obrSegMap.get(obrSeg);
+                
+                // if the obrsegment has not yet been created it will be now
+                if (obxSegs == null)
+                    obxSegs = new ArrayList();
+                
+                int obxCount = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATIONReps();
+                logger.info("lab("+i+") obr("+j+") obxCount: "+obxCount);
+                for (int k=0; k < obxCount; k++){
+                    logger.info("lab("+i+") adding obrseg("+j+") obxseg("+k+")");
+                    obxSegs.add(msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATION(k).getOBX());
+                }
+                
+                obrSegMap.put(obrSeg, obxSegs);
+                obrSegKeySet.add(obrSeg);
+                
+                // ADD THE HEADER TO THE HEADERS ARRAYLIST
+                String header = getString(obrSeg.getUniversalServiceIdentifier().getAlternateIdentifier().getValue());
+                logger.info("lab("+i+") obr("+j+") header: "+header);
+                if (!headers.contains(header)){
+                    logger.info("lab("+i+") obr("+j+") adding header: "+header);
+                    headers.add(header);
+                }
+                
+            }
+        }
+    }
+    
+    private ArrayList getMatchingGDMLLabs(String hl7Body){
+        Base64 base64 = new Base64();
+        ArrayList ret = new ArrayList();
+        int monthsBetween = 0;
+        
+        try{
+            
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "SELECT m2.message, a.lab_no AS lab_no_A, b.lab_no AS lab_no_B,  a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b, hl7TextMessage m1, hl7TextMessage m2 WHERE m2.lab_id = a.lab_no AND a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no = m1.lab_id AND m1.message='"+(new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"))+"' ORDER BY a.obr_date, a.lab_no";
+            ResultSet rs = db.GetSQL(sql);
+            
+            while(rs.next()) {
+                //Accession numbers may be recycled, accession
+                //numbers for a lab should have lab dates within less than 4
+                //months of eachother even this is a large timespan
+                Date dateA = UtilDateUtilities.StringToDate(rs.getString("obr_date"), "yyyy-MM-dd hh:mm:ss");
+                Date dateB = UtilDateUtilities.StringToDate(rs.getString("labDate"), "yyyy-MM-dd hh:mm:ss");
+                if (dateA.before(dateB)){
+                    monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+                }else{
+                    monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
+                }
+                if (monthsBetween < 4){
+                    logger.info("adding lab : "+rs.getString("lab_no_A"));
+                    ret.add(new String(base64.decode(rs.getString("message").getBytes("ASCII")), "ASCII"));
+                }
+                
+                // only return labs up to the one being initialized
+                if (rs.getString("lab_no_A").equals(rs.getString("lab_no_B")))
+                    break;
+            }
+            rs.close();
+            db.CloseConn();
+        }catch(Exception e){
+            logger.error("Exception in HL7 getMatchingLabs: ", e);
+        }
+        
+        //if there have been no labs added to the database yet just return this lab
+        if (ret.size() == 0)
+            ret.add(hl7Body);
+        return ret;
     }
     
     public String getMsgType(){
@@ -72,32 +165,22 @@ public class GDMLHandler implements MessageHandler {
      *  Methods to get information about the Observation Request
      */
     public int getOBRCount(){
-        return(msg.getRESPONSE().getORDER_OBSERVATIONReps());
+        return(obrSegMap.size());
     }
     
     public int getOBXCount(int i){
-        try{
-            return(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps());
-        }catch(Exception e){
-            logger.error("GDMLHandler getOBXCount error", e);
-            return (0);
-        }
-        
+        return( ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).size() );
     }
     
     public String getOBRName(int i){
-        try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getText().getValue()));
-        }catch(Exception e){
-            return("");
-        }
+        return (((OBR) obrSegKeySet.get(i)).getUniversalServiceIdentifier().getText().getValue());
     }
     
     public String getTimeStamp(int i, int j){
         try{
-            String ret = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getResultsRptStatusChngDateTime().getTimeOfAnEvent().getValue();
+            String ret = ((OBR) obrSegKeySet.get(i)).getResultsRptStatusChngDateTime().getTimeOfAnEvent().getValue();
             if (ret == null)
-                ret = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue();
+                ret = ((OBR) obrSegKeySet.get(i)).getObservationDateTime().getTimeOfAnEvent().getValue();
             return(formatDateTime(getString(ret)));
         }catch(Exception e){
             return("");
@@ -115,7 +198,7 @@ public class GDMLHandler implements MessageHandler {
         
         try{
             
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
+            return(getString( ((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getAbnormalFlags(0).getValue() ));
         }catch(Exception e){
             return("");
         }
@@ -123,8 +206,9 @@ public class GDMLHandler implements MessageHandler {
     
     public String getObservationHeader(int i, int j){
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBR().getUniversalServiceIdentifier().getAlternateIdentifier().getValue()));
+            return(getString(((OBR) obrSegKeySet.get(i)).getUniversalServiceIdentifier().getAlternateIdentifier().getValue()));
         }catch(Exception e){
+            logger.error("Exception gettin header", e);
             return("");
         }
     }
@@ -134,7 +218,7 @@ public class GDMLHandler implements MessageHandler {
         try{
             
             Terser t = new Terser(msg);
-            Segment obxSeg = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX();
+            Segment obxSeg = ((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j));
             String ident = getString(t.get(obxSeg, 3, 0, 1, 1 ));
             String subIdent = t.get(obxSeg, 3, 0, 1, 2);
             
@@ -154,8 +238,9 @@ public class GDMLHandler implements MessageHandler {
         try{
             // leave the name blank if the value type is 'FT' this is because it
             // is a comment, if the name is blank the obx segment will not be displayed
-            if (!msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getValueType().getValue().equals("FT"))
-                ret = getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservationIdentifier().getText().getValue());
+            OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
+            if (!obxSeg.getValueType().getValue().equals("FT"))
+                ret = getString(obxSeg.getObservationIdentifier().getText().getValue());
         }catch(Exception e){
             logger.error("Error returning OBX name", e);
         }
@@ -167,7 +252,7 @@ public class GDMLHandler implements MessageHandler {
         try{
             
             Terser terser = new Terser(msg);
-            return(getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),5,0,1,1)));
+            return(getString(terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1,1)));
         }catch(Exception e){
             return("");
         }
@@ -178,16 +263,16 @@ public class GDMLHandler implements MessageHandler {
         try{
             Terser terser = new Terser(msg);
             
-            
+            OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
             // if there are no units specified for the obx they are stored in the
             // second componet of the reference range along with the reference range
             if (getOBXUnits(i, j).equals(""))
-                ret = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,0,2,1).replaceAll("\\\\\\.br\\\\", "");
+                ret = terser.get(obxSeg,7,0,2,1).replaceAll("\\\\\\.br\\\\", "").replaceAll("\\s", "&#160;");
             
             // may have to fall back to original reference range if the second
             // component is empty as well as the units
             if (ret == null || ret.equals("") || ret.equalsIgnoreCase("null"))
-                ret = (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getReferencesRange().getValue()).replaceAll("\\\\\\.br\\\\", ""));
+                ret = (getString(obxSeg.getReferencesRange().getValue()).replaceAll("\\\\\\.br\\\\", ""));
         }catch(Exception e){
             ret = "";
         }
@@ -197,7 +282,7 @@ public class GDMLHandler implements MessageHandler {
     public String getOBXUnits(int i, int j){
         try{
             
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getUnits().getIdentifier().getValue()));
+            return(getString(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getUnits().getIdentifier().getValue()));
         }catch(Exception e){
             return("");
         }
@@ -207,87 +292,69 @@ public class GDMLHandler implements MessageHandler {
         try{
             
             // result status is stored in the wrong field.... i think
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getNatureOfAbnormalTest().getValue()));
+            return(getString(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getNatureOfAbnormalTest().getValue()));
         }catch(Exception e){
             return("");
         }
     }
     
     public int getOBXFinalResultCount(){
-        int obrCount = getOBRCount();
-        int obxCount;
-        int count = 0;
-        for (int i=0; i < obrCount; i++){
-            obxCount = getOBXCount(i);
-            for (int j=0; j < obxCount; j++){
-                if (!getOBXResultStatus(i, j).equalsIgnoreCase("P"))
-                    count++;
-            }
-        }
-        return count;
+        // not applicable to gdml messages
+        return 0;
     }
     
     /**
      *  Retrieve the possible segment headers from the OBX fields
      */
     public ArrayList getHeaders(){
-        int i;
-        int j;
-        int k = 0;
-        ArrayList headers = new ArrayList();
-        String currentHeader;
-        try{
-            for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
-                
-                currentHeader = getObservationHeader(i, 0);
-                
-                k = 0;
-                while(k < headers.size() && !currentHeader.equals(headers.get(k))){
-                    k++;
-                }
-                if (k == headers.size()){
-                    logger.info("Adding header: '"+currentHeader+"' to list");
-                    headers.add(currentHeader);
-                }
-                
-            }
-            return(headers);
-        }catch(Exception e){
-            logger.error("Could not create header list", e);
-            
-            return(null);
-        }
+        return headers;
     }
     
     /**
      *  Methods to get information from observation notes
      */
     public int getOBRCommentCount(int i){
-        try {
-            int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
-
-            if (getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX().getValueType().getValue()).equals("FT"))
-                return(1);
-            else
-                return(0);
-        } catch (Exception e) {
-            return(0);
+        int count = 0;
+        
+        for (int j=0; j < getOBXCount(i); j++){
+            if (getString(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getValueType().getValue()).equals("FT"))
+                count++;
         }
+        
+        return count;
         
     }
     
     public String getOBRComment(int i, int j){
         String comment = "";
+        
+        // update j to the number of the comment not the index of a comment array
+        j++;
         try {
             Terser terser = new Terser(msg);
             
+            int obxCount = getOBXCount(i);
+            int count = 0;
+            int l = 0;
+            OBX obxSeg = null;
+            
+            while ( l < obxCount && count < j){
+                
+                obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(l);
+                if (getString(obxSeg.getValueType().getValue()).equals("FT")){
+                    count++;
+                }
+                l++;
+            
+            }
+            l--;
+            
             int k = 0;
-            int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
-            String nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX(),5,k,1,1);
+            String nextComment = terser.get(obxSeg,5,k,1,1);
             while(nextComment != null){
                 comment = comment + nextComment.replaceAll("\\\\\\.br\\\\", "<br />");
                 k++;
-                nextComment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(lastOBX).getOBX(),5,k,1,1);
+                nextComment = terser.get(obxSeg,5,k,1,1);
             }
             
         } catch (Exception e) {
@@ -306,9 +373,10 @@ public class GDMLHandler implements MessageHandler {
             
             Terser terser = new Terser(msg);
             String comment = "";
+            OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
             while(comment != null){
                 count++;
-                comment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,count,1,1);
+                comment = terser.get(obxSeg,7,count,1,1);
             }
             
             
@@ -325,7 +393,7 @@ public class GDMLHandler implements MessageHandler {
             
             Terser terser = new Terser(msg);
             
-            comment = terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),7,k,1,1).replaceAll("\\\\\\.br\\\\", "<br />");
+            comment = terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),7,k,1,1).replaceAll("\\\\\\.br\\\\", "<br />");
             
         }catch(Exception e){
             logger.error("Cannot return comment", e);
@@ -433,7 +501,8 @@ public class GDMLHandler implements MessageHandler {
     }
     
     public String getOrderStatus(){
-        // no order status specified, assuming final
+        // gdml won't send pending labs... they'll send only the final parts of the
+        // labs
         return("F");
     }
     
