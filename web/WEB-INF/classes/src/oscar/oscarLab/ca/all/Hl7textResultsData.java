@@ -69,59 +69,63 @@ public class Hl7textResultsData {
                 
             }
             // loop through the measurements for the lab and insert them
-
+            
             for (int i=0; i < h.getOBRCount(); i++){
                 for (int j=0; j < h.getOBXCount(i); j++){
                     
                     String result = h.getOBXResult(i, j);
-                    if (!result.equals("") && !result.equals("DNR") && !h.getOBXName(i, j).equals("")){
-                        logger.info("obx("+j+") should be inserted");
-                        String identifier = h.getOBXIdentifier(i, j);
-                        String abnormal = h.getOBXAbnormalFlag(i, j);
-                        if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
-                            abnormal = "A";
-                        }else if ( abnormal != null && abnormal.startsWith("L")){
-                            abnormal = "L";
-                        }else{
-                            abnormal = "N";
-                        }
-                        
-                        String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code='"+identifier+"' AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
-                        PreparedStatement pstmt = conn.prepareStatement(sql);
-                        String measType="";
-                        String measInst="";
-                        ResultSet rs = pstmt.executeQuery();
-                        if(rs.next()){
-                            measType = rs.getString("ident_code");
-                            measInst = rs.getString("measuringInstruction");
-                        }
-                        
-                        sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES ('"+measType+"', '"+demographic_no+"', '0', '"+result+"', '"+measInst+"', '"+h.getTimeStamp(i, j)+"', '"+dateEntered+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
-                        rs = pstmt.getGeneratedKeys();
-                        String insertID = null;
-                        if(rs.next())
-                            insertID = rs.getString(1);
-                        
-                        sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'lab_no', '"+lab_no+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
-                        
-                        sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'abnormal', '"+abnormal+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
-                        
-                        sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'identifier', '"+identifier+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
-                        
-                        pstmt.close();
+                    
+                    // only insert if there is a result and it is supposed to be viewed
+                    if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
+                        continue;                    
+                    
+                    logger.info("obx("+j+") should be inserted");
+                    String identifier = h.getOBXIdentifier(i, j);
+                    String abnormal = h.getOBXAbnormalFlag(i, j);
+                    if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
+                        abnormal = "A";
+                    }else if ( abnormal != null && abnormal.startsWith("L")){
+                        abnormal = "L";
+                    }else{
+                        abnormal = "N";
                     }
+                    
+                    String sql = "SELECT b.ident_code, type.measuringInstruction FROM measurementMap a, measurementMap b, measurementType type WHERE b.lab_type='FLOWSHEET' AND a.ident_code='"+identifier+"' AND a.loinc_code = b.loinc_code and type.type = b.ident_code";
+                    PreparedStatement pstmt = conn.prepareStatement(sql);
+                    String measType="";
+                    String measInst="";
+                    ResultSet rs = pstmt.executeQuery();
+                    if(rs.next()){
+                        measType = rs.getString("ident_code");
+                        measInst = rs.getString("measuringInstruction");
+                    }
+                    
+                    sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES ('"+measType+"', '"+demographic_no+"', '0', '"+result+"', '"+measInst+"', '"+h.getTimeStamp(i, j)+"', '"+dateEntered+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    rs = pstmt.getGeneratedKeys();
+                    String insertID = null;
+                    if(rs.next())
+                        insertID = rs.getString(1);
+                    
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'lab_no', '"+lab_no+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'abnormal', '"+abnormal+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'identifier', '"+identifier+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    
+                    pstmt.close();
+                    
                 }
             }
             
@@ -134,7 +138,7 @@ public class Hl7textResultsData {
     }
     
     public String getMatchingLabs(String lab_no){
-        String sql = "SELECT a.lab_no, a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b WHERE a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no='"+lab_no+"' ORDER BY a.obr_date, a.final_result_count";
+        String sql = "SELECT a.lab_no, a.obr_date, b.obr_date as labDate FROM hl7TextInfo a, hl7TextInfo b WHERE a.accessionNum !='' AND a.accessionNum=b.accessionNum AND b.lab_no='"+lab_no+"' ORDER BY a.obr_date, a.final_result_count, a.lab_no";
         String ret = "";
         int monthsBetween = 0;
         
