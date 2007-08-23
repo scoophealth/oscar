@@ -1,4 +1,4 @@
-<%@page import="java.util.List" %>
+<%@page import="java.util.*" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
 <%@page import="org.oscarehr.PMmodule.dao.*" %>
 <%@page import="org.apache.commons.lang.time.*" %>
@@ -18,8 +18,8 @@
 				<th>Program</th>				
 			</tr>
 			<%
-				List<ClientDao.ClientListsReportResults> reportResults=(List<ClientDao.ClientListsReportResults>)request.getAttribute("reportResults");
-				for (ClientDao.ClientListsReportResults clientListsReportResults : reportResults)
+				Map<String, ClientDao.ClientListsReportResults> reportResults=(Map<String, ClientDao.ClientListsReportResults>)request.getAttribute("reportResults");
+				for (ClientDao.ClientListsReportResults clientListsReportResults : reportResults.values())
 				{
 					%>
 						<tr>
