@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,26 +54,17 @@ public class PopulationReportDAO extends HibernateDaoSupport {
 
     private static final Log LOG = LogFactory.getLog(PopulationReportDAO.class);
 
-    private static final String HQL_CURRENT_POP_SIZE = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and "
-            + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "a.DischargeDate is null";
+    private static final String HQL_CURRENT_POP_SIZE = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "a.DischargeDate is null";
 
-    private static final String HQL_CURRENT_HISTORICAL_POP_SIZE = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and "
-            + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "(a.DischargeDate is null or a.DischargeDate > ?)";
+    private static final String HQL_CURRENT_HISTORICAL_POP_SIZE = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "(a.DischargeDate is null or a.DischargeDate > ?)";
 
-    private static final String HQL_GET_USAGES = "select a.ClientId, a.AdmissionDate, a.DischargeDate from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and "
-            + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "(a.DischargeDate is null or a.DischargeDate > ?) " + "order by a.ClientId, a.AdmissionDate";
+    private static final String HQL_GET_USAGES = "select a.ClientId, a.AdmissionDate, a.DischargeDate from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and " + "a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and " + "(a.DischargeDate is null or a.DischargeDate > ?) " + "order by a.ClientId, a.AdmissionDate";
 
-    private static final String HQL_GET_MORTALITIES = "select count(distinct a.ClientId) from Admission a where "
-            + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'community' and lower(p.name) = 'deceased') and " + "a.AdmissionDate > ? and a.DischargeDate is null";
+    private static final String HQL_GET_MORTALITIES = "select count(distinct a.ClientId) from Admission a where " + "a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'community' and lower(p.name) = 'deceased') and " + "a.AdmissionDate > ? and a.DischargeDate is null";
 
-    private static final String HQL_GET_PREVALENCE = "select count(cmi) from CaseManagementIssue cmi where "
-            + "cmi.resolved = false and "
-            + "cmi.demographic_no in (select distinct a.ClientId from Admission a where a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and a.DischargeDate is null) and "
-            + "cmi.issue.code in ";
+    private static final String HQL_GET_PREVALENCE = "select count(cmi) from CaseManagementIssue cmi where " + "cmi.resolved = false and " + "cmi.demographic_no in (select distinct a.ClientId from Admission a where a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and a.DischargeDate is null) and " + "cmi.issue.code in ";
 
-    private static final String HQL_GET_INCIDENCE = "select count(cmi) from CaseManagementIssue cmi where "
-            + "cmi.demographic_no in (select distinct a.ClientId from Admission a where a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and a.DischargeDate is null) and "
-            + "cmi.issue.code in ";
+    private static final String HQL_GET_INCIDENCE = "select count(cmi) from CaseManagementIssue cmi where " + "cmi.demographic_no in (select distinct a.ClientId from Admission a where a.ProgramId in (select p.id from Program p where lower(p.programStatus) = 'active' and lower(p.type) = 'bed') and a.ClientId in (select d.DemographicNo from Demographic d where lower(d.PatientStatus) = 'ac') and a.DischargeDate is null) and " + "cmi.issue.code in ";
 
     public int getCurrentPopulationSize() {
 
@@ -176,7 +168,7 @@ public class PopulationReportDAO extends HibernateDaoSupport {
         return (Integer)getHibernateTemplate().find(query.toString()).iterator().next();
     }
 
-    public Map<Integer, Integer> getCaseManagementNoteCountGroupedByIssueGroup(int programId, int roleId, EncounterType encounterType) {
+    public Map<Integer, Integer> getCaseManagementNoteCountGroupedByIssueGroup(int programId, int roleId, EncounterType encounterType, Date startDate, Date endDate) {
 
         Session session = getSessionFactory().openSession();
         Connection c = null;
@@ -184,14 +176,17 @@ public class PopulationReportDAO extends HibernateDaoSupport {
         ResultSet rs = null;
         try {
             c = session.connection();
-            ps = c.prepareStatement("select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id and casemgmt_note.encounter_type=? and casemgmt_note.program_no=? and casemgmt_note.reporter_caisi_role=? group by issueGroupId");
+            ps = c.prepareStatement("select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id and casemgmt_note.encounter_type=? and casemgmt_note.program_no=? and casemgmt_note.reporter_caisi_role=? and casemgmt_note.update_date>=? and casemgmt_note.update_date<=? group by issueGroupId");
             ps.setString(1, encounterType.getOldDbValue());
             ps.setInt(2, programId);
             ps.setInt(3, roleId);
+            ps.setTimestamp(4, new Timestamp(startDate != null?startDate.getTime():0));
+            ps.setTimestamp(5, new Timestamp(endDate != null?endDate.getTime():System.currentTimeMillis()));
 
             rs = ps.executeQuery();
             HashMap<Integer, Integer> results = new HashMap<Integer, Integer>();
-            while (rs.next()) results.put(rs.getInt(1), rs.getInt(2));
+            while (rs.next())
+                results.put(rs.getInt(1), rs.getInt(2));
 
             return(results);
         }
