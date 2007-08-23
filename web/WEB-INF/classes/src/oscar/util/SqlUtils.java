@@ -36,20 +36,21 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.*;
+import org.hibernate.Session;
 import org.oscarehr.PMmodule.web.ClientSearchAction2;
 
 import oscar.oscarDB.*;
 
 public class SqlUtils {
-	private static Log logger = LogFactory.getLog(SqlUtils.class);
-	
-	static Category cat = Category.getInstance(SqlUtils.class.getName());
-    
+    private static Log logger = LogFactory.getLog(SqlUtils.class);
+
+    static Category cat = Category.getInstance(SqlUtils.class.getName());
+
     Connection conn = null;
-    
+
     public SqlUtils() {
     }
-    
+
     public boolean executeUpdate(String[] param) {
         boolean result = false;
         if (prepareSQL()) {
@@ -60,7 +61,7 @@ public class SqlUtils {
         }
         return result;
     }
-    
+
     public boolean executeUpdate(String param) {
         boolean result = false;
         if (prepareSQL()) {
@@ -71,7 +72,7 @@ public class SqlUtils {
         }
         return result;
     }
-    
+
     public ArrayList executeSelect(String param) {
         ArrayList result = null;
         if (prepareSQL()) {
@@ -80,7 +81,7 @@ public class SqlUtils {
         }
         return result;
     }
-    
+
     public static ArrayList executeSelect(String param, Connection conn) {
         ArrayList result = null;
         if (conn != null) {
@@ -88,7 +89,7 @@ public class SqlUtils {
         }
         return result;
     }
-    
+
     private boolean prepareSQL() {
         conn = SqlUtils.getConnection();
         if (conn == null) {
@@ -97,7 +98,7 @@ public class SqlUtils {
         }
         return true;
     }
-    
+
     private boolean unPrepareSQL() {
         if (conn != null) {
             SqlUtils.freeConnection(conn);
@@ -105,7 +106,7 @@ public class SqlUtils {
         }
         return true;
     }
-    
+
     private boolean executeUpdateSQL(String[] sqlCommands) {
         Statement stmt = null;
         try {
@@ -121,26 +122,29 @@ public class SqlUtils {
                 conn.commit();
             }
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             try {
                 conn.rollback();
-            } catch (Exception e2) {
+            }
+            catch (Exception e2) {
                 return false;
             }
             cat.error("Transacao nao executada.", e);
             return false;
-        } finally {
+        }
+        finally {
             try {
                 if (stmt != null) {
                     stmt.close();
                 }
                 conn.setAutoCommit(true);
-            } catch (Exception e3) {
             }
-            ;
+            catch (Exception e3) {
+            };
         }
     }
-    
+
     private boolean executeUpdateSQL(String sqlCommand) {
         Statement stmt = null;
         try {
@@ -150,21 +154,23 @@ public class SqlUtils {
             stmt = null;
             cat.debug(sqlCommand);
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             cat.error("Comando no ejecutado.", e);
             cat.debug(sqlCommand);
             return false;
-        } finally {
+        }
+        finally {
             try {
                 if (stmt != null) {
                     stmt.close();
                 }
-            } catch (Exception e3) {
             }
-            ;
+            catch (Exception e3) {
+            };
         }
     }
-    
+
     private ArrayList executeSelectSQL(String sqlCommand) {
         Statement stmt = null;
         ResultSet rset = null;
@@ -187,24 +193,26 @@ public class SqlUtils {
             rset = null;
             cat.debug(sqlCommand);
             return records;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             cat.error("Comando no ejecutado.", e);
             cat.debug(sqlCommand);
             return null;
-        } finally {
-            try{
+        }
+        finally {
+            try {
                 if (rset != null) {
                     rset.close();
                 }
                 if (stmt != null) {
                     stmt.close();
                 }
-            } catch (Exception e3) {
             }
-            ;
+            catch (Exception e3) {
+            };
         }
     }
-    
+
     private static ArrayList executeSelectSQL(String sqlCommand, Connection conn) {
         Statement stmt = null;
         ResultSet rset = null;
@@ -227,11 +235,13 @@ public class SqlUtils {
             rset = null;
             cat.debug(sqlCommand);
             return records;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             cat.error("Comando no ejecutado.", e);
             cat.debug(sqlCommand);
             return null;
-        } finally {
+        }
+        finally {
             try {
                 if (rset != null) {
                     rset.close();
@@ -239,66 +249,67 @@ public class SqlUtils {
                 if (stmt != null) {
                     stmt.close();
                 }
-            } catch (Exception e3) {
             }
-            ;
+            catch (Exception e3) {
+            };
         }
     }
-    
+
     public static Connection getConnection() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection(
-                    "jdbc:protomatter:pool:postgresPool");
+            conn = DriverManager.getConnection("jdbc:protomatter:pool:postgresPool");
             cat.debug("conexao obtida");
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             cat.error("Nao foi possivel obter a conexao do pool ", e);
         }
         if (conn == null) {
             return null;
-        } else {
+        }
+        else {
             return conn;
         }
     }
-    
+
     public static void freeConnection(Connection conn) {
         try {
             if (conn != null) {
                 conn.close();
                 cat.debug("conexao devolvida");
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             cat.error("Nao foi possivel obter a conexao do pool ", e);
         }
     }
-    
+
     public static String getLastIdInserted(String noSeq, Connection conn) {
         if (noSeq == null) {
             cat.debug("[SqlUtils] - sequence nula");
             return null;
         }
-        ArrayList sqlArray = SqlUtils.executeSelect("select currval('" + noSeq +
-                "')", conn);
+        ArrayList sqlArray = SqlUtils.executeSelect("select currval('" + noSeq + "')", conn);
         if (sqlArray != null) {
             if (sqlArray.size() == 1) {
-                String[] recordValue = (String[]) sqlArray.get(0);
+                String[] recordValue = (String[])sqlArray.get(0);
                 return recordValue[0];
-            } else {
-                cat.debug("[SqlUtils] - select currval('" + noSeq +
-                        "') retornou mais q um registro.");
             }
-        } else {
-            cat.debug("[SqlUtils] - select currval('" + noSeq +
-                    "') nao foi executado.");
+            else {
+                cat.debug("[SqlUtils] - select currval('" + noSeq + "') retornou mais q um registro.");
+            }
+        }
+        else {
+            cat.debug("[SqlUtils] - select currval('" + noSeq + "') nao foi executado.");
         }
         return null;
     }
-    
+
     private static java.sql.Date createAppropriateDate(Object value) {
         if (value == null) {
             return null;
         }
-        String valueStr = ( (String) value).trim();
+        String valueStr = ((String)value).trim();
         if (valueStr.length() == 0) {
             return null;
         }
@@ -306,15 +317,16 @@ public class SqlUtils {
         Date result = null;
         try {
             result = new java.sql.Date(sdf.parse(valueStr).getTime());
-        } catch (Exception exc) {
+        }
+        catch (Exception exc) {
             result = null;
         }
         if (result == null) {
             // Maybe date has been returned as a timestamp?
             try {
-                result = new java.sql.Date(java.sql.Timestamp.valueOf(valueStr)
-                .getTime());
-            } catch (java.lang.IllegalArgumentException ex) {
+                result = new java.sql.Date(java.sql.Timestamp.valueOf(valueStr).getTime());
+            }
+            catch (java.lang.IllegalArgumentException ex) {
                 // Try date
                 cat.info("date = " + valueStr);
                 result = java.sql.Date.valueOf(valueStr);
@@ -322,65 +334,60 @@ public class SqlUtils {
         }
         return result;
     }
-    
+
     private static java.math.BigDecimal createAppropriateNumeric(Object value) {
         if (value == null) {
             return null;
         }
-        String valueStr = ( (String) value).trim();
+        String valueStr = ((String)value).trim();
         if (valueStr.length() == 0) {
             return null;
         }
         return new java.math.BigDecimal(valueStr);
     }
-    
+
     /**
-       this utility-method assigns a particular value to a place holder of a PreparedStatement.
-       it tries to find the correct setXxx() value, accoring to the field-type information
-       represented by "fieldType".
-       quality: this method is bloody alpha (as you migth see :=)
+     this utility-method assigns a particular value to a place holder of a PreparedStatement.
+     it tries to find the correct setXxx() value, accoring to the field-type information
+     represented by "fieldType".
+     quality: this method is bloody alpha (as you migth see :=)
      */
-    public static void fillPreparedStatement(PreparedStatement ps, int col,
-            Object val, int fieldType) throws
-            SQLException {
+    public static void fillPreparedStatement(PreparedStatement ps, int col, Object val, int fieldType) throws SQLException {
         try {
-            cat.info("fillPreparedStatement( ps, " + col + ", " + val + ", " +
-                    fieldType + ")...");
+            cat.info("fillPreparedStatement( ps, " + col + ", " + val + ", " + fieldType + ")...");
             Object value = null;
             //Check for hard-coded NULL
-            if (! ("$null$".equals(val))) {
+            if (!("$null$".equals(val))) {
                 value = val;
             }
             if (value != null) {
                 switch (fieldType) {
                     case FieldTypes.INTEGER:
-                        ps.setInt(col, Integer.parseInt( (String) value));
-                        break;
+                        ps.setInt(col, Integer.parseInt((String)value));
+                    break;
                     case FieldTypes.NUMERIC:
                         ps.setBigDecimal(col, createAppropriateNumeric(value));
-                        break;
+                    break;
                     case FieldTypes.CHAR:
-                        ps.setString(col, (String) value);
-                        break;
+                        ps.setString(col, (String)value);
+                    break;
                     case FieldTypes.DATE:
                         ps.setDate(col, createAppropriateDate(value));
-                        break; //#checkme
+                    break; //#checkme
                     case FieldTypes.TIMESTAMP:
-                        ps.setTimestamp(col,
-                                java.sql.Timestamp.valueOf( (String) value));
-                        break;
+                        ps.setTimestamp(col, java.sql.Timestamp.valueOf((String)value));
+                    break;
                     case FieldTypes.DOUBLE:
-                        ps.setDouble(col,
-                                Double.valueOf( (String) value).doubleValue());
-                        break;
+                        ps.setDouble(col, Double.valueOf((String)value).doubleValue());
+                    break;
                     case FieldTypes.FLOAT:
-                        ps.setFloat(col, Float.valueOf( (String) value).floatValue());
-                        break;
+                        ps.setFloat(col, Float.valueOf((String)value).floatValue());
+                    break;
                     case FieldTypes.LONG:
                         ps.setLong(col, Long.parseLong(String.valueOf(value)));
-                        break;
+                    break;
                     case FieldTypes.BLOB:
-                        FileHolder fileHolder = (FileHolder) value;
+                        FileHolder fileHolder = (FileHolder)value;
                         try {
                             ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
                             ObjectOutputStream out = new ObjectOutputStream(byteOut);
@@ -393,43 +400,43 @@ public class SqlUtils {
                             int byteLength = buf.length;
                             ps.setBinaryStream(col, bytein, byteLength);
                             // store fileHolder as a whole (this way we don't lose file meta-info!)
-                        } catch (IOException ioe) {
+                        }
+                        catch (IOException ioe) {
                             ioe.printStackTrace();
                             cat.info(ioe.toString());
-                            throw new SQLException(
-                                    "error storing BLOB in database - " +
-                                    ioe.toString(), null, 2);
+                            throw new SQLException("error storing BLOB in database - " + ioe.toString(), null, 2);
                         }
-                        break;
+                    break;
                     case FieldTypes.DISKBLOB:
-                        ps.setString(col, (String) value);
-                        break;
+                        ps.setString(col, (String)value);
+                    break;
                     default:
                         ps.setObject(col, value); //#checkme
                 }
-            } else {
+            }
+            else {
                 switch (fieldType) {
                     case FieldTypes.INTEGER:
                         ps.setNull(col, java.sql.Types.INTEGER);
-                        break;                        
+                    break;
                     case FieldTypes.NUMERIC:
                         ps.setNull(col, java.sql.Types.NUMERIC);
-                        break;                        
+                    break;
                     case FieldTypes.CHAR:
                         ps.setNull(col, java.sql.Types.CHAR);
-                        break;
+                    break;
                     case FieldTypes.DATE:
                         ps.setNull(col, java.sql.Types.DATE);
-                        break;
+                    break;
                     case FieldTypes.TIMESTAMP:
                         ps.setNull(col, java.sql.Types.TIMESTAMP);
-                        break;
+                    break;
                     case FieldTypes.DOUBLE:
                         ps.setNull(col, java.sql.Types.DOUBLE);
-                        break;
+                    break;
                     case FieldTypes.FLOAT:
                         ps.setNull(col, java.sql.Types.FLOAT);
-                        break;
+                    break;
                     case FieldTypes.BLOB:
                         ps.setNull(col, java.sql.Types.BLOB);
                     case FieldTypes.DISKBLOB:
@@ -438,12 +445,12 @@ public class SqlUtils {
                         ps.setNull(col, java.sql.Types.OTHER);
                 }
             }
-        } catch (Exception e) {
-            throw new SQLException("Field type seems to be incorrect - " +
-                    e.toString(), null, 1);
+        }
+        catch (Exception e) {
+            throw new SQLException("Field type seems to be incorrect - " + e.toString(), null, 1);
         }
     }
-    
+
     /**
      * A simple and convenient method for retrieving object by criteria from the database.
      * The ActiveRecord pattern is assumed whereby and object represents a row in the database.<p>
@@ -459,10 +466,10 @@ public class SqlUtils {
         DBHandler db = null;
         try {
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            rs = (ResultSet) db.GetSQL(qry);
+            rs = (ResultSet)db.GetSQL(qry);
             ResultSetMetaData rsmd = rs.getMetaData();
             colCount = rsmd.getColumnCount();
-            
+
             while (rs.next()) {
                 int recordCount = 0; //used to check if an objects methods have been determined
                 Object obj = null;
@@ -477,22 +484,23 @@ public class SqlUtils {
                 for (int i = 0; i < colCount; i++) {
                     String colName = rsmd.getColumnName(i + 1);
                     Object value = getNewType(rs, i + 1);
-                    
+
                     //if  this is the first record, get list of method names in object
                     // and perform method invocation
-                    
+
                     if (recordCount == 0) {
                         for (int j = 0; j < method.length; j++) {
                             String methodName = method[j].getName();
                             char[] b = {'_'};
                             String columnCase = WordUtils.capitalize(colName, b);
-                            columnCase = org.apache.commons.lang.StringUtils.remove(columnCase,'_');
+                            columnCase = org.apache.commons.lang.StringUtils.remove(columnCase, '_');
                             columnCase = org.apache.commons.lang.StringUtils.capitalize(columnCase);
-                            
+
                             if (methodName.equalsIgnoreCase("set" + colName)) {
                                 method[j].invoke(obj, new Object[] {value});
                                 methodNameMap.put(new Integer(j), methodName);
-                            }else if ( methodName.equalsIgnoreCase("set" + columnCase)){
+                            }
+                            else if (methodName.equalsIgnoreCase("set" + columnCase)) {
                                 method[j].invoke(obj, new Object[] {value});
                                 methodNameMap.put(new Integer(j), methodName);
                             }
@@ -500,41 +508,46 @@ public class SqlUtils {
                     }
                     //else method names have been determined so perform invocations based on list
                     else {
-                        for (Enumeration keys = methodNameMap.keys(); keys.hasMoreElements(); ) {
-                            Integer key = (Integer) keys.nextElement();
-                            System.out.println(method[key.intValue()].getName()+" value  "+value.getClass().getName());
-                            method[key.intValue()].invoke(obj,
-                                    new Object[] {value});
+                        for (Enumeration keys = methodNameMap.keys(); keys.hasMoreElements();) {
+                            Integer key = (Integer)keys.nextElement();
+                            System.out.println(method[key.intValue()].getName() + " value  " + value.getClass().getName());
+                            method[key.intValue()].invoke(obj, new Object[] {value});
                         }
                     }
                 }
                 rec.add(obj);
                 recordCount++;
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        }
+        catch (InvocationTargetException e) {
             e.printStackTrace();
-        } catch (InstantiationException e) {
+        }
+        catch (InstantiationException e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
-                if(db!=null){
+                if (db != null) {
                     db.CloseConn();
                 }
-                
-                if(rs!=null){
+
+                if (rs != null) {
                     rs.close();
                 }
-            } catch (SQLException ex) {
+            }
+            catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }
         return rec;
     }
-    
+
     private static Object getNewType(ResultSet rs, int colNum) {
         int type = 0;
         try {
@@ -566,12 +579,13 @@ public class SqlUtils {
                 default:
                     return rs.getObject(colNum);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-    
+
     /**
      * Returns a List of String[] which contain the results of the specified arbitrary query.
      *
@@ -585,7 +599,7 @@ public class SqlUtils {
         try {
             records = new ArrayList();
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            rs = (ResultSet) db.GetSQL(qry);
+            rs = (ResultSet)db.GetSQL(qry);
             int cols = rs.getMetaData().getColumnCount();
             while (rs.next()) {
                 String[] record = new String[cols];
@@ -594,31 +608,35 @@ public class SqlUtils {
                 }
                 records.add(record);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             records = null;
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             if (db != null) {
                 try {
                     db.CloseConn();
-                } catch (SQLException ex) {
+                }
+                catch (SQLException ex) {
                     ex.printStackTrace();
                 }
             }
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException ex1) {
+                }
+                catch (SQLException ex1) {
                     ex1.printStackTrace();
                 }
             }
-            if(records!=null){
+            if (records != null) {
                 records = records.isEmpty()?null:records;
             }
             return records;
         }
     }
-    
+
     /**
      * Returns a single row(the first row) from a quesry result
      * Generally should only be used with queries that return a single result
@@ -626,16 +644,15 @@ public class SqlUtils {
      * @param qry String
      * @return String[]
      */
-    public static String[] getRow(String qry){
+    public static String[] getRow(String qry) {
         String ret[] = null;
         List list = getQueryResultsList(qry);
-        if(list!=null){
+        if (list != null) {
             ret = (String[])list.get(0);
         }
         return ret;
     }
-    
-    
+
     /**
      * Returns a List of Map objects which contain the results of the specified arbitrary query.
      *The key contains the field names of the table and the value, the field value of the record
@@ -649,46 +666,51 @@ public class SqlUtils {
         try {
             records = new ArrayList();
             db = new DBHandler(DBHandler.OSCAR_DATA);
-            rs = (ResultSet) db.GetSQL(qry);
+            rs = (ResultSet)db.GetSQL(qry);
             int cols = rs.getMetaData().getColumnCount();
             while (rs.next()) {
                 Properties record = new Properties();
                 for (int i = 0; i < cols; i++) {
                     String columnName = rs.getMetaData().getColumnName(i + 1);
                     String cellValue = rs.getString(i + 1);
-                    if(columnName!=null && !"".equals(columnName)){
-                        
-                        cellValue = cellValue==null?"":cellValue;
+                    if (columnName != null && !"".equals(columnName)) {
+
+                        cellValue = cellValue == null?"":cellValue;
                         record.setProperty(columnName, cellValue);
-                    } else{
+                    }
+                    else {
                         System.out.println("Empty key for value: " + cellValue);
                     }
                 }
                 records.add(record);
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             records = null;
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             if (db != null) {
                 try {
                     db.CloseConn();
-                } catch (SQLException ex) {
+                }
+                catch (SQLException ex) {
                     ex.printStackTrace();
                 }
             }
             if (rs != null) {
                 try {
                     rs.close();
-                } catch (SQLException ex1) {
+                }
+                catch (SQLException ex1) {
                     ex1.printStackTrace();
                 }
             }
-            
+
             return records;
         }
     }
-    
+
     /**
      * Creates an 'in' clause segment of an sql query.
      * This is handy in cases where the criteria of a query is dynamic/unknown
@@ -696,9 +718,9 @@ public class SqlUtils {
      * @param type int - a value of true indicates that the clause components are enclosed in quotes
      * @return String - The constructed sql 'in' clause String
      */
-    public static String constructInClauseString(String[] criteria,boolean useQuotes){
+    public static String constructInClauseString(String[] criteria, boolean useQuotes) {
         StringBuffer ret = new StringBuffer();
-        String quote = useQuotes==true?"'":"";
+        String quote = useQuotes == true?"'":"";
         if (criteria.length != 0) {
             ret.append("in (");
             for (int i = 0; i < criteria.length; i++) {
@@ -711,7 +733,7 @@ public class SqlUtils {
         ret.append(")");
         return ret.toString();
     }
- 
+
     /**
      * This method will return a string similar 
      * to "(?,?,?,?)". The intent is that this 
@@ -719,64 +741,73 @@ public class SqlUtils {
      * like select * from foo where x in (?,?,?)
      * for prepared statements.
      */
-    public static String constructInClauseForPreparedStatements(int numberOfParameters)
-    {
-    	if (numberOfParameters<=0) throw(new IllegalArgumentException("Don't call this method if the numberOfParameters is <1 it doesn't make sense."));
-    	
-    	StringBuilder sb=new StringBuilder();
-    	sb.append('(');
+    public static String constructInClauseForPreparedStatements(int numberOfParameters) {
+        if (numberOfParameters <= 0) throw (new IllegalArgumentException("Don't call this method if the numberOfParameters is <1 it doesn't make sense."));
 
-    	for (int i=0; i<numberOfParameters; i++)
-    	{
-    		if (i>0) sb.append(',');
-    		sb.append('?');
-    	}
-    	
-    	sb.append(')');
-    	return(sb.toString());
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+
+        for (int i = 0; i < numberOfParameters; i++) {
+            if (i > 0) sb.append(',');
+            sb.append('?');
+        }
+
+        sb.append(')');
+        return(sb.toString());
     }
-    
-	/**
-	 * This method will close the resources passed in.
-	 * Pass in null for anything you don't want closed.
-	 * All exceptions will be logged at WARN level but not 
-	 * rethrown. Note that if you retrieved the connection
-	 * from something like hibernate/jpa you should 
-	 * not close the connection, let the entityManager / sessionManager do that, 
-	 * just close the statement and resultset.
-	 */
-	public static void closeResources(Connection c, Statement s, ResultSet rs) {
 
-		if (rs != null) {
-			try {
-				rs.close();
-			}
-			catch (SQLException e) {
-				logger.warn("Error closing ResultSet.", e);
-			}
-		}
+    /**
+     * This method will close the resources passed in.
+     * Pass in null for anything you don't want closed.
+     * All exceptions will be logged at WARN level but not 
+     * rethrown. Note that if you retrieved the connection
+     * from something like hibernate/jpa you should 
+     * not close the connection, let the entityManager / sessionManager do that, 
+     * just close the statement and resultset.
+     */
+    public static void closeResources(Connection c, Statement s, ResultSet rs) {
+        closeResources(s, rs);
 
-		if (s != null) {
-			try {
-				s.close();
-			}
-			catch (SQLException e) {
-				logger.warn("Error closing Statement.", e);
-			}
-		}
+        if (c != null) {
+            try {
+                c.close();
+            }
+            catch (Exception e) {
+                if (e.getMessage().toLowerCase().indexOf("already closed") >= 0) {
+                    // I don't care.
+                }
+                else {
+                    logger.warn("Error closing Connection.", e);
+                }
+            }
+        }
+    }
 
-		if (c != null) {
-			try {
-				c.close();
-			}
-			catch (Exception e) {
-				if (e.getMessage().toLowerCase().indexOf("already closed") >= 0) {
-					// I don't care.
-				}
-				else {
-					logger.warn("Error closing Connection.", e);
-				}
-			}
-		}
-	}
+    public static void closeResources(Session session, Statement s, ResultSet rs) {
+        closeResources(s, rs);
+
+        if (session != null) {
+            session.close();
+        }
+    }
+
+    public static void closeResources(Statement s, ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            }
+            catch (SQLException e) {
+                logger.warn("Error closing ResultSet.", e);
+            }
+        }
+
+        if (s != null) {
+            try {
+                s.close();
+            }
+            catch (SQLException e) {
+                logger.warn("Error closing Statement.", e);
+            }
+        }
+    }
 }
