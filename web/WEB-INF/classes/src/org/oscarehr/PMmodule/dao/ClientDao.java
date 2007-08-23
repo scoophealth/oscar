@@ -41,6 +41,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -235,7 +236,8 @@ public class ClientDao extends HibernateDaoSupport {
 		if (tempList.size()>LIST_PROCESSING_CHUNK_SIZE) throw(new IllegalStateException("tempIds list size is too large, size="+tempList.size()));
 		
 		//--- get the list of demographicId's which are opted in ---
-		Connection c=getSession().connection();
+		Session session=getSession();
+        Connection c=session.connection();
 		PreparedStatement ps=null;
 		ResultSet rs=null;
 		String sqlCommand="select demographic_no from demographicExt where key_val=? and value in (?,?) and demographic_no in "+SqlUtils.constructInClauseForPreparedStatements(tempList.size());
@@ -266,7 +268,7 @@ public class ClientDao extends HibernateDaoSupport {
         }
 		finally
 		{
-			SqlUtils.closeResources(null, ps, rs);
+			SqlUtils.closeResources(ps, rs);
 		}
 		
 		//--- add only the opted in people to the optedIn list ---
@@ -587,7 +589,8 @@ public class ClientDao extends HibernateDaoSupport {
 
 		ArrayList<ClientListsReportResults> results=new ArrayList<ClientListsReportResults>();
 		
-		Connection c=getSession().connection();
+        Session session=getSession();
+		Connection c=session.connection();
 		PreparedStatement ps=null;
 		ResultSet rs=null;
 		try
@@ -645,7 +648,7 @@ public class ClientDao extends HibernateDaoSupport {
 		}
 		finally
 		{
-			SqlUtils.closeResources(null, ps, rs);
+			SqlUtils.closeResources(ps, rs);
 		}
 		
 		return results;
