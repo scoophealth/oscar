@@ -30,7 +30,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
-import org.oscarehr.PMmodule.dao.ClientDao.ClientListsReportResults;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
@@ -40,7 +39,6 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
-import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 
 public class ClientManager {
@@ -262,7 +260,4 @@ public class ClientManager {
 		dao.removeDemographicExt(demographicNo, key);
 	}
 	
-	public List<ClientListsReportResults> findByReportCriteria(ClientListsReportFormBean x) {
-		return(dao.findByReportCriteria(x));
-	}
 }

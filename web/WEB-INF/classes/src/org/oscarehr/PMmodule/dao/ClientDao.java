@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +47,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -561,7 +562,7 @@ public class ClientDao extends HibernateDaoSupport {
 		public String programName;
 	}
 	
-    public List<ClientListsReportResults> findByReportCriteria(ClientListsReportFormBean x) {
+    public Map<String, ClientListsReportResults> findByReportCriteria(ClientListsReportFormBean x) {
 
 		StringBuilder sqlCommand=new StringBuilder();
 		// this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
@@ -587,14 +588,15 @@ public class ClientDao extends HibernateDaoSupport {
 		
 		sqlCommand.append(" order by last_name,first_name");		
 
-		ArrayList<ClientListsReportResults> results=new ArrayList<ClientListsReportResults>();
+        // yeah I know using a treeMap isn't an effiientway of making this unique but given the current constraints this was quick and dirty and should work for the size of our data set 
+		TreeMap<String, ClientListsReportResults> results=new TreeMap<String, ClientListsReportResults>();
 		
         Session session=getSession();
 		Connection c=session.connection();
 		PreparedStatement ps=null;
 		ResultSet rs=null;
 		try
-		{
+		{            
 			ps=c.prepareStatement(sqlCommand.toString());
 			
 			// filter by provider
@@ -639,7 +641,7 @@ public class ClientDao extends HibernateDaoSupport {
 				clientListsReportResults.programId=rs.getInt("program.program_id");
 				clientListsReportResults.programName=rs.getString("program.name");
 				
-				results.add(clientListsReportResults);
+				results.put(clientListsReportResults.lastName+clientListsReportResults.firstName,clientListsReportResults);
 			}
 		}
 		catch (SQLException e)

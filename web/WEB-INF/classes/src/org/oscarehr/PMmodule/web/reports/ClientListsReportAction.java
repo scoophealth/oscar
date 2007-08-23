@@ -1,6 +1,28 @@
+/*
+* Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
+* This software is published under the GPL GNU General Public License. 
+* This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 2 
+* of the License, or (at your option) any later version. 
+* 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. 
+* 
+* You should have received a copy of the GNU General Public License 
+* along with this program; if not, write to the Free Software 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+* 
+* This software was written for 
+* CAISI, 
+* Toronto, Ontario, Canada 
+*/
 package org.oscarehr.PMmodule.web.reports;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,60 +32,59 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.apache.struts.actions.DispatchAction;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ClientDao.ClientListsReportResults;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
-import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 
 public class ClientListsReportAction extends DispatchAction {
 
-	private ProviderManager providerManager;
-	
-	public void setProviderManager(ProviderManager providerManager) {
-    
-    	this.providerManager = providerManager;
+    private ClientDao clientDao;
+
+    public void setClientDao(ClientDao clientDao) {
+        this.clientDao = clientDao;
     }
 
-	private ProgramManager programManager;
-	
-	public void setProgramManager(ProgramManager programManager) {
-    
-    	this.programManager = programManager;
+    private ProviderManager providerManager;
+
+    public void setProviderManager(ProviderManager providerManager) {
+
+        this.providerManager = providerManager;
     }
 
-	private ClientManager clientManager;
-	
-	public void setClientManager(ClientManager clientManager) {
-    
-    	this.clientManager = clientManager;
+    private ProgramManager programManager;
+
+    public void setProgramManager(ProgramManager programManager) {
+
+        this.programManager = programManager;
     }
 
-	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		// need to get the reporting options here, i.e.
-		// - provider list
-		// - program list
-		// - icd-10 isue list?
-		
-		List<Provider> providers=providerManager.getProviders();
-		request.setAttribute("providers", providers);
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        // need to get the reporting options here, i.e.
+        // - provider list
+        // - program list
+        // - icd-10 isue list?
 
-		List<Program> programs=programManager.getAllPrograms();
-		request.setAttribute("programs", programs);
-		
-		return mapping.findForward("form");
-	}
+        List<Provider> providers = providerManager.getProviders();
+        request.setAttribute("providers", providers);
 
-	public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        List<Program> programs = programManager.getAllPrograms();
+        request.setAttribute("programs", programs);
 
-		DynaActionForm reportForm = (DynaActionForm)form;
-		ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
+        return mapping.findForward("form");
+    }
 
-		List<ClientListsReportResults> reportResults=clientManager.findByReportCriteria(formBean);
-		request.setAttribute("reportResults", reportResults);
+    public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-		return mapping.findForward("report");
-	}
+        DynaActionForm reportForm = (DynaActionForm)form;
+        ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
+
+        Map<String, ClientListsReportResults> reportResults = clientDao.findByReportCriteria(formBean);
+        request.setAttribute("reportResults", reportResults);
+
+        return mapping.findForward("report");
+    }
 }
