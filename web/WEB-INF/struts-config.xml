@@ -1321,7 +1321,9 @@
             <forward name="providerView" path="/PMmodule/ProviderInfo.do?method=view" redirect="true" />
         </action>
         <!-- Generic Intake -->
-
+      	<action path="/PMmodule/GenericIntake/Report" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+            <forward name="report" path="/PMmodule/GenericIntake/Report.jsp" />
+        </action>
         <!-- FORMS -->
         <action path="/PMmodule/Forms/FollowUp" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="followUpForm" scope="request" input="/PMmodule/forms/FollowUp.jsp">
             <forward name="form" path="/PMmodule/forms/FollowUp.jsp" />
