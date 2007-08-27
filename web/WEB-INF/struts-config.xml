@@ -2,7 +2,7 @@
 <!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
 <struts-config>
     <form-beans>
-        <!-- caisi core -->
+        <!-- caisi core -->p
         <form-bean name="systemMessageForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="system_message" type="org.caisi.model.SystemMessage" />
         </form-bean>
@@ -473,6 +473,9 @@
         </action>
         <action input="/oscarRx/SelectPharacy.jsp" path="/oscarRx/LinkPharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
+        </action>
+        <action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="finished" path="/phr/response.jsp"></forward>
         </action>
         <action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
             <forward name="failure" path="/errorpage.jsp" />
@@ -1156,6 +1159,9 @@
             <forward name="success" path="/dms/closeWindow.html" />
             <forward name="failed" path="/dms/addedithtmldocument.jsp" />
         </action>
+        <action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/SendDocToPhr" type="org.springframework.web.struts.DelegatingActionProxy">
+            <forward name="finished" path="/phr/response.jsp"></forward>
+        </action>
         <action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
             <forward name="success" path="/scratch/index.jsp" />
         </action>
@@ -1463,12 +1469,14 @@
             <forward name="login"  path="/indivoMessenger/LoginIndivo.jsp"/>
             <forward name="read"  path="/phr/msg/ReadPHRMessage.jsp"/>
             <forward name="create" path="/phr/msg/CreatePHRMessage.jsp"/>
+            <forward name="document_not_found" path="/phr/PHRDocNotFound.jsp"/>
         </action>
         <action path="/phr/Login" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
         </action>
         <action path="/phr/Logout" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
         </action>
-        
+        <action path="/phrExchange" name="FrmForm" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
+        </action>
         
     </action-mappings>
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
