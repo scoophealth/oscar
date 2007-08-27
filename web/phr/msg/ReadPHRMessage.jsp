@@ -94,9 +94,9 @@ function BackToOscar()
                                   
                                     <td>
                                         <table class=messButtonsA cellspacing=0 cellpadding=3 ><tr><td class="messengerButtonsA">
-                                           <html:link page="/phr/PhrMessage.do?method=viewMessages" styleClass="messengerButtons">
-                                             <bean:message key="oscarMessenger.ViewMessage.btnInbox"/>
-                                            </html:link>
+                                           <html:link page="/phr/msg/DisplayPHRMessages.jsp?method=${comingfrom}" styleClass="messengerButtons">
+                                             Back
+                                           </html:link>
                                         </td></tr></table>
                                     </td>                                    
                                     <td>
@@ -148,15 +148,18 @@ function BackToOscar()
                                     <td bgcolor="#EEEEFF" ></td>
                                     <td bgcolor="#EEEEFF" >
                                         <textarea name="msgBody" wrap="hard" readonly="true" rows="18" cols="60" ><c:out value="${message.body}"/></textarea><br>
-                                        <html:submit styleClass="ControlPushButton" property="reply">
-                                            <bean:message key="oscarMessenger.ViewMessage.btnReply"/>
-                                        </html:submit>
+                                        <logic:notPresent name="noreply">
+                                            <html:submit styleClass="ControlPushButton" property="reply">
+                                                <bean:message key="oscarMessenger.ViewMessage.btnReply"/>
+                                            </html:submit>
+                                        </logic:notPresent>
                                         <html-el:hidden property="msgTo"         value="${message.senderPhr}" />
                                         <html-el:hidden property="msgFrom"       value="${message.senderPhr}" />
                                         <html-el:hidden property="msgRe"         value="${message.docSubject}" />
                                         <html-el:hidden property="id"            value="${message.id}" />
                                         <html-el:hidden property="docIdx"        value="${message.phrIndex}" />
                                         <html-el:hidden property="demographicNo" value="${message.senderOscar}"/>
+                                        <html-el:hidden property="comingfrom"    value="${comingfrom}"/>
                                         <input type="hidden" name="method" value="reply"/>
                                      </td>
                                 </tr>

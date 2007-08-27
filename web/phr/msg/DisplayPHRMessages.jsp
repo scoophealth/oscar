@@ -7,6 +7,8 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html-el" prefix="html-el" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
+<%@ taglib uri="/WEB-INF/rewrite-tag.tld" prefix="rewrite" %>
 
 <%@ page import="oscar.oscarDemographic.data.DemographicData"%>
 
@@ -14,9 +16,14 @@
 <%@page pageEncoding="UTF-8"%>
 
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
+<%@ page import="org.oscarehr.phr.model.PHRAction"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
+<%@ page import="org.oscarehr.phr.indivo.IndivoConstantsImpl"%>
+<%@ page import="org.oscarehr.phr.PHRConstants"%>
+<%@ page import="org.oscarehr.phr.dao.PHRActionDAO, org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="java.util.*"%>
 <%
+int statusNotAuthorized = PHRAction.STATUS_NOT_AUTHORIZED;
 String providerName = request.getSession().getAttribute("userfirstname") + " " + 
         request.getSession().getAttribute("userlastname");
 String providerNo = (String) request.getSession().getAttribute("user");
@@ -24,6 +31,30 @@ ProviderData providerData = new ProviderData();
 providerData.setProvider_no(providerNo);
 String providerPhrId = providerData.getMyOscarId();
 request.setAttribute("forwardto", request.getRequestURI());
+
+//set the "sent" tab to red if there are authorization errors on send
+PHRActionDAO phrActionDAO = (PHRActionDAO) WebApplicationContextUtils.getWebApplicationContext(
+        		pageContext.getServletContext()).getBean("phrActionDAO");
+
+//some phrAction static constants
+pageContext.setAttribute("STATUS_NOT_AUTHORIZED", PHRAction.STATUS_NOT_AUTHORIZED);
+pageContext.setAttribute("STATUS_SENT", PHRAction.STATUS_SENT);
+pageContext.setAttribute("STATUS_SEND_PENDING", PHRAction.STATUS_SEND_PENDING);
+
+pageContext.setAttribute("ACTION_ADD", PHRAction.ACTION_ADD);
+pageContext.setAttribute("ACTION_UPDATE", PHRAction.ACTION_UPDATE);
+
+PHRConstants phrConstants = new IndivoConstantsImpl();
+pageContext.setAttribute("TYPE_BINARYDATA", phrConstants.DOCTYPE_BINARYDATA());
+pageContext.setAttribute("TYPE_MEDICATION", phrConstants.DOCTYPE_MEDICATION());
+
+String pageMethod = request.getParameter("method");
+if (pageMethod.equals("delete") || pageMethod.equals("resend")) 
+    pageMethod = "viewSentMessages";
+if (pageMethod.equals("archive"))
+    pageMethod = "viewMessages";
+if (pageMethod.equals("unarchive"))
+    pageMethod = "viewArchivedMessages";
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -36,12 +67,23 @@ request.setAttribute("forwardto", request.getRequestURI());
         <title>
         <%-- bean:message key="indivoMessenger.DisplayMessages.title"/ --%>  myOSCAR
         </title>
+        <script type="text/javascript" src="../../share/javascript/prototype.js"></script>
+        <script type="text/javascript" src="../../phr/phr.js"></script>
         <style type="text/css">
         td.messengerButtonsA{
             /*background-color: #6666ff;*/
             /*background-color: #6699cc;*/
             background-color: #003399;
         }
+        td.messengerButtonsACurrent{
+            /*background-color: #6666ff;*/
+            /*background-color: #6699cc;*/
+            background-color: #00ae99;
+        }
+        td.messengerButtonsAWarning{
+            background-color: red;
+        }
+        
         td.messengerButtonsD{
             /*background-color: #84c0f4;*/
             background-color: #555599;
@@ -99,6 +141,33 @@ request.setAttribute("forwardto", request.getRequestURI());
             font-size: 10px;
             color: red;
         }
+        table.messageTable {
+        }
+        
+        tr.normal td {
+            background-color: #EEEEFF;
+        }
+        tr.new td {
+            
+        }
+        
+        .notAuthorized {
+            background-color: #ffcdb9;
+        }
+        .sendPending {
+            background-color: #e1eddb;
+        }
+        .normal {
+            background-color: #EEEEFF;
+        }
+        .new {
+            background-color: #EEEEFF;
+            font-weight: bold;
+        }
+        
+        .statusDiv {
+            background-color: #fb8781;
+        }
         </style>
 
         <script type="text/javascript">
@@ -109,6 +178,18 @@ request.setAttribute("forwardto", request.getRequestURI());
         function setFocus() {
             if (document.getElementById('phrPassword'))
                 document.getElementById('phrPassword').focus();
+        }
+        function reloadWindow() {
+            window.location = "../../phr/PhrMessage.do?method=<%=request.getParameter("method")%>";
+        }
+        
+        function setStatus(message) {
+            if (message.length == 0) {
+                $('statusDiv').hide();
+            } else {
+                $('statusDiv').show();
+                $("statusDiv").innerHTML = message;
+            }
         }
         </script>
     </head>
@@ -147,9 +228,23 @@ request.setAttribute("forwardto", request.getRequestURI());
                             <table  cellspacing=3 >
                                 <tr>
                                     <td >
-                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA">
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewMessages")) {%>Current<%}%>">
                                                     <html:link page="/phr/PhrMessage.do?method=viewMessages" styleClass="messengerButtons">
-                                                        <bean:message key="oscarMessenger.DisplayMessages.btnRefresh"/>
+                                                        Inbox
+                                                    </html:link>
+                                        </td></tr></table>
+                                    </td>
+                                    <td >
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (phrActionDAO.ifActionsWithErrors(providerNo)) {%>Warning<%} else if (pageMethod.equals("viewSentMessages")) {%>Current<%}%>">
+                                                    <html:link page="/phr/PhrMessage.do?method=viewSentMessages" styleClass="messengerButtons">
+                                                        Sent
+                                                    </html:link>
+                                        </td></tr></table>
+                                    </td>
+                                    <td>
+                                        <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA<%if (pageMethod.equals("viewArchivedMessages")) {%>Current<%}%>">
+                                                    <html:link page="/phr/PhrMessage.do?method=viewArchivedMessages" styleClass="messengerButtons">
+                                                        Archived
                                                     </html:link>
                                         </td></tr></table>
                                     </td>
@@ -165,7 +260,7 @@ request.setAttribute("forwardto", request.getRequestURI());
                                                 Status: <b>Logged in as <%=providerName%></b> (<%=phrAuth.getUserId()%>)
                                                 <form action="../../phr/Logout.do" name="phrLogout" method="POST"  style="margin: 0px; padding: 0px;">
                                                     <input type="hidden" name="forwardto" value="<%=request.getServletPath()%>?method=<%=(String) request.getParameter("method")%>">
-                                                    <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a></center>
+                                                    <center><a href="javascript: document.forms['phrLogout'].submit()">Logout</a><div class="statusDiv" id="statusDiv"></div></center>
                                                 </form>
                                             </div>
                                         </td>
@@ -204,20 +299,23 @@ request.setAttribute("forwardto", request.getRequestURI());
                 &nbsp;
             </td>
             <td class="MainTableRightColumn">
-                <table border="0" width="80%" cellspacing="1">
+                <table class="messageTable" border="0" width="80%" cellspacing="1">
                     <tr>
-                        <th bgcolor="#DDDDFF" width="75">
+                        <th bgcolor="#DDDDFF" width="30">
                             &nbsp;
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
                             <html-el:link action="/phr/PhrMessage?orderby=0" >
-                            
                                 <bean:message key="oscarMessenger.DisplayMessages.msgStatus"/>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
                              <html-el:link action="/phr/PhrMessage?orderby=1" >
-                                <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                 <%if (pageMethod.equals("viewSentMessages")) {%>
+                                         Recipient
+                                 <%} else {%>
+                                         <bean:message key="oscarMessenger.DisplayMessages.msgFrom"/>
+                                 <%}%>
                             </html-el:link>
                         </th>
                         <th align="left" bgcolor="#DDDDFF">
@@ -229,11 +327,186 @@ request.setAttribute("forwardto", request.getRequestURI());
                             <html-el:link action="/phr/PhrMessage?orderby=3" >
                                 <bean:message key="oscarMessenger.DisplayMessages.msgDate"/>
                             </html-el:link>
-                        </th>                                    
-                    </tr>          
+                        </th>
+                        <th align="center" style="width: 30px;" bgcolor="#DDDDFF">
+                                &nbsp;
+                        </th>
+                        <%if (pageMethod.equals("viewSentMessages")) {%>
+                            <th align="center" style="width: 30px;" bgcolor="#DDDDFF">
+                                &nbsp;
+                            </th>
+                        <%}%>
+                    </tr>
+                    
+     <%-- Sent items-----------------------------------------------------------------%>
+ 
+                    <c:forEach var="otherAction" items="${indivoOtherActions}">
+                        <tr 
+                            <c:choose>
+                                <c:when test="${otherAction.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
+                                <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
+                                <c:otherwise>class="normal"</c:otherwise>
+                            </c:choose>
+                        >
+                            <td width="30">
+                                &nbsp;
+                            </td>
+                            <td width="120"> 
+                                <c:choose>
+                                    <c:when test="${otherAction.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
+                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
+                                    <c:otherwise>Unknown</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                            <c:out value="${otherAction.receiverPhr}"/></td>
+                            <td>
+                                  <c:choose>
+                                    <c:when test="${otherAction.phrClassification == TYPE_BINARYDATA}">
+                                            <c:choose>
+                                                <c:when test="${otherAction.actionType == ACTION_ADD}"><-- Add Document></c:when>
+                                                <c:when test="${otherAction.actionType == ACTION_UPDATE}"><-- Update Document></c:when>
+                                                <c:otherwise><-- Document></c:otherwise>
+                                            </c:choose>
+                                    </c:when>
+                                    <c:when test="${otherAction.phrClassification == TYPE_MEDICATION}">
+                                            <c:choose>
+                                                <c:when test="${otherAction.actionType == ACTION_ADD}"><-- Add Medication></c:when>
+                                                <c:when test="${otherAction.actionType == ACTION_UPDATE}"><-- Update Medication></c:when>
+                                                <c:otherwise><-- Medication></c:otherwise>
+                                            </c:choose>
+                                    </c:when>
+                                    <c:otherwise><-- Unknown></c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td> 
+                                <fmt:formatDate value="${otherAction.dateQueued}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${otherAction.status == STATUS_NOT_AUTHORIZED}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${otherAction.id}">Resend</html-el:link></c:when>
+                                    <c:otherwise>&nbsp;</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <html-el:link action="/phr/PhrMessage?&method=delete&id=${otherAction.id}">Remove</html-el:link>
+                            </td>
+                        </tr>
+                    </c:forEach>
+     
+     
+                    <c:forEach var="actionMessage" items="${indivoMessageActions}">
+                        <tr 
+                            <c:choose>
+                                <c:when test="${actionMessage.status == STATUS_SEND_PENDING}">class="sendPending"</c:when>
+                                <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}">class="notAuthorized"</c:when>
+                                <c:otherwise>class="normal"</c:otherwise>
+                            </c:choose>
+                        >
+                            <td width="30">
+                                &nbsp;
+                            </td>
+                            <td width="120"> 
+                                <c:choose>
+                                    <c:when test="${actionMessage.status == STATUS_SEND_PENDING}">Waiting to send...</c:when>
+                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}">Error: Not Authorized</c:when>
+                                    <c:otherwise>Unknown</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                            <c:out value="${actionMessage.phrMessage.receiverPhr}"/></td>
+                            <td>
+                                <html-el:link action="/phr/PhrMessage?method=read&source=actions&comingfrom=viewSentMessages&noreply=yes&id=${actionMessage.id}"  >
+                                    <c:out value="${actionMessage.phrMessage.docSubject}"/>
+                                </html-el:link>
+                            </td>
+                            <td> 
+                                <fmt:formatDate value="${actionMessage.dateQueued}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${actionMessage.status == STATUS_NOT_AUTHORIZED}"><html-el:link action="/phr/PhrMessage?&method=resend&id=${actionMessage.id}">Resend</html-el:link></c:when>
+                                    <c:otherwise>&nbsp;</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <html-el:link action="/phr/PhrMessage?&method=delete&id=${actionMessage.id}">Remove</html-el:link>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    
+                    <c:forEach var="sMessage" items="${indivoSentMessages}">
+                        <tr class="normal">
+                            <td width="30">
+                               
+                            &nbsp;
+                            
+                            </td>
+                            <td width="75">
+                                Sent
+                            </td>
+                            <td>
+                                <c:out value="${sMessage.receiverPhr}"/></td>
+                            <td>
+                                
+                                <html-el:link action="/phr/PhrMessage?method=read&noreply=yes&comingfrom=viewSentMessages&id=${sMessage.id}"  >
+                                   <c:out value="${sMessage.docSubject}"/>
+                                </html-el:link>
+                                
+                            </td>
+                            <td> 
+                                <fmt:formatDate value="${sMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    </c:forEach> 
+ <%-- Archived ---------------------------------------------------------- --%>
+                    <c:forEach var="archivedMessage" items="${indivoArchivedMessages}">
+                        <tr class="normal">
+                            <td width="30">
+                               
+                            <c:if test="${archivedMessage.replied}" > --> </c:if>
+                            
+                            </td>
+                            <td width="75">
+                                <c:choose>
+                                   <c:when test="${archivedMessage.read}">read</c:when>
+                                   <c:otherwise>new</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <c:out value="${archivedMessage.senderPhr}"/></td>
+                            <td>
+                                
+                                <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewArchivedMessages&id=${archivedMessage.id}"  >
+                                   <c:out value="${archivedMessage.docSubject}"/>
+                                </html-el:link>
+                                
+                            </td>
+                            <td> 
+                                <fmt:formatDate value="${archivedMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </td>
+                            <td>
+                                <html-el:link action="/phr/PhrMessage?&method=unarchive&id=${archivedMessage.id}"  >
+                                   Unarchive
+                                </html-el:link>
+                            </td>
+                        </tr>
+                    </c:forEach>               
+ <%-- Inbox-------------------------------------------------------------- --%>
+                    
+                    
                     <c:forEach var="iMessage" items="${indivoMessages}">
-                        <tr>
-                            <td bgcolor="#EEEEFF" width="75">
+                        <tr <c:choose>
+                                <c:when test="${iMessage.read}">class="normal"</c:when>
+                                <c:otherwise>class="new"</c:otherwise>
+                            </c:choose>>
+                            <td bgcolor="#EEEEFF" width="30">
                                
                             <c:if test="${iMessage.replied}" > --> </c:if>
                             
@@ -248,13 +521,18 @@ request.setAttribute("forwardto", request.getRequestURI());
                                 <c:out value="${iMessage.senderPhr}"/></td>
                             <td bgcolor="#EEEEFF">
                                 
-                                <html-el:link action="/phr/PhrMessage?&method=read&id=${iMessage.id}"  >
+                                <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewMessages&id=${iMessage.id}"  >
                                    <c:out value="${iMessage.docSubject}"/>
                                 </html-el:link>
                                 
                             </td>
                             <td bgcolor="#EEEEFF"> 
                                 <fmt:formatDate value="${iMessage.dateSent}" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                            </td>
+                            <td>
+                                <html-el:link action="/phr/PhrMessage?&method=archive&id=${iMessage.id}"  >
+                                   Archive
+                                </html-el:link>
                             </td>
                         </tr>
                     </c:forEach> 
@@ -271,4 +549,23 @@ request.setAttribute("forwardto", request.getRequestURI());
         
     </table>
     </body>
+    <script type="text/javascript" language="JavaScript">
+        <phr:IfTimeToExchange>
+        //phrExchangeGo('../../phrExchange.do');
+        setStatus("Loading messages...");
+        new Ajax.Request('../../phrExchange.do',
+          {
+            method:'get',
+            onSuccess: function(transport){
+              var response = transport.responseText || "0";
+              setStatus("");
+              reloadWindow();
+            },
+            onFailure: function(){ 
+              setStatus("");
+              reloadWindow();
+            }
+          });
+        </phr:IfTimeToExchange>
+      </script>
 </html>

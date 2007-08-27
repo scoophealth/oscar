@@ -18,3 +18,9 @@ function phrActionPopup(url, windowName){
   popup.focus();  
   //return false;  
 }
+
+//myoscar exchange script:
+function phrExchangeGo(url) {
+    //alert("executing");
+    new Ajax.Request(url, { method:'get' });
+}

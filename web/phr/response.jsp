@@ -12,6 +12,7 @@ on Libraries node in Projects view can be used to add the JSTL 1.1 library.
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 
 <%@ page import="org.oscarehr.phr.PHRAuthentication"%>
 <%@ page import="oscar.oscarProvider.data.ProviderData"%>
@@ -43,6 +44,8 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
         <link rel="stylesheet" type="text/css" href="../phr/phr.css"/>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>PHR Call</title>
+        <script type="text/javascript" language="JavaScript" src="../share/javascript/prototype.js"></script>
+        <script type="text/javascript" language="JavaScript" src="../phr/phr.js"></script>
         <script type="text/javascript" language="JavaScript">
             function startWindowTimeout() {
                 var sec=1500;
@@ -140,5 +143,10 @@ PHRAuthentication phrAuth = (PHRAuthentication) session.getAttribute(PHRAuthenti
             <%}%>
         </div>
         <script type="text/javascript" src="../share/javascript/boxover.js"></script>
+        <phr:IfTimeToExchange>
+            <script type="text/javascript">
+            phrExchangeGo('../phrExchange.do');
+            </script>
+        </phr:IfTimeToExchange>
     </body>
 </html>
