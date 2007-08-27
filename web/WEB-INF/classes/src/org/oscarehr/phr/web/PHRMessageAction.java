@@ -32,21 +32,24 @@ package org.oscarehr.phr.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
-import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.PHRConstants;
+import org.oscarehr.phr.dao.PHRActionDAO;
 import org.oscarehr.phr.dao.PHRDocumentDAO;
+import org.oscarehr.phr.model.PHRAction;
 import org.oscarehr.phr.model.PHRDocument;
 import org.oscarehr.phr.model.PHRMessage;
 import org.oscarehr.phr.service.PHRService;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarProvider.data.ProviderMyOscarIdData;
+
 
 /**
  *
@@ -57,6 +60,7 @@ public class PHRMessageAction extends DispatchAction {
     private static Log log = LogFactory.getLog(PHRMessageAction.class);
     
     PHRDocumentDAO phrDocumentDAO;
+    PHRActionDAO phrActionDAO;
     PHRService phrService;
     PHRConstants phrConstants;
     
@@ -70,6 +74,10 @@ public class PHRMessageAction extends DispatchAction {
     
     public void setPhrDocumentDAO(PHRDocumentDAO phrDocumentDAO) {
         this.phrDocumentDAO = phrDocumentDAO;
+    }
+    
+    public void setPhrActionDAO(PHRActionDAO phrActionDAO) {
+        this.phrActionDAO = phrActionDAO;
     }
     
     public void setPhrConstants(PHRConstants phrConstants) {
@@ -91,12 +99,45 @@ public class PHRMessageAction extends DispatchAction {
         log.debug("AUTH "+auth);
         String indivoId   = auth.getUserId();
         String ticket     = auth.getToken();*/
+        clearSessionVariables(request);
         String providerNo = (String) request.getSession().getAttribute("user");
-        List docs = phrDocumentDAO.getDocuments(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        List docs = phrDocumentDAO.getDocumentsReceived(phrConstants.DOCTYPE_MESSAGE(), providerNo);
  
         if(docs != null) {
             request.getSession().setAttribute("indivoMessages", docs);
         }
+        return mapping.findForward("view");
+    }
+    
+    public ActionForward viewSentMessages(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
+        log.debug("AUTH "+auth);
+        String indivoId   = auth.getUserId();
+        String ticket     = auth.getToken();*/
+        clearSessionVariables(request);
+        String providerNo = (String) request.getSession().getAttribute("user");
+        List docs = phrDocumentDAO.getDocumentsSent(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        
+        List messageActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MESSAGE(), PHRAction.ACTION_ADD, providerNo);
+        List otherActions = phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_MEDICATION(), -1, providerNo);
+        otherActions.addAll(phrActionDAO.getPendingActionsByProvider(phrConstants.DOCTYPE_BINARYDATA(), -1, providerNo));
+        request.getSession().setAttribute("indivoSentMessages", docs);
+        request.getSession().setAttribute("indivoMessageActions", messageActions);
+        request.getSession().setAttribute("indivoOtherActions", otherActions);
+        
+        return mapping.findForward("view");
+    }
+    
+    public ActionForward viewArchivedMessages(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
+        log.debug("AUTH "+auth);
+        String indivoId   = auth.getUserId();
+        String ticket     = auth.getToken();*/
+        clearSessionVariables(request);
+        String providerNo = (String) request.getSession().getAttribute("user");
+        List docs = phrDocumentDAO.getDocumentsArchived(phrConstants.DOCTYPE_MESSAGE(), providerNo);
+        request.getSession().setAttribute("indivoArchivedMessages", docs);
+        
         return mapping.findForward("view");
     }
     
@@ -107,18 +148,33 @@ public class PHRMessageAction extends DispatchAction {
         String ticket     = auth.getToken();*/
         String providerNo = (String) request.getSession().getAttribute("user");
         String id = request.getParameter("id");
-        PHRDocument doc = phrDocumentDAO.getDocumentById(id);
-        PHRMessage msg = new PHRMessage(doc);
-        msg.setRead();
-        msg.reDocContent();
-        phrDocumentDAO.update((PHRDocument) msg);
+        String source = request.getParameter("source");
+        if (source == null) source = "";
+        PHRMessage msg = new PHRMessage();
+        if ((source != null) && source.equals("actions")) {
+            PHRAction phrAction = phrActionDAO.getActionById(id);
+            if (phrAction == null) {
+                return mapping.findForward("document_not_found");
+            }
+            msg = phrAction.getPhrMessage();
+        } else {
+            PHRDocument doc = phrDocumentDAO.getDocumentById(id);
+            if (doc == null) {
+                return mapping.findForward("document_not_found");
+            }
+            msg = new PHRMessage(doc);
+        }
+        if (!msg.isRead() && !source.equals("actions")) {
+            msg.setRead();
+            msg.reDocContent();
+            phrDocumentDAO.update((PHRDocument) msg);
+
+            phrService.sendUpdateMessage(msg);
+        }
         
-        phrService.sendUpdateMessage(msg);
-        
-        if (doc == null){
-            //FORWARD TO PAGE SAYING DOCUMENT NOT FOUND ON SYSTEM
-        }       
-        log.debug("ID FOR DOC BEING READ IS "+doc.getId());
+        log.debug("ID FOR DOC BEING READ IS "+msg.getId());
+        request.setAttribute("noreply", request.getParameter("noreply"));
+        request.setAttribute("comingfrom", request.getParameter("comingfrom"));
         request.setAttribute("message",msg);
         //List refList = phrDocumentDAO.getReferencedMessages(doc);
         //request.setAttribute("refList",refList);
@@ -150,7 +206,7 @@ public class PHRMessageAction extends DispatchAction {
         if (msgRe != null && !msgRe.startsWith("Re:")){
             msgRe = "Re: "+msgRe;
         }
-        request.setAttribute("subject","re:"+msgRe); //TODO: check to see if the string already starts with re:
+        request.setAttribute("subject",msgRe); //TODO: check to see if the string already starts with re:
         //List refList = phrDocumentDAO.getReferencedMessages(doc);
         //request.setAttribute("refList",refList);
         
@@ -248,6 +304,7 @@ public class PHRMessageAction extends DispatchAction {
                 
                 
         String recipientOscarId = request.getParameter("recipientOscarId");
+        if (request.getParameter("recipientType") == null) return mapping.findForward("view");
         int recipientType    = Integer.parseInt(request.getParameter("recipientType"));
         String recipientPhrId = null;
         
@@ -268,5 +325,81 @@ public class PHRMessageAction extends DispatchAction {
      //          senderPhrId, recipientOscarId, recipientType, recipientPhrId)
         
         return mapping.findForward("view");
+    }
+    
+    public ActionForward delete(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
+        log.debug("AUTH "+auth);
+        String indivoId   = auth.getUserId();
+        String ticket     = auth.getToken();*/
+        
+        String id = request.getParameter("id");
+        if (id == null) return viewSentMessages(mapping, form, request, response);
+        PHRAction action = phrActionDAO.getActionById(id);
+        if (action.getStatus() != PHRAction.STATUS_SENT) {
+            action.setStatus(PHRAction.STATUS_NOT_SENT_DELETED);
+            phrActionDAO.update(action);
+        }
+        
+        return viewSentMessages(mapping, form, request, response);
+    }
+    
+    public ActionForward resend(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
+        log.debug("AUTH "+auth);
+        String indivoId   = auth.getUserId();
+        String ticket     = auth.getToken();*/
+        
+        String id = request.getParameter("id");
+        if (id != null) {
+            PHRAction action = phrActionDAO.getActionById(id);
+            if (action.getStatus() != PHRAction.STATUS_SENT) {
+                action.setStatus(PHRAction.STATUS_SEND_PENDING);
+                phrActionDAO.update(action);
+            }
+        }
+        return viewSentMessages(mapping, form, request, response);
+    }
+    
+    public ActionForward archive(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
+        log.debug("AUTH "+auth);
+        String indivoId   = auth.getUserId();
+        String ticket     = auth.getToken();*/
+        
+        String id = request.getParameter("id");
+        if (id == null) return null;
+        PHRDocument doc = phrDocumentDAO.getDocumentById(id);
+        PHRMessage msg = new PHRMessage(doc);
+        if (!msg.isArchived()) {
+            msg.addStatus(PHRMessage.STATUS_ARCHIVED);
+            phrDocumentDAO.update(msg);
+        }
+        return viewMessages(mapping, form, request, response);
+    }        
+    public ActionForward unarchive(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+        /*PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH); 
+        log.debug("AUTH "+auth);
+        String indivoId   = auth.getUserId();
+        String ticket     = auth.getToken();*/
+        
+        String id = request.getParameter("id");
+        if (id == null) return null;
+        PHRDocument doc = phrDocumentDAO.getDocumentById(id);
+        PHRMessage msg = new PHRMessage(doc);
+        if (msg.isArchived()) {
+            msg.addStatus(-PHRMessage.STATUS_ARCHIVED);
+            phrDocumentDAO.update(msg);
+        }
+        return viewArchivedMessages(mapping, form, request, response);
+    } 
+    
+    private void clearSessionVariables(HttpServletRequest request) {
+        request.getSession().setAttribute("indivoMessages", null);
+        request.getSession().setAttribute("indivoSentMessages", null);
+        request.getSession().setAttribute("indivoMessageActions", null);
+        request.getSession().setAttribute("indivoArchivedMessages", null);
+        request.getSession().setAttribute("indivoOtherActions", null);
+        
     }
 }

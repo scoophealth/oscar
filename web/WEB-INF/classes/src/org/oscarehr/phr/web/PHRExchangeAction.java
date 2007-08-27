@@ -29,6 +29,9 @@
 
 package org.oscarehr.phr.web;
 
+import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -39,43 +42,59 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.oscarehr.phr.PHRAuthentication;
 import org.oscarehr.phr.service.PHRService;
+import oscar.OscarProperties;
 
 /**
  *
  * @author jay
  */
-public class PHRRetrieveAsyncAction extends Action {
+public class PHRExchangeAction extends Action {
     
-    private static Log log = LogFactory.getLog(PHRRetrieveAsyncAction.class);
+    private static Log log = LogFactory.getLog(PHRExchangeAction.class);
     PHRService phrService = null;
     
     /**
      * Creates a new instance of PHRRetrieveAsyncAction
      */
-    public PHRRetrieveAsyncAction() {
+    public PHRExchangeAction() {
     }
     
     
     public ActionForward execute(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response) throws Exception {
-        
+        log.debug("-----------------Indivo Exchange has been called -------------");
         PHRAuthentication auth  = (PHRAuthentication) request.getSession().getAttribute(PHRAuthentication.SESSION_PHR_AUTH);
-        if (auth != null){
+        PrintWriter out = response.getWriter();
+        if (auth != null && request.getSession().getAttribute(phrService.SESSION_PHR_EXCHANGE_TIME) != null){
             String providerNo = (String) request.getSession().getAttribute("user");
             try{
-                phrService.retrieveDocuments(auth,providerNo);
+                request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, null);
+                long startTime = System.currentTimeMillis();
                 phrService.sendQueuedDocuments(auth,providerNo) ;
+                phrService.retrieveDocuments(auth,providerNo);
+                request.getSession().setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, getNextExchangeTime());
+                log.info("Time taken to perform OSCAR-myOSCAR exchange: " + (System.currentTimeMillis()-startTime) + "ms");
+                out.print("1");
             }catch(Exception e){
                 e.printStackTrace();
-                request.getSession().removeAttribute("INDIVO_AUTH");
+                out.print("0");
+                request.getSession().removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
             }
         }else{
-            log.error("String Auth object was null");
+            log.error("String Auth object was null or the previous action still executing");
         }
         return null;
     }
     
     public void setPhrService(PHRService pServ){
         this.phrService = pServ;
+    }
+    
+        //returns a date that is intervalMinutes from now
+    public static Date getNextExchangeTime() {
+        int intervalMinutes = Integer.parseInt(OscarProperties.getInstance().getProperty(PHRService.OSCAR_PROPS_EXCHANGE_INTERVAL));
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MINUTE, intervalMinutes);
+        return cal.getTime();
     }
     
 }

@@ -79,7 +79,7 @@ public class PHRMedication extends PHRDocument{
         this.setSenderOscar(prov.getProviderNo());
         this.setSenderType(this.TYPE_PROVIDER);
         this.setSenderPhr(prov.getIndivoId());
-        this.setSent(this.STATUS_SENT_PENDING);
+        this.setSent(this.STATUS_SEND_PENDING);
         this.setDocContent(docContentStr);
     }
     

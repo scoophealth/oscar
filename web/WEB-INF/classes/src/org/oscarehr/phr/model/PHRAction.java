@@ -16,6 +16,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import org.apache.log4j.Logger;
 import org.indivo.xml.phr.document.IndivoDocumentType;
 
 /**
@@ -44,14 +45,18 @@ CREATE TABLE `phr_actions` (
 ) ENGINE=MyISAM;*/
 
 public class PHRAction {
+    
+    Logger log = Logger.getLogger(PHRAction.class);
+    
     //Action type
     public static final int ACTION_NOT_SET = 0;
     public static final int ACTION_ADD = 1;
     public static final int ACTION_UPDATE = 2;
 
-            
+    public static final int STATUS_NOT_SENT_DELETED = 4;
+    public static final int STATUS_NOT_AUTHORIZED = 3;
     public static final int STATUS_SENT = 2;
-    public static final int STATUS_SENT_PENDING = 1;
+    public static final int STATUS_SEND_PENDING = 1;
     public static final int STATUS_NOT_SET = 0;
     
     private int id;
@@ -68,20 +73,31 @@ public class PHRAction {
     private String oscarId;
     private String phrIndex;  //if updating
     private String docContent;
-    private int sent;
+    private int status;
     private String phrType;
+    
+    private PHRMessage phrMessage = null;    //usually null
 
     /** Creates a new instance of PHRAction */
     public PHRAction() {
     }
 
-    public IndivoDocumentType getPhrDocument() throws JAXBException {
+    public IndivoDocumentType getIndivoDocument() throws JAXBException {
         JAXBContext docContext = JAXBContext.newInstance("org.indivo.xml.phr.document");
         Unmarshaller unmarshaller = docContext.createUnmarshaller();
         StringReader strr = new StringReader(this.getDocContent());
         JAXBElement docEle = (JAXBElement) unmarshaller.unmarshal(strr);
         IndivoDocumentType doc = (IndivoDocumentType) docEle.getValue();
         return doc;
+    }
+    
+    public PHRMessage getPhrMessage() throws Exception {
+        //parses only once
+        if (phrMessage == null) {
+            log.debug("Parsing Message");
+            this.phrMessage = new PHRMessage(getIndivoDocument());
+        }
+        return phrMessage;
     }
     
     public boolean sameOscarObject(PHRAction action) {
@@ -188,12 +204,12 @@ public class PHRAction {
         this.docContent = docContent;
     }
 
-    public int getSent() {
-        return sent;
+    public int getStatus() {
+        return this.status;
     }
 
-    public void setSent(int sent) {
-        this.sent = sent;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getPhrIndex() {

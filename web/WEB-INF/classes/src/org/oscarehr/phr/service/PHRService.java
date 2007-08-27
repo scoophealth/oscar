@@ -42,6 +42,10 @@ import oscar.oscarRx.data.RxPrescriptionData;
  * @author jay
  */
 public interface PHRService {
+    //What the key in the session is (value is PHRAuthentication type)
+    public static final String SESSION_PHR_EXCHANGE_TIME = "PHR_EXCHANGE_TIME";
+    //What the key in OscarProperties is - in seconds (value is int)
+    public static final String OSCAR_PROPS_EXCHANGE_INTERVAL = "MY_OSCAR_EXCHANGE_INTERVAL";
     
     PHRAuthentication authenticate(String providerNo,String password) throws Exception;
     boolean validAuthentication(PHRAuthentication auth);

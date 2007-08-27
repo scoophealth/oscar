@@ -39,7 +39,9 @@ public interface PHRDocumentDAO {
     public boolean hasIndex(String index);
     public void save(PHRDocument doc);
     public void update(PHRDocument doc);
-    public List getDocuments(String docType,String providerNo);
+    public List getDocumentsReceived(String docType,String providerNo);
+    public List getDocumentsSent(String docType,String providerNo);
+    public List getDocumentsArchived(String docType,String providerNo);
     
     public PHRDocument getDocumentById(String id);
     public PHRDocument getDocumentByIndex(String idx);

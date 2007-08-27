@@ -59,6 +59,7 @@ public class PHRLogoutAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
        HttpSession session = request.getSession();
        session.removeAttribute(PHRAuthentication.SESSION_PHR_AUTH);
+       session.removeAttribute(PHRService.SESSION_PHR_EXCHANGE_TIME);
        String forwardTo = (String) request.getParameter("forwardto");
        ActionRedirect ar = new ActionRedirect(forwardTo);
        return ar;

@@ -42,7 +42,7 @@
         <property column="phr_classification" name="phrClassification" length="250" type="string" />
        
         <property column="datetime_sent"      name="dateSent"                       type="java.util.Date" />
-         <!-- property column="datetime_created"   name="dateCreated"                    type="java.util.Date" / -->
+        <property column="datetime_exchanged" name="dateExchanged"                  type="java.util.Date" />
         <property column="sender_oscar"       name="senderOscar"       length="11"  type="string" />
         <property column="sender_type"        name="senderType"        length="1"   type="integer" />
         <property column="sender_phr"         name="senderPhr"         length="255" type="string" />

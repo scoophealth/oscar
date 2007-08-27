@@ -49,14 +49,16 @@ public class PHRDocument implements Serializable{
     public static final String PHR_ROLE_PROVIDER = "provider";
     public static final String PHR_ROLE_DEMOGRAPHIC = "patient";
     
+    public static final int STATUS_NOT_SENT_DELETED = PHRAction.STATUS_NOT_SENT_DELETED;
+    public static final int STATUS_NOT_AUTHORIZED = PHRAction.STATUS_NOT_AUTHORIZED;
     public static final int STATUS_SENT = PHRAction.STATUS_SENT;
-    public static final int STATUS_SENT_PENDING = PHRAction.STATUS_SENT_PENDING;
+    public static final int STATUS_SEND_PENDING = PHRAction.STATUS_SEND_PENDING;
     public static final int STATUS_NOT_SET = PHRAction.STATUS_NOT_SET;
     
     private int id;
     private String phrIndex;
     private String phrClassification;
-    private Date dateCreated;
+    private Date dateExchanged;
     private Date dateSent;
     private String senderOscar;
     private int senderType;
@@ -75,7 +77,7 @@ public class PHRDocument implements Serializable{
     public PHRDocument() {
     }
     
-    public PHRAction getAction(int actionType) {
+    public PHRAction getAction(int actionType, int actionStatus) {
         PHRAction action = new PHRAction();
         action.setActionType(actionType);
         action.setDateQueued(new Date());
@@ -87,11 +89,11 @@ public class PHRDocument implements Serializable{
         action.setSenderType(this.getSenderType());
         action.setSenderPhr(this.getSenderPhr());
         action.setPhrClassification(this.getPhrClassification());
-        action.setSent(this.getSent());
+        action.setStatus(actionStatus);
         return action;
     }
     
-    public PHRAction getAction2(int actionType) {    
+    public PHRAction getAction2(int actionType, int actionStatus) {    
         PHRAction action = new PHRAction();
         action.setActionType(actionType);
         action.setDateQueued(new Date());
@@ -106,7 +108,7 @@ public class PHRDocument implements Serializable{
         action.setSenderPhr(this.getReceiverPhr());
         action.setPhrClassification(this.getPhrClassification());
         action.setPhrIndex(this.getPhrIndex());
-        action.setSent(this.getSent());
+        action.setStatus(actionStatus);
         return action;
     }
 
@@ -134,12 +136,12 @@ public class PHRDocument implements Serializable{
         this.phrClassification = phrClassification;
     }
 
-    public Date getDateCreated() {
-        return dateCreated;
+    public Date getDateExchanged() {
+        return dateExchanged;
     }
 
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+    public void setDateExchanged(Date dateExchanged) {
+        this.dateExchanged = dateExchanged;
     }
 
     public Date getDateSent() {

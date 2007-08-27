@@ -31,13 +31,16 @@ package org.oscarehr.phr.model;
 
 import java.io.Serializable;
 import java.io.StringReader;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.indivo.IndivoException;
@@ -194,8 +197,10 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         log.debug("id :"+ this.getId()+"  ST :"+this.getStatus()+ "  adding  "   +status);
         
         if ( !hasStatus(status) && status > 0  ){
+           //log.debug("add statuss");
            this.setStatus(this.getStatus() +status );
-        }else if (hasStatus(status) && status < 0  ){
+        }else if (hasStatus(-status) && status < 0  ){
+           //log.debug("subtract statuss");
            this.setStatus(this.getStatus() +status );   
         }
             
@@ -229,6 +234,8 @@ public class PHRMessage  extends PHRDocument implements Serializable{
     public void checkImportStatus(){
         if(msg.isRead() ){
             addStatus(this.STATUS_READ);
+        } else {
+            addStatus(this.STATUS_NEW);
         }
         if(msg.isReplied() ){
             addStatus(this.STATUS_REPLIED);
@@ -264,10 +271,13 @@ public class PHRMessage  extends PHRDocument implements Serializable{
            m.put(this.MESSAGE_ID,indexStr);
            this.setExts(m);
         }
-        log.debug("Date Created set to "+docHeaderType.getCreationDateTime().toGregorianCalendar().getGregorianChange());
-        
-        this.setDateCreated(docHeaderType.getCreationDateTime().toGregorianCalendar().getGregorianChange());
-        this.setDateSent(new Date());
+        if (docHeaderType.getCreationDateTime() == null)
+            this.setDateSent(null);
+        else {
+            this.setDateSent(docHeaderType.getCreationDateTime().toGregorianCalendar().getTime());
+            log.debug("Date Created set to "+docHeaderType.getCreationDateTime().toGregorianCalendar().getTime());
+        }
+        this.setDateExchanged(new Date());
         this.setPhrClassification(classification);
         this.setPhrIndex(documentIndex);
         this.setSenderPhr(msg.getSender());
@@ -339,10 +349,12 @@ public class PHRMessage  extends PHRDocument implements Serializable{
     
     
     private int indivoRoleToOscarType(String role) {
-        if (role.equalsIgnoreCase("provider"))
+        System.out.println("role: " +role);
+        if (role.equalsIgnoreCase("provider") || role.equalsIgnoreCase("administrator"))
             return PHRDocument.TYPE_PROVIDER;
         else if (role.equalsIgnoreCase("patient"))
             return PHRDocument.TYPE_DEMOGRAPHIC;
+        log.warn("Unknown role: " +role);
         return -1;
    }
     

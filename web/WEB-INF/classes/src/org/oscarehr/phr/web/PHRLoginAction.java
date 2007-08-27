@@ -29,6 +29,7 @@
 
 package org.oscarehr.phr.web;
 
+import java.util.Calendar;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -84,7 +85,10 @@ public class PHRLoginAction extends DispatchAction {
            phrAuth = phrService.authenticate(providerNo, request.getParameter("phrPassword"));
        } catch (Exception e) {
            e.printStackTrace();
-            if (e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class) {
+            /*if ((e.getCause() != null && e.getCause().getClass() == java.net.ConnectException.class)
+            || (e.getCause() != null && e.getCause().getClass() == java.net.NoRouteToHostException.class)
+            || (e.getCause() != null && e.getCause().getClass(). == )) {*/
+           if (e.getCause() != null && e.getCause().getClass().getName().indexOf("java.") != -1) {
                 //server probably offline
                 log.warn("Connection to MyOSCAR server refused");
                 ar.addParameter("phrUserLoginErrorMsg", "Error contacting MyOSCAR server, please try again later");
@@ -105,6 +109,10 @@ public class PHRLoginAction extends DispatchAction {
            return ar;
        }
        session.setAttribute(PHRAuthentication.SESSION_PHR_AUTH, phrAuth);
+       //set next PHR Exchange for next available time
+       Calendar cal = Calendar.getInstance();
+       cal.roll(Calendar.HOUR_OF_DAY, false);
+       session.setAttribute(phrService.SESSION_PHR_EXCHANGE_TIME, cal.getTime());
        log.debug("Correct user/pass, auth success");
        return ar;
     }

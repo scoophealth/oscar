@@ -78,9 +78,29 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
 		
         }
         
-        public List getDocuments(String docType,String providerNo){
+        public List getDocumentsReceived(String docType,String providerNo) {
             // for messages 'urn:org:indivo:document:classification:message' 
-            String sql ="from PHRDocument d where d.phrClassification = ? and d.receiverOscar = ? ";
+            String sql ="from PHRDocument d where d.phrClassification = ? and d.receiverOscar = ? and d.status <= 7 ORDER BY d.dateSent DESC";
+            String[] f = new String[2];
+            f[0] = docType;
+            f[1] = providerNo; 
+            List list = getHibernateTemplate().find(sql,f);
+            return list;
+        }
+        
+        public List getDocumentsSent(String docType,String providerNo) {
+            // for messages 'urn:org:indivo:document:classification:message' 
+            String sql ="from PHRDocument d where d.phrClassification = ? and d.senderOscar = ? ORDER BY d.dateSent DESC";
+            String[] f = new String[2];
+            f[0] = docType;
+            f[1] = providerNo; 
+            List list = getHibernateTemplate().find(sql,f);
+            return list;
+        }
+        
+        public List getDocumentsArchived(String docType,String providerNo) {
+            // for messages 'urn:org:indivo:document:classification:message' 
+            String sql ="from PHRDocument d where d.phrClassification = ? and d.receiverOscar = ? and d.status > 7 ORDER BY d.dateSent DESC";
             String[] f = new String[2];
             f[0] = docType;
             f[1] = providerNo; 

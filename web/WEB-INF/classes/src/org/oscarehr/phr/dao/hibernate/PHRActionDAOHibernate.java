@@ -31,6 +31,7 @@ package org.oscarehr.phr.dao.hibernate;
 
 import java.util.List;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
@@ -59,7 +60,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
         }
 
         public List<PHRAction> getQueuedActions(String providerNo){
-            String sql ="from PHRAction a where a.senderOscar = ? and a.sent = " + PHRAction.STATUS_SENT_PENDING;
+            String sql ="from PHRAction a where a.senderOscar = ? and a.status = " + PHRAction.STATUS_SEND_PENDING;
             String[] f = new String[1];
             f[0] = providerNo;
             List<PHRAction> list = getHibernateTemplate().find(sql,f);
@@ -77,6 +78,53 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
             return list.get(0);
         }
         
+            //actionType = -1 for all actions
+        public List<PHRAction> getPendingActionsByProvider(String classification, int actionType, String providerNo) {
+            String sql ="FROM PHRAction a WHERE a.phrClassification = ? AND a.senderOscar = ? AND a.status != " + PHRAction.STATUS_SENT + " AND a.status != " + PHRAction.STATUS_NOT_SENT_DELETED;
+            if (actionType != -1) {
+                sql = sql + " AND a.actionType = " + actionType;
+            }
+            String[] f = new String[2];
+            f[0] = classification;
+            f[1] = providerNo;
+            List<PHRAction> list = getHibernateTemplate().find(sql,f);
+            
+            if (list == null){
+                return new ArrayList();
+            }
+            log.debug("Found pending actions: " + list.size());
+            return list;
+        }
+        
+        public List<PHRAction> getPendingActionsByProvider(int actionType, String providerNo) {
+            String sql ="FROM PHRAction a WHERE a.senderOscar = ? AND a.status != " + PHRAction.STATUS_SENT + " AND a.status != " + PHRAction.STATUS_NOT_SENT_DELETED;
+            if (actionType != -1) {
+                sql = sql + " AND a.actionType = " + actionType;
+            }
+            String[] f = new String[2];
+            f[0] = providerNo;
+            List<PHRAction> list = getHibernateTemplate().find(sql,f);
+            
+            if (list == null){
+                return new ArrayList();
+            }
+            log.debug("Found pending actions: " + list.size());
+            return list;
+            
+        }
+        
+        public boolean ifActionsWithErrors(final String providerNo) {
+            Integer num =  (Integer) getHibernateTemplate().execute(new HibernateCallback() {
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                Query q = session.createQuery("select count(*) from PHRAction a where a.senderOscar = '" + providerNo + "' AND a.status=" + PHRAction.STATUS_NOT_AUTHORIZED);
+                q.setCacheable(true);
+                return q.uniqueResult();
+                }
+            });
+            if (num > 0) return true;
+            return false;
+        }
+        
         
         public void save(PHRAction action) {
             this.getHibernateTemplate().save(action);
@@ -88,7 +136,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
     
         public void updatePhrIndexes(String classification, String oscarId, String providerNo, String newPhrIndex) {
             HibernateTemplate ht = getHibernateTemplate();
-            String sql ="FROM PHRAction a WHERE a.phrClassification = ? AND a.oscarId = ? AND a.senderOscar = ? AND a.sent = " + PHRAction.STATUS_SENT_PENDING;
+            String sql ="FROM PHRAction a WHERE a.phrClassification = ? AND a.oscarId = ? AND a.senderOscar = ? AND a.status = " + PHRAction.STATUS_SEND_PENDING;
             String[] f = new String[3];
             f[0] = classification;
             f[1] = oscarId;
@@ -143,7 +191,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
                 Criteria criteria = session.createCriteria(PHRAction.class);
                 criteria.add(Restrictions.eq("phrClassification", classification));
                 criteria.add(Restrictions.eq("oscarId", oscarId));
-                criteria.add(Restrictions.eq("sent", PHRAction.STATUS_SENT));
+                criteria.add(Restrictions.eq("status", PHRAction.STATUS_SENT));
                 criteria.setMaxResults(1);
                 return criteria.list();
                 }
