@@ -4,6 +4,8 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="myoscar" %>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 
 <!-- add by caisi end<style>* {border:1px solid black;}</style> -->
 
@@ -185,6 +187,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 
 <script language="javascript" type="text/javascript" src="../share/javascript/Oscar.js" ></script>
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../phr/phr.js"></script>
 <script language="JavaScript">
 
 
@@ -365,6 +368,27 @@ function refreshTabAlerts(id) {
     
     var myAjax = new Ajax.Updater(id, url, {method: 'get', parameters: pars});
 }
+
+<oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+    <phr:IfTimeToExchange>
+        phrExchangeGo('../phrExchange.do');
+    </phr:IfTimeToExchange>
+</oscar:oscarPropertiesCheck>
+/*
+// myoscar JavaScript server call --we are using the JSP check instead (see above)
+function phrAsyncActivate() {
+    var interval = 10;
+    var date = new Date();
+    var curr_min = d.getMinutes();
+    var timeleft = curr_min%interval + 4;
+    setTimeout(phrAsyncGo2, timeleft);
+}
+function phrAsyncGo2() {
+    alert("executing");
+    new Ajax.Request('../phrAsync.do', { method:'get' });
+    phrAsyncActivate();
+}*/
+
 </SCRIPT>
 
    <style type="text/css">    
@@ -384,6 +408,8 @@ function refreshTabAlerts(id) {
 
         #navlist li:hover { color: #fff; background-color: #486ebd; }
         #navlist li a:hover { color: #fff; background-color: #486ebd; }
+        
+        
     </style>
 </head>
 <%if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()){%>
@@ -569,13 +595,23 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin</a>
           </li>
         </security:oscarSec>
-         
+
+        <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+            <phr:indivoRegistered provider="<%=curUser_no%>">                               
+           
+            <li>
+                <a HREF="#" ONCLICK ="popup('600', '900','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar2</phr:setColor></a>
+                <!--<a HREF="#" ONCLICK ="popup('600', '900','../phr/msg/DisplayPHRMessages.jsp?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar2</phr:setColor></a>-->
+               <a HREF="#" ONCLICK ="popup('50', '50','../phrAsync.do','phrret<%=curUser_no%>')" title="myOscar">ret</a>
+            </li>
+            </phr:indivoRegistered>
+        </oscar:oscarPropertiesCheck>
         <%int menuTagNumber=0; %> 
         <caisi:isModuleLoad moduleName="caisi">
-           <li>    
+           <li>
              <a href='<html:rewrite page="/PMmodule/ProviderInfo.do"/>'>Program</a>
 	     <% menuTagNumber++ ; %>
-           </li>  
+           </li>
         </caisi:isModuleLoad>
 	
     </ul>  <!--- old TABLE -->
