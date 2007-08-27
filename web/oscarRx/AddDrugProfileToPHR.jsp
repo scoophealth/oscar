@@ -162,10 +162,12 @@ String level2 = CddmLevels.MEDICATIONS;
                             String authorFname;
                             String authorLname;
                             boolean indivoUpdated;
-                            
+                            System.out.println("prescribed drugs length" + prescribedDrugs.length);
+                            int sentcount = 0;
                             for( int idx = 0; idx < prescribedDrugs.length; ++idx ) {
                                 oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[idx];
                                 if(drug.isCurrent() == true && !drug.isArchived() ){
+                                    sentcount++;
                                    indivoUpdated = false;
                                    prov = new EctProviderData().getProvider(drug.getProviderNo());
                                     
@@ -207,8 +209,8 @@ String level2 = CddmLevels.MEDICATIONS;
                                     }
                                   
                                 }
-                            }
-
+                            } //endfor
+                            System.out.println("actual sends: " + sentcount);
                             /*oscar.ping.xml.ObjectFactory _respFactory = new oscar.ping.xml.ObjectFactory();
                             OscarPrescriptions oscarPres = _respFactory.createOscarPrescriptions();
                             List drugList = oscarPres.getPrescription();

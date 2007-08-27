@@ -87,6 +87,7 @@ table.hiddenLayer {
 }
 
 </style>
+<script type="text/javascript" src="../phr/phr.js"></script>
 <script type="text/javascript">
 
 function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
@@ -247,7 +248,8 @@ function processData() {
                             <indivo:indivoRegistered demographic="<%=String.valueOf(bean.getDemographicNo())%>" provider="<%=bean.getProviderNo()%>">                               
                                 <tr>
                                     <td colspan="3">
-                                        <a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record</a>                                
+                                        <!--<a href="javascript:popupWindow(720,700,'AddDrugProfileToPHR.jsp?demoId=<%=Integer.toString(bean.getDemographicNo())%>','PresPHR')">Send To Personal Health Record via JSP</a>   <br/>-->
+                                        <a href="javascript: phrActionPopup('../oscarRx/SendToPhr.do?demoId=<%=Integer.toString(bean.getDemographicNo())%>', 'sendRxToPhr');">Send To PHR</a>   
                                     </td>                            
                                 </tr>                                                      
                             </indivo:indivoRegistered>
