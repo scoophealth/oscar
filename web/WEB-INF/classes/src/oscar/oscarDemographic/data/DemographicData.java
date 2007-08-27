@@ -267,6 +267,26 @@ public class DemographicData {
         return demographic;
     }
     
+    public String getDemographicNoByPIN(String pin) {        
+        String demographicNo = "";
+        
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT demographic_no FROM demographic WHERE pin = '" + pin +"'";
+            rs = db.GetSQL(sql);
+            if (rs.next()) {
+                demographicNo = rs.getString("demographic_no");
+            }
+            rs.close();
+            db.CloseConn();
+            return demographicNo;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return demographicNo;
+    }
+    
     
     public String getDemographicDateJoined(String DemographicNo){
         String date = null;
