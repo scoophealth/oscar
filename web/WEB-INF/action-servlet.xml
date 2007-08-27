@@ -518,11 +518,6 @@
     </bean>
     
      <!-- Indivo -->
-        <bean name="/PhrRetrieve" class="org.oscarehr.phr.web.PHRRetrieveAsyncAction" singleton="false">
-            <property name="phrService">
-                <ref bean="phrService" />
-            </property>
-	</bean>
         
         <bean name="/phr/PhrMessage" class="org.oscarehr.phr.web.PHRMessageAction" singleton="false">
             <property name="phrService">
@@ -533,6 +528,9 @@
             </property>
             <property name="phrConstants">
                 <ref bean="phrConstants" />
+            </property>
+            <property name="phrActionDAO" >
+                <ref bean="phrActionDAO" />
             </property>
         </bean>
         <bean name="/oscarRx/SendToPhr" class="oscar.oscarRx.pageUtil.RxSendToPhrAction" singleton="false">
@@ -557,5 +555,10 @@
             </property>
         </bean>
         <bean name="/phr/Logout" class="org.oscarehr.phr.web.PHRLogoutAction" singleton="false">
+        </bean>
+        <bean name="/phrExchange" class="org.oscarehr.phr.web.PHRExchangeAction" singleton="false">
+            <property name="phrService">
+                <ref bean="phrService" />
+            </property>
         </bean>
 </beans>
