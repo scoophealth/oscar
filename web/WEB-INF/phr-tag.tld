@@ -67,6 +67,25 @@
         <body-content>JSP</body-content>
     </tag>
     
+    <tag>
+        <name>indivoRegistered</name>
+        <tag-class>oscar.util.indivoCheck</tag-class>
+        <body-content>JSP</body-content>
+        
+        <attribute>
+            <name>provider</name>
+                <required>true</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>            
+        </attribute>
+        <attribute>
+            <name>demographic</name>
+                <required>false</required>
+                <rtexprvalue>true</rtexprvalue>
+                <type>String</type>            
+        </attribute>
+    </tag>
+    
     <!-- Validators are new in JSP1.2. You may have zero or one validator
          in a tag library. They look like this:
       <validator>

@@ -46,6 +46,7 @@ You have no rights to access the data!
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
@@ -610,6 +611,13 @@ div.demographicWrapper {
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=rs.getString("demographic_no")%>','msg')">Send a Message</a>
                 </td></tr>
+                <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+                    <phr:indivoRegistered provider="<%=curProvider_no%>" demographic="<%=demographic_no%>">                               
+                    <tr><td> 
+                      <a href="javascript: function myFunction() {return false; }" ONCLICK ="popupOscarRx(600,900,'../phr//PhrMessage.do?method=createMessage&providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')" title="myOscar">Send Message to PHR</a>
+                    </td></tr>                
+                    </phr:indivoRegistered>
+                </oscar:oscarPropertiesCheck>
                 <% if (oscarProps.getProperty("clinic_no", "").startsWith("1022")) { // quick hack to make Dr. Hunter happy %>
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,1000,'../form/forwardshortcutname.jsp?formname=AR1&demographic_no=<%=request.getParameter("demographic_no")%>');">AR1</a>

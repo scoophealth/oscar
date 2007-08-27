@@ -124,6 +124,7 @@ else
 <link rel="stylesheet" type="text/css" href="dms.css"/>
 <link rel="stylesheet" type="text/css" href="../share/css/niftyPrint.css" media="print" />
 <script type="text/javascript" src="../share/javascript/nifty.js"></script>
+<script type="text/javascript" src="../phr/phr.js"></script>
 <script type="text/javascript">
 window.onload=function(){
 if(!NiftyCheck())
@@ -181,6 +182,20 @@ function submitForm(actionPath) {
     
     var form = document.forms[2];
     if(verifyChecks(form)) {
+        form.action = actionPath;
+        form.submit();
+        return true;
+    }
+    else
+        return false;
+}
+
+function submitPhrForm(actionPath, windowName) {
+    
+    var form = document.forms[2];
+    if(verifyChecks(form)) {
+        form.onsubmit = phrActionPopup(actionPath, windowName);
+        form.target = windowName;
         form.action = actionPath;
         form.submit();
         return true;
@@ -398,6 +413,8 @@ function popup1(height, width, url, windowName){
                             <indivo:indivoRegistered demographic="<%=moduleid%>" provider="<%=curUser%>">    
                                 
                                 <input type="button" value="Send to MyOscar" onclick="return submitForm('<rewrite:reWrite jspPage="send2Indivo.do"/>');"/>
+                                
+                                <input type="button" onclick="return submitPhrForm('SendDocToPhr.do', 'sendDocToPhr');" value="Send To PHR"/>
                                 
                             </indivo:indivoRegistered>
                         </oscarProp:oscarPropertiesCheck>
