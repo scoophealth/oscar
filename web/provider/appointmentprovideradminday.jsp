@@ -590,22 +590,20 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
            <li><a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../oscarWorkflow/WorkFlowList.jsp','workflow')">WorkFlow</a></li> 
         </oscar:oscarPropertiesCheck>
+         <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
+            <myoscar:indivoRegistered provider="<%=curUser_no%>">                               
+           
+            <li>
+                <a HREF="#" ONCLICK ="popup('600', '900','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar2</phr:setColor></a>
+            </li>
+            </myoscar:indivoRegistered>
+        </oscar:oscarPropertiesCheck>
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
           <li>
 	     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin</a>
           </li>
         </security:oscarSec>
 
-        <oscar:oscarPropertiesCheck property="MY_OSCAR" value="yes">
-            <phr:indivoRegistered provider="<%=curUser_no%>">                               
-           
-            <li>
-                <a HREF="#" ONCLICK ="popup('600', '900','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar2</phr:setColor></a>
-                <!--<a HREF="#" ONCLICK ="popup('600', '900','../phr/msg/DisplayPHRMessages.jsp?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar2</phr:setColor></a>-->
-               <a HREF="#" ONCLICK ="popup('50', '50','../phrAsync.do','phrret<%=curUser_no%>')" title="myOscar">ret</a>
-            </li>
-            </phr:indivoRegistered>
-        </oscar:oscarPropertiesCheck>
         <%int menuTagNumber=0; %> 
         <caisi:isModuleLoad moduleName="caisi">
            <li>
