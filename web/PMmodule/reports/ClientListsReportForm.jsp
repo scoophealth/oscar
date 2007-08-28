@@ -32,7 +32,7 @@
 				<th>Seen by provider</th>
 				<td>
 					<select name="form.providerId" >
-						<option value="">any</option>
+						<option value="">Ignore Option</option>
 						<%
 							for (Provider provider : (List<Provider>)request.getAttribute("providers"))
 							{

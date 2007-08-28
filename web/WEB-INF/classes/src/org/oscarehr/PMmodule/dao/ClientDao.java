@@ -44,6 +44,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -565,9 +566,10 @@ public class ClientDao extends HibernateDaoSupport {
     public Map<String, ClientListsReportResults> findByReportCriteria(ClientListsReportFormBean x) {
 
 		StringBuilder sqlCommand=new StringBuilder();
-		// this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
-		//sqlCommand.append("select * from demographic,admission,intake,program where demographic_no=admission.client_id and demographic_no=intake.client_id and admission.program_id=program.program_id");
-		sqlCommand.append("select * from demographic,casemgmt_note,admission,program where demographic.demographic_no=casemgmt_note.demographic_no and demographic.demographic_no=admission.client_id and admission.program_id=program.program_id");
+        boolean joinCaseMgmtNote=StringUtils.trimToNull(x.getProviderId())!=null || StringUtils.trimToNull(x.getSeenStartDate())!=null || StringUtils.trimToNull(x.getSeenEndDate())!=null;
+
+        // this is a horrid join, no one is allowed to give me grief about it, until we refactor *everything*, some nasty hacks will happen. 
+		sqlCommand.append("select * from demographic"+(joinCaseMgmtNote?",casemgmt_note":"")+",admission,program where demographic.demographic_no=admission.client_id"+(joinCaseMgmtNote?" and demographic.demographic_no=casemgmt_note.demographic_no":"")+" and admission.program_id=program.program_id");
 		
 		// status
 		if (StringUtils.trimToNull(x.getAdmissionStatus())!=null) sqlCommand.append(" and demographic.patient_status=?");			
@@ -650,7 +652,8 @@ public class ClientDao extends HibernateDaoSupport {
 		}
 		finally
 		{
-			SqlUtils.closeResources(ps, rs);
+            // odd not sure what the stupid spring template is doing here but I have to close the session.
+			SqlUtils.closeResources(session,ps, rs);
 		}
 		
 		return results;
