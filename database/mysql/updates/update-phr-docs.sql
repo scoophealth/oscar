@@ -24,11 +24,11 @@ CREATE TABLE `phr_documents` (
 # extra table (maps phr/oscar ids)
 CREATE TABLE `phr_document_ext` (
   `id` int(11) NOT NULL auto_increment,
-  `phr_doc_id` varchar(70) default NULL,
+  `phr_document_id` varchar(70) default NULL,
   `key` varchar(255) default NULL,
   `value` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM 
 
 # actions table for exchanges with PHR
 CREATE TABLE `phr_actions` (
