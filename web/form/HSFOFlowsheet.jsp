@@ -435,7 +435,7 @@ if (visitList != null){
 
               - 
               <SELECT name="BirthDate_day">
-			  <option value="<%=(patientData.getBirthDate() != null) ? ""+(patientData.getBirthDate().getDay()) : ""%>" selected><%=(patientData.getBirthDate() != null) ? ""+(patientData.getBirthDate().getDay()) : ""%>
+			  <option value="<%=(patientData.getBirthDate() != null) ?""+(patientData.getBirthDate().getDate()) : ""%>" selected><%=(patientData.getBirthDate() != null) ?""+(patientData.getBirthDate().getDate()) : ""%>
                 <option value="1">1 
                 <option value="2">2 
                 <option value="3">3 
