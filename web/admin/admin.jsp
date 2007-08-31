@@ -436,6 +436,11 @@ function popUpBillStatus(vheight,vwidth,varpage) {
         <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/ALL/testUploader.jsp');return false;">HL7 Lab Upload</a></li>
         <li><a href="#" onclick ="popupPage(800,1000,'../oscarKeys/keyGen.jsp');return false;">Key Pair Generator</a></li>
         <li><a href="#" onclick ="popupPage(800,1000,'labforwardingrules.jsp');return false;">Lab Forwarding Rules</a></li>
+        <%if (oscarVariables.getProperty("hsfo.loginSiteCode","")!=null && 
+        		!"".equalsIgnoreCase(oscarVariables.getProperty("hsfo.loginSiteCode",""))){  %>
+        <li><a href="#" onclick ="popupPage(400,600,'../admin/RecommitHSFO.do?method=showSchedule');return false;">schedule HSFO XML resubmit</a></li>
+        <%} %>
+        
       </ul>
   </div>
   </security:oscarSec>

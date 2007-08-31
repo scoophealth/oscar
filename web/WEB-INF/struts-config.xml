@@ -2,7 +2,7 @@
 <!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
 <struts-config>
     <form-beans>
-        <!-- caisi core -->p
+        <!-- caisi core -->
         <form-bean name="systemMessageForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="system_message" type="org.caisi.model.SystemMessage" />
         </form-bean>
@@ -530,6 +530,9 @@
             <forward name="graph" path="/form/createpdf" />
             <forward name="failure" path="/oscarEncounter/error.jsp" />
         </action>
+				<action name="inputForm" path="/admin/RecommitHSFO" parameter="method" scope="request" type="oscar.form.study.HSFO.pageUtil.RecommitHSFOAction" >
+                        <forward name="schedulePage" path="/admin/recommitschedule.jsp" />
+                </action>
         <action name="FrmForm" path="/form/HSFOform" scope="request" type="oscar.form.study.HSFO.pageUtil.ManageHSFOAction" >
             <forward name="registration" path="/form/HSFORegistrationFrm.jsp" />
             <forward name="flowsheet" path="/form/HSFOFlowsheet.jsp" />
