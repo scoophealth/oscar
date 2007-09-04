@@ -68,7 +68,7 @@ function add_status(form) {
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Name:</td>
-		<td><html:text property="client_status.name"/></td>
+		<td><html:text property="client_status.name" size="50" maxlength="255"/></td>
 	</tr>
 	<tr>
 		<td colspan="2">

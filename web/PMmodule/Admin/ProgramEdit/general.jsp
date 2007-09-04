@@ -3,6 +3,11 @@
 <%@ page import="org.oscarehr.PMmodule.model.Program" %>
 <script>
 	function save() {
+		var maxAllowed = document.programManagerForm.elements['program.maxAllowed'].value;		
+		if(isNaN(maxAllowed)) {
+			alert("Maximum participants '" + maxAllowed + "' is not a number");
+			return false;
+		}
 		if(document.programManagerForm.elements['program.maxAllowed'].value <= 0) {
 			alert('Maximum participants must be a positive integer');
 			return false;
@@ -63,11 +68,11 @@ Program p = (Program)request.getAttribute("oldProgram");
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
 		<td width="20%">Name:</td>
-		<td><html:text property="program.name" size="30" /></td>
+		<td><html:text property="program.name" size="30" maxlength="70"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Description:</td>
-		<td><html:text property="program.descr" size="30" /></td>
+		<td><html:text property="program.descr" size="30" maxlength="255"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">HIC:</td>
@@ -75,27 +80,27 @@ Program p = (Program)request.getAttribute("oldProgram");
 	</tr>
 	<tr class="b">
 		<td width="20%">Address:</td>
-		<td><html:text property="program.address" size="30" /></td>
+		<td><html:text property="program.address" size="30" maxlength="255"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Phone:</td>
-		<td><html:text property="program.phone" size="30" /></td>
+		<td><html:text property="program.phone" size="30" maxlength="25" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Fax:</td>
-		<td><html:text property="program.fax" size="30" /></td>
+		<td><html:text property="program.fax" size="30" maxlength="25" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">URL:</td>
-		<td><html:text property="program.url" size="30" /></td>
+		<td><html:text property="program.url" size="30" maxlength="100" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Email:</td>
-		<td><html:text property="program.email" size="30" /></td>
+		<td><html:text property="program.email" size="30" maxlength="50"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Emergency Number:</td>
-		<td><html:text property="program.emergencyNumber" size="30" /></td>
+		<td><html:text property="program.emergencyNumber" size="30" maxlength="25"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Type:</td>
@@ -117,11 +122,11 @@ Program p = (Program)request.getAttribute("oldProgram");
 	</tr>
 	<tr class="b">
 		<td width="20%">Location:</td>
-		<td><html:text property="program.location" size="30" /></td>
+		<td><html:text property="program.location" size="30" maxlength="70" /></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Max Participants:</td>
-		<td><html:text property="program.maxAllowed" size="5" /></td>
+		<td><html:text property="program.maxAllowed" size="8" maxlength="8"/></td>
 	</tr>
 	<tr class="b">
 		<td width="20%">Holding Tank:</td>

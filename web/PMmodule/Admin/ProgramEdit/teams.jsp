@@ -81,7 +81,7 @@ function add_team(form) {
 	<html:hidden property="team.id" />
 	<tr class="b">
 		<td width="20%">Name:</td>
-		<td><html:text property="team.name" /></td>
+		<td><html:text property="team.name" size="50" maxlength="255"/></td>
 	</tr>
 	<tr>
 		<td colspan="2"><input type="button" value="Save" onclick="add_team(this.form)" /> <html:cancel /></td>
