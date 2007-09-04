@@ -57,8 +57,7 @@
 			not-null="false"
 			type="timestamp" />
 		<property
-			column="admission_notes"
-			length="255"
+			column="admission_notes"		
 			name="AdmissionNotes"
 			not-null="false"
 			type="string" />
@@ -87,8 +86,7 @@
 			not-null="false"
 			type="string" />		
 		<property
-			column="discharge_notes"
-			length="255"
+			column="discharge_notes"				
 			name="DischargeNotes"
 			not-null="false"
 			type="string" />
