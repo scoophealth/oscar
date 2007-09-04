@@ -55,6 +55,8 @@ public class ClientManager {
 
 	private AdmissionManager admissionManager;
 	
+	private AgencyManager agencyManager;
+	
 	private boolean outsideOfDomainEnabled;
 	
 	public boolean isOutsideOfDomainEnabled() {
@@ -85,6 +87,10 @@ public class ClientManager {
 		this.integratorManager = mgr;
 	}
 
+	public void setAgencyManager(AgencyManager mgr) {
+		this.agencyManager = mgr;
+	}
+	
 	public Demographic getClientByDemographicNo(String demographicNo) {
 		if (demographicNo == null || demographicNo.length() == 0) {
 			return null;
