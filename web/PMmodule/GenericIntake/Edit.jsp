@@ -43,8 +43,8 @@
 <div id="clientTable" dojoType="TitlePane" label="Client Information" title="(Fields marked with * are mandatory)" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
     <table class="intakeTable">
         <tr>
-            <td><label>First Name *<br><html:text property="client.firstName" /></label></td>
-            <td><label>Last Name *<br><html:text property="client.lastName" /></label></td>
+            <td><label>First Name *<br><html:text property="client.firstName" size="20" maxlength="30" /></label></td>
+            <td><label>Last Name *<br><html:text property="client.lastName" size="20" maxlength="30" /></label></td>
             <td>
                 <label>Gender<br>
                     <html:select property="client.sex">
@@ -71,7 +71,7 @@
                         </td>
                         <td>
                             <label>&nbsp;<br>
-                                <html:text property="client.yearOfBirth" size="4" />&nbsp;(YYYY)
+                                <html:text property="client.yearOfBirth" size="4" maxlength="4" />&nbsp;(YYYY)
                             </label>
                         </td>
                     </tr>
@@ -90,21 +90,21 @@
         <tr>
             <td>
                 <label>Email<br>
-                    <input type="text" dojoType="EmailTextBox" name="client.email" value="<bean:write name="genericIntakeEditForm"  property="client.email"/>"/>
+                    <input type="text" size="20" maxlength="100" dojoType="EmailTextBox" name="client.email" value="<bean:write name="genericIntakeEditForm"  property="client.email"/>"/>
                 </label></td>
             <td>
                 <label>Phone #<br>
-                    <input type="text" dojoType="UsPhoneNumberTextbox" name="client.phone" value="<bean:write name="genericIntakeEditForm"  property="client.phone"/>"/>
+                    <input type="text" size="20" maxlength="20" dojoType="UsPhoneNumberTextbox" name="client.phone" value="<bean:write name="genericIntakeEditForm"  property="client.phone"/>"/>
                 </label></td>
             <td>
                 <label>Secondary Phone #<br>
-                    <input type="text" dojoType="UsPhoneNumberTextbox" name="client.phone2" value="<bean:write name="genericIntakeEditForm"  property="client.phone2"/>"/>
+                    <input type="text" size="20" maxlength="20" dojoType="UsPhoneNumberTextbox" name="client.phone2" value="<bean:write name="genericIntakeEditForm"  property="client.phone2"/>"/>
                 </label>
             </td>
         </tr>
         <tr>
-            <td><label>Street<br><html:text property="client.address" /></label></td>
-            <td><label>City<br><html:text property="client.city" /></label></td>
+            <td><label>Street<br><html:text size="20" maxlength="60" property="client.address" /></label></td>
+            <td><label>City<br><html:text size="20" maxlength="20" property="client.city" /></label></td>
             <td><label>Province<br>
                 <html:select property="client.province">
                     <html:optionsCollection property="provinces" value="value" label="label" />
@@ -112,7 +112,7 @@
             </label>
             </td>
             <!-- <td><label>Province<br><html:text property="client.province" /></label></td> -->
-            <td><label>Postal Code<br><html:text property="client.postal" /></label></td>
+            <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9" /></label></td>
         </tr>
         <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
             <tr>

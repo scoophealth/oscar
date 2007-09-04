@@ -1,5 +1,6 @@
 <%@ include file="/taglibs.jsp"%>
-<%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
+<%@ page import="java.util.*" %>
+<%@ page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.caisi.service.Version"%>
@@ -7,6 +8,20 @@
 <%
 	boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 	userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.er_clerk);
+%>
+
+<%
+	String yearStr = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+	String mthStr = String.valueOf(Calendar.getInstance().get(Calendar.MONTH) + 1);
+	String dayStr = String.valueOf(Calendar.getInstance().get(Calendar.DATE));
+
+	if (mthStr.length() == 1)
+		mthStr = "0" + mthStr;
+
+	if (dayStr.length() == 1)
+		dayStr = "0" + dayStr;
+
+	String dateStr = yearStr + "-" + mthStr + "-" + dayStr;
 %>
 
 <script type="text/javascript">
@@ -32,6 +47,20 @@ function getIntakeReport(type) {
     location.href='<html:rewrite action="/PMmodule/GenericIntake/Report"/>?' + 'method=report' + '&type=' + type + '&startDate=' + startDate + '&endDate=' + endDate;
     
     return false;
+}
+
+function createIntakeCReport1()
+{
+	var startDate = prompt("Please enter the date in this format (e.g. 2006-01-01)", "<%=dateStr%>");
+
+	while(startDate.length != 10  ||  startDate.substring(4,5) != "-"  ||  startDate.substring(7,8) != "-")
+	{
+		startDate = prompt("Please enter the date in this format (e.g. 2006-01-01)", "<%=dateStr%>");
+	}
+
+	alert('creating report until ' + startDate);
+
+	location.href='<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction"/>?startDate=' + startDate;
 }
 </script>
 
@@ -98,6 +127,9 @@ function getIntakeReport(type) {
             </div>
             <div>
                 <a href="javascript:void(0)" onclick="javascript:getIntakeReport('indepth')">Follow-up Intake Report</a>
+            </div>           
+            <div>            
+				<a href="javascript:void(0)" onclick="javascript:createIntakeCReport1();return false;">Street Health Mental Health Report</a>
             </div>
             <div>
                 <html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>

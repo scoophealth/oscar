@@ -10,11 +10,11 @@
 	<table id="genericIntakeSearch" width="50%">
 		<tr>
 			<th>First Name</th>
-			<td><html:text property="firstName" /></td>
+			<td><html:text property="firstName" size="30" maxlength="30" /></td>
 		</tr>
 		<tr>
 			<th>Last Name</th>
-			<td><html:text property="lastName" /></td>
+			<td><html:text property="lastName" size="30" maxlength="30" /></td>
 		</tr>
 		<tr>
 			<th>Birth Date</th>
@@ -25,14 +25,14 @@
 				<html:select property="dayOfBirth">
 					<html:optionsCollection property="days" value="value" label="label" />
 				</html:select>&nbsp;
-				<html:text property="yearOfBirth" size="4" />&nbsp;(YYYY)
+				<html:text property="yearOfBirth" size="4" maxlength="4" />&nbsp;(YYYY)
 			</td>
 		</tr>
 		<tr>
 			<th>Health Card</th>
 			<td>
-				<html:text property="healthCardNumber" size="10" />&nbsp;
-				<html:text property="healthCardVersion" size="2" />&nbsp;(version)
+				<html:text property="healthCardNumber" size="10" maxlength="10" />&nbsp;
+				<html:text property="healthCardVersion" size="2" maxlength="2"/>&nbsp;(version)
 			</td>
 		</tr>
 		<tr>
