@@ -75,7 +75,9 @@ public class MessageUploader {
             }
             
             ArrayList disciplineArray = h.getHeaders();
-            String next = (String) disciplineArray.get(0);
+            String next = "";
+            if (disciplineArray != null && disciplineArray.size() > 0)
+                next = (String) disciplineArray.get(0);
             
             int sepMark;
             if ((sepMark = next.indexOf("<br />")) < 0 ){
@@ -186,6 +188,7 @@ public class MessageUploader {
                 routing.route(labId, provider_no, conn, "HL7");
             }
         }else{
+            routing.route(labId, "0", conn, "HL7");
             routing.route(labId, altProviderNo, conn, "HL7");
         }
         
@@ -216,11 +219,12 @@ public class MessageUploader {
                     hinMod = hinMod.substring(0,10);
                 }
             }
-            
-            if (dob != null && dob.length() == 8){
-                dobYear = dob.substring(0,4);
-                dobMonth = dob.substring(5,7);
-                dobDay = dob.substring(8,10);
+
+            if (dob != null && !dob.equals("")){
+                String[] dobArray = dob.split("-");
+                dobYear = dobArray[0];
+                dobMonth = dobArray[1];
+                dobDay = dobArray[2];
             }
             
             if(!firstName.equals(""))
@@ -326,6 +330,17 @@ public class MessageUploader {
                 sql = "DELETE FROM patientLabRouting where lab_no='"+(lab_id - i)+"'";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.executeUpdate();
+                
+                sql = "SELECT MAX(id) AS id FROM fileUploadCheck";
+                pstmt = conn.prepareStatement(sql);
+                ResultSet rs2 = pstmt.executeQuery();
+                if (rs2.next()){
+                    sql = "DELETE FROM fileUploadCheck where id = '"+rs2.getString("id")+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                }
+                    
+                    
             }
             
             pstmt.close();
