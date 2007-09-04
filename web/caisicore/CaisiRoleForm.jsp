@@ -59,6 +59,7 @@
 <div style="color:red">
 <%@ include file="messages.jsp" %>
 </div>
+<div style="overflow:auto; height:480px; width:480px;">
 <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#CCCCFF">
 	  <tr class="subject"><th colspan="4">Caisi Roles</th></tr>
 	<tr>
@@ -84,7 +85,7 @@
               <tr>
                       <td class="fieldTitle">Name:</td>
                       <td class="fieldValue">
-                      	<html:text property="role.name"/>
+                      	<html:text property="role.name" size="50" maxlength="255" />
                       </td>
               </tr>
               <tr>
@@ -96,6 +97,7 @@
 				
               </tr>
 		</html:form>
-</table>         
+</table>  
+</div>    
 </body>
 </html>
