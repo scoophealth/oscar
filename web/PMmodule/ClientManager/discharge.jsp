@@ -144,7 +144,7 @@ Community Program:&nbsp;
 		<tr>
             <td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.MEDICAL_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
 			<td><bean:message  bundle="pmm" key="discharge.reason.MEDICAL_NEEDS_EXCEED_PROVISION"/></td>
-		</tr
+		</tr>
 		<tr>
 			<td width="5%"><html:radio property="admission.radioDischargeReason" value="<%="" + DischargeReason.SOCIAL_BEHAVIOUR_NEEDS_EXCEED_PROVISION.ordinal()%>" /></td>
 			<td><bean:message  bundle="pmm" key="discharge.reason.SOCIAL_BEHAVIOUR_NEEDS_EXCEED_PROVISION"/></td>
