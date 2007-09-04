@@ -54,13 +54,18 @@ public class MessageUploader {
             String sex = h.getSex();
             String hin = h.getHealthNum();
             String resultStatus = "";
-            String obrDate = h.getMsgDate();
             String priority = h.getMsgPriority();
             String requestingClient = h.getDocName();
             String reportStatus = h.getOrderStatus();
             String accessionNum = h.getAccessionNum();
             ArrayList docNums = h.getDocNums();
             int finalResultCount = h.getOBXFinalResultCount();
+            String obrDate = h.getMsgDate();
+            
+            // reformat date
+            String format = "yyyy-MM-dd HH:mm:ss".substring(0, obrDate.length()-1);
+            obrDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(obrDate, format), "yyyy-MM-dd HH:mm:ss");
+            
             
             int i=0;
             int j=0;
