@@ -92,7 +92,7 @@ New schedule time(date hour:minute):
 </tr>
 <tr>
 <td>
-<nested:text property="schedule_date" styleId="schedule_date">
+<nested:text property="schedule_date" styleId="schedule_date" onfocus="this.blur()">
 </nested:text> <img src="../images/cal.gif" id="schedule_vdate_cal">
 
 <nested:select property="schedule_shour">
