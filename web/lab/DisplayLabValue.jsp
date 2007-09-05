@@ -34,11 +34,12 @@
     String demoNo = request.getParameter("demographicNo");
     String labType = request.getParameter("labType");
     String testName = request.getParameter("testName");
+    String identCode = request.getParameter("identCode");
    
    
     CommonLabTestValues labTests = new CommonLabTestValues();
    
-    ArrayList list   = labTests.findValuesForTest(labType, demoNo, testName);
+    ArrayList list   = labTests.findValuesForTest(labType, demoNo, testName, identCode);
     
     SortHashtable sorter = new SortHashtable();
                       Collections.sort(list,sorter);
@@ -47,9 +48,9 @@
       <div class="preventionSection"  id="preventionSection<%=ran%>" >
             <div class="headPrevention" id="headPrevention<%=ran%>">
                <p > 
-               <a id="ahead<%=ran%>" title="fade=[on] header=[<%=testName%>] body=[]" href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'')">
+               <a id="ahead<%=ran%>" title="fade=[on] header=[<%=testName%>] body=[]" href="javascript: function myFunction() {return false; }">
                <span title="<%=""%>" style="font-weight:bold;">
-                <%=StringUtils.maxLenString(testName, 13, 8, "...")%>
+                <%=StringUtils.maxLenString(testName, 10, 8, "...")%>
                 <%=""/*testName*/%>
                </span>
                </a>
@@ -61,8 +62,18 @@
             <%     
             for (int k = 0; k < list.size(); k++){
                 Hashtable hdata = (Hashtable) list.get(k);
+                String labDisplayLink = "";
+                if ( labType.equals(LabResultData.MDS) ){
+                    labDisplayLink = "../oscarMDS/SegmentDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                }else if (labType.equals(LabResultData.CML)){ 
+                    labDisplayLink = "../lab/CA/ON/CMLDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                }else if (labType.equals(LabResultData.HL7TEXT)){
+                    labDisplayLink = "../lab/CA/ALL/labDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                }else if (labType.equals(LabResultData.EXCELLERIS)) {
+                    labDisplayLink = "../lab/CA/BC/labDisplay.jsp?segmentID="+hdata.get("lab_no")+"&providerNo="+session.getValue("user");
+                }
             %>                            
-            <div style="text-align:justify;" title="fade=[on] header=[<%=hdata.get("result")%>] body=[<%=hdata.get("units")%> <%=hdata.get("range")%>]"  class="preventionProcedure" id="preventionProcedure<%=""+k+""+ran%>" onclick="javascript:popup(465,635,'','addPreventionData')" >
+            <div style="text-align:justify;" title="fade=[on] header=[<%=hdata.get("result")%>] body=[<%=hdata.get("units")%> <%=hdata.get("range")%>]"  class="preventionProcedure" id="preventionProcedure<%=""+k+""+ran%>" onclick="javascript:popup(660,960,'<%= labDisplayLink %>','labReport')" >
                 <p <%=r(hdata.get("abn"))%>><%=hdata.get("result")%> &nbsp;&nbsp;&nbsp;
                    <%=hdata.get("collDate")%>
                 </p>

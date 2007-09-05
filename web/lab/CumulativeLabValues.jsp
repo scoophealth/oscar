@@ -37,8 +37,6 @@
   CommonLabTestValues labTests = new CommonLabTestValues();
   
   ArrayList prevList = labTests.findUniqueLabsForPatient(demographic_no);
-  
-  System.out.println("number of different labs :"+prevList.size());
           
 %>  
 
@@ -249,7 +247,7 @@ function addLabToProfile(labType,testName){
 }
 
 
-function addLabToProfile2(labType,testName){
+function addLabToProfile2(labType,testName,identCode){
 
    ///alert("calling addLabToProfile2");
     
@@ -267,7 +265,7 @@ function addLabToProfile2(labType,testName){
    
    var url = "../lab/DisplayLabValue.jsp";
    var ran_number=Math.round(Math.random()*1000000);
-   var params = "demographicNo=<%=demographic_no%>&rand="+ran_number+"&labType="+labType+"&testName="+testName;  //hack to get around ie caching the page
+   var params = "demographicNo=<%=demographic_no%>&rand="+ran_number+"&labType="+labType+"&testName="+testName+"&identCode="+identCode;  //hack to get around ie caching the page
    ///alert(params);  //'d'+ran_number
    new Ajax.Updater(newNode,url, {method:'post',
                                           parameters:params,
@@ -333,12 +331,16 @@ function addLabToList(req){
                   <%for (int i = 0 ; i < prevList.size(); i++){ 
                       Hashtable h = (Hashtable) prevList.get(i);
                       String prevName = (String) h.get("testName");
+                      String identCode = (String) h.get("identCode");
+                      String identCodeEsc = "";
+                      if (identCode != null)
+                          identCodeEsc = identCode.replaceAll("&", "_amp_");
                       String prevNameEsc = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(prevName);
                       
                       if (prevName == null){prevName ="";} %>
                      <li style="margin-top:2px;">
                         <%-- a title="fade=[on] header=[<%=prevName%>] body=[]"      href="javascript: function myFunction() {return false; }"  onclick="javascript:addLabToProfile2('<%=h.get("labType")%>','<%= java.net.URLEncoder.encode(prevName) %>');" --%>                        
-                        <a title="fade=[on] header=[<%=prevName%>] body=[]"      href="javascript: function myFunction() {return false; }"  onclick="javascript:addLabToProfile2('<%=h.get("labType")%>','<%=prevNameEsc%>');">                        
+                        <a title="fade=[on] header=[<%=prevName%>] body=[]"      href="javascript: function myFunction() {return false; }"  onclick="javascript:addLabToProfile2('<%=h.get("labType")%>','<%=prevNameEsc%>','<%= identCodeEsc %>');">                        
                         
                            <%=StringUtils.maxLenString(prevName, 13, 8, "...")%>
                         </a>
