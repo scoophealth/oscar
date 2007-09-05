@@ -145,7 +145,7 @@
  	<form-bean name="WLWaitingListNameForm" type="org.apache.struts.validator.LazyValidatorForm" /> 
         <form-bean name="PreventionReportForm" type="oscar.oscarPrevention.pageUtil.PreventionReportForm" />
         <form-bean name="ImportDemographicDataForm" type="oscar.oscarDemographic.pageUtil.ImportDemographicDataForm" />
-        <form-bean name="newLabUploadForm" type="oscar.oscarLab.ca.all.upload.LabUploadForm" />
+        <form-bean name="newLabUploadForm" type="oscar.oscarLab.ca.all.pageUtil.LabUploadForm" />
         <form-bean name="LabUploadForm" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadForm" />
         <form-bean name="CMLLabUploadForm" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadForm" />
         <form-bean name="DemographicExportForm" type="oscar.oscarDemographic.pageUtil.DemographicExportForm" />
@@ -486,6 +486,22 @@
         <action input="/Index.jsp" path="/oscarMDS/ReportReassign" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/oscarMDS/Index.jsp" />
+        </action>
+        <action input="/labDisplay.jsp" path="/lab/CA/ALL/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
+            <forward name="failure" path="/errorpage.jsp" />
+            <forward name="success" path="/lab/CA/ALL/labDisplay.jsp" />
+        </action>
+        <action input="/labDisplay.jsp" path="/lab/CA/BC/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
+            <forward name="failure" path="/errorpage.jsp" />
+            <forward name="success" path="/lab/CA/BC/labDisplay.jsp" />
+        </action>
+        <action input="/CMLDisplay.jsp" path="/lab/CA/ON/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
+            <forward name="failure" path="/errorpage.jsp" />
+            <forward name="success" path="/lab/CA/ON/CMLDisplay.jsp" />
+        </action>
+        <action input="/SegmentDisplay.jsp" path="/oscarMDS/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
+            <forward name="failure" path="/errorpage.jsp" />
+            <forward name="success" path="/oscarMDS/SegmentDisplay.jsp" />
         </action>
         <action input="/Index.jsp" path="/oscarMDS/FileLabs" scope="request" type="oscar.oscarLab.pageUtil.FileLabsAction">
             <forward name="failure" path="/errorpage.jsp" />
@@ -1102,10 +1118,10 @@
         <action input="/demographic/demographicImport.jsp" name="LabUploadForm" path="/lab/labUpload" scope="request" type="oscar.oscarLab.ca.bc.PathNet.pageUtil.LabUploadAction">
             <forward name="success" path="/lab/CA/BC/LabUpload.jsp" />
         </action>
-        <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/newLabUpload" scope="request" type="oscar.oscarLab.ca.all.upload.LabUploadAction">
+        <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/newLabUpload" scope="request" type="oscar.oscarLab.ca.all.pageUtil.LabUploadAction">
             <forward name="success" path="/lab/CA/ALL/uploadComplete.jsp" />
         </action>
-        <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/CA/ALL/insideLabUpload" scope="request" type="oscar.oscarLab.ca.all.upload.InsideLabUploadAction">
+        <action input="/lab/CA/ALL/testUploader.jsp" name="newLabUploadForm" path="/lab/CA/ALL/insideLabUpload" scope="request" type="oscar.oscarLab.ca.all.pageUtil.InsideLabUploadAction">
             <forward name="success" path="/lab/CA/ALL/testUploader.jsp" />
         </action>
         <action input="/demographic/demographicImport.jsp" name="CMLLabUploadForm" path="/lab/CMLlabUpload" scope="request" type="oscar.oscarLab.ca.on.CML.Upload.LabUploadAction">

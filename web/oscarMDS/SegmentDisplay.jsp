@@ -183,6 +183,14 @@ function popupStart(vheight,vwidth,varpage,windowname) {
 </script>
 
 <body>
+<!-- form forwarding of the lab -->
+<form name="reassignForm" method="post" action="Forward.do">
+    <input type="hidden" name="flaggedLabs" value="<%= request.getParameter("segmentID") %>" />
+    <input type="hidden" name="selectedProviders" value="" />
+    <input type="hidden" name="labType" value="MDS" />
+    <input type="hidden" name="labType<%= request.getParameter("segmentID") %>MDS" value="imNotNull" />
+    <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>" />
+</form> 
 <form name="acknowledgeForm" method="post" action="UpdateStatus.do">
 
 <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
@@ -200,6 +208,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
                         <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return getComment();">
                         <% } %>
+                        <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')">
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
                         <% if ( demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null")){ %>
@@ -822,6 +831,7 @@ function popupStart(vheight,vwidth,varpage,windowname) {
                         <% if ( request.getParameter("providerNo") != null && ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) ) { %>
                         <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                         <% } %>
+                        <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, 'SelectProvider.jsp', 'providerselect')">
                         <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                         <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
                         <% if ( demoNo != null && !demoNo.equals("") && !demoNo.equalsIgnoreCase("null")){ %>

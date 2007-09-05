@@ -24,68 +24,70 @@
 package oscar.oscarMDS.pageUtil;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.*;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.*;
 import oscar.oscarLab.ca.on.*;
-import oscar.oscarMDS.data.MDSResultsData;
 
 public class ReportReassignAction extends Action {
-   
-   public ReportReassignAction() {
-   }
-   
-   public ActionForward execute(ActionMapping mapping,
-   ActionForm form,
-   HttpServletRequest request,
-   HttpServletResponse response)
-   throws ServletException, IOException {
-      
-      String providerNo = request.getParameter("providerNo");
-      String searchProviderNo = request.getParameter("searchProviderNo");
-      String status = request.getParameter("status");
-      
-      String[] flaggedLabs = request.getParameterValues("flaggedLabs");
-      String selectedProviders = request.getParameter("selectedProviders");
-      String labType = request.getParameter("labType");
-      Hashtable htable = new Hashtable();
-      String[] labTypes = CommonLabResultData.getLabTypes();
-      ArrayList listFlaggedLabs = new ArrayList();
-      
-      if(flaggedLabs != null && labTypes != null){
-         for (int i = 0; i < flaggedLabs.length; i++){            
-            for (int j = 0; j < labTypes.length; j++){
-               String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);
-               
-               if (s != null){  //This means that the lab was of this type.
-                  String[] la =  new String[] {flaggedLabs[i],labTypes[j]};                  
-                  listFlaggedLabs.add(la);
-                  j = labTypes.length;
-                  
-               }
-               
+    
+    Logger logger = Logger.getLogger(ReportReassignAction.class);
+    
+    public ReportReassignAction() {
+    }
+    
+    public ActionForward execute(ActionMapping mapping,
+            ActionForm form,
+            HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String providerNo = request.getParameter("providerNo");
+        String searchProviderNo = request.getParameter("searchProviderNo");
+        String status = request.getParameter("status");
+        
+        String[] flaggedLabs = request.getParameterValues("flaggedLabs");
+        String selectedProviders = request.getParameter("selectedProviders");
+        String labType = request.getParameter("labType");
+        Hashtable htable = new Hashtable();
+        String[] labTypes = CommonLabResultData.getLabTypes();
+        ArrayList listFlaggedLabs = new ArrayList();
+        
+        if(flaggedLabs != null && labTypes != null){
+            for (int i = 0; i < flaggedLabs.length; i++){
+                for (int j = 0; j < labTypes.length; j++){
+                    String s =  request.getParameter("labType"+flaggedLabs[i]+labTypes[j]);
+                    
+                    if (s != null){  //This means that the lab was of this type.
+                        String[] la =  new String[] {flaggedLabs[i],labTypes[j]};
+                        listFlaggedLabs.add(la);
+                        j = labTypes.length;
+                        
+                    }
+                    
+                }
             }
-         }
-      }
-      
-      String newURL = "";
-      
-      try {
-         CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
-         newURL = mapping.findForward("success").getPath();
-         newURL = newURL + "?providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status;
-         if (request.getParameter("lname") != null) { newURL = newURL + "&lname="+request.getParameter("lname"); }
-         if (request.getParameter("fname") != null) { newURL = newURL + "&fname="+request.getParameter("fname"); }
-         if (request.getParameter("hnum") != null) { newURL = newURL + "&hnum="+request.getParameter("hnum"); }
-      } catch (Exception e) {
-         System.out.println("exception in ReportReassignAction:"+e);
-         newURL = mapping.findForward("failure").getPath();
-      }
-      // System.out.println("In ReportReassignAction: newURL is: "+newURL);
-      return (new ActionForward(newURL));
-   }
+        }
+        
+        String newURL = "";
+        
+        try {
+            CommonLabResultData.updateLabRouting(listFlaggedLabs, selectedProviders);
+            newURL = mapping.findForward("success").getPath();
+            
+            // the segmentID is needed when being called from a lab display
+            newURL = newURL + "?providerNo="+providerNo+"&searchProviderNo="+searchProviderNo+"&status="+status+"&segmentID="+flaggedLabs[0];
+            if (request.getParameter("lname") != null) { newURL = newURL + "&lname="+request.getParameter("lname"); }
+            if (request.getParameter("fname") != null) { newURL = newURL + "&fname="+request.getParameter("fname"); }
+            if (request.getParameter("hnum") != null) { newURL = newURL + "&hnum="+request.getParameter("hnum"); }
+        } catch (Exception e) {
+            logger.error("exception in ReportReassignAction", e);
+            newURL = mapping.findForward("failure").getPath();
+        }
+        // System.out.println("In ReportReassignAction: newURL is: "+newURL);
+        return (new ActionForward(newURL));
+    }
 }

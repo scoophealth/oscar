@@ -36,6 +36,7 @@ if (ackList != null){
         }
     }
 }
+
 MessageHandler handler = Factory.getInstance().getHandler(request.getParameter("segmentID"));
 Hl7textResultsData data = new Hl7textResultsData();
 String multiLabId = data.getMatchingLabs(request.getParameter("segmentID"));
@@ -175,11 +176,20 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
        
             return ret;
         }
+
         </script>
         
     </head>    
     
     <body>
+        <!-- form forwarding of the lab -->
+        <form name="reassignForm" method="post" action="Forward.do">
+            <input type="hidden" name="flaggedLabs" value="<%= request.getParameter("segmentID") %>" />
+            <input type="hidden" name="selectedProviders" value="" />
+            <input type="hidden" name="labType" value="HL7" />
+            <input type="hidden" name="labType<%= request.getParameter("segmentID") %>HL7" value="imNotNull" />
+            <input type="hidden" name="providerNo" value="<%= request.getParameter("providerNo") %>" />
+        </form>    
         <form name="acknowledgeForm" method="post" action="../../../oscarMDS/UpdateStatus.do">
             
             <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
@@ -197,6 +207,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% if ( !ackFlag ) { %>
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="return getComment();">
                                     <% } %>
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
                                     <% if ( demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")){ %>
@@ -410,7 +421,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             </td>
                                             <td>
                                                 <div class="FieldData" nowrap="nowrap">
-                                                    <%= ( (String) ( handler.getOrderStatus().equals("F") ? "Final" : "Partial") )%>                                        
+                                                    <%= ( (String) ( handler.getOrderStatus().equals("F") ? "Final" : handler.getOrderStatus().equals("C") ? "Corrected" : "Partial") )%>                                        
                                                 </div>
                                             </td>
                                         </tr>
@@ -543,7 +554,6 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                         
                         ArrayList headers = handler.getHeaders();
                         int OBRCount = handler.getOBRCount();
-                        
                         for(i=0;i<headers.size();i++){
                             linenum=0;
                         %>
@@ -580,12 +590,14 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             for ( j=0; j < OBRCount; j++){
                                 
                                 boolean obrFlag = false;
-                                for (k=0; k < handler.getOBXCount(j); k++){ 
-                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !handler.getOBXName(j, k).equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
-                                        
-                                        if(!obrFlag){%>
+                                int obxCount = handler.getOBXCount(j);
+                                for (k=0; k < obxCount; k++){ 
+                                    String obxName = handler.getOBXName(j, k);
+                                    if ( !handler.getOBXResultStatus(j, k).equals("DNS") && !obxName.equals("") && handler.getObservationHeader(j, k).equals(headers.get(i))){ // <<--  DNS only needed for MDS messages
+                                        String obrName = handler.getOBRName(j);
+                                        if(!obrFlag && !obrName.equals("") && !(obxName.contains(obrName) && obxCount < 2)){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
-                                                <td valign="top" align="left"><%=handler.getOBRName(j)%></td>
+                                                <td valign="top" align="left"><%=obrName%></td>
                                                 <td colspan="6">&nbsp;</td>
                                             </tr>
                                             <%obrFlag = true;
@@ -599,7 +611,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             lineClass = "HiLoRes";
                                         }%>
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                            <td valign="top" align="left">&nbsp; &nbsp;<u><%=handler.getOBXName( j, k) %></u></td>                                         
+                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><u><%= obxName %></u></td>                                         
                                             <td align="right"><%= handler.getOBXResult( j, k) %></td>
                                             <td align="center">
                                                 <%if (handler.isOBXAbnormal( j, k)) {%>
@@ -613,7 +625,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             <td align="center"><%= handler.getTimeStamp(j, k) %></td>
                                             <td align="center"><%= handler.getOBXResultStatus( j, k) %></td>
                                         </tr>
-                            
+                                        
                                         <%for (l=0; l < handler.getOBXCommentCount(j, k); l++){%>
                                             <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="NormalRes">
                                                 <td valign="top" align="left" colspan="8"><pre  style="margin:0px 0px 0px 100px;"><%=handler.getOBXComment(j, k, l)%></pre></td>
@@ -626,7 +638,10 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                             //for ( j=0; j< OBRCount; j++){    
                                 if (handler.getObservationHeader(j, 0).equals(headers.get(i))) {%>
                                 <%for (k=0; k < handler.getOBRCommentCount(j); k++){
-                                    if(!obrFlag){%>
+                                    // the obrName should only be set if it has not been
+                                    // set already which will only have occured if the
+                                    // obx name is "" or if it is the same as the obr name
+                                    if(!obrFlag && handler.getOBXName(j, 0).equals("")){%>
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" >
                                             <td valign="top" align="left"><%=handler.getOBRName(j)%></td>
                                             <td colspan="6">&nbsp;</td>
@@ -649,6 +664,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% if ( request.getParameter("providerNo") != null /*&& ! mDSSegmentData.getAcknowledgedStatus(request.getParameter("providerNo")) */) { %>
                                     <input type="submit" value="<bean:message key="oscarMDS.segmentDisplay.btnAcknowledge"/>" onclick="getComment()">
                                     <% } %>
+                                    <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
                                     <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
                                     <% if ( request.getParameter("searchProviderNo") != null ) { // we were called from e-chart %>                            
