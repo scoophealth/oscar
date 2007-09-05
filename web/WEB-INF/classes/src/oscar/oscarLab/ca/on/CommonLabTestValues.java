@@ -28,13 +28,14 @@
 
 package oscar.oscarLab.ca.on;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.*;
 import org.apache.log4j.Logger;
 import oscar.OscarProperties;
 import oscar.oscarDB.*;
 import oscar.oscarLab.ca.all.parsers.*;
-import oscar.oscarLab.ca.bc.PathNet.PathnetResultsData;
 import oscar.util.*;
 
 /**
@@ -144,7 +145,7 @@ public class CommonLabTestValues {
     public ArrayList findUniqueLabsForPatientMDS(String demographic){
         //Need to check which labs are active
         ArrayList labList = new ArrayList();
-        String sql = "select distinct p.lab_type, x.observationIden " +
+        String sql = "select distinct p.lab_type, x.observationIden, x.observationResultStatus " +
                 "from mdsOBX x, mdsMSH m, patientLabRouting p " +
                 " where p.demographic_no = '"+demographic+"' " +
                 "and m.segmentID = p.lab_no " +
@@ -156,6 +157,11 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
+                
+                String status = rs.getString("observationResultStatus");
+                if (status.equals("D") || status.equals("I") || status.equals("X") || status.equals("W"))
+                    continue;
+                
                 String testNam = "Unknown";rs.getString("observationIden").substring(1,rs.getString("observationIden").indexOf('^'));
                 String labType = rs.getString("lab_type");
                 String title = "";//TODO:rs.getString("title");
@@ -231,12 +237,19 @@ public class CommonLabTestValues {
                 MessageHandler h = f.getInstance().getHandler(rs.getString("lab_no"));
                 for (int i=0; i < h.getOBRCount(); i++){
                     for (int j=0; j < h.getOBXCount(i); j++){
+                        
+                        String status = h.getOBXResultStatus(i, j);
+                        if (status.equals("DNS") || status.equals("P") || status.equals("Pending"))
+                            continue;
+                        
                         Hashtable t = new Hashtable();
                         t.put("testName",h.getOBXName(i, j));
                         t.put("labType","HL7");
                         t.put("title", "");//TODO... not sure what title should be
-                        if (!h.getOBXResultStatus(i, j).equals("DNS") && !labList.contains(t))
+                        t.put("identCode",h.getOBXIdentifier(i, j));
+                        if (!labList.contains(t))
                             labList.add(t);
+                        
                     }
                 }
             }
@@ -259,7 +272,7 @@ public class CommonLabTestValues {
      */
     public ArrayList findValuesByLoinc(String demographicNo, String loincCode, Connection conn){
         ArrayList labList = new ArrayList();
-            
+        
         String sql = "SELECT dataField, dateObserved, e1.val AS lab_no, e3.val AS abnormal FROM measurements m " +
                 "JOIN measurementsExt e1 ON m.id = e1.measurement_id AND e1.keyval='lab_no' " +
                 "JOIN measurementsExt e2 ON m.id = e2.measurement_id AND e2.keyval='identifier' " +
@@ -271,7 +284,7 @@ public class CommonLabTestValues {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             //ResultSet rs = db.GetSQL(sql);
             ResultSet rs = pstmt.executeQuery();
-
+            
             while(rs.next()){
                 Hashtable h = new Hashtable();
                 h.put("lab_no", rs.getString("lab_no"));
@@ -287,7 +300,7 @@ public class CommonLabTestValues {
             logger.error("exception in CommonLabTestValues.findValuesByLoinc()", e);
             
         }
-
+        
         return labList;
     }
     
@@ -300,9 +313,17 @@ public class CommonLabTestValues {
      * //sixth field is date : collection Date
      */
     public ArrayList findValuesForTest(String labType, String demographicNo, String testName){
+        return findValuesForTest(labType, demographicNo, testName, "NULL");
+    }
+    
+    public ArrayList findValuesForTest(String labType, String demographicNo, String testName, String identCode){
+        HashMap accessionMap = new HashMap();
+        LinkedHashMap labMap = new LinkedHashMap();
         ArrayList labList = new ArrayList();
+        if (identCode != null)
+            identCode = identCode.replace("_amp_", "&");
         if ( labType != null && labType.equals("CML")){
-            String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, lpp.collection_date " +
+            String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, lpp.collection_date, lpp.accession_num " +
                     "from patientLabRouting p , labTestResults ltr, labPatientPhysicianInfo lpp " +
                     " where p.lab_type = 'CML' " +
                     " and p.demographic_no = '"+demographicNo+"' " +
@@ -316,24 +337,43 @@ public class CommonLabTestValues {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
-                    String testNam = rs.getString("test_name");                    
+                    String testNam = rs.getString("test_name");
                     String abn = rs.getString("abn");
                     String result = rs.getString("result");
                     String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
                     String units = rs.getString("units");
                     String collDate = rs.getString("collection_date");
-                    Hashtable h = new Hashtable();
-                    h.put("testName", testNam);
-                    h.put("abn",abn);
-                    h.put("result",result);
-                    h.put("range",range);
-                    h.put("units",units);
-                    h.put("collDate",collDate);
-                    h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "dd-MMM-yy"));
-                    labList.add(h);
+                    String lab_no = rs.getString("lab_no");
+                    String accessionNum = rs.getString("accession_num");
+                    
+                    Date dateA = (Date) accessionMap.get(accessionNum);
+                    Date dateB = UtilDateUtilities.getDateFromString(collDate, "dd-MMM-yy");
+                    if (dateA == null || dateA.before(dateB)){
+                        int monthsBetween = 0;
+                        if (dateA != null){
+                            monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+                        }
+                        if (monthsBetween < 4){
+                            accessionMap.put(accessionNum, dateB);
+                            Hashtable h = new Hashtable();
+                            h.put("testName", testNam);
+                            h.put("abn",abn);
+                            h.put("result",result);
+                            h.put("range",range);
+                            h.put("units",units);
+                            h.put("lab_no", lab_no);
+                            h.put("collDate",collDate);
+                            h.put("collDateDate",dateB);
+                            //labList.add(h);
+                            labMap.put(accessionNum, h);
+                        }
+                    }
                 }
                 rs.close();
                 db.CloseConn();
+                
+                labList.addAll(labMap.values());
+                
             }catch(Exception e){
                 logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
                 
@@ -356,33 +396,67 @@ public class CommonLabTestValues {
                     String range = "";
                     String units = "";
                     String collDate = rs.getString("dateTime"); //mdsOBX dateTime
+                    String messageConID = rs.getString("messageConID");
+                    String accessionNum = messageConID.substring(0, messageConID.lastIndexOf("-"));
+                    String version = messageConID.substring(messageConID.lastIndexOf("-")+1);
+                    String status = rs.getString("observationResultStatus");
                     
-                    String sql2 = "select * from mdsZMN where segmentID = '"+segId+"' and reportName = '"+testNam+"'";
-                    ResultSet rs2 = db.GetSQL(sql2);
+                    // Skip the result if it is not supposed to be displayed
+                    if (status.equals("I") || status.equals("W") || status.equals("X") || status.equals("D"))
+                        continue;
                     
-                    if(rs2.next()){
-                        range = rs2.getString("referenceRange");  // mdsZMN referenceRange
-                        units = rs2.getString("units"); //mdsZMN units
+                    // Only retieve the latest measurement for each accessionNum
+                    Hashtable ht = (Hashtable) accessionMap.get(accessionNum);
+                    if (ht == null || Integer.parseInt((String) ht.get("mapNum")) < Integer.parseInt(version)){
+                        
+                        int monthsBetween = 0;
+                        if (ht != null){
+                            Date dateA = UtilDateUtilities.StringToDate((String) ht.get("date"), "yyyyMMdd");
+                            Date dateB = UtilDateUtilities.StringToDate(collDate, "yyyyMMdd");
+                            if (dateA.before(dateB)){
+                                monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+                            }else{
+                                monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
+                            }
+                        }
+                        if (monthsBetween < 4){
+                            ht = new Hashtable();
+                            ht.put("date", collDate);
+                            ht.put("mapNum", version);
+                            accessionMap.put(accessionNum, ht);
+                            String sql2 = "select * from mdsZMN where segmentID = '"+segId+"' and reportName = '"+testNam+"'";
+                            ResultSet rs2 = db.GetSQL(sql2);
+                            
+                            if(rs2.next()){
+                                range = rs2.getString("referenceRange");  // mdsZMN referenceRange
+                                units = rs2.getString("units"); //mdsZMN units
+                            }
+                            rs2.close();
+                            Hashtable h = new Hashtable();
+                            h.put("testName", testNam);
+                            h.put("abn",abn);
+                            h.put("result",result);
+                            h.put("range",range);
+                            h.put("units",units);
+                            h.put("lab_no", segId);
+                            h.put("collDate",collDate);
+                            h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
+                            labMap.put(accessionNum, h);
+                        }
                     }
-                    rs2.close();
-                    Hashtable h = new Hashtable();
-                    h.put("testName", testNam);
-                    h.put("abn",abn);
-                    h.put("result",result);
-                    h.put("range",range);
-                    h.put("units",units);
-                    h.put("collDate",collDate);
-                    h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
-                    labList.add(h);
+                    
                 }
                 rs.close();
                 db.CloseConn();
+                
+                labList.addAll(labMap.values());
+                
             }catch(Exception e){
                 logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
                 
             }
         }else if ( labType != null && labType.equals("BCP")){
-            String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x  where p.lab_type = 'BCP' and p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
+            String sql = "select * from patientLabRouting p, hl7_msh m ,hl7_pid pi, hl7_obr r,hl7_obx x, hl7_orc c  where p.lab_type = 'BCP' and p.demographic_no = '"+demographicNo+"' and x.observation_identifier like '%^"+testName+"' and p.lab_no = m.message_id and pi.message_id = m.message_id and r.pid_id = pi.pid_id and c.pid_id = pi.pid_id and r.obr_id = x.obr_id order by r.observation_date_time";
             logger.info(sql);
             try {
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
@@ -397,16 +471,90 @@ public class CommonLabTestValues {
                     String range = rs.getString("reference_range");
                     String units = rs.getString("units");
                     String collDate = rs.getString("observation_date_time");
+                    String accessionNum = rs.getString("filler_order_number");
+                    
+                    // get just the accession number
+                    String[] ss = accessionNum.split("-");
+                    if (ss.length == 3)
+                        accessionNum =  ss[0];
+                    else
+                        accessionNum =  ss[1];
+                    
+                    Date dateA = (Date) accessionMap.get(accessionNum);
+                    Date dateB = UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss");
+                    if (dateA == null || dateA.before(dateB)){
+                        int monthsBetween = 0;
+                        if (dateA != null){
+                            monthsBetween = UtilDateUtilities.getNumMonths(dateA, dateB);
+                        }
+                        if (monthsBetween < 4){
+                            accessionMap.put(accessionNum, dateB);
+                            Hashtable h = new Hashtable();
+                            h.put("testName", testNam);
+                            h.put("abn",abn);
+                            h.put("result",result);
+                            h.put("range",range);
+                            h.put("units",units);
+                            h.put("lab_no", segId);
+                            h.put("collDate",collDate);
+                            h.put("collDateDate",dateB);
+                            //labList.add(h);
+                            labMap.put(accessionNum, h);
+                        }
+                    }
+                }
+                rs.close();
+                db.CloseConn();
+                
+                labList.addAll(labMap.values());
+                
+            }catch(Exception e){
+                logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
+                
+            }
+            
+        }else if ( labType != null && labType.equals("HL7")){
+            String sql = "SELECT DISTINCT e2.val AS lab_no FROM measurements m" +
+                    " JOIN measurementsExt e1 ON m.id=e1.measurement_id AND e1.keyval='identifier'" +
+                    " JOIN measurementsExt e2 ON m.id=e2.measurement_id AND e2.keyval='lab_no'" +
+                    " WHERE e1.val='"+identCode+"' AND m.demographicNo='"+demographicNo+"'";
+            logger.info(sql);
+            try {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                ResultSet rs = db.GetSQL(sql);
+                while(rs.next()){
+                    String lab_no = rs.getString("lab_no");
+                    
+                    Factory f = new Factory();
+                    MessageHandler handler = f.getInstance().getHandler(lab_no);
                     
                     Hashtable h = new Hashtable();
-                    h.put("testName", testNam);
-                    h.put("abn",abn);
-                    h.put("result",result);
-                    h.put("range",range);
-                    h.put("units",units);
-                    h.put("collDate",collDate);
-                    h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
-                    labList.add(h);
+                    int i=0;
+                    while ( i < handler.getOBRCount() && h.get("testName") == null){
+                        for (int j=0; j < handler.getOBXCount(i); j++){
+                            if (handler.getOBXIdentifier(i, j).equals(identCode)){
+                                
+                                String result = handler.getOBXResult(i, j);
+                                
+                                // only add measurements with actual results
+                                if (!result.equals("")){
+                                    h.put("testName", testName);
+                                    h.put("abn",handler.getOBXAbnormalFlag(i, j));
+                                    h.put("result",result);
+                                    h.put("range",handler.getOBXReferenceRange(i, j));
+                                    h.put("units",handler.getOBXUnits(i, j));
+                                    String collDate = handler.getTimeStamp(i, j);
+                                    h.put("lab_no",lab_no);
+                                    h.put("collDate",collDate);
+                                    h.put("collDateDate",UtilDateUtilities.getDateFromString(collDate, "yyyy-MM-dd HH:mm:ss"));
+                                    labList.add(h);
+                                    break;
+                                }
+                                
+                            }
+                        }
+                        i++;
+                    }
                 }
                 rs.close();
                 db.CloseConn();
@@ -414,11 +562,10 @@ public class CommonLabTestValues {
                 logger.error("exception in CommonLabTestValues.findValuesForTest()", e);
                 
             }
-            
         }
         
         return labList;
-    }    
+    }
     
     /**Returns hashtable with the following characteristics
      * //first field is testName,
