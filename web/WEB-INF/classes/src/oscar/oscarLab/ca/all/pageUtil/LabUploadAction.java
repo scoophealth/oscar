@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package oscar.oscarLab.ca.all.upload;
+package oscar.oscarLab.ca.all.pageUtil;
 
 import java.io.*;
 import java.sql.ResultSet;
@@ -24,6 +24,8 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 
 import org.apache.commons.codec.binary.Base64;
+import oscar.oscarLab.FileUploadCheck;
+import oscar.oscarLab.ca.all.upload.*;
 import oscar.oscarLab.ca.all.upload.handlers.MessageHandler;
 import oscar.oscarLab.ca.all.util.Utilities;
 
@@ -43,13 +45,14 @@ public class LabUploadAction extends Action {
         
         ArrayList clientInfo = getClientInfo(service);
         PublicKey clientKey = (PublicKey) clientInfo.get(0);
-        String type = (String) clientInfo.get(1);   
+        String type = (String) clientInfo.get(1);
         
         try{
             
             InputStream is = decryptMessage(importFile.getInputStream(), key, clientKey);
             Utilities u = new Utilities();
-            String filePath = u.saveFile(is, importFile.getFileName());
+            String fileName = importFile.getFileName();
+            String filePath = u.saveFile(is, fileName);
             importFile.getInputStream().close();
             File file = new File(filePath);
             
@@ -57,10 +60,17 @@ public class LabUploadAction extends Action {
                 logger.debug("Validated Successfully");
                 MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
                 
-                if((audit = msgHandler.parse(filePath)) != null)
-                    outcome = "uploaded";
-                else
-                    outcome = "upload failed";
+                is = new FileInputStream(filePath);
+                FileUploadCheck fileC = new FileUploadCheck();
+                if (fileC.addFile(fileName,is,"0")){
+                    if((audit = msgHandler.parse(filePath)) != null)
+                        outcome = "uploaded";
+                    else
+                        outcome = "upload failed";
+                }else{
+                    outcome = "uploaded previously";                    
+                }
+                is.close();
             }else{
                 logger.info("failed to validate");
                 outcome = "validation failed";
@@ -164,7 +174,7 @@ public class LabUploadAction extends Action {
             String query = "SELECT pubKey, type FROM publicKeys WHERE service='"+service+"';";
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(query);
-                        
+            
             while(rs.next()){
                 keyString = rs.getString("pubKey");
                 type = rs.getString("type");
@@ -180,7 +190,7 @@ public class LabUploadAction extends Action {
             
             info.add(Key);
             info.add(type);
-                        
+            
         }catch(Exception e){
             logger.error("Could not retrieve private key: ", e);
         }

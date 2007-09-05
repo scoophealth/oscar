@@ -14,6 +14,7 @@ import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.*;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
+import java.util.HashMap;
 import org.apache.log4j.Logger;
 
 import oscar.util.UtilDateUtilities;
@@ -31,7 +32,7 @@ public class MDSHandler implements MessageHandler {
     static Message msg = null;
     Terser terser;
     ArrayList obrGroups = null;
-    HeaderMapping headerMaps = new HeaderMapping();
+    HashMap headerMaps = new HashMap();
     Logger logger = Logger.getLogger(MDSHandler.class);
     
     /** Creates a new instance of CMLHandler */
@@ -107,7 +108,7 @@ public class MDSHandler implements MessageHandler {
         
         int i=1;
         String priority = "R";
-        try{            
+        try{
             priority = terser.get("/.OBR-27-1");
             while(priority != null){
                 i++;
@@ -232,7 +233,7 @@ public class MDSHandler implements MessageHandler {
         
         switch(resultStatus.charAt(0)){
             case 'C': resultStatus = "Edited"; break;
-            case 'D': resultStatus = "Deleted"; break;
+            case 'D': resultStatus = "DNS"; break;
             case 'F': resultStatus = "Final"; break;
             case 'f': resultStatus = "Final"; break;
             case 'I': resultStatus = "Pending"; break;
@@ -245,7 +246,7 @@ public class MDSHandler implements MessageHandler {
             case 'X': resultStatus = "DNS"; break; // do not show
             case 'U': resultStatus = "Changed to Final"; break;
             case 'u': resultStatus = "Changed to Final"; break;
-            case 'W': resultStatus = "Wrong, Deleted"; break;
+            case 'W': resultStatus = "DNS"; break;
         }
         
         return (resultStatus);
@@ -255,8 +256,7 @@ public class MDSHandler implements MessageHandler {
         int count = 0;
         try {
             String accessionNum = getString(terser.get("/.MSH-10-1"));
-            // must reverse the order of the labs so subtract the number from a large integer
-            count = 100 - Integer.parseInt(accessionNum.substring(accessionNum.lastIndexOf("-")));
+            count = Integer.parseInt(accessionNum.substring(accessionNum.lastIndexOf("-")+1));
         } catch (Exception e) {
             logger.error("could not retrieve message ordering number", e);
         }
@@ -291,7 +291,7 @@ public class MDSHandler implements MessageHandler {
                     if (currentHeader.equals(""))
                         currentHeader = getString(terser.get("/.ZRG("+(i-1)+")-5-1"));
                     
-                    headerMaps.add(currentHeader, headerNum);
+                    headerMaps.put(headerNum, currentHeader);
                     headers.add(currentHeader);
                     currentHeader = nextHeader;
                     headerNum = nextHeaderNum;
@@ -305,7 +305,7 @@ public class MDSHandler implements MessageHandler {
             if (currentHeader.equals(""))
                 currentHeader = getString(terser.get("/.ZRG("+(i-1)+")-5-1"));
             
-            headerMaps.add(currentHeader, headerNum);
+            headerMaps.put(headerNum, currentHeader);
             headers.add(currentHeader);
             
         }catch(Exception e){
@@ -411,7 +411,7 @@ public class MDSHandler implements MessageHandler {
                 return(comment);
                 
             }else{
-                return(getString(terser.get("/."+segments[l]+"-3-1")));
+                return(getString(terser.get("/."+segments[l]+"-3-2")));
             }
         }catch(Exception e){
             logger.error("Could not retrieve the number of OBX comments", e);
@@ -448,6 +448,7 @@ public class MDSHandler implements MessageHandler {
         try{
             return(formatDateTime(getString(terser.get("/.PID-7-1"))).substring(0, 10));
         }catch(Exception e){
+            logger.error("Error retrieving date of birth", e);
             return("");
         }
     }
@@ -457,7 +458,7 @@ public class MDSHandler implements MessageHandler {
         String dob = getDOB();
         try {
             // Some examples
-            DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = (java.util.Date)formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
@@ -480,7 +481,7 @@ public class MDSHandler implements MessageHandler {
             String healthNum = getString(terser.get("/.PID-19-1"));
             int end = healthNum.indexOf(" ");
             if (end > 0)
-                return(healthNum.substring(1, healthNum.indexOf(" ")));
+                return(healthNum.substring(1, end));
             else
                 return(healthNum.substring(1));
         }catch(Exception e){
@@ -529,14 +530,28 @@ public class MDSHandler implements MessageHandler {
     }
     
     public String getOrderStatus(){
+        
+        String ret = "F";
         try{
-            if (getString(terser.get("/.ZFR-3-1")).equals("1"))
-                return("F");
-            else
+            if (getString(terser.get("/.ZFR-3-1")).equals("0"))
                 return("P");
+            
+            String status = "";
+            int i=0;
+            
+            // If one of the zfr segments says partial, the lab should be marked
+            // as a partial lab
+            while ((status = terser.get("/.ZFR("+i+")-3-1")) != null){
+                if (status.equals("0")){
+                    ret = "P";
+                    break;
+                }
+                i++;
+            }
         }catch(Exception e){
-            return("P");
+            logger.error("Exception retrieving order status", e);
         }
+        return ret;
     }
     
     public String getClientRef(){
@@ -645,7 +660,7 @@ public class MDSHandler implements MessageHandler {
             return("");
         }
         
-    }   
+    }
     
     private String getOBXField(String field, int i, int j){
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
@@ -685,7 +700,7 @@ public class MDSHandler implements MessageHandler {
         }
         
         
-        return(headerMaps.getHeader(headerNum));
+        return( (String) headerMaps.get(headerNum) );
         
     }
     
@@ -714,16 +729,13 @@ public class MDSHandler implements MessageHandler {
     
     
     private String formatDateTime(String plain){
-        if (!plain.equals("")){
-            String formatted = plain.substring(0, 4)+"-"+plain.substring(4, 6)+"-"+plain.substring(6);
-            if (plain.length() > 8)
-                formatted = formatted.substring(0, 10)+" "+formatted.substring(10, 12)+":"+formatted.substring(12, 14)+":"+formatted.substring(14);
-            else
-                formatted = formatted+" 00:00:00";
-            return (formatted);
-        }else{
-            return (plain);
-        }
+        String dateFormat = "yyyyMMddHHmmss";
+        dateFormat = dateFormat.substring(0, plain.length());
+        String stringFormat = "yyyy-MM-dd HH:mm:ss";
+        stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
+        
+        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
+        return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
     private String getString(String retrieve){
@@ -734,33 +746,5 @@ public class MDSHandler implements MessageHandler {
             return("");
         }
     }
-    
-    private class HeaderMapping{
-        ArrayList name;
-        ArrayList num;
-        public HeaderMapping(){
-            name = new ArrayList();
-            num = new ArrayList();
-        }
-        
-        public void add(String header, String headerNum){
-            name.add(header);
-            num.add(headerNum);
-        }
-        
-        public String getHeader(String headerNum){
-            
-            for(int i=0; i < num.size(); i++){
-                if (headerNum.equals((String) num.get(i))){
-                    return((String) name.get(i));
-                }
-            }
-            
-            return("");
-        }
-        
-        
-    }
-    
 }
 

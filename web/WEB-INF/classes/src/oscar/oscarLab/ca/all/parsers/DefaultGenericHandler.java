@@ -16,6 +16,7 @@ import ca.uhn.hl7v2.util.Terser;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.*;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
+import java.util.Date;
 import org.apache.log4j.Logger;
 
 import oscar.util.UtilDateUtilities;
@@ -100,7 +101,7 @@ public class DefaultGenericHandler implements MessageHandler {
     public String getMsgDate(){
         
         try{
-            String dateString = formatDateTime(getString(terser.get("/.MSH-7-1")));           
+            String dateString = formatDateTime(getString(terser.get("/.MSH-7-1")));
             return(dateString);
         }catch(Exception e){
             return("");
@@ -385,7 +386,7 @@ public class DefaultGenericHandler implements MessageHandler {
         String dob = getDOB();
         try {
             // Some examples
-            DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = (java.util.Date)formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
@@ -595,16 +596,14 @@ public class DefaultGenericHandler implements MessageHandler {
     
     
     private String formatDateTime(String plain){
-        if (!plain.equals("")){
-            String formatted = plain.substring(0, 4)+"-"+plain.substring(4, 6)+"-"+plain.substring(6);
-            if (plain.length() > 8)
-                formatted = formatted.substring(0, 10)+" "+formatted.substring(10, 12)+":"+formatted.substring(12, 14)+":"+formatted.substring(14);
-            else
-                formatted = formatted+" 00:00:00";
-            return (formatted);
-        }else{
-            return (plain);
-        }
+        
+        String dateFormat = "yyyyMMddHHmmss";
+        dateFormat = dateFormat.substring(0, plain.length());
+        String stringFormat = "yyyy-MM-dd HH:mm:ss";
+        stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
+        
+        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
+        return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
     private String getString(String retrieve){

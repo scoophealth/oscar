@@ -10,7 +10,6 @@
 package oscar.oscarLab.ca.all.parsers;
 
 import ca.uhn.hl7v2.model.Segment;
-import ca.uhn.hl7v2.model.Structure;
 import ca.uhn.hl7v2.model.v23.segment.OBR;
 import ca.uhn.hl7v2.model.v23.segment.OBX;
 import java.sql.ResultSet;
@@ -29,7 +28,6 @@ import ca.uhn.hl7v2.validation.impl.NoValidation;
 
 import java.text.*;
 
-
 /**
  *
  * @author wrighd
@@ -47,6 +45,7 @@ public class GDMLHandler implements MessageHandler {
     }
     
     public void init(String hl7Body) throws HL7Exception {
+        
         Parser p = new PipeParser();
         p.setValidationContext(new NoValidation());
         msg = (ORU_R01) p.parse(hl7Body.replaceAll( "\n", "\r\n" ));
@@ -56,12 +55,10 @@ public class GDMLHandler implements MessageHandler {
         obrSegMap = new LinkedHashMap();
         obrSegKeySet = new ArrayList();
         
-        logger.info("number of labs: "+labs.size());
         for (int i=0; i < labs.size(); i++){
             msg = (ORU_R01) p.parse(((String) labs.get(i)).replaceAll("\n", "\r\n"));
             int obrCount = msg.getRESPONSE().getORDER_OBSERVATIONReps();
             
-            logger.info("lab("+i+") obrCount: "+obrCount);
             for (int j=0; j < obrCount; j++){
                 
                 // ADD OBR SEGMENTS AND THEIR OBX SEGMENTS TO THE OBRSEGMAP
@@ -73,9 +70,7 @@ public class GDMLHandler implements MessageHandler {
                     obxSegs = new ArrayList();
                 
                 int obxCount = msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATIONReps();
-                logger.info("lab("+i+") obr("+j+") obxCount: "+obxCount);
                 for (int k=0; k < obxCount; k++){
-                    logger.info("lab("+i+") adding obrseg("+j+") obxseg("+k+")");
                     obxSegs.add(msg.getRESPONSE().getORDER_OBSERVATION(j).getOBSERVATION(k).getOBX());
                 }
                 
@@ -84,9 +79,7 @@ public class GDMLHandler implements MessageHandler {
                 
                 // ADD THE HEADER TO THE HEADERS ARRAYLIST
                 String header = getString(obrSeg.getUniversalServiceIdentifier().getAlternateIdentifier().getValue());
-                logger.info("lab("+i+") obr("+j+") header: "+header);
                 if (!headers.contains(header)){
-                    logger.info("lab("+i+") obr("+j+") adding header: "+header);
                     headers.add(header);
                 }
                 
@@ -117,7 +110,6 @@ public class GDMLHandler implements MessageHandler {
                     monthsBetween = UtilDateUtilities.getNumMonths(dateB, dateA);
                 }
                 if (monthsBetween < 4){
-                    logger.info("adding lab : "+rs.getString("lab_no_A"));
                     ret.add(new String(base64.decode(rs.getString("message").getBytes("ASCII")), "ASCII"));
                 }
                 
@@ -183,15 +175,16 @@ public class GDMLHandler implements MessageHandler {
                 ret = ((OBR) obrSegKeySet.get(i)).getObservationDateTime().getTimeOfAnEvent().getValue();
             return(formatDateTime(getString(ret)));
         }catch(Exception e){
+            logger.error("Exception retrieving timestamp", e);
             return("");
         }
     }
     
     public boolean isOBXAbnormal(int i, int j){
-        if (getOBXAbnormalFlag(i, j).equals("N"))
-            return(false);
-        else
+        if (getOBXAbnormalFlag(i, j).equals("A"))
             return(true);
+        else
+            return(false);
     }
     
     public String getOBXAbnormalFlag(int i, int j){
@@ -200,6 +193,7 @@ public class GDMLHandler implements MessageHandler {
             
             return(getString( ((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getAbnormalFlags(0).getValue() ));
         }catch(Exception e){
+            logger.error("Exception retrieving abnormal flag", e);
             return("");
         }
     }
@@ -249,13 +243,21 @@ public class GDMLHandler implements MessageHandler {
     }
     
     public String getOBXResult(int i, int j){
+        
+        String result = "";
         try{
             
             Terser terser = new Terser(msg);
-            return(getString(terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1,1)));
+            result = getString(terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),5,0,1,1));
+            
+            // format the result
+            if (result.endsWith("."))
+                result = result.substring(0, result.length()-1);
+            
         }catch(Exception e){
-            return("");
+            logger.error("Exception returning result", e);
         }
+        return result;
     }
     
     public String getOBXReferenceRange(int i, int j){
@@ -264,28 +266,62 @@ public class GDMLHandler implements MessageHandler {
             Terser terser = new Terser(msg);
             
             OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
-            // if there are no units specified for the obx they are stored in the
-            // second componet of the reference range along with the reference range
+            
+            // If the units are not specified use the formatted reference range
+            // which will usually contain the units as well
+            
             if (getOBXUnits(i, j).equals(""))
-                ret = terser.get(obxSeg,7,0,2,1).replaceAll("\\\\\\.br\\\\", "").replaceAll("\\s", "&#160;");
+                ret = getString(terser.get(obxSeg,7,0,2,1));
             
             // may have to fall back to original reference range if the second
-            // component is empty as well as the units
-            if (ret == null || ret.equals("") || ret.equalsIgnoreCase("null"))
-                ret = (getString(obxSeg.getReferencesRange().getValue()).replaceAll("\\\\\\.br\\\\", ""));
+            // component is empty
+            if (ret.equals("") ){
+                ret = getString(obxSeg.getReferencesRange().getValue());
+                if (!ret.equals("")){
+                    // format the reference range if using the unformatted one
+                    String[] ranges = ret.split("-");
+                    for (int k=0; k < ranges.length; k++){
+                        if (ranges[k].endsWith("."))
+                            ranges[k] = ranges[k].substring(0, ranges[k].length()-1);
+                    }
+                    
+                    if (ranges.length > 1){
+                        if (ranges[0].contains(">") || ranges[0].contains("<"))
+                            ret = ranges[0]+"= "+ranges[1];
+                        else
+                            ret = ranges[0]+" - "+ranges[1];
+                    }else if (ranges.length == 1){
+                        ret = ranges[0]+" -";
+                    }
+                }
+            }
         }catch(Exception e){
-            ret = "";
+            logger.error("Exception retrieving reception range", e);
         }
-        return ret;
+        return ret.replaceAll("\\\\\\.br\\\\", "");
     }
     
     public String getOBXUnits(int i, int j){
+        String ret = "";
         try{
+            OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
+            ret = getString(obxSeg.getUnits().getIdentifier().getValue());
             
-            return(getString(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getUnits().getIdentifier().getValue()));
+            // if there are no units specified check the formatted reference
+            // range for the units
+            if (ret.equals("")){
+                Terser terser = new Terser(msg);
+                ret = getString(terser.get(obxSeg,7,0,2,1));
+                
+                // only display units from the formatted reference range if they
+                // have not already been displayed as the reference range
+                if (ret.contains("-") || ret.contains("<") || ret.contains(">") || ret.contains("NEGATIVE"))
+                    ret = "";
+            }
         }catch(Exception e){
-            return("");
+            logger.error("Exception retrieving units", e);
         }
+        return ret.replaceAll("\\\\\\.br\\\\", "");
     }
     
     public String getOBXResultStatus(int i, int j){
@@ -294,12 +330,13 @@ public class GDMLHandler implements MessageHandler {
             // result status is stored in the wrong field.... i think
             return(getString(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)).getNatureOfAbnormalTest().getValue()));
         }catch(Exception e){
+            logger.error("Exception retrieving results status", e);
             return("");
         }
     }
     
     public int getOBXFinalResultCount(){
-        // not applicable to gdml messages
+        // not applicable to gdml labs
         return 0;
     }
     
@@ -345,7 +382,7 @@ public class GDMLHandler implements MessageHandler {
                     count++;
                 }
                 l++;
-            
+                
             }
             l--;
             
@@ -358,7 +395,7 @@ public class GDMLHandler implements MessageHandler {
             }
             
         } catch (Exception e) {
-            logger.info("getOBRComment error", e);
+            logger.error("getOBRComment error", e);
             comment = "";
         }
         return comment;
@@ -377,13 +414,16 @@ public class GDMLHandler implements MessageHandler {
             while(comment != null){
                 count++;
                 comment = terser.get(obxSeg,7,count,1,1);
+                if (comment == null)
+                    comment = terser.get(obxSeg,7,count,2,1);
             }
-            
+            count--;
             
         }catch(Exception e){
-            return(0);
+            logger.error("Exception retrieving obx comment count", e);
+            count = 0;
         }
-        return count-1;
+        return count;
     }
     
     public String getOBXComment(int i, int j, int k){
@@ -392,13 +432,15 @@ public class GDMLHandler implements MessageHandler {
             k++;
             
             Terser terser = new Terser(msg);
-            
-            comment = terser.get(((OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j)),7,k,1,1).replaceAll("\\\\\\.br\\\\", "<br />");
+            OBX obxSeg = (OBX) ((ArrayList) obrSegMap.get(obrSegKeySet.get(i))).get(j);
+            comment = terser.get(obxSeg,7,k,1,1);
+            if (comment == null)
+                comment = terser.get(obxSeg,7,k,2,1);
             
         }catch(Exception e){
             logger.error("Cannot return comment", e);
         }
-        return comment;
+        return comment.replaceAll("\\\\\\.br\\\\", "<br />");
     }
     
     
@@ -421,6 +463,7 @@ public class GDMLHandler implements MessageHandler {
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())).substring(0, 10));
         }catch(Exception e){
+            logger.error("Exception retrieving DOB", e);
             return("");
         }
     }
@@ -430,7 +473,7 @@ public class GDMLHandler implements MessageHandler {
         String dob = getDOB();
         try {
             // Some examples
-            DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = (java.util.Date)formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
@@ -496,6 +539,7 @@ public class GDMLHandler implements MessageHandler {
         try{
             return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
         }catch(Exception e){
+            logger.error("Exception retrieving service date", e);
             return("");
         }
     }
@@ -507,7 +551,7 @@ public class GDMLHandler implements MessageHandler {
     }
     
     public String getClientRef(){
-        String docNum = "";
+        /*String docNum = "";
         int i=0;
         try{
             while(!getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getOrderingProvider(i).getIDNumber().getValue()).equals("")){
@@ -521,7 +565,13 @@ public class GDMLHandler implements MessageHandler {
             return(docNum);
         }catch(Exception e){
             logger.error("Could not return doctor id numbers", e);
-            
+         
+            return("");
+        }*/
+        try{
+            return(getString(msg.getRESPONSE().getPATIENT().getPID().getPatientIDInternalID(0).getAssigningAuthority().getNamespaceID().getValue()));
+        }catch(Exception e){
+            logger.error("Could not return accession num: ", e);
             return("");
         }
     }
@@ -632,36 +682,51 @@ public class GDMLHandler implements MessageHandler {
             docName = docSeg.getPrefixEgDR().getValue();
         
         if(docSeg.getGivenName().getValue() != null){
-            if (docName.equals("")){
+            if (docName.equals(""))
                 docName = docSeg.getGivenName().getValue();
-            }else{
+            else
                 docName = docName +" "+ docSeg.getGivenName().getValue();
-            }
+            
         }
-        if(docSeg.getMiddleInitialOrName().getValue() != null)
-            docName = docName +" "+ docSeg.getMiddleInitialOrName().getValue();
-        if(docSeg.getFamilyName().getValue() != null)
-            docName = docName +" "+ docSeg.getFamilyName().getValue();
-        if(docSeg.getSuffixEgJRorIII().getValue() != null)
-            docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
-        if(docSeg.getDegreeEgMD().getValue() != null)
-            docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
+        if(docSeg.getMiddleInitialOrName().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getMiddleInitialOrName().getValue();
+            else
+                docName = docName +" "+ docSeg.getMiddleInitialOrName().getValue();
+            
+        }
+        if(docSeg.getFamilyName().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getFamilyName().getValue();
+            else
+                docName = docName +" "+ docSeg.getFamilyName().getValue();
+            
+        }
+        if(docSeg.getSuffixEgJRorIII().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getSuffixEgJRorIII().getValue();
+            else
+                docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
+        }
+        if(docSeg.getDegreeEgMD().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getDegreeEgMD().getValue();
+            else
+                docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
+        }
         
         return (docName);
     }
     
     
     private String formatDateTime(String plain){
-        if (!plain.equals("")){
-            String formatted = plain.substring(0, 4)+"-"+plain.substring(4, 6)+"-"+plain.substring(6);
-            if (plain.length() > 8)
-                formatted = formatted.substring(0, 10)+" "+formatted.substring(10, 12)+":"+formatted.substring(12, 14)+":00";
-            else
-                formatted = formatted+" 00:00:00";
-            return (formatted);
-        }else{
-            return (plain);
-        }
+        String dateFormat = "yyyyMMddHHmmss";
+        dateFormat = dateFormat.substring(0, plain.length());
+        String stringFormat = "yyyy-MM-dd HH:mm:ss";
+        stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
+        
+        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
+        return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
     private String getString(String retrieve){

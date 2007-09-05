@@ -10,6 +10,7 @@
 package oscar.oscarLab.ca.all.parsers;
 
 
+import java.util.Date;
 import org.apache.log4j.Logger;
 import oscar.util.UtilDateUtilities;
 
@@ -46,7 +47,7 @@ public class PATHL7Handler implements MessageHandler {
     public String getMsgType(){
         return("PATHL7");
     }
-        
+    
     public String getMsgPriority(){
         return("");
     }
@@ -55,12 +56,12 @@ public class PATHL7Handler implements MessageHandler {
      */
     
     public String getMsgDate(){
-        try {
-            //return(formatDateTime(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue()));
-            return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
-        } catch (HL7Exception ex) {
-            return ("");
-        }
+        //try {
+        return(formatDateTime(getString(msg.getMSH().getDateTimeOfMessage().getTimeOfAnEvent().getValue())));
+        //return(formatDateTime(getString(msg.getRESPONSE().getORDER_OBSERVATION(0).getOBR().getObservationDateTime().getTimeOfAnEvent().getValue())));
+        //} catch (HL7Exception ex) {
+        //    return ("");
+        //}
     }
     
     /*
@@ -91,7 +92,7 @@ public class PATHL7Handler implements MessageHandler {
         String dob = getDOB();
         try {
             // Some examples
-            DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = (java.util.Date)formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
@@ -320,11 +321,21 @@ public class PATHL7Handler implements MessageHandler {
      *  OBX METHODS
      */
     public int getOBXCount(int i){
+        int count = 0;
         try{
-            return(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps());
+            count = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps();
+            // if count is 1 there may only be an nte segment and no obx segments so check
+            if (count == 1){
+                String test = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(0).getOBX().getObservationIdentifier().getText().getValue();
+                logger.info("name: "+test);
+                if (test == null)
+                    count = 0;
+            }
         }catch(Exception e){
-            return(0);
+            logger.error("Error retrieving obx count", e);
+            count = 0;
         }
+        return count;
     }
     
     public String getOBXIdentifier(int i, int j){
@@ -383,10 +394,21 @@ public class PATHL7Handler implements MessageHandler {
         for (int i=0; i < obrCount; i++){
             obxCount = getOBXCount(i);
             for (int j=0; j < obxCount; j++){
-                if (getOBXResultStatus(i, j).equalsIgnoreCase("F"))
+                String status = getOBXResultStatus(i, j);
+                if (status.equalsIgnoreCase("F") || status.equalsIgnoreCase("C"))
                     count++;
             }
         }
+        
+        
+        String orderStatus = getOrderStatus();
+        // add extra so final reports are always the ordered as the latest except
+        // if the report has been changed in which case that report should be the latest
+        if (orderStatus.equalsIgnoreCase("F"))
+            count = count + 100;
+        else if (orderStatus.equalsIgnoreCase("C"))
+            count = count + 150;
+        
         return count;
     }
     
@@ -416,6 +438,7 @@ public class PATHL7Handler implements MessageHandler {
         try{
             return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getAbnormalFlags(0).getValue()));
         }catch(Exception e){
+            logger.error("Error retrieving obx abnormal flag", e);
             return("");
         }
     }
@@ -509,16 +532,13 @@ public class PATHL7Handler implements MessageHandler {
     
     
     private String formatDateTime(String plain){
-        if (!plain.equals("")){
-            String formatted = plain.substring(0, 4)+"-"+plain.substring(4, 6)+"-"+plain.substring(6);
-            if (plain.length() > 8)
-                formatted = formatted.substring(0, 10)+" "+formatted.substring(10, 12)+":"+formatted.substring(12, 14)+":"+formatted.substring(14);
-            else
-                formatted = formatted + " 00:00:00";
-            return (formatted);
-        }else{
-            return (plain);
-        }
+        String dateFormat = "yyyyMMddHHmmss";
+        dateFormat = dateFormat.substring(0, plain.length());
+        String stringFormat = "yyyy-MM-dd HH:mm:ss";
+        stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
+        
+        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
+        return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
     private String getString(String retrieve){

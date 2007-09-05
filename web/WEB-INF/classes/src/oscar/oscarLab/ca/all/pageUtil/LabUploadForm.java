@@ -7,7 +7,7 @@
  * and open the template in the editor.
  */
 
-package oscar.oscarLab.ca.all.upload;
+package oscar.oscarLab.ca.all.pageUtil;
 
 import org.apache.struts.action.*;
 import org.apache.struts.upload.*;

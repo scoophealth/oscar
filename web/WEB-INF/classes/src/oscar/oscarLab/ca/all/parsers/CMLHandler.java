@@ -11,6 +11,7 @@
 package oscar.oscarLab.ca.all.parsers;
 
 
+import java.util.Date;
 import org.apache.log4j.Logger;
 import oscar.util.UtilDateUtilities;
 
@@ -117,9 +118,9 @@ public class CMLHandler implements MessageHandler {
     public String getObservationHeader(int i, int j){
         try{
             Terser terser = new Terser(msg);
-            return(getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,1,1))+" "+
+            return (getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,1,1))+" "+
                     getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,2,1))+" "+
-                    getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,3,1)));
+                    getString(terser.get(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX(),4,0,3,1))).trim();
         }catch(Exception e){
             return("");
         }
@@ -167,11 +168,18 @@ public class CMLHandler implements MessageHandler {
     }
     
     public String getOBXResultStatus(int i, int j){
+        String status = "";
         try{
-            return(getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservResultStatus().getValue()));
+            status = getString(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getOBX().getObservResultStatus().getValue());
+            if (status.equalsIgnoreCase("I"))
+                status = "Pending";
+            else if (status.equalsIgnoreCase("F"))
+                status = "Final";
         }catch(Exception e){
-            return("");
+            logger.error("Error retrieving obx result status", e);
+            return status;
         }
+        return status;
     }
     
     public int getOBXFinalResultCount(){
@@ -181,7 +189,7 @@ public class CMLHandler implements MessageHandler {
         for (int i=0; i < obrCount; i++){
             obxCount = getOBXCount(i);
             for (int j=0; j < obxCount; j++){
-                if (getOBXResultStatus(i, j).equalsIgnoreCase("F"))
+                if (getOBXResultStatus(i, j).equals("Final"))
                     count++;
             }
         }
@@ -201,15 +209,14 @@ public class CMLHandler implements MessageHandler {
             for (i=0; i < msg.getRESPONSE().getORDER_OBSERVATIONReps(); i++){
                 
                 for (j=0; j < msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps(); j++){
-                    currentHeader = getObservationHeader(i, j);
-                    
-                    k = 0;
-                    while(k < headers.size() && !currentHeader.equals(headers.get(k))){
-                        k++;
-                    }
-                    if (k == headers.size()){
-                        logger.info("Adding header: '"+currentHeader+"' to list");
-                        headers.add(currentHeader);
+                    // only check the obx segment for a header if it is one that will be displayed
+                    if (!getOBXName(i, j).equals("")){
+                        currentHeader = getObservationHeader(i, j);
+                        
+                        if (!headers.contains(currentHeader)){
+                            logger.info("Adding header: '"+currentHeader+"' to list");
+                            headers.add(currentHeader);
+                        }
                     }
                     
                 }
@@ -248,12 +255,22 @@ public class CMLHandler implements MessageHandler {
      *  Methods to get information from observation notes
      */
     public int getOBXCommentCount(int i, int j){
+        int count = 0;
         try {
-            //int lastOBX = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATIONReps() - 1;
-            return(msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps());
+            count = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTEReps();
+            
+            // a bug in getNTEReps() causes it to return 1 instead of 0 so we check to make
+            // sure there actually is a comment there
+            if (count == 1){
+                String comment = msg.getRESPONSE().getORDER_OBSERVATION(i).getOBSERVATION(j).getNTE().getComment(0).getValue();
+                if (comment == null)
+                    count = 0;
+            }
+            
         } catch (Exception e) {
-            return(0);
+            logger.error("Error retrieving obx comment count", e);
         }
+        return count;
     }
     
     public String getOBXComment(int i, int j, int k){
@@ -283,7 +300,7 @@ public class CMLHandler implements MessageHandler {
     
     public String getDOB(){
         try{
-            return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())).substring(0, 10));
+            return(formatDateTime(getString(msg.getRESPONSE().getPATIENT().getPID().getDateOfBirth().getTimeOfAnEvent().getValue())));
         }catch(Exception e){
             return("");
         }
@@ -294,7 +311,7 @@ public class CMLHandler implements MessageHandler {
         String dob = getDOB();
         try {
             // Some examples
-            DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = (java.util.Date)formatter.parse(dob);
             age = UtilDateUtilities.calcAge(date);
         } catch (ParseException e) {
@@ -473,36 +490,48 @@ public class CMLHandler implements MessageHandler {
             docName = docSeg.getPrefixEgDR().getValue();
         
         if(docSeg.getGivenName().getValue() != null){
-            if (docName.equals("")){
+            if (docName.equals(""))
                 docName = docSeg.getGivenName().getValue();
-            }else{
+            else
                 docName = docName +" "+ docSeg.getGivenName().getValue();
-            }
         }
-        if(docSeg.getMiddleInitialOrName().getValue() != null)
-            docName = docName +" "+ docSeg.getMiddleInitialOrName().getValue();
-        if(docSeg.getFamilyName().getValue() != null)
-            docName = docName +" "+ docSeg.getFamilyName().getValue();
-        if(docSeg.getSuffixEgJRorIII().getValue() != null)
-            docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
-        if(docSeg.getDegreeEgMD().getValue() != null)
-            docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
+        if(docSeg.getMiddleInitialOrName().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getMiddleInitialOrName().getValue();
+            else
+                docName = docName +" "+ docSeg.getMiddleInitialOrName().getValue();
+        }
+        if(docSeg.getFamilyName().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getFamilyName().getValue();
+            else
+                docName = docName +" "+ docSeg.getFamilyName().getValue();
+        }
+        if(docSeg.getSuffixEgJRorIII().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getSuffixEgJRorIII().getValue();
+            else
+                docName = docName +" "+ docSeg.getSuffixEgJRorIII().getValue();
+        }
+        if(docSeg.getDegreeEgMD().getValue() != null){
+            if (docName.equals(""))
+                docName = docSeg.getDegreeEgMD().getValue();
+            else
+                docName = docName +" "+ docSeg.getDegreeEgMD().getValue();
+        }
         
         return (docName);
     }
     
     
     private String formatDateTime(String plain){
-        if (!plain.equals("")){
-            String formatted = plain.substring(0, 4)+"-"+plain.substring(4, 6)+"-"+plain.substring(6);
-            if (plain.length() > 8)
-                formatted = formatted.substring(0, 10)+" "+formatted.substring(10, 12)+":"+formatted.substring(12, 14)+":"+formatted.substring(14);
-            else
-                formatted = formatted+" 00:00:00";
-            return (formatted);
-        }else{
-            return (plain);
-        }
+        String dateFormat = "yyyyMMddHHmmss";
+        dateFormat = dateFormat.substring(0, plain.length());
+        String stringFormat = "yyyy-MM-dd HH:mm:ss";
+        stringFormat = stringFormat.substring(0, stringFormat.lastIndexOf(dateFormat.charAt(dateFormat.length()-1))+1);
+        
+        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
+        return UtilDateUtilities.DateToString(date, stringFormat);
     }
     
     private String getString(String retrieve){
