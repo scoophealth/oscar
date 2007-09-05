@@ -34,6 +34,7 @@ import java.util.*;
 import org.apache.log4j.Logger;
 import oscar.*;
 import oscar.oscarDB.*;
+import oscar.oscarLab.ca.all.upload.ProviderLabRouting;
 import oscar.oscarLab.ca.bc.PathNet.*;
 import oscar.oscarMDS.data.*;
 import oscar.oscarLab.ca.all.Hl7textResultsData;
@@ -209,7 +210,7 @@ public class CommonLabResultData {
         
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         
+            
             // update pateintLabRouting for labs with the same accession number
             CommonLabResultData data = new CommonLabResultData();
             String[] labArray =  data.getMatchingLabs(labNo, labType).split(",");
@@ -228,7 +229,7 @@ public class CommonLabResultData {
                 
             }
             
-            db.CloseConn();            
+            db.CloseConn();
             return result;
             
         }catch(Exception e){
@@ -247,34 +248,43 @@ public class CommonLabResultData {
             
             String[] providersArray = selectedProviders.split(",");
             String insertString = "";
-            String deleteString = "";
+            CommonLabResultData data = new CommonLabResultData();
+            ProviderLabRouting plr = new ProviderLabRouting();
+            
             for (int i=0; i < flaggedLabs.size(); i++) {
                 String[] strarr = (String[]) flaggedLabs.get(i);
                 String lab = strarr[0];
                 String labType = strarr[1];
-                if (i != 0) {
-                    insertString = insertString + ", ";
-                    deleteString = deleteString + ", ";
-                }
-                for (int j=0; j < providersArray.length; j++) {
-                    if (j != 0) {
-                        insertString = insertString + ", ";
+                
+                // Forward all versions of the lab
+                String matchingLabs = data.getMatchingLabs(lab, labType);
+                String[] labIds = matchingLabs.split(",");
+                for (int k=0; k < labIds.length; k++){
+                    
+                    for (int j=0; j < providersArray.length; j++) {
+                        /*if (!insertString.equals("")) {
+                            insertString = insertString + ", ";
+                        }
+                        insertString = insertString + "('" + providersArray[j] + "','" + labIds[k]+ "','N','"+labType+"')";
+                         */
+                        plr.route(labIds[k], providersArray[j], db.GetConnection(), labType);
                     }
-                    insertString = insertString + "('" + providersArray[j] + "','" + lab+ "','N','"+labType+"')";
+                    
+                    // delete old entries
+                    String sql = "delete from providerLabRouting where provider_no='0' and lab_type= '"+labType+"' and lab_no = '"+labIds[k]+"'";
+                    result = db.RunSQL(sql);
+                    
                 }
-                //deleteString = deleteString+"'"+lab+"'";
-                // delete old entries
-                String sql = "delete from providerLabRouting where provider_no='0' and lab_type= '"+labType+"' and lab_no = '"+lab+"'";
-                result = db.RunSQL(sql);
+                
             }
             
             
             
             // add new entries
-            String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) values "+insertString;
-            result = db.RunSQL(sql);
+            //String sql = "insert ignore into providerLabRouting (provider_no, lab_no, status,lab_type) values "+insertString;
+            //result = db.RunSQL(sql);
             db.CloseConn();
-            return result;
+            return true;
         }catch(Exception e){
             Logger l = Logger.getLogger(CommonLabResultData.class);
             l.error("exception in CommonLabResultData.updateLabRouting()",e);
@@ -324,13 +334,7 @@ public class CommonLabResultData {
             MDSResultsData data = new MDSResultsData();
             labs = data.getMatchingCMLLabs(lab_no);
         }
-        /*
-        if (labs != null && !labs.equals("")){
-            String[] labArray = labs.split(",");
-            return (new ArrayList(Arrays.asList(labArray)));
-        }else{
-            return null;
-        }*/
+        
         return labs;
     }
     
