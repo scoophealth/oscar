@@ -112,7 +112,7 @@ public class PathnetResultsData {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             if ( demographicNo == null) {
-                
+               /*
                 sql  ="select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, min(obr.observation_date_time) as date, min(obr.result_status) as stat, providerLabRouting.status " +
                         "from hl7_message m, hl7_pid pid, hl7_orc orc, hl7_obr obr, providerLabRouting " +
                         "where m.message_id = pid.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and providerLabRouting.lab_no = m.message_id"+
@@ -120,12 +120,26 @@ public class PathnetResultsData {
                         " AND providerLabRouting.lab_type = 'BCP' " +
                         " AND pid.patient_name like '"+patientLastName+"%^"+patientFirstName+"%' AND pid.external_id like '%"+patientHealthNumber+"%'" +
                         " GROUP BY m.message_id";
+                */
+                sql  ="select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat, providerLabRouting.status " +
+                        "from hl7_message m, hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, providerLabRouting " +
+                        "where m.message_id = pid.message_id and m.message_id = msh.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and providerLabRouting.lab_no = m.message_id"+
+                        " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
+                        " AND providerLabRouting.lab_type = 'BCP' " +
+                        " AND pid.patient_name like '"+patientLastName+"%^"+patientFirstName+"%' AND pid.external_id like '%"+patientHealthNumber+"%'" +
+                        " GROUP BY m.message_id";
                 
             } else {
-                
+                /*
                 sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, min(obr.observation_date_time) as date, min(obr.result_status) as stat " +
                         "from hl7_message m, hl7_pid pid, hl7_orc orc, hl7_obr obr, patientLabRouting " +
                         "where m.message_id = pid.message_id  and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and patientLabRouting.lab_no = m.message_id "+
+                        "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"'" +
+                        " group by m.message_id";
+                 */
+                sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat " +
+                        "from hl7_message m, hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, patientLabRouting " +
+                        "where m.message_id = pid.message_id  and m.message_id = msh.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and patientLabRouting.lab_no = m.message_id "+
                         "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"'" +
                         " group by m.message_id";
             }
@@ -187,7 +201,8 @@ public class PathnetResultsData {
         String  ret = "";
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
+            //String sql = "select min(obr.observation_date_time) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
+            String sql = "select max(obr.results_report_status_change) as d from hl7_pid pid, hl7_obr obr where obr.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
                 ret = rs.getString("d");
@@ -258,7 +273,7 @@ public class PathnetResultsData {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             
             // find the accession number
-            String sql = "select orc.filler_order_number, min(observation_date_time) as date from hl7_orc orc, hl7_pid pid, hl7_obr obr where obr.pid_id=pid.pid_id and orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"' GROUP BY pid.message_id";
+            String sql = "select orc.filler_order_number, max(results_report_status_change) as date from hl7_orc orc, hl7_pid pid, hl7_obr obr where obr.pid_id=pid.pid_id and orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"' GROUP BY pid.message_id";
             ResultSet rs = db.GetSQL(sql);
             if(rs.next()){
                 accessionNum = justGetAccessionNumber(rs.getString("filler_order_number"));
@@ -266,7 +281,7 @@ public class PathnetResultsData {
             }
             
             //String sql = "select filler_order_number from hl7_orc orc, hl7_pid pid where orc.pid_id = pid.pid_id and pid.message_id = '"+labId+"'";
-            sql = "SELECT DISTINCT pid.message_id, min(observation_date_time) as date FROM  hl7_pid pid, hl7_orc orc, hl7_obr obr WHERE orc.filler_order_number like '%"+accessionNum+"%' AND orc.pid_id = pid.pid_id AND obr.pid_id = pid.pid_id GROUP BY pid.message_id ORDER BY obr.observation_date_time";
+            sql = "SELECT DISTINCT pid.message_id, max(results_report_status_change) as date FROM  hl7_pid pid, hl7_orc orc, hl7_obr obr WHERE orc.filler_order_number like '%"+accessionNum+"%' AND orc.pid_id = pid.pid_id AND obr.pid_id = pid.pid_id GROUP BY pid.message_id ORDER BY obr.results_report_status_change";
             rs = db.GetSQL(sql);
             while (rs.next()){
                 Date dateA = UtilDateUtilities.StringToDate(rs.getString("date"), "yyyy-MM-dd HH:mm:ss");
