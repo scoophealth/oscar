@@ -56,14 +56,25 @@ public class Hl7textResultsData {
             while ( k < matchingLabs.length && !matchingLabs[k].equals(lab_no)){
                 k++;
             }
+            
             if(k != 0){
-                String sql = "SELECT measurement_id FROM measurementsExt WHERE keyval='lab_no' AND val='"+matchingLabs[k-1]+"'";
+                GregorianCalendar now=new GregorianCalendar();
+                
+                String sql = "SELECT m.* FROM measurements m LEFT JOIN measurementsExt e ON m.id = measurement_id AND e.keyval='lab_no' WHERE e.val='"+matchingLabs[k-1]+"'";
                 ResultSet rs = db.GetSQL(sql);
                 while(rs.next()){
-                    sql = "DELETE FROM measurements WHERE id='"+rs.getString("measurement_id")+"'";
+                    String dateDeleted = now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DATE) ;
+                    sql = "INSERT INTO measurementsDeleted"
+                            +" (type, demographicNo, providerNo, dataField, measuringInstruction, comments, dateObserved, dateEntered, dateDeleted)"
+                            +" VALUES ('"+rs.getString("type")+"','"+rs.getString("demographicNo")+"','"+rs.getString("providerNo")+"','"
+                            + rs.getString("dataField")+"','" + rs.getString("measuringInstruction")+"','"+rs.getString("comments")+"','"
+                            + rs.getString("dateObserved")+"','"+rs.getString("dateEntered")+"','"+dateDeleted+"')";
                     db.RunSQL(sql);
-                    sql = "DELETE FROM measurementsExt WHERE measurement_id='"+rs.getString("measurement_id")+"'";
+                    
+                    sql = "DELETE FROM measurements WHERE id='"+rs.getString("id")+"'";
                     db.RunSQL(sql);
+                    //sql = "DELETE FROM measurementsExt WHERE measurement_id='"+rs.getString("measurement_id")+"'";
+                    //db.RunSQL(sql);
                     
                 }
                 
@@ -77,7 +88,7 @@ public class Hl7textResultsData {
                     
                     // only insert if there is a result and it is supposed to be viewed
                     if (result.equals("") || result.equals("DNR") || h.getOBXName(i, j).equals("") || h.getOBXResultStatus(i, j).equals("DNS"))
-                        continue;                    
+                        continue;
                     
                     logger.info("obx("+j+") should be inserted");
                     String identifier = h.getOBXIdentifier(i, j);
@@ -131,6 +142,7 @@ public class Hl7textResultsData {
             
             
             db.CloseConn();
+            
         }catch(Exception e){
             logger.error("Exception in HL7 populateMeasurementsTable", e);
         }
@@ -256,14 +268,14 @@ public class Hl7textResultsData {
                         " where info.lab_no = providerLabRouting.lab_no "+
                         " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                         " AND providerLabRouting.lab_type = 'HL7' " +
-                        " AND info.first_name like '"+patientFirstName+"%' AND info.last_name like '"+patientLastName+"%' AND info.health_no like '%"+patientHealthNumber+"%' ";
+                        " AND info.first_name like '"+patientFirstName+"%' AND info.last_name like '"+patientLastName+"%' AND info.health_no like '%"+patientHealthNumber+"%' ORDER BY info.lab_no DESC";
                 
             } else {
                 
                 sql = "select info.lab_no, info.sex, info.health_no, info.result_status, info.obr_date, info.priority, info.requesting_client, info.discipline, info.last_name, info.first_name, info.report_status, info.accessionNum, info.final_result_count " +
                         "from hl7TextInfo info, patientLabRouting " +
                         " where info.lab_no = patientLabRouting.lab_no "+
-                        " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ";
+                        " AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no='"+demographicNo+"' ORDER BY info.lab_no DESC";
             }
             
             logger.info(sql);
@@ -310,7 +322,8 @@ public class Hl7textResultsData {
                 lbData.requestingClient = rs.getString("requesting_client");
                 lbData.reportStatus =  rs.getString("report_status");
                 
-                if (lbData.reportStatus != null && lbData.reportStatus.equals("F")){
+                // the "C" is for corrected excelleris labs
+                if (lbData.reportStatus != null && (lbData.reportStatus.equals("F") || lbData.reportStatus.equals("C"))){
                     lbData.finalRes = true;
                 }else{
                     lbData.finalRes = false;
