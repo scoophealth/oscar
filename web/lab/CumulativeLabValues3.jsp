@@ -463,7 +463,7 @@ function reportWindow(page) {
                             %>
                             
                             <th>
-                                <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=lab_no%>&multiID=<%=multiId%>')"><%=UtilDateUtilities.DateToString( labDate , "dd-MMM yy")%></a>
+                                <a href="javascript:reportWindow('../lab/CA/ALL/labDisplay.jsp?segmentID=<%=lab_no%>&providerNo=<%= session.getValue("user") %>')"><%=UtilDateUtilities.DateToString( labDate , "dd-MMM yy")%></a>
                             </th>
                             <%}%>
                         </tr>
@@ -496,7 +496,7 @@ function reportWindow(page) {
                         %>
                         <tr>
                             <td><%=testName%></td>
-                            <td class="<%= abn %>"><%=StringUtils.maxLenString(latestVal, 13, 8, "...")%></td>
+                            <td class="<%= abn %>"><%=StringUtils.maxLenString(latestVal, 9, 8, "...")%></td>
                             <td><%=latestDate%></td>
                             <%
                             // display all of values from all the labs for the given test
@@ -512,7 +512,7 @@ function reportWindow(page) {
                                         }
                                     }
                             %>
-                            <td class="<%= abn %>"><%=StringUtils.maxLenString(labVal, 13, 8, "...")%></td>
+                            <td class="<%= abn %>"><%=StringUtils.maxLenString(labVal, 9, 8, "...")%></td>
                             <%}%>
                         </tr>
                         <%}else{
