@@ -172,14 +172,15 @@ public class Survey {
                if (doesPatientMeetCriteria(demographic_no)){
                   if(isPatientRandomlySelected()){
                      isinsurvey = true;
-                     addPatientToPeriod(demographic_no,provider_no,this.DEFFERED);                  
+                     addPatientToPeriod(demographic_no,provider_no,this.DEFFERED);   
                   }else{
                      addPatientToPeriod(demographic_no,provider_no,this.NOTSELECTED);                  
                   }
-               }            
+               }         
             }
          }               
       }
+      log.debug("Provider : "+provider_no + " Demo : "+demographic_no+"  in survey :"+isinsurvey);
       return isinsurvey;
    }
    
@@ -386,6 +387,7 @@ public class Survey {
       if ( providersParticipating != null && providersParticipating.contains(p)){
         isproviderinsurvey = true;
       }
+      log.debug("provider : "+p+" in survey :" +isproviderinsurvey);
       return isproviderinsurvey;
    }
    
