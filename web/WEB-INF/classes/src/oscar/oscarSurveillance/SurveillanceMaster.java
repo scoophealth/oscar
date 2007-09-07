@@ -211,7 +211,7 @@ public   class SurveillanceMaster {
             input = new FileInputStream(filename) ;
          }catch(Exception eio){ 
             if (input == null){
-               log.debug("OSCAR SURVEILLANCE ERROR:  could not find file :"+filename,eio);
+               log.error("OSCAR SURVEILLANCE ERROR:  could not find file :"+filename,eio);
             }
             //eio.printStackTrace(); 
             surveyList = new ArrayList();
@@ -229,9 +229,10 @@ public   class SurveillanceMaster {
          if(surveyList == null){
             surveyList  = new ArrayList();
             surveyTable = new Hashtable();
-            log.debug("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
+            log.error("OSCAR SURVEILLANCE ERROR: could not load from file "+filename);
          }
       }else{
+         log.info("OSCAR SURVEILLANCE -- module not initialized");
          surveyList  = new ArrayList();
          surveyTable = new Hashtable();
       }
