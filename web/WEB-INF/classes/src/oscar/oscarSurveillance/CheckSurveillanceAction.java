@@ -61,20 +61,27 @@ public class CheckSurveillanceAction extends Action {
                              
       long startTime = System.currentTimeMillis();                                   
       CheckSurveillanceForm frm = (CheckSurveillanceForm) form;
-                                   
+         
+      ActionForward forward = mapping.findForward("close");
       String proceed = frm.getProceed();
-      String proceedURL = URLDecoder.decode(proceed, "UTF-8");
-      
-      ActionForward forward = new ActionForward();
-                    forward.setPath(proceedURL);
-                    forward.setRedirect(true);
-                                                                 
+      String forwardPath = null;
+      if (proceed != null && !proceed.trim().equals("")){
+         String proceedURL = URLDecoder.decode(proceed, "UTF-8");
+         forward = new ActionForward();
+            forward.setPath(proceedURL);
+            forward.setRedirect(true);
+            forwardPath = forward.getPath();
+      }                                      
       SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
       log.debug("Number of surveys "+sMaster.numSurveys());
       if(!sMaster.surveysEmpty()){              
          ArrayList surveys = sMaster.getCurrentSurveys();
       
          String demographic_no = frm.getDemographicNo();
+         if (demographic_no == null){
+             demographic_no = (String) request.getAttribute("demoNo");
+         }
+         
          log.debug("getting demog num "+demographic_no);
          String provider_no = (String) request.getSession().getAttribute("user");
          int i = 0;
@@ -93,11 +100,11 @@ public class CheckSurveillanceAction extends Action {
                forward = mapping.findForward("survey");
                request.setAttribute("currSurveyNum", new Integer(i+ 1));
                i = surveys.size();
-            }                          
+            }                     
          }
       }           
       long endTime = System.currentTimeMillis();
-      log.debug("Surveillance took "+ (endTime - startTime) +" milli-seconds forwarding to: "+forward.getPath());
+      log.debug("Surveillance took "+ (endTime - startTime) +" milli-seconds forwarding to: "+forwardPath);
       
       return forward;                                
    }
