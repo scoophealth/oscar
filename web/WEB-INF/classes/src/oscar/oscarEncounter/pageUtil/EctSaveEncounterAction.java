@@ -42,11 +42,14 @@ import oscar.log.LogAction;
 import oscar.log.LogConst;
 import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
-import oscar.util.UtilMisc;
 import oscar.OscarProperties;
+import oscar.oscarSurveillance.SurveillanceMaster;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class EctSaveEncounterAction
     extends Action {
+    static Log log = LogFactory.getLog(EctSaveEncounterAction.class); 
   
   private String getLatestID(String demoNo) throws
     SQLException  {
@@ -113,7 +116,8 @@ public class EctSaveEncounterAction
                                ActionForm actionform,
                                HttpServletRequest httpservletrequest,
                                HttpServletResponse httpservletresponse) throws
-      IOException, ServletException {    
+      IOException, ServletException {   
+      log.debug("EctSaveEncounterAction Start");
     //UtilDateUtilities dateutilities = new UtilDateUtilities();
     EctSessionBean sessionbean = null;
     sessionbean = (EctSessionBean) httpservletrequest.getSession().getAttribute(
@@ -299,11 +303,17 @@ public class EctSaveEncounterAction
       forward = "bill";
     }
 
-    else if (httpservletrequest.getParameter("btnPressed").equals(
-        "Sign,Save and Exit")
-        ||
-        httpservletrequest.getParameter("btnPressed").equals("Verify and Sign")) {
+    else if (httpservletrequest.getParameter("btnPressed").equals("Sign,Save and Exit")){  
       forward = "success";
+      SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
+      if(!sMaster.surveysEmpty()){  
+         httpservletrequest.setAttribute("demoNo",sessionbean.demographicNo);
+         log.debug("sending to surveillance");
+         forward = "surveillance";  
+      }
+    }
+    else if(httpservletrequest.getParameter("btnPressed").equals("Verify and Sign")) {
+    
     }
     else if (httpservletrequest.getParameter("btnPressed").equals("Save") || httpservletrequest.getParameter("btnPressed").equals("AutoSave")) {
       forward = "saveAndStay";
