@@ -112,40 +112,27 @@ public class PathnetResultsData {
         try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             if ( demographicNo == null) {
-               /*
-                sql  ="select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, min(obr.observation_date_time) as date, min(obr.result_status) as stat, providerLabRouting.status " +
-                        "from hl7_message m, hl7_pid pid, hl7_orc orc, hl7_obr obr, providerLabRouting " +
-                        "where m.message_id = pid.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and providerLabRouting.lab_no = m.message_id"+
-                        " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
-                        " AND providerLabRouting.lab_type = 'BCP' " +
-                        " AND pid.patient_name like '"+patientLastName+"%^"+patientFirstName+"%' AND pid.external_id like '%"+patientHealthNumber+"%'" +
-                        " GROUP BY m.message_id";
-                */
-                sql  ="select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat, providerLabRouting.status " +
+              
+                sql  ="select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat, providerLabRouting.status " +
                         "from hl7_message m, hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, providerLabRouting " +
-                        "where m.message_id = pid.message_id and m.message_id = msh.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and providerLabRouting.lab_no = m.message_id"+
+                        "where providerLabRouting.lab_no = pid.message_id and pid.message_id = msh.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id  "+
                         " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                         " AND providerLabRouting.lab_type = 'BCP' " +
                         " AND pid.patient_name like '"+patientLastName+"%^"+patientFirstName+"%' AND pid.external_id like '%"+patientHealthNumber+"%'" +
-                        " GROUP BY m.message_id";
+                        " GROUP BY pid.message_id";
                 
             } else {
-                /*
-                sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, min(obr.observation_date_time) as date, min(obr.result_status) as stat " +
-                        "from hl7_message m, hl7_pid pid, hl7_orc orc, hl7_obr obr, patientLabRouting " +
-                        "where m.message_id = pid.message_id  and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and patientLabRouting.lab_no = m.message_id "+
-                        "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"'" +
-                        " group by m.message_id";
-                 */
-                sql = "select m.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat " +
-                        "from hl7_message m, hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, patientLabRouting " +
-                        "where m.message_id = pid.message_id  and m.message_id = msh.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and patientLabRouting.lab_no = m.message_id "+
-                        "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"'" +
-                        " group by m.message_id";
+               
+                sql= "select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat "+
+                        "from hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, patientLabRouting "+
+                        "where patientLabRouting.lab_no = pid.message_id   and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id and msh.message_id = pid.message_id "+
+                        "and patientLabRouting.lab_type = 'BCP' and patientLabRouting.demographic_no='"+demographicNo+"'" + 
+                        " group by pid.message_id";
             }
             
-            logger.info(sql);
+            logger.info("s: "+sql);
             ResultSet rs = db.GetSQL(sql);
+            logger.debug("after sql statement");
             while(rs.next()){
                 LabResultData lbData = new LabResultData(LabResultData.EXCELLERIS);
                 lbData.labType = LabResultData.EXCELLERIS;
