@@ -552,7 +552,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	<security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
            <li>
                <a HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=<%=curUser_no%>', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>
-		   <span id="oscar_new_lab"></span>
+		   <span id="oscar_new_lab"><bean:message key="global.lab"/></span>
                </a>
                <oscar:newUnclaimedLab>
                <a class="tabalert" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
@@ -561,7 +561,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	</security:oscarSec>
         <li>
             <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
-		<span id="oscar_new_msg"></span></a>
+		<span id="oscar_new_msg">Msg</span></a>
         </li>
         <li>
          <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>"><bean:message key="global.con"/></a>
@@ -580,11 +580,11 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
         <li>
            <caisi:isModuleLoad moduleName="ticklerplus" reverse="true">
 	    <a HREF="#" ONCLICK ="popupPage2('../tickler/ticklerMain.jsp','<bean:message key="global.tickler"/>');return false;" TITLE='<bean:message key="global.tickler"/>'>
-		<span id="oscar_new_tickler"></span></a>
+		<span id="oscar_new_tickler"><bean:message key="global.tickler"/></span></a>
            </caisi:isModuleLoad>
            <caisi:isModuleLoad moduleName="ticklerplus">
 	    <a HREF="#" ONCLICK ="popupPage2('../Tickler.do','<bean:message key="global.tickler"/>');return false;" TITLE='Tickler+'>
-		<span id="oscar_new_tickler"></span></a>
+		<span id="oscar_new_tickler"><bean:message key="global.tickler"/></span></a>
            </caisi:isModuleLoad>
         </li>
         <oscar:oscarPropertiesCheck property="WORKFLOW" value="yes">
@@ -594,7 +594,7 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
             <myoscar:indivoRegistered provider="<%=curUser_no%>">                               
            
             <li>
-                <a HREF="#" ONCLICK ="popup('600', '900','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar2</phr:setColor></a>
+                <a HREF="#" ONCLICK ="popup('600', '900','../phr/PhrMessage.do?method=viewMessages','INDIVOMESSENGER2<%=curUser_no%>')" title="myOscar"><phr:setColor>myOscar</phr:setColor></a>
             </li>
             </myoscar:indivoRegistered>
         </oscar:oscarPropertiesCheck>
@@ -988,11 +988,8 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <!-- doctor code block -->
 <% if(bShowEncounterLink) { %>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+rs.getString("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(URLEncoder.encode(reason))+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status;%>
-<!--<a href=# onClick="popupPage(700,980,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curUser_no%>&appointmentNo=<%=rs.getString("appointment_no")%>&demographicNo=<%=demographic_no%>&curProviderNo=<%=curProvider_no[nProvider]%>&reason=<%=URLEncoder.encode(reason)%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=curYear%>-<%=curMonth%>-<%=curDay%>&appointmentDate=<%=year+"-"+month+"-"+day%>&startTime=<%=iS+":"+iSm%>&status=<%=status%>');return false;" title="<bean:message key="global.encounter"/>">-->
-<a href=# onClick="popupPage(755, 1048,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
+<a href=# onClick="popupPage(755, 1048,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
-<!--<a href=# onClick="popupPage(700,980,'../oscarSurveillance/CheckSurveillance.do?demographicNo=<%=demographic_no%>&proceed=<%=URLEncoder.encode(eURL)%>');return false;" title="<bean:message key="global.encounter"/>">
-            |e</a>-->
 <% } %>
 <!-- billing code block -->
 	  <security:oscarSec roleName="<%=roleName$%>" objectName="_billing" rights="r">
