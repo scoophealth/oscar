@@ -337,7 +337,7 @@
             <forward name="admin" path="/admin/admin.jsp" redirect="true" />
             <forward name="failure" path="/logout.jsp?login=failed" />
             <forward name="error" path="/loginfailed.jsp" />
-        </action>
+        </action>       
         <action input="/oscarMessenger/SendMessage.jsp" name="msgSendMessageForm" path="/oscarMessenger/SendMessage" scope="request" type="oscar.oscarMessenger.pageUtil.MsgSendMessageAction">
             <forward name="success" path="/oscarMessenger/SentMessage.jsp" />
         </action>
@@ -600,6 +600,7 @@
             <forward name="success" path="/oscarEncounter/TimeOut.jsp" />
             <forward name="bill" path="/billing.do" />
             <forward name="splitchart" path="/oscarEncounter/Index2.jsp?saved=true&amp;splitchart=true" />
+            <forward name="surveillance" path="/oscarSurveillance/CheckSurveillance.do" />
             <forward name="close" path="/oscarEncounter/close.jsp" />
             <forward name="concurrencyError" path="/oscarEncounter/concurrencyError.jsp" />
         </action>
@@ -986,6 +987,7 @@
         </action>
         <action name="CheckSurveillanceForm" path="/oscarSurveillance/CheckSurveillance" scope="request" type="oscar.oscarSurveillance.CheckSurveillanceAction">
             <forward name="survey" path="/oscarSurveillance/Surveillance.jsp" />
+            <forward name="close" path="/oscarEncounter/TimeOut.jsp"/>
         </action>
         <action name="SurveillanceAnswerForm" path="/oscarSurveillance/SurveillanceAnswer" scope="request" type="oscar.oscarSurveillance.SurveillanceAnswerAction">
             <forward name="survey" path="/oscarSurveillance/CheckSurveillance.do" />
