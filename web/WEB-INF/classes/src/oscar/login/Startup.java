@@ -31,6 +31,9 @@ import java.util.*;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import oscar.oscarDB.*;
+import oscar.oscarSurveillance.SurveillanceMaster;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This ContextListener is used to Initialize classes at startup - Initialize the DBConnection Pool.
@@ -38,7 +41,7 @@ import oscar.oscarDB.*;
  * @author Jay Gallagher
  */
 public class Startup implements ServletContextListener {
-
+        private static Log log = LogFactory.getLog(Startup.class);
 	public Startup() {}
 
 	public void contextInitialized(ServletContextEvent sc) {
@@ -86,8 +89,10 @@ public class Startup implements ServletContextListener {
 				sc.getServletContext().setAttribute("useNewEchart", true);
 			}
                         
-                        
+                        log.info("BILLING REGION : "+p.getProperty("billregion","NOTSET"));
+                        log.info("DB PROPS: Username :"+p.getProperty("db_username","NOTSET")+ " db name: "+p.getProperty("db_name","NOTSET"));
                         p.setProperty("OSCAR_START_TIME",""+System.currentTimeMillis());
+                        SurveillanceMaster sMaster = SurveillanceMaster.getInstance();
 		} catch (Exception e) {
 			System.out.println("*** No Property File ***");
 			System.out.println("Property file not found at:");
@@ -95,6 +100,7 @@ public class Startup implements ServletContextListener {
 		}
 		
 		System.out.println("LAST LINE IN contextInitialized");
+                
 	}
 
 	public void contextDestroyed(ServletContextEvent arg0) {}
