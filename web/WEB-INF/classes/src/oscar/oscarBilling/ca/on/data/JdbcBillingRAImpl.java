@@ -533,12 +533,14 @@ public class JdbcBillingRAImpl {
 				String demo_name = "";
 				String localServiceDate = "";
 				String demo_hin = rsdemo.getString("hin") != null ? rsdemo.getString("hin") : "";
-				sql = "select provider_no, demographic_name, hin, billing_date, billing_time, visittype "
-						+ "from billing_on_cheader1 where id= " + account;
+				sql = "select b.provider_no, b.demographic_name, b.hin, b.billing_date, b.billing_time, b.visittype,d.provider_no as fdoc "
+						+ "from billing_on_cheader1 b, demographic d where b.id= " + account+ " and b.demographic_no = d.demographic_no";
 
 				ResultSet rsdemo3 = dbObj.searchDBRecord(sql);
+                                String famProviderNo =null;
 				while (rsdemo3.next()) {
 					demo_name = rsdemo3.getString("demographic_name");
+                                        famProviderNo = rsdemo3.getString("fdoc");
 					if (rsdemo3.getString("hin") != null) {
 						if (!(rsdemo3.getString("hin")).startsWith(demo_hin)) {
 							demo_hin = "";
@@ -554,7 +556,7 @@ public class JdbcBillingRAImpl {
 					// demo_docname = propProvierName.getProperty(("no_" +
 					// rsdemo3.getString("provider_no")), "");
 				}
-
+                                if (famProviderNo == null){famProviderNo = "";}
 				// proName =
 				// propProvierName.getProperty(rsdemo.getString("providerohip_no"));
 				String servicecode = rsdemo.getString("service_code");
@@ -575,6 +577,7 @@ public class JdbcBillingRAImpl {
 				prop.setProperty("account", account);
 				prop.setProperty("demo_name", demo_name);
 				prop.setProperty("demo_hin", demo_hin);
+                                prop.setProperty("demo_doc",famProviderNo);
 				ret.add(prop);
 			}
 		} catch (SQLException e) {
