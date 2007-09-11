@@ -18,6 +18,7 @@ package oscar.oscarBilling.ca.on.pageUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -45,7 +46,11 @@ public class BillingRAPrep {
 		return ret;
 	}
 
-	public List getRASummary(String raNo, String providerOhipNo, List OBbilling_no, List CObilling_no) {
+        public List getRASummary(String raNo, String providerOhipNo, List OBbilling_no, List CObilling_no) {
+	   return getRASummary(raNo, providerOhipNo, OBbilling_no, CObilling_no,null); 
+        }
+        
+	public List getRASummary(String raNo, String providerOhipNo, List OBbilling_no, List CObilling_no,Map map) {
 		List rett = new Vector();
 		List ret = dbObj.getRASummary(raNo, providerOhipNo);
 		double dCFee = 0.0;
@@ -114,6 +119,7 @@ public class BillingRAPrep {
 				double dOBFee = Double.parseDouble(amountOB);
 				BigDecimal bdOBFee = new BigDecimal(dOBFee).setScale(2, BigDecimal.ROUND_HALF_UP);
 				BigOBTotal = BigOBTotal.add(bdOBFee);
+                                obPay = amountpay;
 			} else {
 				obPay = "N/A";
 				// amountOB = "N/A";
@@ -176,6 +182,18 @@ public class BillingRAPrep {
 		prop.setProperty("obPay", BigOBTotal.toString());
 		rett.add(prop);
 
+                if (map != null){
+                   map.put("xml_local", BigLTotal );
+                   map.put("xml_total", BigPTotal ); 
+                   map.put("xml_other_total", BigOTotal);
+                   map.put("xml_ob_total", BigOBTotal);
+                   map.put("xml_co_total", BigCOTotal );
+                }
+                ///end
+                
+                
+                
+                
 		return rett;
 	}
 
