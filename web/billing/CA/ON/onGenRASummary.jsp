@@ -57,7 +57,7 @@ String colposcopyCodes = "'A004A','A005A','Z731A','Z666A','Z730A','Z720A'";
 Vector OBbilling_no = (Vector) obj.getRABillingNo4Code(raNo, obCodes);
 Vector CObilling_no = (Vector) obj.getRABillingNo4Code(raNo, colposcopyCodes);
 
-
+Hashtable map = new Hashtable();
 BigDecimal bdCFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdPFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
 BigDecimal bdOFee = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);     	     
@@ -336,7 +336,7 @@ for(int i=0; i<aL.size(); i++) {
 </tr>
 
 <%
-	aL = obj.getRASummary(raNo, proNo, OBbilling_no, CObilling_no);
+	aL = obj.getRASummary(raNo, proNo, OBbilling_no, CObilling_no,map);
 	for(int i=0; i<aL.size(); i++) {
 		Properties prop = (Properties) aL.get(i);
 		String color = i%2==0? "class='myGreen'":"";
@@ -556,6 +556,17 @@ while(rslocal.next()){
 	transaction= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_transaction>","</xml_transaction>");
 	balancefwd= SxmlMisc.getXmlContent(rslocal.getString("content"),"<xml_balancefwd>","</xml_balancefwd>");
 }
+
+
+if(!map.isEmpty()){
+    BigLTotal = (BigDecimal) map.get("xml_local");
+    BigPTotal = (BigDecimal) map.get("xml_total"); 
+    BigOTotal = (BigDecimal) map.get("xml_other_total"); 
+    BigOBTotal= (BigDecimal) map.get("xml_ob_total"); 
+    BigCOTotal= (BigDecimal) map.get("xml_co_total");
+}
+
+
 content = content + "<xml_transaction>" + transaction + "</xml_transaction>" + "<xml_balancefwd>" + balancefwd + "</xml_balancefwd>";
 content = content + "<xml_local>" + BigLTotal + "</xml_local>"+ "<xml_total>" + BigPTotal + "</xml_total>" + "<xml_other_total>" + BigOTotal + "</xml_other_total>" + "<xml_ob_total>" + BigOBTotal + "</xml_ob_total>" + "<xml_co_total>" + BigCOTotal + "</xml_co_total>";
 
