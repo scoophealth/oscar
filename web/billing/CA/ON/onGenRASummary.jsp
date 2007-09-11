@@ -322,7 +322,8 @@ for(int i=0; i<aL.size(); i++) {
 <tr class="myYellow"> 
 	<th width="6%">Billing No</th>
 	<!--  th width="14%">Provider </th -->
-	<th width="25%">Patient </th>
+	<th width="20%">Patient </th>
+        <th >Fam Doc</th>
 	<th width="10%">HIN</th>
 	<th width="9%">Service Date </th>
 	<th width="8%">Service Code </th>
@@ -346,6 +347,7 @@ for(int i=0; i<aL.size(); i++) {
 	<td align="center"><%=prop.getProperty("account", "&nbsp;")%></td>
 	<!--  >td><%=prop.getProperty("demo_docname", "&nbsp;")%></td -->
 	<td><%=prop.getProperty("demo_name", "&nbsp;")%></td>
+        <td align="center"><%=prop.getProperty("demo_doc", "&nbsp;")%></td>
 	<td align="center"><%=prop.getProperty("demo_hin", "&nbsp;")%></td>
 	<td align="center"><%=prop.getProperty("servicedate", "&nbsp;")%></td>
 	<td align="center"><%=prop.getProperty("servicecode", "&nbsp;")%></td>
