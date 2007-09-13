@@ -21,10 +21,10 @@ CREATE TABLE `admission` (
   `program_id` bigint(11) NOT NULL default '0',
   `provider_no` bigint(11) NOT NULL default '0',
   `admission_date` datetime default NULL,
-  `admission_notes` varchar(255) default NULL,
+  `admission_notes` text default NULL,
   `temp_admission` char(1) default NULL,
   `discharge_date` datetime default NULL,
-  `discharge_notes` varchar(255) default NULL,
+  `discharge_notes` text default NULL,
   `temp_admit_discharge` char(1) default NULL,
   `admission_status` varchar(24) default NULL,
   `team_id` int(10) default NULL,
@@ -223,8 +223,8 @@ CREATE TABLE `casemgmt_cpp` (
   `primaryPhysician` varchar(255) default NULL,
   `primaryCounsellor` varchar(255) default NULL,
   `otherFileNumber` varchar(100) default null,
-  `otherSupportSystems` varchar(255) default null,
-  `pastMedications` varchar(255) default null,
+  `otherSupportSystems` text default null,
+  `pastMedications` text default null,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -328,14 +328,14 @@ CREATE TABLE `client_referral` (
   `client_id` bigint(20) NOT NULL default '0',
   `referral_date` datetime default NULL,
   `provider_no` bigint(20) NOT NULL default '0',
-  `notes` varchar(255) default NULL,
+  `notes` text default NULL,
   `program_id` bigint(20) NOT NULL default '0',
   `status` varchar(30) default NULL,
-  `completion_notes` varchar(255) default NULL,
+  `completion_notes` text default NULL,
   `temporary_admission_flag` tinyint(1) default NULL,
   `completion_date` datetime default NULL,
   `source_agency_id` bigint(20) default NULL,
-  `present_problems` varchar(255) default NULL,
+  `present_problems` text default NULL,
   `radioRejectionReason` varchar(10) default '0',
   PRIMARY KEY  (`referral_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
