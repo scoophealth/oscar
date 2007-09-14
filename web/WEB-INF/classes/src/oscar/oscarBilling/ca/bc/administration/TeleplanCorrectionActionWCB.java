@@ -176,8 +176,8 @@ public class TeleplanCorrectionActionWCB
     catch (Exception ex) {
       ex.printStackTrace();
       System.err.println("WCB Teleplan Correction Query Error: " +
-                         ex.getMessage() + " - " + ex.getStackTrace());
-
+                         ex.getMessage() + " - " );
+       
     }
 
     String newURL = mapping.findForward(where).getPath();
