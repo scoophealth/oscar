@@ -29,6 +29,8 @@ import java.math.*;
 import java.sql.*;
 import java.text.*;
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.data.*;
@@ -36,7 +38,8 @@ import oscar.oscarDB.*;
 import oscar.util.*;
 
 public class MSPReconcile {
-
+  static Log log = LogFactory.getLog(MSPReconcile.class);
+    
   //Accounting Report Types
   public static final String REP_INVOICE = "REP_INVOICE";
   public static final String REP_PAYREF = "REP_PAYREF";
@@ -1352,6 +1355,7 @@ public class MSPReconcile {
    * @param stat String
    */
   public void updateBillingMasterStatus(String billingMasterNo, String stat) {
+    log.debug("setting billingmaster_no "+billingMasterNo+ " to "+stat);
     try {
       DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
       db.RunSQL("update billingmaster set billingstatus = '" + stat +
@@ -1695,19 +1699,23 @@ public class MSPReconcile {
       String qry = "SELECT t_paidamt,t_exp1 from teleplanS00" +
           " where teleplanS00.t_officeno =  '" +
           this.forwardZero(billingMasterNo, 7) + "'";
+      log.debug(qry);
       try {
         db = new DBHandler(DBHandler.OSCAR_DATA);
         rs = db.GetSQL(qry);
         while (rs.next()) {
           if (rs.getString(2).equals("HS")) {
             totalPaidFromS00 = Double.parseDouble(amountBilled);
+            log.debug("Bill has HS setting the totalPaid to amountBilled  "+amountBilled);
             break;
           }
           String paidAmount = rs.getString(1);
           paidAmount = this.convCurValue(paidAmount);
           Double dblAmtPaid = new Double(paidAmount);
           totalPaidFromS00 += dblAmtPaid.doubleValue();
+          log.debug("paidAmount "+paidAmount);
         }
+        log.debug("totalPaidFromS00 "+totalPaidFromS00);
       }
       catch (SQLException ex) {
         ex.printStackTrace();
@@ -1722,7 +1730,9 @@ public class MSPReconcile {
         }
       }
     }
+    log.debug("amtPaid = totalPaidFromHistory + totalPaidFromS00; "+ totalPaidFromHistory +"+"+ totalPaidFromS00);
     double amtPaid = totalPaidFromHistory + totalPaidFromS00;
+    log.debug("amtPaid "+amtPaid);
     double dblAmountOwing = amtPaid < 0 ? dbltBilled + amtPaid :
         dbltBilled - amtPaid;
     dblAmountOwing = UtilMisc.toCurrencyDouble(dblAmountOwing);
@@ -2529,14 +2539,18 @@ public class MSPReconcile {
    * @param string String
    */
   public void settleIfBalanced(String billingmasterNo) {
-    String[] row = SqlUtils.getRow("SELECT b1.billingtype, b.bill_amount " +
-                                   "FROM billingmaster b, billing b1 " +
-                                   "WHERE b1.billing_no=b.billing_no " +
-                                   "AND billingmaster_no = " + billingmasterNo);
+    String sql =   "SELECT b1.billingtype, b.bill_amount " +
+                   "FROM billingmaster b, billing b1 " +
+                   "WHERE b1.billing_no=b.billing_no " +
+                   "AND billingmaster_no = " + billingmasterNo;
+    log.debug(sql);  
+    String[] row = SqlUtils.getRow(sql);
     if (row != null && row.length > 0) {
+      log.debug("Number of rows :"+row.length); 
       double dblAmtOwing = this.getAmountOwing(billingmasterNo, row[1], row[0]);
       String strOwing = String.valueOf(dblAmtOwing);
       double amountOwing = Double.parseDouble(strOwing);
+      log.debug("Amount Owing :"+dblAmtOwing+ " String version : "+strOwing+" and parsed as a double : "+amountOwing );
       if (amountOwing <= 0) {
         if (this.BILLTYPE_PRI.equals(row[0])) {
           this.updateBillingMasterStatus(billingmasterNo, this.PAIDPRIVATE);
@@ -2544,6 +2558,8 @@ public class MSPReconcile {
         else {
           this.updateBillingMasterStatus(billingmasterNo, this.SETTLED);
         }
+      }else{
+         log.debug("amount owing is less than or equal to 0"); 
       }
     }
   }
