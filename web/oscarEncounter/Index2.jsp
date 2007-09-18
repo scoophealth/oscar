@@ -53,6 +53,14 @@ You have no rights to access the data!
 %>
 </security:oscarSec>
 
+<%-- if this patients eChart is read only remove the save rights --%>
+<security:oscarSec roleName="_all" objectName="<%="_eChart$"+demographic$%>" rights="or" reverse="<%=false%>" >
+<%
+    bPrincipalControl = true;
+    bPrincipalDisplay = false;
+%>
+</security:oscarSec>
+
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>

@@ -661,7 +661,31 @@ div.demographicWrapper {
                     <tr><td>
                     <table width="100%" bgcolor="#CCCCFF" cellspacing="1" cellpadding="1">
                         <tr><td class="RowTop">
-                            <b>Record</b> (<%=rs.getString("demographic_no")%>) <a href="javascript: showHideDetail();">Edit</a>
+                            <%
+                            DemographicMerged dmDAO = new DemographicMerged();                            
+                            String dboperation = "search_detail";
+                            String head = dmDAO.getHead(demographic_no);
+                            ArrayList records = dmDAO.getTail(head);
+                            if (vLocale.getCountry().equals("BR"))
+                                dboperation = "search_detail_ptbr";
+                                
+                            %><b>Record</b> (
+                                <%if (head.equals(demographic_no)){
+                                    %><%=demographic_no%><%
+                                }else{
+                                    %><a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=<%= dboperation %>"><%=head%></a>                                    
+                                <%}
+                            
+                                for (int i=0; i < records.size(); i++){
+                                    if (((String) records.get(i)).equals(demographic_no)){
+                                        %><%=", "+demographic_no %><%
+                                    }else{
+                                        %>, <a href="demographiccontrol.jsp?demographic_no=<%= records.get(i) %>&displaymode=edit&dboperation=<%= dboperation %>"><%=records.get(i)%></a><%
+                                    }
+                                }
+                            %>
+                            ) 
+                            <%= head.equals(demographic_no) ? "<a href=\"javascript: showHideDetail();\">Edit</a>" : ""%>
                         </td></tr>
                         <tr><td bgcolor="#eeeeff">
 

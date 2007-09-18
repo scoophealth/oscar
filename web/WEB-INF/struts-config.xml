@@ -804,6 +804,12 @@
         <action input="/admin/gstControl.jsp" name="GstControlForm" path="/admin/GstControl" scope="request" type="oscar.oscarBilling.ca.on.administration.GstControlAction"> 
  	    <forward name="success" path="/admin/admin.jsp" /> 
  	</action>
+        <action input="/admin/demographicmergerecord.jsp" name="MergeRecords" path="/admin/MergeRecords" scope="request" type="oscar.oscarDemographic.pageUtil.DemographicMergeRecordAction"> 
+ 	    <forward name="success" path="/admin/demographicmergerecord.jsp?outcome=success" />
+            <forward name="failure" path="/admin/demographicmergerecord.jsp?outcome=failure" />
+            <forward name="successUnMerge" path="/admin/demographicmergerecord.jsp?outcome=successUnMerge" />
+            <forward name="failureUnMerge" path="/admin/demographicmergerecord.jsp?outcome=failureUnMerge" />
+ 	</action>
         <action input="/oscarReport/RptViewAllQueryByExamples.jsp" name="RptViewAllQueryByExamplesForm" path="/oscarReport/RptViewAllQueryByExamples" scope="request" type="oscar.oscarReport.pageUtil.RptViewAllQueryByExamplesAction">
             <forward name="success" path="/oscarReport/RptViewAllQueryByExamples.jsp" />
         </action>

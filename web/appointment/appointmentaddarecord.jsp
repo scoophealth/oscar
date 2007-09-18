@@ -27,7 +27,7 @@
 <%
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
 %>    
-<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList"  errorPage="errorpage.jsp"%>
+<%@ page  import="java.sql.*, java.util.*, oscar.MyDateFormat, oscar.oscarWaitingList.bean.*, oscar.oscarWaitingList.WaitingList, oscar.oscarDemographic.data.*"  errorPage="errorpage.jsp"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
@@ -44,12 +44,29 @@
       </tr>
     </table>
 <%
+    int[] intparam=new int [1];
+    if(!(request.getParameter("demographic_no").equals(""))){
+        DemographicMerged dmDAO = new DemographicMerged();
+        intparam[0]= Integer.parseInt(dmDAO.getHead(request.getParameter("demographic_no")));
+    }else{
+        intparam[0]=0;
+    }
+    
+    
     String[] param =new String[16];
 	  param[0]=request.getParameter("provider_no");
 	  param[1]=request.getParameter("appointment_date");
 	  param[2]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("start_time"));
 	  param[3]=MyDateFormat.getTimeXX_XX_XX(request.getParameter("end_time"));
-	  param[4]=request.getParameter("keyword");
+          
+          //the keyword(name) must match the demographic_no if it has been changed
+          if (intparam[0] != 0){
+              DemographicData demData = new DemographicData();
+              DemographicData.Demographic demo = demData.getDemographic(""+intparam[0]);
+              param[4] = demo.getLastName()+","+demo.getFirstName();
+          }else{
+              param[4]=request.getParameter("keyword");
+          }
 	  param[5]=request.getParameter("notes");
 	  param[6]=request.getParameter("reason");
 	  param[7]=request.getParameter("location");
@@ -61,9 +78,7 @@
 	  param[13]=request.getParameter("createdatetime");
 	  param[14]=request.getParameter("creator");
 	  param[15]=request.getParameter("remarks");
-	  int[] intparam=new int [1];
-	  if(!(request.getParameter("demographic_no").equals(""))) intparam[0]= Integer.parseInt(request.getParameter("demographic_no"));
-	  else intparam[0]=0;
+	  
   int rowsAffected = apptMainBean.queryExecuteUpdate(param,intparam,request.getParameter("dboperation"));
     if (rowsAffected ==1) {
 

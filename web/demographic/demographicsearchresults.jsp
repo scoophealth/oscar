@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.lang.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.util.*, java.lang.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
 
@@ -166,14 +166,17 @@ function checkTypeIn() {
 %>
 <tr bgcolor="<%=bodd?"white":"#EEEEFF"%>">
       <td align="center"> 
-	    <%if (vLocale.getCountry().equals("BR")) { %>  
-	       	<a href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail_ptbr"><%=rs.getString("demographic_no")%></a>
+	    <%DemographicMerged dmDAO = new DemographicMerged();
+            String dem_no = rs.getString("demographic_no");    
+            String head = dmDAO.getHead(dem_no);
+            if (vLocale.getCountry().equals("BR")) { %>  
+	       	<a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail_ptbr"><%=dem_no%></a>
 	    <!-- Link to Oscar Message with display mode = linkMsg2Demo -->
             <%}else if ( fromMessenger ) {%>
-			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(rs.getString("last_name")+", "+rs.getString("first_name"))%>&demographic_no=<%=rs.getString("demographic_no")%>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=rs.getString("demographic_no")%></a>	        
+			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(rs.getString("last_name")+", "+rs.getString("first_name"))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=rs.getString("demographic_no")%></a>	        
             <!-- Link to Oscar Message with display mode = edit ( default) -->
             <%}else{%>
-			<a href="demographiccontrol.jsp?demographic_no=<%=rs.getString("demographic_no")%>&displaymode=edit&dboperation=search_detail"><%=rs.getString("demographic_no")%></a>	        
+			<a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail"><%=dem_no%></a>	        
 	    <%}%>
       </td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>

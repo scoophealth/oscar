@@ -421,6 +421,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <h3>&nbsp;<bean:message key="admin.admin.misc"/></h3>
       <ul>
         <li><a href="#" onClick="popupPage(550,800,'../demographic/demographicExport.jsp');return false;">Demographic Export <!-- I18N --></a></li>
+                <li><a href="#" onClick="popupPage(550,800,'demographicmergerecord.jsp');return false;">Demographic Merge Records</a></li>
         <li><a href="#" onclick ="popupPage(550,800,'updatedemographicprovider.jsp');return false;" ><bean:message key="admin.admin.btnUpdatePatientProvider"/></a></li>
         <li><a href="#" onclick ="popupPage(550,800,'providertemplate.jsp');return false;" ><bean:message key="admin.admin.btnInsertTemplate"/></a></li>
         <% if (!country.equals("BR")) { %>
