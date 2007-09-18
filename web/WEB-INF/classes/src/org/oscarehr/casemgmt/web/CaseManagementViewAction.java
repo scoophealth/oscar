@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set; 
-import java.util.Enumeration;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -44,7 +44,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.caisi.model.CustomFilter;
-import org.caisi.model.Role;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -52,6 +51,9 @@ import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementViewFormBean;
+
+import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.pageUtil.RxSessionBean;
 
 
 
@@ -123,6 +125,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		
 		String providerNo = getProviderNo(request);
 		String demoNo=getDemographicNo(request);
+		
 		//need to check to see if the client is in our program domain
 		//if not...don't show this screen!
 		if(!caseManagementMgr.isClientInProgramDomain(providerNo, demoNo)) {
@@ -274,7 +277,15 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			} else {
 				prescriptions = this.caseManagementMgr.getPrescriptions(this.getDemographicNo(request),false);				
 			}			
-			request.setAttribute("Prescriptions",prescriptions);						
+			request.setAttribute("Prescriptions",prescriptions);	
+			
+			// Setup RX bean start
+	        RxSessionBean bean = new RxSessionBean(); 
+	        bean.setProviderNo(providerNo);
+	        bean.setDemographicNo(Integer.parseInt(demoNo));	        
+	        request.getSession().setAttribute("RxSessionBean", bean);	        
+	        // set up RX end
+			
 		}
 
 		/* tickler */
