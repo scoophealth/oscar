@@ -50,9 +50,9 @@ public final class RxRePrescribeAction extends Action {
         Locale locale = getLocale(request);
         MessageResources messages = getResources(request);
         
-        oscar.oscarRx.pageUtil.RxSessionBean bean =
+        oscar.oscarRx.pageUtil.RxSessionBean beanRX =
         (oscar.oscarRx.pageUtil.RxSessionBean)request.getSession().getAttribute("RxSessionBean");
-        if(bean==null) {
+        if(beanRX==null) {
             response.sendRedirect("error.html");
             return null;
         }
@@ -77,10 +77,11 @@ public final class RxRePrescribeAction extends Action {
                 
                 // create copy of Prescription
                 RxPrescriptionData.Prescription rx =
-                rxData.newPrescription(bean.getProviderNo(), bean.getDemographicNo(), oldRx);
-                
-                bean.setStashIndex(bean.addStashItem(rx));
+                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
+                beanRX.clearStash();
+                beanRX.setStashIndex(beanRX.addStashItem(rx));
                 request.setAttribute("BoxNoFillFirstLoad", "true");
+                
             }
         }
         catch (Exception e) {
