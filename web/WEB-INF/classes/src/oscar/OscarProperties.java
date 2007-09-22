@@ -26,6 +26,7 @@ package oscar;
 
 import java.util.Properties;
 import java.io.*;
+import java.util.Date;
 
 /*
  * This class is an interface with the file WEB-INF/classes
@@ -92,5 +93,23 @@ public class OscarProperties extends Properties {
 
 		}
 	}
-	
+        
+        
+        /**
+         * Comma delimited spring configuration modules
+         * Options:  Caisi,Indivo
+         * Caisi  - Required to run the Caisi Shelter Management System
+         * Indivo - Indivo PHR record. Required for integration with Indivo.
+         */
+         public final String ModuleNames = "ModuleNames";  
+        
+        public Date getStartTime(){
+            String str  = getProperty("OSCAR_START_TIME");
+            Date ret = null;
+            try{
+                ret = new Date(Long.parseLong(str));
+            }catch(Exception e){/*No Date Found*/}
+            return ret;
+        }
+        
 }
