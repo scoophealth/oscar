@@ -58,7 +58,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <html:html locale="true">
 <head>
 <meta http-equiv="Cache-Control" content="no-cache" />
-<title><bean:message key="admin.admin.title"/></title>
+<title><bean:message key="admin.admin.title"/> Start Time : <%=oscar.OscarProperties.getInstance().getStartTime() %></title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css" />
 <script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 <script type="text/JavaScript">
@@ -298,6 +298,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="yes">
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/TeleplanSimulation.jsp');return false;">Simulate Submission File2</a></li>
           <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/TeleplanSubmission.jsp');return false;">Generate Teleplan File2</a></li>
+          <li><a href="#" onclick ="popupPage(800,1000,'../billing/CA/BC/teleplan/ManageTeleplan.jsp');return false;">Manage Teleplan</a></li>
           </oscar:oscarPropertiesCheck>
           <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/billingTA.jsp');return false;">Upload Remittance Files</a></li>
           <li><a href="#" onclick ="popupPage(600,800,'../billing/CA/BC/viewReconcileReports.jsp');return false;">MSP Reconcilliation Reports</a></li>
