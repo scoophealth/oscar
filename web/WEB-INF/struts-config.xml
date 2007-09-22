@@ -177,6 +177,10 @@
         <form-bean name="setProviderColour" type="org.apache.struts.action.DynaActionForm">
             <form-property name="colour" type="java.lang.String" />
         </form-bean>
+        <form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
+            <form-property name="myOscarLoginId" type="java.lang.String" />
+            <form-property name="myOscarDomain" type="java.lang.String" />
+        </form-bean>
         <form-bean name="attachConsultation" type="org.apache.struts.action.DynaActionForm">
             <form-property name="documents" type="java.lang.String[]" />
             <form-property name="attachedDocs" type="java.lang.String[]" />
@@ -337,7 +341,7 @@
             <forward name="admin" path="/admin/admin.jsp" redirect="true" />
             <forward name="failure" path="/logout.jsp?login=failed" />
             <forward name="error" path="/loginfailed.jsp" />
-        </action>       
+        </action>        
         <action input="/oscarMessenger/SendMessage.jsp" name="msgSendMessageForm" path="/oscarMessenger/SendMessage" scope="request" type="oscar.oscarMessenger.pageUtil.MsgSendMessageAction">
             <forward name="success" path="/oscarMessenger/SentMessage.jsp" />
         </action>
@@ -476,7 +480,7 @@
         <action input="/oscarRx/SelectPharacy.jsp" path="/oscarRx/LinkPharmacy" scope="request" type="oscar.oscarRx.pageUtil.RxLinkPharmacyAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
         </action>
-        <action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" type="org.springframework.web.struts.DelegatingActionProxy">
+        <action input="/oscarRx/SearchDrug.jsp" name="FrmForm" path="/oscarRx/SendToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
             <forward name="finished" path="/phr/response.jsp"></forward>
         </action>
         <action input="/SegmentDisplay.jsp" path="/oscarMDS/UpdateStatus" scope="request" type="oscar.oscarMDS.pageUtil.ReportStatusUpdateAction">
@@ -617,6 +621,7 @@
         <action input="/oscarEncounter/oscarConsultationRequest/ConsultationFormRequest.jsp" name="EctConsultationFormRequestForm" path="/oscarEncounter/RequestConsultation" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestAction">
             <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConfirmConsultationRequest.jsp" />
             <forward name="print" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" />
+            <forward name="printalt" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint2.jsp" />
             <forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
         </action>
         <action input="/oscarEncounter/oscarConsultationRequest/attachmentReport.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
@@ -873,6 +878,12 @@
             <forward name="error" path="/provider/providerColourErr.jsp" />
             <forward name="eject" path="/index.jsp" />
         </action>
+        <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
+            <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
+            <forward name="failure" path="/provider/providerIndivoIdSetter.jsp" />
+            <forward name="error" path="/provider/providerColourErr.jsp" />
+            <forward name="eject" path="/index.jsp" />
+        </action>
         <action input="/oscarEncounter/Index.jsp" path="/oscarResearch/oscarDxResearch/setupDxResearch" scope="request" type="oscar.oscarResearch.oscarDxResearch.pageUtil.dxSetupResearchAction">
             <forward name="success" path="/oscarResearch/oscarDxResearch/dxResearch.jsp" />
         </action>
@@ -1104,6 +1115,7 @@
         <action input="/eform/efmmanageformgroups.jsp" name="delGroup" path="/eforms/delGroup" scope="request" type="oscar.eform.actions.DeleteGroupAction">
             <forward name="success" path="/eform/efmmanageformgroups.jsp" />
         </action>
+        <action input="/eform/efmmanageformgroups.jsp" name="FrmForm" path="/eform/displayImage" scope="request" type="oscar.eform.actions.DisplayImageAction"></action>
         <action input="/billing/CA/BC/dxcode_svccode_assoc.jsp" name="BillingCreateBillingForm" path="/billing/CA/BC/associateCodesAction" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.AssociateCodesAction">
             <forward name="success" path="/billing/CA/BC/showServiceCodeAssocs.do" />
         </action>
@@ -1188,7 +1200,7 @@
             <forward name="success" path="/dms/closeWindow.html" />
             <forward name="failed" path="/dms/addedithtmldocument.jsp" />
         </action>
-        <action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/SendDocToPhr" type="org.springframework.web.struts.DelegatingActionProxy">
+        <action input="/dms/documentReport.jsp" name="FrmForm" path="/dms/SendDocToPhr" parameter="method" scope="request" type="org.springframework.web.struts.DelegatingActionProxy">
             <forward name="finished" path="/phr/response.jsp"></forward>
         </action>
         <action input="/scratch/index.jsp" name="FrmForm" path="/Scratch" scope="request" type="oscar.scratch.ScratchAction">
@@ -1235,6 +1247,10 @@
         <action path="/billing/CA/BC/SimulateTeleplanFile" scope="request" name="FrmForm" 
                 type="oscar.oscarBilling.ca.bc.pageUtil.SimulateTeleplanFileAction">
             <forward name="success" path="/billing/CA/BC/TeleplanSimulation.jsp" />          
+        </action>
+        <action input="/billing/CA/BC/teleplan/ManageTeleplan.jsp" name="FrmForm" path="/billing/CA/BC/ManageTeleplan" parameter="method" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ManageTeleplanAction">
+            <forward name="success" path="/billing/CA/BC/teleplan/ManageTeleplan.jsp"/>
+            <forward name="submission" path="/billing/CA/BC/TeleplanSubmission.jsp" />
         </action>
         <action path="/billing/CA/BC/DownloadBilling"   type="oscar.oscarBilling.ca.bc.pageUtil.DownloadFileAction" />
         
