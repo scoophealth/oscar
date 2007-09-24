@@ -6776,7 +6776,7 @@ CREATE TABLE `waitingListName` (
   `create_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `is_history` char(1) default 'N',
   PRIMARY KEY  (`ID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 
+) ENGINE=MyISAM DEFAULT CHARSET=latin1; 
 
 
 --
