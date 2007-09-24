@@ -63,7 +63,7 @@ public class PreventionReportAction extends Action {
        frm.addDemoIfNotPresent();
        frm.setAsofDate(request.getParameter("asofDate"));
        RptDemographicQueryBuilder demoQ = new RptDemographicQueryBuilder();
-       ArrayList list = demoQ.buildQuery(frm);
+       ArrayList list = demoQ.buildQuery(frm,request.getParameter("asofDate"));
       
        log.debug("set size "+list.size());
        
