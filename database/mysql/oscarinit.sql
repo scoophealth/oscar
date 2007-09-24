@@ -6768,22 +6768,30 @@ CREATE TABLE validations(
 --
 -- Table structure for table `waitingListName`
 --
-CREATE TABLE waitingListName(
-  ID int(10) NOT NULL auto_increment,
-  name varchar(60) NOT NULL,
-  PRIMARY KEY(ID)
-);
-  
+CREATE TABLE `waitingListName` (
+  `ID` bigint(11) NOT NULL auto_increment,
+  `name` varchar(80) NOT NULL default '',
+  `group_no` varchar(10) default '',
+  `provider_no` varchar(6) default '',
+  `create_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `is_history` char(1) default 'N',
+  PRIMARY KEY  (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 
+
+
 --
 -- Table structure for table `waitingList`
 --
-CREATE TABLE waitingList(
-  listID int(10),   
-  demographic_no int(10) NOT NULL,
-  note varchar(255),
-  position int(10) NOT NULL,
-  onListSince datetime NOT NULL,  
-  INDEX (listID)  
+CREATE TABLE `waitingList` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `listID` int(11) default NULL,
+  `demographic_no` int(10) NOT NULL default '0',
+  `note` varchar(255) default NULL,
+  `position` bigint(20) NOT NULL default '0',
+  `onListSince` datetime NOT NULL default '0000-00-00 00:00:00',
+  `is_history` char(1) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `listID` (`listID`)
 );
 
 
