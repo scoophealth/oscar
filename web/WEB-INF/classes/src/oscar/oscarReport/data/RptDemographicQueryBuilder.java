@@ -55,8 +55,12 @@ public class RptDemographicQueryBuilder {
 
     public RptDemographicQueryBuilder() {
     }
-
+    
     public java.util.ArrayList buildQuery(RptDemographicReportForm frm){
+        return buildQuery(frm,null);
+    }
+
+    public java.util.ArrayList buildQuery(RptDemographicReportForm frm,String asofRosterDate){
       System.out.println("in buildQuery");
 
         String[] select = frm.getSelect();
@@ -301,6 +305,12 @@ public class RptDemographicQueryBuilder {
 
        }
 
+       if (asofRosterDate != null){
+           whereClause();
+           firstClause();
+           stringBuffer.append(" ( hc_renew_date <= '"+asofRosterDate+"')");
+           theFirstFlag = 1;
+       }
 
        if (orderBy != null && orderBy.length() != 0 ){
             if (!orderBy.equals("0")){
