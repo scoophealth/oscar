@@ -26,10 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.io.Serializable;
 
-import org.oscarehr.PMmodule.model.base.BaseIntake;
 
-public class Intake extends BaseIntake {
+public class Intake implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -38,8 +38,23 @@ public class Intake extends BaseIntake {
 	public static final String QUICK = "quick";
 	public static final String INDEPTH = "indepth";
 	public static final String PROGRAM = "program";
-	
-	public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId) {
+    public static String REF = "Intake";
+    public static String PROP_NODE = "node";
+    public static String PROP_STAFF_ID = "staffId";
+    public static String PROP_CREATED_ON = "createdOn";
+    public static String PROP_ID = "id";
+    public static String PROP_CLIENT_ID = "clientId";
+
+    private int hashCode = Integer.MIN_VALUE;// primary key
+
+    private Integer id;// fields
+    private Integer clientId;
+    private String staffId;
+    private Calendar createdOn;// many to one
+    private IntakeNode node;// collections
+    private java.util.Set<IntakeAnswer> answers;
+
+    public static Intake create(IntakeNode node, Integer clientId, Integer programId, String staffId) {
 		Intake intake = new Intake();
 		intake.setNode(node);
 		intake.setClientId(clientId);
@@ -54,37 +69,39 @@ public class Intake extends BaseIntake {
 	private Provider staff;
 	private Integer programId;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-
+	// constructors
 	public Intake() {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
 	public Intake(java.lang.Integer id) {
-		super(id);
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
 	public Intake(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNode node, java.lang.Integer clientId, java.lang.String staffId, java.util.Calendar createdOn) {
-		super(id, node, clientId, staffId, createdOn);
-	}
 
-	/* [CONSTRUCTOR MARKER END] */
+		this.setId(id);
+		this.setNode(node);
+		this.setClientId(clientId);
+		this.setStaffId(staffId);
+		this.setCreatedOn(createdOn);
+		initialize();
+	}
 	
-	@Override
 	protected void initialize() {
 		setAnswers(new TreeSet<IntakeAnswer>());
 	}
 	
-	@Override
 	public void addToanswers(IntakeAnswer answer) {
 		answer.setIntake(this);
-		super.addToanswers(answer);
+		addToanswers(answer);
 	}
 	
 	public Map<String, String> getAnswerKeyValues() {
@@ -186,4 +203,134 @@ public class Intake extends BaseIntake {
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getNode()).append(")").toString();
 	}
 
+    /**
+	 * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native" column="intake_id"
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     *
+     * @param id
+     *            the new ID
+     */
+    public void setId(Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: client_id
+     */
+    public Integer getClientId() {
+        return clientId;
+    }
+
+    /**
+	 * Set the value related to the column: client_id
+     *
+     * @param clientId
+     *            the client_id value
+     */
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
+	 * Return the value associated with the column: staff_id
+     */
+    public String getStaffId() {
+        return staffId;
+    }
+
+    /**
+	 * Set the value related to the column: staff_id
+     *
+     * @param staffId
+     *            the staff_id value
+     */
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
+
+    /**
+	 * Return the value associated with the column: creation_date
+     */
+    public Calendar getCreatedOn() {
+        return createdOn;
+    }
+
+    /**
+	 * Set the value related to the column: creation_date
+     *
+     * @param createdOn
+     *            the creation_date value
+     */
+    public void setCreatedOn(Calendar createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_node_id
+     */
+    public IntakeNode getNode() {
+        return node;
+    }
+
+    /**
+	 * Set the value related to the column: intake_node_id
+     *
+     * @param node
+     *            the intake_node_id value
+     */
+    public void setNode(IntakeNode node) {
+        this.node = node;
+    }
+
+    /**
+	 * Return the value associated with the column: answers
+     */
+    public java.util.Set<IntakeAnswer> getAnswers() {
+        return answers;
+    }
+
+    /**
+	 * Set the value related to the column: answers
+     *
+     * @param answers
+     *            the answers value
+     */
+    public void setAnswers(java.util.Set<IntakeAnswer> answers) {
+        this.answers = answers;
+    }
+
+    public boolean equals(Object obj) {
+        if (null == obj)
+            return false;
+        if (!(obj instanceof Intake))
+            return false;
+        else {
+            Intake intake = (Intake) obj;
+            if (null == this.getId() || null == intake.getId())
+                return false;
+            else
+                return (this.getId().equals(intake.getId()));
+        }
+    }
+
+    public int hashCode() {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId())
+                return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

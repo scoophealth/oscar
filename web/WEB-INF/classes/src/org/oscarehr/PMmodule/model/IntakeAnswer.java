@@ -19,44 +19,58 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
-import org.oscarehr.PMmodule.model.base.BaseIntakeAnswer;
 
-public class IntakeAnswer extends BaseIntakeAnswer implements Comparable<IntakeAnswer> {
+import java.io.Serializable;
+
+public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static IntakeAnswer create(IntakeNode node) {
+    public static String REF = "IntakeAnswer";
+    public static String PROP_VALUE = "value";
+    public static String PROP_NODE = "node";
+    public static String PROP_INTAKE = "intake";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer id;// fields
+    private String value;// many to one
+    private Intake intake;
+    private IntakeNode node;
+
+    public static IntakeAnswer create(IntakeNode node) {
 		IntakeAnswer answer = new IntakeAnswer();
 		answer.setNode(node);
 
 		return answer;
 	}
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	
+    // constructors
 	public IntakeAnswer() {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
 	public IntakeAnswer(java.lang.Integer id) {
-		super(id);
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
 	public IntakeAnswer(java.lang.Integer id, org.oscarehr.PMmodule.model.Intake intake, org.oscarehr.PMmodule.model.IntakeNode node, java.lang.String value) {
-		super(id, intake, node, value);
+
+		this.setId(id);
+		this.setIntake(intake);
+		this.setNode(node);
+		this.setValue(value);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
 
-	@Override
 	public String getValue() {
-		return super.getValue() != null ? super.getValue() : "";
+		return getValue() != null ? getValue() : "";
 	}
 	
 	public boolean isAnswerScalar() {
@@ -102,4 +116,96 @@ public class IntakeAnswer extends BaseIntakeAnswer implements Comparable<IntakeA
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getValue()).append(")").toString();
 	}
 
+    protected void initialize() {
+    }
+
+    /**
+	 * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native" column="intake_answer_id"
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     *
+     * @param id
+     *            the new ID
+     */
+    public void setId(Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Set the value related to the column: val
+     *
+     * @param value
+     *            the val value
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_id
+     */
+    public Intake getIntake() {
+        return intake;
+    }
+
+    /**
+	 * Set the value related to the column: intake_id
+     *
+     * @param intake
+     *            the intake_id value
+     */
+    public void setIntake(Intake intake) {
+        this.intake = intake;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_node_id
+     */
+    public IntakeNode getNode() {
+        return node;
+    }
+
+    /**
+	 * Set the value related to the column: intake_node_id
+     *
+     * @param node
+     *            the intake_node_id value
+     */
+    public void setNode(IntakeNode node) {
+        this.node = node;
+    }
+
+    public boolean equals(Object obj) {
+        if (null == obj)
+            return false;
+        if (!(obj instanceof IntakeAnswer))
+            return false;
+        else {
+            IntakeAnswer intakeAnswer = (IntakeAnswer) obj;
+            if (null == this.getId() || null == intakeAnswer.getId())
+                return false;
+            else
+                return (this.getId().equals(intakeAnswer.getId()));
+        }
+    }
+
+    public int hashCode() {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId())
+                return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

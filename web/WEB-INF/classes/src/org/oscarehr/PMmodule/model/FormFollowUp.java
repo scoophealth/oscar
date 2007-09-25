@@ -2959,7 +2959,7 @@ public class FormFollowUp implements Serializable {
 
     public boolean equals (Object obj) {
         if (null == obj) return false;
-        if (!(obj instanceof BaseFormFollowUp)) return false;
+        if (!(obj instanceof FormFollowUp)) return false;
         else {
             FormFollowUp mObj = (FormFollowUp) obj;
             if (null == this.getId() || null == mObj.getId()) return false;

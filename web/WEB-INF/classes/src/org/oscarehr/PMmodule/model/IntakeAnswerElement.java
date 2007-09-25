@@ -19,38 +19,52 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
-import org.oscarehr.PMmodule.model.base.BaseIntakeAnswerElement;
 
-public class IntakeAnswerElement extends BaseIntakeAnswerElement implements Comparable<IntakeAnswerElement> {
+import java.io.Serializable;
+
+public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	public static final String TRUE = "T";
 	public static final String FALSE = "F";
+    public static String REF = "IntakeAnswerElement";
+    public static String PROP_VALIDATION = "validation";
+    public static String PROP_NODE_TEMPLATE = "nodeTemplate";
+    public static String PROP_ELEMENT = "element";
+    public static String PROP_DEFAULT = "default";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer id;// fields
+    private boolean m_default;
+    private String element;// many to one
+    private IntakeNodeTemplate nodeTemplate;
+    private IntakeAnswerValidation validation;
 
-	public IntakeAnswerElement(String element) {
-		super(null, null, element);
-	}
-	
-	/* [CONSTRUCTOR MARKER BEGIN] */
-
+    // constructors
 	public IntakeAnswerElement() {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
 	public IntakeAnswerElement(java.lang.Integer id) {
-		super(id);
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
 	public IntakeAnswerElement(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNodeTemplate nodeTemplate, java.lang.String element) {
-		super(id, nodeTemplate, element);
+
+		this.setId(id);
+		this.setNodeTemplate(nodeTemplate);
+		this.setElement(element);
+		initialize();
 	}
+
 
 	/* [CONSTRUCTOR MARKER END] */
 
@@ -74,4 +88,120 @@ public class IntakeAnswerElement extends BaseIntakeAnswerElement implements Comp
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getElement()).append(", ").append(getValidation()).append(")").toString();
 	}
 
+    protected void initialize() {
+    }
+
+    /**
+	 * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native" column="intake_answer_element_id"
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     *
+     * @param id
+     *            the new ID
+     */
+    public void setId(Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: dflt
+     */
+    public boolean isDefault() {
+        return m_default;
+    }
+
+    /**
+	 * Set the value related to the column: dflt
+     *
+     * @param m_default
+     *            the dflt value
+     */
+    public void setDefault(boolean m_default) {
+        this.m_default = m_default;
+    }
+
+    /**
+	 * Return the value associated with the column: element
+     */
+    public String getElement() {
+        return element;
+    }
+
+    /**
+	 * Set the value related to the column: element
+     *
+     * @param element
+     *            the element value
+     */
+    public void setElement(String element) {
+        this.element = element;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_node_template_id
+     */
+    public IntakeNodeTemplate getNodeTemplate() {
+        return nodeTemplate;
+    }
+
+    /**
+	 * Set the value related to the column: intake_node_template_id
+     *
+     * @param nodeTemplate
+     *            the intake_node_template_id value
+     */
+    public void setNodeTemplate(IntakeNodeTemplate nodeTemplate) {
+        this.nodeTemplate = nodeTemplate;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_answer_validation_id
+     */
+    public IntakeAnswerValidation getValidation() {
+        return validation;
+    }
+
+    /**
+	 * Set the value related to the column: intake_answer_validation_id
+     *
+     * @param validation
+     *            the intake_answer_validation_id value
+     */
+    public void setValidation(IntakeAnswerValidation validation) {
+        this.validation = validation;
+    }
+
+    public boolean equals(Object obj) {
+        if (null == obj)
+            return false;
+        if (!(obj instanceof IntakeAnswerElement))
+            return false;
+        else {
+            IntakeAnswerElement intakeAnswerElement = (IntakeAnswerElement) obj;
+            if (null == this.getId() || null == intakeAnswerElement.getId())
+                return false;
+            else
+                return (this.getId().equals(intakeAnswerElement.getId()));
+        }
+    }
+
+    public int hashCode() {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId())
+                return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }
