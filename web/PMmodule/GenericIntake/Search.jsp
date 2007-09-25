@@ -1,5 +1,6 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ include file="/common/messages.jsp"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <h3>New Client</h3>
 <p>Please enter the following information. The system will try to determine if the client has already been entered into the system.</p>
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
@@ -28,6 +29,7 @@
 				<html:text property="yearOfBirth" size="4" maxlength="4" />&nbsp;(YYYY)
 			</td>
 		</tr>
+		<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
 		<tr>
 			<th>Health Card</th>
 			<td>
@@ -35,6 +37,7 @@
 				<html:text property="healthCardVersion" size="2" maxlength="2"/>&nbsp;(version)
 			</td>
 		</tr>
+		</caisi:isModuleLoad>
 		<tr>
 			<td colspan="2">
 				<br />
