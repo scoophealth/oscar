@@ -20,26 +20,25 @@
  */
 package org.oscarehr.common.web;
 
-import javax.servlet.ServletContext;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.springframework.web.context.ContextLoader;
-import org.springframework.context.ApplicationContext;
-import org.springframework.beans.BeansException;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.ConfigurableWebApplicationContext;
-import org.springframework.context.ApplicationContextException;
 import org.springframework.beans.BeanUtils;
-
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextException;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 import oscar.OscarProperties;
+
+import javax.servlet.ServletContext;
 
 /**
  * @author rjonasz
  */
 public class OscarSpringContextLoader extends ContextLoader {
-	
+
 	private final Log log = LogFactory.getLog(OscarSpringContextLoader.class);
 	private final String CONTEXTNAME = "WEB-INF/applicationContext";
 	private final String PROPERTYNAME = "ModuleNames";
@@ -48,20 +47,22 @@ public class OscarSpringContextLoader extends ContextLoader {
 	public OscarSpringContextLoader() {}
 
 	protected WebApplicationContext createWebApplicationContext(ServletContext servletContext, ApplicationContext parent) throws BeansException {
-		Class contextClass = DEFAULT_CONTEXT_CLASS;
 		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
-		
-		if (contextClassName != null) {
+
+        Class<?> contextClass;
+        if (contextClassName != null) {
 			try {
 				contextClass = Class.forName(contextClassName, true, Thread.currentThread().getContextClassLoader());
 			} catch (ClassNotFoundException ex) {
 				throw new ApplicationContextException("Failed to load context class [" + contextClassName + "]", ex);
 			}
-			
+
 			if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
 				throw new ApplicationContextException("Custom context class [" + contextClassName + "] is not of type ConfigurableWebApplicationContext");
 			}
-		}
+		} else {
+            contextClass = XmlWebApplicationContext.class;
+        }
 
 		ConfigurableWebApplicationContext wac = (ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);
 		wac.setParent(parent);
@@ -73,7 +74,7 @@ public class OscarSpringContextLoader extends ContextLoader {
 
 		if (modules != null) {
 			modules = modules.trim();
-			
+
 			if (modules.length() > 0) {
 				moduleList = modules.split(",");
 			}
@@ -93,7 +94,7 @@ public class OscarSpringContextLoader extends ContextLoader {
 
 		wac.setConfigLocations(configLocations);
 		wac.refresh();
-		
+
 		return wac;
 	}
 }
