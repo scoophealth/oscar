@@ -33,9 +33,7 @@
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" lazy-init="default"
           autowire="default" dependency-check="default">
         <property name="dataSource" ref="dataSource"/>
-        <property name="entityInterceptor">
-            <ref bean="auditInterceptor"/>
-        </property>
+        <property name="entityInterceptor" ref="auditInterceptor"/>
         <property name="mappingDirectoryLocations">
             <!-- only *.hbm.xml will be loaded -->
             <list>
@@ -83,12 +81,18 @@
         </property>
     </bean>
     <!-- DAO -->
-    <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName" lazy-init="default"
-          dependency-check="default"/>
-    <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName"
-          lazy-init="default" dependency-check="default"/>
-    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao" autowire="byName" lazy-init="default"
-          dependency-check="default"/>
+    <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" lazy-init="default"
+          dependency-check="default">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao"
+          lazy-init="default" dependency-check="default">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao" lazy-init="default"
+          dependency-check="default">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
     <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" lazy-init="default" autowire="default"
           dependency-check="default">
         <property name="sessionFactory">
@@ -174,9 +178,7 @@
     </bean>
     <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" lazy-init="default"
           autowire="default" dependency-check="default">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory"/>
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementCPPDAOHibernate"
           lazy-init="default" autowire="default" dependency-check="default">
@@ -216,9 +218,7 @@
     </bean>
     <bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.hibernate.AppointmentDAOHibernate" lazy-init="default"
           autowire="default" dependency-check="default">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory"/>
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.hibernate.MessagetblDAOHibernate" lazy-init="default"
           autowire="default" dependency-check="default">
@@ -363,9 +363,7 @@
     </bean>
     <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
           lazy-init="default" autowire="default" dependency-check="default">
-        <property name="transactionManager">
-            <ref bean="transactionManager"/>
-        </property>
+        <property name="transactionManager" ref="transactionManager"/>
         <property name="target">
             <ref local="CaseManagementManagerTarget"/>
         </property>
@@ -530,8 +528,14 @@
     <bean id="infirmBedProgramManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
           dependency-check="default">
         <property name="target">
-            <bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl" autowire="byType" lazy-init="default"
-                  dependency-check="default"/>
+            <bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl" lazy-init="default"
+                  dependency-check="default">
+                <property name="bedProgramDao" ref="bedProgramDao"/>
+                <property name="programDao" ref="programDao"/>
+                <property name="providerDefaultProgramDao" ref="providerDefaultProgramDao"/>
+                <property name="programProviderDAOT" ref="programProviderDAO"/>
+                <property name="demographicDao" ref="demographicDAOT"/>
+            </bean>
         </property>
     </bean>
     <!-- TicklerPlus -->
