@@ -39,7 +39,7 @@ public class IntakeAnswerValidation implements Serializable {
     /**
      * Constructor for primary key
      */
-    public IntakeAnswerValidation(java.lang.Integer id) {
+    public IntakeAnswerValidation(Integer id) {
         this.setId(id);
         initialize();
     }
@@ -47,7 +47,7 @@ public class IntakeAnswerValidation implements Serializable {
     /**
      * Constructor for required fields
      */
-    public IntakeAnswerValidation(java.lang.Integer id, java.lang.String type) {
+    public IntakeAnswerValidation(Integer id, String type) {
 
         this.setId(id);
         this.setType(type);

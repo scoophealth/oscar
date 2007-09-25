@@ -23,26 +23,139 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseRoomBedHistoricalPK;
 
-public class RoomBedHistoricalPK extends BaseRoomBedHistoricalPK {
-	
-	private static final long serialVersionUID = 1L;
+import java.io.Serializable;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	
-	public RoomBedHistoricalPK() {
-	}
+public class RoomBedHistoricalPK implements Serializable {
 
-	public RoomBedHistoricalPK(java.lang.Integer roomId, java.lang.Integer bedId, java.util.Date containStart) {
-		super(roomId, bedId, containStart);
-	}
-	
-	/* [CONSTRUCTOR MARKER END] */
-	
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+    private static final long serialVersionUID = 1L;
+    protected int hashCode = Integer.MIN_VALUE;
+    private Integer roomId;
+    private Integer bedId;
+    private java.util.Date containStart;
 
+    public RoomBedHistoricalPK () {}
+
+    public RoomBedHistoricalPK (
+            Integer roomId,
+            Integer bedId,
+            java.util.Date containStart) {
+
+        this.setRoomId(roomId);
+        this.setBedId(bedId);
+        this.setContainStart(containStart);
+    }
+
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    /**
+     * Return the value associated with the column: room_id
+     */
+    public Integer getRoomId () {
+        return roomId;
+    }
+
+    /**
+     * Set the value related to the column: room_id
+     * @param roomId the room_id value
+     */
+    public void setRoomId (Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    /**
+     * Return the value associated with the column: bed_id
+     */
+    public Integer getBedId () {
+        return bedId;
+    }
+
+    /**
+     * Set the value related to the column: bed_id
+     * @param bedId the bed_id value
+     */
+    public void setBedId (Integer bedId) {
+        this.bedId = bedId;
+    }
+
+    /**
+     * Return the value associated with the column: contain_start
+     */
+    public java.util.Date getContainStart () {
+        return containStart;
+    }
+
+    /**
+     * Set the value related to the column: contain_start
+     * @param containStart the contain_start value
+     */
+    public void setContainStart (java.util.Date containStart) {
+        this.containStart = containStart;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof RoomBedHistoricalPK)) return false;
+        else {
+            RoomBedHistoricalPK mObj = (RoomBedHistoricalPK) obj;
+            if (null != this.getRoomId() && null != mObj.getRoomId()) {
+                if (!this.getRoomId().equals(mObj.getRoomId())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            if (null != this.getBedId() && null != mObj.getBedId()) {
+                if (!this.getBedId().equals(mObj.getBedId())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            if (null != this.getContainStart() && null != mObj.getContainStart()) {
+                if (!this.getContainStart().equals(mObj.getContainStart())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            StringBuilder sb = new StringBuilder();
+            if (null != this.getRoomId()) {
+                sb.append(this.getRoomId().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            if (null != this.getBedId()) {
+                sb.append(this.getBedId().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            if (null != this.getContainStart()) {
+                sb.append(this.getContainStart().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            this.hashCode = sb.toString().hashCode();
+        }
+        return this.hashCode;
+    }
 }

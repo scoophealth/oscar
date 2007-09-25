@@ -383,7 +383,7 @@ public class FormFollowUp implements Serializable {
      /**
       * Constructor for primary key
       */
-     public FormFollowUp (java.lang.Long _id) {
+     public FormFollowUp (Long _id) {
          this.setId(_id);
          initialize();
      }
@@ -392,8 +392,8 @@ public class FormFollowUp implements Serializable {
       * Constructor for required fields
       */
      public FormFollowUp (
-         java.lang.Long _id,
-         java.lang.Long _demographicNo) {
+         Long _id,
+         Long _demographicNo) {
 
          this.setId(_id);
          this.setDemographicNo(_demographicNo);

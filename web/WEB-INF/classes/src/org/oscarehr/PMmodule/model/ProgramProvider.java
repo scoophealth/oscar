@@ -21,33 +21,46 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseProgramProvider;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the program_provider table.
  * Any customizations belong here.
  */
-public class ProgramProvider extends BaseProgramProvider {
+public class ProgramProvider implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+    public static String PROP_PROVIDER_NO = "ProviderNo";
+    public static String PROP_PROGRAM_ID = "ProgramId";
+    public static String PROP_PROVIDER = "provider";
+    public static String PROP_ROLE = "role";
+    public static String PROP_ID = "Id";
+    public static String PROP_ROLE_ID = "RoleId";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Long _id;// fields
+    private Long _programId;
+    private Long _providerNo;
+    private Long _roleId;// many to one
+    private org.caisi.model.Role _role;
+    private Provider _provider;// collections
+    private java.util.Set _teams;
+    private String programName;
+    private Program program;
 
-	/*[CONSTRUCTOR MARKER BEGIN]*/
-	public ProgramProvider() {
-		super();
+    // constructors
+	public ProgramProvider () {
+		initialize();
 	}
 
-	/**
+    /**
 	 * Constructor for primary key
 	 */
-	public ProgramProvider(java.lang.Long _id) {
-		super(_id);
+	public ProgramProvider (Long _id) {
+		this.setId(_id);
+		initialize();
 	}
-	/*[CONSTRUCTOR MARKER END]*/
 
-	private String programName;
-	private Program program;
-
-	/**
+    /**
 	 * @return Returns the programName.
 	 */
 	public String getProgramName() {
@@ -69,4 +82,146 @@ public class ProgramProvider extends BaseProgramProvider {
 		this.program = program;
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="id"
+*/
+    public Long getId () {
+        return _id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param _id the new ID
+     */
+    public void setId (Long _id) {
+        this._id = _id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: program_id
+     */
+    public Long getProgramId () {
+        return _programId;
+    }
+
+    /**
+	 * Set the value related to the column: program_id
+     * @param _programId the program_id value
+     */
+    public void setProgramId (Long _programId) {
+        this._programId = _programId;
+    }
+
+    /**
+	 * Return the value associated with the column: provider_no
+     */
+    public Long getProviderNo () {
+        return _providerNo;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param _providerNo the provider_no value
+     */
+    public void setProviderNo (Long _providerNo) {
+        this._providerNo = _providerNo;
+    }
+
+    /**
+	 * Return the value associated with the column: role_id
+     */
+    public Long getRoleId () {
+        return _roleId;
+    }
+
+    /**
+	 * Set the value related to the column: role_id
+     * @param _roleId the role_id value
+     */
+    public void setRoleId (Long _roleId) {
+        this._roleId = _roleId;
+    }
+
+    /**
+     * @hibernate.property
+*  column=role_id
+     */
+    public org.caisi.model.Role getRole () {
+        return this._role;
+    }
+
+    /**
+	 * Set the value related to the column: role_id
+     * @param _role the role_id value
+     */
+    public void setRole (org.caisi.model.Role _role) {
+        this._role = _role;
+    }
+
+    /**
+     * @hibernate.property
+*  column=provider_no
+     */
+    public Provider getProvider () {
+        return this._provider;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param _provider the provider_no value
+     */
+    public void setProvider (Provider _provider) {
+        this._provider = _provider;
+    }
+
+    /**
+	 * Return the value associated with the column: teams
+     */
+    public java.util.Set getTeams () {
+        return this._teams;
+    }
+
+    /**
+	 * Set the value related to the column: teams
+     * @param _teams the teams value
+     */
+    public void setTeams (java.util.Set _teams) {
+        this._teams = _teams;
+    }
+
+    public void addToTeams (Object obj) {
+        if (null == this._teams) this._teams = new java.util.HashSet();
+        this._teams.add(obj);
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof ProgramProvider)) return false;
+        else {
+            ProgramProvider mObj = (ProgramProvider) obj;
+            if (null == this.getId() || null == mObj.getId()) return false;
+            else return (this.getId().equals(mObj.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

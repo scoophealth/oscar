@@ -43,7 +43,7 @@ public class FunctionalUserType  implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public FunctionalUserType (java.lang.Long _id) {
+	public FunctionalUserType (Long _id) {
 		this.setId(_id);
 		initialize();
 	}

@@ -24,19 +24,42 @@ package org.oscarehr.PMmodule.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseBed;
 
-public class Bed extends BaseBed {
+public class Bed implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final Integer DEFAULT_ROOM_ID = 1;
 	private static final String DEFAULT_NAME = "";
 	private static final boolean DEFAULT_ACTIVE = true;
+    public static String REF = "Bed";
+    public static String PROP_ACTIVE = "active";
+    public static String PROP_TEAM_ID = "teamId";
+    public static String PROP_BED_TYPE_ID = "bedTypeId";
+    public static String PROP_NAME = "name";
+    public static String PROP_ROOM_START = "roomStart";
+    public static String PROP_ROOM_ID = "roomId";
+    public static String PROP_ID = "id";
 
-	public static Bed create(BedType bedType) {
+    private int hashCode = Integer.MIN_VALUE;// primary key
+
+    private Integer id;// fields
+    private Integer bedTypeId;
+    private Integer roomId;
+    private Date roomStart;
+    private Integer teamId;
+    private String name;
+    private boolean active;
+    private BedType bedType;
+    private Room room;
+    private ProgramTeam team;
+    private BedDemographic bedDemographic;
+    private Integer communityProgramId;
+
+    public static Bed create(BedType bedType) {
 		Bed bed = new Bed();
 		bed.setBedTypeId(bedType.getId());
 		bed.setRoomId(DEFAULT_ROOM_ID);
@@ -47,33 +70,38 @@ public class Bed extends BaseBed {
 		return bed;
 	}
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-
-	public Bed() {
-		super();
+    // constructors
+	public Bed () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Bed(java.lang.Integer id) {
-		super(id);
+	public Bed (Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Bed(java.lang.Integer id, java.lang.Integer bedTypeId, java.lang.Integer roomId, java.util.Date roomStart, java.lang.String name, boolean active) {
-		super(id, bedTypeId, roomId, roomStart, name, active);
+	public Bed (
+		Integer id,
+		Integer bedTypeId,
+		Integer roomId,
+		java.util.Date roomStart,
+		String name,
+		boolean active) {
+
+		this.setId(id);
+		this.setBedTypeId(bedTypeId);
+		this.setRoomId(roomId);
+		this.setRoomStart(roomStart);
+		this.setName(name);
+		this.setActive(active);
+		initialize();
 	}
-
-	/* [CONSTRUCTOR MARKER END] */
-
-	private BedType bedType;
-	private Room room;
-	private ProgramTeam team;
-	private BedDemographic bedDemographic;
-	private Integer communityProgramId;
 
 	public boolean isReserved() {
 		return getReservationStart() != null && getReservationEnd() != null;
@@ -176,4 +204,135 @@ public class Bed extends BaseBed {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="bed_id"
+*/
+    public Integer getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: bed_type_id
+     */
+    public Integer getBedTypeId () {
+        return bedTypeId;
+    }
+
+    /**
+	 * Set the value related to the column: bed_type_id
+     * @param bedTypeId the bed_type_id value
+     */
+    public void setBedTypeId (Integer bedTypeId) {
+        this.bedTypeId = bedTypeId;
+    }
+
+    /**
+	 * Return the value associated with the column: room_id
+     */
+    public Integer getRoomId () {
+        return roomId;
+    }
+
+    /**
+	 * Set the value related to the column: room_id
+     * @param roomId the room_id value
+     */
+    public void setRoomId (Integer roomId) {
+        this.roomId = roomId;
+    }
+
+    /**
+	 * Return the value associated with the column: room_start
+     */
+    public Date getRoomStart () {
+        return roomStart;
+    }
+
+    /**
+	 * Set the value related to the column: room_start
+     * @param roomStart the room_start value
+     */
+    public void setRoomStart (Date roomStart) {
+        this.roomStart = roomStart;
+    }
+
+    /**
+	 * Return the value associated with the column: team_id
+     */
+    public Integer getTeamId () {
+        return teamId;
+    }
+
+    /**
+	 * Set the value related to the column: team_id
+     * @param teamId the team_id value
+     */
+    public void setTeamId (Integer teamId) {
+        this.teamId = teamId;
+    }
+
+    /**
+	 * Return the value associated with the column: name
+     */
+    public String getName () {
+        return name;
+    }
+
+    /**
+	 * Set the value related to the column: name
+     * @param name the name value
+     */
+    public void setName (String name) {
+        this.name = name;
+    }
+
+    /**
+	 * Return the value associated with the column: active
+     */
+    public boolean isActive () {
+        return active;
+    }
+
+    /**
+	 * Set the value related to the column: active
+     * @param active the active value
+     */
+    public void setActive (boolean active) {
+        this.active = active;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof Bed)) return false;
+        else {
+            Bed bed = (Bed) obj;
+            if (null == this.getId() || null == bed.getId()) return false;
+            else return (this.getId().equals(bed.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

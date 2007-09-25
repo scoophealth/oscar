@@ -50,7 +50,7 @@ public class ProgramAccess implements Serializable {
      /**
       * Constructor for primary key
       */
-     public ProgramAccess (java.lang.Long _id) {
+     public ProgramAccess (Long _id) {
          this.setId(_id);
          initialize();
      }

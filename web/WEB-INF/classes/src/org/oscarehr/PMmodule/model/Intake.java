@@ -77,7 +77,7 @@ public class Intake implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public Intake(java.lang.Integer id) {
+	public Intake(Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -85,7 +85,7 @@ public class Intake implements Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public Intake(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNode node, java.lang.Integer clientId, java.lang.String staffId, java.util.Calendar createdOn) {
+	public Intake(Integer id, org.oscarehr.PMmodule.model.IntakeNode node, Integer clientId, String staffId, java.util.Calendar createdOn) {
 
 		this.setId(id);
 		this.setNode(node);

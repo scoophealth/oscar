@@ -18,9 +18,9 @@
  */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseIntakeNodeType;
+import java.io.Serializable;
 
-public class IntakeNodeType extends BaseIntakeNodeType {
+public class IntakeNodeType implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,29 +32,36 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 	public static final Integer ANSWER_SCALAR_CHOICE_ID = 6;
 	public static final Integer ANSWER_SCALAR_TEXT_ID = 7;
 	public static final Integer ANSWER_SCALAR_NOTE_ID = 8;
+    public static String REF = "IntakeNodeType";
+    public static String PROP_TYPE = "type";
+    public static String PROP_ID = "id";
 
-	public IntakeNodeType(String type) {
-		super(null, type);
-	}
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    
+    private Integer id;// fields
+    private String type;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	
+     // constructors
 	public IntakeNodeType() {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeNodeType(java.lang.Integer id) {
-		super(id);
+	public IntakeNodeType(Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeNodeType(java.lang.Integer id, java.lang.String type) {
-		super(id, type);
+	public IntakeNodeType(Integer id, String type) {
+
+		this.setId(id);
+		this.setType(type);
+		initialize();
 	}
 
 	/* [CONSTRUCTOR MARKER END] */
@@ -104,4 +111,69 @@ public class IntakeNodeType extends BaseIntakeNodeType {
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getType()).append(")").toString();
 	}
 
+    protected void initialize() {
+    }
+
+    /**
+	 * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native" column="intake_node_type_id"
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     *
+     * @param id
+     *            the new ID
+     */
+    public void setId(Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+	 * Set the value related to the column: type
+     *
+     * @param type
+     *            the type value
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean equals(Object obj) {
+        if (null == obj)
+            return false;
+        if (!(obj instanceof IntakeNodeType))
+            return false;
+        else {
+            IntakeNodeType intakeNodeType = (IntakeNodeType) obj;
+            if (null == this.getId() || null == intakeNodeType.getId())
+                return false;
+            else
+                return (this.getId().equals(intakeNodeType.getId()));
+        }
+    }
+
+    public int hashCode() {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId())
+                return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

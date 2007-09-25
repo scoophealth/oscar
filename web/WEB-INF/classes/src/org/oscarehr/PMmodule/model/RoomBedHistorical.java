@@ -23,36 +23,101 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseRoomBedHistorical;
 
-public class RoomBedHistorical extends BaseRoomBedHistorical {
+import java.io.Serializable;
 
-	private static final long serialVersionUID = 1L;
+public class RoomBedHistorical implements Serializable {
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	public RoomBedHistorical() {
-		super();
-	}
+    private static final long serialVersionUID = 1L;
+    public static String REF = "RoomBedHistorical";
+    public static String PROP_CONTAIN_END = "containEnd";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private RoomBedHistoricalPK id;// fields
+    private java.util.Date containEnd;
 
-	/**
-	 * Constructor for primary key
-	 */
-	public RoomBedHistorical(org.oscarehr.PMmodule.model.RoomBedHistoricalPK id) {
-		super(id);
-	}
+    // constructors
+    public RoomBedHistorical () {
+        initialize();
+    }
 
-	/**
-	 * Constructor for required fields
-	 */
-	public RoomBedHistorical(org.oscarehr.PMmodule.model.RoomBedHistoricalPK id, java.util.Date containEnd) {
-		super(id, containEnd);
-	}
+    /**
+     * Constructor for primary key
+     */
+    public RoomBedHistorical (org.oscarehr.PMmodule.model.RoomBedHistoricalPK id) {
+        this.setId(id);
+        initialize();
+    }
 
-	/* [CONSTRUCTOR MARKER END] */
+    /**
+     * Constructor for required fields
+     */
+    public RoomBedHistorical (
+            org.oscarehr.PMmodule.model.RoomBedHistoricalPK id,
+            java.util.Date containEnd) {
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+        this.setId(id);
+        this.setContainEnd(containEnd);
+        initialize();
+    }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    protected void initialize () {}
+
+    /**
+     * Return the unique identifier of this class
+     * @hibernate.id
+     */
+    public RoomBedHistoricalPK getId () {
+        return id;
+    }
+
+    /**
+     * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (RoomBedHistoricalPK id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+     * Return the value associated with the column: contain_end
+     */
+    public java.util.Date getContainEnd () {
+        return containEnd;
+    }
+
+    /**
+     * Set the value related to the column: contain_end
+     * @param containEnd the contain_end value
+     */
+    public void setContainEnd (java.util.Date containEnd) {
+        this.containEnd = containEnd;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof RoomBedHistorical)) return false;
+        else {
+            RoomBedHistorical roomBedHistorical = (RoomBedHistorical) obj;
+            if (null == this.getId() || null == roomBedHistorical.getId()) return false;
+            else return (this.getId().equals(roomBedHistorical.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

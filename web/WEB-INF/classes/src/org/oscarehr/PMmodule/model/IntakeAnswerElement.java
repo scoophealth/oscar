@@ -49,7 +49,7 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeAnswerElement(java.lang.Integer id) {
+	public IntakeAnswerElement(Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -57,7 +57,7 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeAnswerElement(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNodeTemplate nodeTemplate, java.lang.String element) {
+	public IntakeAnswerElement(Integer id, org.oscarehr.PMmodule.model.IntakeNodeTemplate nodeTemplate, String element) {
 
 		this.setId(id);
 		this.setNodeTemplate(nodeTemplate);
@@ -73,7 +73,7 @@ public class IntakeAnswerElement  implements Comparable<IntakeAnswerElement>, Se
 	}
 	
 	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 * @see Comparable#compareTo(Object)
 	 */
 	public int compareTo(IntakeAnswerElement answerElement) {
 		CompareToBuilder compareToBuilder = new CompareToBuilder();

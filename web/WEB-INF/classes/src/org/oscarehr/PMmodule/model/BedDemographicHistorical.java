@@ -23,14 +23,23 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseBedDemographicHistorical;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
-public class BedDemographicHistorical extends BaseBedDemographicHistorical {
+import java.io.Serializable;
+
+public class BedDemographicHistorical implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+    public static String REF = "BedDemographicHistorical";
+    public static String PROP_USAGE_END = "usageEnd";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private java.util.Date usageEnd;
+    private BedDemographicHistoricalPK id;// fields
+    private Bed bed;
+    private Demographic demographic;
 
-	public static BedDemographicHistorical create(BedDemographic bedDemographic) {
+    public static BedDemographicHistorical create(BedDemographic bedDemographic) {
 		BedDemographicHistorical historical = new BedDemographicHistorical();
 
 		historical.setId(BedDemographicHistoricalPK.create(bedDemographic.getId(), bedDemographic.getReservationStart()));
@@ -39,32 +48,33 @@ public class BedDemographicHistorical extends BaseBedDemographicHistorical {
 		return historical;
 	}
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-
-	public BedDemographicHistorical() {
-		super();
+    // constructors
+	public BedDemographicHistorical () {
+		initialize();
 	}
 
-	/**
+    /**
 	 * Constructor for primary key
 	 */
-	public BedDemographicHistorical(org.oscarehr.PMmodule.model.BedDemographicHistoricalPK id) {
-		super(id);
+	public BedDemographicHistorical (org.oscarehr.PMmodule.model.BedDemographicHistoricalPK id) {
+		this.setId(id);
+		initialize();
 	}
 
-	/**
+
+    /**
 	 * Constructor for required fields
 	 */
-	public BedDemographicHistorical(org.oscarehr.PMmodule.model.BedDemographicHistoricalPK id, java.util.Date usageEnd) {
-		super(id, usageEnd);
+	public BedDemographicHistorical (
+		org.oscarehr.PMmodule.model.BedDemographicHistoricalPK id,
+		java.util.Date usageEnd) {
+
+		this.setId(id);
+		this.setUsageEnd(usageEnd);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
-
-	private Bed bed;
-	private Demographic demographic;
-	
-	public void setBed(Bed bed) {
+    public void setBed(Bed bed) {
 	    this.bed = bed;
     }
 	
@@ -85,4 +95,58 @@ public class BedDemographicHistorical extends BaseBedDemographicHistorical {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*/
+    public BedDemographicHistoricalPK getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (BedDemographicHistoricalPK id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: usage_end
+     */
+    public java.util.Date getUsageEnd () {
+        return usageEnd;
+    }
+
+    /**
+	 * Set the value related to the column: usage_end
+     * @param usageEnd the usage_end value
+     */
+    public void setUsageEnd (java.util.Date usageEnd) {
+        this.usageEnd = usageEnd;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof BedDemographicHistorical)) return false;
+        else {
+            BedDemographicHistorical bedDemographicHistorical = (BedDemographicHistorical) obj;
+            if (null == this.getId() || null == bedDemographicHistorical.getId()) return false;
+            else return (this.getId().equals(bedDemographicHistorical.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

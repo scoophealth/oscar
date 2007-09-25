@@ -67,7 +67,7 @@ public class Room implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public Room (java.lang.Integer id) {
+	public Room (Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -76,9 +76,9 @@ public class Room implements Serializable {
 	 * Constructor for required fields
 	 */
 	public Room (
-		java.lang.Integer id,
-		java.lang.Integer roomTypeId,
-		java.lang.String name,
+		Integer id,
+		Integer roomTypeId,
+		String name,
 		boolean active) {
 
 		this.setId(id);

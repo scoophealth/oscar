@@ -46,7 +46,7 @@ public class BedType implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public BedType (java.lang.Integer id) {
+	public BedType (Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -55,8 +55,8 @@ public class BedType implements Serializable {
 	 * Constructor for required fields
 	 */
 	public BedType (
-		java.lang.Integer id,
-		java.lang.String name,
+		Integer id,
+		String name,
 		boolean m_default) {
 
 		this.setId(id);

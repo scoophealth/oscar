@@ -23,20 +23,40 @@
 package org.oscarehr.PMmodule.model;
 
 import java.util.Date;
+import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseBedDemographic;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.dao.Auditable;
 
 /**
  * BedDemographic
  */
-public class BedDemographic extends BaseBedDemographic implements Auditable {
+public class BedDemographic implements Auditable, Serializable {
 
 	private static final long serialVersionUID = 1L;
+    public static String REF = "BedDemographic";
+    public static String PROP_PROVIDER_NO = "providerNo";
+    public static String PROP_RESERVATION_START = "reservationStart";
+    public static String PROP_RESERVATION_END = "reservationEnd";
+    public static String PROP_BED_DEMOGRAPHIC_STATUS_ID = "bedDemographicStatusId";
+    public static String PROP_ID = "id";
+    public static String PROP_LATE_PASS = "latePass";
 
-	public static BedDemographic create(Integer demographicNo, BedDemographicStatus bedDemographicStatus, String providerNo) {
+    private int hashCode = Integer.MIN_VALUE;// primary key
+
+    private BedDemographicPK id;// fields
+    private Integer bedDemographicStatusId;
+    private String providerNo;
+    private boolean latePass;
+    private Date reservationStart;
+    private Date reservationEnd;
+    private BedDemographicStatus bedDemographicStatus;
+    private Provider provider;
+    private Bed bed;
+    private Demographic demographic;
+
+    public static BedDemographic create(Integer demographicNo, BedDemographicStatus bedDemographicStatus, String providerNo) {
 		BedDemographicPK id = new BedDemographicPK();
 		id.setDemographicNo(demographicNo);
 
@@ -54,33 +74,40 @@ public class BedDemographic extends BaseBedDemographic implements Auditable {
 		return bedDemographic;
 	}
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
 
-	public BedDemographic() {
-		super();
+    // constructors
+	public BedDemographic () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public BedDemographic(org.oscarehr.PMmodule.model.BedDemographicPK id) {
-		super(id);
+	public BedDemographic (org.oscarehr.PMmodule.model.BedDemographicPK id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public BedDemographic(org.oscarehr.PMmodule.model.BedDemographicPK id, java.lang.Integer bedDemographicStatusId, java.lang.String providerNo, boolean latePass, java.util.Date reservationStart, java.util.Date reservationEnd) {
-		super(id, bedDemographicStatusId, providerNo, latePass, reservationStart, reservationEnd);
+	public BedDemographic (
+		org.oscarehr.PMmodule.model.BedDemographicPK id,
+		Integer bedDemographicStatusId,
+		String providerNo,
+		boolean latePass,
+		java.util.Date reservationStart,
+		java.util.Date reservationEnd) {
+
+		this.setId(id);
+		this.setBedDemographicStatusId(bedDemographicStatusId);
+		this.setProviderNo(providerNo);
+		this.setLatePass(latePass);
+		this.setReservationStart(reservationStart);
+		this.setReservationEnd(reservationEnd);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
-
-	private BedDemographicStatus bedDemographicStatus;
-	private Provider provider;
-	private Bed bed;
-	private Demographic demographic;
-	
 	public void setBedDemographicStatus(BedDemographicStatus bedDemographicStatus) {
 	    this.bedDemographicStatus = bedDemographicStatus;
     }
@@ -203,4 +230,118 @@ public class BedDemographic extends BaseBedDemographic implements Auditable {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*/
+    public BedDemographicPK getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (BedDemographicPK id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: bed_demographic_status_id
+     */
+    public Integer getBedDemographicStatusId () {
+        return bedDemographicStatusId;
+    }
+
+    /**
+	 * Set the value related to the column: bed_demographic_status_id
+     * @param bedDemographicStatusId the bed_demographic_status_id value
+     */
+    public void setBedDemographicStatusId (Integer bedDemographicStatusId) {
+        this.bedDemographicStatusId = bedDemographicStatusId;
+    }
+
+    /**
+	 * Return the value associated with the column: provider_no
+     */
+    public String getProviderNo () {
+        return providerNo;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param providerNo the provider_no value
+     */
+    public void setProviderNo (String providerNo) {
+        this.providerNo = providerNo;
+    }
+
+    /**
+	 * Return the value associated with the column: late_pass
+     */
+    public boolean isLatePass () {
+        return latePass;
+    }
+
+    /**
+	 * Set the value related to the column: late_pass
+     * @param latePass the late_pass value
+     */
+    public void setLatePass (boolean latePass) {
+        this.latePass = latePass;
+    }
+
+    /**
+	 * Return the value associated with the column: reservation_start
+     */
+    public Date getReservationStart () {
+        return reservationStart;
+    }
+
+    /**
+	 * Set the value related to the column: reservation_start
+     * @param reservationStart the reservation_start value
+     */
+    public void setReservationStart (Date reservationStart) {
+        this.reservationStart = reservationStart;
+    }
+
+    /**
+	 * Return the value associated with the column: reservation_end
+     */
+    public Date getReservationEnd () {
+        return reservationEnd;
+    }
+
+    /**
+	 * Set the value related to the column: reservation_end
+     * @param reservationEnd the reservation_end value
+     */
+    public void setReservationEnd (Date reservationEnd) {
+        this.reservationEnd = reservationEnd;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof BedDemographic)) return false;
+        else {
+            BedDemographic bedDemographic = (BedDemographic) obj;
+            if (null == this.getId() || null == bedDemographic.getId()) return false;
+            else return (this.getId().equals(bedDemographic.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

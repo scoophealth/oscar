@@ -80,7 +80,7 @@ public class Provider implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public Provider (java.lang.String _providerNo) {
+	public Provider (String _providerNo) {
 		this.setProviderNo(_providerNo);
 		initialize();
 	}
@@ -89,12 +89,12 @@ public class Provider implements Serializable {
 	 * Constructor for required fields
 	 */
 	public Provider (
-		java.lang.String _providerNo,
-		java.lang.String _lastName,
-		java.lang.String _providerType,
-		java.lang.String _sex,
-		java.lang.String _specialty,
-		java.lang.String _firstName) {
+		String _providerNo,
+		String _lastName,
+		String _providerType,
+		String _sex,
+		String _specialty,
+		String _firstName) {
 
 		this.setProviderNo(_providerNo);
 		this.setLastName(_lastName);

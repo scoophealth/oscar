@@ -21,47 +21,57 @@ package org.oscarehr.PMmodule.model;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.io.Serializable;
 
-import org.oscarehr.PMmodule.model.base.BaseIntakeNodeTemplate;
-
-public class IntakeNodeTemplate extends BaseIntakeNodeTemplate {
+public class IntakeNodeTemplate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public IntakeNodeTemplate(IntakeNodeType type) {
-		super(null, type);
-	}
+    public static String REF = "IntakeNodeTemplate";
+    public static String PROP_TYPE = "type";
+    public static String PROP_REMOTE_ID = "remoteId";
+    public static String PROP_LABEL = "label";
+    public static String PROP_ID = "id";
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    
+    private Integer id;// fields
+    private Integer remoteId;// many to one
+    private IntakeNodeType type;
+    private IntakeNodeLabel label;// collections
+    private Set<IntakeAnswerElement> answerElements;
+
+     // constructors
 	public IntakeNodeTemplate() {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeNodeTemplate(java.lang.Integer id) {
-		super(id);
+	public IntakeNodeTemplate(Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeNodeTemplate(java.lang.Integer id, org.oscarehr.PMmodule.model.IntakeNodeType type) {
-		super(id, type);
+	public IntakeNodeTemplate(Integer id, org.oscarehr.PMmodule.model.IntakeNodeType type) {
+
+		this.setId(id);
+		this.setType(type);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
 
-	@Override
 	protected void initialize() {
 		setAnswerElements(new TreeSet<IntakeAnswerElement>());
 	}
 	
-	@Override
 	public void addToanswerElements(IntakeAnswerElement intakeAnswerElement) {
 		intakeAnswerElement.setNodeTemplate(this);
-		super.addToanswerElements(intakeAnswerElement);
+		addToanswerElements(intakeAnswerElement);
 	}
 	
 	public boolean isIntake() {
@@ -121,4 +131,117 @@ public class IntakeNodeTemplate extends BaseIntakeNodeTemplate {
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getType()).append(", ").append(getLabel()).append(")").toString();
 	}
 
+    /**
+	 * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native" column="intake_node_template_id"
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     *
+     * @param id
+     *            the new ID
+     */
+    public void setId(Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: remote_intake_node_template_id
+     */
+    public Integer getRemoteId() {
+        return remoteId;
+    }
+
+    /**
+	 * Set the value related to the column: remote_intake_node_template_id
+     *
+     * @param remoteId
+     *            the remote_intake_node_template_id value
+     */
+    public void setRemoteId(Integer remoteId) {
+        this.remoteId = remoteId;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_node_type_id
+     */
+    public IntakeNodeType getType() {
+        return type;
+    }
+
+    /**
+	 * Set the value related to the column: intake_node_type_id
+     *
+     * @param type
+     *            the intake_node_type_id value
+     */
+    public void setType(IntakeNodeType type) {
+        this.type = type;
+    }
+
+    /**
+	 * Return the value associated with the column: intake_node_label_id
+     */
+    public IntakeNodeLabel getLabel() {
+        return label;
+    }
+
+    /**
+	 * Set the value related to the column: intake_node_label_id
+     *
+     * @param label
+     *            the intake_node_label_id value
+     */
+    public void setLabel(IntakeNodeLabel label) {
+        this.label = label;
+    }
+
+    /**
+	 * Return the value associated with the column: answerElements
+     */
+    public Set<IntakeAnswerElement> getAnswerElements() {
+        return answerElements;
+    }
+
+    /**
+	 * Set the value related to the column: answerElements
+     *
+     * @param answerElements
+     *            the answerElements value
+     */
+    public void setAnswerElements(Set<IntakeAnswerElement> answerElements) {
+        this.answerElements = answerElements;
+    }
+
+    public boolean equals(Object obj) {
+        if (null == obj)
+            return false;
+        if (!(obj instanceof IntakeNodeTemplate))
+            return false;
+        else {
+            IntakeNodeTemplate intakeNodeTemplate = (IntakeNodeTemplate) obj;
+            if (null == this.getId() || null == intakeNodeTemplate.getId())
+                return false;
+            else
+                return (this.getId().equals(intakeNodeTemplate.getId()));
+        }
+    }
+
+    public int hashCode() {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId())
+                return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

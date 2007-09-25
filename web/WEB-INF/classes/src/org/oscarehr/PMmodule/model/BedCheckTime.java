@@ -21,14 +21,25 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseBedCheckTime;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 
-public class BedCheckTime extends BaseBedCheckTime {
+import java.io.Serializable;
+
+public class BedCheckTime implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static BedCheckTime create(Integer programId, String time) {
+    public static String REF = "BedCheckTime";
+    public static String PROP_TIME = "time";
+    public static String PROP_PROGRAM_ID = "programId";
+    public static String PROP_ID = "id";
+    
+    private int hashCode = Integer.MIN_VALUE;// primary key
+
+    private Integer id;// fields
+    private Integer programId;
+    private java.util.Date time;
+
+    public static BedCheckTime create(Integer programId, String time) {
 		BedCheckTime bedCheckTime = new BedCheckTime();
 		bedCheckTime.setProgramId(programId);
 		bedCheckTime.setStrTime(time);
@@ -36,29 +47,35 @@ public class BedCheckTime extends BaseBedCheckTime {
 		return bedCheckTime;
 	}
 	
-	/* [CONSTRUCTOR MARKER BEGIN] */
 
-	public BedCheckTime() {
-		super();
+    // constructors
+	public BedCheckTime () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public BedCheckTime(java.lang.Integer id) {
-		super(id);
+	public BedCheckTime (Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public BedCheckTime(java.lang.Integer id, java.lang.Integer programId, java.util.Date time) {
-		super(id, programId, time);
+	public BedCheckTime (
+		Integer id,
+		Integer programId,
+		java.util.Date time) {
+
+		this.setId(id);
+		this.setProgramId(programId);
+		this.setTime(time);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
-
-	public String getStrTime() {
+    public String getStrTime() {
 		return DateTimeFormatUtils.getStringFromTime(getTime());
 	}
 
@@ -67,4 +84,79 @@ public class BedCheckTime extends BaseBedCheckTime {
 		setTime(DateTimeFormatUtils.getTimeFromString(strTime));
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="bed_check_time_id"
+*/
+    public Integer getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: program_id
+     */
+    public Integer getProgramId () {
+        return programId;
+    }
+
+    /**
+	 * Set the value related to the column: program_id
+     * @param programId the program_id value
+     */
+    public void setProgramId (Integer programId) {
+        this.programId = programId;
+    }
+
+    /**
+	 * Return the value associated with the column: time
+     */
+    public java.util.Date getTime () {
+        return time;
+    }
+
+    /**
+	 * Set the value related to the column: time
+     * @param time the time value
+     */
+    public void setTime (java.util.Date time) {
+        this.time = time;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof BedCheckTime)) return false;
+        else {
+            BedCheckTime bedCheckTime = (BedCheckTime) obj;
+            if (null == this.getId() || null == bedCheckTime.getId()) return false;
+            else return (this.getId().equals(bedCheckTime.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

@@ -23,37 +23,143 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseBedDemographicStatus;
 
-public class BedDemographicStatus extends BaseBedDemographicStatus {
+import java.io.Serializable;
+
+public class BedDemographicStatus implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+    public static String REF = "BedDemographicStatus";
+    public static String PROP_DURATION = "duration";
+    public static String PROP_DEFAULT = "default";
+    public static String PROP_NAME = "name";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer id;// fields
+    private String name;
+    private Integer duration;
+    private boolean m_default;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
 
-	public BedDemographicStatus() {
-		super();
+    // constructors
+	public BedDemographicStatus () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public BedDemographicStatus(java.lang.Integer id) {
-		super(id);
+	public BedDemographicStatus (Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public BedDemographicStatus(java.lang.Integer id, java.lang.String name, java.lang.Integer duration, boolean m_default) {
-		super(id, name, duration, m_default);
+	public BedDemographicStatus (
+		Integer id,
+		String name,
+		Integer duration,
+		boolean m_default) {
+
+		this.setId(id);
+		this.setName(name);
+		this.setDuration(duration);
+		this.setDefault(m_default);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="bed_demographic_status_id"
+*/
+    public Integer getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: name
+     */
+    public String getName () {
+        return name;
+    }
+
+    /**
+	 * Set the value related to the column: name
+     * @param name the name value
+     */
+    public void setName (String name) {
+        this.name = name;
+    }
+
+    /**
+	 * Return the value associated with the column: duration
+     */
+    public Integer getDuration () {
+        return duration;
+    }
+
+    /**
+	 * Set the value related to the column: duration
+     * @param duration the duration value
+     */
+    public void setDuration (Integer duration) {
+        this.duration = duration;
+    }
+
+    /**
+	 * Return the value associated with the column: default
+     */
+    public boolean isDefault () {
+        return m_default;
+    }
+
+    /**
+	 * Set the value related to the column: default
+     * @param m_default the default value
+     */
+    public void setDefault (boolean m_default) {
+        this.m_default = m_default;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof BedDemographicStatus)) return false;
+        else {
+            BedDemographicStatus bedDemographicStatus = (BedDemographicStatus) obj;
+            if (null == this.getId() || null == bedDemographicStatus.getId()) return false;
+            else return (this.getId().equals(bedDemographicStatus.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

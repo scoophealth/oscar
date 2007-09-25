@@ -18,40 +18,112 @@
  */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseIntakeNodeLabel;
+import java.io.Serializable;
 
-public class IntakeNodeLabel extends BaseIntakeNodeLabel {
+public class IntakeNodeLabel implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public IntakeNodeLabel(String label) {
-		super(null, label);
-	}
+    public static String REF = "IntakeNodeLabel";
+    public static String PROP_LABEL = "label";
+    public static String PROP_ID = "id";
+    
+    private int hashCode = Integer.MIN_VALUE;// primary key
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
+    private Integer id;// fields
+    private String label;
+
+  // constructors
 	public IntakeNodeLabel() {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeNodeLabel(java.lang.Integer id) {
-		super(id);
+	public IntakeNodeLabel(Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeNodeLabel(java.lang.Integer id, java.lang.String label) {
-		super(id, label);
-	}
+	public IntakeNodeLabel(Integer id, String label) {
 
-	/* [CONSTRUCTOR MARKER END] */
+		this.setId(id);
+		this.setLabel(label);
+		initialize();
+	}
 
 	@Override
 	public String toString() {
 		return new StringBuilder(REF).append("(").append(getId()).append(", ").append(getLabel()).append(")").toString();
 	}
 
+    protected void initialize() {
+    }
+
+    /**
+	 * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native" column="intake_node_label_id"
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     *
+     * @param id
+     *            the new ID
+     */
+    public void setId(Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: lbl
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+	 * Set the value related to the column: lbl
+     *
+     * @param label
+     *            the lbl value
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public boolean equals(Object obj) {
+        if (null == obj)
+            return false;
+        if (!(obj instanceof IntakeNodeLabel))
+            return false;
+        else {
+            IntakeNodeLabel intakeNodeLabel = (IntakeNodeLabel) obj;
+            if (null == this.getId() || null == intakeNodeLabel.getId())
+                return false;
+            else
+                return (this.getId().equals(intakeNodeLabel.getId()));
+        }
+    }
+
+    public int hashCode() {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId())
+                return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }

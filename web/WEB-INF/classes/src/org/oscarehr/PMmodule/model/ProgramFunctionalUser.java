@@ -21,26 +21,164 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseProgramFunctionalUser;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the program_functional_user table. Any customizations belong here.
  */
-public class ProgramFunctionalUser extends BaseProgramFunctionalUser {
+public class ProgramFunctionalUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	public ProgramFunctionalUser() {
-		super();
+    public static String PROP_PROVIDER_NO = "ProviderNo";
+    public static String PROP_USER_TYPE = "UserType";
+    public static String PROP_USER_TYPE_ID = "UserTypeId";
+    public static String PROP_PROGRAM_ID = "ProgramId";
+    public static String PROP_PROVIDER = "Provider";
+    public static String PROP_ID = "Id";
+
+    private int hashCode = Integer.MIN_VALUE;// primary key
+
+    private Long _id;// fields
+    private Long _programId;
+    private long _userTypeId;
+    private Long _providerNo;// many to one
+    private FunctionalUserType _userType;
+    private Provider _provider;
+
+                   // constructors
+	public ProgramFunctionalUser () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public ProgramFunctionalUser(java.lang.Long _id) {
-		super(_id);
+	public ProgramFunctionalUser (Long _id) {
+		this.setId(_id);
+		initialize();
 	}
-	/* [CONSTRUCTOR MARKER END] */
-	
+
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="id"
+*/
+    public Long getId () {
+        return _id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param _id the new ID
+     */
+    public void setId (Long _id) {
+        this._id = _id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: program_id
+     */
+    public Long getProgramId () {
+        return _programId;
+    }
+
+    /**
+	 * Set the value related to the column: program_id
+     * @param _programId the program_id value
+     */
+    public void setProgramId (Long _programId) {
+        this._programId = _programId;
+    }
+
+    /**
+	 * Return the value associated with the column: user_type_id
+     */
+    public long getUserTypeId () {
+        return _userTypeId;
+    }
+
+    /**
+	 * Set the value related to the column: user_type_id
+     * @param _userTypeId the user_type_id value
+     */
+    public void setUserTypeId (long _userTypeId) {
+        this._userTypeId = _userTypeId;
+    }
+
+    /**
+	 * Return the value associated with the column: provider_no
+     */
+    public Long getProviderNo () {
+        return _providerNo;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param _providerNo the provider_no value
+     */
+    public void setProviderNo (Long _providerNo) {
+        this._providerNo = _providerNo;
+    }
+
+    /**
+     * @hibernate.property
+*  column=user_type_id
+     */
+    public FunctionalUserType getUserType () {
+        return this._userType;
+    }
+
+    /**
+	 * Set the value related to the column: user_type_id
+     * @param _userType the user_type_id value
+     */
+    public void setUserType (FunctionalUserType _userType) {
+        this._userType = _userType;
+    }
+
+    /**
+     * @hibernate.property
+*  column=provider_no
+     */
+    public Provider getProvider () {
+        return this._provider;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param _provider the provider_no value
+     */
+    public void setProvider (Provider _provider) {
+        this._provider = _provider;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof ProgramFunctionalUser)) return false;
+        else {
+            ProgramFunctionalUser mObj = (ProgramFunctionalUser) obj;
+            if (null == this.getId() || null == mObj.getId()) return false;
+            else return (this.getId().equals(mObj.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

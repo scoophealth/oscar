@@ -65,7 +65,7 @@ public class Log implements Serializable {
 	 */
 	public Log (
 		long _id,
-		java.lang.String _content) {
+		String _content) {
 
 		this.setId(_id);
 		this.setContent(_content);

@@ -352,7 +352,7 @@ public class Formintakea implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public Formintakea (java.lang.Long _id) {
+	public Formintakea (Long _id) {
 		this.setId(_id);
 		initialize();
 	}
@@ -361,8 +361,8 @@ public class Formintakea implements Serializable {
 	 * Constructor for required fields
 	 */
 	public Formintakea (
-		java.lang.Long _id,
-		java.lang.Long _demographicNo) {
+		Long _id,
+		Long _demographicNo) {
 
 		this.setId(_id);
 		this.setDemographicNo(_demographicNo);

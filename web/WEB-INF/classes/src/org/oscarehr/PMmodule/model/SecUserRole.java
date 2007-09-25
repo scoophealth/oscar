@@ -22,27 +22,123 @@
 
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseSecUserRole;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the secUserRole table.
  * Any customizations belong here.
  */
-public class SecUserRole extends BaseSecUserRole {
+public class SecUserRole implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private String _roleName;
+    private String _providerNo;
 
-	/*[CONSTRUCTOR MARKER BEGIN]*/
-	public SecUserRole() {
-		super();
-	}
 
-	/**
-	 * Constructor for primary key
-	 */
-	public SecUserRole(java.lang.String _roleName, java.lang.String _providerNo) {
-		super(_roleName, _providerNo);
-	}
-	/*[CONSTRUCTOR MARKER END]*/
+    // constructors
+    public SecUserRole () {
+        initialize();
+    }
 
+    /**
+     * Constructor for primary key
+     */
+    public SecUserRole (
+            String _roleName,
+            String _providerNo) {
+
+        this.setRoleName(_roleName);
+        this.setProviderNo(_providerNo);
+        initialize();
+    }
+
+    protected void initialize () {}
+
+    /**
+     * @hibernate.property
+     *  column=role_name
+     * not-null=true
+     */
+    public String getRoleName () {
+        return this._roleName;
+    }
+
+    /**
+     * Set the value related to the column: role_name
+     * @param _roleName the role_name value
+     */
+    public void setRoleName (String _roleName) {
+        this._roleName = _roleName;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+     * @hibernate.property
+     *  column=provider_no
+     * not-null=true
+     */
+    public String getProviderNo () {
+        return this._providerNo;
+    }
+
+    /**
+     * Set the value related to the column: provider_no
+     * @param _providerNo the provider_no value
+     */
+    public void setProviderNo (String _providerNo) {
+        this._providerNo = _providerNo;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof SecUserRole)) return false;
+        else {
+            SecUserRole mObj = (SecUserRole) obj;
+            if (null != this.getRoleName() && null != mObj.getRoleName()) {
+                if (!this.getRoleName().equals(mObj.getRoleName())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            if (null != this.getProviderNo() && null != mObj.getProviderNo()) {
+                if (!this.getProviderNo().equals(mObj.getProviderNo())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            StringBuffer sb = new StringBuffer();
+            if (null != this.getRoleName()) {
+                sb.append(this.getRoleName().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            if (null != this.getProviderNo()) {
+                sb.append(this.getProviderNo().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            this.hashCode = sb.toString().hashCode();
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

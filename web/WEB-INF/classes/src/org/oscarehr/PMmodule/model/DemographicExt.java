@@ -55,7 +55,7 @@ public class DemographicExt implements Serializable {
     /**
      * Constructor for primary key
      */
-    public DemographicExt (java.lang.Integer id) {
+    public DemographicExt (Integer id) {
         this.setId(id);
         initialize();
     }

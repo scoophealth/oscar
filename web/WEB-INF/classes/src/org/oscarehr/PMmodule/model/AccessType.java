@@ -21,27 +21,111 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseAccessType;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the access_type table.
  * Any customizations belong here.
  */
-public class AccessType extends BaseAccessType {
+public class AccessType implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static String PROP_TYPE = "Type";
+    public static String PROP_NAME = "Name";
+    public static String PROP_ID = "Id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Long _id;// fields
+    private String _name;
+    private String _type;
 
-	/*[CONSTRUCTOR MARKER BEGIN]*/
-	public AccessType () {
-		super();
-	}
+    // constructors
+    public AccessType () {
+        initialize();
+    }
 
-	/**
-	 * Constructor for primary key
-	 */
-	public AccessType (java.lang.Long _id) {
-		super(_id);
-	}
+    /**
+     * Constructor for primary key
+     */
+    public AccessType (Long _id) {
+        this.setId(_id);
+        initialize();
+    }
 
-	/*[CONSTRUCTOR MARKER END]*/
+
+    /*[CONSTRUCTOR MARKER END]*/
+    protected void initialize () {}
+
+    /**
+     * Return the unique identifier of this class
+     * @hibernate.id
+     *  generator-class="native"
+     *  column="access_id"
+     */
+    public Long getId () {
+        return _id;
+    }
+
+    /**
+     * Set the unique identifier of this class
+     * @param _id the new ID
+     */
+    public void setId (Long _id) {
+        this._id = _id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+     * Return the value associated with the column: name
+     */
+    public String getName () {
+        return _name;
+    }
+
+    /**
+     * Set the value related to the column: name
+     * @param _name the name value
+     */
+    public void setName (String _name) {
+        this._name = _name;
+    }
+
+    /**
+     * Return the value associated with the column: type
+     */
+    public String getType () {
+        return _type;
+    }
+
+    /**
+     * Set the value related to the column: type
+     * @param _type the type value
+     */
+    public void setType (String _type) {
+        this._type = _type;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof AccessType)) return false;
+        else {
+            AccessType mObj = (AccessType) obj;
+            if (null == this.getId() || null == mObj.getId()) return false;
+            else return (this.getId().equals(mObj.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

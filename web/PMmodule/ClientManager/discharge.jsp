@@ -1,4 +1,4 @@
-<%@ page import="org.oscarehr.PMmodule.model.base.DischargeReason" %>
+<%@ page import="org.oscarehr.PMmodule.model.DischargeReason" %>
 <!--
 	Copyright (c) 2001-2002.
 	

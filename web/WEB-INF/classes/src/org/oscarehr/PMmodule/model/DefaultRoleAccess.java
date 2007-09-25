@@ -21,26 +21,146 @@
 */
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseDefaultRoleAccess;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the default_role_access table. Any customizations belong here.
  */
-public class DefaultRoleAccess extends BaseDefaultRoleAccess {
+public class DefaultRoleAccess  implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static String PROP_ACCESS_TYPE = "access_type";
+    public static String PROP_CAISI_ROLE = "caisi_role";
+    public static String PROP_ACCESS_TYPE_ID = "accessTypeId";
+    public static String PROP_ID = "id";
+    public static String PROP_ROLE_ID = "roleId";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Long _id;// fields
+    private long _roleId;
+    private long _accessTypeId;// many to one
+    private org.caisi.model.Role _caisi_role;
+    private AccessType _access_type;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	public DefaultRoleAccess() {
-		super();
-	}
 
-	/**
-	 * Constructor for primary key
-	 */
-	public DefaultRoleAccess(java.lang.Long _id) {
-		super(_id);
-	}
+    // constructors
+    public DefaultRoleAccess () {
+        initialize();
+    }
 
-	/* [CONSTRUCTOR MARKER END] */
+    /**
+     * Constructor for primary key
+     */
+    public DefaultRoleAccess (Long _id) {
+        this.setId(_id);
+        initialize();
+    }
+
+    /* [CONSTRUCTOR MARKER END] */
+    protected void initialize () {}
+
+    /**
+     * Return the unique identifier of this class
+     * @hibernate.id
+     *  generator-class="native"
+     *  column="id"
+     */
+    public Long getId () {
+        return _id;
+    }
+
+    /**
+     * Set the unique identifier of this class
+     * @param _id the new ID
+     */
+    public void setId (Long _id) {
+        this._id = _id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+     * Return the value associated with the column: role_id
+     */
+    public long getRoleId () {
+        return _roleId;
+    }
+
+    /**
+     * Set the value related to the column: role_id
+     * @param _roleId the role_id value
+     */
+    public void setRoleId (long _roleId) {
+        this._roleId = _roleId;
+    }
+
+    /**
+     * Return the value associated with the column: access_id
+     */
+    public long getAccessTypeId () {
+        return _accessTypeId;
+    }
+
+    /**
+     * Set the value related to the column: access_id
+     * @param _accessTypeId the access_id value
+     */
+    public void setAccessTypeId (long _accessTypeId) {
+        this._accessTypeId = _accessTypeId;
+    }
+
+    /**
+     * @hibernate.property
+     *  column=role_id
+     */
+    public org.caisi.model.Role getCaisi_role () {
+        return this._caisi_role;
+    }
+
+    /**
+     * Set the value related to the column: role_id
+     * @param _caisi_role the role_id value
+     */
+    public void setCaisi_role (org.caisi.model.Role _caisi_role) {
+        this._caisi_role = _caisi_role;
+    }
+
+    /**
+     * @hibernate.property
+     *  column=access_id
+     */
+    public AccessType getAccess_type () {
+        return this._access_type;
+    }
+
+    /**
+     * Set the value related to the column: access_id
+     * @param _access_type the access_id value
+     */
+    public void setAccess_type (AccessType _access_type) {
+        this._access_type = _access_type;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof DefaultRoleAccess)) return false;
+        else {
+            DefaultRoleAccess mObj = (DefaultRoleAccess) obj;
+            if (null == this.getId() || null == mObj.getId()) return false;
+            else return (this.getId().equals(mObj.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

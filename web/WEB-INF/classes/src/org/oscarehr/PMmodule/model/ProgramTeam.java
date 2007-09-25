@@ -22,34 +22,40 @@
 package org.oscarehr.PMmodule.model;
 
 import java.util.List;
-
-import org.oscarehr.PMmodule.model.base.BaseProgramTeam;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the program_team table. Any customizations belong here.
  */
-public class ProgramTeam extends BaseProgramTeam {
+public class ProgramTeam implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+    public static String REF = "ProgramTeam";
+    public static String PROP_PROGRAM_ID = "programId";
+    public static String PROP_NAME = "name";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer id;// fields
+    private String name;
+    private Integer programId;
+	private List providers;
+	private List admissions;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	public ProgramTeam() {
-		super();
+
+    // constructors
+	public ProgramTeam () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public ProgramTeam(java.lang.Integer id) {
-		super(id);
+	public ProgramTeam (Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
-
-	private List providers;
-	private List admissions;
-
-	/**
+    /**
 	 * @return Returns the admissions.
 	 */
 	public List getAdmissions() {
@@ -79,4 +85,79 @@ public class ProgramTeam extends BaseProgramTeam {
 		this.providers = providers;
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="team_id"
+*/
+    public Integer getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: name
+     */
+    public String getName () {
+        return name;
+    }
+
+    /**
+	 * Set the value related to the column: name
+     * @param name the name value
+     */
+    public void setName (String name) {
+        this.name = name;
+    }
+
+    /**
+	 * Return the value associated with the column: program_id
+     */
+    public Integer getProgramId () {
+        return programId;
+    }
+
+    /**
+	 * Set the value related to the column: program_id
+     * @param programId the program_id value
+     */
+    public void setProgramId (Integer programId) {
+        this.programId = programId;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof ProgramTeam)) return false;
+        else {
+            ProgramTeam programTeam = (ProgramTeam) obj;
+            if (null == this.getId() || null == programTeam.getId()) return false;
+            else return (this.getId().equals(programTeam.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

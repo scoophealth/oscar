@@ -23,26 +23,107 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseBedDemographicPK;
 
-public class BedDemographicPK extends BaseBedDemographicPK {
+import java.io.Serializable;
+
+public class BedDemographicPK implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
+    protected int hashCode = Integer.MIN_VALUE;
+    private Integer demographicNo;
+    private Integer bedId;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	
-	public BedDemographicPK() {
+
+    public BedDemographicPK () {}
+
+	public BedDemographicPK (
+		Integer demographicNo,
+		Integer bedId) {
+
+		this.setDemographicNo(demographicNo);
+		this.setBedId(bedId);
 	}
 
-	public BedDemographicPK(java.lang.Integer demographicNo, java.lang.Integer bedId) {
-		super(demographicNo, bedId);
-	}
-	
-	/* [CONSTRUCTOR MARKER END] */
 	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
+    /**
+	 * Return the value associated with the column: demographic_no
+     */
+    public Integer getDemographicNo () {
+        return demographicNo;
+    }
+
+    /**
+	 * Set the value related to the column: demographic_no
+     * @param demographicNo the demographic_no value
+     */
+    public void setDemographicNo (Integer demographicNo) {
+        this.demographicNo = demographicNo;
+    }
+
+    /**
+	 * Return the value associated with the column: bed_id
+     */
+    public Integer getBedId () {
+        return bedId;
+    }
+
+    /**
+	 * Set the value related to the column: bed_id
+     * @param bedId the bed_id value
+     */
+    public void setBedId (Integer bedId) {
+        this.bedId = bedId;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof BedDemographicPK)) return false;
+        else {
+            BedDemographicPK mObj = (BedDemographicPK) obj;
+            if (null != this.getDemographicNo() && null != mObj.getDemographicNo()) {
+                if (!this.getDemographicNo().equals(mObj.getDemographicNo())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            if (null != this.getBedId() && null != mObj.getBedId()) {
+                if (!this.getBedId().equals(mObj.getBedId())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            StringBuilder sb = new StringBuilder();
+            if (null != this.getDemographicNo()) {
+                sb.append(this.getDemographicNo().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            if (null != this.getBedId()) {
+                sb.append(this.getBedId().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            this.hashCode = sb.toString().hashCode();
+        }
+        return this.hashCode;
+    }
 }

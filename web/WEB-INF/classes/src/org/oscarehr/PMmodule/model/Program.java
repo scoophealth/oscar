@@ -102,7 +102,7 @@ public class Program implements Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public Program (java.lang.Integer id) {
+	public Program (Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -111,18 +111,18 @@ public class Program implements Serializable {
 	 * Constructor for required fields
 	 */
 	public Program (
-		java.lang.Integer id,
-		java.lang.Integer maxAllowed,
-		java.lang.String address,
-		java.lang.String phone,
-		java.lang.String fax,
-		java.lang.String url,
-		java.lang.String email,
-		java.lang.String emergencyNumber,
-		java.lang.String name,
-		java.lang.Long agencyId,
+		Integer id,
+		Integer maxAllowed,
+		String address,
+		String phone,
+		String fax,
+		String url,
+		String email,
+		String emergencyNumber,
+		String name,
+		Long agencyId,
 		boolean holdingTank,
-		java.lang.String programStatus) {
+		String programStatus) {
 
 		this.setId(id);
 		this.setMaxAllowed(maxAllowed);

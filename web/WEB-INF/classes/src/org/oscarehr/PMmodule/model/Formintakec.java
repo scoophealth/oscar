@@ -521,7 +521,7 @@ public class Formintakec implements Serializable {
     /**
      * Constructor for primary key
      */
-    public Formintakec (java.lang.Long _id) {
+    public Formintakec (Long _id) {
         this.setId(_id);
         initialize();
     }
@@ -530,8 +530,8 @@ public class Formintakec implements Serializable {
      * Constructor for required fields
      */
     public Formintakec (
-            java.lang.Long _id,
-            java.lang.Long _demographicNo) {
+            Long _id,
+            Long _demographicNo) {
 
         this.setId(_id);
         this.setDemographicNo(_demographicNo);

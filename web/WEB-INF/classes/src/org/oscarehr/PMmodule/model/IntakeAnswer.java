@@ -51,7 +51,7 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 	/**
 	 * Constructor for primary key
 	 */
-	public IntakeAnswer(java.lang.Integer id) {
+	public IntakeAnswer(Integer id) {
 		this.setId(id);
 		initialize();
 	}
@@ -59,7 +59,7 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 	/**
 	 * Constructor for required fields
 	 */
-	public IntakeAnswer(java.lang.Integer id, org.oscarehr.PMmodule.model.Intake intake, org.oscarehr.PMmodule.model.IntakeNode node, java.lang.String value) {
+	public IntakeAnswer(Integer id, org.oscarehr.PMmodule.model.Intake intake, org.oscarehr.PMmodule.model.IntakeNode node, String value) {
 
 		this.setId(id);
 		this.setIntake(intake);
@@ -101,7 +101,7 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 	}
 	
 	/**
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 * @see Comparable#compareTo(Object)
 	 */
 	public int compareTo(IntakeAnswer answer) {
 		CompareToBuilder compareToBuilder = new CompareToBuilder();
