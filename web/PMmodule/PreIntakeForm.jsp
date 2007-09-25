@@ -25,6 +25,8 @@
 <%@ include file="/taglibs.jsp"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.Agency"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+
 <script>
 	function new_client(agencyId,clientId) {
 		var f = document.preIntakeForm;
@@ -107,10 +109,12 @@
 				%>
 			</html:select>&nbsp;<html:text property="form.yearOfBirth" size="4" /></td>
 		</tr>
+		<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
 		<tr>
 			<td>Health Card</td>
 			<td><html:text property="form.healthCardNumber" size="10" /> &nbsp; <html:text property="form.healthCardVersion" size="2" /></td>
 		</tr>
+		</caisi:isModuleLoad>
 		<tr>
 			<td colspan="2"><br />
 			<html:submit /></td>
