@@ -1,6 +1,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.model.Intake"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
@@ -79,6 +80,7 @@
 
             </td>
         </tr>
+        <caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
         <tr>
             <td><label>Health Card #<br>
                 <input type="text" size="10" maxlength="10" dojoType="IntegerTextBox" name="client.hin" value="<bean:write name="genericIntakeEditForm"  property="client.hin"/>"/>
@@ -87,6 +89,7 @@
                 <input type="text" size="2" maxlength="2" dojoType="AlphaTextBox" name="client.ver" value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>"/>
             </label></td>
         </tr>
+        </caisi:isModuleLoad>
         <tr>
             <td>
                 <label>Email<br>
