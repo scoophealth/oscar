@@ -113,33 +113,33 @@ public class Hl7textResultsData {
                        logger.info("CODE:"+identifier+ " needs to be mapped"); 
                     }
                     
-                    if (!measType.equals("")){
-                        sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES ('"+measType+"', '"+demographic_no+"', '0', '"+result+"', '"+measInst+"', '"+h.getTimeStamp(i, j)+"', '"+dateEntered+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
-                        rs = pstmt.getGeneratedKeys();
-                        String insertID = null;
-                        if(rs.next())
-                            insertID = rs.getString(1);
+                    
+                    sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES ('"+measType+"', '"+demographic_no+"', '0', '"+result+"', '"+measInst+"', '"+h.getTimeStamp(i, j)+"', '"+dateEntered+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    rs = pstmt.getGeneratedKeys();
+                    String insertID = null;
+                    if(rs.next())
+                        insertID = rs.getString(1);
 
-                        sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'lab_no', '"+lab_no+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'lab_no', '"+lab_no+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
 
-                        sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'abnormal', '"+abnormal+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'abnormal', '"+abnormal+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
 
-                        sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'identifier', '"+identifier+"')";
-                        logger.info(sql);
-                        pstmt = conn.prepareStatement(sql);
-                        pstmt.executeUpdate();
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"', 'identifier', '"+identifier+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
 
-                        pstmt.close();
-                    }
+                    pstmt.close();
+                    
                 }
             }
             
