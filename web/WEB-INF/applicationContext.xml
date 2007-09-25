@@ -10,7 +10,6 @@
           autowire="default" dependency-check="default">
         <property name="locations">
             <list>
-                <value>/WEB-INF/hibernate.properties</value>
                 <value>/WEB-INF/classes/caisi.properties</value>
             </list>
         </property>
