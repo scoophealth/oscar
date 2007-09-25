@@ -2695,7 +2695,7 @@ public class Formintakea implements Serializable {
 
     public boolean equals (Object obj) {
         if (null == obj) return false;
-        if (!(obj instanceof BaseFormintakea)) return false;
+        if (!(obj instanceof Formintakea)) return false;
         else {
             Formintakea mObj = (Formintakea) obj;
             if (null == this.getId() || null == mObj.getId()) return false;
