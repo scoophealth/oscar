@@ -22,34 +22,184 @@
 
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseLog;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the log table.
  * Any customizations belong here.
  */
-public class Log extends BaseLog {
+public class Log implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+    public static String PROP_PROVIDER_NO = "ProviderNo";
+    public static String PROP_ACTION = "Action";
+    public static String PROP_IP = "Ip";
+    public static String PROP_CONTENT = "Content";
+    public static String PROP_ID = "id";
+    public static String PROP_CONTENT_ID = "ContentId";
+    public static String PROP_DATE_TIME = "DateTime";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private long _id;// fields
+    private String _providerNo;
+    private java.util.Date _dateTime;
+    private String _action;
+    private String _contentId;
+    private String _content;
+    private String _ip;
 
-	/*[CONSTRUCTOR MARKER BEGIN]*/
-	public Log() {
-		super();
+       // constructors
+	public Log () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Log(long _id) {
-		super(_id);
+	public Log (long _id) {
+		this.setId(_id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Log(long _id, java.lang.String _content) {
-		super(_id, _content);
+	public Log (
+		long _id,
+		java.lang.String _content) {
+
+		this.setId(_id);
+		this.setContent(_content);
+		initialize();
 	}
-	/*[CONSTRUCTOR MARKER END]*/
-	
+
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="id"
+*/
+    public long getId () {
+        return _id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param _id the new ID
+     */
+    public void setId (long _id) {
+        this._id = _id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: provider_no
+     */
+    public String getProviderNo () {
+        return _providerNo;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param _providerNo the provider_no value
+     */
+    public void setProviderNo (String _providerNo) {
+        this._providerNo = _providerNo;
+    }
+
+    /**
+	 * Return the value associated with the column: dateTime
+     */
+    public java.util.Date getDateTime () {
+        return _dateTime;
+    }
+
+    /**
+	 * Set the value related to the column: dateTime
+     * @param _dateTime the dateTime value
+     */
+    public void setDateTime (java.util.Date _dateTime) {
+        this._dateTime = _dateTime;
+    }
+
+    /**
+	 * Return the value associated with the column: action
+     */
+    public String getAction () {
+        return _action;
+    }
+
+    /**
+	 * Set the value related to the column: action
+     * @param _action the action value
+     */
+    public void setAction (String _action) {
+        this._action = _action;
+    }
+
+    /**
+	 * Return the value associated with the column: contentId
+     */
+    public String getContentId () {
+        return _contentId;
+    }
+
+    /**
+	 * Set the value related to the column: contentId
+     * @param _contentId the contentId value
+     */
+    public void setContentId (String _contentId) {
+        this._contentId = _contentId;
+    }
+
+    /**
+	 * Return the value associated with the column: content
+     */
+    public String getContent () {
+        return _content;
+    }
+
+    /**
+	 * Set the value related to the column: content
+     * @param _content the content value
+     */
+    public void setContent (String _content) {
+        this._content = _content;
+    }
+
+    /**
+	 * Return the value associated with the column: ip
+     */
+    public String getIp () {
+        return _ip;
+    }
+
+    /**
+	 * Set the value related to the column: ip
+     * @param _ip the ip value
+     */
+    public void setIp (String _ip) {
+        this._ip = _ip;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof Log)) return false;
+        else {
+            Log mObj = (Log) obj;
+            return (this.getId() == mObj.getId());
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            return (int) this.getId();
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }
