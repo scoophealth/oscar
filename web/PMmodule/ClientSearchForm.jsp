@@ -2,7 +2,7 @@
 <%@ include file="/common/messages.jsp"%>
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <script>
 	function resetClientFields() {
 		var form = document.clientSearchForm2;
@@ -43,11 +43,12 @@
 					(yyyy/mm/dd)</th>
 					<td><html:text property="criteria.dob" size="15" /></td>
 				</tr>
+				<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
 				<tr>
 					<th>Health Card Number</th>
 					<td><html:text property="criteria.healthCardNumber" size="15" /> <html:text property="criteria.healthCardVersion" size="2" /></td>
 				</tr>
-				
+				</caisi:isModuleLoad>
 				<tr>
 					<!--  <th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
 					-->
