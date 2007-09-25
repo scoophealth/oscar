@@ -14,7 +14,7 @@ import javax.xml.parsers.*;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.httpclient.protocol.*;
-import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
+//import org.apache.commons.httpclient.contrib.ssl.EasySSLProtocolSocketFactory;
 import org.apache.commons.codec.binary.Base64;
 
 import org.w3c.dom.*;
@@ -22,8 +22,11 @@ import org.w3c.dom.*;
 import org.mule.impl.*;
 import org.mule.umo.UMOEventContext;
 import org.mule.providers.file.FileConnector;
+import org.apache.commons.logging.Log; 
+import org.apache.commons.logging.LogFactory;
 
 public class Uploader {
+	private static final Log LOG = LogFactory.getLog(Uploader.class);
 
    	static int ConnectionRefused = 0;
    	static int Success = 1;
@@ -32,7 +35,8 @@ public class Uploader {
    	static int UploadFailed = 4;
 
 	public void Upload(byte[] fileBytes) throws Exception{
-
+		
+		
 		UMOEventContext context = RequestContext.getEventContext();
     	String fileName = context.getStringProperty( FileConnector.PROPERTY_ORIGINAL_FILENAME );
 		String directory = context.getStringProperty( FileConnector.PROPERTY_DIRECTORY );
@@ -47,15 +51,16 @@ public class Uploader {
 		}else if (URL.endsWith("/")){
 			URL = URL+"oscar/lab/newLabUpload.do";
 		}else{
-			URL = URL+"/oscar/lab/newLabUpload.do";
+			URL = URL+"/lab/newLabUpload.do";
 		}
-
+		LOG.debug("URL : " + URL );
+		
 		if (keyLocation.indexOf(":/") != -1){
 			keyLocation = keyLocation.replaceAll("/", "\\\\");
 		}else{
 			keyLocation = "/"+keyLocation;
 		}
-
+		LOG.debug("KEY : " + keyLocation );
 		// if returnCode is not set it is because of an exception
 		int returnCode = Exception;
 		try{
