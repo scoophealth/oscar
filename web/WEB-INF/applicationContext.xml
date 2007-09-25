@@ -17,6 +17,9 @@
 		<property name="url" value="${db_uri}${db_name}" />       <!-- hibernate.connection.url-->
 		<property name="username" value="${db_username}" />       <!-- hibernate.connection.username -->
 		<property name="password" value="${db_password}" />       <!-- hibernate.connection.password -->
+		<!-- <property name="testOnBorrow" value="true" /> -->
+		<!-- <property name="validationQuery" value="select 1 from dual" /> -->
+		<property name="maxWait" value="4000" />	
 	</bean>
 	
 	<bean id="auditInterceptor" class="org.oscarehr.common.dao.hibernate.AuditInterceptor" />
