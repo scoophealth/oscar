@@ -23,16 +23,34 @@
 package org.oscarehr.PMmodule.model;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.oscarehr.PMmodule.model.base.BaseRoom;
 
-public class Room extends BaseRoom {
+import java.io.Serializable;
+
+public class Room implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final String DEFAULT_NAME = "";
 	private static final boolean DEFAULT_ACTIVE = true;
+    public static String REF = "Room";
+    public static String PROP_ROOM_TYPE_ID = "roomTypeId";
+    public static String PROP_ACTIVE = "active";
+    public static String PROP_FLOOR = "floor";
+    public static String PROP_PROGRAM_ID = "programId";
+    public static String PROP_NAME = "name";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer id;// fields
+    private Integer roomTypeId;
+    private Integer programId;
+    private String name;
+    private String floor;
+    private boolean active;
 
-	public static final Room create(RoomType roomType) {
+    private RoomType roomType;
+    private Program program;
+
+    public static final Room create(RoomType roomType) {
 		Room room = new Room();
 		room.setRoomTypeId(roomType.getId());
 		room.setName(DEFAULT_NAME);
@@ -41,31 +59,36 @@ public class Room extends BaseRoom {
 		return room;
 	}
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-
-	public Room() {
-		super();
+	  // constructors
+	public Room () {
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
-	public Room(java.lang.Integer id) {
-		super(id);
+	public Room (java.lang.Integer id) {
+		this.setId(id);
+		initialize();
 	}
 
 	/**
 	 * Constructor for required fields
 	 */
-	public Room(java.lang.Integer id, java.lang.Integer roomTypeId, java.lang.String name, boolean active) {
-		super(id, roomTypeId, name, active);
+	public Room (
+		java.lang.Integer id,
+		java.lang.Integer roomTypeId,
+		java.lang.String name,
+		boolean active) {
+
+		this.setId(id);
+		this.setRoomTypeId(roomTypeId);
+		this.setName(name);
+		this.setActive(active);
+		initialize();
 	}
 
-	/* [CONSTRUCTOR MARKER END] */
 
-	private RoomType roomType;
-	private Program program;
-	
 	public void setRoomType(RoomType roomType) {
 	    this.roomType = roomType;
     }
@@ -97,4 +120,120 @@ public class Room extends BaseRoom {
 		return ToStringBuilder.reflectionToString(this);
 	}
 
+    protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="room_id"
+*/
+    public Integer getId () {
+        return id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: room_type_id
+     */
+    public Integer getRoomTypeId () {
+        return roomTypeId;
+    }
+
+    /**
+	 * Set the value related to the column: room_type_id
+     * @param roomTypeId the room_type_id value
+     */
+    public void setRoomTypeId (Integer roomTypeId) {
+        this.roomTypeId = roomTypeId;
+    }
+
+    /**
+	 * Return the value associated with the column: program_id
+     */
+    public Integer getProgramId () {
+        return programId;
+    }
+
+    /**
+	 * Set the value related to the column: program_id
+     * @param programId the program_id value
+     */
+    public void setProgramId (Integer programId) {
+        this.programId = programId;
+    }
+
+    /**
+	 * Return the value associated with the column: name
+     */
+    public String getName () {
+        return name;
+    }
+
+    /**
+	 * Set the value related to the column: name
+     * @param name the name value
+     */
+    public void setName (String name) {
+        this.name = name;
+    }
+
+    /**
+	 * Return the value associated with the column: floor
+     */
+    public String getFloor () {
+        return floor;
+    }
+
+    /**
+	 * Set the value related to the column: floor
+     * @param floor the floor value
+     */
+    public void setFloor (String floor) {
+        this.floor = floor;
+    }
+
+    /**
+	 * Return the value associated with the column: active
+     */
+    public boolean isActive () {
+        return active;
+    }
+
+    /**
+	 * Set the value related to the column: active
+     * @param active the active value
+     */
+    public void setActive (boolean active) {
+        this.active = active;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof Room)) return false;
+        else {
+            Room room = (Room) obj;
+            if (null == this.getId() || null == room.getId()) return false;
+            else return (this.getId().equals(room.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
 }
