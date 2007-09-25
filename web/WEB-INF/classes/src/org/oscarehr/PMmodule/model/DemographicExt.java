@@ -22,25 +22,178 @@
 
 package org.oscarehr.PMmodule.model;
 
-import org.oscarehr.PMmodule.model.base.BaseDemographicExt;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the demographicExt table. Any customizations belong here.
  */
-public class DemographicExt extends BaseDemographicExt {
+public class DemographicExt implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    public static String REF = "DemographicExt";
+    public static String PROP_KEY = "key";
+    public static String PROP_PROVIDER_NO = "providerNo";
+    public static String PROP_VALUE = "value";
+    public static String PROP_DEMOGRAPHIC_NO = "demographicNo";
+    public static String PROP_HIDDEN = "hidden";
+    public static String PROP_DATE_CREATED = "dateCreated";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer id;// fields
+    private Integer demographicNo;
+    private Integer providerNo;
+    private String key;
+    private String value;
+    private java.util.Date dateCreated;
+    private boolean hidden;
 
-	/* [CONSTRUCTOR MARKER BEGIN] */
-	public DemographicExt() {
-		super();
-	}
+    // constructors
+    public DemographicExt () {
+        initialize();
+    }
 
-	/**
-	 * Constructor for primary key
-	 */
-	public DemographicExt(java.lang.Integer id) {
-		super(id);
-	}
-	/* [CONSTRUCTOR MARKER END] */
+    /**
+     * Constructor for primary key
+     */
+    public DemographicExt (java.lang.Integer id) {
+        this.setId(id);
+        initialize();
+    }
+
+    /* [CONSTRUCTOR MARKER END] */
+    protected void initialize () {}
+
+    /**
+     * Return the unique identifier of this class
+     * @hibernate.id
+     *  generator-class="native"
+     *  column="id"
+     */
+    public Integer getId () {
+        return id;
+    }
+
+    /**
+     * Set the unique identifier of this class
+     * @param id the new ID
+     */
+    public void setId (Integer id) {
+        this.id = id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+     * Return the value associated with the column: demographic_no
+     */
+    public Integer getDemographicNo () {
+        return demographicNo;
+    }
+
+    /**
+     * Set the value related to the column: demographic_no
+     * @param demographicNo the demographic_no value
+     */
+    public void setDemographicNo (Integer demographicNo) {
+        this.demographicNo = demographicNo;
+    }
+
+    /**
+     * Return the value associated with the column: provider_no
+     */
+    public Integer getProviderNo () {
+        return providerNo;
+    }
+
+    /**
+     * Set the value related to the column: provider_no
+     * @param providerNo the provider_no value
+     */
+    public void setProviderNo (Integer providerNo) {
+        this.providerNo = providerNo;
+    }
+
+    /**
+     * Return the value associated with the column: key_val
+     */
+    public String getKey () {
+        return key;
+    }
+
+    /**
+     * Set the value related to the column: key_val
+     * @param key the key_val value
+     */
+    public void setKey (String key) {
+        this.key = key;
+    }
+
+    /**
+     * Return the value associated with the column: value
+     */
+    public String getValue () {
+        return value;
+    }
+
+    /**
+     * Set the value related to the column: value
+     * @param value the value value
+     */
+    public void setValue (String value) {
+        this.value = value;
+    }
+
+    /**
+     * Return the value associated with the column: date_time
+     */
+    public java.util.Date getDateCreated () {
+        return dateCreated;
+    }
+
+    /**
+     * Set the value related to the column: date_time
+     * @param dateCreated the date_time value
+     */
+    public void setDateCreated (java.util.Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    /**
+     * Return the value associated with the column: hidden
+     */
+    public boolean isHidden () {
+        return hidden;
+    }
+
+    /**
+     * Set the value related to the column: hidden
+     * @param hidden the hidden value
+     */
+    public void setHidden (boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof DemographicExt)) return false;
+        else {
+            DemographicExt demographicExt = (DemographicExt) obj;
+            if (null == this.getId() || null == demographicExt.getId()) return false;
+            else return (this.getId().equals(demographicExt.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }
