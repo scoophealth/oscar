@@ -22,8 +22,10 @@
 
 package org.oscarehr.survey.web.formbean;
 
+import java.io.Serializable;
 
-public class SurveyExecuteFormBean {
+
+public class SurveyExecuteFormBean implements Serializable {
 	private String tab;
 	private long id;
 	private long clientId;

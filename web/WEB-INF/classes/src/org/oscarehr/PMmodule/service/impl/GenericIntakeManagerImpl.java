@@ -46,8 +46,8 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 
 	private GenericIntakeNodeDAO genericIntakeNodeDAO;
 	private GenericIntakeDAO genericIntakeDAO;
-	private ProgramDao programDAO;
-	private AdmissionDao admissionDAO;
+	private ProgramDao programDao;
+	private AdmissionDao admissionDao;
 
 	public void setGenericIntakeNodeDAO(GenericIntakeNodeDAO genericIntakeNodeDAO) {
 		this.genericIntakeNodeDAO = genericIntakeNodeDAO;
@@ -57,12 +57,12 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 		this.genericIntakeDAO = genericIntakeDAO;
 	}
 
-	public void setProgramDAO(ProgramDao programDAO) {
-		this.programDAO = programDAO;
+	public void setProgramDao(ProgramDao programDao) {
+		this.programDao = programDao;
 	}
 
-	public void setAdmissionDAO(AdmissionDao admissionDAO) {
-		this.admissionDAO = admissionDAO;
+	public void setAdmissionDao(AdmissionDao admissionDao) {
+		this.admissionDao = admissionDao;
 	}
 
 	// Copy
@@ -167,11 +167,11 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	public List<Program> getProgramsWithIntake(Integer clientId) {
 		List<Program> programsWithIntake = new ArrayList<Program>();
 
-		List<?> serviceProgramAdmissions = admissionDAO.getCurrentServiceProgramAdmission(programDAO, clientId);
+		List<?> serviceProgramAdmissions = admissionDao.getCurrentServiceProgramAdmission(programDao, clientId);
 		if (serviceProgramAdmissions != null) {
 			for (Object o : serviceProgramAdmissions) {
 				Admission admission = (Admission) o;
-				Program program = programDAO.getProgram(admission.getProgramId());
+				Program program = programDao.getProgram(admission.getProgramId());
 
 				if (program != null && program.getIntakeProgram() != null) {
 					programsWithIntake.add(program);
@@ -279,7 +279,7 @@ public class GenericIntakeManagerImpl implements GenericIntakeManager {
 	}
 
 	private IntakeNode getProgramIntakeNode(Integer programId) {
-		return getProgramIntakeNode(programDAO.getProgram(programId));
+		return getProgramIntakeNode(programDao.getProgram(programId));
 	}
 
 	private IntakeNode getProgramIntakeNode(Program program) {

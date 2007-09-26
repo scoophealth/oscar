@@ -22,7 +22,9 @@
 
 package org.oscarehr.survey.web.formbean;
 
-public class PageNavEntry {
+import java.io.Serializable;
+
+public class PageNavEntry implements Serializable {
 	private String pageNumber;
 	private String pageName;
 	

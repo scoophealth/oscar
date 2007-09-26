@@ -24,8 +24,9 @@ package org.oscarehr.survey.web.formbean;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 
-public class SurveyExecuteDataBean {
+public class SurveyExecuteDataBean implements Serializable {
 	private Map values = null;
 
 	public SurveyExecuteDataBean() {
