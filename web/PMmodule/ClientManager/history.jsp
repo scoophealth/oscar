@@ -94,7 +94,7 @@
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	
     <display:column sortable="false">
-        <a href="javascript:void(0)" onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
+        <a href="javascript:void(0)" title="Referral details" onclick="popupReferralInfo('<c:out value="${referral.id}" />')">
             <img alt="View details" src="<c:out value="${ctx}" />/images/details.gif" border="0"/>
         </a>
     </display:column>
