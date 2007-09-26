@@ -22,6 +22,25 @@
 
 package org.caisi.dao;
 
-public interface AccessTypeDAO {
-	public void addAccessType(String name, String type);
+import java.sql.Connection;
+import java.sql.Statement;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.util.DbConnectionFilter;
+
+public class AccessTypeDAO {
+    public void addAccessType(String name, String type) {
+        try {
+            Connection conn = DbConnectionFilter.getThreadLocalDbConnection();
+            Statement stmt = conn.createStatement();
+            String sql = "insert into access_type (name,type) values (\'" + StringEscapeUtils.escapeSql(name) + "\',\'" + type + "\')";
+            stmt.executeUpdate(sql);
+            
+            stmt.close();
+            conn.close();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
 }

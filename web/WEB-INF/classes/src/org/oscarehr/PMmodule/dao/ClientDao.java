@@ -43,7 +43,6 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -590,15 +589,15 @@ public class ClientDao extends HibernateDaoSupport {
 		
 		sqlCommand.append(" order by last_name,first_name");		
 
-        // yeah I know using a treeMap isn't an effiientway of making this unique but given the current constraints this was quick and dirty and should work for the size of our data set 
+        // yeah I know using a treeMap isn't an efficient way of making this unique but given the current constraints this was quick and dirty and should work for the size of our data set 
 		TreeMap<String, ClientListsReportResults> results=new TreeMap<String, ClientListsReportResults>();
 		
-        Session session=getSession();
-		Connection c=session.connection();
+		Connection c=null;
 		PreparedStatement ps=null;
 		ResultSet rs=null;
 		try
 		{            
+		    c=DbConnectionFilter.getThreadLocalDbConnection();
 			ps=c.prepareStatement(sqlCommand.toString());
 			
 			// filter by provider
@@ -653,7 +652,7 @@ public class ClientDao extends HibernateDaoSupport {
 		finally
 		{
             // odd not sure what the stupid spring template is doing here but I have to close the session.
-			SqlUtils.closeResources(session,ps, rs);
+			SqlUtils.closeResources(c,ps, rs);
 		}
 		
 		return results;
