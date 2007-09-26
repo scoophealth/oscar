@@ -166,7 +166,7 @@ public class ProgramDao extends HibernateDaoSupport {
 		String queryStr = "FROM Program p WHERE p.agencyId = ? AND p.type != 'community' ORDER BY p.name";
 
 		@SuppressWarnings("unchecked")
-		List<Program> rs = getHibernateTemplate().find(queryStr, agencyId);
+		List<Program> rs = getHibernateTemplate().find(queryStr, Long.parseLong(agencyId));
 
 		if (log.isDebugEnabled()) {
 			log.debug("getProgramsByAgencyId: # of programs: " + rs.size());

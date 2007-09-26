@@ -98,13 +98,15 @@ public class GenericIntakeDAOHibernate extends HibernateDaoSupport implements Ge
 		}
 		
 		//endDate is "YYYY-MM-DD 00:00:00", it has to be "YYYY-MM-DD 23:59:59"
-		Calendar c = new GregorianCalendar();
-		c.setTime(endDate);
-		c.add(Calendar.DAY_OF_MONTH, 1);
-		endDate = c.getTime();		
+		Calendar endCal = new GregorianCalendar();
+		endCal.setTime(endDate);
+		endCal.add(Calendar.DAY_OF_MONTH, 1);
 		
-		// wrong, only got the oldest first record: List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? group by i.clientId", new Object[] { nodeId, startDate, endDate });
-		List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId", new Object[] { nodeId, startDate, endDate });
+        Calendar startCal = new GregorianCalendar();
+        startCal.setTime(startDate);
+
+        // wrong, only got the oldest first record: List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? group by i.clientId", new Object[] { nodeId, startDate, endDate });
+		List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId", new Object[] { nodeId, startCal, endCal });
 		SortedSet<Integer> intakeIds = convertToIntegers(results);
 
 		LOG.info("get latest intake ids: " + intakeIds.size());
