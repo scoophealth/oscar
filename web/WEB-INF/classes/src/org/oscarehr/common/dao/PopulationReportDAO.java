@@ -37,12 +37,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.util.EncounterUtil.EncounterType;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.joda.time.Days;
 import org.joda.time.MutablePeriod;
 import org.joda.time.PeriodType;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.model.Stay;
+import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.util.SqlUtils;
@@ -169,13 +169,11 @@ public class PopulationReportDAO extends HibernateDaoSupport {
     }
 
     public Map<Integer, Integer> getCaseManagementNoteCountGroupedByIssueGroup(int programId, int roleId, EncounterType encounterType, Date startDate, Date endDate) {
-
-        Session session = getSessionFactory().openSession();
         Connection c = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            c = session.connection();
+            c = DbConnectionFilter.getThreadLocalDbConnection();
             ps = c.prepareStatement("select issueGroupId,count(distinct casemgmt_note.note_id) from IssueGroupIssues,casemgmt_issue,casemgmt_issue_notes,casemgmt_note where IssueGroupIssues.issue_id=casemgmt_issue.issue_id and casemgmt_issue_notes.id=casemgmt_issue.id and casemgmt_note.note_id=casemgmt_issue_notes.note_id and casemgmt_note.encounter_type=? and casemgmt_note.program_no=? and casemgmt_note.reporter_caisi_role=? and casemgmt_note.update_date>=? and casemgmt_note.update_date<=? group by issueGroupId");
             ps.setString(1, encounterType.getOldDbValue());
             ps.setInt(2, programId);
@@ -194,8 +192,7 @@ public class PopulationReportDAO extends HibernateDaoSupport {
             throw (new HibernateException(e));
         }
         finally {
-            // don't close hibernate connections.
-            SqlUtils.closeResources(session, ps, rs);
+            SqlUtils.closeResources(c, ps, rs);
         }
     }
 
