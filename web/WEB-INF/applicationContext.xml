@@ -6,6 +6,7 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
         default-autowire="no">
 
+    <!-- load properties from additional property files; oscar.properties is already loaded -->
     <bean id="propertyConfigurer" class="org.oscarehr.common.OscarPropertyPlaceholderConfigurer" lazy-init="default"
           autowire="default" dependency-check="default">
         <property name="locations">
@@ -14,7 +15,8 @@
             </list>
         </property>
     </bean>
-    <!-- Hibernate -->
+
+    <!-- data source configuration -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="default"
           autowire="default" dependency-check="default">
         <property name="driverClassName" value="${db_driver}"/>
@@ -27,8 +29,9 @@
 		<property name="maxWait" value="4000" />
 
     </bean>
-    <bean id="auditInterceptor" class="org.oscarehr.common.dao.hibernate.AuditInterceptor" lazy-init="default"
-          autowire="default" dependency-check="default"/>
+
+
+    <!-- hibernate session factory -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" lazy-init="default"
           autowire="default" dependency-check="default">
         <property name="dataSource" ref="dataSource"/>
@@ -61,6 +64,11 @@
             </map>
         </property>
     </bean>
+
+
+    <bean id="auditInterceptor" class="org.oscarehr.common.dao.hibernate.AuditInterceptor" lazy-init="default"
+          autowire="default" dependency-check="default"/>
+
     <bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
           lazy-init="default" autowire="default" dependency-check="default">
         <property name="dataSource" ref="dataSource"/>
@@ -83,6 +91,22 @@
             </props>
         </property>
     </bean>
+
+    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"
+          lazy-init="default" autowire="default" dependency-check="default">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+          abstract="true" lazy-init="default" autowire="default" dependency-check="default">
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+
     <!-- DAO -->
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" lazy-init="default"
           dependency-check="default">
@@ -140,20 +164,6 @@
     <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementIssueDAOHibernate"
           lazy-init="default" autowire="default" dependency-check="default">
         <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <!-- Transaction manager for a single Hibernate SessionFactory (alternative to JTA) -->
-    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          abstract="true" lazy-init="default" autowire="default" dependency-check="default">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
     </bean>
     <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" lazy-init="default"
           autowire="default" dependency-check="default">
@@ -255,7 +265,8 @@
           autowire="default" dependency-check="default">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    <!-- managers  -->
+
+    <!-- Manager classes -->
     <bean id="programQueueManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
           dependency-check="default">
         <property name="target">
@@ -423,7 +434,9 @@
             </bean>
         </property>
     </bean>
-    <!-- TicklerPlus -->
+
+    <!-- TicklerPlus DAOs -->
+
     <bean id="ticklerDAOT" class="org.caisi.dao.hibernate.TicklerDAOHibernate" lazy-init="default" autowire="default"
           dependency-check="default">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -449,6 +462,8 @@
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
     </bean>
+
+    <!-- TicklerPlus managers -->
     <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
           lazy-init="default" autowire="default" dependency-check="default">
         <property name="transactionManager" ref="transactionManager"/>
