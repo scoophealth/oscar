@@ -376,14 +376,8 @@
             </props>
         </property>
     </bean>
-    <bean id="consultationDAOT" class="org.caisi.dao.hibernate.ConsultationDAOHibernate"
-         autowire="byName">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="chartDAOT" class="org.caisi.dao.hibernate.EChartDAOHibernate" autowire="byName"
-         >
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
+    <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
+    <bean id="chartDAOT" class="org.caisi.dao.hibernate.EChartDAOHibernate" autowire="byName" />
     <bean id="consultationManagerTarget" class="org.caisi.service.impl.ConsultationManagerImpl"
          autowire="byName">
         <property name="consultationDAO" ref="consultationDAOT"/>

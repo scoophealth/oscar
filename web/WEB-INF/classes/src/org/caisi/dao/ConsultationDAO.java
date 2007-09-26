@@ -1,5 +1,4 @@
 /*
-* 
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
 * This software is published under the GPL GNU General Public License. 
 * This program is free software; you can redistribute it and/or 
@@ -24,37 +23,23 @@ package org.caisi.dao;
 
 import java.util.List;
 
+import org.caisi.dao.ConsultationDAO;
 import org.caisi.model.Consultation;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Data Access Object for Consultation Requests
- * 
- * @author Marc Dumontier <a href="mailto:marc@mdumontier.com">marc@mdumontier.com</a>
- *
  */
-public interface ConsultationDAO extends DAO {
-	
-	/**
-	 * Get all consultations for a patient
-	 * @param demographic_no Demographic Id
-	 * @return A List of Consultation objects
-	 */
-	public List getConsultations(String demographic_no);
-	
-	/**
-	 * Get a set of consultations for a patient, filtered by status
-	 * For set of statuses, see OSCAR table.
-	 * 
-	 * @param demographic_no Demographic Id
-	 * @param status the status
-	 * @return A list of Consultations objects
-	 */
-	public List getConsultationsByStatus(String demographic_no, String status);
-	
-	/**
-	 * Get a Consultation using it's primary identifier
-	 * @param requestId The id
-	 * @return The Consultation
-	 */
-	public Consultation getConsultation(Long requestId);
+public class ConsultationDAO extends HibernateDaoSupport {
+
+    public List getConsultations(String demographic_no) {
+        return this.getHibernateTemplate().find("from Consultation c where c.demographic_no = ?", new Object[] {demographic_no});
+    }
+
+    public List getConsultationsByStatus(String demographic_no, String status) {
+        return this.getHibernateTemplate().find("from Consultation c where c.demographic_no = ? and c.status = ?", new Object[] {demographic_no, status});
+    }
+
+    public Consultation getConsultation(Long requestId) {
+        return (Consultation)this.getHibernateTemplate().get(Consultation.class, requestId);
+    }
 }
