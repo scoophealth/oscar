@@ -23,19 +23,23 @@
  */
 package oscar.util;
 
-import org.apache.log4j.Category;
-
-import org.apache.struts.action.*;
-
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 
 
 public abstract class OscarAction extends Action {
-    static Category cat = Category.getInstance(OscarAction.class.getName());
+    private static Logger logger=Logger.getLogger(OscarAction.class);
     protected static int PAGE_LENGTH = 20;
 
     static {
@@ -54,21 +58,21 @@ public abstract class OscarAction extends Action {
             new ActionMessage(error, e.getMessage()));
         saveErrors(request, aes);
         e.printStackTrace();
-        cat.error("Erro - ", e);
+        logger.error("Erro - ", e);
     }
 
     protected void generalError(HttpServletRequest request, String error) {
         ActionMessages aes = new ActionMessages();
         aes.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(error));
         saveErrors(request, aes);
-        cat.error("Erro - " + error);
+        logger.error("Erro - " + error);
     }
 
 	protected void generalError(HttpServletRequest request, String error, String errorMsg) {
 		ActionMessages aes = new ActionMessages();
 		aes.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(error, errorMsg));
 		saveErrors(request, aes);
-		cat.error("Erro - " + error);
+		logger.error("Erro - " + error);
 	}
 	
 
@@ -76,7 +80,7 @@ public abstract class OscarAction extends Action {
         ActionMessages aes = new ActionMessages();
         aes.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage(error, params));
         saveErrors(request, aes);
-        cat.error("Erro - " + error);
+        logger.error("Erro - " + error);
     }
     
 
@@ -86,7 +90,7 @@ public abstract class OscarAction extends Action {
         aes.add(ActionMessages.GLOBAL_MESSAGE,
             new ActionMessage(error, param1, param2));
         saveErrors(request, aes);
-        cat.error("Erro - " + error);
+        logger.error("Erro - " + error);
     }
 
     protected void generalError(HttpServletRequest request, Exception e) {
@@ -95,7 +99,7 @@ public abstract class OscarAction extends Action {
             new ActionMessage("erro.geral", e.getMessage()));
         saveErrors(request, aes);
         e.printStackTrace();
-        cat.error("Erro - " + e.getMessage());
+        logger.error("Erro - " + e.getMessage());
     }
 
     protected void generalError(HttpServletRequest request, Exception e,
@@ -105,7 +109,7 @@ public abstract class OscarAction extends Action {
             new ActionMessage(error, e.getMessage(), param));
         saveErrors(request, aes);
         e.printStackTrace();
-        cat.error("Erro - " + e.getMessage());
+        logger.error("Erro - " + e.getMessage());
     }
 
     protected PagerDef pagination(ActionMapping mapping,
