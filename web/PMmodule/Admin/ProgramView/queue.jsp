@@ -66,7 +66,6 @@
         window.open(url, title, 'width=800, height=800');
     }
 
-    //         <a href="../CaseManagementView.do?case_program_id=<c:out value="${queue_entry.programId}"/>&demographicNo=<c:out value="${queue_entry.clientId}"/>">Case Management</a>
     function cme_client(programId, clientId) {
         popup("caseManagement" + clientId, "../oscarEncounter/IncomingEncounter.do?case_program_id=" + programId + "&demographicNo=" + clientId + "&status=B");
     }
@@ -91,7 +90,9 @@
         <input type="button" value="Reject" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
     </display:column>
     <display:column sortable="false">
-          <input type="button" value="Case Management" onclick="cme_client(<c:out value="${queue_entry.programId}"/>, <c:out value="${queue_entry.clientId}"/>)"/>
+        <a href="javascript:void(0)" title="Case management" onclick="cme_client('<c:out value="${queue_entry.programId}"/>', '<c:out value="${queue_entry.clientId}"/>')">
+            Case Management Encounter
+        </a>
     </display:column>
     <display:column sortable="true" property="clientFormattedName" title="Client name"/>
     <display:column property="referralDate" sortable="true" title="Referral Date" />
@@ -131,7 +132,7 @@
         <tr>
             <td width="5%"><html:radio property="radioRejectionReason" value="1" /></td>
             <td>Client requires acute care</td>
-        </tr
+        </tr>
         <tr>
             <td width="5%"><html:radio property="radioRejectionReason" value="2" /></td>
             <td>Client not interested</td>
