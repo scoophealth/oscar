@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.struts.util.LabelValueBean;
-import org.caisi.dao.AdmissionDao;
 import org.caisi.dao.BedProgramDao;
 import org.caisi.dao.DemographicDAO;
 import org.caisi.dao.ProviderDefaultProgramDao;
@@ -209,7 +208,6 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	public String[] getProgramInformation(int programId) {
 		return this.bedProgramDao.getProgramInfo(programId);
 	}
-
-
+	
 }
 
