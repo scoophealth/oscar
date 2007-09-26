@@ -335,10 +335,7 @@
             </props>
         </property>
     </bean>
-    <bean id="customFilterDAOT" class="org.caisi.dao.hibernate.CustomFilterDAOHibernate"
-         autowire="byName">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
+    <bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
     <bean id="ticklerManagerTargetT" class="org.caisi.service.impl.TicklerManagerImpl"
          autowire="byName">
         <property name="ticklerDAO" ref="ticklerDAOT"/>
