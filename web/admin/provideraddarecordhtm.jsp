@@ -57,9 +57,15 @@ function onsub() {
      document.searchprovider.provider_type.value==""  ) {
      alert("<bean:message key="global.msgInputKeyword"/>");
      return false;
-  } else {
-    return true;
+  } 
+  if(!document.searchprovider.provider_no.value.match(/^\d+$/)){
+  		alert("Provider No. must be a number.");
+  		return false;
   }
+  else {
+    	return true;
+  }
+ 
 }
 function upCaseCtrl(ctrl) {
   ctrl.value = ctrl.value.toUpperCase();
@@ -88,7 +94,7 @@ function upCaseCtrl(ctrl) {
           <div align="right"><bean:message key="admin.provider.formLastName"/><font color="red">:</font> </div>
         </td>
         <td>
-          <input type="text" name="last_name">
+          <input type="text" name="last_name" maxlength="30">
         </td>
       </tr>
       <tr>
@@ -96,7 +102,7 @@ function upCaseCtrl(ctrl) {
           <div align="right"><bean:message key="admin.provider.formFirstName"/><font color="red">:</font> </div>
         </td>
         <td>
-          <input type="text" name="first_name">
+          <input type="text" name="first_name" maxlength="30">
         </td>
       </tr>
       <tr>
@@ -131,13 +137,13 @@ function upCaseCtrl(ctrl) {
       <tr>
         <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
         <td>
-          <input type="text" name="specialty"  onBlur="upCaseCtrl(this)">
+          <input type="text" name="specialty"  onBlur="upCaseCtrl(this)" maxlength="20">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formTeam"/>: </td>
         <td>
-          <input type="text" name="team" >
+          <input type="text" name="team" maxlength="20">
         </td>
       </tr>
       <tr>
@@ -149,25 +155,25 @@ function upCaseCtrl(ctrl) {
       <tr>
         <td align="right"><bean:message key="admin.provider.formDOB"/>(<font size="-1"><i><bean:message key="admin.provideraddrecordhtm.dateFormat"/></i></font>): </td>
         <td>
-          <input type="text" name="dob" value="0001-01-01" >
+          <input type="text" name="dob" value="0001-01-01" maxlength="10">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
         <td>
-          <input type="text" name="address" size="40">
+          <input type="text" name="address" size="40" maxlength="40">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
         <td>
-          <input type="text" name="phone" >
+          <input type="text" name="phone" maxlength="20">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formWorkPhone"/>: </td>
         <td>
-          <input type="text" name="workphone" value="">
+          <input type="text" name="workphone" value="" maxlength="20">
         </td>
       </tr>
   <tr>
@@ -197,25 +203,25 @@ function upCaseCtrl(ctrl) {
       <tr>
         <td align="right"><bean:message key="admin.provider.formOhipNo"/>: </td>
         <td>
-          <input type="text" name="ohip_no" >
+          <input type="text" name="ohip_no" maxlength="20">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formRmaNo"/>: </td>
         <td>
-          <input type="text" name="rma_no" >
+          <input type="text" name="rma_no" maxlength="20">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formBillingNo"/>: </td>
         <td>
-          <input type="text" name="billing_no" >
+          <input type="text" name="billing_no" maxlength="20">
         </td>
       </tr>
       <tr>
         <td align="right"><bean:message key="admin.provider.formHsoNo"/>: </td>
         <td>
-          <input type="text" name="hso_no" >
+          <input type="text" name="hso_no" maxlength="10">
         </td>
       </tr>
       <tr>
@@ -255,7 +261,7 @@ function upCaseCtrl(ctrl) {
       <tr>
         <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
         <td>
-          <input type="text" name="status" value='1'>
+          <input type="text" name="status" value='1' maxlength="1">
         </td>
       </tr>
       <tr>

@@ -72,11 +72,11 @@ function setfocus() {
   </tr>
   <tr> 
     <td><div align="right"><bean:message key="admin.provider.formLastName"/>: </div></td>
-    <td><input type="text"  index="3" name="last_name" value="<%= rs.getString("last_name") %>"></td>
+    <td><input type="text"  index="3" name="last_name" value="<%= rs.getString("last_name") %>" maxlength="30"></td>
   </tr>
   <tr>
     <td><div align="right"><bean:message key="admin.provider.formFirstName"/>: </div></td>
-    <td><input type="text"  index="4" name="first_name" value="<%= rs.getString("first_name") %>"></td>
+    <td><input type="text"  index="4" name="first_name" value="<%= rs.getString("first_name") %>" maxlength="30" ></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formType"/>: </td>
@@ -92,34 +92,34 @@ function setfocus() {
             <option value="billing"<% if (rs.getString("provider_type").equals("billing")) { %>SELECTED<%}%>><bean:message key="admin.provider.formType.optionBilling"/></option>
           </select>
 		  <% } else { %>
-            <input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>">
+            <input type="text" name="provider_type" value="<%= rs.getString("provider_type") %>" maxlength="15">
           <% } %>
      </td>
   </tr> 
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialty"/>: </td>
-    <td><input type="text" name="specialty" value="<%= rs.getString("specialty") %>"></td>
+    <td><input type="text" name="specialty" value="<%= rs.getString("specialty") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formTeam"/>: </td>
-    <td><input type="text" name="team" value="<%= rs.getString("team") %>"></td>
+    <td><input type="text" name="team" value="<%= rs.getString("team") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSex"/>: </td>
-    <td><input type="text" name="sex" value="<%= rs.getString("sex") %>"></td>
+    <td><input type="text" name="sex" value="<%= rs.getString("sex") %>" maxlength="1"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formDOB"/>: </td>
-    <td><input type="text" name="dob" value="<%= rs.getString("dob") %>"></td>
+    <td><input type="text" name="dob" value="<%= rs.getString("dob") %>" maxlength="10"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formAddress"/>: </td>
-    <td><input type="text" name="address" value="<%= rs.getString("address") %>" size="40"></td>
+    <td><input type="text" name="address" value="<%= rs.getString("address") %>" size="40" maxlength="40"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHomePhone"/>: </td>
     <td><input type="text" name="phone" value="<%= rs.getString("phone") %>"><bean:message key="admin.provider.formWorkPhone"/>: 
-    <input type="text" name="workphone" value="<%= rs.getString("work_phone") == null?"":(rs.getString("work_phone")) %>"></td></tr>
+    <input type="text" name="workphone" value="<%= rs.getString("work_phone") == null?"":(rs.getString("work_phone")) %>" maxlength="50"></td></tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
@@ -146,23 +146,23 @@ function setfocus() {
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formOhipNo"/>: </td>
-    <td><input type="text" name="ohip_no" value="<%= rs.getString("ohip_no") %>"></td>
+    <td><input type="text" name="ohip_no" value="<%= rs.getString("ohip_no") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formRmaNo"/>: </td>
-    <td><input type="text" name="rma_no" value="<%= rs.getString("rma_no") %>"></td>
+    <td><input type="text" name="rma_no" value="<%= rs.getString("rma_no") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formBillingNo"/>: </td>
-    <td><input type="text" name="billing_no" value="<%= rs.getString("billing_no") %>"></td>
+    <td><input type="text" name="billing_no" value="<%= rs.getString("billing_no") %>" maxlength="20"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formHsoNo"/>: </td>
-    <td><input type="text" name="hso_no" value="<%= rs.getString("hso_no") %>"></td>
+    <td><input type="text" name="hso_no" value="<%= rs.getString("hso_no") %>" maxlength="10"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formStatus"/>: </td>
-    <td><input type="text" name="status" value="<%= rs.getString("status") %>"></td>
+    <td><input type="text" name="status" value="<%= rs.getString("status") %>" maxlength="1"></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
