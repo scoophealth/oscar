@@ -22,24 +22,34 @@
 
 package org.oscarehr.casemgmt.model;
 
-import org.oscarehr.casemgmt.model.base.BaseEncounterform;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the encounterform table.
  * Any customizations belong here.
  */
-public class Encounterform extends BaseEncounterform {
+public class Encounterform implements Serializable {
+    public static String PROP_FORM_NAME = "formName";
+    public static String PROP_FORM_TABLE = "formTable";
+    public static String PROP_HIDDEN = "hidden";
+    public static String PROP_FORM_VALUE = "formValue";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private String _formValue;// fields
+    private Integer _hidden;
+    private String _formName;
+    private String _formTable;
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
+    // constructors
 	public Encounterform () {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
 	public Encounterform (java.lang.String _formValue) {
-		super(_formValue);
+		this.setFormValue(_formValue);
+		initialize();
 	}
 
 	/**
@@ -51,12 +61,101 @@ public class Encounterform extends BaseEncounterform {
 		java.lang.String _formName,
 		java.lang.String _formTable) {
 
-		super (
-			_formValue,
-			_hidden,
-			_formName,
-			_formTable);
+		this.setFormValue(_formValue);
+		this.setHidden(_hidden);
+		this.setFormName(_formName);
+		this.setFormTable(_formTable);
+		initialize();
 	}
 
-/*[CONSTRUCTOR MARKER END]*/
+protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="form_value"
+*/
+    public String getFormValue () {
+        return _formValue;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param _formValue the new ID
+     */
+    public void setFormValue (String _formValue) {
+        this._formValue = _formValue;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: hidden
+     */
+    public Integer getHidden () {
+        return _hidden;
+    }
+
+    /**
+	 * Set the value related to the column: hidden
+     * @param _hidden the hidden value
+     */
+    public void setHidden (Integer _hidden) {
+        this._hidden = _hidden;
+    }
+
+    /**
+	 * Return the value associated with the column: form_name
+     */
+    public String getFormName () {
+        return _formName;
+    }
+
+    /**
+	 * Set the value related to the column: form_name
+     * @param _formName the form_name value
+     */
+    public void setFormName (String _formName) {
+        this._formName = _formName;
+    }
+
+    /**
+	 * Return the value associated with the column: form_table
+     */
+    public String getFormTable () {
+        return _formTable;
+    }
+
+    /**
+	 * Set the value related to the column: form_table
+     * @param _formTable the form_table value
+     */
+    public void setFormTable (String _formTable) {
+        this._formTable = _formTable;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof Encounterform)) return false;
+        else {
+            Encounterform mObj = (Encounterform) obj;
+            if (null == this.getFormValue() || null == mObj.getFormValue()) return false;
+            else return (this.getFormValue().equals(mObj.getFormValue()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getFormValue()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getFormValue().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

@@ -22,25 +22,159 @@
 
 package org.oscarehr.casemgmt.model;
 
-import org.oscarehr.casemgmt.model.base.BaseCaseManagementTmpSave;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the casemgmt_tmpsave table.
  * Any customizations belong here.
  */
-public class CaseManagementTmpSave extends BaseCaseManagementTmpSave {
+public class CaseManagementTmpSave implements Serializable {
+    public static String PROP_UPDATE_DATE = "update_date";
+    public static String PROP_PROVIDER_NO = "providerNo";
+    public static String PROP_PROGRAM_ID = "programId";
+    public static String PROP_DEMOGRAPHIC_NO = "demographicNo";
+    public static String PROP_NOTE = "note";
+    public static String PROP_ID = "id";
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Long _id;// fields
+    private long _demographicNo;
+    private String _providerNo;
+    private long _programId;
+    private String _note;
+    private java.util.Date _update_date;
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
+    // constructors
 	public CaseManagementTmpSave () {
-		super();
+		initialize();
 	}
 
 	/**
 	 * Constructor for primary key
 	 */
 	public CaseManagementTmpSave (java.lang.Long _id) {
-		super(_id);
+		this.setId(_id);
+		initialize();
 	}
 
 /*[CONSTRUCTOR MARKER END]*/
+protected void initialize () {}
+
+    /**
+	 * Return the unique identifier of this class
+* @hibernate.id
+*  generator-class="native"
+*  column="id"
+*/
+    public Long getId () {
+        return _id;
+    }
+
+    /**
+	 * Set the unique identifier of this class
+     * @param _id the new ID
+     */
+    public void setId (Long _id) {
+        this._id = _id;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+	 * Return the value associated with the column: demographic_no
+     */
+    public long getDemographicNo () {
+        return _demographicNo;
+    }
+
+    /**
+	 * Set the value related to the column: demographic_no
+     * @param _demographicNo the demographic_no value
+     */
+    public void setDemographicNo (long _demographicNo) {
+        this._demographicNo = _demographicNo;
+    }
+
+    /**
+	 * Return the value associated with the column: provider_no
+     */
+    public String getProviderNo () {
+        return _providerNo;
+    }
+
+    /**
+	 * Set the value related to the column: provider_no
+     * @param _providerNo the provider_no value
+     */
+    public void setProviderNo (String _providerNo) {
+        this._providerNo = _providerNo;
+    }
+
+    /**
+	 * Return the value associated with the column: program_id
+     */
+    public long getProgramId () {
+        return _programId;
+    }
+
+    /**
+	 * Set the value related to the column: program_id
+     * @param _programId the program_id value
+     */
+    public void setProgramId (long _programId) {
+        this._programId = _programId;
+    }
+
+    /**
+	 * Return the value associated with the column: note
+     */
+    public String getNote () {
+        return _note;
+    }
+
+    /**
+	 * Set the value related to the column: note
+     * @param _note the note value
+     */
+    public void setNote (String _note) {
+        this._note = _note;
+    }
+
+    /**
+	 * Return the value associated with the column: update_date
+     */
+    public java.util.Date getUpdate_date () {
+        return _update_date;
+    }
+
+    /**
+	 * Set the value related to the column: update_date
+     * @param _update_date the update_date value
+     */
+    public void setUpdate_date (java.util.Date _update_date) {
+        this._update_date = _update_date;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof CaseManagementTmpSave)) return false;
+        else {
+            CaseManagementTmpSave mObj = (CaseManagementTmpSave) obj;
+            if (null == this.getId() || null == mObj.getId()) return false;
+            else return (this.getId().equals(mObj.getId()));
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            if (null == this.getId()) return super.hashCode();
+            else {
+                String hashStr = this.getClass().getName() + ":" + this.getId().hashCode();
+                this.hashCode = hashStr.hashCode();
+            }
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

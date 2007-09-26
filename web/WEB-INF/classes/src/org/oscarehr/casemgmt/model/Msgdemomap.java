@@ -22,30 +22,121 @@
 
 package org.oscarehr.casemgmt.model;
 
-import org.oscarehr.casemgmt.model.base.BaseMsgdemomap;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the msgdemomap table.
  * Any customizations belong here.
  */
-public class Msgdemomap extends BaseMsgdemomap {
+public class Msgdemomap implements Serializable {
+    private int hashCode = Integer.MIN_VALUE;// primary key
+    private Integer _messageID;
+    private Integer _demographicNo;
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public Msgdemomap () {
-		super();
-	}
 
-	/**
-	 * Constructor for primary key
-	 */
-	public Msgdemomap (
-		java.lang.Integer _messageID,
-		java.lang.Integer _demographicNo) {
+    // constructors
+    public Msgdemomap () {
+        initialize();
+    }
 
-		super (
-			_messageID,
-			_demographicNo);
-	}
+    /**
+     * Constructor for primary key
+     */
+    public Msgdemomap (
+            java.lang.Integer _messageID,
+            java.lang.Integer _demographicNo) {
 
-/*[CONSTRUCTOR MARKER END]*/
+        this.setMessageID(_messageID);
+        this.setDemographicNo(_demographicNo);
+        initialize();
+    }
+
+    protected void initialize () {}
+
+    /**
+     * @hibernate.property
+     *  column=messageID
+     * not-null=true
+     */
+    public Integer getMessageID () {
+        return this._messageID;
+    }
+
+    /**
+     * Set the value related to the column: messageID
+     * @param _messageID the messageID value
+     */
+    public void setMessageID (Integer _messageID) {
+        this._messageID = _messageID;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    /**
+     * @hibernate.property
+     *  column=demographic_no
+     * not-null=true
+     */
+    public Integer getDemographicNo () {
+        return this._demographicNo;
+    }
+
+    /**
+     * Set the value related to the column: demographic_no
+     * @param _demographicNo the demographic_no value
+     */
+    public void setDemographicNo (Integer _demographicNo) {
+        this._demographicNo = _demographicNo;
+        this.hashCode = Integer.MIN_VALUE;
+    }
+
+    public boolean equals (Object obj) {
+        if (null == obj) return false;
+        if (!(obj instanceof Msgdemomap)) return false;
+        else {
+            Msgdemomap mObj = (Msgdemomap) obj;
+            if (null != this.getMessageID() && null != mObj.getMessageID()) {
+                if (!this.getMessageID().equals(mObj.getMessageID())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            if (null != this.getDemographicNo() && null != mObj.getDemographicNo()) {
+                if (!this.getDemographicNo().equals(mObj.getDemographicNo())) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public int hashCode () {
+        if (Integer.MIN_VALUE == this.hashCode) {
+            StringBuffer sb = new StringBuffer();
+            if (null != this.getMessageID()) {
+                sb.append(this.getMessageID().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            if (null != this.getDemographicNo()) {
+                sb.append(this.getDemographicNo().hashCode());
+                sb.append(":");
+            }
+            else {
+                return super.hashCode();
+            }
+            this.hashCode = sb.toString().hashCode();
+        }
+        return this.hashCode;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }

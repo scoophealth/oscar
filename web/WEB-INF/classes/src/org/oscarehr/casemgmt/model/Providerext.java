@@ -22,18 +22,58 @@
 
 package org.oscarehr.casemgmt.model;
 
-import org.oscarehr.casemgmt.model.base.BaseProviderext;
+import java.io.Serializable;
 
 /**
  * This is the object class that relates to the providerext table.
  * Any customizations belong here.
  */
-public class Providerext extends BaseProviderext {
+public class Providerext implements Serializable {
+    public static String PROP_PROVIDER_NO = "providerNo";
+    public static String PROP_SIGNATURE = "signature";// fields
+    private String _providerNo;
+    private String _signature;
 
-/*[CONSTRUCTOR MARKER BEGIN]*/
-	public Providerext () {
-		super();
-	}
+    // constructors
+    public Providerext () {
+        initialize();
+    }
 
-/*[CONSTRUCTOR MARKER END]*/
+
+    /*[CONSTRUCTOR MARKER END]*/
+    protected void initialize () {}
+
+    /**
+     * Return the value associated with the column: provider_no
+     */
+    public String getProviderNo () {
+        return _providerNo;
+    }
+
+    /**
+     * Set the value related to the column: provider_no
+     * @param _providerNo the provider_no value
+     */
+    public void setProviderNo (String _providerNo) {
+        this._providerNo = _providerNo;
+    }
+
+    /**
+     * Return the value associated with the column: signature
+     */
+    public String getSignature () {
+        return _signature;
+    }
+
+    /**
+     * Set the value related to the column: signature
+     * @param _signature the signature value
+     */
+    public void setSignature (String _signature) {
+        this._signature = _signature;
+    }
+
+    public String toString () {
+        return super.toString();
+    }
 }
