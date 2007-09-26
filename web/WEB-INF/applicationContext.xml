@@ -108,180 +108,62 @@
     </bean>
 
     <!-- DAO -->
-    <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" lazy-init="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao"
-          lazy-init="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao" lazy-init="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" lazy-init="default" autowire="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <!-- Generic Intake -->
-    <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.hibernate.ClientReferralDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="agencyDao" class="org.oscarehr.PMmodule.dao.hibernate.AgencyDaoHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.AdmissionDao" lazy-init="default" autowire="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDemographicDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" lazy-init="default" autowire="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDAOHibernate" lazy-init="default" autowire="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" lazy-init="default" autowire="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementIssueDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementCPPDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.hibernate.AllergyDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.hibernate.PrescriptionDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.IssueDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.hibernate.EncounterFormDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.hibernate.EchartDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.hibernate.AppointmentDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.hibernate.MessagetblDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.hibernate.ProviderSignitureDaoHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.hibernate.RoleProgramAccessDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="ClientImageDAO" class="org.oscarehr.casemgmt.dao.hibernate.ClientImageDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO" lazy-init="default" autowire="default"
-          dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementTmpSaveDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.hibernate.TicklerDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.hibernate.SurveyDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramProviderDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramFunctionalUserDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="programAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramAccessDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.DefaultRoleAccessDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="providerDefaultProgramDao" class="org.caisi.dao.hibernate.HibernateProviderDefaultProgramDao"
-          lazy-init="default" autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="bedProgramDao" class="org.caisi.dao.hibernate.HibernateBedProgramDao" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
-    <bean id="demographicDAOT" class="org.caisi.dao.hibernate.DemographicDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
+    <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName"/>
+    <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao"/>
+    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao"/>
+    <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName"/>
+    <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate" autowire="byName"/>
+    <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.hibernate.ClientReferralDAOHibernate" autowire="byName"/>
+    <bean id="agencyDao" class="org.oscarehr.PMmodule.dao.hibernate.AgencyDaoHibernate" autowire="byName"/>
+    <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.AdmissionDao" autowire="byName" />
+    <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDemographicDAOHibernate" autowire="byName"/>
+    <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
+    <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDAOHibernate" autowire="byName"/>
+    <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
+    <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate" autowire="byName"/>
+    <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementIssueDAOHibernate" autowire="byName"/>
+    <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName"/>
+    <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementCPPDAOHibernate" autowire="byName"/>
+    <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.hibernate.AllergyDAOHibernate" autowire="byName"/>
+    <bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.hibernate.PrescriptionDAOHibernate" autowire="byName"/>
+    <bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.IssueDAOHibernate" autowire="byName"/>
+    <bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.hibernate.EncounterFormDAOHibernate" autowire="byName"/>
+    <bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.hibernate.EchartDAOHibernate" autowire="byName"/>
+    <bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.hibernate.AppointmentDAOHibernate" autowire="byName"/>
+    <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.hibernate.MessagetblDAOHibernate" autowire="byName"/>
+    <bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.hibernate.ProviderSignitureDaoHibernate" autowire="byName"/>
+    <bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.hibernate.RoleProgramAccessDAOHibernate" autowire="byName"/>
+    <bean id="ClientImageDAO" class="org.oscarehr.casemgmt.dao.hibernate.ClientImageDAOHibernate" autowire="byName"/>
+    <bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO" autowire="byName" />
+    <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementTmpSaveDAOHibernate" autowire="byName"/>
+    <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.hibernate.TicklerDAOHibernate" autowire="byName"/>
+    <bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.hibernate.SurveyDAOHibernate" autowire="byName"/>
+    <bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramProviderDAOHibernate" autowire="byName"/>
+    <bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramFunctionalUserDAOHibernate" autowire="byName"/>
+    <bean id="programAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramAccessDAOHibernate" autowire="byName"/>
+    <bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.DefaultRoleAccessDAOHibernate" autowire="byName"/>
+    <bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate" autowire="byName"/>
+    <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate" autowire="byName"/>
+    <bean id="providerDefaultProgramDao" class="org.caisi.dao.hibernate.HibernateProviderDefaultProgramDao" autowire="byName"/>
+    <bean id="bedProgramDao" class="org.caisi.dao.hibernate.HibernateBedProgramDao" autowire="byName"/>
+    <bean id="demographicDAOT" class="org.caisi.dao.hibernate.DemographicDAOHibernate" autowire="byName"/>
 
     <!-- Manager classes -->
-    <bean id="programQueueManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="programQueueManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.ProgramQueueManagerImpl" lazy-init="default"
-                  autowire="default" dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.impl.ProgramQueueManagerImpl"
+                 autowire="byName">
                 <property name="programQueueDao" ref="programQueueDao"/>
                 <property name="clientReferralDAO" ref="clientReferralDAO"/>
             </bean>
         </property>
     </bean>
-    <bean id="admissionManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="admissionManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.AdmissionManager" lazy-init="default" autowire="default"
-                  dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.AdmissionManager" autowire="byName"
+                 >
                 <property name="admissionDao" ref="admissionDao"/>
                 <property name="programDao" ref="programDao"/>
                 <property name="programQueueDao" ref="programQueueDao"/>
@@ -291,11 +173,11 @@
             </bean>
         </property>
     </bean>
-    <bean id="bedDemographicManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="bedDemographicManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl" lazy-init="default"
-                  autowire="default" dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl"
+                 autowire="byName">
                 <property name="bedDemographicDAO" ref="bedDemographicDAO"/>
                 <property name="providerDAO" ref="providerDao"/>
                 <property name="bedDAO" ref="bedDAO"/>
@@ -306,7 +188,7 @@
         </property>
     </bean>
     <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="CaseManagementManagerTarget"/>
         <property name="transactionAttributes">
@@ -316,7 +198,7 @@
         </property>
     </bean>
     <bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO"/>
         <property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO"/>
         <property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO"/>
@@ -337,17 +219,17 @@
         <property name="admissionManager" ref="admissionManager"/>
         <property name="enabled" value="${casemgmt.note.password.enabled}"/>
     </bean>
-    <bean id="roleManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="roleManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl" lazy-init="default" autowire="default"
-                  dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl" autowire="byName"
+                 >
                 <property name="roleDAO" ref="roleDAO"/>
             </bean>
         </property>
     </bean>
     <bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ticklerManagerTarget"/>
         <property name="transactionAttributes">
@@ -356,12 +238,12 @@
             </props>
         </property>
     </bean>
-    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.impl.TicklerManagerImpl" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.impl.TicklerManagerImpl"
+         autowire="byName">
         <property name="ticklerDAO" ref="ticklerDAO"/>
     </bean>
     <bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ClientImageManagerTarget"/>
         <property name="transactionAttributes">
@@ -371,23 +253,23 @@
         </property>
     </bean>
     <bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.impl.ClientImageManagerImpl"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="clientImageDAO" ref="ClientImageDAO"/>
     </bean>
-    <bean id="oscarSurveyManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="oscarSurveyManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl" lazy-init="default" autowire="default"
-                  dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl" autowire="byName"
+                 >
                 <property name="surveyDAO" ref="oscarSurveyDAO"/>
             </bean>
         </property>
     </bean>
-    <bean id="programManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="programManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ProgramManager" lazy-init="default" autowire="default"
-                  dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.ProgramManager" autowire="byName"
+                 >
                 <property name="programDao" ref="programDao"/>
                 <property name="programProviderDAO" ref="programProviderDAO"/>
                 <property name="programFunctionalUserDAO" ref="programFunctionalUserDAO"/>
@@ -402,11 +284,11 @@
             </bean>
         </property>
     </bean>
-    <bean id="clientManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="clientManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ClientManager" lazy-init="default" autowire="default"
-                  dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.ClientManager" autowire="byName"
+                 >
                 <property name="clientDao" ref="clientDao"/>
                 <property name="clientReferralDAO" ref="clientReferralDAO"/>
                 <property name="programQueueManager" ref="programQueueManager"/>
@@ -416,16 +298,16 @@
             </bean>
         </property>
     </bean>
-    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl"
+         autowire="byName">
         <property name="agencyDao" ref="agencyDao"/>
         <property name="clientManager" ref="clientManager"/>
     </bean>
-    <bean id="infirmBedProgramManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="infirmBedProgramManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl" lazy-init="default"
-                  dependency-check="default">
+            <bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl"
+                 >
                 <property name="bedProgramDao" ref="bedProgramDao"/>
                 <property name="programDao" ref="programDao"/>
                 <property name="providerDefaultProgramDao" ref="providerDefaultProgramDao"/>
@@ -437,12 +319,12 @@
 
     <!-- TicklerPlus DAOs -->
 
-    <bean id="ticklerDAOT" class="org.caisi.dao.hibernate.TicklerDAOHibernate" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="ticklerDAOT" class="org.caisi.dao.hibernate.TicklerDAOHibernate" autowire="byName"
+         >
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
     <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ticklerManagerTargetT"/>
         <property name="transactionAttributes">
@@ -453,19 +335,19 @@
             </props>
         </property>
     </bean>
-    <bean id="customFilterDAOT" class="org.caisi.dao.hibernate.CustomFilterDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="customFilterDAOT" class="org.caisi.dao.hibernate.CustomFilterDAOHibernate"
+         autowire="byName">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    <bean id="ticklerManagerTargetT" class="org.caisi.service.impl.TicklerManagerImpl" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="ticklerManagerTargetT" class="org.caisi.service.impl.TicklerManagerImpl"
+         autowire="byName">
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
     </bean>
 
     <!-- TicklerPlus managers -->
     <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="demographicManagerTarget"/>
         <property name="transactionAttributes">
@@ -476,14 +358,14 @@
             </props>
         </property>
     </bean>
-    <bean id="demographicManagerTarget" class="org.caisi.service.impl.DemographicManagerImplTickler" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="demographicManagerTarget" class="org.caisi.service.impl.DemographicManagerImplTickler"
+         autowire="byName">
         <property name="demographicDAO" ref="demographicDAOT"/>
     </bean>
     <bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton"
-          lazy-init="default" autowire="default" dependency-check="default"/>
+          autowire="byName"/>
     <bean id="consultationManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="consultationManagerTarget"/>
         <property name="transactionAttributes">
@@ -494,20 +376,20 @@
             </props>
         </property>
     </bean>
-    <bean id="consultationDAOT" class="org.caisi.dao.hibernate.ConsultationDAOHibernate" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="consultationDAOT" class="org.caisi.dao.hibernate.ConsultationDAOHibernate"
+         autowire="byName">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    <bean id="chartDAOT" class="org.caisi.dao.hibernate.EChartDAOHibernate" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="chartDAOT" class="org.caisi.dao.hibernate.EChartDAOHibernate" autowire="byName"
+         >
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-    <bean id="consultationManagerTarget" class="org.caisi.service.impl.ConsultationManagerImpl" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="consultationManagerTarget" class="org.caisi.service.impl.ConsultationManagerImpl"
+         autowire="byName">
         <property name="consultationDAO" ref="consultationDAOT"/>
     </bean>
     <bean id="chartManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          lazy-init="default" autowire="default" dependency-check="default">
+          autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="chartManagerTarget"/>
         <property name="transactionAttributes">
@@ -518,15 +400,15 @@
             </props>
         </property>
     </bean>
-    <bean id="chartManagerTarget" class="org.caisi.service.impl.EChartManagerImpl" lazy-init="default"
-          autowire="default" dependency-check="default">
+    <bean id="chartManagerTarget" class="org.caisi.service.impl.EChartManagerImpl"
+         autowire="byName">
         <property name="chartDAO" ref="chartDAOT"/>
     </bean>
-    <bean id="providerManager" parent="baseTransactionProxy" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="providerManager" parent="baseTransactionProxy" autowire="byName"
+         >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ProviderManager" lazy-init="default" autowire="default"
-                  dependency-check="default">
+            <bean class="org.oscarehr.PMmodule.service.ProviderManager" autowire="byName"
+                 >
                 <property name="providerDao" ref="providerDao"/>
                 <property name="agencyDAO" ref="agencyDao"/>
                 <property name="programProviderDAO" ref="programProviderDAO"/>
@@ -534,8 +416,8 @@
             </bean>
         </property>
     </bean>
-    <bean id="version" class="org.caisi.service.impl.VersionImpl" lazy-init="default" autowire="default"
-          dependency-check="default">
+    <bean id="version" class="org.caisi.service.impl.VersionImpl" autowire="byName"
+         >
         <property name="version" value="3.0.0"/>
     </bean>
 </beans>
