@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.casemgmt.dao.TicklerDAO;
@@ -75,8 +76,8 @@ public class TicklerDAOHibernate extends HibernateDaoSupport implements
 		}
 		
 		List paramList = new ArrayList();
-		paramList.add(filter.getStartDate());
-		paramList.add(filter.getEndDate() + " 23:59:59");
+		paramList.add(filter.getStart_date());
+		paramList.add(new java.util.Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY));
 		
 		//TODO: IN clause
 		if(includeProviderClause) {
