@@ -87,7 +87,8 @@ System.out.println(" statusType "+strBillType);
 List bList = null;
 if(serviceCode == null && dx.length()<2 && visitType.length()<2) {
 	bList = bSearch ? sObj.getBills(strBillType, statusType, providerNo, startDate, endDate, demoNo) : new Vector();
-	serviceCode = "-";
+	//serviceCode = "-";
+	serviceCode = "%";
 } else {
 	serviceCode = (serviceCode == null || serviceCode.length()<2)? "%" : serviceCode; 
 	bList = bSearch ? sObj.getBills(strBillType, statusType,  providerNo, startDate,  endDate,  demoNo, serviceCode, dx, visitType) : new Vector();
@@ -110,6 +111,8 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 
 %>
 
+<%String ohipNo=request.getParameter("provider_ohipNo"); %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 
@@ -124,6 +127,7 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         <script type="text/javascript" src="../../../share/calendar/calendar.js"></script>
         <script type="text/javascript" src="../../../share/calendar/lang/<bean:message key="global.javascript.calendar"/>"></script>                                                            
         <script type="text/javascript" src="../../../share/calendar/calendar-setup.js"></script>
+       
         <script type="text/javascript">
         function fillEndDate(d){
            document.serviceform.xml_appointment_date.value= d;  
@@ -155,7 +159,32 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
            } else {
 			check(false);
            }  
-        }		
+        }	
+        
+        function changeProvider() {
+        
+        	var index = document.serviceform.providerview.selectedIndex;
+        	var provider_no = document.serviceform.providerview[index].value;
+        	alert("....now.... provider_no="+provider_no);
+        	<% for (int i = 0 ; i < pList.size(); i++) { 
+				String temp[] = ((String) pList.get(i)).split("\\|");				
+			%>
+			
+			var temp_provider_no = <%=temp[0]%> ;
+			
+			if(provider_no==temp_provider_no) {
+				alert("provider no="+provider_no+"temp provider_no="+temp_provider_no+" ohip no = " + "<%=temp[3]%>");
+				var provider_ohipNo="<%=temp[3]%>";
+				document.serviceform.provider_ohipNo.value=provider_ohipNo;
+				alert("provider ohip no = " + provider_ohipNo);	
+					
+        	}
+        	<%} %>
+        	
+        	
+        	alert("form ohipNO="+document.serviceform.provider_ohipNo.value);
+        	document.serviceform.submit();
+        }	
         </script>
 <script type="text/javascript">
 var xmlHttp;
@@ -323,7 +352,7 @@ function handleStateChange() {
 
     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="myYellow">
     <form name="serviceform" method="get" action="billingONStatus.jsp">
-    <tr><td width="36%" class="myIvory">
+    <tr><td width="30%" class="myIvory">
         <input type="checkbox" name="billType" value="HCP" <%=strBillType.indexOf("HCP")>=0?"checked":""%>><span class="smallFont">Bill OHIP</span></input>
         <input type="checkbox" name="billType" value="RMB" <%=strBillType.indexOf("RMB")>=0?"checked":""%>><span class="smallFont">RMB</span></input>
         <input type="checkbox" name="billType" value="WCB" <%=strBillType.indexOf("WCB")>=0?"checked":""%>><span class="smallFont">WCB</span></input>
@@ -338,12 +367,12 @@ function handleStateChange() {
     </td>
     <td align="center" class="myYellow">
 	 
-    <select name="providerview">
+    <select name="providerview" onchange="changeProvider();">
 			<%
 			if(pList.size() == 1) {
 				String temp[] = ((String) pList.get(0)).split("\\|");
 			%>
-			<option value="<%=temp[0]%>"><%=temp[1]%>, <%=temp[2]%></option>
+			<option value="<%=temp[0]%>"> <%=temp[1]%>, <%=temp[2]%></option>
 			<%
 			} else {
 			%>
@@ -352,9 +381,11 @@ function handleStateChange() {
 		String temp[] = ((String) pList.get(i)).split("\\|");
 	%>
        <option value="<%=temp[0]%>" <%=providerNo.equals(temp[0])?"selected":""%>><%=temp[1]%>, <%=temp[2]%></option>
+         
     <% } 
     } %>
     </select>
+    <font size="1">OHIP No.: <input type="text" size="7" name="provider_ohipNo" readonly value="<%=ohipNo%>"></font>
           <font size="1"><a href="javascript: function myFunction() {return false; }" id="hlSDate">From:</a></font> 
           <input type="text" name="xml_vdate" id="xml_vdate" value="<%=startDate%>" size=10  style="width:70px"/>          
         
