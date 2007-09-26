@@ -41,7 +41,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	public boolean isBedProgram(Integer programId) {
 		boolean result = false;
 
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId <= 0) {
 			throw new IllegalArgumentException();
 		}
 
@@ -63,7 +63,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	public boolean isServiceProgram(Integer programId) {
 		boolean result = false;
 
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId <= 0) {
 			throw new IllegalArgumentException();
 		}
 
@@ -84,7 +84,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	public boolean isCommunityProgram(Integer programId) {
 		boolean result = false;
 
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId <= 0) {
 			throw new IllegalArgumentException();
 		}
 
@@ -103,7 +103,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	}
 
 	public Program getProgram(Integer programId) {
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId <= 0) {
 			return null;
 		}
 
@@ -119,7 +119,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	public String getProgramName(Integer programId) {
 		String name = null;
 
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId <= 0) {
 			return null;
 		}
 
@@ -130,8 +130,10 @@ public class ProgramDao extends HibernateDaoSupport {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("getProgramName: " + program.getId());
-		}
+            if (program != null) {
+                log.debug("getProgramName: " + program.getId());
+            }
+        }
 
 		return name;
 	}
@@ -220,7 +222,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	}
 
 	public void removeProgram(Integer programId) {
-		if (programId == null || programId.intValue() <= 0) {
+		if (programId == null || programId <= 0) {
 			throw new IllegalArgumentException();
 		}
 
@@ -330,8 +332,9 @@ public class ProgramDao extends HibernateDaoSupport {
 		
 		return exists;
 	}
-	
-	public List<Program> getLinkedServicePrograms(Integer bedProgramId,Integer clientId) {
+
+    @SuppressWarnings("unchecked")
+    public List<Program> getLinkedServicePrograms(Integer bedProgramId, Integer clientId) {
 		List results = this.getHibernateTemplate().find("select p from Admission a,Program p where a.ProgramId = p.id and p.type='service' and  p.bedProgramLinkId = ? and a.ClientId=?",new Object[] {bedProgramId,clientId});	
 		return results;
 	}

@@ -55,7 +55,7 @@ public class ProgramManagerAction extends BaseAction {
 		return list(mapping, form, request, response);
 	}
 
-	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("programs", programManager.getAllPrograms());
 		
 		logManager.log("read", "full program list", "", request);
@@ -63,7 +63,7 @@ public class ProgramManagerAction extends BaseAction {
 		return mapping.findForward("list");
 	}
 
-	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm programForm = (DynaActionForm) form;
 
 		String id = request.getParameter("id");
@@ -287,7 +287,7 @@ public class ProgramManagerAction extends BaseAction {
 		Program program = (Program) programForm.get("program");
 		ProgramProvider pp = (ProgramProvider) programForm.get("provider");
 
-		if (pp.getId() != null && pp.getId().longValue() >= 0) {
+		if (pp.getId() != null && pp.getId() >= 0) {
 			programManager.deleteProgramProvider(String.valueOf(pp.getId()));
 
 			ActionMessages messages = new ActionMessages();
@@ -453,14 +453,14 @@ public class ProgramManagerAction extends BaseAction {
 		if (teamId != null && teamId.length() > 0) {
 			long team_id = Long.valueOf(teamId);
 
-			for (Iterator iter = pp.getTeams().iterator(); iter.hasNext();) {
-				ProgramTeam team = (ProgramTeam) iter.next();
+            for (Object o : pp.getTeams()) {
+                ProgramTeam team = (ProgramTeam) o;
 
-				if (team.getId() == team_id) {
-					pp.getTeams().remove(team);
-					break;
-				}
-			}
+                if (team.getId() == team_id) {
+                    pp.getTeams().remove(team);
+                    break;
+                }
+            }
 
 			programManager.saveProgramProvider(pp);
 		}
@@ -537,7 +537,7 @@ public class ProgramManagerAction extends BaseAction {
 		}
 				
 				
-		if (program.getMaxAllowed().intValue() < program.getNumOfMembers().intValue()) {
+		if (program.getMaxAllowed() < program.getNumOfMembers()) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.max_too_small", program.getName()));
 			saveMessages(request, messages);
@@ -619,7 +619,7 @@ public class ProgramManagerAction extends BaseAction {
 		if (this.isCancelled(request)) {
 			return list(mapping, form, request, response);
 		}
-		access.setProgramId(new Long(program.getId().longValue()));
+		access.setProgramId(program.getId().longValue());
 
 		if (programManager.getProgramAccess(String.valueOf(access.getProgramId()), access.getAccessTypeId()) != null) {
 			ActionMessages messages = new ActionMessages();
@@ -635,9 +635,9 @@ public class ProgramManagerAction extends BaseAction {
 			if (access.getRoles() == null) {
 				access.setRoles(new HashSet());
 			}
-			for (int x = 0; x < roles.length; x++) {
-				access.getRoles().add(roleManager.getRole(roles[x]));
-			}
+            for (String role : roles) {
+                access.getRoles().add(roleManager.getRole(role));
+            }
 		}
 
 		programManager.saveProgramAccess(access);
@@ -661,9 +661,9 @@ public class ProgramManagerAction extends BaseAction {
 		if (this.isCancelled(request)) {
 			return list(mapping, form, request, response);
 		}
-		function.setProgramId(new Long(program.getId().longValue()));
+		function.setProgramId(program.getId().longValue());
 
-		Long pid = programManager.getFunctionalUserByUserType(new Long(program.getId().longValue()), new Long(function.getUserTypeId()));
+		Long pid = programManager.getFunctionalUserByUserType(program.getId().longValue(), function.getUserTypeId());
 
 		if (pid != null && function.getId().longValue() != pid.longValue()) {
 			ActionMessages messages = new ActionMessages();
@@ -695,7 +695,7 @@ public class ProgramManagerAction extends BaseAction {
 		if (this.isCancelled(request)) {
 			return list(mapping, form, request, response);
 		}
-		provider.setProgramId(new Long(program.getId().longValue()));
+		provider.setProgramId(program.getId().longValue());
 
 		if (programManager.getProgramProvider(String.valueOf(provider.getProviderNo()), String.valueOf(program.getId())) != null) {
 			ActionMessages messages = new ActionMessages();
@@ -761,12 +761,12 @@ public class ProgramManagerAction extends BaseAction {
 
 		List teams = programManager.getProgramTeams(programId);
 
-		for (Iterator i = teams.iterator(); i.hasNext();) {
-			ProgramTeam team = (ProgramTeam) i.next();
+        for (Object team1 : teams) {
+            ProgramTeam team = (ProgramTeam) team1;
 
-			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
-			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
-		}
+            team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
+            team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+        }
 		
 		request.setAttribute("teams", teams);
 		
