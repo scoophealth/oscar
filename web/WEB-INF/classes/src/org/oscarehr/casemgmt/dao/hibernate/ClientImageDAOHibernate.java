@@ -34,8 +34,10 @@ public class ClientImageDAOHibernate extends HibernateDaoSupport implements
 		ClientImageDAO
 {
 	public ClientImage getClientImage(String id, String image_type) {
-		List results = this.getHibernateTemplate().find("from ClientImage c where c.demographic_no = ? and c.image_type = ? order by c.update_date desc",new Object[] {id,image_type});
-		if(results.size()>0) {
+		List results = this.getHibernateTemplate().find("from ClientImage c where c.demographic_no = ? and c.image_type = ? order by c.update_date desc",new Object[] {Long.valueOf(id),
+                image_type});
+
+        if(results.size()>0) {
 			return (ClientImage)results.get(0);
 		}
 		return null;
@@ -52,7 +54,7 @@ public class ClientImageDAOHibernate extends HibernateDaoSupport implements
 	}
 
 	public ClientImage getClientImage(String clientId) {
-		List results = this.getHibernateTemplate().find("from ClientImage i where i.demographic_no=?",clientId);
+		List results = this.getHibernateTemplate().find("from ClientImage i where i.demographic_no=?", Long.valueOf(clientId));
 		if(results.size()>0) {
 			return (ClientImage)results.get(0);
 		}
