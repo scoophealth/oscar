@@ -102,17 +102,17 @@ public class BaseCaseManagementViewAction extends DispatchAction {
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoName(demoNo);
 	}
-	
+
 	public String getDemoAge(String demoNo){
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoAge(demoNo);
 	}
-	
+
 	public String getDemoDOB(String demoNo){
 		if (demoNo==null) return "";
 		return caseManagementMgr.getDemoDOB(demoNo);
 	}
-	
+
 	public String getProviderNo(HttpServletRequest request){
 		String providerNo=request.getParameter("providerNo");
 		if (providerNo==null) 
