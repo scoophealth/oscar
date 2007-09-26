@@ -53,6 +53,7 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.util.SqlUtils;
@@ -237,8 +238,7 @@ public class ClientDao extends HibernateDaoSupport {
 		if (tempList.size()>LIST_PROCESSING_CHUNK_SIZE) throw(new IllegalStateException("tempIds list size is too large, size="+tempList.size()));
 		
 		//--- get the list of demographicId's which are opted in ---
-		Session session=getSession();
-        Connection c=session.connection();
+        Connection c=null;
 		PreparedStatement ps=null;
 		ResultSet rs=null;
 		String sqlCommand="select demographic_no from demographicExt where key_val=? and value in (?,?) and demographic_no in "+SqlUtils.constructInClauseForPreparedStatements(tempList.size());
@@ -247,6 +247,7 @@ public class ClientDao extends HibernateDaoSupport {
 		
 		try
 		{
+		    c=DbConnectionFilter.getThreadLocalDbConnection();
 			ps=c.prepareStatement(sqlCommand);
 
 			ps.setString(1, Demographic.SHARING_OPTING_KEY);
@@ -269,7 +270,7 @@ public class ClientDao extends HibernateDaoSupport {
         }
 		finally
 		{
-			SqlUtils.closeResources(ps, rs);
+			SqlUtils.closeResources(c, ps, rs);
 		}
 		
 		//--- add only the opted in people to the optedIn list ---
