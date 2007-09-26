@@ -47,7 +47,6 @@ import org.oscarehr.PMmodule.model.ProgramProvider;
 
 public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	private BedProgramDao bedProgramDao;
-	private AdmissionDao admissionDao;
 	private DemographicDAO demographicDAOT;
 	private ProgramProviderDAO programProviderDAOT;
 	//private ProviderRoleProgramDao providerRoleProgramDao;
@@ -70,11 +69,6 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	public void setProviderDefaultProgramDao(ProviderDefaultProgramDao dao)
 	{
 		this.providerDefaultProgramDao=dao;
-	}
-	
-	public void setAdmissionDao(AdmissionDao dao)
-	{
-		this.admissionDao=dao;
 	}
 	
 	public void setDemographicDao(DemographicDAO dao)
@@ -215,6 +209,7 @@ public class InfirmBedProgramManagerImpl implements InfirmBedProgramManager{
 	public String[] getProgramInformation(int programId) {
 		return this.bedProgramDao.getProgramInfo(programId);
 	}
-	
+
+
 }
 
