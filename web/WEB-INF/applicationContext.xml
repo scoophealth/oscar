@@ -303,14 +303,9 @@
         <property name="agencyDao" ref="agencyDao"/>
         <property name="clientManager" ref="clientManager"/>
     </bean>
-    <bean id="infirmBedProgramManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="infirmBedProgramManager" parent="baseTransactionProxy" autowire="byName" >
         <property name="target">
-            <bean class="org.caisi.service.impl.InfirmBedProgramManagerImpl"
-                 >
-                <property name="bedProgramDao" ref="bedProgramDao"/>
-                <property name="programDao" ref="programDao"/>
-                <property name="providerDefaultProgramDao" ref="providerDefaultProgramDao"/>
+            <bean class="org.caisi.service.InfirmBedProgramManager" autowire="byName" >
                 <property name="programProviderDAOT" ref="programProviderDAO"/>
                 <property name="demographicDao" ref="demographicDAOT"/>
             </bean>
@@ -320,8 +315,7 @@
     <!-- TicklerPlus DAOs -->
 
     <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName" />
-    <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ticklerManagerTargetT"/>
         <property name="transactionAttributes">
@@ -333,7 +327,7 @@
         </property>
     </bean>
     <bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
-    <bean id="ticklerManagerTargetT" class="org.caisi.service.impl.TicklerManagerImpl"
+    <bean id="ticklerManagerTargetT" class="org.caisi.service.TicklerManager"
          autowire="byName">
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
@@ -352,7 +346,7 @@
             </props>
         </property>
     </bean>
-    <bean id="demographicManagerTarget" class="org.caisi.service.impl.DemographicManagerImplTickler"
+    <bean id="demographicManagerTarget" class="org.caisi.service.DemographicManagerTickler"
          autowire="byName">
         <property name="demographicDAO" ref="demographicDAOT"/>
     </bean>
@@ -372,7 +366,7 @@
     </bean>
     <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
     <bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
-    <bean id="consultationManagerTarget" class="org.caisi.service.impl.ConsultationManagerImpl"
+    <bean id="consultationManagerTarget" class="org.caisi.service.ConsultationManager"
          autowire="byName">
         <property name="consultationDAO" ref="consultationDAOT"/>
     </bean>
@@ -388,7 +382,7 @@
             </props>
         </property>
     </bean>
-    <bean id="chartManagerTarget" class="org.caisi.service.impl.EChartManagerImpl"
+    <bean id="chartManagerTarget" class="org.caisi.service.EChartManager"
          autowire="byName">
         <property name="chartDAO" ref="chartDAOT"/>
     </bean>
@@ -404,7 +398,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="version" class="org.caisi.service.impl.VersionImpl" autowire="byName"
+    <bean id="version" class="org.caisi.service.Version" autowire="byName"
          >
         <property name="version" value="3.0.0"/>
     </bean>

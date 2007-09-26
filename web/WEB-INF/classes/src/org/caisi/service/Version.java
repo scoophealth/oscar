@@ -20,9 +20,18 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.caisi.service;
 
-public interface Version {
-	public String getVersion();
+public class Version {
+
+    private String version;
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
 }

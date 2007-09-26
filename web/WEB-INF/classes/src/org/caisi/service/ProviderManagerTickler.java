@@ -29,11 +29,7 @@ import org.caisi.dao.ProviderDAO;
 import org.oscarehr.PMmodule.model.Provider;
 
 /**
- * Manager Interface for Providers
- * Implementing class will provide the business logic
- *
- * @author Marc Dumontier <a href="mailto:marc@mdumontier.com">marc@mdumontier.com</a>
- *
+ * It doesn't look like anyone implements this, but meh, some one references it so it'll stay for now.
  */
 public interface ProviderManagerTickler {
 	

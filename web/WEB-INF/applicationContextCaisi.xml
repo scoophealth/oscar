@@ -57,7 +57,7 @@
             </props>
         </property>
     </bean>
-    <bean id="issueAdminManagerTarget" class="org.caisi.service.impl.IssueAdminManagerImpl" autowire="byName"/>
+    <bean id="issueAdminManagerTarget" class="org.caisi.service.IssueAdminManager" autowire="byName"/>
     <bean id="caisiRoleManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
           lazy-init="default"  dependency-check="default">
         <property name="transactionManager" ref="transactionManager"/>
@@ -69,7 +69,7 @@
             </props>
         </property>
     </bean>
-    <bean id="caisiRoleManagerTarget" class="org.caisi.service.impl.CaisiRoleManagerImpl" autowire="byName"/>
+    <bean id="caisiRoleManagerTarget" class="org.caisi.service.CaisiRoleManager" autowire="byName"/>
     <bean id="roomManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
