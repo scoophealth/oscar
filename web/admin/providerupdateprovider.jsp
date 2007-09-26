@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page  import="java.sql.*, java.util.*, oscar.SxmlMisc" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%
@@ -61,11 +61,6 @@ function setfocus() {
   } else {
     while (rs.next()) {
 %>
-<xml id="xml_list">
-<providercomments>
-     <%=rs.getString("comments")%>
-</providercomments>
-</xml>
 
 <table cellspacing="0" cellpadding="2" width="100%" border="0" datasrc='#xml_list'>
 
@@ -128,25 +123,25 @@ function setfocus() {
   <tr> 
     <td align="right"><bean:message key="admin.provider.formPager"/>: </td>
     <td>
-          <input type="text" name="xml_p_pager" value="" datafld='xml_p_pager'>
+          <input type="text" name="xml_p_pager" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_pager") %>" datafld='xml_p_pager'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formCell"/>: </td>
     <td>
-          <input type="text" name="xml_p_cell" value="" datafld='xml_p_cell'>
+          <input type="text" name="xml_p_cell" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_cell") %>" datafld='xml_p_cell'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formOtherPhone"/>: </td> 
     <td>
-          <input type="text" name="xml_p_phone2" value="" datafld='xml_p_phone2'>
+          <input type="text" name="xml_p_phone2" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_phone2") %>" datafld='xml_p_phone2'>
         </td> 
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formFax"/>: </td>
     <td>
-          <input type="text" name="xml_p_fax" value="" datafld='xml_p_fax'>
+          <input type="text" name="xml_p_fax" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_fax") %>" datafld='xml_p_fax'>
         </td>
   </tr>
   <tr> 
@@ -171,11 +166,11 @@ function setfocus() {
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSpecialtyCode"/>: </td>
-    <td><input type="text" name="xml_p_specialty_code" value="" datafld='xml_p_specialty_code'></td>
+    <td><input type="text" name="xml_p_specialty_code" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_specialty_code") %>" datafld='xml_p_specialty_code'></td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formBillingGroupNo"/>: </td>
-    <td><input type="text" name="xml_p_billinggroup_no" value="" datafld='xml_p_billinggroup_no'></td>
+    <td><input type="text" name="xml_p_billinggroup_no" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_billinggroup_no") %>" datafld='xml_p_billinggroup_no'></td>
   </tr>
   <% if (vLocale.getCountry().equals("BR")) { %>  
   <tr>
@@ -190,13 +185,13 @@ function setfocus() {
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSlpUsername"/>: </td>
     <td>
-          <input type="text" name="xml_p_slpusername" value="" datafld='xml_p_slpusername'>
+          <input type="text" name="xml_p_slpusername" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_slpusername") %>" datafld='xml_p_slpusername'>
         </td>
   </tr>
   <tr> 
     <td align="right"><bean:message key="admin.provider.formSlpPassword"/>: </td>
     <td>
-          <input type="text" name="xml_p_slppassword" value="" datafld='xml_p_slppassword'>
+          <input type="text" name="xml_p_slppassword" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_slppassword") %>" datafld='xml_p_slppassword'>
         </td>
   </tr>
   <tr> 
