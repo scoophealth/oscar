@@ -138,6 +138,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
 			saveIntake(intake, client.getDemographicNo());
 		} catch (Exception e) {
+		    e.printStackTrace();
 			LOG.error(e);
 
 			ActionMessages messages = new ActionMessages();
