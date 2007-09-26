@@ -60,7 +60,7 @@ public class ProgramManagerViewAction extends BaseAction {
     }
 
 	@SuppressWarnings("unchecked")
-    ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
     
     	// find the program id

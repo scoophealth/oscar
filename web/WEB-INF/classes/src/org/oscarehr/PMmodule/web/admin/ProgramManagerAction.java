@@ -55,7 +55,7 @@ public class ProgramManagerAction extends BaseAction {
 		return list(mapping, form, request, response);
 	}
 
-	ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward list(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		request.setAttribute("programs", programManager.getAllPrograms());
 		
 		logManager.log("read", "full program list", "", request);
@@ -63,7 +63,7 @@ public class ProgramManagerAction extends BaseAction {
 		return mapping.findForward("list");
 	}
 
-	ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm programForm = (DynaActionForm) form;
 
 		String id = request.getParameter("id");
