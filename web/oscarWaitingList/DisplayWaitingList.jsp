@@ -173,21 +173,7 @@ function removePatient(demographicNo, waitingList){
                 <table class="TopStatusBar" >                 
                     <tr>    
                         <td>
-<%
-	String userRole = "";
-	if(session.getAttribute("userrole") != null){
-		userRole = (String)session.getAttribute("userrole");
-	}
-	if(userRole.indexOf("admin") >= 0){
-%>                        
-	     <a href="#" onclick="popupEditWlNamePage();" style="color:#000000; text-decoration: none;">C</a>urrent List: <logic:present name="waitingListName"><bean:write name="waitingListName"/></logic:present>
-<%
-	}else{
-%>                        	
 	     Current List: <logic:present name="waitingListName"><bean:write name="waitingListName"/></logic:present>
-<%
-	}
-%>                        	
                         	
                         </td>
                         <td align="right"> 
@@ -215,7 +201,21 @@ function removePatient(demographicNo, waitingList){
                                 <%}%>
                             </html:select>                        
                             <INPUT type="button" onClick="goToPage()" value="Generate Report">                            
-                        </td>
+<%
+        String userRole = "";
+        if(session.getAttribute("userrole") != null){
+                userRole = (String)session.getAttribute("userrole");
+        }
+        if(userRole.indexOf("admin") >= 0){
+%>
+	     <a href="#" onclick="popupEditWlNamePage();" style="color:#000000; text-decoration: none;" >Create List</a>
+<%
+        }else{
+%>
+		test
+<%
+}
+%>
                     </tr>                  
                 </table>
             </td>
