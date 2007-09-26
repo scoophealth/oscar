@@ -55,7 +55,7 @@ public class ProgramQueueDaoHibernate  extends HibernateDaoSupport implements Pr
 		}
 	    
 	    String queryStr = " FROM ProgramQueue q WHERE q.ProgramId=? ORDER BY  q.Id  ";	  
-	    List results =  getHibernateTemplate().find(queryStr, programId );
+	    List results =  getHibernateTemplate().find(queryStr, Long.parseLong(programId) );
 	    
 		 if(log.isDebugEnabled()) {
 			 log.debug("getProgramQueue: programId=" + programId + ",# of results=" + results.size());
