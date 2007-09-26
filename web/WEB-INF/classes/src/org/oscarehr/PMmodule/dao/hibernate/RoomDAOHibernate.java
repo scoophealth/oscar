@@ -45,7 +45,7 @@ public class RoomDAOHibernate extends HibernateDaoSupport implements RoomDAO {
 	 * @see org.oscarehr.PMmodule.dao.RoomDAO#roomExists(java.lang.Integer)
 	 */
 	public boolean roomExists(Integer roomId) {
-		boolean exists = (((Integer) getHibernateTemplate().iterate("select count(*) from Room where id = " + roomId).next()) == 1);
+		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from Room where id = " + roomId).next()) == 1);
 		log.debug("roomExists: " + exists);
 
 		return exists;
@@ -57,7 +57,7 @@ public class RoomDAOHibernate extends HibernateDaoSupport implements RoomDAO {
 	 * @see org.oscarehr.PMmodule.dao.RoomDAO#roomTypeExists(short)
 	 */
 	public boolean roomTypeExists(Integer roomTypeId) {
-		boolean exists = (((Integer) getHibernateTemplate().iterate("select count(*) from RoomType where id = " + roomTypeId).next()) == 1);
+		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from RoomType where id = " + roomTypeId).next()) == 1);
 		log.debug("roomTypeExists: " + exists);
 
 		return exists;

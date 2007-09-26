@@ -45,7 +45,7 @@ public class BedDemographicDAOHibernate extends HibernateDaoSupport implements B
 	private static final Log log = LogFactory.getLog(BedDemographicDAO.class);
 
 	public boolean bedDemographicStatusExists(Integer bedDemographicStatusId) {
-		boolean exists = (((Integer) getHibernateTemplate().iterate("select count(*) from BedDemographicStatus bds where bds.id = " + bedDemographicStatusId).next()) == 1);
+		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from BedDemographicStatus bds where bds.id = " + bedDemographicStatusId).next()) == 1);
 		log.debug("bedDemographicStatusExists: " + exists);
 
 		return exists;
@@ -55,7 +55,7 @@ public class BedDemographicDAOHibernate extends HibernateDaoSupport implements B
 	 * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#demographicExists(java.lang.Integer)
 	 */
 	public boolean demographicExists(Integer bedId) {
-		boolean exists = (((Integer) getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + bedId).next()) == 1);
+		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + bedId).next()) == 1);
 		log.debug("clientExists: " + exists);
 
 		return exists;
@@ -65,7 +65,7 @@ public class BedDemographicDAOHibernate extends HibernateDaoSupport implements B
 	 * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#bedExists(java.lang.Integer)
 	 */
 	public boolean bedExists(Integer demographicNo) {
-		boolean exists = (((Integer) getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.demographicNo = " + demographicNo).next()) == 1);
+		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.demographicNo = " + demographicNo).next()) == 1);
 		log.debug("bedExists: " + exists);
 
 		return exists;
@@ -162,7 +162,7 @@ public class BedDemographicDAOHibernate extends HibernateDaoSupport implements B
 	}
 
 	boolean bedDemographicExists(BedDemographicPK id) {
-		boolean exists = (((Integer) getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + id.getBedId() + " and bd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
+		boolean exists = (((Long) getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + id.getBedId() + " and bd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
 		log.debug("bedDemographicExists: " + exists);
 
 		return exists;
