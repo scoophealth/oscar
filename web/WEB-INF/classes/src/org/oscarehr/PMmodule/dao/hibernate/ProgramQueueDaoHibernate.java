@@ -69,7 +69,7 @@ public class ProgramQueueDaoHibernate  extends HibernateDaoSupport implements Pr
 	    	throw new IllegalArgumentException();	
 		}
 		
-		List results =  this.getHibernateTemplate().find("from ProgramQueue pq where pq.ProgramId = ? and pq.Status = 'active' order by pq.ReferralDate",programId);
+		List results =  this.getHibernateTemplate().find("from ProgramQueue pq where pq.ProgramId = ? and pq.Status = 'active' order by pq.ReferralDate",Long.valueOf(programId));
 		
 		if(log.isDebugEnabled()) {
 			 log.debug("getActiveProgramQueuesByProgramId: programId=" + programId + ",# of results=" + results.size());
