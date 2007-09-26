@@ -22,7 +22,9 @@
 
 package org.oscarehr.PMmodule.web.formbean;
 
-public class AgencyManagerViewFormBean {
+import java.io.Serializable;
+
+public class AgencyManagerViewFormBean implements Serializable {
 
 	public static final String[] tabs = { "General", "Bed", "Integrator", "Community" };
 
