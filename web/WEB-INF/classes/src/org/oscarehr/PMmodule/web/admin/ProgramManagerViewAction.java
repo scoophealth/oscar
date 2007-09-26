@@ -53,14 +53,14 @@ import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 
 public class ProgramManagerViewAction extends BaseAction {
 
-	private static Log log = LogFactory.getLog(ProgramManagerViewAction.class);
+	private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	return view(mapping, form, request, response);
     }
 
 	@SuppressWarnings("unchecked")
-    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
     
     	// find the program id
@@ -79,7 +79,7 @@ public class ProgramManagerViewAction extends BaseAction {
     	request.setAttribute("temporaryAdmission",programManager.getEnabled());
     	
     	// need the queue to determine which tab to go to first
-    	List queue = programQueueManager.getActiveProgramQueuesByProgramId(programId);
+    	List queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
     	request.setAttribute("queue", queue);
     
     	if (formBean.getTab() == null || formBean.getTab().equals("")) {
@@ -123,19 +123,18 @@ public class ProgramManagerViewAction extends BaseAction {
     		//clients should be active
     		List<Admission> admissions = new ArrayList<Admission>();
     		List ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
-    		Iterator ad = ads.iterator();
-    		while(ad.hasNext()){
-    			Admission admission = (Admission)ad.next();
-    			Integer clientId = admission.getClientId();
-    			if(clientId>0){    				
-    				Demographic client = clientManager.getClientByDemographicNo(Integer.toString(clientId));
-    				if(client!=null){
-    				String clientStatus = client.getPatientStatus();
-    				if(clientStatus!=null && clientStatus.equals("AC"))
-    					admissions.add(admission);    			
-    				}
-    			}
-    		}
+            for (Object ad1 : ads) {
+                Admission admission = (Admission) ad1;
+                Integer clientId = admission.getClientId();
+                if (clientId > 0) {
+                    Demographic client = clientManager.getClientByDemographicNo(Integer.toString(clientId));
+                    if (client != null) {
+                        String clientStatus = client.getPatientStatus();
+                        if (clientStatus != null && clientStatus.equals("AC"))
+                            admissions.add(admission);
+                    }
+                }
+            }
     		request.setAttribute("admissions", admissions);
     		
     		request.setAttribute("program_name", program.getName());
@@ -158,15 +157,14 @@ public class ProgramManagerViewAction extends BaseAction {
             }
             
     		List<Program> batchAdmissionServicePrograms = new ArrayList<Program>();
-    		List servicePrograms = new ArrayList();
+    		List servicePrograms;
     		servicePrograms = programManager.getServicePrograms();
-    		Iterator serviceProgram= servicePrograms.iterator();
-    		while(serviceProgram.hasNext()){
-    			Program sp = (Program)serviceProgram.next();
-    			if (sp.isAllowBatchAdmission()&&sp.getProgramStatus().equals("active")) {
-    				batchAdmissionServicePrograms.add(sp);
-    			}            
-    		}
+            for (Object serviceProgram1 : servicePrograms) {
+                Program sp = (Program) serviceProgram1;
+                if (sp.isAllowBatchAdmission() && sp.getProgramStatus().equals("active")) {
+                    batchAdmissionServicePrograms.add(sp);
+                }
+            }
     		
     		//request.setAttribute("programs", batchAdmissionPrograms);
     		request.setAttribute("bedPrograms", batchAdmissionPrograms);    		
@@ -286,7 +284,7 @@ public class ProgramManagerViewAction extends BaseAction {
 	public ActionForward batch_discharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		log.info("do batch discharge");
 		String type = request.getParameter("type");
-		String admitToProgramId = null;
+		String admitToProgramId;
 		if (type != null && type.equals("community")) {
 			admitToProgramId = request.getParameter("batch_discharge_community_program");
 		} else {
@@ -308,40 +306,42 @@ public class ProgramManagerViewAction extends BaseAction {
 				}
 				
 				//temporary admission will not allow batach discharge from bed program.
-				if(admission.isTemporaryAdmission()==true){
+				if(admission.isTemporaryAdmission()){
 					message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
 					continue;
 				}
 				
 				//in case some clients maybe is already in the community program
-				if(type.equals("community")) {
-					Integer clientId = admission.getClientId();
-					String program_type = admission.getProgramType();
-					//if discharged program is service program, 
-					//then should check if the client is in one bed program
-					if(program_type.equals("Service")) {
-						Admission admission_bed_program = admissionManager.getCurrentBedProgramAdmission(clientId);
-						if(admission_bed_program!=null){
-							if(admission_bed_program.isTemporaryAdmission()!=true){
-								message += admission.getClient().getFormattedName() + " is also in the bed program. You cannot do batch discharge for this client! \n";
-								continue;
-							}
-						}
-					}
-					//if the client is already in the community program, then cannot do batch discharge to the community program.
-					Admission admission_community_program = admissionManager.getCurrentCommunityProgramAdmission(clientId);
-					if(admission_community_program!=null) {
-						message += admission.getClient().getFormattedName() + " is already in one community program. You cannot do batch discharge for this client! \n";
-						continue;
-					}
-				}
-				// lets see if there's room first
+                if (type != null) {
+                    if(type.equals("community")) {
+                        Integer clientId = admission.getClientId();
+                        String program_type = admission.getProgramType();
+                        //if discharged program is service program,
+                        //then should check if the client is in one bed program
+                        if(program_type.equals("Service")) {
+                            Admission admission_bed_program = admissionManager.getCurrentBedProgramAdmission(clientId);
+                            if(admission_bed_program!=null){
+                                if(!admission_bed_program.isTemporaryAdmission()){
+                                    message += admission.getClient().getFormattedName() + " is also in the bed program. You cannot do batch discharge for this client! \n";
+                                    continue;
+                                }
+                            }
+                        }
+                        //if the client is already in the community program, then cannot do batch discharge to the community program.
+                        Admission admission_community_program = admissionManager.getCurrentCommunityProgramAdmission(clientId);
+                        if(admission_community_program!=null) {
+                            message += admission.getClient().getFormattedName() + " is already in one community program. You cannot do batch discharge for this client! \n";
+                            continue;
+                        }
+                    }
+                }
+                // lets see if there's room first
 				Program programToAdmit = programManager.getProgram(admitToProgramId);
 				if (programToAdmit == null) {
 					message += "Admitting program not found!";
 					continue;
 				}
-				if (programToAdmit.getNumOfMembers().intValue() >= programToAdmit.getMaxAllowed().intValue()) {
+				if (programToAdmit.getNumOfMembers() >= programToAdmit.getMaxAllowed()) {
 					message += "Program Full. Cannot admit " + admission.getClient().getFormattedName() + "\n";
 					continue;
 				}

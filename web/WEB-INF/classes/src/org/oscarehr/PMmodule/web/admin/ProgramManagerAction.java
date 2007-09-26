@@ -226,7 +226,7 @@ public class ProgramManagerAction extends BaseAction {
 			return list(mapping, form, request, response);
 		}
 
-		int numQueue = programQueueManager.getProgramQueuesByProgramId(id).size();
+		int numQueue = programQueueManager.getProgramQueuesByProgramId(Long.valueOf(id)).size();
 		if (numQueue > 0) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.delete.queue", name, String.valueOf(numQueue)));
@@ -526,7 +526,7 @@ public class ProgramManagerAction extends BaseAction {
 				setEditAttributes(request, String.valueOf(program.getId()));
 				return mapping.findForward("edit");
 			}
-			int numQueue = programQueueManager.getActiveProgramQueuesByProgramId(String.valueOf(program.getId())).size();
+			int numQueue = programQueueManager.getActiveProgramQueuesByProgramId((long) program.getId()).size();
 			if (numQueue > 0) {
 				ActionMessages messages = new ActionMessages();
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.client_in_the_queue", program.getName(), String.valueOf(numQueue)));
@@ -775,7 +775,7 @@ public class ProgramManagerAction extends BaseAction {
 		request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
 		request.setAttribute("accesses", programManager.getProgramAccesses(programId));
 		request.setAttribute("accessTypes", programManager.getAccessTypes());
-		request.setAttribute("queue", programQueueManager.getProgramQueuesByProgramId(programId));
+		request.setAttribute("queue", programQueueManager.getProgramQueuesByProgramId(Long.valueOf(programId)));
 		
 		request.setAttribute("bed_programs",programManager.getBedPrograms());
 		request.setAttribute("programFirstSignature",programManager.getProgramFirstSignature(Integer.valueOf(programId)));

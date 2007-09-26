@@ -58,7 +58,7 @@ public class ProgramQueueManagerImpl implements ProgramQueueManager
 		return pq;
 	}
 	
-	public List getProgramQueuesByProgramId(String programId) {
+	public List getProgramQueuesByProgramId(Long programId) {
 		return dao.getProgramQueuesByProgramId(programId);
 	}
 
@@ -66,12 +66,12 @@ public class ProgramQueueManagerImpl implements ProgramQueueManager
 		dao.saveProgramQueue(programQueue);
 	}
 	
-	public List getActiveProgramQueuesByProgramId(String programId) {
+	public List getActiveProgramQueuesByProgramId(Long programId) {
 		return dao.getActiveProgramQueuesByProgramId(programId);
 	}
 	
 	public ProgramQueue getActiveProgramQueue(String programId, String demographicNo) {
-		return dao.getActiveProgramQueue(Long.valueOf(programId),Integer.valueOf(demographicNo));
+		return dao.getActiveProgramQueue(Long.valueOf(programId), Long.valueOf(demographicNo));
 	}
 	
 	public void rejectQueue(String programId, String clientId,String notes, String rejectionReason) {

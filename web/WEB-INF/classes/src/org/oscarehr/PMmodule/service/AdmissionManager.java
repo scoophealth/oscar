@@ -189,7 +189,7 @@ public class AdmissionManager {
 		saveAdmission(newAdmission);
 
 		// Clear them from the queue, Update their referral
-		ProgramQueue pq = programQueueDao.getActiveProgramQueue(new Long(program.getId().longValue()), demographicNo);
+		ProgramQueue pq = programQueueDao.getActiveProgramQueue(program.getId().longValue(), (long) demographicNo);
 		if (pq != null) {
 			pq.setStatus("admitted");
 			programQueueDao.saveProgramQueue(pq);

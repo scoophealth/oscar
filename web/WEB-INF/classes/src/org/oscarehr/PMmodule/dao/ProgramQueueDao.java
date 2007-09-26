@@ -32,14 +32,14 @@ public interface ProgramQueueDao {
 	
 	public ProgramQueue getProgramQueue(Long queueId);
 
-	public List getProgramQueuesByProgramId(String programId);
+	public List<ProgramQueue> getProgramQueuesByProgramId(Long programId);
 			
 	public void saveProgramQueue(ProgramQueue programQueue);
 
-	public ProgramQueue getQueue(String programId, String clientId);
+	public ProgramQueue getQueue(Long programId, Long clientId);
 	
-	public List getActiveProgramQueuesByProgramId(String programId);
+	public List<ProgramQueue> getActiveProgramQueuesByProgramId(Long programId);
 	
-	public ProgramQueue getActiveProgramQueue(Long programId, Integer demographicNo);
+	public ProgramQueue getActiveProgramQueue(Long programId, Long demographicNo);
 }
 

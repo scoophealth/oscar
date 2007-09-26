@@ -31,9 +31,9 @@ public interface ProgramQueueManager
 {
 	public ProgramQueue getProgramQueue(String queueId);
 		
-	public List getProgramQueuesByProgramId(String programId);
+	public List getProgramQueuesByProgramId(Long programId);
 	
-	public List getActiveProgramQueuesByProgramId(String programId);
+	public List getActiveProgramQueuesByProgramId(Long programId);
 
 	public ProgramQueue getActiveProgramQueue(String programId, String demographicNo);
 		
