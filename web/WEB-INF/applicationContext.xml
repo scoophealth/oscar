@@ -144,8 +144,8 @@
     <bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.DefaultRoleAccessDAOHibernate" autowire="byName"/>
     <bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate" autowire="byName"/>
     <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate" autowire="byName"/>
-    <bean id="providerDefaultProgramDao" class="org.caisi.dao.hibernate.HibernateProviderDefaultProgramDao" autowire="byName"/>
-    <bean id="bedProgramDao" class="org.caisi.dao.hibernate.HibernateBedProgramDao" autowire="byName"/>
+    <bean id="providerDefaultProgramDao" class="org.caisi.dao.ProviderDefaultProgramDao" autowire="byName"/>
+    <bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName"/>
     <bean id="demographicDAOT" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
 
     <!-- Manager classes -->
@@ -319,10 +319,7 @@
 
     <!-- TicklerPlus DAOs -->
 
-    <bean id="ticklerDAOT" class="org.caisi.dao.hibernate.TicklerDAOHibernate" autowire="byName"
-         >
-        <property name="sessionFactory" ref="sessionFactory"/>
-    </bean>
+    <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName" />
     <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
           autowire="byName">
         <property name="transactionManager" ref="transactionManager"/>

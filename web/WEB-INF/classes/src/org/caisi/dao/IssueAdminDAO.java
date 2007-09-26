@@ -21,13 +21,35 @@
 */
 
 package org.caisi.dao;
-import java.util.*;
-import org.caisi.model.IssueAdmin;
 
-// use your IDE to handle imports
-public interface IssueAdminDAO extends DAO {
-    public List getIssueAdmins();
-    public IssueAdmin getIssueAdmin(Long issueId);
-    public void saveIssueAdmin(IssueAdmin issueAdmin);
-    public void removeIssueAdmin(Long issueId);
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.caisi.model.IssueAdmin;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+public class IssueAdminDAO extends HibernateDaoSupport {
+    private Log log = LogFactory.getLog(IssueAdminDAO.class);
+
+    public List getIssueAdmins() {
+        return getHibernateTemplate().find("from IssueAdmin");
+    }
+
+    public IssueAdmin getIssueAdmin(Long id) {
+        return (IssueAdmin)getHibernateTemplate().get(IssueAdmin.class, id);
+    }
+
+    public void saveIssueAdmin(IssueAdmin issueAdmin) {
+        getHibernateTemplate().saveOrUpdate(issueAdmin);
+
+        if (log.isDebugEnabled()) {
+            log.debug("issueAdminId set to:" + issueAdmin.getId());
+        }
+    }
+
+    public void removeIssueAdmin(Long id) {
+        Object issueAdmin = getHibernateTemplate().load(IssueAdmin.class, id);
+        getHibernateTemplate().delete(issueAdmin);
+    }
 }

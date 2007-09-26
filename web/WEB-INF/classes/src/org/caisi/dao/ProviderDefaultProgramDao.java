@@ -19,19 +19,62 @@
 * Centre for Research on Inner City Health, St. Michael's Hospital, 
 * Toronto, Ontario, Canada 
 */
-
 package org.caisi.dao;
-
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.caisi.model.ProviderDefaultProgram;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface ProviderDefaultProgramDao
-{
-	public List getProgramByProviderNo(String providerNo);
-	public void setDefaultProgram(String providerNo,int programId);
-	public List getProviderSig(String providerNo);
-	public void saveProviderDefaultProgram(ProviderDefaultProgram pdp);
-	public void toggleSig(String providerNo);
+public class ProviderDefaultProgramDao extends HibernateDaoSupport {
+    private static final Logger logger = Logger.getLogger(ProviderDefaultProgramDao.class);
+
+    public List getProgramByProviderNo(String providerNo) {
+        String q = "FROM ProviderDefaultProgram pdp WHERE pdp.providerNo=?";
+        List rs = (List)getHibernateTemplate().find(q, providerNo);
+        return rs;
+    }
+
+    public void setDefaultProgram(String providerNo, int programId) {
+        List rs = getProgramByProviderNo(providerNo);
+        ProviderDefaultProgram pdp;
+        if (rs.size() == 0) {
+            pdp = new ProviderDefaultProgram();
+            pdp.setProviderNo(providerNo);
+            pdp.setSignnote(false);
+        }
+        else {
+            pdp = (ProviderDefaultProgram)rs.get(0);
+        }
+        pdp.setProgramId(new Integer(programId));
+        getHibernateTemplate().saveOrUpdate(pdp);
+    }
+
+    public List getProviderSig(String providerNo) {
+        List rs = (List)getProgramByProviderNo(providerNo);
+        return rs;
+    }
+
+    public void saveProviderDefaultProgram(ProviderDefaultProgram pdp) {
+        getHibernateTemplate().saveOrUpdate(pdp);
+
+    }
+
+    public void toggleSig(String providerNo) {
+        List list = getProgramByProviderNo(providerNo);
+        ProviderDefaultProgram pdp = null;
+        if (list.isEmpty()) {
+            pdp = new ProviderDefaultProgram();
+            pdp.setProgramId(new Integer(0));
+            pdp.setProviderNo(providerNo);
+            pdp.setSignnote(false);
+        }
+        else {
+            pdp = (ProviderDefaultProgram)list.get(0);
+            pdp.setSignnote(!pdp.isSignnote());
+        }
+        saveProviderDefaultProgram(pdp);
+    }
+
 }
