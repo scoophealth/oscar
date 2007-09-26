@@ -146,7 +146,7 @@
     <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate" autowire="byName"/>
     <bean id="providerDefaultProgramDao" class="org.caisi.dao.hibernate.HibernateProviderDefaultProgramDao" autowire="byName"/>
     <bean id="bedProgramDao" class="org.caisi.dao.hibernate.HibernateBedProgramDao" autowire="byName"/>
-    <bean id="demographicDAOT" class="org.caisi.dao.hibernate.DemographicDAOHibernate" autowire="byName"/>
+    <bean id="demographicDAOT" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
 
     <!-- Manager classes -->
     <bean id="programQueueManager" parent="baseTransactionProxy" autowire="byName"

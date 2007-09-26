@@ -25,47 +25,60 @@ package org.caisi.dao;
 import java.util.List;
 
 import org.caisi.model.CustomFilter;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
 /**
- * DAO interface for working with Custom Filters
- * @author Marc Dumontier <a href="mailto:marc@mdumontier.com">marc@mdumontier.com</a>
- *
  */
-public interface CustomFilterDAO extends DAO {
-	/**
-	 * Search for a Custom Filter by name
-	 * @param name The name
-	 * @return The filter
-	 */
-	public CustomFilter getCustomFilter(String name);
-	
-	public CustomFilter getCustomFilter(String name, String providerNo);
-		
-	public CustomFilter getCustomFilterById(Integer id);
-	
-	/**
-	 * Get all custom filters
-	 * @return The list of custom filters
-	 */
-	public List getCustomFilters();
-	
-	/**
-	 * Get all custom filters for a user
-	 * @param provider_no the provider
-	 * @return The list of custom filters
-	 */
-	public List getCustomFilters(String provider_no);
-	
-	/**
-	 * Add/Update a Custom Filter
-	 * @param filter The filter
-	 */
-	public void saveCustomFilter(CustomFilter filter);
-	
-	/**
-	 * Delete a custom filter
-	 * @param name The name
-	 */
-	public void deleteCustomFilter(String name);
-	
-	public void deleteCustomFilterById(Integer id);
+public class CustomFilterDAO extends HibernateDaoSupport {
+
+    public CustomFilter getCustomFilter(String name) {
+        List results = getHibernateTemplate().find("from CustomFilter c where c.name = ?", new Object[] {name});
+        if (results.size() > 0) {
+            return (CustomFilter)results.get(0);
+        }
+        else {
+            return null;
+        }
+    }
+
+    public CustomFilter getCustomFilter(String name, String providerNo) {
+        List results = getHibernateTemplate().find("from CustomFilter c where c.name = ? and c.provider_no = ?", new Object[] {name, providerNo});
+        if (results.size() > 0) {
+            return (CustomFilter)results.get(0);
+        }
+        else {
+            return null;
+        }
+
+    }
+
+    public CustomFilter getCustomFilterById(Integer id) {
+        List results = getHibernateTemplate().find("from CustomFilter c where c.id=?", new Object[] {id});
+        if (results.size() > 0) {
+            return (CustomFilter)results.get(0);
+        }
+        else return null;
+    }
+
+    public void saveCustomFilter(CustomFilter filter) {
+        getHibernateTemplate().saveOrUpdate(filter);
+    }
+
+    public List getCustomFilters() {
+        return getHibernateTemplate().find("from CustomFilter");
+    }
+
+    public List getCustomFilters(String provider_no) {
+        return getHibernateTemplate().find("from CustomFilter cf where cf.provider_no = ?", new Object[] {provider_no});
+    }
+
+    public void deleteCustomFilter(String name) {
+        CustomFilter filter = getCustomFilter(name);
+        getHibernateTemplate().delete(filter);
+    }
+
+    public void deleteCustomFilterById(Integer id) {
+        CustomFilter filter = getCustomFilterById(id);
+        getHibernateTemplate().delete(filter);
+    }
 }
