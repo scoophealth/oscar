@@ -23,205 +23,174 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarDB;
-import java.sql.*;  
-import java.io.*;
 
-public class DBPreparedHandler  { 
-  
-  String connDriver=null; //"org.gjt.mm.mysql.Driver";
-  String connURL=null;  //"jdbc:mysql://";
-  String connUser=null; //"mysql";
-  String connPwd=null; //"oscar";
-  Connection conn = null;
-  DBHandler db = null;
-  
-  ResultSet rs = null;
-  Statement stmt = null; 
-  PreparedStatement preparedStmt = null;
-  
-  public DBPreparedHandler(String dbDriver,String dbName, String dbUser,String dbPwd ) throws SQLException {      
-      try {
-          init(dbDriver,dbName,dbUser,dbPwd);      
-      } catch (Exception e) {
-          e.printStackTrace(System.out); // dump to the log file for debugging purposes
-          if (e.getClass().getName().equals("java.sql.SQLException")) {
-              throw new SQLException(e.getMessage());  
-          } else {
-              throw new SQLException(e.toString()); // cast all exceptions to SQLExceptions because having this function throw and Exception breaks too much code
-          }
-      }
-  }
-  
-  public void init(String dbDriver,String dbUrl, String dbUser,String dbPwd ) throws Exception, SQLException {
-    connDriver=dbDriver;
-    connURL=dbUrl;
-    connUser=dbUser;
-    connPwd=dbPwd;
-    OpenConn(connDriver, connURL, connUser, connPwd);    
-  }
-  private void OpenConn(String dbDriver, String dbUrl,String dbUser,String dbPwd) throws Exception, SQLException {      
-     
-    //Class.forName(dbDriver);
-    //conn = DriverManager.getConnection(dbUrl, dbUser, dbPwd);         
-     
-    if (!DBHandler.isInit()){
-       //init(String db_name, String db_driver, String db_uri,String db_username, String db_password) {
-       DBHandler.init("",dbDriver, dbUrl, dbUser, dbPwd);
-    }
-    db = new DBHandler(DBHandler.OSCAR_DATA);            
-    
-    conn = db.GetConnection();
-    
-  }
-  
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-  synchronized public void queryExecute(String preparedSQL, String[] param)throws SQLException{
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(int i=0;i<param.length;i++) {
-      preparedStmt.setString((i+1), param[i]);
-      //System.out.println(param[i]);
-    }
-    preparedStmt.execute();
-  }
+import org.oscarehr.util.DbConnectionFilter;
 
-  synchronized public int queryExecuteUpdate(String preparedSQL, String[] param)throws SQLException{
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(int i=0;i<param.length;i++) {
-      preparedStmt.setString((i+1), param[i]);
-      //System.out.println(param[i]);
-    }
-    return (preparedStmt.executeUpdate());
-  }
-  synchronized public int queryExecuteUpdate(String preparedSQL, int[] param)throws SQLException{
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(int i=0;i<param.length;i++) {
-      preparedStmt.setInt((i+1), param[i]);
-    }
-    return (preparedStmt.executeUpdate());
-  }
-  synchronized public int queryExecuteUpdate(String preparedSQL, String[] param, int [] intparam)throws SQLException{
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(int i=0;i<param.length;i++) {
-      preparedStmt.setString((i+1), param[i]);
-    }
-    for(int i=0;i<intparam.length;i++) {
-      preparedStmt.setInt((param.length+i+1), intparam[i]);
-    }
-    return (preparedStmt.executeUpdate());
-  }
-  synchronized public int queryExecuteUpdate(String preparedSQL, int [] intparam, String[] param)throws SQLException{
-    int i=0;
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(i=0;i<intparam.length;i++) {
-      preparedStmt.setInt((i+1), intparam[i]);
-    }
-    for(i=0;i<param.length;i++) {
-      preparedStmt.setString((intparam.length+i+1), param[i]);
-    }
-    return (preparedStmt.executeUpdate());
-  }
+public class DBPreparedHandler {
 
+    DBHandler db = null;
 
-  synchronized public ResultSet queryResults(String preparedSQL, String[] param, int[] intparam) throws SQLException {
-    int i=0;
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(i=0;i<param.length;i++) {
-      preparedStmt.setString((i+1), param[i]);
-    }
-    for(i=0;i<intparam.length;i++) {
-      preparedStmt.setInt((param.length+i+1), intparam[i]);
-    }
-    rs=preparedStmt.executeQuery();
-    return rs;
-  }
-  synchronized public ResultSet queryResults(String preparedSQL, int param) throws SQLException {
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    preparedStmt.setInt(1, param);
-    rs=preparedStmt.executeQuery();
-    return rs;
-  }
-  synchronized public ResultSet queryResults(String preparedSQL, int[] param)throws SQLException{
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(int i=0;i<param.length;i++) {
-      preparedStmt.setInt((i+1), param[i]);
-    }
-    return (preparedStmt.executeQuery());
-  }
-  synchronized public ResultSet queryResults(String preparedSQL, String param) throws SQLException {
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    preparedStmt.setString(1, param);
-    rs=preparedStmt.executeQuery();
-    return rs;
-  }
-  synchronized public ResultSet queryResults(String preparedSQL, String[] param) throws SQLException {
-    preparedStmt = conn.prepareStatement(preparedSQL);
-    for(int i=0;i<param.length;i++) {
-      preparedStmt.setString((i+1), param[i]);
-    }
-    rs = preparedStmt.executeQuery();
-    return (rs);
-  }
- 
-  synchronized public Object[] queryResultsCaisi(String preparedSQL, int param) throws SQLException {
-	    preparedStmt = conn.prepareStatement(preparedSQL);
-	    preparedStmt.setInt(1, param);
-	    rs=preparedStmt.executeQuery();
-	    return new Object[] {rs, preparedStmt};
-  }
-  
-  synchronized public Object[] queryResultsCaisi(String preparedSQL, String param) throws SQLException {
-	    preparedStmt = conn.prepareStatement(preparedSQL);
-	    preparedStmt.setString(1, param);
-	    rs=preparedStmt.executeQuery();
-	    return new Object[]{rs, preparedStmt};
-  }
-  
-  synchronized public Object[] queryResultsCaisi(String preparedSQL, String[] param) throws SQLException {
-	    preparedStmt = conn.prepareStatement(preparedSQL);
-	    for(int i=0;i<param.length;i++) {
-	      preparedStmt.setString((i+1), param[i]);
-	    }
-	    rs = preparedStmt.executeQuery();
-	    return new Object[]{rs,preparedStmt};
-  }
-	    
-  synchronized public Object[] queryResultsCaisi(String preparedSQL) throws SQLException {
-	        stmt = conn.createStatement();
-	        rs=stmt.executeQuery(preparedSQL);
-	        return new Object[] {rs,stmt};
-  }
+    ResultSet rs = null;
+    Statement stmt = null;
+    PreparedStatement preparedStmt = null;
 
+    public DBPreparedHandler(String dbDriver, String dbName, String dbUser, String dbPwd) throws SQLException {
+    }
 
-  synchronized public ResultSet queryResults(String preparedSQL) throws SQLException {
-    stmt = conn.createStatement();
-    rs=stmt.executeQuery(preparedSQL);
-    return rs;
-  }
-  
+    public static Connection getConnection() throws SQLException {
+        return DbConnectionFilter.getThreadLocalDbConnection();
+    }
 
-  // Don't forget to clean up!
-  public void closePstmt() throws SQLException {
-  	if(stmt!=null) {
-  		stmt.close();
-  		stmt = null;
-  	}	else {
-  		preparedStmt.close();
-      preparedStmt = null;
-    }    
-  }
-  
-   /**
-   * Returns a Connection instance
-   * @return Connection
-   */
-  public Connection getConn() {
-    return conn;
-  }
-  
-  public void closeConn() throws SQLException {
-    //conn.close();
-    db.CloseConn(); 
-    conn = null;
-  }
+    public void init(String dbDriver, String dbUrl, String dbUser, String dbPwd) throws Exception, SQLException {
+    }
+
+    synchronized public void queryExecute(String preparedSQL, String[] param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setString((i + 1), param[i]);
+            //System.out.println(param[i]);
+        }
+        preparedStmt.execute();
+    }
+
+    synchronized public int queryExecuteUpdate(String preparedSQL, String[] param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setString((i + 1), param[i]);
+            //System.out.println(param[i]);
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
+    synchronized public int queryExecuteUpdate(String preparedSQL, int[] param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setInt((i + 1), param[i]);
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
+    synchronized public int queryExecuteUpdate(String preparedSQL, String[] param, int[] intparam) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setString((i + 1), param[i]);
+        }
+        for (int i = 0; i < intparam.length; i++) {
+            preparedStmt.setInt((param.length + i + 1), intparam[i]);
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
+    synchronized public int queryExecuteUpdate(String preparedSQL, int[] intparam, String[] param) throws SQLException {
+        int i = 0;
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (i = 0; i < intparam.length; i++) {
+            preparedStmt.setInt((i + 1), intparam[i]);
+        }
+        for (i = 0; i < param.length; i++) {
+            preparedStmt.setString((intparam.length + i + 1), param[i]);
+        }
+        return(preparedStmt.executeUpdate());
+    }
+
+    synchronized public ResultSet queryResults(String preparedSQL, String[] param, int[] intparam) throws SQLException {
+        int i = 0;
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (i = 0; i < param.length; i++) {
+            preparedStmt.setString((i + 1), param[i]);
+        }
+        for (i = 0; i < intparam.length; i++) {
+            preparedStmt.setInt((param.length + i + 1), intparam[i]);
+        }
+        rs = preparedStmt.executeQuery();
+        return rs;
+    }
+
+    synchronized public ResultSet queryResults(String preparedSQL, int param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        preparedStmt.setInt(1, param);
+        rs = preparedStmt.executeQuery();
+        return rs;
+    }
+
+    synchronized public ResultSet queryResults(String preparedSQL, int[] param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setInt((i + 1), param[i]);
+        }
+        return(preparedStmt.executeQuery());
+    }
+
+    synchronized public ResultSet queryResults(String preparedSQL, String param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        preparedStmt.setString(1, param);
+        rs = preparedStmt.executeQuery();
+        return rs;
+    }
+
+    synchronized public ResultSet queryResults(String preparedSQL, String[] param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setString((i + 1), param[i]);
+        }
+        rs = preparedStmt.executeQuery();
+        return(rs);
+    }
+
+    synchronized public Object[] queryResultsCaisi(String preparedSQL, int param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        preparedStmt.setInt(1, param);
+        rs = preparedStmt.executeQuery();
+        return new Object[] {rs, preparedStmt};
+    }
+
+    synchronized public Object[] queryResultsCaisi(String preparedSQL, String param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        preparedStmt.setString(1, param);
+        rs = preparedStmt.executeQuery();
+        return new Object[] {rs, preparedStmt};
+    }
+
+    synchronized public Object[] queryResultsCaisi(String preparedSQL, String[] param) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setString((i + 1), param[i]);
+        }
+        rs = preparedStmt.executeQuery();
+        return new Object[] {rs, preparedStmt};
+    }
+
+    synchronized public Object[] queryResultsCaisi(String preparedSQL) throws SQLException {
+        stmt = getConnection().createStatement();
+        rs = stmt.executeQuery(preparedSQL);
+        return new Object[] {rs, stmt};
+    }
+
+    synchronized public ResultSet queryResults(String preparedSQL) throws SQLException {
+        stmt = getConnection().createStatement();
+        rs = stmt.executeQuery(preparedSQL);
+        return rs;
+    }
+
+    // Don't forget to clean up!
+    public void closePstmt() throws SQLException {
+        if (stmt != null) {
+            stmt.close();
+            stmt = null;
+        }
+        else {
+            preparedStmt.close();
+            preparedStmt = null;
+        }
+    }
+
+    public void closeConn() throws SQLException {
+    }
 
 }

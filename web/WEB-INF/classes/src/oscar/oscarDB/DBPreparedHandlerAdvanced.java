@@ -35,22 +35,22 @@ public class DBPreparedHandlerAdvanced extends DBPreparedHandler {
 
 	synchronized public void setAutoCommit(boolean flag)
 		throws SQLException {
-		this.conn.setAutoCommit(flag);
+		getConnection().setAutoCommit(flag);
 	}
 
 	synchronized public void rollback()
 		throws SQLException {
-		this.conn.rollback();
+		getConnection().rollback();
 	}
 
 	synchronized public void commit()
 		throws SQLException {
-		this.conn.commit();
+		getConnection().commit();
 	}
 
     synchronized public PreparedStatement getPrepareStatement(
         String preparedSQL) throws SQLException {
-        return conn.prepareStatement(preparedSQL);
+        return getConnection().prepareStatement(preparedSQL);
     }
 
     synchronized public int execute(PreparedStatement preparedSQL)

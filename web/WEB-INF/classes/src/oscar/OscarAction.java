@@ -36,6 +36,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.struts.action.*;
+import org.oscarehr.util.DbConnectionFilter;
+
 import oscar.oscarDB.*;
 
 public class OscarAction
@@ -95,22 +97,7 @@ public class OscarAction
     return dbParams;
   }
 
-  /**
-   * A convenience method that provides direct access to an OSCAR database connection
-   * @param request HttpServletRequest
-   * @return Connection
-   */
-  protected Connection getDBConnection(HttpServletRequest request) {
-    String[] dbParams = this.getDBParams(request);
-    try {
-      handler = new DBPreparedHandler(dbParams[0], dbParams[1], dbParams[2],
-                                      dbParams[3]);
-    }
-    catch (SQLException ex) {
-      ex.printStackTrace();
-    }
-    return handler.getConn();
-  }
+ 
 
   /**
    * Configures the response header for upload of specified mime-type

@@ -22,6 +22,7 @@ package org.oscarehr.common.web;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -38,7 +39,7 @@ import javax.servlet.ServletContext;
  * @author rjonasz
  */
 public class OscarSpringContextLoader extends ContextLoader {
-
+	
 	private final Log log = LogFactory.getLog(OscarSpringContextLoader.class);
 	private final String CONTEXTNAME = "WEB-INF/applicationContext";
 	private final String PROPERTYNAME = "ModuleNames";
@@ -56,7 +57,7 @@ public class OscarSpringContextLoader extends ContextLoader {
 			} catch (ClassNotFoundException ex) {
 				throw new ApplicationContextException("Failed to load context class [" + contextClassName + "]", ex);
 			}
-
+			
 			if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
 				throw new ApplicationContextException("Custom context class [" + contextClassName + "] is not of type ConfigurableWebApplicationContext");
 			}
@@ -74,7 +75,7 @@ public class OscarSpringContextLoader extends ContextLoader {
 
 		if (modules != null) {
 			modules = modules.trim();
-
+			
 			if (modules.length() > 0) {
 				moduleList = modules.split(",");
 			}
@@ -94,7 +95,9 @@ public class OscarSpringContextLoader extends ContextLoader {
 
 		wac.setConfigLocations(configLocations);
 		wac.refresh();
-
+		
+        if (SpringUtils.beanFactory==null) SpringUtils.beanFactory=wac;
+        
 		return wac;
 	}
 }

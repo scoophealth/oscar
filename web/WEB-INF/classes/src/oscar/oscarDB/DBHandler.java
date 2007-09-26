@@ -26,103 +26,66 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarDB;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.oscarehr.util.DbConnectionFilter;
+
 public class DBHandler {
-	public static String IDDF_DATA = "iddf";
-	public static String OSCAR_DATA = "oscar_sfhc";
-	private static String connDriver = "org.gjt.mm.mysql.Driver";
-	private static String connURL = "jdbc:mysql://"; //"jdbc:mysql://";/;
-													 // //oscar?user=root&password=oscar";
-	private static String connUser = null;
-	private static String connPwd = null;
-	private int connInitialConnections = 1;
-	private int connMaxConnections = 100;
-	private boolean connWaitIfBusy = true;
-	private Connection conn;
-	private DBConnectionPool pool;
-        
-        public static boolean isInit(){
-           boolean initd = true;
-           if (connPwd == null){
-              initd = false;
-           }
-           return initd;
+
+    public static String OSCAR_DATA = "oscar_sfhc";
+
+    public static boolean isInit() {
+        return true;
+    }
+
+    public static void init(String db_name, String db_driver, String db_uri, String db_username, String db_password) {
+    }
+
+    public DBHandler(String dbName) throws SQLException {
+    }
+
+    public DBHandler(String host, String dbName) throws SQLException {
+    }
+
+    public static Connection GetConnection() throws SQLException {
+        return getConnection();
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return DbConnectionFilter.getThreadLocalDbConnection();
+    }
+
+    public java.sql.ResultSet GetSQL(String SQLStatement) throws SQLException {
+        return this.GetSQL(SQLStatement, false);
+    }
+
+    synchronized public java.sql.ResultSet GetSQL(String SQLStatement, boolean updatable) throws SQLException {
+        Statement stmt;
+        ResultSet rs = null;
+        if (updatable) {
+            stmt = getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
         }
-        
-	public static void init(String db_name, String db_driver, String db_uri,
-			String db_username, String db_password) {
-		OSCAR_DATA = db_name;
-		connDriver = db_driver;
-		connURL = db_uri;
-		connUser = db_username;
-		connPwd = db_password;
-	}
-	public DBHandler(String dbName) throws SQLException {
-		//this("localhost:3306/", dbName);
-		this("", dbName);
-	}
-	public DBHandler(String host, String dbName) throws SQLException {
-		if (dbName.compareTo(IDDF_DATA) == 0) {
-			pool = DBIddfPool.getInstance(connDriver, connURL + host + dbName,
-					connUser, connPwd, connInitialConnections,
-					connMaxConnections, connWaitIfBusy);
-			conn = pool.getConnection();
-		} else {
-			pool = DBOscarPool.getInstance(connDriver, connURL + host + dbName,
-					connUser, connPwd, connInitialConnections,
-					connMaxConnections, connWaitIfBusy);
-			conn = pool.getConnection();
-		}
-	}
-        
-        synchronized public Connection GetConnection() throws SQLException{
-           return conn;
+        else {
+            stmt = getConnection().createStatement();
         }
-	synchronized public java.sql.ResultSet GetSQL(String SQLStatement) throws SQLException {
-		return this.GetSQL(SQLStatement, false);
-	}
-        
-	synchronized public java.sql.ResultSet GetSQL(String SQLStatement,boolean updatable) throws SQLException {
-		Statement stmt;
-		ResultSet rs = null;
-		if (updatable) {
-			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-		} else {
-			stmt = conn.createStatement();
-		}
-		//        System.err.println(stmt.getResultSetConcurrency());
-		rs = stmt.executeQuery(SQLStatement);
-		//        System.err.println(rs.getConcurrency());
-		return rs;
-	}
-	synchronized public boolean RunSQL(String SQLStatement) throws SQLException {
-		boolean b = false;
-		Statement stmt;
-		stmt = conn.createStatement();
-		b = stmt.execute(SQLStatement);
-		return b;
-	}
-	public void CloseConn() throws SQLException {
-		if (!conn.isClosed()) {
-			pool.free(conn);
-		}
-	}
-        
-        /**
-         *Method makes sure connection to database is closed
-         **/
-        protected void finalize() throws Throwable {           
-           try{
-              if(conn != null){                                       
-                 CloseConn();                       
-              }
-           }catch(SQLException e){
-              System.out.println("Problem finalizing DBHandler");
-              e.printStackTrace();
-           }
-        }
-        
+
+        rs = stmt.executeQuery(SQLStatement);
+        return rs;
+    }
+
+    synchronized public boolean RunSQL(String SQLStatement) throws SQLException {
+        boolean b = false;
+        Statement stmt;
+        stmt = getConnection().createStatement();
+        b = stmt.execute(SQLStatement);
+        return b;
+    }
+
+    public void CloseConn() throws SQLException {
+    }
+
 }
