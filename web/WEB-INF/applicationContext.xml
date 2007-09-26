@@ -145,7 +145,7 @@
     <bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate" autowire="byName"/>
     <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate" autowire="byName"/>
     <bean id="providerDefaultProgramDao" class="org.caisi.dao.hibernate.HibernateProviderDefaultProgramDao" autowire="byName"/>
-    <bean id="bedProgramDao" class="org.caisi.dao.hibernate.HibernateBedProgramDao" autowire="byName"/>
+    <bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName"/>
     <bean id="demographicDAOT" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
 
     <!-- Manager classes -->
@@ -374,7 +374,7 @@
         </property>
     </bean>
     <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
-    <bean id="chartDAOT" class="org.caisi.dao.hibernate.EChartDAOHibernate" autowire="byName" />
+    <bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
     <bean id="consultationManagerTarget" class="org.caisi.service.impl.ConsultationManagerImpl"
          autowire="byName">
         <property name="consultationDAO" ref="consultationDAOT"/>

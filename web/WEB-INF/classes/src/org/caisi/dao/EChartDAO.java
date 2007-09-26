@@ -22,27 +22,19 @@
 
 package org.caisi.dao;
 
+import org.caisi.dao.EChartDAO;
 import org.caisi.model.EChart;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Data Access Object for working with eChart table in OSCAR
- * @author Marc Dumontier marc@mdumontier.com
- *
  */
-public interface EChartDAO extends DAO {
-	
-	/**
-	 * Add/Update an encounter
-	 * 
-	 * Note: should always make a copy of the latest chart, and save it.
-	 * @param chart The Chart object to save
-	 */
-	public void saveEncounter(EChart chart);
-	
-	/**
-	 * Get the latest eChart entry for a patient
-	 * @param demographicNo Demographic Id
-	 * @return The Chart object
-	 */
-	public EChart getLatestChart(int demographicNo);
+public class EChartDAO extends HibernateDaoSupport {
+
+    public void saveEncounter(EChart chart) {
+        this.getHibernateTemplate().save(chart);
+    }
+
+    public EChart getLatestChart(int demographicNo) {
+        return (EChart)getHibernateTemplate().find("from EChart c where c.demographicNo = ? order by c.timeStamp desc", new Object[] {String.valueOf(demographicNo)}).get(0);
+    }
 }
