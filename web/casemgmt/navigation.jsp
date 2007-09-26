@@ -167,11 +167,11 @@
 <!-- tr><td><a href="</td></tr -->
 
 
-<tr style="background-color:#BBBBBB;"><td>Master</td></tr>
+<%--<tr style="background-color:#BBBBBB;"><td>Master</td></tr>--%>
 <!-- go back to oscar main page -->
 <!-- <tr><td><a href="../provider/providercontrol.jsp">Oscar Medical</a></td></tr> -->
-<!-- add PMM link here -->
-<tr><td><a href="../PMmodule/ClientManager.do?id=<%=bean.demographicNo%>">Program Management</a></td></tr>
+<!-- PMM link here / removed because of navigation concerns! -->
+<%--<tr><td><a href="../PMmodule/ClientManager.do?id=<%=bean.demographicNo%>">Program Management</a></td></tr>--%>
 
 
 <tr style="background-color:#BBBBBB;"><td>Clinical Modules</td></tr>
@@ -309,11 +309,10 @@
         if(formId == 0) {
             return;
         }
-        var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute"/>?method=survey&formId=' + formId + '&clientId=' + <%=bean.demographicNo%>;
+        var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute"/>?method=survey&type=provider&formId=' + formId + '&clientId=' + <%=bean.demographicNo%>;
         ctl.selectedIndex=0;
-		
-		//window.open(url);
-        window.location = url;
+
+        popupPage(url)
 
     }
 </script>
