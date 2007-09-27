@@ -1523,6 +1523,7 @@ if(oscarVariables.getProperty("demographicExtJScript") != null) { out.println(os
                                <!--input type="button" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnSwipeCard"/>" onclick="javascript:window.alert('Health Card Number Already Inuse');"-->
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFEnvelope"/>" onclick="window.location='../report/GenerateEnvelopes.do?demos=<%=rs.getString("demographic_no")%>'">
                                <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFLabel"/>" onclick="window.location='printDemoLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'">
+                               <input type="button" size="110" name="Button" value="<bean:message key="demographic.demographiceditdemographic.btnCreatePDFAddressLabel"/>" onclick="window.location='printDemoAddressLabelAction.do?demographic_no=<%=rs.getString("demographic_no")%>'">
                                <input type="button" name="Button" size="110" value="<bean:message key="demographic.demographiceditdemographic.btnPrintLabel"/>" onclick="window.location='demographiclabelprintsetting.jsp?demographic_no=<%=rs.getString("demographic_no")%>'">
                             </td>
                         </table>
