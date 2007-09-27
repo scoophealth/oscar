@@ -35,8 +35,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.Misc;
-import oscar.OscarProperties;
 import oscar.entities.Billingmaster;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
@@ -48,6 +49,10 @@ import oscar.oscarProvider.data.ProviderData;
  * @author jay
  */
 public class TeleplanFileWriter {
+    
+    
+    private static Log log = LogFactory.getLog(TeleplanFileWriter.class);
+    
     
     StringBuffer mspFileStr = null;
     StringBuffer mspHtmlStr = null;
@@ -124,42 +129,53 @@ public class TeleplanFileWriter {
     }
     
     public TeleplanSubmission getSubmission(boolean testRun,ProviderData[] providers,String dataCenterId ) throws Exception{
-        
+        log.debug("Start getSubmission");
         
         String logNo =  getNextSequenceNumber() ;
+        log.debug("LogNo :"+logNo);
         String headerLine = "VS1" + dataCenterId + misc.forwardZero(logNo,7) + "V6242" + "OSCAR_MCMASTER           " + "V1.1      " + "20030930" + "OSCAR MCMASTER                          " + "(905) 575-1300 " + misc.space(25) + misc.space(57) + "\r";
         String errorMsg = checkData.checkVS1("VS1" , dataCenterId , misc.forwardZero(logNo,7) , "V6242" , "OSCAR_MCMASTER           " , "V1.1      " , "20030930" , "OSCAR MCMASTER                          " , "(905) 575-1300 " , misc.space(25) , misc.space(57));
         setLog(logNo, headerLine);
         
         appendToHTML(HtmlTeleplanHelper.htmlHeaderGen(errorMsg));
         appendToFile(headerLine);
-        
         errorMsg = "";
         
         for (int p = 0; p < providers.length; p++){
-           appendToHTML(HtmlTeleplanHelper.htmlNewProviderSection(providers[p].getOhip_no(),new Date()));    
+           appendToHTML(HtmlTeleplanHelper.htmlNewProviderSection(providers[p].getOhip_no(),new Date()));  
+           log.debug("For Provider  :"+providers[p].getOhip_no());
            List list = getBilling(providers[p].getOhip_no(),null,null); // null,null because date range doesn't do anything 
            //Get All The Bills for this provider
            
-           System.out.println("Got List For Billing size?"+list.size());
+           log.debug("Billing List Size? "+list.size());
            int providerClaimsCount = 0;
            BigDecimal providerTotals = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
            for (int i = 0; i < list.size(); i++){
+                log.debug("Start loop, Interation "+i);
                 HashMap map = (HashMap) list.get(i);
                 String billType = (String) map.get("billingtype");
                 String billing_no = (String) map.get("billing_no");
                 Claims c = null;
                 if (billType.equals("MSP")  || billType.equals("ICBC") ) {
-                    c = createMSPICBCLines(billing_no,dataCenterId);   System.out.println("ITs an MSP / IcBc bill");
+                    log.debug("Billing # :"+billing_no+" Data Center :"+dataCenterId+ " ICBC / MSP BILL");
+                    c = createMSPICBCLines(billing_no,dataCenterId);   
                 }else if(billType.equals("WCB")){
                     //TODO:Should pass dataCenterId to WCB but it looks it up in the properties currently, fix in the future
-                    c = createWCB(billing_no);            System.out.println("Its a WCB bill");
+                    log.debug("Billing # :"+billing_no+" Data Center :"+dataCenterId+ " WCB BILL");
+                    c = createWCB(billing_no);            
                 }
+                
                 
                 providerClaimsCount += c.getNumClaims();
                 providerTotals = providerTotals.add(c.getClaimTotal());
                 
+                log.debug("line Claims :"+c.getNumClaims());
+                log.debug("To Claims to this point :"+providerClaimsCount);
+                log.debug("Claim Total :"+c.getClaimTotal());
+                log.debug("Provider Total  :"+providerTotals);
+                
                 addToMarkBillingList(billing_no);
+                log.debug("End loop, added billing no "+ billing_no+" to list");
            } 
            //Add to Providers Totals to the  submission
            addToTotal(providerTotals);
@@ -249,6 +265,7 @@ public class TeleplanFileWriter {
     
     //This needs to handle having multiple billingmaster line per billing but from now 
     private Claims createMSPICBCLines(String billing_no,String dataCenterId){
+        log.debug("createMSPICBCLines Start");
         BillingmasterDAO masDAO = new BillingmasterDAO();
         
         List billMasterList = masDAO.getBillingMasterWithStatus(billing_no,"O");
@@ -276,6 +293,7 @@ public class TeleplanFileWriter {
 
             addToMarkBillingmasterList(""+bm.getBillingmasterNo());
         }
+        log.debug("createMSPICBCLines End");
         return claims;
     }  
 
@@ -312,8 +330,8 @@ public class TeleplanFileWriter {
     private List getBilling(String providerInsNo,Date startDate, Date endDate) throws Exception{
         ArrayList list = new ArrayList();      
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-        String query = "select * from billing where provider_ohip_no='"+ providerInsNo+"' and (status='O' or status='W') " ;
-        System.out.println("1st billing query "+query);
+        String query = "select * from billing where provider_ohip_no='"+ providerInsNo+"' and (status='O' or status='W') and billingtype != 'Pri' ";
+        log.debug("billing query "+query);
         ResultSet rs = db.GetSQL(query);
         while (rs.next()){
             HashMap map = new HashMap();
