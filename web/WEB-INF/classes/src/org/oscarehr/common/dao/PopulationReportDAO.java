@@ -71,9 +71,9 @@ public class PopulationReportDAO extends HibernateDaoSupport {
         return (Integer)getHibernateTemplate().find(HQL_CURRENT_POP_SIZE).iterator().next();
     }
 
-    public long getCurrentAndHistoricalPopulationSize(int numYears) {
+    public int getCurrentAndHistoricalPopulationSize(int numYears) {
 
-        return (Long)getHibernateTemplate().find(HQL_CURRENT_HISTORICAL_POP_SIZE, DateTimeFormatUtils.getPast(numYears)).iterator().next();
+        return ((Long)getHibernateTemplate().find(HQL_CURRENT_HISTORICAL_POP_SIZE, DateTimeFormatUtils.getPast(numYears)).iterator().next()).intValue();
     }
 
     public int[] getUsages(int numYears) {
