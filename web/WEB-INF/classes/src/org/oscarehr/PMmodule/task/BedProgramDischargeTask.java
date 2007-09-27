@@ -37,6 +37,7 @@ import org.oscarehr.PMmodule.service.BedDemographicManager;
 import org.oscarehr.PMmodule.service.BedManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class BedProgramDischargeTask extends TimerTask {
 
@@ -65,34 +66,40 @@ public class BedProgramDischargeTask extends TimerTask {
 
 	@Override
 	public void run() {
-		log.info("start bed program discharge task");
+		try {
+            log.info("start bed program discharge task");
 
-		Program[] bedPrograms = programManager.getBedPrograms();
+            Program[] bedPrograms = programManager.getBedPrograms();
 
-		for (Program bedProgram : bedPrograms) {
-			Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME);
-			Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - PERIOD);
-			Date currentExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime());
-			
-			// previousExecutionTime < dischargeTime <= currentExecutionTime
-			if (previousExecutionTime.before(dischargeTime) && (dischargeTime.equals(currentExecutionTime) || dischargeTime.before(currentExecutionTime))) {
-				Bed[] reservedBeds = bedManager.getBedsByProgram(bedProgram.getId(), true);
-				
-				for (Bed reservedBed : reservedBeds) {
-					BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(reservedBed.getId());
-					
-					if (bedDemographic.isExpired()) {
-						try {
-							admissionManager.processDischargeToCommunity(Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), Provider.SYSTEM_PROVIDER_NO, "bed reservation ended - automatically discharged","0");
-						} catch (AdmissionException e) {
-							log.error("Error discharging to community", e);
-						}
-					}
+            for (Program bedProgram : bedPrograms) {
+                Date dischargeTime = DateTimeFormatUtils.getTimeFromString(DISCHARGE_TIME);
+                Date previousExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime() - PERIOD);
+                Date currentExecutionTime = DateTimeFormatUtils.getTimeFromLong(scheduledExecutionTime());
+
+                // previousExecutionTime < dischargeTime <= currentExecutionTime
+                if (previousExecutionTime.before(dischargeTime) && (dischargeTime.equals(currentExecutionTime) || dischargeTime.before(currentExecutionTime))) {
+                    Bed[] reservedBeds = bedManager.getBedsByProgram(bedProgram.getId(), true);
+
+                    for (Bed reservedBed : reservedBeds) {
+                        BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(reservedBed.getId());
+
+                        if (bedDemographic.isExpired()) {
+                            try {
+                                admissionManager.processDischargeToCommunity(Program.DEFAULT_COMMUNITY_PROGRAM_ID, bedDemographic.getId().getDemographicNo(), Provider.SYSTEM_PROVIDER_NO, "bed reservation ended - automatically discharged", "0");
+                            }
+                            catch (AdmissionException e) {
+                                log.error("Error discharging to community", e);
+                            }
+                        }
+                    }
                 }
-			}
-		}
-		
-		log.info("finish bed program discharge task");
+            }
+
+            log.info("finish bed program discharge task");
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
 	}
 
 }

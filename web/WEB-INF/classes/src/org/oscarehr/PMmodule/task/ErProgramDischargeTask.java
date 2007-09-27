@@ -36,91 +36,95 @@ import org.oscarehr.PMmodule.model.SecUserRole;
 import org.oscarehr.PMmodule.service.AdmissionManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class ErProgramDischargeTask extends TimerTask {
 
-	private static final Log log = LogFactory.getLog(ErProgramDischargeTask.class);
+    private static final Log log = LogFactory.getLog(ErProgramDischargeTask.class);
 
-	private ProviderManager providerManager;
+    private ProviderManager providerManager;
 
-	private AdmissionManager admissionManager;
+    private AdmissionManager admissionManager;
 
-	//the clients will stay in the service program for 3 days, 
-	//then will be automatically discharged.
-	private int lengthOfStay = 60 * 24 * 3; //minutes	
-	
-	public void setProviderManager(ProviderManager mgr) {
-		this.providerManager = mgr;
-	}
+    //the clients will stay in the service program for 3 days, 
+    //then will be automatically discharged.
+    private int lengthOfStay = 60 * 24 * 3; //minutes	
 
-	public void setAdmissionManager(AdmissionManager mgr) {
-		this.admissionManager = mgr;
-	}
+    public void setProviderManager(ProviderManager mgr) {
+        this.providerManager = mgr;
+    }
 
-	public void setLengthOfStay(int minutes) {
-		this.lengthOfStay = minutes;
-	}
+    public void setAdmissionManager(AdmissionManager mgr) {
+        this.admissionManager = mgr;
+    }
 
-	public void run() {
-		log.debug("running ErProgramDischargeTask");
-		//log.info("Running ErProgramDischargeTask.............");
-		
-		// get all "ER" Service programs		
-		//List providers = providerManager.getProvidersByType("er_clerk");
-		List providers = providerManager.getProviders();
-		boolean er_clerk = false;
-		
-		for (Iterator i = providers.iterator(); i.hasNext();) {
-			Provider provider = (Provider) i.next();
-			
-			er_clerk = false;			
-			List<SecUserRole> roles = providerManager.getSecUserRoles(provider.getProviderNo());
-			for(Iterator ii = roles.iterator(); ii.hasNext();) {
-				SecUserRole secUserRole = (SecUserRole) ii.next();
-				if(UserRoleUtils.Roles.er_clerk.name().equals(secUserRole.getRoleName())) {
-					er_clerk = true;
-				}
-			}
-			
-			if(!er_clerk)
-				continue;
-			
-			// ER Clerks, they should only have 1 service program
-			List programDomain = null;
-			programDomain = providerManager.getProgramDomain(provider.getProviderNo());
-			
-			ProgramProvider programProvider = null;
-			if(programDomain.size() > 0) {
-				programProvider = (ProgramProvider) programDomain.get(0);
-			}
-			if (programProvider != null) {
-				// loop clients in the ER program
-				List programAdmissions = admissionManager.getCurrentAdmissionsByProgramId(programProvider.getProgramId().toString());
-				
-				if(programAdmissions == null) 
-					continue;
-				
-				for (Iterator j = programAdmissions.iterator(); j.hasNext();) {
-					Admission admission = (Admission) j.next();
-					
-					// check admission date, determine if we should discharge
-					Date admissionDate = admission.getAdmissionDate();
-					Date currentDate = new Date();
-					long diff = currentDate.getTime() - admissionDate.getTime();
-					
-					log.debug("difference = " + diff);
-					
-					if (diff > (lengthOfStay * 60 * 1000)) {
-						admission.setDischargeDate(new Date());
-						admission.setDischargeNotes("Auto-Discharge");
-						admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
-						admissionManager.saveAdmission(admission);
-						
-						log.debug("discharged");
-					}
-				}
-			}
-		}
-	}
+    public void setLengthOfStay(int minutes) {
+        this.lengthOfStay = minutes;
+    }
+
+    public void run() {
+        try {
+            log.debug("running ErProgramDischargeTask");
+            //log.info("Running ErProgramDischargeTask.............");
+
+            // get all "ER" Service programs		
+            //List providers = providerManager.getProvidersByType("er_clerk");
+            List providers = providerManager.getProviders();
+            boolean er_clerk = false;
+
+            for (Iterator i = providers.iterator(); i.hasNext();) {
+                Provider provider = (Provider)i.next();
+
+                er_clerk = false;
+                List<SecUserRole> roles = providerManager.getSecUserRoles(provider.getProviderNo());
+                for (Iterator ii = roles.iterator(); ii.hasNext();) {
+                    SecUserRole secUserRole = (SecUserRole)ii.next();
+                    if (UserRoleUtils.Roles.er_clerk.name().equals(secUserRole.getRoleName())) {
+                        er_clerk = true;
+                    }
+                }
+
+                if (!er_clerk) continue;
+
+                // ER Clerks, they should only have 1 service program
+                List programDomain = null;
+                programDomain = providerManager.getProgramDomain(provider.getProviderNo());
+
+                ProgramProvider programProvider = null;
+                if (programDomain.size() > 0) {
+                    programProvider = (ProgramProvider)programDomain.get(0);
+                }
+                if (programProvider != null) {
+                    // loop clients in the ER program
+                    List programAdmissions = admissionManager.getCurrentAdmissionsByProgramId(programProvider.getProgramId().toString());
+
+                    if (programAdmissions == null) continue;
+
+                    for (Iterator j = programAdmissions.iterator(); j.hasNext();) {
+                        Admission admission = (Admission)j.next();
+
+                        // check admission date, determine if we should discharge
+                        Date admissionDate = admission.getAdmissionDate();
+                        Date currentDate = new Date();
+                        long diff = currentDate.getTime() - admissionDate.getTime();
+
+                        log.debug("difference = " + diff);
+
+                        if (diff > (lengthOfStay * 60 * 1000)) {
+                            admission.setDischargeDate(new Date());
+                            admission.setDischargeNotes("Auto-Discharge");
+                            admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
+                            admissionManager.saveAdmission(admission);
+
+                            log.debug("discharged");
+                        }
+                    }
+                }
+            }
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+    }
 
 }

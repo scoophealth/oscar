@@ -42,11 +42,16 @@ public class DbConnectionFilter implements javax.servlet.Filter
         }
         finally
         {
-            Connection c=dbConnection.get();
-            SqlUtils.closeResources(c, null, null);
-            dbConnection.remove();
+            releaseThreadLocalDbConnection();
         }
 	}
+
+
+    public static void releaseThreadLocalDbConnection() {
+        Connection c=dbConnection.get();
+        SqlUtils.closeResources(c, null, null);
+        dbConnection.remove();
+    }
 
 	public void destroy()
 	{

@@ -32,6 +32,7 @@ import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class IntegratorUpdateTask extends TimerTask {
 
@@ -64,42 +65,51 @@ public class IntegratorUpdateTask extends TimerTask {
 	}
 
 	public void run() {
-		if (!integratorManager.isEnabled()) {
-			log.debug("integrator is not enabled");
-			return;
-		}
-
-		log.info("updating integrator");
-
 		try {
-			integratorManager.refreshAdmissions(admissionManager.getAdmissions());
-			log.info("Admissions updated");
-		} catch (IntegratorException e) {
-			log.error(e);
-		}
+            if (!integratorManager.isEnabled()) {
+                log.debug("integrator is not enabled");
+                return;
+            }
 
-		try {
-			integratorManager.refreshPrograms(programManager.getProgramsByAgencyId("0"));
-			log.info("Programs refreshed");
-		} catch (IntegratorException e) {
-			log.error(e);
-		}
+            log.info("updating integrator");
 
-		try {
-			integratorManager.refreshProviders(providerManager.getProviders());
-			log.info("Providers refereshed");
-		} catch (IntegratorException e) {
-			log.error(e);
-		}
+            try {
+                integratorManager.refreshAdmissions(admissionManager.getAdmissions());
+                log.info("Admissions updated");
+            }
+            catch (IntegratorException e) {
+                log.error(e);
+            }
 
-		try {
-			integratorManager.refreshReferrals(clientManager.getReferrals());
-			log.info("referrals refreshed");
-		} catch (IntegratorException e) {
-			log.error(e);
-		}
+            try {
+                integratorManager.refreshPrograms(programManager.getProgramsByAgencyId("0"));
+                log.info("Programs refreshed");
+            }
+            catch (IntegratorException e) {
+                log.error(e);
+            }
 
-		log.info("integrator update task complete)");
+            try {
+                integratorManager.refreshProviders(providerManager.getProviders());
+                log.info("Providers refereshed");
+            }
+            catch (IntegratorException e) {
+                log.error(e);
+            }
+
+            try {
+                integratorManager.refreshReferrals(clientManager.getReferrals());
+                log.info("referrals refreshed");
+            }
+            catch (IntegratorException e) {
+                log.error(e);
+            }
+
+            log.info("integrator update task complete)");
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
 	}
 
 }
