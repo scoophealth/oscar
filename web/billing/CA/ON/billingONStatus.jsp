@@ -111,7 +111,11 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 
 %>
 
-<%String ohipNo=request.getParameter("provider_ohipNo"); %>
+<%
+	String ohipNo= "";
+	if(request.getParameter("provider_ohipNo")!=null)
+		ohipNo = request.getParameter("provider_ohipNo");
+%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -173,10 +177,11 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
 			var temp_provider_no = <%=temp[0]%> ;			
 			if(provider_no==temp_provider_no) {				
 				var provider_ohipNo="<%=temp[3]%>";
-				document.serviceform.provider_ohipNo.value=provider_ohipNo;					
-        	}
+				document.serviceform.provider_ohipNo.value=provider_ohipNo;	
+				document.serviceform.submit();				
+        	} 
         	<%} %>
-        	
+        	document.serviceform.provider_ohipNo.value="";
         	document.serviceform.submit();
         }	
         </script>
