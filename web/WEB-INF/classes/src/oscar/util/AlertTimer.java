@@ -26,6 +26,8 @@ package oscar.util;
 
 import java.util.*;
 
+import org.oscarehr.util.DbConnectionFilter;
+
 /**
  *
  * <p>Title:AlertTimer </p>
@@ -37,38 +39,41 @@ import java.util.*;
  * @version 1.0
  */
 public class AlertTimer {
-  private static AlertTimer alerts = null;
-  private static Timer timer;
-  String alertCodes[] = null;
-  oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = null;
-  private AlertTimer(String[] codes,long interval) {
-    timer = new Timer(true);
-    alertCodes =codes;
-    hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
-    //triggers alerts 5 seconds after instantiation
-    timer.scheduleAtFixedRate(new ReminderClass(),5000,interval);
-  }
+    private static AlertTimer alerts = null;
+    private static Timer timer;
+    String alertCodes[] = null;
+    oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp hlp = null;
 
-  public static AlertTimer getInstance(String[] codes,long interval) {
-    if (alerts == null) {
-      alerts = new AlertTimer(codes,interval);
+    private AlertTimer(String[] codes, long interval) {
+        timer = new Timer(true);
+        alertCodes = codes;
+        hlp = new oscar.oscarBilling.ca.bc.MSP.CDMReminderHlp();
+        //triggers alerts 5 seconds after instantiation
+        timer.scheduleAtFixedRate(new ReminderClass(), 5000, interval);
     }
-    return alerts;
-  }
 
-  /**
-   * The helper class whcih is responsible for triggering the alerts
-   */
-  class ReminderClass
-      extends TimerTask {
-    public void run() {
-      try {
-        hlp.manageCDMTicklers(alertCodes);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
+    public static AlertTimer getInstance(String[] codes, long interval) {
+        if (alerts == null) {
+            alerts = new AlertTimer(codes, interval);
+        }
+        return alerts;
     }
-  }
+
+    /**
+     * The helper class which is responsible for triggering the alerts
+     */
+    class ReminderClass extends TimerTask {
+        public void run() {
+            try {
+                hlp.manageCDMTicklers(alertCodes);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                DbConnectionFilter.releaseThreadLocalDbConnection();
+            }
+        }
+    }
 
 }
