@@ -32,7 +32,7 @@ import org.oscarehr.PMmodule.dao.ProviderDao;
 
 public class CaisiRoleManager {
 
-    private CaisiRoleDAO roleDAO;
+    private CaisiRoleDAO caisiRoleDAO;
     private AccessTypeDAO accessTypeDAO;
     private ProviderDao providerDAO;
 
@@ -41,7 +41,7 @@ public class CaisiRoleManager {
     }
 
     public void setCaisiRoleDAO(CaisiRoleDAO roleDAO) {
-        this.roleDAO = roleDAO;
+        this.caisiRoleDAO = roleDAO;
     }
 
     public void setProviderDAO(ProviderDao providerDAO) {
@@ -53,14 +53,14 @@ public class CaisiRoleManager {
     }
 
     public void saveRoleAssignment(CaisiRole role) {
-        this.roleDAO.saveRoleAssignment(role);
+        this.caisiRoleDAO.saveRoleAssignment(role);
     }
 
     public String saveRole(Role role) {
         String rolename = role.getName();
         if ("".equals(rolename.trim())) return "role.empty";
-        if (roleDAO.hasExist(rolename)) return "role.hasexist";
-        this.roleDAO.saveRole(role);
+        if (caisiRoleDAO.hasExist(rolename)) return "role.hasexist";
+        this.caisiRoleDAO.saveRole(role);
 
         accessTypeDAO.addAccessType("write " + role.getName() + " issues", "access");
         accessTypeDAO.addAccessType("read " + role.getName() + " issues", "access");
@@ -70,7 +70,7 @@ public class CaisiRoleManager {
     }
 
     public List getRoles() {
-        return this.roleDAO.getRoles();
+        return this.caisiRoleDAO.getRoles();
     }
 
     public void assignRole(String provider_no, String role_no) {
