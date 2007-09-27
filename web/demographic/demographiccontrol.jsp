@@ -118,6 +118,7 @@
      {"Search" , "demographicsearchresults.jsp"},
      {"edit" , "demographiceditdemographic.jsp"},
      {"pdflabel" , "demographicpdflabel.jsp"},             
+     {"pdfaddresslabel" , "demographicpdfaddresslabel.jsp"},             
      {"appt_history" , "demographicappthistory.jsp"},
      {"Update Record" , "demographicupdatearecord.jsp"},
 
