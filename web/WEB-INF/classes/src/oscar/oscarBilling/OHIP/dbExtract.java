@@ -28,11 +28,12 @@
 package oscar.oscarBilling.OHIP;
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.oscarehr.util.DbConnectionFilter;
 public class dbExtract implements Serializable {
 	private Connection con = null;
 	private Statement stmt = null;
@@ -76,8 +77,7 @@ public class dbExtract implements Serializable {
 			Class.forName(sdriver);
 			//establish connection with the specified username, password and
 			// url
-			con = DriverManager.getConnection(surl, user, password);
-			//con2 = DriverManager.getConnection(url, user, password);//create
+			con = DbConnectionFilter.getThreadLocalDbConnection();
 			// a statement that can execute a query
 			stmt = con.createStatement();
 			stmt2 = con.createStatement();

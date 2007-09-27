@@ -23,156 +23,160 @@
 // *
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.oscarBilling.ca.bc.MSP;
+
 import java.sql.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
 import java.lang.*;
 
+import org.oscarehr.util.DbConnectionFilter;
+
 public class dbExtract implements Serializable {
 
-  private Connection con = null;
-  private Statement stmt = null;
-  private Statement stmt2 = null;
-  private Statement stmt3 = null;
-  private String surl;
-  private String user;
-  private String password;
-  private String sdriver;
-  private int numUpdate;
-  private Statement prepStmt = null;
-  private String updateString;
-  PreparedStatement prep = null;
-  ResultSet resultSet = null;
-  ResultSet resultSet2 = null;
-  ResultSet resultSet3 = null;
-public dbExtract()
-{
-//	try{
-//	 String userHomePath = System.getProperty("user.home", "user.dir");
+    private Connection con = null;
+    private Statement stmt = null;
+    private Statement stmt2 = null;
+    private Statement stmt3 = null;
+    private String surl;
+    private String user;
+    private String password;
+    private String sdriver;
+    private int numUpdate;
+    private Statement prepStmt = null;
+    private String updateString;
+    PreparedStatement prep = null;
+    ResultSet resultSet = null;
+    ResultSet resultSet2 = null;
+    ResultSet resultSet3 = null;
 
-  //    File pFile = new File(userHomePath, "oscar.prop");
-    //  FileInputStream pStream = new FileInputStream(pFile.getPath());
+    public dbExtract() {
+        //	try{
+        //	 String userHomePath = System.getProperty("user.home", "user.dir");
 
-      //Properties ap = new Properties();
-     // ap.load(pStream);
+        //    File pFile = new File(userHomePath, "oscar.prop");
+        //  FileInputStream pStream = new FileInputStream(pFile.getPath());
 
-     //  surl = ap.getProperty("DB_DRIVER");
-     // user = ap.getProperty("DB_USERID");
-    //  password = ap.getProperty("DB_PASSWORD");
-    //  pStream.close();
-// }
- // catch (Exception ex) {
- //     System.out.println("Exception : " + ex);
- //   }
+        //Properties ap = new Properties();
+        // ap.load(pStream);
+
+        //  surl = ap.getProperty("DB_DRIVER");
+        // user = ap.getProperty("DB_USERID");
+        //  password = ap.getProperty("DB_PASSWORD");
+        //  pStream.close();
+        // }
+        // catch (Exception ex) {
+        //     System.out.println("Exception : " + ex);
+        //   }
+    }
+
+    public void openConnection(String sd, String ur, String us, String ps) throws SQLException {
+        sdriver = sd;
+        surl = ur;
+        us = user;
+        password = ps;
+        try {
+
+            //Load the particular driver
+            Class.forName(sdriver);
+            //establish connection with the specified username, password and url
+            con = DbConnectionFilter.getThreadLocalDbConnection();
+            stmt = con.createStatement();
+            stmt2 = con.createStatement();
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot get connection ");
+            System.out.println("Exception is: " + e);
+        }
+        catch (ClassNotFoundException e) {
+            System.out.println("Class not found exception ");
+            System.out.println("Exception is: " + e);
+        }
+
+    }
+
+    public ResultSet executeQuery(String sql) throws SQLException {
+        try {
+            String SQLString = sql;
+            // Execute sql
+            // statement
+            resultSet = stmt.executeQuery(SQLString);
+            return resultSet;
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot get connection ");
+            System.out.println("Exception is: " + e);
+            return resultSet;
+        }
+    }
+
+    public ResultSet executeQuery2(String sql) throws SQLException {
+        try {
+            String SQLString = sql;
+            // Execute sql
+            // statement
+            resultSet2 = stmt2.executeQuery(SQLString);
+            return resultSet2;
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot get connection ");
+            System.out.println("Exception is: " + e);
+            return resultSet2;
+        }
+    }
+
+    public ResultSet executeQuery3(String sql) throws SQLException {
+        try {
+            String SQLString = sql;
+            // Execute sql
+            // statement
+            resultSet3 = stmt3.executeQuery(SQLString);
+            return resultSet3;
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot get connection ");
+            System.out.println("Exception is: " + e);
+            return resultSet3;
+        }
+    }
+
+    public int executeUpdate() throws SQLException {
+
+        try {
+            String SQLup = getUpdateString();
+            // System.out.println(SQLup);
+            prepStmt = con.createStatement();
+            numUpdate = prepStmt.executeUpdate(SQLup);
+            con.commit();
+
+            return numUpdate;
+        }
+        catch (SQLException e) {
+            System.out.println("Cannot get connection ");
+            System.out.println("Exception is: " + e);
+            return numUpdate;
+        }
+    }
+
+    public synchronized void setUpdateString(String newUpdateString) {
+        updateString = newUpdateString;
+    }
+
+    public String getUpdateString() {
+        return updateString;
+    }
+
+    public void closeConnection() throws SQLException {
+        try {
+            if ((con != null) && (stmt != null)) {
+                con.close();
+                stmt.close();
+            }
+
+        }
+        catch (Exception e) {
+            System.out.println("Error closing the database connection : " + surl);
+        }
+
+    } //closeConnection ends
 }
-
-public void openConnection(String sd,String ur, String us, String ps) throws SQLException
-{
-    sdriver=sd;
-    surl=ur;
-    us=user; password=ps;
-try
-{
-
-
-//Load the particular driver
-Class.forName(sdriver);
-//establish connection with the specified username, password and url
-con = DriverManager.getConnection(surl, user, password);
-//con2 = DriverManager.getConnection(url, user, password);//create a statement that can execute a query
-stmt = con.createStatement();
-stmt2 = con.createStatement();
-}
-catch (SQLException e)
-{
-System.out.println("Cannot get connection ");
-System.out.println("Exception is: " + e);
-}
-catch (ClassNotFoundException e)
-{
-System.out.println("Class not found exception ");
-System.out.println("Exception is: " + e);
-}
-
-}
-
-public ResultSet executeQuery(String sql) throws SQLException {
-try {
-String SQLString = sql;
-// Execute sql
-// statement
-resultSet = stmt.executeQuery(SQLString);
-return resultSet;
-} catch (SQLException e) {
-System.out.println("Cannot get connection ");
-System.out.println("Exception is: " + e);
-return resultSet;
-}
-}
-public ResultSet executeQuery2(String sql) throws SQLException {
-try {
-String SQLString = sql;
-// Execute sql
-// statement
-resultSet2 = stmt2.executeQuery(SQLString);
-return resultSet2;
-} catch (SQLException e) {
-System.out.println("Cannot get connection ");
-System.out.println("Exception is: " + e);
-return resultSet2;
-}
-}
-public ResultSet executeQuery3(String sql) throws SQLException {
-try {
-String SQLString = sql;
-// Execute sql
-// statement
-resultSet3 = stmt3.executeQuery(SQLString);
-return resultSet3;
-} catch (SQLException e) {
-System.out.println("Cannot get connection ");
-System.out.println("Exception is: " + e);
-return resultSet3;
-}
-}
-
-public int executeUpdate() throws SQLException {
-
-try {
-String SQLup = getUpdateString();
-// System.out.println(SQLup);
-prepStmt = con.createStatement();
-numUpdate=prepStmt.executeUpdate(SQLup);
-con.commit();
-
-return numUpdate;
-} catch(SQLException e) {
-System.out.println("Cannot get connection ");
-System.out.println("Exception is: " + e);
-return numUpdate;
-}
-}
-
-public synchronized void setUpdateString(String newUpdateString){
-updateString = newUpdateString;
-}
-public String getUpdateString() {
-return updateString;
-}
-
-public void closeConnection() throws SQLException {
-try {
-if ((con != null) && (stmt != null)) {
-con.close();
-stmt.close();
-}
-
-} catch (Exception e) {
-System.out.println("Error closing the database connection : " + surl); }
-
-} //closeConnection ends
-}
-
-
-

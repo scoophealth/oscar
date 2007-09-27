@@ -27,69 +27,61 @@ package oscar;
 import java.sql.*;
 import java.io.*;
 
+import org.oscarehr.util.DbConnectionFilter;
+
 public class Provider {
-  //String sDBDriver = "sun.jdbc.odbc.JdbcOdbcDriver";
-  //String sConnStr = "jdbc:odbc:oscar";
-	
-  Connection conn = null;// db is our connection object
-  ResultSet result = null;// result will hold the recordset
-  Statement stmt = null; // stmt will hold sql jdbc statements
-  
-  // default constructor
-  public Provider() {
-  }
-  
-  /*********************************************
-  * @dsn String for ODBC Datasource name
-  * @uid String for ODBC Datasource user name
-  * @pwn String for ODBC Datasource password
-  */
-  public void OpenConn(String dsn,String uid,String pwd) throws Exception {
-    try {
-      dsn = "jdbc:odbc:" + dsn;
-      Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-    }catch(java.lang.ClassNotFoundException e) {
-      System.err.println("test(): " + e.getMessage());
-    }
-    try {
-      conn = DriverManager.getConnection(dsn, uid, pwd);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
+    //String sDBDriver = "sun.jdbc.odbc.JdbcOdbcDriver";
+    //String sConnStr = "jdbc:odbc:oscar";
 
-//} catch(SQLException ex) { 
-//System.err.println("aq.executeQuery: " + //ex.getMessage());
-//}
-  
-  /*********************************************
-  * @sproc String for sql statement or stored
-  *        procedure
-  */
-  synchronized public ResultSet getResults(String sproc) throws Exception {
-    stmt = conn.createStatement();
-    result = stmt.executeQuery(sproc);
-    return result;
-  }
-  
-  /*********************************************
-  * @sproc String for sql statement or stored
-  *        procedure
-  */
-  synchronized public void execute(String sproc) throws Exception {    
-    stmt = conn.createStatement();
-    stmt.execute(sproc);
-  }
+    Connection conn = null;// db is our connection object
+    ResultSet result = null;// result will hold the recordset
+    Statement stmt = null; // stmt will hold sql jdbc statements
 
-  // Don't forget to clean up!
-  public void CloseStmt() throws Exception {
-    stmt.close();
-    stmt = null;
-  }
-  
-  // Don't forget to clean up!
-  public void CloseConn() throws Exception {
-    conn.close();
-    conn = null;
-  }
+    // default constructor
+    public Provider() {
+    }
+
+    /*********************************************
+    * @dsn String for ODBC Datasource name
+    * @uid String for ODBC Datasource user name
+    * @pwn String for ODBC Datasource password
+    */
+    public void OpenConn(String dsn, String uid, String pwd) throws Exception {
+            conn = DbConnectionFilter.getThreadLocalDbConnection();
+    }
+
+    //} catch(SQLException ex) { 
+    //System.err.println("aq.executeQuery: " + //ex.getMessage());
+    //}
+
+    /*********************************************
+    * @sproc String for sql statement or stored
+    *        procedure
+    */
+    synchronized public ResultSet getResults(String sproc) throws Exception {
+        stmt = conn.createStatement();
+        result = stmt.executeQuery(sproc);
+        return result;
+    }
+
+    /*********************************************
+    * @sproc String for sql statement or stored
+    *        procedure
+    */
+    synchronized public void execute(String sproc) throws Exception {
+        stmt = conn.createStatement();
+        stmt.execute(sproc);
+    }
+
+    // Don't forget to clean up!
+    public void CloseStmt() throws Exception {
+        stmt.close();
+        stmt = null;
+    }
+
+    // Don't forget to clean up!
+    public void CloseConn() throws Exception {
+        conn.close();
+        conn = null;
+    }
 }

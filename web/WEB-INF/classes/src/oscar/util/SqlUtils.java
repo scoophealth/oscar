@@ -38,6 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.*;
 import org.hibernate.Session;
 import org.oscarehr.PMmodule.web.ClientSearchAction2;
+import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.oscarDB.*;
 
@@ -258,7 +259,7 @@ public class SqlUtils {
     public static Connection getConnection() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:protomatter:pool:postgresPool");
+            conn = DbConnectionFilter.getThreadLocalDbConnection();
             cat.debug("conexao obtida");
         }
         catch (SQLException e) {
