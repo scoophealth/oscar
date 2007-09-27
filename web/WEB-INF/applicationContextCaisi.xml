@@ -16,7 +16,6 @@
     <bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
     <bean id="caisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO" autowire="byName" />
     <bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO" autowire="byName"/>
-    <bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramSignatureDaoHibernate" autowire="byName"/>
     <bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedCheckTimeDAOHibernate" autowire="byName" />
     <bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.hibernate.HibernateRatePageDao" autowire="byName" />
     <bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeNodeDAOHibernate" autowire="byName"/>
