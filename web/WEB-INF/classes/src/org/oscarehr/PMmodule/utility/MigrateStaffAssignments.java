@@ -22,37 +22,26 @@
 
 package org.oscarehr.PMmodule.utility;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.oscarehr.util.DbConnectionFilter;
 
 public class MigrateStaffAssignments {
 	protected final Log log = LogFactory.getLog(getClass());
-    protected ApplicationContext ctx = null;
-    protected DataSource ds;
-    protected Connection conn;
     protected int nurseRoleId = 0;
     protected int doctorRoleId = 0;
     
     public MigrateStaffAssignments() throws Exception {
-    	String[] paths = {"/WEB-INF/applicationContext.xml"};
-    	ctx = new ClassPathXmlApplicationContext(paths);
-    	ds = (DataSource)ctx.getBean("dataSource");
-    	conn = ds.getConnection();
     }
     
     public void run() throws Exception {
     	nurseRoleId = (int)this.getRoleId("Nurse");
     	doctorRoleId = (int)this.getRoleId("Doctor");
     	
-    	Statement stmt = conn.createStatement();
+    	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	stmt.execute("SELECT * FROM provider_role_program");
     	ResultSet rs = stmt.getResultSet();
     	int count = 0;
@@ -72,7 +61,7 @@ public class MigrateStaffAssignments {
     }
     
     public boolean programExists(long programId) throws Exception {
-    	Statement stmt = conn.createStatement();
+    	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	stmt.execute("SELECT count(*) as num FROM program where program_id =" + programId);
     	ResultSet rs = stmt.getResultSet();
     	rs.next();
@@ -85,7 +74,7 @@ public class MigrateStaffAssignments {
     }
 
     public boolean providerExists(long providerNo) throws Exception {
-    	Statement stmt = conn.createStatement();
+    	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	stmt.execute("SELECT count(*) as num FROM provider where provider_no =" + providerNo);
     	ResultSet rs = stmt.getResultSet();
     	rs.next();
@@ -98,7 +87,7 @@ public class MigrateStaffAssignments {
     }
     
     public long getRoleId(String name) throws Exception {
-    	Statement stmt = conn.createStatement();
+    	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	stmt.execute("SELECT * FROM caisi_role where name = '"+ name + "'");
     	ResultSet rs = stmt.getResultSet();
     	if(rs.next()) {
@@ -109,7 +98,7 @@ public class MigrateStaffAssignments {
     }
     
     public void addProgramProvider(long programId, long providerNo, long groupNo) throws Exception {
-    	Statement stmt = conn.createStatement();
+    	Statement stmt = DbConnectionFilter.getThreadLocalDbConnection().createStatement();
     	long roleId = doctorRoleId;
     	if(groupNo == 9) {
     		roleId = nurseRoleId;
