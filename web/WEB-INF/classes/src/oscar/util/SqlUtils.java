@@ -45,266 +45,6 @@ import oscar.oscarDB.*;
 public class SqlUtils {
     private static Log logger = LogFactory.getLog(SqlUtils.class);
 
-    static Category cat = Category.getInstance(SqlUtils.class.getName());
-
-    Connection conn = null;
-
-    public SqlUtils() {
-    }
-
-    public boolean executeUpdate(String[] param) {
-        boolean result = false;
-        if (prepareSQL()) {
-            if (executeUpdateSQL(param)) {
-                result = true;
-            }
-            unPrepareSQL();
-        }
-        return result;
-    }
-
-    public boolean executeUpdate(String param) {
-        boolean result = false;
-        if (prepareSQL()) {
-            if (executeUpdateSQL(param)) {
-                result = true;
-            }
-            unPrepareSQL();
-        }
-        return result;
-    }
-
-    public ArrayList executeSelect(String param) {
-        ArrayList result = null;
-        if (prepareSQL()) {
-            result = executeSelectSQL(param);
-            unPrepareSQL();
-        }
-        return result;
-    }
-
-    public static ArrayList executeSelect(String param, Connection conn) {
-        ArrayList result = null;
-        if (conn != null) {
-            result = executeSelectSQL(param, conn);
-        }
-        return result;
-    }
-
-    private boolean prepareSQL() {
-        conn = SqlUtils.getConnection();
-        if (conn == null) {
-            cat.fatal("Sem conexao.");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean unPrepareSQL() {
-        if (conn != null) {
-            SqlUtils.freeConnection(conn);
-            return false;
-        }
-        return true;
-    }
-
-    private boolean executeUpdateSQL(String[] sqlCommands) {
-        Statement stmt = null;
-        try {
-            conn.setAutoCommit(false);
-            if (sqlCommands != null) {
-                for (int i = 0; i < sqlCommands.length; i++) {
-                    cat.debug(sqlCommands[i]);
-                    stmt = conn.createStatement();
-                    stmt.executeUpdate(sqlCommands[i]);
-                    stmt.close();
-                    stmt = null;
-                }
-                conn.commit();
-            }
-            return true;
-        }
-        catch (Exception e) {
-            try {
-                conn.rollback();
-            }
-            catch (Exception e2) {
-                return false;
-            }
-            cat.error("Transacao nao executada.", e);
-            return false;
-        }
-        finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                conn.setAutoCommit(true);
-            }
-            catch (Exception e3) {
-            };
-        }
-    }
-
-    private boolean executeUpdateSQL(String sqlCommand) {
-        Statement stmt = null;
-        try {
-            stmt = conn.createStatement();
-            stmt.executeUpdate(sqlCommand);
-            stmt.close();
-            stmt = null;
-            cat.debug(sqlCommand);
-            return true;
-        }
-        catch (Exception e) {
-            cat.error("Comando no ejecutado.", e);
-            cat.debug(sqlCommand);
-            return false;
-        }
-        finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-            catch (Exception e3) {
-            };
-        }
-    }
-
-    private ArrayList executeSelectSQL(String sqlCommand) {
-        Statement stmt = null;
-        ResultSet rset = null;
-        ArrayList records = new ArrayList();
-        try {
-            cat.debug("vai executar select");
-            stmt = conn.createStatement();
-            rset = stmt.executeQuery(sqlCommand);
-            int cols = rset.getMetaData().getColumnCount();
-            while (rset.next()) {
-                String[] record = new String[cols];
-                for (int i = 0; i < cols; i++) {
-                    record[i] = rset.getString(i + 1);
-                }
-                records.add(record);
-            }
-            stmt.close();
-            stmt = null;
-            rset.close();
-            rset = null;
-            cat.debug(sqlCommand);
-            return records;
-        }
-        catch (Exception e) {
-            cat.error("Comando no ejecutado.", e);
-            cat.debug(sqlCommand);
-            return null;
-        }
-        finally {
-            try {
-                if (rset != null) {
-                    rset.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-            catch (Exception e3) {
-            };
-        }
-    }
-
-    private static ArrayList executeSelectSQL(String sqlCommand, Connection conn) {
-        Statement stmt = null;
-        ResultSet rset = null;
-        ArrayList records = new ArrayList();
-        try {
-            cat.debug("vai executar select");
-            stmt = conn.createStatement();
-            rset = stmt.executeQuery(sqlCommand);
-            int cols = rset.getMetaData().getColumnCount();
-            while (rset.next()) {
-                String[] record = new String[cols];
-                for (int i = 0; i < cols; i++) {
-                    record[i] = rset.getString(i + 1);
-                }
-                records.add(record);
-            }
-            stmt.close();
-            stmt = null;
-            rset.close();
-            rset = null;
-            cat.debug(sqlCommand);
-            return records;
-        }
-        catch (Exception e) {
-            cat.error("Comando no ejecutado.", e);
-            cat.debug(sqlCommand);
-            return null;
-        }
-        finally {
-            try {
-                if (rset != null) {
-                    rset.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-            }
-            catch (Exception e3) {
-            };
-        }
-    }
-
-    public static Connection getConnection() {
-        Connection conn = null;
-        try {
-            conn = DbConnectionFilter.getThreadLocalDbConnection();
-            cat.debug("conexao obtida");
-        }
-        catch (SQLException e) {
-            cat.error("Nao foi possivel obter a conexao do pool ", e);
-        }
-        if (conn == null) {
-            return null;
-        }
-        else {
-            return conn;
-        }
-    }
-
-    public static void freeConnection(Connection conn) {
-        try {
-            if (conn != null) {
-                conn.close();
-                cat.debug("conexao devolvida");
-            }
-        }
-        catch (SQLException e) {
-            cat.error("Nao foi possivel obter a conexao do pool ", e);
-        }
-    }
-
-    public static String getLastIdInserted(String noSeq, Connection conn) {
-        if (noSeq == null) {
-            cat.debug("[SqlUtils] - sequence nula");
-            return null;
-        }
-        ArrayList sqlArray = SqlUtils.executeSelect("select currval('" + noSeq + "')", conn);
-        if (sqlArray != null) {
-            if (sqlArray.size() == 1) {
-                String[] recordValue = (String[])sqlArray.get(0);
-                return recordValue[0];
-            }
-            else {
-                cat.debug("[SqlUtils] - select currval('" + noSeq + "') retornou mais q um registro.");
-            }
-        }
-        else {
-            cat.debug("[SqlUtils] - select currval('" + noSeq + "') nao foi executado.");
-        }
-        return null;
-    }
 
     private static java.sql.Date createAppropriateDate(Object value) {
         if (value == null) {
@@ -329,7 +69,7 @@ public class SqlUtils {
             }
             catch (java.lang.IllegalArgumentException ex) {
                 // Try date
-                cat.info("date = " + valueStr);
+                logger.info("date = " + valueStr);
                 result = java.sql.Date.valueOf(valueStr);
             }
         }
@@ -355,7 +95,7 @@ public class SqlUtils {
      */
     public static void fillPreparedStatement(PreparedStatement ps, int col, Object val, int fieldType) throws SQLException {
         try {
-            cat.info("fillPreparedStatement( ps, " + col + ", " + val + ", " + fieldType + ")...");
+            logger.info("fillPreparedStatement( ps, " + col + ", " + val + ", " + fieldType + ")...");
             Object value = null;
             //Check for hard-coded NULL
             if (!("$null$".equals(val))) {
@@ -404,7 +144,7 @@ public class SqlUtils {
                         }
                         catch (IOException ioe) {
                             ioe.printStackTrace();
-                            cat.info(ioe.toString());
+                            logger.info(ioe.toString());
                             throw new SQLException("error storing BLOB in database - " + ioe.toString(), null, 2);
                         }
                     break;
@@ -774,7 +514,7 @@ public class SqlUtils {
                 c.close();
             }
             catch (Exception e) {
-                if (e.getMessage().toLowerCase().indexOf("already closed") >= 0) {
+                if (e.getMessage().toLowerCase().indexOf("closed") >= 0) {
                     // I don't care.
                 }
                 else {
