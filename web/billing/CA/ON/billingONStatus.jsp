@@ -165,24 +165,18 @@ BigDecimal paidTotal = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
         
         	var index = document.serviceform.providerview.selectedIndex;
         	var provider_no = document.serviceform.providerview[index].value;
-        	alert("....now.... provider_no="+provider_no);
+        	
         	<% for (int i = 0 ; i < pList.size(); i++) { 
 				String temp[] = ((String) pList.get(i)).split("\\|");				
 			%>
 			
-			var temp_provider_no = <%=temp[0]%> ;
-			
-			if(provider_no==temp_provider_no) {
-				alert("provider no="+provider_no+"temp provider_no="+temp_provider_no+" ohip no = " + "<%=temp[3]%>");
+			var temp_provider_no = <%=temp[0]%> ;			
+			if(provider_no==temp_provider_no) {				
 				var provider_ohipNo="<%=temp[3]%>";
-				document.serviceform.provider_ohipNo.value=provider_ohipNo;
-				alert("provider ohip no = " + provider_ohipNo);	
-					
+				document.serviceform.provider_ohipNo.value=provider_ohipNo;					
         	}
         	<%} %>
         	
-        	
-        	alert("form ohipNO="+document.serviceform.provider_ohipNo.value);
         	document.serviceform.submit();
         }	
         </script>
@@ -391,7 +385,7 @@ function handleStateChange() {
         
           <font size="1" ><a href="javascript: function myFunction() {return false; }" id="hlADate" >To:</a></font> 
           <input type="text" name="xml_appointment_date" id="xml_appointment_date" value="<%=endDate%>" size=10 style="width:70px" /> 
-          <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-MM-dd","-30")%>')" >30</a>
+          <br><a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-MM-dd","-30")%>')" >30</a>
           <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-MM-dd","-60")%>')" >60</a>
           <a href="javascript: function myFunction() {return false; }" onClick="fillEndDate('<%=DateUtils.sumDate("yyyy-MM-dd","-90")%>')" >90</a>                         
 		<input type="submit" name="Submit" value="Create Report">
