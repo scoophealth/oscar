@@ -25,7 +25,6 @@
     <bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.hibernate.IntakeCDaoHibernate" autowire="byName" />
     <bean id="consentDao" class="org.oscarehr.PMmodule.dao.hibernate.ConsentDAOHibernate" autowire="byName" />
     <bean id="logDAO" class="org.oscarehr.PMmodule.dao.hibernate.LogDAOHibernate" autowire="byName" />
-    <bean id="oscarSecurityDAO" class="org.oscarehr.PMmodule.dao.hibernate.OscarSecurityDAOHibernate" autowire="byName"/>
     <bean id="formsDAO" class="org.oscarehr.PMmodule.dao.hibernate.FormsDAOHibernate" autowire="byName"/>
     <bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate" autowire="byName"/>
     <bean id="surveyTestDAO" class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate" autowire="byName"/>
