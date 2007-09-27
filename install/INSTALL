@@ -311,6 +311,7 @@ NOTE: In some cases, the Jasper Reports Engine will fail on systems that don't r
 
 Configuring OSCAR Properties Files
 
+Copy Addresslabel.xml (will need to be tweaked for your environment.) to /root - to print PDF Address labels from the demographic master file.
 
 1 Install Properties Files in root directory
 cp /home/oscar_mcmaster/oscar_*properties /root/.
@@ -341,8 +342,3 @@ SUPERUSER = oscardoc
 # Path
 tomcat_path = 
 project_home = oscar_mcmaster
-
-
-
-
-
