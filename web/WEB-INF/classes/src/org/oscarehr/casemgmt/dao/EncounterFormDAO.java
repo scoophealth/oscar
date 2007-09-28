@@ -20,12 +20,17 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.casemgmt.dao;
 
 import java.util.List;
 
-public interface EncounterFormDAO
-{
-	public List getAllForms();
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+public class EncounterFormDAO extends HibernateDaoSupport {
+
+    public List getAllForms() {
+        String sql = "from Encounterform e order by e.formName";
+        return getHibernateTemplate().find(sql);
+    }
+
 }

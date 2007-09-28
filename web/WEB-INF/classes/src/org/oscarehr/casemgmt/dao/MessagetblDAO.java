@@ -20,12 +20,17 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.casemgmt.dao;
 
 import java.util.List;
 
-public interface MessagetblDAO
-{
-	public List getMsgByDemoNo(Integer demographicNo);
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+public class MessagetblDAO extends HibernateDaoSupport {
+
+    public List getMsgByDemoNo(Integer demographicNo) {
+        String sql = "select mtbl from Messagetbl mtbl, Msgdemomap mdmap where mtbl.messageid=mdmap.messageID and mdmap.demographicNo=?";
+        return getHibernateTemplate().find(sql, demographicNo);
+    }
+
 }

@@ -20,13 +20,27 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.casemgmt.dao;
 
-import org.oscarehr.casemgmt.model.CaseManagementCPP;
-import org.oscarehr.casemgmt.model.CaseManagementNote;
+import java.util.List;
 
-public interface ApptDAO
-{
-	public void updateAppointmentStatus(String apptId, String status, String type);
+import org.caisi.model.Appointment;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+public class ApptDAO extends HibernateDaoSupport {
+    public void updateAppointmentStatus(String apptId, String status, String type) {
+
+        String sql = "from Appointment appt where appt.id = ?";
+        List list = getHibernateTemplate().find(sql, new Long(apptId));
+        Appointment appt;
+        if (list.size() != 0) {
+            appt = (Appointment)list.get(list.size() - 1);
+            oscar.appt.ApptStatusData as = new oscar.appt.ApptStatusData();
+            as.setApptStatus(status);
+            if (type.equalsIgnoreCase("sign")) appt.setStatus(as.signStatus());
+            if (type.equalsIgnoreCase("verify")) appt.setStatus(as.verifyStatus());
+
+            getHibernateTemplate().update(appt);
+        }
+    }
 }

@@ -20,23 +20,45 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.casemgmt.dao;
-
-import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.model.DefaultRoleAccess;
 
 import java.util.List;
 
-public interface RoleProgramAccessDAO extends DAO
-{
-	public List<ProgramProvider> getProgramProviderByProviderProgramID(String providerNo, Long programId);
-	
-	public List<ProgramProvider> getProgramProviderByProviderNo(String providerNo);
-	
-	public List<ProgramProvider> getAccessListByProgramID(Long programId);
-	
-	public List<DefaultRoleAccess> getDefaultAccessRightByRole(Long roleId);
-		
-	public List<String> getAllRoleName();
+import org.oscarehr.PMmodule.model.DefaultRoleAccess;
+import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+public class RoleProgramAccessDAO extends HibernateDaoSupport {
+
+    @SuppressWarnings("unchecked")
+    public List<String> getAllRoleName() {
+        String q = "select rl.name from Role rl";
+        return getHibernateTemplate().find(q);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<ProgramProvider> getProgramProviderByProviderProgramID(String providerNo, Long programId) {
+        String q = "select pp from ProgramProvider pp where pp.ProgramId=? and pp.ProviderNo=?";
+
+        return getHibernateTemplate().find(q, new Object[] {programId, Long.valueOf(providerNo)});
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<ProgramProvider> getProgramProviderByProviderNo(String providerNo) {
+        String q = "select pp from ProgramProvider pp where pp.ProviderNo=?";
+        return getHibernateTemplate().find(q, Long.valueOf(providerNo));
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<ProgramProvider> getAccessListByProgramID(Long programId) {
+        String q = "select pp from ProgramAccess pp where pp.ProgramId=?";
+
+        return getHibernateTemplate().find(q, new Object[] {programId});
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<DefaultRoleAccess> getDefaultAccessRightByRole(Long roleId) {
+        String q = "from DefaultRoleAccess da where da.caisi_role.id=?";
+        return getHibernateTemplate().find(q, roleId);
+    }
 }

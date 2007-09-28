@@ -121,22 +121,22 @@
     <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDAOHibernate" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
     <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate" autowire="byName"/>
-    <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementIssueDAOHibernate" autowire="byName"/>
+    <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName"/>
     <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName"/>
-    <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementCPPDAOHibernate" autowire="byName"/>
-    <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.hibernate.AllergyDAOHibernate" autowire="byName"/>
-    <bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.hibernate.PrescriptionDAOHibernate" autowire="byName"/>
-    <bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.hibernate.IssueDAOHibernate" autowire="byName"/>
-    <bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.hibernate.EncounterFormDAOHibernate" autowire="byName"/>
-    <bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.hibernate.EchartDAOHibernate" autowire="byName"/>
-    <bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.hibernate.AppointmentDAOHibernate" autowire="byName"/>
-    <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.hibernate.MessagetblDAOHibernate" autowire="byName"/>
-    <bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.hibernate.ProviderSignitureDaoHibernate" autowire="byName"/>
-    <bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.hibernate.RoleProgramAccessDAOHibernate" autowire="byName"/>
-    <bean id="ClientImageDAO" class="org.oscarehr.casemgmt.dao.hibernate.ClientImageDAOHibernate" autowire="byName"/>
+    <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName"/>
+    <bean id="AllergyDAO" class="org.oscarehr.casemgmt.dao.AllergyDAO" autowire="byName"/>
+    <bean id="PrescriptionDAO" class="org.oscarehr.casemgmt.dao.PrescriptionDAO" autowire="byName"/>
+    <bean id="IssueDAO" class="org.oscarehr.casemgmt.dao.IssueDAO" autowire="byName"/>
+    <bean id="EncounterFormDAO" class="org.oscarehr.casemgmt.dao.EncounterFormDAO" autowire="byName"/>
+    <bean id="EchartDAO" class="org.oscarehr.casemgmt.dao.EchartDAO" autowire="byName"/>
+    <bean id="ApptDAO" class="org.oscarehr.casemgmt.dao.ApptDAO" autowire="byName"/>
+    <bean id="MessagetblDAO" class="org.oscarehr.casemgmt.dao.MessagetblDAO" autowire="byName"/>
+    <bean id="ProviderSignitureDao" class="org.oscarehr.casemgmt.dao.ProviderSignitureDao" autowire="byName"/>
+    <bean id="RoleProgramAccessDAO" class="org.oscarehr.casemgmt.dao.RoleProgramAccessDAO" autowire="byName"/>
+    <bean id="ClientImageDAO" class="org.oscarehr.casemgmt.dao.ClientImageDAO" autowire="byName"/>
     <bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO" autowire="byName" />
-    <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.hibernate.CaseManagementTmpSaveDAOHibernate" autowire="byName"/>
-    <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.hibernate.TicklerDAOHibernate" autowire="byName"/>
+    <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO" autowire="byName"/>
+    <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.TicklerDAO" autowire="byName"/>
     <bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.hibernate.SurveyDAOHibernate" autowire="byName"/>
     <bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramProviderDAOHibernate" autowire="byName"/>
     <bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramFunctionalUserDAOHibernate" autowire="byName"/>

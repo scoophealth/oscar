@@ -20,18 +20,116 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.casemgmt.dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.caisi.model.EChart;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface EchartDAO
-{
-	public void saveCPPIntoEchart(CaseManagementCPP cpp, String providerNo);
+public class EchartDAO extends HibernateDaoSupport {
 
-	public void updateEchartOngoing(CaseManagementCPP cpp);
+    public void saveCPPIntoEchart(CaseManagementCPP cpp, String providerNo) {
+        String demoNo = cpp.getDemographic_no();
+        String sql = "from EChart e where e.demographicNo=? order by e.id";
+        List list = getHibernateTemplate().find(sql, new Integer(demoNo));
+        EChart ec;
+        if (list.size() != 0) ec = (EChart)list.get(list.size() - 1);
+        else {
+            ec = new EChart();
+            ec.setDemographicNo(new Integer(demoNo).intValue());
+            ec.setProviderNo(providerNo);
+            ec.setEncounter("");
+        }
 
-	public String saveEchart(CaseManagementNote note, CaseManagementCPP cpp,
-			String userName, String lastStr);
+        ec.setFamilyHistory(cpp.getFamilyHistory());
+        ec.setMedicalHistory(cpp.getMedicalHistory());
+        ec.setOngoingConcerns(cpp.getOngoingConcerns());
+        ec.setReminders(cpp.getReminders());
+        ec.setSocialHistory(cpp.getSocialHistory());
+
+        Date now = new Date();
+        ec.setTimeStamp(now);
+        getHibernateTemplate().saveOrUpdate(ec);
+    }
+
+    public String saveEchart(CaseManagementNote note, CaseManagementCPP cpp, String userName, String lastStr) {
+        String demoNo = note.getDemographic_no();
+        String sql = "from EChart e where e.demographicNo=? order by e.id";
+        List list = getHibernateTemplate().find(sql, new Integer(demoNo));
+        EChart oldec;
+        if (list.size() != 0) oldec = (EChart)list.get(list.size() - 1);
+        else {
+            oldec = new EChart();
+            oldec.setEncounter("");
+        }
+
+        EChart ec = new EChart();
+        ec.setDemographicNo(new Integer(demoNo).intValue());
+        ec.setProviderNo(note.getProvider_no());
+        ec.setSubject("");
+        ec.setFamilyHistory(cpp.getFamilyHistory());
+        ec.setMedicalHistory(cpp.getMedicalHistory());
+        ec.setOngoingConcerns(cpp.getOngoingConcerns());
+        ec.setReminders(cpp.getReminders());
+        ec.setSocialHistory(cpp.getSocialHistory());
+
+        Date now = new Date();
+        ec.setTimeStamp(now);
+        String etext = oldec.getEncounter();
+
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd");
+        String rtStr = "\n-----------------------------------\n[" + dt.format(now) + "]\n" + note.getNote();
+
+        //if echart have this note return
+        String dupliString = note.getNote();
+        if (dupliString.lastIndexOf("[[") >= 0) {
+            dupliString = dupliString.substring(0, dupliString.lastIndexOf("[["));
+        }
+        if (etext.lastIndexOf(dupliString) >= 0) return rtStr;
+        //if old ecounter text>6000, auto split
+        if (etext.length() > 6000) {
+            etext = etext.substring(etext.length() - 5120) + "\n------------------------------------\n$$CAISI AUTO SPLIT CHART$$\n";
+            ec.setSubject("SPLIT CHART");
+        }
+        /*remove the duplicate String from save button*/
+        if (lastStr != null && etext.lastIndexOf(lastStr) >= 0) {
+            String begetext = etext.substring(0, etext.lastIndexOf(lastStr));
+            String endetext = etext.substring(etext.lastIndexOf(lastStr) + lastStr.length());
+            etext = begetext + endetext;
+        }
+
+        etext = etext + rtStr;
+        /*
+         * String rolename=pcr.getCaisirole().getName(); if (rolename==null)
+         * rolename=""; dt=new SimpleDateFormat("yyyy.MM.dd HH:mm:ss"); if
+         * (note.getSigning_provider_no()!=null ||
+         * !note.getSigning_provider_no().equals("")) etext=etext+"\n[Signed on
+         * "+dt.format(now)+" "+"Signed by "+userName+" ]\n";
+         */
+
+        ec.setEncounter(etext);
+
+        getHibernateTemplate().saveOrUpdate(ec);
+        return rtStr;
+
+    }
+
+    public void updateEchartOngoing(CaseManagementCPP cpp) {
+        String demoNo = cpp.getDemographic_no();
+        String sql = "from EChart e where e.demographicNo=? order by e.id";
+        List list = getHibernateTemplate().find(sql, new Integer(demoNo));
+        EChart oldec;
+        if (list.size() != 0) oldec = (EChart)list.get(list.size() - 1);
+        else {
+            return;
+        }
+        oldec.setOngoingConcerns(cpp.getOngoingConcerns());
+        getHibernateTemplate().saveOrUpdate(oldec);
+    }
+
 }

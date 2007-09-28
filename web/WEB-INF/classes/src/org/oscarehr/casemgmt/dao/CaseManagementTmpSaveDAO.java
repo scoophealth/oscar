@@ -20,14 +20,31 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.casemgmt.dao;
 
+import java.util.List;
+
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface CaseManagementTmpSaveDAO {
+public class CaseManagementTmpSaveDAO extends HibernateDaoSupport {
 
-	public void save(CaseManagementTmpSave obj);
-	public void delete(String providerNo, Long demographicNo, Long programId);
-	public CaseManagementTmpSave load(String providerNo, Long demographicNo, Long programId);
+    public void delete(String providerNo, Long demographicNo, Long programId) {
+        List results = this.getHibernateTemplate().find("from CaseManagementTmpSave c where c.providerNo=? and c.demographicNo=? and c.programId=?", new Object[] {providerNo, demographicNo, programId});
+        this.getHibernateTemplate().deleteAll(results);
+    }
+
+    public CaseManagementTmpSave load(String providerNo, Long demographicNo, Long programId) {
+        List results = this.getHibernateTemplate().find("from CaseManagementTmpSave c where c.providerNo=? and c.demographicNo=? and c.programId=? order by c.update_date DESC", new Object[] {providerNo, demographicNo, programId});
+        if (!results.isEmpty()) {
+            return (CaseManagementTmpSave)results.get(0);
+        }
+
+        return null;
+    }
+
+    public void save(CaseManagementTmpSave obj) {
+        this.getHibernateTemplate().saveOrUpdate(obj);
+    }
+
 }

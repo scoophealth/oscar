@@ -25,8 +25,16 @@ package org.oscarehr.casemgmt.dao;
 import java.util.List;
 
 import org.oscarehr.casemgmt.model.Allergy;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface AllergyDAO extends DAO {
-	public Allergy getAllergy(Long allergyid);
-	public List getAllergies(String demographic_no);
+public class AllergyDAO extends HibernateDaoSupport {
+
+    public Allergy getAllergy(Long allergyid) {
+        return (Allergy)this.getHibernateTemplate().get(Allergy.class, allergyid);
+    }
+
+    public List getAllergies(String demographic_no) {
+        return this.getHibernateTemplate().find("from Allergy a where a.demographic_no = ?", new Object[] {demographic_no});
+    }
+
 }
