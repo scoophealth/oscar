@@ -27,13 +27,14 @@
 // -----------------------------------------------------------------------------------------------------------------------
 package oscar.util;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import java.sql.*;
-import sun.misc.*;
-import oscar.util.*;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class UtilMisc {
   public static String htmlEscape(String S) {
@@ -213,13 +214,11 @@ public class UtilMisc {
   }
 
   public static String encode64(String plainText) {
-    BASE64Encoder enc = new BASE64Encoder();
-    return enc.encode(plainText.getBytes());
+      return(new String(Base64.encodeBase64(plainText.getBytes())));
   }
 
-  public static String decode64(String encodedText) throws IOException {
-    BASE64Decoder decoder = new BASE64Decoder();
-    return new String(decoder.decodeBuffer(encodedText));
+  public static String decode64(String encodedText) {
+      return(new String(Base64.decodeBase64(encodedText.getBytes())));
   }
 
   public static int BoolToInt(boolean Expression) {
