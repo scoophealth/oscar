@@ -28,56 +28,59 @@
 
 package oscar.oscarTickler;
 
-import java.sql.*;
-import oscar.oscarDB.*;
-import oscar.oscarDemographic.data.*;
-import oscar.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.oscarehr.util.DbConnectionFilter;
+
+import oscar.oscarDB.DBHandler;
+import oscar.oscarDemographic.data.DemographicNameAgeString;
+import oscar.util.UtilDateUtilities;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class TicklerWorker extends Thread {
-      
-   public String provider = null;
-   public String ticklerMessage = null;
-   public String status = TicklerData.ACTIVE;
-   public String priority = TicklerData.NORMAL;
-         
-   public TicklerWorker() {
-      //System.out.println("CONSTRUCTOR FOR TICKLERWORKER CALLED");
-   }
-      
-   
-   public void run() {            
-      //System.out.println("TICKLERWORKER THREAD STARTED");
-      TicklerData td = new TicklerData();
-      try {         
-         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-         String sql = "select * from consultationRequests where to_days(now()) - to_days(referalDate) > 14 and status = '1' and providerNo = '"+provider+"' ";                                          
-         //System.out.println(sql);
-         ResultSet rs = db.GetSQL(sql);
-         while (rs.next()){
-            String demo = rs.getString("demographicNo");
-            String date = rs.getString("referalDate");
-            //System.out.println("Check to see if "+demo+" does not have this tickler already");
-            ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was "+date;
-            if (!td.hasTickler(demo,provider,ticklerMessage)){                                                         
-               td.addTickler(demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
+
+    public String provider = null;
+    public String ticklerMessage = null;
+    public String status = TicklerData.ACTIVE;
+    public String priority = TicklerData.NORMAL;
+
+    public TicklerWorker() {
+        //System.out.println("CONSTRUCTOR FOR TICKLERWORKER CALLED");
+    }
+
+    public void run() {
+        //System.out.println("TICKLERWORKER THREAD STARTED");
+        try {
+            TicklerData td = new TicklerData();
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            String sql = "select * from consultationRequests where to_days(now()) - to_days(referalDate) > 14 and status = '1' and providerNo = '" + provider + "' ";
+            //System.out.println(sql);
+            ResultSet rs = db.GetSQL(sql);
+            while (rs.next()) {
+                String demo = rs.getString("demographicNo");
+                String date = rs.getString("referalDate");
+                //System.out.println("Check to see if "+demo+" does not have this tickler already");
+                ticklerMessage = DemographicNameAgeString.getInstance().getNameAgeString(demo) + " has an Consultation Request with a status of 'Nothing Done'. Referral Date was " + date;
+                if (!td.hasTickler(demo, provider, ticklerMessage)) {
+                    td.addTickler(demo, ticklerMessage, status, UtilDateUtilities.getToday("yyyy-MM-dd"), "0", priority, provider);
+                }
             }
-         }
-         rs.close();
-         db.CloseConn();         
-      } catch (SQLException e) {
-         //System.out.println(e.getMessage());
-      }      
-      /// check to see if tickler is needed
-      //if so, check to see if one is already added
-      //if so add it
-      //System.out.println("TICKLERWORKER THREAD ENDED");
-   }
+            rs.close();
+            db.CloseConn();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+        /// check to see if tickler is needed
+        //if so, check to see if one is already added
+        //if so add it
+        //System.out.println("TICKLERWORKER THREAD ENDED");
+    }
 }
-
-
-
- 
