@@ -32,6 +32,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
+import org.oscarehr.util.DbConnectionFilter;
 
 import oscar.login.DBHelp;
 
@@ -59,14 +60,20 @@ public class LogWorker extends Thread {
     }
 
     public void run() {
-        DBHelp db = new DBHelp();
-        String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
-        sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
         try {
-            db.updateDBRecord(sql, provider_no);
-        } catch (SQLException e) {
-            _logger.error("failed to insert into logging table providerNo" + provider_no + ", action " + action
-                    + ", content " + content + ", contentId " + contentId + ", ip " + ip);
+            DBHelp db = new DBHelp();
+            String sql = "insert into log (provider_no,action,content,contentId, ip) values('" + provider_no;
+            sql += "', '" + action + "','" + StringEscapeUtils.escapeSql(content) + "','" + contentId + "','" + ip + "')";
+            try {
+                db.updateDBRecord(sql, provider_no);
+            } catch (SQLException e) {
+                _logger.error("failed to insert into logging table providerNo" + provider_no + ", action " + action
+                        + ", content " + content + ", contentId " + contentId + ", ip " + ip);
+            }
+        }
+        finally
+        {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
         }
     }
 

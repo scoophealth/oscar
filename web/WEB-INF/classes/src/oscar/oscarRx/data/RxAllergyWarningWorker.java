@@ -26,55 +26,59 @@
  * Created on June 16, 2005, 2:54 PM
  */
 
-
 package oscar.oscarRx.data;
 
-import java.util.*;
-import oscar.oscarRx.pageUtil.*;
+import org.oscarehr.util.DbConnectionFilter;
+
+import oscar.oscarRx.pageUtil.RxSessionBean;
 
 /**
  *
  * @author Jay Gallagher
  */
 public class RxAllergyWarningWorker extends Thread {
-   RxSessionBean sessionBean = null;
-   String atcCode = null;
-   oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;
-   
-   
-   public RxAllergyWarningWorker() {
-   }
-   
-   public RxAllergyWarningWorker(RxSessionBean sessionBean,String actCode,oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies){
-      //drugData.getAllergyWarnings(rx.getAtcCode(),allergies)
-      
-      this.atcCode = actCode;
-      this.sessionBean = sessionBean;
-      this.allergies = allergies;
-   }
-   
-   public void run() {
-      System.out.println("STARTING THREAD - RxAllergyWarningWorker ");
-      long start = System.currentTimeMillis(); 
-      
-          oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;                 
-          try{   
-             if (atcCode != null && sessionBean != null && allergies != null){
+    RxSessionBean sessionBean = null;
+    String atcCode = null;
+    oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies = null;
+
+    public RxAllergyWarningWorker() {
+    }
+
+    public RxAllergyWarningWorker(RxSessionBean sessionBean, String actCode, oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergies) {
+        //drugData.getAllergyWarnings(rx.getAtcCode(),allergies)
+
+        this.atcCode = actCode;
+        this.sessionBean = sessionBean;
+        this.allergies = allergies;
+    }
+
+    public void run() {
+        System.out.println("STARTING THREAD - RxAllergyWarningWorker ");
+        long start = System.currentTimeMillis();
+
+        oscar.oscarRx.data.RxPatientData.Patient.Allergy[] allergyWarnings = null;
+        try {
+            if (atcCode != null && sessionBean != null && allergies != null) {
                 RxDrugData drugData = new RxDrugData();
-                allergyWarnings = drugData.getAllergyWarnings(atcCode,allergies);                 
-                if (allergyWarnings != null){
-                   
-                   sessionBean.addAllergyWarnings(atcCode,allergyWarnings);
-                   sessionBean.removeFromWorkingAllergyWarnings(atcCode);
-                }else{
-                   System.out.println("What to do will allergies atc codes "+atcCode);
+                allergyWarnings = drugData.getAllergyWarnings(atcCode, allergies);
+                if (allergyWarnings != null) {
+
+                    sessionBean.addAllergyWarnings(atcCode, allergyWarnings);
+                    sessionBean.removeFromWorkingAllergyWarnings(atcCode);
                 }
-             }
-          }catch(Exception e){
-             e.printStackTrace();
-          }
-      long end = System.currentTimeMillis() - start;
-      System.out.println("THREAD ENDING -RxAllergyWarningWorker "+end);
-   }
-   
+                else {
+                    System.out.println("What to do will allergies atc codes " + atcCode);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+        long end = System.currentTimeMillis() - start;
+        System.out.println("THREAD ENDING -RxAllergyWarningWorker " + end);
+    }
+
 }

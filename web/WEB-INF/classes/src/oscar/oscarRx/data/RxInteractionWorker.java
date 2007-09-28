@@ -30,44 +30,51 @@ package oscar.oscarRx.data;
 
 import java.util.*;
 
+import org.oscarehr.util.DbConnectionFilter;
+
 /**
  *
  * @author Jay Gallagher
  */
 public class RxInteractionWorker extends Thread {
-   RxInteractionData interactionData = null;
-   Vector atcCodes = null;
-   
-   public RxInteractionWorker() {
-   }
-   
-   public RxInteractionWorker(RxInteractionData rxInt,Vector v){
-      atcCodes = v;
-      interactionData = rxInt;
-   }
-   
-   public void run() {
-      System.out.println("STARTING THREAD");
-      long start = System.currentTimeMillis(); 
-      
-          RxDrugData.Interaction[] interactions = null;                 
-          try{   
-             if (atcCodes != null && interactionData != null){
+    RxInteractionData interactionData = null;
+    Vector atcCodes = null;
+
+    public RxInteractionWorker() {
+    }
+
+    public RxInteractionWorker(RxInteractionData rxInt, Vector v) {
+        atcCodes = v;
+        interactionData = rxInt;
+    }
+
+    public void run() {
+        System.out.println("STARTING THREAD");
+        long start = System.currentTimeMillis();
+
+        RxDrugData.Interaction[] interactions = null;
+        try {
+            if (atcCodes != null && interactionData != null) {
                 RxDrugData drugData = new RxDrugData();
                 interactions = drugData.getInteractions(atcCodes);
-                if (interactions != null){
-                   interactionData.addToHash(atcCodes,interactions);
-                   interactionData.removeFromWorking(atcCodes);
-                }else{
-                   System.out.println("What to do");
-                   System.out.println("atc codes "+atcCodes);
+                if (interactions != null) {
+                    interactionData.addToHash(atcCodes, interactions);
+                    interactionData.removeFromWorking(atcCodes);
                 }
-             }
-          }catch(Exception e){
-             e.printStackTrace();
-          }
-      long end = System.currentTimeMillis() - start;
-      System.out.println("THREAD ENDING "+end);
-   }
-   
+                else {
+                    System.out.println("What to do");
+                    System.out.println("atc codes " + atcCodes);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            DbConnectionFilter.releaseThreadLocalDbConnection();
+        }
+        long end = System.currentTimeMillis() - start;
+        System.out.println("THREAD ENDING " + end);
+    }
+
 }
