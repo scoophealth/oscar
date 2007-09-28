@@ -35,7 +35,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.util.EncounterUtil.EncounterType;
 import org.hibernate.HibernateException;
 import org.joda.time.Days;
 import org.joda.time.MutablePeriod;
@@ -43,6 +42,7 @@ import org.joda.time.PeriodType;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
 import org.oscarehr.common.model.Stay;
 import org.oscarehr.util.DbConnectionFilter;
+import org.oscarehr.util.EncounterUtil.EncounterType;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import oscar.util.SqlUtils;

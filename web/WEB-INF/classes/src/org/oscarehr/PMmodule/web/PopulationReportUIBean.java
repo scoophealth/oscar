@@ -29,7 +29,6 @@ import java.util.TreeSet;
 import org.caisi.dao.IssueGroupDao;
 import org.caisi.model.IssueGroup;
 import org.caisi.model.Role;
-import org.caisi.util.EncounterUtil;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoleDAO;
 import org.oscarehr.PMmodule.model.Program;
@@ -37,6 +36,7 @@ import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataGr
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.EncounterTypeDataRow;
 import org.oscarehr.PMmodule.web.PopulationReportDataObjects.RoleDataGrid;
 import org.oscarehr.common.dao.PopulationReportDAO;
+import org.oscarehr.util.EncounterUtil;
 import org.springframework.context.ApplicationContext;
 
 public class PopulationReportUIBean {

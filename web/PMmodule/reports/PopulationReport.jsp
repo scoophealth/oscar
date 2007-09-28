@@ -29,7 +29,7 @@
 <%@page import="org.oscarehr.PMmodule.model.*"%>
 <%@page import="org.oscarehr.PMmodule.dao.*"%>
 <%@page import="org.oscarehr.PMmodule.web.*"%>
-<%@page import="org.caisi.util.*"%>
+<%@page import="org.oscarehr.util.*"%>
 <%@page import="java.text.*"%>
 <%
 	int programId=Integer.parseInt(request.getParameter("programId"));
@@ -82,17 +82,17 @@
 		<td class="genericTableHeader">Total</td>
 	</tr>
 	<%
-		for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
-		{
-			boolean hasPrintedRole = false;
-			for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
+			for (Map.Entry<Role, PopulationReportDataObjects.EncounterTypeDataGrid> roleEntry : roleDataGrid.entrySet())
 			{
-				String tempRoleName = "";
-				if (!hasPrintedRole)
-				{
-			tempRoleName = roleEntry.getKey().getName();
-			hasPrintedRole = true;
-				}
+		boolean hasPrintedRole = false;
+		for (Map.Entry<EncounterUtil.EncounterType, PopulationReportDataObjects.EncounterTypeDataRow> encounterEntry : roleEntry.getValue().entrySet())
+		{
+			String tempRoleName = "";
+			if (!hasPrintedRole)
+			{
+		tempRoleName = roleEntry.getKey().getName();
+		hasPrintedRole = true;
+			}
 	%>
 	<tr class="genericTableRow">
 		<td class="genericTableHeader"><%=tempRoleName%></td>

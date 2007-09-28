@@ -17,7 +17,7 @@
  * Toronto, Ontario, Canada 
  */
 
-package org.caisi.util;
+package org.oscarehr.util;
 
 public class EncounterUtil {
     public enum EncounterType {

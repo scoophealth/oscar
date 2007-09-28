@@ -17,7 +17,7 @@
  * Vancouver, B.C., Canada 
  */
 
-package org.caisi.util;
+package org.oscarehr.util;
 
 import java.util.Map;
 
