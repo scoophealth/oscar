@@ -233,9 +233,7 @@
             </props>
         </property>
     </bean>
-    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.impl.TicklerManagerImpl">
-        <property name="ticklerDAO" ref="ticklerDAO"/>
-    </bean>
+    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.TicklerManager" autowire="byName" /> 
     <bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ClientImageManagerTarget"/>
@@ -245,7 +243,7 @@
             </props>
         </property>
     </bean>
-    <bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.impl.ClientImageManagerImpl">
+    <bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.ClientImageManager"  autowire="byName" >
         <property name="clientImageDAO" ref="ClientImageDAO"/>
     </bean>
     <bean id="oscarSurveyManager" parent="baseTransactionProxy">
