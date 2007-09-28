@@ -36,8 +36,7 @@
   DemographicSets  ds = new DemographicSets();
   ArrayList sets = ds.getDemographicSets();
 
-  
-  
+  String userRole = (String)session.getAttribute("userrole");
 %>
 
 <html:html locale="true">
@@ -181,7 +180,13 @@ clear: left;
 </head>
 
 <body class="BodyStyle" vlink="#0000FF">
-<!--  -->
+<%
+if (!userRole.toLowerCase().contains("admin")) { %>
+    <p><h2>Sorry! Only administrators can export demographics.</h2></p>
+<%
+} else {
+%>  
+
     <table  class="MainTable" id="scrollNumber1" name="encounterTable">
         <tr class="MainTableTopRow">
             <td class="MainTableTopRowLeftColumn" width="100" >
@@ -213,10 +218,10 @@ clear: left;
                   Patient Set:
                   <html:select property="patientSet">
                       <html:option value="-1" >--Select Set--</html:option>
-                      <% for ( int i = 0 ; i < sets.size(); i++ ){  
-                            String s = (String) sets.get(i);%>
+<% for ( int i = 0 ; i < sets.size(); i++ ){  
+    String s = (String) sets.get(i);%>
                       <html:option value="<%=s%>"><%=s%></html:option>
-                      <%}%>
+<%}%>
                   </html:select>                  
                   <input type="submit" value="Export" />
                </div>               
@@ -224,6 +229,18 @@ clear: left;
                </html:form>
                <html:form action="/demographic/DemographicExport2" method="get" onsubmit="patientSet.value = document.forms[0].patientSet.value;return checkSelect(patientSet.value);">
 		   <html:hidden property="patientSet"/>
+		   Media Type:
+		   <html:select property="mediaType">
+		       <html:option value="Hard Disk">Hard Disk</html:option>
+		       <html:option value="CD/DVD">CD/DVD</html:option>
+		       <html:option value="Flash Disk">Flash Disk</html:option>
+		       <html:option value="Floppy Disk">Floppy Disk</html:option>
+		       <html:option value="Tape">Tape</html:option>
+		   </html:select>
+		   &nbsp;
+		   Number of Media:
+		   <html:text property="noOfMedia" size="1" value="1"/>
+		   <p>
 		   <input type="submit" value="Export (Spec 2.0)" />               
                </html:form>
                
@@ -240,8 +257,9 @@ clear: left;
     </table>
 <script type="text/javascript">
     //Calendar.setup( { inputField : "asofDate", ifFormat : "%Y-%m-%d", showsTime :false, button : "date", singleClick : true, step : 1 } );
-</script>    
+</script>
 
+<%}%>
 </body>
 </html:html>
 <%!
