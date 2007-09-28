@@ -25,11 +25,12 @@ package oscar.oscarMessenger.data;
 
 import oscar.oscarDB.DBHandler;
 
-import oscar.comm.client.SendMessageClient;
 import oscar.comm.client.*;
 
 
 import javax.xml.parsers.*;
+
+import org.oscarehr.util.DbConnectionFilter;
 import org.w3c.dom.*;
 
       /**
@@ -181,32 +182,37 @@ public  class MsgRemoteMessageData extends Thread{
 
 
          public void run(){
-            int i = 0;
-            System.err.println("Create MEssage with ID of "+messageId);
-            System.err.println("LOcation = "+currentLocation);
-            XMLMessage = getXMLMessage(messageId);
-            SendMessageClient sendMessageClient = new SendMessageClient();
-            boolean how = false;
-            try{
-            int llll = 0;
-               //Document docs;
-               //docs = oscar.oscarMessenger.util.xml.parseXML(XMLMessage);
-               //System.err.println("\n\ndocument "+docs+"\n\n");
-               //System.err.println("\n"+oscar.oscarMessenger.util.xml.toXML(docs)+"\n");
+            try {
+                int i = 0;
+                System.err.println("Create MEssage with ID of "+messageId);
+                System.err.println("LOcation = "+currentLocation);
+                XMLMessage = getXMLMessage(messageId);
+                SendMessageClient sendMessageClient = new SendMessageClient();
+                boolean how = false;
+                try{
+                int llll = 0;
+                   //Document docs;
+                   //docs = oscar.oscarMessenger.util.xml.parseXML(XMLMessage);
+                   //System.err.println("\n\ndocument "+docs+"\n\n");
+                   //System.err.println("\n"+oscar.oscarMessenger.util.xml.toXML(docs)+"\n");
 
-               //System.err.println("\nGOnna send this\n"+XMLMessage+"\n");
-               System.err.println("MEssage Sent");
-               how = sendMessageClient.sendMessage("localhost:3306/","oscar_spc",XMLMessage);
-            }catch(Exception e){
-                defunctMessage();
-                System.err.println("I be messin up");
-                e.printStackTrace();
+                   //System.err.println("\nGOnna send this\n"+XMLMessage+"\n");
+                   System.err.println("MEssage Sent");
+                   how = sendMessageClient.sendMessage("localhost:3306/","oscar_spc",XMLMessage);
+                }catch(Exception e){
+                    defunctMessage();
+                    System.err.println("I be messin up");
+                    e.printStackTrace();
+                }
+                System.err.println("Back from sending message");
+
+                System.err.println("How i did = " + how);
+                if (!how){
+                    defunctMessage();
+                }
             }
-            System.err.println("Back from sending message");
-
-            System.err.println("How i did = " + how);
-            if (!how){
-                defunctMessage();
+            finally {
+                DbConnectionFilter.releaseThreadLocalDbConnection();
             }
 
          }
