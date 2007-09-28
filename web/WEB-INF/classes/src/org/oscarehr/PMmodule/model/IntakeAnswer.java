@@ -70,7 +70,8 @@ public class IntakeAnswer implements Comparable<IntakeAnswer>, Serializable {
 
 
 	public String getValue() {
-		return getValue() != null ? getValue() : "";
+		//return getValue() != null ? getValue() : "";
+		return value!=null ? value: "";
 	}
 	
 	public boolean isAnswerScalar() {
