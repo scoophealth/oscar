@@ -25,16 +25,11 @@ public class IsModuleLoadTag extends TagSupport {
 			String propFileName = System.getProperty("user.home") + sep + propFile;
 			OscarProperties proper = OscarProperties.getInstance();
 			proper.loader(propFileName);
-			if (proper.getProperty("plugins", "").equalsIgnoreCase("yes") || proper.getProperty("plugins", "").equalsIgnoreCase("true") || proper.getProperty("plugins", "").equalsIgnoreCase("on")) {
-				if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
-					if (reverse)
-						return SKIP_BODY;
-					else
-						return EVAL_BODY_INCLUDE;
-			} else if (reverse)
-				return EVAL_BODY_INCLUDE;
-			else
-				return SKIP_BODY;
+			if (proper.getProperty(moduleName, "").equalsIgnoreCase("yes") || proper.getProperty(moduleName, "").equalsIgnoreCase("true") || proper.getProperty(moduleName, "").equalsIgnoreCase("on"))
+				if (reverse)
+					return SKIP_BODY;
+				else
+					return EVAL_BODY_INCLUDE;
 		} catch (Exception e) {
 			throw new JspException("Failed to get module load info", e);
 
