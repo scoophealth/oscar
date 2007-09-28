@@ -128,22 +128,22 @@ public class FrmXml2VTData {
         String tempXmlValue = null;
         try {
             Class tempC = xmlMethod.getReturnType();
-            Method tempXmlMethod = tempC.getMethod(methodName, null);
-            Object tempXmlObj = xmlMethod.invoke(rec, null);
+            Method tempXmlMethod = tempC.getMethod(methodName);
+            Object tempXmlObj = xmlMethod.invoke(rec);
 
             String tempXmlType = tempXmlMethod.getReturnType().getName();
             // Handle with types: txt_ ; b_ ; int_ ; dbl_ ; dat_ 
             if ("java.lang.String".equals(tempXmlType)) {
-                tempXmlValue = (String) tempXmlMethod.invoke(tempXmlObj, null);
+                tempXmlValue = (String) tempXmlMethod.invoke(tempXmlObj);
             } else if ("boolean".equals(tempXmlType)) {
-                tempXmlValue = "" + ((Boolean) tempXmlMethod.invoke(tempXmlObj, null)).booleanValue();
+                tempXmlValue = "" + ((Boolean) tempXmlMethod.invoke(tempXmlObj)).booleanValue();
             } else if ("int".equals(tempXmlType)) {
-                tempXmlValue = "" + ((Integer) tempXmlMethod.invoke(tempXmlObj, null)).intValue();
+                tempXmlValue = "" + ((Integer) tempXmlMethod.invoke(tempXmlObj)).intValue();
             } else if ("double".equals(tempXmlType)) {
-                tempXmlValue = "" + ((Double) tempXmlMethod.invoke(tempXmlObj, null)).doubleValue();
+                tempXmlValue = "" + ((Double) tempXmlMethod.invoke(tempXmlObj)).doubleValue();
             } else {
                 //System.out.println("Calendar");
-                tempXmlValue = "" + (Calendar) tempXmlMethod.invoke(tempXmlObj, null);
+                tempXmlValue = "" + (Calendar) tempXmlMethod.invoke(tempXmlObj);
             }
         } catch (Exception e) {
             // do nothing
