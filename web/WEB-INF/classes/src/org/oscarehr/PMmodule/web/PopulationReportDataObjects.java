@@ -4,8 +4,8 @@ import java.util.TreeMap;
 
 import org.caisi.model.IssueGroup;
 import org.caisi.model.Role;
-import org.caisi.util.AccumulatorMap;
 import org.caisi.util.EncounterUtil;
+import org.oscarehr.util.AccumulatorMap;
 
 /**
  * This bean is a essentiallya huge data grid. The purpose of this
