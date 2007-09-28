@@ -23,15 +23,10 @@
  */
 package oscar.oscarMessenger.data;
 
-import oscar.oscarDB.DBHandler;
-
-import oscar.comm.client.*;
-
-
-import javax.xml.parsers.*;
-
 import org.oscarehr.util.DbConnectionFilter;
-import org.w3c.dom.*;
+
+import oscar.comm.client.SendMessageClient;
+import oscar.oscarDB.DBHandler;
 
       /**
        *
