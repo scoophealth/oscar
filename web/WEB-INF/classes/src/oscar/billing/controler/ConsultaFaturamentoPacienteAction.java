@@ -23,30 +23,31 @@
  */
 package oscar.billing.controler;
 
-import org.apache.log4j.Category;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 import oscar.billing.dao.AppointmentDAO;
-
 import oscar.billing.model.Demographic;
-
 import oscar.util.OscarAction;
-
-import javax.servlet.http.*;
 
 
 public class ConsultaFaturamentoPacienteAction extends OscarAction {
-    static Category cat = Category.getInstance(ConsultaFaturamentoPacienteAction.class.getName());
+    private static Logger logger = LogManager.getLogger(ConsultaFaturamentoPacienteAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         String myaction = mapping.getParameter();
-        cat.debug(" [ConsultaFaturamentoPacienteAction] My action = " + myaction);
+        logger.debug(" [ConsultaFaturamentoPacienteAction] My action = " + myaction);
 
         if (isCancelled(request)) {
-            cat.info(" [ConsultaFaturamentoPacienteAction] " +
+            logger.info(" [ConsultaFaturamentoPacienteAction] " +
                 mapping.getAttribute() + " - acao foi cancelada");
 
             return mapping.findForward("cancel");
@@ -66,16 +67,16 @@ public class ConsultaFaturamentoPacienteAction extends OscarAction {
     private ActionForward performInit(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [ConsultaFaturamentoPacienteAction] INIT");
+        logger.info(" [ConsultaFaturamentoPacienteAction] INIT");
 
         ConsultaFaturamentoPacienteForm form = (ConsultaFaturamentoPacienteForm) actionForm;
 
         try {
             form.clear();
-            cat.info(" [ConsultaFaturamentoPacienteAction] Limpou form");
+            logger.info(" [ConsultaFaturamentoPacienteAction] Limpou form");
             
             String id = request.getParameter("demographic_no");
-			cat.info(" [ConsultaFaturamentoPacienteAction] id " + id);
+			logger.info(" [ConsultaFaturamentoPacienteAction] id " + id);
             Demographic demographic = new Demographic();
             demographic.setDemographicNo(Long.parseLong(id));
 
@@ -84,11 +85,11 @@ public class ConsultaFaturamentoPacienteAction extends OscarAction {
 
             //Obter lista de faturamentos
             request.setAttribute("BILLING", appDAO.listFatPatiente(demographic));
-            cat.info(
+            logger.info(
                 " [ConsultaFaturamentoPacienteAction] setou billings no form");
         } catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }

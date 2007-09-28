@@ -23,22 +23,21 @@
  */
 package oscar.util;
 
-import java.io.*;
-import org.apache.log4j.Category;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
- * A <code>FileHolder</code> holds data saved from a com.oreilly.servlet.multipart.FilePart
- * either as byteArray [now] or as reference to temp-file[future versions]
- *
- *
- *
- *
- * @author Joe Peer
  */
 public class FileHolder implements Serializable {
-
-  static Category logCat = Category.getInstance(FileHolder.class.getName()); // logging category for this class
-
 	private boolean toMemory;
 
   // "file system" name of the file

@@ -23,62 +23,63 @@
  */
 package oscar.billing.popup;
 
-import org.apache.log4j.Category;
+import java.util.List;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 import oscar.billing.cad.dao.CadProcedimentoDAO;
-
 import oscar.util.OscarAction;
 import oscar.util.PagerDef;
 
-import java.util.List;
-
-import javax.servlet.http.*;
-
-
 public class ProcedimentoAction extends OscarAction {
-    static Category cat = Category.getInstance(ProcedimentoAction.class.getName());
+    private static Logger logger = LogManager.getLogger(ProcedimentoAction.class);
 
-    public ActionForward execute(ActionMapping mapping, ActionForm form,
-        HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         String myaction = mapping.getParameter();
-        cat.debug(" [ProcedimentoAction] My action = " + myaction);
+        logger.debug(" [ProcedimentoAction] My action = " + myaction);
 
         if (isCancelled(request)) {
-            cat.info(" [FormBillingAction] " + mapping.getAttribute() +
-                " - acao foi cancelada");
+            logger.info(" [FormBillingAction] " + mapping.getAttribute() + " - acao foi cancelada");
 
             return mapping.findForward("cancel");
         }
 
         if ("".equalsIgnoreCase(myaction)) {
             myforward = mapping.findForward("failure");
-        } else if ("INIT".equalsIgnoreCase(myaction)) {
+        }
+        else if ("INIT".equalsIgnoreCase(myaction)) {
             myforward = performInit(mapping, form, request, response);
-        } else if ("FIND_PROC".equalsIgnoreCase(myaction)) {
+        }
+        else if ("FIND_PROC".equalsIgnoreCase(myaction)) {
             myforward = performFindProcedimento(mapping, form, request, response);
-        } else {
+        }
+        else {
             myforward = mapping.findForward("failure");
         }
 
         return myforward;
     }
 
-    private ActionForward performInit(ActionMapping mapping,
-        ActionForm actionForm, HttpServletRequest request,
-        HttpServletResponse response) {
-        cat.info(" [ProcedimentoAction] INIT");
+    private ActionForward performInit(ActionMapping mapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
+        logger.info(" [ProcedimentoAction] INIT");
 
-        ProcedimentoForm form = (ProcedimentoForm) actionForm;
+        ProcedimentoForm form = (ProcedimentoForm)actionForm;
 
         try {
             form.clear();
-            cat.info(" [ProcedimentoAction] Limpou form");
-        } catch (Exception e) {
+            logger.info(" [ProcedimentoAction] Limpou form");
+        }
+        catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }
@@ -86,16 +87,13 @@ public class ProcedimentoAction extends OscarAction {
         return mapping.findForward("success");
     }
 
-    private ActionForward performFindProcedimento(ActionMapping mapping,
-        ActionForm actionForm, HttpServletRequest request,
-        HttpServletResponse response) {
-        cat.info(" [ProcedimentoAction] FIND_PROC");
+    private ActionForward performFindProcedimento(ActionMapping mapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
+        logger.info(" [ProcedimentoAction] FIND_PROC");
 
-        ProcedimentoForm form = (ProcedimentoForm) actionForm;
+        ProcedimentoForm form = (ProcedimentoForm)actionForm;
 
         try {
-			CadProcedimentoDAO procDAO = new CadProcedimentoDAO(getPropertiesDb(
-			request));
+            CadProcedimentoDAO procDAO = new CadProcedimentoDAO(getPropertiesDb(request));
 
             if (request.getParameter("coProc") != null) {
                 form.setCodigoProc(request.getParameter("coProc"));
@@ -115,10 +113,11 @@ public class ProcedimentoAction extends OscarAction {
 
             form.setProcedimentos(procs);
 
-            cat.info(" [ProcedimentoAction] setou procedimentos");
-        } catch (Exception e) {
+            logger.info(" [ProcedimentoAction] setou procedimentos");
+        }
+        catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }

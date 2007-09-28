@@ -23,9 +23,18 @@
  */
 package oscar.billing.controler;
 
-import org.apache.log4j.Category;
+import java.util.List;
+import java.util.Vector;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 import oscar.billing.cad.dao.CadProcedimentoDAO;
 import oscar.billing.cad.dao.CidDAO;
@@ -35,30 +44,23 @@ import oscar.billing.cad.model.CadProcedimentos;
 import oscar.billing.dao.AppointmentDAO;
 import oscar.billing.dao.DiagnosticoDAO;
 import oscar.billing.dao.ProcedimentoRealizadoDAO;
-
 import oscar.billing.fat.dao.FatFormulariosDAO;
 import oscar.billing.model.ProcedimentoRealizado;
-
 import oscar.util.OscarAction;
-
-import java.util.List;
-import java.util.Vector;
-
-import javax.servlet.http.*;
 
 
 public class ProcedimentoRealizadoAction extends OscarAction {
-    static Category cat = Category.getInstance(ProcedimentoRealizadoAction.class.getName());
+    private static Logger logger = LogManager.getLogger(ProcedimentoRealizadoAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         ProcedimentoRealizadoForm procedimentoRealizadoForm = (ProcedimentoRealizadoForm) form;
         String myaction = mapping.getParameter();
-        cat.debug(" [ProcedimentoRealizadoAction] My action = " + myaction);
+        logger.debug(" [ProcedimentoRealizadoAction] My action = " + myaction);
 
         if (isCancelled(request)) {
-            cat.info(" [ProcedimentoRealizadoAction] " +
+            logger.info(" [ProcedimentoRealizadoAction] " +
                 mapping.getAttribute() + " - acao foi cancelada");
 
             return mapping.findForward("cancel");
@@ -111,7 +113,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performInit(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.debug(" [ProcedimentoRealizadoAction] INIT");
+        logger.debug(" [ProcedimentoRealizadoAction] INIT");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
         HttpSession session = request.getSession();
@@ -128,7 +130,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             }
 
             form.clear();
-            cat.debug(" [ProcedimentoRealizadoAction] Limpou form");
+            logger.debug(" [ProcedimentoRealizadoAction] Limpou form");
 
             FatFormulariosDAO formDAO = new FatFormulariosDAO(getPropertiesDb(request));
             AppointmentDAO appDAO = new AppointmentDAO(getPropertiesDb(request));
@@ -143,14 +145,14 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             //obter lista de formularios
             form.setFormularios(formDAO.list());
             session.setAttribute("FORMULARIOS", form.getFormularios());
-            cat.info("size = " + form.getFormularios().size());
+            logger.info("size = " + form.getFormularios().size());
             
             //Obter procedimentos realizados
             form.getAppointment().setProcedimentoRealizado(prDAO.list(appId));
 
             //Obter diagnosticos realizados
             form.getAppointment().setDiagnostico(diagDAO.list(appId));
-            cat.info(
+            logger.info(
                 " [ProcedimentoRealizadoAction] setou procedimentos e diagnosticos no form");
                 
             // get attendance types
@@ -165,7 +167,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 			
         } catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }
@@ -176,7 +178,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performUpdateFormulario(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [ProcedimentoRealizadoAction] UPDATE_FORMULARIO");
+        logger.info(" [ProcedimentoRealizadoAction] UPDATE_FORMULARIO");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
@@ -187,7 +189,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
             //selecionar procedimentos do formulario XXX
             Vector v = new Vector(formDAO.listProcedimentoByForm(String.valueOf(
                             form.getFormulario().getCoFormulario())));
-            cat.info("vector " + v.size());
+            logger.info("vector " + v.size());
             form.setProcedimentosForm(v);
             
             form.setFormulario(formDAO.retrieve(String.valueOf(form.getFormulario().getCoFormulario())));
@@ -204,7 +206,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performUpdateProcedimento(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [ProcedimentoRealizadoAction] UPDATE_PROCEDIMENTO");
+        logger.info(" [ProcedimentoRealizadoAction] UPDATE_PROCEDIMENTO");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
@@ -229,13 +231,13 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performDeleteProcedimento(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [ProcedimentoRealizadoAction] DELETE_PROCEDIMENTO");
+        logger.info(" [ProcedimentoRealizadoAction] DELETE_PROCEDIMENTO");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
         try {
             long id = Long.parseLong(request.getParameter("coProc"));
-            cat.info("id " + id );
+            logger.info("id " + id );
             
             //apagar procedimentos realizados
             form.getAppointment().removeProcedimentos(id);
@@ -251,7 +253,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 	private ActionForward performUpdateDiagnostico(ActionMapping mapping,
 		ActionForm actionForm, HttpServletRequest request,
 		HttpServletResponse response) {
-		cat.info(" [ProcedimentoRealizadoAction] UPDATE_DIAGNOSTICO");
+		logger.info(" [ProcedimentoRealizadoAction] UPDATE_DIAGNOSTICO");
 
 		ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
@@ -279,13 +281,13 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 	private ActionForward performDeleteDiagnostico(ActionMapping mapping,
 		ActionForm actionForm, HttpServletRequest request,
 		HttpServletResponse response) {
-		cat.info(" [ProcedimentoRealizadoAction] DELETE_DIAGNOSTICO");
+		logger.info(" [ProcedimentoRealizadoAction] DELETE_DIAGNOSTICO");
 
 		ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 
 		try {
 			String id = request.getParameter("coCid");
-			cat.info("id " + id );
+			logger.info("id " + id );
             
 			//apagar diagnostico realizados
 			form.getAppointment().removeDiagnostico(id);
@@ -302,7 +304,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
     private ActionForward performGravar(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [ProcedimentoRealizadoAction] GRAVAR");
+        logger.info(" [ProcedimentoRealizadoAction] GRAVAR");
 
         ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
         try {
@@ -330,7 +332,7 @@ public class ProcedimentoRealizadoAction extends OscarAction {
 	private ActionForward performAddProcedimento(ActionMapping mapping,
 		ActionForm actionForm, HttpServletRequest request,
 		HttpServletResponse response) {
-		cat.info(" [ProcedimentoRealizadoAction] ADD_PROC");
+		logger.info(" [ProcedimentoRealizadoAction] ADD_PROC");
 
 		ProcedimentoRealizadoForm form = (ProcedimentoRealizadoForm) actionForm;
 

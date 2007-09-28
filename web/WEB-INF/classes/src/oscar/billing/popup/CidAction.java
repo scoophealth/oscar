@@ -23,31 +23,33 @@
  */
 package oscar.billing.popup;
 
-import org.apache.log4j.Category;
+import java.util.List;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 import oscar.billing.cad.dao.CidDAO;
-
 import oscar.util.OscarAction;
 import oscar.util.PagerDef;
 
-import java.util.List;
-
-import javax.servlet.http.*;
-
 
 public class CidAction extends OscarAction {
-    static Category cat = Category.getInstance(CidAction.class.getName());
+    private static Logger logger = LogManager.getLogger(CidAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         String myaction = mapping.getParameter();
-        cat.debug(" [CidAction] My action = " + myaction);
+        logger.debug(" [CidAction] My action = " + myaction);
 
         if (isCancelled(request)) {
-            cat.info(" [FormBillingAction] " + mapping.getAttribute() +
+            logger.info(" [FormBillingAction] " + mapping.getAttribute() +
                 " - acao foi cancelada");
 
             return mapping.findForward("cancel");
@@ -69,16 +71,16 @@ public class CidAction extends OscarAction {
     private ActionForward performInit(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [CidAction] INIT");
+        logger.info(" [CidAction] INIT");
 
         CidForm form = (CidForm) actionForm;
 
         try {
             form.clear();
-            cat.info(" [CidAction] Limpou form");
+            logger.info(" [CidAction] Limpou form");
         } catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }
@@ -89,7 +91,7 @@ public class CidAction extends OscarAction {
     private ActionForward performFindCid(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [CidAction] FIND_CID");
+        logger.info(" [CidAction] FIND_CID");
 
         CidForm form = (CidForm) actionForm;
 
@@ -115,10 +117,10 @@ public class CidAction extends OscarAction {
 
             form.setCid(cid);
 
-            cat.info(" [CidAction] setou procedimentos");
+            logger.info(" [CidAction] setou procedimentos");
         } catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }

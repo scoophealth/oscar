@@ -23,358 +23,358 @@
  */
 package oscar.util;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
-
-import org.apache.log4j.Category;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.*;
-import org.apache.struts.upload.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.struts.upload.FormFile;
 
 public class StringUtils {
-  static Category cat = Category.getInstance(StringUtils.class.getName());
+    private static Logger logger = LogManager.getLogger(StringUtils.class);
 
-  
-  /**
-    * use to have a maximum string length view 
-    * ie "hello world !!!" would be "hello wor..."
-    *
-    *  with maxlength 13 and shorted 8 and added "..."
-    * 
-    * BENZOICUM ACIDUM 1CH - 30CH
-    *
-    *  would equal
-    *
-    * BENZOIC ...
-    * @param maxlength The maximum string length before truncating the string
-    * @param shorted length the string will be truncated to if maxlength is met
-    * @param added string added to original string if maxlength is met.  ie ...
-    * @return either full description if its less than maxlength or shortened string if its not
-    */         
-    public static String maxLenString(String str, int maxlength, int shorted, String added){                            
+    /**
+      * use to have a maximum string length view 
+      * ie "hello world !!!" would be "hello wor..."
+      *
+      *  with maxlength 13 and shorted 8 and added "..."
+      * 
+      * BENZOICUM ACIDUM 1CH - 30CH
+      *
+      *  would equal
+      *
+      * BENZOIC ...
+      * @param maxlength The maximum string length before truncating the string
+      * @param shorted length the string will be truncated to if maxlength is met
+      * @param added string added to original string if maxlength is met.  ie ...
+      * @return either full description if its less than maxlength or shortened string if its not
+      */
+    public static String maxLenString(String str, int maxlength, int shorted, String added) {
         String ret = str;
-        if( (str != null && maxlength > shorted) && (str.length() > maxlength) ){
-            ret = str.substring(0, shorted) + added ;
-        }           
+        if ((str != null && maxlength > shorted) && (str.length() > maxlength)) {
+            ret = str.substring(0, shorted) + added;
+        }
         return ret;
     }
 
-  
-  public static Vector splitString(String str, String delimeter) {
-    Vector result = new Vector();
-    StringTokenizer st = new StringTokenizer(str, delimeter);
+    public static Vector splitString(String str, String delimeter) {
+        Vector result = new Vector();
+        StringTokenizer st = new StringTokenizer(str, delimeter);
 
-    while (st.hasMoreTokens()) {
-      result.addElement(st.nextToken());
+        while (st.hasMoreTokens()) {
+            result.addElement(st.nextToken());
 
-    }
-    return result;
-  }
-  
-  
-  
-
-  public static boolean existsStrInVector(String str, String delimiter,
-                                          String arrayStr) {
-    Vector vector = splitString(arrayStr, delimiter);
-
-    for (int i = 0; i < vector.size(); i++) {
-      if (vector.get(i).equals(str)) {
-        return true;
-      }
+        }
+        return result;
     }
 
-    return false;
-  }
+    public static boolean existsStrInVector(String str, String delimiter, String arrayStr) {
+        Vector vector = splitString(arrayStr, delimiter);
 
-  public static boolean validateRegEx(String regex, String value) {
-    try {
-      Pattern pattern = Pattern.compile(regex);
-      Matcher matcher = pattern.matcher(value);
-      boolean matchFound = matcher.matches();
+        for (int i = 0; i < vector.size(); i++) {
+            if (vector.get(i).equals(str)) {
+                return true;
+            }
+        }
 
-      return matchFound;
-    }
-    catch (IllegalStateException e) {
-      e.printStackTrace();
-      cat.error("Erro ao validar expressao regular", e);
-
-      return false;
-    }
-  }
-
-  public static String getResourceLine(String resourceName,
-                                       String resourceIten) {
-    InputStream is = cat.getClass().getResourceAsStream("/" + resourceName);
-    Properties props = new Properties();
-
-    try {
-      props.load(is);
-      cat.debug("carregou " + resourceName);
-
-      return props.getProperty(resourceIten);
-    }
-    catch (Exception e) {
-      cat.error("Can't read the properties file. " + "Make sure " +
-                resourceName + " is in the CLASSPATH", e);
-
-      return null;
-    }
-  }
-
-  public static String transformEmptyStringInNull(String value) {
-    if (value != null) {
-      return (value.equals("") ? "$null$" : value);
-    }
-    else {
-      return value;
-    }
-  }
-
-  public static String transformNullInEmptyString(String value) {
-    return ( (value == null) ? "" : value);
-  }
-
-  public static String transformNullInOtherString(String value, String str) {
-    return ( ( (value == null) || value.equals("")) ? str : value);
-  }
-
-  public static String preencheBranco(int n) {
-    String espaco = "";
-
-    for (int i = 0; i < n; i++) {
-      espaco = espaco + " ";
+        return false;
     }
 
-    return espaco;
-  }
+    public static boolean validateRegEx(String regex, String value) {
+        try {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(value);
+            boolean matchFound = matcher.matches();
 
-  public static String preenchimentoEsquerda(int n, String c, String c1) {
-    String result = "";
+            return matchFound;
+        }
+        catch (IllegalStateException e) {
+            e.printStackTrace();
+            logger.error("Erro ao validar expressao regular", e);
 
-    for (int i = 0; i < n; i++) {
-      result = result + c;
+            return false;
+        }
     }
 
-    return result + c1;
-  }
+    public static String getResourceLine(String resourceName, String resourceIten) {
+        InputStream is = logger.getClass().getResourceAsStream("/" + resourceName);
+        Properties props = new Properties();
 
-  public static String preenchimento(int n, String c) {
-    String result = "";
+        try {
+            props.load(is);
+            logger.debug("carregou " + resourceName);
 
-    for (int i = 0; i < n; i++) {
-      result = result + c;
+            return props.getProperty(resourceIten);
+        }
+        catch (Exception e) {
+            logger.error("Can't read the properties file. " + "Make sure " + resourceName + " is in the CLASSPATH", e);
+
+            return null;
+        }
     }
 
-    return result;
-  }
-
-  public static boolean isNullOrEmpty(String obj) {
-    if (obj == null) {
-      return true;
-    }
-    else if (obj.trim().equals("")) {
-      return true;
-    }
-    else if (obj.trim().toUpperCase().equals("NULL")) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  public static String replaceChar(char oldChar, char newChar, String word) {
-    return ( (word == null) ? null : word.replace(oldChar, newChar));
-  }
-
-  public static String getStrIn(String[] ids) {
-    String id = "";
-
-    for (int i = 0; i < ids.length; i++) {
-      if (i == 0) {
-        id = ids[i];
-      }
-      else {
-        id = id + "," + ids[i];
-      }
+    public static String transformEmptyStringInNull(String value) {
+        if (value != null) {
+            return(value.equals("")?"$null$":value);
+        }
+        else {
+            return value;
+        }
     }
 
-    return id;
-  }
+    public static String transformNullInEmptyString(String value) {
+        return((value == null)?"":value);
+    }
 
-  /**
-   * Returns true if the provided string is a numeral
-   * @param str String
-   * @return boolean
-   */
-  public static boolean isNumeric(String str) {
-    boolean ret = false;
-    if (str != null && !str.equals("")) {
-      try {
-        new Double(str);
-        ret = true;
-      }
-      catch (NumberFormatException e) {
-        ret = false;
-      }
-      finally {
+    public static String transformNullInOtherString(String value, String str) {
+        return(((value == null) || value.equals(""))?str:value);
+    }
+
+    public static String preencheBranco(int n) {
+        String espaco = "";
+
+        for (int i = 0; i < n; i++) {
+            espaco = espaco + " ";
+        }
+
+        return espaco;
+    }
+
+    public static String preenchimentoEsquerda(int n, String c, String c1) {
+        String result = "";
+
+        for (int i = 0; i < n; i++) {
+            result = result + c;
+        }
+
+        return result + c1;
+    }
+
+    public static String preenchimento(int n, String c) {
+        String result = "";
+
+        for (int i = 0; i < n; i++) {
+            result = result + c;
+        }
+
+        return result;
+    }
+
+    public static boolean isNullOrEmpty(String obj) {
+        if (obj == null) {
+            return true;
+        }
+        else if (obj.trim().equals("")) {
+            return true;
+        }
+        else if (obj.trim().toUpperCase().equals("NULL")) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public static String replaceChar(char oldChar, char newChar, String word) {
+        return((word == null)?null:word.replace(oldChar, newChar));
+    }
+
+    public static String getStrIn(String[] ids) {
+        String id = "";
+
+        for (int i = 0; i < ids.length; i++) {
+            if (i == 0) {
+                id = ids[i];
+            }
+            else {
+                id = id + "," + ids[i];
+            }
+        }
+
+        return id;
+    }
+
+    /**
+     * Returns true if the provided string is a numeral
+     * @param str String
+     * @return boolean
+     */
+    public static boolean isNumeric(String str) {
+        boolean ret = false;
+        if (str != null && !str.equals("")) {
+            try {
+                new Double(str);
+                ret = true;
+            }
+            catch (NumberFormatException e) {
+                ret = false;
+            }
+            finally {
+                return ret;
+            }
+        }
         return ret;
-      }
     }
-    return ret;
-  }
 
-  public static String returnStringToFirst(String str, String firstChar) {
-    String ret = str;
-    if (str != null) {
-      int i = str.indexOf(firstChar);
-      if (i != -1) {
-        ret = str.substring(0, i);
-      }
+    public static String returnStringToFirst(String str, String firstChar) {
+        String ret = str;
+        if (str != null) {
+            int i = str.indexOf(firstChar);
+            if (i != -1) {
+                ret = str.substring(0, i);
+            }
+        }
+        return ret;
     }
-    return ret;
-  }
 
- /**
-   * Returns true if the specified String represents a valid date
-   *
-   * @param string String
-   * @return boolean
-   */
-  public static boolean isValidDate(String dateString,String format) {
-      boolean ret = false;
-      SimpleDateFormat fmt = new SimpleDateFormat(format);
-      try {
-          fmt.parse(dateString);
-          ret = true;
-      } catch (ParseException ex) {
-      } finally {
-          return ret;
-      }
-  }
-  
-  public static String readFileStream(FormFile file) {
-      try {
-          InputStream is = file.getInputStream();
-          int pointer;
-          StringBuffer strb = new StringBuffer(file.getFileSize());
-          while ((pointer = is.read()) != -1) {
-              strb.append((char) pointer);
-          }
-          return(strb.toString());
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
-      return("");
-  }
-  
-  //joins an array into a string; array elements separated by a specified delimiter
-  public static String join(String[] strArray, String delimiter) {
-      StringBuffer result = new StringBuffer();
-      for (int i=0, arrayLength=strArray.length; i<arrayLength; i++) {
-          result.append(strArray[i]);
-          if (i < arrayLength-1) {
-              result.append(delimiter);
-          }
-      }
-      return result.toString();
-  }
-  //arraylist elements must be string types
-  public static String join(ArrayList strArray, String delimiter) {
-      StringBuffer result = new StringBuffer();
-      for (int i=0, arrayLength=strArray.size(); i<arrayLength; i++) {
-          result.append(strArray.get(i));
-          if (i < arrayLength-1) {
-              result.append(delimiter);
-          }
-      }
-      return result.toString();
-  }
-  
-  public static ArrayList split(String rawString, String delimiter) {
+    /**
+      * Returns true if the specified String represents a valid date
+      *
+      * @param string String
+      * @return boolean
+      */
+    public static boolean isValidDate(String dateString, String format) {
+        boolean ret = false;
+        SimpleDateFormat fmt = new SimpleDateFormat(format);
+        try {
+            fmt.parse(dateString);
+            ret = true;
+        }
+        catch (ParseException ex) {
+        }
+        finally {
+            return ret;
+        }
+    }
+
+    public static String readFileStream(FormFile file) {
+        try {
+            InputStream is = file.getInputStream();
+            int pointer;
+            StringBuffer strb = new StringBuffer(file.getFileSize());
+            while ((pointer = is.read()) != -1) {
+                strb.append((char)pointer);
+            }
+            return(strb.toString());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return("");
+    }
+
+    //joins an array into a string; array elements separated by a specified delimiter
+    public static String join(String[] strArray, String delimiter) {
+        StringBuffer result = new StringBuffer();
+        for (int i = 0, arrayLength = strArray.length; i < arrayLength; i++) {
+            result.append(strArray[i]);
+            if (i < arrayLength - 1) {
+                result.append(delimiter);
+            }
+        }
+        return result.toString();
+    }
+
+    //arraylist elements must be string types
+    public static String join(ArrayList strArray, String delimiter) {
+        StringBuffer result = new StringBuffer();
+        for (int i = 0, arrayLength = strArray.size(); i < arrayLength; i++) {
+            result.append(strArray.get(i));
+            if (i < arrayLength - 1) {
+                result.append(delimiter);
+            }
+        }
+        return result.toString();
+    }
+
+    public static ArrayList split(String rawString, String delimiter) {
         ArrayList result = new ArrayList();
         StringTokenizer st = new StringTokenizer(rawString, delimiter);
 
         while (st.hasMoreTokens()) {
-          result.add(st.nextToken());
+            result.add(st.nextToken());
 
         }
         return result;
-  }
-  
-  public static String[] splitToStringArray(String rawString, String delimiter) {
+    }
+
+    public static String[] splitToStringArray(String rawString, String delimiter) {
         StringTokenizer st = new StringTokenizer(rawString, delimiter);
         String[] result = new String[st.countTokens()];
         int i = 0;
         while (st.hasMoreTokens()) {
-          result[i] = (st.nextToken());
-          i++;
+            result[i] = (st.nextToken());
+            i++;
         }
         return result;
-  }
-  
-  /**
-   *Takes a list of String Objects and returns a String with the all values from the list separated by a comma
-   */
-  public static String getCSV(List l){
+    }
+
+    /**
+     *Takes a list of String Objects and returns a String with the all values from the list separated by a comma
+     */
+    public static String getCSV(List l) {
         StringBuffer ret = new StringBuffer();;
-        if (l != null){
-            for (int i = 0; i < l.size(); i++){
-                ret.append((String) l.get(i));
-                if (i + 1 < l.size()){
-                   ret.append(",");   
+        if (l != null) {
+            for (int i = 0; i < l.size(); i++) {
+                ret.append((String)l.get(i));
+                if (i + 1 < l.size()) {
+                    ret.append(",");
                 }
             }
         }
         return ret.toString();
-   }
-  
-   
-
-   /**
-    * Strips linebreaks
-    * Converts multiple line breaks to one line break
-    * Added by johnchwk Jun 2007
-    */
-    public static String lineBreaks (String str){
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(str);
-        int strlen = (stringBuffer.length()-1);
-        int i = 1 ;
-        int k = 0;
-        boolean space = false;
-        while ((i <= strlen) && (i > 0)){
-                k = 0;
-        // Delete consecutive line breaks
-                while (((stringBuffer.charAt(i) == '\n') || (stringBuffer.charAt(i) == '\r')) && (i < strlen)) {
-                        stringBuffer.deleteCharAt(i);
-                        strlen--;
-                        k++;
-                }
-        // Two or more line breaks converted to one line break
-                if ((k >= 2) && (!space) && (stringBuffer.charAt(i) != ' ')) {
-                        stringBuffer.insert(i,"\n");
-                        strlen++;
-                        i++;
-                } 
-        // Line break and no spaces on either side of line break so insert space else the two words will get concatenated
-                else if ((k == 1) && (!space) && (stringBuffer.charAt(i) != ' ') && k < 2) {
-                        stringBuffer.insert(i," ");
-                        strlen++;
-                        i++;
-                }
-                if (stringBuffer.charAt(i) == ' ') {
-                        space = true;
-                } else {
-                        space = false;
-                }
-                i++;
-
-        }
-	return stringBuffer.toString();
     }
 
+    /**
+     * Strips linebreaks
+     * Converts multiple line breaks to one line break
+     * Added by johnchwk Jun 2007
+     */
+    public static String lineBreaks(String str) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(str);
+        int strlen = (stringBuffer.length() - 1);
+        int i = 1;
+        int k = 0;
+        boolean space = false;
+        while ((i <= strlen) && (i > 0)) {
+            k = 0;
+            // Delete consecutive line breaks
+            while (((stringBuffer.charAt(i) == '\n') || (stringBuffer.charAt(i) == '\r')) && (i < strlen)) {
+                stringBuffer.deleteCharAt(i);
+                strlen--;
+                k++;
+            }
+            // Two or more line breaks converted to one line break
+            if ((k >= 2) && (!space) && (stringBuffer.charAt(i) != ' ')) {
+                stringBuffer.insert(i, "\n");
+                strlen++;
+                i++;
+            }
+            // Line break and no spaces on either side of line break so insert space else the two words will get concatenated
+            else if ((k == 1) && (!space) && (stringBuffer.charAt(i) != ' ') && k < 2) {
+                stringBuffer.insert(i, " ");
+                strlen++;
+                i++;
+            }
+            if (stringBuffer.charAt(i) == ' ') {
+                space = true;
+            }
+            else {
+                space = false;
+            }
+            i++;
+
+        }
+        return stringBuffer.toString();
+    }
 
 }

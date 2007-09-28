@@ -23,31 +23,33 @@
  */
 package oscar.billing.popup;
 
-import org.apache.log4j.Category;
+import java.util.List;
 
-import org.apache.struts.action.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 import oscar.billing.cad.dao.CadAtividadeSaudeDAO;
-
 import oscar.util.OscarAction;
 import oscar.util.PagerDef;
 
-import java.util.List;
-
-import javax.servlet.http.*;
-
 
 public class AtividadeSaudeAction extends OscarAction {
-    static Category cat = Category.getInstance(AtividadeSaudeAction.class.getName());
+    private static Logger logger = LogManager.getLogger(AtividadeSaudeAction.class);
 
     public ActionForward execute(ActionMapping mapping, ActionForm form,
         HttpServletRequest request, HttpServletResponse response) {
         ActionForward myforward = null;
         String myaction = mapping.getParameter();
-        cat.debug(" [AtividadeSaudeAction] My action = " + myaction);
+        logger.debug(" [AtividadeSaudeAction] My action = " + myaction);
 
         if (isCancelled(request)) {
-            cat.info(" [FormBillingAction] " + mapping.getAttribute() +
+            logger.info(" [FormBillingAction] " + mapping.getAttribute() +
                 " - acao foi cancelada");
 
             return mapping.findForward("cancel");
@@ -69,16 +71,16 @@ public class AtividadeSaudeAction extends OscarAction {
     private ActionForward performInit(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [AtividadeSaudeAction] INIT");
+        logger.info(" [AtividadeSaudeAction] INIT");
 
         AtividadeSaudeForm form = (AtividadeSaudeForm) actionForm;
 
         try {
             form.clear();
-            cat.info(" [AtividadeSaudeAction] Limpou form");
+            logger.info(" [AtividadeSaudeAction] Limpou form");
         } catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }
@@ -89,7 +91,7 @@ public class AtividadeSaudeAction extends OscarAction {
     private ActionForward performFindAtividadeSaude(ActionMapping mapping,
         ActionForm actionForm, HttpServletRequest request,
         HttpServletResponse response) {
-        cat.info(" [AtividadeSaudeAction] FIND_ATIV");
+        logger.info(" [AtividadeSaudeAction] FIND_ATIV");
 
         AtividadeSaudeForm form = (AtividadeSaudeForm) actionForm;
 
@@ -115,10 +117,10 @@ public class AtividadeSaudeAction extends OscarAction {
 
             form.setAtividades(ativ);
 
-            cat.info(" [AtividadeSaudeAction] setou atividadeSaudes");
+            logger.info(" [AtividadeSaudeAction] setou atividadeSaudes");
         } catch (Exception e) {
             generalError(request, e, "error.general");
-            cat.error("erro: ", e);
+            logger.error("erro: ", e);
 
             return mapping.findForward("failure");
         }
