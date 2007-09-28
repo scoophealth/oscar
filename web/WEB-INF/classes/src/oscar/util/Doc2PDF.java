@@ -23,77 +23,54 @@
  */
 package oscar.util;
 
-import org.apache.log4j.Category;
-
-//import java.text.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.FileOutputStream;
-import java.io.*;  
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.util.Vector;
 
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.SAXParseException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.w3c.tidy.Tidy;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
-import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.html.SAXmyHtmlHandler;
-
-import com.lowagie.text.Chunk;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.OutputStream;
-import java.io.InputStream;
-import org.xml.sax.InputSource;
-import org.w3c.tidy.*;
-import java.net.*;
-import com.lowagie.text.html.HtmlParser;
-import java.util.Vector;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import com.lowagie.text.pdf.PdfEncodings;
-import sun.misc.*;
-
+import com.lowagie.text.pdf.PdfWriter;
 
 /**
  *
  * @author root
  */
-public class Doc2PDF{
-    
-      
-    public static void parseJSP2PDF( HttpServletRequest request, HttpServletResponse response, String uri, String jsessionid ) {
-        
+public class Doc2PDF {
 
-       
+    public static void parseJSP2PDF(HttpServletRequest request, HttpServletResponse response, String uri, String jsessionid) {
+
         try {
-           
+
             // step 2:
             // we create a writer that listens to the document
             // and directs a XML-stream to a file
             Tidy tidy = new Tidy();
             tidy.setXHTML(true);
 
-          
-            BufferedInputStream in = GetInputFromURI( jsessionid, uri);
+            BufferedInputStream in = GetInputFromURI(jsessionid, uri);
             ByteArrayOutputStream tidyout = new ByteArrayOutputStream();
-                        
+
             tidy.parse(in, tidyout);
-                        
+
             System.out.println(tidyout.toString());
             String documentTxt = AddAbsoluteTag(request, tidyout.toString(), uri);
 
@@ -101,44 +78,37 @@ public class Doc2PDF{
 
         }
 
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
         }
 
-        
     }
-    
-    // Convert named file to PDF on stdout...
-    public static int topdf( HttpServletRequest request, HttpServletResponse response, String filename)// I - Name of file to convert
-    {
-    String              command;          // Command string
-        Process             process;          // Process for HTMLDOC
-        Runtime             runtime;          // Local runtime object
-        java.io.InputStream input;            // Output from HTMLDOC
-        byte                buffer [];        // Buffer for output data
-        int                 bytes;            // Number of bytes
 
+    // Convert named file to PDF on stdout...
+    public static int topdf(HttpServletRequest request, HttpServletResponse response, String filename)// I - Name of file to convert
+    {
+        String command; // Command string
+        Process process; // Process for HTMLDOC
+        Runtime runtime; // Local runtime object
+        java.io.InputStream input; // Output from HTMLDOC
+        byte buffer[]; // Buffer for output data
+        int bytes; // Number of bytes
 
         // Construct the command string
         command = "htmldoc --quiet --webpage -t pdf " + filename;
 
+        try {
 
-        try
-        {
-           
-  
-        
             // Run the process and wait for it to complete...
             runtime = Runtime.getRuntime();
 
-             // Create a new HTMLDOC process...
+            // Create a new HTMLDOC process...
             process = runtime.exec(command);
 
             // Get stdout from the process and a buffer for the data...
-            input  = process.getInputStream();
-            
-            
+            input = process.getInputStream();
+
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
             // Compress the data
@@ -146,114 +116,101 @@ public class Doc2PDF{
 
             // Read output from HTMLDOC until we have it all...
             while ((bytes = input.read(buf)) > 0)
-                bos.write(buf, 0, bytes);            
-            
-            PrintPDFFromBytes( response,  bos.toByteArray() );
-            
+                bos.write(buf, 0, bytes);
+
+            PrintPDFFromBytes(response, bos.toByteArray());
 
             // Return the exit status from HTMLDOC...
-            return (process.waitFor());
+            return(process.waitFor());
         }
-        catch (Exception e)
-        {
-          // An error occurred - send it to stderr for the web server...
-          System.err.print(e.toString() + " caught while running:\n\n");
-          System.err.print("    " + command + "\n");
-          return (1);
+        catch (Exception e) {
+            // An error occurred - send it to stderr for the web server...
+            System.err.print(e.toString() + " caught while running:\n\n");
+            System.err.print("    " + command + "\n");
+            return(1);
         }
     }
 
     // Main entry for htmldoc class
-    public static void HTMLDOC( HttpServletRequest request, HttpServletResponse response, String url)// I - Command-line args
+    public static void HTMLDOC(HttpServletRequest request, HttpServletResponse response, String url)// I - Command-line args
     {
-        String server_name,                 // SERVER_NAME env var
-               server_port,                 // SERVER_PORT env var
-               path_info,                   // PATH_INFO env var
-               query_string,                // QUERY_STRING env var
-               filename;                    // File to convert
+        String server_name, // SERVER_NAME env var
+        server_port, // SERVER_PORT env var
+        path_info, // PATH_INFO env var
+        query_string, // QUERY_STRING env var
+        filename; // File to convert
 
+        filename = url;
 
-         filename = url;
-
-          if ((query_string = System.getProperty("QUERY_STRING")) != null)
-          {
+        if ((query_string = System.getProperty("QUERY_STRING")) != null) {
             filename = filename + "?" + query_string;
-          }
-  
+        }
+
         System.err.print("htmldoc.class filename\n");
-        
+
         // Convert the file to PDF and send to the web client...
         topdf(request, response, filename);
-        
+
         return;
     }
-    
 
+    public static void parseString2PDF(HttpServletRequest request, HttpServletResponse response, String docText) {
 
-    public static void parseString2PDF( HttpServletRequest request, HttpServletResponse response, String docText ) {
-        
-
-        
         try {
-             
+
             // step 2:
             // we create a writer that listens to the document
             // and directs a XML-stream to a file
             Tidy tidy = new Tidy();
             tidy.setXHTML(true);
-          
+
             BufferedInputStream in = new BufferedInputStream(new ByteArrayInputStream(docText.getBytes()));
-            ByteArrayOutputStream tidyout = new ByteArrayOutputStream();          
-                        
+            ByteArrayOutputStream tidyout = new ByteArrayOutputStream();
+
             tidy.parse(in, tidyout);
-            
-            PrintPDFFromHTMLString(response,  AddAbsoluteTag(request, tidyout.toString(), "") );         
+
+            PrintPDFFromHTMLString(response, AddAbsoluteTag(request, tidyout.toString(), ""));
 
         }
 
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
         }
 
-        
-    }    
-    
-    public static String parseString2Bin ( HttpServletRequest request, HttpServletResponse response, String docText ) {
-        
+    }
 
-        
+    public static String parseString2Bin(HttpServletRequest request, HttpServletResponse response, String docText) {
+
         try {
-           
+
             // step 2:
             // we create a writer that listens to the document
             // and directs a XML-stream to a file
             Tidy tidy = new Tidy();
             tidy.setXHTML(true);
-          
+
             BufferedInputStream in = new BufferedInputStream(new ByteArrayInputStream(docText.getBytes()));
-            ByteArrayOutputStream tidyout = new ByteArrayOutputStream();          
-                        
+            ByteArrayOutputStream tidyout = new ByteArrayOutputStream();
+
             tidy.parse(in, tidyout);
-            
-            String testFile = GetPDFBin(response,  AddAbsoluteTag(request, tidyout.toString(), "") );
-            
+
+            String testFile = GetPDFBin(response, AddAbsoluteTag(request, tidyout.toString(), ""));
+
             return testFile;
-                    
 
         }
 
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
             return null;
         }
 
-        
-    }   
-    
-    public static void SavePDF2File( String fileName, String docBin ) {
-       
+    }
+
+    public static void SavePDF2File(String fileName, String docBin) {
+
         FileOutputStream fos;
         DataOutputStream ds;
         try {
@@ -264,93 +221,87 @@ public class Doc2PDF{
 
             p.writeBytes(docBin);
 
-
             p.flush();
             ostream.close();
 
-        } 
+        }
         catch (IOException ioe) {
-                   System.out.println( "IO error: " + ioe ); 
+            System.out.println("IO error: " + ioe);
         }
     }
-    public static BufferedInputStream GetInputFromURI(String jsessionid, String uri ) {
-        
+
+    public static BufferedInputStream GetInputFromURI(String jsessionid, String uri) {
+
         BufferedInputStream in = null;
         try {
-                
- 
-            URL url = new URI( uri + ";jsessionid=" + jsessionid ).toURL();
-            
-            System.out.println( " " +  uri + ";jsessionid=" + jsessionid) ;
-            
-            HttpURLConnection conn=  (HttpURLConnection) url.openConnection();
-            
-            in = new BufferedInputStream( conn.getInputStream() );          
-            
-        }                   
-        catch(Exception e) {
+
+            URL url = new URI(uri + ";jsessionid=" + jsessionid).toURL();
+
+            System.out.println(" " + uri + ";jsessionid=" + jsessionid);
+
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+            in = new BufferedInputStream(conn.getInputStream());
+
+        }
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
         }
         return in;
     }
-    
-    public static String GetPDFBin ( HttpServletResponse response, String docText ) {
+
+    public static String GetPDFBin(HttpServletResponse response, String docText) {
         // step 1: creation of a document-object
-        Document document = new Document(PageSize.A4, 36, 36, 36, 36);    
+        Document document = new Document(PageSize.A4, 36, 36, 36, 36);
         // Document document = new Document(PageSize.A4.rotate());
-        
-        
+
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();      
-            PdfWriter.getInstance(document, baos );
-            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter.getInstance(document, baos);
+
             // step 3: we create a parser and set the document handler
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            
 
             // step 4: we parse the document
             // use input stream  
-            parser.parse( new ByteArrayInputStream(docText.getBytes()), new SAXmyHtmlHandler(document));                       
-            
+            parser.parse(new ByteArrayInputStream(docText.getBytes()), new SAXmyHtmlHandler(document));
+
             document.close();
-            
-            return new sun.misc.BASE64Encoder().encode(baos.toByteArray());
-            
-            
+
+            return(new String(Base64.encodeBase64(baos.toByteArray())));
         }
 
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
         }
         return null;
-                
+
     }
-    
-    public static void PrintPDFFromBin ( HttpServletResponse response, String docBin ) {
-       
+
+    public static void PrintPDFFromBin(HttpServletResponse response, String docBin) {
+
         // step 1: creation of a document-object
-        
+
         try {
 
-            byte[] binDecodedArray =  new sun.misc.BASE64Decoder().decodeBuffer(docBin);
-            
-            PrintPDFFromBytes( response, binDecodedArray  );
+            byte[] binDecodedArray = Base64.decodeBase64(docBin.getBytes());
+
+            PrintPDFFromBytes(response, binDecodedArray);
             return;
-                           
+
         }
 
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
         }
-                
-        
+
     }
-    
-    public static void PrintPDFFromBytes( HttpServletResponse response, byte[] docBytes ) {
-    
+
+    public static void PrintPDFFromBytes(HttpServletResponse response, byte[] docBytes) {
+
         try {
             // setting some response headers
             response.setHeader("Expires", "0");
@@ -359,79 +310,75 @@ public class Doc2PDF{
 
             // setting the content type
             response.setContentType("application/pdf");
-            
+
             OutputStream o = response.getOutputStream();
-            response.setContentLength( docBytes.length );
+            response.setContentLength(docBytes.length);
 
-            InputStream is = new BufferedInputStream(new ByteArrayInputStream(docBytes ) ) ;
+            InputStream is = new BufferedInputStream(new ByteArrayInputStream(docBytes));
 
-            byte[] buf = new byte[ 32 * 1024]; // 32k buffer
+            byte[] buf = new byte[32 * 1024]; // 32k buffer
 
             int nRead = 0;
-            while( (nRead=is.read(buf)) != -1 ) {
+            while ((nRead = is.read(buf)) != -1) {
                 o.write(buf, 0, nRead);
             }
-            
-            o.flush();            
-            o.close(); // *important* to ensure no more jsp output
-            return; 
-       }
 
-        catch(Exception e) {
-            e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            o.flush();
+            o.close(); // *important* to ensure no more jsp output
+            return;
         }
-                          
+
+        catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error: " + e.getMessage());
+        }
+
     }
-    
-    public static void PrintPDFFromHTMLString ( HttpServletResponse response, String docText ) {
- 
+
+    public static void PrintPDFFromHTMLString(HttpServletResponse response, String docText) {
+
         // step 1: creation of a document-object
-        Document document = new Document(PageSize.A4, 36, 36, 36, 36);      
+        Document document = new Document(PageSize.A4, 36, 36, 36, 36);
         //Document document = new Document(PageSize.A4.rotate());
-        
-               
-        
+
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();      
-            PdfWriter.getInstance(document, baos );
-            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PdfWriter.getInstance(document, baos);
+
             // step 3: we create a parser and set the document handler
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            
 
             // step 4: we parse the document
             // use input stream        
-            parser.parse( new ByteArrayInputStream(docText.getBytes()), new SAXmyHtmlHandler(document));                       
-            
-                   
+            parser.parse(new ByteArrayInputStream(docText.getBytes()), new SAXmyHtmlHandler(document));
+
             document.close();
-            
+
             // String yourString = new String(theBytesOfYourString, "UTF-8");
             // byte[] theBytesOfYourString = yourString.getBytes("UTF-8");
-            
+
             byte[] binArray = baos.toByteArray();
-            
-            PrintPDFFromBytes( response, binArray  );          
+
+            PrintPDFFromBytes(response, binArray);
 
         }
 
-        catch(Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage()  );
+            System.err.println("Error: " + e.getMessage());
         }
-        
+
     }
-    
-    public static String AddAbsoluteTag( HttpServletRequest request, String docText, String uri ) {
+
+    public static String AddAbsoluteTag(HttpServletRequest request, String docText, String uri) {
 
         String absolutePath = "";
-        
-        docText  = docText.replaceAll( "src='/", "src='"  );        
-        docText  = docText.replaceAll( "src=\"/", "src=\"" );
-        docText  = docText.replaceAll( "src=/", "src=" );
-              
-        if ( request.getProtocol().toString().equals("HTTP/1.1") ) {
+
+        docText = docText.replaceAll("src='/", "src='");
+        docText = docText.replaceAll("src=\"/", "src=\"");
+        docText = docText.replaceAll("src=/", "src=");
+
+        if (request.getProtocol().toString().equals("HTTP/1.1")) {
             absolutePath = "http://";
         }
         else {
@@ -439,19 +386,16 @@ public class Doc2PDF{
         }
 
         absolutePath += request.getRemoteHost() + ":" + request.getServerPort() + "" + request.getContextPath() + "/";
-                
-        docText  = docText.replaceAll( "src='", "src='" + absolutePath );
-        docText  = docText.replaceAll( "src=\"", "src=\"" + absolutePath );        
-        
-        
+
+        docText = docText.replaceAll("src='", "src='" + absolutePath);
+        docText = docText.replaceAll("src=\"", "src=\"" + absolutePath);
+
         return docText;
     }
-    
 
-    public static Vector getXMLTagValue(String xml, String section) throws Exception
-    {
+    public static Vector getXMLTagValue(String xml, String section) throws Exception {
         String xmlString = xml;
-        
+
         Vector v = new Vector();
         String beginTagToSearch = "<" + section + ">";
         String endTagToSearch = "</" + section + ">";
@@ -459,41 +403,36 @@ public class Doc2PDF{
         // Look for the first occurrence of begin tag
         int index = xmlString.indexOf(beginTagToSearch);
 
+        while (index != -1) {
+            // Look for end tag
+            // DOES NOT HANDLE <section Blah />
+            int lastIndex = xmlString.indexOf(endTagToSearch);
 
-        while(index != -1)
-        {
-                // Look for end tag
-                // DOES NOT HANDLE <section Blah />
-                int lastIndex = xmlString.indexOf(endTagToSearch);
+            // Make sure there is no error
+            if ((lastIndex == -1) || (lastIndex < index)) throw new Exception("Parse Error");
 
-                // Make sure there is no error
-                if((lastIndex == -1) || (lastIndex < index))
-                        throw new Exception("Parse Error");
+            // extract the substring
+            String subs = xmlString.substring((index + beginTagToSearch.length()), lastIndex);
 
-                // extract the substring
-                String subs = xmlString.substring((index + beginTagToSearch.length()), lastIndex) ;
+            // Add it to our list of tag values
+            v.addElement(subs);
 
-                // Add it to our list of tag values
-                v.addElement(subs);
+            // Try it again. Narrow down to the part of string which is not 
+            // processed yet.
+            try {
+                xmlString = xmlString.substring(lastIndex + endTagToSearch.length());
+            }
+            catch (Exception e) {
+                xmlString = "";
+            }
 
-                 // Try it again. Narrow down to the part of string which is not 
-                 // processed yet.
-                try
-                {
-                        xmlString = xmlString.substring(lastIndex + endTagToSearch.length());
-                }
-                catch(Exception e)
-                {
-                        xmlString = "";
-                }
+            // Start over again by searching the first occurrence of the begin tag 
+            // to continue the loop.
 
-                 // Start over again by searching the first occurrence of the begin tag 
-                 // to continue the loop.
+            index = xmlString.indexOf(beginTagToSearch);
+        }
 
-                index = xmlString.indexOf(beginTagToSearch);
-        }		
-        
         return v;
     }
-        
+
 }

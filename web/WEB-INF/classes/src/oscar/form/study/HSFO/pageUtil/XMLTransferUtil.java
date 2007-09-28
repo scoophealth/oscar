@@ -146,12 +146,12 @@ import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatien
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.SelWaistCircumfUnit;
 import noNamespace.HsfoHbpsDataDocument.HsfoHbpsData.Site.SitePatient.SitePatientVisit.SelWeightUnit;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.log4j.Logger;
-
 import org.apache.xmlbeans.XmlCalendar;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -164,7 +164,6 @@ import oscar.form.study.HSFO.PatientData;
 import oscar.form.study.HSFO.VisitData;
 import oscar.oscarDemographic.data.DemographicData;
 import oscar.oscarProvider.data.ProviderData;
-import sun.misc.BASE64Encoder;
 
 
 public class XMLTransferUtil
@@ -1437,8 +1436,7 @@ public class XMLTransferUtil
 
 	public String base64Encoding(byte[] input)
 	{
-		BASE64Encoder encoder = new BASE64Encoder();
-		return encoder.encode(input);
+	    return(new String(Base64.encodeBase64(input)));
 	}
 
 	public byte[] zipCompress(String fileName, byte[] input) throws IOException
