@@ -168,7 +168,6 @@
           lazy-init="default"  dependency-check="default">
         <property name="transactionManager" ref="transactionManager"/>       
         <property name="target" ref="systemMessageManagerTarget"/>
-        </property>
         <property name="transactionAttributes">
             <props>
                 <prop key="save*">PROPAGATION_REQUIRED</prop>
