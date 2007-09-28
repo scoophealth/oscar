@@ -29,6 +29,11 @@ import java.io.Serializable;
  */
 public class ProgramQueue implements Serializable {
 
+    public static String STATUS_ADMITTED = "admitted";
+    public static String STATUS_REJECTED = "rejected";
+    public static String STATUS_REMOVED = "removed";
+    public static String STATUS_ACTIVE = "active";
+
     private static final long serialVersionUID = 1L;
 
     public static String PROP_STATUS = "Status";

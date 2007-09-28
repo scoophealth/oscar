@@ -191,13 +191,13 @@ public class AdmissionManager {
 		// Clear them from the queue, Update their referral
 		ProgramQueue pq = programQueueDao.getActiveProgramQueue(program.getId().longValue(), (long) demographicNo);
 		if (pq != null) {
-			pq.setStatus("admitted");
+			pq.setStatus(ProgramQueue.STATUS_ADMITTED);
 			programQueueDao.saveProgramQueue(pq);
 
 			// is there a referral
 			if (pq.getReferralId() != null && pq.getReferralId().longValue() > 0) {
 				ClientReferral referral = clientReferralDAO.getClientReferral(pq.getReferralId());
-				referral.setStatus("complete");
+				referral.setStatus(ClientReferral.STATUS_CURRENT);
 				referral.setCompletionDate(new Date());
 				referral.setCompletionNotes(admissionNotes);
 				clientReferralDAO.saveClientReferral(referral);

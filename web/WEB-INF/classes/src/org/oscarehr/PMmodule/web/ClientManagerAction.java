@@ -328,7 +328,7 @@ public class ClientManagerAction extends BaseAction {
 		referral.setProgramId(new Long(program.getId().longValue()));
 		referral.setProviderNo(Long.valueOf(getProviderNo(request)));
 		referral.setReferralDate(new Date());
-		referral.setStatus("active");
+		referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
 		boolean success = true;
 		try {
@@ -457,11 +457,11 @@ public class ClientManagerAction extends BaseAction {
 			referral.setProviderNo(Long.valueOf(getProviderNo(request)));
 			referral.setReferralDate(new Date());
 			referral.setSourceAgencyId(new Long(0));
-			referral.setStatus("active");
+			referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
 			Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getProgramId()), Integer.valueOf(demographicNo));
 			if (currentAdmission != null) {
-				referral.setStatus("rejected");
+				referral.setStatus(ClientReferral.STATUS_REJECTED);
 				referral.setCompletionNotes("Client currently admitted");
 				referral.setCompletionDate(new Date());
 				ActionMessages messages = new ActionMessages();
@@ -471,7 +471,7 @@ public class ClientManagerAction extends BaseAction {
 			}
 			ProgramQueue queue = programQueueManager.getActiveProgramQueue(String.valueOf(program.getId()), demographicNo);
 			if (queue != null) {
-				referral.setStatus("rejected");
+				referral.setStatus(ClientReferral.STATUS_REJECTED);
 				referral.setCompletionNotes("Client already in queue");
 				referral.setCompletionDate(new Date());
 				ActionMessages messages = new ActionMessages();

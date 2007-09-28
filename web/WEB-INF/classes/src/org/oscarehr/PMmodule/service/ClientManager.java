@@ -161,7 +161,7 @@ public class ClientManager {
 
 		referralDAO.saveClientReferral(referral);
 
-		if (referral.getStatus().equalsIgnoreCase("active")) {
+		if (referral.getStatus().equalsIgnoreCase(ClientReferral.STATUS_ACTIVE)) {
 			ProgramQueue queue = new ProgramQueue();
 			queue.setAgencyId(referral.getAgencyId());
 			queue.setClientId(referral.getClientId());
@@ -169,7 +169,7 @@ public class ClientManager {
 			queue.setProgramId(referral.getProgramId());
 			queue.setProviderNo(referral.getProviderNo());
 			queue.setReferralDate(referral.getReferralDate());
-			queue.setStatus("active");
+			queue.setStatus(ProgramQueue.STATUS_ACTIVE);
 			queue.setReferralId(referral.getId());
 			queue.setTemporaryAdmission(referral.isTemporaryAdmission());
 			queue.setPresentProblems(referral.getPresentProblems());
@@ -185,7 +185,7 @@ public class ClientManager {
 	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException {
 		Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
 		if (currentAdmission != null) {
-			referral.setStatus("rejected");
+			referral.setStatus(ClientReferral.STATUS_REJECTED);
 			referral.setCompletionNotes("Client currently admitted");
 			referral.setCompletionDate(new Date());
 			
@@ -195,7 +195,7 @@ public class ClientManager {
 
 		ProgramQueue queue = queueManager.getActiveProgramQueue(String.valueOf(referral.getProgramId()), String.valueOf(referral.getClientId()));
 		if (queue != null) {
-			referral.setStatus("rejected");
+			referral.setStatus(ClientReferral.STATUS_REJECTED);
 			referral.setCompletionNotes("Client already in queue");
 			referral.setCompletionDate(new Date());
 			
@@ -218,12 +218,12 @@ public class ClientManager {
 		queue.setProgramId(referral.getProgramId());
 		queue.setProviderNo(referral.getProviderNo());
 		queue.setReferralDate(referral.getReferralDate());
-		queue.setStatus("active");
+		queue.setStatus(ProgramQueue.STATUS_ACTIVE);
 		queue.setReferralId(referral.getId());
 		queue.setTemporaryAdmission(referral.isTemporaryAdmission());
 		queueManager.saveProgramQueue(queue);
 
-		referral.setStatus("active");
+		referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
 		// send back jms message
 		integratorManager.sendReferral(referral.getSourceAgencyId(), referral);

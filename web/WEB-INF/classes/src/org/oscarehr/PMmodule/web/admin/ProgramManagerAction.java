@@ -431,7 +431,7 @@ public class ProgramManagerAction extends BaseAction {
 		ProgramQueue queue = (ProgramQueue) programForm.get("queue");
 
 		ProgramQueue fullQueue = programQueueManager.getProgramQueue(String.valueOf(queue.getId()));
-		fullQueue.setStatus("removed");
+		fullQueue.setStatus(ProgramQueue.STATUS_REMOVED);
 		programQueueManager.saveProgramQueue(fullQueue);
 
 		logManager.log("write", "edit program - queue removal", String.valueOf(program.getId()), request);

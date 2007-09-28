@@ -81,13 +81,13 @@ public class ProgramQueueManagerImpl implements ProgramQueueManager
 		}
 		ClientReferral referral = this.referralDAO.getClientReferral(queue.getReferralId());
 		if(referral != null) {
-			referral.setStatus("rejected");
+			referral.setStatus(ClientReferral.STATUS_REJECTED);
 			referral.setCompletionDate(new Date());
 			referral.setCompletionNotes(notes);			
 			referral.setRadioRejectionReason(rejectionReason);
 			this.referralDAO.saveClientReferral(referral);
 		}
-		queue.setStatus("rejected");		
+		queue.setStatus(ProgramQueue.STATUS_REJECTED);
 		
 		this.saveProgramQueue(queue);
 	}

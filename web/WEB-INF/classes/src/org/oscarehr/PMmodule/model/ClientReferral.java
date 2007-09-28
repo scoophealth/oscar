@@ -29,7 +29,12 @@ import java.io.Serializable;
  */
 public class ClientReferral implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    public static String STATUS_REJECTED = "rejected";        
+    public static String STATUS_ACTIVE = "active";
+    public static String STATUS_CURRENT = "current";
+
+
+    private static final long serialVersionUID = 1L;
     public static String PROP_STATUS = "Status";
     public static String PROP_PROGRAM_NAME = "ProgramName";
     public static String PROP_AGENCY_ID = "AgencyId";
