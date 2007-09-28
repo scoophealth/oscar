@@ -181,7 +181,6 @@
     <bean id="systemMessageManagerTarget" class="org.caisi.service.SystemMessageManager" lazy-init="default"
           autowire="default" dependency-check="default">
         <property name="systemMessageDAO" ref="systemMessageDAO"/>
-        </property>
     </bean>
    
 
