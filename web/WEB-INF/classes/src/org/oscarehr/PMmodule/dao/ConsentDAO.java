@@ -20,31 +20,143 @@
 * Toronto, Ontario, Canada 
 */
 
-
 package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Consent;
 import org.oscarehr.PMmodule.model.ConsentInterview;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface ConsentDAO {
-	
-	public List getConsents();
-	
-	public Consent getConsent(Long id);
-	
-	public Consent getConsentByDemographic(Long demographicNo);
-	
-	public void saveConsent(Consent consent);
-		
-	public Consent getMostRecentConsent(Long demographicNo);
-	
-	public void saveConsentInterview(ConsentInterview consent);
-	
-	public List getConsentInterviews();
-	
-	public ConsentInterview getConsentInterview(Long id);
-	
-	public ConsentInterview getConsentInterviewByDemographicNo(Long demographicNo);
+public class ConsentDAO extends HibernateDaoSupport {
+
+    private Log log = LogFactory.getLog(ConsentDAO.class);
+
+    public List getConsents() {
+        List results = this.getHibernateTemplate().find("from Consent");
+
+        if (log.isDebugEnabled()) {
+            log.debug("getConsents: # of results=" + results.size());
+        }
+
+        return results;
+    }
+
+    public Consent getConsent(Long id) {
+
+        if (id == null || id.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        Consent result = (Consent)this.getHibernateTemplate().get(Consent.class, id);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getConsent: id=" + id + ",found=" + (result != null));
+        }
+        return result;
+    }
+
+    public Consent getConsentByDemographic(Long demographicNo) {
+        if (demographicNo == null || demographicNo.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        Consent result = null;
+
+        List list = this.getHibernateTemplate().find("from Consent c where c.demographicNo=?", demographicNo);
+        if (!list.isEmpty()) result = (Consent)list.get(0);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getConsentByDemographic:id=" + demographicNo + ",found=" + (result != null));
+        }
+
+        return result;
+    }
+
+    public void saveConsent(Consent consent) {
+        if (consent == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.getHibernateTemplate().saveOrUpdate(consent);
+
+        if (log.isDebugEnabled()) {
+            log.debug("saveConsent:id=" + consent.getId());
+        }
+    }
+
+    public Consent getMostRecentConsent(Long demographicNo) {
+        if (demographicNo == null || demographicNo.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+        Consent result = null;
+
+        List results = this.getHibernateTemplate().find("from Consent c where c.demographicNo = ? order by c.dateSigned DESC", demographicNo);
+        if (!results.isEmpty()) {
+            result = (Consent)results.get(0);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getMostRecentConsent:id=" + demographicNo + ",found=" + (result != null));
+        }
+
+        return result;
+    }
+
+    public void saveConsentInterview(ConsentInterview consent) {
+        if (consent == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.getHibernateTemplate().save(consent);
+
+        if (log.isDebugEnabled()) {
+            log.debug("saveConsentInterview: " + consent.getId());
+        }
+    }
+
+    public List getConsentInterviews() {
+
+        List results = this.getHibernateTemplate().find("from ConsentInterview");
+
+        if (log.isDebugEnabled()) {
+            log.debug("getConsentInterviews: # of results=" + results.size());
+        }
+        return results;
+    }
+
+    public ConsentInterview getConsentInterview(Long id) {
+        if (id == null || id.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        ConsentInterview result = (ConsentInterview)this.getHibernateTemplate().get(ConsentInterview.class, id);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getConsent: id=" + id + ",found=" + (result != null));
+        }
+
+        return result;
+    }
+
+    public ConsentInterview getConsentInterviewByDemographicNo(Long demographicNo) {
+        if (demographicNo == null || demographicNo.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        ConsentInterview result = null;
+        List results = this.getHibernateTemplate().find("from ConsentInterview ci where ci.demographicNo = ?", demographicNo);
+
+        if (!results.isEmpty()) {
+            result = (ConsentInterview)results.get(0);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getConsentBydemographicNo: demographicNo=" + demographicNo + ",found=" + (result != null));
+        }
+
+        return result;
+    }
 }

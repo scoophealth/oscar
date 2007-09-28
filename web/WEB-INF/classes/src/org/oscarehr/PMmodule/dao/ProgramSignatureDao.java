@@ -24,14 +24,58 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.ProgramSignature;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface ProgramSignatureDao {
-	
-	public ProgramSignature getProgramFirstSignature(Integer programId);
-	
-	public List<ProgramSignature> getProgramSignatures(Integer programId);
-	
-	public void saveProgramSignature(ProgramSignature ps);
-	
+public class ProgramSignatureDao extends HibernateDaoSupport {
+
+    private static final Log log = LogFactory.getLog(ProgramSignatureDao.class);
+
+    //get the creator of the program
+    public ProgramSignature getProgramFirstSignature(Integer programId) {
+        ProgramSignature programSignature = null;
+        if (programId == null || programId.intValue() <= 0) {
+            return null;
+        }
+        List ps = getHibernateTemplate().find("FROM ProgramSignature ps where ps.programId = ? ORDER BY ps.updateDate ASC", programId);
+
+        if (!ps.isEmpty()) {
+            programSignature = (ProgramSignature)ps.get(0);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramFirstSignature: " + ((programSignature != null)?String.valueOf(programSignature.getId()):"null"));
+        }
+
+        return programSignature;
+    }
+
+    public List<ProgramSignature> getProgramSignatures(Integer programId) {
+        if (programId == null || programId.intValue() <= 0) {
+            return null;
+        }
+
+        List rs = getHibernateTemplate().find("FROM ProgramSignature ps WHERE ps.programId = ? ORDER BY ps.updateDate ASC", programId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramSignatures: # of programs: " + rs.size());
+        }
+        return rs;
+
+    }
+
+    public void saveProgramSignature(ProgramSignature programSignature) {
+        if (programSignature == null) {
+            throw new IllegalArgumentException();
+        }
+
+        getHibernateTemplate().saveOrUpdate(programSignature);
+        getHibernateTemplate().flush();
+
+        if (log.isDebugEnabled()) {
+            log.debug("saveAdmission: id= " + programSignature.getId());
+        }
+    }
 }

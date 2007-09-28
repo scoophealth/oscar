@@ -22,24 +22,117 @@
 
 package org.oscarehr.PMmodule.dao;
 
-
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+public class ProgramQueueDao extends HibernateDaoSupport {
+
+    private Log log = LogFactory.getLog(ProgramQueueDao.class);
 
 
-public interface ProgramQueueDao {
-	
-	public ProgramQueue getProgramQueue(Long queueId);
+    public ProgramQueue getProgramQueue(Long queueId) {
+        if (queueId == null || queueId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
 
-	public List<ProgramQueue> getProgramQueuesByProgramId(Long programId);
-			
-	public void saveProgramQueue(ProgramQueue programQueue);
+        ProgramQueue result = (ProgramQueue) getHibernateTemplate().get(ProgramQueue.class, queueId);
 
-	public ProgramQueue getQueue(Long programId, Long clientId);
-	
-	public List<ProgramQueue> getActiveProgramQueuesByProgramId(Long programId);
-	
-	public ProgramQueue getActiveProgramQueue(Long programId, Long demographicNo);
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramQueue: queueId=" + queueId + ",found=" + (result != null));
+        }
+
+        return result;
+    }
+
+    public List<ProgramQueue> getProgramQueuesByProgramId(Long programId) {
+        if (programId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = " FROM ProgramQueue q WHERE q.ProgramId=? ORDER BY  q.Id  ";
+        List results = getHibernateTemplate().find(queryStr, programId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramQueue: programId=" + programId + ",# of results=" + results.size());
+        }
+
+        return results;
+    }
+
+    public List<ProgramQueue> getActiveProgramQueuesByProgramId(Long programId) {
+        if (programId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        List results = this.getHibernateTemplate().find("from ProgramQueue pq where pq.ProgramId = ? and pq.Status = 'active' order by pq.ReferralDate", Long.valueOf(programId));
+
+        if (log.isDebugEnabled()) {
+            log.debug("getActiveProgramQueuesByProgramId: programId=" + programId + ",# of results=" + results.size());
+        }
+
+        return results;
+    }
+
+    public void saveProgramQueue(ProgramQueue programQueue) {
+        if (programQueue == null) {
+            return;
+        }
+
+        getHibernateTemplate().saveOrUpdate(programQueue);
+
+        if (log.isDebugEnabled()) {
+            log.debug("saveProgramQueue: id=" + programQueue.getId());
+        }
+
+    }
+
+    public ProgramQueue getQueue(Long programId, Long clientId) {
+        if (programId == null) {
+            throw new IllegalArgumentException();
+        }
+        if (clientId == null) {
+            throw new IllegalArgumentException();
+        }
+
+        ProgramQueue result = null;
+        List results = this.getHibernateTemplate().find("from ProgramQueue pq where pq.ProgramId = ? and pq.ClientId = ?",
+                new Object[]{Long.valueOf(programId), Long.valueOf(clientId)});
+
+        if (!results.isEmpty()) {
+            result = (ProgramQueue) results.get(0);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getQueue: programId=" + programId + ",clientId=" + clientId + ",found=" + (result != null));
+        }
+
+        return result;
+    }
+
+    public ProgramQueue getActiveProgramQueue(Long programId, Long demographicNo) {
+        if (programId == null || programId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (demographicNo == null || demographicNo.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        ProgramQueue result = null;
+
+        List results = this.getHibernateTemplate().find("from ProgramQueue pq where pq.ProgramId = ? and pq.ClientId = ? and pq.Status='active'",
+                new Object[]{programId, demographicNo});
+        if (!results.isEmpty()) {
+            result = (ProgramQueue) results.get(0);
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("getActiveProgramQueue: programId=" + programId + ",demogaphicNo=" + demographicNo + ",found=" + (result != null));
+        }
+
+        return result;
+    }
 }
-

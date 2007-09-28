@@ -22,101 +22,171 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.BedDemographicHistorical;
+import org.oscarehr.PMmodule.model.BedDemographicPK;
 import org.oscarehr.PMmodule.model.BedDemographicStatus;
+import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Interface for BedDemographicDAO
+ * Hibernate implementation of BedDemographicDAO
  */
-public interface BedDemographicDAO {
+public class BedDemographicDAO extends HibernateDaoSupport {
 
-	/**
-	 * Does status exist
-	 * 
-	 * @param bedDemographicStatusId
-	 *            status id
-	 * @return true if status exists
-	 */
-	public boolean bedDemographicStatusExists(Integer bedDemographicStatusId);
+    private static final Log log = LogFactory.getLog(BedDemographicDAO.class);
 
-	/**
-	 * Does demographic to bed relationship exist
-	 * 
-	 * @param bedId
-	 *            bed identifier
-	 * @return true if relationship exits
-	 */
-	public boolean demographicExists(Integer bedId);
+    public boolean bedDemographicStatusExists(Integer bedDemographicStatusId) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographicStatus bds where bds.id = " + bedDemographicStatusId).next()) == 1);
+        log.debug("bedDemographicStatusExists: " + exists);
 
-	/**
-	 * Does bed to demographic relationship exist
-	 * 
-	 * @param demographicNo
-	 *            demographic identifier
-	 * @return true if relationship exits
-	 */
-	public boolean bedExists(Integer demographicNo);
+        return exists;
+    }
 
-	/**
-	 * Get BedDemographic relationship object for given bed
-	 * 
-	 * @param bedId
-	 *            bed identifier
-	 * @return BedDemographic
-	 */
-	public BedDemographic getBedDemographicByBed(Integer bedId);
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#demographicExists(java.lang.Integer)
+     */
+    public boolean demographicExists(Integer bedId) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + bedId).next()) == 1);
+        log.debug("clientExists: " + exists);
 
-	/**
-	 * Get BedDemographic relationship object for given demographic
-	 * 
-	 * @param demographicNo
-	 *            demographic number
-	 * @return BedDemographic
-	 */
-	public BedDemographic getBedDemographicByDemographic(Integer demographicNo);
+        return exists;
+    }
 
-	/**
-	 * Get BedDemographicStatus for given id
-	 * 
-	 * @param bedDemographicStatusId
-	 *            status identifier
-	 * @return BedDemographicStatus
-	 */
-	public BedDemographicStatus getBedDemographicStatus(Integer bedDemographicStatusId);
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#bedExists(java.lang.Integer)
+     */
+    public boolean bedExists(Integer demographicNo) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.demographicNo = " + demographicNo).next()) == 1);
+        log.debug("bedExists: " + exists);
 
-	/**
-	 * Get BedDemographicStatuses
-	 * 
-	 * @return array of statutes
-	 */
-	public BedDemographicStatus[] getBedDemographicStatuses();
+        return exists;
+    }
 
-	/**
-	 * Get BedDemographicHistoricals since given date
-	 * 
-	 * @param since
-	 *            given date
-	 * @return array of historicals
-	 */
-	public BedDemographicHistorical[] getBedDemographicHistoricals(Date since);
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicByBed(java.lang.Integer)
+     */
+    public BedDemographic getBedDemographicByBed(Integer bedId) {
+        List bedDemographics = getHibernateTemplate().find("from BedDemographic bd where bd.id.bedId = ?", bedId);
 
-	/**
-	 * Save BedDemographic relationship object
-	 * 
-	 * @param bedDemographic
-	 *            BedDemographic relationship object
-	 */
-	public void saveBedDemographic(BedDemographic bedDemographic);
+        if (bedDemographics.size() > 1) {
+            throw new IllegalStateException("Bed is assigned to more than one client");
+        }
 
-	/**
-	 * Delete bed demographic and create bed demographic historical
-	 * 
-	 * @param bedDemographic
-	 *            BedDemographic relationship object
-	 */
-	public void deleteBedDemographic(BedDemographic bedDemographic);
+        BedDemographic bedDemographic = (BedDemographic)((bedDemographics.size() == 1)?bedDemographics.get(0):null);
+
+        log.debug("getBedDemographicByBed: " + bedId);
+
+        return bedDemographic;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicByDemographic(java.lang.Integer)
+     */
+    public BedDemographic getBedDemographicByDemographic(Integer demographicNo) {
+        List bedDemographics = getHibernateTemplate().find("from BedDemographic bd where bd.id.demographicNo = ?", demographicNo);
+
+        if (bedDemographics.size() > 1) {
+            throw new IllegalStateException("Client is assigned to more than one bed");
+        }
+
+        BedDemographic bedDemographic = (BedDemographic)((bedDemographics.size() == 1)?bedDemographics.get(0):null);
+
+        log.debug("getBedDemographicByDemographic: " + demographicNo);
+
+        return bedDemographic;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicStatus(java.lang.Integer)
+     */
+    public BedDemographicStatus getBedDemographicStatus(Integer bedDemographicStatusId) {
+        BedDemographicStatus bedDemographicStatus = (BedDemographicStatus)getHibernateTemplate().get(BedDemographicStatus.class, bedDemographicStatusId);
+        log.debug("getBedDemographicStatus: id: " + (bedDemographicStatus != null?bedDemographicStatus.getId():null));
+
+        return bedDemographicStatus;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicStatuses()
+     */
+    @SuppressWarnings("unchecked")
+    public BedDemographicStatus[] getBedDemographicStatuses() {
+        List bedDemographicStatuses = getHibernateTemplate().find("from BedDemographicStatus");
+        log.debug("getBedDemographicStatuses: size: " + bedDemographicStatuses.size());
+
+        return (BedDemographicStatus[])bedDemographicStatuses.toArray(new BedDemographicStatus[bedDemographicStatuses.size()]);
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#getBedDemographicHistoricals(java.util.Date)
+     */
+    @SuppressWarnings("unchecked")
+    public BedDemographicHistorical[] getBedDemographicHistoricals(Date since) {
+        List bedDemographicHistoricals = getHibernateTemplate().find("from BedDemographicHistorical bdh where bdh.usageEnd >= ?", DateTimeFormatUtils.getDateFromDate(since));
+        log.debug("getBedDemographicHistoricals: size: " + bedDemographicHistoricals.size());
+
+        return (BedDemographicHistorical[])bedDemographicHistoricals.toArray(new BedDemographicHistorical[bedDemographicHistoricals.size()]);
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.BedDemographicDAO#saveBedDemographic(org.oscarehr.PMmodule.model.BedDemographic)
+     */
+    public void saveBedDemographic(BedDemographic bedDemographic) {
+        updateHistory(bedDemographic);
+
+        bedDemographic = (BedDemographic)getHibernateTemplate().merge(bedDemographic);
+        getHibernateTemplate().flush();
+
+        log.debug("saveBedDemographic: " + bedDemographic);
+    }
+
+    public void deleteBedDemographic(BedDemographic bedDemographic) {
+        // save historical
+        if (!DateUtils.isSameDay(bedDemographic.getReservationStart(), Calendar.getInstance().getTime())) {
+            BedDemographicHistorical historical = BedDemographicHistorical.create(bedDemographic);
+            getHibernateTemplate().saveOrUpdate(historical);
+        }
+
+        // delete
+        getHibernateTemplate().delete(bedDemographic);
+        getHibernateTemplate().flush();
+    }
+
+    boolean bedDemographicExists(BedDemographicPK id) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from BedDemographic bd where bd.id.bedId = " + id.getBedId() + " and bd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
+        log.debug("bedDemographicExists: " + exists);
+
+        return exists;
+    }
+
+    void updateHistory(BedDemographic bedDemographic) {
+        BedDemographic existing = null;
+
+        BedDemographicPK id = bedDemographic.getId();
+
+        if (!bedDemographicExists(id)) {
+            Integer demographicNo = id.getDemographicNo();
+            Integer bedId = id.getBedId();
+
+            if (bedExists(demographicNo)) {
+                existing = getBedDemographicByDemographic(demographicNo);
+            }
+            else if (demographicExists(bedId)) {
+                existing = getBedDemographicByBed(bedId);
+            }
+        }
+
+        if (existing != null) {
+            deleteBedDemographic(existing);
+        }
+    }
 
 }

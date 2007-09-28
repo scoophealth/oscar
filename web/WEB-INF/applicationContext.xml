@@ -112,15 +112,15 @@
     <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao"/>
     <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao"/>
     <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName"/>
-    <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramQueueDaoHibernate" autowire="byName"/>
-    <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.hibernate.ClientReferralDAOHibernate" autowire="byName"/>
-    <bean id="agencyDao" class="org.oscarehr.PMmodule.dao.hibernate.AgencyDaoHibernate" autowire="byName"/>
+    <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName"/>
+    <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName"/>
+    <bean id="agencyDao" class="org.oscarehr.PMmodule.dao.AgencyDao" autowire="byName"/>
     <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.AdmissionDao" autowire="byName" />
-    <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDemographicDAOHibernate" autowire="byName"/>
+    <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.BedDemographicDAO" autowire="byName"/>
     <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
-    <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedDAOHibernate" autowire="byName"/>
+    <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
-    <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.hibernate.RoomDAOHibernate" autowire="byName"/>
+    <bean id="roomDAO" class="org.oscarehr.PMmodule.dao.RoomDAO" autowire="byName"/>
     <bean id="CaseManagementIssueDAO" class="org.oscarehr.casemgmt.dao.CaseManagementIssueDAO" autowire="byName"/>
     <bean id="CaseManagementNoteDAO" class="org.oscarehr.casemgmt.dao.CaseManagementNoteDAO" autowire="byName"/>
     <bean id="CaseManagementCPPDAO" class="org.oscarehr.casemgmt.dao.CaseManagementCPPDAO" autowire="byName"/>
@@ -137,18 +137,18 @@
     <bean id="roleDAO" class="org.oscarehr.PMmodule.dao.RoleDAO" autowire="byName" />
     <bean id="CaseManagementTmpSaveDAO" class="org.oscarehr.casemgmt.dao.CaseManagementTmpSaveDAO" autowire="byName"/>
     <bean id="ticklerDAO" class="org.oscarehr.casemgmt.dao.TicklerDAO" autowire="byName"/>
-    <bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.hibernate.SurveyDAOHibernate" autowire="byName"/>
-    <bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramProviderDAOHibernate" autowire="byName"/>
-    <bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramFunctionalUserDAOHibernate" autowire="byName"/>
-    <bean id="programAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramAccessDAOHibernate" autowire="byName"/>
-    <bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.hibernate.DefaultRoleAccessDAOHibernate" autowire="byName"/>
-    <bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramClientStatusDAOHibernate" autowire="byName"/>
-    <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.hibernate.ProgramTeamDAOHibernate" autowire="byName"/>
+    <bean id="oscarSurveyDAO" class="org.oscarehr.PMmodule.dao.SurveyDAO" autowire="byName"/>
+    <bean id="programProviderDAO" class="org.oscarehr.PMmodule.dao.ProgramProviderDAO" autowire="byName"/>
+    <bean id="programFunctionalUserDAO" class="org.oscarehr.PMmodule.dao.ProgramFunctionalUserDAO" autowire="byName"/>
+    <bean id="programAccessDAO" class="org.oscarehr.PMmodule.dao.ProgramAccessDAO" autowire="byName"/>
+    <bean id="defaultRoleAccessDAO" class="org.oscarehr.PMmodule.dao.DefaultRoleAccessDAO" autowire="byName"/>
+    <bean id="programClientStatusDAO" class="org.oscarehr.PMmodule.dao.ProgramClientStatusDAO" autowire="byName"/>
+    <bean id="programTeamDAO" class="org.oscarehr.PMmodule.dao.ProgramTeamDAO" autowire="byName"/>
     <bean id="providerDefaultProgramDao" class="org.caisi.dao.ProviderDefaultProgramDao" autowire="byName"/>
     <bean id="bedProgramDao" class="org.caisi.dao.BedProgramDao" autowire="byName"/>
     <bean id="demographicDAOT" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
-    <bean id="oscarSecurityDAO" class="org.oscarehr.PMmodule.dao.hibernate.OscarSecurityDAOHibernate" autowire="byName"/>
-    <bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramSignatureDaoHibernate" autowire="byName"/>
+    <bean id="oscarSecurityDAO" class="org.oscarehr.PMmodule.dao.OscarSecurityDAO" autowire="byName"/>
+    <bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.ProgramSignatureDao" autowire="byName"/>
     <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
     <bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
     <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName"/>

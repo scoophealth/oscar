@@ -7,23 +7,23 @@
         default-autowire="no">
 
     <!-- audit strategy -->
-    <bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.hibernate.BedAuditStrategy" autowire="byName"/>
-    <bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.hibernate.BedDemographicAuditStrategy" autowire="byName"/>
-    <bean id="roomAuditStrategy" class="org.oscarehr.PMmodule.dao.hibernate.RoomAuditStrategy" lazy-init="default" autowire="byName"/>
+    <bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.BedAuditStrategy" autowire="byName"/>
+    <bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy" autowire="byName"/>
+    <bean id="roomAuditStrategy" class="org.oscarehr.PMmodule.dao.RoomAuditStrategy" lazy-init="default" autowire="byName"/>
 
     <!-- DAO -->
     <bean id="issueAdminDAO" class="org.caisi.dao.IssueAdminDAO" autowire="byName" />
     <bean id="caisiRoleDAO" class="org.caisi.dao.CaisiRoleDAO" autowire="byName" />
     <bean id="accessTypeDAO" class="org.caisi.dao.AccessTypeDAO" autowire="byName"/>
-    <bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.hibernate.BedCheckTimeDAOHibernate" autowire="byName" />
-    <bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.hibernate.HibernateRatePageDao" autowire="byName" />
-    <bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeNodeDAOHibernate" autowire="byName"/>
-    <bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.hibernate.GenericIntakeDAOHibernate" autowire="byName"/>
-    <bean id="intakeADao" class="org.oscarehr.PMmodule.dao.hibernate.IntakeADaoHibernate" autowire="byName" />
-    <bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.hibernate.IntakeCDaoHibernate" autowire="byName" />
-    <bean id="consentDao" class="org.oscarehr.PMmodule.dao.hibernate.ConsentDAOHibernate" autowire="byName" />
-    <bean id="logDAO" class="org.oscarehr.PMmodule.dao.hibernate.LogDAOHibernate" autowire="byName" />
-    <bean id="formsDAO" class="org.oscarehr.PMmodule.dao.hibernate.FormsDAOHibernate" autowire="byName"/>
+    <bean id="bedCheckTimeDAO" class="org.oscarehr.PMmodule.dao.BedCheckTimeDAO" autowire="byName" />
+    <bean id="ratePageDao" class="org.oscarehr.PMmodule.dao.RatePageDao" autowire="byName" />
+    <bean id="genericIntakeNodeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO" autowire="byName"/>
+    <bean id="genericIntakeDAO" class="org.oscarehr.PMmodule.dao.GenericIntakeDAO" autowire="byName"/>
+    <bean id="intakeADao" class="org.oscarehr.PMmodule.dao.IntakeADao" autowire="byName" />
+    <bean id="intakeCDao" class="org.oscarehr.PMmodule.dao.IntakeCDao" autowire="byName" />
+    <bean id="consentDao" class="org.oscarehr.PMmodule.dao.ConsentDAO" autowire="byName" />
+    <bean id="logDAO" class="org.oscarehr.PMmodule.dao.LogDAO" autowire="byName" />
+    <bean id="formsDAO" class="org.oscarehr.PMmodule.dao.FormsDAO" autowire="byName"/>
     <bean id="surveyDAO" class="org.oscarehr.survey.dao.hibernate.SurveyDAOHibernate" autowire="byName"/>
     <bean id="surveyTestDAO" class="org.oscarehr.survey.dao.hibernate.SurveyTestDAOHibernate" autowire="byName"/>
     <bean id="oscarFormDAO" class="org.oscarehr.survey.dao.oscar.hibernate.OscarFormDAOHibernate" autowire="byName"/>

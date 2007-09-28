@@ -18,17 +18,59 @@
  */
 package org.oscarehr.PMmodule.dao;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.IntakeNode;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface GenericIntakeNodeDAO {
+/**
+ * Hibernate implementation of GenericIntakeNodeDAO interface
+ */
+public class GenericIntakeNodeDAO extends HibernateDaoSupport {
 
-	/**
-	 * Get the tree of nodes rooted at node with given id
-	 * 
-	 * @param intakeNodeId
-	 *            root node id
-	 * @return tree of nodes
-	 */
-	public IntakeNode getIntakeNode(Integer intakeNodeId);
-	
+    private static final Log LOG = LogFactory.getLog(GenericIntakeNodeDAO.class);
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO#getIntakeNode(java.lang.Integer)
+     */
+    public IntakeNode getIntakeNode(Integer intakeNodeId) {
+        if (intakeNodeId == null || intakeNodeId < 1) {
+            throw new IllegalArgumentException("intakeNodeId must be non-null and greater than 0");
+        }
+
+        IntakeNode intakeNode = (IntakeNode)getHibernateTemplate().load(IntakeNode.class, intakeNodeId);
+        getChildren(intakeNode);
+
+        LOG.info("getIntakeNode : " + intakeNodeId);
+
+        return intakeNode;
+    }
+
+    private void getChildren(IntakeNode intakeNode) {
+        HashSet<Integer> nodeIds = new HashSet<Integer>();
+        nodeIds.add(intakeNode.getId());
+
+        getChildren(nodeIds, intakeNode.getChildren());
+    }
+
+    private void getChildren(Set<Integer> nodeIds, List<IntakeNode> children) {
+        for (IntakeNode child : children) {
+            Integer childId = child.getId();
+
+            if (nodeIds.contains(childId)) {
+                throw new IllegalStateException("intake node with id : " + childId + " is an ancestor of itself");
+            }
+            else {
+                nodeIds.add(childId);
+            }
+
+            // load children
+            getChildren(nodeIds, child.getChildren());
+        }
+    }
+
 }

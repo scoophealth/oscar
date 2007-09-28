@@ -1,4 +1,4 @@
-package org.oscarehr.PMmodule.dao.hibernate;
+package org.oscarehr.PMmodule.dao;
 
 import java.io.Serializable;
 import java.util.Calendar;

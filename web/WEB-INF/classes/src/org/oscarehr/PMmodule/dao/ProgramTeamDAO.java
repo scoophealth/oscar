@@ -24,20 +24,125 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Query;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-public interface ProgramTeamDAO {
-	
-	public boolean teamExists(Integer teamId);
+public class ProgramTeamDAO extends HibernateDaoSupport {
 
-	public boolean teamNameExists(Integer programId, String teamName);
-	
-	public ProgramTeam getProgramTeam(Integer id);
+    private Log log = LogFactory.getLog(ProgramTeamDAO.class);
 
-	public List getProgramTeams(Integer programId);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#teamExists(java.lang.Integer)
+     */
+    public boolean teamExists(Integer teamId) {
+        boolean exists = getHibernateTemplate().get(ProgramTeam.class, teamId) != null;
+        log.debug("teamExists: " + exists);
 
-	public void saveProgramTeam(ProgramTeam team);
+        return exists;
+    }
 
-	public void deleteProgramTeam(Integer id);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#teamNameExists(java.lang.Integer, java.lang.String)
+     */
+    public boolean teamNameExists(Integer programId, String teamName) {
+        if (programId == null || programId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        if (teamName == null || teamName.length() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        Query query = getSession().createQuery("select pt.id from ProgramTeam pt where pt.programId = ? and pt.name = ?");
+        query.setLong(0, programId.longValue());
+        query.setString(1, teamName);
+
+        List teams = query.list();
+
+        if (log.isDebugEnabled()) {
+            log.debug("teamNameExists: programId = " + programId + ", teamName = " + teamName + ", result = " + !teams.isEmpty());
+        }
+
+        return !teams.isEmpty();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#getProgramTeam(java.lang.Integer)
+     */
+    public ProgramTeam getProgramTeam(Integer id) {
+        if (id == null || id.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        ProgramTeam result = (ProgramTeam) this.getHibernateTemplate().get(ProgramTeam.class, id);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramTeam: id=" + id + ",found=" + (result != null));
+        }
+
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#getProgramTeams(java.lang.Integer)
+     */
+    public List getProgramTeams(Integer programId) {
+        if (programId == null || programId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        List results = this.getHibernateTemplate().find("from ProgramTeam tp where tp.programId = ?", programId);
+
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramTeams: programId=" + programId + ",# of results=" + results.size());
+        }
+
+        return results;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#saveProgramTeam(org.oscarehr.PMmodule.model.ProgramTeam)
+     */
+    public void saveProgramTeam(ProgramTeam team) {
+        if (team == null) {
+            throw new IllegalArgumentException();
+        }
+
+        this.getHibernateTemplate().saveOrUpdate(team);
+
+        if (log.isDebugEnabled()) {
+            log.debug("saveProgramTeam: id=" + team.getId());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.oscarehr.PMmodule.dao.ProgramTeamDAO#deleteProgramTeam(java.lang.Integer)
+     */
+    public void deleteProgramTeam(Integer id) {
+        if (id == null || id.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        this.getHibernateTemplate().delete(getProgramTeam(id));
+
+        if (log.isDebugEnabled()) {
+            log.debug("deleteProgramTeam: id=" + id);
+        }
+    }
 
 }
