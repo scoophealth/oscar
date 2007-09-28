@@ -149,23 +149,23 @@
     <bean id="demographicDAOT" class="org.caisi.dao.DemographicDAO" autowire="byName"/>
     <bean id="oscarSecurityDAO" class="org.oscarehr.PMmodule.dao.hibernate.OscarSecurityDAOHibernate" autowire="byName"/>
     <bean id="programSignatureDao" class="org.oscarehr.PMmodule.dao.hibernate.ProgramSignatureDaoHibernate" autowire="byName"/>
-   
+    <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
+    <bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
+    <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName"/>
+    <bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName"/>
+
     <!-- Manager classes -->
-    <bean id="programQueueManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="programQueueManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.ProgramQueueManagerImpl"
-                 autowire="byName">
+            <bean class="org.oscarehr.PMmodule.service.impl.ProgramQueueManagerImpl">
                 <property name="programQueueDao" ref="programQueueDao"/>
                 <property name="clientReferralDAO" ref="clientReferralDAO"/>
             </bean>
         </property>
     </bean>
-    <bean id="admissionManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="admissionManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.AdmissionManager" autowire="byName"
-                 >
+            <bean class="org.oscarehr.PMmodule.service.AdmissionManager">
                 <property name="admissionDao" ref="admissionDao"/>
                 <property name="programDao" ref="programDao"/>
                 <property name="programQueueDao" ref="programQueueDao"/>
@@ -175,11 +175,9 @@
             </bean>
         </property>
     </bean>
-    <bean id="bedDemographicManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="bedDemographicManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl"
-                 autowire="byName">
+            <bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl">
                 <property name="bedDemographicDAO" ref="bedDemographicDAO"/>
                 <property name="providerDAO" ref="providerDao"/>
                 <property name="bedDAO" ref="bedDAO"/>
@@ -189,8 +187,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="CaseManagementManagerTarget"/>
         <property name="transactionAttributes">
@@ -199,8 +196,7 @@
             </props>
         </property>
     </bean>
-    <bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager"
-          autowire="byName">
+    <bean id="CaseManagementManagerTarget" class="org.oscarehr.casemgmt.service.CaseManagementManager">
         <property name="caseManagementNoteDAO" ref="CaseManagementNoteDAO"/>
         <property name="caseManagementIssueDAO" ref="CaseManagementIssueDAO"/>
         <property name="caseManagementCPPDAO" ref="CaseManagementCPPDAO"/>
@@ -221,17 +217,14 @@
         <property name="admissionManager" ref="admissionManager"/>
         <property name="enabled" value="${casemgmt.note.password.enabled}"/>
     </bean>
-    <bean id="roleManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="roleManager" parent="baseTransactionProxy" >
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl" autowire="byName"
-                 >
+            <bean class="org.oscarehr.PMmodule.service.impl.RoleManagerImpl">
                 <property name="roleDAO" ref="roleDAO"/>
             </bean>
         </property>
     </bean>
-    <bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="ticklerManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ticklerManagerTarget"/>
         <property name="transactionAttributes">
@@ -240,12 +233,10 @@
             </props>
         </property>
     </bean>
-    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.impl.TicklerManagerImpl"
-         autowire="byName">
+    <bean id="ticklerManagerTarget" class="org.oscarehr.casemgmt.service.impl.TicklerManagerImpl">
         <property name="ticklerDAO" ref="ticklerDAO"/>
     </bean>
-    <bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="ClientImageManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ClientImageManagerTarget"/>
         <property name="transactionAttributes">
@@ -254,24 +245,19 @@
             </props>
         </property>
     </bean>
-    <bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.impl.ClientImageManagerImpl"
-          autowire="byName">
+    <bean id="ClientImageManagerTarget" class="org.oscarehr.casemgmt.service.impl.ClientImageManagerImpl">
         <property name="clientImageDAO" ref="ClientImageDAO"/>
     </bean>
-    <bean id="oscarSurveyManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="oscarSurveyManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl" autowire="byName"
-                 >
+            <bean class="org.oscarehr.PMmodule.service.impl.SurveyManagerImpl">
                 <property name="surveyDAO" ref="oscarSurveyDAO"/>
             </bean>
         </property>
     </bean>
-    <bean id="programManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="programManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ProgramManager" autowire="byName"
-                 >
+            <bean class="org.oscarehr.PMmodule.service.ProgramManager">
                 <property name="programDao" ref="programDao"/>
                 <property name="programProviderDAO" ref="programProviderDAO"/>
                 <property name="programFunctionalUserDAO" ref="programFunctionalUserDAO"/>
@@ -286,11 +272,9 @@
             </bean>
         </property>
     </bean>
-    <bean id="clientManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="clientManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ClientManager" autowire="byName"
-                 >
+            <bean class="org.oscarehr.PMmodule.service.ClientManager">
                 <property name="clientDao" ref="clientDao"/>
                 <property name="clientReferralDAO" ref="clientReferralDAO"/>
                 <property name="programQueueManager" ref="programQueueManager"/>
@@ -300,24 +284,21 @@
             </bean>
         </property>
     </bean>
-    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl"
-         autowire="byName">
+    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl">
         <property name="agencyDao" ref="agencyDao"/>
         <property name="clientManager" ref="clientManager"/>
     </bean>
-    <bean id="infirmBedProgramManager" parent="baseTransactionProxy" autowire="byName" >
+    <bean id="infirmBedProgramManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.caisi.service.InfirmBedProgramManager" autowire="byName" >
+            <bean class="org.caisi.service.InfirmBedProgramManager" autowire="byName">
                 <property name="programProviderDAOT" ref="programProviderDAO"/>
                 <property name="demographicDao" ref="demographicDAOT"/>
             </bean>
         </property>
     </bean>
 
-    <!-- TicklerPlus DAOs -->
-
-    <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName" />
-    <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" autowire="byName">
+    <!-- TicklerPlus managers -->
+    <bean id="ticklerManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="ticklerManagerTargetT"/>
         <property name="transactionAttributes">
@@ -328,16 +309,12 @@
             </props>
         </property>
     </bean>
-    <bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName" />
-    <bean id="ticklerManagerTargetT" class="org.caisi.service.TicklerManager"
-         autowire="byName">
+    <bean id="ticklerManagerTargetT" class="org.caisi.service.TicklerManager">
         <property name="ticklerDAO" ref="ticklerDAOT"/>
         <property name="customFilterDAO" ref="customFilterDAOT"/>
     </bean>
 
-    <!-- TicklerPlus managers -->
-    <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="demographicManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="demographicManagerTarget"/>
         <property name="transactionAttributes">
@@ -348,14 +325,11 @@
             </props>
         </property>
     </bean>
-    <bean id="demographicManagerTarget" class="org.caisi.service.DemographicManagerTickler"
-         autowire="byName">
+    <bean id="demographicManagerTarget" class="org.caisi.service.DemographicManagerTickler">
         <property name="demographicDAO" ref="demographicDAOT"/>
     </bean>
-    <bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton"
-          autowire="byName"/>
-    <bean id="consultationManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="preparedTicklerManagerT" class="org.caisi.tickler.prepared.PreparedTicklerManager" scope="singleton"/>
+    <bean id="consultationManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="consultationManagerTarget"/>
         <property name="transactionAttributes">
@@ -366,14 +340,11 @@
             </props>
         </property>
     </bean>
-    <bean id="consultationDAOT" class="org.caisi.dao.ConsultationDAO" autowire="byName" />
-    <bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
-    <bean id="consultationManagerTarget" class="org.caisi.service.ConsultationManager"
-         autowire="byName">
+
+    <bean id="consultationManagerTarget" class="org.caisi.service.ConsultationManager">
         <property name="consultationDAO" ref="consultationDAOT"/>
     </bean>
-    <bean id="chartManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-          autowire="byName">
+    <bean id="chartManagerT" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="target" ref="chartManagerTarget"/>
         <property name="transactionAttributes">
@@ -384,15 +355,12 @@
             </props>
         </property>
     </bean>
-    <bean id="chartManagerTarget" class="org.caisi.service.EChartManager"
-         autowire="byName">
+    <bean id="chartManagerTarget" class="org.caisi.service.EChartManager">
         <property name="chartDAO" ref="chartDAOT"/>
     </bean>
-    <bean id="providerManager" parent="baseTransactionProxy" autowire="byName"
-         >
+    <bean id="providerManager" parent="baseTransactionProxy">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.ProviderManager" autowire="byName"
-                 >
+            <bean class="org.oscarehr.PMmodule.service.ProviderManager">
                 <property name="providerDao" ref="providerDao"/>
                 <property name="agencyDAO" ref="agencyDao"/>
                 <property name="programProviderDAO" ref="programProviderDAO"/>
