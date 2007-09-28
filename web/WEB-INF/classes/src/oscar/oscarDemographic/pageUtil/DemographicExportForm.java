@@ -37,23 +37,38 @@ import org.apache.struts.action.*;
 public class DemographicExportForm extends ActionForm {
          
    String patientSet = null;
+   String mediaType = null;
+   String noOfMedia = null;
+   
    public DemographicExportForm() {
    }
    
    /**
-    * Getter for property patientSet.
-    * @return Value of property patientSet.
+    * Getter for properties.
+    * @return Value of properties.
     */
    public java.lang.String getPatientSet() {
       return patientSet;
    }
+   public java.lang.String getMediaType() {
+       return mediaType;
+   }
+   public java.lang.String getNoOfMedia() {
+       return noOfMedia;
+   }
    
    /**
-    * Setter for property patientSet.
-    * @param patientSet New value of property patientSet.
+    * Setter for properties
+    * @param patientSet New value of properties.
     */
    public void setPatientSet(java.lang.String patientSet) {
       this.patientSet = patientSet;
    }
-   
+   public void setMediaType(java.lang.String mediaType) {
+       this.mediaType = mediaType;
+   }
+   public void setNoOfMedia(java.lang.String noOfMedia) {
+       if (Integer.parseInt(noOfMedia)>0) this.noOfMedia = noOfMedia;
+       else this.noOfMedia = "1";
+   }
 }
