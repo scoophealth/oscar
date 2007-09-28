@@ -66,7 +66,7 @@
     </bean>
 
 
-    <bean id="auditInterceptor" class="org.oscarehr.common.dao.hibernate.AuditInterceptor" lazy-init="default"
+    <bean id="auditInterceptor" class="org.oscarehr.common.dao.AuditInterceptor" lazy-init="default"
           autowire="default" dependency-check="default"/>
 
     <bean id="auditSessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"

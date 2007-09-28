@@ -3,9 +3,9 @@ package org.oscarehr.PMmodule.dao.hibernate;
 import java.io.Serializable;
 
 import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.common.dao.AuditStrategyFactory;
 import org.oscarehr.common.dao.AuditableEvent;
-import org.oscarehr.common.dao.hibernate.AuditStrategyFactory;
-import org.oscarehr.common.dao.hibernate.BaseAuditStrategy;
+import org.oscarehr.common.dao.BaseAuditStrategy;
 
 public class BedAuditStrategy extends BaseAuditStrategy {
 

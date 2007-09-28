@@ -1,4 +1,4 @@
-package org.oscarehr.common.dao.hibernate;
+package org.oscarehr.common.dao;
 
 import java.io.Serializable;
 

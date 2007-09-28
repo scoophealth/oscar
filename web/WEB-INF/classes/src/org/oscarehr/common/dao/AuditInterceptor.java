@@ -1,4 +1,4 @@
-package org.oscarehr.common.dao.hibernate;
+package org.oscarehr.common.dao;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.oscarehr.common.dao.Auditable;
-import org.oscarehr.common.dao.AuditableEvent;
 
 /**
  * Hibernate Audit Interceptor

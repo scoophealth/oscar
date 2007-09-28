@@ -6,9 +6,9 @@ import java.util.Date;
 
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.oscarehr.common.dao.AuditStrategyFactory;
 import org.oscarehr.common.dao.AuditableEvent;
-import org.oscarehr.common.dao.hibernate.AuditStrategyFactory;
-import org.oscarehr.common.dao.hibernate.BaseAuditStrategy;
+import org.oscarehr.common.dao.BaseAuditStrategy;
 
 public class BedDemographicAuditStrategy extends BaseAuditStrategy {
 	
