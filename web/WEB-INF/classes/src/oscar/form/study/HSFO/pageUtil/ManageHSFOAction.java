@@ -30,6 +30,7 @@
 package oscar.form.study.HSFO.pageUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -344,7 +345,9 @@ public class ManageHSFOAction extends Action{
     }
     
     protected String setDate(Date visitDate){
-        return setDate(visitDate.getMonth(),visitDate.getYear() + 1900);
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(visitDate);
+        return setDate(cal.get(Calendar.MONTH),cal.get(Calendar.YEAR) + 1900);
     }
     //method to convert the date
     protected String setDate(int mnth, int year){
