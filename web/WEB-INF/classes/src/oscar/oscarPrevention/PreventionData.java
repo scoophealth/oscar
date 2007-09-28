@@ -184,7 +184,7 @@ public class PreventionData {
            if (proNum == null || proNum.equals("-1")){
               name = (String) hash.get("provider_name");
            }else{
-              name = ProviderData.getProviderName(proNum);  
+              name = ProviderData.getProviderName(proNum);
            }
        }
        return name;
@@ -361,9 +361,8 @@ public class PreventionData {
             rs = db.GetSQL(sql);
             while (rs.next()){
                PreventionItem pi = new PreventionItem( rs.getString("prevention_type"),rs.getDate("prevention_date"),rs.getString("never"), rs.getDate("next_date") ) ;
-               p.addPreventionItem(pi,rs.getString("prevention_type"));                                                           
+               p.addPreventionItem(pi,rs.getString("prevention_type"));
             }
-            
             db.CloseConn();            
         } catch (SQLException e) {
             log.error(e.getMessage(),e);
@@ -396,8 +395,38 @@ public class PreventionData {
                addToHashIfNotNull(h,"deleted", rs.getString("deleted"));
                addToHashIfNotNull(h,"refused", rs.getString("refused"));  
                addToHashIfNotNull(h,"next_date", rs.getString("next_date"));
-               addToHashIfNotNull(h,"never",rs.getString("never"));          
+               addToHashIfNotNull(h,"never",rs.getString("never"));
                
+	       String refused = " completed";
+	       switch (Integer.parseInt(rs.getString("refused"))) {
+		   case 1: refused = " refused"; break;
+		   case 2: refused = " ineligible"; break;
+	       }
+	       String provider = ProviderData.getProviderName(rs.getString("provider_no"));
+	       String summary = "Prevention " + rs.getString("prevention_type") + " provided by " + provider + " on " + rs.getString("prevention_date") +"\n";
+	       Hashtable ext = getPreventionKeyValues(rs.getString("id"));
+	       if (ext.containsKey("result")) {
+		   summary += "Result: " + ext.get("result");
+		   if (!ext.get("reason").equals("")) summary += "\nReason: " + ext.get("reason");
+	       } else {
+		   if (!ext.get("location").equals("")) {
+		       addToHashIfNotNull(h, "location", (String)ext.get("location"));
+		       summary += "Location: " + ext.get("location") + "\n";
+		   }
+		   if (!ext.get("route").equals("")) {
+		       addToHashIfNotNull(h, "route", (String)ext.get("route"));
+		       summary += "Route: " + ext.get("route") + "\n";
+		   }
+		   if (!ext.get("lot").equals("")) {
+		       addToHashIfNotNull(h, "lot", (String)ext.get("lot"));
+		       summary += "Lot: " + ext.get("lot") + "\n";
+		   }
+		   if (!ext.get("manufacture").equals("")) {
+		       addToHashIfNotNull(h, "manufacture", (String)ext.get("manufacture"));
+		       summary += "Manufacturer: " + ext.get("manufacture");
+		   }
+	       }
+	       addToHashIfNotNull(h,"summary", summary);
                log.debug("1"+h.get("preventionType")+" "+h.size());
                log.debug("id"+h.get("id"));
             }
@@ -409,7 +438,6 @@ public class PreventionData {
         }
       return h;
    }
-   
    
    private void addToHashIfNotNull(Hashtable h,String key,String val){
       if (val != null && !val.equalsIgnoreCase("null")){
