@@ -1,4 +1,4 @@
-package org.oscarehr.common.service.impl;
+package org.oscarehr.common.service;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

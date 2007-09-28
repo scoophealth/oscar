@@ -178,7 +178,7 @@
     <bean id="populationReportManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
-            <bean class="org.oscarehr.common.service.impl.PopulationReportManagerImpl" autowire="byName"/>
+            <bean class="org.oscarehr.common.service.PopulationReportManager" autowire="byName"/>
         </property>
     </bean>
     <!-- ========================= SCHEDULED JOBS ========================= -->
