@@ -40,6 +40,7 @@
   String prevDate = UtilDateUtilities.getToday("yyyy-MM-dd");
   String completed = "0";
   String nextDate = "";
+  String summary = "";
   boolean never = false;
   Hashtable extraData = new Hashtable();
   
@@ -50,9 +51,9 @@
      prevDate = (String) existingPrevention.get("preventionDate"); 
      providerName = (String) existingPrevention.get("providerName");
      provider = (String) existingPrevention.get("provider_no");
-     if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){         
+     if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("1") ){
         completed = "1";
-     }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){         
+     }else if ( existingPrevention.get("refused") != null && ((String)existingPrevention.get("refused")).equals("2") ){
         completed = "2";
      }
      if ( existingPrevention.get("never") != null && ((String)existingPrevention.get("never")).equals("1") ){         
@@ -62,6 +63,7 @@
      if ( nextDate == null || nextDate.equalsIgnoreCase("null") || nextDate.equals("0000-00-00")){
         nextDate = "";
      }
+     summary = (String) existingPrevention.get("summary");
      extraData = pd.getPreventionKeyValues(id);
   }
 
@@ -289,14 +291,20 @@ clear: left;
                <input type="hidden" name="demographic_no" value="<%=demographic_no%>"/>              
                <% if ( id != null ) { %>
                <input type="hidden" name="id" value="<%=id%>"/>               
-               <input type="hidden" name="layoutType" value="<%=layoutType%>
+               <input type="hidden" name="layoutType" value="<%=layoutType%>"/>
+	       <div class="prevention">
+		   <fieldset>
+		       <legend>Summary</legend>
+		       <textarea name="summary" readonly><%=summary%></textarea>		   
+		   </fieldset>
+	       </div>
                <% } %>
-               <%if (layoutType.equals("injection")) {%>               
-               <div class="prevention">                                      
+               <%if (layoutType.equals("injection")) {%>
+               <div class="prevention">
                    <fieldset>
                       <legend>Prevention : <%=prevention%></legend>
                          <div style="float:left;">
-                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%> >Completed</input><br/>
+                            <input name="given" type="radio" value="given"      <%=checked(completed,"0")%>>Completed</input><br/>
                             <input name="given" type="radio" value="refused"    <%=checked(completed,"1")%>>Refused</input><br/>
                             <input name="given" type="radio" value="ineligible" <%=checked(completed,"2")%>>Ineligible</input>
                          </div>
@@ -317,7 +325,7 @@ clear: left;
                          <label for="location">Location:</label> <input type="text" name="location" value="<%=str(((String)extraData.get("location")),"")%>"/> <br/>
                          <label for="route">Route:</label> <input type="text" name="route"   value="<%=str(((String)extraData.get("route")),"")%>"/><br/>                                               
                          <label for="lot">Lot:</label> <input type="text" name="lot"  value="<%=str(((String)extraData.get("lot")),"")%>"/><br/>
-                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str(((String)extraData.get("manufacture")),"")%>"/><br/>                      
+                         <label for="manufacture">Manufacture:</label> <input type="text" name="manufacture"   value="<%=str(((String)extraData.get("manufacture")),"")%>"/><br/>
                    </fieldset>
                    <fieldset >
                       <legend >Comments</legend>                   
