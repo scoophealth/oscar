@@ -3,6 +3,9 @@ package org.oscarehr.util;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -15,6 +18,7 @@ import oscar.util.SqlUtils;
 public class DbConnectionFilter implements javax.servlet.Filter
 {
     private static ThreadLocal<Connection> dbConnection=new ThreadLocal<Connection>();
+    public static Map<Thread, StackTraceElement[]> debugMap=Collections.synchronizedMap(new HashMap<Thread, StackTraceElement[]>());
     
     public static Connection getThreadLocalDbConnection() throws SQLException
     {
@@ -23,6 +27,7 @@ public class DbConnectionFilter implements javax.servlet.Filter
         {
             c=SpringUtils.getDbConnection();
             dbConnection.set(c);
+            debugMap.put(Thread.currentThread(), (new Exception()).getStackTrace());
         }
 
         return(c);
@@ -51,6 +56,7 @@ public class DbConnectionFilter implements javax.servlet.Filter
         Connection c=dbConnection.get();
         SqlUtils.closeResources(c, null, null);
         dbConnection.remove();
+        debugMap.remove(Thread.currentThread());
     }
 
 	public void destroy()
