@@ -22,13 +22,6 @@
 
 package org.caisi.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.apache.struts.util.LabelValueBean;
 import org.caisi.dao.BedProgramDao;
@@ -40,6 +33,9 @@ import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.springframework.beans.factory.annotation.Required;
+
+import java.util.*;
 
 public class InfirmBedProgramManager {
     private BedProgramDao bedProgramDao;
@@ -50,18 +46,22 @@ public class InfirmBedProgramManager {
 
     private static Logger logger = Logger.getLogger(InfirmBedProgramManager.class);
 
+    @Required
     public void setBedProgramDao(BedProgramDao dao) {
         this.bedProgramDao = dao;
     }
 
+    @Required
     public void setProgramDao(ProgramDao dao) {
         this.programDao = dao;
     }
 
+    @Required
     public void setProviderDefaultProgramDao(ProviderDefaultProgramDao dao) {
         this.providerDefaultProgramDao = dao;
     }
 
+    @Required
     public void setDemographicDao(DemographicDAO dao) {
         this.demographicDAOT = dao;
     }
