@@ -55,7 +55,7 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
         
         public boolean hasIndex(String idx){
             final String index = idx;
-            Integer num =  (Integer) getHibernateTemplate().execute(new HibernateCallback() {
+            Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session)
                     throws HibernateException, SQLException {
                 Query q = session.createQuery("select count(*) from PHRDocument p where p.phrIndex= '"+index+"'");
@@ -74,7 +74,7 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
         public boolean hasInde2x(String index){
             String sql = "select count(*) from PHRDocument p where p.phrClassification= '"+index+"'";
             
-            return   (((Integer) getHibernateTemplate().iterate(sql).next()) == 1);
+            return   (((Long) getHibernateTemplate().iterate(sql).next()) == 1);
 		
         }
         
@@ -186,7 +186,7 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
         
         
         public int countUnreadDocuments(final String classification, final String providerNo) {
-            Integer num =  (Integer) getHibernateTemplate().execute(new HibernateCallback() {
+            Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
             public Object doInHibernate(Session session)
                     throws HibernateException, SQLException {
                 Query q = session.createQuery("select count(*) from PHRDocument d where d.phrClassification = '" + classification + "' and d.receiverOscar = '" + providerNo + "' and d.status = " + PHRMessage.STATUS_NEW);

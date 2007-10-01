@@ -114,7 +114,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
         }
         
         public boolean ifActionsWithErrors(final String providerNo) {
-            Integer num =  (Integer) getHibernateTemplate().execute(new HibernateCallback() {
+            Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query q = session.createQuery("select count(*) from PHRAction a where a.senderOscar = '" + providerNo + "' AND a.status=" + PHRAction.STATUS_NOT_AUTHORIZED);
                 q.setCacheable(true);
@@ -152,7 +152,7 @@ public class PHRActionDAOHibernate extends HibernateDaoSupport implements PHRAct
         
         //checks to see whether this document has been sent to indivo before (for update/add decision)
         public boolean isIndivoRegistered(final String classification, final String oscarId) {
-            Integer num =  (Integer) getHibernateTemplate().execute(new HibernateCallback() {
+            Long num =  (Long) getHibernateTemplate().execute(new HibernateCallback() {
                 public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Query q = session.createQuery("select count(*) from PHRAction a where a.phrClassification = '" + classification + "' and a.oscarId = '" + oscarId + "'");
                 q.setCacheable(true);
