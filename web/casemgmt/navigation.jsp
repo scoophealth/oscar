@@ -362,7 +362,7 @@
             for (int f = 0; f < flowsheets.size();f++){
                 String flowsheetName = (String) flowsheets.get(f);
         %>
-        <a href="jajavascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
+        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
         <%}%>
 
         <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">
