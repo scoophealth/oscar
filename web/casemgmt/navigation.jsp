@@ -24,6 +24,10 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
+<%@ page import="oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Vector" %>
 
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <%
@@ -347,8 +351,20 @@
 
 <caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr style="background-color:#BBBBBB;"><td>Measurements</td></tr>
+
+
     <!-- measurement -->
     <tr><td>
+        <%
+            dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
+            Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
+            ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
+            for (int f = 0; f < flowsheets.size();f++){
+                String flowsheetName = (String) flowsheets.get(f);
+        %>
+        <a href="jajavascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
+        <%}%>
+
         <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">
             <option value="null" selected>-select group-</option>
             <%
