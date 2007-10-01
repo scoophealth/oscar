@@ -52,7 +52,7 @@ public class RoomManagerImpl implements RoomManager {
 		this.roomDAO = roomDAO;
 	}
 
-	public void setProgramDAO(ProgramDao programDAO) {
+	public void setProgramDao(ProgramDao programDAO) {
 		this.programDAO = programDAO;
 	}
 	
