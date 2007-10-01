@@ -1370,10 +1370,10 @@ int i;
                                     <a href="javascript:ShowDrugInfo('<%= rx2.getGenericName() %>');">Info</a>
                                 </td>
                                 <td>
-                                    <a href="javascript:addFavorite(<%= String.valueOf(ii) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');">Add to Favorites</a>
+                                    <a href="javascript:addFavorite(<%= String.valueOf(i) %>, '<%= rx2.isCustom() ? rx2.getCustomName() : rx2.getBrandName() %>');">Add to Favorites</a>
                                 </td>
                             </tr>
-                            <% ii++; %>
+                            <% i++; %>
                         </logic:iterate>
                         </table>
                     </td>
