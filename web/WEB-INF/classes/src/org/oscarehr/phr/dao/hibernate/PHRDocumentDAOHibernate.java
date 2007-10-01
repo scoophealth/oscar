@@ -112,7 +112,7 @@ public class PHRDocumentDAOHibernate extends HibernateDaoSupport
             // for messages 'urn:org:indivo:document:classification:message' 
             String sql ="from PHRDocument d where d.id = ? ";
            
-            List<PHRDocument> list = getHibernateTemplate().find(sql,id);
+            List<PHRDocument> list = getHibernateTemplate().find(sql,new Integer(id));
             
             if (list == null || list.size() == 0){
                 return null;
