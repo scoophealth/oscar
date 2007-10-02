@@ -76,38 +76,56 @@
                     }
                     openWindows[name].focus();
                 }            
-        }   
+        } 
+        function urlencode(str) {
+            var ns = (navigator.appName=="Netscape") ? 1 : 0;
+            if (ns) { return escape(str); }
+            var ms = "%25#23 20+2B?3F<3C>3E{7B}7D[5B]5D|7C^5E~7E`60";
+            var msi = 0;
+            var i,c,rs,ts ;
+            while (msi < ms.length) {
+                c = ms.charAt(msi);
+                rs = ms.substring(++msi, msi +2);
+                msi += 2;
+                i = 0;
+                while (true)	{
+                    i = str.indexOf(c, i);
+                    if (i == -1) break;
+                    ts = str.substring(0, i);
+                    str = ts + "%" + rs + str.substring(++i, str.length);
+                }
+            }
+            return str;
+    }
     </script>
 <div style="font-size: 12px; width:100%; color:#<%=inverseFamDocColour%>; background-color:<%=famDocColour%>">
     <bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
     <%=famDocName%>&nbsp;<%=famDocSurname%>&nbsp;&nbsp;
+    <form style="display:inline;" action="" name="ksearch" >
     <span class="Header">
         <%
             String winName = "Master" + bean.demographicNo;
             String url;
             if (vLocale.getCountry().equals("BR"))
-                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail_ptbr";                            
+                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail_ptbr";                            
             else
-                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&displaymode=edit&dboperation=search_detail";
+                url = "../demographic/demographiccontrol.jsp?demographic_no=" + bean.demographicNo + "&amp;displaymode=edit&amp;dboperation=search_detail";
         %>
         <a href="#" onClick="popupPage(700,1000,'<%=winName%>','<%=url%>'); return false;" title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>"><%=bean.patientLastName %>, <%=bean.patientFirstName%></a>&nbsp;<%=bean.patientSex%> <%=bean.patientAge%>
         <span style="margin-left:20px;"><i>Next Appt: <oscar:nextAppt demographicNo="<%=bean.demographicNo%>"/></i></span>
 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-        <form style="display:inline;" name="ksearch" >
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       
         <select  name="channel" >
              <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
              <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
-             <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&CDM=Search&DB=PubMed&term="><bean:message key="global.pubmed"/></option>
-             <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&FUNCTION=search&SERVER2=server2&SERVER1=server1&PARAMETER="><bean:message key="global.medlineplus"/></option>
-             <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&searchButton=Search&q="><bean:message key="global.BNF"/></option>
+             <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed"/></option>
+             <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus"/></option>
+             <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&amp;searchButton=Search&amp;q="><bean:message key="global.BNF"/></option>
         </select>
-        <input type="text" name="keyword"  value=""  onkeypress="return grabEnter(event)"/>
-        <input type="button" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
-
-        </form>
+        <input type="text" name="keyword"  value=""  onkeypress="return grabEnter('searchButton',event)"/>
+        <input type="button" id="searchButton" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">       
     </span>
+  </form>
 </div>
 
 
