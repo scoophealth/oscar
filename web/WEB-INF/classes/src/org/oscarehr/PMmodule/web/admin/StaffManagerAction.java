@@ -188,7 +188,7 @@ public class StaffManagerAction extends BaseAction {
 				programManager.saveProgramProvider(existingPP);
 			}
 		} else {
-			pp.setProviderNo(Long.valueOf(provider.getProviderNo()));
+			pp.setProviderNo(provider.getProviderNo());
 			programManager.saveProgramProvider(pp);
 		}
 		
