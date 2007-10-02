@@ -22,7 +22,7 @@
 			<generator class="native" />
 		</id>
 		<property column="program_id" length="11" name="ProgramId" not-null="false" type="java.lang.Long" />
-		<property column="provider_no" length="11" name="ProviderNo" not-null="false" type="java.lang.Long" />
+		<property column="provider_no" length="11" name="ProviderNo" not-null="false" type="java.lang.String" />
 		<property column="role_id" length="11" name="RoleId" not-null="false" type="java.lang.Long" />
 		<set name="teams" table="program_provider_team" lazy="false">
 			<key column="id" />
