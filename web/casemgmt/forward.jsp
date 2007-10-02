@@ -22,14 +22,26 @@
 */
  -->
 <%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ page import="java.util.ArrayList" %>
 
 <!--  logic:redirect forward="/admissionListAction.admit"  / -->
 
 <%
-    String useNewCaseMgmt = (String)session.getAttribute("newCaseManagement");
-    if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") ) {
+    String useNewCaseMgmt;
+    if((useNewCaseMgmt = request.getParameter("newCaseManagement")) != null ) {        
+        session.setAttribute("newCaseManagement", useNewCaseMgmt); 
+        ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+        if( users != null ) {
+            users.add(request.getParameter("providerNo"));
+            session.getServletContext().setAttribute("CaseMgmtUsers", users);
+        }
+    }
+    else {
+        useNewCaseMgmt = (String)session.getAttribute("newCaseManagement");                
+   }
+    if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") ) {        
 %>
-        <jsp:forward page="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&chain=list" />
+        <jsp:forward page="/CaseManagementEntry.do?method=edit&from=casemgmt&chain=list" />
 <%
     }
     else {
