@@ -1,0 +1,335 @@
+/*
+ * 
+ * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for the 
+ * Department of Family Medicine 
+ * McMaster Unviersity 
+ * Hamilton 
+ * Ontario, Canada 
+ */
+
+import java.sql.*;
+import java.util.UUID;
+import java.util.Properties;
+import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class importCasemgmt {
+	public static void main( String[] args ) {
+
+		if( args.length != 1 ) {
+			System.out.println("Usage: java -cp .:/path/to/mysql-connector-java-3.0.11-stable-bin.jar importCasemgmt 'path/to/oscar.properties'");
+			return;
+		}
+
+		try {
+                        FileInputStream fin = new FileInputStream(args[0]);        
+                        Properties prop = new Properties();
+                        prop.load(fin);                                                
+                        
+                        String driver = prop.getProperty("db_driver");
+                        System.out.println("Driver " + driver);
+                        
+                        String uri = prop.getProperty("db_uri");
+                        System.out.println("URI " + uri);
+                        
+                        String dbName = prop.getProperty("db_name");
+                        System.out.println("DB NAME " + dbName);
+                        
+                        String user = prop.getProperty("db_username");
+                        System.out.println("DB USER " + user);
+                        
+                        String passwd = prop.getProperty("db_password");
+                        System.out.println("DB PASSWD " + passwd);
+                        
+			Statement stmt, stmtUpdate;
+			ResultSet rs, rsUpdate;
+
+			Class.forName(driver);
+			
+                        uri += dbName;
+			Connection con = DriverManager.getConnection(uri, user, passwd);
+
+			stmt = con.createStatement();	
+                        stmtUpdate = con.createStatement();
+
+                        System.out.println("Creating OSCAR program");
+                        
+			int result = stmt.executeUpdate("insert into program (agency_id,name,max_allowed,type,allow_batch_admission,allow_batch_discharge,hic) " + 
+                                "Values(0,'OSCAR','99999','Bed',0,0,0)", Statement.RETURN_GENERATED_KEYS);
+                        
+                        rs = stmt.getGeneratedKeys();
+                        
+                        rs.next();
+                        String programId = rs.getString(1);
+                        rs.close();
+                        System.out.println("INSERT into program " + programId);
+                        System.out.println("Importing OSCAR Providers to CAISI");
+                        
+                        //we have to make sure we only grant perms to entitled providers
+                        String sql = "select roleUserGroup from secObjPrivilege where objectName = '_eChart' and privilege = '|*|'";
+                        rs = stmt.executeQuery(sql);
+                        ArrayList<String> secObjs  = new ArrayList<String>();
+                        while( rs.next() ) {
+                            secObjs.add(rs.getString(1));
+                        }
+                        
+                        rs.close();
+                        sql = "select provider_no, role_name from secUserRole where provider_no in (select provider_no from provider) ";
+                        if( secObjs.size() > 0 )
+                            sql += "and ";
+                        
+                        for( int idx = 0; idx < secObjs.size(); ++idx ) {
+                            sql += "role_name = '" + secObjs.get(idx) + "'";
+                            if( idx <= secObjs.size() - 2)
+                                sql += " or ";
+                        }
+                        
+                        sql += " order by role_name";
+                        rs = stmt.executeQuery(sql);
+                        
+                        //we got to watch out for duplicate entries
+                        //right now we default to first record as they are alpha sorted i.e. doctor locum nurse
+                        ArrayList<String> providers = new ArrayList<String>();
+                        String role_name, prov;
+                        int role_id;
+                        PreparedStatement insert = con.prepareStatement("insert into program_provider (program_id,provider_no,role_id) Values('" + programId + "',?,?)");
+                        while( rs.next() ) {                            
+                            prov = rs.getString("provider_no");
+                            
+                            if( !providers.contains(prov) ) {
+                                role_name = rs.getString("role_name");                                
+                                insert.setString(1, prov);
+                                
+                                if( role_name.equalsIgnoreCase("nurse") )
+                                    role_id = 2;
+                                else
+                                    role_id = 1;
+
+                                insert.setInt(2, role_id);
+
+                                if( insert.executeUpdate() != 1 )
+                                    throw new SQLException("insert into program_provider failed" + prov);
+                                
+                                providers.add(prov);
+                                System.out.println("Imported provider " + prov);
+                            }
+                        }
+                        
+                        rs.close();
+                        insert.close();
+                        System.out.println("Setting up CAISI role permissions");
+                        String id;                        
+                        insert = con.prepareStatement("insert into program_access (program_id,access_type_id,all_roles) Values(" + programId + ",?,false)", PreparedStatement.RETURN_GENERATED_KEYS);
+                        PreparedStatement roleInsert = con.prepareStatement("insert into program_access_roles (id,role_id) Values(?,1),(?,2)");
+                        for( int idx = 1; idx < 7; ++idx ) {
+                            
+                            insert.setString(1, String.valueOf(idx));
+                            
+                            if( insert.executeUpdate() != 1 )
+                                    throw new SQLException("Setting up CAISI role permissions failed");
+                            
+                            rs = insert.getGeneratedKeys();
+                            rs.next();                                                        
+                                                        
+                            roleInsert.setInt(1, rs.getInt(1));
+                            roleInsert.setInt(2, rs.getInt(1));
+                            
+                            if( roleInsert.executeUpdate() != 2 )
+                                    throw new SQLException("Setting up CAISI role permissions failed");
+                            
+                            rs.close();
+                        }
+                        
+                        insert.close();
+                        roleInsert.close();
+                        System.out.println("Doctors and Nurses now have full CAISI privs");
+                        System.out.println("Importing OSCAR patients into CAISI");
+                        
+                        sql = "select demographic_no, date_joined, provider_no from demographic";
+                        rs = stmt.executeQuery(sql);
+                        insert = con.prepareStatement("insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag," +
+                                "agency_id) Values(?,'" + programId +"',?,?,'current',0,0,0)");
+                        
+                        int i = 1;
+                        while( rs.next() ) {                            
+                            insert.setInt(1, rs.getInt("demographic_no"));
+                            insert.setString(2, rs.getString("provider_no"));
+                            insert.setDate(3, rs.getDate("date_joined"));
+                            
+                            if( insert.executeUpdate() != 1 )
+                                    throw new SQLException("insert into admission failed " + rs.getString("demographic_no"));
+                            
+                            ++i;
+                            if( i > 4 ) {
+                                System.out.println("OK");
+                                i = 1;
+                            }
+                                
+                            System.out.print(rs.getString("demographic_no") + " ");
+                        }
+                        rs.close();
+                        insert.close();
+                        System.out.println("OK");
+                        System.out.println("Importing current eChart records. Be patient this may take a few minutes.");
+                        
+                        sql = "select * from eChart e left join (select max(eChartId) eChartId from eChart where subject != 'SPLIT CHART' group by demographicNo) " + 
+                                "mx using(eChartId) where e.eChartId = mx.eChartId and e.subject != 'SPLIT CHART'";
+                        
+                        rs = stmt.executeQuery(sql);
+                        insert = con.prepareStatement("insert into casemgmt_note (update_date, demographic_no, provider_no, note,  signed, include_issue_innote, program_no, agency_no, " +
+                                "reporter_caisi_role, reporter_program_team, history, password, locked, uuid, observation_date) Values(?,?,?,?,false," +
+                                "false,'" + programId + "','0','1','0',?,'','0',?,?)");
+                        PreparedStatement cppInsert = con.prepareStatement("insert into casemgmt_cpp (demographic_no,provider_no,socialHistory,familyHistory,medicalHistory,ongoingConcerns," +
+                                "reminders,update_date) Values(?,?,?,?,?,?,?,?)");
+                        UUID uuid;
+                        String note;
+                        while( rs.next() ) {
+                            uuid = UUID.randomUUID();
+                            
+                            insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
+                            insert.setString(2, rs.getString("demographicNo"));
+                            insert.setString(3, rs.getString("providerNo"));
+                            note = formatNote(rs.getString("encounter"));
+                            insert.setString(4, note);
+                            insert.setString(5, note);
+                            insert.setString(6, uuid.toString());
+                            insert.setTimestamp(7, rs.getTimestamp("timeStamp"));
+                            
+                            if( insert.executeUpdate() != 1 )
+                                    throw new SQLException("inserting case not for " + rs.getString("demographicNo") + " failed");
+                            
+                            insert.clearParameters();
+                            System.out.println("Imported note for " + rs.getString("demographicNo"));
+                            
+                            cppInsert.setString(1, rs.getString("demographicNo"));
+                            cppInsert.setString(2, rs.getString("providerNo"));
+                            cppInsert.setString(3, rs.getString("socialHistory"));
+                            cppInsert.setString(4, rs.getString("familyHistory"));
+                            cppInsert.setString(5, rs.getString("medicalHistory"));
+                            cppInsert.setString(6, rs.getString("ongoingConcerns"));
+                            cppInsert.setString(7, rs.getString("reminders"));
+                            cppInsert.setTimestamp(8, rs.getTimestamp("timeStamp"));
+                            
+                            if( cppInsert.executeUpdate() != 1 )
+                                    throw new SQLException(sql);
+                            
+                            cppInsert.clearParameters();
+                            System.out.println("Imported cpp for " + rs.getString("demographicNo"));
+                            
+                        }
+                        
+                        rs.close();
+                        cppInsert.close();
+                        System.out.println("Finished current notes.");
+                        System.out.println("Importing split charts");
+                        
+                        sql = "select * from eChart e where e.subject = 'SPLIT CHART'";
+                        rs = stmt.executeQuery(sql);
+                        while( rs.next() ) {
+                            uuid = UUID.randomUUID();                                                        
+                            
+                            insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
+                            insert.setString(2, rs.getString("demographicNo"));
+                            insert.setString(3, rs.getString("providerNo"));
+                            note = formatNote(rs.getString("encounter"));
+                            insert.setString(4, note);
+                            insert.setString(5, note);
+                            insert.setString(6, uuid.toString());
+                            insert.setTimestamp(7, rs.getTimestamp("timeStamp"));
+                            
+                            if( insert.executeUpdate() != 1 )
+                                    throw new SQLException(sql);
+                            
+                            System.out.println("Imported split chart for " + rs.getString("demographicNo"));
+                        }
+                        
+                        insert.clearParameters();
+                        System.out.println("It's been fun but we're all done!");
+			
+			con.close();
+                         
+		}
+                catch( FileNotFoundException e ) {
+                    System.out.println("Could not open properties file:\n" + e.getMessage());
+                }
+                catch( IOException e ) {
+                    System.out.println("Error reading properties file\n" + e.getMessage());
+                }                
+		catch( Exception e ) {
+			System.out.println("DB ERROR: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+        
+	public static String formatNote(String note) {
+            int MAXLINE = 80;
+            int space = 0;
+            int count = 0;
+	    boolean brokeline = false;	    
+            char []arrNote = note.toCharArray();
+	    
+            
+            for( int idx = 0; idx < arrNote.length; ++idx ) {
+                if( count >= MAXLINE ) {
+			if( arrNote[idx] == '*' ) {
+				arrNote[idx] = 0x01;	
+			}			
+			else if( space > 0 && arrNote[idx-1] != 0x01 )  {
+                                arrNote[space] = '\n';
+                                count = idx - space;
+                                space = idx;
+                        }
+                        else  {
+                                arrNote[idx] = '\n';
+                                count = 0;
+                        }
+			brokeline = true;
+		}
+		else if( arrNote[idx] == '\n' ) {
+			if( idx < arrNote.length - 2  && (arrNote[idx+1] == '*' || arrNote[idx+1] == '[') )
+				count = 0;
+			else if( brokeline ) {
+				arrNote[idx] = ' ';
+				space = idx;
+				++count;
+			}
+			else
+				count = 0;
+
+			brokeline = false;			
+                }
+                else if( arrNote[idx] == ' ') {
+                    space = idx;
+                    ++count;
+                }
+                else
+                    ++count;
+            }
+
+            StringBuffer sb = new StringBuffer();
+            for(int idx = 0; idx < arrNote.length; ++idx) {
+		if( arrNote[idx] != 0x01 )
+			sb.append(arrNote[idx]);
+	    }
+
+            return sb.toString();
+        }        
+
+}
