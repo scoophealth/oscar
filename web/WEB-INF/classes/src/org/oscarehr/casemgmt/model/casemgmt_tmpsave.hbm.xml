@@ -26,5 +26,6 @@
 		<property name="programId" column="program_id" type="long" />
 		<property name="note" type="string" />
 		<property name="update_date" type="java.util.Date" />
+                <property name="note_id" type="long" />
 	</class>
 </hibernate-mapping>
