@@ -41,7 +41,7 @@
 
 <security:oscarSec roleName="<%=roleName$%>" objectName="<%="_eChart$"+demographic$%>" rights="o" reverse="<%=false%>" >
 You have no rights to access the data!
-<% response.sendRedirect("../noRights.html"); %>
+<% response.sendRedirect("../noRights.html");  %>
 </security:oscarSec>
 
 <%-- only principal has the save rights --%>
@@ -79,9 +79,7 @@ You have no rights to access the data!
 	String ip = request.getRemoteAddr();
 	LogAction.addLog((String) session.getAttribute("user"), LogConst.READ, LogConst.CON_ECHART, demographic$, ip);
 %>
-<%
-
-  response.setHeader("Cache-Control","no-cache");
+<%  
   //The oscarEncounter session manager, if the session bean is not in the context it looks for a session cookie with the appropriate name and value, if the required cookie is not available
   //it dumps you out to an erros page.
 
@@ -93,22 +91,31 @@ You have no rights to access the data!
 %>
 
 <!-- check to see if new case management is request -->
-<oscar:oscarPropertiesCheck property="CASEMANAGEMENT" value="yes">
 <%
-    session.setAttribute("newCaseManagement", "true");
+    ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+    
+    if( users != null && users.size() > 0 && (users.get(0).equalsIgnoreCase("all") || Collections.binarySearch(users, bean.providerNo)>=0)) {
+        session.setAttribute("newCaseManagement", "true");        
 %>
     <caisi:isModuleLoad moduleName="caisi" reverse="true">
         <%
+            EctProgram prgrmMgr = new EctProgram(session);
+            session.setAttribute("case_program_id", prgrmMgr.getProgram(bean.providerNo));
+            System.out.println("case_program_id " + session.getAttribute("case_program_id"));
             session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
             session.setAttribute("casemgmt_oscar_bean", bean);
             session.setAttribute("casemgmt_bean_flag", "true");
-            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
-            response.sendRedirect(hrefurl);            
-        %>                                
+            String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;          
+            if( !response.isCommitted())                
+                response.sendRedirect(hrefurl);
+        %>
+        
     </caisi:isModuleLoad>
-</oscar:oscarPropertiesCheck>
 				
-
+<%  }
+    else
+        session.setAttribute("newCaseManagement", "false");
+%>
 <!-- add by caisi  --> 
 
 <caisi:isModuleLoad moduleName="caisi">
@@ -118,8 +125,9 @@ session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
 String hrefurl=request.getContextPath()+"/casemgmt/forward.jsp?action=view&demographicNo="+bean.demographicNo+"&providerNo="+bean.providerNo+"&providerName="+bean.userName;
 if (request.getParameter("casetoEncounter")==null)
-{
-	response.sendRedirect(hrefurl);
+{   
+        if( !response.isCommitted())
+            response.sendRedirect(hrefurl);
     return;
 }
 %>
@@ -127,6 +135,7 @@ if (request.getParameter("casetoEncounter")==null)
 <!-- add by caisi end--> 
 
 <%
+  response.setHeader("Cache-Control","no-cache");
   //need these variables for the forms
   oscar.util.UtilDateUtilities dateConvert = new oscar.util.UtilDateUtilities();
   String demoNo = bean.demographicNo;
@@ -233,7 +242,7 @@ if (request.getParameter("casetoEncounter")==null)
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 
-  <script src="../share/javascript/prototype.js" type="text/javascript"></script>
+  <script src="../share/javascript/prototype_1.5.1.1.js" type="text/javascript"></script>
   <script src="../share/javascript/scriptaculous.js" type="text/javascript"></script>  
   
   <%-- for popup menu of forms --%>
