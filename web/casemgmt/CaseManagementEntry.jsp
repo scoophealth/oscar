@@ -195,10 +195,11 @@ var XMLHttpRequestObject = false;
 					alert('saved');
                 }
 			}
-			*/
-			var demographicNo = '<c:out value="${demographicNo}"/>';
+			*/                        
+			var demographicNo = '<c:out value="${param.demographicNo}"/>';
+                        var noteId = '<c:out value="${param.noteId}"/>';
 			var programId = '<c:out value="${case_program_id}"/>';
-			XMLHttpRequestObject.send("method=autosave&demographicNo=" + demographicNo + "&programId=" + programId + "&note="  + escape(obj.value));
+			XMLHttpRequestObject.send("method=autosave&demographicNo=" + demographicNo + "&programId=" + programId + "&note_id=" + noteId + "&note="  + escape(obj.value));
 						
 		}	
 		
@@ -215,7 +216,7 @@ var XMLHttpRequestObject = false;
 	}
 
 	function restore() {
-		if(confirm('The system has detected an unsaved note for this client. By continuing, your current note will be replaced by the existing note in the system')) {
+		if(confirm('You have an unsaved note from a previous session.  Click ok to retrieve note.')) {
 			document.caseManagementEntryForm.method.value='restore';
 			document.caseManagementEntryForm.submit();			
 		}		
