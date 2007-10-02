@@ -21,7 +21,8 @@
 		<id name="id" column="note_id" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<property name="update_date" type="java.util.Date" />
+		<property name="update_date" type="java.util.Date" />  
+                <property name="observation_date" type="java.util.Date" />  
 		<property name="demographic_no" />
 		<property name="provider_no" />
 		<property name="note" />
@@ -37,13 +38,15 @@
 		<property name="history" />
                 <property name="uuid" />
 		<many-to-one name="provider" class="org.oscarehr.PMmodule.model.Provider" column="provider_no" update="false" not-found='ignore' insert="false" lazy="false" />                
-		<set name="issues" table="casemgmt_issue_notes" lazy="false">
+		<set name="issues" table="casemgmt_issue_notes" lazy="false">   
 			<key column="note_id" />
 			<many-to-many column="id" class="org.oscarehr.casemgmt.model.CaseManagementIssue" />
 		</set>
 		<property name="roleName" type="string" formula="(select r.name from caisi_role r where r.role_id = reporter_caisi_role)" />
 		<property name="programName" type="string" formula="(select p.name from program p where p.program_id = program_no)" />
                 <property name="revision" type="string" formula="(select count(cmn.uuid) from casemgmt_note cmn where cmn.uuid = uuid)" />
+                <property name="create_date" type="java.util.Date" formula="(select min(cmn.update_date) from casemgmt_note cmn where cmn.uuid = uuid)" />    
+                
 		<property name="password" type="string" column="password" />
 		<property name="locked" type="boolean" column="locked" />
                 
@@ -51,13 +54,15 @@
 	</class>
         <sql-query name="mostRecent">
             <return alias="cmn" class="org.oscarehr.casemgmt.model.CaseManagementNote" />
-                select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
+                select casemgmt_note.note_id as {cmn.id}, update_date as {cmn.update_date}, observation_date as {cmn.observation_date}, demographic_no as {cmn.demographic_no}, provider_no as {cmn.provider_no}, note as {cmn.note},
                     signed as {cmn.signed}, include_issue_innote as {cmn.includeissue}, signing_provider_no as {cmn.signing_provider_no},
                     encounter_type as {cmn.encounter_type}, billing_code as {cmn.billing_code}, program_no as {cmn.program_no}, agency_no as {cmn.agency_no}, 
                     reporter_caisi_role as {cmn.reporter_caisi_role}, reporter_program_team as {cmn.reporter_program_team}, history as {cmn.history},
                     uuid as {cmn.uuid}, password as {cmn.password}, locked as {cmn.locked}, (select r.name from caisi_role r where r.role_id = reporter_caisi_role) as {cmn.roleName},
                     (select p.name from program p where p.program_id = program_no) as {cmn.programName}, 
-                    (select count(casemgmt_note.uuid) from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision} from casemgmt_note left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
-                    using(note_id) where recent.note_id = casemgmt_note.note_id order by casemgmt_note.update_date asc
+                    (select count(casemgmt_note.uuid) from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision}, (select min(casemgmt_note.update_date)
+                    from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.create_date} from casemgmt_note
+                    left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
+                    using(note_id) where recent.note_id = casemgmt_note.note_id order by {cmn.observation_date} asc
         </sql-query>
 </hibernate-mapping>

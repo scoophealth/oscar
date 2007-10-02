@@ -34,6 +34,8 @@ import org.oscarehr.PMmodule.model.Provider;
 public class CaseManagementNote extends BaseObject {
 	private Long id;
 	private Date update_date;
+        private Date create_date;
+        private Date observation_date;
 	private String demographic_no;
 	private String note;
 	private boolean signed=false;
@@ -134,6 +136,18 @@ public class CaseManagementNote extends BaseObject {
 	public void setUpdate_date(Date update_date) {
 		this.update_date = update_date;
 	}       
+        public Date getCreate_date() {
+                return create_date;
+        }
+        public void setCreate_date(Date create_date) {
+                this.create_date = create_date;
+        }
+        public Date getObservation_date() {
+                return this.observation_date;
+        }
+        public void setObservation_date(Date observation_date) {
+                this.observation_date = observation_date;
+        }                
 	public String getProvider_no() {
 		return provider_no;
 	}
