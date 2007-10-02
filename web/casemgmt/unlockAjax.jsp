@@ -13,9 +13,9 @@
     pageContext.setAttribute("provName", note.getProviderName());
     String description;
     if( note.isSigned() )
-        description = " signed by " + note.getSigning_provider_no();
+        description = " Signed by " + note.getSigning_provider_no();
     else
-        description = " saved by " + note.getProviderName();
+        description = " Saved by " + note.getProviderName();
         
     String dateFormat = "dd-MMM-yyyy H:mm";
 %>
@@ -24,8 +24,11 @@
     <c:if test="${success}">    
         <img title="Minimize Display" id='quitImg<c:out value="${Note.id}"/>' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>
         <pre><c:out value="${Note.note}"/></pre>
-        <span id="sig<c:out value="${Note.id}"/>">
-            <p id="sumary<c:out value="${Note.id}"/>"><%=DateUtils.getDate(note.getUpdate_date(),dateFormat)  + description%><sup>rev <%=note.getRevision()%></sup>
+        <div id="sig<c:out value="${Note.id}"/>">
+            <p id="sumary<c:out value="${Note.id}"/>">
+                 <i>Observation Date:&nbsp;<%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></i><br>
+                 Created:&nbsp;<%=DateUtils.getDate(note.getCreate_date(),dateFormat)%><br>
+                <%=description + " " + DateUtils.getDate(note.getUpdate_date(),dateFormat)%><sup>rev<a href="#" onclick="return showHistory('<c:out value="${Note.id}"/>', event);"><%=note.getRevision()%></a></sup>
                 <%                        
                 Set issSet = note.getIssues();
                 if( issSet.size() > 0 ) {
@@ -44,7 +47,7 @@
                     %>
                 </ul> 
             </p>
-        </span>
+        </div>
         <script type="text/javascript">            
             Element.observe('<c:out value="n${Note.id}"/>', 'click', editNote);
         </script>
@@ -53,8 +56,8 @@
         <img title="Minimize Display" id='quitImg<c:out value="${Note.id}"/>' onclick='resetView(true, true, event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>
         <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat)%> <c:out value="${provName}" /></pre>
         <span id="passwdError"><pre>Incorrect password</pre></span>
-        <p id='passwdPara'>Password:&nbsp;<input onkeypress="return passwordEnter('btnUnlock', event);" type='password' id='passwd' size='16'>&nbsp;
-            <input id='btnUnlock' type='button' onclick="return unlock_ajax('<c:out value="${Note.id}"/>');" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'>
+        <p id='passwdPara'>Password:&nbsp;<input onkeypress="return grabEnter('btnUnlock', event);" type='password' id='passwd' size='16'>&nbsp;
+            <input id='btnUnlock' type='button' onclick="return unlock_ajax('<c:out value="n${Note.id}"/>');" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'>
         </p>
         <script type="text/javascript">      
             $('passwd').focus();
