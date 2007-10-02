@@ -209,6 +209,16 @@ String curUser_no = (String)session.getAttribute("user");
 
     rs = apptMainBean.queryResults(param1, "search_demoaddno");
     if(rs.next()) { //
+        
+        //propagate demographic to caisi admission table
+        oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
+        String[] caisiParam = new String[4];
+        caisiParam[0] = rs.getString("demographic_no");
+        caisiParam[1] = program.getProgram(request.getParameter("staff"));
+        caisiParam[2] = request.getParameter("staff");
+        caisiParam[3] = request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
+        apptMainBean.queryExecuteUpdate(caisiParam, "add2caisi_admission");
+        
         //add democust record for alert
         String[] param2 =new String[6];
 	    param2[0]=rs.getString("demographic_no");
