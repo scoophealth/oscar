@@ -26,15 +26,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.ResourceBundle;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,6 +53,7 @@ import org.oscarehr.PMmodule.service.ProgramManager;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
+import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
 import org.springframework.web.context.WebApplicationContext;
@@ -69,6 +73,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 	
 	public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("edit");
+                if( request.getSession().getAttribute("userrole") == null ) {
+                    response.sendError(response.SC_FORBIDDEN);
+                    return null;
+                }
                 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		
@@ -175,40 +183,81 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		CaseManagementNote note = null;
 
                 String nId = request.getParameter("noteId");
-		if ((nId == null || Integer.parseInt(nId) == 0) || request.getParameter("note_edit") != null
-				&& request.getParameter("note_edit").equals("new")) {
-			request.getSession().setAttribute("newNote","true");
-			request.getSession().setAttribute("issueStatusChanged","false");
-			note = new CaseManagementNote();
-			// note.setNote("test");
-			note.setProvider_no(providerNo);
-			Provider prov = new Provider();
-			prov.setProviderNo(providerNo);
-			note.setProvider(prov);
-			note.setDemographic_no(demono);
-
-		} else {
-			request.getSession().setAttribute("newNote","false");
-			String noteid = (String) request.getParameter("noteId");	
-			note = caseManagementMgr.getNote(noteid);
+                String forceNote = request.getParameter("forceNote");
+                if( forceNote == null ) 
+                    forceNote = "false";
+                
+                log.debug("NoteId " + nId);
+                CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId);
+                if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {		                                                                       
+                        request.getSession().setAttribute("newNote","true");
+                        request.getSession().setAttribute("issueStatusChanged","false");
+                        note = new CaseManagementNote();
+                        // note.setNote("test");
+                        note.setProvider_no(providerNo);
+                        Provider prov = new Provider();
+                        prov.setProviderNo(providerNo);
+                        note.setProvider(prov);
+                        note.setDemographic_no(demono);     
                         
+                        resetTemp(providerNo, demono, programId);
+
+		}else if(tmpsavenote != null && !forceNote.equals("true")) {
+                        log.debug("tempsavenote is NOT NULL");
+                        if( tmpsavenote.getNote_id() > 0 ) {
+                            request.getSession().setAttribute("newNote","false");
+                            note = caseManagementMgr.getNote(String.valueOf(tmpsavenote.getNote_id())); 
+                            log.debug("Restoring " + String.valueOf(note.getId()));
+                        }
+                        else {
+                            request.getSession().setAttribute("newNote","true");
+                            request.getSession().setAttribute("issueStatusChanged","false");
+                            note = new CaseManagementNote();                        
+                            note.setProvider_no(providerNo);
+                            Provider prov = new Provider();
+                            prov.setProviderNo(providerNo);
+                            note.setProvider(prov);
+                            note.setDemographic_no(demono);
+                        }
+
+                        note.setNote(tmpsavenote.getNote());
+                
+                }else if( nId != null && Integer.parseInt(nId) > 0 ) {
+			request.getSession().setAttribute("newNote","false");			
+			note = caseManagementMgr.getNote(nId);
+                        log.debug("Using nId " + nId + " to fetch note");
 			if(note.getHistory()== null || note.getHistory().equals("")) {
 				//old note - we need to save the original in here
 				note.setHistory(note.getNote());
 				caseManagementMgr.saveNoteSimple(note);
 			}
 
-		}
+		} else {
+                    //A hack to load last unsigned note when not specifying a particular note to edit
+                    //if there is no unsigned note load a new one
+                    if((note = getLastSaved(request,demono,providerNo)) == null) {
+                        request.getSession().setAttribute("newNote","true");
+                        request.getSession().setAttribute("issueStatusChanged","false");
+                        note = new CaseManagementNote();
+                        // note.setNote("test");
+                        note.setProvider_no(providerNo);
+                        Provider prov = new Provider();
+                        prov.setProviderNo(providerNo);
+                        note.setProvider(prov);
+                        note.setDemographic_no(demono);                         
+                    }                    
+                }
 		
-		/* do the restore */
+		/* do the restore 
 		if(restore != null && restore.booleanValue() == true) {
 			String tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId);
 			if(tmpsavenote != null) {
 				note.setNote(tmpsavenote);
 			}
 			
-		}
-
+		}*/
+                
+                log.debug("Fetched Note " + String.valueOf(note.getId()));
 		cform.setCaseNote(note);
 		/* set issue checked list */
 		CheckBoxBean[] checkedList = new CheckBoxBean[issues.size()];
@@ -266,25 +315,38 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 boolean passwd = caseManagementMgr.getEnabled();
                 String chain = request.getParameter("chain");                               
 		
-                if( chain != null && chain.equalsIgnoreCase("list") ) {
+                if( chain != null && chain.length() > 0 ) {
                     request.getSession().setAttribute("passwordEnabled", passwd);
                     return mapping.findForward(chain);   
                 }
                 
                 request.setAttribute("passwordEnabled", passwd);
-                
+                               
                 String ajax = request.getParameter("ajax");
-		if( ajax != null && ajax.equalsIgnoreCase("true") ) {
-                    request.setAttribute("caseManagementEntryForm", cform);
+		if( ajax != null && ajax.equalsIgnoreCase("true") ) {                  
+                    request.getSession().setAttribute("caseManagementEntryForm", cform);
                     return mapping.findForward("issueList_ajax");
                 }
                 
 		return mapping.findForward("view");
 	}
 
+        public void resetTemp(String providerNo, String demoNo, String programId) {
+            try {
+                    this.caseManagementMgr.deleteTmpSave(providerNo,demoNo,programId);
+		}catch(Throwable e) {
+                    log.warn(e);
+		}     
+        }
 
-	public void noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
+	public boolean noteSave(CaseManagementEntryFormBean cform, HttpServletRequest request) throws Exception {
 
+                //we don't want to save empty notes!
+                CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
+                String noteTxt = note.getNote();
+                if( noteTxt == null || noteTxt.equals("") )
+                    return false;
+                
 		String providerNo = getProviderNo(request);
                 Provider provider = getProvider(request);
 		String userName = provider != null?provider.getFullName():"";
@@ -299,8 +361,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 		/* get the checked issue save into note */
 		List issuelist = new ArrayList();
-		CheckBoxBean[] checkedlist = (CheckBoxBean[]) cform.getIssueCheckList();
-		CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
+		CheckBoxBean[] checkedlist = (CheckBoxBean[]) cform.getIssueCheckList();		
 
 		String sign = (String) request.getParameter("sign");
 		String includeIssue = (String) request.getParameter("includeIssue");
@@ -425,11 +486,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                                     UtilDateUtilities.DateToString(new Date(), "dd-MMM-yyyy H:mm",request.getLocale()) + "]";
                     String n = note.getNote() + "\n" + message;
                     note.setNote(n);
-                    caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
+                    
+                    //only update appt if there is one
+                    if( sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("") )
+                        caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
                 }
-                else if( note.isSigned() )
-                    caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
-                
+                else if( note.isSigned() ) {
+                    //only update appt if there is one
+                    if( sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("") )
+                        caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
+                }
 		/*get access right*/
 		//List accessRight=caseManagementMgr.getAccessRight(providerNo,getDemographicNo(request),(String)request.getSession().getAttribute("case_program_id"));
 		String roleName=caseManagementMgr.getRoleName(providerNo,note.getProgram_no());
@@ -458,6 +524,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 
                 note.setRevision(String.valueOf(revision));
                 
+                Date now = new Date();
+                String observationDate = cform.getObservation_date();
+                Date dateObserve;
+                if( observationDate != null && !observationDate.equals("") ) {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
+                    dateObserve = formatter.parse(observationDate);
+                }
+                else {
+                    dateObserve = now;
+                }
+                
+                note.setObservation_date(dateObserve);
+                note.setUpdate_date(now);
+                if( note.getCreate_date() == null )
+                    note.setCreate_date(now);
+                
+                
 		/* save note including add signature */	
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
 		/* remember the str written into echart */
@@ -468,11 +551,18 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			this.caseManagementMgr.deleteTmpSave(providerNo,note.getDemographic_no(),note.getProgram_no());
 		}catch(Throwable e) {
 			log.warn(e);
-		}                                
+		}               
+                
+                return true;
 	}
 
 
-	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {                
+                HttpSession session = request.getSession();
+                if( session == null || session.getAttribute("userrole") == null )
+                    return mapping.findForward("expired");                
+                
+                String providerNo = getProviderNo(request);
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		request.setAttribute("change_flag","false");
 		
@@ -483,7 +573,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		
 
 		request.setAttribute("from", request.getParameter("from"));	
-		noteSave(cform, request);
+		boolean saved = noteSave(cform, request);
 		
 		/* prepare the message */
 		ActionMessages messages = new ActionMessages();
@@ -491,9 +581,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		saveMessages(request, messages);
                 
                 //are we in the new encounter and chaining actions?
-                String chain = request.getParameter("chain");
+                String chain = request.getParameter("chain");                
                 if( chain != null ) {      
-                    request.getSession().setAttribute("newNote","false");               
+                    request.getSession().setAttribute("newNote",!saved);               
                     request.getSession().setAttribute("saveNote", new Boolean(true));  //tell CaseManagementView we have just saved note
                     return mapping.findForward(chain);
                 }
@@ -506,6 +596,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 	public ActionForward saveAndExit(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response)throws Exception{
 		log.debug("saveandexit");
+                String providerNo = getProviderNo(request);
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");                
+                
 		request.setAttribute("change_flag","false");
 		
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
@@ -518,7 +612,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		return mapping.findForward("windowClose");
 	}
 	
-	public ActionForward cancel(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response)throws Exception{
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception{
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");
+                
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String providerNo = getProviderNo(request);
 		CaseManagementNote note = (CaseManagementNote) cform.getCaseNote();
@@ -538,7 +635,11 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 	}
 
 	public ActionForward addNewIssue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		log.debug("addNewIssue");
+		log.debug("addNewIssue");                
+                
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");
+                                
 		request.setAttribute("change_flag","true");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
@@ -555,7 +656,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		return mapping.findForward("IssueSearch");
 	}
         
-        public ActionForward issueList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        public ActionForward issueList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            if( request.getSession().getAttribute("userrole") == null ) {
+                response.sendError(response.SC_FORBIDDEN);
+                return null;
+            }
+            
             String programId = (String)request.getSession().getAttribute("case_program_id");	
             CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
@@ -569,7 +675,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
             List searchResults;
             searchResults = caseManagementMgr.searchIssues(providerNo, programId, search);            
-
+            
             List filteredSearchResults = new ArrayList();
 
             //remove issues which we already have - we don't want duplicates
@@ -706,6 +812,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
         }
 
 	public ActionForward issueAdd(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");
+                
+                
 		String changeDiagnosis = request.getParameter("change_diagnosis");
 		if(changeDiagnosis != null && changeDiagnosis.equalsIgnoreCase("true")) {
 			return this.submitChangeDiagnosis(mapping, form, request, response);
@@ -750,6 +860,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 				caseIssueList[oldList.length + k] = new CheckBoxBean();
 				caseIssueList[oldList.length + k].setIssue(newIssueToCIssue(
 						cform, issueList[i].getIssue()));
+                                caseIssueList[oldList.length + k].setChecked("on");
 				k++;
 			}
 		}
@@ -767,6 +878,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 	public ActionForward changeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		log.debug("changeDiagnosis");
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");                
+                
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		String inds = (String) cform.getDeleteId();
 		
@@ -785,6 +899,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 	
 	public ActionForward submitChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		log.debug("submitChangeDiagnosis");
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");                
+                
 		request.setAttribute("change_flag","true");
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		request.setAttribute("from", request.getParameter("from"));
@@ -831,7 +948,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 	
         public ActionForward ajaxChangeDiagnosis(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		log.debug("ajaxChangeDiagnosis");		
-		
+		if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");                
+                
 		//get issue we're changing
 		String strIndex = request.getParameter("change_diagnosis_id");
                 int idx = Integer.parseInt(strIndex);
@@ -866,8 +985,13 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 return mapping.findForward("issueList_ajax");
 	}
         
-	public ActionForward issueDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward issueDelete(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("issueDelete");
+                if( request.getSession().getAttribute("userrole") == null ) {
+                    response.sendError(response.SC_FORBIDDEN);
+                    return null;
+                }
+                
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 		//noteSave(cform, request);
 		request.setAttribute("change_flag","true");
@@ -925,6 +1049,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 	public ActionForward issueChange(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception	{
 		log.debug("issueChange");
+                if( request.getSession().getAttribute("userrole") == null ) {
+                    response.sendError(response.SC_FORBIDDEN);
+                    return null;
+                }
 		request.setAttribute("from", request.getParameter("from"));
 		request.setAttribute("change_flag", "true");
 		request.getSession().setAttribute("issueStatusChanged", "true");
@@ -938,8 +1066,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 		//noteSave(cform, request);
 		CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
-		String providerNo = getProviderNo(request);
-		CaseManagementCPP cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));
+		
+		//CaseManagementCPP cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));
 
 		String inds = (String) cform.getLineId();
 
@@ -951,12 +1079,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		// reset current concern in CPP
 		//updateIssueToConcern(cform);
 
-		/*get access right*/
+		//get access right
 		//List accessRight=caseManagementMgr.getAccessRight(providerNo,demono,(String)request.getSession().getAttribute("case_program_id"));
 		
-		/* add medical history to CPP */
+		// add medical history to CPP 
 		//setCPPMedicalHistory(cpp, providerNo,accessRight);
-		caseManagementMgr.saveCPP(cpp, providerNo);
+		//caseManagementMgr.saveCPP(cpp, providerNo);
                 
                 String ajax = request.getParameter("ajax");
                 if( ajax != null && ajax.equalsIgnoreCase("true") ) {
@@ -967,9 +1095,24 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                     return mapping.findForward("view");
 	}
 
+        public ActionForward notehistory(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");
+            
+            String demono = getDemographicNo(request);
+            request.setAttribute("demoName", getDemoName(demono));            
+
+            String noteid = (String) request.getParameter("noteId");
+            
+            List <CaseManagementNote> history = caseManagementMgr.getHistory(noteid);
+            request.setAttribute("history", history);
+            return mapping.findForward("showHistory");
+        }
 
 	public ActionForward history(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		log.debug("history");
+                if( request.getSession().getAttribute("userrole") == null )
+                    return mapping.findForward("expired");
 
 		CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
 
@@ -995,15 +1138,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		String programId = request.getParameter("programId");
 		String providerNo = this.getProviderNo(request);
 		String note = request.getParameter("note");
+                String noteId = request.getParameter("note_id");
 		
 		if(note == null || note.length() == 0) {
 			return null;
 		}
 		
 		try {
-			caseManagementMgr.tmpSave(providerNo, demographicNo, programId, note);
+			caseManagementMgr.tmpSave(providerNo, demographicNo, programId, noteId, note);
 		}catch(Throwable e) {
-			log.warn(e);
+			log.warn("AutoSave Error: " + e);
 		}
 		
 		return null;
@@ -1016,6 +1160,58 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		
 		return edit(mapping, form, request, response);
 	}
-	
+        
+        public CaseManagementNote getLastSaved(HttpServletRequest request, String demono, String providerNo) {
+            CaseManagementNote note = null;
+            List notes = null;            
+            
+            notes = caseManagementMgr.getNotes(demono);
+            notes = manageLockedNotes(notes,false,this.getUnlockedNotesMap(request));
+            
+            String programId = (String)request.getSession().getAttribute("case_program_id");
+            
+            if(programId == null || programId.length() == 0 ) {
+                programId = "0";
+            }
+            
+            notes = caseManagementMgr.filterNotes(notes, providerNo, programId);
+            
+            for( int idx = notes.size() - 1; idx >= 0; --idx ) {
+                CaseManagementNote n = (CaseManagementNote)notes.get(idx);
+                if( !n.isSigned() && n.getProvider_no().equals(providerNo)) {                    
+                    note = n;        
+                    request.getSession().setAttribute("newNote","false");
+                    break;
+                }
+            }
 
+            return note;
+        }
+        
+        protected Map getUnlockedNotesMap(HttpServletRequest request) {
+		Map map =  (Map)request.getSession().getAttribute("unlockedNoteMap");
+		if(map == null) {
+			map = new HashMap();
+		}
+		return map;
+	}
+        
+        protected List manageLockedNotes(List notes,boolean removeLockedNotes,Map unlockedNotesMap) {
+		List notesNoLocked = new ArrayList();
+		for(Iterator iter=notes.iterator();iter.hasNext();) {
+			CaseManagementNote note = (CaseManagementNote)iter.next();
+			if(note.isLocked()) {
+				if(unlockedNotesMap.get(note.getId()) != null) {
+					note.setLocked(false);
+				}
+			}
+			if(removeLockedNotes && !note.isLocked()) {
+				notesNoLocked.add(note);
+			}
+		}
+		if(removeLockedNotes) {
+			return notesNoLocked;
+		}
+		return notes;
+	}
 }
