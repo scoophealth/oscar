@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.struts.util.LabelValueBean;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.caisi.model.Role;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
@@ -97,9 +99,7 @@ public class CaseManagementManager {
     public String saveNote(CaseManagementCPP cpp, CaseManagementNote note, String cproviderNo, String userName, String lastStr, String roleName) {
 
         String noteStr = note.getNote();
-        String noteHistory = note.getHistory();
-        Date now = new Date();
-        note.setUpdate_date(now);
+        String noteHistory = note.getHistory();        
         // process noteStr, remove existing signed on string
         // noteStr = removeSignature(noteStr);
         /*if (note.isSigned())
@@ -551,27 +551,31 @@ public class CaseManagementManager {
         }
         return filteredNotes;
     }
-
-    public void tmpSave(String providerNo, String demographicNo, String programId, String note) {
-        CaseManagementTmpSave tmp = new CaseManagementTmpSave();
-        tmp.setProviderNo(providerNo);
-        tmp.setDemographicNo(new Long(demographicNo).longValue());
-        tmp.setProgramId(new Long(programId).longValue());
-        tmp.setNote(note);
-        tmp.setUpdate_date(new Date());
-        caseManagementTmpSaveDAO.save(tmp);
+    
+    public void tmpSave(String providerNo, String demographicNo, String programId, String noteId, String note) {
+            CaseManagementTmpSave tmp = new CaseManagementTmpSave();
+            tmp.setProviderNo(providerNo);
+            tmp.setDemographicNo(new Long(demographicNo).longValue());
+            tmp.setProgramId(new Long(programId).longValue());
+            tmp.setNote_id(Long.parseLong(noteId));
+            tmp.setNote(note);
+            tmp.setUpdate_date(new Date());
+            caseManagementTmpSaveDAO.save(tmp);
     }
+   
 
     public void deleteTmpSave(String providerNo, String demographicNo, String programId) {
         caseManagementTmpSaveDAO.delete(providerNo, new Long(demographicNo), new Long(programId));
     }
 
-    public String restoreTmpSave(String providerNo, String demographicNo, String programId) {
+    public CaseManagementTmpSave restoreTmpSave(String providerNo, String demographicNo, String programId) {
         CaseManagementTmpSave obj = caseManagementTmpSaveDAO.load(providerNo, new Long(demographicNo), new Long(programId));
-        if (obj != null) {
-            return obj.getNote();
-        }
-        return null;
+        return obj;
+    }
+    
+    public List getHistory(String note_id) {
+            CaseManagementNote note = caseManagementNoteDAO.getNote(Long.valueOf(note_id));
+            return this.caseManagementNoteDAO.getHistory(note);
     }
 
     /**
