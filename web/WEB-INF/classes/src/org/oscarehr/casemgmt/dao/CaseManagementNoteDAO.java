@@ -43,6 +43,10 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	
 	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);
 
+        public List getHistory(CaseManagementNote note) {
+            String uuid = note.getUuid();
+            return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.uuid = ? order by cmn.update_date asc", uuid);
+        }
 
 	public CaseManagementNote getNote(Long id) {
 		CaseManagementNote note = (CaseManagementNote)this.getHibernateTemplate().get(CaseManagementNote.class,id);
@@ -66,8 +70,8 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 				list += issues[x];
 			}
 		}
-		String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.update_date DESC";
-		
+		//String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+		String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
 		return this.getHibernateTemplate().find(hql,demographic_no);
 	}
 
