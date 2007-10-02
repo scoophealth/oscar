@@ -22,6 +22,7 @@
 			<generator class="native" />
 		</id>
 		<property name="demographic_no" />
+                <property name="provider_no" />
 		<property name="socialHistory" />
 		<property name="familyHistory" />
 		<property name="medicalHistory" />
