@@ -19,7 +19,7 @@ CREATE TABLE `admission` (
   `am_id` bigint(11) NOT NULL auto_increment,
   `client_id` bigint(11) NOT NULL default '0',
   `program_id` bigint(11) NOT NULL default '0',
-  `provider_no` bigint(11) NOT NULL default '0',
+  `provider_no` varchar(6) NOT NULL default '0',
   `admission_date` datetime default NULL,
   `admission_notes` text default NULL,
   `temp_admission` char(1) default NULL,
@@ -214,6 +214,7 @@ DROP TABLE IF EXISTS `casemgmt_cpp`;
 CREATE TABLE `casemgmt_cpp` (
   `id` int(10) NOT NULL auto_increment,
   `demographic_no` varchar(10) NOT NULL default '',
+  `provider_no` varchar(6) NOT NULL,
   `socialHistory` text,
   `familyHistory` text,
   `medicalHistory` text,
@@ -224,7 +225,7 @@ CREATE TABLE `casemgmt_cpp` (
   `primaryCounsellor` varchar(255) default NULL,
   `otherFileNumber` varchar(100) default null,
   `otherSupportSystems` text default null,
-  `pastMedications` text default null,
+  `pastMedications` text default null,  
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -268,6 +269,7 @@ DROP TABLE IF EXISTS `casemgmt_note`;
 CREATE TABLE `casemgmt_note` (
   `note_id` int(10) NOT NULL auto_increment,
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
+  `observation_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `demographic_no` varchar(20) NOT NULL default '',
   `provider_no` varchar(20) NOT NULL default '',
   `note` mediumtext NOT NULL,
@@ -300,6 +302,7 @@ CREATE TABLE `casemgmt_tmpsave` (
   `program_id` bigint(20) default NULL,
   `note` text,
   `update_date` datetime default NULL,
+  `note_id` int(10),
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1681,7 +1684,7 @@ DROP TABLE IF EXISTS `program_provider`;
 CREATE TABLE `program_provider` (
   `id` bigint(20) NOT NULL auto_increment,
   `program_id` bigint(20) default NULL,
-  `provider_no` bigint(20) default NULL,
+  `provider_no` varchar(6) NOT NULL,
   `role_id` bigint(20) default NULL,
   `team_id` bigint(20) default NULL,
   PRIMARY KEY  (`id`),
