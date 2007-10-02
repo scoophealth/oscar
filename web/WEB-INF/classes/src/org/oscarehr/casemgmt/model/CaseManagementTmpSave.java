@@ -41,6 +41,7 @@ public class CaseManagementTmpSave implements Serializable {
     private String _providerNo;
     private long _programId;
     private String _note;
+    private long _note_id;
     private java.util.Date _update_date;
 
     // constructors
@@ -136,6 +137,14 @@ protected void initialize () {}
      */
     public void setNote (String _note) {
         this._note = _note;
+    }
+    
+    public long getNote_id() {
+        return _note_id;
+    }
+    
+    public void setNote_id( long note_id ) {
+        this._note_id = note_id;
     }
 
     /**
