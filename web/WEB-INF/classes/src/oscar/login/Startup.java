@@ -53,6 +53,7 @@ public class Startup implements ServletContextListener {
 		try {
 			// Anyone know a better way to do this?
 			String url = sc.getServletContext().getResource("/index.jsp").getPath();
+                        log.info(url);
 			url = url.substring(url.indexOf('/', 1) + 1, url.lastIndexOf('/'));
 			
 			contextPath = url;
@@ -67,12 +68,27 @@ public class Startup implements ServletContextListener {
 		try {
 			// This has been used to look in the users home directory that started tomcat
 			propFileName = System.getProperty("user.home") + sep + propName;
+                        log.info("looking up " + propFileName);
 			oscar.OscarProperties p = oscar.OscarProperties.getInstance();
 			p.loader(propFileName);
 
 			if (!DBHandler.isInit())
 				DBHandler.init(p.getProperty("db_name"), p.getProperty("db_driver"), p.getProperty("db_uri"), p.getProperty("db_username"), p.getProperty("db_password"));
 
+                        
+                        //Specify who will see new casemanagement screen
+                        ArrayList<String> listUsers;
+                        String casemgmtscreen = p.getProperty("CASEMANAGEMENT");
+                        if( casemgmtscreen != null ) {
+                            String[] arrUsers = casemgmtscreen.split(",");
+                            listUsers = new ArrayList<String>(Arrays.asList(arrUsers));
+                            Collections.sort(listUsers);                            
+                        }
+                        else
+                            listUsers = new ArrayList<String>();
+                        
+                        sc.getServletContext().setAttribute("CaseMgmtUsers", listUsers);
+                        
 			// Temporary Testing of new ECHART
 			// To be removed
 			String newDocs = p.getProperty("DOCS_NEW_ECHART");
