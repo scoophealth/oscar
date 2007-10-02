@@ -32,7 +32,7 @@ import org.oscarehr.casemgmt.web.CheckIssueBoxBean;
 
 public class CaseManagementEntryFormBean extends ActionForm {
 	private CaseManagementNote caseNote;
-	private CaseManagementCPP cpp;
+	private CaseManagementCPP cpp;        
 	private String demoNo;
 	private String noteId;
 	private CheckBoxBean[] issueCheckList;
@@ -50,10 +50,22 @@ public class CaseManagementEntryFormBean extends ActionForm {
 	private String programNo;
 	private String demoName;
 	private String caseNote_note;
-	private String caseNote_history;
+	private String caseNote_history;	
+        private String observation_date;
 	
-	
-
+        public CaseManagementEntryFormBean() {
+            super();           
+            this.caseNote = new CaseManagementNote();
+        }               
+        
+        public String getObservation_date() {
+            return this.observation_date;
+        }
+        
+        public void setObservation_date(String date) {
+            this.observation_date = date;
+        }
+        
 	public String getCaseNote_history() {
 		return caseNote_history;
 	}
@@ -62,10 +74,6 @@ public class CaseManagementEntryFormBean extends ActionForm {
 		this.caseNote_history = caseNote_history;
 	}
 
-	public CaseManagementEntryFormBean() {
-		caseNote = new CaseManagementNote();
-	}
-	
 	public String getDeleteId()
 	{
 		return deleteId;
