@@ -25,7 +25,7 @@
 --%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <% 
   if(session.getAttribute("user") == null)    response.sendRedirect("../logout.htm");
@@ -311,7 +311,9 @@ onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no"
   }
   if(nItems==0 && nLastPage<=0) {
 %>
+	<caisi:isModuleLoad moduleName="caisi" reverse="true">
   <bean:message key="demographic.search.noResultsWereFound"/> <a href="../demographic/demographicaddarecordhtm.jsp"><bean:message key="demographic.search.btnCreateNew"/></a>
+  </caisi:isModuleLoad>
 <%
     }
 %>
