@@ -697,7 +697,7 @@ public class ProgramManagerAction extends BaseAction {
 		}
 		provider.setProgramId(program.getId().longValue());
 
-		if (programManager.getProgramProvider(String.valueOf(provider.getProviderNo()), String.valueOf(program.getId())) != null) {
+		if (programManager.getProgramProvider(provider.getProviderNo(), String.valueOf(program.getId())) != null) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.provider.exists"));
 			saveMessages(request, messages);
