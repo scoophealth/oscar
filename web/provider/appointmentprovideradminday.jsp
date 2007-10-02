@@ -990,7 +990,7 @@ notes: <%=UtilMisc.htmlEscape(notes)%>"</oscar:oscarPropertiesCheck>   ><%=(view
 <!-- doctor code block -->
 <% if(bShowEncounterLink) { %>
 <% String  eURL = "../oscarEncounter/IncomingEncounter.do?providerNo="+curUser_no+"&appointmentNo="+rs.getString("appointment_no")+"&demographicNo="+demographic_no+"&curProviderNo="+curProvider_no[nProvider]+"&reason="+URLEncoder.encode(URLEncoder.encode(reason))+"&userName="+URLEncoder.encode( userfirstname+" "+userlastname)+"&curDate="+curYear+"-"+curMonth+"-"+curDay+"&appointmentDate="+year+"-"+month+"-"+day+"&startTime="+iS+":"+iSm+"&status="+status;%>
-<a href=# onClick="popupPage(755, 1048,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
+<a href=# onClick="popupPage(748, 1048,'<%=eURL%>');return false;" title="<bean:message key="global.encounter"/>">
             |<bean:message key="provider.appointmentProviderAdminDay.btnE"/></a>
 <% } %>
 <!-- billing code block -->
