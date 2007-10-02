@@ -30,6 +30,8 @@ import java.util.Date;
 import java.util.List;
 import java.sql.SQLException;
 import org.apache.struts.util.MessageResources;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import oscar.util.StringUtils;
 import oscar.util.DateUtils;
 
@@ -46,6 +48,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
     private int MAXLEN = 25;
     private int CROP = 22;
     private CaseManagementManager caseManagementMgr;
+    private static Log log = LogFactory.getLog(EctDisplayIssuesAction.class);
     
     public void setCaseManagementManager(CaseManagementManager caseManagementMgr) {
         this.caseManagementMgr = caseManagementMgr;
@@ -67,11 +70,10 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
         String serviceDateStr;
         Date date; 
         List issues = null;        
-        issues = caseManagementMgr.getIssues(bean.getCurProviderNo(),bean.getDemographicNo());
-                
+        issues = caseManagementMgr.getIssues(bean.providerNo,bean.getDemographicNo());             
         String programId = (String)request.getSession().getAttribute("case_program_id");
-        issues = caseManagementMgr.filterIssues(issues,bean.getCurProviderNo(),programId);
-			
+        issues = caseManagementMgr.filterIssues(issues,bean.providerNo,programId);
+
         for(int idx = 0; idx < issues.size(); ++idx ) {
             NavBarDisplayDAO.Item item = Dao.Item();                                    
             
@@ -81,7 +83,7 @@ public class EctDisplayIssuesAction extends EctDisplayAction {
             
             item.setTitle(strTitle);
             item.setLinkTitle(tmp);
-            url = "$('check_issue').value=" + issue.getIssue_id() + ";document.caseManagementViewForm.submit();return false;";
+            url = "$('check_issue').value=" + issue.getIssue_id() + ";return filter();";
             item.setURL(url);
             Dao.addItem(item);
         }
