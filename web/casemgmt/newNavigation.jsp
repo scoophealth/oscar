@@ -75,6 +75,6 @@ function updateDiv() {
     setTimeout("updateDiv();", 1000);
 </script>
 
-<form name="dummyForm">
+<form name="dummyForm" action="">
     <input type="hidden" id="reloadDiv" name="reloadDiv" value="none" onchange="updateDiv();">
 </form>
