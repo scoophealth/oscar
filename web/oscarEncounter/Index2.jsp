@@ -242,7 +242,7 @@ if (request.getParameter("casetoEncounter")==null)
 <!-- This is from OscarMessenger to get the top and left borders on -->
 <link rel="stylesheet" type="text/css" href="encounterStyles.css">
 
-  <script src="../share/javascript/prototype_1.5.1.1.js" type="text/javascript"></script>
+  <script src="../share/javascript/prototype.js" type="text/javascript"></script>
   <script src="../share/javascript/scriptaculous.js" type="text/javascript"></script>  
   
   <%-- for popup menu of forms --%>
