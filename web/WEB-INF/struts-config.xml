@@ -1439,6 +1439,7 @@
             <forward name="unlockSuccess" path="/casemgmt/unlockNoteSuccess.jsp" />
             <forward name="unlockError" path="/casemgmt/unlockNoteError.jsp" />
             <forward name="unlock_ajax" path="/casemgmt/unlockAjax.jsp" />
+            <forward name="expired" path="/casemgmt/expired.jsp" />            
         </action>
         <action path="/CaseManagementEntry" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="session" input="/casemgmt/CaseManagementEntry.jsp" name="caseManagementEntryForm">
             <forward name="view" path="/casemgmt/CaseManagementEntry.jsp" />
@@ -1447,8 +1448,10 @@
             <forward name="NoDemoERR" path="/casemgmt/noDemo.jsp" />
             <forward name="windowClose" path="/casemgmt/close.jsp" />
             <forward name="historyview" path="/casemgmt/historyview.jsp" />
+            <forward name="showHistory" path="/casemgmt/showHistory.jsp" />
             <forward name="issueAutoCompletion" path="/casemgmt/IssueList.jsp" />
             <forward name="issueList_ajax" path="/casemgmt/noteIssueList.jsp" />
+            <forward name="expired" path="/casemgmt/expired.jsp" />
         </action>
         <action path="/ClientImage" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" name="clientImageForm" input="/casemgmt/uploadimage.jsp">
             <forward name="success" path="/casemgmt/uploadimage.jsp" />
