@@ -92,7 +92,7 @@ public class InfirmBedProgramManager {
 
     public List getProgramBeans(String providerNo) {
         if (providerNo == null || "".equalsIgnoreCase(providerNo.trim())) return new ArrayList();
-        Iterator iter = programProviderDAOT.getProgramProvidersByProvider(new Long(providerNo)).iterator();
+        Iterator iter = programProviderDAOT.getProgramProvidersByProvider(providerNo).iterator();
         ArrayList pList = new ArrayList();
         while (iter.hasNext()) {
             ProgramProvider p = (ProgramProvider)iter.next();
