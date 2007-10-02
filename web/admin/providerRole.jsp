@@ -36,10 +36,24 @@ String curUser_no = (String)session.getAttribute("user");
 </security:oscarSec>
 
 <%
+//Caisi roles; Declared in function section below
+roles.put("doctor","1");
+roles.put("locum","1");
+roles.put("nurse","2");
+
+
 String ip = request.getRemoteAddr();
 
 String msg = "";
 DBHelp dbObj = new DBHelp();
+
+
+//get caisi programid for oscar
+String caisiQuery = "select program_id from program where name = 'OSCAR'";
+ResultSet result = dbObj.searchDBRecord(caisiQuery);
+if( result.next() )
+    caisiProgram = result.getString(1);
+
 // get role from database
 Vector vecRoleName = new Vector();
 String	sql   = "select * from secRole order by role_name";
@@ -67,9 +81,11 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     if(dbObj.updateDBRecord(sql, curUser_no)){
     	msg = "Role " + name + " is updated. (" + number + ")";
 	    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleName, ip);
+            updateCaisiPriv(dbObj, roleName, name, number, curUser_no);
     } else {
     	msg = "Role " + name + " is <font color='red'>NOT</font> updated!!! (" + number + ")";
     }
+        
 }
 
 // add the role list
@@ -80,6 +96,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     if(dbObj.updateDBRecord(sql, curUser_no)){
     	msg = "Role " + name + " is added. (" + number + ")";
 	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ name, ip);
+            addCaisiPriv(dbObj, name, number, curUser_no);
     } else {
     	msg = "Role " + name + " is <font color='red'>NOT</font> added!!! (" + number + ")";
     }
@@ -101,6 +118,7 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleName + "</role_name>" + "')";
 		dbObj.updateDBRecord(sql, curUser_no);
 	    LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_ROLE, number +"|"+ roleName, ip);
+            delCaisiPriv(dbObj, roleName, name, number, curUser_no);
     } else {
     	msg = "Role " + name + " is <font color='red'>NOT</font> deleted!!! (" + number + ")";
     }
@@ -108,6 +126,70 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
 
 String keyword = request.getParameter("keyword")!=null?request.getParameter("keyword"):"";
 
+    
+%>
+<%!
+        //Caisi role mapping; see top of file for init values
+        private java.util.HashMap<String,String> roles = new HashMap<String,String>();  
+        //caisi program id for oscar
+        private String caisiProgram;// = "10015";
+        //update caisi case management provider table so access can be granted and denied
+        public void updateCaisiPriv(DBHelp dbObj, String roleName, String name, String provNo, String curUser_no) throws java.sql.SQLException {
+            String sql;
+            ResultSet rs;            
+            if( name.equals("doctor") || name.equals("nurse") || name.equals("locum") ) {
+                if( roleName.equals("doctor") || roleName.equals("nurse") || roleName.equals("locum") )
+                    sql = "UPDATE program_provider SET role_id = " + roles.get(name) + " WHERE provider_no ='" + provNo + "'";                
+                else {
+                    sql = "SELECT role_id FROM program_provider WHERE provider_no = '" + provNo + "'";
+                    rs = dbObj.searchDBRecord(sql);
+                    if( rs.next() )
+                        sql = "UPDATE program_provider SET role_id = " + roles.get(name) + " WHERE provider_no ='" + provNo + "'";
+                    else
+                        sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "'," + provNo + "," + roles.get(name) + ")";
+                }
+
+                dbObj.updateDBRecord(sql,curUser_no);
+            }
+            else {
+                if( roleName.equals("doctor") || roleName.equals("nurse") || roleName.equals("locum") ) {
+                    sql = "SELECT role_name FROM secUserRole WHERE provider_no = '" + provNo + "' AND (role_name = 'doctor' OR role_name = 'nurse' OR role_name = 'locum')";
+                    rs = dbObj.searchDBRecord(sql);
+                    if(!rs.next()) {
+                        sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
+                        dbObj.updateDBRecord(sql,curUser_no);
+                    }
+                    
+                }
+            }
+        }
+        
+        //add privelege to caisi casemanagement if needed
+        public void addCaisiPriv(DBHelp dbObj, String name, String provNo, String curUser_no) throws java.sql.SQLException {
+            if( name.equals("doctor") || name.equals("nurse") || name.equals("locum") ) {
+                String sql = "SELECT role_id FROM program_provider WHERE provider_no = '" + provNo + "'";
+                ResultSet rs = dbObj.searchDBRecord(sql);
+                
+                if( rs.next() )
+                    sql = "UPDATE program_provider SET role_id = " + roles.get(name) + " WHERE provider_no ='" + provNo + "'";
+                else
+                    sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "'," + provNo + "," + roles.get(name) + ")";
+                               
+                dbObj.updateDBRecord(sql,curUser_no);
+            }
+        }
+        
+        //delete privelege from caisi casemanagement if needed
+        public void delCaisiPriv(DBHelp dbObj, String roleName, String name, String provNo, String curUser_no) throws java.sql.SQLException {
+            if( (name.equals("doctor") || name.equals("nurse") || name.equals("locum")) && name.equals(roleName) ) {
+                String sql = "SELECT role_name FROM secUserRole WHERE provider_no = '" + provNo + "' AND (role_name = 'doctor' OR role_name = 'nurse' OR role_name = 'locum')";
+                ResultSet rs = dbObj.searchDBRecord(sql);
+                if(!rs.next()) {
+                    sql = "DELETE FROM program_provider WHERE provider_no = '" + provNo + "'";
+                    dbObj.updateDBRecord(sql,curUser_no);
+                }
+            }
+        }
 %>
   <html>
     <head>
