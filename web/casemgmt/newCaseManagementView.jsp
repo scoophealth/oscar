@@ -95,13 +95,13 @@
         text = text.replace(/\\u0022/g, "\u0022");
         text = text.replace(/\\u0027/g, "\u0027");
 
-        if( document.forms['caseManagementEntryForm'].caseNote_note.value.length > 0 )
-            document.forms['caseManagementEntryForm'].caseNote_note.value += "\n\n";
+        if( $(caseNote).value.length > 0 )
+            $(caseNote).value += "\n\n";
             
-        var curPos = document.forms['caseManagementEntryForm'].caseNote_note.value.length;
+        var curPos = $(caseNote).value.length;
         //subtract \r chars from total length for IE
         if( document.all ) {                                 
-            var newLines = document.forms['caseManagementEntryForm'].caseNote_note.value.match(/.*\n.*/g);  
+            var newLines = $(caseNote).value.match(/.*\n.*/g);  
             if( newLines != null ) {
                 curPos -= newLines.length;
             }
@@ -116,11 +116,12 @@
             curPos += subtxt.indexOf('\n');            
         }
                 
-        document.forms['caseManagementEntryForm'].caseNote_note.value += text;                                
+        $(caseNote).value += text;                                
         
-        //setTimeout("document.forms['caseManagementEntryForm'].caseNote_note.scrollTop="+scrollHeight, 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
-        document.forms['caseManagementEntryForm'].caseNote_note.focus();
-        setCaretPosition(document.forms["caseManagementEntryForm"].caseNote_note,curPos);
+        //setTimeout("$(caseNote).scrollTop="+scrollHeight, 0);  // setTimeout is needed to allow browser to realize that text field has been updated 
+        $(caseNote).focus();
+        adjustCaseNote();
+        setCaretPosition($(caseNote),curPos);
     }
     
      function ajaxInsertTemplate(varpage) { //fetch template
@@ -177,7 +178,7 @@ function resetView(frm, error, e) {
     Element.observe(parent, 'click', unlockNote);
 }
 
-function changeToView(id, save) {
+function changeToView(id) {
 
     var random =  Math.round(Math.random() * 1000);
     var img = "<img id='quitImg" + random + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";
@@ -185,13 +186,19 @@ function changeToView(id, save) {
     var parent = $(id).parentNode.id;
     var sumaryId = "sumary";
     var sumary;
-    var span;
     var nId;        
+    
+    //check if case note has been changed
+    //if so, warn user that changes will be lost if not saved    
+    if( origCaseNote != $F(id) || origObservationDate != $("observationDate").value) {
+        if( !confirm("Your changes to the current note have not been saved. Select Ok to continue or Cancel to continue editing current note"))
+            return false;
+   }
 
-    //cancel updating of issues
+    //cancel updating of issueschangeToView(
     //IE destroys innerHTML of sig div when calling ajax update
     //so we have to restore it here if the ajax call is aborted
-    if( ajaxRequest != undefined ) {
+    if( ajaxRequest != undefined  && callInProgress(ajaxRequest.transport) ) {
         ajaxRequest.transport.abort();
         var siblings = $(id).siblings();
         var pos;
@@ -200,26 +207,48 @@ function changeToView(id, save) {
             if( (pos = siblings[idx].id.indexOf("sig")) != -1 ) {
                 nId = siblings[idx].id.substr(pos+3);
                 sumaryId += nId;
-                if( $(sumaryId) == undefined ) {
+                if( $(sumaryId) == null ) {                    
                     siblings[idx].innerHTML = sigCache;                
                 }
                 break;
             }
         }
-    }                                                                                             
+    }                                                                                            
     
-    Element.remove(save);
+    //clear auto save
+    clearTimeout(autoSaveTimer);
+    deleteAutoSave();
+    
+    Element.remove("notePasswd");
+    Element.stopObserving(id, 'keyup', monitorCaseNote);
+    nId = parent.substr(1);
     Element.remove(id);    
-    if( $("noteIssues") != undefined )
-        Element.remove("noteIssues");            
     
-    var input = "<pre>" + tmp + "</pre>";
+    //remove observation date input text box but preserve date if there is one
+    if( $("observation") != null ) {
+        var observation = $("observationDate").value;
+        Element.remove("observation");
+        
+        if( observation.length > 0 ) {            
+            html = "<i>Observation Date:&nbsp;" + observation + "<\/i><br>";
+            new Insertion.Top("sumary"+nId, html);
+        }        
+    }
+    
+    if( $("noteIssues") != null )
+        Element.remove("noteIssues");        
+        
+    //we can stop listening for add issue here
+    Element.stopObserving('asgnIssues', 'click', addIssueFunc);
+    
+    var input = "<pre>" + tmp + "<\/pre>";
     new Insertion.Top(parent, input);
     //$(txt).style.fontSize = normalFont;    
     new Insertion.Top(parent, img);    
     
     $(parent).style.height = "auto";        
     Element.observe(parent, 'click', editNote);    
+    return true;
 }
 
 function minView(e) {      
@@ -236,7 +265,7 @@ function minView(e) {
     var nodes = $(txt).getElementsBySelector('pre');
     if( nodes.length > 0 ) {
         var line = nodes[0].innerHTML;
-        line = "<span>" + line + "</span>";
+        line = "<span>" + line + "<\/span>";
         new Insertion.Top(txt,line);
     }
     
@@ -248,22 +277,20 @@ function minView(e) {
 function resetEdit(e) {
     var random =  Math.round(Math.random() * 1000);
     var img = "<img id='quitImg" + random + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";
-    var divHeight = 14;
-    var caseNote_note = "caseNote_note";
-    var divSize = "size";
-    var save = "save";   
+    var divHeight = 14;    
+    var divSize = "size";       
     var txt = Event.element(e).id;
     var payload;
     
     //if exit button fires func, we need to get id of textarea, which is grandfather of button
     if( txt == "" ) txt = Event.element(e).parentNode.parentNode.id;
     
-    payload = $(caseNote_note).value;
-    Element.remove(save);
-    Element.remove(caseNote_note);
+    payload = $(caseNote).value;
+    Element.remove("notePasswd");
+    Element.remove(caseNote);
     
     payload = payload.replace(/^\s+|\s+$/g,"");
-    var input = "<pre>" + payload + "\n</pre>";    
+    var input = "<pre>" + payload + "\n<\/pre>";    
     new Insertion.Top(txt, input);
     new Insertion.Top(txt, img);
     
@@ -278,7 +305,7 @@ function unlock_ajax(id) {
     var url = "<c:out value="${lockedURL}" />";
     var noteId = id.substr(1);  
     var params = "method=do_unlock_ajax&noteId=" + noteId + "&password=" + $F("passwd");
-    
+
     var objAjax = new Ajax.Request (
                     url,
                     {
@@ -294,7 +321,10 @@ function unlock_ajax(id) {
                                                                             
                                     },
                         onFailure: function(request) {
-                                        $(id).update("Error: " + request.status);
+                                        if( request.status == 403 )
+                                            alert("<bean:message key="oscarEncounter.error.msgExpired"/>");
+                                        else
+                                            alert("Error " + request.status + "\nAn error occurred while unlocking note");
                                     }
                    }
             );
@@ -337,7 +367,7 @@ function unlockNote(e) {
         
         
     new Insertion.Top(txt,img);
-    var lockForm = "<p id='passwdPara'>Password:&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'></p>";
+    var lockForm = "<p id='passwdPara'>Password:&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'><\/p>";
     new Insertion.Bottom(txt, lockForm);
     
     $(txt).style.height = "auto";
@@ -350,9 +380,9 @@ var sigCache = "";
 function editNote(e) {        
     var divHeight = 14;
     var normalFont = 12;
-    var largeFont = 16;
-    var caseNote_note = "caseNote_note";
-    var save = "save";
+    var lineHeight = 1.2;
+    var noteHeight;
+    var largeFont = 16;        
     var quit = "quitImg";
     var txt; 
     var payload;
@@ -369,30 +399,30 @@ function editNote(e) {
             ++level;
         
         txt = $(el).up('div',level).id;        
-    }               
-   
+    }                              
+    
     //if we have an edit textarea already open, close it
-    if($(caseNote_note) !=null && $(caseNote_note).parentNode.id != $(txt).id)
-        changeToView(caseNote_note, save);
-        
+    if($(caseNote) !=null && $(caseNote).parentNode.id != $(txt).id) {
+        if( !changeToView(caseNote) ) {
+            $(caseNote).focus();
+            return;
+        }
+    }
+            
     //get rid of minimize button
     var nodes = $(txt).getElementsBySelector('img');    
     if( nodes.length > 0 ) {
         nodes[0].remove();        
-    }       
-    
-    //get rid of button tag if we're creating new note
-    if( $("newNote") != null )
-        Element.remove("newNote");
+    }              
         
     //check for line item displayed when note is minimized
     nodes = $(txt).getElementsBySelector('span');
-    if( nodes.length > 1 )
+    if( nodes.length > 0 )
         nodes[0].remove();
     
-    //place text in textarea for editing, adding save and sign buttons as well
+    //place text in textarea for editing
     nodes = $(txt).getElementsBySelector('pre');  
-    if( nodes.length > 0 ) {
+    if( nodes.length > 0 ) {        
         payload = nodes[0].innerHTML;    
         nodes[0].remove();
     }
@@ -404,43 +434,36 @@ function editNote(e) {
     
     payload = payload.replace(/^\s+|\s+$/g,"");
     payload += "\n";
-        
+                       
+    var nId = txt.substr(1); 
+    caseNote = "caseNote" + nId;                
     
-    var input = "<textarea tabindex='7' wrap=hard cols='84' rows='10' style='width:100%; height:166px;overflow:auto; border-style:none;' name='caseNote_note' id='caseNote_note'>" + payload + "</textarea>";                
-    new Insertion.Top(txt, input); 
-    //position cursor at end of text
-    $(caseNote_note).focus();    
-    setCaretPosition($(caseNote_note),$(caseNote_note).value.length);
-    $(caseNote_note).scrollTop = $(caseNote_note).scrollHeight;
+    var input = "<textarea tabindex='7' wrap=hard cols='84' rows='10' style='overflow:scroll; width:100%; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
+    new Insertion.Top(txt, input);         
     
-    input = "<div id='save' style='cursor:default;'>" + 
-                <c:if test="${sessionScope.passwordEnabled=='true'}">
-                        "<p style='display:none;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/></p>" +		
-                </c:if>
-                "<span style='float:right; margin-right:5px;'>" +
-                    "<input type='image' id='toggleIssue' disabled onclick='return showIssues();' src='<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>' title='Display Issues'>&nbsp;" +
-                    "<input  tabindex='9' type='button' id='asgnIssues' value='Assign Issues'>&nbsp;" + 
-                    "<input tabindex='8' type='text' id='issueAutocomplete' name='issueSearch' onkeypress='return submitIssue(event);' size='25'>" +
-                    "<span id='busy' style='display: none'><img style='position:absolute; z-index:1;' src='<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>' alt='Working...' /></span>" +
-                    "<div class='enTemplate_name_auto_complete' id='issueAutocompleteList' style='display:none'></div>" +            
-                "</span>" +
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>' onclick=\"return savePage('save');\" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;" + 
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>' onclick=\"document.forms['caseManagementEntryForm'].sign.value='on';return savePage('saveAndExit');\" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;" + 
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>' onclick=\"document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';return savePage('saveAndExit');\" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;" +
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>' onclick=\"return toggleNotePasswd();\" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;" +
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>' onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>" +
-            "</div>";
-            
-    new Insertion.Bottom(txt, input);            
-        
-    var nId = txt.substr(1);
+    //position cursor at end of text        
+    adjustCaseNote();
+    $(caseNote).focus();
+    setCaretPosition($(caseNote),$(caseNote).value.length);    
+    
+    Element.observe(caseNote, 'keyup', monitorCaseNote);
+      
+    <c:if test="${sessionScope.passwordEnabled=='true'}">
+           input = "<p style='display:none;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
+           new Insertion.Bottom(txt, input);
+    </c:if>
+                                
+          
     document.forms["caseManagementEntryForm"].noteId.value = nId;
     
     if( nId > 0 )
         document.forms["caseManagementEntryForm"].note_edit.value = "existing";
     else 
-        document.forms["caseManagementEntryForm"].note_edit.value = "new";
-        
+        document.forms["caseManagementEntryForm"].note_edit.value = "new";            
+    
+    //we want to make sure update issue ajax call doesn't retrieve anything from autosave table
+    document.forms["caseManagementEntryForm"].forceNote.value = "true";
+    
     var divId = "sig" + nId;    
     //cache existing signature so we can recreate it if ajax call aborted
     sigCache = $(divId).innerHTML;    
@@ -455,17 +478,11 @@ function editNote(e) {
     
     //AutoCompleter for Issues
     <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
-    issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId});        
-}
-
-function grabEnter(id, event) {
-    var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
-    if (keyCode == 13) {
-        $(id).click();        
-        return false;
-    }            
+    issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});        
     
-    return true;
+    origCaseNote = $F(caseNote);            
+    //start AutoSave
+    setTimer();
 }
 
 function collapseView(e) {
@@ -492,13 +509,14 @@ function viewNote(e) {
         
     $(txt).style.height = "auto";
     html = $(txt).innerHTML;
-    $(txt).innerHTML = "<pre>" + html + "</pre>";        
+    $(txt).innerHTML = "<pre>" + html + "<\/pre>";        
     $(txt).style.cursor = "text";
         
     new Insertion.Top(txt,img);
     Event.stopObserving(txt, 'click', viewNote);           
 }
 var showIssue = false;
+var expandedIssues = new Array();
 function showIssues() {    
         
     Element.toggle('noteIssues');
@@ -507,7 +525,7 @@ function showIssues() {
     if( showIssue )
         $("issueAutocomplete").focus();
     else
-        $("caseNote_note").focus();
+        $(caseNote).focus();
         
     return false;
 
@@ -529,12 +547,63 @@ function issueIsAssigned() {
     return false;
 }
 
-function savePage(method) {
+function filter() {
+    document.forms["caseManagementEntryForm"].method.value = "edit";
+    document.forms["caseManagementEntryForm"].note_edit.value = "new";
+    document.forms["caseManagementEntryForm"].noteId.value = "0";
+    document.forms["caseManagementEntryForm"].ajax.value = false;
+    document.forms["caseManagementEntryForm"].chain.value = "null";
+    
+    <c:url value="/CaseManagementEntry.do" var="entryURL" />
+    document.forms["caseManagementViewForm"].method.value = "view";
+     
+    var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
+    var caseMgtViewfrm = document.forms["caseManagementViewForm"];
+    var url = "<c:out value="${entryURL}" />";
+    var objAjax = new Ajax.Request (
+                    url,
+                    {
+                        method: 'post',                        
+                        postBody: Form.serialize(caseMgtEntryfrm),
+                        onSuccess: function(request) {                              
+                            caseMgtViewfrm.submit(); 
+                        },
+                        onFailure: function(request) {
+                            alert("Filtering Failed "+ request.status);
+                        }
+                     }
+                   );          
+    
+    return false;
+}
 
-    if( $F("caseNote_note").replace(/^\s+|\s+$/g,"").length == 0 ) {
-        alert("Please enter a note before saving");
+//make sure observation date is in the past
+function validDate() {
+    var strDate = $("observationDate").value;
+    var day = strDate.substring(0,strDate.indexOf("-"));
+    var mnth = strDate.substring(strDate.indexOf("-")+1, strDate.lastIndexOf("-"));
+    var year = strDate.substring(strDate.lastIndexOf("-")+1, strDate.indexOf(" "));
+    var time = strDate.substr(strDate.indexOf(" ")+1);
+    var date = new Date( mnth + " " + day + ", " + year + " " + time);
+    var now = new Date();
+    
+    if( date <= now )
+        return true;
+    else
+        return false;
+}
+
+function savePage(method) {
+    
+    if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
+        alert("Observation date must be in the past");
         return false;
     }
+    
+    /*if( $F(caseNote).replace(/^\s+|\s+$/g,"").length == 0 ) {
+        alert("Please enter a note before saving");
+        return false;
+    }*/
     
 <caisi:isModuleLoad moduleName="caisi">
     if( !issueIsAssigned() ) {
@@ -558,11 +627,15 @@ function savePage(method) {
                     {
                         method: 'post',                        
                         postBody: Form.serialize(frm),
-                        onSuccess: function(request) {                              
+                        onSuccess: function(request) {  
+                            tmpSaveNeeded = false;
                             caseMgtEntryfrm.submit(); 
                         },
                         onFailure: function(request) {
-                            alert("Save failed "+ request.status);
+                            if( request.status == 403 )
+                                alert("<bean:message key="oscarEncounter.error.msgExpired"/>");
+                            else
+                                alert("Error saving form " + request.status);
                         }
                      }
                    );          
@@ -577,7 +650,7 @@ function savePage(method) {
         changeIssueFunc = updateIssues.bindAsEventListener(thisObj, methodArg, divIdArg);
         
         document.forms['caseManagementEntryForm'].change_diagnosis_id.value=issueId;
-        $("asgnIssues").value="Change Diagnosis";       
+        $("asgnIssues").value="Change";       
                         
         Element.stopObserving('asgnIssues', 'click', addIssueFunc);
         Element.observe('asgnIssues', 'click', changeIssueFunc);
@@ -591,16 +664,18 @@ function savePage(method) {
             if( $('notePasswd').style.display != "none" )
                 document.forms['caseManagementEntryForm'].elements['caseNote.password'].focus();
             else
-                document.forms['caseManagementEntryForm'].elements['caseNote_note'].focus();
+                document.forms['caseManagementEntryForm'].elements[caseNote].focus();
         </c:if>
         return false;    
     }
     
     function closeEnc(e) {
         Event.stop(e);
-        if( confirm("Are you sure you wish to close the encounter?") ) {
-            document.forms["caseManagementEntryForm"].method.value = "cancel";
-            document.forms["caseManagementEntryForm"].submit();
+        if( confirm("Are you sure you wish to close the encounter? Any unsaved data WILL BE LOST") ) {
+            var frm = document.forms["caseManagementEntryForm"];
+            tmpSaveNeeded = false;
+            frm.method.value = "cancel";
+            frm.submit();            
         }
         
         return false;
@@ -615,7 +690,7 @@ function showIssues() {
     if( showIssue )
         $("issueAutocomplete").focus();
     else
-        $("caseNote_note").focus();
+        $(caseNote).focus();
         
     return false;
 
@@ -648,19 +723,24 @@ var ajaxRequest;
 function ajaxUpdateIssues(method, div) {
     <c:url value="/CaseManagementEntry.do" var="issueURL" />
     
-    document.forms["caseManagementEntryForm"].method.value = method;    
-    document.forms["caseManagementEntryForm"].ajax.value = true;
-    
     var frm = document.forms["caseManagementEntryForm"];
+    frm.method.value = method;    
+    frm.ajax.value = true;
+    
     var url = "<c:out value="${issueURL}"/>";
-    ajaxRequest = new Ajax.Updater( div, url, { evalScripts: true, parameters: Form.serialize(frm), onSuccess:
-                                    onIssueUpdate                                                                        
-                                    } );
-        
+    ajaxRequest = new Ajax.Updater( {success:div}, url, { 
+                                        evalScripts: true, parameters: Form.serialize(frm), onSuccess: onIssueUpdate,
+                                        onFailure: function(response) { 
+                                                        alert( "Error " + response.status + "\nMost likely your session has expired.  Login again.\n" +
+                                                                "If problem persists contact support");
+                                                    }
+                                    } );           
+    
     return false;
 }
 
 function onIssueUpdate() {
+    
     //update issue list in right hand column
     popColumn(rightURLs["issues"], "issues", "issues");
 
@@ -686,7 +766,7 @@ var filterShows = false;
 function showFilter() {
 
     if( filterShows )
-        new Effect.Squish('filter');
+        new Effect.BlindUp('filter');
     else
         new Effect.BlindDown('filter');
         
@@ -717,73 +797,161 @@ function filterCheckBox(checkbox) {
 }
 
 function newNote(e) {
-    var input = "<textarea tabindex='7' wrap=hard cols='78' rows='10' style='width:100%; height:166px;overflow:auto; border-style:none;' name='caseNote_note' id='caseNote_note'></textarea>";
-    var save  = "<div id='save' style='cursor:default;'>" + 
+    var input = "<textarea tabindex='7' wrap=hard cols='84' rows='5' style='width:100%; rows:10; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name='caseNote_note' id='caseNote_note0'><\/textarea>";
+    var passwd  = 
                 <c:if test="${sessionScope.passwordEnabled=='true'}">
-                        "<p style='display:none;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/></p>" +		
+                        "<p style='display:none;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>" +		
                 </c:if>
-                "<span style='float:right; margin-right:5px;'>" +
-                    "<input type='image' id='toggleIssue' disabled onclick='return showIssues();' src='<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>' title='Display Issues'>&nbsp;" +
-                    "<input  tabindex='9' type='button' id='asgnIssues' value='Assign Issues'>&nbsp;" + 
-                    "<input tabindex='8' type='text' id='issueAutocomplete' name='issueSearch' onkeypress='return submitIssue(event);' size='25'>" +
-                    "<span id='busy' style='display: none'><img style='position:absolute; z-index:1;' src='<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>' alt='Working...' /></span>" +
-                    "<div class='enTemplate_name_auto_complete' id='issueAutocompleteList' style='display:none'></div>" +            
-                "</span>" +
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>' onclick=\"return savePage('save');\" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;" + 
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>' onclick=\"document.forms['caseManagementEntryForm'].sign.value='on';return savePage('saveAndExit');\" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;" + 
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>' onclick=\"document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';return savePage('saveAndExit');\" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;" +
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>' onclick=\"return toggleNotePasswd();\" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;" +
-                "<input type='image' src='<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>' onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>" +
-            "</div>";
-    var div = "<div id='n0' style='background-color:#EFEFEF; float:left; font-size:12px; width:99%; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000; margin-right:-3px;'>" +
-              input + "<span id='sig0'></span>" + save + "</div>";
+                "";
+                
+    var div = "<div id='h0' style='position: absolute; display:none; font-size:12px; left:0px; top:0px;'>&nbsp;</div>" +
+              "<div id='n0' style='background-color:#EFEFEF; float:left; font-size:12px; width:99%; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000; margin-right:-3px;'>" +
+              input + "<div style='display:inline;' id='sig0'><div id='sumary0'><\/div><\/div>" + passwd + "<\/div>";
               
-    changeToView("caseNote_note", "save");
-    
-    document.forms["caseManagementEntryForm"].note_edit.value = "new";
-    new Insertion.Bottom("encMainDiv", div);
-    $("caseNote_note").focus();    
-    
-    ajaxUpdateIssues('edit', 'sig0'); 
-    addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, 'sig0');
-    Element.observe('asgnIssues', 'click', addIssueFunc);        
+    if( changeToView(caseNote) ) {
+        caseNote = "caseNote_note0";
+        document.forms["caseManagementEntryForm"].note_edit.value = "new";
+        document.forms["caseManagementEntryForm"].noteId.value = "0"
+        new Insertion.Bottom("encMainDiv", div);
+        $(caseNote).focus();   
+        adjustCaseNote();
+        Element.observe(caseNote, 'keyup', monitorCaseNote);
+
+        origCaseNote = $F(caseNote);
+
+        ajaxUpdateIssues('edit', 'sig0'); 
+        addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, 'sig0');
+        Element.observe('asgnIssues', 'click', addIssueFunc);        
+
+        //AutoCompleter for Issues
+        <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
+        issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});        
+
+        //hide new note button
+        $("newNoteImg").hide();
+    }
+    else
+        $(caseNote).focus();
         
-    //AutoCompleter for Issues
-    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
-    issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId});        
-    
     return false;
 }
 
-function autoSave() {
-    <c:url value="/CaseManagementEntry.do" var="autoSaveURL"/>
+<c:url value="/CaseManagementEntry.do" var="autoSaveURL"/>
+function deleteAutoSave() {
+    var url = "<c:out value="${autoSaveURL}"/>";
+    var frm = document.forms["caseManagementEntryForm"];
+    frm.method.value = "cancel";
+    
+    new Ajax.Request( url, {
+                                method: 'post',
+                                postBody: Form.serialize(frm)
+                           }
+                    );
+}
+
+function autoSave(async) {    
     
     var url = "<c:out value="${autoSaveURL}"/>";
     var programId = "<c:out value="${case_program_id}"/>";
     var demoNo = "<c:out value="${param.demographicNo}"/>";
-    var params = "method=autosave&demographicNo=" + demoNo + "&programId=" + programId + "&note=" + escape($F("caseNote_note"));
-    
+    var params = "method=autosave&demographicNo=" + demoNo + "&programId=" + programId + "&note_id=" + document.forms["caseManagementEntryForm"].noteId.value + "&note=" + escape($F(caseNote));
+
     new Ajax.Request( url, {
                                 method: 'post',
-                                postBody: params
+                                postBody: params,
+                                asynchronous: async
                             }
                      );
                      
     setTimer();
                                 
 }
-
+var autoSaveTimer;
 function setTimer() {
-    setTimeout("autoSave()", 60000);
+    autoSaveTimer = setTimeout("autoSave(true)", 60000);
 }
 
 function restore() {
-    if(confirm('The system has detected an unsaved note for this client. By continuing, your current note will be replaced by the existing note in the system')) {
+    if(confirm('There is an unsaved note for this client.  Click Ok to edit it.')) {
         document.caseManagementEntryForm.method.value='restore';
         document.caseManagementEntryForm.chain.value = 'list';
 	document.caseManagementEntryForm.submit();			
     }		
 }
+
+function showHistory(noteId, event) {
+    Event.stop(event);
+    <c:url value="/CaseManagementEntry.do" var="historyURL"/>
+    var rnd = Math.round(Math.random() * 1000);
+    win = "win" + rnd;
+    var url = "<c:out value="${historyURL}"/>?method=notehistory&noteId=" + noteId;    
+    window.open(url,win,"scrollbars=yes, location=no, width=647, height=600","");
+    return false;
+}
+
+var caseNote = "";  //contains id of note text area; system permits only 1 text area at a time to be created
+var numChars = 0;
+function monitorCaseNote(e) {
+    var MAXCHARS = 70;
+    var MINCHARS = -10;
+    var newChars = $(caseNote).value.length - numChars;
+    var newline = false;
+    
+    if( e.keyCode == 13)       
+      newline = true;    
+    
+    if( newChars >= MAXCHARS || newline ) {
+        adjustCaseNote();
+    }
+    else if( newChars <= MINCHARS ) {
+        adjustCaseNote();
+    }
+
+}
+
+//resize case note text area to contain all text
+function adjustCaseNote() {
+    var nId = caseNote.match(/\d+/);
+    var shadowNote = "h" + nId;    
+    var width = $(caseNote).getWidth();
+    var payload = $(caseNote).value;
+    
+    $(shadowNote).innerHTML = payload.replace(/\n/g,'<br>') + '&nbsp;';
+    $(shadowNote).style.width = width;
+    noteHeight = $(shadowNote).getHeight();
+    noteHeight += $(caseNote).getStyle('fontSize').substr(0,2) * 1.5;    
+    $(caseNote).style.height = noteHeight;
+    
+    numChars = payload.length;
+}
+
+function autoCompleteHideMenu(element, update){ 
+    new Effect.Fade(update,{duration:0.15});
+    new Effect.Fade($("issueTable"),{duration:0.15});
+    new Effect.Fade($("issueList"),{duration:0.15});
+}
+
+function autoCompleteShowMenu(element, update){ 
+    $("issueList").style.left = $("mainContent").style.left;    
+    $("issueList").style.top = $("mainContent").style.top;
+    $("issueList").style.width = $("issueAutocompleteList").style.width;    
+    
+    Effect.Appear($("issueList"), {duration:0.15});
+    Effect.Appear($("issueTable"), {duration:0.15});    
+    Effect.Appear(update,{duration:0.15});
+    }
+    
+    function callInProgress(xmlhttp) {
+        switch (xmlhttp.readyState) {
+            case 1: case 2: case 3:
+                return true;
+                break;
+        // Case 4 and 0
+            default:
+                return false;
+                break;
+        }
+    }
 </script>
 
 <%-- <div class="tabs" id="tabs">
@@ -912,7 +1080,7 @@ Version version = (Version) ctx.getBean("version");
     <html:form action="/CaseManagementView" method="get">
         <html:hidden property="demographicNo"/>
         <html:hidden property="providerNo" value="<%=provNo%>" />
-        <html:hidden property="tab"/>
+        <html:hidden property="tab" value="Current Issues"/>
         <html:hidden property="hideActiveIssue"/>
         <input type="hidden" name="chain" value="list" /> 
         <input type="hidden" name="method" value="view"/>
@@ -953,17 +1121,17 @@ Version version = (Version) ctx.getBean("version");
     </div> --%>
         <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
         <div id="divR1" style="float:left; width:34%; border-width:0px; margin-left:2px; background-color:#CCCCFF;"><%-- <textarea name="shTextarea" tabindex="1" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>--%>
-            <html:textarea property="cpp.socialHistory" tabindex="1" style="height:60; overflow: auto;" cols="28"/>
+            <html:textarea property="cpp.socialHistory" tabindex="1" style="height:60; overflow: auto;" rows="4" cols="28"/>
         </div>
         
         <!-- This is the Family History cell ...fh...-->
         <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;"><%-- <textarea name="fhTextarea" tabindex="2" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>--%>
-            <html:textarea property="cpp.familyHistory" tabindex="2" style="height:60; overflow: auto;" cols="28"/>
+            <html:textarea property="cpp.familyHistory" tabindex="2" style="height:60; overflow: auto;"  rows="4" cols="28"/>
         </div>
         
         <!-- This is the Medical History cell ...mh...-->
         <div style="clear:right; float:left; width:33%; border-width:0px; margin-right:-5px; background-color:#CCCCFF;"><%-- <textarea name="mhTextarea" tabindex="3" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>--%>
-            <html:textarea property="cpp.medicalHistory" tabindex="3" style="height:60; overflow: auto;" cols="28"/>
+            <html:textarea property="cpp.medicalHistory" tabindex="3" style="height:60; overflow: auto;"  rows="4" cols="28"/>
         </div>
         
         <!--2nd row headers -->
@@ -995,22 +1163,22 @@ Version version = (Version) ctx.getBean("version");
     
         <!--Ongoing Concerns cell -->
         <div style="float:left; width:50%; margin-left:2px; background-color:#CCCCFF;"><%-- <textarea id="ocTextarea" name='ocTextarea' tabindex="4" wrap="hard"  cols= "44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>"><%=bean.ongoingConcerns%></textarea>--%>
-            <html:textarea property="cpp.ongoingConcerns" tabindex="4" style="height:60; overflow: auto;" cols="44"/>
+            <html:textarea property="cpp.ongoingConcerns" tabindex="4" style="height:60; overflow: auto;"  rows="4" cols="44"/>
         </div>     
         
         <!--Reminders cell -->
         <div style="clear:right; float:left; width:50%; margin-right:-5px; background-color:#CCCCFF;"><%-- <textarea name='reTextarea' tabindex="5" wrap="hard" cols="44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>--%>
-            <html:textarea property="cpp.reminders" tabindex="5" style="height:60; overflow: auto;" cols="44"/>
+            <html:textarea property="cpp.reminders" tabindex="5" style="height:60; overflow: auto;"  rows="4" cols="44"/>
         </div> 
     
-    <div id="rightNavBar" style="width:25%; display:inline; float:right; background-color:white; padding-left:2px;" id="rightNavbar"><jsp:include page="rightColumn.jsp" /></div>
+    <div id="rightNavBar" style="width:25%; display:inline; float:right; background-color:white; padding-left:2px;"><jsp:include page="rightColumn.jsp" /></div>
     <div style="float:left; width:75%; border-width:0px; margin-right:-5px; margin-left:2px; background-color:#CCCCFF; padding-bottom:5px; border-bottom:thin groove #000000; font-size:10px;">
             <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
             <div id="filter" style="display:none;">
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
                     Provider:
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
-                        <li><html:multibox styleId="filter_providers" property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
+                        <li><html:multibox property="filter_providers" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
                         <%
                         Set providers = (Set)request.getAttribute("providers"); 
                         Object[] arrProv = providers.toArray();
@@ -1026,7 +1194,7 @@ Version version = (Version) ctx.getBean("version");
                             prov = (Provider)arrProv[idx];
                             providerNo = prov.getProviderNo();
                         %>
-                        <li><html:multibox styleId="filter_providers" property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
+                        <li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
                         <%                        
                         }
                         %>
@@ -1072,47 +1240,56 @@ Version version = (Version) ctx.getBean("version");
                         <html:option value="programName">Program</html:option>
                         <html:option value="roleName">Role</html:option>
                 </html:select> --%>
-                <div style="float:left; clear:both; cursor:pointer; text-decoration:underline;" onclick="document.caseManagementViewForm.method.value='view';document.caseManagementViewForm.submit()">
+                <div style="float:left; clear:both; cursor:pointer; text-decoration:underline;" onclick="return filter();">
                     Show View
                 </div>
             </div>           
-            &nbsp;         
-            <div id="intelBox" style="float:left; position:relative; left:45%; clear:both;">
-                <input id="enTemplate" tabindex="6" autocomplete="off" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
-                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>
-            </div>
-           </html:form>
+                                
+                <input id="enTemplate" style="float:left; position:relative; left:45%; clear:both;" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
+                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>                 
           </div>
+           </html:form>
           
               <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0; margin-right:-5px;">
                   <html:hidden property="demographicNo"/>
                   <html:hidden property="providerNo"/>
                   <html:hidden property="includeIssue" value="off"/>
-                  <input type="hidden" name="deleteId" value="0" />
-                  <input type="hidden" name="lineId" value="0" />
-                  <input type="hidden" name="from" value="casemgmt" />
-                  <input type="hidden" name="method" value="save"/>
+                  <input type="hidden" name="deleteId" value="0">
+                  <input type="hidden" name="lineId" value="0">
+                  <input type="hidden" name="from" value="casemgmt">
+                  <input type="hidden" name="method" value="save">
                   <input type="hidden" name="change_diagnosis" value="<c:out value="${change_diagnosis}"/>"/>
                   <input type="hidden" name="change_diagnosis_id" value="<c:out value="${change_diagnosis_id}"/>"/>                                     
                   <input type="hidden" name="newIssueId" id="newIssueId">
                   <input type="hidden" name="newIssueName" id="newIssueName">
                   <input type="hidden" name="ajax" value="false">
                   <input type="hidden" name="chain" value="">
-                  <input type="hidden" name="caseNote.program_no" value="<%=pId%>"/>
+                  <input type="hidden" name="caseNote.program_no" value="<%=pId%>">
                   <input type="hidden" name="noteId" value="0">
                   <input type="hidden" name="note_edit" value="new">
                   <input type="hidden" name="sign" value="off">
                   <input type="hidden" name="verify" value="off">
-                  <div id="encMainDiv" style="width:75%; border-width:0px; margin-right:-5px; background-color:#FFFFFF; height:500px; overflow:auto; margin-left:2px; display:inline; float:left;">
-                      
-                      
-                      <%-- <p style="font-size:6px; clear:both"><a href="javascript:viewIssues()">view Issues</a></p> --%>
+                  <input type="hidden" name="forceNote" value="false">
+                  <div id="mainContent" style="width:75%; display:inline; float:left; margin-right:-5px;"> 
+                     <span id="issueList" style="height:490px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
+                          <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
+                              <tr>
+                                  <td style="height:480px; vertical-align: bottom;"> 
+                                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteList" name="issueAutocompleteList" style="position:relative; left:0px; display:none;"></div>
+                                  </td>
+                              </tr>
+                          </table> 
+                      </span>
+                      <div id="encMainDiv" style="width:99%; border-right: thin groove #000000; border-left: thin groove #000000; margin-right:-5px; background-color:#FFFFFF; height:480px; overflow:auto; margin-left:2px;">
+                          
+                          
+                          <%-- <p style="font-size:6px; clear:both"><a href="javascript:viewIssues()">view Issues</a></p> --%>
         
-                      <%-- <div style="display:none" id="viewIssues">
+                          <%-- <div style="display:none" id="viewIssues">
             <jsp:include page="/casemgmt/current_issues.jsp" />
         </div> --%>
         
-                      <%--
+                          <%--
 <c:if test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
 <html:hidden property="note_view" value="summary"/>
 </c:if>
@@ -1126,8 +1303,8 @@ Version version = (Version) ctx.getBean("version");
 <html:hidden property="prescipt_view" value="all"/>
 </c:if>
     --%>
-                      <c:if test="${not empty Notes}">                        
-                          <%-- <td align="left">
+                          <c:if test="${not empty Notes}">                        
+                              <%-- <td align="left">
 <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='summary';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit(); return false;" >Summary</span>
 &nbsp;|&nbsp;
 <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit();return false;">Detailed</span>
@@ -1144,7 +1321,7 @@ Version version = (Version) ctx.getBean("version");
 	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore Lost Note</span>
 </c:if>
 </td> --%>                            
-                          <%-- <c:if test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
+                              <%-- <c:if test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
         
         <table id="test" width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
             <tr class="title">
@@ -1219,120 +1396,113 @@ Version version = (Version) ctx.getBean("version");
         </table>
     </c:if> 
     <c:if test="${sessionScope.caseManagementViewForm.note_view=='detailed'}"> --%>            
-                          <%
-                          java.util.List noteList=(java.util.List)request.getAttribute("Notes");
-                          int idx = 0;
-                          int noteSize = noteList.size();            
-                          
-                          //Notes list will contain all notes including most recently saved
-                          //we need to skip this one when displaying
-                          CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
-                          
-                          if( cform.getCaseNote().getId() != null ) {
-                          savedId = cform.getCaseNote().getId();                
-                          }
-                          
-                          for( idx = 0; idx < noteSize; ++idx ) {
-                          
-                          CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
-                          %>
-                          
-                          <div id="n<%=note.getId()%>" style="cursor:pointer; width:99%; background-color:#EFEFEF; float:left; font-size:12px; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000; margin-right:-3px;"> 
                               <%
-                              //display last saved note for editing
-                              if( note.getId() == savedId ) {    
-                                found = true;
-                              %>    
-                              <textarea name='caseNote_note' id='caseNote_note' cols="78" rows="10" wrap=hard tabindex="7" style="width:100%; height:166px;overflow:auto;border-style:none;"><nested:write property="caseNote.note"/></textarea>
-                              <span id="sig<%=note.getId()%>">
-                                  <%@ include file="noteIssueList.jsp" %>                                        
-                              </span>
-                              <div id='save' style='cursor:default; margin-right:-3px;'>
-                                  <c:if test="${sessionScope.passwordEnabled=='true'}">
-                                      <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
-                                  </c:if>
-                                  <span style="float:right">   
-                                      <input type='image' id='toggleIssue' onclick="return showIssues();" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
-                                      <input  tabindex="9" type="button" id="asgnIssues" value="Assign Issues">&nbsp;
-                                      <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" onkeypress="return submitIssue(event);" size="25">
-                                      <span id="busy" style="display: none"><img style="position:absolute; z-index:1;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
-                                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteList" name="issueAutocompleteList" style="display:none"></div>            
-                                  </span>
-                                  <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;
-                                  <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;
-                                  <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick=" document.forms['caseManagementEntryForm'].sign.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
-                                  <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
-                                  <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
-                                  <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick="closeEnc(event);return false;" title='<bean:message key="global.btnExit"/>'>
-                              </div>
+                              java.util.List noteList=(java.util.List)request.getAttribute("Notes");
+                              int idx = 0;
+                              int noteSize = noteList.size();            
                               
-                              <%    
-                              }
-                              //else display contents of note for viewing
-                              else {
+                              //Notes list will contain all notes including most recently saved
+                              //we need to skip this one when displaying
+                              CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
+                              
+                              //if we're editing a note, display it
+                              //else check for last unsigned note and use it if present
+                              if( cform.getCaseNote().getId() != null ) {
+                                savedId = cform.getCaseNote().getId();                
+                              }                              
+                              
+                              for( idx = 0; idx < noteSize; ++idx ) {
+                              
+                              CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
+                              String noteStr = note.getNote();
                               %>
-                              <img title="Minimize Display" id='quitImg<%=idx%>' onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>
+                              <div id="h<%=note.getId()%>" style="position: absolute; display:none; font-size:12px; left:0px; top:0px;">&nbsp;</div>
+                              <div id="n<%=note.getId()%>" style="float:left; background-color:#EFEFEF; font-size:12px; width:99%; border-bottom: thin groove #000000; margin-right:-3px;"> 
                               
-                              <%
-                              if( note.isLocked() ) {
-                              %>
-                              <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>
-                              <%
-                              }
-                              else {
-                              String description;
-                              if( note.isSigned() )
-                              description = " signed by " + note.getSigning_provider_no();
-                              else
-                              description = " saved by " + note.getProviderName(); 
-                              
-                              String noteStr = note.getNote();                            
-                              %>
-                              <pre><%=noteStr%></pre>
-                              
-                              <span id="sig<%=note.getId()%>"><p id="sumary<%=note.getId()%>"><%=DateUtils.getDate(note.getUpdate_date(),dateFormat)  + description%><sup>rev <%=note.getRevision()%></sup>
-                                      
-                                      <%                        
-                                      Set issSet = note.getIssues();
-                                      if( issSet.size() > 0 ) {
-                                      %>                      
-                                      <br>Assigned Issues
-                                      <ul style="list-style: circle outside none; margin-top:0px;">                            
-                                          <% 
-                                          Iterator i = issSet.iterator();
-                                          while( i.hasNext() ) {
-                                          CaseManagementIssue iss = (CaseManagementIssue)i.next();
-                                          %>
-                                          <li><%=iss.getIssue().getDescription().trim()%></li>
+                                  <%
+                                  //display last saved note for editing
+                                  if( note.getId() == savedId ) {    
+                                  found = true;
+                                  %>    
+                                  <textarea  tabindex="7" cols="78" rows="10" wrap=hard style='width:100%; rows:10; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
+                                  <div style="display:inline;" id="sig<%=note.getId()%>">
+                                      <%@ include file="noteIssueList.jsp" %>                                        
+                                  </div>
+                                  
+                                      <c:if test="${sessionScope.passwordEnabled=='true'}">
+                                          <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
+                                      </c:if>                                 
+                                  
+                                  <%    
+                                  }
+                                  //else display contents of note for viewing
+                                  else {
+                                  %>
+                                  <img title="Minimize Display" id='quitImg<%=idx%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>
+                                  
+                                  <%
+                                  if( note.isLocked() ) {
+                                  %>
+                                  <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>
+                                  <%
+                                  }
+                                  else {
+                                  String description;
+                                  if( note.isSigned() )
+                                  description = " Signed by " + note.getSigning_provider_no();
+                                  else
+                                  description = " Saved by " + note.getProviderName(); 
+                                                                       
+                                  String rev = note.getRevision();
+                                  %>
+                                  <pre><%=noteStr%></pre>
+                                  
+                                  <div style="display:inline;" id="sig<%=note.getId()%>"><div id="sumary<%=note.getId()%>">
+                                      <i>Observation Date:&nbsp;<%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></i><br>
+                                      Created:&nbsp;<%=DateUtils.getDate(note.getCreate_date(),dateFormat)%><br><%=description + " " + DateUtils.getDate(note.getUpdate_date(),dateFormat)%><sup>rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></sup>
+                                          
+                                          <%                        
+                                          Set issSet = note.getIssues();
+                                          if( issSet.size() > 0 ) {
+                                          %>                      
+                                          <br>Assigned Issues
+                                          <ul style="list-style: circle outside none; margin-top:0px;">                            
+                                              <% 
+                                              Iterator i = issSet.iterator();
+                                              while( i.hasNext() ) {
+                                              CaseManagementIssue iss = (CaseManagementIssue)i.next();
+                                              %>
+                                              <li><%=iss.getIssue().getDescription().trim()%></li>
+                                              <%
+                                              }
+                                          %></ul>                                     
                                           <%
                                           }
-                                      %></ul>                                     
-                                      <%
-                                      }
-                                      %>
-                                  </p>
-                              </span>
+                                          %>
+                                      </div>
+                                  </div>
+                                  <%
+                                  }
+                                  }
+                                  //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
+                                  %>
+                                  
+                              </div>
                               <%
-                              }
+                              //if we are not editing note, remember note ids for setting event listeners
+                              //Internet Explorer does not play nice with inserting javascript between divs
+                              //so we store the ids here and list the event listeners at the end of this script
+                              if( note.getId() != savedId ) {
+                                
+                                if( note.isLocked() ) { 
+                                    lockedNotes.add(note.getId());
+                                }
+                                else {
+                                    unLockedNotes.add(note.getId());
+                                }
                               }
                               %>
-                              
-                          </div>
-                          <%
-                          //if we are not editing note, remember note ids for setting event listeners
-                          //Internet Explorer does not play nice with inserting javascript between divs
-                          //so we store the ids here and list the event listeners at the end of this script
-                          if( note.getId() != savedId ) {
-                          
-                          if( note.isLocked() ) { 
-                          lockedNotes.add(note.getId());
-                          }
-                          else {
-                          unLockedNotes.add(note.getId());
-                          }
-                          }
-                          %>
-                          <%--
+                              <%--
                                 <tr bgcolor="<%=bgcolor1 %>">
                                     <td width="7%">Date</td>
                                     <td width="93%"><fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.update_date}"/></td>
@@ -1379,10 +1549,10 @@ Version version = (Version) ctx.getBean("version");
                                 </tr> 
                                 --%>
             
-                          <%}%>
-                          
-                          
-                          <%--</c:if>
+                              <%}%>
+                              
+                              
+                              <%--</c:if>
     
     <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='summary';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit(); return false;" >Summary</span>
     &nbsp;|&nbsp;
@@ -1401,48 +1571,53 @@ Version version = (Version) ctx.getBean("version");
     </c:if>
     
         <br/><br/>--%>
-                      </c:if>        
-                      <%
-                      if( !found ) {
-                      savedId = 0;
-                      %>                
-                      <div id="n0" style="float:left; background-color:#EFEFEF; font-size:12px; width:99%; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000; margin-right:-3px;">           
+                          </c:if>        
                           
-                          <textarea  tabindex="7" cols="78" rows="10" wrap=hard style='width:100%; height:166px;overflow:auto;border-style:none;' name="caseNote_note" id="caseNote_note"><nested:write property="caseNote.note"/></textarea>
-                          <span id="sig0">
-                              <%@ include file="noteIssueList.jsp" %>                                        
-                          </span>
-                          <div id='save' style="margin-right:-3px;">
+                          <%
+                          if( !found ) {
+                          savedId = 0;
+                          %>    
+                          <div id="h<%=savedId%>" style="position: absolute; display:none; font-size:12px; left:0px; top:0px;">&nbsp;</div>
+                          <div id="n<%=savedId%>" style="float:left; background-color:#EFEFEF; font-size:12px; width:100%; border-bottom: thin groove #000000; margin-right:-3px;">                                     
+                              <textarea  tabindex="7" cols="78" rows="10" wrap=hard style='width:100%; rows:10; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
+                              <div style="display:inline;" id="sig0">
+                                  <%@ include file="noteIssueList.jsp" %>                                        
+                              </div>
+                              
                               <c:if test="${sessionScope.passwordEnabled=='true'}">
                                   <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
                               </c:if>
-                              <span style="float:right; margin-right:5px;">   
-                                  <input type='image' id='toggleIssue' onclick="return showIssues();" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
-                                  <input  tabindex="9" type="button" id="asgnIssues" value="Assign Issues">&nbsp;
-                                  <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" onkeypress="return submitIssue(event);" size="25">
-                                  <span id="busy" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
-                                  <div class="enTemplate_name_auto_complete" id="issueAutocompleteList" name="issueAutocompleteList" style="display:none; z-index: 1;"></div>            
-                              </span>
-                              <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;
-                              <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
-                              <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
-                              <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
-                              <input type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>
+                              
+                              
                           </div>
+                          <%
+                          }
+                          %>
                           
-                      </div>
-                      <%
-                      }
-                      %>
-                      
-                      <%--
+                          <%--
 <c:if test="${empty Notes and sessionScope.readonly=='false'}">
     <c:url value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
     <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New Note</span>
 </c:if>
 
-        --%>
-                      
+        --%>                       
+                      </div>
+                      <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
+                          <span style="float:right; margin-right:5px;">                                
+                              <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
+                              <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" style="display:none;" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
+                              <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
+                              <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+                              <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
+                              <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>
+                          </span>
+                              <input type='image' id='toggleIssue' onclick="return showIssues();" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
+                              <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;
+                              <input  tabindex="9" type="button" id="asgnIssues" value="Assign Issues">
+                              <span id="busy" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
+                                         
+                          
+                      </div>
                   </div>
               </nested:form>          
           
@@ -1464,23 +1639,26 @@ Version version = (Version) ctx.getBean("version");
             Element.observe('n<%=num%>', 'click', editNote);
     <%
         }
-    %>            
-                 
-    $("caseNote_note").focus();
-    $("caseNote_note").scrollTop = $("caseNote_note").scrollHeight;
+    %>   
     
-    if( $("caseNote_note").value.length > 0 )
-        $("caseNote_note").value += "\n";
-        
-    setCaretPosition($("caseNote_note"), $("caseNote_note").value.length);
-     
+    document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
+    caseNote = "caseNote_note" + "<%=savedId%>";                      
+    
+    if( $(caseNote).value.length > 0 )
+        $(caseNote).value += "\n";
+            
+    adjustCaseNote();
+    $(caseNote).focus();
+    setCaretPosition($(caseNote), $(caseNote).value.length);     
+    Element.observe(caseNote, "keyup", monitorCaseNote);    
+    
     $("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
     var submitIssues = false;
    //AutoCompleter for Issues
     <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
-    var issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId});
+    var issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});
 
     <%
     int MaxLen = 20;
@@ -1504,13 +1682,18 @@ Version version = (Version) ctx.getBean("version");
    var changeIssueFunc;  //set in changeDiagnosis function above
    var addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, defaultDiv);
    Element.observe('asgnIssues', 'click', addIssueFunc);
-   new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );
-   
-   <c:if test="${can_restore}">
-       restore();
-   </c:if>
+   new Autocompleter.Local('enTemplate', 'enTemplate_list', autoCompList, { colours: itemColours, afterUpdateElement: menuAction }  );      
    
    //start timer for autosave
    setTimer();  
+   
+   //are we editing existing note?  if so show new note button
+   <% if( found == true ) { %>        
+        $("newNoteImg").show();
+   <%} else { %>
+        $("newNoteImg").hide();        
+   <%}%>
+   
+   origCaseNote = $F(caseNote);
    </script>
    
