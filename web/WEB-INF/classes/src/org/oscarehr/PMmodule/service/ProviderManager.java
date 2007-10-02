@@ -79,7 +79,7 @@ public class ProviderManager
 	}
 	
 	public List getProgramDomain(String providerNo) {
-		return programProviderDAO.getProgramDomain(Long.valueOf(providerNo));
+		return programProviderDAO.getProgramDomain(providerNo);
 	}
 	
 	public List<Agency> getAgencyDomain(String providerNo) {

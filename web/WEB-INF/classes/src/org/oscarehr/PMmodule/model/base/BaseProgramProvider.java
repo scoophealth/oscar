@@ -54,7 +54,7 @@ public abstract class BaseProgramProvider  implements Serializable {
 
 	// fields
 	private java.lang.Long _programId;
-	private java.lang.Long _providerNo;
+	private java.lang.String _providerNo;
 	private java.lang.Long _roleId;
 
 	// many to one
@@ -115,13 +115,12 @@ public abstract class BaseProgramProvider  implements Serializable {
 	 */
 	public void setProgramId (java.lang.Long _programId) {
 		this._programId = _programId;
-	}
-
+	}        
 
 	/**
 	 * Return the value associated with the column: provider_no
 	 */
-	public java.lang.Long getProviderNo () {
+	public java.lang.String getProviderNo () {
 		return _providerNo;
 	}
 
@@ -129,11 +128,10 @@ public abstract class BaseProgramProvider  implements Serializable {
 	 * Set the value related to the column: provider_no
 	 * @param _providerNo the provider_no value
 	 */
-	public void setProviderNo (java.lang.Long _providerNo) {
+	public void setProviderNo (java.lang.String _providerNo) {
 		this._providerNo = _providerNo;
-	}
-
-
+	}              
+        
 	/**
 	 * Return the value associated with the column: role_id
 	 */

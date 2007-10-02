@@ -208,7 +208,7 @@ public class ProgramManager {
 	}
 
 	public List getProgramProvidersByProvider(String providerNo) {
-		return programProviderDAO.getProgramProvidersByProvider(Long.valueOf(providerNo));
+		return programProviderDAO.getProgramProvidersByProvider(providerNo);
 	}
 
 	public ProgramProvider getProgramProvider(String id) {
@@ -216,7 +216,7 @@ public class ProgramManager {
 	}
 
 	public ProgramProvider getProgramProvider(String providerNo, String programId) {
-		return programProviderDAO.getProgramProvider(Long.valueOf(providerNo), Long.valueOf(programId));
+		return programProviderDAO.getProgramProvider(providerNo, Long.valueOf(programId));
 	}
 
 	public void saveProgramProvider(ProgramProvider pp) {
@@ -341,7 +341,7 @@ public class ProgramManager {
 	public List<Program> getProgramDomain(String providerNo) {
 		List<Program> programDomain = new ArrayList<Program>();
 		
-		for (Iterator<?> i = programProviderDAO.getProgramDomain(new Long(providerNo)).iterator(); i.hasNext();) {
+		for (Iterator<?> i = programProviderDAO.getProgramDomain(providerNo).iterator(); i.hasNext();) {
 			ProgramProvider programProvider = (ProgramProvider) i.next();
 			programDomain.add(getProgram(programProvider.getProgramId()));
 		}

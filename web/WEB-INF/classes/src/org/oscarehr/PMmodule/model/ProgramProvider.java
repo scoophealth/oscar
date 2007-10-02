@@ -39,7 +39,7 @@ public class ProgramProvider implements Serializable {
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Long _id;// fields
     private Long _programId;
-    private Long _providerNo;
+    private String _providerNo;
     private Long _roleId;// many to one
     private org.caisi.model.Role _role;
     private Provider _provider;// collections
@@ -121,7 +121,7 @@ public class ProgramProvider implements Serializable {
     /**
 	 * Return the value associated with the column: provider_no
      */
-    public Long getProviderNo () {
+    public String getProviderNo () {
         return _providerNo;
     }
 
@@ -129,7 +129,7 @@ public class ProgramProvider implements Serializable {
 	 * Set the value related to the column: provider_no
      * @param _providerNo the provider_no value
      */
-    public void setProviderNo (Long _providerNo) {
+    public void setProviderNo (String _providerNo) {
         this._providerNo = _providerNo;
     }
 
