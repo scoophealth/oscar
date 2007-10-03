@@ -67,7 +67,10 @@ public class MeasurementFlowSheet {
     private String warningColour = null;
     private String recommendationColour = null;
     Hashtable indicatorHash = new Hashtable();
-    
+
+    private boolean universal;
+    private boolean isMedical = true;
+
     public void parseDxTriggers(String s){
         dxTriggers = s.split(","); //TODO: what do about different coding systems.
     }
@@ -297,9 +300,23 @@ public class MeasurementFlowSheet {
         Collections.sort(nonOrderedList,new FlowSheetSort(list));
         return nonOrderedList;
     }
-  
-      
-    
+
+    public void setUniversal(boolean universal) {
+        this.universal = universal;
+    }
+
+    public boolean isUniversal() {
+        return universal;
+    }
+
+    public boolean isMedical() {
+        return isMedical;
+    }
+
+    public void setMedical(boolean medical) {
+        isMedical = medical;
+    }
+
     class FlowSheetSort implements Comparator {
         ArrayList list = null;
         public FlowSheetSort(){     

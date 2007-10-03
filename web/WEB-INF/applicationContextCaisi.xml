@@ -6,6 +6,21 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
         default-autowire="no">
 
+    <!-- configure the available measurement flow sheets -->
+    <bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
+        <property name="flowSheets">
+            <list>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/financesFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/identificationFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/socialLegalFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/housingFlowsheet.xml</value>
+            </list>
+        </property>
+    </bean>
+    
     <!-- audit strategy -->
     <bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.BedAuditStrategy" autowire="byName"/>
     <bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy" autowire="byName"/>

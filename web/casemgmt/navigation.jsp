@@ -350,6 +350,37 @@
 </td></tr>
 
 <caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
+    <tr style="background-color:#BBBBBB;"><td>Flowsheets</td></tr>
+
+
+    <!-- measurement -->
+    <tr><td>
+        <%
+            dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
+            Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
+            ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
+            for (String flowsheet : flowsheets) {
+        %>
+        <a href="javascript:void(0)"
+           onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
+        </a>
+        <%}%>
+
+        <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">
+            <option value="null" selected>-select group-</option>
+            <%
+                for(int j=0; j<bean.measurementGroupNames.size(); j++) {
+                    String tmp = (String)bean.measurementGroupNames.get(j);
+            %>
+            <option value="<%=tmp%>"><%=tmp %></option>
+            <%}%>
+        </select>
+    </td></tr>
+
+
+</caisirole:SecurityAccess>
+
+<caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr style="background-color:#BBBBBB;"><td>Measurements</td></tr>
 
 
@@ -358,11 +389,12 @@
         <%
             dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
             Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
-            ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
-            for (int f = 0; f < flowsheets.size();f++){
-                String flowsheetName = (String) flowsheets.get(f);
+            ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
+            for (String flowsheet : flowsheets) {
         %>
-        <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheetName%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheetName)%></a>
+        <a href="javascript:void(0)"
+           onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
+        </a>
         <%}%>
 
         <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">

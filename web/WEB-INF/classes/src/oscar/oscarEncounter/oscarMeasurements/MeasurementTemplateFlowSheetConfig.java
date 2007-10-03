@@ -37,7 +37,6 @@ import org.jdom.input.SAXBuilder;
 import org.springframework.beans.factory.InitializingBean;
 import oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementTypeBeanHandler;
 import oscar.oscarEncounter.oscarMeasurements.data.ImportMeasurementTypes;
-import oscar.oscarEncounter.oscarMeasurements.util.EctFindMeasurementTypeUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -57,13 +56,14 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
 
     private List<File> flowSheets;
     
-    ArrayList dxTriggers = new ArrayList();
-    Hashtable dxTrigHash = new Hashtable();
-    Hashtable flowsheetDisplayNames = new Hashtable();
+    ArrayList<String> dxTriggers = new ArrayList<String>();
+    Hashtable<String, ArrayList<String>> dxTrigHash = new Hashtable<String, ArrayList<String>>();
+    Hashtable<String, String> flowsheetDisplayNames = new Hashtable<String, String>();
+    ArrayList<String> universalFlowSheets = new ArrayList<String>();
 
     static MeasurementTemplateFlowSheetConfig measurementTemplateFlowSheetConfig;
 
-    Hashtable flowsheets = null;
+    Hashtable<String, MeasurementFlowSheet> flowsheets = null;
 
     public void afterPropertiesSet() throws Exception {
         measurementTemplateFlowSheetConfig = this;
@@ -95,21 +95,21 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
      * How to query in an effiecent way
      * How to handle when codes have multiple flowsheets
      */
-    public ArrayList getFlowsheetsFromDxCodes(Vector coll) {
-        ArrayList alist = new ArrayList();
+    public ArrayList<String> getFlowsheetsFromDxCodes(Vector coll) {
+        ArrayList<String> alist = new ArrayList<String>();
 
         //should i search run thru the list of possible flowsheets?
         //or should i run thru the list of dx codes for the patient?
         log.debug("Triggers size " + dxTriggers.size());
         for (int i = 0; i < dxTriggers.size(); i++) {
-            String dx = (String) dxTriggers.get(i);
+            String dx = dxTriggers.get(i);
             log.debug("Checking dx " + dx);
             if (coll.contains(dx) && !alist.contains(dx)) {
                 log.debug("coll contains " + dx);
-                ArrayList flowsheets = getFlowsheetForDxCode(dx);
+                ArrayList<String> flowsheets = getFlowsheetForDxCode(dx);
                 log.debug("Size of flowsheets for " + dx + " is " + flowsheets.size());
                 for (int j = 0; j < flowsheets.size(); j++) {
-                    String flowsheet = (String) flowsheets.get(j);
+                    String flowsheet = flowsheets.get(j);
                     if (!alist.contains(flowsheet)) {
                         log.debug("adding flowsheet " + flowsheet);
                         alist.add(flowsheet);
@@ -121,18 +121,22 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
         return alist;
     }
 
-    public Hashtable getDxTrigHash() {
+    public ArrayList<String> getUniveralFlowsheets() {
+        return universalFlowSheets;
+    }
+
+    public Hashtable<String, ArrayList<String>> getDxTrigHash() {
         return dxTrigHash;
     }
 
     public String getDisplayName(String name) {
-        return (String) flowsheetDisplayNames.get(name);
+        return flowsheetDisplayNames.get(name);
     }
 
 
     void loadFlowsheets() throws FileNotFoundException {
 
-        flowsheets = new Hashtable();
+        flowsheets = new Hashtable<String, MeasurementFlowSheet>();
         EctMeasurementTypeBeanHandler mType = new EctMeasurementTypeBeanHandler();
         //TODO: Will change this when there are more flowsheets
 
@@ -140,31 +144,36 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             InputStream is = new FileInputStream(flowSheet);
             MeasurementFlowSheet d = createflowsheet(mType, is);
             flowsheets.put(d.getName(), d);
-            String[] dxTrig = d.getDxTriggers();
-            addTriggers(dxTrig, d.getName());
+            if (d.isUniversal())
+                universalFlowSheets.add(d.getName());
+            else {
+                String[] dxTrig = d.getDxTriggers();
+                addTriggers(dxTrig, d.getName());
+            }
+
             flowsheetDisplayNames.put(d.getName(), d.getDisplayName());
         }
     }
 
-    public ArrayList getFlowsheetForDxCode(String code) {
-        return (ArrayList) dxTrigHash.get(code);
+    public ArrayList<String> getFlowsheetForDxCode(String code) {
+        return dxTrigHash.get(code);
     }
 
     private void addTriggers(String[] dxTrig, String name) {
         if (dxTrig != null) {
-            for (int i = 0; i < dxTrig.length; i++) {
-                if (!dxTriggers.contains(dxTrig[i])) {
-                    dxTriggers.add(dxTrig[i]);
+            for (String aDxTrig : dxTrig) {
+                if (!dxTriggers.contains(aDxTrig)) {
+                    dxTriggers.add(aDxTrig);
                 }
-                if (dxTrigHash.containsKey(dxTrig[i])) {
-                    ArrayList l = (ArrayList) dxTrigHash.get(dxTrig[i]);
+                if (dxTrigHash.containsKey(aDxTrig)) {
+                    ArrayList<String> l = dxTrigHash.get(aDxTrig);
                     if (!l.contains(name)) {
                         l.add(name);
                     }
                 } else {
-                    ArrayList l = new ArrayList();
+                    ArrayList<String> l = new ArrayList<String>();
                     l.add(name);
-                    dxTrigHash.put(dxTrig[i], l);
+                    dxTrigHash.put(aDxTrig, l);
                 }
             }
         }
@@ -174,29 +183,25 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     private MeasurementFlowSheet createflowsheet(final EctMeasurementTypeBeanHandler mType, InputStream is) {
         MeasurementFlowSheet d = new MeasurementFlowSheet();
 
-        EctFindMeasurementTypeUtil fmtu = new EctFindMeasurementTypeUtil();
         try {
             SAXBuilder parser = new SAXBuilder();
             Document doc = parser.build(is);
             Element root = doc.getRootElement();
 
             //MAKE SURE ALL MEASUREMENTS HAVE BEEN INITIALIZED
-            ImportMeasurementTypes importMeamsurementTypes = new ImportMeasurementTypes();
-            importMeamsurementTypes.importMeasurements(root);
+            ImportMeasurementTypes importMeasurementTypes = new ImportMeasurementTypes();
+            importMeasurementTypes.importMeasurements(root);
 
             List indi = root.getChildren("indicator"); // key="LOW" colour="blue">
             for (int i = 0; i < indi.size(); i++) {
                 Element e = (Element) indi.get(i);
                 d.AddIndicator(e.getAttributeValue("key"), e.getAttributeValue("colour"));
             }
-            List items = root.getChildren("item");
-            for (int i = 0; i < items.size(); i++) {
-                Element e = (Element) items.get(i);
-                List attr = e.getAttributes();
-                Hashtable h = new Hashtable();
-                String name = "";
-                for (int j = 0; j < attr.size(); j++) {
-                    Attribute att = (Attribute) attr.get(j);
+            List<Element> items = root.getChildren("item");
+            for (Element e : items) {
+                List<Attribute> attr = e.getAttributes();
+                Hashtable<String, String> h = new Hashtable<String, String>();
+                for (Attribute att : attr) {
                     h.put(att.getName(), att.getValue());
                     //System.out.print(att.getName()+" "+att.getValue() );
                 }
@@ -232,7 +237,12 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
             if (root.getAttribute("recommendation_colour") != null) {
                 d.setRecommendationColour(root.getAttribute("recommendation_colour").getValue());
             }
-
+            if (root.getAttribute("is_universal") != null) {
+                d.setUniversal("true".equals(root.getAttribute("is_universal").getValue()));
+            }
+            if (root.getAttribute("is_medical") != null) {
+                d.setMedical("true".equals(root.getAttribute("is_medical").getValue()));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -243,7 +253,7 @@ public class MeasurementTemplateFlowSheetConfig implements InitializingBean {
     }
 
     public MeasurementFlowSheet getFlowSheet(String flowsheetName) {
-        return (MeasurementFlowSheet) flowsheets.get(flowsheetName);
+        return flowsheets.get(flowsheetName);
     }
 
     public List<File> getFlowSheets() {
