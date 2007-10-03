@@ -47,6 +47,13 @@
       </tr>
     </table>
 <%
+  //check to see if new case management is request
+ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+boolean newCaseManagement = false;
+
+if( users != null && users.size() > 0 )
+    newCaseManagement = true; 
+
   ResultSet rs = null;
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
@@ -133,6 +140,14 @@
 
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, intparam,  request.getParameter("dboperation"));
   if (rowsAffected ==1) {
+      //propagate demographic to caisi admission table
+      if( newCaseManagement ) {
+        oscar.oscarEncounter.data.EctProgram program = new oscar.oscarEncounter.data.EctProgram(request.getSession());
+        String[] caisiParam = new String[2];
+        caisiParam[0] = request.getParameter("provider_no");
+        caisiParam[1] = request.getParameter("demographic_no");
+        apptMainBean.queryExecuteUpdate(caisiParam, "update_admission");
+      }
     //find the democust record for update
     try{  
     DemographicNameAgeString nameAgeString  = DemographicNameAgeString.getInstance();

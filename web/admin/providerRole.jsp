@@ -36,6 +36,14 @@ String curUser_no = (String)session.getAttribute("user");
 </security:oscarSec>
 
 <%
+//check to see if new case management is request
+ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+boolean newCaseManagement = false;
+
+if( users != null && users.size() > 0 )
+    newCaseManagement = true; 
+
+
 //Caisi roles; Declared in function section below
 roles.put("doctor","1");
 roles.put("locum","1");
@@ -49,10 +57,12 @@ DBHelp dbObj = new DBHelp();
 
 
 //get caisi programid for oscar
-String caisiQuery = "select program_id from program where name = 'OSCAR'";
-ResultSet result = dbObj.searchDBRecord(caisiQuery);
-if( result.next() )
-    caisiProgram = result.getString(1);
+if( newCaseManagement ) {
+    String caisiQuery = "select program_id from program where name = 'OSCAR'";
+    ResultSet result = dbObj.searchDBRecord(caisiQuery);
+    if( result.next() )
+        caisiProgram = result.getString(1);
+}
 
 // get role from database
 Vector vecRoleName = new Vector();
@@ -81,7 +91,9 @@ if (request.getParameter("buttonUpdate") != null && request.getParameter("button
     if(dbObj.updateDBRecord(sql, curUser_no)){
     	msg = "Role " + name + " is updated. (" + number + ")";
 	    LogAction.addLog(curUser_no, LogConst.UPDATE, LogConst.CON_ROLE, number +"|"+ roleName, ip);
-            updateCaisiPriv(dbObj, roleName, name, number, curUser_no);
+            
+            if( newCaseManagement )
+                updateCaisiPriv(dbObj, roleName, name, number, curUser_no);
     } else {
     	msg = "Role " + name + " is <font color='red'>NOT</font> updated!!! (" + number + ")";
     }
@@ -96,7 +108,9 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     if(dbObj.updateDBRecord(sql, curUser_no)){
     	msg = "Role " + name + " is added. (" + number + ")";
 	    LogAction.addLog(curUser_no, LogConst.ADD, LogConst.CON_ROLE, number +"|"+ name, ip);
-            addCaisiPriv(dbObj, name, number, curUser_no);
+            
+            if( newCaseManagement )
+                addCaisiPriv(dbObj, name, number, curUser_no);
     } else {
     	msg = "Role " + name + " is <font color='red'>NOT</font> added!!! (" + number + ")";
     }
@@ -118,7 +132,9 @@ if (request.getParameter("submit") != null && request.getParameter("submit").equ
     	sql += "'" + "<provider_no>" + number + "</provider_no>" + "<role_name>" + roleName + "</role_name>" + "')";
 		dbObj.updateDBRecord(sql, curUser_no);
 	    LogAction.addLog(curUser_no, LogConst.DELETE, LogConst.CON_ROLE, number +"|"+ roleName, ip);
-            delCaisiPriv(dbObj, roleName, name, number, curUser_no);
+            
+            if( newCaseManagement )
+                delCaisiPriv(dbObj, roleName, name, number, curUser_no);
     } else {
     	msg = "Role " + name + " is <font color='red'>NOT</font> deleted!!! (" + number + ")";
     }
