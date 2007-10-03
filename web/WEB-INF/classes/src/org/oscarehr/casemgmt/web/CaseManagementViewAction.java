@@ -292,7 +292,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			request.setAttribute("Prescriptions",prescriptions);	
 			
 			// Setup RX bean start
-	        RxSessionBean bean = new RxSessionBean(); 
+	        RxSessionBean bean = new RxSessionBean();
 	        bean.setProviderNo(providerNo);
 	        bean.setDemographicNo(Integer.parseInt(demoNo));	        
 	        request.getSession().setAttribute("RxSessionBean", bean);	        
