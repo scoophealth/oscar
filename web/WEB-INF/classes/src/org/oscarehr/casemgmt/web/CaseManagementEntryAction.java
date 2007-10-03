@@ -557,7 +557,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 	}
 
 
-	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {                
+	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {                
                 HttpSession session = request.getSession();
                 if( session == null || session.getAttribute("userrole") == null )
                     return mapping.findForward("expired");                
@@ -592,7 +592,23 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		return mapping.findForward("view");
 	}
 
-
+        public ActionForward ajaxsave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+            if( request.getSession().getAttribute("userrole") == null )
+                return mapping.findForward("expired");
+            
+            CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
+            long oldId = cform.getCaseNote().getId();
+            if( noteSave(cform, request) ) {
+                cform.setMethod("view");                
+                request.getSession().setAttribute("newNote",false); 
+                request.getSession().setAttribute("caseManagementEntryForm", cform);
+                request.setAttribute("ajaxsave", cform.getCaseNote().getId());
+                request.setAttribute("origNoteId", oldId);
+                return mapping.findForward("issueList_ajax");
+            }
+            
+            return null;
+        } 
 
 	public ActionForward saveAndExit(ActionMapping mapping, ActionForm form,HttpServletRequest request, HttpServletResponse response)throws Exception{
 		log.debug("saveandexit");
@@ -1129,6 +1145,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		cform.setCaseNote_history(note.getHistory());
 		return mapping.findForward("historyview");
 	}
+        
 
 	public ActionForward autosave(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response){
 
