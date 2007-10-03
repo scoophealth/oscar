@@ -57,7 +57,7 @@ public class MDSResultsData {
      *Lists labs predicated on relationship to patient's consultation
      */
     public ArrayList populateCMLResultsData(String demographicNo, String consultationId, boolean attached) {
-        String sql = "SELECT lpp.id, lpp.collection_date, lpp.accession_num patientLabRouting.id AS labId FROM labPatientPhysicianInfo lpp, patientLabRouting"
+        String sql = "SELECT lpp.id, lpp.collection_date, lpp.accession_num, patientLabRouting.id AS labId FROM labPatientPhysicianInfo lpp, patientLabRouting"
                 +" WHERE patientLabRouting.lab_type = 'CML' AND lpp.id = patientLabRouting.lab_no AND"
                 +" patientLabRouting.demographic_no="+demographicNo;
         
