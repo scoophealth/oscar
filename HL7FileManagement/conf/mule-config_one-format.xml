@@ -12,7 +12,7 @@
 	<connector name="myFileConnector" className="org.mule.providers.file.FileConnector">
 	    <properties>
             <property name="outputPattern" value="${DATE}_${ORIGINALNAME}"/>
-			<property name="pollingFrequency" value="60000"/>
+			<property name="pollingFrequency" value="1000"/>
 	    </properties>
 	</connector>
 
@@ -30,15 +30,16 @@
     <model name="oscarUploader">
         <mule-descriptor name="UploaderUMO" implementation="org.mule.custom.Uploader">
             <inbound-router>
-                <endpoint address="file:///${incomingHL7dir}?connector=myFileConnector" transformers="FileToByteArray">
+                <endpoint address="file:///${incomingHL7dir1}?connector=myFileConnector" transformers="FileToByteArray">
 					<filter pattern="*.hl7,*.xml,*.HL7,*.XML" className="org.mule.custom.providers.file.filters.BusyFilter"/>
 					<properties>
-						<property name="keyLocation" value="${keyLocation}" />
+						<property name="keyLocation" value="${keyLocation1}" />
 						<property name="oscarURL" value="${oscarURL}"/>
 					</properties>
 				</endpoint>
             </inbound-router>
-			<outbound-router>
+
+	    <outbound-router>
                 <router className="org.mule.routing.outbound.OutboundPassThroughRouter">
                     <endpoint address="file:///${completedHL7dir}" />
                 </router>
@@ -52,7 +53,7 @@
             -->
     		<exception-strategy className="org.mule.custom.CustomExceptionStrategy">
 				<!-- Connection refused exceptions will be sent back to the inbound folder so they can try to send again -->
-        		<endpoint address="file:///${incomingHL7dir}"/>
+        		<!-- endpoint address="file:///${incomingHL7dir}"/ -->
 				<!-- All other exceptions will be sent to the errors folder -->
         		<endpoint address="file:///${errorHL7dir}"/>
     		</exception-strategy>
