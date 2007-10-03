@@ -611,7 +611,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                             lineClass = "HiLoRes";
                                         }%>
                                         <tr bgcolor="<%=(linenum % 2 == 1 ? highlight : "")%>" class="<%=lineClass%>">
-                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><u><%= obxName %></u></td>                                         
+                                            <td valign="top" align="left"><%= obrFlag ? "&nbsp; &nbsp; &nbsp;" : "&nbsp;" %><a href="javascript:popupStart('660','900','../ON/labValues.jsp?testName=<%=obxName%>&demo=<%=demographicID%>&labType=HL7&identifier=<%= handler.getOBXIdentifier(j, k) %>')"><%=obxName %></a></td>                                         
                                             <td align="right"><%= handler.getOBXResult( j, k) %></td>
                                             <td align="center">
                                                 <%if (handler.isOBXAbnormal( j, k)) {%>

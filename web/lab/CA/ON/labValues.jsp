@@ -14,6 +14,8 @@ System.out.println(" labType  "+request.getParameter("labType"));
 String labType = request.getParameter("labType");
 String demographicNo = request.getParameter("demo");
 String testName = request.getParameter("testName");
+String identifier = request.getParameter("identifier");
+if (identifier == null) identifier = "NULL";
 
 String highlight = "#E0E0FF";
 
@@ -26,7 +28,7 @@ ArrayList list = null;
 
 if (!demographicNo.equals("null")){
     System.out.println("sdfsdf");
- list = comVal.findValuesForTest(labType, demographicNo, testName);
+ list = comVal.findValuesForTest(labType, demographicNo, testName, identifier);
  
 }
 
