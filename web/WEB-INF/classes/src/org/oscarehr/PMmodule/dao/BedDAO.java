@@ -54,7 +54,7 @@ public class BedDAO extends HibernateDaoSupport {
      * @see org.oscarehr.PMmodule.dao.BedDAO#bedTypeExists(java.lang.Integer)
      */
     public boolean bedTypeExists(Integer bedTypeId) {
-        boolean exists = (((Integer)getHibernateTemplate().iterate("select count(*) from BedType where id = " + bedTypeId).next()) == 1);
+        boolean exists = ((Long)(getHibernateTemplate().iterate("select count(*) from BedType where id = " + bedTypeId).next()) == 1);
         log.debug("bedTypeExists: " + exists);
 
         return exists;
