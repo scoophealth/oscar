@@ -186,13 +186,16 @@ function changeToView(id) {
     var parent = $(id).parentNode.id;
     var sumaryId = "sumary";
     var sumary;
-    var nId;        
+    var nId = parent.substr(1);
+    var sig = 'sig' + nId;
     
     //check if case note has been changed
     //if so, warn user that changes will be lost if not saved    
     if( origCaseNote != $F(id) || origObservationDate != $("observationDate").value) {
-        if( !confirm("Your changes to the current note have not been saved. Select Ok to continue or Cancel to continue editing current note"))
+        if( !confirm("Your changes to the current note have not been saved. Select Ok to save and continue or Cancel to continue editing current note"))
             return false;
+        else
+            ajaxSaveNote(sig);
    }
 
     //cancel updating of issueschangeToView(
@@ -591,6 +594,43 @@ function validDate() {
         return true;
     else
         return false;
+}
+
+function ajaxSaveNote(div) {
+    if( $("observationDate") != undefined && $("observationDate").value.length > 0 && !validDate() ) {
+        alert("Observation date must be in the past");
+        return false;
+    }
+
+<caisi:isModuleLoad moduleName="caisi">
+    if( !issueIsAssigned() ) {
+        alert("At least one(1) issue must be assigned to note");
+        return false;
+    }
+</caisi:isModuleLoad>
+
+    document.forms["caseManagementEntryForm"].method.value = 'ajaxsave';
+    
+    var caseMgtEntryfrm = document.forms["caseManagementEntryForm"];
+    <c:url value="/CaseManagementEntry.do" var="saveAjaxURL" />
+    var url = "<c:out value="${saveAjaxURL}" />";
+
+    var objAjax = new Ajax.Updater (
+                    {success:div},
+                    url,
+                    {
+                        method: 'post',                        
+                        evalScripts: true, 
+                        parameters: Form.serialize(caseMgtEntryfrm),                        
+                        onFailure: function(request) {
+                            if( request.status == 403 )
+                                alert("<bean:message key="oscarEncounter.error.msgExpired"/>");
+                            else
+                                alert("Error saving note " + request.status);
+                        }
+                     }
+                   );          
+    return false;
 }
 
 function savePage(method) {
