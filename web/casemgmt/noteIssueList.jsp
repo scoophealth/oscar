@@ -165,6 +165,22 @@
    //store observation date so we know if user changes it
    origObservationDate = $("observationDate").value;
    
+   //check to see if we need to update div containers to most recent note id
+   //this happens only when we're called thru ajaxsave
+   <nested:notEmpty name="ajaxsave">
+    var origId = <nested:write name="origNoteId" />;
+    var newId = <nested:write name="ajaxsave" />;
+    var oldDiv;
+    var newDiv;
+    var prequel = ["h","n","sig"];
+    
+    for( var idx = 0; idx < prequel.length; ++idx ) {
+        oldDiv = prequel[idx] + origId;
+        newDiv = prequel[idx] + newId;
+        $(oldDiv).id = newDiv;
+    }    
+    </nested:notEmpty>
+   
     //create calendar
     Calendar.setup({ inputField : "observationDate", ifFormat : "%d-%b-%Y %H:%M ", showsTime :true, button : "observationDate_cal", singleClick : true, step : 1 });    
 </script>
