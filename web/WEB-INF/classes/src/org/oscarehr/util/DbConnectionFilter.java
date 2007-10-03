@@ -26,8 +26,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -40,7 +40,12 @@ import oscar.util.SqlUtils;
 public class DbConnectionFilter implements javax.servlet.Filter
 {
     private static ThreadLocal<Connection> dbConnection=new ThreadLocal<Connection>();
-    public static Map<Thread, StackTraceElement[]> debugMap=Collections.synchronizedMap(new HashMap<Thread, StackTraceElement[]>());
+
+    /**
+     * This map was added because not all the code was using hibernate/JDBC properly, once we 
+     * fix the data access we should remove this map as it's a waste of cpu time and memory.
+     */
+    public static Map<Thread, StackTraceElement[]> debugMap=Collections.synchronizedMap(new WeakHashMap<Thread, StackTraceElement[]>());
     
     public static Connection getThreadLocalDbConnection() throws SQLException
     {
