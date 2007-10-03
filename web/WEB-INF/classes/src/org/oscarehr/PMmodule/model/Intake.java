@@ -99,9 +99,11 @@ public class Intake implements Serializable {
 		setAnswers(new TreeSet<IntakeAnswer>());
 	}
 	
-	public void addToanswers(IntakeAnswer answer) {
-		answer.setIntake(this);
-		addToanswers(answer);
+	public void addToanswers(IntakeAnswer intakeAnswer) {
+		intakeAnswer.setIntake(this);
+        if (null == getAnswers())
+                setAnswers(new java.util.TreeSet<org.oscarehr.PMmodule.model.IntakeAnswer>());
+        getAnswers().add(intakeAnswer);
 	}
 	
 	public Map<String, String> getAnswerKeyValues() {
