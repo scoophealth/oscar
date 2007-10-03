@@ -92,6 +92,7 @@ public class Hl7textResultsData {
                     
                     logger.info("obx("+j+") should be inserted");
                     String identifier = h.getOBXIdentifier(i, j);
+                    String name = h.getOBXName(i, j);
                     String abnormal = h.getOBXAbnormalFlag(i, j);
                     if ( abnormal != null && ( abnormal.equals("A") || abnormal.startsWith("H")) ){
                         abnormal = "A";
@@ -137,7 +138,12 @@ public class Hl7textResultsData {
                     logger.info(sql);
                     pstmt = conn.prepareStatement(sql);
                     pstmt.executeUpdate();
-
+                    
+                    sql = "INSERT INTO measurementsExt (measurement_id, keyval, val) VALUES ('"+insertID+"','name', '"+name+"')";
+                    logger.info(sql);
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    
                     pstmt.close();
                     
                 }

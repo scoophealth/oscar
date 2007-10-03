@@ -90,6 +90,21 @@ function popupOscarConS(vheight,vwidth,varpage) { //open a new popup window
         </td>
     </tr>
     <tr>
+    <td class=Title colspan="2">Mappings</td>
+    </tr>
+    <tr>
+         <td>
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
+            <a href=# onClick="popupOscarConS(300,1000,'AddMeasurementMap.do')" class="messengerButtons">Add Measurement Mapping</a>
+            </td></tr></table>
+        </td>
+        <td >
+            <table class=messButtonsA cellspacing=0 cellpadding=3><tr><td class="messengerButtonsA" width="200">
+            <a href=# onClick="popupOscarConS(600,700,'RemoveMeasurementMap.do')" class="messengerButtons">Remove/Remap Measurement Mapping</a>
+            </td></tr></table>
+        </td>
+    </tr>
+    <tr>
     <td class=Title colspan="2"><bean:message key="oscarEncounter.Measurements.msgMeasuringInstruction"/></td>
     </tr>
     <tr>
