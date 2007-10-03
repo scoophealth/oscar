@@ -25,7 +25,7 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ page import="org.oscarehr.casemgmt.model.*" %>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
-
+<% response.setHeader("Cache-Control","no-cache");%>
 
 Prescriptions
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">

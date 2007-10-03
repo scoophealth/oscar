@@ -29,6 +29,7 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.service.Version"%>
+<% response.setHeader("Cache-Control","no-cache");%>
 
 <html:form action="/CaseManagementView" method="get">
 <html:hidden property="demographicNo"/>
