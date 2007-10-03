@@ -597,7 +597,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 return mapping.findForward("expired");
             
             CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
-            long oldId = cform.getCaseNote().getId();
+            
+            long oldId = cform.getCaseNote().getId() == null ? 0L : cform.getCaseNote().getId();
             if( noteSave(cform, request) ) {
                 cform.setMethod("view");                
                 request.getSession().setAttribute("newNote",false); 
