@@ -53,7 +53,8 @@ public class CustomFilterDAO extends HibernateDaoSupport {
     }
 
     public CustomFilter getCustomFilterById(Integer id) {
-        List results = getHibernateTemplate().find("from CustomFilter c where c.id=?", new Object[] {id});
+    	Long idLong = id.longValue();
+        List results = getHibernateTemplate().find("from CustomFilter c where c.id=?", new Object[] {idLong});
         if (results.size() > 0) {
             return (CustomFilter)results.get(0);
         }
