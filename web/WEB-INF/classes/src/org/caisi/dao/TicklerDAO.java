@@ -120,6 +120,8 @@ public class TicklerDAO extends HibernateDaoSupport {
         List paramList = new ArrayList();
         paramList.add(filter.getStartDate());
         paramList.add(filter.getEndDate() + " 23:59:59");
+//        paramList.add(filter.getStart_date());
+//        paramList.add(new Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY));
 
         //TODO: IN clause
         if (includeProviderClause) {
