@@ -769,6 +769,27 @@
                  </html:form>
 
             <script type="text/javascript">
+                
+             <%
+             //Hack to display injections after a workflow has been closed.
+             if (h == null && !props.getProperty("workflowId","").equals("") && !props.getProperty("workflowId","").equals("-1")){
+                try{                  
+                    h = new  Hashtable();
+                    h.put("ID", props.getProperty("workflowId",""));
+                    String ddate = props.getProperty("edd","");
+                    ddate = ddate.substring(0,10);
+                    h.put("completion_date",  new  java.sql.Date( UtilDateUtilities.StringToDate(ddate , "yyyy-MM-dd").getTime() )  );
+                        
+                }catch(Exception eo){
+                   eo.printStackTrace();
+                }
+             }
+
+             %>
+    
+                
+                
+                
             <%if (h != null) { %>  
             function getInjectionInformation(origRequest){
                console.log("calling get renal dosing information");
