@@ -196,6 +196,7 @@
         </form-bean>
         <form-bean name="intakeAReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
         <form-bean name="intakeCReport1Form" type="org.apache.struts.validator.LazyValidatorForm" />
+        <form-bean name="intakeCReportForm" type="org.apache.struts.validator.LazyValidatorForm"/>
         <form-bean name="intakeCForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="intake" type="org.oscarehr.PMmodule.model.Formintakec" />
             <form-property name="view2" type="org.oscarehr.PMmodule.web.formbean.IntakeCFormBean" />
@@ -1296,6 +1297,9 @@
             <forward name="success" path="/PMmodule/IntakeAReport1.jsp" />
             <forward name="error" path="/PMmodule/IntakeAReport1.jsp" />
             <forward name="timeout" path="/PMmodule/Timeout.jsp" />
+        </action>
+        <action path="/PMmodule/IntakeCMentalHealthReportAction" type="org.oscarehr.PMmodule.web.IntakeCMentalHealthReportAction" name="intakeCReportForm" scope="request" input="/PMmodule/IntakeCReport.jsp">
+        	<forward name="success" path="/PMmodule/IntakeCReport.jsp"/>
         </action>
         <action path="/PMmodule/IntakeCReport1Action" type="org.oscarehr.PMmodule.web.IntakeCReport1Action" name="intakeCReport1Form" scope="request" input="/PMmodule/IntakeCReport1.jsp">
             <forward name="success" path="/PMmodule/IntakeCReport1.jsp" />
