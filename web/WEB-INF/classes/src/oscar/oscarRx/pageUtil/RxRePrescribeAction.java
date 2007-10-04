@@ -78,6 +78,7 @@ public final class RxRePrescribeAction extends Action {
                 // create copy of Prescription
                 RxPrescriptionData.Prescription rx =
                 rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
+                //beanRX.clearStash();
                 beanRX.setStashIndex(beanRX.addStashItem(rx));
                 request.setAttribute("BoxNoFillFirstLoad", "true");
                 
