@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import org.caisi.dao.TicklerDAO;
+import org.apache.commons.lang.time.DateUtils;
 import org.caisi.model.CustomFilter;
 import org.caisi.model.Tickler;
 import org.caisi.model.TicklerComment;
@@ -118,10 +118,10 @@ public class TicklerDAO extends HibernateDaoSupport {
         }
 
         List paramList = new ArrayList();
-        paramList.add(filter.getStartDate());
-        paramList.add(filter.getEndDate() + " 23:59:59");
-//        paramList.add(filter.getStart_date());
-//        paramList.add(new Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY));
+//        paramList.add(filter.getStartDate());
+//        paramList.add(filter.getEndDate() + " 23:59:59");
+        paramList.add(filter.getStart_date());
+        paramList.add(new Date(filter.getEnd_date().getTime()+DateUtils.MILLIS_PER_DAY));
 
         //TODO: IN clause
         if (includeProviderClause) {
