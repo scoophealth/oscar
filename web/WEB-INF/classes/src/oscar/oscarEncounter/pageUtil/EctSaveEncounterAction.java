@@ -313,7 +313,7 @@ public class EctSaveEncounterAction
       }
     }
     else if(httpservletrequest.getParameter("btnPressed").equals("Verify and Sign")) {
-    
+      forward = "success";
     }
     else if (httpservletrequest.getParameter("btnPressed").equals("Save") || httpservletrequest.getParameter("btnPressed").equals("AutoSave")) {
       forward = "saveAndStay";
