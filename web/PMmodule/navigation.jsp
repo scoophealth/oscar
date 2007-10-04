@@ -4,6 +4,7 @@
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.caisi.service.Version"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <%
 	boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
@@ -60,7 +61,7 @@ function createIntakeCReport1()
 
 	alert('creating report until ' + startDate);
 
-	location.href='<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction"/>?startDate=' + startDate;
+	location.href='<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction.do"/>?startDate=' + startDate;
 }
 </script>
 
@@ -127,10 +128,12 @@ function createIntakeCReport1()
             </div>
             <div>
                 <a href="javascript:void(0)" onclick="javascript:getIntakeReport('indepth')">Follow-up Intake Report</a>
-            </div>           
+            </div> 
+            <caisi:isModuleLoad moduleName="intakec.enabled">          
             <div>            
 				<a href="javascript:void(0)" onclick="javascript:createIntakeCReport1();return false;">Street Health Mental Health Report</a>
             </div>
+            </caisi:isModuleLoad>
             <div>
                 <html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
             </div>
