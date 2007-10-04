@@ -187,6 +187,12 @@ function processData() {
     else return false;
 }
 
+//make sure form is in viewport
+function load() {
+    window.scrollTo(0,0);
+}
+
+
 </script>
 </head>
 
@@ -200,7 +206,7 @@ function processData() {
 
 <bean:define id="patient" type="oscar.oscarRx.data.RxPatientData.Patient" name="Patient"/>
 
-<body topmargin="0" leftmargin="0" vlink="#0000FF">
+<body topmargin="0" leftmargin="0" vlink="#0000FF" onload="load()">
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="100%">
     <%@ include file="TopLinks.jsp" %><!-- Row One included here-->
     <tr>
@@ -426,7 +432,7 @@ function processData() {
                         <tr valign="center">
 			    <td>
 				<bean:message key="SearchDrug.drugSearchTextBox"/><br>
-				<html:text property="searchString" size="16" maxlength="16"/>
+				<html:text styleId="searchString" property="searchString" size="16" maxlength="16"/>
 			    </td>
 			    <td width=100>
 				<a href="javascript:goDOC();">Drug of Choice</a>                            
