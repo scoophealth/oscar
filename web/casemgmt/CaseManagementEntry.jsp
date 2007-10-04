@@ -23,6 +23,7 @@
  -->
 
 <%@ include file="/casemgmt/taglibs.jsp" %>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <html>
 <head>
@@ -440,13 +441,13 @@ if (pId==null) pId="";
 					onclick="self.open('<%=(String)session.getAttribute("billing_url")%>','','scrollbars=yes,menubars=no,toolbars=no,resizable=yes');return false;"></td>
 			</tr>
 		</caisirole:SecurityAccess>
-		</c:if>
-		<c:if test="${requestScope.passwordEnabled=='true'}">
+		</c:if>		
+		<caisi:isModuleLoad moduleName="casemgmt.note.password.enabled">
 		<tr>
 			<td class="fieldTitle">Password:</td>
 			<td class="fieldValue"><html:password property="caseNote.password"/></td>
 		</tr>
-		</c:if>
+		</caisi:isModuleLoad>
 		<tr>
 			<td class="fieldValue" colspan="2">
 			<input type="submit" value="Save"
