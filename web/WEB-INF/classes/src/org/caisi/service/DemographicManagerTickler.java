@@ -50,7 +50,7 @@ public class DemographicManagerTickler {
         return demographicDAO.getProgramIdByDemoNo(demoNo);
     }
 
-    public List getDemoProgram(String demoNo) {
+    public List getDemoProgram(Integer demoNo) {
         return demographicDAO.getDemoProgram(demoNo);
     }
 

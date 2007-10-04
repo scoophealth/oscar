@@ -153,7 +153,7 @@ public class TicklerAction extends DispatchAction {
         boolean ticklerInProgtam=false; 
         for(int i=0;i<ticklersTemp.size();i++)
         {
-        	ticklerDemoProgram=demographicMgr.getDemoProgram(((Tickler)ticklersTemp.get(i)).getDemographic_no());
+        	ticklerDemoProgram=demographicMgr.getDemoProgram(Integer.valueOf(((Tickler)ticklersTemp.get(i)).getDemographic_no()));
         	for(int j=0;j<ticklerDemoProgram.size();j++)
         	{
         		for(int k=0;k<providerProgram.size();k++)

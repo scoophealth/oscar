@@ -153,9 +153,9 @@ public class DemographicDAO extends HibernateDaoSupport {
 
     }
 
-    public List getDemoProgram(String demoNo) {
+    public List getDemoProgram(Integer demoNo) {
         String q = "Select a.ProgramId From Admission a Where a.ClientId=?";
-        List rs = (List) getHibernateTemplate().find(q, new Object[] { demoNo });
+        List rs = getHibernateTemplate().find(q, new Object[] { demoNo });
         return rs;
     }
 
