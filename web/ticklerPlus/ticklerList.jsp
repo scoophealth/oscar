@@ -88,10 +88,13 @@
 		<td class="blueText">Service Date Range:</td>
 		<td class="blueText"><span style="text-decoration:underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</span>
-		<html:text property="filter.startDate" /></td>
+		<html:text property="filter.startDate" maxlength="11" /></td>
+		
 		<td class="blueText"><span style="text-decoration:underline"
-			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End:</span><html:text
-			property="filter.endDate" /></td>
+			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End:</span>
+		<html:text property="filter.endDate" maxlength="11"/>
+		</td>
+		
 		<td><input type="button" value="Create Report"
 			onclick="this.form.method.value='filter';this.form.submit();" /></td>
 	</tr>
