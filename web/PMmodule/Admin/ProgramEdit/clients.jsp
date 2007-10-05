@@ -23,6 +23,7 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <script>
 function assignTeam(id,selectBox) {
 	var team_id = selectBox.options[selectBox.selectedIndex].value;
@@ -60,9 +61,9 @@ function assignStatus(id,selectBox) {
 	</display:column>
 	<display:column property="client.formattedName" sortable="true" title="Name" />
 	<display:column property="admissionDate" sortable="true" title="Admission Date" />
-	<c:if test="${requestScope.temporaryAdmission == true}">
+	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 		<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
-	</c:if>
+	</caisi:isModuleLoad>
 	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
 	<display:column property="teamName" sortable="true" title="Team" />
 	<display:column sortable="false" title="" >

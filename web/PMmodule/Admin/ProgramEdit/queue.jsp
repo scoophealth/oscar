@@ -48,8 +48,8 @@ function removeFromQueue(id) {
 	<display:column property="clientFormattedName" sortable="true" title="Client Name" />
 	<display:column property="referralDate" sortable="true" title="Referral Date" />
 	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
-  	<c:if test="${requestScope.temporaryAdmission == true}"> }
+  	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 		<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
-	</c:if>
+	</caisi:isModuleLoad>
 	<display:column property="notes" sortable="true" title="Notes" />
 </display:table>

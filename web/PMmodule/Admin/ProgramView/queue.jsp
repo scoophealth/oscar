@@ -25,6 +25,8 @@
 -->
 
 <%@ include file="/taglibs.jsp"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+
 <script>
     function do_admission() {
         var form = document.programManagerViewForm;
@@ -97,9 +99,9 @@
     <display:column sortable="true" property="clientFormattedName" title="Client name"/>
     <display:column property="referralDate" sortable="true" title="Referral Date" />
     <display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
-    <c:if test="${requestScope.temporaryAdmission == true}">
+    <caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
         <display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
-    </c:if>
+    </caisi:isModuleLoad>
     <display:column property="notes" sortable="true" title="Reason for referral" />
     <display:column property="presentProblems" sortable="true" title="Present problems"/>
 </display:table>

@@ -23,6 +23,8 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+
 <script>
 function assignTeam(id,selectBox) {
 	var team_id = selectBox.options[selectBox.selectedIndex].value;
@@ -71,7 +73,8 @@ function do_batch_discharge(community,bed) {
 		document.programManagerViewForm.type.value='community';		
 	} else {
 		programBox = document.programManagerViewForm.batch_discharge_program;
-		if(bed){			
+		if(bed){
+			programBox = document.programManagerViewForm.batch_discharge_program;			
 			document.programManagerViewForm.type.value='bed';
 		}
 		else {			
@@ -79,26 +82,27 @@ function do_batch_discharge(community,bed) {
 		}
 	}
 
-	if(programBox.selectedIndex == -1) {
+	if(bed == true && programBox.selectedIndex == -1) {
 		alert('No programs available. Cannot continue');
 		return;
 	}
 	
-	var programId = programBox.options[programBox.selectedIndex].value;
-	var programName = programBox.options[programBox.selectedIndex].text;
+	if(bed==true) {
+		var programId = programBox.options[programBox.selectedIndex].value;
+		var programName = programBox.options[programBox.selectedIndex].text;
 	
-	if(programId == 0) {
-		if(community) {
-			alert('Please choose a Community Bed Program from the list');
-		} else {
-			if(bed)
+		if(programId == 0) {
+			if(community) {
+				alert('Please choose a Community Bed Program from the list');
+			} else {
+				if(bed)
 				alert('Please choose a CAISI Bed Program from the list');
-			else
-				alert('Please choose a CAISI Service Program from the list');
+				//else
+				//	alert('Please choose a CAISI Service Program from the list');
+			}
+			return;
 		}
-		return;
 	}
-	
 	//get current program
 	var currentProgramId = document.programManagerViewForm.elements['id'].value;
 	
@@ -139,9 +143,10 @@ function do_batch_discharge(community,bed) {
 	</display:column>
 	<display:column property="client.formattedName" sortable="true" title="Name" />
 	<display:column property="admissionDate" sortable="true" title="Admission Date" />
-	<c:if test="${requestScope.temporaryAdmission == true}">
+	
+	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
-	</c:if>
+	</caisi:isModuleLoad>
 	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
 
 	<display:column property="teamName" sortable="true" title="Team" />
@@ -203,6 +208,9 @@ function do_batch_discharge(community,bed) {
 </c:if>
 
 <c:if test="${requestScope.allowBatchDischarge == true and program.type eq 'Service'}"> 
+ 	<input type="button" value="Batch Discharge" onclick="do_batch_discharge(false,false)" />
+ 	
+ 	<!-- 
  	<input type="button" value="Batch Discharge To CAISI Service Program" onclick="do_batch_discharge(false,false)" />
 	<select name="batch_discharge_program">
 		<option value="0"></option>
@@ -223,5 +231,5 @@ function do_batch_discharge(community,bed) {
 			</c:if>
 		</c:forEach>
 	</select>	
-	
+	-->
 </c:if>
