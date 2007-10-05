@@ -8,11 +8,47 @@
  	int day = rightNow.get(Calendar.DAY_OF_MONTH);
  	String formattedDate = year + "-" + month + "-" + day;
 %>
-
-	<script>
+<script type="text/javascript" src="../js/checkDate.js"></script>
+	<script>	
 		function search_demographic() {
 			window.open('demographicSearch.jsp?form=customFilterForm&elementName=filter.demographic_webName&elementId=filter.demographic_no&query=' + document.customFilterForm.elements['filter.demographic_webName'].value,'demographic_search');
 		}
+		
+		function check_custom_filter_date() {
+			var startDate = document.customFilterForm.elements['filter.startDate'].value;
+			var endDate = document.customFilterForm.elements['filter.endDate'].value;
+			
+			if(check_date(startDate) && check_date(endDate)) {				
+				return true;
+			} else {
+				return false;
+			}	
+		}
+		
+		function validateCustomFilterForm(form) {
+			if(form.elements['filter.name'].value == '') {
+				alert('You must provider a filter name.');
+				return false;
+			}
+			if(form.elements['filter.demographic_webName'].value != '' &&
+			 	(form.elements['filter.demographic_no'].value == '' || form.elements['filter.demographic_no'].value == '0')) {
+				alert('You should provide patient information by using the search button');
+				return false;
+			}
+						
+			if (form.elements['filter.startDate'].value == '') {
+				alert('You must provide a valid start date');
+				return false;
+			}
+			
+			if (form.elements['filter.endDate'].value == '') {
+				alert('You must provide a valid end date');
+				return false;
+			}
+			
+			return check_custom_filter_date();
+		}
+		
 	</script>	
 
 
@@ -50,7 +86,7 @@
                       	 <html:hidden property="filter.name"/>
                       </c:when>
                       <c:otherwise>
-                        <html:text property="filter.name"/>        
+                        <html:text property="filter.name" maxlength="255" />        
                       </c:otherwise>
                       	</c:choose>
                       	
@@ -60,7 +96,7 @@
                       <td class="fieldTitle">Demographic:</td>
                       <td class="fieldValue">
                       	<html:hidden property="filter.demographic_no"/>
-                      	<html:text property="filter.demographic_webName"/>
+                      	<html:text property="filter.demographic_webName" maxlength="60" />
                       	<input type="button" value="Search" onclick="search_demographic();"/>
 			</td>
 	                 </td>
@@ -68,14 +104,14 @@
               <tr>
                       <td class="fieldTitle">Start Date:</td>
                       <td class="fieldValue">
-                      	<html:text property="filter.startDate"/>
+                      	<html:text property="filter.startDate" maxlength="10" />
                       	<span onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=customFilterForm&amp;openerElement=filter.startDate&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img border="0" src="images/calendar.jpg"/></span>
 	                 </td>
               </tr>
               <tr>
                       <td class="fieldTitle">End Date:</td>
                       <td class="fieldValue">
-                      	<html:text property="filter.endDate"/>
+                      	<html:text property="filter.endDate" maxlength="10"/>
                       	<span onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=customFilterForm&amp;openerElement=filter.endDate&amp;year=<%=year %>&amp;month=<%=month %>','','width=300,height=300')"><img border="0" src="images/calendar.jpg"/></span>
 	                 </td>
               </tr>

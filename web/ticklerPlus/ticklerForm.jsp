@@ -14,8 +14,17 @@
 		
 		boolean curAm = (now.get(Calendar.HOUR_OF_DAY) <= 12) ? true : false;
 	%>
-	
+	<script type="text/javascript" src="../js/checkDate.js"></script>
 	<script type="text/javascript">
+		function check_tickler_service_date() {
+			var serviceDate = document.ticklerForm.elements['tickler.serviceDate'].value;
+			if(check_date(serviceDate)) {		
+				return true;
+			} else {
+				return false;
+			}	
+		}
+		
 		function search_demographic() {
 			window.open('<c:out value="${ctx}"/>/ticklerPlus/demographicSearch.jsp?query=' + document.ticklerForm.elements['tickler.demographic_webName'].value,'demographic_search');
 		}
@@ -46,6 +55,8 @@
 				alert('You must provide a message');
 				return false;
 			}
+			
+			return check_tickler_service_date();
 		}
 	</script>
 
@@ -83,7 +94,7 @@
 				String formattedDate = year + "-" + month + "-" + day;
 			%>
 			<td class="fieldValue">
-				<html:text property="tickler.serviceDate" value="<%=formattedDate%>" />
+				<html:text property="tickler.serviceDate" value="<%=formattedDate%>" maxlength="10"/>
 				<span onClick="openBrWindow('calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=tickler.serviceDate&amp;year=<%=year%>&amp;month=<%=month%>','','width=300,height=300')">
 					<img border="0" src="images/calendar.jpg" />
 				</span>
@@ -181,7 +192,7 @@
 				Message:
 			</td>
 			<td class="fieldValue">
-				<html:textarea cols="40" rows="10" property="tickler.message" />
+				<html:textarea cols="40" rows="10" property="tickler.message"></html:textarea>
 			</td>
 		</tr>
 		<tr>

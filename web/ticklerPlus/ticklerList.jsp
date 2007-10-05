@@ -9,6 +9,8 @@
 			%>
 
 <script type="text/javascript" src="../share/javascript/prototype.js"></script>
+<script type="text/javascript" src="../js/checkDate.js"></script>
+
 <script>
 	function batch_operation(method) {
 		var checked=false;
@@ -28,6 +30,21 @@
 		form.method.value=method;
 		form.submit();
 	}
+	
+	function checkTicklerDate() {
+		//2007-10-05
+		var startDate = document.ticklerForm.elements['filter.startDate'].value;
+		var endDate = document.ticklerForm.elements['filter.endDate'].value;
+		
+		if(check_date(startDate) && check_date(endDate)) {
+		
+		var form = document.ticklerForm;
+		form.method.value='filter';
+		form.submit();
+		} else {
+			return false;
+		}		
+	}	
 
         function createReport() {        
                 document.ticklerForm.method.value='filter';
@@ -88,33 +105,33 @@
 		<td class="blueText">Service Date Range:</td>
 		<td class="blueText"><span style="text-decoration:underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.startDate&amp;year=<%=curYear%>&amp;month=<%=curMonth%>','','width=300,height=300')">Begin:</span>
-		<html:text property="filter.startDate" maxlength="11" /></td>
+		<html:text property="filter.startDate" maxlength="10" /></td>
 		
 		<td class="blueText"><span style="text-decoration:underline"
 			onClick="openBrWindow('<c:out value="${ctx}"/>/ticklerPlus/calendar/oscarCalendarPopup.jsp?type=caisi&openerForm=ticklerForm&amp;openerElement=filter.endDate&amp;year=<%=curYear%>&amp;month=<%=curMonth %>','','width=300,height=300')">End:</span>
-		<html:text property="filter.endDate" maxlength="11"/>
+		<html:text property="filter.endDate" maxlength="10"/>
 		</td>
 		
 		<td><input type="button" value="Create Report"
-			onclick="this.form.method.value='filter';this.form.submit();" /></td>
+			onclick="return checkTicklerDate();" /></td>
 	</tr>
 	<tr>
 		<td class="blueText">Status: <html:select property="filter.status"
-			onchange="this.form.method.value='filter';this.form.submit();">
+			onchange="return checkTicklerDate();">
 			<html:option value="Z">All</html:option>
 			<html:option value="A">Active</html:option>
 			<html:option value="C">Completed</html:option>
 			<html:option value="D">Deleted</html:option>
 		</html:select></td>
 		<td class="blueText">Provider: <html:select property="filter.provider"
-			onchange="this.form.method.value='filter';this.form.submit();">
+			onchange="return checkTicklerDate();">
 			<option value="All Providers">All Providers</option>
 			<html:options collection="providers" property="provider_no"
 				labelProperty="formattedName" />
 		</html:select></td>
 		<td class="blueText">Task Assigned To: <html:select
 			property="filter.assignee"
-			onchange="this.form.method.value='filter';this.form.submit();">
+			onchange="return checkTicklerDate();">
 			<option value="All Providers">All Providers</option>
 			<html:options collection="providers" property="provider_no"
 				labelProperty="formattedName" />
@@ -125,7 +142,7 @@
 		
 		<oscar:oscarPropertiesCheck property="clientdropbox" value="on">
 		    <html:select property="filter.demographic_no"
-			onchange="this.form.method.value='filter';this.form.submit();">
+			onchange="return checkTicklerDate();">
 			<option value="All Clients">All Clients</option>
 			<html:options collection="demographics" property="demographicNo" labelProperty="formattedName" />
 		    </html:select>
