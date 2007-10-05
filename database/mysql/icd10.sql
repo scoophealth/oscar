@@ -3,7 +3,7 @@ CREATE TABLE icd10 (code CHAR(6) NOT NULL, short_desc VARCHAR(40) NOT NULL, long
 
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("N/A","N/A","Not Available");
 
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("O829","Delivery by caesarean section");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("O829","Delivery by caesarean section","Delivery by caesarean section");
 
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("80000","Neoplasm, benign","Neoplasm, benign");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("80001","Neoplasm, uncertain benign or malignant","Neoplasm, uncertain whether benign or malignant");
