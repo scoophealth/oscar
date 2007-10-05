@@ -5,7 +5,7 @@
 <%@page import="org.oscarehr.PMmodule.model.ClientReferral"%>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <script>
 var XMLHttpRequestObject = false;
 
@@ -329,7 +329,9 @@ function updateSharingOpting(state) {
 		%>
 		<%=numDays%>
 	</display:column>
+	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+	</caisi:isModuleLoad>
 	<display:column property="admissionNotes" sortable="true" title="Admission Notes" />
 </display:table>
 

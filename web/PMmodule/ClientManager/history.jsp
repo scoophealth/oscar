@@ -25,6 +25,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="java.util.*"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <script type="text/javascript">
     function popupAdmissionInfo(admissionId) {
@@ -79,7 +80,9 @@
 		%>
 		<%=numDays%>
 	</display:column>
+	<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 	<display:column property="temporaryAdmission" sortable="true" title="Temporary Admission" />
+	</caisi:isModuleLoad>
 </display:table>
 <br />
 <br />

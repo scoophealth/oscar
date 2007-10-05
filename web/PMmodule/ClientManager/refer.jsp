@@ -25,7 +25,7 @@
 <%@ include file="/taglibs.jsp"%>
 <%@ page import="org.oscarehr.PMmodule.model.*"%>
 <%@ page import="java.util.*"%>
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <script>
 	function resetClientFields() {
 		var form = document.clientManagerForm;
@@ -224,12 +224,14 @@
 			<td><html:textarea cols="50" rows="7" property="referral.presentProblems" /></td>
 		</tr>
 		<c:if test="${program.type eq 'Bed' }">
-			<c:if test="${requestScope.temporaryAdmission == true}">
+			<!-- <c:if test="${requestScope.temporaryAdmission == true}"> -->
+			<caisi:isModuleLoad moduleName="pmm.refer.temporaryAdmission.enabled">
 			<tr class="b">
 				<td width="20%">Request Temporary Admission:</td>
 				<td><html:checkbox property="referral.temporaryAdmission" /></td>
 			</tr>
-			</c:if>
+			</caisi:isModuleLoad>
+			<!-- </c:if> -->
 		</c:if>
 		<tr class="b">
 			<td colspan="2"><input type="button" value="Process Referral" onclick="do_referral()" /> <input type="button" value="Cancel" onclick="document.clientManagerForm.submit()" /></td>
