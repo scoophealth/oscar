@@ -38,6 +38,7 @@ import org.oscarehr.PMmodule.integrator.message.OutgoingReferralBean;
 import org.oscarehr.PMmodule.integrator.xfire.OutgoingAuthenticationHandler;
 import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.IntegratorManager;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.integrator.ws.AgencyService;
 import org.oscarehr.integrator.ws.ProgramService;
 import org.springframework.jms.JmsException;
@@ -46,7 +47,7 @@ import org.springframework.jms.core.JmsTemplate;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
-public class IntegratorManagerImpl extends BaseIntegratorManager implements IntegratorManager {
+public class IntegratorManagerImpl implements IntegratorManager {
 
     private static Log log = LogFactory.getLog(IntegratorManagerImpl.class);
 
@@ -57,7 +58,10 @@ public class IntegratorManagerImpl extends BaseIntegratorManager implements Inte
 
     private AgencyDao agencyDAO;
     private JmsTemplate jmsTemplate;
-    private OutgoingReferralBean outgoingReferralBean;
+    private OutgoingReferralBean outgoingReferralBean;/* services provided by integrator */
+    protected AgencyService agencyService= null;
+    protected ProgramService programService = null;/* data managers */
+    protected ClientManager clientManager;
 
     public static Agency getLocalAgency() {
         return localAgency;
@@ -413,5 +417,28 @@ public class IntegratorManagerImpl extends BaseIntegratorManager implements Inte
 
         return agencyService.getVersion();
 
+    }
+
+    public void setClientManager(ClientManager mgr) {
+        this.clientManager = mgr;
+    }
+
+    public ClientManager getClientManager() {
+        return this.clientManager;
+    }
+
+    protected boolean updateClient(String id) {
+        if(!isEnabled() || agencyService == null) {
+            return false;
+        }
+
+        Demographic demographic = clientManager.getClientByDemographicNo(id);
+        List extras = clientManager.getDemographicExtByDemographicNo(Integer.valueOf(id));
+
+        demographic.setExtras((DemographicExt[])extras.toArray(new DemographicExt[extras.size()]));
+
+        agencyService.updateClient(getLocalAgency().getId(), demographic.getDemographicNo(),demographic);
+
+        return true;
     }
 }
