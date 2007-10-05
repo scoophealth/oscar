@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +72,8 @@ public class IntakeAction extends BaseAction {
 		d.setVer(formBean.getHealthCardVersion());
 		
 		try {
-			results  = integratorManager.matchClient(d);
+            Collection<Demographic> demographicCollection = integratorManager.matchClient(d);
+            results  = demographicCollection.toArray(new Demographic[demographicCollection.size()]);
 			log.debug("integrator found " + results.length + " match(es)");		
 		}catch(IntegratorNotEnabledException e) {
 			log.info(e);

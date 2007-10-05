@@ -146,7 +146,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	public void notifyIntegrator(short dataType, String id) {
 		IntegratorManager mgr = (IntegratorManager) getAppContext().getBean("integratorManager");
-		mgr.notifyUpdate(dataType, id);
+		mgr.notifyUpdate(dataType, Long.valueOf(id));
 	}
 
 	public void setAdmissionManager(AdmissionManager mgr) {

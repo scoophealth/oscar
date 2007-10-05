@@ -280,7 +280,7 @@ public class ClientManagerAction extends BaseAction {
 		String id = request.getParameter("id");
 
 		if (id != null) {
-			Demographic client = integratorManager.getClient(id);
+			Demographic client = integratorManager.getClient(Integer.valueOf(id));
 			request.setAttribute("client", client);
 		}
 		return mapping.findForward("links");

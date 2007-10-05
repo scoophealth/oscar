@@ -19,6 +19,7 @@
 package org.oscarehr.PMmodule.web;
 
 import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,11 +54,13 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 		
-		// search for remote matches
-		Demographic[] remoteMatches = remoteSearch(intakeSearchBean);
-		intakeSearchBean.setRemoteMatches(remoteMatches);
-		
-		// if no remote matches, search for local matches
+		// search for remote matches if integrator enabled
+        if (integratorManager.isEnabled()) {
+            Demographic[] remoteMatches = remoteSearch(intakeSearchBean);
+            intakeSearchBean.setRemoteMatches(remoteMatches);
+        }
+
+        // if no remote matches, search for local matches
 		if (!intakeSearchBean.isRemoteMatch()) {
 			boolean allowOnlyOptins=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 			List<?> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
@@ -104,7 +107,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 		Demographic[] matches = null;
 		
 		try {
-			matches = integratorManager.matchClient(createClient(intakeSearchBean));
+            Collection<Demographic> demographicCollection = integratorManager.matchClient(createClient(intakeSearchBean));
+            matches = demographicCollection.toArray(new Demographic[demographicCollection.size()]);
 		} catch (IntegratorException e) {
 			LOG.error(e);
 		}

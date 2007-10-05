@@ -6,6 +6,9 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
         default-autowire="no">
 
+    <!-- import the xfire spring bits -->
+    <import resource="classpath:org/codehaus/xfire/spring/xfire.xml"/>
+    
     <!-- configure the available measurement flow sheets -->
     <bean id="measurementTemplateFlowSheet" class="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig">
         <property name="flowSheets">
@@ -20,7 +23,8 @@
             </list>
         </property>
     </bean>
-    
+
+
     <!-- audit strategy -->
     <bean id="bedAuditStrategy" class="org.oscarehr.PMmodule.dao.BedAuditStrategy" autowire="byName"/>
     <bean id="bedDemographicAuditStrategy" class="org.oscarehr.PMmodule.dao.BedDemographicAuditStrategy" autowire="byName"/>
@@ -250,5 +254,6 @@
     <bean id="testmode" class="java.lang.String" lazy-init="default"  dependency-check="default">
         <constructor-arg value="${testmode.enabled}"/>
     </bean>
+
 </beans>
 

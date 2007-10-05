@@ -66,9 +66,10 @@ public class AgencyManagerAction extends BaseAction {
 		DynaActionForm agencyForm = (DynaActionForm) form;
 		
 		AgencyManagerViewFormBean tabBean = (AgencyManagerViewFormBean) agencyForm.get("view");
-		
-		if (tabBean.getTab() != null && tabBean.getTab().equalsIgnoreCase("community")) {
-			if (integratorManager.isEnabled() && integratorManager.isRegistered()) {
+
+        boolean integratorEnabled = integratorManager.isEnabled();
+        if (tabBean.getTab() != null && tabBean.getTab().equalsIgnoreCase("community")) {
+			if (integratorEnabled && integratorManager.isRegistered()) {
 				request.setAttribute("agencies", integratorManager.getAgencies());
 			}
 		}
@@ -77,9 +78,12 @@ public class AgencyManagerAction extends BaseAction {
 		request.setAttribute(BEAN_ROOMS, roomManager.getRooms());
 		request.setAttribute(BEAN_BEDS, bedManager.getBeds());
 		
-		request.setAttribute("integrator_enabled", new Boolean(integratorManager.isEnabled()));
-		request.setAttribute("integrator_registered", new Boolean(integratorManager.isRegistered()));
-		request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
+		request.setAttribute("integrator_enabled", integratorEnabled);
+
+        request.setAttribute("integrator_registered", integratorManager.isRegistered());
+
+        if (integratorEnabled)
+            request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
 
 		return mapping.findForward(FORWARD_VIEW);
 	}
@@ -99,9 +103,9 @@ public class AgencyManagerAction extends BaseAction {
 		agencyForm.set(BEAN_PROGRAMS, programManager.getBedPrograms());
 		
 		request.setAttribute("id", localAgency.getId());
-		request.setAttribute("integratorEnabled", new Boolean(localAgency.isIntegratorEnabled()));
-		request.setAttribute("integrator_enabled", new Boolean(integratorManager.isEnabled()));
-		request.setAttribute("integrator_registered", new Boolean(integratorManager.isRegistered()));
+		request.setAttribute("integratorEnabled", localAgency.isIntegratorEnabled());
+		request.setAttribute("integrator_enabled", integratorManager.isEnabled());
+		request.setAttribute("integrator_registered", integratorManager.isRegistered());
 		
 		return mapping.findForward(FORWARD_EDIT);
 	}
@@ -129,7 +133,7 @@ public class AgencyManagerAction extends BaseAction {
 		saveMessages(request, messages);
 
 		request.setAttribute("id", agency.getId());
-		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+		request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
 		logManager.log("write", "agency", agency.getId().toString(), request);
 
@@ -218,12 +222,12 @@ public class AgencyManagerAction extends BaseAction {
 	public ActionForward enable_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		Agency agency = agencyManager.getLocalAgency();
 
-		if (agency.getId().longValue() == 0) {
+		if (0 == agency.getId()) {
 			try {
-				if (agency.getId().longValue() == 0) {
-					String id = integratorManager.register(agency, agency.getIntegratorUsername());
+				if (agency.getId() == 0) {
+					Long id = integratorManager.register(agency);
 					if (id != null) {
-						agency.setId(Long.valueOf(id));
+						agency.setId(id);
 						agencyManager.saveLocalAgency(agency);
 					} else {
 						throw new Exception("Unable to register agency");
@@ -238,7 +242,7 @@ public class AgencyManagerAction extends BaseAction {
 				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.registered.failed", e.getMessage()));
 				saveMessages(request, messages);
 				request.setAttribute("id", agency.getId());
-				request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+				request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
 				return mapping.findForward(FORWARD_EDIT);
 			}
@@ -249,7 +253,7 @@ public class AgencyManagerAction extends BaseAction {
 		integratorManager.refresh();
 
 		request.setAttribute("id", agency.getId());
-		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+		request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
 		return mapping.findForward(FORWARD_EDIT);
 	}
@@ -261,7 +265,7 @@ public class AgencyManagerAction extends BaseAction {
 		integratorManager.refresh();
 
 		request.setAttribute("id", agency.getId());
-		request.setAttribute("integratorEnabled", new Boolean(agency.isIntegratorEnabled()));
+		request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
 		return mapping.findForward(FORWARD_EDIT);
 	}
@@ -271,10 +275,10 @@ public class AgencyManagerAction extends BaseAction {
 			Agency agency = agencyManager.getLocalAgency();
 			
 			if (agency.getId() == 0) {
-				String id = integratorManager.register(agency, agency.getIntegratorUsername());
+				Long id = integratorManager.register(agency);
 				
 				if (id != null) {
-					agency.setId(Long.valueOf(id));
+					agency.setId(id);
 					agencyManager.saveLocalAgency(agency);
 				} else {
 					log.error("error");
