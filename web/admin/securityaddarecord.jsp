@@ -108,7 +108,7 @@
           <div align="right"><bean:message key="admin.securityrecord.formUserName"/><font color="red">:</font> </div>
         </td>
         <td>
-          <input type="text" name="user_name">
+          <input type="text" name="user_name" size="20" maxlength="30">
         </td>
       </tr>
       <tr>
@@ -116,9 +116,9 @@
           <div align="right"><bean:message key="admin.securityrecord.formPassword"/><font color="red">:</font> </div>
         </td>
         <td>
-          <input type="password" name="password" >
+          <input type="password" name="password" size="20" maxlength="80" >
           Confirm:
-          <input type="password" name="conPassword" >
+          <input type="password" name="conPassword" size="20" maxlength="80">
         </td>
       </tr>
       <tr>
@@ -165,9 +165,9 @@
           <div align="right"><bean:message key="admin.securityrecord.formPIN"/>: </div>
         </td>
         <td>
-          <input type="password" name="pin" size="10" />
+          <input type="password" name="pin" size="6" maxlenght="6"/>
           <font size="-1">more than 3 digits<!-- bean:message key="admin.securityaddarecord.onlyInternet"/--></font> 
-          Confirm:<input type="password" name="conPin" size="10" /></td>
+          Confirm:<input type="password" name="conPin" size="6" maxlength="6"/></td>
       </tr>
       <tr>
         <td colspan="2">
