@@ -134,7 +134,8 @@ public class CustomFilterAction extends DispatchAction {
 			CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
 			/* get the demographic */
 			String demo_no=filter.getDemographic_no();
-			if(!(demo_no.equals(""))&&demo_no!=null)
+			
+			if(!("".equals(demo_no))&&demo_no!=null)
 			{
 			Demographic demographic = demographicMgr.getDemographic(demo_no);
 			if(demographic != null) {
