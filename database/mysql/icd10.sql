@@ -2,6 +2,9 @@ DROP TABLE IF EXISTS icd10;
 CREATE TABLE icd10 (code CHAR(6) NOT NULL, short_desc VARCHAR(40) NOT NULL, long_desc VARCHAR(255) NOT NULL, PRIMARY KEY(code)) ENGINE = InnoDB;
 
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("N/A","N/A","Not Available");
+
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("O829","Delivery by caesarean section");
+
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("80000","Neoplasm, benign","Neoplasm, benign");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("80001","Neoplasm, uncertain benign or malignant","Neoplasm, uncertain whether benign or malignant");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("80003","Neoplasm, malignant","Neoplasm, malignant");
@@ -441,7 +444,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89333","Adenosarcoma","
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89400","Pleomorphic adenoma","Pleomorphic adenoma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89403","Mixed tumour, malignant NOS","Mixed tumour, malignant NOS");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89413","Ca in pleomorphic adenoma","Carcinoma in pleomorphic adenoma");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89503","Müllerian mixed tumour","Müllerian mixed tumour");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89503","Mï¿½llerian mixed tumour","Mï¿½llerian mixed tumour");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89513","Mesodermal mixed tumour","Mesodermal mixed tumour");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89601","Mesoblastic nephroma","Mesoblastic nephroma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("89603","Nephroblastoma NOS","Nephroblastoma NOS");
@@ -738,7 +741,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("96963","Malig lymphoma 
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("96973","Malig lymphoma centroblastic follicular","Malignant lymphoma, centroblastic, follicular");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("96983","Malig lymphoma lrg cell follicular NOS","Malignant lymphoma, large cell, follicular NOS");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97003","Mycosis fungoides","Mycosis fungoides");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97013","Sézary's disease","Sézary's disease");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97013","Sï¿½zary's disease","Sï¿½zary's disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97023","Peripheral T-cell lymphoma NOS","Peripheral T-cell lymphoma NOS");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97053","Peripheral T-cell lymphoma, AILD","Peripheral T-cell lymphoma, AILD (angioimmunoblastic lymphadenopathy with dysproteinaemia)");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97063","Prphrl T-cell lymphma pleomorph sm cell","Peripheral T-cell lymphoma, pleomorphic small cell");
@@ -757,7 +760,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97401","Mastocytoma NOS
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97403","Mast cell sarcoma","Mast cell sarcoma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97413","Malignant mastocytosis","Malignant mastocytosis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97603","Immunoproliferative disease NOS","Immunoproliferative disease NOS");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97613","Waldenström's macroglobulinaemia","Waldenström's macroglobulinaemia");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97613","Waldenstrï¿½m's macroglobulinaemia","Waldenstrï¿½m's macroglobulinaemia");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97623","Alpha heavy chain disease","Alpha heavy chain disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97633","Gamma heavy chain disease","Gamma heavy chain disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("97643","Immunoproliferative sm bowel intest dis","Immunoproliferative small intestinal disease");
@@ -2025,13 +2028,13 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C837","Burkitt's tumour
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C838","Other types diffuse NHL","Other types of diffuse non-Hodgkin's lymphoma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C839","Diffuse NHL unspecified","Diffuse non-Hodgkin's lymphoma, unspecified");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C840","Mycosis fungoides","Mycosis fungoides");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C841","Sézary's disease","Sézary's disease");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C841","Sï¿½zary's disease","Sï¿½zary's disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C844","Peripheral T-cell lymphoma","Peripheral T-cell lymphoma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C845","Other and unspecified T-cell lymphomas","Other and unspecified T-cell lymphomas");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C851","B-cell lymphoma unspecified","B-cell lymphoma, unspecified");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C857","Other specified types of NHL","Other specified types of non-Hodgkin's lymphoma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C859","NHL unspecified type","Non-Hodgkin's lymphoma, unspecified type");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C8800","Waldenström's macroglobulinaemia","Waldenström's macroglobulinaemia");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C8800","Waldenstrï¿½m's macroglobulinaemia","Waldenstrï¿½m's macroglobulinaemia");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C8808","Other lymphoplasmacytic lymphoma","Other lymphoplasmacytic lymphoma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C881","Alpha heavy chain disease","Alpha heavy chain disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("C882","Gamma heavy chain disease","Gamma heavy chain disease");
@@ -3491,7 +3494,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G371","Central demyelin
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G372","Central pontine myelinolysis","Central pontine myelinolysis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G373","Ac transv myelitis in demyelin dis CNS","Acute transverse myelitis in demyelinating disease of central nervous system");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G374","Subacute necrotizing myelitis","Subacute necrotizing myelitis");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G375","Concentric sclerosis [Bal>]","Concentric sclerosis [Baló]");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G375","Concentric sclerosis [Bal>]","Concentric sclerosis [Balï¿½]");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G378","Other spec demyelinating diseases of CNS","Other specified demyelinating diseases of central nervous system");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G379","Demyelinating disease of CNS unspecified","Demyelinating disease of central nervous system, unspecified");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G400","Local-rel idiopath epilep local seizure","Localization-related (focal)(partial) idiopathic epilepsy and epileptic syndromes with seizures of localized onset");
@@ -3613,7 +3616,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G602","Neuropathy ass w
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G603","Idiopathic progressive neuropathy","Idiopathic progressive neuropathy");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G608","Oth hereditary & idiopathic neuropathies","Other hereditary and idiopathic neuropathies");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G609","Hereditary & idiopathic neuropathy NOS","Hereditary and idiopathic neuropathy, unspecified");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G610","Guillain-Barr, syndrome","Guillain-Barré syndrome");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G610","Guillain-Barr, syndrome","Guillain-Barrï¿½ syndrome");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G611","Serum neuropathy","Serum neuropathy");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G618","Other inflammatory polyneuropathies","Other inflammatory polyneuropathies");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("G619","Inflammatory polyneuropathy unspecified","Inflammatory polyneuropathy, unspecified");
@@ -4114,7 +4117,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H801","Oblit otoscleros
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H802","Cochlear otosclerosis","Cochlear otosclerosis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H808","Other otosclerosis","Other otosclerosis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H809","Otosclerosis unspecified","Otosclerosis, unspecified");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H810","Meniere's disease","Ménière's disease");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H810","Meniere's disease","Mï¿½niï¿½re's disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H811","Benign paroxysmal vertigo","Benign paroxysmal vertigo");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H812","Vestibular neuronitis","Vestibular neuronitis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("H813","Other peripheral vertigo","Other peripheral vertigo");
@@ -5518,7 +5521,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L701","Acne conglobata"
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L702","Acne varioliformis","Acne varioliformis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L703","Acne tropica","Acne tropica");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L704","Infantile acne","Infantile acne");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L705","Acné excoriée des jeunes filles","Acné excoriée des jeunes filles");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L705","Acnï¿½ excoriï¿½e des jeunes filles","Acnï¿½ excoriï¿½e des jeunes filles");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L708","Other acne","Other acne");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L709","Acne unspecified","Acne, unspecified");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L710","Perioral dermatitis","Perioral dermatitis");
@@ -5551,7 +5554,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L80","Vitiligo","Vitili
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L810","Postinflammatory hyperpigmentation","Postinflammatory hyperpigmentation");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L811","Chloasma","Chloasma");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L812","Freckles","Freckles");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L813","Café au lait spots","Café au lait spots");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L813","Cafï¿½ au lait spots","Cafï¿½ au lait spots");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L814","Other melanin hyperpigmentation","Other melanin hyperpigmentation");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L815","Leukoderma not elsewhere classified","Leukoderma, not elsewhere classified");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("L816","Other disrd diminished melanin formation","Other disorders of diminished melanin formation");
@@ -6452,9 +6455,9 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M341","CR(E)ST syndrome
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M342","Systc sclerosis induced drugs chemicals","Systemic sclerosis induced by drugs and chemicals");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M348","Other forms of systemic sclerosis","Other forms of systemic sclerosis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M349","Systemic sclerosis unspecified","Systemic sclerosis, unspecified");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M350","Sicca syndrome [Sjogren]","Sicca syndrome [Sjögren]");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M350","Sicca syndrome [Sjogren]","Sicca syndrome [Sjï¿½gren]");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M351","Other overlap syndromes","Other overlap syndromes");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M352","Behcet's disease","Behçet's disease");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M352","Behcet's disease","Behï¿½et's disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M353","Polymyalgia rheumatica","Polymyalgia rheumatica");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M354","Diffuse (eosinophilic) fasciitis","Diffuse (eosinophilic) fasciitis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M355","Multifocal fibrosclerosis","Multifocal fibrosclerosis");
@@ -8027,7 +8030,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M906","Osteitis deforma
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M907","Fracture of bone in neoplastic disease","Fracture of bone in neoplastic disease");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M908","Osteopathy in other diseases c/e","Osteopathy in other diseases classified elsewhere");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M910","Juvenile osteochondrosis of pelvis","Juvenile osteochondrosis of pelvis");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M911","Juvenile osteochondrosis head of femur","Juvenile osteochondrosis  head of femur [Legg-Calvé-Perthes]");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M911","Juvenile osteochondrosis head of femur","Juvenile osteochondrosis  head of femur [Legg-Calvï¿½-Perthes]");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M912","Coxa plana","Coxa plana");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M913","Pseudocoxalgia","Pseudocoxalgia");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M918","Oth juvnle osteochondrosis  hip & pelvis","Other juvenile osteochondrosis of hip and pelvis");
@@ -8043,7 +8046,7 @@ INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M927","Juvenile osteoch
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M928","Other specified juvenile osteochondrosis","Other specified juvenile osteochondrosis");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M929","Juvenile osteochondrosis unspecified","Juvenile osteochondrosis, unspecified");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M930","Slipped upp femor epiphysis (nontraum)","Slipped upper femoral epiphysis (nontraumatic)");
-INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M931","Kienbock's disease of adults","Kienböck's disease of adults");
+INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M931","Kienbock's disease of adults","Kienbï¿½ck's disease of adults");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M9320","Osteochondritis dissecans of mult sites","Osteochondritis dissecans of multiple sites");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M9321","Osteochondritis dissecans of shoulder","Osteochondritis dissecans of shoulder");
 INSERT INTO icd10 (code, short_desc, long_desc) VALUES ("M9322","Osteochondritis dissecans of elbow","Osteochondritis dissecans of elbow");
