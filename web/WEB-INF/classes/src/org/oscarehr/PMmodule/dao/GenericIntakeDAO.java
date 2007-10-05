@@ -192,7 +192,8 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
             Integer nodeId = (Integer)tuple[0];
             String value = (String)tuple[1];
-            Integer count = (Integer)tuple[2];
+            
+            Integer count = Integer.valueOf(tuple[2].toString());
 
             if (!reportStatistics.containsKey(nodeId)) {
                 reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
