@@ -149,8 +149,9 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         if (teamId == null || teamId.intValue() <= 0) {
             throw new IllegalArgumentException();
         }
-
-        List results = this.getHibernateTemplate().find("select pp from ProgramProvider pp left join pp.teams as team where pp.ProgramId = ? and team.id = ?", new Object[] {programId, teamId});
+        Long pId = Long.valueOf(programId.longValue());
+        
+        List results = this.getHibernateTemplate().find("select pp from ProgramProvider pp left join pp.teams as team where pp.ProgramId = ? and team.id = ?", new Object[] {pId, teamId});
 
         if (log.isDebugEnabled()) {
             log.debug("getProgramProvidersInTeam: programId=" + programId + ",teamId=" + teamId + ",# of results=" + results.size());
