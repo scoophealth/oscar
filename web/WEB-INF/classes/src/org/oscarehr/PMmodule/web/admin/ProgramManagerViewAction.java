@@ -287,8 +287,10 @@ public class ProgramManagerViewAction extends BaseAction {
 		String admitToProgramId;
 		if (type != null && type.equals("community")) {
 			admitToProgramId = request.getParameter("batch_discharge_community_program");
-		} else {
+		} else if(type!=null && type.equals("bed")){
 			admitToProgramId = request.getParameter("batch_discharge_program");
+		} else {
+			admitToProgramId="";
 		}
 
 		String message = "";
@@ -306,7 +308,7 @@ public class ProgramManagerViewAction extends BaseAction {
 				}
 				
 				//temporary admission will not allow batach discharge from bed program.
-				if(admission.isTemporaryAdmission()){
+				if(admission.isTemporaryAdmission() && "bed".equals(type)){
 					message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
 					continue;
 				}
@@ -318,7 +320,7 @@ public class ProgramManagerViewAction extends BaseAction {
                         String program_type = admission.getProgramType();
                         //if discharged program is service program,
                         //then should check if the client is in one bed program
-                        if(program_type.equals("Service")) {
+                        /*if(program_type.equals("Service")) {
                             Admission admission_bed_program = admissionManager.getCurrentBedProgramAdmission(clientId);
                             if(admission_bed_program!=null){
                                 if(!admission_bed_program.isTemporaryAdmission()){
@@ -327,6 +329,7 @@ public class ProgramManagerViewAction extends BaseAction {
                                 }
                             }
                         }
+                        */
                         //if the client is already in the community program, then cannot do batch discharge to the community program.
                         Admission admission_community_program = admissionManager.getCurrentCommunityProgramAdmission(clientId);
                         if(admission_community_program!=null) {
@@ -336,32 +339,36 @@ public class ProgramManagerViewAction extends BaseAction {
                     }
                 }
                 // lets see if there's room first
-				Program programToAdmit = programManager.getProgram(admitToProgramId);
-				if (programToAdmit == null) {
-					message += "Admitting program not found!";
-					continue;
-				}
-				if (programToAdmit.getNumOfMembers() >= programToAdmit.getMaxAllowed()) {
-					message += "Program Full. Cannot admit " + admission.getClient().getFormattedName() + "\n";
-					continue;
-				}
-
+                if(!"service".equals(type)) {
+                	Program programToAdmit = programManager.getProgram(admitToProgramId);
+                	if (programToAdmit == null) {
+                		message += "Admitting program not found!";
+                		continue;
+                	}
+                	if (programToAdmit.getNumOfMembers() >= programToAdmit.getMaxAllowed()) {
+                		message += "Program Full. Cannot admit " + admission.getClient().getFormattedName() + "\n";
+                		continue;
+                	}
+                }
 				admission.setDischargeDate(new Date());
 				admission.setDischargeNotes("Batch discharge");
 				admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 				admissionManager.saveAdmission(admission);
+				
+				//The service program can only be batch discharged, can not be admitted to another program.
+				if(!"service".equals(type)) {
+					Admission newAdmission = new Admission();
+					newAdmission.setAdmissionDate(new Date());
+					newAdmission.setAdmissionNotes("Batch Admit");
+					newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
+					newAdmission.setClientId(admission.getClientId());
+					newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
+					newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));
+					newAdmission.setTeamId(0);
+					newAdmission.setAgencyId(admission.getAgencyId());
 
-				Admission newAdmission = new Admission();
-				newAdmission.setAdmissionDate(new Date());
-				newAdmission.setAdmissionNotes("Batch Admit");
-				newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
-				newAdmission.setClientId(admission.getClientId());
-				newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
-				newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));
-				newAdmission.setTeamId(0);
-				newAdmission.setAgencyId(admission.getAgencyId());
-
-				admissionManager.saveAdmission(newAdmission);
+					admissionManager.saveAdmission(newAdmission);
+				}
 			}
 		}
 
