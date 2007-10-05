@@ -279,8 +279,8 @@ public class ClientManagerAction extends BaseAction {
 	public ActionForward getLinks(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		String id = request.getParameter("id");
 
-		if (id != null) {
-			Demographic client = integratorManager.getClient(Integer.valueOf(id));
+		if (id != null && integratorManager.isEnabled()) {
+            Demographic client = integratorManager.getClient(Integer.valueOf(id));
 			request.setAttribute("client", client);
 		}
 		return mapping.findForward("links");
