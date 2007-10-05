@@ -174,6 +174,9 @@ public class CustomFilterAction extends DispatchAction {
         DynaActionForm filterForm = (DynaActionForm)form;
         CustomFilter filter = (CustomFilter)filterForm.get("filter");
                 
+        if("".equals(filter.getDemographic_webName())) {
+        	filter.setDemographic_no("");
+        }
         String[] providers = request.getParameterValues("provider");
         if(providers != null) {
 	        Set sProviders = new HashSet();	        

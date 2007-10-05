@@ -336,11 +336,11 @@ public class TicklerAction extends DispatchAction {
         /* get service time */
         String service_hour = request.getParameter("tickler.service_hour");
         String service_minute = request.getParameter("tickler.service_minute");
-        String service_ampm = request.getParameter("tickler.service_ampm");
-        
+        String service_ampm = request.getParameter("tickler.service_ampm");        
         tickler.setServiceTime(service_hour + ":" + service_minute + " " + service_ampm);
         
         tickler.setUpdate_date(new java.util.Date());
+        
         ticklerMgr.addTickler(tickler);
 
         String echart = request.getParameter("echart");
@@ -352,15 +352,28 @@ public class TicklerAction extends DispatchAction {
         	
     		/* get current chart */
     		EChart tempChart = chartMgr.getLatestChart(tickler.getDemographic_no());
-    		String postedDate = formatter.format(tempChart.getTimeStamp());
+    		String postedDate = "";
+    		if(tempChart!=null) {
+    			postedDate = formatter.format(tempChart.getTimeStamp());
+    		}
     		
     		/* create new object */
     		EChart chart = new EChart();
-    		BeanUtils.copyProperties(chart,tempChart);
+    		if(tempChart!=null) {
+    			BeanUtils.copyProperties(chart,tempChart);
+    		} else {
+    			String curUser_no = (String) request.getSession().getAttribute("user");
+    			chart.setProviderNo(curUser_no);
+    		}
     		String today = formatter.format(new Date());
     		
     		String e = chart.getEncounter();
-    		StringBuffer buf = new StringBuffer(e);
+    		StringBuffer buf;
+    		if(e!=null) {
+    			buf = new StringBuffer(e);
+    		} else {
+    			buf = new StringBuffer();
+    		}
     		buf.append("\n\n");
     		if(!today.equals(postedDate)) {
     			buf.append("__________________________________________________\n");
