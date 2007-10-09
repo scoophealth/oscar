@@ -57,10 +57,10 @@ public class CustomExceptionStrategy extends AbstractExceptionListener
     {
         if (endpoints.size() > 0) {
 			
-			if(t.getCause().toString().contains("Connection Refused"))	
+			//if(t.getCause().toString().contains("Connection Refused"))	
 				return (UMOEndpoint) endpoints.get(0);
-			else						     
-				return (UMOEndpoint) endpoints.get(1);
+			//else						     
+				//return (UMOEndpoint) endpoints.get(1);
         } else {
             return null;
         }
