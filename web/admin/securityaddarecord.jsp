@@ -28,7 +28,7 @@
 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page  import="java.sql.*, java.util.*" errorPage="errorpage.jsp" %>
+<%@ page  import="java.sql.*, java.util.*, oscar.OscarProperties" errorPage="errorpage.jsp" %>
 <%
   //if(session.getAttribute("user") == null && session.getValue("user").equals("admin") )  response.sendRedirect("../logout.jsp");
 %>
@@ -102,6 +102,7 @@
       </tr>
     </table>
     <form method="post" action="admincontrol.jsp" name="searchprovider" onsubmit="return onsub()">
+        
   <table cellspacing="0" cellpadding="2" width="90%" border="0">
       <tr>
         <td>
@@ -117,7 +118,13 @@
         </td>
         <td>
           <input type="password" name="password" size="20" maxlength="80" >
-          Confirm:
+        </td>
+      </tr>
+      <tr>
+        <td>    
+            <div align="right">Confirm:</div>
+        </td>
+        <td>
           <input type="password" name="conPassword" size="20" maxlength="80">
         </td>
       </tr>
@@ -151,6 +158,8 @@
 		  <img src="../images/cal.gif" id="date_ExpireDate_cal"/>
         </td>
       </tr>
+      
+      <% if (OscarProperties.getInstance().getBooleanProperty("NEW_USER_PIN_CONTROL","yes")){%>
       <tr>
         <td align="right" nowrap>Pin(remote) Enable:</td>
         <td>
@@ -159,6 +168,10 @@
           <input type="checkbox" name="b_LocalLockSet" value="1" />
         </td>
       </tr>
+      <%}else{%>
+        <input type="hidden" name="b_RemoteLockSet" value="1" />
+        <input type="hidden" name="b_LocalLockSet" value="" />
+      <%}%>  
 <!-- new security -->
       <tr>
         <td>
