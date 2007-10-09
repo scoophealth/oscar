@@ -35,29 +35,12 @@
             graphable="no"
             value_name="Copy in file"/>
 
-    <item
-            measurement_type="PGT"
-            display_name="Public Guardian and Trustee Found"
-            guideline="not competent to make decisions about treatment, finances or placement"
-            graphable="no"
-            value_name="PGT Obtained"/>
 
     <measurement
             type="Lwil"
             typeDesc="Lwil"
             typeDisplayName="Living Will filled out"
             measuringInstrc="Living Will filled out">
-        <validationRule
-                name="Yes/No"
-                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
-    </measurement>
-
-
-    <measurement
-            type="PGT"
-            typeDesc="PGT"
-            typeDisplayName="Public Guardian and Trustee Found"
-            measuringInstrc="Public Guardian and Trustee Found">
         <validationRule
                 name="Yes/No"
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>

@@ -149,5 +149,21 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <item
+            measurement_type="PGT"
+            display_name="Public Guardian and Trustee Found"
+            guideline="not competent to make decisions about treatment, finances or placement"
+            graphable="no"
+            value_name="PGT Obtained"/>
+
+    <measurement
+            type="PGT"
+            typeDesc="PGT"
+            typeDisplayName="Public Guardian and Trustee Found"
+            measuringInstrc="Public Guardian and Trustee Found">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
 
 </flowsheet>
