@@ -63,13 +63,6 @@
             graphable="no"
             value_name="Completed"/>
 
-    <item
-
-            measurement_type="ARRS"
-            display_name="Arrears is an issue"
-            guideline=""
-            graphable="no"
-            value_name="Arrears is an issue"/>
 
     <item
             measurement_type="HVIS"
@@ -124,16 +117,6 @@
             typeDesc="CMSP"
             typeDisplayName="Community Support Application"
             measuringInstrc="Community Support Application">
-        <validationRule
-                name="Yes/No"
-                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
-    </measurement>
-
-    <measurement
-            type="ARRS"
-            typeDesc="ARRS"
-            typeDisplayName="Arrears is an issue"
-            measuringInstrc="Arrears is an issue">
         <validationRule
                 name="Yes/No"
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
