@@ -105,13 +105,22 @@ public class MessageUploader {
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection conn = db.GetConnection();
-            String insertStmt = "INSERT INTO hl7TextMessage (lab_id, message, type) VALUES ('', ?, ?)";
-            PreparedStatement pstmt = conn.prepareStatement(insertStmt);
+            
+            String sql = "SELECT MAX(id) FROM fileUploadCheck";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            String fileUploadCheck_id = null;
+            if (rs.next())
+                fileUploadCheck_id = rs.getString(1);
+            
+            String insertStmt = "INSERT INTO hl7TextMessage (lab_id, message, type, fileUploadCheck_id) VALUES ('', ?, ?, ?)";
+            pstmt = conn.prepareStatement(insertStmt);
             pstmt.setString(1, new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"));
             pstmt.setString(2, type);
+            pstmt.setString(3, fileUploadCheck_id);
             pstmt.executeUpdate();
             
-            ResultSet rs = pstmt.getGeneratedKeys();
+            rs = pstmt.getGeneratedKeys();
             String insertID = null;
             if(rs.next())
                 insertID = rs.getString(1);
