@@ -17,7 +17,7 @@
 -->
 <flowsheet
         name="agencySocialLegal"
-        display_name="Social and Legal flowsheet"
+        display_name="Other Service Components Flowsheet"
         ds_rules="socialLegal.drl"
         is_universal="true"
         is_medical="false"
