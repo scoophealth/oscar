@@ -30,7 +30,8 @@ package oscar.oscarLab;
 
 import java.io.*;
 import java.net.*;
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import org.apache.commons.lang.*;
 import oscar.oscarDB.*;
@@ -117,7 +118,7 @@ public class FileUploadCheck {
          String md5sum = getMd5Sum(is);
          if(!hasFileBeenUploaded(md5sum)){           
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name)+"','"+md5sum+"',now())";
+            String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name.replaceAll(".enc", "")+"."+(new Date()).getTime())+"','"+md5sum+"',now())";
             System.out.println(sql);
             db.RunSQL(sql);
             db.CloseConn();        
