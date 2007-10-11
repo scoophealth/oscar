@@ -34,6 +34,15 @@
             guideline="All Ontario residents"
             graphable="no"
             value_name="Copy in file"/>
+    <measurement
+            type="OHIP"
+            typeDesc="OHIP"
+            typeDisplayName="OHIP Card in File"
+            measuringInstrc="OHIP Card in File">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
 
     <item
             measurement_type="SIN"
@@ -41,32 +50,6 @@
             guideline="All Canadian citizens"
             graphable="no"
             value_name="Copy in file"/>
-
-    <item
-            measurement_type="BCRT"
-            display_name="Birth Cert. in File"
-            guideline=""
-            graphable="no"
-            value_name="Copy in file"/>
-
-    <item
-            measurement_type="LAND"
-            display_name="Landing Docs in File"
-            guideline=""
-            graphable="no"
-            value_name="Copy in file"/>
-
-    <measurement
-             type="OHIP"
-             typeDesc="OHIP"
-             typeDisplayName="OHIP Card in File"
-             measuringInstrc="OHIP Card in File">
-         <validationRule
-                 name="Yes/No"
-                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
-     </measurement>
-
-
     <measurement
             type="SIN"
             typeDesc="SIN"
@@ -77,6 +60,12 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <item
+            measurement_type="BCRT"
+            display_name="Birth Cert. in File"
+            guideline=""
+            graphable="no"
+            value_name="Copy in file"/>
     <measurement
             type="BCRT"
             typeDesc="BCRT"
@@ -87,6 +76,12 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <item
+            measurement_type="LAND"
+            display_name="Landing Docs in File"
+            guideline=""
+            graphable="no"
+            value_name="Copy in file"/>
     <measurement
             type="LAND"
             typeDesc="LAND"
@@ -97,6 +92,51 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <item measurement_type="Citz"
+          display_name="Citizenship card in file"
+          guideline=""
+          graphable="no"
+          value_name="Copy in file"
+          />
+    <measurement
+            type="Citz"
+            typeDesc="Citz"
+            typeDisplayName="Citizenship card in file"
+            measuringInstrc="Citizenship card in file">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
 
-    
+    <item measurement_type="Othi"
+          display_name="Other ID in file"
+          guideline=""
+          graphable="no"
+          value_name="Copy in file"
+          />
+    <measurement
+            type="Othi"
+            typeDesc="Othi"
+            typeDisplayName="Other ID in file"
+            measuringInstrc="Other ID in file">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
+
+    <item measurement_type = "Isup"
+          display_name = "reviewed by supevisor"
+          guideline = ""
+          graphable = "no"
+          value_name = "Reviewed"/>
+    <measurement
+            type="Isup"
+            typeDesc="Isup"
+            typeDisplayName="reviewed by supervisor"
+            measuringInstrc="reviewed by supervisor">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
+
 </flowsheet>

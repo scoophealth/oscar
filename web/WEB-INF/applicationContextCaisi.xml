@@ -20,6 +20,7 @@
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/identificationFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/socialLegalFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/housingFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/intakeFlowsheet.xml</value>
             </list>
         </property>
     </bean>

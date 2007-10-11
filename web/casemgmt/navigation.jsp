@@ -350,7 +350,7 @@
 </td></tr>
 
 <caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
-    <tr style="background-color:#BBBBBB;"><td>Flowsheets</td></tr>
+    <tr style="background-color:#BBBBBB;"><td>Case Management Flowsheets</td></tr>
 
 
     <!-- measurement -->
@@ -363,7 +363,7 @@
         %>
         <a href="javascript:void(0)"
            onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
-        </a>
+        </a><br/>
         <%}%>
 
         <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">

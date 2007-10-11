@@ -166,4 +166,20 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <item measurement_type="Fsup"
+          display_name="reviewed by supervisor"
+          guideline=""
+          graphable="no"
+          value_name="Reviewed"
+          />
+
+    <measurement type="Fsup"
+                 typeDesc="Fsup"
+                 typeDisplayName="reviewed by supervisor"
+                 measuringInstrc="reviewed by supervisor">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
+
 </flowsheet>
