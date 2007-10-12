@@ -29,10 +29,7 @@ import org.caisi.integrator.message.agencies.FindAgenciesRequest;
 import org.caisi.integrator.message.agencies.FindAgenciesResponse;
 import org.caisi.integrator.message.agencies.RegisterAgencyRequest;
 import org.caisi.integrator.message.agencies.RegisterAgencyResponse;
-import org.caisi.integrator.message.demographics.GetDemographicRequest;
-import org.caisi.integrator.message.demographics.GetDemographicResponse;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsResponse;
+import org.caisi.integrator.message.demographics.*;
 import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
 import org.caisi.integrator.message.search.SearchCandidateDemographicResponse;
 import org.caisi.integrator.model.Client;
@@ -149,12 +146,17 @@ public class IntegratorManagerImpl implements IntegratorManager {
         }
     }
 
-    public void setupAgencyMap() {
+    /**
+     * Build the map of agencies available via the integrator.
+     */
+    protected void setupAgencyMap() {
         if (integratorService != null) {
             FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest( new Date() ), authenticationToken);
             agencyMap = new HashMap<Long, Agency>();
             for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
-                agencyMap.put(agency.getId(), integratorAgencyToCAISIAgency(agency));
+                // skip the local agency... we already have the information we need about ourselves
+                if (!agency.getName().equals(localAgency.getIntegratorUsername()))
+                    agencyMap.put(agency.getId(), integratorAgencyToCAISIAgency(agency));
             }
         }
         agencyMap.put((long) 0, localAgency);
@@ -162,7 +164,17 @@ public class IntegratorManagerImpl implements IntegratorManager {
         log.info("Agency Map is setup");
     }
 
-    private IntegratorService getIntegratorService() {
+    /**
+     * Build a map of agencies available, but populate it only with the local agency
+     */
+    protected void setupLocalAgencyMap() {
+        agencyMap = new HashMap<Long, Agency>();
+        agencyMap.put((long) 0, localAgency);
+        Agency.setAgencyMap(agencyMap);
+        log.info("Agency Map is setup");
+    }
+
+    protected IntegratorService getIntegratorService() {
         if (!isEnabled())
             throw new IntegratorNotEnabledException("request made for integrator service, but integrator is not enabled");
         else if (integratorService == null)
@@ -182,13 +194,6 @@ public class IntegratorManagerImpl implements IntegratorManager {
         }
 
         return agencies;
-    }
-
-    public void setupLocalAgencyMap() {
-        agencyMap = new HashMap<Long, Agency>();
-        agencyMap.put((long) 0, localAgency);
-        Agency.setAgencyMap(agencyMap);
-        log.info("Agency Map is setup");
     }
 
     public void refresh() {
@@ -298,15 +303,7 @@ public class IntegratorManagerImpl implements IntegratorManager {
 
 
     public void saveClient(Demographic client) throws IntegratorException {
-        // TODO stubbed for now, must implement
-//        if (!isEnabled() || agencyService == null) {
-//            throw new IntegratorNotEnabledException();
-//        }
-//        try {
-//            agencyService.saveClient(localAgency.getId(), client);
-//        } catch (XFireRuntimeException e) {
-//            throw new IntegratorException(e.getMessage());
-//        }
+        getIntegratorService().addUpdateDemographic(new AddUpdateDemographicRequest(new Date(), caisiDemographicToIntegratorDemographic(client)), authenticationToken);
     }
 
     public void mergeClient(Demographic localClient, long remoteAgency, long remoteClientId) throws IntegratorException {
