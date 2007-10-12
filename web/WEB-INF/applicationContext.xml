@@ -110,8 +110,8 @@
 
     <!-- DAO -->
     <bean id="redirectLinkDao" class="org.caisi.dao.RedirectLinkDao" autowire="byName"/>
-    <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao"/>
-    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao"/>
+    <bean id="redirectLinkTrackingDao" class="org.caisi.dao.RedirectLinkTrackingDao" autowire="byName"/>
+    <bean id="issueGroupDao" class="org.caisi.dao.IssueGroupDao" autowire="byName"/>
     <bean id="programDao" class="org.oscarehr.PMmodule.dao.ProgramDao" autowire="byName"/>
     <bean id="programQueueDao" class="org.oscarehr.PMmodule.dao.ProgramQueueDao" autowire="byName"/>
     <bean id="clientReferralDAO" class="org.oscarehr.PMmodule.dao.ClientReferralDAO" autowire="byName"/>
