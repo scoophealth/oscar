@@ -120,7 +120,7 @@ public class IntegratorManagerImpl implements IntegratorManager {
             return;
         }
 
-        if (isActive()) {
+        if (localAgency.isIntegratorEnabled()) {
             try {
                 // prepare the service;
                 Service serviceModel = new AnnotationServiceFactory().create(IntegratorService.class);
@@ -132,7 +132,7 @@ public class IntegratorManagerImpl implements IntegratorManager {
                 // set up the map of other agencies
                 setupAgencyMap();
 
-                localAgency.setIntegratorEnabled(false);
+                localAgency.setIntegratorEnabled(true);
             } catch (Throwable e) {
                 localAgency.setIntegratorEnabled(false);
 
@@ -166,7 +166,7 @@ public class IntegratorManagerImpl implements IntegratorManager {
         if (!isEnabled())
             throw new IntegratorNotEnabledException("request made for integrator service, but integrator is not enabled");
         else if (integratorService == null)
-            throw new IntegratorNotInitializedException("request made for integrator service, which was not initialized");
+            throw new IntegratorNotInitializedException("request made for integrator service, which did not complete initialization");
         else
             return integratorService;
     }
@@ -373,7 +373,8 @@ public class IntegratorManagerImpl implements IntegratorManager {
         demographicTransfer.setAddress(demographicInfo.getAddress());
         org.caisi.integrator.model.Agency agency = caisiAgencyToIntegratorAgency(agencyDAO.getAgency(demographicInfo.getAgencyId()));
         demographicTransfer.setAgency(agency);
-        demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo());
+        if (demographicInfo.getDemographicNo() != null)
+            demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo());
         demographicTransfer.setChartNo(demographicInfo.getChartNo());
         demographicTransfer.setCity(demographicInfo.getCity());
         demographicTransfer.setDateJoined(demographicInfo.getDateJoined());
