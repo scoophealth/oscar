@@ -16,11 +16,11 @@
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/diabetesFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hypertensionFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/hivFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/intakeFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/financesFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/identificationFlowsheet.xml</value>
-                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/socialLegalFlowsheet.xml</value>
                 <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/housingFlowsheet.xml</value>
-                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/intakeFlowsheet.xml</value>
+                <value>classpath:oscar/oscarEncounter/oscarMeasurements/flowsheets/socialLegalFlowsheet.xml</value>
             </list>
         </property>
     </bean>
