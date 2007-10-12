@@ -166,13 +166,28 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+
+    <item measurement_type =  "SPDT"
+          display_name = "Special Diet Allowance Obtained"
+          guideline = "OW or ODSP recipients with particular health conditions are eligible"
+          graphable = "no"
+          value_name = "Obtained Special Diet Allowance"
+          ds_rules = ""/>
+    <measurement type="SPDT"
+                 typeDesc="SPDT"
+                 typeDisplayName="Special Diet Allowance Obtained"
+                 measuringInstrc="Special Diet Allowance Obtained">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
+
     <item measurement_type="Fsup"
           display_name="reviewed by supervisor"
           guideline=""
           graphable="no"
           value_name="Reviewed"
           />
-
     <measurement type="Fsup"
                  typeDesc="Fsup"
                  typeDisplayName="reviewed by supervisor"

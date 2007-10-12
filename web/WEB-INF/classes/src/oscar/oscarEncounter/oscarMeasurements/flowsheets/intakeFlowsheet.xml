@@ -134,15 +134,15 @@
     </measurement>
 
     <item measurement_type="Ornt"
-          display_name="Orientation completed (tour of current program)"
+          display_name="Orientation to Current Program Completed"
           guideline=""
           graphable="no"
           value_name="Completed"
           />
     <measurement type="Ornt"
                  typeDesc="Ornt"
-                 typeDisplayName="Orientation completed (tour of current program)"
-                 measuringInstrc="Orientation completed (tour of current program)">
+                 typeDisplayName="Orientation to Current Program Completed"
+                 measuringInstrc="Orientation to Current Program Completed">
         <validationRule
                 name="Yes/No"
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
