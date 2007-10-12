@@ -21,6 +21,20 @@
  */
 package org.oscarehr.PMmodule.service.impl;
 
+/**
+ * TODO Integrator todo list:
+ *    - clean up use of local agency across application; application should not assume '0' as local agency Id,
+ *      and should use the string (non-numerical) identifier for an agency.  disjunction between local agency Ids
+ *      and what they are assigned on the server is a source of confusion.
+ *
+ *    - implement unimplemented methods
+ *
+ *    - implement Ext handling
+ *
+ *    - implement program registry
+ *
+ *    - implement notes
+ */
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.integrator.message.AuthenticationToken;
