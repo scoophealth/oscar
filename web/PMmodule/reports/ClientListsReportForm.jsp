@@ -51,7 +51,7 @@
 			</tr>
 
 			<tr>
-				<th>Enrolled in program</th>
+				<th>Has been in program</th>
 				<td>
 					<select name="form.programId" >
 						<option value="">any</option>
@@ -68,7 +68,7 @@
 			</tr>
 
 			<tr>
-				<th>Enrolled between</th>
+				<th>Admitted between</th>
 				<td>Start Date <input type="text" name="form.enrolledStartDate" size="15" /> (yyyy-mm-dd) - End Date <input type="text" name="form.enrolledEndDate" size="15" /> (yyyy-mm-dd)</td>
 			</tr>
 
