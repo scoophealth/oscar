@@ -148,4 +148,19 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <item measurement_type="Insp"
+          display_name="reviewed by supervisor"
+          guideline=""
+          graphable="no"
+          value_name="Completed"
+          />
+    <measurement type="Insp"
+                 typeDesc="Insp"
+                 typeDisplayName="reviewed by supervisor"
+                 measuringInstrc="reviewed by supervisor">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
+
 </flowsheet>

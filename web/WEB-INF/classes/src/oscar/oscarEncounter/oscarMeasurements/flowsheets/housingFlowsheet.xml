@@ -132,4 +132,20 @@
                 regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
     </measurement>
 
+    <measurement
+            type="Hsup"
+            typeDesc="Hsup"
+            typeDisplayName="reviewed by supervisor"
+            measuringInstrc="reviewed by supervisor">
+        <validationRule
+                name="Yes/No"
+                regularExp="YES|yes|Yes|Y|NO|no|No|N"/>
+    </measurement>
+    <item
+            measurement_type="Hsup"
+            display_name="reviewed by supervisor"
+            guideline=""
+            graphable="no"
+            value_name="Completed"/>
+
 </flowsheet>
