@@ -23,7 +23,6 @@
  */
 package oscar.billing.dao;
 
-import java.util.Vector;
 import oscar.billing.model.Appointment;
 import oscar.billing.model.Demographic;
 import oscar.billing.model.Diagnostico;
@@ -203,7 +202,7 @@ public class AppointmentDAO extends DAO {
                 appointment.getDemographic().setLastName(rs.getString(7));
                 appointment.setName(rs.getString(8));
                 appointment.setReason(rs.getString(9));
-		appointment.setAppointmentDate(rs.getDate(10));
+				appointment.setAppointmentDate(rs.getDate(10));
             }
         } finally {
             db.CloseConn();
@@ -261,69 +260,39 @@ public class AppointmentDAO extends DAO {
         return list;
     }
 
-    public ArrayList listFatPatiente(Demographic demographic)
-	    throws SQLException {
-	    ArrayList list = new ArrayList();
-	    String sql =
-		    "select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " +
-		    "b.first_name, a.billing " +
-		    "from appointment a, provider b, demographic c " +
-		    "where a.provider_no = b.provider_no and " +
-		    "a.demographic_no = c.demographic_no and " +
-		    "a.demographic_no = " + demographic.getDemographicNo() + " and " +
-		    "a.billing is not null " +
-		    "order by a.appointment_date desc";
+	public ArrayList listFatPatiente(Demographic demographic)
+		throws SQLException {
+		ArrayList list = new ArrayList();
+		String sql =
+			"select a.appointment_no, a.appointment_date, a.provider_no, b.last_name, " +
+			"b.first_name, a.billing " +
+			"from appointment a, provider b, demographic c " +
+			"where a.provider_no = b.provider_no and " +
+			"a.demographic_no = c.demographic_no and " +
+			"a.demographic_no = " + demographic.getDemographicNo() + " and " +
+			"a.billing is not null " +
+			"order by a.appointment_date desc";
 
-	    DBHandler db = getDb();
+		DBHandler db = getDb();
 
-	    try {
-		    ResultSet rs = db.GetSQL(sql);
+		try {
+			ResultSet rs = db.GetSQL(sql);
 
-		    while (rs.next()) {
-			    Appointment app = new Appointment();
-			    app.setAppointmentNo(rs.getLong(1));
-			    app.setAppointmentDate(rs.getDate(2));
-			    app.getProvider().setProviderNo(rs.getString(3));
-			    app.getProvider().setLastName(rs.getString(4));
-			    app.getProvider().setFirstName(rs.getString(5));
-			    app.setBilling(rs.getString(6));
+			while (rs.next()) {
+				Appointment app = new Appointment();
+				app.setAppointmentNo(rs.getLong(1));
+				app.setAppointmentDate(rs.getDate(2));
+				app.getProvider().setProviderNo(rs.getString(3));
+				app.getProvider().setLastName(rs.getString(4));
+				app.getProvider().setFirstName(rs.getString(5));
+				app.setBilling(rs.getString(6));
+				
+				list.add(app);            	
+			}
+		} finally {
+			db.CloseConn();
+		}
 
-			    list.add(app);            	
-		    }
-	    } finally {
-		    db.CloseConn();
-	    }
-	    return list;
-    }
-	
-    public Vector search(String demo_no) throws SQLException {
-	Vector appointments = new Vector();
-	
-        String sql =
-            "select app.*, prov.last_name, prov.first_name from appointment app, provider prov " + 
-	    "where app.provider_no = prov.provider_no and app.demographic_no = " + demo_no;
-        DBHandler db = getDb();
-        try {
-            ResultSet rs = db.GetSQL(sql);
-	    
-            while (rs.next()) {
-		Appointment appointment = new Appointment();
-		
-                appointment.setAppointmentNo(rs.getLong("appointment_no"));
-		appointment.setAppointmentDate(rs.getDate("appointment_date"));
-		appointment.setStartTime(rs.getTime("start_time"));
-		appointment.setEndTime(rs.getTime("end_time"));
-		appointment.setNotes(rs.getString("notes"));
-		appointment.setReason(rs.getString("reason"));
-		appointment.setStatus(rs.getString("status"));
-		appointment.getProvider().setLastName(rs.getString("last_name"));
-		appointment.getProvider().setFirstName(rs.getString("first_name"));
-		
-		appointments.add(appointment);
-            }
-        } finally {
-            db.CloseConn();
-        }
-        return appointments;
-    }
+		return list;
+	}
 }
