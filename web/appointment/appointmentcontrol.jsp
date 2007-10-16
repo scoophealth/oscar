@@ -50,7 +50,7 @@
     {"searchprovidername", "select last_name, first_name from provider where provider_no=?"},
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " },
-    {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID order by wl.listID"},
+    {"search_waitinglist", "select wl.listID, wln.name from waitingList wl, waitingListName wln where wl.demographic_no=? and wln.ID=wl.listID and wl.is_history ='N' order by wl.listID"},
   };
 
    //associate each operation with an output JSP file -- displaymode
