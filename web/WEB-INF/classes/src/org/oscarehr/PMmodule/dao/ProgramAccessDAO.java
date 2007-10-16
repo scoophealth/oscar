@@ -71,9 +71,9 @@ public class ProgramAccessDAO extends HibernateDaoSupport {
         if (accessTypeId == null || accessTypeId.intValue() <= 0) {
             throw new IllegalArgumentException();
         }
-
+        String accessTypeIdString = accessTypeId.toString();
         ProgramAccess result = null;
-        List results = this.getHibernateTemplate().find("from ProgramAccess pa where pa.ProgramId = ? and pa.AccessTypeId = ?", new Object[] {programId, accessTypeId});
+        List results = this.getHibernateTemplate().find("from ProgramAccess pa where pa.ProgramId = ? and pa.AccessTypeId = ?", new Object[] {programId, accessTypeIdString});
         if (results.size() > 0) {
             result = (ProgramAccess)results.get(0);
         }
