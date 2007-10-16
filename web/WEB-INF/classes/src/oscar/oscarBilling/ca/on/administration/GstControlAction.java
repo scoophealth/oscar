@@ -30,30 +30,18 @@ public class GstControlAction extends Action{
     
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         GstControlForm gstForm = (GstControlForm) form;
-        writeDatabase( gstForm.getGstFlag(), gstForm.getGstPercent() );
+        writeDatabase( gstForm.getGstPercent() );
         
         return mapping.findForward("success");
     }
     
-    public void writeDatabase(String flag, String percent){
+    public void writeDatabase( String percent){
         try {
                 String sql;
-                int gstFlag, gstPercent;
                 DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-                if (flag.equals("checked")){
-                    gstFlag = 1;
-                    if( percent.equals("") )
-                        gstPercent = 0;
-                    else
-                        gstPercent = Integer.parseInt(percent);
-                    sql = "Update gstControl set gstFlag = " + gstFlag + ", gstPercent = " + gstPercent + ";";
-                } else {
-                    gstFlag = 0;
-                    sql = "Update gstControl set gstFlag = " + gstFlag + ", gstPercent = 0;";
-                }                
-
-                    db.RunSQL(sql);
-                    db.CloseConn();   
+                sql = "Update gstControl set gstPercent = " + percent + ";";
+                db.RunSQL(sql);
+                db.CloseConn();   
             }
         catch(SQLException e) {
                 System.out.println(e.getMessage());            
@@ -63,11 +51,10 @@ public class GstControlAction extends Action{
     public Properties readDatabase() throws SQLException{
         DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
         Properties props = new Properties();
-        String sql = "Select gstFlag, gstPercent from gstControl;";
+        String sql = "Select gstPercent from gstControl;";
         
         ResultSet rs = db.GetSQL(sql);
         if(rs.next()){
-            props.setProperty("gstFlag", rs.getString("gstFlag"));
             props.setProperty("gstPercent", rs.getString("gstPercent"));
         }
         rs.close();

@@ -19,11 +19,11 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
-<%@ page
+<%@ page errorPage="errorpage.jsp"
 	import="java.util.*,java.math.*,java.net.*,java.sql.*,oscar.util.*,oscar.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.administration.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
-<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*, java.util.Properties"%> 
+<%@ page import="oscar.oscarBilling.ca.on.pageUtil.*, java.util.Properties"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils"%>
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
 <jsp:useBean id="providerBean" class="java.util.Properties" scope="session" />
@@ -40,14 +40,18 @@
 			String color = "";
 			String premiumFlag = "";
 			String service_form = "";
-%> 
- 
-<% 
-Properties gstProp = new Properties(); 
-GstControlAction db = new GstControlAction(); 
-gstProp = db.readDatabase(); 
-String flag = gstProp.getProperty("gstFlag", ""); 
+%>
+
+<%
+Properties gstProp = new Properties();
+GstControlAction db = new GstControlAction();
+GstReport gstRep = new GstReport();
+gstProp = db.readDatabase();
+String gstFlag;
 String percent = gstProp.getProperty("gstPercent", "");
+BigDecimal stotal = new BigDecimal(0);
+BigDecimal gstTotal = new BigDecimal(0);
+BigDecimal gstbilledtotal = new BigDecimal(0);
 %>
 
 <%//
@@ -58,49 +62,18 @@ String percent = gstProp.getProperty("gstPercent", "");
 		vecServiceParam[1] = new Vector();
 		vecServiceParam[2] = new Vector();
 	} else {
-                //This will find data in the checkboxes/ "1","1" is the default 1 unit and 100% of the fee item
 		vecServiceParam = prepObj.getRequestFormCodeVec(request, "xml_", "1", "1");
 	}
 	
-	System.out.println("line1=="+vecServiceParam[0] + ":" + vecServiceParam[1] + vecServiceParam[2] + " :::" + vecServiceParam.length);
-        System.out.println("numItem "+BillingDataHlp.FIELD_SERVICE_NUM);
-        
-        //This finds data in the PINK AREA
+	//System.out.println(vecServiceParam[0] + ":" + vecServiceParam[1] + vecServiceParam[2] + " :::" + vecServiceParam.length);
 	Vector[] vecServiceParam0 = prepObj.getRequestCodeVec(request, "serviceCode", "serviceUnit", "serviceAt", BillingDataHlp.FIELD_SERVICE_NUM);
-	System.out.println("line2=="+vecServiceParam0[0] +":"+vecServiceParam0[1] +" :: :" + vecServiceParam0.length);
-	
-        vecServiceParam[0].addAll(vecServiceParam0[0]);
+	//System.out.println(vecServiceParam0[0] +":"+vecServiceParam0[1] +" :: :" + vecServiceParam0.length);
+	vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
-        /////// hack used to order the billing codes
-        /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable 
-        /////// But should cause that much of a performance hit. It's generally under 3 items
-        Vector v = new Vector();
-        for (int ii = 0 ; ii< vecServiceParam[0].size(); ii++){
-            Hashtable h = new Hashtable();
-            h.put("serviceCode",vecServiceParam[0].get(ii));
-            h.put("serviceUnit",vecServiceParam[1].get(ii));
-            h.put("serviceAt",vecServiceParam[2].get(ii));
-            v.add(h);
-        }
-        Collections.sort(v,new BillingSortComparator());
-        
-        vecServiceParam[0] = new Vector();
-        vecServiceParam[1] = new Vector();
-        vecServiceParam[2] = new Vector();
-        
-        for (int ii = 0; ii < v.size(); ii++){
-            Hashtable h = (Hashtable) v.get(ii);
-            vecServiceParam[0].add((String) h.get("serviceCode") );
-            vecServiceParam[1].add((String) h.get("serviceUnit"));
-            vecServiceParam[2].add((String) h.get("serviceAt"));
-        }
-        ///////--------
-	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2]);
-	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);  //LINE CAUSING ERROR
-
-        
-        
+	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
+					vecServiceParam[2]);
+	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);
 	Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
 			String dxDesc = prepObj.getDxDescription(request.getParameter("dxCode"));
 			String clinicview = oscarVariables.getProperty("clinic_view", "");
@@ -217,73 +190,63 @@ String percent = gstProp.getProperty("gstPercent", "");
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
-var bClick = false;
+	<!--
+	var bClick = false;
+	    function onSave() {
+	        //alert(document.forms[0].submit[0].value);
+	        var ret = true;
+	        if(ret==true && bClick) {
+	            ret = confirm("Are you sure you want to save?");
+	        }
+	        if(!ret) {
+	        	bClick = false;
+	        }
+	        return ret;
+	    }
+	    function onClickSave() {
+			bClick = true;
+	    }
+		function popupPage(vheight,vwidth,varpage) {
+		  var page = "" + varpage;
+		  windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
+		  var popup=window.open(page, "billcorrection", windowprops);
+		    if (popup != null) {
+		    if (popup.opener == null) {
+		      popup.opener = self;
+		    }
+		    popup.focus();
+		  }
+		}
+		function settlePayment() {
+		  document.forms[0].payment.value = document.forms[0].total.value;
+		}
+		
+		function scriptAttach(elementName) {
+		     var d = elementName;
+		     t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
+		     popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
+		}
+                function showtotal(){
+                    var subtotal = document.getElementById("total").value;
+                    //subtotal = subtotal * 1 + document.getElementById("gst").value * 1;
+                        document.getElementById("stotal").value = subtotal;
+                }
+		
+	//-->
 
-function onSave() {
-    var ret = true;
-    bClick = false;
-    return ret;
-}
-
-function onClickSave() {
-    bClick = true;
-}
-
-function popupPage(vheight,vwidth,varpage) {
-    var page = "" + varpage;
-    windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=0,screenY=0,top=0,left=0";
-    var popup=window.open(page, "billcorrection", windowprops);
-    if (popup != null) {
-	if (popup.opener == null) {
-	    popup.opener = self;
-	}
-	popup.focus();
-    }
-}
-
-function settlePayment() {
-    document.forms[0].payment.value = document.forms[0].finaltotal.value;
-}
-
-function scriptAttach(elementName) {
-    var d = elementName;
-    t0 = escape("document.forms[0].elements[\'"+d+"\'].value");
-    popupPage('600', '700', 'onSearch3rdBillAddr.jsp?param='+t0);
-}
-
-function showtotal(){ 
- 	var subtotal = document.getElementById("total").value; 
-  	
- 	<% if (flag.equals("1")) {%> 
- 	var percent = <%=percent%>/100; 
- 	var gst = subtotal * percent; 
- 	
- 	gst *= 100; 
- 	gst = Math.round(gst); 
- 	gst /= 100; 
- 	
- 	document.getElementById("gsttotal").value = gst; 
- 	var total = subtotal * 1 + gst; 
- 	total *= 100; 
- 	total = Math.round(total); 
- 	total /= 100; 
- 	document.getElementById("finaltotal").value = total; 
- 	<%} else {%> 
- 	document.getElementById("finaltotal").value = subtotal; 
- 	<%}%> 
- 	} 
 </script>
 	
 </head>
 
-<body topmargin="0"  onload="showtotal()">
+<body topmargin="0" onload="showtotal()">
+
 <form method="post" name="titlesearch" action="billingONSave.jsp" onsubmit="return onSave();">
 <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myDarkGreen">
 			<tr>
-				<td><b><font color="#FFFFFF">&nbsp;Confirmation </font></b></td>
+				<td><b><font color="#FFFFFF">Confirmation </font></b></td>
 				<td align="right"><input type="hidden" name="addition" value="Confirm" /></td>
 			</tr>
 		</table>
@@ -308,6 +271,7 @@ function showtotal(){
 				<table border="1" cellspacing="2" cellpadding="0" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF"
 					>
 					<tr>
+						<!--<input type="text" name="checkFlag" id="checkFlag" value="<%=request.getParameter("checkFlag") %>" />  -->
 						<td nowrap width="30%" align="center" ><b>Service Date</b><br>
 						<%=request.getParameter("service_date").replaceAll("\\n", "<br>")%></td>
 						<td align="center" width="33%"><b>Diagnostic Code</b><br>
@@ -371,57 +335,12 @@ function showtotal(){
 		<td align="center">
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 
-<%  boolean codeValid = true;
-    
-    //validation of user entered service codes
-    String serviceCodeValue = null;
-    for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
-	serviceCodeValue = request.getParameter("serviceCode" + i);
-	if (!serviceCodeValue.equals("")) {
-	    sql = "select distinct(service_code) from billingservice where service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "'";
-	   System.out.println(sql);
-            rs = dbObj.searchDBRecord(sql);
-	    if (!rs.next()) {
-		codeValid = false;
-		%>
-		<tr class="myErrorText"><td align=center>
-		    &nbsp;<br>
-		    Service code "<%=serviceCodeValue%>" is invalid. Please go back to correct it.
-		</td></tr>  
-		<%
-	    }
-	}
-    }
-    
-    //validation of diagnostic code (dxcode)
-    String dxCodeValue = null;
-    for (int i = 0; i < 3; i++) {
-	if (i==0) dxCodeValue=request.getParameter("dxCode");
-	else dxCodeValue=request.getParameter("dxCode" + i);
-	if (!dxCodeValue.equals("")) {
-	    sql = "select diagnostic_code from diagnosticcode where diagnostic_code='" + dxCodeValue.trim() +"'";
-	    rs = dbObj.searchDBRecord(sql);
-	    if (!rs.next()) {
-		codeValid = false;
-		%>
-		<tr class="myErrorText"><td align=center>
-		    &nbsp;<br>
-		    Diagnostic code "<%=dxCodeValue%>" is invalid. Please go back to correct it.
-		</td></tr>
-		<%
-	    }
-	}
-    }
-
-    if (codeValid) {
-%>
-
 			<%--= msg --%>
 			<tr class="myYellow">
 				<td colspan='3'>Calculation</td>
 				<td>Description</td>
 			</tr>
-<% }
+			<% 
 			//Vector[] vecServiceParam = prepObj.getRequestCodeVec(request, "serviceDate", "serviceUnit", "serviceAt", 8);
 			//Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
 			//				vecServiceParam[2]);
@@ -445,30 +364,43 @@ function showtotal(){
 						String codeUnit = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeUnit();
 						String codeFee = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeFee();
 						String codeTotal = (String)((BillingReviewCodeItem)vecCodeItem.get(nCode)).getCodeTotal();
-if (codeValid) {
+                                                gstFlag = gstRep.getGstFlag(codeName);  // Retrieve whether the code has gst involved
+                                                if ( gstFlag.equals("1") ){   // If it does, update the total with the gst calculated
+                                                    BigDecimal cTotal = new BigDecimal(codeTotal);
+                                                    BigDecimal perc = new BigDecimal(percent);
+                                                    BigDecimal hund = new BigDecimal(100);
+                                                    stotal = cTotal;
+                                                    stotal = stotal.multiply(perc);
+                                                    stotal = stotal.divide(hund);
+                                                    gstTotal = gstTotal.add(stotal).setScale(2, BigDecimal.ROUND_HALF_UP);  // Total up GST Charged
+                                                    stotal = stotal.add(cTotal).setScale(2, BigDecimal.ROUND_HALF_UP); // Finally update the new codeTotal
+                                                    codeTotal = stotal + "";
+                                                    BigDecimal temp = new BigDecimal(codeTotal);
+                                                    gstbilledtotal = gstbilledtotal.add(temp).setScale(2, BigDecimal.ROUND_HALF_UP);
+                                                }
+                                                
 			%>
 			<tr class="myGreen">
 				<td align='center' width='3%'><%=""+n %></td>
 				<td align='right' width='12%'><%=codeName %> (<%=codeUnit %>)</td>
-				<td align='right'><%=codeFee %> x <%=codeUnit %> = 
+				<td align='right'><%=codeFee %> x <%=codeUnit %><% if (gstFlag.equals("1")){%> + <%=percent%>% GST<%}%> = 
 				<input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="<%=codeTotal %>" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
 				</td>
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
 			</tr>
-<% }
+			<% 
 						nCode++;
 					} 
 					//System.out.println("vecPercCodeItem end: " + codeName);
 					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
-if (codeValid) {
 			%>
 			<tr class="myPink">
 				<td align='center' ><%="&nbsp;" %></td>
 				<td align='right' ><%=codeName %> (1)</td>
 				<td align='right'>
-<% }
+				<% 
 						bPerc = true;
 						BillingReviewPercItem percItem = (BillingReviewPercItem)vecPercCodeItem.get(nPerc);
 						String percFee = percItem.getCodeFee();
@@ -477,11 +409,9 @@ if (codeValid) {
 						String codeUnit = (String)percItem.getCodeUnit();
 						for(int j=0; j<vecPercTotal.size(); j++) {
 							String percTotal = (Float.parseFloat((String)vecPercTotal.get(j)) )*Integer.parseInt(codeUnit) + "";
-if (codeValid) {
 				%>
 						<input type="checkbox" name="percCode_<%=i %>" value="<%=percTotal %>" onclick="onCheckMaster();" /> <%=percTotal %><font size='-2'>(<%=vecPercFee.get(j) %>x<%=percFee %>x<%=codeUnit %>)</font> | 
-<% }		} 
-if (codeValid) {
+				<%		} 
 				%> = <input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="0.00" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
@@ -489,7 +419,7 @@ if (codeValid) {
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %>
 				</td>
 			</tr>
-<% }
+			<% 
 						nPerc++;
 						vecPercNo.add(""+i);
 						String nMin = percItem.getCodeMinFee();
@@ -501,7 +431,6 @@ if (codeValid) {
 					}
 					//System.out.println(i + "end: " + nCode);
 				}
-if (codeValid) {
 			%>
 			<tr>
 				<td align='right' colspan='3' class="myGreen">Total: <input type="text" id="total" name="total" size="5" value="0.00" />
@@ -559,7 +488,7 @@ function onCheckMaster() {
 		//alert(stotal.length + " : " + stotal.indexOf("."));
 		stotal = stotal + "00".substring(0, (stotal.length - stotal.indexOf('.') - 1));
 	}
-	document.forms[0].total.value = stotal; 
+	document.forms[0].total.value = stotal;
 }
 	var ntotal = 0.00;
     for (var i =0; i <document.forms[0].elements.length; i++) {
@@ -583,22 +512,17 @@ function onCheckMaster() {
 </script>
 
 			</tr>
-<% } %>
 			<tr>
 
 				<td colspan='3' align='center' bgcolor="silver">
-                                    <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
-<% if (codeValid) { %>
-                                    <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
-				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
-<% } %>
-                                </td>
+				<input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
+				<input type="submit" name="button" value="Back to Edit"	style="width: 120px;" />
+				</td>
 			</tr>
 		</table>
 		</td>
 	</tr>
-<% if (codeValid) {
-   if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
+<% if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
 	<tr>
 			<td >
 			Billing Notes:<br>
@@ -615,32 +539,48 @@ function onCheckMaster() {
 			<textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea>
 			</td>
 	</tr>
-<% } } %>
-<%
+<% } %>
+<%//
 if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) {
 	JdbcBillingPageUtil pObj = new JdbcBillingPageUtil();
 	List al = pObj.getPaymentType();
 	
 	Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
-	//Properties propClinic = privateObj.getLocalClinicAddr();
-        oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
-	 
-                /*
-                = propClinic.getProperty("clinic_name", "") + "\n" 
+	Properties propClinic = privateObj.getLocalClinicAddr();
+	String strClinicAddr = propClinic.getProperty("clinic_name", "") + "\n" 
 		+ propClinic.getProperty("clinic_address", "") + "\n" 
 		+ propClinic.getProperty("clinic_city", "") + ", " + propClinic.getProperty("clinic_province", "") + "\n" 
 		+ propClinic.getProperty("clinic_postal", "") + "\n" 
 		+ "Tel: " + propClinic.getProperty("clinic_phone", "") + "\n" 
 		+ "Fax: " + propClinic.getProperty("clinic_fax", "") ;
-                */
-        String strClinicAddr = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") +"\n"
-                             + provider.getClinicAddress() +"\n"
-                             + provider.getClinicCity() +","+ provider.getClinicProvince()+"\n"
-                             + provider.getClinicPostal() +"\n"
-                             + "Tel: "+provider.getClinicPhone() +"\n"
-                             + "Fax: "+provider.getClinicFax() ;
-                
-if (codeValid) { %>
+%>
+
+<%
+// for satellite clinics
+String clinicAddress = null;
+// get Site ID from billingON.jsp
+String siteID = request.getParameter("siteId");
+OscarProperties props2 = OscarProperties.getInstance();
+if(props2.getProperty("clinicSatelliteCity") != null) {
+    //compare the site id with clinicSatelliteCity to get the current address index
+    //in properties file  clinicSatelliteCity and scheduleSiteID must have same value
+    String[] clinicCity = props2.getProperty("clinicSatelliteCity", "").split("\\|");
+    //current address index
+    int siteFlag = 0;
+    for(int i = 0; i < clinicCity.length; i++){
+    	if (siteID.equals(clinicCity[i]))	siteFlag = i;
+    }
+    String[] temp0 = props2.getProperty("clinicSatelliteName", "").split("\\|");
+    String[] temp1 = props2.getProperty("clinicSatelliteAddress", "").split("\\|");
+    String[] temp3 = props2.getProperty("clinicSatelliteProvince", "").split("\\|");
+    String[] temp4 = props2.getProperty("clinicSatellitePostal", "").split("\\|");
+    String[] temp5 = props2.getProperty("clinicSatellitePhone", "").split("\\|");
+    String[] temp6 = props2.getProperty("clinicSatelliteFax", "").split("\\|");
+    clinicAddress = temp0[siteFlag]+"\n"+temp1[siteFlag] + "\n" + clinicCity[siteFlag] + ", " + temp3[siteFlag] + " " + temp4[siteFlag] + "\nTel: " + temp5[siteFlag] + "\nFax: " + temp6[siteFlag];
+}else{
+	clinicAddress = strClinicAddr;
+}
+%>
 <tr><td>
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
 			<tr class="myYellow">
@@ -652,7 +592,7 @@ if (codeValid) { %>
 			<tr><td>Bill To [<a href=# onclick="scriptAttach('billto'); return false;">Search</a>]<br>
 			<textarea name="billto" value="" cols=30 rows=6><%=strPatientAddr %></textarea></td>
 			<td>Remit To<br>
-			<textarea name="remitto" value="" cols=30 rows=6><%=strClinicAddr %></textarea></td>
+			<textarea name="remitto" value="" cols=30 rows=6><%=clinicAddress%></textarea></td>
 			</tr>
 			</table>
 			<table border="0" width="100%" >
@@ -662,10 +602,10 @@ if (codeValid) { %>
 			<textarea name="comment" value="" cols=60 rows=4></textarea>
 			</td>
 			<td align="right">
-                        <% if (flag.equals("1")) { %> 
- 	                GST <%=percent%>%:<input type="text" disabled id="gsttotal" value="0.00" size="6" /><br> 
- 	                <%}%> 
- 	                Total:<input type="text" disabled id="finaltotal" value="0.00" size="6" /><br>    
+                        <input type="hidden" name="provider_no" value="<%=request.getParameter("xml_provider").substring(0,request.getParameter("xml_provider").indexOf("|"))%>"/>
+                        GST Billed:<input type="text" id="gst" name="gst" value="<%=gstTotal%>" size="6"/><br>
+                        <input type="hidden" id="gstBilledTotal" name="gstBilledTotal" value="<%=gstbilledtotal%>" size="6" />
+                        Total:<input type="text" disabled id="stotal" name = "stotal" value="0.00" size="6" /><br>
 			Payments:<input type="text" name="payment" value="0.00" size="6" onDblClick="settlePayment();" /><br/>
 			Refunds:<input type="text" name="refund" value="0.00" size="6"/>
 			</td>
@@ -675,7 +615,7 @@ if (codeValid) { %>
 			<td class="myGreen">
 			Payment Method:<br/>
 			<% for(int i=0; i<al.size(); i=i+2) { %>
-			    <input type="radio" name="payMethod" value="<%=al.get(i) %>"/><%=al.get(i+1) %><br/>
+			<input type="radio" name="payMethod" value="<%=al.get(i) %>"/><%=al.get(i+1) %><br/>
 			<% } %>
 			</td></tr>
 			<tr>
@@ -688,7 +628,7 @@ if (codeValid) { %>
 		</table>
 
 </td></tr>
-<% } } %>
+<% } %>
 	<%for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
 				String temp = e.nextElement().toString();
 %>
@@ -696,9 +636,10 @@ if (codeValid) { %>
 	<%}
 
 		%>
-	</form>
+	
 
 </table>
 <% if(bPerc) { out.println("* Click the code you want the % code to apply to [1 or 2 ...]."); } %>
+</form>
 </body>
 </html>

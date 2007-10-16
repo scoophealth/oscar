@@ -39,7 +39,7 @@
 					serviceCode = "_" + serviceCode;
 					if (serviceCode.equals(request.getParameter("action").substring("edit".length()))) {
 						if (dbObj.updateCodeByName(serviceCode, request.getParameter("description"), valuePara, "0.00",
-								request.getParameter("billingservice_date"))) {
+								request.getParameter("billingservice_date"), request.getParameter("gstFlag"))) {
 							msg = serviceCode + " is updated.<br>"
 									+ "Type in a service code and search first to see if it is available.";
 							action = "search";
@@ -52,6 +52,7 @@
 							prop.setProperty("description", request.getParameter("description"));
 							prop.setProperty("value", request.getParameter("value"));
 							prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
+                                                        prop.setProperty("gstFlag", request.getParameter("gstFlag"));
 						}
 					} else {
 						msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode
@@ -65,7 +66,7 @@
 					serviceCode = "_" + serviceCode;
 					if (serviceCode.equals(request.getParameter("action").substring("add".length()))) {
 						if (dbObj.addCodeByStr(serviceCode, request.getParameter("description"), valuePara, "0.00",
-								request.getParameter("billingservice_date")) > 0) {
+								request.getParameter("billingservice_date"), request.getParameter("gstFlag")) > 0) {
 							msg = serviceCode + " is added.<br>"
 									+ "Type in a service code and search first to see if it is available.";
 							action = "search";
@@ -78,6 +79,7 @@
 							prop.setProperty("description", request.getParameter("description"));
 							prop.setProperty("value", request.getParameter("value"));
 							prop.setProperty("billingservice_date", request.getParameter("billingservice_date"));
+                                                        prop.setProperty("gstFlag", request.getParameter("gstFlag"));
 						}
 					} else {
 						msg = "You can <font color='red'>NOT</font> save the service code - " + serviceCode
@@ -103,6 +105,7 @@
 						prop.setProperty("value", "" + ls.get(2));
 						prop.setProperty("percentage", "" + ls.get(3));
 						prop.setProperty("billingservice_date", "" + ls.get(4));
+                                                prop.setProperty("gstFlag", "" + ls.get(5));
 						msg = "You can edit the service code.";
 						action = "edit" + serviceCode;
 					} else {
@@ -153,6 +156,15 @@
 		  this.focus();
 		  document.forms[1].service_code.focus();
 		  document.forms[1].service_code.select();
+                <% if ( prop.getProperty("gstFlag") != null ) {%>
+                if( "<%=prop.getProperty("gstFlag")%>" == "1" ){
+                    document.getElementById("gstCheck").checked = true;
+                    document.getElementById("gstFlag").value = 1;
+                } else {
+                    document.getElementById("gstCheck").checked = false;
+                    document.getElementById("gstFlag").value = 0;
+                }
+                <%}%>
 		}
 	    function onSearch() {
 	        //document.forms[1].submit.value="Search";
@@ -218,12 +230,22 @@
 	    function upCaseCtrl(ctrl) {
 			ctrl.value = ctrl.value.toUpperCase();
 		}
-	    
+            
+            function setFlag(){
+                if( document.getElementById("gstCheck").checked == true){
+                    document.getElementById("gstFlag").value = "1";
+                } else {
+                    document.getElementById("gstFlag").value = "0";
+                }
+            }
+
+            
+                    
 //-->
 
       </script>
 </head>
-<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="ivory" onLoad="setfocus()" topmargin="0" leftmargin="0" rightmargin="0" >
 <center>
 <table BORDER="1" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
 	<tr class="myDarkGreen">
@@ -269,8 +291,8 @@
 	</tr>
 	<tr class="myGreen">
 		<td align="right"><b>Fee</b></td>
-		<td><input type="text" name="value" value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'> (format: xx.xx,
-		e.g. 18.20)</td>
+		<td><input type="text" name="value" value="<%=prop.getProperty("value", "")%>" size='8' maxlength='8'>Add GST<input type="checkbox" name="gstCheck" id="gstCheck" onclick="setFlag()"/> (format: xx.xx,
+		e.g. 18.20)</td><input type="hidden" value="" id="gstFlag" name="gstFlag"/>
 	</tr>
 	<tr>
 		<td align="right"><b>Issued Date</b></td>

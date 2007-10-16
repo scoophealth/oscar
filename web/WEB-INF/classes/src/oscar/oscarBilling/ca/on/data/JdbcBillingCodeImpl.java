@@ -24,6 +24,7 @@ public class JdbcBillingCodeImpl {
 				ret.add(rs.getString("value"));
 				ret.add(rs.getString("percentage"));
 				ret.add(rs.getString("billingservice_date"));
+                                ret.add(rs.getString("gstFlag"));
 			}
 		} catch (SQLException e) {
 			_logger.error("getBillingCodeAttr(sql = " + sql + ")");
@@ -51,11 +52,12 @@ public class JdbcBillingCodeImpl {
 	}
 
 	public boolean updateCodeByName(String serviceCode, String description, String value, String percentage,
-			String billingservice_date) {
+			String billingservice_date, String gstFlag) {
 		boolean ret = false;
 		String sql = "update billingservice set description='" + StringEscapeUtils.escapeSql(description) + "', ";
 		sql += " value='" + value + "', ";
 		sql += " percentage='" + percentage + "', ";
+                sql += " gstFlag='" + gstFlag + "', ";
 		sql += " billingservice_date='" + billingservice_date + "' ";
 		sql += "where service_code='" + serviceCode + "'";
 		_logger.info("updateCodeByName(sql = " + sql + ")");
@@ -67,13 +69,14 @@ public class JdbcBillingCodeImpl {
 	}
 
 	public int addCodeByStr(String serviceCode, String description, String value, String percentage,
-			String billingservice_date) {
+			String billingservice_date, String gstFlag) {
 		int ret = 0;
-		String sql = "insert into billingservice (service_compositecode, service_code, description, value, percentage, billingservice_date) values ('', '";
+		String sql = "insert into billingservice (service_compositecode, service_code, description, value, percentage, gstFlag, billingservice_date) values ('', '";
 		sql += serviceCode + "', '";
 		sql += StringEscapeUtils.escapeSql(description) + "', '";
 		sql += value + "', '";
 		sql += percentage + "', '";
+                sql += gstFlag + "', '";
 		sql += billingservice_date + "' )";
 		_logger.info("addCodeByStr(sql = " + sql + ")");
 		ret = dbObj.saveBillingRecord(sql);

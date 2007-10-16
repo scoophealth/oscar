@@ -275,8 +275,11 @@ public class BillingSavePrep {
 		aL.add(val.getParameter("demographic_no"));
 		aL.add(val.getParameter("billto"));
 		aL.add(val.getParameter("remitto"));
+                aL.add(val.getParameter("gstBilledTotal"));
 		aL.add(val.getParameter("payment"));
 		aL.add(val.getParameter("refund"));
+                aL.add(val.getParameter("provider_no"));
+                aL.add(val.getParameter("gst"));
 		if (val.getParameter("payMethod") != null) {
 			aL.add(val.getParameter("payMethod"));
 		}

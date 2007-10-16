@@ -1,50 +1,48 @@
 <%
 String invNo = request.getParameter("billingNo");
 Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
-oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
-//Properties propClinic = privateObj.getLocalClinicAddr( (String) session.getAttribute("user"));
+Properties propClinic = privateObj.getLocalClinicAddr();
 Properties prop3rdPart = privateObj.get3rdPartBillProp(invNo);
 Properties prop3rdPayMethod = privateObj.get3rdPayMethod();
+Properties propGst = privateObj.getGst(invNo);
+//int gstFlag = 0;
+//if ( propGst.getProperty("gst", "") != "0.00" && propGst.getProperty("gst", "") != null ){
+//    gstFlag = 1;
+//}
 
 BillingCorrectionPrep billObj = new BillingCorrectionPrep();
 List aL = billObj.getBillingRecordObj(invNo);
 BillingClaimHeader1Data ch1Obj = (BillingClaimHeader1Data) aL.get(0);
-Properties gstProp = new Properties(); 
-GstControlAction db = new GstControlAction(); 
-gstProp = db.readDatabase(); 
 
-String flag = gstProp.getProperty("gstFlag", ""); 
+Properties gstProp = new Properties();
+GstControlAction db = new GstControlAction();
+gstProp = db.readDatabase();
+
 String percent = gstProp.getProperty("gstPercent", "");
+
 %>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@ page import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.*,oscar.oscarBilling.ca.on.administration.*" %>
+<%@ page import="java.util.*, oscar.util.*,oscar.oscarBilling.ca.on.pageUtil.*,oscar.oscarBilling.ca.on.data.*,oscar.oscarProvider.data.*,java.math.* ,oscar.oscarBilling.ca.on.administration.*" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Invoice - <%=invNo %></title>
+<title>Billing Invoice</title>
 </head>
 <body>
 
 <table width="100%" border="0">
 <tr>
 <td>
-    <%--
 <b><%=propClinic.getProperty("clinic_name", "") %></b><br/>
 <%=propClinic.getProperty("clinic_address", "") %><br/>
 <%=propClinic.getProperty("clinic_city", "") %>,
 <%=propClinic.getProperty("clinic_province", "") %><br/>
 <%=propClinic.getProperty("clinic_postal", "") %><br/>
 Tel.: <%=propClinic.getProperty("clinic_phone", "") %><br/>
---%>
-<b><%= provider.getClinicName().replaceAll("\\(\\d{6}\\)","") %></b><br>
-<%= provider.getClinicAddress() %><br>
-<%= provider.getClinicCity() %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<%= provider.getClinicPostal() %><br>
-Tel: <%= provider.getClinicPhone() %><br>
-Fax: <%= provider.getClinicFax() %><br>
+
 </td>
 <td align="right" valign="top">
 <font size="+2"><b>Invoice - <%=invNo %></b></font><br/>
@@ -101,36 +99,20 @@ Date:<%=DateUtils.sumDate("yyyy-MM-dd HH:mm","0") %></td>
 </table>
 
 <hr/>
-
 <% 
 BigDecimal bdBal = new BigDecimal(ch1Obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP);
-BigDecimal bdTotal = new BigDecimal(ch1Obj.getTotal()).setScale(2, BigDecimal.ROUND_HALF_UP); 
-BigDecimal bdGST = new BigDecimal("0"); 
-BigDecimal hundred = new BigDecimal("100"); 
-BigDecimal bdPercent = new BigDecimal(percent).setScale(2, BigDecimal.ROUND_HALF_UP); 
-if( flag.equals("1")){ 
-bdPercent = bdPercent.divide(hundred).setScale(2, BigDecimal.ROUND_HALF_UP); 
-bdGST = bdBal.multiply(bdPercent).setScale(2, BigDecimal.ROUND_HALF_UP); 
-bdBal = bdBal.add(bdGST).setScale(2, BigDecimal.ROUND_HALF_UP); 
-bdTotal = bdBal; 
-} 
 BigDecimal bdPay = new BigDecimal(prop3rdPart.getProperty("payment","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
 BigDecimal bdRef = new BigDecimal(prop3rdPart.getProperty("refund","0.00")).setScale(2, BigDecimal.ROUND_HALF_UP);
 bdBal = bdBal.subtract(bdPay);
 bdBal = bdBal.subtract(bdRef);
+//BigDecimal bdGst = new BigDecimal(propGst.getProperty("gst", "")).setScale(2, BigDecimal.ROUND_HALF_UP);
 %>
+<table width="100%" border="0">
 
-<table width="100%" border="0"> 
-<% if ( flag.equals("1")){ %> 
-<tr align="right"><td width="86%">GST <%=percent%>%:</td><td><%=bdGST%></td></tr> 
-<tr align="right"><td width="86%">Subtotal:</td><td><%=ch1Obj.getTotal()%></td></tr> 
-<tr align="right"><td width="86%">Total:</td><td><%=bdTotal%></td></tr> 
-<%} else {%> 
-<tr align="right"><td width="86%">Total:</td><td><%=ch1Obj.getTotal()%></td></tr> 
-<%}%> 
-<tr align="right"><td>Payments:</td><td><%=prop3rdPart.getProperty("payment","0.00") %></td></tr> 
-<tr align="right"><td>Refunds:</td><td><%=prop3rdPart.getProperty("refund","0.00") %></td></tr> 
-        
+<tr align="right"><td width="86%">Total:</td><td><%=ch1Obj.getTotal()%></td></tr>
+<tr align="right"><td>Payments:</td><td><%=prop3rdPart.getProperty("payment","0.00") %></td></tr>
+<tr align="right"><td>Refunds:</td><td><%=prop3rdPart.getProperty("refund","0.00") %></td></tr>
+
 <tr align="right"><td><b>Balance:</b></td><td><%=bdBal %></td></tr>
 <tr align="right"><td>(<%=prop3rdPayMethod.getProperty(prop3rdPart.getProperty("payMethod",""), "") %>)</td><td></td></tr>
 </table>
