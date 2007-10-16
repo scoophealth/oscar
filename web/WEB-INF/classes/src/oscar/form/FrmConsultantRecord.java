@@ -9,6 +9,7 @@ import oscar.oscarDB.DBHandler;
 import oscar.util.UtilDateUtilities;
 
 
+
 public class FrmConsultantRecord extends FrmRecord {
 
 	public Properties getFormRecord(int demographicNo, int existingID) throws SQLException {
@@ -24,6 +25,7 @@ public class FrmConsultantRecord extends FrmRecord {
 			java.util.Date date = UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth"));
                 	props.setProperty("demographic_no", rs.getString("demographic_no"));
 	                props.setProperty("formCreated", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
+                        props.setProperty("consultTime", UtilDateUtilities.DateToString(UtilDateUtilities.Today(), "yyyy/MM/dd"));
 	                props.setProperty("formEdited", UtilDateUtilities.DateToString(UtilDateUtilities.Today(),"yyyy/MM/dd"));
 	                props.setProperty("p_name", rs.getString("pName"));
         	        props.setProperty("p_address1", rs.getString("address"));
@@ -57,39 +59,16 @@ public class FrmConsultantRecord extends FrmRecord {
 	}
 
 
-        public Properties getDoctors() throws SQLException {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            Properties props = new Properties();
-            String sql = "SELECT billingreferral_no, CONCAT('Dr. ', first_name, ' ', last_name) AS to_name, CONCAT(address1, ' ', address2) AS to_address1, CONCAT(city, ', ', province, ' ', postal) AS to_address2, phone, fax FROM billingreferral";
-            
-		ResultSet rs = db.GetSQL(sql);
-		int n = 0;
-		while (rs.next()) {
-                    n++;
-                        props.setProperty(n + "billingreferral_no", rs.getString("billingreferral_no"));
-			props.setProperty(n + "to_name", rs.getString("to_name"));
-                        props.setProperty(n + "to_address1", rs.getString("to_address1"));
-                        props.setProperty(n + "to_address2", rs.getString("to_address2"));
-                        props.setProperty(n + "to_phone", rs.getString("phone"));
-                        props.setProperty(n + "to_fax", rs.getString("fax"));
-
-		}
-                        props.setProperty("n", "" + n);
-		rs.close();
-                db.CloseConn();
-                return props;
-        }
-        
         public Properties getDocInfo(Properties props, String billingreferral_no) throws SQLException {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "SELECT CONCAT('Dr. ', first_name, ' ', last_name) AS to_name, CONCAT(address1, ' ', address2) AS to_address1, CONCAT(city, ', ', province, ' ', postal) AS to_address2, phone, fax FROM billingreferral WHERE billingreferral_no =" + billingreferral_no;
+            String sql = "SELECT CONCAT('Dr. ', first_name, ' ', last_name) AS to_name, CONCAT(address1, ' ', address2) AS to_address1, CONCAT(city, ', ', province, ' ', postal) AS to_address2, phone, fax FROM billingreferral WHERE referral_no ='" + billingreferral_no +"';";
             ResultSet rs = db.GetSQL(sql);
             if (rs.next()) {
-                props.setProperty("to_name", rs.getString("to_name"));
-            	props.setProperty("to_address1", rs.getString("to_address1"));
-		props.setProperty("to_address2", rs.getString("to_address2"));
-		props.setProperty("to_phone", rs.getString("phone"));
-		props.setProperty("to_fax", rs.getString("fax"));
+                props.setProperty("t_name", rs.getString("to_name"));
+            	props.setProperty("t_address1", rs.getString("to_address1"));
+		props.setProperty("t_address2", rs.getString("to_address2"));
+		props.setProperty("t_phone", rs.getString("phone"));
+		props.setProperty("t_fax", rs.getString("fax"));
             }
             rs.close();
             db.CloseConn();
@@ -108,6 +87,22 @@ public class FrmConsultantRecord extends FrmRecord {
                 db.CloseConn();
 		return props.getProperty("doc_name", "");
 	}
+        
+        public Properties getInitRefDoc(Properties props, int demo_no) throws SQLException {
+                DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+                String sql = "SELECT family_doctor FROM demographic WHERE demographic_no = '" + demo_no + "';";
+                ResultSet rs = db.GetSQL(sql);
+                String refdocno, docno;
+                if (rs.next()){
+                    docno = rs.getString("family_doctor");
+                    refdocno = docno.substring( 8, docno.indexOf("</rdohip>"));
+                    if ( refdocno != ""){
+                        props.setProperty("refdocno", refdocno);
+                    }
+                }
+                
+                return props;
+        }
 
 	public int saveFormRecord(Properties props) throws SQLException {
         	String demographic_no = props.getProperty("demographic_no");

@@ -35,7 +35,7 @@
 <jsp:useBean id="myTempBean" class="oscar.ScheduleTemplateBean" scope="page" />
 <% //save or delete the settings
   int rowsAffected = 0;
-  int STEP = request.getParameter("step")!=null&&!request.getParameter("step").equals("")?Integer.parseInt(request.getParameter("step")):15;
+  int STEP = request.getParameter("step")!=null&&!request.getParameter("step").equals("")?Integer.parseInt(request.getParameter("step")):(props.getProperty("template_time", "").length()>0?Integer.parseInt(props.getProperty("template_time", "")):15);
   //System.out.println("step:"+STEP);
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 || request.getParameter("dboperation").equals("Delete") ) ) {
     String pre = request.getParameter("providerid").equals("Public")&&!request.getParameter("name").startsWith("P:")?"P:":"" ;
