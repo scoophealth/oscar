@@ -144,6 +144,10 @@ protected void initialize () {}
     }
     
     public void setNote_id( long note_id ) {
+    	/*String tmpId = Long.toString(note_id);
+    	if("".equals(tmpId)|| tmpId==null) {
+    		note_id = 0;
+    	}*/
         this._note_id = note_id;
     }
 

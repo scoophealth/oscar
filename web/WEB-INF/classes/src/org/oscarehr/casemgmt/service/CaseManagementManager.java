@@ -557,6 +557,9 @@ public class CaseManagementManager {
             tmp.setProviderNo(providerNo);
             tmp.setDemographicNo(new Long(demographicNo).longValue());
             tmp.setProgramId(new Long(programId).longValue());
+            if(noteId==null || "".equals(noteId)) {
+            	noteId="0";
+            }
             tmp.setNote_id(Long.parseLong(noteId));
             tmp.setNote(note);
             tmp.setUpdate_date(new Date());
