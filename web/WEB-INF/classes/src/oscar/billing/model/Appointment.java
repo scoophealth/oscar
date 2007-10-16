@@ -101,7 +101,6 @@ public class Appointment {
     private String reason;
     private String billing;
     private String descBilling;
-    private String notes;
 
     ///////////////////////////////////////
     // associations
@@ -258,13 +257,6 @@ public class Appointment {
     /**
      * @return
      */
-    public String getNotes() {
-        return notes;
-    }
-
-    /**
-     * @return
-     */
     public String getStatus() {
         return status;
     }
@@ -337,13 +329,6 @@ public class Appointment {
      */
     public void setStartTime(Date date) {
         startTime = date;
-    }
-
-    /**
-     * @param string
-     */
-    public void setNotes(String string) {
-        notes = string;
     }
 
     /**
