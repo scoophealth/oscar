@@ -83,7 +83,7 @@ if(props.getProperty("clinicSatelliteName") != null) {
     String[] temp6 = props.getProperty("clinicSatelliteFax", "").split("\\|");
     for(int i=0; i<temp0.length; i++) {
         vecAddressName.add(temp0[i]);
-        vecAddress.add("<b>"+doctorName+"</b><br>"+provider.getClinicName().replaceAll("\\(\\d{6}\\)","")+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>Tel: " + temp5[i] + "<br>Fax: " + temp6[i]);
+        vecAddress.add("<b>"+doctorName+"</b><br>"+temp0[i]+"<br>"+temp1[i] + "<br>" + temp2[i] + ", " + temp3[i] + " " + temp4[i] + "<br>Tel: " + temp5[i] + "<br>Fax: " + temp6[i]);
     }
 }
 %>
