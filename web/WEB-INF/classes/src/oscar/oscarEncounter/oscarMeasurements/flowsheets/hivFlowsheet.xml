@@ -92,6 +92,14 @@
     />
     
     <item
+        measurement_type="WT"
+        display_name="Weight"
+        guideline=""
+        graphable="no"
+        value_name="Kg"/>  
+    
+    
+    <item
         measurement_type="TG"
         display_name="Triglycerides"
         guideline="Target: &lt; 2.0 mmol/L"
@@ -305,6 +313,20 @@
             minValue="0" 
             isNumeric="1"/>
     </measurement> 
+    
+    <measurement 
+        type="WT" 
+        typeDesc="Weight" 
+        typeDisplayName="Wt" 
+        measuringInstrc="in kg (nnn.n) Range:0-300 Interval:3mo.">
+        <validationRule 
+            name="Numeric Value: 0 to 300" 
+            maxValue="300" 
+            minValue="0" 
+            isNumeric="1"/>
+    </measurement>
+    
+    
     
     <measurement 
         type="VLOA" 
