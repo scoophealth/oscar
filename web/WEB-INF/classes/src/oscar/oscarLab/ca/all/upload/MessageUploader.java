@@ -106,10 +106,8 @@ public class MessageUploader {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection conn = db.GetConnection();
             
-             
             String fileUploadCheck_id = ""+ fileId;
-            
-            
+                        
             String insertStmt = "INSERT INTO hl7TextMessage (lab_id, message, type, fileUploadCheck_id) VALUES ('', ?, ?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(insertStmt);
             pstmt.setString(1, new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"));
@@ -135,7 +133,6 @@ public class MessageUploader {
             db.CloseConn();
             
             retVal = h.audit();
-      
         }catch(Exception e){
             logger.error("Error uploading lab to database");
             throw e;
@@ -208,7 +205,7 @@ public class MessageUploader {
                     hinMod = hinMod.substring(0,10);
                 }
             }
-
+            
             if (dob != null && !dob.equals("")){
                 String[] dobArray = dob.split("-");
                 dobYear = dobArray[0];
@@ -286,57 +283,222 @@ public class MessageUploader {
      *  Used when errors occur to clean the database of labs that have not been
      *  inserted into all of the necessary tables
      */
-    public void clean(int recordCount){
+    public void clean(int fileId){
         
         try{
             
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection conn = db.GetConnection();
             PreparedStatement pstmt;
+            
             ResultSet rs;
             String sql;
             
-            sql = "SELECT lab_id FROM hl7TextMessage";
+            sql = "SELECT lab_id FROM hl7TextMessage WHERE fileUploadCheck_id='"+fileId+"'";
             pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            int lab_id = 0;
-            if(rs.last())
-                lab_id = rs.getInt(1);
+            ResultSet labId_rs = pstmt.executeQuery();
+                        
+            while(labId_rs.next()){
+                int lab_id = labId_rs.getInt("lab_id");
+                
+                try{
+                    sql = "SELECT * FROM hl7TextInfo WHERE lab_no='"+lab_id+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    rs = pstmt.executeQuery();
+                    if (rs.next()){
+                        sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                                "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'hl7TextInfo', '"+lab_id+"', " +
+                                "'<id>"+rs.getString("id")+"</id>" +
+                                "<lab_no>"+lab_id+"</lab_no>" +
+                                "<sex>"+rs.getString("sex")+"</sex>" +
+                                "<health_no>"+rs.getString("health_no")+"</health_no>" +
+                                "<result_status>"+rs.getString("result_status")+"</result_status>" +
+                                "<final_result_count>"+rs.getString("final_result_count")+"</final_result_count>" +
+                                "<obr_date>"+rs.getString("obr_date")+"</obr_date>" +
+                                "<priority>"+rs.getString("priority")+"</priority>" +
+                                "<requesting_client>"+rs.getString("requesting_client")+"</requesting_client>" +
+                                "<discipline>"+rs.getString("discipline")+"</discipline>" +
+                                "<last_name>"+rs.getString("last_name")+"</last_name>" +
+                                "<first_name>"+rs.getString("first_name")+"</first_name>" +
+                                "<report_status>"+rs.getString("report_status")+"</report_status>" +
+                                "<accessionNum>"+rs.getString("accessionNum")+"</accessionNum>')";
+                        
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                        
+                        sql = "DELETE FROM hl7TextInfo where lab_no='"+lab_id+"'";
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                    }
+                }catch(SQLException e){
+                    logger.error("Error cleaning hl7TextInfo table for lab_no '"+lab_id+"'", e);
+                }
+                
+                try{
+                    sql = "SELECT * FROM hl7TextMessage WHERE lab_id='"+lab_id+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    rs = pstmt.executeQuery();
+                    if (rs.next()){
+                        sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                                "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'hl7TextMessage', '"+lab_id+"', " +
+                                "'<lab_id>"+rs.getString("lab_id")+"</lab_id>" +
+                                "<message>"+rs.getString("message")+"</message>" +
+                                "<type>"+rs.getString("type")+"</type>" +
+                                "<fileUploadCheck_id>"+rs.getString("fileUploadCheck_id")+"</fileUploadCheck_id>')";
+                        
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                        
+                        sql = "DELETE FROM hl7TextMessage where lab_id='"+lab_id+"'";
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                    }
+                }catch(SQLException e){
+                    logger.error("Error cleaning hl7TextMessage table for lab_id '"+lab_id+"'", e);
+                }
+                
+                
+                try{
+                    sql = "SELECT * FROM providerLabRouting WHERE lab_no='"+lab_id+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    rs = pstmt.executeQuery();
+                    if (rs.next()){
+                        sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                                "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'providerLabRouting', '"+lab_id+"', " +
+                                "'<provider_no>"+rs.getString("provider_no")+"</provider_no>" +
+                                "<lab_no>"+rs.getString("lab_no")+"</lab_no>" +
+                                "<status>"+rs.getString("status")+"</status>" +
+                                "<comment>"+rs.getString("comment")+"</comment>" +
+                                "<timestamp>"+rs.getString("timestamp")+"</timestamp>" +
+                                "<lab_type>"+rs.getString("lab_type")+"</lab_type>" +
+                                "<id>"+rs.getString("id")+"</id>')";
+                        
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                        
+                        sql = "DELETE FROM providerLabRouting where lab_no='"+lab_id+"'";
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                    }
+                }catch(SQLException e){
+                    logger.error("Error cleaning providerLabRouting table for lab_no '"+lab_id+"'", e);
+                }
+                
+                try{
+                    sql = "SELECT * FROM patientLabRouting WHERE lab_no='"+lab_id+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    rs = pstmt.executeQuery();
+                    if (rs.next()){
+                        sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                                "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'patientLabRouting', '"+lab_id+"', " +
+                                "'<demographic_no>"+rs.getString("demographic_no")+"</demographic_no>" +
+                                "<lab_no>"+rs.getString("lab_no")+"</lab_no>" +
+                                "<lab_type>"+rs.getString("lab_type")+"</lab_type>" +
+                                "<id>"+rs.getString("id")+"</id>')";
+                        
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                        
+                        sql = "DELETE FROM patientLabRouting where lab_no='"+lab_id+"'";
+                        pstmt = conn.prepareStatement(sql);
+                        pstmt.executeUpdate();
+                    }
+                }catch(SQLException e){
+                    logger.error("Error cleaning patientLabRouting table for lab_no '"+lab_id+"'", e);
+                }
+                
+                try{
+                    sql = "SELECT measurement_id FROM measurementsExt WHERE keyval='lab_no' and val='"+lab_id+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    rs = pstmt.executeQuery();
+                    
+                    while (rs.next()){
+                        
+                        int meas_id = rs.getInt("measurement_id");
+                        sql = "SELECT * FROM measurements WHERE id='"+meas_id+"'";
+                        pstmt = conn.prepareStatement(sql);
+                        ResultSet rs2 = pstmt.executeQuery();
+                        
+                        if (rs2.next()){
+                            sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                                "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'measurements', '"+meas_id+"', " +
+                                    "'<id>"+rs2.getString("id")+"</id>" +
+                                    "<type>"+rs2.getString("type")+"</type>" +
+                                    "<demographicNo>"+rs2.getString("demographicNo")+"</demographicNo>" +
+                                    "<providerNo>"+rs2.getString("providerNo")+"</providerNo>" +
+                                    "<dataField>"+rs2.getString("dataField")+"</dataField>" +
+                                    "<measuringInstruction>"+rs2.getString("measuringInstruction")+"</measuringInstruction>" +
+                                    "<comments>"+rs2.getString("comments")+"</comments>" +
+                                    "<dateObserved>"+rs2.getString("dateObserved")+"</dateObserved>" +
+                                    "<dateEntered>"+rs2.getString("dateEntered")+"</dateEntered>')";
+                            
+                            pstmt = conn.prepareStatement(sql);
+                            pstmt.executeUpdate();
+                            
+                            sql = "DELETE FROM measurements WHERE id='"+meas_id+"'";
+                            pstmt = conn.prepareStatement(sql);
+                            pstmt.executeUpdate();
+                        }
+                        
+                        sql = "SELECT * FROM measurementsExt WHERE measurement_id='"+meas_id+"'";
+                        pstmt = conn.prepareStatement(sql);
+                        rs2 = pstmt.executeQuery();
+                        
+                        while (rs2.next()){
+                            sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                                "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'measurementsExt', '"+meas_id+"', " +
+                                    "'<id>"+rs2.getString("id")+"</id>" +
+                                    "<measurement_id>"+rs2.getString("measurement_id")+"</measurement_id>" +
+                                    "<keyval>"+rs2.getString("keyval")+"</keyval>" +
+                                    "<val>"+rs2.getString("val")+"</val>')";
+                            
+                            pstmt = conn.prepareStatement(sql);
+                            pstmt.executeUpdate();
+                            
+                            sql = "DELETE FROM measurementsExt WHERE measurement_id='"+meas_id+"'";
+                            pstmt = conn.prepareStatement(sql);
+                            pstmt.executeUpdate();
+                        }
+                    }
+                    
+                    
+                }catch(SQLException e){
+                    logger.error("Error cleaning measuremnts or measurementsExt table for lab_no '"+lab_id+"'", e);
+                }
+                
+            }
             
-            for(int i=0; i < recordCount; i++){
-                sql = "DELETE FROM hl7TextInfo where lab_no='"+(lab_id - i)+"'";
+            try{
+                sql = "SELECT * FROM fileUploadCheck WHERE id = '"+fileId+"'";
                 pstmt = conn.prepareStatement(sql);
-                pstmt.executeUpdate();
-                
-                sql = "DELETE FROM hl7TextMessage where lab_id='"+(lab_id - i)+"'";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.executeUpdate();
-                
-                sql = "DELETE FROM providerLabRouting where lab_no='"+(lab_id - i)+"'";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.executeUpdate();
-                
-                sql = "DELETE FROM patientLabRouting where lab_no='"+(lab_id - i)+"'";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.executeUpdate();
-                
-                sql = "SELECT MAX(id) AS id FROM fileUploadCheck";
-                pstmt = conn.prepareStatement(sql);
-                ResultSet rs2 = pstmt.executeQuery();
-                if (rs2.next()){
-                    sql = "DELETE FROM fileUploadCheck where id = '"+rs2.getString("id")+"'";
+                rs = pstmt.executeQuery();
+                if (rs.next()){
+                    sql = "INSERT INTO recyclebin (provider_no, updatedatetime, table_name, keyword, table_content) " +
+                            "VALUES ('0', '"+UtilDateUtilities.getToday("yyyy-MM-dd HH:mm:ss")+"', 'fileUploadCheck', '"+fileId+"', " +
+                            "'<id>"+rs.getString("id")+"</id>" +
+                            "<provider_no>"+rs.getString("provider_no")+"</provider_no>" +
+                            "<filename>"+rs.getString("filename")+"</filename>" +
+                            "<md5sum>"+rs.getString("md5sum")+"</md5sum>" +
+                            "<datetime>"+rs.getString("date_time")+"</datetime>')";
+                    
                     pstmt = conn.prepareStatement(sql);
                     pstmt.executeUpdate();
+                    
+                    sql = "DELETE FROM fileUploadCheck where id = '"+fileId+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeUpdate();
+                    
                 }
-                    
-                    
+            }catch(SQLException e){
+                logger.error("Error cleaning fileUploadCheck table for id '"+fileId+"'", e);
             }
             
             pstmt.close();
+            db.CloseConn();
             logger.info("Successfully cleaned the database");
             
         }catch(SQLException e){
             logger.error("Could not clean database: ", e);
         }
-    }    
+    }
 }

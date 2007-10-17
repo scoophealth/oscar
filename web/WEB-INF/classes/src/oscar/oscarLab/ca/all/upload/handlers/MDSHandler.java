@@ -39,11 +39,11 @@ public class MDSHandler implements MessageHandler  {
 
             }
             logger.info("Parsed OK");
-            
+
             return(audit.toString());
-            
+
         } catch (Exception e) {
-            uploader.clean(i+1);
+            uploader.clean(fileId);
             logger.error("Could not parse message", e);
             return null;
         }

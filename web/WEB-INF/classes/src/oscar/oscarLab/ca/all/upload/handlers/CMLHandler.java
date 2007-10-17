@@ -37,7 +37,7 @@ public class CMLHandler implements MessageHandler  {
                 
             }            
         } catch (Exception e) {
-            uploader.clean(i+1);
+            uploader.clean(fileId);
             logger.error("Could not upload message: ", e);
             e.printStackTrace();
             return null;

@@ -51,7 +51,7 @@ public class DefaultHandler implements MessageHandler {
                     }
                 }
             }catch(Exception e){
-                uploader.clean(msgCount);
+                uploader.clean(fileId);
                 logger.error("ERROR:", e);
                 return null;
             }
@@ -65,7 +65,7 @@ public class DefaultHandler implements MessageHandler {
                     uploader.routeReport(null, msg,fileId);
                 }
             }catch(Exception e){
-                uploader.clean(i+1);
+                uploader.clean(fileId);
                 logger.error("ERROR:", e);
                 return null;
             }

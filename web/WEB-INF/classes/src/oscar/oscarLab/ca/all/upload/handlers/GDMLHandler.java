@@ -44,10 +44,9 @@ public class GDMLHandler implements MessageHandler  {
             // by accession number their abnormal status must be updated to reflect the
             // other labs that they are grouped with aswell
             updateLabStatus(messages.size());
-            
             logger.info("Parsed OK");
         } catch (Exception e) {
-            uploader.clean(i+1);
+            uploader.clean(fileId);
             logger.error("Could not upload message", e);
             return null;
         }
