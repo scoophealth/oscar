@@ -124,7 +124,7 @@ public class CustomFilter extends BaseObject {
 	/* have to do this */
 	public void setStartDate(String data) {
 		if(data == null || data.length()==0) {
-			data = "0001-01-01";
+			data = "1900-01-01";
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		try {
@@ -144,7 +144,7 @@ public class CustomFilter extends BaseObject {
 	
 	public void setEndDate(String data) {
 		if(data == null || data.length()==0) {
-			data = "9999-12-31";
+			data = "8888-12-31";
 		}
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		try {

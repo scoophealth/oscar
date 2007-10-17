@@ -96,10 +96,10 @@ public class TicklerDAO extends HibernateDaoSupport {
         boolean includeDemographicClause = true;
 
         if (filter.getStartDate() == null || filter.getStartDate().length() == 0) {
-            filter.setStartDate("0001-01-01");
+            filter.setStartDate("1900-01-01");
         }
         if (filter.getEndDate() == null || filter.getEndDate().length() == 0) {
-            filter.setEndDate("9999-12-31");
+            filter.setEndDate("8888-12-31");
         }
 
         if (filter.getProvider() == null || filter.getProvider().equals("All Providers")) {
