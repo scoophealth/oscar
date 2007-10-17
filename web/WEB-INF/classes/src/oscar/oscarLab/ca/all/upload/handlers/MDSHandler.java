@@ -22,25 +22,25 @@ public class MDSHandler implements MessageHandler  {
 
     Logger logger = Logger.getLogger(MDSHandler.class);
     
-    public String parse(String fileName){
+    public String parse(String fileName,int fileId){
         
         Utilities u = new Utilities();
         MessageUploader uploader = new MessageUploader();
         int i = 0;
         try {
 
-            String audit = "";
+            StringBuffer audit = new StringBuffer();
             ArrayList messages = u.separateMessages(fileName);
             for (i=0; i < messages.size(); i++){
                 
                 String msg = (String) messages.get(i);
-                String auditLine = uploader.routeReport("MDS", msg)+"\n";
-                audit = audit+auditLine;
+                String auditLine = uploader.routeReport("MDS", msg,fileId)+"\n";
+                audit.append(auditLine);
 
             }
             logger.info("Parsed OK");
             
-            return(audit);
+            return(audit.toString());
             
         } catch (Exception e) {
             uploader.clean(i+1);
