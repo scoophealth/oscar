@@ -63,8 +63,8 @@ public class EctDisplayTicklerAction extends EctDisplayAction {
     Dao.setRightURL(url);
     Dao.setRightHeadingID(cmd); //no menu so set div id to unique id for this action
         
-    String dateBegin = "0001-01-01";
-    String dateEnd = "9999-12-31";        
+    String dateBegin = "1900-01-01";
+    String dateEnd = "8888-12-31";        
      
     TicklerData tickler = new TicklerData();
     ResultSet rs = tickler.listTickler(bean.demographicNo, TicklerData.ACTIVE, dateBegin, dateEnd);
