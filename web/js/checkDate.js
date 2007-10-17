@@ -38,7 +38,7 @@ function check_date(checkedDate)
     }
    	else
    	{
-      	alert('Date format is not valid!');
+      	alert('Date format is not valid. The right date format is like 2007-10-16.');
       	return false;
    	}
 
