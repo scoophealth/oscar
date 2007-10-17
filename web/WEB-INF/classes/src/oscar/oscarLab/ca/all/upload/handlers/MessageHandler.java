@@ -50,6 +50,6 @@ public interface MessageHandler {
      *  If any exceptions are encountered the method should return 'null'
      *  otherwise it should return the String "success"
      */
-    public String parse(String fileName);
+    public String parse(String fileName,int fileId);
     
 }
