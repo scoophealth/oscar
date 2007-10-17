@@ -316,4 +316,9 @@ public interface MessageHandler {
      *  billing numbers of the cc'd docs
      */
     public ArrayList getDocNums();
+    
+    /**
+     * Returns a string audit of the messages.  If not required handler should just return an empty string;
+     */
+    public String audit();
 }
