@@ -175,6 +175,17 @@
 		<ap-output>${last_name}, ${first_name}</ap-output>
 	</databaseap>
         
+        
+        <databaseap>
+		<ap-name>provider_name_first_init</ap-name>
+		<ap-sql>select  substring(provider.first_name,1,1) as first_init,provider.last_name 
+                        FROM provider, demographic 
+			WHERE demographic_no=${demographic} AND demographic.provider_no=provider.provider_no</ap-sql>
+		<ap-output>${first_init}. ${last_name}</ap-output>
+	</databaseap>
+        
+        
+        
         <databaseap>
 		<ap-name>current_user</ap-name>
 		<ap-sql>SELECT provider.last_name, provider.first_name 
