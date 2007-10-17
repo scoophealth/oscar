@@ -40,16 +40,17 @@ public class InsideLabUploadAction extends Action {
             Utilities u = new Utilities();
             String filePath = u.saveFile(is, filename);
             is.close();
+            File file = new File(filePath);
             
             is = new FileInputStream(filePath);
             FileUploadCheck fileC = new FileUploadCheck();
-            boolean fileUploadedSuccessfully = fileC.addFile(filename,is,proNo);            
+            int checkFileUploadedSuccessfully = fileC.addFile(file.getName(),is,proNo);            
             is.close();
             
-            if (fileUploadedSuccessfully){
+            if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
                 logger.info("filePath"+filePath);
                 MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
-                if((msgHandler.parse(filePath)) != null)
+                if((msgHandler.parse(filePath,checkFileUploadedSuccessfully)) != null)
                     outcome = "success";
                 
             }else{

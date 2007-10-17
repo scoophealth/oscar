@@ -77,10 +77,11 @@ public class LabUploadAction extends Action {
              boolean fileUploadedSuccessfully = false;
              if (localFileName != null){
                 InputStream  fis = new FileInputStream(localFileName); 
-                FileUploadCheck fileC = new FileUploadCheck();               
+                FileUploadCheck fileC = new FileUploadCheck();  
+                int check = FileUploadCheck.UNSUCCESSFUL_SAVE;
                 try{
-                    fileUploadedSuccessfully = fileC.addFile(filename,fis,proNo);
-                    if (!fileUploadedSuccessfully){
+                    check = fileC.addFile(filename,fis,proNo);
+                    if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
                         outcome = "uploadedPreviously";
                     }
                 }catch(Exception addFileEx){
@@ -89,7 +90,7 @@ public class LabUploadAction extends Action {
                 }    
                 System.out.println("Was file uploaded successfully ?"+fileUploadedSuccessfully);
                 fis.close();     
-                if (fileUploadedSuccessfully){
+                if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
                     BufferedReader in = new BufferedReader(new FileReader(localFileName));                                       
                     ABCDParser abc = new ABCDParser();     
                     abc.parse(in);              

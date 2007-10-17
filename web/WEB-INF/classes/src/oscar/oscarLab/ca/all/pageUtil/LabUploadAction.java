@@ -60,10 +60,11 @@ public class LabUploadAction extends Action {
                 logger.debug("Validated Successfully");
                 MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
                 
-                is = new FileInputStream(filePath);
+                is = new FileInputStream(file);
                 FileUploadCheck fileC = new FileUploadCheck();
-                if (fileC.addFile(fileName,is,"0")){
-                    if((audit = msgHandler.parse(filePath)) != null)
+                int check = fileC.addFile(file.getName(),is,"0");
+                if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
+                    if((audit = msgHandler.parse(filePath,check)) != null)
                         outcome = "uploaded";
                     else
                         outcome = "upload failed";

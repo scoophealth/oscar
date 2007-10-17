@@ -64,9 +64,10 @@ public class LabUploadAction extends Action {
           filename = importFile.getFileName();
           
           FileUploadCheck fileC = new FileUploadCheck();
-          boolean fileUploadedSuccessfully = fileC.addFile(filename,is,proNo);
+          
+          int check = fileC.addFile(filename,is,proNo);
           is.reset();
-          if (fileUploadedSuccessfully){
+          if (check != FileUploadCheck.UNSUCCESSFUL_SAVE){
              Connection connection = new Connection();
              ArrayList messages = connection.Retrieve(is);
              if (messages != null) {
