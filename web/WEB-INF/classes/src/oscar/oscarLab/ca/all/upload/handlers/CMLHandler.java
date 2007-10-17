@@ -23,7 +23,7 @@ public class CMLHandler implements MessageHandler  {
     Logger logger = Logger.getLogger(CMLHandler.class);
     
    
-    public String parse(String fileName){
+    public String parse(String fileName,int fileId){
         
         Utilities u = new Utilities();    
         MessageUploader uploader = new MessageUploader();
@@ -33,7 +33,7 @@ public class CMLHandler implements MessageHandler  {
             for (i=0; i < messages.size(); i++){
                 
                 String msg = (String) messages.get(i);
-                uploader.routeReport("CML", msg);
+                uploader.routeReport("CML", msg,fileId);
                 
             }            
         } catch (Exception e) {

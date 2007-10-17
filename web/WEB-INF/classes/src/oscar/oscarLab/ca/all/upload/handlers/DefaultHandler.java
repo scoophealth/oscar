@@ -29,7 +29,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class DefaultHandler implements MessageHandler {
     Logger logger = Logger.getLogger(DefaultHandler.class);
 
-    public String parse(String fileName){
+    public String parse(String fileName,int fileId){
         Document xmlDoc = getXML(fileName);
         MessageUploader uploader = new MessageUploader();
         
@@ -47,7 +47,7 @@ public class DefaultHandler implements MessageHandler {
                     
                     if (hl7Body != null && hl7Body.indexOf("\nPID|") > 0){
                         msgCount++;
-                        uploader.routeReport(null, hl7Body);
+                        uploader.routeReport(null, hl7Body,fileId);
                     }
                 }
             }catch(Exception e){
@@ -62,7 +62,7 @@ public class DefaultHandler implements MessageHandler {
                 ArrayList messages = u.separateMessages(fileName);
                 for (i=0; i < messages.size(); i++){
                     String msg = (String) messages.get(i);
-                    uploader.routeReport(null, msg);
+                    uploader.routeReport(null, msg,fileId);
                 }
             }catch(Exception e){
                 uploader.clean(i+1);

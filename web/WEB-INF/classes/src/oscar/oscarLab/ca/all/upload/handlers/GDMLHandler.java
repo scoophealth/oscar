@@ -26,7 +26,7 @@ public class GDMLHandler implements MessageHandler  {
     
     Logger logger = Logger.getLogger(GDMLHandler.class);
     
-    public String parse(String fileName){
+    public String parse(String fileName,int fileId){
         
         Utilities u = new Utilities();
         MessageUploader uploader = new MessageUploader();
@@ -36,7 +36,7 @@ public class GDMLHandler implements MessageHandler  {
             for (i=0; i < messages.size(); i++){
                 
                 String msg = (String) messages.get(i);
-                uploader.routeReport("GDML", msg);
+                uploader.routeReport("GDML", msg,fileId);
                 
             }
             

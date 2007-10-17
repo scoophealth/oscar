@@ -34,7 +34,7 @@ public class PATHL7Handler implements MessageHandler  {
 
     Logger logger = Logger.getLogger(PATHL7Handler.class);
     
-    public String parse(String fileName){
+    public String parse(String fileName,int fileId){
         Document doc = null;
         try{
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -53,7 +53,7 @@ public class PATHL7Handler implements MessageHandler  {
                 for (i=0; i<messages.getLength(); i++){
                     
                     String hl7Body = messages.item(i).getFirstChild().getTextContent();
-                    uploader.routeReport("PATHL7", hl7Body);
+                    uploader.routeReport("PATHL7", hl7Body,fileId);
                     
                 }
             }catch(Exception e){
