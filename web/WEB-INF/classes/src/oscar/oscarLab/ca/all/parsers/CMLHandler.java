@@ -481,6 +481,9 @@ public class CMLHandler implements MessageHandler {
         return(docNums);
     }
     
+    public String audit(){
+        return "";
+    }
     
     
     private String getFullDocName(XCN docSeg){

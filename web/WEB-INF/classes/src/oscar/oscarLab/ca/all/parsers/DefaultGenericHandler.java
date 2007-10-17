@@ -525,6 +525,11 @@ public class DefaultGenericHandler implements MessageHandler {
         return(nums);
     }
     
+    
+    public String audit(){
+        return "";
+    }
+    
     private String getOBXField(int i, int j, int field, int rep, int comp){
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
         

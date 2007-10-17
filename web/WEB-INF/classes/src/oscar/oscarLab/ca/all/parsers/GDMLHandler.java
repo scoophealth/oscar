@@ -675,6 +675,10 @@ public class GDMLHandler implements MessageHandler {
         return(nums);
     }
     
+    public String audit(){
+        return "";
+    }
+    
     private String getFullDocName(XCN docSeg){
         String docName = "";
         

@@ -498,7 +498,9 @@ public class PATHL7Handler implements MessageHandler {
         
     }
     
-    
+    public String audit(){
+        return "";
+    }
     
     /*
      *  END OF PUBLIC METHODS
