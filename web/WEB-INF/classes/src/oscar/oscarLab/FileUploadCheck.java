@@ -29,7 +29,6 @@
 package oscar.oscarLab;
 
 import java.io.*;
-import java.net.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -109,20 +108,24 @@ public class FileUploadCheck {
    }
    
    
+   public static final int UNSUCCESSFUL_SAVE = -1;
    /**
     *Used to add a new file to the database, checks to see if it already has been added
     */
-   public synchronized boolean addFile(String name, InputStream is,String provider) throws Exception{
-      boolean fileUploaded = false;
+   public synchronized int addFile(String name, InputStream is,String provider) throws Exception{
+      int fileUploaded = UNSUCCESSFUL_SAVE;
       try{
          String md5sum = getMd5Sum(is);
          if(!hasFileBeenUploaded(md5sum)){           
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-            String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name.replaceAll(".enc", "")+"."+(new Date()).getTime())+"','"+md5sum+"',now())";
+            String sql = "insert into fileUploadCheck (provider_no,filename,md5sum,date_time) values ('"+provider+"','"+StringEscapeUtils.escapeSql(name)+"','"+md5sum+"',now())";
             System.out.println(sql);
             db.RunSQL(sql);
-            db.CloseConn();        
-            fileUploaded = true;
+            ResultSet rs = db.GetSQL("SELECT LAST_INSERT_ID() ");
+            if(rs.next()){
+                fileUploaded= rs.getInt(1) ;
+            } 
+            db.CloseConn();       
          }
       }catch(SQLException conE){
          conE.printStackTrace();            
