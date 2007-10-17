@@ -40,7 +40,7 @@ public class MessageUploader {
     /**
      *  Insert the lab into the proper tables of the database
      */
-    public String routeReport(String type, String hl7Body) throws Exception{
+    public String routeReport(String type, String hl7Body,int fileId) throws Exception{
         
         String retVal = "";
         try{
@@ -106,21 +106,18 @@ public class MessageUploader {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             Connection conn = db.GetConnection();
             
-            String sql = "SELECT MAX(id) FROM fileUploadCheck";
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-            String fileUploadCheck_id = null;
-            if (rs.next())
-                fileUploadCheck_id = rs.getString(1);
+             
+            String fileUploadCheck_id = ""+ fileId;
+            
             
             String insertStmt = "INSERT INTO hl7TextMessage (lab_id, message, type, fileUploadCheck_id) VALUES ('', ?, ?, ?)";
-            pstmt = conn.prepareStatement(insertStmt);
+            PreparedStatement pstmt = conn.prepareStatement(insertStmt);
             pstmt.setString(1, new String(base64.encode(hl7Body.getBytes("ASCII")), "ASCII"));
             pstmt.setString(2, type);
             pstmt.setString(3, fileUploadCheck_id);
             pstmt.executeUpdate();
             
-            rs = pstmt.getGeneratedKeys();
+            ResultSet rs = pstmt.getGeneratedKeys();
             String insertID = null;
             if(rs.next())
                 insertID = rs.getString(1);
@@ -137,30 +134,8 @@ public class MessageUploader {
             providerRouteReport( insertID, docNums, db.GetConnection(), demProviderNo, type);
             db.CloseConn();
             
-            
-            //handle mds differently because it requires an acknowledgement message
-            if (type != null && type.equals("MDS")){
-                // MessageHandler h must be cast as an MDSHandler because the methods
-                // used here are specific to the MDSHandler
-                MDSHandler mds = (MDSHandler) h;
-                String formType = mds.getFormType();
-                String clientNum = mds.getClientRef();
-                
-                java.util.Date unformattedDate = UtilDateUtilities.getDateFromString(mds.getMsgDate(), "yyyy-MM-dd HH:mm:ss");
-                String date = UtilDateUtilities.DateToString( unformattedDate, "dd-MMM-yyyy  HH:mm:ss");
-                
-                String time = "";
-                String healthCardVC = mds.getHealthNumVersion();
-                String name = lastName.toUpperCase()+", "+firstName.toUpperCase();
-                
-                DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy  HH:mm:ss");
-                java.util.Date dateObject = new java.util.Date();
-                String procDateTime = dateFormat.format(dateObject);
-                
-                retVal = procDateTime+"  REC  "+reportStatus+"  "+formType+"  "+accessionNum+"  "+hin+"  "
-                        +healthCardVC+"  "+name+"  "+clientNum+"  "+date+"  "+time;
-            }           
-            
+            retVal = h.audit();
+      
         }catch(Exception e){
             logger.error("Error uploading lab to database");
             throw e;
