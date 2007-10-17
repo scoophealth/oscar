@@ -444,6 +444,14 @@ public class MDSHandler implements MessageHandler {
         }
     }
     
+    public String getUnescapedName(){
+        try {
+            return(getString(terser.get("/.PID-5")));
+        } catch (HL7Exception ex) {
+            return("");
+        }
+    }
+    
     public String getDOB(){
         try{
             return(formatDateTime(getString(terser.get("/.PID-7-1"))).substring(0, 10));
@@ -662,6 +670,17 @@ public class MDSHandler implements MessageHandler {
         
     }
     
+    public Date getMsgDateAsDate(){
+        Date date = null;
+        try{
+            date = getDateTime(getString(terser.get("/.MSH-7-1"))); 
+        }catch(Exception e){
+            //Not sure what to do here
+            e.printStackTrace();
+        }
+        return date;
+    }
+    
     private String getOBXField(String field, int i, int j){
         ArrayList obxSegs = (ArrayList) obrGroups.get(i);
         String obxSeg = (String) obxSegs.get(j);
@@ -727,6 +746,12 @@ public class MDSHandler implements MessageHandler {
         return (docName);
     }
     
+    private Date getDateTime(String plain){
+        String dateFormat = "yyyyMMddHHmmss";
+        dateFormat = dateFormat.substring(0, plain.length());
+        Date date = UtilDateUtilities.StringToDate(plain, dateFormat);
+        return date;
+    }
     
     private String formatDateTime(String plain){
         String dateFormat = "yyyyMMddHHmmss";
@@ -746,5 +771,64 @@ public class MDSHandler implements MessageHandler {
             return("");
         }
     }
+    
+    String delimiter = "  ";
+    char bl = ' ';
+    
+
+    public  String getAuditLine(String procDate, String procTime, String logId,String formStatus, String formType, String accession, String hcNum, String hcVerCode, String patientName,String orderingClient,String  messageDate,String messageTime){
+        logger.info("Getting Audit Line");
+                
+
+
+        return getPaddedString(procDate,11,bl)+delimiter+
+               getPaddedString(procTime,8,bl)+delimiter+
+               getPaddedString(logId,7,bl)+delimiter+
+               getPaddedString(formStatus,1,bl)+delimiter+
+               getPaddedString(formType,1,bl)+delimiter+
+               getPaddedString(accession,9,bl)+delimiter+
+               getPaddedString(hcNum,10,bl)+delimiter+
+               getPaddedString(hcVerCode,2,bl)+delimiter+
+               getPaddedString(patientName,61,bl)+delimiter+
+               getPaddedString(orderingClient,8,bl)+delimiter+
+               getPaddedString(messageDate,11,bl)+delimiter+
+               getPaddedString(messageTime,8,bl)+"\n\r";             
+   
+	}
+
+	String getPaddedString(String originalString, int length, char paddingChar){
+           StringBuffer str = new StringBuffer(length);
+           str.append(originalString);
+                      
+           for (int i = str.length(); i < length; i++){
+             str.append(paddingChar);
+           }
+           
+           return str.substring(0,length);
+        }
+
+    public String audit(){
+        String retVal = "";
+
+        java.util.Date date = new java.util.Date();
+        SimpleDateFormat dayFormatter =  new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat timeFormatter =  new SimpleDateFormat("HH:mm:ss");
+        
+        String procDate = dayFormatter.format(date);
+        String procTime = timeFormatter.format(date);
+            
+        String messageDate = "";
+        String messageTime = "";
+        try{
+            messageDate = dayFormatter.format(getMsgDateAsDate());
+            messageTime = timeFormatter.format(getMsgDateAsDate());
+        }catch(Exception e){e.printStackTrace();}    
+        
+        retVal = getAuditLine(procDate, procTime, "REC",getOrderStatus(), getFormType(), getAccessionNum(), getHealthNum(), getHealthNumVersion(), getUnescapedName(),getClientRef(),messageDate, messageTime);
+     
+        return retVal;
+    }
+        
+        
 }
 
