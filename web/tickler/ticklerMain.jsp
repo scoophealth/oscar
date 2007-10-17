@@ -116,8 +116,8 @@ function refresh() {
 
 function allYear()
 {
-var newD = "9999-12-31";
-var beginD = "0001-01-01"
+var newD = "8888-12-31";
+var beginD = "1900-01-01"
 	document.serviceform.xml_appointment_date.value = newD;
 		document.serviceform.xml_vdate.value = beginD;
 }

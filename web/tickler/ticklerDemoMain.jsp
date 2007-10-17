@@ -42,7 +42,7 @@ GregorianCalendar now=new GregorianCalendar();
   %><% //String providerview=request.getParameter("provider")==null?"":request.getParameter("provider");
   String ticklerview=request.getParameter("ticklerview")==null?"A":request.getParameter("ticklerview");
    String xml_vdate=request.getParameter("xml_vdate") == null?"":request.getParameter("xml_vdate");
-   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"9999-12-31":request.getParameter("xml_appointment_date");
+   String xml_appointment_date = request.getParameter("xml_appointment_date")==null?"8888-12-31":request.getParameter("xml_appointment_date");
 %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
@@ -259,8 +259,8 @@ function refresh() {
     
     function allYear()
     {       
-    var newD = "9999-12-31";
-    var beginD = "0001-01-01"
+    var newD = "8888-12-31";
+    var beginD = "1900-01-01"
     	document.serviceform.xml_appointment_date.value = newD;
     		document.serviceform.xml_vdate.value = beginD;
 }
@@ -403,8 +403,8 @@ DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:ss:mm.SSS", request.
   String provider = "";
   String taskAssignedTo = "";
   
-  if (dateEnd.compareTo("") == 0) dateEnd = "9999-12-31";
-  if (dateBegin.compareTo("") == 0) dateBegin="0001-01-01";
+  if (dateEnd.compareTo("") == 0) dateEnd = "8888-12-31";
+  if (dateBegin.compareTo("") == 0) dateBegin="1900-01-01";
   ResultSet rs=null ;
   String[] param =new String[4];
   boolean bodd=false;
