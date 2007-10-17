@@ -54,11 +54,12 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return note;
 	}
 	
-	/*???? why???what is mostRecent?
-	 public List getNotesByDemographic(String demographic_no) {
-            
-                return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] {demographic_no});
+	/*This is used by OSCAR, please use another method to get the most recent note.
+	 public List getNotesByDemographic(String demographic_no) {            
+           return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] {demographic_no});
 	}*/
+	
+	 //This is used by CAISI, to get all notes for one client.
 	public List getNotesByDemographic(String demographic_no) {
 		return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.demographic_no = ? ORDER BY cmn.update_date DESC", new Object[] {demographic_no});
 	}
