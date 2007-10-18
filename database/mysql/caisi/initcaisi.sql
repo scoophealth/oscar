@@ -287,7 +287,9 @@ CREATE TABLE `casemgmt_note` (
   `locked` char(1) default NULL,
   `uuid` char(36) default NULL,
   PRIMARY KEY  (`note_id`),
-  KEY `FKA8D537806CCA0FC` (`provider_no`)
+  KEY `FKA8D537806CCA0FC` (`provider_no`),
+	index(demographic_no),
+	index(uuid)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
