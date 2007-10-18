@@ -410,6 +410,7 @@ public class CaseManagementManager {
         return false;
     }
 
+    // TODO terrible performance here.  TERRIBLE. at LEAST cache this - rwd
     public List getAccessRight(String providerNo, String demoNo, String programId) {
         List<Integer> progList = new ArrayList<Integer>();
 
