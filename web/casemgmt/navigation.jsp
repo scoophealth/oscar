@@ -24,7 +24,9 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet" %>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
+<%@ page import="oscar.oscarEncounter.oscarMeasurements.util.MeasurementHelper" %>
 <%@ page import="oscar.oscarResearch.oscarDxResearch.bean.dxResearchBeanHandler" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Vector" %>
@@ -360,6 +362,9 @@
             Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
             ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
             for (String flowsheet : flowsheets) {
+                MeasurementFlowSheet measurementFlowSheet = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(flowsheet);
+                if (MeasurementHelper.flowSheetRequiresWork(bean.demographicNo, measurementFlowSheet)) {
+                %>* <% }         
         %>
         <a href="javascript:void(0)"
            onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
