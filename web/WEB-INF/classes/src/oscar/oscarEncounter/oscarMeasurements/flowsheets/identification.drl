@@ -43,7 +43,7 @@
         </parameter>
         <java:condition>m.getLastDateRecordedInMonths("SIN") == -1</java:condition>
         <java:consequence>
-              m.addWarning("ODSP","Question not answered");
+              m.addWarning("SIN","Question not answered");
         </java:consequence>
     </rule>
 
