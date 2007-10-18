@@ -65,7 +65,7 @@
     }
 
     function popup(title, url) {
-        window.open(url, title, 'width=800, height=800');
+        window.open(url, title, 'width=800, height=800,resizable=yes, scrollbars=yes');
     }
 
     function cme_client(programId, clientId) {
