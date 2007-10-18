@@ -54,16 +54,16 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		return note;
 	}
 	
-	/*This is used by OSCAR, please use another method to get the most recent note.
+	//This was created by OSCAR. if all notes' UUID are same like null, it will only get one note.
 	 public List getNotesByDemographic(String demographic_no) {            
            return this.getHibernateTemplate().findByNamedQuery("mostRecent", new Object[] {demographic_no});
-	}*/
-	
-	 //This is used by CAISI, to get all notes for one client.
-	public List getNotesByDemographic(String demographic_no) {
-		return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.demographic_no = ? ORDER BY cmn.update_date DESC", new Object[] {demographic_no});
 	}
 	
+	 //This is the original method. It was created by CAISI, to get all notes for each client.
+	/*public List getNotesByDemographic(String demographic_no) {
+		return this.getHibernateTemplate().find("from CaseManagementNote cmn where cmn.demographic_no = ? ORDER BY cmn.update_date DESC", new Object[] {demographic_no});
+	}
+	*/
 	public List getNotesByDemographic(String demographic_no,String[] issues) {
 		String list = null;
 		if(issues != null && issues.length>0) {
