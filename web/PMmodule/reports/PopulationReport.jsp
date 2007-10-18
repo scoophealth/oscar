@@ -67,6 +67,8 @@
 
 <h1>Population Report : <%=program.getName()%> from <%=startDateString%> to <%=endDateString%></h1>
 
+<input type="button" value="Back" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
+
 <table class="genericTable">
 	<tr class="genericTableRow">
 		<td class="genericTableHeader">Role Provider</td>
@@ -142,5 +144,8 @@
 		<td class="genericTableData"><%=encounterTypeDataRow.getTotalOfAllValues()%></td>
 	</tr>
 </table>
+
+<input type="button" value="Back" onclick="document.location='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />
+
 
 <%@include file="/layouts/caisi_html_bottom.jspf"%>
