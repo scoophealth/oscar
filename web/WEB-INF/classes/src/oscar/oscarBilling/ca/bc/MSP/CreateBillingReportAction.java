@@ -157,7 +157,7 @@ public class CreateBillingReportAction extends OscarAction {
         }
         else if (repType.equals(msp.REP_MSPREMSUM)) {
             String s21id = request.getParameter("rano");
-            S21 s21 = msp.getS21Record(s21id);
+            oscar.entities.S21 s21 = msp.getS21Record(s21id);
 
             oscar.entities.Provider payeeProv = msp.getProvider(provider, 1);
             reportParams.put("mspBean", msp);
