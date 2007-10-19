@@ -54,7 +54,7 @@ public class EchartDAO extends HibernateDaoSupport {
 
         Date now = new Date();
         ec.setTimeStamp(now);
-        getHibernateTemplate().saveOrUpdate(ec);
+        getHibernateTemplate().save(ec);
     }
 
     public String saveEchart(CaseManagementNote note, CaseManagementCPP cpp, String userName, String lastStr) {
@@ -72,12 +72,15 @@ public class EchartDAO extends HibernateDaoSupport {
         ec.setDemographicNo(new Integer(demoNo).intValue());
         ec.setProviderNo(note.getProvider_no());
         ec.setSubject("");
-        ec.setFamilyHistory(cpp.getFamilyHistory());
-        ec.setMedicalHistory(cpp.getMedicalHistory());
-        ec.setOngoingConcerns(cpp.getOngoingConcerns());
-        ec.setReminders(cpp.getReminders());
-        ec.setSocialHistory(cpp.getSocialHistory());
-
+        
+        if( cpp != null ) {
+            ec.setFamilyHistory(cpp.getFamilyHistory());
+            ec.setMedicalHistory(cpp.getMedicalHistory());
+            ec.setOngoingConcerns(cpp.getOngoingConcerns());
+            ec.setReminders(cpp.getReminders());
+            ec.setSocialHistory(cpp.getSocialHistory());
+        }
+        
         Date now = new Date();
         ec.setTimeStamp(now);
         String etext = oldec.getEncounter();
@@ -114,7 +117,7 @@ public class EchartDAO extends HibernateDaoSupport {
 
         ec.setEncounter(etext);
 
-        getHibernateTemplate().saveOrUpdate(ec);
+        getHibernateTemplate().save(ec);
         return rtStr;
 
     }
@@ -129,7 +132,7 @@ public class EchartDAO extends HibernateDaoSupport {
             return;
         }
         oldec.setOngoingConcerns(cpp.getOngoingConcerns());
-        getHibernateTemplate().saveOrUpdate(oldec);
+        getHibernateTemplate().save(oldec);
     }
 
 }
