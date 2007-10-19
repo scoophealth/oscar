@@ -68,6 +68,7 @@ public class TeleplanService {
         if (tr != null && tr.getResult().equals("SUCCESS")){
            return tAPI;
         }
+        //TODO: ALSO RESULT COULD BE   EXPIRED.PASSWORD   need some kind of trigger that will propmt user to change password
         
         throw new Exception(tr.getMsgs());
     } 
