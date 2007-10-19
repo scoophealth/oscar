@@ -56,6 +56,7 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
         tempcpp.setSocialHistory(shist);
         tempcpp.setUpdate_date(new Date());
         tempcpp.setPrimaryPhysician(cpp.getPrimaryPhysician());
+        tempcpp.setProvider_no(cpp.getProvider_no());
         tempcpp.setPrimaryCounsellor(cpp.getPrimaryCounsellor());
         tempcpp.setOtherFileNumber(ofnum);
         tempcpp.setOtherSupportSystems(ossystem);
