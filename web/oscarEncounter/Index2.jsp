@@ -120,6 +120,7 @@ You have no rights to access the data!
 
 <caisi:isModuleLoad moduleName="caisi">
 <%
+session.setAttribute("caisiLoaded","true");
 session.setAttribute("casemgmt_oscar_baseurl",request.getContextPath());
 session.setAttribute("casemgmt_oscar_bean", bean);
 session.setAttribute("casemgmt_bean_flag", "true");
