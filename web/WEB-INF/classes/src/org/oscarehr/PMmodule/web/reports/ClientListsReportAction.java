@@ -79,12 +79,15 @@ public class ClientListsReportAction extends DispatchAction {
 
     public ActionForward report(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-        DynaActionForm reportForm = (DynaActionForm)form;
-        ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
+// feature temporaryily disabled for security reasons    	
+    	
+//        DynaActionForm reportForm = (DynaActionForm)form;
+//        ClientListsReportFormBean formBean = (ClientListsReportFormBean)reportForm.get("form");
+//
+//        Map<String, ClientListsReportResults> reportResults = clientDao.findByReportCriteria(formBean);
+//        request.setAttribute("reportResults", reportResults);
 
-        Map<String, ClientListsReportResults> reportResults = clientDao.findByReportCriteria(formBean);
-        request.setAttribute("reportResults", reportResults);
-
+    	
         return mapping.findForward("report");
     }
 }

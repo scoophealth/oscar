@@ -137,9 +137,11 @@ function createIntakeCReport1()
             <div>
                 <html:link action="/PMmodule/Reports/ProgramActivityReport.do">Activity Report</html:link>
             </div>
+            <%--
             <div>
                 <html:link action="/PMmodule/Reports/ClientListsReport">Client Lists Report</html:link>
             </div>
+            --%>
             <div>
                 <a href="<%=request.getContextPath()%>/PMmodule/reports/PopulationReportForm.jsp">Population Report</a>
             </div>
