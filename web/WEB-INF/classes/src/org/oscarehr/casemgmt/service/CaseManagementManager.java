@@ -284,6 +284,7 @@ public class CaseManagementManager {
     }
 
     public void saveCPP(CaseManagementCPP cpp, String providerNo) {
+        cpp.setProvider_no(providerNo);    // added because nothing else was setting providerNo; not sure this is the right place to do this -- rwd
         caseManagementCPPDAO.saveCPP(cpp);
         //echartDAO.saveCPPIntoEchart(cpp, providerNo);
     }
