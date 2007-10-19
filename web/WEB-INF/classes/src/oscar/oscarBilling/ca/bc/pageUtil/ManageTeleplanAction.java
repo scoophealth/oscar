@@ -198,9 +198,37 @@ public class ManageTeleplanAction extends DispatchAction {
            log.debug("sendFile End"+tr.getResult());
            if(!tr.isSuccess()){
                request.setAttribute("error",tr.getMsgs());
+           }else{
+               billActDAO.setStatusToSent(b);
            }
+           
+           
            return mapping.findForward("submission");
-    }        
+    }  
+    
+    public ActionForward remit(ActionMapping mapping, ActionForm  form,
+           HttpServletRequest request, HttpServletResponse response)
+           throws Exception {
+           
+           TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+           String[] userpass = dao.getUsernamePassword();
+           TeleplanService tService = new TeleplanService();
+           
+           TeleplanAPI tAPI = null;
+           try{
+                tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
+           }catch(Exception e){
+               log.debug(e.getMessage(),e);
+               request.setAttribute("error",e.getMessage());
+               return mapping.findForward("success");
+           }
+        
+           TeleplanResponse tr = tAPI.getRemittance(true);
+           log.debug(tr.toString());
+           log.debug("real filename "+tr.getRealFilename());
+           request.setAttribute("filename",tr.getRealFilename());
+        return mapping.findForward("remit");
+    }
             
     public ActionForward changePass(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
@@ -217,7 +245,29 @@ public class ManageTeleplanAction extends DispatchAction {
            //CHECK TELEPLAN
            
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
-           dao.saveUpdatePasssword(newpass);
+           String[] userpass = dao.getUsernamePassword();
+           TeleplanService tService = new TeleplanService();
+           
+           TeleplanAPI tAPI = new TeleplanAPI();
+           try{
+              //THIS IS DIFFERENT BECAUSE THE NORMAL TELEPLAN SERVICE WILL THROW AN EXCEPTION BECAUSE IT CHECKS FOR RESULT OF SUCCESS.  
+               //IF PASSWORD HAS EXPIRED THE RESULTS is EXPIRED.PASSWORD
+              TeleplanResponse tr = tAPI.login(userpass[0],userpass[1]);
+              
+              
+           }catch(Exception e){
+               log.debug(e.getMessage(),e);
+               request.setAttribute("error",e.getMessage());
+               return mapping.findForward("success");
+           }
+           
+           TeleplanResponse tr = tAPI.changePassword(userpass[0],userpass[1],newpass,confpass);
+           log.debug("change password "+tr.getResult());
+           if(!tr.isSuccess()){
+              request.setAttribute("error",tr.getMsgs());
+           }else{
+              dao.saveUpdatePasssword(newpass);
+           }
            return mapping.findForward("success");
     }
     
