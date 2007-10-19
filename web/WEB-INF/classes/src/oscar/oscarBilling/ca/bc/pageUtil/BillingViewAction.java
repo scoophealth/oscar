@@ -94,11 +94,11 @@ public final class BillingViewAction
       bean.setPatientHCType(demo.getHCType());
       bean.setPatientAge(demo.getAge());
       frm.setBillingNo(bean.getBillingNo());
-      log.debug("End Demo Call");
+      log.debug("End Demo Call billing No"+request.getParameter("billing_no"));
       //Loading bill Recipient Data
-      List billRecipList = bean.getBillRecipient(request.getParameter(
-          "billing_no"));
+      List billRecipList = bean.getBillRecipient(request.getParameter("billing_no"));
       if (!billRecipList.isEmpty()) {
+        log.debug("Filling recep with last details");
         BillRecipient rec = (BillRecipient) billRecipList.get(0);
         frm.setRecipientAddress(rec.getAddress());
         frm.setRecipientCity(rec.getCity());
@@ -106,15 +106,14 @@ public final class BillingViewAction
         frm.setRecipientPostal(rec.getPostal());
         frm.setRecipientProvince(rec.getProvince());
         frm.setBillPatient("0");
-      }
-      else {
+      }else {
+        log.debug("Filling recep with demo details");
         frm.setRecipientName(demo.getFirstName() + " " + demo.getLastName());
         frm.setRecipientCity(demo.getCity());
         frm.setRecipientAddress(demo.getAddress());
         frm.setRecipientPostal(demo.getPostal());
         frm.setRecipientProvince(demo.getProvince());
         frm.setBillPatient("1");
-
       }
       frm.setMessageNotes(bean.getMessageNotes());
       frm.setBillStatus(bean.getBillingType());
