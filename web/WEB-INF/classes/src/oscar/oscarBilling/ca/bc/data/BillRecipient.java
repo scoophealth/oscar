@@ -47,7 +47,18 @@ public class BillRecipient {
   public void setId(Integer id) {
     this.id = id;
   }
-
+  
+  public void setId(int id){
+      
+      System.out.println("int id");
+      this.id = new Integer(id);
+  }
+  
+ /* public void setId(String id){
+      System.out.println("string id");
+      this.id = new Integer(Integer.parseInt(id));
+  }
+*/
   public void setName(String name) {
     this.name = name;
   }
@@ -79,6 +90,11 @@ public class BillRecipient {
   public void setBillingNo(String billingNo) {
     this.billingNo = billingNo;
   }
+  
+  /*public void setBillingNo(int billingNo) {
+    this.billingNo = ""+billingNo;
+  }
+  */
 
   public Integer getId() {
     return id;
