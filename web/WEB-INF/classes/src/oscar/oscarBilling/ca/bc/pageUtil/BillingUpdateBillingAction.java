@@ -38,6 +38,8 @@ import javax.servlet.http.*;
 import org.apache.struts.action.*;
 import oscar.oscarBilling.ca.bc.MSP.*;
 import oscar.oscarBilling.ca.bc.data.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -45,6 +47,7 @@ import oscar.oscarBilling.ca.bc.data.*;
  */
 public final class BillingUpdateBillingAction
     extends Action {
+    private static Log log = LogFactory.getLog(BillingUpdateBillingAction.class);
   HttpServletRequest request;
   public ActionForward execute(ActionMapping mapping,
                                ActionForm form,
@@ -60,9 +63,12 @@ public final class BillingUpdateBillingAction
     recip.setCity(frm.getRecipientCity());
     recip.setProvince(frm.getRecipientProvince());
     recip.setPostal(frm.getRecipientPostal());
+    recip.setBillingNo(frm.getBillingNo());
+    log.debug("Name of recip "+recip.getName());
     MSPReconcile msprec = new MSPReconcile();
     BillingViewBean bean = new BillingViewBean();
     bean.updateBill(frm.getBillingNo(),request.getParameter("billingProvider"));
+    
     msprec.saveOrUpdateBillRecipient(recip);
     BillingNote n = new BillingNote();
     try {
