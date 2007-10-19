@@ -176,6 +176,27 @@ public class BillActivityDAO {
         return id;
     }
     
+    public void setStatusToSent(Billactivity b){
+        DBHandler dbhandler = null;
+        try {             
+           dbhandler = new DBHandler(DBHandler.OSCAR_DATA);
+                                                         //1 2 3 4 5 6 7 8 9 0 1 2 3     
+           String query = "update billactivity set status = ?, sentdate = ? where id = ? ";
+        
+           PreparedStatement pstmt = dbhandler.GetConnection().prepareStatement(query);
+        
+            pstmt.setString(1,b.SENT);
+            pstmt.setDate(2,new java.sql.Date(new Date().getTime()));
+            pstmt.setString(3,""+b.getId());
+            pstmt.executeUpdate();
+
+            pstmt.close();  
+            dbhandler.CloseConn();
+        }catch (SQLException sqlexception) {
+           System.out.println(sqlexception.getMessage());
+        }
+    }
+    
     public List getBillactivityByYear(int year){
        String startDate = year+"-01-01";
        String endDate = year+"/12/31 23:59:59"; 
