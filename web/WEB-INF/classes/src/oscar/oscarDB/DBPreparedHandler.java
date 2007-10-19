@@ -35,11 +35,13 @@ import org.oscarehr.util.DbConnectionFilter;
 public class DBPreparedHandler {
 
     DBHandler db = null;
-
     ResultSet rs = null;
     Statement stmt = null;
     PreparedStatement preparedStmt = null;
 
+    public DBPreparedHandler() {
+    }
+    
     public DBPreparedHandler(String dbDriver, String dbName, String dbUser, String dbPwd) throws SQLException {
     }
 
