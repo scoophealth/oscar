@@ -141,10 +141,12 @@ public class TeleplanCorrectionActionWCB
 
       }
 
+      log.debug("sql_biling "+sql_biling+" ");
       bean.queryExecuteUpdate(data.getBillingForStatus(), sql_biling);
       String feeItem = data.getW_feeitem();
       String extraFeeItem = data.getW_extrafeeitem();
       String getItemAmt = this.GetFeeItemAmount(feeItem, extraFeeItem);
+      log.debug("fee "+feeItem+" extra "+extraFeeItem+" item amt "+getItemAmt);
       String[] wcbParams = data.getWcb(getItemAmt);
       bean.queryExecuteUpdate(wcbParams, sql_wcb);
 
