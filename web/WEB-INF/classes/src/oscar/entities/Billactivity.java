@@ -45,6 +45,10 @@ public class Billactivity {
   private String status;
   private String total;
   private int id;
+  
+  public static final String SENT = "S";
+  public static final String NOTSENT = "A";
+  
 
   /**
    * Class constructor with no arguments.
