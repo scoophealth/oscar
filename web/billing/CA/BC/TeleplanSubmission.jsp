@@ -20,12 +20,16 @@ pageContext.setAttribute("yesterday",now.getTime());
 String[] yearArray = new String[5];
 String thisyear = (request.getParameter("year")==null || request.getParameter("year").compareTo("")==0) ? String.valueOf(curYear) : request.getParameter("year");
 
+pageContext.setAttribute("thisYear",thisyear);
+
+
 String yearColor = "";
 yearArray[0] = String.valueOf(curYear);
 yearArray[1] = String.valueOf(curYear-1);
 yearArray[2] = String.valueOf(curYear-2);
 yearArray[3] = String.valueOf(curYear-3);
 yearArray[4] = String.valueOf(curYear-4);
+pageContext.setAttribute("yearArray",yearArray);
 
 if (thisyear.compareTo(yearArray[0])==0) yearColor="#B1D3EF";
 if (thisyear.compareTo(yearArray[1])==0) yearColor="#BBBBBB";
@@ -164,11 +168,19 @@ function showHideLayers() { //v3.0
         <tr bgcolor="#DDDDEE">
             <td align='CENTER'>Last5 Years</td>
         </tr>
-        <% for (int i=0; i<5;i++) { %>
+        <% for (String year:yearArray) { %>
         <tr>
-            <td align='CENTER'><a href="TeleplanSubmission.jsp?year=<%=yearArray[i]%>">YEAR <%=yearArray[i]%></a></td>
+            <td align='CENTER'><a href="TeleplanSubmission.jsp?year=<%=year%>">YEAR <%=year%></a></td>
         </tr>
         <% } %>
+        
+        <c:forEach var="year" items="${yearArray}">
+           <tr>
+              <td align='CENTER'><a href="TeleplanSubmission.jsp?year=<c:out value="${year}"/>" >YEAR <c:out value="${year}"/></a></td>
+           </tr>
+        </c:forEach>
+        
+        
     </table>
 </div>
 <table border="0" cellspacing="0" cellpadding="0" width="100%"  onLoad="setfocus()" rightmargin="0" topmargin="0" leftmargin="0">
@@ -195,11 +207,10 @@ function showHideLayers() { //v3.0
                 <select name="provider">
                     <option value="all">All Providers</option>
                     <%ProviderData pd = new ProviderData();
-                    List list = pd.getProviderListWithInsuranceNo();
-                    for (int i=0;i < list.size(); i++){
-                    String provNo = (String) list.get(i);
-                    ProviderData provider = new ProviderData(provNo);%>
-                    <option value="<%=provider.getOhip_no()%>" ><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
+                    List<String> list = pd.getProviderListWithInsuranceNo();
+                    for(String provNo: list){
+                       ProviderData provider = new ProviderData(provNo);%>
+                       <option value="<%=provider.getOhip_no()%>" ><%=provider.getLast_name()%>,<%=provider.getFirst_name()%></option>
                     <%}%>
                 </select>
             </td>
@@ -214,13 +225,14 @@ function showHideLayers() { //v3.0
 </table>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="acttable">
 <tr bgcolor="<%=yearColor%>">
-    <td colspan="6">Activity List </td>
+    <td colspan="7">Activity List </td>
 </tr>
 <tr bgcolor="<%=yearColor%>">
     <th width="12%">Provider</th>
     <th width="14%">Group Number</th>
     <th width="20%">Creation Date </th>
     <th width="15%">Claims/Records</th>
+    <th >Teleplan</th>
     <th width="15%">MSP Filename</th>
     <th>HTML Filename</th>
 </tr>
@@ -241,6 +253,23 @@ function showHideLayers() { //v3.0
     <td><c:out value="${billAct.groupno}"/>&nbsp;</td>
     <td><c:out value="${billAct.updatedatetime}"/>&nbsp;</td> 
     <td><c:out value="${billAct.claimrecord}"/>&nbsp;</td> 
+    <td>
+    
+      <c:choose>
+        <c:when test="${billAct.status == 'A'}">
+            <html-el:link action="/billing/CA/BC/ManageTeleplan?id=${billAct.id}&method=sendFile"  >
+            Send
+            </html-el:link>
+        </c:when>
+        <c:otherwise>
+            Sent
+        </c:otherwise>
+      </c:choose>    
+    
+        
+        
+    </td>
+    
     <td>
         <html-el:link action="/billing/CA/BC/DownloadBilling?filename=${billAct.ohipfilename}"  >
             <c:out value="${billAct.ohipfilename}"/>
