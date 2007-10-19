@@ -351,11 +351,17 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 Provider provider = getProvider(request);
 		String userName = provider != null?provider.getFullName():"";
                 
-
-                CaseManagementCPP cpp = null;
-                String chain = request.getParameter("chain");                
-                if( chain == null )                       
-                    cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));                    
+                String demo = getDemographicNo(request);
+                CaseManagementCPP cpp = this.caseManagementMgr.getCPP(demo);
+                if( cpp == null ) {
+                    cpp = new CaseManagementCPP();
+                    cpp.setDemographic_no(demo);
+                }
+                
+                String caisiLoaded = (String)request.getSession().getAttribute("caisiLoaded");
+                boolean inCaisi = false;
+                if( caisiLoaded != null && caisiLoaded.equalsIgnoreCase("true") )                       
+                    inCaisi = true;
 
 		String lastSavedNoteString = (String) request.getSession().getAttribute("lastSavedNoteString");
 
@@ -474,7 +480,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		
 		/* save all issue changes for demographic */
 		caseManagementMgr.saveAndUpdateCaseIssues(issuelist);
-		//cpp.setOngoingConcerns(ongoing);
+                if( inCaisi )
+                    cpp.setOngoingConcerns(ongoing);
 		
                 //update appointment and add verify message to note if verified                
                 EctSessionBean sessionBean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");                
@@ -496,17 +503,19 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                     if( sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("") )
                         caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
                 }
-		/*get access right*/
-		//List accessRight=caseManagementMgr.getAccessRight(providerNo,getDemographicNo(request),(String)request.getSession().getAttribute("case_program_id"));
+		
 		String roleName=caseManagementMgr.getRoleName(providerNo,note.getProgram_no());
 		/*
 		 * if provider is a doctor or nurse,get all major and resolved medical
 		 * issue for demograhhic and append them to CPP medical history
 		 */
-		//setCPPMedicalHistory(cpp, providerNo,accessRight);
+                if( inCaisi ) {
+                    /*get access right*/
+                    List accessRight=caseManagementMgr.getAccessRight(providerNo,getDemographicNo(request),(String)request.getSession().getAttribute("case_program_id"));                
+                    setCPPMedicalHistory(cpp, providerNo,accessRight);
+                    caseManagementMgr.saveCPP(cpp, providerNo);
+                }
 
-		//caseManagementMgr.saveCPP(cpp, providerNo);
-		
 		if(note.getPassword() != null && note.getPassword().length()>0) {
 			note.setLocked(true);
 		} else {
@@ -1052,8 +1061,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			}
 		}
 		cform.setIssueCheckList(caseIssueList);
-		// reset current concern in CPP
-		//updateIssueToConcern(cform);
+                
+                String inCaisi = (String)request.getSession().getAttribute("caisiLoaded");
+                if(inCaisi != null && inCaisi.equalsIgnoreCase("true")) {
+                    // reset current concern in CPP
+                    updateIssueToConcern(cform);
+                }
                 
                 String ajax = request.getParameter("ajax");
                 if( ajax != null && ajax.equalsIgnoreCase("true") ) {
@@ -1082,9 +1095,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		
 
 		//noteSave(cform, request);
-		CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();
-		
-		//CaseManagementCPP cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));
+		CheckBoxBean[] oldList = (CheckBoxBean[]) cform.getIssueCheckList();				
 
 		String inds = (String) cform.getLineId();
 
@@ -1093,15 +1104,21 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		oldList[ind.intValue()].getIssue().setUpdate_date(new Date());
 		iss.add(oldList[ind.intValue()].getIssue());
 		caseManagementMgr.saveAndUpdateCaseIssues(iss);
-		// reset current concern in CPP
-		//updateIssueToConcern(cform);
+                
+                String inCaisi = (String)request.getSession().getAttribute("caisiLoaded");
+                if(inCaisi != null && inCaisi.equalsIgnoreCase("true")) {
+                    String providerNo = this.getProviderNo(request);
+                    // reset current concern in CPP
+                    updateIssueToConcern(cform);
 
-		//get access right
-		//List accessRight=caseManagementMgr.getAccessRight(providerNo,demono,(String)request.getSession().getAttribute("case_program_id"));
-		
-		// add medical history to CPP 
-		//setCPPMedicalHistory(cpp, providerNo,accessRight);
-		//caseManagementMgr.saveCPP(cpp, providerNo);
+                    //get access right
+                    List accessRight=caseManagementMgr.getAccessRight(providerNo,demono,(String)request.getSession().getAttribute("case_program_id"));
+
+                    // add medical history to CPP 
+                    CaseManagementCPP cpp = this.caseManagementMgr.getCPP(getDemographicNo(request));
+                    setCPPMedicalHistory(cpp, providerNo,accessRight);
+                    caseManagementMgr.saveCPP(cpp, providerNo);
+                }
                 
                 String ajax = request.getParameter("ajax");
                 if( ajax != null && ajax.equalsIgnoreCase("true") ) {
