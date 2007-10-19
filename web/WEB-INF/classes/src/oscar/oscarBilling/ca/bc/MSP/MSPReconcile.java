@@ -36,10 +36,13 @@ import oscar.entities.*;
 import oscar.oscarBilling.ca.bc.data.*;
 import oscar.oscarDB.*;
 import oscar.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class MSPReconcile {
-  static Log log = LogFactory.getLog(MSPReconcile.class);
-    
+  private static Log log = LogFactory.getLog(MSPReconcile.class);
+
+
   //Accounting Report Types
   public static final String REP_INVOICE = "REP_INVOICE";
   public static final String REP_PAYREF = "REP_PAYREF";
@@ -1066,12 +1069,21 @@ public class MSPReconcile {
     ResultSet rs = null;
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
-      rs = db.GetSQL("select count(*) from bill_recipients where billingNo = " +
-                     recip.getBillingNo());
-
+      rs = db.GetSQL("select count(*) as cou from bill_recipients where billingNo = " +recip.getBillingNo());
+      boolean existingBill = false;
+      
+      if(rs.next()){
+         int i = rs.getInt("cou");
+         log.debug("rs has next :"+i); 
+         if (i > 0){
+             existingBill = true;
+             log.debug("i is greater than 0 :"+existingBill);
+         }
+      }
       PreparedStatement stmt = null;
       //Record exists so perform an update
-      if (rs.next()) {
+      if (existingBill) {
+          log.debug("updating bill_recip"+recip.getBillingNo());
         stmt = db.GetConnection().prepareStatement("update bill_recipients set name=?,address=?,city=?,province=?,postal=?,updateTime=now() where billingNo=?");
         stmt.setString(1, recip.getName());
         stmt.setString(2, recip.getAddress());
@@ -1081,6 +1093,7 @@ public class MSPReconcile {
         stmt.setString(6, recip.getBillingNo());
       }
       else {
+          log.debug("inserting bill_recip"+recip.getBillingNo());
         //create a new record
         stmt = db.GetConnection().prepareStatement("insert into bill_recipients(name,address,city,province,postal,creationTime,updateTime,billingNo) " +
             "values(?,?,?,?,?,now(),now(),?)");
@@ -2405,14 +2418,14 @@ public class MSPReconcile {
     return description;
   }
 
-  public S21 getS21Record(String s21id) {
+  public oscar.entities.S21 getS21Record(String s21id) {
     System.out.println(new java.util.Date() +
                        ":MSPReconcile.getS21Record(s21id)");
     String qry = "select t_payment,t_payeeno,t_payeename,t_amtbilled,t_amtpaid,t_cheque from teleplanS21 where status <> 'D' and s21_id = " +
         s21id + " order by t_payment desc";
     DBHandler db = null;
     ResultSet rs = null;
-    S21 s21 = new S21();
+    oscar.entities.S21 s21 = new oscar.entities.S21();
     try {
       db = new DBHandler(DBHandler.OSCAR_DATA);
       System.err.println(qry);
