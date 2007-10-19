@@ -97,12 +97,13 @@ public class CaseManagementManager {
     }
 
     public String saveNote(CaseManagementCPP cpp, CaseManagementNote note, String cproviderNo, String userName, String lastStr, String roleName) {
-
+    	SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+    	Date now = new Date();
         String noteStr = note.getNote();
         String noteHistory = note.getHistory();        
         // process noteStr, remove existing signed on string
         // noteStr = removeSignature(noteStr);
-        /*if (note.isSigned())
+        if (note.isSigned())
         {
         	// add the time, signiture and role at the end of note
         	String rolename="";
@@ -141,7 +142,9 @@ public class CaseManagementManager {
         note.setHistory(noteHistory);
 
         caseManagementNoteDAO.saveNote(note);
-        return null; //echartDAO.saveEchart(note, cpp, userName, lastStr);
+        //return echartDAO.saveEchart(note, cpp, userName, lastStr);
+        return null; 
+        
 
     }
 
