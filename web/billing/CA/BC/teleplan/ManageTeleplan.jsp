@@ -327,7 +327,9 @@ div.recommendations li{
                
             </td>
             <td valign="top" class="MainTableRightColumn">
-                
+                <%if (request.getAttribute("error") != null) { %>
+                <div> <%=request.getAttribute("error")%></div>
+                <%}%>
                 <div class="leftBox">
                   <h3>&nbsp;Manually Set Sequence #</h3>
                   <div style="background-color: #EEEEFF;" >
@@ -381,7 +383,22 @@ div.recommendations li{
                   <div style="background-color: #EEEEFF;" >
                     <html:form action="/billing/CA/BC/ManageTeleplan">
                          <input type="hidden" name="method" value="changePass"/>
-                         Password: <input type="password" name="pass" />
+                         Current Password: <input type="password" name="oldpass" />
+                         <br>
+                         New Password:     <input type="password" name="newpass" />
+                         Confirm Password: <input type="password" name="confpass" />
+                         <input type="submit"/>
+                    </html:form>
+                
+                  </div>
+               </div> 
+               
+               
+               <div class="leftBox">
+                  <h3>&nbsp;Get Remittance</h3>
+                  <div style="background-color: #EEEEFF;" >
+                    <html:form action="/billing/CA/BC/ManageTeleplan">
+                         <input type="hidden" name="method" value="remit"/>
                          <input type="submit"/>
                     </html:form>
                 
