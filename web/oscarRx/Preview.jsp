@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ page import="oscar.oscarProvider.data.*"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
-<%@ page import="oscar.*,java.lang.*"%>
+<%@ page import="oscar.*,java.lang.*,java.util.Date"%>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <!--
@@ -84,6 +84,13 @@ if (hasSig){
 doctorName = doctorName.replaceAll("\\d{6}","");
 doctorName = doctorName.replaceAll("\\-","");
 OscarProperties props = OscarProperties.getInstance();
+
+Date rxDate;
+if( request.getParameter("rePrint") != null) {
+    rxDate = bean.getStashItem(0).getRxDate();
+}
+else
+    rxDate = oscar.oscarRx.util.RxUtil.Today();
 %>
 <html:form action="/form/formname">
 
@@ -118,7 +125,7 @@ OscarProperties props = OscarProperties.getInstance();
 			<input type="hidden" name="patientCityPostal" value="<%= StringEscapeUtils.escapeHtml(patient.getCity())+ " " + StringEscapeUtils.escapeHtml(patient.getPostal())%>"/>
 			<input type="hidden" name="patientPhone" value="<%= "Tel: " + StringEscapeUtils.escapeHtml(patient.getPhone()) %>"/>
 
-			<input type="hidden" name="rxDate" value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy")) %>"/>
+			<input type="hidden" name="rxDate" value="<%= StringEscapeUtils.escapeHtml(oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy")) %>"/>
 			<input type="hidden" name="sigDoctorName" value="<%= StringEscapeUtils.escapeHtml(doctorName) %>"/>
             <!--img src="img/rx.gif" border="0"-->
         </td>
@@ -160,7 +167,7 @@ OscarProperties props = OscarProperties.getInstance();
                         </b>
                     </td>
                     <td align=right valign=top><b>
-                            <%= oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy") %>
+                            <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy") %>
                     </b></td>
                 </tr>
             </table>

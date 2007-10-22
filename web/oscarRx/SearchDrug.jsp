@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <%@ taglib uri="/WEB-INF/indivo-tag.tld" prefix="indivo" %>
@@ -26,6 +27,7 @@
         <logic:redirect href="error.html" />
     </logic:equal>
 </logic:present>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 %>
@@ -82,12 +84,12 @@ table.hiddenLayer {
 	height: 200px;        	
 	margin-left: 20px;
 	border: 1px solid #dcdcdc;
-	background-color: #f5f5f5
-
+	background-color: #f5f5f5        
 }
 
 </style>
-<script type="text/javascript" src="../phr/phr.js"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/phr/phr.js"/>"></script>
+<script type="text/javascript" src="<c:out value="${ctx}/share/javascript/prototype.js"/>"></script>
 <script type="text/javascript">
 
 function popupDrugOfChoice(vheight,vwidth,varpage) { //open a new popup window
@@ -268,7 +270,57 @@ function load() {
                 <td>
                     <div class="DivContentSectionHead"><bean:message key="SearchDrug.section2Title"/> 
                                                    
-                   (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>)</div>
+                   (<a href="javascript:popupWindow(720,700,'PrintDrugProfile.jsp','PrintDrugProfile')">Print</a>)
+                        &nbsp;&nbsp;(<a href="#" onclick="$('reprint').toggle();return false;">Reprint</a>)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="height:100px; overflow:auto; background-color: #DCDCDC; border: thin solid green; display:none;" id="reprint">
+                        <%
+                           oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
+                           prescribedDrugs = patient.getPrescribedDrugs();
+                           String script_no = "";
+                           String jsVar ="d";
+                           StringBuffer drugIds = new StringBuffer();
+                           
+                           for(int i=0; i<prescribedDrugs.length; i++) {   
+                               oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
+                                   if( script_no.equals(drug.getScript_no())) {                                     
+                                       drugIds.append(","+String.valueOf(drug.getDrugId()));
+                        %>               
+                        <br><div style=" float:left; width:12%; padding-left:20px;">&nbsp;</div><a style="float:left;" href="javascript:reprint(<%=jsVar%>)"><%=drug.getRxDisplay()%></a>
+                        <%
+                                    }                                       
+                                    else {                                               
+                                       if( i > 0 ) {
+                         %>
+                         <script type="text/javascript">
+                             var <%=jsVar%> = "<%=drugIds.toString()%>";
+                         </script>
+                         <%
+                                            jsVar = "d" + String.valueOf(i);
+                                       }
+                         %>
+                             <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div style="float:left; width:12%; padding-left:20px;"><%=drug.getRxDate()%></div><a style="float:left;" href="javascript:reprint(<%=jsVar%>)"><%=drug.getRxDisplay()%></a>
+                             <%                                    
+                                        drugIds = new StringBuffer(String.valueOf(drug.getDrugId()));
+                                    }
+                                    script_no = drug.getScript_no();
+                             }                           
+                             %>  
+                             <% 
+                             if( prescribedDrugs.length>0 ) {
+                             %>
+                         
+                        <script type="text/javascript">
+                             var <%=jsVar%> = "<%=drugIds.toString()%>";
+                         </script>        
+                        <%
+                            }                                   
+                        %>                        
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -285,20 +337,22 @@ function load() {
                                     <th align=center width="100px"><b>Delete</b></th>
                                 </tr>
 
-                                <%
-                                oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
+                                <%                                
 
-                                if(showall)
-                                    prescribedDrugs = patient.getPrescribedDrugs();
-                                else
+                                if(!showall)                                                                    
                                     prescribedDrugs = patient.getPrescribedDrugsUnique();
 
+                                long now = System.currentTimeMillis();
+                                long month = 1000L * 60L * 60L * 24L * 30L;
+                                                                
                                 for(int i=0; i<prescribedDrugs.length; i++) {
                                     oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
                                     String styleColor = "";
                                     if(drug.isCurrent() == true && drug.isArchived() ){
 					styleColor="style=\"color:red;text-decoration: line-through;\"";  
-                                    }else if (drug.isCurrent() && !drug.isArchived())  {
+                                    }else if (drug.isCurrent() && (drug.getEndDate().getTime() - now <= month)) {
+                                        styleColor="style=\"color:orange;font-weight:bold;\"";
+                                    }else if (drug.isCurrent() && !drug.isArchived())  {                                        
                                         styleColor="style=\"color:red;\"";
 				    }else if (!drug.isCurrent() && drug.isArchived()){
                                         styleColor="style=\"text-decoration: line-through;\"";
@@ -360,6 +414,13 @@ function load() {
                             </div>
 
                             <script language=javascript>
+                                function reprint(drug) {
+                                    document.forms[0].drugList.value = drug;
+                                    document.forms[0].reprint.value = true;
+                                    document.forms[0].submit();
+                                                                        
+                                }
+                                
                                 function RePrescribe(){
                                 
                                     if(document.getElementsByName('chkRePrescribe')!=null){
@@ -374,9 +435,10 @@ function load() {
                                         }
 
                                         if(s.length>1){
-                                            s = s.substring(0, s.length - 1);
-
+                                            s = s.substring(0, s.length - 1);                                                                                        
+                                                                                            
                                             document.forms[0].drugList.value = s;
+                                            document.forms[0].reprint.value = false;
                                             document.forms[0].submit();
                                         }
                                     }
@@ -408,11 +470,12 @@ function load() {
 
                             <html:form  action="/oscarRx/rePrescribe">
                             <html:hidden property="drugList" />
+                            <html:hidden property="reprint" />
                             </html:form>
                             <br>
                             <html:form   action="/oscarRx/deleteRx">
                             <html:hidden property="drugList" />
-                            </html:form>
+                            </html:form>                           
                         </td>
                     </tr>
                     </table>
