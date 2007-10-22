@@ -26,7 +26,8 @@
 
 <%    
 if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
-if(((String)session.getAttribute("userrole")).indexOf("admin") >=0 ) response.sendRedirect("billingONReport.jsp");
+if(((String)session.getAttribute("userrole")).indexOf("admin") >=0 ||
+        ((String)session.getAttribute("userrole")).indexOf("doctor") >=0) response.sendRedirect("billingONReport.jsp");
 String user_no = (String) session.getAttribute("user");
 int  nItems=0;
 String strLimit1="0";
