@@ -449,6 +449,7 @@
         </action>
         <action input="/oscarRx/SearchDrug.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
+            <forward name="reprint" path="/oscarRx/ViewScript.jsp" />
         </action>
         <action input="/oscarRx/SearchDrug.jsp" name="RxDeleteRxForm" path="/oscarRx/deleteRx" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteRxAction">
             <forward name="success" path="/oscarRx/SearchDrug.jsp" />
