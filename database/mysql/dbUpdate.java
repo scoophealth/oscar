@@ -80,7 +80,19 @@ public class dbUpdate {
 					throw new Exception(updateSQL);				                                 
                                 System.out.println(updateSQL);
 			}
-
+                        
+                        rs.close();
+                        rs = stmt.executeQuery("SELECT update_date, note_id FROM casemgmt_note where observation_date = '0000-00-00 00:00:00'");
+                        while(rs.next()) {
+                            updateSQL = "UPDATE casemgmt_note set observation_date = '" + rs.getString("update_date") + "' WHERE note_id = " + rs.getString("note_id");
+                            if( stmtUpdate.executeUpdate(updateSQL) != 1 ) 
+					throw new Exception(updateSQL);				                                 
+                            
+                            System.out.println(updateSQL);
+                            
+                        }
+                        
+                        rs.close();
 			con.close();
                          
 		}
