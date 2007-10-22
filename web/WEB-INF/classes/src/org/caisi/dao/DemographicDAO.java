@@ -107,8 +107,7 @@ public class DemographicDAO extends HibernateDaoSupport {
         List rs = (List) getHibernateTemplate().find(q, new Object[] { status, new Integer(programId), dt, admissionStatus});
         
         //and clients should not currently in this program.
-        List clients = new ArrayList();
-        String clientId = null;
+        List clients = new ArrayList();        
         Integer clientNo = 0;
         
         Iterator it = rs.iterator();
@@ -122,8 +121,7 @@ public class DemographicDAO extends HibernateDaoSupport {
                 continue;
             
             clientNo = demographic.getDemographicNo();
-            clientId = String.valueOf(clientNo);
-            List rs1 = (List)getHibernateTemplate().find(q1,new Object[]{clientId, new Integer(programId), ss});
+            List rs1 = (List)getHibernateTemplate().find(q1,new Object[]{clientNo, new Integer(programId), ss});
             if(rs1.size()==0) {             
                 clients.add(demographic);
             }
