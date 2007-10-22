@@ -66,6 +66,7 @@ public class RxPrescriptionData {
                 prescription.setSpecial(rs.getString("special"));
                 prescription.setGenericName(rs.getString("GN"));
                 prescription.setAtcCode(rs.getString("ATC"));
+                prescription.setScript_no(rs.getString("script_no"));
                 prescription.setRegionalIdentifier(rs.getString("regional_Identifier"));
                 prescription.setUnit(rs.getString("unit"));
                 prescription.setMethod(rs.getString("method"));
@@ -140,6 +141,7 @@ public class RxPrescriptionData {
         prescription.setSpecial(rePrescribe.getSpecial());
         prescription.setGenericName(rePrescribe.getGenericName());
         prescription.setAtcCode(rePrescribe.getAtcCode());
+        prescription.setScript_no(rePrescribe.getScript_no());
         prescription.setRegionalIdentifier(rePrescribe.getRegionalIdentifier());
         prescription.setUnit(rePrescribe.getUnit());
         prescription.setMethod(rePrescribe.getMethod());
@@ -189,6 +191,7 @@ public class RxPrescriptionData {
                 p.setArchived(rs.getString("archived"));
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
+                p.setScript_no(rs.getString("script_no"));
                 p.setRegionalIdentifier(rs.getString("regional_identifier"));
                 p.setUnit(rs.getString("unit"));
                 p.setMethod(rs.getString("method"));
@@ -247,6 +250,7 @@ public class RxPrescriptionData {
                 p.setSpecial(rs.getString("special"));
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
+                p.setScript_no(rs.getString("script_no"));
                 p.setRegionalIdentifier(rs.getString("regional_identifier"));
                 p.setUnit(rs.getString("unit"));
                 p.setMethod(rs.getString("method"));
@@ -343,6 +347,7 @@ public class RxPrescriptionData {
                     p.setSpecial(rs.getString("special"));
                     p.setGenericName(rs.getString("GN"));
                     p.setAtcCode(rs.getString("ATC"));
+                    p.setScript_no(rs.getString("script_no"));
                     p.setRegionalIdentifier(rs.getString("regional_identifier"));
                     p.setUnit(rs.getString("unit"));
                     p.setMethod(rs.getString("method"));
@@ -424,6 +429,7 @@ public class RxPrescriptionData {
                 p.setSpecial(rs.getString("special"));
                 p.setGenericName(rs.getString("GN"));
                 p.setAtcCode(rs.getString("ATC"));
+                p.setScript_no(rs.getString("script_no"));
                 p.setRegionalIdentifier(rs.getString("regional_identifier"));
                 p.setUnit(rs.getString("unit"));
                 p.setMethod(rs.getString("method"));
@@ -592,16 +598,14 @@ public class RxPrescriptionData {
         textView.append(patient.getPhone()+"\n");
         textView.append(oscar.oscarRx.util.RxUtil.DateToString(oscar.oscarRx.util.RxUtil.Today(), "MMMM d, yyyy")+"\n");
         
+        String txt;
         for(int i=0;i<bean.getStashSize();i++){
             rx = bean.getStashItem(i);
-            textView.append(rx.getFullOutLine().replaceAll(";","\n"));
-            
+            txt = rx.getFullOutLine().replaceAll(";","\n");
+            textView.append("\n" + txt);            
         }
-        //textView.append();
-        
-        System.out.println("date_prescribed " +date_prescribed+" date printed "+date_printed);
-                
-        
+        //textView.append();        
+                        
         String sql =  " insert into prescription "
         +" (provider_no,demographic_no,date_prescribed,date_printed,textView) "
         +" values "
@@ -611,6 +615,7 @@ public class RxPrescriptionData {
         +"   '"+date_printed+"', "
         +"   '"+StringEscapeUtils.escapeSql(textView.toString())+"') ";
         try{
+
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
                         
             db.RunSQL(sql);
@@ -660,6 +665,7 @@ public class Prescription {
     String genericName = null;
     boolean archived = false;  // ADDED BY JAY DEC 3 2002
     String atcCode = null;
+    String script_no = null;
     String regionalIdentifier = null;
     String method = null;
     String unit = null; 
@@ -674,6 +680,14 @@ public class Prescription {
         this.drugId = drugId;
         this.providerNo = providerNo;
         this.demographicNo = demographicNo;
+    }
+    
+    public void setScript_no(String script_no) {
+        this.script_no = script_no;
+    }
+    
+    public String getScript_no() {
+        return this.script_no;
     }
     
     public void setIndivoIdx(String idx) {
@@ -1190,6 +1204,35 @@ public class Prescription {
             System.out.println("DATABASE ERROR: " + e.getMessage());
         }
         
+        return ret;
+    }
+    
+    public boolean Print() {
+        boolean ret = false;
+        try {
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT dates_reprinted, now() FROM prescription WHERE script_no = " + this.getScript_no();
+            
+            rs = db.GetSQL(sql);
+                
+            if(rs.next()) {
+                String dates_reprinted = rs.getString(1);
+                String now = rs.getString(2);
+                if( dates_reprinted != null )
+                    dates_reprinted += "," + now;
+                else
+                    dates_reprinted = now;
+                
+                sql = "UPDATE prescription SET dates_reprinted = '" + dates_reprinted + "' WHERE script_no = " + this.getScript_no();
+                if( db.RunSQL(sql))
+                    ret = true;
+            }
+            
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return ret;
     }
     
@@ -1775,7 +1818,6 @@ public class Favorite {
                 + "custom_instructions = " + this.getCustomInstr() + " "
                 + "WHERE favoriteid = " + this.getFavoriteId();
                 
-                System.out.println(sql);
                 db.RunSQL(sql);
                 
                 b = true;
