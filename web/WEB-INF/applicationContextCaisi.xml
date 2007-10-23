@@ -103,7 +103,7 @@
     <bean id="genericIntakeManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.GenericIntakeManagerImpl" autowire="byName"/>
+            <bean class="org.oscarehr.PMmodule.service.GenericIntakeManager" autowire="byName"/>
         </property>
     </bean>
     <bean id="intakeAManager" parent="baseTransactionProxy" lazy-init="default"

@@ -24,23 +24,33 @@
 
 package oscar.util;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.sql.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.Date;
-import java.text.*;
-import java.util.*;
-import java.util.logging.Level;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.*;
 import org.hibernate.Session;
-import org.oscarehr.PMmodule.web.ClientSearchAction2;
-import org.oscarehr.util.DbConnectionFilter;
 
-import oscar.oscarDB.*;
+import oscar.oscarDB.DBHandler;
 
 public class SqlUtils {
     private static Log logger = LogFactory.getLog(SqlUtils.class);
@@ -473,6 +483,29 @@ public class SqlUtils {
         }
         ret.append(")");
         return ret.toString();
+    }
+
+    /**
+     * This method will return a string similar 
+     * to "(1,3,5,7)". The intent is that this 
+     * method will be used to build "in clauses"
+     * like select * from foo where x in (1,3,5,7)
+     * for statements. This only works for primitives
+     * unless you pre-quote strings.
+     */
+    public static String constructInClauseForStatements(Object[] items) {
+        if (items.length <= 0) throw (new IllegalArgumentException("Don't call this method if the items for the in clause is <1 it doesn't make sense."));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+
+        for (Object item : items) {
+            if (sb.length()>1) sb.append(',');
+            sb.append(item);
+        }
+
+        sb.append(')');
+        return(sb.toString());
     }
 
     /**

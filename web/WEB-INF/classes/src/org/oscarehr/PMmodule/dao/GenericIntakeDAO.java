@@ -18,10 +18,16 @@
  */
 package org.oscarehr.PMmodule.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -37,170 +43,279 @@ import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.IntakeNode;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.common.model.ReportStatistic;
+import org.oscarehr.util.AccumulatorMap;
+import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+import oscar.util.SqlUtils;
 
 /**
  * Hibernate implementation of GenericIntakeDAO interface
  */
 public class GenericIntakeDAO extends HibernateDaoSupport {
 
-    private static final Log LOG = LogFactory.getLog(GenericIntakeDAO.class);
+	private static final Log LOG = LogFactory.getLog(GenericIntakeDAO.class);
 
-    /**
-     * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntake(IntakeNode, java.lang.Integer, Integer)
-     */
-    public Intake getLatestIntake(IntakeNode node, Integer clientId, Integer programId) {
-        if (node == null || clientId == null) {
-            throw new IllegalArgumentException("Parameters node and clientId must be non-null");
-        }
+	/**
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntake(IntakeNode, java.lang.Integer, Integer)
+	 */
+	public Intake getLatestIntake(IntakeNode node, Integer clientId, Integer programId) {
+		if (node == null || clientId == null) {
+			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
+		}
 
-        List<Intake> intakes = getIntakes(node, clientId, programId);
-        Intake intake = !intakes.isEmpty()?intakes.get(0):null;
-        LOG.info("get latest intake: " + intake);
+		List<Intake> intakes = getIntakes(node, clientId, programId);
+		Intake intake = !intakes.isEmpty() ? intakes.get(0) : null;
+		LOG.info("get latest intake: " + intake);
 
-        return intake;
-    }
+		return intake;
+	}
 
-    /**
-     * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakes(org.oscarehr.PMmodule.model.IntakeNode, java.lang.Integer, Integer)
-     */
-    public List<Intake> getIntakes(IntakeNode node, Integer clientId, Integer programId) {
-        if (node == null || clientId == null) {
-            throw new IllegalArgumentException("Parameters node and clientId must be non-null");
-        }
+	/**
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getIntakes(org.oscarehr.PMmodule.model.IntakeNode, java.lang.Integer, Integer)
+	 */
+	public List<Intake> getIntakes(IntakeNode node, Integer clientId, Integer programId) {
+		if (node == null || clientId == null) {
+			throw new IllegalArgumentException("Parameters node and clientId must be non-null");
+		}
 
-        List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? order by i.createdOn desc", new Object[] {node, clientId});
-        List<Intake> intakes = convertToIntakes(results, programId);
+		List<?> results = getHibernateTemplate().find("from Intake i where i.node = ? and i.clientId = ? order by i.createdOn desc",
+				new Object[] { node, clientId });
+		List<Intake> intakes = convertToIntakes(results, programId);
 
-        LOG.info("get intakes: " + intakes.size());
+		LOG.info("get intakes: " + intakes.size());
 
-        return intakes;
-    }
+		return intakes;
+	}
 
-    /**
-     * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#saveIntake(org.oscarehr.PMmodule.model.Intake)
-     */
-    public Integer saveIntake(Intake intake) {
-        Integer intakeId = (Integer)getHibernateTemplate().save(intake);
-        getHibernateTemplate().flush();
-        LOG.info("saved intake: " + intake);
+	/**
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#saveIntake(org.oscarehr.PMmodule.model.Intake)
+	 */
+	public Integer saveIntake(Intake intake) {
+		Integer intakeId = (Integer) getHibernateTemplate().save(intake);
+		getHibernateTemplate().flush();
+		LOG.info("saved intake: " + intake);
 
-        return intakeId;
-    }
+		return intakeId;
+	}
 
-    /**
-     * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntakeIds(Integer, java.util.Date, java.util.Date)
-     */
-    public SortedSet<Integer> getLatestIntakeIds(Integer nodeId, Date startDate, Date endDate) {
-        if (nodeId == null || startDate == null || endDate == null) {
-            throw new IllegalArgumentException("Parameters node, startDate and endDate must be non-null");
-        }
+	/**
+	 * @throws SQLException
+	 */
+	public List<Integer> getIntakeIds2(Integer nodeId, Date startDate, Date endDate) throws SQLException {
+		if (nodeId == null || startDate == null || endDate == null) {
+			throw new IllegalArgumentException("Parameters nodeId, startDate and endDate must be non-null");
+		}
 
-        //endDate is "YYYY-MM-DD 00:00:00", it has to be "YYYY-MM-DD 23:59:59"
-        Calendar endCal = new GregorianCalendar();
-        endCal.setTime(endDate);
-        endCal.add(Calendar.DAY_OF_MONTH, 1);
+		Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+		ArrayList<Integer> results = new ArrayList<Integer>();
+		try {
+			PreparedStatement ps = c.prepareStatement("select intake_id from intake where intake_node_id=? and creation_date>? and creation_date<?");
+			ps.setInt(1, nodeId);
+			ps.setTimestamp(2, new Timestamp(startDate.getTime()));
+			ps.setTimestamp(3, new Timestamp(endDate.getTime()));
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				results.add(rs.getInt(1));
+			}
+		}
+		finally {
+			c.close();
+		}
 
-        Calendar startCal = new GregorianCalendar();
-        startCal.setTime(startDate);
+		return results;
+	}
 
-        // wrong, only got the oldest first record: List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? group by i.clientId", new Object[] { nodeId, startDate, endDate });
-        List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId", new Object[] {nodeId, startCal, endCal});
-        SortedSet<Integer> intakeIds = convertToIntegers(results);
+	/**
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getLatestIntakeIds(Integer, java.util.Date, java.util.Date)
+	 */
+	public SortedSet<Integer> getLatestIntakeIds(Integer nodeId, Date startDate, Date endDate) {
+		if (nodeId == null || startDate == null || endDate == null) {
+			throw new IllegalArgumentException("Parameters node, startDate and endDate must be non-null");
+		}
 
-        LOG.info("get latest intake ids: " + intakeIds.size());
+		// endDate is "YYYY-MM-DD 00:00:00", it has to be "YYYY-MM-DD 23:59:59"
+		Calendar endCal = new GregorianCalendar();
+		endCal.setTime(endDate);
+		endCal.add(Calendar.DAY_OF_MONTH, 1);
 
-        return intakeIds;
-    }
+		Calendar startCal = new GregorianCalendar();
+		startCal.setTime(startDate);
 
-    /**
-     * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getReportStatistics(java.util.List, java.util.List)
-     */
-    public SortedMap<Integer, SortedMap<String, ReportStatistic>> getReportStatistics(Set<Integer> answerIds, Set<Integer> intakeIds) {
-        if (intakeIds == null || answerIds == null) {
-            throw new IllegalArgumentException("Parameters intakeIds and answerIds must be non-null");
-        }
+		// wrong, only got the oldest first record: List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id =
+		// ? and i.createdOn between ? and ? group by i.clientId", new Object[] { nodeId, startDate, endDate });
+		List<?> results = getHibernateTemplate()
+				.find(
+						"select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId",
+						new Object[] { nodeId, startCal, endCal });
+		SortedSet<Integer> intakeIds = convertToIntegers(results);
 
-        SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics = new TreeMap<Integer, SortedMap<String, ReportStatistic>>();
+		LOG.info("get latest intake ids: " + intakeIds.size());
 
-        if (!intakeIds.isEmpty() && !answerIds.isEmpty()) {
-            List<?> results = getHibernateTemplate().find("select ia.node.id, ia.value, count(ia.value) from IntakeAnswer ia where ia.node.id in (" + convertToString(answerIds) + ") and ia.intake.id in (" + convertToString(intakeIds) + ") group by ia.node.id, ia.value");
-            convertToReportStatistics(results, intakeIds.size(), reportStatistics);
-        }
+		return intakeIds;
+	}
 
-        LOG.info("get reportStatistics: " + reportStatistics.size());
+	/**
+	 * @see org.oscarehr.PMmodule.dao.GenericIntakeDAO#getReportStatistics(java.util.List, java.util.List)
+	 */
+	public SortedMap<Integer, SortedMap<String, ReportStatistic>> getReportStatistics(Set<Integer> answerIds, Set<Integer> intakeIds) {
+		if (intakeIds == null || answerIds == null) {
+			throw new IllegalArgumentException("Parameters intakeIds and answerIds must be non-null");
+		}
 
-        return reportStatistics;
-    }
+		SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics = new TreeMap<Integer, SortedMap<String, ReportStatistic>>();
 
-    // Private
+		if (!intakeIds.isEmpty() && !answerIds.isEmpty()) {
+			List<?> results = getHibernateTemplate().find(
+					"select ia.node.id, ia.value, count(ia.value) from IntakeAnswer ia where ia.node.id in (" + convertToString(answerIds)
+							+ ") and ia.intake.id in (" + convertToString(intakeIds) + ") group by ia.node.id, ia.value");
+			convertToReportStatistics(results, intakeIds.size(), reportStatistics);
+		}
 
-    private List<Intake> convertToIntakes(List<?> results, Integer programId) {
-        List<Intake> intakes = new ArrayList<Intake>();
+		LOG.info("get reportStatistics: " + reportStatistics.size());
 
-        if (results != null) {
-            for (Object o : results) {
-                Intake intake = (Intake)o;
+		return reportStatistics;
+	}
 
-                Demographic client = (Demographic)getHibernateTemplate().get(Demographic.class, intake.getClientId());
-                intake.setClient(client);
+	/**
+	 * This method will populate the totalIntakeCount and 
+	 */
+	public GenericIntakeReportStatistics getReportStatistics2(List<Integer> intakeIds, Set<Integer> answerIds) throws SQLException {
 
-                Provider staff = (Provider)getHibernateTemplate().get(Provider.class, intake.getStaffId());
-                intake.setStaff(staff);
+		// this is a brute for simple algorithm, if the data set gets large we can group these into
+		// smaller groups like doing 10 results at a time or something, we can't do all results
+		// at the same time because the in clause doesn't have a dynamic length prepared statement
+		// parameter and we can't put ?,?,? ... for each item because there's a maximum query string
+		// length so we should limit it to at most blocks of 100's if we do that.
 
-                intake.setProgramId(programId);
+		GenericIntakeReportStatistics genericIntakeReportStatistics=new GenericIntakeReportStatistics();
+		genericIntakeReportStatistics.totalIntakeCount = intakeIds.size();
+		Object[] answerIdArray=answerIds.toArray();
 
-                intakes.add(intake);
-            }
-        }
+		for (Integer intakeId : intakeIds) {
+			Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+			try {
+				PreparedStatement ps = c.prepareStatement("select intake_node_id,val from intake_answer where intake_id=? and intake_answer_id in "+SqlUtils.constructInClauseForStatements(answerIdArray));
+				ps.setInt(1, intakeId);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
+					genericIntakeReportStatistics.addResult(rs.getInt("intake_node_id"), rs.getString("val"));
+				}
+				else {
+					LOG.error("Error, an intake has no answers? intakeId=" + intakeId);
+				}
+			}
+			finally {
+				c.close();
+			}
+		}
+		
+		return(genericIntakeReportStatistics);
+	}
 
-        return intakes;
-    }
+	public static class GenericIntakeReportStatistics {
+		public int totalIntakeCount = 0;
+		/**
+		 * This is a map of <intake_node_id, <intake_answer.val, count>>
+		 */
+		public HashMap<Integer, AccumulatorMap<String>> intakeNodeResults = new HashMap<Integer, AccumulatorMap<String>>();
 
-    private SortedSet<Integer> convertToIntegers(List<?> results) {
-        SortedSet<Integer> intakeIds = new TreeSet<Integer>();
+		public void addResult(int intakeNodeId, String answer) {
+			AccumulatorMap<String> accumulatorMap = intakeNodeResults.get(intakeNodeId);
 
-        if (results != null) {
-            for (Object o : results) {
-                Object[] tuple = (Object[])o;
-                Integer intakeId = (Integer)tuple[0];
+			if (accumulatorMap == null) {
+				accumulatorMap = new AccumulatorMap<String>();
+				intakeNodeResults.put(intakeNodeId, accumulatorMap);
+			}
 
-                intakeIds.add(intakeId);
-            }
-        }
+			accumulatorMap.increment(answer);
+		}
+	}
 
-        return intakeIds;
-    }
+	// Private
 
-    private String convertToString(Set<Integer> ids) {
-        StringBuilder builder = new StringBuilder();
+	private List<Intake> convertToIntakes(List<?> results, Integer programId) {
+		List<Intake> intakes = new ArrayList<Intake>();
 
-        for (Iterator<Integer> i = ids.iterator(); i.hasNext();) {
-            builder.append(i.next());
+		if (results != null) {
+			for (Object o : results) {
+				Intake intake = (Intake) o;
 
-            if (i.hasNext()) {
-                builder.append(",");
-            }
-        }
+				Demographic client = (Demographic) getHibernateTemplate().get(Demographic.class, intake.getClientId());
+				intake.setClient(client);
 
-        return builder.toString();
-    }
+				Provider staff = (Provider) getHibernateTemplate().get(Provider.class, intake.getStaffId());
+				intake.setStaff(staff);
 
-    private void convertToReportStatistics(List<?> results, int size, SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics) {
-        for (Object o : results) {
-            Object[] tuple = (Object[])o;
+				intake.setProgramId(programId);
 
-            Integer nodeId = (Integer)tuple[0];
-            String value = (String)tuple[1];
-            
-            Integer count = Integer.valueOf(tuple[2].toString());
+				intakes.add(intake);
+			}
+		}
 
-            if (!reportStatistics.containsKey(nodeId)) {
-                reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
-            }
+		return intakes;
+	}
 
-            reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
-        }
-    }
+	private SortedSet<Integer> convertToIntegers(List<?> results) {
+		SortedSet<Integer> intakeIds = new TreeSet<Integer>();
 
+		if (results != null) {
+			for (Object o : results) {
+				Object[] tuple = (Object[]) o;
+				Integer intakeId = (Integer) tuple[0];
+
+				intakeIds.add(intakeId);
+			}
+		}
+
+		return intakeIds;
+	}
+
+	private String convertToString(Set<Integer> ids) {
+		StringBuilder builder = new StringBuilder();
+
+		for (Iterator<Integer> i = ids.iterator(); i.hasNext();) {
+			builder.append(i.next());
+
+			if (i.hasNext()) {
+				builder.append(",");
+			}
+		}
+
+		return builder.toString();
+	}
+
+	private void convertToReportStatistics(List<?> results, int size, SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics) {
+		for (Object o : results) {
+			Object[] tuple = (Object[]) o;
+
+			Integer nodeId = (Integer) tuple[0];
+			String value = (String) tuple[1];
+
+			Integer count = Integer.valueOf(tuple[2].toString());
+
+			if (!reportStatistics.containsKey(nodeId)) {
+				reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
+			}
+
+			reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
+		}
+	}
+
+	private void convertToReportStatistics2(List<?> results, SortedMap<Integer, SortedMap<String, ReportStatistic>> reportStatistics) {
+		// for (Object o : results) {
+		// Object[] tuple = (Object[])o;
+		//
+		// Integer nodeId = (Integer)tuple[0];
+		// String value = (String)tuple[1];
+		//            
+		// Integer count = Integer.valueOf(tuple[2].toString());
+		//
+		// if (!reportStatistics.containsKey(nodeId)) {
+		// reportStatistics.put(nodeId, new TreeMap<String, ReportStatistic>());
+		// }
+		//
+		// reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
+		// }
+	}
 }
