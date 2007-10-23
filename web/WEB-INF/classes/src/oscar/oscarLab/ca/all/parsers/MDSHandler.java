@@ -444,12 +444,16 @@ public class MDSHandler implements MessageHandler {
         }
     }
     
-    public String getUnescapedName(){
+    public String getMiddleName(){
         try {
-            return(getString(terser.get("/.PID-5")));
+            return(getString(terser.get("/.PID-5-3")));
         } catch (HL7Exception ex) {
             return("");
         }
+    }
+    
+    public String getUnescapedName(){
+        return getLastName()+"^"+getFirstName()+"^"+getMiddleName();
     }
     
     public String getDOB(){
