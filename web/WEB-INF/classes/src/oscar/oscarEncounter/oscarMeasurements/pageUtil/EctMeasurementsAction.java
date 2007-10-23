@@ -61,10 +61,10 @@ public class EctMeasurementsAction extends Action {
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
         String month =  Integer.toString(calender.get(java.util.Calendar.MONTH)+1);
         String year = Integer.toString(calender.get(java.util.Calendar.YEAR));
-        String hour = Integer.toString(calender.get(java.util.Calendar.HOUR));
+        String hour = Integer.toString(calender.get(java.util.Calendar.HOUR_OF_DAY));
         String min = Integer.toString(calender.get(java.util.Calendar.MINUTE));
         String second = Integer.toString(calender.get(java.util.Calendar.SECOND));
-        String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second + ":";
+        String dateEntered = year+"-"+month+"-"+day+" " + hour + ":" + min + ":" + second ;
 
         String numType = (String) frm.getValue("numType");
         int iType = Integer.parseInt(numType);
