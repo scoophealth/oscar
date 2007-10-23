@@ -149,7 +149,7 @@ public class Uploader {
 				// when uploaded successfully the only time audit will not be "success"
 				// is with MDS messages when an audit of the message is returned					
 				if (!audit.equals("success")){
-                                        BufferedWriter out = new BufferedWriter(new FileWriter(dir+"/CURHST.O", true));
+                                        BufferedWriter out = new BufferedWriter(new FileWriter(dir+"/CURHST.0", true));
                                         out.write(audit);
                                         out.close();
 				}
