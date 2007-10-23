@@ -3,9 +3,8 @@ CREATE TABLE measurementsExt(
 	measurement_id int(10) NOT NULL,
 	keyval varchar(20) NOT NULL,
 	val varchar(20)	NOT NULL,
-	FOREIGN KEY(measurement_id) REFERENCES measurements(id),
-	FOREIGN KEY(val) REFERENCES measurementMap(ident_code),
-	INDEX(measurement_id, val)
+	INDEX(measurement_id),
+        INDEX(val)
 );
 
 CREATE TABLE measurementMap(
@@ -14,7 +13,6 @@ CREATE TABLE measurementMap(
 	ident_code varchar(20) NOT NULL,
 	name varchar(255),
 	lab_type varchar(10) NOT NULL,
-	FOREIGN KEY(ident_code) REFERENCES measurementsExt(val),
 	INDEX(ident_code)
 );
 
