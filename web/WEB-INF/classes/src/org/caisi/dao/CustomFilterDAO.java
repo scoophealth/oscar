@@ -53,7 +53,7 @@ public class CustomFilterDAO extends HibernateDaoSupport {
     }
 
     public CustomFilter getCustomFilterById(Integer id) {
-    	Long idLong = id.longValue();
+        Long idLong = id.longValue();
         List results = getHibernateTemplate().find("from CustomFilter c where c.id=?", new Object[] {idLong});
         if (results.size() > 0) {
             return (CustomFilter)results.get(0);
@@ -73,6 +73,10 @@ public class CustomFilterDAO extends HibernateDaoSupport {
         return getHibernateTemplate().find("from CustomFilter cf where cf.provider_no = ?", new Object[] {provider_no});
     }
 
+    public List getCustomFilterWithShortCut(String providerNo){
+        return getHibernateTemplate().find("from CustomFilter c where c.provider_no = ? and c.shortcut = true",new Object[]{providerNo});
+    }
+    
     public void deleteCustomFilter(String name) {
         CustomFilter filter = getCustomFilter(name);
         getHibernateTemplate().delete(filter);
