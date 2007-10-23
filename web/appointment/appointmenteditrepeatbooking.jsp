@@ -18,8 +18,10 @@ String [][] dbQueries=new String[][] {
 	{"delete", "delete from appointment where appointment_date=? and start_time=? and end_time=? and name=? and creator=?"}, 
 	{"search_appt", "select * from appointment where appointment_no = ?" }, 
 	{"delete_appt", "delete from appointment where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
-	{"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
-	{"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, createdatetime=?, creator=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" }, 
+	//{"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
+	{"cancel_appt", "update appointment set status = ?, updatedatetime = ?, creator = ? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=? " }, 
+        //{"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, createdatetime=?, creator=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" }, 
+        {"update_appt", "update appointment set start_time=?, end_time=?, name=?, demographic_no=?, notes=?, reason=?, location=?, resources=?, updatedatetime=?, creator=? where appointment_date=? and provider_no=? and start_time=? and end_time=? and name=? and notes=? and reason=? and createdatetime like ?  and creator=? and demographic_no=?" }, 
 };
 groupApptBean.doConfigure(dbParams,dbQueries);
 // this is not an efficient way to deal with the multiple update

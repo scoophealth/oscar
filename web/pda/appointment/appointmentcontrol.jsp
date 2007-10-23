@@ -34,7 +34,8 @@
   String [][] dbQueries=new String[][] {
     {"add_apptrecord", "insert into appointment (provider_no,appointment_date,start_time,end_time,name, notes,reason,location,resources,type, style,billing,status,createdatetime,creator, remarks, demographic_no) values(?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?)" },
     {"search", "select * from appointment where appointment_no=?"}, // provider_no=? and appointment_date=? and start_time=? and demographic_no=?" },
-    {"update_apptrecord", "update appointment set demographic_no=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=?"},
+//    {"update_apptrecord", "update appointment set demographic_no=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=?"},
+    {"update_apptrecord", "update appointment set demographic_no=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,updatedatetime=?,creator=?,remarks=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=?"},
     {"delete", "delete from appointment where appointment_no=?"}, //provider_no=? and appointment_date=? and start_time=?"},
     {"searchappointmentday", "select start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time"}, 
     {"searchapptweek", "select appointment_date, start_time,end_time, name from appointment where provider_no=? and appointment_date between ? and ? order by appointment_date,start_time"}, 

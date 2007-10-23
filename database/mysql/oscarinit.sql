@@ -63,6 +63,7 @@ CREATE TABLE appointment (
   billing varchar(10) default NULL,
   status char(2) default NULL,
   createdatetime datetime default NULL,
+  updatedatetime datetime default NULL,
   creator varchar(50) default NULL,
   remarks varchar(50) default NULL,
   PRIMARY KEY  (appointment_no),

@@ -21,8 +21,10 @@
         {"search_scheduledate_single", "select * from scheduledate where sdate=? and provider_no=?" }, 
         {"search_appt", "select * from appointment where appointment_no = ?" }, 
         {"delete_appt", "delete from appointment where appointment_no = ?" }, 
-        {"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_no = ?" }, 
-        {"update_appt", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? " }, 
+        //{"cancel_appt", "update appointment set status = ?, createdatetime = ?, creator = ? where appointment_no = ?" }, 
+        {"cancel_appt", "update appointment set status = ?, updatedatetime = ?, creator = ? where appointment_no = ?" }, 
+        //{"update_appt", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? " }, 
+        {"update_appt", "update appointment set demographic_no=?,appointment_date=?,start_time=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,updatedatetime=?,creator=?,remarks=? where appointment_no=? " }, 
         {"search_otherappt", "select * from appointment where appointment_date=? and ((start_time <= ? and end_time >= ?) or (start_time > ? and start_time < ?) ) order by provider_no, start_time" }, 
     };
     groupApptBean.doConfigure(dbParams,dbQueries);

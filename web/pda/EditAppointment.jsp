@@ -80,12 +80,21 @@ if (request.getParameter("submitButton")!=null &&
  
 // where to get demography_no ???????? ,billing =?remarks=?style=?'
 //      String queryString = update appointment set demographic_no=?,end_time=?,name=?, notes=?,reason =?,location=?, resources=?, type=?,style=?,billing =?,status=?,createdatetime=?,creator=?,remarks=? where appointment_no=? "}, //provider_no=? and appointment_date=? and start_time=?";     
-        String queryString = "update appointment set appointment_date='"+appointment_date
+/*        String queryString = "update appointment set appointment_date='"+appointment_date
                              +"',start_time='"+start_time+"',end_time='"+end_time
                              +"',name='"+name+"', notes='"+notes+"',reason ='"+reason
                              +"',location='"+location+"', resources='"+resources
                              +"', type='"+type+"',status='"+status
                              +"',createdatetime='"+createdatetime 
+                             +"',creator="+creator
+                             +",demographic_no="+demographic_no
+                             +"  where appointment_no= "+appointment_no+"";*/
+        String queryString = "update appointment set appointment_date='"+appointment_date
+                             +"',start_time='"+start_time+"',end_time='"+end_time
+                             +"',name='"+name+"', notes='"+notes+"',reason ='"+reason
+                             +"',location='"+location+"', resources='"+resources
+                             +"', type='"+type+"',status='"+status
+                             +"',updatedatetime='"+createdatetime 
                              +"',creator="+creator
                              +",demographic_no="+demographic_no
                              +"  where appointment_no= "+appointment_no+"";
