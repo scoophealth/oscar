@@ -25,6 +25,7 @@ create table if not exists custom_filter (
 	status char(1) not null,
 	priority varchar(20) not null,
 	demographic_no varchar(20) not null,
+        shortcut tinyint(1) default '0',
 	primary key(id)
 ) TYPE MyISAM;
 

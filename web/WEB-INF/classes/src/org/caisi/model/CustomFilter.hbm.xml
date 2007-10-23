@@ -36,5 +36,6 @@
 		</set>
 		<property name="demographic_no" />
 		<property name="priority" />
+                <property name="shortcut" />
 	</class>
 </hibernate-mapping>
