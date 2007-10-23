@@ -354,8 +354,7 @@
 <caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr style="background-color:#BBBBBB;"><td>Case Management Flowsheets</td></tr>
 
-
-    <!-- measurement -->
+    <!-- caisi flow sheet -->
     <tr><td>
         <%
             dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
@@ -370,18 +369,8 @@
            onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
         </a><br/>
         <%}%>
-
-        <select name="measurementGroupSelect" class="ControlSelect" onchange="javascript:popUpMeasurements(500,1000,this,this.options[this.selectedIndex].value)">
-            <option value="null" selected>-select group-</option>
-            <%
-                for(int j=0; j<bean.measurementGroupNames.size(); j++) {
-                    String tmp = (String)bean.measurementGroupNames.get(j);
-            %>
-            <option value="<%=tmp%>"><%=tmp %></option>
-            <%}%>
-        </select>
+        
     </td></tr>
-
 
 </caisirole:SecurityAccess>
 
