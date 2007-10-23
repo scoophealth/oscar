@@ -64,6 +64,8 @@ public class CustomFilter extends BaseObject {
 	public static List priorityList;
 	
 	private String provider_no;
+        
+        private boolean shortcut;
 	
 	
 	static {
@@ -259,4 +261,12 @@ public class CustomFilter extends BaseObject {
 	public void setSort_order(String sort_order) {
 		this.sort_order = sort_order;
 	}
+
+    public boolean isShortcut() {
+        return shortcut;
+    }
+
+    public void setShortcut(boolean shortcut) {
+        this.shortcut = shortcut;
+    }
 }
