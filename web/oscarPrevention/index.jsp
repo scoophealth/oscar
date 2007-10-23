@@ -437,8 +437,18 @@ div.recommendations li{
                         ArrayList alist = (ArrayList)  h2.get("list");
                         %>                 
                         <div class="preventionSection"  >
+                            <%
+                            if( alist.size() > 0 ) {                                
+                            %>
+                            <div style="position: relative; float:left; padding-right:10px;">
+                                <input style="display:none;" type="checkbox" name="printHP" value="<%=i%>" checked />
+                           <%}else {%>
+                                    <div style="position: relative; float:left; padding-right:25px;">
+                                        <span style="display:none;" name="printSp">&nbsp;</span>
+                           <%}%>
+                                </div>
                             <div class="headPrevention">
-                                <p > 
+                                <p> 
                                     <a href="javascript: function myFunction() {return false; }"  onclick="javascript:popup(465,635,'AddPreventionData.jsp?prevention=<%= response.encodeURL( (String) h.get("name")) %>&amp;demographic_no=<%=demographic_no%>','addPreventionData<%=Math.abs( ((String) h.get("name")).hashCode() ) %>')">
                                         <span title="<%=h.get("desc")%>" style="font-weight:bold;"><%=h.get("name")%></span>
                                     </a>
