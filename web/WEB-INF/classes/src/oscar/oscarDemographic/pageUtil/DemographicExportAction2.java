@@ -12,7 +12,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
  *
- * Ronnie Cheng
+ * Jay Gallagher
  *
  * This software was written for the
  * Department of Family Medicine
@@ -36,26 +36,37 @@ import java.util.*;
 import java.util.zip.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
+import javax.servlet.jsp.JspFactory;
 import org.apache.struts.action.*;
+import org.apache.struts.util.MessageResources;
+import oscar.appt.AppointmentDAO;
+import oscar.appt.AppointmentDAO.Appointment;
+import oscar.appt.ApptStatusData;
+import oscar.dms.EDoc;
+import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.*;
+import oscar.oscarEncounter.data.EctEChartBean;
+import oscar.oscarEncounter.pageUtil.EctSessionBean;
+import oscar.oscarFax.client.OSCARFAXClient;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.*;
 import oscar.oscarReport.data.DemographicSets;
+import oscar.oscarRx.data.RxPatientData;
+import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
 import oscar.util.UtilDateUtilities;
 
 /**
  *
- * @author Jay Gallagher
+ * @author Ronnie Cheng
  */
 public class DemographicExportAction2 extends Action {
 
 public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
     String setName = request.getParameter("patientSet");
-
+    
     DemographicSets dsets = new DemographicSets();
     ArrayList list = dsets.getDemographicSet(setName);
-    ArrayList list2 = dsets.getDemographicSet(setName);
 
     DemographicData d = new DemographicData();
 
@@ -124,11 +135,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    data = demographic.getRosterStatus();
 	    if (data==null || data.trim().equals("")) err.add("Error: No Enrollment Status for Patient "+demoNo);
-	    else demo.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
+	    else {
+		if (data.equals("RO")) data = "1";
+		else data = "0";
+		demo.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
+	    }
 	    
 	    data = demographic.getPatientStatus();
 	    if (data==null || data.trim().equals("")) err.add("Error: No Person Status Code for Patient "+demoNo);
-	    else demo.setPersonStatusCode(cdsDt.PersonStatus.Enum.forString(data));
+	    else {
+		if (data.equals("AC")) data = "A";
+		else if (data.equals("DE")) data = "D";
+		else data = "I";
+		demo.setPersonStatusCode(cdsDt.PersonStatus.Enum.forString(data));
+	    }
 	    
 	    Calendar c = Calendar.getInstance();
 	    data = demographic.getDob("-");
@@ -144,12 +164,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		healthCard.setNumber(demographic.getJustHIN());
 		if (demographic.getVersionCode()!=null && !demographic.getVersionCode().trim().equals("")) healthCard.setVersion(demographic.getVersionCode());
 	    }
-	    if (  demographic.getAddress()!=null && !demographic.getAddress().trim().equals("") ||
-		  demographic.getCity()!=null && !demographic.getCity().trim().equals("") ||
-		  demographic.getProvince()!=null && !demographic.getProvince().trim().equals("") ||
-		  demographic.getPostal()!=null && !demographic.getPostal().trim().equals(""))      {
-		cdsDt.AddressStructured address = demo.addNewAddress().addNewStructured();
-		if (demographic.getAddress()!=null && !demographic.getAddress().trim().equals("")) address.setLine1(demographic.getAddress());
+	    if (demographic.getAddress()!=null && !demographic.getAddress().trim().equals("")) {
+		cdsDt.Address addr = demo.addNewAddress();		
+		cdsDt.AddressStructured address = addr.addNewStructured();
+		
+		addr.setAddressType(cdsDt.AddressType.R);
+		address.setLine1(demographic.getAddress());		
 		if (demographic.getCity()!=null && !demographic.getCity().trim().equals("")) address.setCity(demographic.getCity());
 		if (demographic.getProvince()!=null && !demographic.getProvince().trim().equals("")) address.setCountrySubdivisionCode(demographic.getProvince());
 		if (demographic.getPostal()!=null && !demographic.getPostal().trim().equals("")) address.addNewPostalZipCode().setPostalCode(demographic.getPostal());
@@ -167,6 +187,49 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (demoExt.get("wPhoneExt")!=null) phoneWork.setExtension((String)demoExt.get("wPhoneExt"));
 	    }
 	    demoExt = null;
+	    
+	    // PERSONAL HISTORY	    
+	    EctEChartBean bean = new EctEChartBean();
+	    bean.setEChartBean(demoNo);
+	    data = bean.socialHistory;
+	    if (!data.equals("")) patientRec.addNewPersonalHistory().setCategorySummaryLine(data);
+	    
+	    // FAMILY HISTORY
+	    data = bean.familyHistory;
+	    if (!data.equals("")) patientRec.addNewFamilyHistory().setCategorySummaryLine(data);
+	    
+	    // PAST HEALTH
+	    data = bean.medicalHistory;
+	    if (!data.equals("")) patientRec.addNewPastHealth().setCategorySummaryLine(data);
+	    
+	    // PROBLEM LIST
+	    data = bean.ongoingConcerns;
+	    if (!data.equals("")) {
+		cds.ProblemListDocument.ProblemList pl = patientRec.addNewProblemList();
+		pl.setCategorySummaryLine(data);
+		c.setTime(bean.eChartTimeStamp);
+		pl.addNewOnsetDate().setFullDate(c);		
+	    }	    
+	    
+	    // RISK FACTORS
+	    data = bean.reminders;
+	    if (!data.equals("")) patientRec.addNewRiskFactors().setCategorySummaryLine(data);
+	    
+	    // ALLERGIES & ADVERSE REACTIONS
+	    Allergy[] allergies = new RxPatientData().getPatient(demoNo).getAllergies();
+	    for (int j=0; j<allergies.length; j++) {
+		cds.AllergiesAndAdverseReactionsDocument.AllergiesAndAdverseReactions alr = patientRec.addNewAllergiesAndAdverseReactions();
+		
+		data = allergies[j].getAllergy().getDESCRIPTION();
+		if (data==null || data.trim().equals("")) err.add("Error: No Category Summary Line (Allergies & Adverse Reactions) for Patient "+demoNo);
+		else alr.setCategorySummaryLine(data);
+		
+		data = allergies[j].getAllergy().getReaction();
+		if (data!=null && !data.trim().equals("")) alr.setReaction(data);
+		
+		if (allergies[j].getEntryDate()!=null) c.setTime(allergies[j].getEntryDate());
+		alr.addNewRecordedDate().setFullDate(c);
+	    }	    
 
 	    // IMMUNIZATIONS
 	    ArrayList prevList2 = pd.getPreventionData(demoNo);
@@ -261,7 +324,125 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		h = null;
 	    }
 	    labs = null;
+	    
+	    // APPOINTMENTS
+	    HttpSession session = request.getSession();
+	    Properties p = (Properties) session.getAttribute("oscarVariables");
+	    Vector appts = new AppointmentDAO(p).retrieve(demoNo);
+	    Appointment ap = null;
+	    for (int j=0; j<appts.size(); j++) {
+		ap = (Appointment)appts.get(j);
+		cds.AppointmentsDocument.Appointments aptm = patientRec.addNewAppointments();
+		
+		aptm.setSequenceIndex(Integer.parseInt(ap.getAppointment_no()));
 
+		c.setTime(ap.getDateAppointment());
+		aptm.setAppointmentDate(c);
+		
+		c.setTime(ap.getDateStartTime());
+		aptm.setAppointmentTime(c);
+		
+		long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000;
+		BigInteger duration = BigInteger.valueOf(dLong);
+		aptm.setDuration(duration);
+		
+		data = ap.getStatus();
+		if (data!=null && !data.equals("")) {
+		    ApptStatusData asd = new ApptStatusData();
+		    asd.setApptStatus(data);
+		    String msg = getResources(request).getMessage(asd.getTitle());
+		    if (msg!=null) aptm.setAppointmentStatus(data);
+		    else throw new Exception ("Error! No matching message for appointment status code: " + data);
+		}
+		
+		data = ap.getReason();
+		if (data!=null && !data.equals("")) aptm.setAppointmentPurpose(data);
+		
+		data = ap.getNotes();
+		if (data!=null && !data.equals("")) aptm.setAppointmentNotes(data);
+		
+		if (ap.getProviderFirstN()!=null || ap.getProviderLastN()!=null) {
+		    cdsDt.PersonNameSimple p_name = aptm.addNewProvider().addNewName();
+		    if (ap.getProviderFirstN()!=null) p_name.setFirstName(ap.getProviderFirstN());
+		    if (ap.getProviderLastN()!=null) p_name.setLastName(ap.getProviderLastN());
+		}
+ 	    }
+	    
+	    // CLINCAL NOTES
+	    data = bean.encounter;
+	    if (!data.equals("")) {
+		cds.ClinicalNotesDocument.ClinicalNotes c_notes = patientRec.addNewClinicalNotes();
+		c_notes.setMyClinicalNotesContent(data);
+		c.setTime(bean.eChartTimeStamp);
+		c_notes.setEnteredDateTime(c);
+	    }	    
+	    
+	    // REPORTS RECEIVED
+	    ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
+	    
+	    if (!edoc_list.isEmpty()) {
+		for (int j=0; j<edoc_list.size(); j++) {
+		    EDoc edoc = (EDoc)edoc_list.get(j);
+		    cds.ReportsReceivedDocument.ReportsReceived rpr = patientRec.addNewReportsReceived();
+		    
+		    data = edoc.getFileName();
+		    if (!data.equals("")) {
+			cdsDt.ReportContent rpc = rpr.addNewContent();
+			rpc.setTextContent(data);
+			
+			File f = new File(edoc.getFilePath());
+			if (!f.exists()) err.add("Error: Document \""+f.getName()+"\" does not exist!");
+			else if (f.length()>Runtime.getRuntime().freeMemory()) err.add("Error: Document \""+f.getName()+"\" too big to be exported. Not enough memory!");
+			else {
+			    InputStream in = new FileInputStream(f);
+			    byte[] b = new byte[(int)f.length()];
+			    
+			    int offset=0, numRead=0;
+			    while ((numRead=in.read(b,offset,b.length-offset)) >= 0
+				   && offset < b.length) offset += numRead;
+			    
+			    if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
+			    in.close();
+			    
+			    rpc.setMedia(b);
+			}
+		    }
+		    data = edoc.getContentType();
+		    if (!data.equals("")) rpr.setFileExtensionAndVersion(data);
+		    
+		    data = edoc.getType();
+		    if (!data.equals("")) {
+			if (data.trim().equalsIgnoreCase("radiology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
+			else if (data.trim().equalsIgnoreCase("pathology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
+			else if (data.trim().equalsIgnoreCase("consult")) rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
+			else {
+			    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+			    rpr.setSubClass(data);
+			}
+		    }
+		    rpr.setMedia(cdsDt.ReportMedia.HARDCOPY);
+		    rpr.setFormat(cdsDt.ReportFormat.IMAGE);
+		    
+		    data = edoc.getObservationDate();
+		    if (!data.equals("")) {
+			c.setTime(UtilDateUtilities.StringToDate(data));
+			rpr.setEventDateTime(c);
+		    }
+		    data = edoc.getDateTimeStamp();
+		    if (!data.equals("")) {
+			c.setTime(UtilDateUtilities.StringToDate(data));
+			rpr.setReceivedDateTime(c);
+		    }
+		    data = edoc.getCreatorName();
+		    if (!data.equals("")) {
+			cdsDt.PersonNameSimple author = rpr.addNewAuthorPhysician();
+			String[] name = data.split(", ");
+			if (!name[0].equals("")) author.setFirstName(name[0]);
+			if (!name[1].equals("")) author.setLastName(name[1]);
+		    }
+		}
+	    }
+	    
 	    //export file to temp directory
 	    String inFiles = null;
 	    try{
@@ -269,7 +450,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if(!directory.exists()){
 		    throw new Exception("Temporary Export Directory (as set in oscar.properties) does not exist!");
 		}
-		inFiles = demoNo+"-"+lastName.getPart()+firstName.getPart()+"-"+UtilDateUtilities.getToday("yyyy-mm-dd.HH.mm.ss")+".xml";
+		inFiles = demoNo+"-"+lastName.getPart().replace(" ","")+firstName.getPart().replace(" ","")+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".xml";
 		files[i] = new File(directory,inFiles);
 	    }catch(Exception e){
 		e.printStackTrace();
@@ -289,7 +470,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	exportFiles[exportFiles.length-1] = makeExportLog(files, err);
 	
 	//zip all export files
-	String zipName = "export-"+setName.replace(" ","")+"-"+UtilDateUtilities.getToday("yyyy-mm-dd.HH.mm.ss")+".zip";
+	String zipName = "export-"+setName.replace(" ","")+"-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+".zip";
 	if (!zipFiles(exportFiles, zipName)) {
 	    throw new Exception("Error! Failed zipping export files");
 	}
@@ -348,7 +529,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	out.write(noOfMedia);
 	out.newLine();
 	out.write("Date and Time stamp                : ");
-	out.write(UtilDateUtilities.getToday("yyyy-mm-dd hh:mm:ss aa"));
+	out.write(UtilDateUtilities.getToday("yyyy-MM-dd hh:mm:ss aa"));
 	out.newLine();
 	out.write("Total byte count of export files(s): ");
 	int fileBytes=0;
@@ -373,12 +554,21 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
     }
     
     File makeExportLog(File[] f, Vector error) throws IOException {
-	Hashtable content = null;
-	String[] keyword = new String[4];
+	String[] keyword = new String[13];
 	keyword[0] = "Demographics";
-	keyword[1] = "MedicationsAndTreatments";
-	keyword[2] = "Immunizations";
-	keyword[3] = "LaboratoryResults";
+	keyword[1] = "PersonalHistory";
+	keyword[2] = "FamilyHistory";
+	keyword[3] = "PastHealth";
+	keyword[4] = "ProblemList";
+	keyword[5] = "RiskFactors";
+	keyword[6] = "AllergiesAndAdverseReactions";
+	keyword[7] = "MedicationsAndTreatments";
+	keyword[8] = "Immunizations";
+	keyword[9] = "LaboratoryResults";
+	keyword[10] = "Appointments";
+	keyword[11] = "ClinicalNotes";
+	keyword[12] = "ReportsReceived";
+	int[] content = new int[keyword.length];
 	String patientID = "Patient ID";
 	String totalByte = "Total Bytes";
 	String field = null;
@@ -401,16 +591,17 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    content = countByte(f[i], keyword);
 
 	    out.write("|");
-	    field = f[i].getName().substring(0,f[i].getName().indexOf("-"));
+	    field = f[i].getName().substring(0,f[i].getName().indexOf("-")); //field=PatientID
 	    out.write(fillUp(field,' ',patientID.length()));
 	    out.write(" |");
 	    int total=0;
-	    for (int j=0; j<keyword.length; j++) {
-		field = content.get(keyword[j]).toString();
+	    for (int j=0; j<content.length; j++) {
+		field = "" + content[j];   //field = data size matching each keyword
 		total += Integer.parseInt(field);
 		out.write(fillUp(field,' ',keyword[j].length()));
 		out.write(" |");
 	    }
+
 	    out.write(fillUp(String.valueOf(total),' ',totalByte.length()));
 	    out.write(" |");
 	    out.newLine();
@@ -489,56 +680,72 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
 	return true;
     }
-    
-    Hashtable countByte(File fin, String[] kwd) throws FileNotFoundException, IOException {
-	Hashtable catcnt = new Hashtable();
-	String[] tag = new String[4];
+
+    int[] countByte(File fin, String[] kwd) throws FileNotFoundException, IOException {
+	int[] cat_cnt = new int[kwd.length];
+	String[] tag = new String[kwd.length];
 	
 	FileInputStream fis = new FileInputStream(fin);
 	BufferedInputStream bis = new BufferedInputStream(fis);
 	DataInputStream dis = new DataInputStream(bis);
 	
-	int cnt=0, tcnt=0;
-	for (int i=0; i<tag.length; i++) {
-	    tag[i] = "cds:" + kwd[i];
-	    boolean tagfnd=false;
-	    while (!tagfnd && dis.available()!=0) {
-		if ((char)dis.read()!='<') continue;
-		cnt=0;
-		for (int j=0; j<tag[i].length(); j++) {
-		    if ((char)dis.read()!=tag[i].charAt(j)) break;
-		    cnt++;
+	int cnt=0, tag_in_list=0;
+	boolean tag_fnd=false;
+	
+	while (dis.available()!=0) {
+	    if (!tag_fnd) {   //looking for a start tag
+		if ((char)dis.read()=='<') {   //a possible tag
+		    boolean whole_tag=false;
+		    
+		    //retrieve the whole tag word
+		    String tag_word = "";
+		    while (dis.available()!=0 && !whole_tag) {
+			String tmp = "" + (char)dis.read();
+			if (tmp.equals(">")) whole_tag = true;
+			else tag_word += tmp;
+		    }
+		    
+		    //compare the tag word with the list
+		    for (int i=0; i<kwd.length; i++) {
+			if (tag_word.equals("cds:"+kwd[i])) {
+			    tag_in_list = i;
+			    tag_fnd = true;
+			    cnt = kwd[i].length() +1 +4 +1;   //byte count +"<" +"cds:" +">"
+			}
+		    }
 		}
-		if (cnt<tag[i].length()) continue;
-		cnt++;	//add 1 for the '<' character
-		tagfnd=true;
-	    }
-	    while (tagfnd && dis.available()!=0) {
-		boolean clstag=false;
-		if ((char)dis.read()=='<') {
-		    if ((char)dis.read()=='/') clstag=true;
+	    } else {   //a start tag was found, counting...
+		//look for an end tag
+		if ((char)dis.read()=='<') {   //a possible tag
+		    if ((char)dis.read()=='/') {   //a possible end tag
+			boolean whole_tag=false;
+
+			//retrieve the whole tag word
+			String tag_word = "";
+			while (dis.available()!=0 & !whole_tag) {
+			    String tmp = "" + (char)dis.read();
+			    if (tmp.equals(">")) whole_tag = true;
+			    else tag_word += tmp;
+			    cnt++;
+			}
+			
+			//compare tag word with the start tag - if matched, stop counting
+			if (tag_word.equals("cds:"+kwd[tag_in_list])) {
+			    tag_fnd = false;
+			    cat_cnt[tag_in_list] += cnt;
+			    cnt = 0;
+			}
+		    }
 		    cnt++;
 		}
 		cnt++;
-		if (clstag) {
-		    int cnt_tag=0;
-		    for (int j=0; j<tag[i].length(); j++) {
-			cnt++;
-			cnt_tag++;
-			if ((char)dis.read()!=tag[i].charAt(j)) break;
-		    }
-		    if (cnt_tag<tag[i].length()) continue;
-		    cnt++;  //add 1 for the '>' character
-		    tagfnd=false;
-		}
 	    }
-	    catcnt.put(kwd[i], cnt);
 	}
 	fis.close();
 	bis.close();
 	dis.close();
 	
-	return catcnt;
+	return cat_cnt;
     }
    
     boolean convert10toboolean(String s){
