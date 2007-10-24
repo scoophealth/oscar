@@ -43,6 +43,10 @@
   <property name="root_document" location="${build}/document" />
   <property name="classes_document" location="${root_document}/classes" />
 
+  <property name="JAVA_TARGET_VERSION" value="1.5" />
+
+  
+
   <mkdir dir="${build}" />
   <mkdir dir="${root_web}" />
   <mkdir dir="${classes_web}" />
@@ -84,6 +88,7 @@
      destdir="${classes_web}"
 	 deprecation="on"
 	 debug="on"
+	target="${JAVA_TARGET_VERSION}"
 	>
    <classpath>
       <pathelement path="${classes_web}/"/>
@@ -97,6 +102,7 @@
           srcdir="${src_document}"
           destdir="${classes_document}"
           deprecation="off"
+	target="${JAVA_TARGET_VERSION}"
           debug="on">
      <classpath>     
        <path refid="classpath.path"/>
@@ -126,7 +132,7 @@
          destdir="${classes_web}"
 	 deprecation="on"
 	 debug="on"
-         target="1.5"
+	target="${JAVA_TARGET_VERSION}"
          source="1.5">
    <classpath>
       <pathelement path="${classes_web}/"/>
@@ -315,6 +321,7 @@
 	 srcdir="${mdsfiledir}"     
          destdir="${mdsfiledir}"
 	 deprecation="on"
+         target="${JAVA_TARGET_VERSION}"
 	 debug="on">
    <!-- <classpath>
       <pathelement path="${classes_web}/"/>
@@ -345,6 +352,7 @@
 	 srcdir="${cmlfiledir}"     
          destdir="${cmlfiledir}"
 	 deprecation="on"
+         target="${JAVA_TARGET_VERSION}"
 	 debug="on">
    <classpath>
       <pathelement path="${classes_web}/"/>
