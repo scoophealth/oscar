@@ -59,9 +59,35 @@
 
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>  
+  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>    
     
     <style type="text/css">
+      
+        /* span formatting for measurements div found in ajax call */
+        span.measureCol1 {            
+            float: left;
+            width: 50px;            
+        }
+        
+        span.measureCol2 {
+            float: left;
+            width: 55px;
+        }
+        
+        span.measureCol3 {
+            float: left;                        
+        }
+        /* formatting for navbar */
+        .links {
+            color: blue;
+            text-decoration: underline;
+        }
+        
+        .linkhover { 
+            color: black;
+            text-decoration: underline;
+        }
+        
     /* template styles*/
           
           .enTemplate_name_auto_complete {
