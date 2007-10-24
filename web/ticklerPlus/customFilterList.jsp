@@ -13,6 +13,7 @@
 		<th width="10%"></th>
 		<th width="10%"></th>
 		<th width="80%">Name</th>
+                <th >Shortcut</th>
 	</tr>
 	<%int index=0; 
 	  String bgcolor;
@@ -39,6 +40,18 @@
 			<td>
 				<c:out value="${filter.name}"/>
 			</td>
+                        <td>
+                            <html-el:link action="/CustomFilter?method=changeShortCutStatus&id=${filter.id}"  >
+                            <c:choose>
+                                <c:when test="${filter.shortcut == true}">
+                                    Remove
+                                </c:when>
+                                <c:otherwise>
+                                    Add
+                                </c:otherwise>
+                            </c:choose>
+                            </html-el:link>
+                        </td>
 		</tr>
 	</c:forEach>
 	
