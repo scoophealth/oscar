@@ -45,8 +45,8 @@ import org.oscarehr.casemgmt.service.CaseManagementManager;
  */
 public class EctDisplayIssuesAction extends EctDisplayAction {    
     private String cmd = "issues";
-    private int MAXLEN = 25;
-    private int CROP = 22;
+    private int MAXLEN = 30;
+    private int CROP = 27;
     private CaseManagementManager caseManagementMgr;
     private static Log log = LogFactory.getLog(EctDisplayIssuesAction.class);
     
