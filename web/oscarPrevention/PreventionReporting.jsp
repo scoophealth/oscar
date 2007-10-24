@@ -314,6 +314,7 @@ table.ele td{
                 <%ArrayList overDueList = new ArrayList();
                   ArrayList firstLetter = new ArrayList();
                   ArrayList secondLetter = new ArrayList();
+                  ArrayList refusedLetter = new ArrayList();
                   ArrayList phoneCall = new ArrayList();
                   String type = (String) request.getAttribute("ReportType");
                   String ineligible = (String) request.getAttribute("inEligible");
@@ -386,6 +387,9 @@ table.ele td{
                                 }
                             }
                           
+                            if (dis.state != null && dis.state.equals("Refused")){
+                                refusedLetter.add(dis.demographicNo);
+                            }
                                     
                             if (dis.state != null && dis.state.equals("Overdue")){
                                overDueList.add(dis.demographicNo);
@@ -479,6 +483,13 @@ table.ele td{
                         %>                        
                     <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 2 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L2">Generate Second Letter</a>
                   <%}%>
+                  
+                  <% if ( refusedLetter.size() > 0 ) { 
+                        String queryStr = getUrlParamList(refusedLetter, "demo"); 
+                        %>                        
+                    <a target="_blank" href="../report/GenerateLetters.jsp?<%=queryStr%>&amp;message=<%=java.net.URLEncoder.encode("Letter 1 Reminder Letter sent for :"+request.getAttribute("prevType"),"UTF-8")%>&amp;followupType=<%=followUpType%>&amp;followupValue=L1">Generate Refused Letter</a>
+                  <%}%>
+                  
                   
                   <%--
                   <% if ( phoneCall.size() > 0 ) { 
