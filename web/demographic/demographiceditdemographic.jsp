@@ -25,6 +25,7 @@
  */
 --%>
 <%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+
 <%
     if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
     String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
@@ -48,7 +49,8 @@ You have no rights to access the data!
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/phr-tag.tld" prefix="phr" %>
 <%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
-
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%
 	if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 
@@ -607,6 +609,10 @@ div.demographicWrapper {
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,1000,'../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" >
                     <bean:message key="global.tickler"/></a>
+                </td></tr>
+                <tr><td>
+                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,960,'<c:out value="${ctx}"/>/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>');return false;" >
+                    <bean:message key="oscarEncounter.LeftNavBar.Prevent"/></a>
                 </td></tr>
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=rs.getString("demographic_no")%>','msg')">Send a Message</a>
