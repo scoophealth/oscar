@@ -112,8 +112,9 @@ function printIframe(){
 
 
 function printPaste2Parent(){
+    
    try{
-      text = "**<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
+      text = "****<%=oscar.oscarProvider.data.ProviderData.getProviderName(bean.getProviderNo())%>********************************************************************************";
       text = text.substring(0, 82) + "\n";
       if (document.all){
          text += preview.document.forms[0].rx_no_newlines.value
@@ -121,7 +122,14 @@ function printPaste2Parent(){
          text += preview.document.forms[0].rx_no_newlines.value + "\n";
       }
       text += "**********************************************************************************\n";
-      opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
+      
+      //we support pasting into orig encounter and new casemanagement
+      if( opener.document.forms["caseManagementEntryForm"] != undefined ) {        
+        opener.pasteToEncounterNote(text);
+      }
+      else if( opener.document.encForm != undefined )
+        opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + text;
+        
    }catch (e){
       alert ("ERROR: could not paste to EMR");
    }

@@ -50,14 +50,22 @@
 <script language="javascript">
 
 function write2Parent(text){  
-    var changed = <bean:write name="parentChanged"/>;
-    self.window.close();    
+    var changed = <bean:write name="parentChanged"/>;    
     
     if( !changed ) {
+      //we support pasting into orig encounter and new casemanagement
+      if( opener.document.forms["caseManagementEntryForm"] != undefined ) {        
+        opener.pasteToEncounterNote(text);
+      }
+      else if( opener.document.encForm != undefined ) {
         opener.document.encForm.enTextarea.focus();
         opener.document.encForm.enTextarea.value = opener.document.encForm.enTextarea.value + "\n" + text;
         opener.setTimeout("document.encForm.enTextarea.scrollTop=document.encForm.enTextarea.scrollHeight", 0);  // setTimeout is needed to allow browser to realize that text field has been updated         
+      }
+      
     }
+    
+    self.window.close();    
  }
 
 
