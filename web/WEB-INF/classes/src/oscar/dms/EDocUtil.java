@@ -219,7 +219,6 @@ public class EDocUtil extends SqlUtilBaseS {
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         }
-        
         return resultDocs;
     }
     
@@ -265,7 +264,32 @@ public class EDocUtil extends SqlUtilBaseS {
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         }
+        return resultDocs;
+    }
 
+    public static ArrayList listDemoDocs(String moduleid) {
+        String sql = "SELECT d.*, p.first_name, p.last_name FROM document d, provider p WHERE document_no IN " +
+		     "(SELECT document_no FROM ctl_document WHERE module='demographic' AND module_id=" + moduleid +
+		     ") AND d.doccreator=p.provider_no";
+
+        log.debug("sql list: " + sql);
+        ResultSet rs = getSQL(sql);
+        ArrayList resultDocs = new ArrayList();
+        try {
+            while (rs.next()) {
+                EDoc currentdoc = new EDoc();
+		currentdoc.setType(rsGetString(rs, "doctype"));
+		currentdoc.setFileName(rsGetString(rs, "docfilename"));
+		currentdoc.setCreatorId(rsGetString(rs, "doccreator"));
+		currentdoc.setDateTimeStamp(rsGetString(rs, "updatedatetime"));
+		currentdoc.setContentType(rsGetString(rs, "contenttype"));
+                currentdoc.setObservationDate(rsGetString(rs, "observationdate"));
+                resultDocs.add(currentdoc);
+            }
+            rs.close();
+        } catch (SQLException sqe) {
+            sqe.printStackTrace();
+        }	
         return resultDocs;
     }
     
