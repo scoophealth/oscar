@@ -125,6 +125,21 @@ public class CustomFilterAction extends DispatchAction {
 		return mapping.findForward("customFilterForm");
 	}
 */	
+        
+        public ActionForward changeShortCutStatus(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+            log.debug("changeShortCutStatus");
+            String id = request.getParameter("id");
+            if(id != null && !id.equals("")) {
+                CustomFilter filter = ticklerMgr.getCustomFilterById(Integer.valueOf(id));
+                filter.setShortcut(!filter.isShortcut());
+                ticklerMgr.saveCustomFilter(filter);
+                log.debug("Filter :"+filter.getName()+" shortcut now set to "+filter.isShortcut());
+            }
+            request.setAttribute("custom_filters",ticklerMgr.getCustomFilters(this.getProviderNo(request)));
+            return mapping.findForward("customFilterList");
+        } 
+        
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		log.debug("edit");
