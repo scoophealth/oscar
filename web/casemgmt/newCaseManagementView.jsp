@@ -82,6 +82,12 @@
 	}                     
 
     }
+    
+    function pasteToEncounterNote(txt) {        
+        $(caseNote).value += "\n" + txt;
+        adjustCaseNote();
+        setCaretPosition($(caseNote),$(caseNote).value.length);    
+    }
 
     function writeToEncounterNote(request) {
         
@@ -1735,5 +1741,6 @@ Version version = (Version) ctx.getBean("version");
    <%}%>
    
    origCaseNote = $F(caseNote);
+     
    </script>
    
