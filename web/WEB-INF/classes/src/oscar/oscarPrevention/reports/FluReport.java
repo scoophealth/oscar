@@ -274,14 +274,25 @@ public class FluReport implements PreventionReport {
           
           
           }else if (prd.state.equals("Refused")){  //Not sure what to do about refused
-                //prd.lastDate = "-----";             
-                //prd.numMonths ;
+              EctMeasurementsDataBeanHandler measurementData = new EctMeasurementsDataBeanHandler(prd.demographicNo,"FLUF");
+              log.debug("getting FLUF data for "+prd.demographicNo);
+              Collection fluFollowupData = measurementData.getMeasurementsDataVector();
+              System.out.print("fluFollowupData size = "+fluFollowupData.size());
+              if ( fluFollowupData.size() > 0 ){
+                  EctMeasurementsDataBean fluData = (EctMeasurementsDataBean) fluFollowupData.iterator().next();
+                  log.debug("fluData "+fluData.getDataField());
+                  log.debug("lastFollowup "+fluData.getDateObservedAsDate()+ " last procedure "+fluData.getDateObservedAsDate());
+                  log.debug("CUTTOFF DATE : "+cuttoffDate);
+                  log.debug("toString: "+fluData.toString());
+                  prd.lastFollowup = fluData.getDateObservedAsDate();
+                  prd.lastFollupProcedure = fluData.getDataField();
+              }
           }else if(prd.state.equals("Ineligible")){
                 // Do nothing        
           }else if(prd.state.equals("Up to date")){
                 //Do nothing
           }else{
-               log.debug("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
+               log.warn("NOT SURE WHAT HAPPEND IN THE LETTER PROCESSING");
           }
        }
        return null;         
