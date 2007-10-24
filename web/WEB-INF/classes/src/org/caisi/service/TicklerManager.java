@@ -56,6 +56,10 @@ public class TicklerManager {
         return ticklerDAO.getTicklers(filter);
     }
 
+    public int getNumTicklers(CustomFilter filter){
+        return ticklerDAO.getNumTicklers(filter);
+    }
+    
     public Tickler getTickler(String tickler_no) {
         Long id = Long.valueOf(tickler_no);
         return ticklerDAO.getTickler(id);
@@ -89,6 +93,10 @@ public class TicklerManager {
 
     public List getCustomFilters(String provider_no) {
         return customFilterDAO.getCustomFilters(provider_no);
+    }
+    
+    public List getCustomFilterWithShortCut( String providerNo) {
+	return customFilterDAO.getCustomFilterWithShortCut(providerNo);
     }
 
     public CustomFilter getCustomFilter(String name) {
