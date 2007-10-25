@@ -99,7 +99,10 @@ public class StaffManagerAction extends BaseAction {
 		DynaActionForm providerForm = (DynaActionForm)form;
 		StaffManagerViewFormBean formBean = (StaffManagerViewFormBean)providerForm.get("view");
 		
-		request.setAttribute("providers",providerManager.getProviders());
+		//request.setAttribute("providers",providerManager.getProviders());
+		//changed to get all active providers
+		request.setAttribute("providers",providerManager.getActiveProviders());
+		
 		logManager.log("read","full provider list","",request);
 		return mapping.findForward("list");
 	}
