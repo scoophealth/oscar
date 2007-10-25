@@ -91,6 +91,16 @@ public class ProviderDao extends HibernateDaoSupport {
 		return rs;
 	}
 
+    public List<Provider> getActiveProviders() {
+    	@SuppressWarnings("unchecked")
+		List<Provider> rs = getHibernateTemplate().find("FROM  Provider p where p.Status='1' ORDER BY p.LastName");
+
+		if (log.isDebugEnabled()) {
+			log.debug("getProviders: # of results=" + rs.size());
+		}
+		return rs;
+	}
+    
 	public List<Provider> search(String name) {
 		Criteria c = this.getSession().createCriteria(Provider.class);
 		c.add(Restrictions.or(Expression.like("FirstName", name + "%"), Expression.like("LastName", name + "%")));
