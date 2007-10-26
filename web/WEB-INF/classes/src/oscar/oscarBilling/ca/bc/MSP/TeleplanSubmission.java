@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
+import oscar.oscarBilling.ca.bc.data.BillingmasterDAO;
 import oscar.oscarDB.DBHandler;
 import oscar.util.StringUtils;
 
@@ -161,10 +162,10 @@ public class TeleplanSubmission {
                   this.getBigTotal().toString());
     
         
-        /*
+        
         BillingmasterDAO billingmaster = new BillingmasterDAO();
         billingmaster.markListAsBilled(billingmasterToBeMarkedAsBilled);
-        
+        /*
         markListAsBilled(billingToBeMarkedAsBilled);
         */
         TeleplanLogDAO logDAO = new TeleplanLogDAO();
