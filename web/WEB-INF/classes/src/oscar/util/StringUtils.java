@@ -361,7 +361,8 @@ public class StringUtils {
             }
             // Line break and no spaces on either side of line break so insert space else the two words will get concatenated
             else if ((k == 1) && (!space) && (stringBuffer.charAt(i) != ' ') && k < 2) {
-                stringBuffer.insert(i, " ");
+                //stringBuffer.insert(i, " ");
+            	stringBuffer.insert(i, "; ");
                 strlen++;
                 i++;
             }
