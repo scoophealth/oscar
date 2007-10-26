@@ -56,16 +56,17 @@ public final class RxRePrescribeAction extends Action {
             response.sendRedirect("error.html");
             return null;
         }
+        RxDrugListForm frm = (RxDrugListForm)form;
         
         try {
             RxPrescriptionData rxData = new RxPrescriptionData();
             
-            String drugList = ((RxDrugListForm)form).getDrugList();
+            String drugList = frm.getDrugList();
             String[] drugArr = drugList.split(",");
             
             int drugId;
             int i;
-            
+            beanRX.clearStash();
             for(i=0;i<drugArr.length;i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
@@ -76,18 +77,34 @@ public final class RxRePrescribeAction extends Action {
                 rxData.getPrescription(drugId);
                 
                 // create copy of Prescription
-                RxPrescriptionData.Prescription rx =
-                rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);
-                //beanRX.clearStash();
-                beanRX.setStashIndex(beanRX.addStashItem(rx));
+                if( !frm.getReprint() ) {
+                    RxPrescriptionData.Prescription rx =
+                        rxData.newPrescription(beanRX.getProviderNo(), beanRX.getDemographicNo(), oldRx);                
+                    beanRX.setStashIndex(beanRX.addStashItem(rx));
+                }
+                else {
+                    //save previously prescribed drugs for printing
+                    beanRX.setStashIndex(beanRX.addStashItem(oldRx));
+                }
                 request.setAttribute("BoxNoFillFirstLoad", "true");
                 
             }
+            
+            
         }
         catch (Exception e) {
             e.printStackTrace(System.out);
-        }
+        }             
         
-        return (mapping.findForward("success"));
+        if( frm.getReprint() ) {
+            //update print date and pass to view script                
+            RxPrescriptionData.Prescription[] prescriptions = beanRX.getStash();
+            if( prescriptions.length > 0 )
+                prescriptions[0].Print();
+            request.setAttribute("rePrint", "true");
+            return mapping.findForward("reprint");
+        }
+        else
+            return (mapping.findForward("success"));
     }
 }
