@@ -97,12 +97,16 @@ public class WcbSb {
    public WcbSb(String billingNo){
        try{
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           
+           String sql = "SELECT *, billingservice.value As `feeitem1` FROM  wcb JOIN billing ON wcb.billing_no=billing.billing_no left join billingservice on wcb.w_feeitem=billingservice.service_code "
+            +"WHERE wcb.billing_no='"+ billingNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') ";
+           
            ResultSet rs =
-           db.GetSQL("SELECT *, billingservice.value As `feeitem1` FROM billingservice, wcb JOIN billing ON wcb.billing_no=billing.billing_no WHERE wcb.billing_no='"
-           + billingNo + "' AND wcb.status='O' AND billing.status IN ('O', 'W') AND billingservice.service_code=wcb.w_feeitem");
+           db.GetSQL(sql);
            if (rs.next()){
               fillWithRs(rs);
            }
+           rs.close();
            //TODO: what to do if the result is empty?? 
        }catch (Exception e){}
    }
