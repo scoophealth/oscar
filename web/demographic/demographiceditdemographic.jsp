@@ -601,18 +601,20 @@ div.demographicWrapper {
                     <a href="javascript: function myFunction() {return false; }" onClick="popupOscarRx(700,960,'../oscarRx/choosePatient.do?providerNo=<%=curProvider_no%>&demographicNo=<%=demographic_no%>')"><bean:message key="global.prescriptions"/></a></th>
                 </td></tr>
                 <% } %>
-                <tr><td>
-                    <!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
-                    <a href="javascript: function myFunction() {return false; }" onClick="popupEChart(748, 1048,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
-                    <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>
-                </td></tr>
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_eChart" rights="r" reverse="<%=false%>" >
+                    <tr><td>
+                            <!--a href=# onclick="popupPage(600,800,'../provider/providercontrol.jsp?appointment_no=&demographic_no=<%=demographic_no%>&curProvider_no=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&username=&appointment_date=&start_time=&status=&displaymode=encounter&dboperation=search_demograph&template=');return false;" title="Tel-Progress Notes">Add Encounter</a-->
+                            <a href="javascript: function myFunction() {return false; }" onClick="popupEChart(748, 1048,'../oscarEncounter/IncomingEncounter.do?providerNo=<%=curProvider_no%>&appointmentNo=&demographicNo=<%=demographic_no%>&curProviderNo=&reason=<%=URLEncoder.encode("Tel-Progress Notes")%>&userName=<%=URLEncoder.encode( userfirstname+" "+userlastname) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=');return false;" title="<bean:message key="demographic.demographiceditdemographic.btnEChart"/>">
+                            <bean:message key="demographic.demographiceditdemographic.btnEChart"/></a>
+                    </td></tr>
+                    <tr><td>
+                            <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,960,'<c:out value="${ctx}"/>/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>');return false;" >
+                            <bean:message key="oscarEncounter.LeftNavBar.Prevent"/></a>
+                    </td></tr>
+                </security:oscarSec>
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,1000,'../tickler/ticklerDemoMain.jsp?demoview=<%=demographic_no%>');return false;" >
                     <bean:message key="global.tickler"/></a>
-                </td></tr>
-                <tr><td>
-                    <a href="javascript: function myFunction() {return false; }" onClick="popupPage(700,960,'<c:out value="${ctx}"/>/oscarPrevention/index.jsp?demographic_no=<%=demographic_no%>');return false;" >
-                    <bean:message key="oscarEncounter.LeftNavBar.Prevent"/></a>
                 </td></tr>
                 <tr><td>
                     <a href="javascript: function myFunction() {return false; }" onClick="popup(700,960,'../oscarMessenger/SendDemoMessage.do?demographic_no=<%=rs.getString("demographic_no")%>','msg')">Send a Message</a>
