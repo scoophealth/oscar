@@ -9,7 +9,7 @@ OSCAR (Open Source Clinical Application Resource) - README
   http://www.oscarhome.org/
 
   Licence for OSCAR software
-  This software is copyright © 2001 McMaster University. 
+  This software is copyright ï¿½ 2001 McMaster University. 
   You can redistribute it and/or modify it under the terms of the 
   GNU General Public License version 2 as published by the Free 
   Software Foundation. A copy of this licence follows.  This 
@@ -35,10 +35,10 @@ OSCAR (Open Source Clinical Application Resource) - README
 
 
   Requirements: 
-    Linux (tested with Redhat 7.x, Redhat 8.0)
-    Java2 SDK 4.1.01
-    MySQL 4.0.x (tested with 3.23.49, 3.23.52, 3.23.53a, 4.0.12)
-    Jakarta Tomcat 4.0.x (tested with 4.0.1, 4.0.4, 4.0.6)
+    Linux (some developers use Fedora 4, Fedora 7, Ubuntu 7, Windows 2000)
+    Java SDK 1.5.x (some developers use java 1.6 without problems)
+    MySQL 5.0.x
+    Jakarta Tomcat 5.5.x (Do not use tomcat 6 yet) 
     Mozilla 1.1 or equivalent browser (tested with Mozilla 1.1 and Microsoft Internet Explorer 6 (SP1))
                 
   Summary:
@@ -167,6 +167,8 @@ OSCAR (Open Source Clinical Application Resource) - README
 	       2003-03-01	eEncounter updated filesize control	oscarEncounter
 	       2003-03-20	Consult ReDated				oscarConsultations
 	       2003-03-27	mySQL Driver change			oscar
+	       ...
+	       2007-10-20	Updated source forge release with latest thing and tried to update code and documentation, too much to mention, CAISI is now part of Oscar.
 
   
   Documentation:
