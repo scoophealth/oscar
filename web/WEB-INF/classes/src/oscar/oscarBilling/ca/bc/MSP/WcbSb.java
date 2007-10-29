@@ -175,6 +175,29 @@ public class WcbSb {
        
    }
    
+   
+   
+   
+   public String validate(){
+        String m = "";
+        if ( billamountforfeeitem1 == null || billamountforfeeitem1.equalsIgnoreCase("NULL")){
+            m += ": INVALID Fee Code "; 
+        }
+       
+        String ret = "<tr bgcolor='red'><td colspan='11'>"
+                + "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no="
+                + misc.forwardZero(this.billing_no, 7) 
+                + "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"
+                + m + "</a>" + "</td></tr>";
+        if (m != ""){
+        return ret;
+        }else{
+            return "";
+        }
+        
+   
+   }
+   
    public BigDecimal getBillingAmountForFee1BigDecimal(){
      BigDecimal bdFee= null;
      try{
