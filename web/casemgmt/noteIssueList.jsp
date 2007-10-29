@@ -27,6 +27,7 @@
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@ include file="/casemgmt/taglibs.jsp" %>
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
@@ -70,6 +71,7 @@
                                 <%
                                 String winame = "window" + issueCheckList.getIssue().getIssue().getDescription();
                                 winame = winame.replaceAll("\\s|\\/", "_");
+                                winame = StringEscapeUtils.escapeJavaScript(winame);
                                 if( ind % 2 == 0 ) {%>
                                 <tr>
                                 <% } %>
