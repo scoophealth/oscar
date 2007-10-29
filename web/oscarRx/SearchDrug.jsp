@@ -287,7 +287,7 @@ function load() {
                            
                            for(int i=0; i<prescribedDrugs.length; i++) {   
                                oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
-                                   if( script_no.equals(drug.getScript_no())) {                                     
+                                   if(drug.getScript_no() != null &&  script_no.equals(drug.getScript_no())) {                                     
                                        drugIds.append(","+String.valueOf(drug.getDrugId()));
                         %>               
                         <br><div style=" float:left; width:12%; padding-left:20px;">&nbsp;</div><a style="float:left;" href="javascript:reprint(<%=jsVar%>)"><%=drug.getRxDisplay()%></a>
@@ -307,7 +307,7 @@ function load() {
                              <%                                    
                                         drugIds = new StringBuffer(String.valueOf(drug.getDrugId()));
                                     }
-                                    script_no = drug.getScript_no();
+                                    script_no = drug.getScript_no() == null ? "" : drug.getScript_no();
                              }                           
                              %>  
                              <% 
