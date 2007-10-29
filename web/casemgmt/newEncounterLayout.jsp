@@ -59,7 +59,9 @@
 
   <!-- the following script defines the Calendar.setup helper function, which makes
        adding a calendar a matter of 1 or 2 lines of code. -->
-  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>    
+  <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
+  
+ 
     
     <style type="text/css">
       
@@ -208,12 +210,8 @@
                             onSuccess: function(request) {                            
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
-                                                                                             
-                                            //$(div).innerHTML = request.responseText;
-                                            if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
-                                                $(div).updateSafari(request.responseText);
-                                            else
-                                                $(div).update(request.responseText);
+                                                                                                                                         
+                                            $(div).update(request.responseText);
                                                 
                                             listDisplay(params);
                                        }, 
