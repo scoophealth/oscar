@@ -835,11 +835,8 @@ function popLeftColumn(url,div,params) {
                                             while( $(div).firstChild )
                                                 $(div).removeChild($(div).firstChild);
                                                                                              
-                                            //$(div).innerHTML = request.responseText;
-                                            if( navigator.userAgent.indexOf("AppleWebKit") > -1 )
-                                                $(div).updateSafari(request.responseText);
-                                            else
-                                                $(div).update(request.responseText);
+                                            
+                                            $(div).update(request.responseText);
                                                 
                                             listDisplay(params);
                                        }, 
