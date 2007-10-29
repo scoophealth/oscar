@@ -65,9 +65,23 @@
 		inpu.focus();
 		inpu.setSelectionRange(pos,pos);                
          
-                var ev = document.createEvent('KeyEvents');
-                ev.initKeyEvent('keypress', true, true, window,false, false, false, false, 0,inpu.value.charCodeAt(pos-1));
+                var ev;
+                try {
+                    ev = document.createEvent('KeyEvents');
+                    ev.initKeyEvent('keypress', true, true, window,false, false, false, false, 0,inpu.value.charCodeAt(pos-1));
+                }
+                catch(e) {                
+                    ev = document.createEvent("UIEvents");                    
+                    /*
+                    Safari doesn't support these funcs but seems to scroll without them
+                    ev.initUIEvent( 'keypress', true, true, window, 1 );                    
+                    ev.keyCode = inpu.value.charCodeAt(pos-1);                    
+                    */
+                    
+                }
+                
                 inpu.dispatchEvent(ev); // causes the scrolling   
+                
                 
 	}else if (inpu.createTextRange) {
 		var range = inpu.createTextRange();
@@ -80,7 +94,7 @@
                 ev.keyCode = inpu.value.charCodeAt(pos-1);
                 inpu.fireEvent("onkeydown", ev);
 	}                     
-
+        
     }
     
     function pasteToEncounterNote(txt) {        
@@ -173,6 +187,7 @@ function resetView(frm, error, e) {
         
     var parent = Event.element(e).parentNode.id;
     Element.remove(Event.element(e).id);
+    Event.stop(e);
     
     if( error )
         Element.remove("passwdError");
@@ -266,6 +281,7 @@ function minView(e) {
     var txt = Event.element(e).parentNode.id;   
     var img = Event.element(e).id;    
     
+    Event.stop(e);
     Element.remove(img);
     
     $(txt).style.overflow = "hidden";
@@ -280,6 +296,7 @@ function minView(e) {
     
     img = "<img id='xpImg" + random + "' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-add.png'/>";
     new Insertion.Top(txt, img);
+    
     
 }
 
@@ -489,7 +506,8 @@ function editNote(e) {
     <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
     issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});        
     
-    origCaseNote = $F(caseNote);            
+    origCaseNote = $F(caseNote);  
+    
     //start AutoSave
     setTimer();
 }
@@ -863,7 +881,7 @@ function newNote(e) {
         adjustCaseNote();
         Element.observe(caseNote, 'keyup', monitorCaseNote);
 
-        origCaseNote = $F(caseNote);
+        origCaseNote = $F(caseNote);        
 
         ajaxUpdateIssues('edit', 'sig0'); 
         addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, 'sig0');
@@ -961,13 +979,12 @@ function adjustCaseNote() {
     var shadowNote = "h" + nId;    
     var width = $(caseNote).getWidth();
     var payload = $(caseNote).value;
-    
+
     $(shadowNote).innerHTML = payload.replace(/\n/g,'<br>') + '&nbsp;';
     $(shadowNote).style.width = width;
     noteHeight = $(shadowNote).getHeight();
     noteHeight += $(caseNote).getStyle('fontSize').substr(0,2) * 1.5;    
-    $(caseNote).style.height = noteHeight;
-    
+    $(caseNote).style.height = noteHeight + 'px';
     numChars = payload.length;
 }
 
@@ -978,6 +995,7 @@ function autoCompleteHideMenu(element, update){
 }
 
 function autoCompleteShowMenu(element, update){ 
+
     $("issueList").style.left = $("mainContent").style.left;    
     $("issueList").style.top = $("mainContent").style.top;
     $("issueList").style.width = $("issueAutocompleteList").style.width;    
@@ -985,18 +1003,17 @@ function autoCompleteShowMenu(element, update){
     Effect.Appear($("issueList"), {duration:0.15});
     Effect.Appear($("issueTable"), {duration:0.15});    
     Effect.Appear(update,{duration:0.15});
-    }
+
+}
     
     function callInProgress(xmlhttp) {
         switch (xmlhttp.readyState) {
             case 1: case 2: case 3:
                 return true;
-                break;
         // Case 4 and 0
             default:
                 return false;
-                break;
-        }
+        } 
     }
 </script>
 
@@ -1292,7 +1309,7 @@ Version version = (Version) ctx.getBean("version");
             </div>           
                                 
                 <input id="enTemplate" style="float:left; position:relative; left:45%; clear:both;" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
-                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="display:none"></div>                 
+                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none"></div>                 
           </div>
            </html:form>
           
@@ -1668,6 +1685,7 @@ Version version = (Version) ctx.getBean("version");
               </nested:form>          
           
 <script type="text/javascript">
+    
     <%
         Long num;
         Iterator iterator = lockedNotes.iterator();
@@ -1686,18 +1704,18 @@ Version version = (Version) ctx.getBean("version");
     <%
         }
     %>   
-    
+   
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
     caseNote = "caseNote_note" + "<%=savedId%>";                      
     
     if( $(caseNote).value.length > 0 )
         $(caseNote).value += "\n";
             
-    adjustCaseNote();
+    adjustCaseNote();    
     $(caseNote).focus();
-    setCaretPosition($(caseNote), $(caseNote).value.length);     
+    setCaretPosition($(caseNote), $(caseNote).value.length);         
     Element.observe(caseNote, "keyup", monitorCaseNote);    
-    
+   
     $("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
@@ -1740,7 +1758,7 @@ Version version = (Version) ctx.getBean("version");
         $("newNoteImg").hide();        
    <%}%>
    
-   origCaseNote = $F(caseNote);
-     
+   origCaseNote = $F(caseNote);   
+
    </script>
    
