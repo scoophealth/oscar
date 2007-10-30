@@ -63,6 +63,6 @@
                     (select count(casemgmt_note.uuid) from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.revision}, (select min(casemgmt_note.update_date)
                     from casemgmt_note where casemgmt_note.uuid = {cmn.uuid}) as {cmn.create_date} from casemgmt_note
                     left join (select max(note_id) as note_id from casemgmt_note where demographic_no = ? group by uuid) recent
-                    using(note_id) where recent.note_id = casemgmt_note.note_id order by {cmn.update_date} DESC
+                    using(note_id) where recent.note_id = casemgmt_note.note_id order by {cmn.observation_date} asc
         </sql-query>
 </hibernate-mapping>
