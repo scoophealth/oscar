@@ -75,6 +75,25 @@ public class CaseManagementIssue extends BaseObject {
 	public CaseManagementIssue() {
 		update_date = new Date();
 	}
+        
+        /*
+         *Copy constructor performs copy
+         */
+        public CaseManagementIssue(CaseManagementIssue cMgmtIssue) {
+            
+            this.setId(0L); //so hibernate will think it a non persisted obj
+            this.setDemographic_no(cMgmtIssue.getDemographic_no());
+            this.setIssue_id(cMgmtIssue.getIssue_id());
+            this.setAcute(cMgmtIssue.isAcute());
+            this.setCertain(cMgmtIssue.isCertain());
+            this.setMajor(cMgmtIssue.isMajor());
+            this.setResolved(cMgmtIssue.isResolved());
+            this.setType(cMgmtIssue.getType());
+            this.setUpdate_date(cMgmtIssue.getUpdate_date());
+            this.setNotes(cMgmtIssue.getNotes());
+            this.setIssue(cMgmtIssue.getIssue());
+            this.setWriteAccess(cMgmtIssue.isWriteAccess());
+        }
 	/*public boolean isActive() {
 		return active;
 	}
