@@ -302,7 +302,7 @@ Sort:
 				</c:choose>
 			</td>
 			<td>
-				<fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.update_date}"/>
+				<fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.observation_date}"/>
 			</td>			
 			<td>
 				<c:out value="${note.providerName}"/>
@@ -343,7 +343,7 @@ Sort:
 		</tr>
 		<tr bgcolor="<%=bgcolor1 %>">
 			<td width="7%">Date</td>
-			<td width="93%"><fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.update_date}"/></td>
+			<td width="93%"><fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.observation_date}"/></td>
 		</tr>
 		<tr bgcolor="<%=bgcolor1 %>">
 			<td width="7%">Status</td>
