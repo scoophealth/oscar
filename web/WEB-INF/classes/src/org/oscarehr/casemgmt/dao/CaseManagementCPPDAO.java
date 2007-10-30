@@ -28,18 +28,21 @@ import java.util.List;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class CaseManagementCPPDAO extends HibernateDaoSupport {
 
+    private Log log = LogFactory.getLog(CaseManagementCPPDAO.class);
+    
     public CaseManagementCPP getCPP(String demographic_no) {
-        List results = this.getHibernateTemplate().find("from CaseManagementCPP cpp where cpp.demographic_no = ?", new Object[] {demographic_no});
+        List results = this.getHibernateTemplate().find("from CaseManagementCPP cpp where cpp.demographic_no = ? order by update_date desc", new Object[] {demographic_no});
         return (results.size() != 0)?(CaseManagementCPP)results.get(0):null;
     }
 
-    public void saveCPP(CaseManagementCPP cpp) {
-        /*find the old cpp record for client*/
-        String demoNo = cpp.getDemographic_no();
-        CaseManagementCPP tempcpp = getCPP(demoNo);
-
+    public void saveCPP(CaseManagementCPP cpp) {                        
+        CaseManagementCPP tempcpp = new CaseManagementCPP();
+        
         String fhist = cpp.getFamilyHistory() == null?"":cpp.getFamilyHistory();
         String ongoing = cpp.getOngoingConcerns() == null?"":cpp.getOngoingConcerns();
         String shist = cpp.getSocialHistory() == null?"":cpp.getSocialHistory();
@@ -48,7 +51,8 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
         String pm = cpp.getPastMedications() == null?"":cpp.getPastMedications();
         String ofnum = cpp.getOtherFileNumber() == null?"":cpp.getOtherFileNumber();
         String ossystem = cpp.getOtherSupportSystems() == null?"":cpp.getOtherSupportSystems();
-        if (tempcpp == null) tempcpp = cpp;
+        
+        tempcpp.setDemographic_no(cpp.getDemographic_no());
         tempcpp.setFamilyHistory(fhist);
         tempcpp.setMedicalHistory(mhist);
         tempcpp.setOngoingConcerns(ongoing);
@@ -60,8 +64,9 @@ public class CaseManagementCPPDAO extends HibernateDaoSupport {
         tempcpp.setPrimaryCounsellor(cpp.getPrimaryCounsellor());
         tempcpp.setOtherFileNumber(ofnum);
         tempcpp.setOtherSupportSystems(ossystem);
-        tempcpp.setPastMedications(pm);
-        this.getHibernateTemplate().saveOrUpdate(tempcpp);
+        tempcpp.setPastMedications(pm);         
+        this.getHibernateTemplate().save(tempcpp);
+        
     }
 
 }
