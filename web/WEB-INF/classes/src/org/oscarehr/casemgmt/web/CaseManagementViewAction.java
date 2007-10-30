@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +93,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
            if( session.getAttribute("userrole") != null ) {            
                 CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
                 CaseManagementCPP cpp=caseForm.getCpp();
+                cpp.setUpdate_date(new Date());
                 String providerNo = getProviderNo(request);            
                 caseManagementMgr.saveCPP(cpp,providerNo);
            }
@@ -106,6 +108,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		log.debug("patientCPPSave");
 		CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
 		CaseManagementCPP cpp=caseForm.getCpp();
+                cpp.setUpdate_date(new Date());
 		String providerNo = getProviderNo(request);
 		caseManagementMgr.saveCPP(cpp,providerNo);
 		addMessage(request,"cpp.saved");
@@ -258,9 +261,24 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                         String[] roleId = caseForm.getFilter_roles();
                         if( roleId != null && roleId.length > 0 )
                             notes = applyRoleFilter(notes, roleId );
-			            
-                        
-			request.setAttribute("Notes", sort_notes(notes,caseForm.getNote_sort()));
+			    
+                        /*
+                         *Notes are by default sorted from the past to the most recent
+                         *So we sort only if preference is set in form
+                         *or site wide setting in oscar.properties
+                         */
+                        String noteSort = caseForm.getNote_sort();
+                        if(noteSort != null && noteSort.length() > 0 ) {
+                            request.setAttribute("Notes", sort_notes(notes, noteSort));
+                        }
+                        else {
+                            oscar.OscarProperties p = oscar.OscarProperties.getInstance();
+                            noteSort = p.getProperty("CMESort", "");
+                            if( noteSort.trim().equalsIgnoreCase("UP") )
+                                request.setAttribute("Notes", sort_notes(notes, "update_date_asc"));                            
+                            else
+                                request.setAttribute("Notes", notes);                            
+                        }
 			
 			
 			//UCF
