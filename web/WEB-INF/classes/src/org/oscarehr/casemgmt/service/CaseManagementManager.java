@@ -31,6 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import org.apache.struts.util.LabelValueBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -138,7 +141,7 @@ public class CaseManagementManager {
         if (noteHistory == null) noteHistory = noteStr;
         else noteHistory = noteStr + "\n" + "   ----------------History Record----------------   \n" + noteHistory + "\n";
 
-        note.setNote(noteStr);
+        //note.setNote(noteStr);
         note.setHistory(noteHistory);
 
         caseManagementNoteDAO.saveNote(note);
@@ -282,7 +285,7 @@ public class CaseManagementManager {
     }
 
     public void saveCPP(CaseManagementCPP cpp, String providerNo) {
-        cpp.setProvider_no(providerNo);    // added because nothing else was setting providerNo; not sure this is the right place to do this -- rwd
+        cpp.setProvider_no(providerNo);    // added because nothing else was setting providerNo; not sure this is the right place to do this -- rwd        
         caseManagementCPPDAO.saveCPP(cpp);
         echartDAO.saveCPPIntoEchart(cpp, providerNo);
     }
@@ -324,11 +327,67 @@ public class CaseManagementManager {
         String ongoing = (cpp.getOngoingConcerns() == null)?"":cpp.getOngoingConcerns();
         ongoing = ongoing + issueName + "\n";
         cpp.setOngoingConcerns(ongoing);
+        cpp.setUpdate_date(new Date());
         caseManagementCPPDAO.saveCPP(cpp);
         echartDAO.updateEchartOngoing(cpp);
 
     }
+    
+    /**
+     *substitue function for updateCurrentIssueToCPP
+     *We don't want to clobber existing text in ongoing concerns
+     *all we want to do is remove the issue description
+     **/
+    public void removeIssueFromCPP(String demoNo, CaseManagementIssue issue) {
+        CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
+        
+        String ongoing = cpp.getOngoingConcerns();
+        String newOngoing;
+        String description;       
+        int idx;                       
+        
+        description = issue.getIssue().getDescription();
+        Pattern pattern = Pattern.compile("^" + description + "$", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(ongoing);
+        
+        if( matcher.find() ) {
+            newOngoing = matcher.replaceFirst("");
+            
+            cpp.setOngoingConcerns(newOngoing);
+            cpp.setUpdate_date(new Date());
+            caseManagementCPPDAO.saveCPP(cpp);
+            echartDAO.updateEchartOngoing(cpp);
+        }
+    }
 
+    /**
+     *Substitute for updateCurrentIssueToCPP
+     *we replace old issue with new without clobbering existing text
+     **/
+    public void changeIssueInCPP(String demoNo, CaseManagementIssue origIssue, CaseManagementIssue newIssue) {
+        CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
+        
+        String ongoing = cpp.getOngoingConcerns();
+        String newOngoing;
+        String description;       
+        int idx;               
+                
+        description = origIssue.getIssue().getDescription();
+        
+        Pattern pattern = Pattern.compile("^" + description + "$", Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(ongoing);
+        
+        if( matcher.find()) {            
+            description = newIssue.getIssue().getDescription();        
+            newOngoing = matcher.replaceFirst(description);
+            cpp.setOngoingConcerns(newOngoing);
+            cpp.setUpdate_date(new Date());
+            caseManagementCPPDAO.saveCPP(cpp);
+            echartDAO.updateEchartOngoing(cpp);
+        }                
+        
+    }
+    
     public void updateCurrentIssueToCPP(String demoNo, List issueList) {
         CaseManagementCPP cpp = caseManagementCPPDAO.getCPP(demoNo);
         if (cpp == null) {
@@ -341,7 +400,9 @@ public class CaseManagementManager {
             CaseManagementIssue iss = (CaseManagementIssue)itr.next();
             ongoing = ongoing + iss.getIssue().getDescription() + "\n";
         }
+        
         cpp.setOngoingConcerns(ongoing);
+        cpp.setUpdate_date(new Date());
         caseManagementCPPDAO.saveCPP(cpp);
         echartDAO.updateEchartOngoing(cpp);
     }
