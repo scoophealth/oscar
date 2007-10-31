@@ -376,12 +376,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			note.setSigning_provider_no("");
 			note.setSigned(false);                        
 			cform.setSign("off");
-		} else {
-			note.setProvider_no(providerNo);
+		} else {			
 			note.setSigning_provider_no(userName);
 			note.setSigned(true);
 		}
-				
+                
+		note.setProvider_no(providerNo);		
 		if( provider != null )
                     note.setProvider(provider);
 		
