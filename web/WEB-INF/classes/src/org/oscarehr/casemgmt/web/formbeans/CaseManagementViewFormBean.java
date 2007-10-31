@@ -48,7 +48,7 @@ public class CaseManagementViewFormBean extends ActionForm {
 	private String searchText;
 	private String searchEncounterType;
 	
-	private String note_sort = "update_date";
+	private String note_sort = null;
 	private String filter_provider = "";
         private String filter_providers[];
         private String filter_roles[];
