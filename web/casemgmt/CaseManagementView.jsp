@@ -221,7 +221,7 @@ Progress Note Report View:
 &nbsp;|&nbsp;
 <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="window.print();">Print</span>
 <c:if test="${can_restore}">
-	<c:url value="/CaseManagementEntry.do?method=restore&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
+	<c:url value="/CaseManagementEntry.do?method=restore&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
 	&nbsp;|&nbsp;
 	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore Lost Note</span>
 </c:if>
@@ -271,11 +271,11 @@ Sort:
 			<td>
 				<c:choose>				
 					<c:when test="${(!note.signed) and (sessionScope.readonly=='false')}">
-						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
+						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit/Sign Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>				
 					<c:when test="${note.signed and note.provider_no eq param.providerNo and (note.locked !=true)}">
-						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
+						<c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}&forceNote=true" var="notesURL" />
 						<img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
 					</c:when>
 					<c:otherwise>
@@ -402,7 +402,7 @@ Sort:
 &nbsp;|&nbsp;
 <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="window.print();">Print</span>
 <c:if test="${can_restore}">
-	<c:url value="/CaseManagementEntry.do?method=restore&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
+	<c:url value="/CaseManagementEntry.do?method=restore&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
 	&nbsp;|&nbsp;
 	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore Note</span>
 </c:if>
