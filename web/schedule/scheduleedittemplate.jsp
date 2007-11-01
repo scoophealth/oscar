@@ -29,12 +29,14 @@
 %>
 <%@ page import="java.util.*, java.sql.*, oscar.*, java.text.*, java.lang.*" errorPage="../appointment/errorpage.jsp" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="oscar.OscarProperties" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <jsp:useBean id="scheduleMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="myTempBean" class="oscar.ScheduleTemplateBean" scope="page" />
 <% //save or delete the settings
   int rowsAffected = 0;
+  OscarProperties props = OscarProperties.getInstance();
   int STEP = request.getParameter("step")!=null&&!request.getParameter("step").equals("")?Integer.parseInt(request.getParameter("step")):(props.getProperty("template_time", "").length()>0?Integer.parseInt(props.getProperty("template_time", "")):15);
   //System.out.println("step:"+STEP);
   if(request.getParameter("dboperation")!=null && (request.getParameter("dboperation").compareTo(" Save ")==0 || request.getParameter("dboperation").equals("Delete") ) ) {
