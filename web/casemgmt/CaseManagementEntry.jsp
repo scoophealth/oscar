@@ -198,7 +198,7 @@ var XMLHttpRequestObject = false;
 			}
 			*/                        
 			var demographicNo = '<c:out value="${param.demographicNo}"/>';
-                        var noteId = '<%=request.getParameter("noteId") != null ? request.getParameter("noteId") : request.getAttribute("noteId")%>';
+                        var noteId = '<%=request.getParameter("noteId") != null ? request.getParameter("noteId") : request.getAttribute("noteId") != null ? request.getAttribute("noteId") : ""%>';
 			var programId = '<c:out value="${case_program_id}"/>';
 			XMLHttpRequestObject.send("method=autosave&demographicNo=" + demographicNo + "&programId=" + programId + "&note_id=" + noteId + "&note="  + escape(obj.value));
 						
