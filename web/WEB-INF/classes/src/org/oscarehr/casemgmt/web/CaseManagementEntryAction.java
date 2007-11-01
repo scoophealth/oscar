@@ -537,16 +537,16 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 note.setRevision(String.valueOf(revision));
                                 
                 String observationDate = cform.getObservation_date();
-                Date dateObserve;
+                
                 if( observationDate != null && !observationDate.equals("") ) {
                     SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy H:mm");
-                    dateObserve = formatter.parse(observationDate);
+                    Date dateObserve = formatter.parse(observationDate);
+                    note.setObservation_date(dateObserve);
                 }
-                else {
-                    dateObserve = now;
+                else if( note.getObservation_date() == null ) {                    
+                    note.setObservation_date(now);
                 }
                 
-                note.setObservation_date(dateObserve);
                 note.setUpdate_date(now);
                 if( note.getCreate_date() == null )
                     note.setCreate_date(now);
