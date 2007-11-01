@@ -17,7 +17,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -262,21 +262,24 @@ public class RxSessionBean {
           RxPrescriptionData.Prescription rx;                
           for(int i=0;i<this.getStashSize(); i++) {
              rx = this.getStashItem(i);
-             atcCodes.add(rx.getAtcCode());
+             if (rx.isValidAtcCode()){
+                atcCodes.add(rx.getAtcCode());
+             }
           }
           System.out.println("atccode 2"+atcCodes.hashCode());
-          try{        
-             interactions = rxInteract.getInteractions(atcCodes);
-             //interactions = drugData.getInteractions(atcCodes);
-          }catch(Exception e){
-             e.printStackTrace();
+          if (atcCodes != null && atcCodes.size() > 1){
+             try{        
+                interactions = rxInteract.getInteractions(atcCodes);
+                System.out.println("interactions "+interactions.length);
+                 for(int i =0 ; i < interactions.length;i++){
+                    System.out.println(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
+                 }
+                 Arrays.sort(interactions);
+              }catch(Exception e){
+                 e.printStackTrace();
+              }
           }
-          System.out.println("interactions "+interactions.length);
-          for(int i =0 ; i < interactions.length;i++){
-             System.out.println(interactions[i].affectingatc+" "+interactions[i].effect+" "+interactions[i].affectedatc);
-          }
-          //interactions = 
-          Arrays.sort(interactions);
+          
        end2 = System.currentTimeMillis() - start2;         
        }catch(Exception e2){}                 
        long end = System.currentTimeMillis() - start;      
