@@ -28,7 +28,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -1275,23 +1275,7 @@ int i;
                         <%  }
                           }%>   
                         
-                        
-                        <%if (!isCustom) {
-                             RxDrugData.Interaction[] interactions = (RxDrugData.Interaction[]) bean.getInteractions();
-                             if (interactions != null && interactions.length > 0){ 
-                                System.out.println("interactions.length "+interactions.length);
-                                for (int i = 0 ; i < interactions.length; i++){  %>
-                                 <div style="background-color:<%=sigColor(interactions[i].significance)%>;margin-right:100px;margin-left:20px;margin-top:10px;padding-left:10px;padding-top:10px;padding-bottom:5px;border-bottom: 2px solid gray;border-right: 2px solid #999;border-top: 1px solid #CCC;border-left: 1px solid #CCC;">
-                                 <%=interactions[i].affectingdrug%> 	<%=effect(interactions[i].effect)%> <%=interactions[i].affecteddrug%> &nbsp;&nbsp;&nbsp;&nbsp;SIGNIFICANCE = <%=significance(interactions[i].significance)%> &nbsp;&nbsp;&nbsp;EVIDENCE = <%=evidence(interactions[i].evidence)%><br/>
-                                 <%=interactions[i].comment%>
-                                 </div>
-                        <%      }
-                             
-                             }else if(interactions == null){ %>
-                                <div>Drug to Drug Interaction Service not available</div>                          
-                        <%   }                        
-                          }%>
-                                
+                          <div id="interactionsRx"></div>
                           <div  id="renalDosing"></div>
                           
                        
@@ -1434,9 +1418,17 @@ int i;
                new Ajax.Updater('renalDosing',url, {method:'get',parameters:params,asynchronous:true}); 
                //alert(origRequest.responseText);
          }
-         getRenalDosingInformation();
+         getRenalDosingInformation(); 
          </oscar:oscarPropertiesCheck>
- 
+        function getInteraction(origRequest){
+               var url = "InteractionDisplay.jsp";
+               var ran_number=Math.round(Math.random()*1000000);
+               var params = "demographicNo=<%=bean.getDemographicNo()%>&atcCode=<%=atcCode%>&rand="+ran_number;  //hack to get around ie caching the page
+               //alert(params);
+               new Ajax.Updater('interactionsRx',url, {method:'get',parameters:params,asynchronous:true}); 
+               //alert(origRequest.responseText);
+         }
+         getInteraction();
         </script>
         
         </td>
@@ -1448,59 +1440,7 @@ int i;
 <%long end  = System.currentTimeMillis() -start; System.out.println("millis "+end);%>
 
 <%!
-
-    String effect(String s){
-		  Hashtable h = new Hashtable();
-        h.put("a","augments (no clinical effect)");
-        h.put("A","augments");
-        h.put("i","inhibts  (no clinical effect)");
-        h.put("I","inhibits");
-        h.put("n","has no effect on");
-        h.put("N","has no effect on");
-        h.put(" ","unknown effect on");
-        
-        String retval = (String) h.get(s);
-        if (retval == null) {retval = "unknown effect on";}
-        return retval;
-   }
-    
-	String significance(String s){
-       Hashtable h = new Hashtable();
-       h.put("1","minor");
-       h.put("2","moderate");
-       h.put("3","major");
-       h.put(" ","unknown");
-       
-       String retval = (String) h.get(s);
-        if (retval == null) {retval = "unknown";}
-        return retval;
-   }
-   
-   String evidence(String s){
-       Hashtable h = new Hashtable();
-       h.put("P","poor");
-       h.put("F","fair");
-       h.put("G","good");
-       h.put(" ","unknown");
-       
-       String retval = (String) h.get(s);
-        if (retval == null) {retval = "unknown";}
-        return retval;
-   }
-
-
-   String sigColor(String s){
-       Hashtable h = new Hashtable();
-       h.put("1","yellow");
-       h.put("2","orange");
-       h.put("3","red");
-       h.put(" ","greenyellow");
-       
-       String retval = (String) h.get(s);
-        if (retval == null) {retval = "greenyellow";}
-        return retval;
-   }
-    
+ 
    String severityOfReaction(String s){
        Hashtable h = new Hashtable();
        h.put("1","Mild");
@@ -1534,4 +1474,3 @@ int i;
        return retval;
    }
 %>
-
