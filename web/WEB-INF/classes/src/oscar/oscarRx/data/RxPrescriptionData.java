@@ -18,7 +18,7 @@
  * 
  * This software was written for the 
  * Department of Family Medicine 
- * McMaster Unviersity 
+ * McMaster University 
  * Hamilton 
  * Ontario, Canada 
  */
@@ -280,7 +280,9 @@ public class RxPrescriptionData {
               System.out.println(p[i].getAtcCode()+" "+p[i].getBrandName());
               if (!vec.contains(p[i].getAtcCode())){
                  System.out.println("Actually Adding "+p[i].getAtcCode()+" "+p[i].getBrandName());
-                 vec.add(p[i].getAtcCode());
+                 if (p[i].isValidAtcCode()){
+                    vec.add(p[i].getAtcCode());
+                 }
               }
            }
         }
@@ -1391,6 +1393,17 @@ public class Prescription {
      */
     public java.lang.String getAtcCode() {
         return atcCode;
+    }
+    
+    
+    /**
+     * Checks to see if atcCode is not null or an emtpy string
+     */
+    public boolean isValidAtcCode(){
+        if (atcCode != null && !atcCode.trim().equals("")){
+            return true;
+        }
+        return false;
     }
     
     /** Setter for property atcCode.
