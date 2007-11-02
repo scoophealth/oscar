@@ -499,14 +499,14 @@ function editNote(e) {
     
     //AutoCompleter for Issues
     <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
-    issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});        
-    
-    origCaseNote = $F(caseNote);  
+    issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});               
     
     //position cursor at end of text        
     adjustCaseNote();
     $(caseNote).focus();
     setCaretPosition($(caseNote),$(caseNote).value.length); 
+    
+    origCaseNote = $F(caseNote); 
     
     //start AutoSave
     setTimer();
@@ -1756,8 +1756,8 @@ Version version = (Version) ctx.getBean("version");
    <%} else { %>
         $("newNoteImg").hide();        
    <%}%>
-   
-   origCaseNote = $F(caseNote);   
+         
    setCaretPosition($(caseNote), $(caseNote).value.length);
+   origCaseNote = $F(caseNote);
    </script>
    
