@@ -465,12 +465,7 @@ function editNote(e) {
     caseNote = "caseNote" + nId;                
     
     var input = "<textarea tabindex='7' wrap=hard cols='84' rows='10' style='overflow:scroll; width:100%; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
-    new Insertion.Top(txt, input);         
-    
-    //position cursor at end of text        
-    adjustCaseNote();
-    $(caseNote).focus();
-    setCaretPosition($(caseNote),$(caseNote).value.length);    
+    new Insertion.Top(txt, input);                 
     
     Element.observe(caseNote, 'keyup', monitorCaseNote);
       
@@ -507,6 +502,11 @@ function editNote(e) {
     issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});        
     
     origCaseNote = $F(caseNote);  
+    
+    //position cursor at end of text        
+    adjustCaseNote();
+    $(caseNote).focus();
+    setCaretPosition($(caseNote),$(caseNote).value.length); 
     
     //start AutoSave
     setTimer();
@@ -1712,8 +1712,7 @@ Version version = (Version) ctx.getBean("version");
         $(caseNote).value += "\n";
             
     adjustCaseNote();    
-    $(caseNote).focus();
-    setCaretPosition($(caseNote), $(caseNote).value.length);         
+    $(caseNote).focus();             
     Element.observe(caseNote, "keyup", monitorCaseNote);    
    
     $("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
@@ -1759,6 +1758,6 @@ Version version = (Version) ctx.getBean("version");
    <%}%>
    
    origCaseNote = $F(caseNote);   
-
+   setCaretPosition($(caseNote), $(caseNote).value.length);
    </script>
    
