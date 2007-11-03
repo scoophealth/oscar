@@ -44,6 +44,7 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import oscar.OscarProperties;
 
 /**
  *
@@ -65,7 +66,8 @@ public class TeleplanAPI {
     public static String ExternalActionCheckE45   = "AcheckE45";
 
     
-    public String CONTACT_URL = "https://tlpt2.moh.hnet.bc.ca/TeleplanBroker";
+    //public String CONTACT_URL = "https://tlpt2.moh.hnet.bc.ca/TeleplanBroker";
+    public String CONTACT_URL = "https://teleplan.hnet.bc.ca/TeleplanBroker";
     
     HttpClient httpclient = null;
 	
@@ -83,6 +85,7 @@ public class TeleplanAPI {
 	
 
     private void getClient(){
+       CONTACT_URL = OscarProperties.getInstance().getProperty("TELEPLAN_URL",CONTACT_URL);
        HttpState initialState = new HttpState();
         // Initial set of cookies can be retrieved from persistent storage and 
         // re-created, using a persistence mechanism of choice,
