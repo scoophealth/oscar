@@ -71,6 +71,7 @@ public class TeleplanSubmissionLinkDAO {
     private void executeUpdate(PreparedStatement pstmt, int billActId, int billingmasterNo) throws SQLException{
         pstmt.setInt(1,billActId);
         pstmt.setInt(2,billingmasterNo);    
-        pstmt.executeUpdate();      
+        pstmt.executeUpdate();   
+        pstmt.clearParameters();
     }
 }
