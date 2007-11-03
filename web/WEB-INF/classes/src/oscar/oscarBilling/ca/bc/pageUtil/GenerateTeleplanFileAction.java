@@ -99,7 +99,7 @@ public class GenerateTeleplanFileAction extends Action{
             TeleplanSubmission submission = teleplanWr.getSubmission(testRun,pdArr,dataCenterId);
 
             BillActivityDAO bActDao  = new BillActivityDAO();
-            String batchCode = bActDao.getNextMonthlySequence("");
+            batchCount = bActDao.getNextMonthlySequence("");
 
             // -commit the record to Bill Activity
             //Create Filename
