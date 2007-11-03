@@ -165,9 +165,9 @@ public class TeleplanSubmission {
         
         BillingmasterDAO billingmaster = new BillingmasterDAO();
         billingmaster.markListAsBilled(billingmasterToBeMarkedAsBilled);
-        /*
+        
         markListAsBilled(billingToBeMarkedAsBilled);
-        */
+        
         TeleplanLogDAO logDAO = new TeleplanLogDAO();
         logDAO.save(logList);
         
