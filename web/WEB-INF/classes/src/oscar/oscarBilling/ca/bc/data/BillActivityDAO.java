@@ -44,6 +44,10 @@ import oscar.util.SqlUtils;
  *
  alter table billactivity add column id int(10) NOT NULL auto_increment
 primary key;
+ 
+ alter table billactivity add column sentdate datetime default NULL;
+ 
+ 
  *
  * @author jay
  */
@@ -100,14 +104,14 @@ public class BillActivityDAO {
                 pstmt.setString(1,getMonthCode(d));
                 pstmt.setString(2,billinggroup_no);
                 pstmt.setDate(3,new java.sql.Date(beginningOfYear.getTime().getTime())); 
+              
                 
-                                                                           
                 ResultSet rs = pstmt.executeQuery(); 
                 while(rs.next()){
                   batchCount = rs.getString("batchcount");
                 }
                 int fileCount = Integer.parseInt(batchCount) + 1;
-                batchCount = String.valueOf(fileCount);
+                batchCount = String.valueOf(fileCount);    
             pstmt.close();  
             
             dbhandler.CloseConn();
@@ -200,7 +204,7 @@ public class BillActivityDAO {
     public List getBillactivityByYear(int year){
        String startDate = year+"-01-01";
        String endDate = year+"/12/31 23:59:59"; 
-       String query = "select * from billactivity where updatedatetime >= '"+startDate+"' and updatedatetime <= '"+endDate+"' and status <> 'D' order by updatedatetime desc";
+       String query = "select * from billactivity where updatedatetime >= '"+startDate+"' and updatedatetime <= '"+endDate+"' and status <> 'D' order by id desc";
        return getBillactivity(query);
     }
 
