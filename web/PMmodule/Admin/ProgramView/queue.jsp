@@ -91,11 +91,12 @@
     <display:column sortable="false">
         <input type="button" value="Reject" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
     </display:column>
-    <display:column sortable="false">
-        <a href="javascript:void(0)" title="Case management" onclick="cme_client('<c:out value="${queue_entry.programId}"/>', '<c:out value="${queue_entry.clientId}"/>')">
-            Case Management Encounter
-        </a>
-    </display:column>
+    <!-- disabled by rwd because visibility of link and permissions in CME are a problem -->
+    <%--<display:column sortable="false">--%>
+        <!--<a href="javascript:void(0)" title="Case management" onclick="cme_client('<c:out value="${queue_entry.programId}"/>', '<c:out value="${queue_entry.clientId}"/>')">-->
+            <!--Case Management Encounter-->
+        <!--</a>-->
+    <%--</display:column>--%>
     <display:column sortable="true" property="clientFormattedName" title="Client name"/>
     <display:column property="referralDate" sortable="true" title="Referral Date" />
     <display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
