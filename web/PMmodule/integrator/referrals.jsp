@@ -25,7 +25,7 @@
 <%@ include file="/taglibs.jsp" %>
 <%@ page import="org.oscarehr.PMmodule.model.*" %>
 <%@ page import="java.util.*" %>
-<%@ page import="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl" %>
+<%@ page import="org.oscarehr.PMmodule.service.IntegratorManager" %>
 
 	<display:table class="simple" cellspacing="2" cellpadding="3" id="referral" name="referrals" export="false" pagesize="10" requestURI="/PMmodule/ClientManager.do">
 	  <display:setProperty name="paging.banner.placement" value="bottom"/>
@@ -33,7 +33,7 @@
 	  <display:column sortable="true" title="Source Agency Id">
 	  <%
 	  		ClientReferral tmpReferral = (ClientReferral)pageContext.getAttribute("referral");
-		  	Map agencyMap = IntegratorManagerImpl.getAgencyMap();
+		  	Map agencyMap = IntegratorManager.getAgencyMap();
 		  	Agency agency = (Agency)agencyMap.get(tmpReferral.getSourceAgencyId());
 		  	if(agency != null) {
 		  		out.println(agency.getName());
@@ -46,7 +46,7 @@
 	  <display:column sortable="true" title="Agency Id">
 	  <%
 	  		ClientReferral tmpReferral = (ClientReferral)pageContext.getAttribute("referral");
-		  	Map agencyMap = IntegratorManagerImpl.getAgencyMap();
+		  	Map agencyMap = IntegratorManager.getAgencyMap();
 		  	Agency agency = (Agency)agencyMap.get(tmpReferral.getAgencyId());
 		  	if(agency != null) {
 		  		out.println(agency.getName());

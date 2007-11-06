@@ -24,7 +24,7 @@
 
 <%@ include file="/taglibs.jsp" %>
 <%@ page import="org.oscarehr.PMmodule.model.*" %>
-<%@ page import="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl" %>
+<%@ page import="org.oscarehr.PMmodule.service.IntegratorManager" %>
 <%@ page import="java.util.*" %>
 
 	<display:table class="simple" cellspacing="2" cellpadding="3" id="admission" name="admissions" export="false" pagesize="20" requestURI="/PMmodule/ClientManager.do">
@@ -34,7 +34,7 @@
 	  <display:column sortable="true" title="Agency">
 	  	<%
 	  		Admission tmpAd = (Admission)pageContext.getAttribute("admission");
-		  	Map agencyMap = IntegratorManagerImpl.getAgencyMap();
+		  	Map agencyMap = IntegratorManager.getAgencyMap();
 		  	Agency agency = (Agency)agencyMap.get(tmpAd.getAgencyId());
 		  	if(agency != null) {
 		  		out.println(agency.getName());

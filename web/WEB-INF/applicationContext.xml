@@ -325,7 +325,7 @@
             </bean>
         </property>
     </bean>
-    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.impl.IntegratorManagerImpl">
+    <bean id="integratorManager" class="org.oscarehr.PMmodule.service.IntegratorManager">
         <property name="agencyDao" ref="agencyDao"/>
         <property name="clientManager" ref="clientManager"/>
     </bean>
