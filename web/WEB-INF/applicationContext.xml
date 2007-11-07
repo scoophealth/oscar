@@ -172,7 +172,7 @@
     <bean id="agencyManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.AgencyManagerImpl" autowire="byName"/>
+            <bean class="org.oscarehr.PMmodule.service.AgencyManager" autowire="byName"/>
         </property>
     </bean>
     
