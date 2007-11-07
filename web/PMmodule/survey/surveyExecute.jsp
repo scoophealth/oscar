@@ -45,7 +45,7 @@
         <c:if test="${not empty sessionScope.validation_file}">
 	        <script type="text/javascript" src="<c:out value="${ctx}"/>/survey/scripts/<c:out value="${sessionScope.validation_file}"/>.js"></script>
 	    </c:if>
-        <link rel="stylesheet" type="text/css" href="jsCalendar/skins/aqua/theme.css">
+        <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}"/>/jsCalendar/skins/aqua/theme.css">
 
 		<c:if test="${empty sessionScope.validation_file}">
 		<script>
