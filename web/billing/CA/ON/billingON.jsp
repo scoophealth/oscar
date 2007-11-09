@@ -788,6 +788,11 @@ function changeCodeDesc() {
 </div>
 
 <form method="post" name="titlesearch" action="billingONReview.jsp" onsubmit="return onNext();">
+<%String checkFlag = request.getParameter("checkFlag");
+	if(checkFlag == null) checkFlag = "0";
+%>
+<input type="hidden" name="checkFlag" id="checkFlag" value="<%=checkFlag %>" />
+
     <table border="0" cellpadding="0" cellspacing="2" width="100%" class="myIvory">
 	<tr>
 	    <td>
