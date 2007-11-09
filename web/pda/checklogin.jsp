@@ -85,7 +85,6 @@
     
     monitor.put(strAuth[0], session);
     System.out.println("Assigned new session for: " + strAuth[0]+ " : "+ strAuth[3] );
-    session.setMaxInactiveInterval(6800);
 
     //GregorianCalendar now=new GregorianCalendar();
     int nowYear =now.get(Calendar.YEAR);

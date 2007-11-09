@@ -133,7 +133,6 @@ public class UnreadTicklerAction extends DispatchAction {
           session.invalidate();
           session = request.getSession(); // Create a new session for this user
         }
-        session.setMaxInactiveInterval(3200);
 
         request.getSession().setAttribute("user",strAuth[0]);
  
