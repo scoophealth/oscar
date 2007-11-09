@@ -210,7 +210,10 @@
 		<servlet-class>oscar.form.study.HSFO.pageUtil.HsfoQuartzServlet</servlet-class>
 		<load-on-startup>0</load-on-startup>
 	</servlet>    
-    
+    <servlet>
+        <servlet-name>PatientListByAppointment</servlet-name>
+        <servlet-class>oscar.oscarReport.data.PatientListByAppt</servlet-class>
+    </servlet>
     
     <servlet-mapping>
 		<servlet-name>action</servlet-name>
