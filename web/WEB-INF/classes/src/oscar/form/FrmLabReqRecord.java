@@ -91,40 +91,71 @@ public class FrmLabReqRecord extends FrmRecord {
 
             if (Integer.parseInt(demoProvider) == provNo) {
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no "
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no, comments "
                         + "FROM provider WHERE provider_no = " + provNo;
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
                     String num = rs.getString("ohip_no");
+                    
+            		String sp, specialty;
+            		specialty = rs.getString("comments");
+            		System.out.println("specialty: "+specialty);
+            		System.out.println("specialty index : "+ specialty.indexOf("<xml_p_specialty_code>"));
+            		if(specialty.equals("")|| specialty == null  || specialty.indexOf("<xml_p_specialty_code>") < 0){
+            			sp = "00";
+            		}else{
+            			int st = specialty.indexOf("<xml_p_specialty_code>") + 22;
+                		int end = specialty.indexOf("</xml_p_specialty_code>");
+                		sp = specialty.substring(st,end);
+            		}
                     props.setProperty("reqProvName", rs.getString("provName"));
                     props.setProperty("provName", rs.getString("provName"));
-                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                    props.setProperty("practitionerNo", "0000-" + num + "-"+ sp);
                 }
                 rs.close();
             } else {
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no, comments FROM provider WHERE provider_no = "
                         + provNo;
                 rs = db.GetSQL(sql);
-               
+                
                 String num = "";
                 if (rs.next()) {
+                	String sp, specialty;
+                	specialty = rs.getString("comments");
+            		if(specialty.equals("")|| specialty == null || specialty.indexOf("<xml_p_specialty_code>") < 0){
+            			sp = "00";
+            		}else{
+            			int st = specialty.indexOf("<xml_p_specialty_code>") + 22;
+                		int end = specialty.indexOf("</xml_p_specialty_code>");
+                		sp = specialty.substring(st,end);
+            		}
                     num = rs.getString("ohip_no");
                     props.setProperty("reqProvName", rs.getString("provName"));                    
-                    props.setProperty("practitionerNo", "0000-" + num + "-00");
+                    props.setProperty("practitionerNo", "0000-" + num + "-" + sp);
                 }
                 rs.close();
 
                 // from provider table
-                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no FROM provider WHERE provider_no = "
+                sql = "SELECT CONCAT(last_name, ', ', first_name) AS provName, ohip_no, comments FROM provider WHERE provider_no = "
                         + demoProvider;
                 rs = db.GetSQL(sql);
 
                 if (rs.next()) {
-                    if( num.equals("") ) {
+                	String sp, specialty;
+                	specialty = rs.getString("comments");
+            		if(specialty.equals("")|| specialty == null || specialty.indexOf("<xml_p_specialty_code>") < 0){
+            			sp = "00";
+            		}else{
+            			
+            			int st = specialty.indexOf("<xml_p_specialty_code>") + 22;
+                		int end = specialty.indexOf("</xml_p_specialty_code>");
+                		sp = specialty.substring(st,end);
+            		}
+                	if( num.equals("") ) {
                         num = rs.getString("ohip_no");
-                        props.setProperty("practitionerNo", "0000-"+num+"-00");
+                        props.setProperty("practitionerNo", "0000-"+num+ "-"+ sp);
                     }
                     props.setProperty("provName", rs.getString("provName"));
                     
