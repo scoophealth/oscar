@@ -152,18 +152,17 @@ public class MessageUploader {
         String sql = "";
         if (docNums != null){
             for (int i=0; i < docNums.size(); i++){
-                if (labType.equals("PATHL7")){
+                
+                if (!( (String) docNums.get(i) ).trim().equals("")){
                     sql = "select provider_no from provider where ohip_no = '"+( (String) docNums.get(i) )+"'";
-                }else{
-                    sql = "select provider_no from provider where billing_no = '"+( (String) docNums.get(i) )+"'";
+                    pstmt = conn.prepareStatement(sql);
+                    ResultSet rs = pstmt.executeQuery();
+                    while(rs.next()){
+                        providerNums.add(rs.getString("provider_no"));
+                    }
+                    rs.close();
+                    pstmt.close();
                 }
-                pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery();
-                while(rs.next()){
-                    providerNums.add(rs.getString("provider_no"));
-                }
-                rs.close();
-                pstmt.close();
             }
         }
         
