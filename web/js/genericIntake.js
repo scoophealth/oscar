@@ -87,14 +87,14 @@ function createLocal() {
 	}
 }
 
-function updateLocal(clientId) {
-	document.forms[0].elements['clientId'].value = clientId;
+function updateLocal(demographicId) {
+	document.forms[0].elements['demographicId'].value = demographicId;
 	setMethod('updateLocal');
 }
 
-function copyRemote(agencyId, clientId) {
+function copyRemote(agencyId, demographicId) {
 	document.forms[0].elements['agencyId'].value = agencyId;
-	document.forms[0].elements['clientId'].value = clientId;
+	document.forms[0].elements['demographicId'].value = demographicId;
 	setMethod('copyRemote');
 }
 

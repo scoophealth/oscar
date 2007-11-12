@@ -102,7 +102,7 @@ public class ClientManager {
 		return dao.getClients();
 	}
 
-	public List search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
+	public List<Demographic> search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
 		return dao.search(criteria, returnOptinsOnly);
 	}
 

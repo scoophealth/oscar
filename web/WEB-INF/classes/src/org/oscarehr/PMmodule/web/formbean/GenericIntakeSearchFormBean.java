@@ -18,11 +18,13 @@
  */
 package org.oscarehr.PMmodule.web.formbean;
 
-import java.util.List;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.util.LabelValueBean;
+import org.caisi.integrator.model.Client;
 import org.oscarehr.PMmodule.model.Demographic;
+
+import java.util.Collection;
+import java.util.List;
 
 public class GenericIntakeSearchFormBean extends ActionForm {
 
@@ -41,12 +43,11 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 	private String healthCardNumber;
 	private String healthCardVersion;
 
-	private boolean localMatch;
-	private boolean remoteMatch;
-	private Demographic[] matches;
+    private Collection<Demographic> localMatches;
+    private Client[] remoteMatches;
 
-	private Integer clientId;
-	private Long agencyId;
+    private String agencyId;
+    private Integer demographicId;
 
 	public GenericIntakeSearchFormBean() {
 		setMonths(GenericIntakeConstants.MONTHS);
@@ -133,54 +134,36 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 		this.healthCardVersion = healthCardVersion;
 	}
 
-	public boolean isLocalMatch() {
-		return localMatch;
-	}
 
-	public boolean isRemoteMatch() {
-		return remoteMatch;
-	}
+    public Collection<Demographic> getLocalMatches() {
+        return localMatches;
+    }
 
-	public Demographic[] getMatches() {
-		return matches;
-	}
+    public void setLocalMatches(Collection<Demographic> localMatches) {
+        this.localMatches = localMatches;
+    }
 
-	public String getMatchType() {
-		return isRemoteMatch() ? "Integrator" : "Agency";
-	}
+    public Client[] getRemoteMatches() {
+        return remoteMatches;
+    }
 
-	public void setLocalMatches(List<?> matches) {
-		if (matches != null && matches.size() > 0) {
-			this.localMatch = true;
+    public void setRemoteMatches(Client[] remoteMatches) {
+        this.remoteMatches = remoteMatches;
+    }
 
-			this.matches = new Demographic[matches.size()];
-			for (int i = 0; i < matches.size(); i++) {
-				this.matches[i] = ((Demographic) matches.get(i));
-			}
-		}
-	}
+    public String getAgencyId() {
+        return agencyId;
+    }
 
-	public void setRemoteMatches(Demographic[] matches) {
-		if (matches != null && matches.length > 0) {
-			this.remoteMatch = true;
-			this.matches = matches;
-		}
-	}
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
+    }
 
-	public Integer getClientId() {
-		return clientId;
-	}
+    public Integer getDemographicId() {
+        return demographicId;
+    }
 
-	public void setClientId(Integer clientId) {
-		this.clientId = clientId;
-	}
-
-	public Long getAgencyId() {
-		return agencyId;
-	}
-
-	public void setAgencyId(Long agencyId) {
-		this.agencyId = agencyId;
-	}
-
+    public void setDemographicId(Integer demographicId) {
+        this.demographicId = demographicId;
+    }
 }

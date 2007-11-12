@@ -115,7 +115,7 @@ public class IncomingReferralBean implements MessageListener {
 				long demographicNo = 0;
 				try {
                     // TODO re-enable or reimplement
-//					demographicNo = integratorManager.getLocalClientId(referral.getSourceAgencyId().longValue(),referral.getClientId().longValue());
+//					demographicNo = integratorManager.getLocalClientId(referral.getSourceAgencyId().longValue(),referral.getDemographicId().longValue());
 					log.debug("local id is " + demographicNo);
 				} catch(IntegratorException e) {
 					log.error(e);

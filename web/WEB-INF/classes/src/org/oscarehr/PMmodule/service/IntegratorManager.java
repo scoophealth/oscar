@@ -35,6 +35,7 @@ package org.oscarehr.PMmodule.service;
  *
  *    - implement notes
  */
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.integrator.message.AuthenticationToken;
@@ -59,18 +60,17 @@ import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.exception.IntegratorNotInitializedException;
 import org.oscarehr.PMmodule.exception.OperationNotImplementedException;
 import org.oscarehr.PMmodule.model.*;
-import org.oscarehr.PMmodule.service.ClientManager;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.springframework.beans.factory.annotation.Required;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class IntegratorManager {
 
-	public static final short DATATYPE_CLIENT = 	1;
-	public static final short DATATYPE_PROVIDER = 	2;
+    public static final short DATATYPE_CLIENT = 	1;
+    public static final short DATATYPE_PROVIDER = 	2;
 
-	private static Log log = LogFactory.getLog(IntegratorManager.class);
+    private static Log log = LogFactory.getLog(IntegratorManager.class);
 
     private static Agency localAgency;
     private static Map<Long, Agency> agencyMap;
@@ -243,7 +243,7 @@ public class IntegratorManager {
         return response.getAgency().getId();
     }
 
-    public Collection<Demographic> matchClient(Demographic client) throws IntegratorException {
+    public Collection<Client> matchClient(Demographic client) throws IntegratorException {
 
         org.caisi.integrator.model.Demographic searchDemographic = caisiDemographicToIntegratorDemographic(client);
         SearchCandidateDemographicResponse response =
@@ -252,23 +252,13 @@ public class IntegratorManager {
 
         Collection<Client> clients = response.getCandidateClients();
 
-        Collection<Demographic> demographics = new ArrayList<Demographic>();
-        for (Client client1 : clients) {
-            for (org.caisi.integrator.model.Demographic demographic : client1.getDemographics()) {
-                demographics.add(integratorDemographicToCaisiDemographic(demographic));
-            }
-        }
-
-        return demographics;
+        return clients;
     }
 
-    public Demographic getDemographic(long agencyId, long demographicNo) throws IntegratorException {
-        // TODO in the new integrator we look up the agency by its username, not by its id, so until i finish unwinding all of marc's code that uses the integer id, we'll have to look it up
-        String agencyUsername = getAgencyUsername(agencyId);
+    public Demographic getDemographic(String agencyUsername, long demographicNo) throws IntegratorException {
         GetDemographicResponse response = getIntegratorService().getDemographic(
                 new GetDemographicRequest(new Date(),
                         agencyUsername, (int) demographicNo), authenticationToken);
-
 
         Demographic demographic = integratorDemographicToCaisiDemographic(response.getDemographic());
 
@@ -385,8 +375,8 @@ public class IntegratorManager {
         DemographicTransfer demographicTransfer = new DemographicTransfer();
 
         demographicTransfer.setAddress(demographicInfo.getAddress());
-        org.caisi.integrator.model.Agency agency = caisiAgencyToIntegratorAgency(agencyDAO.getAgency(demographicInfo.getAgencyId()));
-        demographicTransfer.setAgency(agency);
+//        org.caisi.integrator.model.Agency agency = caisiAgencyToIntegratorAgency(agencyDAO.getAgency(demographicInfo.getAgencyId()));
+//        demographicTransfer.setAgency(agency);
         if (demographicInfo.getDemographicNo() != null)
             demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo());
         demographicTransfer.setChartNo(demographicInfo.getChartNo());
@@ -419,6 +409,17 @@ public class IntegratorManager {
         return demographicTransfer;
     }
 
+    private String padOrNull(Integer n, int zeroes)
+    {
+        if (n == null) return null;
+        else {
+            StringBuffer zeroesBuff = new StringBuffer();
+            while (zeroes-- != 0) zeroesBuff.append('0');
+            DecimalFormat df = new DecimalFormat(zeroesBuff.toString());
+            return df.format(n);
+        }
+    }
+
     public Demographic integratorDemographicToCaisiDemographic(org.caisi.integrator.model.Demographic demographicTransfer) {
         Demographic demographicInfo = new Demographic();
 
@@ -427,7 +428,7 @@ public class IntegratorManager {
         demographicInfo.setChartNo(demographicTransfer.getChartNo());
         demographicInfo.setCity(demographicTransfer.getCity());
         demographicInfo.setDateJoined(demographicTransfer.getDateJoined());
-        demographicInfo.setDateOfBirth(intToStrOrNull(demographicTransfer.getDateOfBirth()));
+        demographicInfo.setDateOfBirth(padOrNull(demographicTransfer.getDateOfBirth(), 2));
         demographicInfo.setEffDate(demographicTransfer.getEffDate());
         demographicInfo.setEmail(demographicTransfer.getEmail());
         demographicInfo.setEndDate(demographicTransfer.getEndDate());
@@ -437,7 +438,7 @@ public class IntegratorManager {
         demographicInfo.setHcType(demographicTransfer.getHcType());
         demographicInfo.setHin(demographicTransfer.getHin());
         demographicInfo.setLastName(demographicTransfer.getLastName());
-        demographicInfo.setMonthOfBirth(intToStrOrNull(demographicTransfer.getMonthOfBirth()));
+        demographicInfo.setMonthOfBirth(padOrNull(demographicTransfer.getMonthOfBirth(), 2));
         demographicInfo.setPatientStatus(demographicTransfer.getPatientStatus());
         demographicInfo.setPcnIndicator(demographicTransfer.getPcnIndicator());
         demographicInfo.setPhone(demographicTransfer.getPhone());
@@ -449,7 +450,7 @@ public class IntegratorManager {
         demographicInfo.setRosterStatus(demographicTransfer.getRosterStatus());
         demographicInfo.setSex(demographicTransfer.getSex());
         demographicInfo.setVer(demographicTransfer.getVer());
-        demographicInfo.setYearOfBirth(intToStrOrNull(demographicTransfer.getYearOfBirth()));
+        demographicInfo.setYearOfBirth(padOrNull(demographicTransfer.getYearOfBirth(), 4));
 
         return demographicInfo;
     }
@@ -460,10 +461,6 @@ public class IntegratorManager {
         } catch (NumberFormatException e) {
             return null;
         }
-    }
-
-    public String intToStrOrNull(Integer value) {
-        return value == null ? null : "" + value;
     }
 
     public void refreshPrograms(List<Program> programs) throws IntegratorException {

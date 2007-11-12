@@ -24,8 +24,8 @@ package org.oscarehr.PMmodule.web.formbean;
 
 public class PreIntakeForm {
 	
-	private long agencyId;
-	private String clientId;
+	private String agencyId;
+	private String demographicId;
 	private String dayOfBirth;
 	private String firstName;
 	private String healthCardNumber;
@@ -34,12 +34,12 @@ public class PreIntakeForm {
 	private String monthOfBirth;
 	private String yearOfBirth;
 
-	public long getAgencyId() {
+	public String getAgencyId() {
 		return agencyId;
 	}
 
-	public String getClientId() {
-		return clientId;
+	public String getDemographicId() {
+		return demographicId;
 	}
 
 	public String getDayOfBirth() {
@@ -70,12 +70,12 @@ public class PreIntakeForm {
 		return yearOfBirth;
 	}
 
-	public void setAgencyId(long agencyId) {
+	public void setAgencyId(String agencyId) {
 		this.agencyId = agencyId;
 	}
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
+	public void setDemographicId(String demographicId) {
+		this.demographicId = demographicId;
 	}
 
 	public void setDayOfBirth(String dayOfBirth) {

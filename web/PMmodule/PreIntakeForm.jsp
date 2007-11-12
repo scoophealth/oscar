@@ -28,18 +28,18 @@
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
 <script>
-	function new_client(agencyId,clientId) {
+	function new_client(agencyId,demographicId) {
 		var f = document.preIntakeForm;
 		f.elements['form.agencyId'].value = agencyId;
-		f.elements['form.clientId'].value = clientId;
+		f.elements['form.demographicId'].value = demographicId;
 		f.action.value='new_client';
 		f.submit();
 	}
 
-	function update_client(agencyId,clientId) {
+	function update_client(agencyId,demographicId) {
 		var f = document.preIntakeForm;
 		f.elements['form.agencyId'].value = agencyId;
-		f.elements['form.clientId'].value = clientId;
+		f.elements['form.demographicId'].value = demographicId;
 		f.action.value='update_client';
 		f.submit();
 	}
@@ -67,7 +67,7 @@
 </script>
 <html:form action="/PMmodule/Intake" onsubmit="return validateSearchForm(this)">
 	<input type="hidden" name="action" value="do_intake" />
-	<html:hidden property="form.clientId" />
+	<html:hidden property="form.demographicId" />
 	<html:hidden property="form.agencyId" />
 	<table width="50%">
 		<tr>

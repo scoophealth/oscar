@@ -504,7 +504,7 @@ public class SurveyExecuteAction extends DispatchAction {
         }
         return forwardToClientManager(request, mapping, form, String.valueOf(formBean.getClientId()));
         //request.setAttribute("survey_saved",new Boolean(true));
-        //request.setAttribute("clientId",String.valueOf(formBean.getClientId()));
+        //request.setAttribute("clientId",String.valueOf(formBean.getDemographicId()));
         //return mapping.findForward("client_manager");
     }
 
