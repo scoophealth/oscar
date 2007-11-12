@@ -315,7 +315,8 @@
         if(formId == 0) {
             return;
         }
-        var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute"/>?method=survey&type=provider&formId=' + formId + '&clientId=' + <%=bean.demographicNo%>;
+        var id = document.getElementById('formInstanceId').value;
+        var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute"/>?method=survey&type=provider&formId=' + formId + '&formInstanceId=' + id + '&clientId=' + <%=bean.demographicNo%>;
         ctl.selectedIndex=0;
 
         popupPage(url)
@@ -323,6 +324,7 @@
     }
 </script>
 <tr style="background-color:#BBBBBB;"><td>User Created Forms</td></tr>
+<tr><td><input type="hidden" id="formInstanceId" value="0" /></td></tr>
 <tr>
     <td>
         <select property="view.formId" onchange="openSurvey(this);">
