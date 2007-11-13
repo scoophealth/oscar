@@ -48,6 +48,7 @@ GstControlAction db = new GstControlAction();
 GstReport gstRep = new GstReport();
 gstProp = db.readDatabase();
 String gstFlag;
+String flag = gstProp.getProperty("gstFlag", ""); 
 String percent = gstProp.getProperty("gstPercent", "");
 BigDecimal stotal = new BigDecimal(0);
 BigDecimal gstTotal = new BigDecimal(0);
@@ -71,10 +72,36 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 	vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
-	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
-					vecServiceParam[2]);
-	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);
-	Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
+	
+        /////// hack used to order the billing codes
+        /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable 
+        /////// But should cause that much of a performance hit. It's generally under 3 items
+        Vector v = new Vector();
+        for (int ii = 0 ; ii< vecServiceParam[0].size(); ii++){
+            Hashtable h = new Hashtable();
+            h.put("serviceCode",vecServiceParam[0].get(ii));
+            h.put("serviceUnit",vecServiceParam[1].get(ii));
+            h.put("serviceAt",vecServiceParam[2].get(ii));
+            v.add(h);
+        }
+        Collections.sort(v,new BillingSortComparator());
+        
+        vecServiceParam[0] = new Vector();
+        vecServiceParam[1] = new Vector();
+        vecServiceParam[2] = new Vector();
+        
+        for (int ii = 0; ii < v.size(); ii++){
+            Hashtable h = (Hashtable) v.get(ii);
+            vecServiceParam[0].add((String) h.get("serviceCode") );
+            vecServiceParam[1].add((String) h.get("serviceUnit"));
+            vecServiceParam[2].add((String) h.get("serviceAt"));
+        }
+        ///////--------
+	Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],vecServiceParam[2]);
+	Vector vecPercCodeItem = prepObj.getPercCodeReviewVec(vecServiceParam[0], vecServiceParam[1], vecCodeItem);  //LINE CAUSING ERROR
+
+                        
+        Properties propCodeDesc = (new JdbcBillingCodeImpl()).getCodeDescByNames(vecServiceParam[0]);
 			String dxDesc = prepObj.getDxDescription(request.getParameter("dxCode"));
 			String clinicview = oscarVariables.getProperty("clinic_view", "");
 			String clinicNo = oscarVariables.getProperty("clinic_no", "");
@@ -190,19 +217,19 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 <title>OscarBilling</title>
 <link rel="stylesheet" type="text/css" href="billingON.css" />
 <script language="JavaScript">
-	<!--
+	
 	var bClick = false;
 	    function onSave() {
-	        //alert(document.forms[0].submit[0].value);
-	        var ret = true;
-	        if(ret==true && bClick) {
-	            ret = confirm("Are you sure you want to save?");
-	        }
-	        if(!ret) {
-	        	bClick = false;
-	        }
-	        return ret;
-	    }
+
+            var ret = true;
+
+
+
+
+            bClick = false;
+
+                return ret;
+            }
 	    function onClickSave() {
 			bClick = true;
 	    }
@@ -246,7 +273,7 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 		<td>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myDarkGreen">
 			<tr>
-				<td><b><font color="#FFFFFF">Confirmation </font></b></td>
+				<td><b><font color="#FFFFFF">&nbsp;Confirmation </font></b></td>
 				<td align="right"><input type="hidden" name="addition" value="Confirm" /></td>
 			</tr>
 		</table>
@@ -334,13 +361,56 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 	<tr>
 		<td align="center">
 		<table border="1" width="100%" bordercolorlight="#99A005" bordercolordark="#FFFFFF">
+<%  boolean codeValid = true;
+    
+    //validation of user entered service codes
+    String serviceCodeValue = null;
+    for (int i = 0; i < BillingDataHlp.FIELD_SERVICE_NUM; i++) {
+	serviceCodeValue = request.getParameter("serviceCode" + i);
+	if (!serviceCodeValue.equals("")) {
+	    sql = "select distinct(service_code) from billingservice where  service_code='" + serviceCodeValue.trim().replaceAll("_","\\_") + "'";
+	   System.out.println(sql);
+            rs = dbObj.searchDBRecord(sql);
+	    if (!rs.next()) {
+		codeValid = false;
+		%>
+		<tr class="myErrorText"><td align=center>
+		    &nbsp;<br>
+		    Service code "<%=serviceCodeValue%>" is invalid. Please go back to correct it.
+		</td></tr>  
+		<%
+	    }
+	}
+    }
+    
+    //validation of diagnostic code (dxcode)
+    String dxCodeValue = null;
+    for (int i = 0; i < 3; i++) {
+	if (i==0) dxCodeValue=request.getParameter("dxCode");
+	else dxCodeValue=request.getParameter("dxCode" + i);
+	if (!dxCodeValue.equals("")) {
+	    sql = "select diagnostic_code from diagnosticcode where diagnostic_code='" + dxCodeValue.trim() +"'";
+	    rs = dbObj.searchDBRecord(sql);
+	    if (!rs.next()) {
+		codeValid = false;
+		%>
+		<tr class="myErrorText"><td align=center>
+		    &nbsp;<br>
+		    Diagnostic code "<%=dxCodeValue%>" is invalid. Please go back to correct it.
+		</td></tr>
+		<%
+	    }
+	}
+    }
 
+    if (codeValid) {
+%>
 			<%--= msg --%>
 			<tr class="myYellow">
 				<td colspan='3'>Calculation</td>
 				<td>Description</td>
 			</tr>
-			<% 
+<%  }  
 			//Vector[] vecServiceParam = prepObj.getRequestCodeVec(request, "serviceDate", "serviceUnit", "serviceAt", 8);
 			//Vector vecCodeItem = prepObj.getServiceCodeReviewVec(vecServiceParam[0], vecServiceParam[1],
 			//				vecServiceParam[2]);
@@ -378,7 +448,7 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
                                                     BigDecimal temp = new BigDecimal(codeTotal);
                                                     gstbilledtotal = gstbilledtotal.add(temp).setScale(2, BigDecimal.ROUND_HALF_UP);
                                                 }
-                                                
+                        if (codeValid) {                 
 			%>
 			<tr class="myGreen">
 				<td align='center' width='3%'><%=""+n %></td>
@@ -390,17 +460,20 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 				</td>
 				<td width='25%'><%=propCodeDesc.getProperty(codeName, "") %></td>
 			</tr>
-			<% 
+			<%     
+                        }                        
 						nCode++;
 					} 
 					//System.out.println("vecPercCodeItem end: " + codeName);
 					else if(nPerc<vecPercCodeItem.size() && codeName.equals((String) ((BillingReviewPercItem)vecPercCodeItem.get(nPerc)).getCodeName())) {
-			%>
+			if (codeValid) {
+                                            %>
 			<tr class="myPink">
 				<td align='center' ><%="&nbsp;" %></td>
 				<td align='right' ><%=codeName %> (1)</td>
 				<td align='right'>
-				<% 
+		     <% }
+                                                
 						bPerc = true;
 						BillingReviewPercItem percItem = (BillingReviewPercItem)vecPercCodeItem.get(nPerc);
 						String percFee = percItem.getCodeFee();
@@ -409,9 +482,13 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 						String codeUnit = (String)percItem.getCodeUnit();
 						for(int j=0; j<vecPercTotal.size(); j++) {
 							String percTotal = (Float.parseFloat((String)vecPercTotal.get(j)) )*Integer.parseInt(codeUnit) + "";
-				%>
+				if (codeValid) {
+                                                        %>
 						<input type="checkbox" name="percCode_<%=i %>" value="<%=percTotal %>" onclick="onCheckMaster();" /> <%=percTotal %><font size='-2'>(<%=vecPercFee.get(j) %>x<%=percFee %>x<%=codeUnit %>)</font> | 
-				<%		} 
+				<%
+                                }               
+                                                }
+                                if (codeValid) {                
 				%> = <input type="text" name="percCodeSubtotal_<%=i %>" size="5" value="0.00" />
 				<input type="hidden" name="xserviceCode_<%=i %>" value="<%=codeName %>" />
 				<input type="hidden" name="xserviceUnit_<%=i %>" value="<%=codeUnit %>" />
@@ -420,6 +497,7 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 				</td>
 			</tr>
 			<% 
+                                }
 						nPerc++;
 						vecPercNo.add(""+i);
 						String nMin = percItem.getCodeMinFee();
@@ -431,6 +509,7 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 					}
 					//System.out.println(i + "end: " + nCode);
 				}
+                        if (codeValid) {
 			%>
 			<tr>
 				<td align='right' colspan='3' class="myGreen">Total: <input type="text" id="total" name="total" size="5" value="0.00" />
@@ -512,17 +591,22 @@ function onCheckMaster() {
 </script>
 
 			</tr>
+                        <% } %>
 			<tr>
 
 				<td colspan='3' align='center' bgcolor="silver">
-				<input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
-				<input type="submit" name="button" value="Back to Edit"	style="width: 120px;" />
+				    <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
+                                    <% if (codeValid) { %>
+                                    <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
+				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
+                                    <% } %>
 				</td>
 			</tr>
 		</table>
 		</td>
 	</tr>
-<% if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
+<% if (codeValid) {
+        if(request.getParameter("xml_billtype")!=null && request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) { %>
 	<tr>
 			<td >
 			Billing Notes:<br>
@@ -539,20 +623,32 @@ function onCheckMaster() {
 			<textarea name="comment" cols=60 rows=4><%=tempLoc %></textarea>
 			</td>
 	</tr>
-<% } %>
+<%      } 
+  }     %>
 <%//
 if(request.getParameter("xml_billtype")!=null && !request.getParameter("xml_billtype").matches("ODP.*|WCB.*|NOT.*")) {
 	JdbcBillingPageUtil pObj = new JdbcBillingPageUtil();
 	List al = pObj.getPaymentType();
 	
 	Billing3rdPartPrep privateObj = new Billing3rdPartPrep();
-	Properties propClinic = privateObj.getLocalClinicAddr();
-	String strClinicAddr = propClinic.getProperty("clinic_name", "") + "\n" 
+	oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider((String) session.getAttribute("user"));
+	 
+                /*
+                = propClinic.getProperty("clinic_name", "") + "\n" 
 		+ propClinic.getProperty("clinic_address", "") + "\n" 
 		+ propClinic.getProperty("clinic_city", "") + ", " + propClinic.getProperty("clinic_province", "") + "\n" 
 		+ propClinic.getProperty("clinic_postal", "") + "\n" 
 		+ "Tel: " + propClinic.getProperty("clinic_phone", "") + "\n" 
 		+ "Fax: " + propClinic.getProperty("clinic_fax", "") ;
+                */
+        String strClinicAddr = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") +"\n"
+                             + provider.getClinicAddress() +"\n"
+                             + provider.getClinicCity() +","+ provider.getClinicProvince()+"\n"
+                             + provider.getClinicPostal() +"\n"
+                             + "Tel: "+provider.getClinicPhone() +"\n"
+                             + "Fax: "+provider.getClinicFax() ;
+                
+if (codeValid) { %>
 %>
 
 <%
@@ -628,7 +724,7 @@ if(props2.getProperty("clinicSatelliteCity") != null) {
 		</table>
 
 </td></tr>
-<% } %>
+<% }} %>
 	<%for (Enumeration e = request.getParameterNames(); e.hasMoreElements();) {
 				String temp = e.nextElement().toString();
 %>
