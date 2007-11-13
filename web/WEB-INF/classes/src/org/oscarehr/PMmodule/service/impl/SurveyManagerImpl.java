@@ -30,7 +30,9 @@ import org.oscarehr.PMmodule.dao.SurveyDAO;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
+import org.oscarehr.survey.model.oscar.OscarFormDataTmpsave;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.surveymodel.SurveyDocument;
 
 public class SurveyManagerImpl implements SurveyManager {
@@ -55,7 +57,25 @@ public class SurveyManagerImpl implements SurveyManager {
 		}
 		surveyDAO.saveFormInstance(instance);
 	}
-
+	
+	public void deleteTmpsave(String instanceId, String formId, String clientId, String providerId) {
+		List tmpInstances = getTmpForms(instanceId,formId,clientId,providerId);
+		OscarFormInstanceTmpsave tmpInstance = (OscarFormInstanceTmpsave)tmpInstances.get(0);
+		for(Iterator iter=tmpInstance.getData().iterator();iter.hasNext();) {
+			OscarFormDataTmpsave data = (OscarFormDataTmpsave)iter.next();
+			this.surveyDAO.deleteFormDataTmpsave(data);
+		}
+		surveyDAO.deleteFormInstanceTmpsave(tmpInstance);
+	}
+	
+	public void saveFormInstanceTmpsave(OscarFormInstanceTmpsave instance) {
+		for(Iterator iter=instance.getData().iterator();iter.hasNext();) {
+			OscarFormDataTmpsave data = (OscarFormDataTmpsave)iter.next();
+			this.surveyDAO.saveFormDataTmpsave(data);
+		}
+		surveyDAO.saveFormInstanceTmpsave(instance);
+	}
+	
 	public OscarFormInstance getLatestForm(String formId, String clientId) {
 		return surveyDAO.getLatestForm(Long.valueOf(formId),Long.valueOf(clientId));
 	}
@@ -67,11 +87,23 @@ public class SurveyManagerImpl implements SurveyManager {
 	public List getForms(String formId, String clientId) {
 		return surveyDAO.getForms(Long.valueOf(formId),Long.valueOf(clientId));
 	}
-
+	public OscarFormInstance getCurrentFormById(String formInstanceId) {
+		return surveyDAO.getCurrentFormById(Long.valueOf(formInstanceId));
+	}
+	public List getTmpForms(String instanceId, String formId, String clientId, String providerId) {
+		return surveyDAO.getTmpForms(Long.valueOf(instanceId),Long.valueOf(formId),Long.valueOf(clientId), Long.valueOf(providerId));
+	}
+	public List getTmpFormData(String tmpInstanceId) {
+		return surveyDAO.getTmpFormData(Long.valueOf(tmpInstanceId));
+	}
 	public void saveFormData(OscarFormData data) {
 		surveyDAO.saveFormData(data);
 	}
 
+	public void saveFormDataTmpsave(OscarFormDataTmpsave data) {
+		surveyDAO.saveFormDataTmpsave(data);
+	}
+	
 	public SurveyDocument.Survey getFormModel(String formId) {
 		OscarForm survey = getForm(formId);
 		if(survey != null) {

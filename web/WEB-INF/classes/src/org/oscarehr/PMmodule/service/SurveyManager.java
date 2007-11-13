@@ -26,18 +26,26 @@ import java.util.List;
 
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
+import org.oscarehr.survey.model.oscar.OscarFormDataTmpsave;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.surveymodel.SurveyDocument;
 
 public interface SurveyManager {
 	public List getAllForms();
 	public OscarForm getForm(String formId);
 	public void saveFormInstance(OscarFormInstance instance);
+	public void saveFormInstanceTmpsave(OscarFormInstanceTmpsave instance);
 	public OscarFormInstance getLatestForm(String formId, String clientId);
 	public List getForms(String clientId);
-	public List getForms(String formId, String clientId);
+	public List getForms(String formId, String clientId);	
+	public OscarFormInstance getCurrentFormById(String formInstanceId);
+	public List getTmpForms(String tmpInstanceId, String formId, String clientId, String providerId);
+	public List getTmpFormData(String tmpInstanceId);
 	public void saveFormData(OscarFormData data);
+	public void saveFormDataTmpsave(OscarFormDataTmpsave data);
 	public SurveyDocument.Survey getFormModel(String formId);
 	
 	public List getCurrentForms(String formId, List clients);
+	public void deleteTmpsave(String instanceId, String formId, String clientId, String providerId);
 }

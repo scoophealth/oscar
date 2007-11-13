@@ -38,6 +38,28 @@
 				document.surveyExecuteForm.method.value='refresh';
 				document.surveyExecuteForm.submit();
 			}
+			function init() {
+				setInterval("autoSave()",60000);
+				/*window.opener.location.reload(true);*/
+			}
+			function autoSave() {
+				document.surveyExecuteForm.elements['view.tab'].value=name;
+				document.surveyExecuteForm.method.value='tmpsave_survey';
+				document.surveyExecuteForm.submit();				
+			}
+			function init1() {
+				setTimer();
+				window.opener.location.reload(true);
+			}
+			
+			function setTimer() {
+				setTimeout("autoSave()", 300000); <%--5minutes --%>
+			}
+			
+			function autoSave1() {
+					
+				setTimer();	
+			}
 		</script>
 		<script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/calendar.js"></script>
         <script type="text/javascript" src="<c:out value="${ctx}"/>/jsCalendar/lang/calendar-en.js"></script>
@@ -55,10 +77,10 @@
 		</script>		
 		</c:if>
 		        
- 	</head>
+ 	</head>	
 	
-	<body>
-		
+	<body onload="init()">
+	
 		<%@ include file="/common/messages.jsp"%>
 		<html:form action="/PMmodule/Forms/SurveyExecute" onsubmit="return validateForm(this,document.surveyExecuteForm.elements['view.tab'].value,true);">
 		<html:hidden property="view.tab"/>
