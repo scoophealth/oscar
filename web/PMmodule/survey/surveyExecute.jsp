@@ -39,8 +39,8 @@
 				document.surveyExecuteForm.submit();
 			}
 			function init() {
-				setInterval("autoSave()",60000);
-				/*window.opener.location.reload(true);*/
+				setInterval("autoSave()",300000); 
+				/*5minutes*/
 			}
 			function autoSave() {
 				document.surveyExecuteForm.elements['view.tab'].value=name;
