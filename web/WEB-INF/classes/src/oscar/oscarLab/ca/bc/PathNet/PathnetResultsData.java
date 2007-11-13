@@ -114,7 +114,7 @@ public class PathnetResultsData {
             if ( demographicNo == null) {
               
                 sql  ="select pid.message_id, pid.external_id as patient_health_num,  pid.patient_name as patientName, pid.sex as patient_sex ,pid.pid_id, orc.filler_order_number as accessionNum, orc.ordering_provider, msh.date_time_of_message as date, min(obr.result_status) as stat, providerLabRouting.status " +
-                        "from hl7_message m, hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, providerLabRouting " +
+                        "from hl7_msh msh, hl7_pid pid, hl7_orc orc, hl7_obr obr, providerLabRouting " +
                         "where providerLabRouting.lab_no = pid.message_id and pid.message_id = msh.message_id and pid.pid_id = orc.pid_id and pid.pid_id = obr.pid_id  "+
                         " AND providerLabRouting.status like '%"+status+"%' AND providerLabRouting.provider_no like '"+(providerNo.equals("")?"%":providerNo)+"'" +
                         " AND providerLabRouting.lab_type = 'BCP' " +
