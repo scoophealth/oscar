@@ -44,7 +44,7 @@ public class AgencyManager {
 
 	public Agency getLocalAgency() {
 		Agency agency = dao.getLocalAgency();
-		
+
 		if (agency == null) {
 			log.warn("No local agency has been saved.");
 			return new Agency(new Long(0));

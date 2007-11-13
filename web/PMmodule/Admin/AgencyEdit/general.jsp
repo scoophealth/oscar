@@ -33,10 +33,6 @@
 </div>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr class="b">
-		<td width="20%">Agency Id:</td>
-		<td><c:out value="${requestScope.id}" /></td>
-	</tr>
-	<tr class="b">
 		<td width="20%">Name:</td>
 		<td><html:text property="agency.name" /></td>
 	</tr>
