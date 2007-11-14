@@ -30,6 +30,7 @@
 			String DemoProvince = "";
 			String DemoPostal = "";
 			String DemoDOB = "";
+                        String DemoRS = "";
 			String DemoSex = "";
 			String hin = "";
 			String location = "";
@@ -234,7 +235,7 @@ function popupPage(vheight,vwidth,varpage) {
 						hin = sdemo.getHIN();
 						DemoDOB = sdemo.getYearOfBirth() + sdemo.getMonthOfBirth() + sdemo.getDateOfBirth();
 						DemoSex = sdemo.getSex();
-						
+						DemoRS = sdemo.getRosterStatus();
 						//hin = ch1Obj.getHin() + ch1Obj.getVer();
 						location = ch1Obj.getFacilty_num();
 						BillLocation = "";
@@ -326,7 +327,7 @@ if(bFlag) {
 		<%=DemoName%></a>
 		<input type="hidden" name="demo_name" value="<%=DemoName%>"> </b></td>
 		<td width="46%"><b><bean:message key="billing.billingCorrection.formHealth" />: <%=hin%> <input type="hidden"
-			name="xml_hin" value="<%=hin%>"> </b></td>
+			name="xml_hin" value="<%=hin%>">&nbsp; &nbsp; RS: <%=DemoRS%> </b></td>
 	</tr>
 	<tr>
 		<td><b><bean:message key="billing.billingCorrection.msgSex" />: <%=DemoSex%> <input type="hidden" name="demo_sex"
