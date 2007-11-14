@@ -538,7 +538,8 @@ public class ExtractBean extends Object implements Serializable {
                             + misc.forwardZero(rs2.getString("birth_date"),8)            //p52   8
                             + misc.forwardZero(rs2.getString("billingmaster_no"), 7)     //p54   7
                             + misc.forwardSpace(rs2.getString("correspondence_code"), 1) //p56   1
-                            + misc.space(20)                                             //p58  20
+                            //+ misc.space(20)                                             //p58  20
+                            + misc.backwardSpace(rs2.getString("claim_comment"),20)      //p58  20
                             + misc.forwardSpace(rs2.getString("mva_claim_code"),1)       //p60   1
                             + misc.forwardZero(rs2.getString("icbc_claim_no"), 8)        //p62   8
                             + misc.forwardZero(rs2.getString("original_claim"), 20 )     //p64  20
