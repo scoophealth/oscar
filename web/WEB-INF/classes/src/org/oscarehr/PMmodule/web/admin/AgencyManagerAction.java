@@ -69,9 +69,7 @@ public class AgencyManagerAction extends BaseAction {
 
 		boolean integratorEnabled = integratorManager.isEnabled();
 		if (tabBean.getTab() != null && tabBean.getTab().equalsIgnoreCase("community")) {
-			if (integratorEnabled && integratorManager.isRegistered()) {
-				request.setAttribute("agencies", integratorManager.getAgencies());
-			}
+			request.setAttribute("agencies", integratorManager.getAgencies());
 		}
 
 		request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());

@@ -206,9 +206,12 @@ public class IntegratorManager {
 	}
 
 	/**
-	 * @return a list of all agencies
+	 * @return a list of all agencies or an empty list if integrator is not enabled.
 	 */
 	public List<Agency> getAgencies() {
+		
+		if (!isEnabled()) return(new ArrayList<Agency>());
+			
 		FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), authenticationToken);
 		List<Agency> agencies = new ArrayList<Agency>();
 		for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
