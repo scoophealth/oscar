@@ -291,8 +291,10 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href="#" onClick="popupPage(600,600,'../billing/CA/BC/showServiceCodeAssocs.do');return false;">Manage Service/Diagnostic Code Associations</a></li>
 		  <li><a href="#" onClick="popupPage(600,500,'../billing/CA/BC/supServiceCodeAssocAction.do');return false;">Manage Procedure/Fee Code Associations</a></li>
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingManageReferralDoc.jsp');return false;">Manage Referral Doc</a></li>
+          <oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="no" defaultVal="true">
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/billingSim.jsp');return false;">Simulate Submission File</a></li>
           <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/billingTeleplanGroupReport.jsp');return false;">Generate Teleplan File</a></li>
+          </oscar:oscarPropertiesCheck>
           <oscar:oscarPropertiesCheck property="NEW_BC_TELEPLAN" value="yes">
           <li><a href="#" onclick ="popupPage(700,1000,'../billing/CA/BC/TeleplanSimulation.jsp');return false;">Simulate Submission File2</a></li>
           <li><a href="#" onclick ="popupPage(800,720,'../billing/CA/BC/TeleplanSubmission.jsp');return false;">Generate Teleplan File2</a></li>
@@ -361,7 +363,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
          <li><a href="#" onClick="popupPage(600,900,'../oscarSurveillance/ReportSurveillance.jsp')"><bean:message key="admin.admin.report.SurveillanceReport"/></a></li>
          <li><a href="#" onClick="popupPage(600,900,'../oscarReport/oscarReportRehabStudy.jsp')">Rehab Study</a></li>
          <li><a href="../oscarReport/TrackedLinks.jsp">Link Tracking Reports</a></li>
-         <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes">
+         <oscar:oscarPropertiesCheck property="SERVERLOGGING" value="yes" >
          <li><a href="#" onClick="popupPage(600,900, 'oscarLogging.jsp')">Server Logging</a></li>
          </oscar:oscarPropertiesCheck>
       </ul>
