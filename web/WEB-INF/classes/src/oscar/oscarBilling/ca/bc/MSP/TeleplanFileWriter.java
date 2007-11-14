@@ -389,7 +389,8 @@ public class TeleplanFileWriter {
             dLine.append(misc.forwardZero(bm.getBirthDate(),8));                        //p52   8
             dLine.append(misc.forwardZero(""+bm.getBillingmasterNo(), 7));              //p54   7
             dLine.append(misc.forwardSpace(bm.getCorrespondenceCode(), 1));             //p56   1
-            dLine.append(misc.space(20));                                               //p58  20
+            //dLine.append(misc.space(20));                                             //p58  20
+            dLine.append(misc.backwardSpace(bm.getClaimComment(),20));        //p58  20
             dLine.append(misc.forwardSpace(bm.getMvaClaimCode(),1));                    //p60   1
             dLine.append(misc.forwardZero(bm.getIcbcClaimNo(), 8));                     //p62   8
             dLine.append(misc.forwardZero(bm.getOriginalClaim(), 20 ));                 //p64  20
