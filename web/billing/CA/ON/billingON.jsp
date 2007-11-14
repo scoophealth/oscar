@@ -20,6 +20,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean"%>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html"%>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 <%@ page errorPage="errorpage.jsp"%>
 <%@ page import="java.util.*,java.net.*,java.sql.*,oscar.*,oscar.util.*,oscar.appt.*"%>
 <%@ page import="oscar.oscarBilling.ca.on.data.*"%>
@@ -826,12 +827,7 @@ function changeCodeDesc() {
 		<table border="0" cellspacing="0" cellpadding="0" width="100%" class="myYellow">
 		    <tr>
 			<td nowrap bgcolor="#FFCC99" width="10%" align="center">
-			    <b><%=demoname + " ("
-					   + (demoSex.equals("1") ? "M" : "F")
-					   + ", "
-					   + UtilDateUtilities.calcAge(demoDOB.substring(0,4), demoDOB.substring(4,6), demoDOB.substring(6,8))
-					   + ")"
-					   + roster_status%></b>
+			    <b>&nbsp;<oscar:nameage demographicNo="<%=demo_no%>"/>  <%=roster_status%></b>
 				<%if (appt_no.compareTo("0") == 0) {%> 
 			    <img src="../../../images/cal.gif" id="service_date_cal" />
 			    <input type="text" id="service_date" name="service_date"
