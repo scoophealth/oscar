@@ -312,9 +312,7 @@ if (pId==null) pId="";
 				<td>
 					<nested:checkbox indexed="true" name="issueCheckList" property="checked" onchange="setChangeFlag(true);" disabled="<%=disabled%>"></nested:checkbox>
 				</td>
-				<td>
-				
-				</td>				
+								
 					<logic:equal name="issueCheckList" property="issue.issue.priority" value="allergy">
 						<td bgcolor="yellow">
 							<nested:write name="issueCheckList"	property="issue.issue.description" />
