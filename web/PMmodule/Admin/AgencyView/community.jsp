@@ -54,5 +54,4 @@
 <input type="button" value="Refresh Client Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_clients'" />
 <input type="button" value="Refresh Program Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_programs'" />
 <input type="button" value="Refresh Program Participation Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_admissions'" />
-<input type="button" value="Refresh Provider Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_providers'" />
 <input type="button" value="Refresh Referral Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_referrals'" />

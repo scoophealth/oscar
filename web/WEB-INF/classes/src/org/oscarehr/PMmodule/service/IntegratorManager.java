@@ -446,10 +446,6 @@ public class IntegratorManager {
 
     }
 
-    public void refreshProviders(List<Provider> providers) throws IntegratorException {
-        throw new OperationNotImplementedException("provider registrations not yet implemented in integrator");
-    }
-
     public void refreshReferrals(List<ClientReferral> referrals) throws IntegratorException {
         throw new OperationNotImplementedException("referral registrations not yet implemented in integrator");
     }

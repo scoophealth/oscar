@@ -74,14 +74,6 @@ public class IntegratorUpdateTask extends TimerTask {
             }
 
             try {
-                integratorManager.refreshProviders(providerManager.getProviders());
-                log.info("Providers refereshed");
-            }
-            catch (IntegratorException e) {
-                log.error(e);
-            }
-
-            try {
                 integratorManager.refreshAdmissions(admissionManager.getAdmissions());
                 log.info("Admissions updated");
             }
