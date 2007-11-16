@@ -18,54 +18,65 @@ import oscar.OscarProperties;
 
 public class PopulationReportTask extends TimerTask {
 
-    private static final Logger LOG = Logger.getLogger(PopulationReportTask.class);
+    private static final Logger logger = Logger.getLogger(PopulationReportTask.class);
 
     private static String URL;
     private static String FILE;
 
     private static String getUrl() {
         if (URL == null) {
-            URL = new StringBuilder("https://").append(OscarProperties.getInstance().getProperty("host")).append("/oscar/PopulationReport.do").toString();
+
+            String host = OscarProperties.getInstance().getProperty("host");
+            if (host == null) return (null);
+
+            URL = new StringBuilder("https://").append(host).append("/oscar/PopulationReport.do").toString();
         }
 
-        LOG.info("request url: " + URL);
+        logger.info("request url: " + URL);
 
         return URL;
     }
 
     private static String getFile() {
         if (FILE == null) {
-            FILE = new StringBuilder().append(System.getProperty("user.home")).append(File.separator).append("reports").append(File.separator).append("report").append(File.separator).append("populationReport.html").toString();
+            FILE = new StringBuilder().append(System.getProperty("user.home")).append(File.separator).append("reports").append(File.separator).append("report")
+                    .append(File.separator).append("populationReport.html").toString();
         }
 
-        LOG.info("write file: " + FILE);
+        logger.info("write file: " + FILE);
 
         return FILE;
     }
 
     @Override
     public void run() {
+        logger.info("start population report task");
 
         try {
-            LOG.info("start population report task");
+            String url = getUrl();
+            if (url == null) {
+                logger.debug("Population report task not run, no host / url configured.");
+                return;
+            }
 
             HttpClient client = new HttpClient();
-            HttpMethod method = new GetMethod(getUrl());
+            HttpMethod method = new GetMethod(url);
 
             client.executeMethod(method);
             writeResponseToFile(method);
             method.releaseConnection();
 
-            LOG.info("end population report task");
         }
         catch (UnknownHostException e) {
-            LOG.error("Error running population report task, unknown host, host=" + e.getMessage());
+            logger.error("Error running population report task, unknown host, host=" + e.getMessage());
         }
         catch (Throwable t) {
-            LOG.error("error running population report task", t);
+            logger.error("error running population report task", t);
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
+
+            logger.info("end population report task");
         }
     }
 
