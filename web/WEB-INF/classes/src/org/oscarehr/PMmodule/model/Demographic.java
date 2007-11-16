@@ -74,7 +74,7 @@ public class Demographic implements Serializable {
     private String email;
     private String yearOfBirth;
     private Date effDate;
-    private long agencyId;
+    private String agencyId;
     private String links;
     private DemographicExt[] extras;
 
@@ -634,13 +634,7 @@ public class Demographic implements Serializable {
         return Utility.getNumYears(Utility.calcDate(Utility.convertToReplaceStrIfEmptyStr(getYearOfBirth(), DEFAULT_YEAR), Utility.convertToReplaceStrIfEmptyStr(getMonthOfBirth(), DEFAULT_MONTH), Utility.convertToReplaceStrIfEmptyStr(getDateOfBirth(), DEFAULT_DATE)), asofDate);
     }
 
-    public long getAgencyId() {
-        return agencyId;
-    }
 
-    public String getAgencyName() {
-        return Agency.getAgencyName(agencyId);
-    }
 
     public DemographicExt[] getExtras() {
         return extras;
@@ -718,9 +712,7 @@ public class Demographic implements Serializable {
         return getLinks().split(",").length;
     }
 
-    public void setAgencyId(long agencyId) {
-        this.agencyId = agencyId;
-    }
+
 
     public void setExtras(DemographicExt[] extras) {
         this.extras = extras;
@@ -730,5 +722,12 @@ public class Demographic implements Serializable {
         this.links = links;
     }
 
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
+    }
 }
 

@@ -64,6 +64,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         List<Demographic> localMatches = localSearch(intakeSearchBean, allowOnlyOptins);
         intakeSearchBean.setLocalMatches(localMatches);
 
+        intakeSearchBean.setSearchPerformed(true);
+        
         // if matches found display results, otherwise create local intake
         if (!localMatches.isEmpty() && !remoteMatches.isEmpty()) {
             return mapping.findForward(FORWARD_SEARCH_FORM);

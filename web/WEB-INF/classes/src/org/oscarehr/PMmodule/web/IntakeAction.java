@@ -125,10 +125,10 @@ public class IntakeAction extends BaseAction {
 
 
         Demographic demographic = null;
-        if (!formBean.getAgencyId().equals(IntegratorManager.getLocalAgency().getIntegratorUsername())) {
+        if (!IntegratorManager.getLocalAgency().getIntegratorUsername().equals(formBean.getAgencyId())) {
             //integrator
             try {
-                demographic = integratorManager.getDemographic(formBean.getAgencyId(), Long.valueOf(formBean.getDemographicId()).longValue());
+                demographic = integratorManager.getDemographic(formBean.getAgencyId(), Long.valueOf(formBean.getDemographicId()));
             } catch (IntegratorException e) {
                 log.error(e);
             }

@@ -144,7 +144,7 @@ public class IntakeCAction2 extends BaseAction {
 		if (demographicInfo != null) {
 			log.debug("have demographic information");
 			intakeFormBean.setAgencyId(demographicInfo.getAgencyId());
-			intakeFormBean.setClientId(demographicInfo.getDemographicNo().longValue());
+			intakeFormBean.setDemographicId(demographicInfo.getDemographicNo().longValue());
 		}
 
 		if (update) {
@@ -619,8 +619,10 @@ public class IntakeCAction2 extends BaseAction {
 			IntakeFormBean intakeFormBean = (IntakeFormBean) intakeForm.get("bean");
 
 			/* if client is based on one from a remote agency */
-			if (intakeFormBean.getAgencyId() != integratorManager.getLocalAgencyId() && intakeFormBean.getAgencyId() != 0) {
-				integratorManager.mergeClient(demographic, intakeFormBean.getAgencyId(), intakeFormBean.getClientId());
+            // integratorManager.getLocalAgency().getIntegratorUsername().equals(intakeFormBean.getAgencyId())
+
+            if (integratorManager.getLocalAgency().getIntegratorUsername().equals(intakeFormBean.getAgencyId())) {
+				integratorManager.mergeClient(demographic.getDemographicNo(), intakeFormBean.getAgencyId(), intakeFormBean.getDemographicId());
 			}
 		} catch (IntegratorException e) {
 			log.error(e);

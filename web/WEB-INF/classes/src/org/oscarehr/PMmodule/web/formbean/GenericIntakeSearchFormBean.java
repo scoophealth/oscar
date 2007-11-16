@@ -43,6 +43,8 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 	private String healthCardNumber;
 	private String healthCardVersion;
 
+    private boolean searchPerformed = false;
+
     private Collection<Demographic> localMatches;
     private Client[] remoteMatches;
 
@@ -52,9 +54,17 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 	public GenericIntakeSearchFormBean() {
 		setMonths(GenericIntakeConstants.MONTHS);
 		setDays(GenericIntakeConstants.DAYS);
-	}
+    }
 
-	public LabelValueBean[] getMonths() {
+    public boolean isSearchPerformed() {
+        return searchPerformed;
+    }
+
+    public void setSearchPerformed(boolean searchPerformed) {
+        this.searchPerformed = searchPerformed;
+    }
+
+    public LabelValueBean[] getMonths() {
 		return months;
 	}
 

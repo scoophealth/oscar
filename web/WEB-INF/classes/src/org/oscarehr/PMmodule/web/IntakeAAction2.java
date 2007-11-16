@@ -22,399 +22,388 @@
 
 package org.oscarehr.PMmodule.web;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts.action.*;
+import org.caisi.event.OscarCaisiEvent;
+import org.oscarehr.PMmodule.exception.IntegratorException;
+import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
+import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.action.DynaActionForm;
-import org.caisi.event.OscarCaisiEvent;
-import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.Formintakea;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.web.formbean.IntakeAFormBean;
-import org.oscarehr.PMmodule.web.formbean.IntakeFormBean;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
 public class IntakeAAction2 extends BaseAction {
-	private static Log log = LogFactory.getLog(IntakeAAction2.class);
-	private  final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-	
-	
-	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		return form(mapping,form,request,response);
-	}
-	
-	public ActionForward new_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		request.getSession().setAttribute("demographic",null);
-		return form(mapping,form,request,response);
-	}
-	
-	
-	
-	public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm intakeForm = (DynaActionForm)form;
-		IntakeFormBean intakeFormBean = (IntakeFormBean)intakeForm.get("bean");
-		
-		log.debug("loading Intake A");
-		
-		intakeForm.set("intake", new Formintakea());
-		
-		String demographicNo = request.getParameter("demographicNo");
-		if(demographicNo==null) {
-			demographicNo=(String)request.getAttribute("demographicNo");
-		}
-		
-		Formintakea intakeAForm = null;
-		if(demographicNo != null) {
-			intakeAForm = intakeAManager.getCurrIntakeAByDemographicNo(demographicNo);
-		}
-		boolean update=(intakeAForm != null);
-		if(!update) {
-			intakeAForm = new Formintakea();
-		}
-		
-		Demographic client  = clientManager.getClientByDemographicNo(demographicNo);
-		if(client != null) {
-			this.updateForm(intakeAForm,client);
-		}
-		
-		//this is the one set when the integrator/local imported a match
-		Demographic demographicInfo = (Demographic)request.getSession().getAttribute("demographic");
-		if(demographicInfo != null) {
-			log.debug("have demographic information from integrator/local");
-			intakeFormBean.setAgencyId(demographicInfo.getAgencyId());
-			intakeFormBean.setClientId(demographicInfo.getDemographicNo().longValue());
-			//request.getSession().setAttribute("demographic",null);
-		}
-		
-		if(update) {
-			intakeAForm.setDemographicNo(Long.valueOf(demographicNo));
-			
-			if(client == null) {
-				ActionMessages messages = new ActionMessages();
-				messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.invalid_client"));
-				saveMessages(request,messages);			
-				return mapping.findForward("success");
-			}  			
-		} else {
-			//intakeAForm = new Formintakea();
-			intakeAForm.setAssessDate(formatter.format(new Date()));
-			//set client name
-			if(client != null) {
-				intakeAForm.setDemographicNo(Long.valueOf(demographicNo));
-				intakeAForm.setClientFirstName(client.getFirstName());
-				intakeAForm.setClientSurname(client.getLastName());
-				this.updateForm(intakeAForm, client);
-			}
-			if(demographicInfo != null) {
-				intakeAForm.setClientFirstName(demographicInfo.getFirstName());
-				intakeAForm.setClientSurname(demographicInfo.getLastName());
-				intakeAForm.setDay(demographicInfo.getDateOfBirth());
-				intakeAForm.setMonth(demographicInfo.getMonthOfBirth());
-				intakeAForm.setYear(demographicInfo.getYearOfBirth());
-				
-				if(demographicInfo.getSex() != null) {
-					if(demographicInfo.getSex().equalsIgnoreCase("M")) {
-						intakeAForm.setRadioSex("male");
-					} else if(demographicInfo.getSex().equalsIgnoreCase("F")) {
-						intakeAForm.setRadioSex("female");				
-					} else if(demographicInfo.getSex().equalsIgnoreCase("T")) {
-						intakeAForm.setRadioSex("transgendered");
-					}
-				}
-				if(demographicInfo.getHin()!=null && demographicInfo.getHin().length()>0) {
-					intakeAForm.setCboxHealthcard("Y");
-					intakeAForm.setHealthCardNum(demographicInfo.getHin());
-					intakeAForm.setHealthCardVer(demographicInfo.getVer());
-					if(demographicInfo.getEffDate()!=null) {
-						SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
-						intakeAForm.setEffDate(formatter.format(demographicInfo.getEffDate()));
-					}
-				}
-			}
-		}
-		
-		if(client != null) {
-			Admission a = admissionManager.getCurrentCommunityProgramAdmission(client.getDemographicNo());
-			if(a != null) {
-				request.setAttribute("in_community_program", new Boolean(true));
-			}
-		}
-		
-		intakeAForm.setProviderNo(Long.valueOf(getProviderNo(request)));		
-		intakeForm.set("intake",intakeAForm);
+    private static Log log = LogFactory.getLog(IntakeAAction2.class);
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 
-		List origProgramDomain = providerManager.getProgramDomain(getProviderNo(request));
-		request.setAttribute("programDomainBed",this.getProgramDomain_Bed(origProgramDomain));
-		request.setAttribute("programDomainService",this.getProgramDomain_Service(origProgramDomain));
 
-		logManager.log("read","intakea",demographicNo,request);
-	   	request.setAttribute("demographicNo",demographicNo);
-		return mapping.findForward("form");
-	}
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        return form(mapping, form, request, response);
+    }
 
-	
-	public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm intakeForm = (DynaActionForm)form;
-		IntakeAFormBean formBean = (IntakeAFormBean)intakeForm.get("view2");
-		IntakeFormBean intakeFormBean = (IntakeFormBean)intakeForm.get("bean");
-		
-		Formintakea intakea = (Formintakea)intakeForm.get("intake");
-		String demographicNo = request.getParameter("demographicNo");
-		
-		boolean update = false;
-		
-		if(intakea.getDemographicNo() != null && intakea.getDemographicNo().longValue() > 0) {
-			update = true;
-		}	
+    public ActionForward new_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().setAttribute("demographic", null);
+        return form(mapping, form, request, response);
+    }
 
-		intakea.setProviderNo(Long.valueOf(this.getProviderNo(request)));
-		intakeAManager.saveNewIntake(intakea);
-		
-		if(update) {
-			updateClientInfo(intakea,String.valueOf(intakea.getDemographicNo()));
-		}
-		
+
+    public ActionForward form(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm intakeForm = (DynaActionForm) form;
+        IntakeFormBean intakeFormBean = (IntakeFormBean) intakeForm.get("bean");
+
+        log.debug("loading Intake A");
+
+        intakeForm.set("intake", new Formintakea());
+
+        String demographicNo = request.getParameter("demographicNo");
+        if (demographicNo == null) {
+            demographicNo = (String) request.getAttribute("demographicNo");
+        }
+
+        Formintakea intakeAForm = null;
+        if (demographicNo != null) {
+            intakeAForm = intakeAManager.getCurrIntakeAByDemographicNo(demographicNo);
+        }
+        boolean update = (intakeAForm != null);
+        if (!update) {
+            intakeAForm = new Formintakea();
+        }
+
+        Demographic client = clientManager.getClientByDemographicNo(demographicNo);
+        if (client != null) {
+            this.updateForm(intakeAForm, client);
+        }
+
+        //this is the one set when the integrator/local imported a match
+        Demographic demographicInfo = (Demographic) request.getSession().getAttribute("demographic");
+        if (demographicInfo != null) {
+            log.debug("have demographic information from integrator/local");
+            intakeFormBean.setAgencyId(demographicInfo.getAgencyId());
+            intakeFormBean.setDemographicId(demographicInfo.getDemographicNo().longValue());
+            //request.getSession().setAttribute("demographic",null);
+        }
+
+        if (update) {
+            intakeAForm.setDemographicNo(Long.valueOf(demographicNo));
+
+            if (client == null) {
+                ActionMessages messages = new ActionMessages();
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("intake.invalid_client"));
+                saveMessages(request, messages);
+                return mapping.findForward("success");
+            }
+        } else {
+            //intakeAForm = new Formintakea();
+            intakeAForm.setAssessDate(formatter.format(new Date()));
+            //set client name
+            if (client != null) {
+                intakeAForm.setDemographicNo(Long.valueOf(demographicNo));
+                intakeAForm.setClientFirstName(client.getFirstName());
+                intakeAForm.setClientSurname(client.getLastName());
+                this.updateForm(intakeAForm, client);
+            }
+            if (demographicInfo != null) {
+                intakeAForm.setClientFirstName(demographicInfo.getFirstName());
+                intakeAForm.setClientSurname(demographicInfo.getLastName());
+                intakeAForm.setDay(demographicInfo.getDateOfBirth());
+                intakeAForm.setMonth(demographicInfo.getMonthOfBirth());
+                intakeAForm.setYear(demographicInfo.getYearOfBirth());
+
+                if (demographicInfo.getSex() != null) {
+                    if (demographicInfo.getSex().equalsIgnoreCase("M")) {
+                        intakeAForm.setRadioSex("male");
+                    } else if (demographicInfo.getSex().equalsIgnoreCase("F")) {
+                        intakeAForm.setRadioSex("female");
+                    } else if (demographicInfo.getSex().equalsIgnoreCase("T")) {
+                        intakeAForm.setRadioSex("transgendered");
+                    }
+                }
+                if (demographicInfo.getHin() != null && demographicInfo.getHin().length() > 0) {
+                    intakeAForm.setCboxHealthcard("Y");
+                    intakeAForm.setHealthCardNum(demographicInfo.getHin());
+                    intakeAForm.setHealthCardVer(demographicInfo.getVer());
+                    if (demographicInfo.getEffDate() != null) {
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                        intakeAForm.setEffDate(formatter.format(demographicInfo.getEffDate()));
+                    }
+                }
+            }
+        }
+
+        if (client != null) {
+            Admission a = admissionManager.getCurrentCommunityProgramAdmission(client.getDemographicNo());
+            if (a != null) {
+                request.setAttribute("in_community_program", new Boolean(true));
+            }
+        }
+
+        intakeAForm.setProviderNo(Long.valueOf(getProviderNo(request)));
+        intakeForm.set("intake", intakeAForm);
+
+        List origProgramDomain = providerManager.getProgramDomain(getProviderNo(request));
+        request.setAttribute("programDomainBed", this.getProgramDomain_Bed(origProgramDomain));
+        request.setAttribute("programDomainService", this.getProgramDomain_Service(origProgramDomain));
+
+        logManager.log("read", "intakea", demographicNo, request);
+        request.setAttribute("demographicNo", demographicNo);
+        return mapping.findForward("form");
+    }
+
+
+    public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm intakeForm = (DynaActionForm) form;
+        IntakeAFormBean formBean = (IntakeAFormBean) intakeForm.get("view2");
+        IntakeFormBean intakeFormBean = (IntakeFormBean) intakeForm.get("bean");
+
+        Formintakea intakea = (Formintakea) intakeForm.get("intake");
+        String demographicNo = request.getParameter("demographicNo");
+
+        boolean update = false;
+
+        if (intakea.getDemographicNo() != null && intakea.getDemographicNo().longValue() > 0) {
+            update = true;
+        }
+
+        intakea.setProviderNo(Long.valueOf(this.getProviderNo(request)));
+        intakeAManager.saveNewIntake(intakea);
+
+        if (update) {
+            updateClientInfo(intakea, String.valueOf(intakea.getDemographicNo()));
+        }
+
 //		see if we can admit them
-		if(!update) {
-			long admissionProgramId =formBean.getAdmissionProgram();
-			log.debug(String.valueOf(admissionProgramId));
-			
-			Program admissionProgram = null;
-			
-			if(admissionProgramId == 0) {
-				//holding tank!
-				if(admissionManager.getCurrentBedProgramAdmission(intakea.getDemographicNo().intValue()) == null) {
-					admissionProgram = programManager.getHoldingTankProgram();
-				}
-			} else {
-				admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
-			}
-			
-			if(admissionProgram != null) {
-				try {
-					admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(),getProviderNo(request),admissionProgram,"initial admission", null);
-				}catch(Exception e) {
-					log.warn(e);
-				}
-			} else {
-				ActionMessages messages = new ActionMessages();
-				messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
-				saveMessages(request,messages);			
-			}
-		}
-		
-		if(update) {
-			long admissionProgramId =formBean.getAdmissionProgram();		
-			
-			if(admissionProgramId != 0) {
-				Admission commAdmission = admissionManager.getCurrentCommunityProgramAdmission(intakea.getDemographicNo().intValue());
-				Program admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
-				
-				if(commAdmission != null && admissionProgram != null && !admissionProgram.isFull()) {
-					try {
-						admissionManager.processAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), admissionProgram, null, "Intake Based Admission");						
-					}catch(Exception e) {
-						ActionMessages messages = new ActionMessages();
-						messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
-						saveMessages(request,messages);		
-					}
-				} else {
-					ActionMessages messages = new ActionMessages();
-					messages.add(ActionMessages.GLOBAL_MESSAGE,new ActionMessage("intake.no_admission"));
-					saveMessages(request,messages);		
-				}
-			}	
-		}
-		
-		String[] servicePrograms = request.getParameterValues("admit_service");
-		if(servicePrograms != null) {
-			for(int x=0;x<servicePrograms.length;x++) {
-				Program serviceProgram =  programManager.getProgram(servicePrograms[x]);
-				if(serviceProgram != null) {
-					try {
-						admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(),getProviderNo(request),serviceProgram,"initial admission",null);						
-					}catch(Exception e) {
-						log.warn(e);
-					}
-				}
-			}
-		}
-		request.setAttribute("demographicNo",String.valueOf(intakea.getDemographicNo()));		
-		intakeForm.reset(mapping,request);
-		intakeForm.set("view2",new IntakeAFormBean());
-		
-		// Intake A saved exposed to Oscar-Triggers as event
-		// begin-event-code
-		OscarCaisiEvent ev = new OscarCaisiEvent("pmm.intakea.saved",intakea);
-		ev.getOscarCaisiContext().setProviderID(this.getProviderNo(request));
-		ev.getOscarCaisiContext().setClientID(intakea.getDemographicNo().toString());
-		ev.addBean("form",intakea);
-		WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext()).publishEvent(ev);
-		// end-event-code
-		
-		try {
-			/* if client is based on one from a remote agency */
-			if(intakeFormBean.getAgencyId() != integratorManager.getLocalAgencyId() && intakeFormBean.getAgencyId() != 0) {
-				//integrator-add/merge
-				Demographic demographic = clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo()));
-				integratorManager.saveClient(demographic);
-				integratorManager.mergeClient(demographic,intakeFormBean.getAgencyId(),intakeFormBean.getClientId());
-				//saveClientExtras(demographic.getDemographicNo().intValue(),(Demographic)request.getSession().getAttribute("demographic"));
-			} else {
-				//new client
-				integratorManager.saveClient(clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo())));
-			}
-			
-			/* update regardless */
-			//integratorManager.notifyUpdate(IntegratorManager.DATATYPE_CLIENT, String.valueOf(intakea.getDemographicNo()));
-		}catch(IntegratorException e) {
-			log.error(e);
-		}
-		
-		request.getSession().setAttribute("demographic",null);
-		
-		return mapping.findForward("success");
-	}
+        if (!update) {
+            long admissionProgramId = formBean.getAdmissionProgram();
+            log.debug(String.valueOf(admissionProgramId));
 
-	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm intakeForm = (DynaActionForm)form;
-		Formintakea intakea = (Formintakea)intakeForm.get("intake");
-		boolean update = false;
-		if(intakea.getId() != null && intakea.getId().longValue()>0) {
-			update=true;
-		}
-		Long demographicNo = intakea.getDemographicNo();
-		request.setAttribute("demographicNo",demographicNo);
-		intakeForm.reset(mapping,request);
-		if(update) {
-			return mapping.findForward("cancel-update"); 
-		} else {
-			//return mapping.findForward("cancel-new"); 
-			return new ActionForward("/PMmodule/ProviderInfo.do?method=view");
-		}
-	}
+            Program admissionProgram = null;
 
-	protected List getProgramDomain_Bed(List origProgramDomain) {
-		List programDomain = new ArrayList();
-		
-		for(Iterator iter=origProgramDomain.iterator();iter.hasNext();) {
-			ProgramProvider pp = (ProgramProvider)iter.next();
-			Program p = programManager.getProgram(String.valueOf(pp.getProgramId()));
-			boolean add = true;
-			if(!p.getType().equalsIgnoreCase("bed")) {
-				add=false;
-			}
-			if(p.getNumOfMembers().intValue() >= p.getMaxAllowed().intValue()) {
-				add=false;
-			}
-			//pp.setProgramName(p.getName());
-			if(add) {
-				programDomain.add(p);
-			}
-		}
-		return programDomain;
-	}
-	
-	protected List getProgramDomain_Service(List origProgramDomain) {
-		List programDomain = new ArrayList();
-		
-		for(Iterator iter=origProgramDomain.iterator();iter.hasNext();) {
-			ProgramProvider pp = (ProgramProvider)iter.next();
-			Program p = programManager.getProgram(String.valueOf(pp.getProgramId()));
-			boolean add = true;
-			if(!p.getType().equalsIgnoreCase("service")) {
-				add=false;
-			}
-			if(p.getNumOfMembers().intValue() >= p.getMaxAllowed().intValue()) {
-				add=false;
-			}
-			//pp.setProgramName(p.getName());
-			if(add) {
-				programDomain.add(p);
-			}
-		}
-		return programDomain;
-	}
-  
-	protected void updateClientInfo(Formintakea intake, String demographicNo) {
-		Demographic client  = clientManager.getClientByDemographicNo(demographicNo);
-		client.setFirstName(intake.getClientFirstName());
-		client.setLastName(intake.getClientSurname());
-		
-		if(intake.getYear()!= null && intake.getYear().length()>0) {
-			client.setYearOfBirth(intake.getYear());
-		}
-		if(intake.getMonth()!= null && intake.getMonth().length()>0) {
-			client.setMonthOfBirth(intake.getMonth());
-		}
-		if(intake.getDay()!= null && intake.getDay().length()>0) {
-			client.setDateOfBirth(intake.getDay());
-		}
-		
-		if(intake.getHealthCardNum() != null && intake.getHealthCardNum().length()>0) {
-			client.setHin(intake.getHealthCardNum());
-		}
-		
-		if(intake.getHealthCardVer() != null && intake.getHealthCardVer().length()>0) {
-			client.setVer(intake.getHealthCardVer());
-		}
-		
-		if(intake.getRadioSex() != null && intake.getRadioSex().length()>0) {
-			client.setSex(intake.getRadioSex().toUpperCase().substring(0,1));
-		}
-		
-		clientManager.saveClient(client);
-	}
-	
-	protected void updateForm(Formintakea intake, Demographic client) {
-		if(client.getYearOfBirth() != null && client.getYearOfBirth().length()>0) {
-			intake.setYear(client.getYearOfBirth());
-		}
-		if(client.getMonthOfBirth() != null && client.getMonthOfBirth().length()>0) {
-			intake.setMonth(client.getMonthOfBirth());
-		}
-		if(client.getDateOfBirth() != null && client.getDateOfBirth().length()>0) {
-			intake.setDay(client.getDateOfBirth());
-		}
-		
-		if(client.getHin() != null && client.getHin().length()>0) {
-			intake.setHealthCardNum(client.getHin());
-		}
-		if(client.getVer() != null && client.getVer().length()>0) {
-			intake.setHealthCardVer(client.getVer());
-		}
-	}
+            if (admissionProgramId == 0) {
+                //holding tank!
+                if (admissionManager.getCurrentBedProgramAdmission(intakea.getDemographicNo().intValue()) == null) {
+                    admissionProgram = programManager.getHoldingTankProgram();
+                }
+            } else {
+                admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
+            }
 
-	protected void saveClientExtras(int demographicNo, Demographic remoteDemographic) {
-		if(remoteDemographic == null) {
-			log.warn("Expected demographic session variable to be set!");
-			return;
-		}
-		
-		if(remoteDemographic.getExtras() == null) {
-			log.info("no extras found");
-			return;
-		}
-		
-		for(int x=0;x<remoteDemographic.getExtras().length;x++) {
-			clientManager.saveDemographicExt(demographicNo, remoteDemographic.getExtras()[x].getKey(), remoteDemographic.getExtras()[x].getValue());
-		}		
-	}
+            if (admissionProgram != null) {
+                try {
+                    admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), admissionProgram, "initial admission", null);
+                } catch (Exception e) {
+                    log.warn(e);
+                }
+            } else {
+                ActionMessages messages = new ActionMessages();
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("intake.no_admission"));
+                saveMessages(request, messages);
+            }
+        }
+
+        if (update) {
+            long admissionProgramId = formBean.getAdmissionProgram();
+
+            if (admissionProgramId != 0) {
+                Admission commAdmission = admissionManager.getCurrentCommunityProgramAdmission(intakea.getDemographicNo().intValue());
+                Program admissionProgram = programManager.getProgram(String.valueOf(admissionProgramId));
+
+                if (commAdmission != null && admissionProgram != null && !admissionProgram.isFull()) {
+                    try {
+                        admissionManager.processAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), admissionProgram, null, "Intake Based Admission");
+                    } catch (Exception e) {
+                        ActionMessages messages = new ActionMessages();
+                        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("intake.no_admission"));
+                        saveMessages(request, messages);
+                    }
+                } else {
+                    ActionMessages messages = new ActionMessages();
+                    messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("intake.no_admission"));
+                    saveMessages(request, messages);
+                }
+            }
+        }
+
+        String[] servicePrograms = request.getParameterValues("admit_service");
+        if (servicePrograms != null) {
+            for (int x = 0; x < servicePrograms.length; x++) {
+                Program serviceProgram = programManager.getProgram(servicePrograms[x]);
+                if (serviceProgram != null) {
+                    try {
+                        admissionManager.processInitialAdmission(intakea.getDemographicNo().intValue(), getProviderNo(request), serviceProgram, "initial admission", null);
+                    } catch (Exception e) {
+                        log.warn(e);
+                    }
+                }
+            }
+        }
+        request.setAttribute("demographicNo", String.valueOf(intakea.getDemographicNo()));
+        intakeForm.reset(mapping, request);
+        intakeForm.set("view2", new IntakeAFormBean());
+
+        // Intake A saved exposed to Oscar-Triggers as event
+        // begin-event-code
+        OscarCaisiEvent ev = new OscarCaisiEvent("pmm.intakea.saved", intakea);
+        ev.getOscarCaisiContext().setProviderID(this.getProviderNo(request));
+        ev.getOscarCaisiContext().setClientID(intakea.getDemographicNo().toString());
+        ev.addBean("form", intakea);
+        WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext()).publishEvent(ev);
+        // end-event-code
+
+        try {
+            /* if client is based on one from a remote agency */
+            if (!integratorManager.getLocalAgency().getIntegratorUsername().equals(intakeFormBean.getAgencyId())) {
+                //integrator-add/merge
+                Demographic demographic = clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo()));
+                integratorManager.saveClient(demographic);
+                integratorManager.mergeClient(demographic.getDemographicNo(), intakeFormBean.getAgencyId(), intakeFormBean.getDemographicId());
+                //saveClientExtras(demographic.getDemographicNo().intValue(),(Demographic)request.getSession().getAttribute("demographic"));
+            } else {
+                //new client
+                integratorManager.saveClient(clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo())));
+            }
+
+            /* update regardless */
+            //integratorManager.notifyUpdate(IntegratorManager.DATATYPE_CLIENT, String.valueOf(intakea.getDemographicNo()));
+        } catch (IntegratorException e) {
+            log.error(e);
+        }
+
+        request.getSession().setAttribute("demographic", null);
+
+        return mapping.findForward("success");
+    }
+
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm intakeForm = (DynaActionForm) form;
+        Formintakea intakea = (Formintakea) intakeForm.get("intake");
+        boolean update = false;
+        if (intakea.getId() != null && intakea.getId().longValue() > 0) {
+            update = true;
+        }
+        Long demographicNo = intakea.getDemographicNo();
+        request.setAttribute("demographicNo", demographicNo);
+        intakeForm.reset(mapping, request);
+        if (update) {
+            return mapping.findForward("cancel-update");
+        } else {
+            //return mapping.findForward("cancel-new");
+            return new ActionForward("/PMmodule/ProviderInfo.do?method=view");
+        }
+    }
+
+    protected List getProgramDomain_Bed(List origProgramDomain) {
+        List programDomain = new ArrayList();
+
+        for (Iterator iter = origProgramDomain.iterator(); iter.hasNext();) {
+            ProgramProvider pp = (ProgramProvider) iter.next();
+            Program p = programManager.getProgram(String.valueOf(pp.getProgramId()));
+            boolean add = true;
+            if (!p.getType().equalsIgnoreCase("bed")) {
+                add = false;
+            }
+            if (p.getNumOfMembers().intValue() >= p.getMaxAllowed().intValue()) {
+                add = false;
+            }
+            //pp.setProgramName(p.getName());
+            if (add) {
+                programDomain.add(p);
+            }
+        }
+        return programDomain;
+    }
+
+    protected List getProgramDomain_Service(List origProgramDomain) {
+        List programDomain = new ArrayList();
+
+        for (Iterator iter = origProgramDomain.iterator(); iter.hasNext();) {
+            ProgramProvider pp = (ProgramProvider) iter.next();
+            Program p = programManager.getProgram(String.valueOf(pp.getProgramId()));
+            boolean add = true;
+            if (!p.getType().equalsIgnoreCase("service")) {
+                add = false;
+            }
+            if (p.getNumOfMembers().intValue() >= p.getMaxAllowed().intValue()) {
+                add = false;
+            }
+            //pp.setProgramName(p.getName());
+            if (add) {
+                programDomain.add(p);
+            }
+        }
+        return programDomain;
+    }
+
+    protected void updateClientInfo(Formintakea intake, String demographicNo) {
+        Demographic client = clientManager.getClientByDemographicNo(demographicNo);
+        client.setFirstName(intake.getClientFirstName());
+        client.setLastName(intake.getClientSurname());
+
+        if (intake.getYear() != null && intake.getYear().length() > 0) {
+            client.setYearOfBirth(intake.getYear());
+        }
+        if (intake.getMonth() != null && intake.getMonth().length() > 0) {
+            client.setMonthOfBirth(intake.getMonth());
+        }
+        if (intake.getDay() != null && intake.getDay().length() > 0) {
+            client.setDateOfBirth(intake.getDay());
+        }
+
+        if (intake.getHealthCardNum() != null && intake.getHealthCardNum().length() > 0) {
+            client.setHin(intake.getHealthCardNum());
+        }
+
+        if (intake.getHealthCardVer() != null && intake.getHealthCardVer().length() > 0) {
+            client.setVer(intake.getHealthCardVer());
+        }
+
+        if (intake.getRadioSex() != null && intake.getRadioSex().length() > 0) {
+            client.setSex(intake.getRadioSex().toUpperCase().substring(0, 1));
+        }
+
+        clientManager.saveClient(client);
+    }
+
+    protected void updateForm(Formintakea intake, Demographic client) {
+        if (client.getYearOfBirth() != null && client.getYearOfBirth().length() > 0) {
+            intake.setYear(client.getYearOfBirth());
+        }
+        if (client.getMonthOfBirth() != null && client.getMonthOfBirth().length() > 0) {
+            intake.setMonth(client.getMonthOfBirth());
+        }
+        if (client.getDateOfBirth() != null && client.getDateOfBirth().length() > 0) {
+            intake.setDay(client.getDateOfBirth());
+        }
+
+        if (client.getHin() != null && client.getHin().length() > 0) {
+            intake.setHealthCardNum(client.getHin());
+        }
+        if (client.getVer() != null && client.getVer().length() > 0) {
+            intake.setHealthCardVer(client.getVer());
+        }
+    }
+
+    protected void saveClientExtras(int demographicNo, Demographic remoteDemographic) {
+        if (remoteDemographic == null) {
+            log.warn("Expected demographic session variable to be set!");
+            return;
+        }
+
+        if (remoteDemographic.getExtras() == null) {
+            log.info("no extras found");
+            return;
+        }
+
+        for (int x = 0; x < remoteDemographic.getExtras().length; x++) {
+            clientManager.saveDemographicExt(demographicNo, remoteDemographic.getExtras()[x].getKey(), remoteDemographic.getExtras()[x].getValue());
+        }
+    }
 
 }

@@ -265,8 +265,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		try {
 			integratorManager.saveClient(client);
 
-			if (client.getAgencyId() != integratorManager.getLocalAgencyId() && client.getAgencyId() != 0) {
-				integratorManager.mergeClient(client, client.getAgencyId(), client.getDemographicNo());
+			if (!integratorManager.getLocalAgency().getIntegratorUsername().equals(client.getAgencyId())) {
+				integratorManager.mergeClient(client.getDemographicNo(), client.getAgencyId(), client.getDemographicNo());
 			}
 		} catch (IntegratorException e) {
 			LOG.error(e);
