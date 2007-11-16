@@ -36,42 +36,50 @@ import org.oscarehr.util.DbConnectionFilter;
 
 public class IntegratorUpdateTask extends TimerTask {
 
-	private static final Log log = LogFactory.getLog(IntegratorUpdateTask.class);
+    private static final Log log = LogFactory.getLog(IntegratorUpdateTask.class);
 
-	private IntegratorManager integratorManager;
-	private AdmissionManager admissionManager;
-	private ProgramManager programManager;
-	private ProviderManager providerManager;
-	private ClientManager clientManager;
+    private IntegratorManager integratorManager;
+    private AdmissionManager admissionManager;
+    private ProgramManager programManager;
+    private ProviderManager providerManager;
+    private ClientManager clientManager;
 
-	public void setIntegratorManager(IntegratorManager mgr) {
-		this.integratorManager = mgr;
-	}
+    public void setIntegratorManager(IntegratorManager mgr) {
+        this.integratorManager = mgr;
+    }
 
-	public void setAdmissionManager(AdmissionManager mgr) {
-		this.admissionManager = mgr;
-	}
+    public void setAdmissionManager(AdmissionManager mgr) {
+        this.admissionManager = mgr;
+    }
 
-	public void setProgramManager(ProgramManager mgr) {
-		this.programManager = mgr;
-	}
+    public void setProgramManager(ProgramManager mgr) {
+        this.programManager = mgr;
+    }
 
-	public void setProviderManager(ProviderManager mgr) {
-		this.providerManager = mgr;
-	}
+    public void setProviderManager(ProviderManager mgr) {
+        this.providerManager = mgr;
+    }
 
-	public void setClientManager(ClientManager mgr) {
-		this.clientManager = mgr;
-	}
+    public void setClientManager(ClientManager mgr) {
+        this.clientManager = mgr;
+    }
 
-	public void run() {
-		try {
+    public void run() {
+        log.debug("IntegratorUpdateTask starting");
+
+        try {
             if (!integratorManager.isEnabled()) {
                 log.debug("integrator is not enabled");
                 return;
             }
 
-            log.info("updating integrator");
+            try {
+                integratorManager.refreshProviders(providerManager.getProviders());
+                log.info("Providers refereshed");
+            }
+            catch (IntegratorException e) {
+                log.error(e);
+            }
 
             try {
                 integratorManager.refreshAdmissions(admissionManager.getAdmissions());
@@ -90,26 +98,18 @@ public class IntegratorUpdateTask extends TimerTask {
             }
 
             try {
-                integratorManager.refreshProviders(providerManager.getProviders());
-                log.info("Providers refereshed");
-            }
-            catch (IntegratorException e) {
-                log.error(e);
-            }
-
-            try {
                 integratorManager.refreshReferrals(clientManager.getReferrals());
                 log.info("referrals refreshed");
             }
             catch (IntegratorException e) {
                 log.error(e);
             }
-
-            log.info("integrator update task complete)");
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
+            
+            log.debug("IntegratorUpdateTask finished)");
         }
-	}
+    }
 
 }

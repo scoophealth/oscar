@@ -78,8 +78,6 @@ public class AgencyManagerAction extends BaseAction {
 
 		request.setAttribute("integrator_enabled", integratorEnabled);
 
-		request.setAttribute("integrator_registered", integratorManager.isRegistered());
-
 		if (integratorEnabled) request.setAttribute("integrator_version", integratorManager.getIntegratorVersion());
 
 		return mapping.findForward(FORWARD_VIEW);
@@ -102,7 +100,6 @@ public class AgencyManagerAction extends BaseAction {
 		request.setAttribute("id", localAgency.getId());
 		request.setAttribute("integratorEnabled", localAgency.isIntegratorEnabled());
 		request.setAttribute("integrator_enabled", integratorManager.isEnabled());
-		request.setAttribute("integrator_registered", integratorManager.isRegistered());
 
 		return mapping.findForward(FORWARD_EDIT);
 	}

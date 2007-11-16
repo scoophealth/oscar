@@ -138,7 +138,7 @@ public class ProgramManager {
 	}
 
 	public Program getProgram(Long agencyId, Integer programId) {
-		if (integratorManager != null && integratorManager.isEnabled() && integratorManager.isRegistered()) {
+		if (integratorManager != null && integratorManager.isEnabled()) {
 			try {
 				return integratorManager.getProgram(agencyId, new Long(programId.longValue()));
 			} catch (IntegratorNotEnabledException e) {
