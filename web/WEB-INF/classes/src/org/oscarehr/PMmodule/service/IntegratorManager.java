@@ -23,11 +23,8 @@ package org.oscarehr.PMmodule.service;
 
 /**
  * TODO Integrator todo list: - clean up use of local agency across application; application should not assume '0' as local agency Id, and should use the string
- * (non-numerical) identifier for an agency. disjunction between local agency Ids and what they are assigned on the server is a source of confusion.
- *  - implement unimplemented methods
- *  - implement Ext handling
- *  - implement program registry
- *  - implement notes
+ * (non-numerical) identifier for an agency. disjunction between local agency Ids and what they are assigned on the server is a source of confusion. - implement
+ * unimplemented methods - implement Ext handling - implement program registry - implement notes
  */
 
 import java.text.DecimalFormat;
@@ -102,10 +99,6 @@ public class IntegratorManager {
 
     public static Map<Long, Agency> getAgencyMap() {
         return agencyMap;
-    }
-
-    public boolean isActive() {
-        return isEnabled();
     }
 
     public boolean isEnabled() {
