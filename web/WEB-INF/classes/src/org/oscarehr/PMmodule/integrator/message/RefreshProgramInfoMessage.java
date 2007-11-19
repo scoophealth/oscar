@@ -61,7 +61,7 @@ public class RefreshProgramInfoMessage implements MessageListener {
 			return;
 		}
 		List programs = programManager.getProgramsByAgencyId("0");
-		integratorManager.updateProgramData(programs);
+//		integratorManager.updateProgramData(programs);
 		dateLastUpdated = new Date();
 		log.debug("updated program info @ " + dateLastUpdated);
 		

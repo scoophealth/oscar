@@ -1634,6 +1634,7 @@ CREATE TABLE `issue` (
 DROP TABLE IF EXISTS `program`;
 CREATE TABLE `program` (
   `program_id` int(10) NOT NULL auto_increment,
+  userDefined tinyint(1) not null,
   `agency_id` bigint(11) NOT NULL default '0',
   `intake_program` integer unsigned,
   `name` varchar(70) NOT NULL default '',

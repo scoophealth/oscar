@@ -39,6 +39,7 @@ public class Program implements Serializable {
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;// fields
+    private boolean userDefined=true;
     private Integer numOfMembers;
     private Integer queueSize;
     private Integer maxAllowed;
@@ -73,7 +74,7 @@ public class Program implements Serializable {
 
     // constructors
     public Program() {
-        initialize();
+        // no arg constructor for JPA
     }
 
     /**
@@ -81,28 +82,35 @@ public class Program implements Serializable {
      */
     public Program(Integer id) {
         this.setId(id);
-        initialize();
     }
 
     /**
      * Constructor for required fields
      */
-    public Program(Integer id, Integer maxAllowed, String address, String phone, String fax, String url, String email, String emergencyNumber, String name,
+    public Program(Integer id, boolean isUserDefined, Integer maxAllowed, String address, String phone, String fax, String url, String email, String emergencyNumber, String name,
             Long agencyId, boolean holdingTank, String programStatus) {
 
-        this.setId(id);
-        this.setMaxAllowed(maxAllowed);
-        this.setAddress(address);
-        this.setPhone(phone);
-        this.setFax(fax);
-        this.setUrl(url);
-        this.setEmail(email);
-        this.setEmergencyNumber(emergencyNumber);
-        this.setName(name);
-        this.setAgencyId(agencyId);
-        this.setHoldingTank(holdingTank);
-        this.setProgramStatus(programStatus);
-        initialize();
+        setId(id);
+        setUserDefined(isUserDefined);
+        setMaxAllowed(maxAllowed);
+        setAddress(address);
+        setPhone(phone);
+        setFax(fax);
+        setUrl(url);
+        setEmail(email);
+        setEmergencyNumber(emergencyNumber);
+        setName(name);
+        setAgencyId(agencyId);
+        setHoldingTank(holdingTank);
+        setProgramStatus(programStatus);
+    }
+
+    public boolean isUserDefined() {
+        return userDefined;
+    }
+
+    public void setUserDefined(boolean userDefined) {
+        this.userDefined = userDefined;
     }
 
     public boolean isActive() {
@@ -127,9 +135,6 @@ public class Program implements Serializable {
 
     public boolean getHoldingTank() {
         return isHoldingTank();
-    }
-
-    protected void initialize() {
     }
 
     /**
