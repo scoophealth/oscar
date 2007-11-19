@@ -20,6 +20,18 @@
         </java:consequence>
     </rule>
 
+    <rule name="A1C2">
+        <parameter identifier="m">
+            <class>oscar.oscarEncounter.oscarMeasurements.util.MeasurementDSHelper</class>
+        </parameter>
+        <java:condition>m.getDataAsDouble() &lt;= 2</java:condition>   
+        <java:condition>m.getDataAsDouble() &gt;= 0.07</java:condition>    
+        <java:consequence>     
+              System.out.println("A1C RULES IS GETTING RUN");           
+              m.setIndicationColor("HIGH");
+        </java:consequence>
+    </rule>
+
 </rule-set>
 
 
