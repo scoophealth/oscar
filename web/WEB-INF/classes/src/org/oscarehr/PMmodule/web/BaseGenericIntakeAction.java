@@ -17,14 +17,18 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 	protected static final String METHOD = "method";
 	protected static final String TYPE = "type";
 	protected static final String CLIENT_ID = "clientId";
-	protected static final String CLIENT_EDIT_ID = "id";
+    protected static final String REMOTE_AGENCY = "remoteAgency";
+    protected static final String REMOTE_AGENCY_DEMOGRAPHIC_NO = "remoteAgencyDemographicNo";
+    protected static final String CLIENT_EDIT_ID = "id";
 	protected static final String PROGRAM_ID = "programId";
 	protected static final String START_DATE = "startDate";
 	protected static final String END_DATE = "endDate";
 	
 	// Method Names
 	protected static final String EDIT_CREATE = "create";
-	protected static final String EDIT_UPDATE = "update";
+    protected static final String EDIT_CREATE_REMOTE = "create_remote";
+
+    protected static final String EDIT_UPDATE = "update";
 	
 	// Session Attributes
 	protected static final String CLIENT = "client";
@@ -39,7 +43,15 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 		return Integer.valueOf(getParameter(request, CLIENT_ID));
 	}
 
-	protected Integer getProgramId(HttpServletRequest request) {
+    protected Long getRemoteAgencyDemographicNo(HttpServletRequest request) {
+        return Long.valueOf(getParameter(request, REMOTE_AGENCY_DEMOGRAPHIC_NO));
+    }
+
+    protected String getRemoteAgency(HttpServletRequest request) {
+        return getParameter(request, REMOTE_AGENCY);
+    }
+
+    protected Integer getProgramId(HttpServletRequest request) {
 		Integer programId = null;
 		
 		String programIdParam = getParameter(request, PROGRAM_ID);
@@ -69,5 +81,6 @@ abstract class BaseGenericIntakeAction extends BaseAction {
 		Demographic client = (Demographic) getSessionAttribute(request, CLIENT);
 		return (client != null) ? client : new Demographic();
 	}
+
 
 }

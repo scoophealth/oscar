@@ -22,19 +22,19 @@
 package org.oscarehr.PMmodule.service;
 
 /**
- * TODO Integrator todo list: - clean up use of local agency across application; application should not assume '0' as local agency Id, and should use the string
- * (non-numerical) identifier for an agency. disjunction between local agency Ids and what they are assigned on the server is a source of confusion. - implement
- * unimplemented methods - implement Ext handling - implement program registry - implement notes
+ * TODO Integrator todo list:
+ *    - clean up use of local agency across application; application should not assume '0' as local agency Id,
+ *      and should use the string (non-numerical) identifier for an agency.  disjunction between local agency Ids
+ *      and what they are assigned on the server is a source of confusion.
+ *
+ *    - implement unimplemented methods
+ *
+ *    - implement Ext handling
+ *
+ *    - implement program registry
+ *
+ *    - implement notes
  */
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,13 +44,10 @@ import org.caisi.integrator.message.agencies.FindAgenciesRequest;
 import org.caisi.integrator.message.agencies.FindAgenciesResponse;
 import org.caisi.integrator.message.agencies.RegisterAgencyRequest;
 import org.caisi.integrator.message.agencies.RegisterAgencyResponse;
+import org.caisi.integrator.message.clientGroup.DemographicKey;
 import org.caisi.integrator.message.clientGroup.JoinClientRequest;
 import org.caisi.integrator.message.clientGroup.JoinClientResponse;
-import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
-import org.caisi.integrator.message.demographics.GetDemographicRequest;
-import org.caisi.integrator.message.demographics.GetDemographicResponse;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsResponse;
+import org.caisi.integrator.message.demographics.*;
 import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
 import org.caisi.integrator.message.search.SearchCandidateDemographicResponse;
 import org.caisi.integrator.model.Client;
@@ -65,18 +62,16 @@ import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.exception.IntegratorNotInitializedException;
 import org.oscarehr.PMmodule.exception.OperationNotImplementedException;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.model.*;
 import org.springframework.beans.factory.annotation.Required;
+
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class IntegratorManager {
 
-    public static final short DATATYPE_CLIENT = 1;
-    public static final short DATATYPE_PROVIDER = 2;
+    public static final short DATATYPE_CLIENT = 	1;
+    public static final short DATATYPE_PROVIDER = 	2;
 
     private static Log log = LogFactory.getLog(IntegratorManager.class);
 
@@ -221,7 +216,7 @@ public class IntegratorManager {
 
     /**
      * Register an agency (presumably the local agency) with the integrator
-     * 
+     *
      * @param agencyInfo
      *            the agency to register
      * @return the agency's id
@@ -254,16 +249,6 @@ public class IntegratorManager {
         return demographic;
     }
 
-    // TODO is this used? and why this name?
-    public Demographic getClient(long demographicNo) {
-        GetDemographicResponse response = getIntegratorService().getDemographic(
-                new GetDemographicRequest(new Date(), localAgency.getIntegratorUsername(), (int) demographicNo), authenticationToken);
-
-        Demographic demographic = integratorDemographicToCaisiDemographic(response.getDemographic());
-
-        return demographic;
-    }
-
     public void refreshClients(List<Demographic> clients) throws IntegratorException {
         List<org.caisi.integrator.model.Demographic> demographics = new ArrayList<org.caisi.integrator.model.Demographic>();
         for (Demographic client : clients) {
@@ -289,14 +274,23 @@ public class IntegratorManager {
         return true;
     }
 
+
+
     public void saveClient(Demographic client) throws IntegratorException {
         getIntegratorService().addUpdateDemographic(new AddUpdateDemographicRequest(new Date(), caisiDemographicToIntegratorDemographic(client)),
                 authenticationToken);
     }
 
+    public void saveClient(Demographic client, String remoteAgency, long remoteDemographicNo) throws IntegratorException {
+        AddUpdateDemographicRequest demographicRequest = new AddUpdateDemographicRequest(new Date(), caisiDemographicToIntegratorDemographic(client));
+        demographicRequest.setSameClientAsDemographic(new DemographicKey(remoteAgency, remoteDemographicNo));
+        getIntegratorService().addUpdateDemographic(demographicRequest,
+                authenticationToken);
+    }
+
     public void mergeClient(long demographicNo, String remoteAgency, long remoteDemographicNo) throws IntegratorException {
-        JoinClientRequest request = new JoinClientRequest(new Date(), Arrays.asList(new JoinClientRequest.DemographicKey(remoteAgency, remoteDemographicNo),
-                new JoinClientRequest.DemographicKey(localAgency.getIntegratorUsername(), demographicNo)));
+        JoinClientRequest request = new JoinClientRequest(new Date(), Arrays.asList(new DemographicKey(remoteAgency, remoteDemographicNo),
+                new DemographicKey(localAgency.getIntegratorUsername(), demographicNo)));
 
         JoinClientResponse response = integratorService.joinClient(request, authenticationToken);
     }
@@ -351,7 +345,8 @@ public class IntegratorManager {
         DemographicTransfer demographicTransfer = new DemographicTransfer();
 
         demographicTransfer.setAddress(demographicInfo.getAddress());
-        if (demographicInfo.getDemographicNo() != null) demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo());
+        if (demographicInfo.getDemographicNo() != null)
+            demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo());
         demographicTransfer.setChartNo(demographicInfo.getChartNo());
         demographicTransfer.setCity(demographicInfo.getCity());
         demographicTransfer.setDateJoined(demographicInfo.getDateJoined());
@@ -382,12 +377,12 @@ public class IntegratorManager {
         return demographicTransfer;
     }
 
-    private String padOrNull(Integer n, int zeroes) {
+    private String padOrNull(Integer n, int zeroes)
+    {
         if (n == null) return null;
         else {
             StringBuffer zeroesBuff = new StringBuffer();
-            while (zeroes-- != 0)
-                zeroesBuff.append('0');
+            while (zeroes-- != 0) zeroesBuff.append('0');
             DecimalFormat df = new DecimalFormat(zeroesBuff.toString());
             return df.format(n);
         }
@@ -431,8 +426,7 @@ public class IntegratorManager {
     public Integer strToIntegerOrNull(String value) {
         try {
             return Integer.valueOf(value);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
     }

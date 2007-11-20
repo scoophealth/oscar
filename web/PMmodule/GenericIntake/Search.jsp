@@ -8,7 +8,8 @@
 <html:form action="/PMmodule/GenericIntake/Search" onsubmit="return validateSearchForm()">
 <html:hidden property="method" />
 <html:hidden property="demographicId" />
-<html:hidden property="agencyId" />
+<html:hidden property="remoteAgency" />
+<html:hidden property="remoteAgencyDemographicNo" />
 
 <table id="genericIntakeSearch" width="50%">
     <tr>
@@ -66,11 +67,6 @@
         <display-el:column property="formattedName" sortable="true" title="Name" />
         <display-el:column property="formattedDob" sortable="true" title="Date of Birth" />
 
-        <display-el:column title="EMPI Links">
-				<span style="text-decoration:underline" title="<c:out value="${client.formattedLinks}"/>">
-					<c:out value="${client.numLinks}" />
-				</span>
-        </display-el:column>
     </display-el:table>
 
 </c:if>
@@ -91,7 +87,9 @@
         <display-el:column>
             <display-el:table class="simple sublist" name="${nestedName}" id="demographic">
                 <display-el:column style="width: 10%">
-                    <html-el:submit onclick="copyRemote('${demographic.agency.username}', '${demographic.agencyDemographicNo}')">Copy Remote</html-el:submit>
+                    <c:if test="${demographic.agency.username != requestScope.genericIntakeSearchForm.localAgencyUsername}">
+                        <html-el:submit onclick="copyRemote('${demographic.agency.username}', '${demographic.agencyDemographicNo}')">Copy Remote</html-el:submit>
+                    </c:if>                   
                 </display-el:column>
 
                 <display-el:column property="agency.name" sortable="true" title="Agency" />

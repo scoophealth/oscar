@@ -79,7 +79,35 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		return mapping.findForward(EDIT);
 	}
 
-	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward create_remote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
+
+        String intakeType = getType(request);
+        String providerNo = getProviderNo(request);
+
+        Intake intake = null;
+
+        if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
+            intake = genericIntakeManager.createQuickIntake(providerNo);
+        } else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
+            intake = genericIntakeManager.createIndepthIntake(providerNo);
+        } else if (Intake.PROGRAM.equalsIgnoreCase(intakeType)) {
+            intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
+        }
+
+        setBeanProperties(formBean, intake, getRemoteClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), null, null);
+        formBean.setRemoteAgency(getRemoteAgency(request));
+        formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
+        
+        return mapping.findForward(EDIT);
+    }
+
+    private Demographic getRemoteClient(HttpServletRequest request) {
+        return integratorManager.getDemographic(getRemoteAgency(request), getRemoteAgencyDemographicNo(request));
+    }
+
+
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 
 		String intakeType = getType(request);
@@ -133,7 +161,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 		try {
 			saveClient(client, providerNo);
-			admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
+            updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
+
+            admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
 			if(!formBean.getSelectedServiceProgramIds().isEmpty())
 				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
 			saveIntake(intake, client.getDemographicNo());
@@ -151,7 +181,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		return mapping.findForward(EDIT);
 	}
 
-	public ActionForward clientEdit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    private void updateRemote(Demographic client, String remoteAgency, Long remoteAgencyDemographicNo) {		
+        integratorManager.saveClient(client, remoteAgency, remoteAgencyDemographicNo);
+    }
+               
+    public ActionForward clientEdit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
 		
 		Integer clientEditId = formBean.getClient().getDemographicNo();
@@ -261,16 +295,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		
 		if (defaultOptingStatus!=null) clientManager.saveDemographicExt(client.getDemographicNo(), Demographic.SHARING_OPTING_KEY, defaultOptingStatus.name());
 		
-		// remote save
-		try {
-			integratorManager.saveClient(client);
 
-			if (!integratorManager.getLocalAgency().getIntegratorUsername().equals(client.getAgencyId())) {
-				integratorManager.mergeClient(client.getDemographicNo(), client.getAgencyId(), client.getDemographicNo());
-			}
-		} catch (IntegratorException e) {
-			LOG.error(e);
-		}
 	}
 
 	private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException {

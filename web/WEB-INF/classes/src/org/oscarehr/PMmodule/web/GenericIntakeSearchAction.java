@@ -25,6 +25,7 @@ import org.caisi.integrator.model.Client;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
+import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
@@ -50,7 +51,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-
+        intakeSearchBean.setLocalAgencyUsername(IntegratorManager.getLocalAgency().getIntegratorUsername());
+        
         Collection<Client> remoteMatches = new ArrayList<Client>();
 
         // search for remote matches if integrator enabled
@@ -67,7 +69,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         intakeSearchBean.setSearchPerformed(true);
         
         // if matches found display results, otherwise create local intake
-        if (!localMatches.isEmpty() && !remoteMatches.isEmpty()) {
+        if (!localMatches.isEmpty() || !remoteMatches.isEmpty()) {
             return mapping.findForward(FORWARD_SEARCH_FORM);
         } else {
             return createLocal(mapping, form, request, response);
@@ -90,9 +92,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
         try {
-            Demographic remoteClient = integratorManager.getDemographic(intakeSearchBean.getAgencyId(), intakeSearchBean.getDemographicId());
-
-            return forwardIntakeEditCreate(mapping, request, remoteClient);
+            return forwardIntakeEditCreateBasedOnRemote(mapping, request, intakeSearchBean.getRemoteAgency(), intakeSearchBean.getRemoteAgencyDemographicNo());
         } catch (IntegratorException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.error", e.getMessage()));
@@ -103,8 +103,6 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     }
 
     private Collection<Client> remoteSearch(GenericIntakeSearchFormBean intakeSearchBean) {
-        Demographic[] matches = null;
-
         try {
             return integratorManager.matchClient(createClient(intakeSearchBean));
         } catch (IntegratorException e) {
@@ -134,6 +132,16 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         StringBuilder parameters = new StringBuilder(PARAM_START);
         parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE).append(PARAM_AND);
         parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
+
+        return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
+    }
+
+    protected ActionForward forwardIntakeEditCreateBasedOnRemote(ActionMapping mapping, HttpServletRequest request, String remoteAgency, Long remoteAgencyDemographicNo) {
+        StringBuilder parameters = new StringBuilder(PARAM_START);
+        parameters.append(METHOD).append(PARAM_EQUALS).append(EDIT_CREATE_REMOTE).append(PARAM_AND);
+        parameters.append(TYPE).append(PARAM_EQUALS).append(Intake.QUICK);
+        parameters.append(PARAM_AND).append(REMOTE_AGENCY).append(PARAM_EQUALS).append(remoteAgency);
+        parameters.append(PARAM_AND).append(REMOTE_AGENCY_DEMOGRAPHIC_NO).append(PARAM_EQUALS).append(remoteAgencyDemographicNo);
 
         return createRedirectForward(mapping, FORWARD_INTAKE_EDIT, parameters);
     }

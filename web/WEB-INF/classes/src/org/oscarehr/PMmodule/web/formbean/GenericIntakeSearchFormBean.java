@@ -24,7 +24,6 @@ import org.caisi.integrator.model.Client;
 import org.oscarehr.PMmodule.model.Demographic;
 
 import java.util.Collection;
-import java.util.List;
 
 public class GenericIntakeSearchFormBean extends ActionForm {
 
@@ -48,7 +47,11 @@ public class GenericIntakeSearchFormBean extends ActionForm {
     private Collection<Demographic> localMatches;
     private Client[] remoteMatches;
 
-    private String agencyId;
+    private String localAgencyUsername;
+
+    private String remoteAgency;
+    private Long remoteAgencyDemographicNo;
+
     private Integer demographicId;
 
 	public GenericIntakeSearchFormBean() {
@@ -161,12 +164,12 @@ public class GenericIntakeSearchFormBean extends ActionForm {
         this.remoteMatches = remoteMatches;
     }
 
-    public String getAgencyId() {
-        return agencyId;
+    public String getRemoteAgency() {
+        return remoteAgency;
     }
 
-    public void setAgencyId(String agencyId) {
-        this.agencyId = agencyId;
+    public void setRemoteAgency(String remoteAgency) {
+        this.remoteAgency = remoteAgency;
     }
 
     public Integer getDemographicId() {
@@ -175,5 +178,21 @@ public class GenericIntakeSearchFormBean extends ActionForm {
 
     public void setDemographicId(Integer demographicId) {
         this.demographicId = demographicId;
+    }
+
+    public Long getRemoteAgencyDemographicNo() {
+        return remoteAgencyDemographicNo;
+    }
+
+    public void setRemoteAgencyDemographicNo(Long remoteAgencyDemographicNo) {
+        this.remoteAgencyDemographicNo = remoteAgencyDemographicNo;
+    }
+
+    public String getLocalAgencyUsername() {
+        return localAgencyUsername;
+    }
+
+    public void setLocalAgencyUsername(String localAgencyUsername) {
+        this.localAgencyUsername = localAgencyUsername;
     }
 }

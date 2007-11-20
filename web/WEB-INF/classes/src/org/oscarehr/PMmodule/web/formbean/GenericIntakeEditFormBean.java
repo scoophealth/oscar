@@ -57,7 +57,10 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	private Intake intake;
 
-	public GenericIntakeEditFormBean() {
+    private String remoteAgency;
+    private Long remoteAgencyDemographicNo;
+
+    public GenericIntakeEditFormBean() {
 		genders = GenericIntakeConstants.GENDERS;
 		months = GenericIntakeConstants.MONTHS;
 		days = GenericIntakeConstants.DAYS;
@@ -273,4 +276,19 @@ public class GenericIntakeEditFormBean extends ActionForm {
 		return result;
 	}
 
+    public String getRemoteAgency() {
+        return remoteAgency;
+    }
+
+    public void setRemoteAgency(String remoteAgency) {
+        this.remoteAgency = remoteAgency;
+    }
+
+    public Long getRemoteAgencyDemographicNo() {
+        return remoteAgencyDemographicNo;
+    }
+
+    public void setRemoteAgencyDemographicNo(Long remoteAgencyDemographicNo) {
+        this.remoteAgencyDemographicNo = remoteAgencyDemographicNo;
+    }
 }

@@ -93,8 +93,8 @@ function updateLocal(demographicId) {
 }
 
 function copyRemote(agencyId, demographicId) {
-	document.forms[0].elements['agencyId'].value = agencyId;
-	document.forms[0].elements['demographicId'].value = demographicId;
+	document.forms[0].elements['remoteAgency'].value = agencyId;
+	document.forms[0].elements['remoteAgencyDemographicNo'].value = demographicId;
 	setMethod('copyRemote');
 }
 
