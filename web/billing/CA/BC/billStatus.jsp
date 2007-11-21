@@ -35,6 +35,7 @@
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" /><jsp:useBean id="SxmlMisc" class="oscar.SxmlMisc" scope="session" /><%@ include file="../../../admin/dbconnection.jsp" %>
 <%@ include file="dbBilling.jsp" %>
 <%
+  String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
   java.text.NumberFormat nf = java.text.NumberFormat.getCurrencyInstance();
   String user_no;
   user_no = (String) session.getAttribute("user");
@@ -71,7 +72,15 @@ String readonly = request.getParameter("filterPatient");
 String firstName = request.getParameter("firstName");
 String lastName = request.getParameter("lastName");
 String demographicNo = request.getParameter("demographicNo")!=null?request.getParameter("demographicNo"):"";
+
+boolean adminAccess = false;
 %>
+
+
+<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.billing" rights="r" reverse="<%=false%>" >
+    <% adminAccess = true; %>
+</security:oscarSec>
+
 <html>
 <head>
 <html:base/>
@@ -650,11 +659,16 @@ billTypes = "%";
     <td align="center" class="bCellData" ><%=nf.format(amtOwed)%> </td>
     <td align="center" class="bCellData" ><%=s(b.dx1)%></td>
 
-    <td><%if (!b.isWCB()){%>
-      <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>&invoiceNo=<%=b.billing_no%>')" >Edit </a>
-      <%}else{%>
-      <a href="javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
-      <%}%>
+    <td>
+      <% if (adminAccess){ %>  
+          <%if (!b.isWCB()){%>
+          <a href="javascript: popupPage(700,700,'adjustBill.jsp?billing_no=<%=b.billMasterNo%>&invoiceNo=<%=b.billing_no%>')" >Edit </a>
+          <%}else{%>
+          <a href="javascript: popupPage(700,700,'billingTeleplanCorrectionWCB.jsp?billing_no=<%=b.billMasterNo%>')" >Edit </a>
+          <%}%>
+      <% } %>
+      
+      
       <%=rejected%><%=rejected2%> </td>
   </tr>
 
