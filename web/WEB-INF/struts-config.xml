@@ -272,6 +272,11 @@
         <form-bean name="clientListsReportForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.ClientListsReportFormBean" />
         </form-bean>
+<!--
+        <form-bean name="customReportForm" type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="form" type="org.oscarehr.PMmodule.web.formbean.CustomReportFormBean" />
+        </form-bean>
+-->
         <form-bean name="surveyExecuteForm" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="view" type="org.oscarehr.survey.web.formbean.SurveyExecuteFormBean" />
             <form-property name="data" type="org.oscarehr.survey.web.formbean.SurveyExecuteDataBean" />
@@ -1446,6 +1451,12 @@
             <forward name="form" path="page.report.clientlistsreportform" />
             <forward name="report" path="page.report.clientlistsreport" />
         </action>
+<!--
+        <action path="/PMmodule/Reports/CustomReport" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="customReportForm" scope="request" validate="false">
+            <forward name="list" path="page.customreport.list" />
+            <forward name="form" path="page.customreport.form" />
+       </action>
+-->
         <action path="/SurveyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="surveyForm" scope="session">
             <forward name="edit" path=".view.survey.form" />
             <forward name="list" path=".view.survey.manager" redirect="true" />

@@ -163,6 +163,14 @@
             </bean>
         </property>
     </bean>
+    <bean id="oscarFormManager" parent="baseTransactionProxy" lazy-init="default"
+          dependency-check="default">
+        <property name="target">
+            <bean class="org.oscarehr.survey.service.impl.OscarFormManagerImpl">
+                <property name="oscarFormDAO" ref="oscarFormDAO"/>
+            </bean>
+        </property>
+    </bean>
     <bean id="surveyTestManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
@@ -251,6 +259,12 @@
     <bean id="testmode" class="java.lang.String" lazy-init="default"  dependency-check="default">
         <constructor-arg value="${testmode.enabled}"/>
     </bean>
-
+<!--
+        <bean id="UCRConfigurationManager" class="org.oscarehr.PMmodule.web.reports.custom.UCRConfigurationManager">
+                <property name="filename">
+                        <value>org/oscarehr/PMmodule/web/reports/custom/test.xml</value>
+                </property>
+        </bean>
+-->
 </beans>
 

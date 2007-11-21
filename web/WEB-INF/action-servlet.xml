@@ -179,6 +179,7 @@
         <property name="surveyLaunchManager" ref="surveyLaunchManager"/>
         <property name="questionTypes" ref="QuestionTypes"/>
         <property name="userManager" ref="surveyUserManager"/>
+        <property name="oscarFormManager" ref="oscarFormManager"/>
     </bean>
     <bean name="/SurveyTest" class="org.oscarehr.survey.web.SurveyTestAction" singleton="false">
         <property name="surveyManager" ref="surveyManager"/>
@@ -255,4 +256,8 @@
     <bean name="/phrExchange" class="org.oscarehr.phr.web.PHRExchangeAction" singleton="false">
         <property name="phrService" ref="phrService"/>
     </bean>
+<!--
+    <bean name="/PMmodule/Reports/CustomReport" class="org.oscarehr.PMmodule.web.reports.CustomReportAction" singleton="false" autowire="byName">
+    </bean>
+-->
 </beans>

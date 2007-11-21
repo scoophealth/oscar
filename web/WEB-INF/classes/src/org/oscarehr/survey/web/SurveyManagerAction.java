@@ -22,6 +22,8 @@
 
 package org.oscarehr.survey.web;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -46,6 +48,7 @@ import org.apache.struts.util.LabelValueBean;
 import org.apache.xmlbeans.XmlOptions;
 import org.oscarehr.survey.model.QuestionTypes;
 import org.oscarehr.survey.model.Survey;
+import org.oscarehr.survey.service.OscarFormManager;
 import org.oscarehr.survey.service.SurveyLaunchManager;
 import org.oscarehr.survey.service.SurveyManager;
 import org.oscarehr.survey.service.SurveyModelManager;
@@ -70,6 +73,11 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 	private SurveyLaunchManager surveyLaunchManager;
 	private QuestionTypes questionTypes;
 	
+	private OscarFormManager oscarFormManager;
+	
+	public void setOscarFormManager(OscarFormManager mgr) {
+		this.oscarFormManager = mgr;
+	}
 	
 	public void setSurveyManager(SurveyManager mgr) {
 		this.surveyManager = mgr;
@@ -99,6 +107,8 @@ public class SurveyManagerAction extends AbstractSurveyAction {
     	}
     	
         request.setAttribute("surveys",surveyManager.getSurveys());
+        
+        request.setAttribute("released_forms", oscarFormManager.getForms());
         return mapping.findForward("list");
     }
     
@@ -944,6 +954,20 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		surveyManager.saveSurvey(newSurvey);
 		
 		return list(mapping,form,request,response);
+	}
+
+	public ActionForward export_csv(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		String id = request.getParameter("id");
+		try {
+			response.setContentType("APPLICATION/OCTET-STREAM");
+			String strProjectInfoPageHeader = "Attachment;Filename=" + id + ".csv";
+			response.setHeader("Content-Disposition", strProjectInfoPageHeader);
+			this.oscarFormManager.generateCSV(Long.valueOf(id), response.getOutputStream());
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	protected static int getUnusedSectionId(Page page) {

@@ -22,17 +22,30 @@
 
 package org.oscarehr.survey.dao.oscar.hibernate;
 
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.surveymodel.Page;
+import org.oscarehr.surveymodel.Question;
+import org.oscarehr.surveymodel.SurveyDocument;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		OscarFormDAO {
 
+	public List getOscarForms() {
+		return this.getHibernateTemplate().find("from OscarForm");
+	}
+	
 	public void saveOscarForm(OscarForm form) {
 		this.getHibernateTemplate().saveOrUpdate(form);
 	}
@@ -77,4 +90,85 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		return result;
 	}
 
+	public Map<String,String> getHeaders(OscarForm form) {
+		//get ordered list of keys with question headers - use LinkedHashMap
+		LinkedHashMap<String,String> keyMap = new LinkedHashMap<String,String>();
+		SurveyDocument model = null;
+		try {
+			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
+		}catch(Exception e) {
+			logger.error(e);
+			return null;
+		}
+		
+		int page=1;
+		int section=0;
+		int question=1;
+		String id="";
+		for(Page p:model.getSurvey().getBody().getPageArray()) {
+			section=0;
+			question=1;
+			for(Page.QContainer container:p.getQContainerArray()) {
+				if(container.isSetQuestion()) {
+					Question q = container.getQuestion();
+					id = page + "_" + section + "_"+ question;
+					keyMap.put(id, q.getDescription());
+					question++;
+				} else {
+					for(Question q:container.getSection().getQuestionArray()) {
+						id = page + "_" + section + "_"+ question;
+						keyMap.put(id, q.getDescription());
+						question++;
+					}
+					section++;
+				}
+			}		
+			page++;
+		}	
+		return keyMap;
+	}
+	
+	public void generateCSV(Long formId, OutputStream out) {
+		PrintWriter pout = new PrintWriter(out,true);
+		
+		//get form structure - output headers, and determine order to print out data elements
+		OscarForm form = (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+
+		//load headers
+		Map<String,String> keyMap = getHeaders(form);
+		if(keyMap == null) {
+			return;
+		}
+		
+		//print header line
+		int x=0;
+		for(String s:keyMap.keySet()) {
+			if(x>0) {pout.print(",");}
+			pout.print("\"" + keyMap.get(s) + "\"");
+			x++;
+		}
+		pout.println();
+		
+		//get form instances - for each one, output a line
+		List result = this.getHibernateTemplate().find("select f.id from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
+		for(x=0;x<result.size();x++) {
+			Long instanceId = (Long)result.get(x);
+			//get data for this instance
+			Map<String,String> formMap = new HashMap<String,String>();
+			List data = this.getHibernateTemplate().find("from OscarFormData d where d.instanceId=?",instanceId);
+			for(int y=0;y<data.size();y++) {
+				OscarFormData d = (OscarFormData)data.get(y);
+				formMap.put(d.getKey(),d.getValue());
+			}
+			int z=0;
+			for(String key:keyMap.keySet()) {
+				if(z>0) {pout.print(",");}
+				pout.print(formMap.get(key));			
+				z++;
+			}
+			pout.println();
+		}
+		pout.flush();
+	}
+	
 }

@@ -313,5 +313,26 @@
                         name="body"
                         value="/casemgmt/CaseManagementView.jsp" />
         </definition>
-
+<!--
+	<definition
+		name="page.customreport.list"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/CustomReportList.jsp" />
+	</definition>
+	<definition
+		name="page.customreport.form"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/reports/CustomReportForm.jsp" />
+	</definition>	
+-->
 </tiles-definitions>

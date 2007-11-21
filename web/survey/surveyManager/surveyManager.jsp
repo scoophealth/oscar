@@ -133,3 +133,24 @@
 <input type="button" value="Create New Form" onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=new_survey'"/>
 <br/><br/>
 <input type="button" value="Import" onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=show_import_form'"/>
+<br/><br/>
+<script>
+	function export_csv(selectObj) {
+		var formId = selectObj.options[selectObj.selectedIndex].value;
+		if(formId != "") {
+			//alert('<html:rewrite action="/SurveyManager"/>?method=export_csv&id=' + formId);	
+			location.href='<html:rewrite action="/SurveyManager"/>?method=export_csv&id=' + formId;		
+		}
+		//run the command
+		
+		selectObj.selectedIndex=0;
+	}
+</script>
+Export Form Data:&nbsp;
+<select onchange="export_csv(this);">
+	<option value=""></option>
+<c:forEach var="f" items="${released_forms}">
+	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
+</c:forEach>
+</select>
+<input type="button" value="Export CSV" onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=export_csv'"/>

@@ -23,19 +23,26 @@
 package org.oscarehr.PMmodule.service.impl;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.struts.util.LabelValueBean;
 import org.oscarehr.PMmodule.dao.SurveyDAO;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.PMmodule.web.reports.custom.CustomReportDataSource;
+import org.oscarehr.PMmodule.web.reports.custom.Item;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
 import org.oscarehr.survey.model.oscar.OscarFormDataTmpsave;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.surveymodel.Page;
+import org.oscarehr.surveymodel.Question;
+import org.oscarehr.surveymodel.Section;
 import org.oscarehr.survey.model.oscar.OscarFormInstanceTmpsave;
 import org.oscarehr.surveymodel.SurveyDocument;
 
-public class SurveyManagerImpl implements SurveyManager {
+public class SurveyManagerImpl implements SurveyManager, CustomReportDataSource {
 
 	private SurveyDAO surveyDAO;
 	
@@ -122,5 +129,86 @@ public class SurveyManagerImpl implements SurveyManager {
 	
 	public List getCurrentForms(String formId, List clients) {
 		return surveyDAO.getCurrentForms(formId,clients);
+	}
+	
+	public LabelValueBean[] getFormNames() {
+		List<OscarForm> forms = surveyDAO.getAllForms();
+		LabelValueBean[] results = new LabelValueBean[forms.size()];
+		int x=0;
+		for(OscarForm form: forms) {
+			results[x] = new LabelValueBean(form.getDescription(),String.valueOf(form.getFormId()));
+			x++;
+		}
+		return results;
+	}
+	
+	
+	public LabelValueBean[] getItems(String formId) {
+		List<LabelValueBean> results = new ArrayList<LabelValueBean>();
+		SurveyDocument.Survey survey = getFormModel(formId);
+		if(survey == null) {
+			return (LabelValueBean[])results.toArray(new LabelValueBean[results.size()]);
+		}
+		
+		int pageId=1;
+		int sectionId=0;
+		for(Page page:survey.getBody().getPageArray()) {
+			for(Page.QContainer qcontainer:page.getQContainerArray()) {
+				sectionId=0;
+				if(qcontainer.isSetQuestion()) {
+					Question question = qcontainer.getQuestion();
+					String id = pageId + "_" + sectionId + "_" + question.getId();
+					results.add(new LabelValueBean(question.getDescription(),id));
+				} else {
+					Section section = qcontainer.getSection();
+					sectionId = section.getId();
+					for(Question question: section.getQuestionArray()) {
+						String id = pageId + "_" + sectionId + "_" + question.getId();
+						results.add(new LabelValueBean(question.getDescription(),id));
+					}
+				}
+			}
+		}
+		return (LabelValueBean[])results.toArray(new LabelValueBean[results.size()]);		
+	}
+	
+	public Item getItem(String formId, String id) {
+		SurveyDocument.Survey survey = getFormModel(formId);
+		if(survey == null) {
+			return null;
+		}
+		
+		int pageId=1;
+		int sectionId=0;
+		for(Page page:survey.getBody().getPageArray()) {
+			for(Page.QContainer qcontainer:page.getQContainerArray()) {
+				sectionId=0;
+				if(qcontainer.isSetQuestion()) {
+					Question question = qcontainer.getQuestion();
+					String tmpId = pageId + "_" + sectionId + "_" + question.getId();
+					if(id.equals(tmpId)) {
+						return createItem(question,id);
+					}
+				} else {
+					Section section = qcontainer.getSection();
+					sectionId = section.getId();
+					for(Question question: section.getQuestionArray()) {
+						String tmpId = pageId + "_" + sectionId + "_" + question.getId();
+						if(id.equals(tmpId)) {
+							return createItem(question,id);
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	private Item createItem(Question question,String id) {
+		Item item = new Item();
+		item.setId(id);
+		item.setName(question.getDescription());
+		
+		return item;
 	}
 }
