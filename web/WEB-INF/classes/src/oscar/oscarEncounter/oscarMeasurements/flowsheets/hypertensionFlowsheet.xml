@@ -83,13 +83,7 @@
         graphable="yes"
         value_name="BMI"/>
    
-   <!-- TODO: is this FG the same as from the db flowsheet? --> 
-   <item
-        measurement_type="FGLC"
-        display_name="Fasting glucose meter/lab comparison"
-        guideline="Meter within 20% of simultaneous lab values"
-        graphable="no"
-        value_name="Within 20%"/>
+  
    <item
         measurement_type="ACR"
         display_name="Alb: creat ratio"
@@ -214,16 +208,7 @@
           isNumeric="1"/>   
     </measurement>
     
-    <measurement 
-        type="FGLC"      
-        typeDesc="Fasting glucose meter, lab comparison"      
-        typeDisplayName="Fasting Glucose meter , lab comparison" 
-        measuringInstrc="Within 20 percent">  
-        <validationRule
-           name="Yes/No"
-           regularExp="YES|yes|Yes|Y|NO|no|No|N"/>   
-    </measurement>   
- 
+   
     <measurement 
         type="ACR"      
         typeDesc="ACR"      
