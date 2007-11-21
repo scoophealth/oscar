@@ -60,12 +60,14 @@ public class SurveyManagerImpl implements SurveyManager {
 	
 	public void deleteTmpsave(String instanceId, String formId, String clientId, String providerId) {
 		List tmpInstances = getTmpForms(instanceId,formId,clientId,providerId);
-		OscarFormInstanceTmpsave tmpInstance = (OscarFormInstanceTmpsave)tmpInstances.get(0);
-		for(Iterator iter=tmpInstance.getData().iterator();iter.hasNext();) {
-			OscarFormDataTmpsave data = (OscarFormDataTmpsave)iter.next();
-			this.surveyDAO.deleteFormDataTmpsave(data);
+		if(tmpInstances.size()> 0 && tmpInstances!=null) {
+			OscarFormInstanceTmpsave tmpInstance = (OscarFormInstanceTmpsave)tmpInstances.get(0);
+			for(Iterator iter=tmpInstance.getData().iterator();iter.hasNext();) {
+				OscarFormDataTmpsave data = (OscarFormDataTmpsave)iter.next();
+				this.surveyDAO.deleteFormDataTmpsave(data);
+			}		
+			surveyDAO.deleteFormInstanceTmpsave(tmpInstance);
 		}
-		surveyDAO.deleteFormInstanceTmpsave(tmpInstance);
 	}
 	
 	public void saveFormInstanceTmpsave(OscarFormInstanceTmpsave instance) {
