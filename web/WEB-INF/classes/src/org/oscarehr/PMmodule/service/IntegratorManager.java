@@ -51,6 +51,7 @@ import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
 import org.caisi.integrator.message.search.SearchCandidateDemographicResponse;
 import org.caisi.integrator.model.Client;
 import org.caisi.integrator.model.transfer.AgencyTransfer;
+import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.caisi.integrator.model.transfer.DemographicTransfer;
 import org.caisi.integrator.service.IntegratorService;
 import org.codehaus.xfire.annotations.AnnotationServiceFactory;
@@ -228,13 +229,13 @@ public class IntegratorManager {
         return response.getAgency().getId();
     }
 
-    public Collection<Client> matchClient(Demographic client) throws IntegratorException {
+    public Collection<ClientTransfer> matchClient(Demographic client) throws IntegratorException {
 
-        org.caisi.integrator.model.Demographic searchDemographic = caisiDemographicToIntegratorDemographic(client);
+        DemographicTransfer searchDemographic = caisiDemographicToIntegratorDemographic(client);
         SearchCandidateDemographicResponse response = getIntegratorService().searchCandidateDemographic(
                 new SearchCandidateDemographicRequest(new Date(), searchDemographic), authenticationToken);
 
-        Collection<Client> clients = response.getCandidateClients();
+        Collection<ClientTransfer> clients = response.getCandidateClients();
 
         return clients;
     }
@@ -249,7 +250,7 @@ public class IntegratorManager {
     }
 
     public void refreshClients(List<Demographic> clients) throws IntegratorException {
-        List<org.caisi.integrator.model.Demographic> demographics = new ArrayList<org.caisi.integrator.model.Demographic>();
+        List<DemographicTransfer> demographics = new ArrayList<DemographicTransfer>();
         for (Demographic client : clients) {
             demographics.add(caisiDemographicToIntegratorDemographic(client));
         }
@@ -340,7 +341,7 @@ public class IntegratorManager {
         return agency;
     }
 
-    public org.caisi.integrator.model.Demographic caisiDemographicToIntegratorDemographic(Demographic demographicInfo) {
+    public DemographicTransfer caisiDemographicToIntegratorDemographic(Demographic demographicInfo) {
         DemographicTransfer demographicTransfer = new DemographicTransfer();
 
         demographicTransfer.setAddress(demographicInfo.getAddress());

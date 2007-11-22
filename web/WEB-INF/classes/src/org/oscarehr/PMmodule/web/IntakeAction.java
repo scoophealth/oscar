@@ -29,6 +29,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
 import org.caisi.integrator.model.Client;
+import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.model.Demographic;
@@ -73,7 +74,7 @@ public class IntakeAction extends BaseAction {
         d.setVer(formBean.getHealthCardVersion());
 
         try {
-            Collection<Client> demographicCollection = integratorManager.matchClient(d);
+            Collection<ClientTransfer> demographicCollection = integratorManager.matchClient(d);
             log.debug("integrator found " + demographicCollection.size() + " match(es)");
         } catch (IntegratorNotEnabledException e) {
             log.info(e);

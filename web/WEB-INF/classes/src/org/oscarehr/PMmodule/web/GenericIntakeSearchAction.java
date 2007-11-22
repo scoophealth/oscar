@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
 import org.caisi.integrator.model.Client;
+import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
@@ -53,12 +54,12 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
         intakeSearchBean.setLocalAgencyUsername(IntegratorManager.getLocalAgency().getIntegratorUsername());
         
-        Collection<Client> remoteMatches = new ArrayList<Client>();
+        Collection<ClientTransfer> remoteMatches = new ArrayList<ClientTransfer>();
 
         // search for remote matches if integrator enabled
         if (integratorManager.isEnabled()) {
             remoteMatches = remoteSearch(intakeSearchBean);
-            intakeSearchBean.setRemoteMatches(remoteMatches.toArray(new Client[remoteMatches.size()]));
+            intakeSearchBean.setRemoteMatches(remoteMatches.toArray(new ClientTransfer[remoteMatches.size()]));
         }
 
 
@@ -102,13 +103,13 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         }
     }
 
-    private Collection<Client> remoteSearch(GenericIntakeSearchFormBean intakeSearchBean) {
+    private Collection<ClientTransfer> remoteSearch(GenericIntakeSearchFormBean intakeSearchBean) {
         try {
             return integratorManager.matchClient(createClient(intakeSearchBean));
         } catch (IntegratorException e) {
             LOG.error(e);
 
-            return new ArrayList<Client>();
+            return new ArrayList<ClientTransfer>();
         }
     }
 
