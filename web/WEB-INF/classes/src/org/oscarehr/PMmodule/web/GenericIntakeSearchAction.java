@@ -108,7 +108,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         } catch (IntegratorException e) {
             LOG.error(e);
 
-            return null; // TODO GROSS silent failures all over the place -- rwd
+            return new ArrayList<Client>();
         }
     }
 
