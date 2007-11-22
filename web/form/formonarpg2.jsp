@@ -760,7 +760,7 @@ function calToday(field) {
         </td>
 		<td><b>Newborn needs: Hep B IG</b>
             <input type="checkbox" name="ar2_hepBIG" <%= props.getProperty("ar2_hepBIG", "") %>/>
-            &nbsp;&nbsp;&nbsp;<b>Rh B vaccine</b>
+            &nbsp;&nbsp;&nbsp;<b>Hep B vaccine</b>
             <input type="checkbox" name="ar2_hepBVac" <%= props.getProperty("ar2_hepBVac", "") %>/>
         </td>
     </tr>
