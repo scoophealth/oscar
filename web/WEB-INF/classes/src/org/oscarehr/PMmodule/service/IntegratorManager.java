@@ -281,9 +281,10 @@ public class IntegratorManager {
                 authenticationToken);
     }
 
-    public void saveClient(Demographic client, String remoteAgency, long remoteDemographicNo) throws IntegratorException {
+    public void saveClient(Demographic client, String remoteAgency, Long remoteDemographicNo) throws IntegratorException {
         AddUpdateDemographicRequest demographicRequest = new AddUpdateDemographicRequest(new Date(), caisiDemographicToIntegratorDemographic(client));
-        demographicRequest.setSameClientAsDemographic(new DemographicKey(remoteAgency, remoteDemographicNo));
+        if (remoteAgency != null && remoteDemographicNo != null)
+            demographicRequest.setSameClientAsDemographic(new DemographicKey(remoteAgency, remoteDemographicNo));
         getIntegratorService().addUpdateDemographic(demographicRequest,
                 authenticationToken);
     }
