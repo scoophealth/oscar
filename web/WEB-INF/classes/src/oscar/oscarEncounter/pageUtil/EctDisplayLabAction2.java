@@ -74,12 +74,16 @@ public class EctDisplayLabAction2 extends EctDisplayAction {
         
         if (OscarProperties.getInstance().getBooleanProperty("HL7TEXT_LABS","yes")){
             url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues3.jsp?demographic_no=" + bean.demographicNo + "')";            
+            Dao.addPopUpUrl(url);
+            Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1"));
+            url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "')";
+            Dao.addPopUpUrl(url);
+            Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1")+"-OLD");
         }else{
             url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues2.jsp?demographic_no=" + bean.demographicNo + "')";
+            Dao.addPopUpUrl(url);
+            Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1"));
         }
-        Dao.addPopUpUrl(url);
-        Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem1"));
-        
         url = "popupPage(700,1000, '" + winName + "','" + request.getContextPath() + "/lab/CumulativeLabValues.jsp?demographic_no=" + bean.demographicNo + "')";
         Dao.addPopUpUrl(url);
         Dao.addPopUpText(messages.getMessage("oscarEncounter.LeftNavBar.LabMenuItem2"));
