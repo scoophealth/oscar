@@ -80,7 +80,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
     public ActionForward createLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
 
-        return forwardIntakeEditCreate(mapping, request, createClient(intakeSearchBean));
+        return forwardIntakeEditCreate(mapping, request, createClient(intakeSearchBean, true));
     }
 
     public ActionForward updateLocal(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -105,7 +105,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     private Collection<ClientTransfer> remoteSearch(GenericIntakeSearchFormBean intakeSearchBean) {
         try {
-            return integratorManager.matchClient(createClient(intakeSearchBean));
+            return integratorManager.matchClient(createClient(intakeSearchBean, false));
         } catch (IntegratorException e) {
             LOG.error(e);
 
@@ -123,8 +123,8 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         return clientManager.search(clientSearchBean, allowOnlyOptins);
     }
 
-    private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean) {
-        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion());
+    private Demographic createClient(GenericIntakeSearchFormBean intakeSearchBean, boolean populateDefaultBirthDate) {
+        return Demographic.create(intakeSearchBean.getFirstName(), intakeSearchBean.getLastName(), intakeSearchBean.getMonthOfBirth(), intakeSearchBean.getDayOfBirth(), intakeSearchBean.getYearOfBirth(), intakeSearchBean.getHealthCardNumber(), intakeSearchBean.getHealthCardVersion(), populateDefaultBirthDate);
     }
 
     protected ActionForward forwardIntakeEditCreate(ActionMapping mapping, HttpServletRequest request, Demographic client) {

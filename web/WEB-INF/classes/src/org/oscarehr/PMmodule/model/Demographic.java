@@ -90,14 +90,16 @@ public class Demographic implements Serializable {
         AC,IN,DE,IC,ID,MO,FI
     }
 
-    public static Demographic create(String firstName, String lastName, String monthOfBirth, String dateOfBirth, String yearOfBirth, String hin, String ver) {
+    public static Demographic create(String firstName, String lastName, 
+                                     String monthOfBirth, String dateOfBirth, String yearOfBirth,
+                                     String hin, String ver, boolean applyDefaultBirthDate ) {
         Demographic demographic = new Demographic();
 
         demographic.setFirstName(firstName);
         demographic.setLastName(lastName);
-        demographic.setMonthOfBirth(monthOfBirth != null && monthOfBirth.length() > 0 ? monthOfBirth : DEFAULT_MONTH);
-        demographic.setDateOfBirth(dateOfBirth != null && dateOfBirth.length() > 0 ? dateOfBirth : DEFAULT_DATE);
-        demographic.setYearOfBirth(yearOfBirth != null && yearOfBirth.length() > 0 ? yearOfBirth : DEFAULT_YEAR);
+        demographic.setMonthOfBirth(monthOfBirth != null && monthOfBirth.length() > 0 ? monthOfBirth : applyDefaultBirthDate ? DEFAULT_MONTH : null );
+        demographic.setDateOfBirth(dateOfBirth != null && dateOfBirth.length() > 0 ? dateOfBirth : applyDefaultBirthDate ? DEFAULT_DATE : null );
+        demographic.setYearOfBirth(yearOfBirth != null && yearOfBirth.length() > 0 ? yearOfBirth : applyDefaultBirthDate ? DEFAULT_YEAR : null );
         demographic.setHin(hin);
         demographic.setVer(ver);
 
