@@ -153,4 +153,3 @@ Export Form Data:&nbsp;
 	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
 </c:forEach>
 </select>
-<input type="button" value="Export CSV" onclick="location.href='<html:rewrite action="/SurveyManager"/>?method=export_csv'"/>
