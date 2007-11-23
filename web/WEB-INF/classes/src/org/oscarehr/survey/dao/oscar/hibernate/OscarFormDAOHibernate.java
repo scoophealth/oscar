@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
@@ -39,9 +40,13 @@ import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.SurveyDocument;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.Ostermiller.util.StringHelper;
+
 public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		OscarFormDAO {
 
+	protected char quoteChar = '"';
+	 
 	public List getOscarForms() {
 		return this.getHibernateTemplate().find("from OscarForm");
 	}
@@ -107,18 +112,16 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		String id="";
 		for(Page p:model.getSurvey().getBody().getPageArray()) {
 			section=0;
-			question=1;
+			
 			for(Page.QContainer container:p.getQContainerArray()) {
 				if(container.isSetQuestion()) {
 					Question q = container.getQuestion();
-					id = page + "_" + section + "_"+ question;
+					id = page + "_" + section + "_"+ q.getId();
 					keyMap.put(id, q.getDescription());
-					question++;
 				} else {
 					for(Question q:container.getSection().getQuestionArray()) {
-						id = page + "_" + section + "_"+ question;
-						keyMap.put(id, q.getDescription());
-						question++;
+						id = page + "_" + section + "_"+ q.getId();
+						keyMap.put(id, q.getDescription());						
 					}
 					section++;
 				}
@@ -144,7 +147,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		int x=0;
 		for(String s:keyMap.keySet()) {
 			if(x>0) {pout.print(",");}
-			pout.print("\"" + keyMap.get(s) + "\"");
+			pout.print(escapeAndQuote(keyMap.get(s)));
 			x++;
 		}
 		pout.println();
@@ -158,12 +161,24 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 			List data = this.getHibernateTemplate().find("from OscarFormData d where d.instanceId=?",instanceId);
 			for(int y=0;y<data.size();y++) {
 				OscarFormData d = (OscarFormData)data.get(y);
-				formMap.put(d.getKey(),d.getValue());
+				String key = d.getPageNumber() + "_" + d.getSectionId() + "_" + d.getQuestionId();
+				String value = formMap.get(key);
+				String val = d.getValue();
+				if(value == null) {
+					if(val == null) { val="";}
+					formMap.put(key,val);
+				} else {
+					if(val == null || val.length()==0) {continue;}
+					if(value.length()>0) {
+						val = value + "," + val;
+					}
+					formMap.put(key,val);
+				}				
 			}
 			int z=0;
 			for(String key:keyMap.keySet()) {
-				if(z>0) {pout.print(",");}
-				pout.print(formMap.get(key));			
+				if(z>0) {pout.print(",");}				
+				pout.print(escapeAndQuote(formMap.get(key)));							
 				z++;
 			}
 			pout.println();
@@ -171,4 +186,9 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		pout.flush();
 	}
 	
+	private String escapeAndQuote(String value){
+        String s = StringHelper.replace(value, String.valueOf(quoteChar), String.valueOf(quoteChar) + String.valueOf(quoteChar));
+        return (new StringBuffer(2 + s.length())).append(quoteChar).append(s).append(quoteChar).toString();
+	}
 }
+
