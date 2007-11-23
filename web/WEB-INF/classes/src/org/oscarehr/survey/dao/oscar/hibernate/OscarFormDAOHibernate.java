@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
@@ -144,6 +145,10 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		}
 		
 		//print header line
+		pout.print(escapeAndQuote("Client ID"));pout.print(",");
+		pout.print(escapeAndQuote("Client First Name"));pout.print(",");
+		pout.print(escapeAndQuote("Client Last Name"));pout.print(",");
+		pout.print(escapeAndQuote("Client DOB"));pout.print(",");
 		int x=0;
 		for(String s:keyMap.keySet()) {
 			if(x>0) {pout.print(",");}
@@ -153,9 +158,10 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		pout.println();
 		
 		//get form instances - for each one, output a line
-		List result = this.getHibernateTemplate().find("select f.id from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
+		List result = this.getHibernateTemplate().find("select f.id,f.clientId from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
 		for(x=0;x<result.size();x++) {
-			Long instanceId = (Long)result.get(x);
+			Object o = result.get(x);
+			Long instanceId = (Long)((Object[])result.get(x))[0];
 			//get data for this instance
 			Map<String,String> formMap = new HashMap<String,String>();
 			List data = this.getHibernateTemplate().find("from OscarFormData d where d.instanceId=?",instanceId);
@@ -175,6 +181,22 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 					formMap.put(key,val);
 				}				
 			}
+			
+			//we need to add the client data
+			long clientId = (Long)((Object[])result.get(x))[1];
+			pout.print(escapeAndQuote(String.valueOf(clientId)));
+			Demographic demographic = (Demographic)getHibernateTemplate().get(Demographic.class, (int)clientId);
+			if(demographic != null) {
+				pout.print(escapeAndQuote(demographic.getFirstName()));pout.print(",");
+				pout.print(escapeAndQuote(demographic.getLastName()));pout.print(",");
+				pout.print(escapeAndQuote(demographic.getYearOfBirth() + "-" + demographic.getMonthOfBirth() + "-" + demographic.getDateOfBirth()));pout.print(",");
+			} else {
+				pout.print("\"\"");pout.print(",");
+				pout.print("\"\"");pout.print(",");
+				pout.print("\"\"");pout.print(",");			
+			}
+			
+			
 			int z=0;
 			for(String key:keyMap.keySet()) {
 				if(z>0) {pout.print(",");}				
