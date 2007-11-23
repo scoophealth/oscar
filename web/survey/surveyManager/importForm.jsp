@@ -69,7 +69,7 @@
 		<tr>
         	<td>
         		<html:submit value="Import"/>
-        		<input type="button" value="Cancel"/>
+        		<input type="button" value="Cancel" onclick="location.href='<html:rewrite action="/SurveyManager"/>'"/>
         	</td>
 		</tr>
 	</table>
