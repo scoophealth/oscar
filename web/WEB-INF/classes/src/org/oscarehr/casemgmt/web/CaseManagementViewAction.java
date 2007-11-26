@@ -149,6 +149,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 		request.setAttribute("casemgmt_demoName",getDemoName(demoNo));
 		request.setAttribute("casemgmt_demoAge",getDemoAge(demoNo));
 		request.setAttribute("casemgmt_demoDOB",getDemoDOB(demoNo));
+                request.setAttribute("demographicNo", demoNo);
 		
 		//get client image
 		request.setAttribute("image_filename",this.getImageFilename(demoNo, request));
@@ -261,6 +262,8 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                         String[] roleId = caseForm.getFilter_roles();
                         if( roleId != null && roleId.length > 0 )
                             notes = applyRoleFilter(notes, roleId );
+                        
+                        this.caseManagementMgr.getEditors(notes);
 			    
                         /*
                          *Notes are by default sorted from the past to the most recent
@@ -428,6 +431,7 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         int noteId = Integer.parseInt(request.getParameter("noteId"));
 
         CaseManagementNote note = this.caseManagementMgr.getNote(request.getParameter("noteId"));
+        this.caseManagementMgr.getEditors(note);
         request.setAttribute("Note", note);
 
         boolean success = caseManagementMgr.unlockNote(noteId,password);
@@ -560,5 +564,6 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
         }
 
         return filteredNotes;
-    }
+    }        
+    
 }
