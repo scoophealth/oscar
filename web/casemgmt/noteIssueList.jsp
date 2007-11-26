@@ -32,39 +32,65 @@
 
 <c:set var="ctx" value="${pageContext.request.contextPath}" scope="request"/>
 <nested:empty name="caseManagementEntryForm" property="caseNote.id">
-    <div id="sumary0">
+    <nested:notEmpty name="newNoteIdx">
+        <div class="sig" id="sumary<nested:write name="newNoteIdx"/>">
+        <div id="observation<nested:write name="newNoteIdx"/>" style="float:right;margin-right:3px;">
+    </nested:notEmpty>
+    <nested:empty name="newNoteIdx">
+        <div class="sig" id="sumary0">
+        <div id="observation0" style="float:right;margin-right:3px;">
+    </nested:empty>
 </nested:empty>
-<nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">
-    <div id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+<nested:notEmpty name="caseManagementEntryForm" property="caseNote.id">   
+    <div class="sig" id="sumary<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+    <div id="observation<nested:write name="caseManagementEntryForm" property="caseNote.id" />" style="float:right;margin-right:3px;">
 </nested:notEmpty>
-    
-    <div id="observation"><i>Observation Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />" id="observationDate_cal" alt="calendar">&nbsp;<input type="text" id="observationDate" name="observation_date" ondblclick="this.value='';" style="font-style:italic;border:none; width:140px;" readonly value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />"></div>
-    
-    <nested:equal name="newNote" value="false">
-        Created:&nbsp;<nested:write name="caseManagementEntryForm" property="caseNote.create_date" format="dd-MMM-yyyy H:mm" /><br>
-        <nested:equal name="caseManagementEntryForm" property="caseNote.signed" value="true"> 
-            Signed by 
-            <nested:write name="caseManagementEntryForm" property="caseNote.signing_provider_no"/>
+    <nested:notEmpty name="ajaxsave">
+        <i>Date:&nbsp;<span id="obs<nested:write name="caseManagementEntryForm" property="caseNote.id" />">
+                <nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />
+            </span>&nbsp;
+        rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a></i>
+    </nested:notEmpty>    
+    <nested:empty name="ajaxsave">
+    <i>Date:</i>&nbsp;<img src="<c:out value="${ctx}/images/cal.gif" />" id="observationDate_cal" alt="calendar">&nbsp;<input type="text" id="observationDate" name="observation_date" ondblclick="this.value='';" style="font-style:italic;border:none; width:140px; background-color:#CCCCFF;" readonly value="<nested:write name="caseManagementEntryForm" property="caseNote.observation_date" format="dd-MMM-yyyy H:mm" />">
+                rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a>
+    </nested:empty>
+    </div>
+    <div><span style="float:left;">Editors:</span>
+        <nested:equal name="newNote" value="false">
+            <ul style="list-style: none inside none; margin:0px;">
+            <nested:iterate indexId="eIdx" id="editor" property="caseNote.editors" name="caseManagementEntryForm">
+                <c:if test="${eIdx % 2 == 0}">
+                    <li><nested:write property="formattedName"/>;
+                </c:if>
+                <c:if test="${eIdx % 2 != 0}">
+                    <nested:write property="formattedName"/></li>
+                </c:if>
+            </nested:iterate> 
+            <c:if test="${eIdx % 2 == 0}"></li></c:if>
+            </ul>
         </nested:equal>
-        <nested:notEqual name="caseManagementEntryForm" property="caseNote.signed" value="true"> 
-            Saved by 
-            <nested:write name="caseManagementEntryForm" property="caseNote.provider.formattedName" />
-        </nested:notEqual>        
-        <nested:write name="caseManagementEntryForm" property="caseNote.update_date" format="dd-MMM-yyyy H:mm" />
-        <sup>rev<a href="#" onclick="return showHistory('<nested:write name="caseManagementEntryForm" property="caseNote.id" />', event);"><nested:write name="caseManagementEntryForm" property="caseNote.revision" /></a></sup>
-    </nested:equal>
+        <nested:equal name="newNote" value="true">
+            <div style="margin:0px;">&nbsp;</div>
+        </nested:equal>
+        
+    </div>
     
     <nested:size id="numIssues" name="caseManagementEntryForm" property="caseNote.issues" />
     <nested:greaterThan name="numIssues" value="0">
-        <br>Assigned Issues
-        <ul style="list-style: circle outside none; margin-top:0px;">
+        Assigned Issues
+        <ul style="list-style: circle outside none; margin:0px;">
             <nested:iterate id="noteIssue" property="caseNote.issues" name="caseManagementEntryForm">
                 <li><c:out value="${noteIssue.issue.description}"/></li>
             </nested:iterate>
         </ul>
     </nested:greaterThan>
+    <nested:equal name="numIssues" value="0">
+        <div style="margin:0px;">&nbsp;</div>
+    </nested:equal>    
 </div>
-                            <div id="noteIssues" style="font-size:8px; display:none;">
+                            
+                            <div id="noteIssues" style="margin:0px; background-color:#CCCCFF; font-size:8px; display:none;">
                                 <b>Reference Issues</b>
                                 <table id="setIssueList" style="font-size:8px;">
                                 <nested:iterate indexId="ind" id="issueCheckList" property="issueCheckList" name="caseManagementEntryForm" type="org.oscarehr.casemgmt.web.CheckBoxBean">
@@ -75,7 +101,7 @@
                                 if( ind % 2 == 0 ) {%>
                                 <tr>
                                 <% } %>
-                                <td style="width:50%; font-size:8px; background-color: <%= (ind.intValue()%2==0)?"#EEEEFF":"white" %>;">
+                                <td style="width:50%; font-size:8px; background-color:#CCCCFF;">
                                 <%String submitString = "this.form.method.value='issueChange';";
                                 submitString = submitString + "this.form.lineId.value=" + "'"
                                 + ind.intValue() + "'; return ajaxUpdateIssues('issueChange', $('noteIssues').up().id);";
@@ -123,7 +149,25 @@
     </table>
 </div>	
         
-<script type="text/javascript">         
+<script type="text/javascript">   
+    
+    //check to see if we need to update div containers to most recent note id
+   //this happens only when we're called thru ajaxsave
+   <nested:notEmpty name="ajaxsave">
+        var origId = "<nested:write name="origNoteId" />";
+        var newId = "<nested:write name="ajaxsave" />";  
+        var oldDiv;
+        var newDiv;
+        var prequel = ["n","sig"];
+console.log(origId + "; " + newId);
+        for( var idx = 0; idx < prequel.length; ++idx ) {
+            oldDiv = prequel[idx] + origId;
+            newDiv = prequel[idx] + newId;
+            console.log(oldDiv + " = " + newDiv);
+            $(oldDiv).id = newDiv;            
+        }  
+    </nested:notEmpty>
+    
    if( $("toggleIssue") != null )
         $("toggleIssue").disabled = false;
     
@@ -165,25 +209,11 @@
             expandedIssues.splice(idx,1);
    }      
    //store observation date so we know if user changes it
-   origObservationDate = $("observationDate").value;
+   if( $("observationDate") != null ) {
+        origObservationDate = $("observationDate").value;            
    
-   //check to see if we need to update div containers to most recent note id
-   //this happens only when we're called thru ajaxsave
-   <nested:notEmpty name="ajaxsave">
-    var origId = <nested:write name="origNoteId" />;
-    var newId = <nested:write name="ajaxsave" />;
-    var oldDiv;
-    var newDiv;
-    var prequel = ["h","n","sig"];
-    
-    for( var idx = 0; idx < prequel.length; ++idx ) {
-        oldDiv = prequel[idx] + origId;
-        newDiv = prequel[idx] + newId;
-        $(oldDiv).id = newDiv;
-    }    
-    </nested:notEmpty>
-   
-    //create calendar
-    Calendar.setup({ inputField : "observationDate", ifFormat : "%d-%b-%Y %H:%M ", showsTime :true, button : "observationDate_cal", singleClick : true, step : 1 });    
+        //create calendar
+        Calendar.setup({ inputField : "observationDate", ifFormat : "%d-%b-%Y %H:%M ", showsTime :true, button : "observationDate_cal", singleClick : true, step : 1 });    
+   }
 </script>
         
