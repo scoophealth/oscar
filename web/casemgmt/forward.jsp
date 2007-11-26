@@ -41,7 +41,13 @@
    }
     if( useNewCaseMgmt != null && useNewCaseMgmt.equals("true") ) {        
 %>
-        <jsp:forward page="/CaseManagementEntry.do?method=edit&from=casemgmt&chain=list" />
+
+<jsp:forward page="/CaseManagementEntry.do">
+    <jsp:param name="method" value="edit"/>
+    <jsp:param name="from" value="casemgmt"/>
+    <jsp:param name="chain" value="list" />
+    <jsp:param name="demographicNo" value="<%=request.getParameter("demographicNo")%>"/>
+</jsp:forward>        
 <%
     }
     else {
