@@ -94,6 +94,28 @@ public class CaseManagementManager {
     protected AdmissionManager admissionManager;
     private boolean enabled;
 
+    //retrieve list of providers who have edited specific note
+    public void getEditors(CaseManagementNote note) {
+        List<Provider>providers;
+        providers = this.caseManagementNoteDAO.getEditors(note);
+        if( providers == null ) providers = new ArrayList<Provider>();
+        note.setEditors(providers);
+    }
+    
+    //retrieves a list of providers that have been associated with each note
+    //and stores this list in the coresponding note.
+    public void getEditors(List<CaseManagementNote>notes) {
+        Iterator<CaseManagementNote>iterator = notes.listIterator();
+        List<Provider>providers;
+        while(iterator.hasNext()) {
+            CaseManagementNote note = iterator.next();
+            providers = this.caseManagementNoteDAO.getEditors(note);
+            if( providers == null ) providers = new ArrayList<Provider>();
+            note.setEditors(providers);
+        }
+    }
+    
+    
     public void updateAppointment(String apptId, String status, String type) {
 
         apptDAO.updateAppointmentStatus(apptId, status, type);
@@ -574,6 +596,7 @@ public class CaseManagementManager {
     }
 
     public String getDemoName(String demoNo) {
+       
         Demographic dg = demographicDAO.getClientByDemographicNo(new Integer(demoNo));
         if (dg == null) return "";
         else return dg.getFirstName() + " " + dg.getLastName();
