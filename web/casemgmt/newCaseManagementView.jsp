@@ -25,7 +25,7 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 
-<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.Iterator"%>
+<%@page import="java.util.Arrays, java.util.Properties, java.util.List, java.util.Set, java.util.ArrayList, java.util.Iterator, java.text.SimpleDateFormat, java.util.Date, java.text.ParseException"%>
 <%@page import="org.oscarehr.casemgmt.model.*" %>
 <%@page import="org.oscarehr.casemgmt.web.formbeans.*" %>
 <%@page import="org.oscarehr.PMmodule.model.*" %>
@@ -60,15 +60,17 @@
 <script type="text/javascript">    
     
     function setCaretPosition(inpu, pos){
-        
+
 	if(inpu.setSelectionRange){
 		inpu.focus();
 		inpu.setSelectionRange(pos,pos);                
          
                 var ev;
+                var firefox = false;
                 try {
                     ev = document.createEvent('KeyEvents');
                     ev.initKeyEvent('keypress', true, true, window,false, false, false, false, 0,inpu.value.charCodeAt(pos-1));
+                    firefox = true;
                 }
                 catch(e) {                
                     ev = document.createEvent("UIEvents");                    
@@ -80,8 +82,14 @@
                     
                 }
                 
-                inpu.dispatchEvent(ev); // causes the scrolling   
+                inpu.dispatchEvent(ev); // causes the scrolling                      
+                //firefox actually inserts char at pos!  so we need to remove it
+                if( firefox ) {
+                    var txt = inpu.value;
+                    var end = pos + 1 < txt.length ? txt.substr(pos+1) : "";
+                    inpu.value = txt.substring(0,pos) + end;
                 
+                }
                 
 	}else if (inpu.createTextRange) {
 		var range = inpu.createTextRange();
@@ -182,10 +190,11 @@ function grabEnterGetTemplate(event){
 
 //Return display of Locked Note to normal 
 function resetView(frm, error, e) {
-    var random =  Math.round(Math.random() * 1000);
-    var img = "<img id='quitImg" + random + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";
-        
     var parent = Event.element(e).parentNode.id;
+    var nId = parent.substr(1);
+    var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+        
+    
     Element.remove(Event.element(e).id);
     Event.stop(e);
     
@@ -200,25 +209,34 @@ function resetView(frm, error, e) {
 }
 
 function changeToView(id) {
-
-    var random =  Math.round(Math.random() * 1000);
-    var img = "<img id='quitImg" + random + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";
-    var tmp = $(id).value;
     var parent = $(id).parentNode.id;
+    var nId = parent.substr(1);
+        
+    var tmp = $(id).value;
+    var saving = false;
     var sumaryId = "sumary";
     var sumary;
-    var nId = parent.substr(1);
-    var sig = 'sig' + nId;
     
+    var sig = 'sig' + nId;
+        
     //check if case note has been changed
     //if so, warn user that changes will be lost if not saved    
-    if( origCaseNote != $F(id) || origObservationDate != $("observationDate").value) {
+    if( origCaseNote != $F(id)  || origObservationDate != $("observationDate").value) {
         if( !confirm("Your changes to the current note have not been saved. Select Ok to save and continue or Cancel to continue editing current note"))
             return false;
-        else
+        else {
+            saving = true;
             ajaxSaveNote(sig);
+        }
    }
-
+   
+   //ajaxSave changes id to represent saved note id so we must update our vars here
+   parent = $(id).parentNode.id;
+   nId = parent.substr(1);
+   sig = 'sig' + nId;
+   var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+   
+   
     //cancel updating of issueschangeToView(
     //IE destroys innerHTML of sig div when calling ajax update
     //so we have to restore it here if the ajax call is aborted
@@ -249,22 +267,34 @@ function changeToView(id) {
     Element.remove(id);    
     
     //remove observation date input text box but preserve date if there is one
-    if( $("observation") != null ) {
-        var observation = $("observationDate").value;
-        Element.remove("observation");
+    if( !saving && $("observationDate") != null ) {
+        var observationDate = $("observationDate").value;
+        console.log("Remove Calendar nId = " + nId);
+        Element.remove("observationDate");
+        Element.remove("observationDate_cal");
+                    
+        var observationId = "observation" + nId;
+        if( $(observationId) == null )
+            console.log(obaservationId + " not present");
+        var html = $(observationId).innerHTML;
+        console.log(html);
+        html = html.substr(0,html.indexOf(":")+1) + " <span id='obs" + nId + "'>" + observationDate + "<\/span>" + html.substr(html.indexOf(":")+1);
         
-        if( observation.length > 0 ) {            
-            html = "<i>Observation Date:&nbsp;" + observation + "<\/i><br>";
-            new Insertion.Top("sumary"+nId, html);
-        }        
+        $(observationId).update(html);
+                
     }
+    
+    if( $("autosaveTime") != null )
+        Element.remove("autosaveTime");
     
     if( $("noteIssues") != null )
         Element.remove("noteIssues");        
         
     //we can stop listening for add issue here
     Element.stopObserving('asgnIssues', 'click', addIssueFunc);
-    
+    if( tmp.length == 0 ) 
+        tmp = "&nbsp;";
+        
     var input = "<pre>" + tmp + "<\/pre>";
     new Insertion.Top(parent, input);
     //$(txt).style.fontSize = normalFont;    
@@ -275,37 +305,90 @@ function changeToView(id) {
     return true;
 }
 
-function minView(e) {      
-    var random =  Math.round(Math.random() * 1000);
-    var divHeight = "14px";
+function minView(e) {          
+    var divHeight = "1.1em";
     var txt = Event.element(e).parentNode.id;   
+    var nId = txt.substr(1);
     var img = Event.element(e).id;    
+    var dateId = "obs" + nId;
+    var content = "c" + nId;
+    var date = "d" + nId;
     
     Event.stop(e);
-    Element.remove(img);
-    
-    $(txt).style.overflow = "hidden";
-    $(txt).style.height = divHeight;
-    
-    var nodes = $(txt).getElementsBySelector('pre');
-    if( nodes.length > 0 ) {
-        var line = nodes[0].innerHTML;
-        line = "<span>" + line + "<\/span>";
-        new Insertion.Top(txt,line);
+    var imgs = $(txt).getElementsBySelector("img");
+    for( i = 0; i < imgs.length; ++i ) {    
+        if( imgs[i].id.indexOf("quitImg") > -1 ) {
+            Element.remove(imgs[i]);
+            break;
+        }
     }
     
-    img = "<img id='xpImg" + random + "' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-add.png'/>";
+    $(txt).style.overflow = "hidden";
+    shrink(txt, 14);
+    //$(txt).style.height = divHeight;
+    
+    
+    var nodes = $(txt).getElementsBySelector('pre')
+    if( nodes.length > 0 ) {
+        var line = nodes[0].innerHTML;
+        var dateValue = $(dateId) != null ? $(dateId).innerHTML : "";
+        line = "<div id='" + date + "' style='float:left; font-size:1.0em; width:25%;'><b>" + dateValue + "<\/b><\/div><div id='" + content + "' style='float:left; font-size:1.0em; width:70%;'>" + line + "<\/div>";
+        new Insertion.Top(txt,line);        
+    }
+    
+    img = "<img title='Maximize Display' alt='Maximize Display' id='xpImg" + nId + "' onclick='xpandView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_down.gif'/>";
     new Insertion.Top(txt, img);
+}
+
+var idHeight;
+var curElemHeight;
+var shrinkTimer;
+function shrink(id, toScale) {
+    idHeight = $(id).getHeight();
+    curElemHeight = idHeight;
+    
+    shrinkTimer = self.setInterval("shrinkImpl("+id+", " + toScale+")",1);
+}
+function shrinkImpl(id, minHeight) {
+    curElemHeight -= 30;
+    if( curElemHeight <= minHeight ) {
+        $(id).style.height = minHeight;
+        window.clearInterval(shrinkTimer);
+        return;
+    }    
+    
+    $(id).style.height = curElemHeight;
+}
+//restore note to full display within pre tags
+//this func fires only if maximize button is clicked
+function xpandView(e) {
+    var txt = Event.element(e).parentNode.id;   
+    var img = Event.element(e).id; 
+    var nId = txt.substr(1);
+    var content = "c" + nId;
+    var date = "d" + nId;    
+    
+    var imgTag = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
     
     
+    Element.remove(img);
+    Element.remove(date);
+    Element.remove(content);
+    
+    $(txt).style.height = 'auto';    
+    new Insertion.Top(txt, imgTag);    
+    Event.stop(e);
+
 }
 
 function resetEdit(e) {
-    var random =  Math.round(Math.random() * 1000);
-    var img = "<img id='quitImg" + random + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";
+    var txt = Event.element(e).id;
+    var nId = txt.substr(1);
+
+    var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
     var divHeight = 14;    
     var divSize = "size";       
-    var txt = Event.element(e).id;
+    
     var payload;
     
     //if exit button fires func, we need to get id of textarea, which is grandfather of button
@@ -358,9 +441,7 @@ function unlock_ajax(id) {
 }
 
 //display unlock note password text field and submit button
-function unlockNote(e) {
-   var random =  Math.round(Math.random() * 1000);
-   var img = "<img id='quitImg" + random + "' onclick='resetView(true, false, event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";
+function unlockNote(e) {      
    var txt;
    var el;
    
@@ -376,7 +457,7 @@ function unlockNote(e) {
         
         txt = $(el).up('div',level).id;        
     } 
-   
+      
    var passwd = "passwd";
 
     for( var i = 0; i < $(txt).childNodes.length; ++i ) {
@@ -386,14 +467,18 @@ function unlockNote(e) {
         }
     }
     
-    //check for line item displayed when note is minimized
-    nodes = $(txt).getElementsBySelector('span');
-    if( nodes.length > 0 )
-        nodes[0].remove();
-        
-        
+    //check for line item displayed when note is minimized    
+    var nId = txt.substr(1);
+    var content = "c" + nId;
+    var date = "d" + nId; 
+    if( $(date) != null ) {
+        Element.remove(date);
+        Element.remove(content);    
+    }
+                   
+    var img = "<img id='quitImg" + nId + "' onclick='resetView(true, false, event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
     new Insertion.Top(txt,img);
-    var lockForm = "<p id='passwdPara'>Password:&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'><\/p>";
+    var lockForm = "<p id='passwdPara' class='passwd'>Password:&nbsp;<input onkeypress=\"return grabEnter('btnUnlock', event);\" type='password' id='" + passwd + "' size='16'>&nbsp;<input id='btnUnlock' type='button' onclick=\"return unlock_ajax('" + txt + "');\" value='<bean:message key="oscarEncounter.Index.btnUnLock"/>'><\/p>";
     new Insertion.Bottom(txt, lockForm);
     
     $(txt).style.height = "auto";
@@ -440,47 +525,50 @@ function editNote(e) {
     if( nodes.length > 0 ) {
         nodes[0].remove();        
     }              
-        
+    
+    var nId = txt.substr(1); 
+    var date = 'd' + nId;
+    var content = 'c' + nId;
+    
     //check for line item displayed when note is minimized
-    nodes = $(txt).getElementsBySelector('span');
-    if( nodes.length > 0 )
-        nodes[0].remove();
+    if( $(date) != null ) {
+        Element.remove(date);
+        Element.remove(content);
+    }
     
     //place text in textarea for editing
     nodes = $(txt).getElementsBySelector('pre');  
     if( nodes.length > 0 ) {        
         payload = nodes[0].innerHTML;    
         nodes[0].remove();
-    }
-    else {       
-        var pos = $(txt).innerHTML.search(/<span/i);        
-        payload = $(txt).innerHTML.substr(0,pos);   
-        $(txt).innerHTML = $(txt).innerHTML.substr(pos);  
-    }
+    }    
     
     payload = payload.replace(/^\s+|\s+$/g,"");
     payload += "\n";
-                       
-    var nId = txt.substr(1); 
-    caseNote = "caseNote" + nId;                
+                           
+    caseNote = "caseNote_note" + nId;                
     
-    var input = "<textarea tabindex='7' wrap=hard cols='84' rows='10' style='overflow:scroll; width:100%; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
+    var input = "<textarea tabindex='7' cols='84' rows='10' wrap='hard' class='txtArea' style='line-height:1.1em;' name='caseNote_note' id='" + caseNote + "'>" + payload + "<\/textarea>";                    
     new Insertion.Top(txt, input);                 
     
     Element.observe(caseNote, 'keyup', monitorCaseNote);
       
     <c:if test="${sessionScope.passwordEnabled=='true'}">
-           input = "<p style='display:none;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
+           input = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
            new Insertion.Bottom(txt, input);
     </c:if>
-                                
-          
-    document.forms["caseManagementEntryForm"].noteId.value = nId;
-    
-    if( nId > 0 )
+                            
+    //we check if we are dealing with a new note or not
+    if( nId.charAt(0) == "0" ) {
+        document.forms["caseManagementEntryForm"].noteId.value = "0";
+        document.forms["caseManagementEntryForm"].newNoteIdx.value = nId;
+        document.forms["caseManagementEntryForm"].note_edit.value = "new";
+    }
+    else {
+        document.forms["caseManagementEntryForm"].noteId.value = nId;
         document.forms["caseManagementEntryForm"].note_edit.value = "existing";
-    else 
-        document.forms["caseManagementEntryForm"].note_edit.value = "new";            
+    }
+        
     
     //we want to make sure update issue ajax call doesn't retrieve anything from autosave table
     document.forms["caseManagementEntryForm"].forceNote.value = "true";
@@ -498,14 +586,13 @@ function editNote(e) {
     Element.stopObserving(txt, 'click', editNote);
     
     //AutoCompleter for Issues
-    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
+    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
     issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});               
     
-    //position cursor at end of text        
+    //position cursor at end of text            
     adjustCaseNote();
-    $(caseNote).focus();
     setCaretPosition($(caseNote),$(caseNote).value.length); 
-    
+    $(caseNote).focus();
     origCaseNote = $F(caseNote); 
     
     //start AutoSave
@@ -532,7 +619,7 @@ function collapseView(e) {
 function viewNote(e) {    
     var txt = Event.element(e).id; 
     var html;            
-    var img = "<img id='quitImg" + txt + "' onclick='collapseView(event)' style='float:right; cursor:pointer;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>";    
+    var img = "<img id='quitImg" + txt.substr(1) + "' onclick='collapseView(event)' style='float:right; cursor:pointer;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";    
         
     $(txt).style.height = "auto";
     html = $(txt).innerHTML;
@@ -644,14 +731,14 @@ function ajaxSaveNote(div) {
                     url,
                     {
                         method: 'post',                        
-                        evalScripts: true, 
+                        evalScripts: true,                         
                         parameters: Form.serialize(caseMgtEntryfrm),                        
                         onFailure: function(request) {
                             if( request.status == 403 )
                                 alert("<bean:message key="oscarEncounter.error.msgExpired"/>");
                             else
                                 alert("Error saving note " + request.status);
-                        }
+                        }                        
                      }
                    );          
     return false;
@@ -735,12 +822,16 @@ function savePage(method) {
     
     function closeEnc(e) {
         Event.stop(e);
-        if( confirm("Are you sure you wish to close the encounter? Any unsaved data WILL BE LOST") ) {
-            var frm = document.forms["caseManagementEntryForm"];
-            tmpSaveNeeded = false;
-            frm.method.value = "cancel";
-            frm.submit();            
+        if( origCaseNote != $F(caseNote)  || origObservationDate != $("observationDate").value) {
+            if( confirm("Are you sure you wish to close the encounter? Any unsaved data WILL BE LOST") ) {
+                var frm = document.forms["caseManagementEntryForm"];
+                tmpSaveNeeded = false;
+                frm.method.value = "cancel";
+                frm.submit();            
+            }           
         }
+        else
+            window.close();
         
         return false;
     }
@@ -786,7 +877,7 @@ function updateIssues(e) {
 var ajaxRequest; 
 function ajaxUpdateIssues(method, div) {
     <c:url value="/CaseManagementEntry.do" var="issueURL" />
-    
+    console.log("update issues div " + div);
     var frm = document.forms["caseManagementEntryForm"];
     frm.method.value = method;    
     frm.ajax.value = true;
@@ -860,39 +951,55 @@ function filterCheckBox(checkbox) {
      
 }
 
+//we insert a new note div with textarea etc
+//newNoteIdx guarantees unique id for successive calls to newNote
+var newNoteCounter = 0;
 function newNote(e) {
-    var input = "<textarea tabindex='7' wrap=hard cols='84' rows='5' style='width:100%; rows:10; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name='caseNote_note' id='caseNote_note0'><\/textarea>";
+    var id = "new" + Math.round(Math.random()*1000);
+    var reason = "<%=insertReason(request)%>";    //function defined bottom of file
+    ++newNoteCounter;
+    var newNoteIdx = "0" + newNoteCounter;
+    var sigId = "sig"+ newNoteIdx;
+    var input = "<textarea tabindex='7' cols='84' rows='1' wrap='hard' class='txtArea' style='line-height:1.0em;' name='caseNote_note' id='caseNote_note" + newNoteIdx + "'>" + reason + "<\/textarea>";
     var passwd  = 
                 <c:if test="${sessionScope.passwordEnabled=='true'}">
-                        "<p style='display:none;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>" +		
+                        "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>" +		
                 </c:if>
                 "";
                 
-    var div = "<div id='h0' style='position: absolute; display:none; font-size:12px; left:0px; top:0px;'>&nbsp;</div>" +
-              "<div id='n0' style='background-color:#EFEFEF; float:left; font-size:12px; width:99%; border-left: thin groove #000000; border-bottom: thin groove #000000; border-right: thin groove #000000; margin-right:-3px;'>" +
-              input + "<div style='display:inline;' id='sig0'><div id='sumary0'><\/div><\/div>" + passwd + "<\/div>";
+    var div = "<div id='" + id + "' class='newNote'><div id='n" + newNoteIdx + "'>" +
+              input + "<div class='sig' style='display:inline;' id='" + sigId + "'><\/div>" + passwd + "<\/div><\/div>";
               
     if( changeToView(caseNote) ) {
-        caseNote = "caseNote_note0";
+        
+        caseNote = "caseNote_note" + newNoteIdx;
         document.forms["caseManagementEntryForm"].note_edit.value = "new";
-        document.forms["caseManagementEntryForm"].noteId.value = "0"
+        document.forms["caseManagementEntryForm"].noteId.value = "0";
+        document.forms["caseManagementEntryForm"].newNoteIdx.value = newNoteIdx;
         new Insertion.Bottom("encMainDiv", div);
+        Rounded("div#"+id,"all","transparent","#CCCCCC","big border #000000");
         $(caseNote).focus();   
         adjustCaseNote();
+        if( reason.length > 0 ) 
+            setCaretPosition($(caseNote),$(caseNote).value.length);
+            
         Element.observe(caseNote, 'keyup', monitorCaseNote);
 
-        origCaseNote = $F(caseNote);        
-
-        ajaxUpdateIssues('edit', 'sig0'); 
-        addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, 'sig0');
+        origCaseNote = "";        
+        console.log("DIV " + sigId);
+        ajaxUpdateIssues("edit", sigId); 
+        addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, sigId);
         Element.observe('asgnIssues', 'click', addIssueFunc);        
 
         //AutoCompleter for Issues
-        <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
+        <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
         issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});        
 
         //hide new note button
-        $("newNoteImg").hide();
+        //$("newNoteImg").hide();
+        
+        //start AutoSave
+        setTimer();
     }
     else
         $(caseNote).focus();
@@ -917,22 +1024,61 @@ function autoSave(async) {
     
     var url = "<c:out value="${autoSaveURL}"/>";
     var programId = "<c:out value="${case_program_id}"/>";
-    var demoNo = "<c:out value="${param.demographicNo}"/>";
-    var params = "method=autosave&demographicNo=" + demoNo + "&programId=" + programId + "&note_id=" + document.forms["caseManagementEntryForm"].noteId.value + "&note=" + escape($F(caseNote));
+    var demoNo = "<c:out value="${demographicNo}"/>";
+    var nId = document.forms["caseManagementEntryForm"].noteId.value < 0 ? 0 : document.forms["caseManagementEntryForm"].noteId.value;
+    var params = "method=autosave&demographicNo=" + demoNo + "&programId=" + programId + "&note_id=" + nId + "&note=" + escape($F(caseNote));
 
     new Ajax.Request( url, {
                                 method: 'post',
                                 postBody: params,
-                                asynchronous: async
+                                asynchronous: async,
+                                onSuccess: function(req) {     
+                                                var nId = caseNote.substr(13);
+                                                var sig = "sig" + nId;                                                
+                                                var month=new Array(12)
+                                                
+                                                month[0]="Jan"
+                                                month[1]="Feb"
+                                                month[2]="Mar"
+                                                month[3]="Apr"
+                                                month[4]="May"
+                                                month[5]="Jun"
+                                                month[6]="Jul"
+                                                month[7]="Aug"
+                                                month[8]="Sep"
+                                                month[9]="Oct"
+                                                month[10]="Nov"
+                                                month[11]="Dec"
+                                                
+                                                if( $("autosaveTime") == null ) 
+                                                    new Insertion.Bottom(sig, "<div id='autosaveTime' class='sig' style='text-align:center; margin:0px;'><\/div>");
+                                                    
+                                                var d = new Date();
+                                                var min = d.getMinutes();
+                                                min += min.length == 1 ? "0" : "";
+                                                var fmtDate = "<i>Draft Saved " + d.getDate() + "-" + month[d.getMonth()] + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
+                                                $("autosaveTime").update(fmtDate);
+                                                
+                                           }
                             }
                      );
                      
-    setTimer();
+    
                                 
 }
+
+function backup() {
+    
+    if(origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) {
+        autoSave(true);
+    }
+    
+    setTimer();
+}
+
 var autoSaveTimer;
 function setTimer() {
-    autoSaveTimer = setTimeout("autoSave(true)", 60000);
+    autoSaveTimer = setTimeout("backup()", 60000);
 }
 
 function restore() {
@@ -956,15 +1102,18 @@ function showHistory(noteId, event) {
 var caseNote = "";  //contains id of note text area; system permits only 1 text area at a time to be created
 var numChars = 0;
 function monitorCaseNote(e) {
-    var MAXCHARS = 70;
+    var MAXCHARS = 78;
     var MINCHARS = -10;
     var newChars = $(caseNote).value.length - numChars;
     var newline = false;
     
     if( e.keyCode == 13)       
       newline = true;    
-    
-    if( newChars >= MAXCHARS || newline ) {
+   
+    if( newline ) {
+	adjustCaseNote();
+    }	
+    else if( newChars >= MAXCHARS ) {
         adjustCaseNote();
     }
     else if( newChars <= MINCHARS ) {
@@ -975,17 +1124,32 @@ function monitorCaseNote(e) {
 
 //resize case note text area to contain all text
 function adjustCaseNote() {
-    var nId = caseNote.match(/\d+/);
-    var shadowNote = "h" + nId;    
-    var width = $(caseNote).getWidth();
+    var MAXCHARS = 78;
     var payload = $(caseNote).value;
+    var numLines = 0;
+    var spacing = Prototype.Browser.IE == true ? 1.08 : Prototype.Browser.Gecko == true ? 1.11 : 1.2;
+    var fontSize = $(caseNote).getStyle('font-size');
+    var lHeight = $(caseNote).getStyle('line-height');
+    var lineHeight = lHeight.substr(0,lHeight.indexOf('e'));
+    var arrLines = payload.split("\n");    
 
-    $(shadowNote).innerHTML = payload.replace(/\n/g,'<br>') + '&nbsp;';
-    $(shadowNote).style.width = width;
-    noteHeight = $(shadowNote).getHeight();
-    noteHeight += $(caseNote).getStyle('fontSize').substr(0,2) * 1.5;    
-    $(caseNote).style.height = noteHeight + 'px';
-    numChars = payload.length;
+    //we count each new line char and add a line for lines longer than max length
+    for( var idx = 0; idx < arrLines.length; ++idx ) {
+
+	if( arrLines[idx].length >= MAXCHARS ) {
+	   numLines += Math.ceil( arrLines[idx].length / MAXCHARS );
+	}
+	else
+	   ++numLines;
+	    
+    }
+    //add a buffer
+    numLines += 2;
+    var noteHeight = Math.ceil(lineHeight * numLines);    
+    noteHeight += 'em';
+    $(caseNote).style.height = noteHeight;    
+
+    numChars = $(caseNote).value.length;
 }
 
 function autoCompleteHideMenu(element, update){ 
@@ -1333,6 +1497,7 @@ Version version = (Version) ctx.getBean("version");
                   <input type="hidden" name="sign" value="off">
                   <input type="hidden" name="verify" value="off">
                   <input type="hidden" name="forceNote" value="false">
+                  <input type="hidden" name="newNoteIdx" value="">
                   <div id="mainContent" style="width:75%; display:inline; float:left; margin-right:-5px;"> 
                      <span id="issueList" style="height:490px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
                           <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
@@ -1344,8 +1509,7 @@ Version version = (Version) ctx.getBean("version");
                           </table> 
                       </span>
                       <div id="encMainDiv" style="width:99%; border-right: thin groove #000000; border-left: thin groove #000000; margin-right:-5px; background-color:#FFFFFF; height:480px; overflow:auto; margin-left:2px;">
-                          
-                          
+
                           <%-- <p style="font-size:6px; clear:both"><a href="javascript:viewIssues()">view Issues</a></p> --%>
         
                           <%-- <div style="display:none" id="viewIssues">
@@ -1478,58 +1642,81 @@ Version version = (Version) ctx.getBean("version");
                               
                               CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
                               String noteStr = note.getNote();
-                              %>
-                              <div id="h<%=note.getId()%>" style="position: absolute; display:none; font-size:12px; left:0px; top:0px;">&nbsp;</div>
-                              <div id="n<%=note.getId()%>" style="float:left; background-color:#EFEFEF; font-size:12px; width:99%; border-bottom: thin groove #000000; margin-right:-3px;"> 
-                              
-                                  <%
-                                  //display last saved note for editing
-                                  if( note.getId() == savedId ) {    
-                                  found = true;
-                                  %>    
-                                  <textarea  tabindex="7" cols="78" rows="10" wrap=hard style='width:100%; rows:10; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
-                                  <div style="display:inline;" id="sig<%=note.getId()%>">
-                                      <%@ include file="noteIssueList.jsp" %>                                        
-                                  </div>
-                                  
+                              %>                               
+                              <div class="note"> 
+                                  <div id="n<%=note.getId()%>">
+                                      <%
+                                      //display last saved note for editing
+                                      if( note.getId() == savedId ) {    
+                                      found = true;
+                                      %>    
+                                      <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
+                                      <div class="sig" style="display:inline;" id="sig<%=note.getId()%>">
+                                          <%@ include file="noteIssueList.jsp" %>
+                                      </div>
+                                      
                                       <c:if test="${sessionScope.passwordEnabled=='true'}">
-                                          <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
+                                          <p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
                                       </c:if>                                 
-                                  
-                                  <%    
-                                  }
-                                  //else display contents of note for viewing
-                                  else {
-                                  %>
-                                  <img title="Minimize Display" id='quitImg<%=idx%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/list-remove.png'/>
-                                  
-                                  <%
-                                  if( note.isLocked() ) {
-                                  %>
-                                  <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>
-                                  <%
-                                  }
-                                  else {
-                                  String description;
-                                  if( note.isSigned() )
-                                  description = " Signed by " + note.getSigning_provider_no();
-                                  else
-                                  description = " Saved by " + note.getProviderName(); 
-                                                                       
-                                  String rev = note.getRevision();
-                                  %>
-                                  <pre><%=noteStr%></pre>
-                                  
-                                  <div style="display:inline;" id="sig<%=note.getId()%>"><div id="sumary<%=note.getId()%>">
-                                      <i>Observation Date:&nbsp;<%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></i><br>
-                                      Created:&nbsp;<%=DateUtils.getDate(note.getCreate_date(),dateFormat)%><br><%=description + " " + DateUtils.getDate(note.getUpdate_date(),dateFormat)%><sup>rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></sup>
+                                      
+                                      <%    
+                                      }
+                                      //else display contents of note for viewing
+                                      else {
+                                      %>
+                                      <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+                                      
+                                      <%
+                                      if( note.isLocked() ) {
+                                      %>
+                                      <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>                                  
+                                      <%
+                                      }
+                                      else {                                      
+                                      
+                                      String rev = note.getRevision();
+                                      %>
+                                      <pre><%=noteStr%></pre>
+                                      <%
+                                        if( largeNote(noteStr) ) {
+                                      %>                                       
+                                        <img title="Minimize Display" id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+                                      <%
+                                        }
+                                      %>                                      
+                                  <div id="sig<%=note.getId()%>" style="clear:both;"><div class="sig" id="sumary<%=note.getId()%>">
+                                          <div id="observation<%=note.getId()%>" style="float:right;margin-right:3px;"><i>Date:&nbsp;<span id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
+                                              <div><span style="float:left;">Editors:</span>
+                                                  <ul style="list-style: none inside none; margin:0px;">    
+                                                      <%  
+                                                      List editors = note.getEditors();
+                                                      Iterator<Provider> it = editors.iterator(); 
+                                                      int count = 0;
+                                                      int MAXLINE = 2;
+                                                      while( it.hasNext() ) {
+                                                      Provider p = it.next();
+                                                      
+                                                      if( count % MAXLINE == 0 ) {
+                                                      out.print("<li>" + p.getFormattedName() + "; ");
+                                                      }
+                                                      else {
+                                                      out.print(p.getFormattedName() + "</li>");
+                                                      }
+                                                      ++count;
+                                                      }
+                                                      if( count % MAXLINE == 0 )
+                                                          out.print("</li>");
+                                                      %>
+                                                      
+                                                  </ul>
+                                              </div>
+                                              <%
+                                              Set issSet = note.getIssues();
+                                              if( issSet.size() > 0 ) {
+                                              %>
                                           
-                                          <%                        
-                                          Set issSet = note.getIssues();
-                                          if( issSet.size() > 0 ) {
-                                          %>                      
-                                          <br>Assigned Issues
-                                          <ul style="list-style: circle outside none; margin-top:0px;">                            
+                                              Assigned Issues
+                                          <ul style="list-style: circle inside none; margin:0px;">                            
                                               <% 
                                               Iterator i = issSet.iterator();
                                               while( i.hasNext() ) {
@@ -1544,12 +1731,12 @@ Version version = (Version) ctx.getBean("version");
                                           %>
                                       </div>
                                   </div>
-                                  <%
-                                  }
-                                  }
-                                  //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
-                                  %>
-                                  
+                                      <%
+                                      }
+                                      }
+                                      //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
+                                      %>
+                                  </div>
                               </div>
                               <%
                               //if we are not editing note, remember note ids for setting event listeners
@@ -1640,18 +1827,19 @@ Version version = (Version) ctx.getBean("version");
                           if( !found ) {
                           savedId = 0;
                           %>    
-                          <div id="h<%=savedId%>" style="position: absolute; display:none; font-size:12px; left:0px; top:0px;">&nbsp;</div>
-                          <div id="n<%=savedId%>" style="float:left; background-color:#EFEFEF; font-size:12px; width:100%; border-bottom: thin groove #000000; margin-right:-3px;">                                     
-                              <textarea  tabindex="7" cols="78" rows="10" wrap=hard style='width:100%; rows:10; overflow:hidden; border-style:none; font-family:arial,sans-serif; font-size:12px;' name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
-                              <div style="display:inline;" id="sig0">
-                                  <%@ include file="noteIssueList.jsp" %>                                        
+                          <div class="note">
+                              <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
+                                  <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
+                                  <div id="sig0">
+                                      <%@ include file="noteIssueList.jsp" %>                                        
+                                  </div>
+                                  
+                                  <c:if test="${sessionScope.passwordEnabled=='true'}">
+                                      <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
+                                  </c:if>
+                                  
+                                  
                               </div>
-                              
-                              <c:if test="${sessionScope.passwordEnabled=='true'}">
-                                  <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
-                              </c:if>
-                              
-                              
                           </div>
                           <%
                           }
@@ -1668,7 +1856,7 @@ Version version = (Version) ctx.getBean("version");
                       <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
                           <span style="float:right; margin-right:5px;">                                
                               <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
-                              <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" style="display:none;" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
+                              <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
                               <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
                               <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
                               <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
@@ -1684,8 +1872,11 @@ Version version = (Version) ctx.getBean("version");
                   </div>
               </nested:form>          
           
-<script type="text/javascript">
-    
+<script type="text/javascript">                         
+    document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
+    caseNote = "caseNote_note" + "<%=savedId%>"; 
+    setupNotes();
+    Element.observe(caseNote, "keyup", monitorCaseNote);   
     <%
         Long num;
         Iterator iterator = lockedNotes.iterator();
@@ -1705,22 +1896,11 @@ Version version = (Version) ctx.getBean("version");
         }
     %>   
    
-    document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
-    caseNote = "caseNote_note" + "<%=savedId%>";                      
-    
-    if( $(caseNote).value.length > 0 )
-        $(caseNote).value += "\n";
-            
-    adjustCaseNote();    
-    $(caseNote).focus();             
-    Element.observe(caseNote, "keyup", monitorCaseNote);    
-   
-    $("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
     
     //flag for determining if we want to submit case management entry form with enter key pressed in auto completer text box
     var submitIssues = false;
    //AutoCompleter for Issues
-    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
+    <c:url value="/CaseManagementEntry.do?method=issueList&demographicNo=${demographicNo}&providerNo=${param.providerNo}" var="issueURL" />
     var issueAutoCompleter = new Ajax.Autocompleter("issueAutocomplete", "issueAutocompleteList", "<c:out value="${issueURL}"/>", {minChars: 4, indicator: 'busy', afterUpdateElement: saveIssueId, onShow: autoCompleteShowMenu, onHide: autoCompleteHideMenu});
 
     <%
@@ -1750,14 +1930,78 @@ Version version = (Version) ctx.getBean("version");
    //start timer for autosave
    setTimer();  
    
-   //are we editing existing note?  if so show new note button
+   //are we editing existing note?  if so save current text otherwise init to ""
    <% if( found == true ) { %>        
-        $("newNoteImg").show();
+        origCaseNote = $F(caseNote);
    <%} else { %>
-        $("newNoteImg").hide();        
+        origCaseNote = "";   
    <%}%>
-         
-   setCaretPosition($(caseNote), $(caseNote).value.length);
-   origCaseNote = $F(caseNote);
+                     
+    //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
    </script>
    
+<%!
+  
+    /*
+     *Insert encounter reason for new note
+     */
+    protected String insertReason(HttpServletRequest request) {
+        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("casemgmt_oscar_bean");
+        String encounterText = "";
+        if( bean != null ) {            
+            String apptDate = convertDateFmt(bean.appointmentDate);
+            if(bean.eChartTimeStamp==null){
+                  encounterText ="\n["+oscar.util.UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy",request.getLocale())+" .: "+bean.reason+"] \n";
+                  //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
+            }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
+                   //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
+                  //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                   encounterText ="\n["+("".equals(bean.appointmentDate)?oscar.util.UtilDateUtilities.getToday("dd-MMM-yyyy"):apptDate)+" .: "+bean.reason+"]\n";
+            }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
+                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                   encounterText ="\n["+apptDate+" .: "+bean.reason+"]\n";
+            }
+           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
+           if(!bean.oscarMsg.equals("")){
+              encounterText +="\n\n"+bean.oscarMsg;
+           }
+
+        }
+        encounterText = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(encounterText);
+        return encounterText;
+    }
+    
+    protected String convertDateFmt(String strOldDate) {
+        String strNewDate = "";
+        if( strOldDate != null && strOldDate.length() > 0 ) {
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                
+                Date tempDate = fmt.parse(strOldDate);
+                strNewDate = new SimpleDateFormat("dd-MMM-yyyy").format(tempDate);
+                
+            }
+            catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        return strNewDate;
+    }
+    
+    protected boolean largeNote(String note) {
+        final int THRESHOLD = 10;
+        boolean isLarge = false;       
+        int pos = -1;
+        
+        for( int count = 0; (pos = note.indexOf("\n",pos+1)) != -1; ++count ) {
+            if( count == THRESHOLD ) {
+                isLarge = true;
+                break;
+            }
+        }
+        
+        return isLarge;
+    }
+
+%>
