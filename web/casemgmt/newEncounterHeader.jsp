@@ -102,7 +102,7 @@
     <bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
     <%=famDocName%>&nbsp;<%=famDocSurname%>&nbsp;&nbsp;
     <form style="display:inline;" action="" name="ksearch" >
-    <span class="Header">
+    <span class="Header" style="color:#<%=inverseFamDocColour%>; background-color:<%=famDocColour%>">
         <%
             String winName = "Master" + bean.demographicNo;
             String url;
