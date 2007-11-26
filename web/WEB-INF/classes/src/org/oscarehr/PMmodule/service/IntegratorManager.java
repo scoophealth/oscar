@@ -240,6 +240,13 @@ public class IntegratorManager {
         return clients;
     }
 
+    public Client getClient(String agencyUsername, long demographicNo) throws IntegratorException {
+         GetDemographicResponse response = getIntegratorService().getDemographic(new GetDemographicRequest(new Date(), agencyUsername, (int) demographicNo),
+                authenticationToken);
+
+        return response.getClient();
+    }
+
     public Demographic getDemographic(String agencyUsername, long demographicNo) throws IntegratorException {
         GetDemographicResponse response = getIntegratorService().getDemographic(new GetDemographicRequest(new Date(), agencyUsername, (int) demographicNo),
                 authenticationToken);
@@ -259,17 +266,9 @@ public class IntegratorManager {
     }
 
     protected boolean updateClient(long id) {
-        // TODO stubbed for now, must implement
-        // if(!isEnabled() || agencyService == null) {
-        // return false;
-        // }
-        //
-        // Demographic demographic = clientManager.getClientByDemographicNo(id);
-        // List<DemographicExt> extras = clientManager.getDemographicExtByDemographicNo((int)id);
-        //
-        // demographic.setExtras(extras.toArray(new DemographicExt[extras.size()]));
-        //
-        // agencyService.updateClient(getLocalAgency().getId().longValue(),demographic.getDemographicNo().intValue(),demographic);
+
+        Demographic demographic = clientManager.getClientByDemographicNo("" + id);
+        saveClient(demographic);        
 
         return true;
     }

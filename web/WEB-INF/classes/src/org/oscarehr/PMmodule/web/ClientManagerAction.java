@@ -21,47 +21,22 @@
  */
 package org.oscarehr.PMmodule.web;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.exception.AdmissionException;
-import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
-import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
-import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.exception.ProgramFullException;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.model.Bed;
-import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.Consent;
-import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.DemographicExt;
-import org.oscarehr.PMmodule.model.Intake;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramProvider;
-import org.oscarehr.PMmodule.model.ProgramQueue;
-import org.oscarehr.PMmodule.model.Provider;
+import org.apache.struts.action.*;
+import org.caisi.integrator.model.Client;
+import org.oscarehr.PMmodule.exception.*;
+import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 public class ClientManagerAction extends BaseAction {
 
@@ -280,8 +255,8 @@ public class ClientManagerAction extends BaseAction {
 		String id = request.getParameter("id");
 
 		if (id != null && integratorManager.isEnabled()) {
-//      TODO enable      Demographic client = integratorManager.getClient(Integer.valueOf(id));
-//			request.setAttribute("client", client);
+            Client client = integratorManager.getClient(IntegratorManager.getLocalAgency().getIntegratorUsername(), Long.valueOf(id));
+			request.setAttribute("client", client);
 		}
 		return mapping.findForward("links");
 	}
