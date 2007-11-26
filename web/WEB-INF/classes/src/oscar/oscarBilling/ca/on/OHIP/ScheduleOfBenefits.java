@@ -104,7 +104,12 @@ public class ScheduleOfBenefits {
                if (addChangedCodes){
                   oldfees++;                  
                   String oldPrice = (String) billingInfo.get("value");                                                              
-                  double oldDoub = Double.parseDouble(oldPrice);                  
+                  double oldDoub = 0.00;
+                  try{
+                      Double.parseDouble(oldPrice);
+                  }   catch(Exception e){
+                      oldDoub = 0.00;
+                  }               
                   BigDecimal oldPriceDec = new BigDecimal(oldDoub).setScale(2, BigDecimal.ROUND_HALF_UP);                 
                   BigDecimal diffPriceDec = newPriceDec.subtract(oldPriceDec);
 
