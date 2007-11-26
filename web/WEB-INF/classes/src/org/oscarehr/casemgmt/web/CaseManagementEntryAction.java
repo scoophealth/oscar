@@ -189,17 +189,20 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 
                 log.debug("NoteId " + nId);
                 CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId);
-                if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {		                                                                       
+                if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {
+                        log.info("NEW NOTE GENERATED");
                         request.getSession().setAttribute("newNote","true");
                         request.getSession().setAttribute("issueStatusChanged","false");
+                        request.setAttribute("newNoteIdx",request.getParameter("newNoteIdx"));
                         
                         note = new CaseManagementNote();                       
                         note.setProvider_no(providerNo);
                         Provider prov = new Provider();
                         prov.setProviderNo(providerNo);
                         note.setProvider(prov);
-                        note.setDemographic_no(demono);     
-                        
+                        note.setDemographic_no(demono); 
+                        this.insertReason(request,note);
+                                                
                         resetTemp(providerNo, demono, programId);
 
 		}else if(tmpsavenote != null && !forceNote.equals("true")) {
@@ -224,9 +227,10 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                         note.setNote(tmpsavenote.getNote());
                 
                 }else if( nId != null && Integer.parseInt(nId) > 0 ) {
+                        log.info("Using nId " + nId + " to fetch note");
 			request.getSession().setAttribute("newNote","false");			
 			note = caseManagementMgr.getNote(nId);
-                        log.debug("Using nId " + nId + " to fetch note");
+                        
 			if(note.getHistory()== null || note.getHistory().equals("")) {
 				//old note - we need to save the original in here
 				note.setHistory(note.getNote());
@@ -246,6 +250,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                         prov.setProviderNo(providerNo);
                         note.setProvider(prov);
                         note.setDemographic_no(demono);                         
+                        
+                        this.insertReason(request,note);
                     }                    
                 }
 		
@@ -259,6 +265,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		}*/
                 
                 log.debug("Fetched Note " + String.valueOf(note.getId()));
+                this.caseManagementMgr.getEditors(note);
 		cform.setCaseNote(note);
 		/* set issue checked list */
 		CheckBoxBean[] checkedList = new CheckBoxBean[issues.size()];
@@ -452,7 +459,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 
 		/* remove signature and the related issues from note */
 		String noteString = note.getNote();
-		noteString = removeSignature(noteString);
+		//noteString = removeSignature(noteString);
 		noteString = removeCurrentIssue(noteString);
 		note.setNote(noteString);
 
@@ -487,11 +494,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 //update appointment and add verify message to note if verified                
                 EctSessionBean sessionBean = (EctSessionBean)request.getSession().getAttribute("EctSessionBean");                
                 String verify = request.getParameter("verify");
+                ResourceBundle prop;
+                Date now = new Date();
                 if( verify != null && verify.equalsIgnoreCase("on") ) {
-                    ResourceBundle prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
-                    String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVer") +
+                    prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
+                    String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgVerAndSig") +
                                     " " +
-                                    UtilDateUtilities.DateToString(new Date(), "dd-MMM-yyyy H:mm",request.getLocale()) + "]";
+                                    UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm",request.getLocale()) + " " +
+                                    prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + 
+                                    provider.getFormattedName() + "]";
                     String n = note.getNote() + "\n" + message;
                     note.setNote(n);
                     
@@ -500,6 +511,15 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                         caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "verify");
                 }
                 else if( note.isSigned() ) {
+                    prop = ResourceBundle.getBundle("oscarResources", request.getLocale());
+                    String message = "[" + prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigned") +
+                                    " " +
+                                    UtilDateUtilities.DateToString(now, "dd-MMM-yyyy H:mm",request.getLocale()) + " " + 
+                                    prop.getString("oscarEncounter.class.EctSaveEncounterAction.msgSigBy") + " " + 
+                                    provider.getFormattedName() + "]";
+                    String n = note.getNote() + "\n" + message;
+                    note.setNote(n);
+                    
                     //only update appt if there is one
                     if( sessionBean.appointmentNo != null && !sessionBean.appointmentNo.equals("") )
                         caseManagementMgr.updateAppointment(sessionBean.appointmentNo, sessionBean.status, "sign");
@@ -509,8 +529,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		/*
 		 * if provider is a doctor or nurse,get all major and resolved medical
 		 * issue for demograhhic and append them to CPP medical history
-		 */
-                Date now = new Date();
+		 */                
                 if( inCaisi ) {
                     /*get access right*/
                     List accessRight=caseManagementMgr.getAccessRight(providerNo,getDemographicNo(request),(String)request.getSession().getAttribute("case_program_id"));                
@@ -556,7 +575,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
 		/* remember the str written into echart */
 		request.getSession().setAttribute("lastSavedNoteString", savedStr);
-                
+                caseManagementMgr.getEditors(note);
 		
 		try {
 			this.caseManagementMgr.deleteTmpSave(providerNo,note.getDemographic_no(),note.getProgram_no());
@@ -609,8 +628,9 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
             
             CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean) form;
             
-            long oldId = cform.getCaseNote().getId() == null ? 0L : cform.getCaseNote().getId();
+            String oldId = cform.getCaseNote().getId() == null ? request.getParameter("newNoteIdx") : String.valueOf(cform.getCaseNote().getId());
             if( noteSave(cform, request) ) {
+                log.info("OLD ID " + oldId);
                 cform.setMethod("view");                
                 request.getSession().setAttribute("newNote",false); 
                 request.getSession().setAttribute("caseManagementEntryForm", cform);
@@ -1193,6 +1213,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 			log.warn("AutoSave Error: " + e);
 		}
 		
+                response.setStatus(response.SC_OK);
 		return null;
 	}
 	
@@ -1257,4 +1278,33 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
 		}
 		return notes;
 	}
+        
+/*
+     *Insert encounter reason for new note
+     */
+    protected void insertReason(HttpServletRequest request, CaseManagementNote note) {
+        oscar.oscarEncounter.pageUtil.EctSessionBean bean = (oscar.oscarEncounter.pageUtil.EctSessionBean)request.getSession().getAttribute("casemgmt_oscar_bean");
+        
+        if( bean != null ) {
+            String encounterText = "";
+            if(bean.eChartTimeStamp==null){
+                  encounterText ="\n["+UtilDateUtilities.DateToString(bean.currentDate, "dd-MMM-yyyy H:mm",request.getLocale())+" .: "+bean.reason+"] \n";
+                  //encounterText +="\n["+bean.appointmentDate+" .: "+bean.reason+"] \n";
+            }else if(bean.currentDate.compareTo(bean.eChartTimeStamp)>0){
+                   //System.out.println("2curr Date "+ oscar.util.UtilDateUtilities.DateToString(oscar.util.UtilDateUtilities.now(),"yyyy",java.util.Locale.CANADA) );
+                  //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                   encounterText ="\n["+("".equals(bean.appointmentDate)?UtilDateUtilities.getToday("dd-MMM-yyyy H:mm"):bean.appointmentDate)+" .: "+bean.reason+"]\n";
+            }else if((bean.currentDate.compareTo(bean.eChartTimeStamp) == 0) && (bean.reason != null || bean.subject != null ) && !bean.reason.equals(bean.subject) ){
+                   //encounterText +="\n__________________________________________________\n["+dateConvert.DateToString(bean.currentDate)+" .: "+bean.reason+"]\n";
+                   encounterText ="\n["+bean.appointmentDate+" .: "+bean.reason+"]\n";
+            }
+           //System.out.println("eChartTimeStamp" + bean.eChartTimeStamp+"  bean.currentDate " + dateConvert.DateToString(bean.currentDate));//" diff "+bean.currentDate.compareTo(bean.eChartTimeStamp));
+           if(!bean.oscarMsg.equals("")){
+              encounterText +="\n\n"+bean.oscarMsg;
+           }
+
+           note.setNote(encounterText);
+        }
+        
+    }        
 }
