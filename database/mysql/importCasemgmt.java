@@ -1,4 +1,4 @@
-/*
+/*n
  * 
  * Copyright (c) 2001-2002. Department of Family Medicine, McMaster University. All Rights Reserved. *
  * This software is published under the GPL GNU General Public License. 
@@ -206,14 +206,14 @@ public class importCasemgmt {
                             insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
                             insert.setString(2, rs.getString("demographicNo"));
                             insert.setString(3, rs.getString("providerNo"));
-                            note = formatNote(rs.getString("encounter"));
+                            note = formatNote(new StringBuffer(rs.getString("encounter")));
                             insert.setString(4, note);
                             insert.setString(5, note);
                             insert.setString(6, uuid.toString());
                             insert.setTimestamp(7, rs.getTimestamp("timeStamp"));
                             
                             if( insert.executeUpdate() != 1 )
-                                    throw new SQLException("inserting case not for " + rs.getString("demographicNo") + " failed");
+                                    throw new SQLException("inserting case note for " + rs.getString("demographicNo") + " failed");
                             
                             insert.clearParameters();
                             System.out.println("Imported note for " + rs.getString("demographicNo"));
@@ -248,7 +248,7 @@ public class importCasemgmt {
                             insert.setTimestamp(1, rs.getTimestamp("timeStamp"));
                             insert.setString(2, rs.getString("demographicNo"));
                             insert.setString(3, rs.getString("providerNo"));
-                            note = formatNote(rs.getString("encounter"));
+                            note = formatNote(new StringBuffer(rs.getString("encounter")));
                             insert.setString(4, note);
                             insert.setString(5, note);
                             insert.setString(6, uuid.toString());
@@ -278,58 +278,57 @@ public class importCasemgmt {
 		}
 	}
         
-	public static String formatNote(String note) {
-            int MAXLINE = 80;
-            int space = 0;
-            int count = 0;
-	    boolean brokeline = false;	    
-            char []arrNote = note.toCharArray();
-	    
-            
-            for( int idx = 0; idx < arrNote.length; ++idx ) {
-                if( count >= MAXLINE ) {
-			if( arrNote[idx] == '*' ) {
-				arrNote[idx] = 0x01;	
-			}			
-			else if( space > 0 && arrNote[idx-1] != 0x01 )  {
-                                arrNote[space] = '\n';
-                                count = idx - space;
-                                space = idx;
+         public static String formatNote(StringBuffer note) {
+                final int MAXLENGTH = 80;
+                final int ORIGTHRESHOLD = 88;
+
+                int curLen = 0;
+                int origLen = 0;
+                int space = 0;
+                StringBuffer temp = new StringBuffer();
+                
+                for( int idx = 0; idx < note.length(); ++idx ) {
+                    ++curLen;
+                    ++origLen;
+                    
+                    if( note.charAt(idx) == '\r' )                        
+                        ;
+                    else if( note.charAt(idx) == '\n' ) {
+                        if( origLen >= ORIGTHRESHOLD ) {
+                            temp.append(' ');
                         }
-                        else  {
-                                arrNote[idx] = '\n';
-                                count = 0;
+                        else {
+                            temp.append(note.charAt(idx));
+                            curLen = 0;
                         }
-			brokeline = true;
-		}
-		else if( arrNote[idx] == '\n' ) {
-			if( idx < arrNote.length - 2  && (arrNote[idx+1] == '*' || arrNote[idx+1] == '[') )
-				count = 0;
-			else if( brokeline ) {
-				arrNote[idx] = ' ';
-				space = idx;
-				++count;
-			}
-			else
-				count = 0;
-
-			brokeline = false;			
-                }
-                else if( arrNote[idx] == ' ') {
-                    space = idx;
-                    ++count;
-                }
-                else
-                    ++count;
-            }
-
-            StringBuffer sb = new StringBuffer();
-            for(int idx = 0; idx < arrNote.length; ++idx) {
-		if( arrNote[idx] != 0x01 )
-			sb.append(arrNote[idx]);
-	    }
-
-            return sb.toString();
-        }        
+                        origLen = 0;
+                    }
+                    else if( note.charAt(idx) == ' ' ) {
+                        temp.append(' ');
+                        space = temp.length() - 1;
+                    }
+                    else
+                        temp.append(note.charAt(idx));
+                    
+                    if( curLen > MAXLENGTH && (note.charAt(idx) == '*' || note.charAt(idx) == '_') ) {
+                        temp.deleteCharAt(temp.length()-1);
+                        --curLen;
+                        --origLen;
+                    }
+                    else if( curLen > MAXLENGTH ) {
+                        if( space > 0 ) {                            
+                            temp.setCharAt(space, '\n');                            
+                            space = 0;
+                        }
+                        else
+                            temp.append('\n');
+                        
+                        curLen = 0;
+                    }   
+                    
+                } //end for
+                
+                return temp.toString();
+        }        	
 
 }
