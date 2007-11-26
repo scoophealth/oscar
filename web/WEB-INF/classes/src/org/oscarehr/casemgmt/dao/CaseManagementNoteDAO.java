@@ -37,11 +37,18 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
+import org.oscarehr.PMmodule.model.Provider;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	
-	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);
+	private static Log log = LogFactory.getLog(CaseManagementNoteDAO.class);                
+        
+        public List getEditors(CaseManagementNote note) {
+            String uuid = note.getUuid();
+            String hql = "select distinct p from Provider p, CaseManagementNote cmn where p.ProviderNo = cmn.provider_no and cmn.uuid = ?";
+            return this.getHibernateTemplate().find(hql,uuid);
+        }
 
         public List getHistory(CaseManagementNote note) {
             String uuid = note.getUuid();
