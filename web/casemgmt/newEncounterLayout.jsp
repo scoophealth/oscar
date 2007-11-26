@@ -47,6 +47,10 @@
     <%-- for popup menu of forms --%>
     <script src="<c:out value="${ctx}"/>/share/javascript/popupmenu.js" type="text/javascript"></script>
     <script src="<c:out value="${ctx}"/>/share/javascript/menutility.js" type="text/javascript"></script>
+
+    <!-- library for rounded elements -->
+    <link rel="stylesheet" type="text/css" href="<c:out value="${ctx}/share/css/niftyCorners.css" />">
+    <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/nifty.js"/>"></script>
     
       <!-- calendar stylesheet -->
   <link rel="stylesheet" type="text/css" media="all" href="<c:out value="${ctx}"/>/share/calendar/calendar.css" title="win2k-cold-1">
@@ -61,10 +65,66 @@
        adding a calendar a matter of 1 or 2 lines of code. -->
   <script type="text/javascript" src="<c:out value="${ctx}"/>/share/calendar/calendar-setup.js"></script>
   
- 
+  <!-- js implementation of markdown -->
+  <script type="text/javascript" src="<c:out value="${ctx}/share/javascript/showdown.js"/>"></script>
     
     <style type="text/css">
+        
+        /*Note format */
+        div.newNote {
+            color: #000000;         
+            font-family:arial,sans-serif;
+            font-size:0.8em;
+            margin: 5px 0px 5px 5px;
+            float:left;  
+            width:98%;            
+        }
+        
+        div.newNote pre {
+            color: #000000;      
+            font-family:arial,sans-serif;
+            margin: 0px 3px 0px 3px;          
+            width:100%; 
+            clear:left;            
+        }
+        
+        div.note {
+            color: #000000;         
+            font-family:arial,sans-serif;
+            margin: 5px 0px 5px 5px;
+            float:left;  
+            width:98%;
+        }
+        
+        div.note pre {
+            color: #000000;      
+            font-family:arial,sans-serif;
+            margin: 0px 3px 0px 3px;          
+            width:100%; 
+            clear:left;
+        }
+       .sig {
+            background-color:#CCCCFF;
+            color: #000000;  
+            width:100%;
+            font-size:0.8em;
+        }                
+        
+        .txtArea {
+            font-family:arial,sans-serif; 
+            font-size:1.0em;             
+            width:99%; 
+            rows:10; 
+            overflow:hidden; 
+            border-style:none; 
+            font-family:arial,sans-serif;             
+            margin: 0px 3px 0px 3px;
+        }
       
+        p.passwd {
+            margin:0px 3px; 0px 3px;        
+        }
+        
         /* span formatting for measurements div found in ajax call */
         span.measureCol1 {            
             float: left;
@@ -146,7 +206,7 @@
             }
             
             //check to see if we need to back up case note
-            if( tmpSaveNeeded && origCaseNote != $(caseNote).value )
+            if( tmpSaveNeeded && (origCaseNote != $(caseNote).value || origObservationDate != $("observationDate").value) )
                 autoSave(false);
         }
         
@@ -231,6 +291,18 @@ function grabEnter(id, event) {
     }            
     
     return true;
+}
+function setupNotes(){
+if(!NiftyCheck())
+    return;
+    
+    Rounded("div.note","all","transparent","#CCCCCC","big border #000000");
+    
+    //need to set focus after rounded is called
+    adjustCaseNote();    
+    setCaretPosition($(caseNote), $(caseNote).value.length);
+    $(caseNote).focus();
+    
 }
     
     </script>
