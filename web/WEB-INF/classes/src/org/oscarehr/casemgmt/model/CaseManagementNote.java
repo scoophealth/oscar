@@ -29,6 +29,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class CaseManagementNote extends BaseObject {
@@ -53,6 +55,7 @@ public class CaseManagementNote extends BaseObject {
     private String history;
     private Provider provider;
     private Set issues = new HashSet();
+    private List editors = new ArrayList();
     private String roleName;
     private String programName;
     private String uuid;
@@ -202,6 +205,13 @@ public class CaseManagementNote extends BaseObject {
         this.issues = issues;
     }
 
+    public List getEditors() {
+        return this.editors;
+    }
+    
+    public void setEditors( List editors ) {
+        this.editors = editors;
+    }
 
     public boolean isIncludeissue() {
         return includeissue;
