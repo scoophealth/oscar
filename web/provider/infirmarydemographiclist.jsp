@@ -199,7 +199,8 @@ if ((k/2)*2==k){ %>
     	title="<bean:message key="provider.appointmentProviderAdminDay.msgMasterFile"/>">|<bean:message key="provider.appointmentProviderAdminDay.btnM"/></a>
     <%}%>
     </security:oscarSec>
-
+    
+  <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
     <% if (!vLocale.getCountry().equals("BR")) { %>
     <!-- doctor code block -->
 	    <security:oscarSec roleName="<%=roleName$%>" objectName="_appointment.doctorLink" rights="r">
@@ -207,6 +208,7 @@ if ((k/2)*2==k){ %>
 	    </security:oscarSec>
     <% } %>
     <!-- doctor code block -->  
+  </caisi:isModuleLoad>
 <%}%>
 <% if(isBirthday(monthDay,demBday)){%> | <img src="../images/cake.gif" height="20" /> <%}%>
 														

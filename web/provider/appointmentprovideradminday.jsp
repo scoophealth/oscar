@@ -33,6 +33,7 @@ if (request.getParameter("year")!=null && request.getParameter("month")!=null &&
 	}
 session.setAttribute("infirmaryView_OscarQue",request.getQueryString()); 
 String absurl="/infirm.do?action=showProgram";
+
 %>
 <c:import url="/infirm.do?action=showProgram" />
 </caisi:isModuleLoad>
@@ -179,6 +180,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.caisi.service.Version"%>
+<%@page import="oscar.util.*"%>
 <html:html locale="true">
 <head>
 <title><%=WordUtils.capitalize(userlastname + ", " +  org.apache.commons.lang.StringUtils.substring(userfirstname, 0, 1)) + "-"%><bean:message key="provider.appointmentProviderAdminDay.title"/></title>
@@ -520,8 +522,10 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 <table BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%" id="firstTable">
 <tr>
   <td >
-
     <ul id="navlist">
+    
+      <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+
         <li>
             <a href="providercontrol.jsp?year=<%=curYear%>&month=<%=curMonth%>&day=<%=curDay%>&view=<%=view==0?"0":("1&curProvider="+request.getParameter("curProvider")+"&curProviderName="+request.getParameter("curProviderName") )%>&displaymode=day&dboperation=searchappointmentday" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewDaySched"/>' ; return true"><bean:message key="global.day"/></a>
         </li>
@@ -531,6 +535,8 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
          <li>
             <a href="#" ONCLICK ="popupPage2('<%=resourcebaseurl%>');return false;" title="<bean:message key="global.resources"/>" onmouseover="window.status='<bean:message key="provider.appointmentProviderAdminDay.viewResources"/>';return true"><bean:message key="global.resources"/></a>
          </li>
+      </caisi:isModuleLoad>
+
          <li>
             <caisi:isModuleLoad moduleName="caisi">
                <a HREF="../PMmodule/ClientSearch2.do" TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
@@ -539,6 +545,8 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
                <a HREF="#" ONCLICK ="popupPage2('../demographic/search.jsp');return false;"  TITLE='<bean:message key="global.searchPatientRecords"/>' OnMouseOver="window.status='<bean:message key="global.searchPatientRecords"/>' ; return true"><bean:message key="provider.appointmentProviderAdminDay.search"/></a>
             </caisi:isModuleLoad>
         </li>
+
+      <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
         <li>
             <a HREF="#" ONCLICK ="popupPage2('../report/reportindex.jsp','reportPage');return false;"   TITLE='<bean:message key="global.genReport"/>' OnMouseOver="window.status='<bean:message key="global.genReport"/>' ; return true"><bean:message key="global.report"/></a>
         </li>
@@ -558,14 +566,21 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
                <a class="tabalert" HREF="#" ONCLICK ="popupPage2('../oscarMDS/Index.jsp?providerNo=0&searchProviderNo=0&status=N&lname=&fname=&hnum=&pageNum=1&startIndex=0', '<bean:message key="global.lab"/>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.viewLabReports"/>'>*</a>
                </oscar:newUnclaimedLab>
            </li>
-	</security:oscarSec>
+	     </security:oscarSec>
+	     
+	 </caisi:isModuleLoad>
+	 
         <li>
             <a HREF="#" ONCLICK ="popupOscarRx(600,900,'../oscarMessenger/DisplayMessages.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="global.messenger"/>">
 		<span id="oscar_new_msg">Msg</span></a>
         </li>
+        
+     <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">     
         <li>
          <a HREF="#" ONCLICK ="popupOscarRx(625,900,'../oscarEncounter/IncomingConsultation.do?providerNo=<%=curUser_no%>&userName=<%=URLEncoder.encode(userfirstname+" "+userlastname)%>')" title="<bean:message key="provider.appointmentProviderAdminDay.viewConReq"/>"><bean:message key="global.con"/></a>
         </li>
+     </caisi:isModuleLoad>
+     
         <li>    <!-- remove this and let providerpreference check -->
 	    <caisi:isModuleLoad moduleName="ticklerplus">
 		<a href=# onClick ="popupPage(400,680,'providerpreference.jsp?provider_no=<%=curUser_no%>&start_hour=<%=startHour%>&end_hour=<%=endHour%>&every_min=<%=everyMin%>&mygroup_no=<%=mygroupno%>&new_tickler_warning_window=<%=newticklerwarningwindow%>');return false;" TITLE='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' OnMouseOver="window.status='<bean:message key="provider.appointmentProviderAdminDay.msgSettings"/>' ; return true"><bean:message key="global.pref"/></a>
@@ -618,9 +633,10 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
   
   <form method="post" name="findprovider" onSubmit="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;" target="apptReception" action="receptionistfindprovider.jsp">
   <td align="right" valign="bottom">
+   <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
    <INPUT TYPE="text" NAME="providername" VALUE="" WIDTH="2" HEIGHT="10" border="0" size="10" maxlength="10">-
    <INPUT TYPE="SUBMIT" NAME="Go" VALUE='<bean:message key="receptionist.appointmentreceptionistadminday.btnGo"/>' onClick="findProvider(<%=year%>,<%=month%>,<%=day%>);return false;">
-
+</caisi:isModuleLoad>
    <a href=# onClick ="popupPage(600,750,'<%=resourcebaseurl+"Support"%>')"><bean:message key="global.help"/></a>
    &nbsp;&nbsp;
 	  <a href="javascript: function myFunction() {return false; }" onClick="popup(700,1000,'../scratch/index.jsp','scratch')"><span id="oscar_scratch"></span></a>&nbsp;
@@ -663,8 +679,15 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
 	<% session.setAttribute("infirmaryView_isOscar", "false"); %>
     </caisi:ProgramExclusiveView>
 </caisi:isModuleLoad>
+
+<caisi:isModuleLoad moduleName="TORONTO_RFQ">
+	<% session.setAttribute("infirmaryView_isOscar", "false"); %>
+</caisi:isModuleLoad>
 <!-- caisi infirmary view extension add end ffffffffffffff-->
+
+
 <logic:notEqual name="infirmaryView_isOscar" value="false">
+
 <%
 //session.setAttribute("case_program_id", null);
 %>

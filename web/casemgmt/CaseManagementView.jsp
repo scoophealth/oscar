@@ -29,6 +29,7 @@
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@page import="org.caisi.service.Version"%>
+<%@ page import="oscar.OscarProperties" %>
 <% response.setHeader("Cache-Control","no-cache");%>
 
 <html:form action="/CaseManagementView" method="get">
@@ -98,7 +99,7 @@ setTimeout(string,time);
 	
 	boolean reminders = false;
 	CaseManagementCPP cpp = (CaseManagementCPP)request.getAttribute("cpp");
-	if(cpp!=null){
+	if(cpp!=null && cpp.getReminders()!=null){
 		reminders = cpp.getReminders().length() > 0;
 	}
 	//get programId
@@ -121,6 +122,11 @@ Version version = (Version) ctx.getBean("version");
 	<tr>
 		<% for(int x=0;x<CaseManagementViewFormBean.tabs.length;x++) {%>
 			<%
+				if(OscarProperties.getInstance().isTorontoRFQ()) {
+					if(CaseManagementViewFormBean.tabs[x].equals("Prescriptions")) {
+						continue;
+					}
+				}
 				String extra = "";
 				if((allergies && CaseManagementViewFormBean.tabs[x].equals("Allergies"))||(reminders && CaseManagementViewFormBean.tabs[x].equals("Reminders")) ) {
 					extra="color:red;";

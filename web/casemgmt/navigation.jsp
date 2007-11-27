@@ -22,7 +22,7 @@
 */
 -->
 <%@ include file="/casemgmt/taglibs.jsp" %>
-
+<%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementFlowSheet" %>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.MeasurementTemplateFlowSheetConfig" %>
@@ -56,10 +56,11 @@
     }
 //bean=(oscar.oscarEncounter.pageUtil.EctSessionBean)session.getAttribute("EctSessionBean");
 //session.setAttribute("casemgmt_bean", bean);
-    bean=(oscar.oscarEncounter.pageUtil.EctSessionBean) session.getAttribute("casemgmt_bean");
-    if (bean.appointmentNo==null) bean.appointmentNo="0";
-    String bsurl=(String)session.getAttribute("casemgmt_oscar_baseurl");
-    String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
+bean=(oscar.oscarEncounter.pageUtil.EctSessionBean) session.getAttribute("casemgmt_bean");
+if (bean==null) bean=new oscar.oscarEncounter.pageUtil.EctSessionBean();
+if (bean.appointmentNo==null) bean.appointmentNo="0";
+String bsurl=(String)session.getAttribute("casemgmt_oscar_baseurl");
+String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
 //get programId
     String pgId=(String)session.getAttribute("case_program_id");
     if (pgId==null) pgId="";
@@ -172,16 +173,18 @@
 </caisirole:SecurityAccess>
 <!-- tr><td><a href="</td></tr -->
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 
 <%--<tr style="background-color:#BBBBBB;"><td>Master</td></tr>--%>
 <!-- go back to oscar main page -->
 <!-- <tr><td><a href="../provider/providercontrol.jsp">Oscar Medical</a></td></tr> -->
 <!-- PMM link here / removed because of navigation concerns! -->
 <%--<tr><td><a href="../PMmodule/ClientManager.do?id=<%=bean.demographicNo%>">Program Management</a></td></tr>--%>
-
+</caisi:isModuleLoad>
 
 <tr style="background-color:#BBBBBB;"><td>Clinical Modules</td></tr>
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <!-- master -->
 <caisirole:SecurityAccess accessName="master file" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <nested:equal name="casemgmt_VlCountry" value="BR">
@@ -255,6 +258,8 @@
 
     <tr><td><a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarResearch/oscarDxResearch/setupDxResearch.do?demographicNo=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&quickList=');return false;">Disease Registry</a></td></tr>
 </caisirole:SecurityAccess>
+
+</caisi:isModuleLoad>
 
 <!-- add tickler -->
 <caisirole:SecurityAccess accessName="Write Ticklers" accessType="Action" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
@@ -353,6 +358,7 @@
     <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMessenger/DisplayDemographicMessages.do?orderby=date&boxType=3&demographic_no=<%=bean.demographicNo%>&providerNo=<%=bean.providerNo%>&userName=<%=bean.userName%>'); return false;" >-All Messages-</a>
 </td></tr>
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr style="background-color:#BBBBBB;"><td>Case Management Flowsheets</td></tr>
 
@@ -370,16 +376,12 @@
         <a href="javascript:void(0)"
            onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
         </a><br/>
-        <%}%>
-        
+        <%}%>        
     </td></tr>
-
 </caisirole:SecurityAccess>
 
 <caisirole:SecurityAccess accessName="measurements" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr style="background-color:#BBBBBB;"><td>Measurements</td></tr>
-
-
     <!-- measurement -->
     <tr><td>
         <%
@@ -409,6 +411,7 @@
         <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/SetupHistoryIndex.do'); return false;" >-Old Measurements--</a>
     </td></tr>
 </caisirole:SecurityAccess>
+</caisi:isModuleLoad>
 
 <tr style="background-color:#BBBBBB;"><td>Clinical Resources</td></tr>
 
@@ -418,19 +421,24 @@
     java.util.ArrayList labs = comLab.populateLabResultsData("",bean.demographicNo, "", "","","U");
     session.setAttribute("casemgmt_labsbeans",labs);
 %>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <tr><td>
     <a href="javascript:void(0)" ONCLICK ="popupPage('http://resource.oscarmcmaster.org/oscarResource/');return false;">resource</a><br>
 </td></tr>
+</caisi:isModuleLoad>
+
 <tr><td>
     <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/dms/documentReport.jsp?function=demographic&doctype=lab&functionid=<%=bean.demographicNo%>&curUser=<%=bean.curProviderNo%>');return false;">documents</a><br>
 </td></tr>
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <caisirole:SecurityAccess accessName="eform" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <!-- eform -->
     <tr><td>
         <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/eform/efmpatientformlist.jsp?demographic_no=<%=bean.demographicNo%>');return false;">E-Forms</a><br>
     </td></tr>
 </caisirole:SecurityAccess>
+</caisi:isModuleLoad>
 
 <caisirole:SecurityAccess accessName="read ticklers" accessType="access" providerNo="<%=bean.providerNo%>" demoNo="<%=bean.demographicNo%>" programId="<%=pgId%>">
     <tr><td>
@@ -438,6 +446,7 @@
     </td></tr>
 </caisirole:SecurityAccess>
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <tr><td>
     <a href="javascript:void(0)" onClick="popupPage('<%=bsurl%>/oscarEncounter/calculators.jsp?sex=<%=bean.patientSex%>&age=<%=pAge%>'); return false;" >calculators</a><br>
 </td></tr>
@@ -469,9 +478,11 @@
         <%session.removeAttribute("casemgmt_labsbeans"); %>
     </td></tr>
 </caisirole:SecurityAccess>
+</caisi:isModuleLoad>
 
 </form>
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 <form name="ksearch" method="get">
     <tr style="background-color:#BBBBBB;"><td>Internet Resources</td></tr>
     <tr><td>
@@ -491,6 +502,7 @@
         <input type="button" name="button" value="Go" onClick="popupSearchPage(600,800,forms['ksearch'].channel.options[forms['ksearch'].channel.selectedIndex].value+urlencode(forms['ksearch'].keyword.value) ); return false;">
     </td></tr>
 </form>
+</caisi:isModuleLoad>
 </table>
 </div>
 

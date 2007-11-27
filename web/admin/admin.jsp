@@ -237,6 +237,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </security:oscarSec>
 
 <% if(oscar.oscarSecurity.CRHelper.isCRFrameworkEnabled()){%>
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <div class="adminBox">
       <h3>&nbsp;2 Factor Authentication</h3>
       <ul>
@@ -249,6 +250,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
           <li><a href=# onClick ="popupPage(500,700,'../gatekeeper/matrixadmin/show');return false;">Generate matrix cards</a></li>
       </ul>
    </div>
+</caisi:isModuleLoad>
 <% } %>
 
 <%-- -add by caisi--%>
@@ -265,7 +267,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
  </caisi:isModuleLoad>
  <%-- -add by caisi end--%>
 
-
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.schedule" rights="r" reverse="<%=false%>" >
   <div class="adminBox">
       <h3>&nbsp;<bean:message key="admin.admin.schedule"/></h3>
@@ -369,6 +371,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
   </security:oscarSec>
+</caisi:isModuleLoad>
 
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.backup" rights="r" reverse="<%=false%>" >
   <%-- This links doesnt make sense on Brazil. Hide then --%>
@@ -393,6 +396,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
   </div>
   </security:oscarSec>
 
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
   <!--e forms block -->
   <div class="adminBox">
@@ -404,6 +408,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       </ul>
   </div>
   </security:oscarSec>
+</caisi:isModuleLoad>
 
   <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.encounter" rights="r" reverse="<%=false%>" >
   <!--// start oscarEncounter block-->
