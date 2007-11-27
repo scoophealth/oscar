@@ -25,12 +25,15 @@
 <%@ include file="/casemgmt/taglibs.jsp" %>
 <%@ page import="org.oscarehr.casemgmt.model.*" %>
 <%@ page import="org.oscarehr.casemgmt.web.formbeans.*" %>
+<%@ page import="oscar.OscarProperties" %>
 
 <table width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
+<%if(!OscarProperties.getInstance().isTorontoRFQ())  { %>
 <tr>
 	<td bgcolor="white">Primary Health Care Provider</td>
 	<td bgcolor="white"><html:text property="cpp.primaryPhysician"/>
 </tr>
+<%} %>
 <tr>
 	<td bgcolor="white" >Primary Counsellor/Caseworker</td>
 	<td bgcolor="white"><html:text property="cpp.primaryCounsellor"/>

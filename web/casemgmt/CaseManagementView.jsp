@@ -176,9 +176,12 @@ Version version = (Version) ctx.getBean("version");
 		<c:out value="${tm}" />&nbsp;&nbsp;&nbsp;
 	</c:forEach></td>	
 </tr>
+<%if(!OscarProperties.getInstance().isTorontoRFQ())  { %>
+
 <tr>
 	<td align="right"  valign="top" nowrap><b>Primary Health Care Provider:</b></td><td><c:out value="${requestScope.cpp.primaryPhysician}" /></td>
 </tr>
+<%} %>
 <tr>
 	<td align="right" valign="top" nowrap><b>Primary Counsellor/Caseworker:</b></td><td><c:out value="${requestScope.cpp.primaryCounsellor}" /></td>	
 </tr>
