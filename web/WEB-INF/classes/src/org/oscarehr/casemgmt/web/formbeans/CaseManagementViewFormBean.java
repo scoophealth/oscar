@@ -37,7 +37,7 @@ public class CaseManagementViewFormBean extends ActionForm {
 	private String rootCompURL="";
 	private String hideActiveIssue="true"; 
 	private CaseManagementCPP cpp=new CaseManagementCPP();
-	public static final String[] tabs = {"Current Issues","Patient History","Allergies","Prescriptions","Reminders","Ticklers","Search"};
+	public static final String[] tabs = {"Current Issues","Client History","Allergies","Prescriptions","Reminders","Ticklers","Search"};
 	private FormFile imageFile;
 	
 	private String searchStartDate;
