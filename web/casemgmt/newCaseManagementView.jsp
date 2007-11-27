@@ -237,10 +237,10 @@ function changeToView(id) {
    var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
    
    
-    //cancel updating of issueschangeToView(
+    //cancel updating of issues
     //IE destroys innerHTML of sig div when calling ajax update
     //so we have to restore it here if the ajax call is aborted
-    if( ajaxRequest != undefined  && callInProgress(ajaxRequest.transport) ) {
+    /*if( ajaxRequest != undefined  && callInProgress(ajaxRequest.transport) ) {
         ajaxRequest.transport.abort();
         var siblings = $(id).siblings();
         var pos;
@@ -255,7 +255,7 @@ function changeToView(id) {
                 break;
             }
         }
-    }                                                                                            
+    } */                                                                                           
     
     //clear auto save
     clearTimeout(autoSaveTimer);
@@ -269,15 +269,14 @@ function changeToView(id) {
     //remove observation date input text box but preserve date if there is one
     if( !saving && $("observationDate") != null ) {
         var observationDate = $("observationDate").value;
-        console.log("Remove Calendar nId = " + nId);
+       
         Element.remove("observationDate");
         Element.remove("observationDate_cal");
                     
         var observationId = "observation" + nId;
-        if( $(observationId) == null )
-            console.log(obaservationId + " not present");
+        
         var html = $(observationId).innerHTML;
-        console.log(html);
+        (html);
         html = html.substr(0,html.indexOf(":")+1) + " <span id='obs" + nId + "'>" + observationDate + "<\/span>" + html.substr(html.indexOf(":")+1);
         
         $(observationId).update(html);
@@ -346,11 +345,11 @@ var shrinkTimer;
 function shrink(id, toScale) {
     idHeight = $(id).getHeight();
     curElemHeight = idHeight;
-    
-    shrinkTimer = self.setInterval("shrinkImpl("+id+", " + toScale+")",1);
+    var delta = Math.ceil(curElemHeight/5);
+    shrinkTimer = self.setInterval("shrinkImpl("+id+", " + toScale+", "+delta+")",1);
 }
-function shrinkImpl(id, minHeight) {
-    curElemHeight -= 30;
+function shrinkImpl(id, minHeight, delta) {
+    curElemHeight -= delta;
     if( curElemHeight <= minHeight ) {
         $(id).style.height = minHeight;
         window.clearInterval(shrinkTimer);
@@ -732,7 +731,8 @@ function ajaxSaveNote(div) {
                     {
                         method: 'post',                        
                         evalScripts: true,                         
-                        parameters: Form.serialize(caseMgtEntryfrm),                        
+                        parameters: Form.serialize(caseMgtEntryfrm),
+                        asynchronous: false,
                         onFailure: function(request) {
                             if( request.status == 403 )
                                 alert("<bean:message key="oscarEncounter.error.msgExpired"/>");
@@ -877,7 +877,7 @@ function updateIssues(e) {
 var ajaxRequest; 
 function ajaxUpdateIssues(method, div) {
     <c:url value="/CaseManagementEntry.do" var="issueURL" />
-    console.log("update issues div " + div);
+
     var frm = document.forms["caseManagementEntryForm"];
     frm.method.value = method;    
     frm.ajax.value = true;
@@ -986,7 +986,6 @@ function newNote(e) {
         Element.observe(caseNote, 'keyup', monitorCaseNote);
 
         origCaseNote = "";        
-        console.log("DIV " + sigId);
         ajaxUpdateIssues("edit", sigId); 
         addIssueFunc = updateIssues.bindAsEventListener(obj, makeIssue, sigId);
         Element.observe('asgnIssues', 'click', addIssueFunc);        
@@ -1874,6 +1873,8 @@ Version version = (Version) ctx.getBean("version");
           
 <script type="text/javascript">                         
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
+    
+        
     caseNote = "caseNote_note" + "<%=savedId%>"; 
     setupNotes();
     Element.observe(caseNote, "keyup", monitorCaseNote);   
@@ -1930,11 +1931,12 @@ Version version = (Version) ctx.getBean("version");
    //start timer for autosave
    setTimer();  
    
-   //are we editing existing note?  if so save current text otherwise init to ""
-   <% if( found == true ) { %>        
+   //are we editing existing note?  if so save current text otherwise init to "" and init newNoteIdx as we are dealing with a new note
+   <% if( found == true ) { %>
         origCaseNote = $F(caseNote);
    <%} else { %>
-        origCaseNote = "";   
+        origCaseNote = "";  
+        document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
    <%}%>
                      
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
