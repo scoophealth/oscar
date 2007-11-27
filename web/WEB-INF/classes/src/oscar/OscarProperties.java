@@ -111,5 +111,8 @@ public class OscarProperties extends Properties {
             }catch(Exception e){/*No Date Found*/}
             return ret;
         }
-        
+     
+     public boolean isTorontoRFQ() {
+        return getBooleanProperty("TORONTO_RFQ", "yes") || getBooleanProperty("TORONTO_RFQ", "true");
+    }   
 }
