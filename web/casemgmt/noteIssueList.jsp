@@ -159,11 +159,10 @@
         var oldDiv;
         var newDiv;
         var prequel = ["n","sig"];
-console.log(origId + "; " + newId);
+
         for( var idx = 0; idx < prequel.length; ++idx ) {
             oldDiv = prequel[idx] + origId;
             newDiv = prequel[idx] + newId;
-            console.log(oldDiv + " = " + newDiv);
             $(oldDiv).id = newDiv;            
         }  
     </nested:notEmpty>
