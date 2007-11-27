@@ -147,6 +147,7 @@
 	<table width="50%">
 			<tr>
 				<td colspan="2">
+					<input type="submit" value="Temporary Save" onclick="this.form.method.value='tmpsave_survey'; return true;"/>
 					<html:submit value="Save"/>
 					<html:cancel value="Cancel"/>
 				</td>
