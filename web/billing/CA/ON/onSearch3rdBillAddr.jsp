@@ -159,8 +159,8 @@
 							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("company_name", "").equals("")?"":(prop.getProperty("company_name")+"\n")) 
 							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("address", "").equals("")?"":(prop.getProperty("address")+"\n")) 
 							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("city", "").equals("")?"":(prop.getProperty("city")+" ")) 
-                                                        + StringEscapeUtils.escapeJavaScript(prop.getProperty("postcode", "").equals("")?"":(prop.getProperty("postcode")+" ")) 
-							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("province", "").equals("")?"":(prop.getProperty("province")+"\n")) 
+                                                        + StringEscapeUtils.escapeJavaScript(prop.getProperty("province", "").equals("")?"":(prop.getProperty("province")+" ")) 
+							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("postcode", "").equals("")?"":(prop.getProperty("postcode")+"\n")) 
 							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("telephone", "").equals("")?"":(prop.getProperty("telephone")+"\n")) 
 							+ StringEscapeUtils.escapeJavaScript(prop.getProperty("fax", "").equals("")?"":(prop.getProperty("fax")+"\n")) 
 							+ "')" : "typeInData1('"
