@@ -123,7 +123,7 @@ Version version = (Version) ctx.getBean("version");
 		<% for(int x=0;x<CaseManagementViewFormBean.tabs.length;x++) {%>
 			<%
 				if(OscarProperties.getInstance().isTorontoRFQ()) {
-					if(CaseManagementViewFormBean.tabs[x].equals("Prescriptions")) {
+					if(CaseManagementViewFormBean.tabs[x].equals("Prescriptions") || CaseManagementViewFormBean.tabs[x].equals("Allergies") ) {
 						continue;
 					}
 				}
