@@ -5,8 +5,13 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.caisi.service.Version"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 
 <%
+	long loadPage = System.currentTimeMillis();
+	if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+	String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+
 	boolean userHasExternalOrErClerkRole=UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external);
 	userHasExternalOrErClerkRole=userHasExternalOrErClerkRole || UserRoleUtils.hasRole(request, UserRoleUtils.Roles.er_clerk);
 %>
@@ -62,6 +67,19 @@ function createIntakeCReport1()
 	alert('creating report until ' + startDate);
 
 	location.href='<html:rewrite action="/PMmodule/IntakeCMentalHealthReportAction.do"/>?startDate=' + startDate;
+}
+
+function popupPage2(varpage, windowname) {
+    var page = "" + varpage;
+    windowprops = "height=700,width=1000,location=no,"
+    + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=10,left=0";
+    var popup = window.open(page, windowname, windowprops);
+    if (popup != null) {
+       if (popup.opener == null) {
+          popup.opener = self;
+       }
+       popup.focus();
+    }
 }
 </script>
 
@@ -178,6 +196,18 @@ function createIntakeCReport1()
 				<html:link action="/PMmodule/Admin/DefaultRoleAccess.do">Global Role Access</html:link>
 			</div>
 		</div>
+		
+		<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
+		<div>
+			<span>System Administration</span>
+			<div>
+				<a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin Page</a>
+			</div>
+		</div>
+		</security:oscarSec>
+		</caisi:isModuleLoad>
+		
         <div>
             <span><a href="javascript.void(0);" onclick="window.open('<html:rewrite action="/CaisiRole.do"/>','caisi_role','width=500,height=500');return false;">Caisi Roles</a></span>
         </div>
