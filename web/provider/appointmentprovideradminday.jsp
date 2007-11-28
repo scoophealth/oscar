@@ -613,12 +613,14 @@ if(providerBean.get(mygroupno) != null) { //single appointed provider view
             </li>
             </myoscar:indivoRegistered>
         </oscar:oscarPropertiesCheck>
-	<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
+        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+		<security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc" rights="r">
           <li>
 	     <a HREF="#" ONCLICK ="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin</a>
           </li>
         </security:oscarSec>
-
+		</caisi:isModuleLoad>
+		
         <%int menuTagNumber=0; %> 
         <caisi:isModuleLoad moduleName="caisi">
            <li>
