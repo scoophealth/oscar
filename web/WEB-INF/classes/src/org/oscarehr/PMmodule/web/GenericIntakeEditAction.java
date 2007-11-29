@@ -159,13 +159,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		String providerNo = getProviderNo(request);
 
 		try {
-			saveClient(client, providerNo);
-            updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
-
+			saveClient(client, providerNo);            
             admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
 			if(!formBean.getSelectedServiceProgramIds().isEmpty())
 				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
 			saveIntake(intake, client.getDemographicNo());
+			//don't move updateRemote up...this method has the problem needs to be fixed 
+			updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
+
 		} catch (Exception e) {
 		    e.printStackTrace();
 			LOG.error(e);
