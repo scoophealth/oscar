@@ -254,7 +254,8 @@ public class DemographicData {
                 rs.getString("patient_status"), rs.getString("date_joined"), rs.getString("chart_no"),
                 rs.getString("provider_no"), rs.getString("sex"), rs.getString("end_date"),
                 rs.getString("eff_date"), rs.getString("pcn_indicator"), rs.getString("hc_type"),
-                rs.getString("hc_renew_date"), rs.getString("family_doctor"));
+                rs.getString("hc_renew_date"), rs.getString("family_doctor"),
+                rs.getString("alias"),rs.getString("previousAddress"),rs.getString("children"),rs.getString("sourceOfIncome"),rs.getString("citizenship"),rs.getString("sin"));
             }
             
             rs.close();
@@ -341,6 +342,13 @@ public class DemographicData {
         protected String hc_type      ;
         protected String hc_renew_date;
         protected String family_doctor;
+        protected String alias;
+        protected String previousAddress;
+        protected String children;
+        protected String sourceOfIncome;
+        protected String citizenship;
+        protected String sin;
+        
         public RxInformation RxInfo;        
         public EctInformation EctInfo;
         
@@ -354,7 +362,8 @@ public class DemographicData {
         String pin, String year_of_birth, String month_of_birth, String date_of_birth, String hin,
         String ver, String roster_status, String patient_status, String date_joined, String chart_no,
         String provider_no, String sex, String end_date, String eff_date, String pcn_indicator,
-        String hc_type, String hc_renew_date, String family_doctor) {
+        String hc_type, String hc_renew_date, String family_doctor, 
+        String alias,String previousAddress,String children,String sourceOfIncome,String citizenship,String sin) {
             this.demographic_no= DemographicNo;
             this.last_name = last_name;
             this.first_name = first_name;
@@ -382,7 +391,15 @@ public class DemographicData {
             this.pcn_indicator= pcn_indicator;
             this.hc_type = hc_type;
             this.hc_renew_date = hc_renew_date;
-            this.family_doctor = family_doctor;                                    
+            this.family_doctor = family_doctor; 
+            this.alias = alias;
+            this.previousAddress = previousAddress;
+            this.children = children;
+            this.sourceOfIncome = sourceOfIncome;
+            this.citizenship = citizenship;
+            this.sin = sin;
+            
+            
             this.RxInfo = getRxInformation();
             this.EctInfo = getEctInformation();
         }        
@@ -425,6 +442,12 @@ public class DemographicData {
                     this.hc_type = rs.getString("hc_type");
                     this.hc_renew_date = rs.getString("hc_renew_date");
                     this.family_doctor = rs.getString("family_doctor");
+                    this.alias = rs.getString("alias");
+                    this.previousAddress = rs.getString("previousAddress");
+                    this.children = rs.getString("children");
+                    this.sourceOfIncome = rs.getString("sourceOfIncome");
+                    this.citizenship = rs.getString("citizenship");
+                    this.sin = rs.getString("sin");
                 }
 
                 rs.close();
@@ -602,8 +625,32 @@ public class DemographicData {
         public String getFamilyDoctor() {
             return family_doctor;
         }
-        
-        public String addZero(String text, int num){
+                
+        public String getAlias() {
+			return alias;
+		}
+
+		public String getChildren() {
+			return children;
+		}
+
+		public String getCitizenship() {
+			return citizenship;
+		}
+
+		public String getPreviousAddress() {
+			return previousAddress;
+		}
+
+		public String getSin() {
+			return sin;
+		}
+
+		public String getSourceOfIncome() {
+			return sourceOfIncome;
+		}
+
+		public String addZero(String text, int num){
             text = text.trim();
             String zero = "0";
             for (int i = text.length();i<num; i++){
@@ -710,13 +757,14 @@ public class DemographicData {
     
     
     ////////////////
-    String add_record_string ="insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" ;                                      
+    String add_record_string ="insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor, alias, previousAddress, children, sourceOfIncome, citizenship, sin) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?,?,?,?,?)" ;                                      
     public DemographicAddResult   addDemographic(String last_name,     String  first_name,   String  address,    String  city,         String  province,
                            String  postal,       String  phone,        String  phone2,     String  year_of_birth,String  month_of_birth,
                            String  date_of_birth,String  hin,          String  ver,        String  roster_status,String  patient_status,
                            String  date_joined,  String  chart_no,     String  provider_no,String  sex,          String  end_date,
                            String  eff_date,     String  pcn_indicator,String  hc_type,    String  hc_renew_date,String  family_doctor,
-                           String  email,        String pin){
+                           String  email,        String pin, 
+                           String alias, String previousAddress,String children,String sourceOfIncome,String citizenship,String sin){
         
         boolean duplicateRecord = false;
         DemographicAddResult ret = new DemographicAddResult();
@@ -799,7 +847,13 @@ public class DemographicData {
                add_record.setString(25,hc_type);
                add_record.setString(26,hc_renew_date);
                add_record.setString(27,family_doctor);
-             
+               add_record.setString(28,alias);
+               add_record.setString(29,previousAddress);
+               add_record.setString(30,children);
+               add_record.setString(31,sourceOfIncome);
+               add_record.setString(32,citizenship);
+               add_record.setString(33,sin);
+               
                String outString = add_record.toString();
                int firstmark = outString.indexOf(':');
                //System.out.println(add_record.toString().substring(firstmark+1)+";");
