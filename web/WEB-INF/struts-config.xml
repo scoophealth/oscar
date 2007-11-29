@@ -1083,6 +1083,7 @@
         
         <action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/AddRelation" scope="request" type="oscar.oscarDemographic.pageUtil.AddDemographicRelationshipAction">
             <forward name="success" path="/demographic/AddAlternateContact.jsp" />
+            <forward name="pmmClient" path="/PMmodule/ClientManager.do" />
         </action>
         <action input="/demographic/AddAlternateContact.jsp" name="FrmForm" path="/demographic/DeleteRelation" scope="request" type="oscar.oscarDemographic.pageUtil.DeleteDemographicRelationshipAction">
             <forward name="success" path="/demographic/AddAlternateContact.jsp" />
