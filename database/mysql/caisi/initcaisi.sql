@@ -2041,3 +2041,6 @@ create table programSignature (
 -- Caisi Alter Oscar
 alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL default '' after color_template;
 
+drop table if exists IntakeRequiredFields;
+create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
+
