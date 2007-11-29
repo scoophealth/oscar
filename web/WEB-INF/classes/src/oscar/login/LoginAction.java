@@ -135,10 +135,11 @@ public final class LoginAction
         session.setAttribute("endhour", strPreferAuth[1]);
         session.setAttribute("everymin", strPreferAuth[2]);
         session.setAttribute("groupno", strPreferAuth[3]);
-        if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable())
+        if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable()) {
         	session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
         	session.setAttribute("default_pmm",strPreferAuth[5]);
         	default_pmm = strPreferAuth[5];
+        }
       }
 
       if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view
