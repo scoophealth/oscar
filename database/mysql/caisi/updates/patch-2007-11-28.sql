@@ -1,14 +1,11 @@
 create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
 
-ALTER TABLE agency MODIFY id BIGINT(20) NOT NULL AUTO_INCREMENT FIRST;
-ALTER TABLE agency ADD COLUMN disabled tinyint(1) NOT NULL default '0';
 create table facility (
      `id` bigint(22) NOT NULL auto_increment,
      `name` varchar(32) NOT NULL default '',
      `description` VARCHAR(70) NOT NULL default '',
      `disabled` tinyint(1) NOT NULL default '0',
      PRIMARY KEY (`id`),
-     CONSTRAINT `FK_facility_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency` (`id`),
      UNIQUE KEY `idx_facility_name` USING HASH (`name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
