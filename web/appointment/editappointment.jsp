@@ -402,12 +402,11 @@ function onCut() {
               <div align="right"><font face="arial"><bean:message key="Appointment.formLastTime"/> :</font></div>
             </td>
             <td width="20%"  ALIGN="LEFT"> 
-              <%
-                String lastDateTime = rs.getString("updatedatetime");
-                if (lastDateTime == null){ lastDateTime = rs.getString("createdatetime"); }
-              %>
-              <INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2">
-
+		<%
+                 String lastDateTime = bFirstDisp?rs.getString("updatedatetime"):request.getParameter("updatedatetime");
+                 if (lastDateTime == null){ lastDateTime = bFirstDisp?rs.getString("createdatetime"):request.getParameter("createdatetime"); }
+		%>
+<INPUT TYPE="TEXT" NAME="lastcreatedatetime" readonly VALUE="<%=bFirstDisp?lastDateTime:request.getParameter("lastcreatedatetime")%>" WIDTH="25" HEIGHT="20" border="0" hspace="2"> 
 <%
       break;
     } //end while
