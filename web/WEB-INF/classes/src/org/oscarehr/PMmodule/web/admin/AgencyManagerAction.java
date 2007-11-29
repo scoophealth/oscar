@@ -22,25 +22,16 @@
 
 package org.oscarehr.PMmodule.web.admin;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.apache.struts.action.DynaActionForm;
-import org.oscarehr.PMmodule.exception.BedReservedException;
+import org.apache.struts.action.*;
 import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.model.Bed;
-import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.AgencyManagerViewFormBean;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class AgencyManagerAction extends BaseAction {
 
@@ -50,13 +41,7 @@ public class AgencyManagerAction extends BaseAction {
 	private static final String FORWARD_VIEW = "view";
 
 	private static final String BEAN_AGENCY = "agency";
-	private static final String BEAN_ROOMS = "rooms";
-	private static final String BEAN_ROOM_TYPES = "roomTypes";
-	private static final String BEAN_NUM_ROOMS = "numRooms";
-	private static final String BEAN_BEDS = "beds";
-	private static final String BEAN_BED_TYPES = "bedTypes";
-	private static final String BEAN_NUM_BEDS = "numBeds";
-	private static final String BEAN_PROGRAMS = "programs";
+
 
 	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		return view(mapping, form, request, response);
@@ -73,8 +58,7 @@ public class AgencyManagerAction extends BaseAction {
 		}
 
 		request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
-		request.setAttribute(BEAN_ROOMS, roomManager.getRooms());
-		request.setAttribute(BEAN_BEDS, bedManager.getBeds());
+
 
 		request.setAttribute("integrator_enabled", integratorEnabled);
 
@@ -89,13 +73,6 @@ public class AgencyManagerAction extends BaseAction {
 		Agency localAgency = agencyManager.getLocalAgency();
 
 		agencyForm.set(BEAN_AGENCY, localAgency);
-		agencyForm.set(BEAN_ROOMS, roomManager.getRooms());
-		agencyForm.set(BEAN_ROOM_TYPES, roomManager.getRoomTypes());
-		agencyForm.set(BEAN_NUM_ROOMS, new Integer(1));
-		agencyForm.set(BEAN_BEDS, bedManager.getBeds());
-		agencyForm.set(BEAN_BED_TYPES, bedManager.getBedTypes());
-		agencyForm.set(BEAN_NUM_BEDS, new Integer(1));
-		agencyForm.set(BEAN_PROGRAMS, programManager.getBedPrograms());
 
 		request.setAttribute("id", localAgency.getId());
 		request.setAttribute("integratorEnabled", localAgency.isIntegratorEnabled());
@@ -132,89 +109,6 @@ public class AgencyManagerAction extends BaseAction {
 		logManager.log("write", "agency", agency.getId().toString(), request);
 
 		return mapping.findForward(FORWARD_EDIT);
-	}
-
-	public ActionForward saveRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm agencyForm = (DynaActionForm) form;
-
-		Room[] rooms = (Room[]) agencyForm.get(BEAN_ROOMS);
-
-		// detect check box false
-		for (int i = 0; i < rooms.length; i++) {
-			if (request.getParameter("rooms[" + i + "].active") == null) {
-				rooms[i].setActive(false);
-			}
-		}
-
-		try {
-			roomManager.saveRooms(rooms);
-		}
-		catch (RoomHasActiveBedsException e) {
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
-			saveMessages(request, messages);
-		}
-
-		return edit(mapping, form, request, response);
-	}
-
-	public ActionForward saveBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm agencyForm = (DynaActionForm) form;
-
-		Bed[] beds = (Bed[]) agencyForm.get(BEAN_BEDS);
-
-		for (int i = 0; i < beds.length; i++) {
-			if (request.getParameter("beds[" + i + "].active") == null) {
-				beds[i].setActive(false);
-			}
-		}
-
-		try {
-			bedManager.saveBeds(beds);
-		}
-		catch (BedReservedException e) {
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
-			saveMessages(request, messages);
-		}
-
-		return edit(mapping, form, request, response);
-	}
-
-	public ActionForward addRooms(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm agencyForm = (DynaActionForm) form;
-		Integer numRooms = (Integer) agencyForm.get("numRooms");
-
-		if (numRooms != null && numRooms > 0) {
-			try {
-				roomManager.addRooms(numRooms);
-			}
-			catch (RoomHasActiveBedsException e) {
-				ActionMessages messages = new ActionMessages();
-				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
-				saveMessages(request, messages);
-			}
-		}
-
-		return edit(mapping, form, request, response);
-	}
-
-	public ActionForward addBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		DynaActionForm agencyForm = (DynaActionForm) form;
-		Integer numBeds = (Integer) agencyForm.get("numBeds");
-
-		if (numBeds != null && numBeds > 0) {
-			try {
-				bedManager.addBeds(numBeds);
-			}
-			catch (BedReservedException e) {
-				ActionMessages messages = new ActionMessages();
-				messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
-				saveMessages(request, messages);
-			}
-		}
-
-		return edit(mapping, form, request, response);
 	}
 
 	public ActionForward enable_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

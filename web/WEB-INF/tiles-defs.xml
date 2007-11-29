@@ -54,6 +54,36 @@
 			value="/PMmodule/Admin/AgencyManagerForm.jsp" />
 	</definition>
 	<definition
+		name="page.pmm.admin.beds.manage"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/Bed/Bed.jsp" />
+	</definition>
+    <definition
+        name="page.pmm.admin.facility.list"
+        path="/PMmodule/layout.jsp">
+        <put
+            name="navigation"
+            value="/PMmodule/navigation.jsp" />
+        <put
+            name="body"
+            value="/PMmodule/Admin/Facility/ListFacilities.jsp" />
+    </definition>
+    <definition
+        name="page.pmm.admin.facility.edit"
+        path="/PMmodule/layout.jsp">
+        <put
+            name="navigation"
+            value="/PMmodule/navigation.jsp" />
+        <put
+            name="body"
+            value="/PMmodule/Admin/Facility/EditFacility.jsp" />
+    </definition>
+	<definition
 		name="page.pmm.client.searchform"
 		path="/PMmodule/layout.jsp">
 		<put

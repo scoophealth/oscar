@@ -237,6 +237,8 @@
             <form-property name="bedTypes" type="org.oscarehr.PMmodule.model.BedType[]" />
             <form-property name="programs" type="org.oscarehr.PMmodule.model.Program[]" />
         </form-bean>
+        <form-bean name="bedManagerForm" type="org.oscarehr.PMmodule.web.admin.BedManagerForm"/>
+        <form-bean name="facilityManagerForm" type="org.oscarehr.PMmodule.web.admin.FacilityManagerForm"/>        
         <form-bean name="clientSearchForm2" type="org.apache.struts.validator.DynaValidatorForm">
             <form-property name="criteria" type="org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean" />
         </form-bean>
@@ -1335,6 +1337,13 @@
         <action path="/PMmodule/AgencyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="agencyManagerForm" scope="session">
             <forward name="view" path="page.pmm.admin.agency.view" />
             <forward name="edit" path="page.pmm.admin.agency.edit" />
+        </action>
+        <action path="/PMmodule/BedManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="bedManagerForm" scope="session">
+            <forward name="manage" path="page.pmm.admin.beds.manage"/>
+        </action>
+        <action path="/PMmodule/FacilityManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="facilityManagerForm" scope="session">
+            <forward name="list" path="page.pmm.admin.facility.list"/>
+            <forward name="edit" path="page.pmm.admin.facility.edit"/>
         </action>
         <action path="/PMmodule/ProviderSearch" type="org.springframework.web.struts.DelegatingActionProxy">
             <forward name="results" path="/PMmodule/ProviderSearch.jsp" />

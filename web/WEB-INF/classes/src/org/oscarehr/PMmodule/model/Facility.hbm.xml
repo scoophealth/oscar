@@ -17,17 +17,14 @@
 	"-//Hibernate/Hibernate Mapping DTD//EN"
 	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
-	<class name="Room" table="room">
+	<class name="Facility" table="facility">
 		<meta attribute="sync-DAO">false</meta>
-		<id name="id" type="integer" column="room_id">
+		<id name="id" type="integer" column="id">
 			<generator class="native" />
 		</id>
-		<property name="roomTypeId" column="room_type_id" type="integer" not-null="true" length="10" />
-		<property name="programId" column="program_id" type="integer" length="10" />
-		<property name="name" column="name" type="string" not-null="true" length="45" />
-		<property name="floor" column="floor" type="string" not-null="false" length="45" />
-		<property name="active" column="active" type="boolean" not-null="true" />
-        <property name="facilityId" column="facility_id" type="integer" length="10" not-null="true"/>
+        <property name="name" column="name" type="string" not-null="true" length="32" />
+        <property name="description" column="description" type="string" not-null="true" length="70" />
+        <property name="disabled" column="disabled" type="boolean" not-null="true"/>
     </class>
 </hibernate-mapping>
         

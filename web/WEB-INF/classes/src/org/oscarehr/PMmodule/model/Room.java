@@ -1,23 +1,23 @@
 /*
-* 
+*
 * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
+* This software is published under the GPL GNU General Public License.
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version. *
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+*
 * <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
+*
+* This software was written for
+* Centre for Research on Inner City Health, St. Michael's Hospital,
+* Toronto, Ontario, Canada
 */
 
 package org.oscarehr.PMmodule.model;
@@ -28,10 +28,11 @@ import java.io.Serializable;
 
 public class Room implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static final String DEFAULT_NAME = "";
-	private static final boolean DEFAULT_ACTIVE = true;
+    private static final String DEFAULT_NAME = "";
+    private static final boolean DEFAULT_ACTIVE = true;
+
     public static String REF = "Room";
     public static String PROP_ROOM_TYPE_ID = "roomTypeId";
     public static String PROP_ACTIVE = "active";
@@ -39,184 +40,210 @@ public class Room implements Serializable {
     public static String PROP_PROGRAM_ID = "programId";
     public static String PROP_NAME = "name";
     public static String PROP_ID = "id";
+
     private int hashCode = Integer.MIN_VALUE;// primary key
+
     private Integer id;// fields
     private Integer roomTypeId;
     private Integer programId;
     private String name;
     private String floor;
     private boolean active;
+    private Integer facilityId;
 
     private RoomType roomType;
     private Program program;
+    private Facility facility;
 
-    public static final Room create(RoomType roomType) {
-		Room room = new Room();
-		room.setRoomTypeId(roomType.getId());
-		room.setName(DEFAULT_NAME);
-		room.setActive(DEFAULT_ACTIVE);
-
-		return room;
-	}
-
-	  // constructors
-	public Room () {
-		initialize();
-	}
-
-	/**
-	 * Constructor for primary key
-	 */
-	public Room (Integer id) {
-		this.setId(id);
-		initialize();
-	}
-
-	/**
-	 * Constructor for required fields
-	 */
-	public Room (
-		Integer id,
-		Integer roomTypeId,
-		String name,
-		boolean active) {
-
-		this.setId(id);
-		this.setRoomTypeId(roomTypeId);
-		this.setName(name);
-		this.setActive(active);
-		initialize();
-	}
-
-
-	public void setRoomType(RoomType roomType) {
-	    this.roomType = roomType;
+    // constructors
+    public Room() {
+        initialize();
     }
-	
-	public void setProgram(Program program) {
-	    this.program = program;
-    }
-	
-	public String getRoomTypeName() {
-		return roomType.getName();
-	}
-
-	public void setRoomTypeName(String roomTypeName) {
-		roomType.setName(roomTypeName);
-	}
-
-	public String getProgramName() {
-		return program != null ? program.getName() : null;
-	}
-
-	public void setProgramName(String programName) {
-		if (program != null) {
-			program.setName(programName);
-		}
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
-
-    protected void initialize () {}
 
     /**
-	 * Return the unique identifier of this class
-* @hibernate.id
-*  generator-class="native"
-*  column="room_id"
-*/
-    public Integer getId () {
+     * Constructor for primary key
+     */
+    public Room(Integer id) {
+        this.setId(id);
+        initialize();
+    }
+
+    /**
+     * Constructor for required fields
+     */
+    public Room(
+            Integer id,
+            Integer roomTypeId,
+            String name,
+            boolean active,
+            Integer facilityId) {
+
+        this.setId(id);
+        this.setRoomTypeId(roomTypeId);
+        this.setName(name);
+        this.setActive(active);
+        this.setFacilityId(facilityId);
+        initialize();
+    }
+
+    public static final Room create(Integer facilityId, RoomType roomType) {
+        Room room = new Room();
+
+        room.setFacilityId(facilityId);
+        room.setRoomTypeId(roomType.getId());
+        room.setName(DEFAULT_NAME);
+        room.setActive(DEFAULT_ACTIVE);
+
+        return room;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public String getRoomTypeName() {
+        return roomType.getName();
+    }
+
+    public void setRoomTypeName(String roomTypeName) {
+        roomType.setName(roomTypeName);
+    }
+
+    public String getProgramName() {
+        return program != null ? program.getName() : null;
+    }
+
+    public void setProgramName(String programName) {
+        if (program != null) {
+            program.setName(programName);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    protected void initialize() {
+    }
+
+    /**
+     * Return the unique identifier of this class
+     *
+     * @hibernate.id generator-class="native"
+     * column="room_id"
+     */
+    public Integer getId() {
         return id;
     }
 
     /**
-	 * Set the unique identifier of this class
+     * Set the unique identifier of this class
+     *
      * @param id the new ID
      */
-    public void setId (Integer id) {
+    public void setId(Integer id) {
         this.id = id;
         this.hashCode = Integer.MIN_VALUE;
     }
 
     /**
-	 * Return the value associated with the column: room_type_id
+     * Return the value associated with the column: room_type_id
      */
-    public Integer getRoomTypeId () {
+    public Integer getRoomTypeId() {
         return roomTypeId;
     }
 
     /**
-	 * Set the value related to the column: room_type_id
+     * Set the value related to the column: room_type_id
+     *
      * @param roomTypeId the room_type_id value
      */
-    public void setRoomTypeId (Integer roomTypeId) {
+    public void setRoomTypeId(Integer roomTypeId) {
         this.roomTypeId = roomTypeId;
     }
 
     /**
-	 * Return the value associated with the column: program_id
+     * Return the value associated with the column: program_id
      */
-    public Integer getProgramId () {
+    public Integer getProgramId() {
         return programId;
     }
 
     /**
-	 * Set the value related to the column: program_id
+     * Set the value related to the column: program_id
+     *
      * @param programId the program_id value
      */
-    public void setProgramId (Integer programId) {
+    public void setProgramId(Integer programId) {
         this.programId = programId;
     }
 
     /**
-	 * Return the value associated with the column: name
+     * Return the value associated with the column: name
      */
-    public String getName () {
+    public String getName() {
         return name;
     }
 
     /**
-	 * Set the value related to the column: name
+     * Set the value related to the column: name
+     *
      * @param name the name value
      */
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
     /**
-	 * Return the value associated with the column: floor
+     * Return the value associated with the column: floor
      */
-    public String getFloor () {
+    public String getFloor() {
         return floor;
     }
 
     /**
-	 * Set the value related to the column: floor
+     * Set the value related to the column: floor
+     *
      * @param floor the floor value
      */
-    public void setFloor (String floor) {
+    public void setFloor(String floor) {
         this.floor = floor;
     }
 
     /**
-	 * Return the value associated with the column: active
+     * Return the value associated with the column: active
      */
-    public boolean isActive () {
+    public boolean isActive() {
         return active;
     }
 
+    public Facility getFacility() {
+        return facility;
+    }
+
     /**
-	 * Set the value related to the column: active
+     * Set the value related to the column: active
+     *
      * @param active the active value
      */
-    public void setActive (boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public boolean equals (Object obj) {
+    public Integer getFacilityId() {
+        return facilityId;
+    }
+
+    public void setFacilityId(Integer facilityId) {
+        this.facilityId = facilityId;
+    }
+
+    public boolean equals(Object obj) {
         if (null == obj) return false;
         if (!(obj instanceof Room)) return false;
         else {
@@ -226,7 +253,7 @@ public class Room implements Serializable {
         }
     }
 
-    public int hashCode () {
+    public int hashCode() {
         if (Integer.MIN_VALUE == this.hashCode) {
             if (null == this.getId()) return super.hashCode();
             else {
@@ -235,5 +262,10 @@ public class Room implements Serializable {
             }
         }
         return this.hashCode;
+    }
+
+
+    public void setFacility(Facility facility) {
+        this.facility = facility;
     }
 }

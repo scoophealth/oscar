@@ -69,7 +69,8 @@ DROP TABLE IF EXISTS `bed`;
 CREATE TABLE `bed` (
   `bed_id` int(10) unsigned NOT NULL auto_increment,
   `bed_type_id` int(10) unsigned NOT NULL default '1',
-  `room_id` int(10) unsigned NOT NULL,
+  `room_id` int(10) unsigned default NULL,
+  `facility_id` int(10) unsigned NOT NULL default 0,
   `room_start` date NOT NULL,
   `team_id` int(10) unsigned default NULL,
   `name` varchar(45) NOT NULL,
@@ -1797,6 +1798,8 @@ CREATE TABLE `room` (
   `name` varchar(45) NOT NULL,
   `floor` varchar(45) default NULL,
   `active` tinyint(1) NOT NULL default '1',
+  `facility_id` int(10) NOT NULL,
+  CONSTRAINT `FK_room_facility` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
   PRIMARY KEY  (`room_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -2043,4 +2046,15 @@ alter table preference add `new_tickler_warning_window` varchar(10) NOT NULL def
 
 drop table if exists IntakeRequiredFields;
 create table IntakeRequiredFields (fieldKey varchar(255) not null primary key , isRequired tinyint not null);
+
+-- Facility table, added to CAISI to support RFQ requirement of facilities.
+drop table if exists `facility`;
+create table facility (
+    `id` bigint(22) NOT NULL auto_increment,
+    `name` varchar(32) NOT NULL default '',
+    `description` VARCHAR(70) NOT NULL default '',
+    `disabled` tinyint(1) NOT NULL default '0',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `idx_facility_name` USING HASH (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

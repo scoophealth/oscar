@@ -177,7 +177,10 @@ function popupPage2(varpage, windowname) {
 			<div>
 				<html:link action="/PMmodule/AgencyManager.do?method=edit">Update Info</html:link>
 			</div>
-		</div>
+            			<div>
+				<html:link action="/PMmodule/FacilityManager.do?method=list">Facilities</html:link>
+			</div>
+        </div>
 		<div>
 			<span>Staff Management</span>
 			<div>

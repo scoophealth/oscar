@@ -75,13 +75,22 @@
     <bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false">
         <property name="admissionManager" ref="admissionManager"/>
         <property name="agencyManager" ref="agencyManager"/>
-        <property name="bedManager" ref="bedManager"/>
         <property name="clientManager" ref="clientManager"/>
         <property name="integratorManager" ref="integratorManager"/>
         <property name="logManager" ref="logManager"/>
         <property name="programManager" ref="programManager"/>
         <property name="providerManager" ref="providerManager"/>
+    </bean>
+    <bean name="/PMmodule/FacilityManager" class="org.oscarehr.PMmodule.web.admin.FacilityManagerAction" singleton="false">
+        <property name="logManager" ref="logManager"/>
+        <property name="facilityManager" ref="facilityManager"/>
+    </bean>
+    <bean name="/PMmodule/BedManager" class="org.oscarehr.PMmodule.web.admin.BedManagerAction" singleton="false">
+        <property name="bedManager" ref="bedManager"/>
+        <property name="logManager" ref="logManager"/>
+        <property name="facilityManager" ref="facilityManager"/>
         <property name="roomManager" ref="roomManager"/>
+        <property name="programManager" ref="programManager"/>
     </bean>
     <bean name="/PMmodule/ProviderSearch" class="org.oscarehr.PMmodule.web.ProviderSearchAction" singleton="false">
         <property name="providerManager" ref="providerManager"/>
