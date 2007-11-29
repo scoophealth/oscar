@@ -37,6 +37,7 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import oscar.oscarDemographic.data.DemographicRelationship;
 
 public class ClientManagerAction extends BaseAction {
 
@@ -704,6 +705,15 @@ public class ClientManagerAction extends BaseAction {
 			request.setAttribute("current_bed_program", admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo)));
 			request.setAttribute("current_community_program", admissionManager.getCurrentCommunityProgramAdmission(Integer.valueOf(demographicNo)));
 		}
+                
+                /* Relations */
+                DemographicRelationship demoRelation = new DemographicRelationship();
+                ArrayList relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo);
+                
+                if ( relList != null  && relList.size() > 0 ){
+                    request.setAttribute("relations",relList);
+                    request.setAttribute("relationSize",relList.size()+1);
+                }
 	}
 
 }
