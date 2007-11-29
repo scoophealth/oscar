@@ -1761,7 +1761,12 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 			// get Cohort 0 - 11
 			for (int idx = 0; idx < (dateList.length - 1); idx++) {
 				//List rsList = intakeCMgr.getCohort(dateList[idx], dateList[idx + 1]);
-				List rsList = genericIntakeMgr.getCohort(dateList[idx], dateList[idx + 1]);
+				List rsList = null;
+				/*fix later  : 
+				 * 
+				 List rsList = genericIntakeMgr.getCohort(dateList[idx], dateList[idx + 1]);
+				*/
+				
 				outputDetails(dateList[idx], dateList[idx + 1],rsList,idx);
 				if (rsList != null) {
 					dataList = getCohortCount(idx + 4, rsList, dataList);
