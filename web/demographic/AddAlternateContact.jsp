@@ -166,6 +166,7 @@ function newWindow(file,window) {
                <input type="hidden" name="origDemo" value="<%=origDemo%>"/>
                <input type="hidden" name="linkingDemo" value="<%=demoNo%>"/>
                
+               
                <div class="prevention">                                                         
                    <fieldset >
                       <legend >Relation</legend>
@@ -197,6 +198,8 @@ function newWindow(file,window) {
                          <label for="notes">Notes:</label><br>
                                 <textarea cols="20" rows="3" name="notes" ></textarea>
                                <input type="submit" value="Add Relationship"/>
+                               
+                               
                    </fieldset>                   
                </div>                                                                                               
                </html:form>            
@@ -232,6 +235,17 @@ function newWindow(file,window) {
                 <%}%>
                   </table>
                </div>
+               
+               
+               <oscar:oscarPropertiesCheck property="TORONTO_RFQ" value="yes">
+                   <br/>
+                  <html:form action="/demographic/AddRelation">
+                     <input type="hidden" name="origDemo" value="<%=creatorDemo%>"/>
+                     <input type="submit" name="pmmClient" value="Finished"/>
+                   </html:form>
+               </oscar:oscarPropertiesCheck>
+
+               
             </td>
         </tr>
         <tr>
