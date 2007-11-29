@@ -6307,7 +6307,7 @@ CREATE TABLE preference (
   mygroup_no varchar(10) default NULL,
   color_template varchar(10) default NULL,
   default_servicetype varchar(10) default NULL,
-  default_caisi_pmm varchar(10) default NULL,
+  default_caisi_pmm varchar(10) default 'disabled',
   PRIMARY KEY  (preference_no),
   KEY provider_no (provider_no)
 ) TYPE=MyISAM;
