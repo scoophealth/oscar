@@ -126,6 +126,7 @@ public final class LoginAction
       session.setAttribute("oscar_context_path", request.getContextPath());
       session.setAttribute("expired_days",strAuth[5]);
       
+      String default_pmm = null;
       if (viewType.equalsIgnoreCase("receptionist") ||
           viewType.equalsIgnoreCase("doctor")) {
         //get preferences from preference table
@@ -136,8 +137,8 @@ public final class LoginAction
         session.setAttribute("groupno", strPreferAuth[3]);
         if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable())
         	session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
-        
-        
+        	session.setAttribute("default_pmm",strPreferAuth[5]);
+        	default_pmm = strPreferAuth[5];
       }
 
       if (viewType.equalsIgnoreCase("receptionist")) { // go to receptionist view
@@ -152,6 +153,10 @@ public final class LoginAction
         where = "admin";
       }
 
+      if(where.equals("provider") && default_pmm!=null && "enabled".equals(default_pmm) ){
+    	  where = "caisiPMM" ;
+      }
+    	  
       //Lazy Loads AlertTimer instance only once, will run as daemon for duration of server runtime
       if (pvar.getProperty("billregion").equals("BC")) {
        String alertFreq = pvar.getProperty("ALERT_POLL_FREQUENCY");
