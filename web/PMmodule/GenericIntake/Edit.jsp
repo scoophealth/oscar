@@ -80,6 +80,19 @@
 
             </td>
         </tr>
+        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+        <tr>
+        	<td><label>Alias<br><html:text size="40" maxlength="70" property="client.alias" /></label></td>
+        	<td><label>Citizenship<br><html:text size="20" maxlength="40" property="client.citizenship" /></label></td>
+        	<td><label>Children<br><html:text size="20" maxlength="255" property="client.children" /></label></td>
+        </tr>
+        <tr>
+        	<td><label>Previous Address<br><html:text size="40" maxlength="255" property="client.previousAddress" /></label></td>
+        	<td><label>Souce of Income<br><html:text size="20" maxlength="255" property="client.sourceOfIncome" /></label></td>
+           	<td><label>Social Insurance #<br><html:text size="20" maxlength="15" property="client.sin" /></label></td>
+        </tr>
+        </caisi:isModuleLoad>
+        
         <caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
         <tr>
             <td><label>Health Card #<br>
@@ -87,9 +100,12 @@
             </label></td>
             <td><label>Version<br>
                 <input type="text" size="2" maxlength="2" dojoType="AlphaTextBox" name="client.ver" value="<bean:write name="genericIntakeEditForm"  property="client.ver"/>"/>
-            </label></td>
+            </label></td>        
         </tr>
         </caisi:isModuleLoad>
+        
+        
+        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
         <tr>
             <td>
                 <label>Email<br>
@@ -117,6 +133,7 @@
             <!-- <td><label>Province<br><html:text property="client.province" /></label></td> -->
             <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9" /></label></td>
         </tr>
+        </caisi:isModuleLoad>
         <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
             <tr>
                 <td>
