@@ -50,5 +50,13 @@
 		<property column="eff_date" length="10" name="EffDate" type="date" />
 		<property column="pcn_indicator" length="20" name="PcnIndicator" type="string" />
 		<property column="family_doctor" length="80" name="FamilyDoctor" type="string" />
+	
+		<property column="alias" length="70" name="Alias" type="string" />
+		<property column="previousAddress" length="255" name="PreviousAddress" type="string" />
+		<property column="children" length="255" name="Children" type="string" />
+		<property column="sourceOfIncome" length="255" name="SourceOfIncome" type="string" />
+		<property column="citizenship" length="40" name="Citizenship" type="string" />
+		<property column="sin" length="15" name="Sin" type="string" />
+	
 	</class>
 </hibernate-mapping>

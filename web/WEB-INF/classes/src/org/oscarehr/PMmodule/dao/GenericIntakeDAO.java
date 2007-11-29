@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -318,4 +319,73 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 		// reportStatistics.get(nodeId).put(value, new ReportStatistic(count, size));
 		// }
 	}
+	
+	/* the following codes are for street health report, not finished yet.
+	public List getCohort(Date EndDate, Date BeginDate, List clients) {
+        if (BeginDate == null && EndDate == null) {
+            return new ArrayList();
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        List results = new ArrayList();
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Getting Cohort: " + BeginDate + " to " + EndDate);
+        }
+
+        for (int x = 0; x < clients.size(); x++) {
+            Demographic client = (Demographic)clients.get(x);
+            if (client.getPatientStatus().equals("AC")) {
+                // get current intake
+                //Formintakec intake = this.getCurrentForm(client.getDemographicNo());
+            	Intake intake = getLatestIntake(client.getDemographicNo(),1);
+                // parse date
+                Date admissionDate = null;
+                try {
+                    //admissionDate = formatter.parse(intake.getAdmissionDate());
+                	admissionDate = formatter.parse(intake.getCreatedOnStr());
+                }
+                catch (Exception e) {
+                }
+                if (admissionDate == null) {
+                    LOG.warn("invalid admission date for client #" + client.getDemographicNo());
+                    continue;
+                }
+                // does it belong in this cohort?
+                if (BeginDate != null && EndDate != null) {
+                    if (admissionDate.after(BeginDate) && admissionDate.before(EndDate)) {
+                        LOG.debug("admissionDate=" + admissionDate);
+                        // ok, add this client
+                        Object[] ar = new Object[2];
+                        ar[0] = intake;
+                        ar[1] = client;
+                        results.add(ar);
+                    }
+                }
+                if (BeginDate == null && admissionDate.before(EndDate)) {
+                    LOG.debug("admissionDate=" + admissionDate);
+                    // ok, add this client
+                    Object[] ar = new Object[2];
+                    ar[0] = intake;
+                    ar[1] = client;
+                    results.add(ar);
+                }
+            }
+        }
+
+        LOG.info("getCohort: found " + results.size() + " results. (" + BeginDate + " - " + EndDate + ")");
+
+        return results;
+    }
+	private Intake getLatestIntake(String clientId, int num) {
+		if (clientId == null) {
+			throw new IllegalArgumentException("clientId must be non-null");
+		}
+		
+		List<Intake> intakes = getIntakes(node, clientId, programId);
+		Intake intake = !intakes.isEmpty() ? intakes.get(0) : null;
+		LOG.info("get latest intake: " + intake);
+
+		return intake;
+	}
+	*/
 }

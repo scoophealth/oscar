@@ -49,6 +49,7 @@
 	import org.oscarehr.PMmodule.common.PassIntakeFormVars;
 	import org.oscarehr.PMmodule.model.Demographic;
 	import org.oscarehr.PMmodule.model.Formintakec;
+import org.oscarehr.PMmodule.service.GenericIntakeManager;
 	import org.oscarehr.PMmodule.service.IntakeCManager;
 import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 
@@ -60,6 +61,7 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 		private static Log log = LogFactory.getLog(IntakeCReport1Action.class);
 
 	    private IntakeCManager intakeCMgr = null;
+	    private GenericIntakeManager genericIntakeMgr = null;
 
 	    private static final String SDF_PATTERN = "yyyy-MM-dd";
 
@@ -121,13 +123,20 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 		            return  (mapping.findForward(target));
 		        }
 
-		        intakeCMgr = getIntakeCManager();
-
+		        //intakeCMgr = getIntakeCManager();
+		        genericIntakeMgr = getGenericIntakeManager();
+		        
+		        /*
 		        if(intakeCMgr == null) {
 		            target = "error";
 		            return  (mapping.findForward(target));
 		        }
-
+		        */
+		        if(genericIntakeMgr == null) {
+		        	target = "error";
+		        	return mapping.findForward(target);
+		        }
+		        
 		        dataList = initDataList(dataList);
 
 		        dateList = getDateList(startDate, dateList);
@@ -241,21 +250,7 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 	            dataList[row][i + 4] = "Cohort " + i;
 	        }
 	        row++;
-	/*
-	        // Service Language English
-	        dataList[row][0] = "6";
-	        dataList[row][1] = "Service Language";
-	        dataList[row][2] = "English";
-	        row++;
-
-	        // Service Language French
-	        dataList[row][2] = "French";
-	        row++;
-
-	        // Service Language Other
-	        dataList[row][2] = "Other";
-	        row++;
-	*/
+	
 	        // Total Service Recipients  Unique individuals - admitted
 	        dataList[row][0] = "7";
 	        dataList[row][1] = "Total Service Recipients";
@@ -265,28 +260,6 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 	        // Total Service Recipients  Unique individuals - pre-admission
 	        dataList[row][2] = "Unique individuals - pre-admission";
 	        row++;
-
-//	        // Total Service Recipients  Individuals - not uniquely identified
-//	        dataList[row][2] = "Individuals - not uniquely identified";
-//	        row++;
-	//
-//	        // Waiting List Information  Individuals Waiting for Initial Assessment
-//	        dataList[row][0] = "7a";
-//	        dataList[row][1] = "Waiting List Information";
-//	        dataList[row][2] = "Individuals Waiting for Initial Assessment";
-//	        row++;
-	//
-//	        // Waiting List Information  Days Waited for Initial Assessment
-//	        dataList[row][2] = "Days Waited for Initial Assessment";
-//	        row++;
-//	       
-//	        // Waiting List Information  Individuals Waiting for Service Initiation
-//	        dataList[row][2] = "Individuals Waiting for Service Initiation";
-//	        row++;
-	//
-//	        // Waiting List Information  Days Waited for Service Initiation
-//	        dataList[row][2] = "Days Waited for Service Initiation";
-//	        row++;
 
 	        // Gender  Male
 	        dataList[row][0] = "8";
@@ -1787,7 +1760,8 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 
 			// get Cohort 0 - 11
 			for (int idx = 0; idx < (dateList.length - 1); idx++) {
-				List rsList = intakeCMgr.getCohort(dateList[idx], dateList[idx + 1]);
+				//List rsList = intakeCMgr.getCohort(dateList[idx], dateList[idx + 1]);
+				List rsList = genericIntakeMgr.getCohort(dateList[idx], dateList[idx + 1]);
 				outputDetails(dateList[idx], dateList[idx + 1],rsList,idx);
 				if (rsList != null) {
 					dataList = getCohortCount(idx + 4, rsList, dataList);
@@ -1860,9 +1834,7 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 				int row = 0;
 				boolean preAdmission = false;
 				
-				//formintakec = (Formintakec) cohort[0];
 				demographic = (Demographic) cohort[1];  			
-				//formintakec = intakeCMgr.getCurrentForm(String.valueOf(demographic.getDemographicNo()));
 				formintakec = (Formintakec)cohort[0];
 				
 	            if (tempDemographicNo.equals(formintakec.getDemographicNo())){
@@ -1884,21 +1856,6 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 	    			row++;
 	            }
 				row++;
-
-//				// Total Service Recipients  Individuals - not uniquely identified
-//				row++;
-	//
-//				// Waiting List Information  Individuals Waiting for Initial Assessment
-//				row++;
-	//
-//				// Waiting List Information  Days Waited for Initial Assessment
-//				row++;
-	//
-//				// Waiting List Information  Individuals Waiting for Service Initiation
-//				row++;
-	//
-//				// Waiting List Information  Days Waited for Service Initiation
-//				row++;
 
 				// Gender  Male
 				if ("2".equals(formintakec.getRadioGender())) {
@@ -3782,7 +3739,6 @@ import org.oscarehr.PMmodule.web.formbean.IntakeCHospitalization;
 	    		
 	    			out2.println(client.getDemographicNo());
 	        		
-	    			//Formintakec intake = intakeCMgr.getCurrentForm(String.valueOf(client.getDemographicNo()));
 	    			Formintakec intake = (Formintakec)cohortObj[0];
 	    			if (tempDemographicNo.equals(intake.getDemographicNo())){
 	                    continue;

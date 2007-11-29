@@ -32,6 +32,7 @@ import java.util.TreeSet;
 import java.util.Map.Entry;
 
 import org.oscarehr.PMmodule.dao.AdmissionDao;
+import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.GenericIntakeDAO;
 import org.oscarehr.PMmodule.dao.GenericIntakeNodeDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
@@ -49,7 +50,8 @@ public class GenericIntakeManager {
 	private GenericIntakeDAO genericIntakeDAO;
 	private ProgramDao programDao;
 	private AdmissionDao admissionDao;
-
+	private ClientDao clientDao;
+	
 	public void setGenericIntakeNodeDAO(GenericIntakeNodeDAO genericIntakeNodeDAO) {
 		this.genericIntakeNodeDAO = genericIntakeNodeDAO;
 	}
@@ -340,5 +342,9 @@ public class GenericIntakeManager {
 
 		return builder.toString();
 	}
-
+/*street health report, not finished yet
+	public List getCohort(Date beginDate, Date endDate) {
+		return genericIntakeDAO.getCohort(beginDate, endDate, clientDao.getClients());
+	}
+	*/
 }

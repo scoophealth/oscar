@@ -44,7 +44,11 @@ public class ProviderInfoAction extends BaseAction {
 	}
 
 	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String providerNo = getProviderNo(request);
+		String providerNo = null;
+		providerNo = (String)request.getSession().getAttribute("user");
+		if(providerNo == null || "".equals(providerNo) ) {
+			providerNo = getProviderNo(request);
+		}
 				
 		request.setAttribute("provider", providerManager.getProvider(providerNo));
 		request.setAttribute("agencyDomain", providerManager.getAgencyDomain(providerNo));

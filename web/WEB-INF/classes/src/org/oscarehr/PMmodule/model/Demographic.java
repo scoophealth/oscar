@@ -78,6 +78,13 @@ public class Demographic implements Serializable {
     private String links;
     private DemographicExt[] extras;
 
+    private String alias;    
+    private String previousAddress;
+    private String children;
+    private String sourceOfIncome;
+    private String citizenship;
+    private String sin;
+    
     public enum OptingStatus {
         IMPLICITLY_OPTED_IN,
         IMPLICITLY_OPTED_OUT,
@@ -580,8 +587,58 @@ public class Demographic implements Serializable {
     public void setEffDate (Date effDate) {
         this.effDate = effDate;
     }
+        
+    public String getAlias() {
+		return alias;
+	}
 
-    public boolean equals (Object obj) {
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public String getChildren() {
+		return children;
+	}
+
+	public void setChildren(String children) {
+		this.children = children;
+	}
+
+	public String getCitizenship() {
+		return citizenship;
+	}
+
+	public void setCitizenship(String citizenship) {
+		this.citizenship = citizenship;
+	}
+
+	public String getPreviousAddress() {
+		return previousAddress;
+	}
+
+	public void setPreviousAddress(String previousAddress) {
+		this.previousAddress = previousAddress;
+	}
+
+	public String getSin() {
+		return sin;
+	}
+
+	public void setSin(String sin) {
+		this.sin = sin;
+	}
+
+	public String getSourceOfIncome() {
+		return sourceOfIncome;
+	}
+
+	public void setSourceOfIncome(String sourceOfIncome) {
+		this.sourceOfIncome = sourceOfIncome;
+	}
+
+
+
+	public boolean equals (Object obj) {
         if (null == obj) return false;
         if (!(obj instanceof Demographic)) return false;
         else {
