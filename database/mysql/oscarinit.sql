@@ -415,11 +415,11 @@ CREATE TABLE demographic (
   hc_type varchar(20) default NULL,
   hc_renew_date date default NULL,
   family_doctor varchar(80) default NULL,
-  alias varchar(70) default NULL,
+  	alias varchar(70) default NULL,
 	previousAddress varchar(255)default NULL,
 	children varchar(255) default NULL,
 	sourceOfIncome varchar(255)default NULL,
-	citizenship varchar(40) default NULL;
+	citizenship varchar(40) default NULL,
 	sin varchar(15) default NULL,  
   PRIMARY KEY  (demographic_no),
   KEY hin (hin),
