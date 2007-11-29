@@ -27,6 +27,12 @@ function consent_mandatory() {
 	</c:if>
 }
 
+function openRelations(){
+        var url = '../demographic/AddAlternateContact.jsp';
+		url += '?demo='+ '<c:out value="${client.demographicNo}"/>&pmmClient=yes';
+	location.href = url;
+}
+
 function updateQuickIntake(clientId) {
 	location.href = '<html:rewrite action="/PMmodule/GenericIntake/Edit.do"/>' + "?method=update&type=quick&clientId=" + clientId;
 }
@@ -129,6 +135,50 @@ function updateSharingOpting(state) {
 			(current opting status : <c:out value="${sharingOptingStatus}" />)
 		</td>
 	</tr>
+</table>
+
+
+<br />
+
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th>Family</th>
+		</tr>
+	</table>
+</div>
+
+<table class="simple" cellspacing="2" cellpadding="3">
+    <c:choose>
+        <c:when test="${relations == null}">
+            <tr>
+                <td>
+                    <span style="color:red">No Family Members Registered</span>
+                </td>
+            </tr>
+        </c:when>
+        <c:otherwise>
+            <thead>
+                <th>Relation</th>
+                <th>Name</th> 
+                <th>Phone</th>
+            </thead>
+            <c:forEach var="rHash" items="${relations}">
+                <tr>
+                        <td><c:out value="${rHash['relation']}"/></td>
+                        <td><c:out value="${rHash['lastName']}"/>, <c:out value="${rHash['firstName']}"/></td> 
+                        <td><c:out value="${rHash['phone']}"/></td>
+                        
+                </tr>
+            </c:forEach>
+            <tr>
+                <td>Total Family Members jointly admitted: <c:out value="${relationSize}"/></td>
+                <td>&nbsp;</td>
+                <td><input type="button" value="Update" onclick="openRelations()" /></td>
+            </tr>
+        </c:otherwise>
+    </c:choose>
+    
 </table>
 
 <br />
