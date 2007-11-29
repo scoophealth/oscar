@@ -45,7 +45,7 @@
   //if action is good, then give me the result
   String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-    param =new String[8];
+    param =new String[9];
 }else{
 	param =new String[7];
 }
@@ -58,6 +58,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	  param[6]=request.getParameter("color_template");
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	  param[7]=request.getParameter("new_tickler_warning_window");
+		param[8]=request.getParameter("default_pmm");
 }	  
 	  int[] nparam=new int[1];
 	  nparam[0]=Integer.parseInt(request.getParameter("preference_no"));
