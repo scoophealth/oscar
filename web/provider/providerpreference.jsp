@@ -198,7 +198,7 @@ function showHideBillPref() {
           <tr BGCOLOR="<%=weakcolor%>"> 
             <td width="20%"> 
             </td>
-            <td width="20%"> 
+            <td width="40%"> 
               <div align="right"><font face="arial">New Tickler Warning Window:</font></div>
             </td>
             <td width="20%"> 
@@ -219,9 +219,40 @@ function showHideBillPref() {
 				<input type="radio" name="new_tickler_warning_window" value="disabled" <%= myCheck2 %> > Disabled
    				
             </td>
-            <td width="25%"> 
+            <td width="20%"> 
             </td>
           </tr>
+          
+          <!-- check box of the default PMM window -->
+          <tr BGCOLOR="<%=weakcolor%>"> 
+            <td width="20%"> 
+            </td>
+            <td width="40%"> 
+              <div align="right"><font face="arial">Default PMM:</font></div>
+            </td>
+            <td width="20%"> 
+             <%  String myCheck3 = "";
+             	 String myCheck4 = "";                 
+                  if((request.getParameter("default_pmm")).equals("enabled"))
+                  { myCheck3 = "checked";
+                  	  myCheck4 = "unchecked";}
+                  else
+                  { myCheck3 = "unchecked";
+              	  	  myCheck4 = "checked";}
+     
+               %>
+              
+   				<input type="radio" name="default_pmm" value="enabled" <%= myCheck3 %> > Enabled
+				<br>
+				<input type="radio" name="default_pmm" value="disabled" <%= myCheck4 %> > Disabled
+   				
+            </td>
+            <td width="20%"> 
+            </td>
+          </tr>
+          
+          
+          
       </caisi:isModuleLoad>
       
               <INPUT TYPE="hidden" NAME="provider_no" VALUE='<%=request.getParameter("provider_no")%>'>

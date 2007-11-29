@@ -100,6 +100,7 @@
       session.setAttribute("groupno", strPreferAuth[3]);
 	if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
       session.setAttribute("newticklerwarningwindow", strPreferAuth[4]);
+	
 	}
     }
 

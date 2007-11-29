@@ -52,7 +52,7 @@
 <%
 String[] param=null;
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
-    param =new String[8];
+    param =new String[9];
 }else {
 	param =new String[7];
 }
@@ -65,6 +65,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	  param[6]=request.getParameter("provider_no");
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	  param[7]=request.getParameter("new_tickler_warning_window");
+	  param[8]=request.getParameter("default_pmm");
 }
   int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
   if (rowsAffected >=1) { //Successful Update of a Preference Record.
@@ -75,6 +76,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("default_servicetype", param[4]);
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
+    session.setAttribute("default_pmm", param[8]);
 }
 %>
 <script LANGUAGE="JavaScript">
@@ -93,6 +95,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
 	param[6]=request.getParameter("color_template");
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
 	param[7]=request.getParameter("new_tickler_warning_window");
+	param[8]=request.getParameter("default_pmm");
 }	
   rowsAffected = apptMainBean.queryExecuteUpdate(param, "add_preference");
   if (rowsAffected ==1) { //Successful add of a Preference Record.
@@ -103,6 +106,7 @@ if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.Is
     session.setAttribute("default_servicetype", param[5]);
 if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
     session.setAttribute("newticklerwarningwindow", param[6]);
+    session.setAttribute("default_pmm",param[8]);
 }
 %>
 <script LANGUAGE="JavaScript">
