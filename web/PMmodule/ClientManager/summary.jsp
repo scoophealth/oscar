@@ -154,6 +154,7 @@ function updateSharingOpting(state) {
             <tr>
                 <td>
                     <span style="color:red">No Family Members Registered</span>
+                    <input type="button" value="Update" onclick="openRelations()" />
                 </td>
             </tr>
         </c:when>
