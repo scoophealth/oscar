@@ -347,6 +347,7 @@
             <forward name="admin" path="/admin/admin.jsp" redirect="true" />
             <forward name="failure" path="/logout.jsp?login=failed" />
             <forward name="error" path="/loginfailed.jsp" />
+            <forward name="caisiPMM" path="/PMmodule/ProviderInfo.do" />
         </action>        
         <action input="/oscarMessenger/SendMessage.jsp" name="msgSendMessageForm" path="/oscarMessenger/SendMessage" scope="request" type="oscar.oscarMessenger.pageUtil.MsgSendMessageAction">
             <forward name="success" path="/oscarMessenger/SentMessage.jsp" />
@@ -1312,6 +1313,8 @@
         </action>
         <action path="/PMmodule/IntakeCMentalHealthReportAction" type="org.oscarehr.PMmodule.web.IntakeCMentalHealthReportAction" name="intakeCReportForm" scope="request" input="/PMmodule/IntakeCReport.jsp">
         	<forward name="success" path="/PMmodule/IntakeCReport.jsp"/>
+        	<forward name="error" path="/PMmodule/IntakeCReport.jsp" />
+        	<forward name="timeout" path="/PMmodule/Timeout.jsp" />
         </action>
         <action path="/PMmodule/IntakeCReport1Action" type="org.oscarehr.PMmodule.web.IntakeCReport1Action" name="intakeCReport1Form" scope="request" input="/PMmodule/IntakeCReport1.jsp">
             <forward name="success" path="/PMmodule/IntakeCReport1.jsp" />
