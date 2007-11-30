@@ -137,18 +137,15 @@ public class ProgramManager {
 		return getProgram(agencyId, new Integer(programId));
 	}
 
+	/**
+	 * @return a program from the integrator or null upon error.
+	 */
 	public Program getProgram(Long agencyId, Integer programId) {
-		if (integratorManager != null && integratorManager.isEnabled()) {
-			try {
-				return integratorManager.getProgram(agencyId, new Long(programId.longValue()));
-			} catch (IntegratorNotEnabledException e) {
-				log.error(e);
-			} catch (XFireRuntimeException e) {
-				log.error(e);
-			}
+		if (integratorManager != null) {
+			return integratorManager.getProgram(agencyId, new Long(programId.longValue()));
 		}
 		
-		return getProgram(programId);
+		return null;
 	}
 
 	public String getProgramName(String programId) {

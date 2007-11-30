@@ -136,8 +136,9 @@ public class ClientManager {
 			ClientReferral referral = (ClientReferral) iter.next();
 			if (referral.getAgencyId().longValue() > 0) {
 				try {
-					Program p = integratorManager.getProgram(referral.getAgencyId(), referral.getProgramId());
-					referral.setProgramName(p.getName());
+// TODO : this part needs to be redone. Xfire should not be proliferated up to here
+//					Program p = integratorManager.getProgram(referral.getAgencyId(), referral.getProgramId());
+//					referral.setProgramName(p.getName());
 				} catch (org.codehaus.xfire.XFireRuntimeException ex) {
 					log.error(ex);
 					referral.setProgramName("<Unavailable>");

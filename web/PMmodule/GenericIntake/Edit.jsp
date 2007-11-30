@@ -2,11 +2,11 @@
 <%@ page import="org.oscarehr.PMmodule.model.Intake"%>
 <%@ page import="org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
 %>
-<%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
 <html:html xhtml="true" locale="true">
 <head>
     <title>Generic Intake Edit</title>
@@ -30,7 +30,7 @@
         dojo.require("dojo.validate.*");
         // -->
     </script>
-    <script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
+    <script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
     <html:base />
 </head>
 <body class="edit">
@@ -64,7 +64,7 @@
                 <table>
                     <tr>
                         <td>
-        					<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER);%>
+        					<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_BIRTH_DATE);%>
                             <label>Birth Date<%=isRequired?REQUIRED_MARKER:""%><br>
                                 <html:select property="client.monthOfBirth">
                                     <html:optionsCollection property="months" value="value" label="label" />
@@ -90,14 +90,20 @@
         </tr>
         <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
         <tr>
-        	<td><label>Alias<br><html:text size="40" maxlength="70" property="client.alias" /></label></td>
-        	<td><label>Citizenship<br><html:text size="20" maxlength="40" property="client.citizenship" /></label></td>
-        	<td><label>Children<br><html:text size="20" maxlength="255" property="client.children" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_ALIAS);%>
+        	<td><label>Alias<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="40" maxlength="70" property="client.alias" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CITIZENSHIP);%>
+        	<td><label>Citizenship<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="20" maxlength="40" property="client.citizenship" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CHILDREN);%>
+        	<td><label>Children<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="20" maxlength="255" property="client.children" /></label></td>
         </tr>
         <tr>
-        	<td><label>Previous Address<br><html:text size="40" maxlength="255" property="client.previousAddress" /></label></td>
-        	<td><label>Source of Income<br><html:text size="20" maxlength="255" property="client.sourceOfIncome" /></label></td>
-           	<td><label>Social Insurance #<br><html:text size="20" maxlength="15" property="client.sin" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PREVIOUS_ADDRESS);%>
+        	<td><label>Previous Address<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="40" maxlength="255" property="client.previousAddress" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_SOURCE_OF_INCOME);%>
+        	<td><label>Source of Income<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="20" maxlength="255" property="client.sourceOfIncome" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_SIN);%>
+           	<td><label>Social Insurance #<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="20" maxlength="15" property="client.sin" /></label></td>
         </tr>
         </caisi:isModuleLoad>
         
