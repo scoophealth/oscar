@@ -45,9 +45,9 @@ Import Demographic Information
 
 <SCRIPT LANGUAGE="JavaScript">
 function displayAndDisable(){
-   document.forms[0].Submit.disabled = true;
-   showHideItem('waitingMessage');
-   return true;
+    forms.Submit.disabled = true;
+    showHideItem('waitingMessage');
+    return true;
 }
 </SCRIPT>
 
@@ -112,12 +112,17 @@ function displayAndDisable(){
             </td>
             <td valign="top" class="MainTableRightColumn">
             
-            <html:form action="/form/importUpload.do" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">                
+            <html:form action="/form/importUpload.do" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">
                         <input type="file" name="importFile" value="">                    
-                        <input type="submit" name="Submit" value="Import">                                        
+                        <input type="submit" name="Submit" value="Import">
             </html:form>
-            
-            <div id="waitingMessage" style="display: none;">
+	    
+            <html:form action="/form/importUpload2.do" method="POST" enctype="multipart/form-data" onsubmit="displayAndDisable()">
+                        <input type="file" name="importFile" value="">
+			<input type="submit" name="Submit" value="Import (CMS spec 2.0)">
+            </html:form>
+
+	    <div id="waitingMessage" style="display: none;">
             <h2>This make take several minutes</h2>
             </div>
             
