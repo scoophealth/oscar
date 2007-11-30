@@ -20,6 +20,12 @@ public class IntakeRequiredFieldsDao {
     public static final String FIELD_CITY="CITY";
     public static final String FIELD_PROVINCE="PROVINCE";
     public static final String FIELD_POSTAL_CODE="POSTAL_CODE";
+    public static final String FIELD_ALIAS="ALIAS";
+    public static final String FIELD_CITIZENSHIP="CITIZENSHIP";
+    public static final String FIELD_CHILDREN="CHILDREN";
+    public static final String FIELD_PREVIOUS_ADDRESS="PREVIOUS_ADDRESS";
+    public static final String FIELD_SOURCE_OF_INCOME="SOURCE_OF_INCOME";
+    public static final String FIELD_SIN="SIN";
     
     public static boolean isRequired(String fieldKey) throws SQLException {
         Connection c = DbConnectionFilter.getThreadLocalDbConnection();

@@ -57,6 +57,30 @@
 			<td>Postal Code</td>
 			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_POSTAL_CODE%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_POSTAL_CODE)?"checked=\"checked\"":""%> /></td>
 		</tr>
+		<tr>
+			<td>Alias</td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_ALIAS%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_ALIAS)?"checked=\"checked\"":""%> /></td>
+		</tr>
+		<tr>
+			<td>Citizenship</td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_CITIZENSHIP%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CITIZENSHIP)?"checked=\"checked\"":""%> /></td>
+		</tr>
+		<tr>
+			<td>Children</td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_CHILDREN%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CHILDREN)?"checked=\"checked\"":""%> /></td>
+		</tr>
+		<tr>
+			<td>Previous Address</td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PREVIOUS_ADDRESS%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PREVIOUS_ADDRESS)?"checked=\"checked\"":""%> /></td>
+		</tr>
+		<tr>
+			<td>Source Of Income</td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_SOURCE_OF_INCOME%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_SOURCE_OF_INCOME)?"checked=\"checked\"":""%> /></td>
+		</tr>
+		<tr>
+			<td>Social Insurance Number</td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_SIN%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_SIN)?"checked=\"checked\"":""%> /></td>
+		</tr>
 	</table>
 	
 	<br />

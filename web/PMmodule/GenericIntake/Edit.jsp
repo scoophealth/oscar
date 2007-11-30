@@ -6,6 +6,7 @@
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
 %>
+<%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
 <html:html xhtml="true" locale="true">
 <head>
     <title>Generic Intake Edit</title>
@@ -44,10 +45,16 @@
 <div id="clientTable" dojoType="TitlePane" label="Client Information" title="(Fields marked with * are mandatory)" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
     <table class="intakeTable">
         <tr>
-            <td><label>First Name *<br><html:text property="client.firstName" size="20" maxlength="30" /></label></td>
-            <td><label>Last Name *<br><html:text property="client.lastName" size="20" maxlength="30" /></label></td>
+        	<%
+        		boolean isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_FIRST_NAME);
+        		String REQUIRED_MARKER=" *";
+        	%>
+            <td><label>First Name<%=isRequired?REQUIRED_MARKER:""%><br><html:text property="client.firstName" size="20" maxlength="30" /></label></td>
+        	<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_LAST_NAME);%>
+            <td><label>Last Name<%=isRequired?REQUIRED_MARKER:""%><br><html:text property="client.lastName" size="20" maxlength="30" /></label></td>
             <td>
-                <label>Gender<br>
+        		<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER);%>
+                <label>Gender<%=isRequired?REQUIRED_MARKER:""%><br>
                     <html:select property="client.sex">
                         <html:optionsCollection property="genders" value="value" label="label" />
                     </html:select>
@@ -57,7 +64,8 @@
                 <table>
                     <tr>
                         <td>
-                            <label>Birth Date<br>
+        					<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER);%>
+                            <label>Birth Date<%=isRequired?REQUIRED_MARKER:""%><br>
                                 <html:select property="client.monthOfBirth">
                                     <html:optionsCollection property="months" value="value" label="label" />
                                 </html:select>
@@ -88,7 +96,7 @@
         </tr>
         <tr>
         	<td><label>Previous Address<br><html:text size="40" maxlength="255" property="client.previousAddress" /></label></td>
-        	<td><label>Souce of Income<br><html:text size="20" maxlength="255" property="client.sourceOfIncome" /></label></td>
+        	<td><label>Source of Income<br><html:text size="20" maxlength="255" property="client.sourceOfIncome" /></label></td>
            	<td><label>Social Insurance #<br><html:text size="20" maxlength="15" property="client.sin" /></label></td>
         </tr>
         </caisi:isModuleLoad>
@@ -122,16 +130,20 @@
             </td>
         </tr>
         <tr>
-            <td><label>Street<br><html:text size="20" maxlength="60" property="client.address" /></label></td>
-            <td><label>City<br><html:text size="20" maxlength="20" property="client.city" /></label></td>
-            <td><label>Province<br>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_STREET);%>
+            <td><label>Street<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="20" maxlength="60" property="client.address" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CITY);%>
+            <td><label>City<%=isRequired?REQUIRED_MARKER:""%><br><html:text size="20" maxlength="20" property="client.city" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PROVINCE);%>
+            <td><label>Province<%=isRequired?REQUIRED_MARKER:""%><br>
                 <html:select property="client.province">
                     <html:optionsCollection property="provinces" value="value" label="label" />
                 </html:select>
             </label>
             </td>
             <!-- <td><label>Province<br><html:text property="client.province" /></label></td> -->
-            <td><label>Postal Code<br><html:text property="client.postal" size="9" maxlength="9" /></label></td>
+			<%isRequired=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_POSTAL_CODE);%>
+            <td><label>Postal Code<%=isRequired?REQUIRED_MARKER:""%><br><html:text property="client.postal" size="9" maxlength="9" /></label></td>
         </tr>
         </caisi:isModuleLoad>
         <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
