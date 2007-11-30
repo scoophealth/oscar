@@ -47,7 +47,6 @@ import oscar.dms.EDocUtil;
 import oscar.oscarClinic.ClinicData;
 import oscar.oscarDemographic.data.*;
 import oscar.oscarEncounter.data.EctEChartBean;
-import oscar.oscarEncounter.pageUtil.EctSessionBean;
 import oscar.oscarFax.client.OSCARFAXClient;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.*;
@@ -122,8 +121,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    data = demographic.getFirstName();
 	    if (data==null || data.trim().equals("")) err.add("Error: No First Name for Patient "+demoNo);
-	    else firstName.setPart(data);
-	    
+	    else firstName.setPart(data);	    
 	    
 	    data = demographic.getLastName();
 	    if (data==null || data.trim().equals("")) err.add("Error: No Last Name for Patient "+demoNo);
@@ -157,7 +155,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    } else {
 		c.setTime(UtilDateUtilities.StringToDate(data));
 		demo.setDateOfBirth(c);
-	    }	    
+	    }
+	    
+	    data = demographic.getChartNo();
+	    if (data!=null && !data.trim().equals("")) demo.setChartNumber(data);
 	    
 	    if (demographic.getJustHIN()!=null && !demographic.getJustHIN().trim().equals("")) {
 		cdsDt.HealthCard healthCard = demo.addNewHealthCard();
@@ -204,12 +205,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    // PROBLEM LIST
 	    data = bean.ongoingConcerns;
-	    if (!data.equals("")) {
-		cds.ProblemListDocument.ProblemList pl = patientRec.addNewProblemList();
-		pl.setCategorySummaryLine(data);
-		c.setTime(bean.eChartTimeStamp);
-		pl.addNewOnsetDate().setFullDate(c);		
-	    }	    
+	    if (!data.equals("")) patientRec.addNewProblemList().setCategorySummaryLine(data);
 	    
 	    // RISK FACTORS
 	    data = bean.reminders;
@@ -362,9 +358,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (data!=null && !data.equals("")) aptm.setAppointmentNotes(data);
 		
 		if (ap.getProviderFirstN()!=null || ap.getProviderLastN()!=null) {
-		    cdsDt.PersonNameSimple p_name = aptm.addNewProvider().addNewName();
+		    cds.AppointmentsDocument.Appointments.Provider prov = aptm.addNewProvider();
+		    cdsDt.PersonNameSimple p_name = prov.addNewName();
 		    if (ap.getProviderFirstN()!=null) p_name.setFirstName(ap.getProviderFirstN());
 		    if (ap.getProviderLastN()!=null) p_name.setLastName(ap.getProviderLastN());
+		    if (ap.getOhipNo()!=null) prov.setOHIPPhysicianId(ap.getOhipNo());
 		}
  	    }
 	    
