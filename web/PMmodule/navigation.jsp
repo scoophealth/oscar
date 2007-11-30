@@ -228,7 +228,7 @@
             <div>
                 <html:link action="/PMmodule/FacilityManager.do?method=list">Manage Facilities</html:link>
             </div>
-            <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+            <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                 <div>
                     <html:link action="/PMmodule/AgencyManager.do?method=view_integrator">Integrator</html:link>
                 </div>
@@ -257,7 +257,7 @@
                 <html:link action="/PMmodule/Admin/DefaultRoleAccess.do">Global Role Access</html:link>
             </div>
         </div>
-        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
+        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
             <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc"
                                rights="r">
