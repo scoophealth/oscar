@@ -133,6 +133,9 @@ function popupPage2(varpage, windowname) {
 		            <div>
 		    			<html:link action="/PMmodule/GenericIntake/Search.do">New Client</html:link>
 		            </div>
+		            <div>
+                                <a HREF="#" ONCLICK ="popupPage2('../admin/demographicmergerecord.jsp', 'Merge');return false;">Merge Records</a>
+		            </div>
 		            <%
 		        }
 		    %>
