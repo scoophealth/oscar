@@ -43,6 +43,4 @@
 
     </table>
 </html:form>
-<div>
-    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list"/>Return to facilities list</a></p>
-</div>
+

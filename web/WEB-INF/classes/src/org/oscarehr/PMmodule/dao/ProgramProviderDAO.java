@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.ProgramProvider;
+import org.oscarehr.PMmodule.model.Facility;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 public class ProgramProviderDAO extends HibernateDaoSupport {
@@ -49,13 +50,13 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
 
     public List getProgramProvidersByProvider(String providerNo) {
         if (providerNo == null || Integer.valueOf(providerNo) <= 0) {
-                throw new IllegalArgumentException();
+            throw new IllegalArgumentException();
         }
 
         List results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProviderNo = ?", providerNo);
 
         if (log.isDebugEnabled()) {
-                log.debug("getProgramProvidersByProvider: providerNo=" + providerNo + ",# of results=" + results.size());
+            log.debug("getProgramProvidersByProvider: providerNo=" + providerNo + ",# of results=" + results.size());
         }
         return results;
     }
@@ -75,22 +76,22 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     }
 
     public ProgramProvider getProgramProvider(String providerNo, Long programId) {
-		if (providerNo == null || Integer.parseInt(providerNo) <= 0) {
-			throw new IllegalArgumentException();
-		}
-		if (programId == null || programId.intValue() <= 0) {
-			throw new IllegalArgumentException();
-		}
+        if (providerNo == null || Integer.parseInt(providerNo) <= 0) {
+            throw new IllegalArgumentException();
+        }
+        if (programId == null || programId.intValue() <= 0) {
+            throw new IllegalArgumentException();
+        }
 
-		ProgramProvider result = null;
-		List results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId = ?", new Object[] { providerNo, programId });
-		if (!results.isEmpty()) {
-			result = (ProgramProvider) results.get(0);
-		}
+        ProgramProvider result = null;
+        List results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProviderNo = ? and pp.ProgramId = ?", new Object[] { providerNo, programId });
+        if (!results.isEmpty()) {
+            result = (ProgramProvider) results.get(0);
+        }
 
-		if (log.isDebugEnabled()) {
-			log.debug("getProgramProvider: providerNo=" + providerNo + ",programId=" + programId + ",found=" + (result != null));
-		}
+        if (log.isDebugEnabled()) {
+            log.debug("getProgramProvider: providerNo=" + providerNo + ",programId=" + programId + ",found=" + (result != null));
+        }
 
         return result;
     }
@@ -143,14 +144,14 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
     }
 
     public List getProgramProvidersInTeam(Integer programId, Integer teamId) {
-        if (programId == null || programId.intValue() <= 0) {
+        if (programId == null || programId <= 0) {
             throw new IllegalArgumentException();
         }
-        if (teamId == null || teamId.intValue() <= 0) {
+        if (teamId == null || teamId <= 0) {
             throw new IllegalArgumentException();
         }
-        Long pId = Long.valueOf(programId.longValue());
-        
+        Long pId = programId.longValue();
+
         List results = this.getHibernateTemplate().find("select pp from ProgramProvider pp left join pp.teams as team where pp.ProgramId = ? and team.id = ?", new Object[] {pId, teamId});
 
         if (log.isDebugEnabled()) {
@@ -160,16 +161,29 @@ public class ProgramProviderDAO extends HibernateDaoSupport {
         return results;
     }
 
-    public List getProgramDomain(String providerId) {
-        if (providerId == null || Integer.parseInt(providerId) <= 0) {
-                throw new IllegalArgumentException();
+
+
+    @SuppressWarnings("unchecked")
+    public List<ProgramProvider> getProgramDomain(String providerNo) {
+        if (providerNo == null || Long.valueOf(providerNo) == null) {
+            throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProviderNo = ?", providerId);
+        List results = this.getHibernateTemplate().find("from ProgramProvider pp where pp.ProviderNo = ?", providerNo);
 
         if (log.isDebugEnabled()) {
-                log.debug("getProgramDomain: providerNo=" + providerId + ",# of results=" + results.size());
+            log.debug("getProgramDomain: providerNo=" + providerNo + ",# of results=" + results.size());
         }
+        return results;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Facility> getFacilitiesInProgramDomain(String providerNo) {
+        if (providerNo == null || Long.valueOf(providerNo) == null) {
+            throw new IllegalArgumentException();
+        }
+        List results = this.getHibernateTemplate().find("select distinct f from Facility f, Room r, ProgramProvider pp where pp.ProgramId = r.programId and f.id = r.facilityId and pp.ProviderNo = ?", providerNo);
+
         return results;
     }
 }

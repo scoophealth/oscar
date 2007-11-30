@@ -20,54 +20,63 @@
  */
 package org.oscarehr.PMmodule.web;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.PMmodule.model.Facility;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProviderInfoAction extends BaseAction {
 
-	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		return view(mapping, form, request, response);
-	}
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        return view(mapping, form, request, response);
+    }
 
-	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		return view(mapping, form, request, response);
-	}
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        return view(mapping, form, request, response);
+    }
 
-	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String providerNo = null;
-		providerNo = (String)request.getSession().getAttribute("user");
-		if(providerNo == null || "".equals(providerNo) ) {
-			providerNo = getProviderNo(request);
-		}
-				
-		request.setAttribute("provider", providerManager.getProvider(providerNo));
-		request.setAttribute("agencyDomain", providerManager.getAgencyDomain(providerNo));
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String providerNo = null;
+        providerNo = (String)request.getSession().getAttribute("user");
+        if(providerNo == null || "".equals(providerNo) ) {
+            providerNo = getProviderNo(request);
+        }
 
-		List<ProgramProvider> programDomain = new ArrayList<ProgramProvider>();
-		
-		for (Iterator<?> i = providerManager.getProgramDomain(providerNo).iterator(); i.hasNext();) {
-			ProgramProvider programProvider = (ProgramProvider) i.next();
-			Program program = programManager.getProgram(programProvider.getProgramId());
-			
-			if (program.getProgramStatus().equals("active")) {
-				programProvider.setProgram(program);
-				programDomain.add(programProvider);
-			}
-		}
+        request.setAttribute("provider", providerManager.getProvider(providerNo));
+        request.setAttribute("agencyDomain", providerManager.getAgencyDomain(providerNo));
 
-		request.setAttribute("programDomain", programDomain);
+        List<ProgramProvider> programDomain = new ArrayList<ProgramProvider>();
 
-		return mapping.findForward("view");
-	}
+        for (ProgramProvider programProvider : providerManager.getProgramDomain(providerNo)) {
+            Program program = programManager.getProgram(programProvider.getProgramId());
+
+            if (program.getProgramStatus().equals("active")) {
+                programProvider.setProgram(program);
+                programDomain.add(programProvider);
+            }
+        }
+
+        List<Facility> facilityDomain = new ArrayList<Facility>();
+        for (Facility facility : providerManager.getFacilitiesInProgramDomain(providerNo)) {
+
+            if (!facility.isDisabled()) {
+
+                facilityDomain.add(facility);
+            }
+        }
+
+
+        request.setAttribute("programDomain", programDomain);
+        request.setAttribute("facilityDomain", facilityDomain);
+
+        return mapping.findForward("view");
+    }
 
 }

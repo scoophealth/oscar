@@ -22,17 +22,14 @@
 
 package org.oscarehr.PMmodule.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.dao.OscarSecurityDAO;
 import org.oscarehr.PMmodule.dao.ProgramProviderDAO;
 import org.oscarehr.PMmodule.dao.ProviderDao;
-import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.model.Provider;
-import org.oscarehr.PMmodule.model.SecUserRole;
-import org.oscarehr.PMmodule.service.ProviderManager;
+import org.oscarehr.PMmodule.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ProviderManager
@@ -82,12 +79,16 @@ public class ProviderManager
 	public List<Provider> search(String name) {
 		return dao.search(name);
 	}
-	
-	public List getProgramDomain(String providerNo) {
+
+    public List<ProgramProvider> getProgramDomain(String providerNo) {
 		return programProviderDAO.getProgramDomain(providerNo);
 	}
-	
-	public List<Agency> getAgencyDomain(String providerNo) {
+
+    public List<Facility> getFacilitiesInProgramDomain(String providerNo) {
+        return programProviderDAO.getFacilitiesInProgramDomain(providerNo);
+    }
+
+    public List<Agency> getAgencyDomain(String providerNo) {
 		Agency localAgency =  agencyDAO.getLocalAgency();
 		List<Agency> agencies = new ArrayList<Agency>();
 		agencies.add(localAgency);
