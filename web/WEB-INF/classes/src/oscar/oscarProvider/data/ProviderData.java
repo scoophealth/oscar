@@ -520,5 +520,63 @@ public class ProviderData {
          return defaultView;
     }
     
-   
+    public int addProvider(String providerNo, String firstName, String lastName, String ohipNo) throws SQLException {
+	String add_record_string = "insert into provider values (?,?,?,'doctor','','','','','','','',?,'','','','1','','')";
+	int key = 0;
+	
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.GetConnection();
+	PreparedStatement add_record = conn.prepareStatement(add_record_string);
+	
+	add_record.setString(1, providerNo);
+	add_record.setString(2, lastName);
+	add_record.setString(3, firstName);
+	add_record.setString(4, ohipNo);
+	
+	add_record.executeUpdate();
+	ResultSet rs = add_record.getGeneratedKeys();
+	if(rs.next()) key = rs.getInt(1);
+	add_record.close();
+	rs.close();
+	db.CloseConn();
+	
+	return key;
+    }
+    
+    public String getNewExtProviderNo() throws SQLException {
+	String providerNo = null;
+	
+	String sql = "select max(provider_no) from provider where provider_no like 'E%'";
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	ResultSet rs = db.GetSQL(sql);
+	if (rs.next()) providerNo = rs.getString(1);
+	rs.close();
+	db.CloseConn();
+	
+	if (providerNo!=null) {
+	    int lastPN = Integer.parseInt(providerNo.substring(1)) + 1;
+	    providerNo = "E" + fillUp(String.valueOf(lastPN), 5, '0');
+	} else {
+	    providerNo = "E00001";
+	}
+	return providerNo;
+    }
+    
+    public String getProviderNoByOhip(String OhipNO) throws SQLException {
+	String providerNo = null;
+	if (OhipNO!=null) {
+	    String sql = "select provider_no from provider where ohip_no = '" + OhipNO + "'";
+	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    ResultSet rs = db.GetSQL(sql);
+	    if (rs.next()) providerNo = rs.getString("provider_no");
+	    rs.close();
+	}
+	return providerNo;
+    }
+    
+     String fillUp(String in, int size, char fill) {
+	size -= in.length();
+	for (int i=0; i<size; i++) in = fill + in;
+	return in;
+    }    
 }
