@@ -311,6 +311,24 @@ public class DemographicData {
         return date;
     }
     
+    public String getLastDemographicNo() {
+	String demoNo = null;
+	try {
+	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	    ResultSet rs;
+	    String sql = "SELECT MAX(demographic_no) FROM demographic";
+	    rs = db.GetSQL(sql);
+	    if (rs.next()) {
+		demoNo = rs.getString(1);
+	    }
+	    rs.close();
+	    db.CloseConn();
+	} catch (SQLException e) {
+	    System.out.append(e.getMessage());
+	}
+	return demoNo;
+    }
+    
     
     public class Demographic {
         
