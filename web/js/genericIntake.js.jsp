@@ -1,4 +1,5 @@
 <%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
+<%@page contentType="text/javascript"%>
 
 function validateSearchForm() {
 	if (document.forms[0].elements['firstName'].value == '' || document.forms[0].elements['lastName'].value == '') {
