@@ -226,17 +226,6 @@ public class AgencyManagerAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
-    public ActionForward refresh_programs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            integratorManager.refreshPrograms(programManager.getProgramsByAgencyId("0"));
-        }
-        catch (IntegratorException e) {
-            log.error(e);
-        }
-
-        return view(mapping, form, request, response);
-    }
-
     public ActionForward refresh_admissions(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         try {
             integratorManager.refreshAdmissions(admissionManager.getAdmissions());

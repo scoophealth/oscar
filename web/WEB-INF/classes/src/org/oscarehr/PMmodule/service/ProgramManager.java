@@ -141,9 +141,9 @@ public class ProgramManager {
 	 * @return a program from the integrator or null upon error.
 	 */
 	public Program getProgram(Long agencyId, Integer programId) {
-		if (integratorManager != null) {
-			return integratorManager.getProgram(agencyId, new Long(programId.longValue()));
-		}
+//		if (integratorManager != null) {
+//			return integratorManager.getProgram(agencyId, new Long(programId.longValue()));
+//		}
 		
 		return null;
 	}

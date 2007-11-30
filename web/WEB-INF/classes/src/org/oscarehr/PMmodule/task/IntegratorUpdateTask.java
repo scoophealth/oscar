@@ -82,14 +82,6 @@ public class IntegratorUpdateTask extends TimerTask {
             }
 
             try {
-                integratorManager.refreshPrograms(programManager.getProgramsByAgencyId("0"));
-                log.info("Programs refreshed");
-            }
-            catch (IntegratorException e) {
-                log.error(e);
-            }
-
-            try {
                 integratorManager.refreshReferrals(clientManager.getReferrals());
                 log.info("referrals refreshed");
             }
