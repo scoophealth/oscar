@@ -227,7 +227,6 @@
             <form-property name="client_status" type="org.oscarehr.PMmodule.model.ProgramClientStatus" />
         </form-bean>
         <form-bean name="agencyManagerForm" type="org.apache.struts.validator.DynaValidatorForm">
-            <form-property name="view" type="org.oscarehr.PMmodule.web.formbean.AgencyManagerViewFormBean" />
             <form-property name="agency" type="org.oscarehr.PMmodule.model.Agency" />
             <form-property name="numRooms" type="java.lang.Integer" />
             <form-property name="numBeds" type="java.lang.Integer" />
@@ -1338,6 +1337,9 @@
         <action path="/PMmodule/AgencyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="agencyManagerForm" scope="session">
             <forward name="view" path="page.pmm.admin.agency.view" />
             <forward name="edit" path="page.pmm.admin.agency.edit" />
+            <forward name="view_community" path="page.pmm.admin.agency.view_community" />
+            <forward name="view_integrator" path="page.pmm.admin.agency.view_integrator" />
+            <forward name="edit_integrator" path="page.pmm.admin.agency.edit_integrator" />            
         </action>
         <action path="/PMmodule/BedManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="bedManagerForm" scope="session">
             <forward name="manage" path="page.pmm.admin.beds.manage"/>

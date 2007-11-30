@@ -220,27 +220,32 @@
     <div class="body">
 
         <div>
-            <span>Agency Management</span>
+            <span>Agency</span>
 
             <div>
-                <html:link action="/PMmodule/AgencyManager.do">Agency Summary</html:link>
-            </div>
-            <div>
-                <html:link action="/PMmodule/AgencyManager.do?method=edit">Update Agency Information</html:link>
+                <html:link action="/PMmodule/AgencyManager.do">Agency Information</html:link>
             </div>
             <div>
                 <html:link action="/PMmodule/FacilityManager.do?method=list">Manage Facilities</html:link>
             </div>
+            <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+                <div>
+                    <html:link action="/PMmodule/AgencyManager.do?method=view_integrator">Integrator</html:link>
+                </div>
+                <div>
+                    <html:link action="/PMmodule/AgencyManager.do?method=view_community">View Community</html:link>
+                </div>
+            </caisi:isModuleLoad>
         </div>
         <div>
-            <span>Staff Management</span>
+            <span>Staff</span>
 
             <div>
                 <html:link action="/PMmodule/StaffManager.do">Staff List</html:link>
             </div>
         </div>
         <div>
-            <span>Program Management</span>
+            <span>Program</span>
 
             <div>
                 <html:link action="/PMmodule/ProgramManager.do">Program List</html:link>
@@ -252,7 +257,7 @@
                 <html:link action="/PMmodule/Admin/DefaultRoleAccess.do">Global Role Access</html:link>
             </div>
         </div>
-        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+        <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
             <security:oscarSec roleName="<%=roleName$%>"
                                objectName="_admin,_admin.userAdmin,_admin.schedule,_admin.billing,_admin.resource,_admin.reporting,_admin.backup,_admin.messenger,_admin.eform,_admin.encounter,_admin.misc"
                                rights="r">

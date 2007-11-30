@@ -41,7 +41,7 @@
 			value="/PMmodule/navigation.jsp" />
 		<put
 			name="body"
-			value="/PMmodule/Admin/AgencyManagerView.jsp" />
+			value="/PMmodule/Admin/AgencyView/general.jsp" />
 	</definition>
 	<definition
 		name="page.pmm.admin.agency.edit"
@@ -51,9 +51,40 @@
 			value="/PMmodule/navigation.jsp" />
 		<put
 			name="body"
-			value="/PMmodule/Admin/AgencyManagerForm.jsp" />
+			value="/PMmodule/Admin/AgencyEdit/general.jsp" />
 	</definition>
 	<definition
+		name="page.pmm.admin.agency.view_integrator"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/AgencyView/integrator.jsp" />
+	</definition>
+	<definition
+		name="page.pmm.admin.agency.view_community"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/AgencyView/community.jsp" />
+	</definition>
+    <definition
+		name="page.pmm.admin.agency.edit_integrator"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/Admin/AgencyEdit/integrator.jsp" />
+	</definition>
+
+    <definition
 		name="page.pmm.admin.beds.manage"
 		path="/PMmodule/layout.jsp">
 		<put
