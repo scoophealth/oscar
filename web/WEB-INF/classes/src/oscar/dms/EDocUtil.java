@@ -370,7 +370,6 @@ public class EDocUtil extends SqlUtilBaseS {
        return filename;
     }
         
-        
     
     public static void deleteDocument(String documentNo) {
         String nowDate = getDmsDateTime();
@@ -383,6 +382,61 @@ public class EDocUtil extends SqlUtilBaseS {
         String nowTimeR = UtilDateUtilities.DateToString(UtilDateUtilities.now(), "HH:mm:ss");
         String dateTimeStamp = nowDateR + " " + nowTimeR;
         return dateTimeStamp;
+    }
+    
+    public static int addDocument(String demoNo, String docFileName, String docDesc, String docType, String contentType, String observationDate, String updateDateTime, String docCreator) throws SQLException {
+	String add_record_string1 = "insert into document (doctype,docdesc,docfilename,doccreator,updatedatetime,status,contenttype,public,observationdate) values (?,?,?,?,?,'A',?,0,?)";
+	String add_record_string2 = "insert into ctl_document values ('demographic',?,?,'A')";
+	int key = 0;
+	
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	Connection conn = db.GetConnection();
+	PreparedStatement add_record = conn.prepareStatement(add_record_string1);
+	
+	add_record.setString(1, docType);
+	add_record.setString(2, docDesc);
+	add_record.setString(3, docFileName);
+	add_record.setString(4, docCreator);
+	add_record.setString(5, updateDateTime);
+	add_record.setString(6, contentType);
+	add_record.setString(7, observationDate);
+	
+	add_record.executeUpdate();
+	ResultSet rs = add_record.getGeneratedKeys();
+	if(rs.next()) key = rs.getInt(1);
+	add_record.close();
+	rs.close();
+	
+	if (key>0) {
+	    add_record = conn.prepareStatement(add_record_string2);
+	    add_record.setString(1, demoNo);
+	    add_record.setString(2, getLastDocumentNo());
+
+	    add_record.executeUpdate();
+	    rs = add_record.getGeneratedKeys();
+	    if(rs.next()) key = rs.getInt(1);
+	    add_record.close();
+	    rs.close();	    
+	}
+	db.CloseConn();
+	return key;
+    }
+    
+    private static String getLastDocumentNo(){
+       String documentNo = null;
+       try {
+          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+          String sql = "select max(document_no) from document";
+          ResultSet rs = db.GetSQL(sql);
+          if (rs.next()){
+              documentNo = rs.getString(1);
+          }
+          rs.close();
+          db.CloseConn();
+       }catch(SQLException e) { 
+           e.printStackTrace(); 
+       }
+       return documentNo;
     }
     
     public byte[] getFile(String fpath) {
