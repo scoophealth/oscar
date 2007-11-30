@@ -181,6 +181,7 @@
     <bean name="/PMmodule/GenericIntake/Report" class="org.oscarehr.PMmodule.web.GenericIntakeReportAction" singleton="false">
         <property name="genericIntakeManager" ref="genericIntakeManager"/>
     </bean>
+    <bean name="/PMmodule/EditIntake" class="org.oscarehr.PMmodule.web.EditIntakeAction" singleton="false" />
     <!-- Generic Intake -->
     <bean name="/SurveyManager" class="org.oscarehr.survey.web.SurveyManagerAction" singleton="false">
         <property name="surveyManager" ref="surveyManager"/>

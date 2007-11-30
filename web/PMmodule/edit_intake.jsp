@@ -7,6 +7,7 @@
 %>
 
 <form method="post" action="" >
+	<input type="hidden" name="method" value="update" />
 	<table>
 		<tr>
 			<td style="<%=headerStyle%>">Field</td>
@@ -37,7 +38,7 @@
 			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PHONE%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PHONE)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
-			<td>Secondary Phone #/td>
+			<td>Secondary Phone #</td>
 			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PHONE2%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PHONE2)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
@@ -59,7 +60,7 @@
 	</table>
 	
 	<br />
-	<input type="submit" />
+	<input type="button" value="back" onclick="document.location.href='<%=request.getContextPath()%>/PMmodule/ProviderInfo.do'" />&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="save changes" />
 </form>
 
 <%@include file="/layouts/caisi_html_bottom.jspf"%>

@@ -219,7 +219,7 @@ function popupPage2(varpage, windowname) {
         %>
         
 		<div>
-			<span><a href='<%=request.getContextPath()%>/PMmodule/edit_intake.jsp'>Registration Editor</a></span>
+			<span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
 		</div>
         <c:if test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
 		<div>
