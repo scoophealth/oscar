@@ -222,9 +222,11 @@ public class ImportDemographicDataAction2 extends Action {
 
 	    demoRes = dd.addDemographic(lastName, firstName, address, city, province, postalCode, homePhone, workPhone,
 					year_of_birth, month_of_birth, date_of_birth, hin, versionCode, 
-					roster_status, patient_status, date_joined, chart_no, 
-					providerNo, sex, ""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, 
-					""/*hc_type*/, ""/*hc_renew_date*/ ,""/*family_doctor*/, email,""/*pin*/);
+					roster_status, patient_status, date_joined, chart_no, providerNo, sex, 
+					""/*end_date*/, ""/*eff_date*/, ""/*pcn_indicator*/, ""/*hc_type*/, ""/*hc_renew_date*/,
+					""/*family_doctor*/, email, ""/*pin*/, 
+					""/*alias*/, ""/*previousAddress*/, ""/*children*/, ""/*sourceOfIncome*/, 
+					""/*citizenship*/, ""/*sin*/);
 	    
 	    String demoNo = new DemographicData().getLastDemographicNo();
 	    
