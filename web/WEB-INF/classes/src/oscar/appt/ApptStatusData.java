@@ -91,6 +91,12 @@ public final class ApptStatusData {
     public String unbillStatus(String fstatus) {
         return preStatus(fstatus, "P");
     }
+    public String[] getAllStatus() {
+	return this.aStatus;
+    }
+    public String[] getAllTitle() {
+	return this.aTitle;
+    }
 
     private String appendStatus(String status, String s) {
         String temp = null;
