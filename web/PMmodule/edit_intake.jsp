@@ -14,47 +14,47 @@
 		</tr>
 		<tr>
 			<td>First Name</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_FIRST_NAME%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_FIRST_NAME)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_FIRST_NAME%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_FIRST_NAME)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Last Name</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_LAST_NAME%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_LAST_NAME)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_LAST_NAME%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_LAST_NAME)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Gender</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_GENDER%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_GENDER%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Birth Date</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_BIRTH_DATE%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_BIRTH_DATE)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_BIRTH_DATE%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_BIRTH_DATE)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Email</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_EMAIL%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_EMAIL)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_EMAIL%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_EMAIL)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Phone #</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PHONE%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PHONE)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PHONE%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PHONE)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Secondary Phone #/td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PHONE2%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PHONE2)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PHONE2%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PHONE2)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Street</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_STREET%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_STREET)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_STREET%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_STREET)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>City</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_CITY%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CITY)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_CITY%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_CITY)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Province</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PROVINCE%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PROVINCE)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_PROVINCE%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_PROVINCE)?"checked=\"checked\"":""%> /></td>
 		</tr>
 		<tr>
 			<td>Postal Code</td>
-			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_POSTAL_CODE%>" type="checkbox" checked="<%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_POSTAL_CODE)%>" /></td>
+			<td><input name="<%=IntakeRequiredFieldsDao.FIELD_POSTAL_CODE%>" type="checkbox" <%=IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_POSTAL_CODE)?"checked=\"checked\"":""%> /></td>
 		</tr>
 	</table>
 	
