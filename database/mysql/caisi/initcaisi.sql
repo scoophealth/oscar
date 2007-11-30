@@ -2053,6 +2053,10 @@ create table facility (
     `id` bigint(22) NOT NULL auto_increment,
     `name` varchar(32) NOT NULL default '',
     `description` VARCHAR(70) NOT NULL default '',
+    `contact_name` varchar(255) default NULL,
+    `contact_email` varchar(255) default NULL,
+    `contact_phone` varchar(255) default NULL,
+    `hic` tinyint(1) NOT NULL default FALSE,
     `disabled` tinyint(1) NOT NULL default '0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `idx_facility_name` USING HASH (`name`)

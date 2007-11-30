@@ -4,7 +4,7 @@
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>
-            <th title="Facility">Edit facility</th>
+            <th title="Facility">Facility summary</th>
         </tr>
     </table>
 </div>
@@ -18,36 +18,31 @@
         </tr>
         <tr class="b">
             <td width="20%">Name:</td>
-            <td><html:text property="facility.name" size="32" maxlength="32"/></td>
+            <td><c:out value="${requestScope.facilityManagerForm.facility.name}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Description:</td>
-            <td><html:text property="facility.description" size="70" maxlength="70"/></td>
+            <td><c:out value="${requestScope.facilityManagerForm.facility.description}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">HIC:</td>
-            <td><html:checkbox property="facility.hic" /></td>
+            <td><c:out value="${requestScope.facilityManagerForm.facility.hic}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Primary Contact Name:</td>
-            <td><html:text property="facility.contactName" /></td>
+            <td><c:out value="${requestScope.facilityManagerForm.facility.contactName}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Primary Contact Email:</td>
-            <td><html:text property="facility.contactEmail" /></td>
+            <td><c:out value="${requestScope.facilityManagerForm.facility.contactEmail}" /></td>
         </tr>
         <tr class="b">
             <td width="20%">Primary Contact Phone:</td>
-            <td><html:text property="facility.contactPhone" /></td>
+            <td><c:out value="${requestScope.facilityManagerForm.facility.contactPhone}" /></td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <html:submit property="submit.save">Save</html:submit>
-                <html:cancel property="submit.cancel">Cancel</html:cancel>
-            </td>
-        </tr>
+
     </table>
 </html:form>
 <div>
-    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list" />Return to facilities list</a></p>
+    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=list"/>Return to facilities list</a></p>
 </div>

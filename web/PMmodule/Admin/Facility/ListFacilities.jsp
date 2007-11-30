@@ -26,13 +26,20 @@
         <display:setProperty name="basic.msg.empty_list" value="No facilities found." />
 
         <display:column sortable="false" title="">
-            <a onclick="return ConfirmDelete('<c:out value="${facility.name}"/>')" href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=delete&id=<c:out value="${facility.id}"/>&name=<c:out value="${facility.name}"/>"> Delete </a>
+            <a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=view&id=<c:out value="${facility.id}" />"> Details </a>
         </display:column>
         <display:column sortable="false" title="">
-            <a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=edit&id=<c:out value="${facility.id}" />&agencyId=<c:out value="${agencyId}" />"> Edit </a>
+            <a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=edit&id=<c:out value="${facility.id}" />"> Edit </a>
         </display:column>
+        <display:column sortable="false" title="">
+            <a onclick="return ConfirmDelete('<c:out value="${facility.name}"/>')" href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=delete&id=<c:out value="${facility.id}"/>&name=<c:out value="${facility.name}"/>"> Delete </a>
+        </display:column>
+
+
         <display:column property="name" sortable="true" title="Name"/>
         <display:column property="description" sortable="true" title="Description" />
+        <display:column property="contactName" sortable="true" title="Contact name" />
+        <display:column property="hic" sortable="true" title="HIC?" />
         <display:column sortable="false" title="">
             <a href="<html:rewrite action="/PMmodule/BedManager.do"/>?method=manage&facilityId=<c:out value="${facility.id}" />" />Manage Beds </a>
         </display:column>

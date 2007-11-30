@@ -14,17 +14,45 @@
 	This software was written for Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada
 -->
 <!DOCTYPE hibernate-mapping PUBLIC
-	"-//Hibernate/Hibernate Mapping DTD//EN"
-	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping package="org.oscarehr.PMmodule.model">
-	<class name="Facility" table="facility">
-		<meta attribute="sync-DAO">false</meta>
-		<id name="id" type="integer" column="id">
-			<generator class="native" />
-		</id>
+    <class name="Facility" table="facility">
+        <meta attribute="sync-DAO">false</meta>
+        <id name="id" type="integer" column="id">
+            <generator class="native" />
+        </id>
         <property name="name" column="name" type="string" not-null="true" length="32" />
         <property name="description" column="description" type="string" not-null="true" length="70" />
         <property name="disabled" column="disabled" type="boolean" not-null="true"/>
+        <property
+                name="contactName"
+                column="contact_name"
+                type="string"
+                not-null="false"
+                length="255"
+                />
+        <property
+                name="contactEmail"
+                column="contact_email"
+                type="string"
+                not-null="false"
+                length="255"
+                />
+        <property
+                name="contactPhone"
+                column="contact_phone"
+                type="string"
+                not-null="false"
+                length="255"
+                />
+        <property
+                name="hic"
+                column="hic"
+                type="boolean"
+                not-null="true"
+                length="1"
+                />
     </class>
 </hibernate-mapping>
         

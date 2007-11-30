@@ -9,6 +9,10 @@ public class Facility implements Serializable {
     private Integer id;
     private String name;
     private String description;
+    private String contactName;
+	private String contactEmail;
+	private String contactPhone;
+    private boolean hic;   
     private boolean disabled;
 
     public Facility() {
@@ -49,6 +53,38 @@ public class Facility implements Serializable {
 
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public boolean isHic() {
+        return hic;
+    }
+
+    public void setHic(boolean hic) {
+        this.hic = hic;
     }
 
     public boolean equals(Object o) {

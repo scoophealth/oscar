@@ -21,6 +21,7 @@ public class FacilityManagerAction extends BaseAction {
     private FacilityManager facilityManager;
 
     private static final String FORWARD_EDIT = "edit";
+    private static final String FORWARD_VIEW = "view";
     private static final String FORWARD_LIST = "list";
 
     private static final String BEAN_FACILITIES = "facilities";
@@ -40,6 +41,17 @@ public class FacilityManagerAction extends BaseAction {
 
 
         return mapping.findForward(FORWARD_LIST);
+    }
+
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String id = request.getParameter("id");
+        Facility facility = facilityManager.getFacility(Integer.valueOf(id));
+        FacilityManagerForm managerForm = (FacilityManagerForm) form;
+        managerForm.setFacility(facility);
+
+        request.setAttribute("id", facility.getId());
+
+        return mapping.findForward(FORWARD_VIEW);
     }
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
