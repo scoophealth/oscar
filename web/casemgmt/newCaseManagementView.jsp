@@ -188,6 +188,20 @@ function grabEnterGetTemplate(event){
   }
 }
 
+function largeNote(note) {
+    var THRESHOLD = 10;
+    var isLarge = false;       
+    var pos = -1;
+        
+    for( var count = 0; (pos = note.indexOf("\n",pos+1)) != -1; ++count ) {
+        if( count == THRESHOLD ) {
+            isLarge = true;
+            break;
+        }
+    }        
+        return isLarge;
+}
+
 //Return display of Locked Note to normal 
 function resetView(frm, error, e) {
     var parent = Event.element(e).parentNode.id;
@@ -230,12 +244,6 @@ function changeToView(id) {
         }
    }
    
-   //ajaxSave changes id to represent saved note id so we must update our vars here
-   parent = $(id).parentNode.id;
-   nId = parent.substr(1);
-   sig = 'sig' + nId;
-   var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
-   
    
     //cancel updating of issues
     //IE destroys innerHTML of sig div when calling ajax update
@@ -260,6 +268,11 @@ function changeToView(id) {
     //clear auto save
     clearTimeout(autoSaveTimer);
     deleteAutoSave();
+    
+    //ajaxSave changes id to represent saved note id so we must update our vars here
+    parent = $(id).parentNode.id;
+    nId = parent.substr(1);
+    sig = 'sig' + nId;       
     
     Element.remove("notePasswd");
     Element.stopObserving(id, 'keyup', monitorCaseNote);
@@ -294,9 +307,14 @@ function changeToView(id) {
     if( tmp.length == 0 ) 
         tmp = "&nbsp;";
         
+    if( largeNote(tmp) ) {
+        var btmImg = "<img title='Minimize Display' id='bottomQuitImg" + nId + "' alt='Minimize Display' onclick='minView(event)' style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
+        new Insertion.Top(parent, btmImg); 
+    }
     var input = "<pre>" + tmp + "<\/pre>";
     new Insertion.Top(parent, input);
-    //$(txt).style.fontSize = normalFont;    
+    //$(txt).style.fontSize = normalFont; 
+    var img = "<img id='quitImg" + nId + "' onclick='minView(event)' style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>";
     new Insertion.Top(parent, img);    
     
     $(parent).style.height = "auto";        
@@ -324,8 +342,7 @@ function minView(e) {
     
     $(txt).style.overflow = "hidden";
     shrink(txt, 14);
-    //$(txt).style.height = divHeight;
-    
+    //$(txt).style.height = divHeight;    
     
     var nodes = $(txt).getElementsBySelector('pre')
     if( nodes.length > 0 ) {
@@ -521,8 +538,8 @@ function editNote(e) {
             
     //get rid of minimize button
     var nodes = $(txt).getElementsBySelector('img');    
-    if( nodes.length > 0 ) {
-        nodes[0].remove();        
+    for(var i = 0; i < nodes.length; ++i ) {
+        nodes[i].remove();        
     }              
     
     var nId = txt.substr(1); 
@@ -1054,7 +1071,7 @@ function autoSave(async) {
                                                     
                                                 var d = new Date();
                                                 var min = d.getMinutes();
-                                                min += min.length == 1 ? "0" : "";
+                                                min = min < 10 ? "0" + min : min;
                                                 var fmtDate = "<i>Draft Saved " + d.getDate() + "-" + month[d.getMonth()] + "-" + d.getFullYear() + " " + d.getHours() + ":" + min + "<\/i>";
                                                 $("autosaveTime").update(fmtDate);
                                                 
