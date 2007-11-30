@@ -81,8 +81,8 @@ public class PreventionData {
          ResultSet rs;
          sql = "Insert into preventions (creator,demographic_no,prevention_date,provider_no,provider_name,prevention_type,refused,creation_date,next_date,never) values "
          + "('"+creator+"','"+demoNo+"','"+date+"','"+providerNo+"','"+providerName+"','"+preventionType+"','"+refused+"',now(),'"+nextDate+"','"+neverWarn+"')";            
-         log.debug(sql);            
-         db.RunSQL(sql);                                                
+         log.debug(sql);
+         db.RunSQL(sql);
          rs = db.GetSQL("select Last_insert_id()");
          int insertId = -1;
          if (rs.next()){
@@ -91,7 +91,8 @@ public class PreventionData {
          if (insertId != -1){
             for (int i = 0; i < list.size(); i++){
                Hashtable h = (Hashtable) list.get(i);
-               String key = (String) h.keys().nextElement();               
+               String key = null;
+	       if (h.keys().hasMoreElements()) key = (String) h.keys().nextElement();
                if (key != null && h.get(key) != null ){
                   String val = (String) h.get(key);
                   addPreventionKeyValue(""+insertId,key,val);
