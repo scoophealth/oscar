@@ -35,21 +35,44 @@ public class IntakeRequiredFieldsDao {
         }
     }
 
-    public static void setIsRequired(String fieldKey, boolean isRequired) throws SQLException {
+    public static void setRequired(String fieldKey) throws SQLException {
         Connection c = DbConnectionFilter.getThreadLocalDbConnection();
         try {
-            PreparedStatement ps = c.prepareStatement("update IntakeRequiredFields set isRequired=? where fieldKey=?");
-            ps.setBoolean(1, isRequired);
-            ps.setString(2, fieldKey);
+            PreparedStatement ps = c.prepareStatement("update IntakeRequiredFields set isRequired=1 where fieldKey=?");
+            ps.setString(1, fieldKey);
             
             int result=ps.executeUpdate();
             
             if (result==0) {
-                ps = c.prepareStatement("insert into IntakeRequiredFields values (?,?)");
+                ps = c.prepareStatement("insert into IntakeRequiredFields values (?,1)");
                 ps.setString(1, fieldKey);
-                ps.setBoolean(2, isRequired);
                 ps.executeUpdate();
             }
+        }
+        finally {
+            c.close();
+        }
+    }
+    
+    public static void setNotRequired(String fieldKey) throws SQLException
+    {
+        Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+        try {
+            PreparedStatement ps = c.prepareStatement("delete from IntakeRequiredFields where fieldKey=?");
+            ps.setString(1, fieldKey);
+            ps.executeUpdate();
+        }
+        finally {
+            c.close();
+        }
+    }
+    
+    public static void setAllNotRequired() throws SQLException
+    {
+        Connection c = DbConnectionFilter.getThreadLocalDbConnection();
+        try {
+            PreparedStatement ps = c.prepareStatement("delete from IntakeRequiredFields");
+            ps.executeUpdate();
         }
         finally {
             c.close();

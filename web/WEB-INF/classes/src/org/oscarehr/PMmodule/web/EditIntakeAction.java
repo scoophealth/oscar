@@ -21,30 +21,56 @@
  */
 package org.oscarehr.PMmodule.web;
 
+import java.sql.SQLException;
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.oscarehr.common.dao.IntakeRequiredFieldsDao;
 
 public class EditIntakeAction extends BaseAction {
 
-	private static Log log = LogFactory.getLog(EditIntakeAction.class);
+    private static Logger logger = LogManager.getLogger(EditIntakeAction.class);
 
-	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		return view(mapping, form, request, response);
-	}
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        return view(mapping, form, request, response);
+    }
 
-	public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-System.err.println("***** view");
-	    return mapping.findForward("view");
-	}
+    public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        // not doing anything
+        return mapping.findForward("view");
+    }
 
-	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-System.err.println("***** update");
+    public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
+        // due to the nature of check boxes...
+        // reset everything to not required
+        // set only the boxes checked to required.
+
+        try {
+            IntakeRequiredFieldsDao.setAllNotRequired();
+
+            @SuppressWarnings("unchecked")
+            Enumeration<String> e = request.getParameterNames();
+            while (e.hasMoreElements()) {
+                String key = e.nextElement();
+                String value = request.getParameter(key).toLowerCase().trim();
+
+                if ("on".equals(value)) {
+                    IntakeRequiredFieldsDao.setRequired(key);
+                }
+            }
+        }
+        catch (SQLException e) {
+            logger.error("Unexpected error occurred.", e);
+        }
+
         return mapping.findForward("view");
     }
 }
