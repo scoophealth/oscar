@@ -41,6 +41,24 @@
             <td><c:out value="${requestScope.facilityManagerForm.facility.contactPhone}" /></td>
         </tr>
 
+
     </table>
+
+    <div class="tabs" id="tabs">
+        <table cellpadding="3" cellspacing="0" border="0">
+            <tr>
+                <th title="Associated programs">Associated programs</th>
+            </tr>
+        </table>
+    </div>
+    <display:table class="simple" cellspacing="2" cellpadding="3" id="program" name="associatedPrograms" export="false" requestURI="/PMmodule/FacilityManager.do">
+        <display:setProperty name="basic.msg.empty_list" value="No programs." />
+        <display:column sortable="true" sortProperty="name" title="Program Name">
+            <a href="<html:rewrite action="/PMmodule/ProgramManagerView"/>?id=<c:out value="${program.id}"/>"><c:out value="${program.name}" /></a>
+        </display:column>
+        <display:column property="type" sortable="true" title="Program Type" />
+        <display:column property="queueSize" sortable="true" title="Clients in Queue" />
+    </display:table>
+
 </html:form>
 

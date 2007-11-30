@@ -2,6 +2,9 @@ package org.oscarehr.PMmodule.web.admin;
 
 import org.apache.struts.action.ActionForm;
 import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.model.Program;
+
+import java.util.List;
 
 /**
  */
@@ -24,4 +27,5 @@ public class FacilityManagerForm extends ActionForm {
     public void setAgencyId(Integer agencyId) {
         this.agencyId = agencyId;
     }
+
 }

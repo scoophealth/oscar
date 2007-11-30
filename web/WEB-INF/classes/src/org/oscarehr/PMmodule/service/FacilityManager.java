@@ -2,6 +2,7 @@ package org.oscarehr.PMmodule.service;
 
 import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.model.Facility;
+import org.oscarehr.PMmodule.model.Program;
 import org.springframework.beans.factory.annotation.Required;
 
 import java.util.List;
@@ -19,6 +20,10 @@ public class FacilityManager {
 
     public List<Facility> getFacilities() {
         return facilityDAO.getFacilities();
+    }
+
+    public List<Program> getAssociatedPrograms(Integer facilityId) {
+        return facilityDAO.getAssociatedPrograms(facilityId);
     }
 
     public void saveFacility(Facility facility) {

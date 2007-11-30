@@ -25,6 +25,7 @@ public class FacilityManagerAction extends BaseAction {
     private static final String FORWARD_LIST = "list";
 
     private static final String BEAN_FACILITIES = "facilities";
+    private static final String BEAN_ASSOCIATED_PROGRAMS = "associatedPrograms";
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return list(mapping, form, request, response);
@@ -44,11 +45,12 @@ public class FacilityManagerAction extends BaseAction {
     }
 
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        String id = request.getParameter("id");
-        Facility facility = facilityManager.getFacility(Integer.valueOf(id));
+        String idStr = request.getParameter("id");
+        Integer id = Integer.valueOf(idStr);
+        Facility facility = facilityManager.getFacility(id);
         FacilityManagerForm managerForm = (FacilityManagerForm) form;
         managerForm.setFacility(facility);
-
+        request.setAttribute(BEAN_ASSOCIATED_PROGRAMS, facilityManager.getAssociatedPrograms(id));
         request.setAttribute("id", facility.getId());
 
         return mapping.findForward(FORWARD_VIEW);
