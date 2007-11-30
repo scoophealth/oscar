@@ -82,6 +82,9 @@ public class BillRecipient {
     this.billingNo = billingNo.toString();
   }
   
+  public void setBillingNoString(String billingNo) {
+    this.billingNo = billingNo;
+  }
 
   public Integer getId() {
     return id;
