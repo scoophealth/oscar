@@ -44,7 +44,7 @@
 			dojo.require("dojo.validate.*");
 		</script>
 		
-		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js" />"></script>
+		<script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
 		
 		<html:base />
 	</head>
