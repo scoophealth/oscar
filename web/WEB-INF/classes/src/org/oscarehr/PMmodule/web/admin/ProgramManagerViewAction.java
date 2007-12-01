@@ -22,40 +22,31 @@
 
 package org.oscarehr.PMmodule.web.admin;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.Bed;
-import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramQueue;
-import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
 
 public class ProgramManagerViewAction extends BaseAction {
 
 	private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
 
-	public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    protected ClientRestrictionManager clientRestrictionManager;
+
+    public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
     	return view(mapping, form, request, response);
     }
 
@@ -96,8 +87,11 @@ public class ProgramManagerViewAction extends BaseAction {
     	if (formBean.getTab().equals("General")) {
     		request.setAttribute("agency", programManager.getAgencyByProgram(programId));
     	}
-    
-    	if (formBean.getTab().equals("Staff")) {
+
+        if (formBean.getTab().equals("Service Restrictions")) {
+                request.setAttribute("service_restriction", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(programId), new Date()));
+        }
+        if (formBean.getTab().equals("Staff")) {
     		request.setAttribute("providers", programManager.getProgramProviders(programId));
     	}
     
@@ -468,5 +462,12 @@ public class ProgramManagerViewAction extends BaseAction {
 		
 		return view(mapping, form, request, response);	
 	}
-	
+
+    public ClientRestrictionManager getClientRestrictionManager() {
+        return clientRestrictionManager;
+    }
+
+    public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
+        this.clientRestrictionManager = clientRestrictionManager;
+    }
 }

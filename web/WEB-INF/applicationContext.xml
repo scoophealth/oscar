@@ -155,6 +155,7 @@
     <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName"/>
     <bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName"/>
 	<bean id="systemMessageDAO" class="org.caisi.dao.SystemMessageDAO" autowire="byName"/>
+    <bean id="programClientRestrictionDAO" class="org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO" autowire="byName"/>
 
 
     <!-- configure the available measurement flow sheets -->
@@ -409,10 +410,15 @@
             </bean>
         </property>
     </bean>
+    <bean id="clientRestrictionManager" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.ClientRestrictionManager" autowire="byName"/>
+        </property>
+    </bean>
+
     <bean id="version" class="org.caisi.service.Version">
         <property name="version" value="3.1.0"/>
     </bean>
-
 
       
 </beans>
