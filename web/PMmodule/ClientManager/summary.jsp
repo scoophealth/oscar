@@ -6,6 +6,11 @@
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
 <%@page import="java.util.Date"%>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+
+<input type="hidden" name="clientId" value="" />
+<input type="hidden" name="formId" value="" />
+<input type="hidden" id="formInstanceId" value="0" />
+
 <script>
 var XMLHttpRequestObject = false;
 
@@ -74,6 +79,22 @@ function showEMPILinks() {
 
 function updateSharingOpting(state) {
 	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=update_sharing_opting&state="+state+"&id=<c:out value='${client.demographicNo}'/>";
+}
+
+function openSurvey() {	
+
+	var selectBox = document.getElementById('form.formId');	alert("111");
+	
+	var formId = selectBox.options[selectBox.selectedIndex].value;	alert("2222");
+	
+	document.clientManagerForm.clientId.value='<c:out value="${client.demographicNo}"/>';
+	document.clientManagerForm.formId.value=formId;
+	alert("3333");
+	var id = document.getElementById('formInstanceId').value; alert("444");
+	
+	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
+	//url='<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
+	//popupPage(url);
 }
 
 </script>
@@ -262,6 +283,46 @@ function updateSharingOpting(state) {
 			<td></td>
 			<td><input type="button" value="Create" onclick="updateQuickIntake('<c:out value="${client.demographicNo}" />')" /></td>
 		</c:if>
+	</tr>
+</table>
+<br />
+
+<div class="tabs">
+	<table cellpadding="3" cellspacing="0" border="0">
+		<tr>
+			<th>User Created Form</th>
+		</tr>
+	</table>
+</div>
+<table class="simple" cellspacing="2" cellpadding="3">
+	<thead>
+		<tr>
+			<th>Form Name</th>
+			<th>Date</th>
+			<th>Staff</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<c:forEach var="form" items="${surveys}">
+	<tr>
+		<td width="20%"><c:out value="${form.description}" /></td>
+		<td><c:out value="${form.dateCreated}" /></td>
+		<td><c:out value="${form.username}" /></td>
+		<td><input type="button" value="update" onclick="document.clientManagerForm.elements['form.formId'].value='<c:out value="${form.formId}"/>';document.clientManagerForm.elements['formInstanceId'].value='<c:out value="${form.id}"/>';openSurvey();" /></td>
+	</tr>
+	</c:forEach>
+</table>
+<br />
+<table cellspacing="0" cellpadding="0">
+	<tr><td>New User Created Form:</td>
+	<td>
+	
+		<html:select property="form.formId" onchange="openSurvey()">
+	<html:option value="0">&nbsp;</html:option>
+	<html:options collection="survey_list" property="formId" labelProperty="description" />
+</html:select>
+
+</td>
 	</tr>
 </table>
 

@@ -606,6 +606,10 @@ public class ClientManagerAction extends BaseAction {
 		}
 
 		if (tabBean.getTab().equals("Summary")) {
+			/* survey module */
+			request.setAttribute("survey_list", surveyManager.getAllForms());
+			request.setAttribute("surveys", surveyManager.getForms(demographicNo));
+			
 			request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
 
 			Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
