@@ -157,6 +157,7 @@ public class DemographicRelationship {
             h.put("subDecisionMaker", booleanConverter(rs.getString("sub_decision_maker")));
             h.put("emergencyContact", booleanConverter(rs.getString("emergency_contact")));
             h.put("notes", rs.getString("notes"));
+            h.put("age",demographic.getAge());
             list.add(h);
          }
          db.CloseConn();            
