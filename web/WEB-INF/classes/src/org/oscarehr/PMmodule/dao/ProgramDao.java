@@ -24,12 +24,14 @@ package org.oscarehr.PMmodule.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Program;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -242,7 +244,10 @@ public class ProgramDao extends HibernateDaoSupport {
 		Criteria criteria = getSession().createCriteria(Program.class);
 
 		if (program.getName() != null && program.getName().length() > 0) {
-			criteria.add(Expression.like("name", program.getName() + "%"));
+			String programName = StringEscapeUtils.escapeSql(program.getName());
+			String sql = "((LEFT(SOUNDEX(name),4) = LEFT(SOUNDEX('" + programName + "'),4))" + " " +
+							"OR (name like '" + "%" + programName + "%'))";
+			criteria.add(Restrictions.sqlRestriction(sql));
 		}
 
 		if (program.getType() != null && program.getType().length() > 0) {
