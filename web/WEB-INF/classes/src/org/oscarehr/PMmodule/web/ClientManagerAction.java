@@ -49,7 +49,6 @@ public class ClientManagerAction extends BaseAction {
 
     // Parameter
     public static final String ID = "id";
-    private static final int ONEDAY_MS = 86400000;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         DynaActionForm clientForm = (DynaActionForm) form;
@@ -370,7 +369,10 @@ public class ClientManagerAction extends BaseAction {
         restriction.setDemographicNo(Integer.valueOf(id));
         restriction.setStartDate(new Date());
         restriction.setProviderNo(getProviderNo(request));
-        restriction.setEndDate(new Date(new Date().getTime() + (ONEDAY_MS * days)));
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(new Date());
+        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + days) ;        
+        restriction.setEndDate(cal.getTime());
         restriction.setEnabled(true);
 
         boolean success;
