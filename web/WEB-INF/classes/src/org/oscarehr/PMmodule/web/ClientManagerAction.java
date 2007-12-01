@@ -392,7 +392,38 @@ public class ClientManagerAction extends BaseAction {
 		setEditAttributes(form, request, clientId);
 		return mapping.findForward("edit");
 	}
+        
+        public ActionForward save_joint_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+            JointAdmission jadmission = new JointAdmission();
 
+            String headClientId = request.getParameter("headClientId");
+            String clientId = request.getParameter("dependentClientId");
+            String type = request.getParameter("type");
+            Long headInteger = new Long(headClientId);
+            Long clientInteger = new Long(clientId);
+
+            System.out.println("headClientId "+ headClientId+ " clientId "+clientId);
+
+            jadmission.setAdmissionDate(new Date());
+            jadmission.setHeadClientId(headInteger);
+            jadmission.setArchived(false);
+            jadmission.setClientId(clientInteger);
+            jadmission.setProviderNo((String)request.getSession().getAttribute("user"));
+            jadmission.setTypeId(new Long(type));
+            System.out.println(jadmission.toString());
+            clientManager.saveJointAdmission(jadmission);
+            setEditAttributes(form, request, (String) request.getParameter("clientId"));
+
+            return mapping.findForward("edit");
+        }
+    
+        public ActionForward remove_joint_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+            String clientId = request.getParameter("dependentClientId");
+            clientManager.removeJointAdmission(new Long(clientId), (String)request.getSession().getAttribute("user"));
+            setEditAttributes(form, request, (String) request.getParameter("clientId"));
+            return mapping.findForward("edit");
+        }
+        
 	public ActionForward search_programs(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 		DynaActionForm clientForm = (DynaActionForm) form;
 
@@ -712,11 +743,58 @@ public class ClientManagerAction extends BaseAction {
                 
                 /* Relations */
                 DemographicRelationship demoRelation = new DemographicRelationship();
-                ArrayList relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo);
-                
+                ArrayList<Hashtable> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo);
+                List<JointAdmission> list = clientManager.getDependents(new Long(demographicNo));
+                JointAdmission clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
+                int familySize = list.size()+1;
+                if ( familySize > 1 ){
+                    request.setAttribute("groupHead","yes");
+                }
+                if( clientsJadm != null){
+                    request.setAttribute("dependentOn",clientsJadm.getHeadClientId());
+                    List depList = clientManager.getDependents(clientsJadm.getHeadClientId());
+                    familySize = depList.size()+1;
+                    Demographic headClientDemo = clientManager.getClientByDemographicNo(""+clientsJadm.getHeadClientId());
+                    request.setAttribute("groupName",headClientDemo.getFormattedName()+" Group");
+
+                }
+
                 if ( relList != null  && relList.size() > 0 ){
+                    for (Hashtable h: relList){
+                        String demographic = (String) h.get("demographicNo");
+                        Long demoLong = new Long(demographic);
+                        JointAdmission demoJadm = clientManager.getJointAdmission(demoLong);
+                        System.out.println("DEMO JADM: "+demoJadm);
+
+                        //IS PERSON JOINTLY ADMITTED WITH ME, They will either  have the same HeadClient or be my headClient
+                        if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong){  //they're my head client
+                            h.put("jointAdmission","head");
+                        }else if ( demoJadm != null && clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoJadm.getHeadClientId().longValue()){
+                            //They depend on the same person i do!
+                            h.put("jointAdmission","dependent");
+                        }else if( demoJadm != null && demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()){
+                            //They depend on me
+                            h.put("jointAdmission","dependent");
+                        }
+                        //Can this person be added to my depended List
+                        if (clientsJadm == null  && demoJadm == null && clientManager.getDependents(demoLong).size() == 0){  
+                            //yes if - i am not dependent on anyone
+                                   //- this person is not dependent on someone
+                                   //- this person is not a head of a family already
+                            h.put("dependentable","yes");
+                        }   
+                        if (demoJadm != null){  //DEPENDS ON SOMEONE
+                            h.put("dependentOn",demoJadm.getHeadClientId());
+                            if ( demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()){
+                                h.put("dependent", demoJadm.getTypeId());
+                            }
+                        }else if( clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong){  //HEAD PERSON WON'T DEPEND ON ANYONE
+                             h.put("dependent", new Long(0));
+                        }
+                    }
                     request.setAttribute("relations",relList);
-                    request.setAttribute("relationSize",relList.size()+1);
+                    request.setAttribute("relationSize",familySize);
+
                 }
 	}
 
