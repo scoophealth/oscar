@@ -68,7 +68,7 @@ if( outcome !=null){
 }
 %>
 
-<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.DemographicMerged" errorPage="errorpage.jsp" %>
+<%@ page import="java.util.*, java.sql.*, oscar.*, oscar.oscarDemographic.data.DemographicMerged"  %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <html>
