@@ -388,6 +388,9 @@ public class ClientManagerAction extends BaseAction {
         restriction.setProviderNo(getProviderNo(request));
         Calendar cal = new GregorianCalendar();
         cal.setTime(new Date());
+        cal.set(Calendar.HOUR, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
         cal.set(Calendar.DATE, cal.get(Calendar.DATE) + days) ;
         restriction.setEndDate(cal.getTime());
         restriction.setEnabled(true);
