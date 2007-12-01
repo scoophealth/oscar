@@ -22,10 +22,6 @@
 
 package org.oscarehr.PMmodule.service;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
@@ -34,68 +30,35 @@ import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.DemographicExt;
-import org.oscarehr.PMmodule.model.JointAdmission;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
+import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
+import org.springframework.beans.factory.annotation.Required;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class ClientManager {
 
 	private static Log log = LogFactory.getLog(ClientManager.class);
 
 	private ClientDao dao;
-
 	private ClientReferralDAO referralDAO;
-        
-        private JointAdmissionDAO jointAdmissionDAO;
-
+    private JointAdmissionDAO jointAdmissionDAO;
 	private ProgramQueueManager queueManager;
-
 	private IntegratorManager integratorManager;
-
 	private AdmissionManager admissionManager;
-	
 	private AgencyManager agencyManager;
-	
-	private boolean outsideOfDomainEnabled;
+    private ClientRestrictionManager clientRestrictionManager;
+
+    private boolean outsideOfDomainEnabled;
 	
 	public boolean isOutsideOfDomainEnabled() {
 		return outsideOfDomainEnabled;
 	}
 
-	public void setOutsideOfDomainEnabled(boolean outsideOfDomainEnabled) {
-		this.outsideOfDomainEnabled = outsideOfDomainEnabled;
-	}
-
-	public void setClientDao(ClientDao dao) {
-		this.dao = dao;
-	}
-
-	public void setClientReferralDAO(ClientReferralDAO dao) {
-		this.referralDAO = dao;
-	}
-
-	public void setProgramQueueManager(ProgramQueueManager mgr) {
-		this.queueManager = mgr;
-	}
-
-	public void setAdmissionManager(AdmissionManager mgr) {
-		this.admissionManager = mgr;
-	}
-
-	public void setIntegratorManager(IntegratorManager mgr) {
-		this.integratorManager = mgr;
-	}
-
-	public void setAgencyManager(AgencyManager mgr) {
-		this.agencyManager = mgr;
-	}
-	
-	public Demographic getClientByDemographicNo(String demographicNo) {
+    public Demographic getClientByDemographicNo(String demographicNo) {
 		if (demographicNo == null || demographicNo.length() == 0) {
 			return null;
 		}
@@ -211,8 +174,14 @@ public class ClientManager {
             jointAdmissionDAO.removeJointAdmission(admission);
         }
 
-	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException {
-		Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
+	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException, ServiceRestrictionException {
+        // check if there's a service restriction in place on this individual for this program
+        ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(referral.getProgramId().intValue(), referral.getClientId().intValue(), new Date());
+        if (restrInPlace != null) {
+            throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+        }
+
+        Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
 		if (currentAdmission != null) {
 			referral.setStatus(ClientReferral.STATUS_REJECTED);
 			referral.setCompletionNotes("Client currently admitted");
@@ -302,5 +271,46 @@ public class ClientManager {
     //public JointAdmission getJointAdmission(Long demoLong) {
     //    return jointAdmissionDAO.getJointAdmission(demoLong);
     //}
-	
+
+    @Required
+    public void setClientDao(ClientDao dao) {
+		this.dao = dao;
+	}
+
+    @Required
+    public void setClientReferralDAO(ClientReferralDAO dao) {
+		this.referralDAO = dao;
+	}
+
+    @Required
+    public void setProgramQueueManager(ProgramQueueManager mgr) {
+		this.queueManager = mgr;
+	}
+
+    @Required
+    public void setAdmissionManager(AdmissionManager mgr) {
+		this.admissionManager = mgr;
+	}
+
+    @Required
+	public void setIntegratorManager(IntegratorManager mgr) {
+		this.integratorManager = mgr;
+	}
+
+    @Required
+    public void setAgencyManager(AgencyManager mgr) {
+		this.agencyManager = mgr;
+	}
+
+    @Required
+    public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
+        this.clientRestrictionManager = clientRestrictionManager;
+    }
+
+    @Required
+    public void setOutsideOfDomainEnabled(boolean outsideOfDomainEnabled) {
+		this.outsideOfDomainEnabled = outsideOfDomainEnabled;
+	}
+
+
 }

@@ -22,24 +22,17 @@
 
 package org.oscarehr.PMmodule.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.oscarehr.PMmodule.dao.AdmissionDao;
-import org.oscarehr.PMmodule.dao.ClientReferralDAO;
-import org.oscarehr.PMmodule.dao.ProgramClientStatusDAO;
-import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.dao.ProgramQueueDao;
+import org.oscarehr.PMmodule.dao.*;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
-import org.oscarehr.PMmodule.model.Admission;
-import org.oscarehr.PMmodule.model.AdmissionSearchBean;
-import org.oscarehr.PMmodule.model.BedDemographic;
-import org.oscarehr.PMmodule.model.ClientReferral;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
+import org.oscarehr.PMmodule.model.*;
+import org.springframework.beans.factory.annotation.Required;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class AdmissionManager {
 
@@ -49,32 +42,9 @@ public class AdmissionManager {
 	private ClientReferralDAO clientReferralDAO;
 	private BedDemographicManager bedDemographicManager;
 	private ProgramClientStatusDAO programClientStatusDAO;
-	
-	public void setAdmissionDao(AdmissionDao dao) {
-		this.dao = dao;
-	}
+	private ClientRestrictionManager clientRestrictionManager;
 
-	public void setProgramDao(ProgramDao programDao) {
-	    this.programDao = programDao;
-    }
-	
-	public void setProgramQueueDao(ProgramQueueDao dao) {
-		this.programQueueDao = dao;
-	}
-
-	public void setClientReferralDAO(ClientReferralDAO dao) {
-		this.clientReferralDAO = dao;
-	}
-	
-	public void setBedDemographicManager(BedDemographicManager bedDemographicManager) {
-	    this.bedDemographicManager = bedDemographicManager;
-    }
-	
-	public void setProgramClientStatusDAO(ProgramClientStatusDAO programClientStatusDAO) {
-		this.programClientStatusDAO = programClientStatusDAO;
-	}
-
-	public List getAdmissions_archiveView(String programId, Integer demographicNo) {
+    public List getAdmissions_archiveView(String programId, Integer demographicNo) {
 		return dao.getAdmissions_archiveView(Integer.valueOf(programId), demographicNo);
 	}
 	
@@ -114,7 +84,7 @@ public class AdmissionManager {
 		return dao.getCurrentAdmissionsByProgramId(Integer.valueOf(programId));
 	}
 
-	public Admission getAdmission(Long id) {
+    public Admission getAdmission(Long id) {
 		return dao.getAdmission(id);
 	}
 
@@ -122,25 +92,31 @@ public class AdmissionManager {
 		dao.saveAdmission(admission);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes) throws ProgramFullException, AdmissionException {
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, null);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission) throws ProgramFullException, AdmissionException {
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException {
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate) throws ProgramFullException, AdmissionException {
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		// see if there's room first
 		if (program.getNumOfMembers().intValue() >= program.getMaxAllowed().intValue()) {
 			throw new ProgramFullException();
 		}
 
-		// If admitting to bed program, discharge from old bed program
+        // check if there's a service restriction in place on this individual for this program
+        ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(program.getId(), demographicNo, new Date());
+        if (restrInPlace != null) {
+            throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+        }
+
+        // If admitting to bed program, discharge from old bed program
 		if (program.getType().equalsIgnoreCase("bed") && !tempAdmission) {
 			Admission fullAdmission = getCurrentBedProgramAdmission(demographicNo);
 
@@ -216,13 +192,19 @@ public class AdmissionManager {
 		}
 	}
 
-	public void processInitialAdmission(Integer demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException, AlreadyAdmittedException {
+	public void processInitialAdmission(Integer demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException, AlreadyAdmittedException, ServiceRestrictionException {
 		// see if there's room first
 		if (program.getNumOfMembers().intValue() >= program.getMaxAllowed().intValue()) {
 			throw new ProgramFullException();
 		}
 
-		Admission admission = getCurrentAdmission(String.valueOf(program.getId()), demographicNo);
+        // check if there's a service restriction in place on this individual for this program
+        ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(program.getId(), demographicNo, new Date());
+        if (restrInPlace != null) {
+            throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+        }
+
+        Admission admission = getCurrentAdmission(String.valueOf(program.getId()), demographicNo);
 		if (admission != null) {
 			throw new AlreadyAdmittedException();
 		}
@@ -280,7 +262,7 @@ public class AdmissionManager {
 		Admission currentBedAdmission = getCurrentBedProgramAdmission(demographicNo);
 
 		if (currentBedAdmission != null) {
-			processDischarge(currentBedAdmission.getProgramId().intValue(), demographicNo, notes, radioDischargeReason);
+			processDischarge(currentBedAdmission.getProgramId(), demographicNo, notes, radioDischargeReason);
 			
 			BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByDemographic(demographicNo);
 			
@@ -292,7 +274,7 @@ public class AdmissionManager {
 		Admission currentCommunityAdmission = getCurrentCommunityProgramAdmission(demographicNo);
 
 		if (currentCommunityAdmission != null) {
-			processDischarge(currentCommunityAdmission.getProgramId().intValue(), demographicNo, notes, radioDischargeReason);
+			processDischarge(currentCommunityAdmission.getProgramId(), demographicNo, notes, radioDischargeReason);
 		}
 
 		// Create and save admission object
@@ -310,4 +292,41 @@ public class AdmissionManager {
 		admission.setClientStatusId(0);
 		saveAdmission(admission);
 	}
+
+    @Required
+    public void setAdmissionDao(AdmissionDao dao) {
+		this.dao = dao;
+	}
+
+    @Required
+    public void setProgramDao(ProgramDao programDao) {
+	    this.programDao = programDao;
+    }
+
+    @Required
+    public void setProgramQueueDao(ProgramQueueDao dao) {
+		this.programQueueDao = dao;
+	}
+
+    @Required
+    public void setClientReferralDAO(ClientReferralDAO dao) {
+		this.clientReferralDAO = dao;
+	}
+
+    @Required
+    public void setBedDemographicManager(BedDemographicManager bedDemographicManager) {
+	    this.bedDemographicManager = bedDemographicManager;
+    }
+
+	@Required
+    public void setProgramClientStatusDAO(ProgramClientStatusDAO programClientStatusDAO) {
+		this.programClientStatusDAO = programClientStatusDAO;
+	}
+
+    @Required
+    public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
+        this.clientRestrictionManager = clientRestrictionManager;
+    }
+
+
 }

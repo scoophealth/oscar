@@ -23,5 +23,18 @@
 package org.oscarehr.PMmodule.exception;
 
 public class ProgramFullException extends Exception {
+    public ProgramFullException() {
+    }
 
+    public ProgramFullException(String s) {
+        super(s);
+    }
+
+    public ProgramFullException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
+
+    public ProgramFullException(Throwable throwable) {
+        super(throwable);
+    }
 }

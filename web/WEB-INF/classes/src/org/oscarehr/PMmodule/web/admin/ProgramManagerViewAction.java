@@ -28,6 +28,7 @@ import org.apache.struts.action.*;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
+import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
@@ -232,7 +233,11 @@ public class ProgramManagerViewAction extends BaseAction {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
 			saveMessages(request, messages);
-		}
+		} catch (ServiceRestrictionException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
+            saveMessages(request, messages);
+        }
 
 		logManager.log("view", "admit to program", clientId, request);
 

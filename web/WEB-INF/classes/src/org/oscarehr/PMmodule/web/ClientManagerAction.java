@@ -76,6 +76,10 @@ public class ClientManagerAction extends BaseAction {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
             saveMessages(request, messages);
+        } catch (ServiceRestrictionException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
+            saveMessages(request, messages);
         }
 
         logManager.log("write", "admit", demographicNo, request);
@@ -321,6 +325,11 @@ public class ClientManagerAction extends BaseAction {
         } catch (AlreadyQueuedException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_referred"));
+            saveMessages(request, messages);
+            success = false;
+        } catch (ServiceRestrictionException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
             saveMessages(request, messages);
             success = false;
         }

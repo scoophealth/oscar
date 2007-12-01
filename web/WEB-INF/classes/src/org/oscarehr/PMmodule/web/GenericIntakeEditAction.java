@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
+import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.Demographic;
@@ -166,8 +167,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			saveIntake(intake, client.getDemographicNo());
 			//don't move updateRemote up...this method has the problem needs to be fixed 
 			updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
+        } catch (ServiceRestrictionException e) {
+            // TODO service restriction popup... somehow
+			ActionMessages messages = new ActionMessages();
+			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
+			saveErrors(request, messages);
 
-		} catch (Exception e) {
+        } catch (Exception e) {
 		    e.printStackTrace();
 			LOG.error(e);
 
@@ -298,7 +304,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
 	}
 
-	private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException {
+	private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		Program bedCommunityProgram = null;
 		Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
 
@@ -330,7 +336,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 	}
 
-	private void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException {
+	private void admitServicePrograms(Integer clientId, String providerNo, Set<Integer> serviceProgramIds) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		SortedSet<Integer> currentServicePrograms = getCurrentServiceProgramIds(clientId);
 		
 		Collection<?> discharge = CollectionUtils.subtract(currentServicePrograms, serviceProgramIds);

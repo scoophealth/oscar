@@ -217,6 +217,7 @@
                 <property name="clientReferralDAO" ref="clientReferralDAO"/>
                 <property name="bedDemographicManager" ref="bedDemographicManager"/>
                 <property name="programClientStatusDAO" ref="programClientStatusDAO"/>
+                <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
             </bean>
         </property>
     </bean>
@@ -324,6 +325,7 @@
                 <property name="programQueueManager" ref="programQueueManager"/>
                 <property name="integratorManager" ref="integratorManager"/>
                 <property name="admissionManager" ref="admissionManager"/>
+                <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
                 <property name="outsideOfDomainEnabled" value="${pmm.client.search.outside.of.domain.enabled}"/>
             </bean>
         </property>
