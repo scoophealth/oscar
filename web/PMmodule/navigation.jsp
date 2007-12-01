@@ -198,9 +198,7 @@
     </c:if>
 
 
-    <div>
-        <span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
-    </div>
+    
     <c:if test="${sessionScope.userrole ne 'er_clerk' and sessionScope.userrole ne 'Vaccine Provider'}">
         <div>
             <span><a href='<c:out value="${ctx}"/>/provider/providercontrol.jsp'>Oscar Medical</a></span>
@@ -228,6 +226,9 @@
             <div>
                 <html:link action="/PMmodule/FacilityManager.do?method=list">Manage Facilities</html:link>
             </div>
+            <div>
+        		<span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
+    		</div>
             <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                 <div>
                     <html:link action="/PMmodule/AgencyManager.do?method=view_integrator">Integrator</html:link>
