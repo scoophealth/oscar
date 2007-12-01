@@ -31,6 +31,7 @@
     <bean name="/PMmodule/ClientSearch2" class="org.oscarehr.PMmodule.web.ClientSearchAction2" singleton="false">
         <property name="clientManager" ref="clientManager"/>
         <property name="logManager" ref="logManager"/>
+        <property name="programManager" ref="programManager"/>
     </bean>
     <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false">
         <property name="admissionManager" ref="admissionManager"/>

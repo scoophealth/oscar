@@ -43,7 +43,9 @@ public class ClientSearchFormBean {
 	private String healthCardVersion;
 	private boolean searchOutsideDomain;
 	private boolean searchUsingSoundex;
-	
+	private String bedProgramId; 
+	private String dateFrom;
+	private String dateTo;
 	private List programDomain;
 	
 	public ClientSearchFormBean() {
@@ -185,6 +187,43 @@ public class ClientSearchFormBean {
 	 */
 	public void setProgramDomain(List programDomain) {
 		this.programDomain = programDomain;
+	}
+	/**
+	 * @return Returns the bedProgramId.
+	 */
+	public String getBedProgramId() {
+		return bedProgramId;
+	}
+
+	/**
+	 * @param bedProgramId The bedProgramId to set.
+	 */
+	public void setBedProgramId(String bedProgramId) {
+		this.bedProgramId = bedProgramId;
+	}
+	/**
+	 * @return Returns the dateFrom.
+	 */
+	public String getDateFrom() {
+		return dateFrom;
+	}
+	/**
+	 * @param dateFrom The dateFrom to set.
+	 */
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+	/**
+	 * @return Returns the dateTo.
+	 */
+	public String getDateTo() {
+		return dateTo;
+	}
+	/**
+	 * @param dateTo The dateTo to set.
+	 */
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
 	}
 	
 }

@@ -111,11 +111,19 @@ public class ClientDao extends HibernateDaoSupport {
 		Criteria criteria = getSession().createCriteria(Demographic.class);
 		String firstName = "";
 		String lastName = "";
-
+		String bedProgramIdCond = "";
+		String admitDateFromCond = "";
+		String admitDateToCond = "";
+		String AND = " and ";
+		String WHERE = " where ";
+		String sql = "";
+		
 		if (bean.getFirstName() != null && bean.getFirstName().length() > 0) {
 			firstName = bean.getFirstName();
 			firstName = StringEscapeUtils.escapeSql(firstName);
 		}
+		
+		
 		if (bean.getLastName() != null && bean.getLastName().length() > 0) {
 			lastName = bean.getLastName();
 			lastName = StringEscapeUtils.escapeSql(lastName);
@@ -130,7 +138,7 @@ public class ClientDao extends HibernateDaoSupport {
 			}
 		}
 		else { // soundex variation
-			String sql;
+			
 			if (firstName.length() > 0) {
 				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
@@ -140,12 +148,13 @@ public class ClientDao extends HibernateDaoSupport {
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 		}
-
+		
 		if (bean.getDob() != null && bean.getDob().length() > 0) {
 			criteria.add(Expression.eq("YearOfBirth", bean.getYearOfBirth()));
 			criteria.add(Expression.eq("MonthOfBirth", bean.getMonthOfBirth()));
 			criteria.add(Expression.eq("DateOfBirth", bean.getDayOfBirth()));
 		}
+
 
 		if (bean.getHealthCardNumber() != null && bean.getHealthCardNumber().length() > 0) {
 			criteria.add(Expression.eq("Hin", bean.getHealthCardNumber()));
@@ -154,7 +163,22 @@ public class ClientDao extends HibernateDaoSupport {
 		if (bean.getHealthCardVersion() != null && bean.getHealthCardVersion().length() > 0) {
 			criteria.add(Expression.eq("Ver", bean.getHealthCardVersion()));
 		}
+		
+		if(bean.getBedProgramId() != null && bean.getBedProgramId().length() > 0) {
+			bedProgramIdCond = " program_id = " + bean.getBedProgramId();
+		}
+		
+		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
+			admitDateFromCond = " admission_date >= '" + bean.getDateFrom().trim() + "' ";
+		}
+		
+		if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
+			
+			admitDateToCond = " admission_date <= '" + bean.getDateTo().trim() + "' ";
+		}
+
 		if (bean.getProgramDomain() != null && !bean.getProgramDomain().isEmpty() && !bean.isSearchOutsideDomain()) {
+
 			// program domain search
 			StringBuilder programIds = new StringBuilder();
 
@@ -165,19 +189,50 @@ public class ClientDao extends HibernateDaoSupport {
 				}
 				programIds.append(p.getProgramId());
 			}
-			String sql = "{alias}.demographic_no in (select client_id from admission where program_id in (" + programIds.toString() + "))";
+			sql ="{alias}.demographic_no in (select client_id from admission " + 
+				 " where program_id in (" + programIds.toString() + ") " +
+				 (bedProgramIdCond.length()>0? AND + bedProgramIdCond : "") + 
+				 (admitDateFromCond.length()>0? AND + admitDateFromCond : "") + 
+				 (admitDateToCond.length()>0? AND + admitDateToCond : "") + 
+				 ")";
+			criteria.add(Restrictions.sqlRestriction(sql));
+			
+		}else{  
+			String extraCond = "";
+			if(bedProgramIdCond.length()>0){
+				extraCond = WHERE + bedProgramIdCond;
+				if(admitDateFromCond.length()>0){
+					extraCond += AND + admitDateFromCond;
+				}
+				if(admitDateToCond.length()>0){
+					extraCond += AND + admitDateToCond;
+				}
+			}else{
+				if(admitDateFromCond.length()>0){
+					extraCond += WHERE + admitDateFromCond;
+					if(admitDateToCond.length()>0){
+						extraCond += AND + admitDateToCond;
+					}
+				}else{
+					if(admitDateToCond.length()>0){
+						extraCond += WHERE + admitDateToCond;
+					}
+				}
+			}
+
+			sql ="{alias}.demographic_no in (select client_id from admission " +  
+				 extraCond + ")"; 
+			
 			criteria.add(Restrictions.sqlRestriction(sql));
 		}
 
 		if (bean.getProgramDomain() != null && bean.getProgramDomain().isEmpty() && !bean.isSearchOutsideDomain()) {
-			String sql = "{alias}.demographic_no = 0";
+			sql = "{alias}.demographic_no = 0";
 			criteria.add(Restrictions.sqlRestriction(sql));
 		}
-
 		criteria.add(Expression.ne("PatientStatus", "IN"));
-
 		criteria.addOrder(Order.asc("LastName"));
-		
+	
 		@SuppressWarnings("unchecked")
 		List<Demographic> results = criteria.list();
 

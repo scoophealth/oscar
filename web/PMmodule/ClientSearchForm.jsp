@@ -2,6 +2,10 @@
 <%@ include file="/common/messages.jsp"%>
 <%@page import="oscar.OscarProperties" %>
 <%@page import="org.oscarehr.PMmodule.web.utils.UserRoleUtils"%>
+<%@page import="java.util.*" %>
+<%@page import="org.oscarehr.PMmodule.model.Demographic" %>
+<%@page import="org.oscarehr.PMmodule.model.Program" %>
+
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
 <script>
 	function resetClientFields() {
@@ -13,6 +17,9 @@
 		form.elements['criteria.healthCardVersion'].value='';
 		form.elements['criteria.searchOutsideDomain'].checked = true;
 		form.elements['criteria.searchUsingSoundex'].checked = true;
+		form.elements['criteria.dateFrom'].value=''; 
+		form.elements['criteria.dateTo'].value=''; 
+		form.elements['criteria.bedProgramId'].selectedIndex = 0;
 	}
 
 	function popupHelp(type) {
@@ -34,20 +41,24 @@
 					<th>Client First Name</th>
 					<td><html:text property="criteria.firstName" size="15" /></td>
 				</tr>
+		
 				<tr>
 					<th>Client Last Name</th>
 					<td><html:text property="criteria.lastName" size="15" /></td>
 				</tr>
+				
 				<tr>
 					<th>Date of Birth <br>
 					(yyyy/mm/dd)</th>
 					<td><html:text property="criteria.dob" size="15" /></td>
 				</tr>
+				
 				<caisi:isModuleLoad moduleName="GET_OHIP_INFO" reverse="false">
 				<tr>
 					<th>Health Card Number</th>
 					<td><html:text property="criteria.healthCardNumber" size="15" /> <html:text property="criteria.healthCardVersion" size="2" /></td>
 				</tr>
+			
 				</caisi:isModuleLoad>
 				<tr>
 					<!--  <th>Search outside of domain <a href="javascript:void(0)" onclick="popupHelp('domain')">?</a></th>
@@ -61,6 +72,28 @@
 				<tr>
 					<th>Soundex on names <a href="javascript:void(0)" onclick="popupHelp('soundex')">?</a></th>
 					<td><html:checkbox property="criteria.searchUsingSoundex" /></td>
+				</tr>
+
+				<tr>
+					<th>Bed Program</th>
+			          <td>
+			            <html:select property="criteria.bedProgramId">
+			                <html:option value="">
+			                </html:option>
+			              	<html:options collection="allBedPrograms" property="id" labelProperty="name" />
+			            </html:select>
+			          </td>
+				</tr>
+
+				<tr>
+					<th>Admission Date From<br>
+						(yyyy/mm/dd)</th>
+					<td><html:text property="criteria.dateFrom" size="12" /></td>
+				</tr>
+				<tr>
+					<th>Admission Date To<br>
+						(yyyy/mm/dd)</th>
+					<td><html:text property="criteria.dateTo" size="12" /></td>
 				</tr>
 			</table>
 			<table>
@@ -90,7 +123,7 @@
 	</div>
 	
 	<br />
-	
+
 	<c:if test="${requestScope.clients != null}">
 		<display:table class="simple" cellspacing="2" cellpadding="3" id="client" name="clients" export="false" pagesize="10" requestURI="/PMmodule/ClientSearch2.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
