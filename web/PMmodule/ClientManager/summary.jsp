@@ -337,7 +337,7 @@ function openSurvey() {
 	</tr>
 </table>
 <br />
-
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
@@ -366,18 +366,16 @@ function openSurvey() {
 <br />
 <table cellspacing="0" cellpadding="0">
 	<tr><td>New User Created Form:</td>
-	<td>
-	
+	<td>	
 		<html:select property="form.formId" onchange="openSurvey()">
-	<html:option value="0">&nbsp;</html:option>
-	<html:options collection="survey_list" property="formId" labelProperty="description" />
-</html:select>
-
-</td>
+		<html:option value="0">&nbsp;</html:option>
+		<html:options collection="survey_list" property="formId" labelProperty="description" />
+		</html:select>
+	</td>
 	</tr>
 </table>
-
 <br />
+</caisi:isModuleLoad>
 
 <c:if test="${empty remote_consent}">
 	<div class="tabs">

@@ -6,6 +6,8 @@
 <%
     GenericIntakeEditFormBean intakeEditForm = (GenericIntakeEditFormBean) session.getAttribute("genericIntakeEditForm");
     Intake intake = intakeEditForm.getIntake();
+    String clientId = String.valueOf(intake.getClientId());   
+    
 %>
 <html:html xhtml="true" locale="true">
 <head>
@@ -21,6 +23,24 @@
             searchIds: ["layoutContainer", "topPane", "clientPane", "bottomPane", "clientTable", "admissionsTable"]
         };
         // -->
+        
+        function openSurvey(ctl) {
+        	var formId = ctl.options[ctl.selectedIndex].value;
+        	if(formId == 0) {
+            	return;
+        	}
+        	var id = document.getElementById('formInstanceId').value; 
+        	var url = '<html:rewrite action="/PMmodule/Forms/SurveyExecute"/>?method=survey&type=provider&formId=' + formId + '&formInstanceId=' + id + '&clientId=' + <%=clientId%>;
+        	ctl.selectedIndex=0;
+        	popupPage(url);
+   		 }
+   		 
+   		function popupPage(varpage) {
+        	var page = "" + varpage;
+       		windowprops = "height=600,width=700,location=no,"
+                + "scrollbars=yes,menubars=no,toolbars=no,resizable=yes,top=0,left=0";
+        	window.open(page, "", windowprops);
+    	}
     </script>
     <script type="text/javascript" src="<html:rewrite page="/dojoAjax/dojo.js" />"></script>
     <script type="text/javascript" src="<html:rewrite page="/js/AlphaTextBox.js" />"></script>
@@ -193,7 +213,29 @@
         </table>
     </div>
 </c:if>
+
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+<c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+<div id="admissionsTable" dojoType="TitlePane" label="Intake Assessment" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
+	<table class="intakeTable">
+	<tr><td><input type="hidden" id="formInstanceId" value="0" /></td></tr>
+	<tr>
+    	<td>
+        <select property="form.formId" onchange="openSurvey(this);">
+            <option value="0">&nbsp;</option>
+            <c:forEach var="survey" items="${survey_list}">
+                <option value="<c:out value="${survey.formId}"/>"><c:out value="${survey.description}"/></option>
+            </c:forEach>
+        </select>
+    	</td>    
+	</tr>
+	</table>
+</div>
+</c:if>
+</caisi:isModuleLoad>
+
 <br />
+
 <caisi:intake base="<%=5%>" intake="<%=intake%>" />
 </div>
 <div id="bottomPane" dojoType="ContentPane" layoutAlign="bottom" class="intakeBottomPane">
@@ -214,7 +256,19 @@
         </logic:messagesPresent>
         <tr>
             <td>
+            	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                 <html:submit onclick="save()">Save</html:submit>&nbsp;
+                </caisi:isModuleLoad>
+                <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+                <c:choose>
+                	<c:when test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
+                		<html:submit onclick="save()">Save</html:submit>&nbsp;
+                	</c:when>
+                	<c:otherwise>
+                		<html:submit onclick="save()">Save And Do Intake Accessment</html:submit>&nbsp;
+                	</c:otherwise>
+                </c:choose>
+                </caisi:isModuleLoad>
                 <html:reset>Reset</html:reset>
             </td>
             <td align="right">

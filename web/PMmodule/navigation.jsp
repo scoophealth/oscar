@@ -226,9 +226,11 @@
             <div>
                 <html:link action="/PMmodule/FacilityManager.do?method=list">Manage Facilities</html:link>
             </div>
+            <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
             <div>
         		<span><a href='<%=request.getContextPath()%>/PMmodule/EditIntake.do'>Registration Editor</a></span>
     		</div>
+    		</caisi:isModuleLoad>
             <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
                 <div>
                     <html:link action="/PMmodule/AgencyManager.do?method=view_integrator">Integrator</html:link>
