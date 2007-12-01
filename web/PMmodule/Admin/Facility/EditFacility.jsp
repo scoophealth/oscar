@@ -10,6 +10,7 @@
 </div>
 
 <html:form action="/PMmodule/FacilityManager.do">
+    <html:hidden property="agencyId"/>
     <input type="hidden" name="method" value="save" />
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr class="b">

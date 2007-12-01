@@ -46,5 +46,5 @@
     </display:table>
 </html:form>
 <div>
-    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=add&agencyId=<c:out value="${agencyId}" />"> Add new facility </a></p>
+    <p><a href="<html:rewrite action="/PMmodule/FacilityManager.do"/>?method=add"> Add new facility </a></p>
 </div>
