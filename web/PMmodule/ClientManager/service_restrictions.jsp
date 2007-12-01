@@ -198,7 +198,7 @@
 		</tr>
 		<tr class="b">
 			<td width="20%">Length of restriction (in days)</td>
-			<td><html:textarea cols="4" property="serviceRestrictionLength" /></td>
+			<td><html:text size="4" property="serviceRestrictionLength" /></td>
 		</tr>
         <tr class="b">
 			<td colspan="2"><input type="button" value="Add Service Restriction" onclick="do_service_restriction()" /> <input type="button" value="Cancel" onclick="document.clientManagerForm.submit()" /></td>
