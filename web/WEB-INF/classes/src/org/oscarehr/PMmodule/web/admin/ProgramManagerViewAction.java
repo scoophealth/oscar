@@ -43,81 +43,81 @@ import java.util.List;
 
 public class ProgramManagerViewAction extends BaseAction {
 
-	private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
+    private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
 
     protected ClientRestrictionManager clientRestrictionManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	return view(mapping, form, request, response);
+        return view(mapping, form, request, response);
     }
 
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public ActionForward view(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
-    
-    	// find the program id
-    	String programId = request.getParameter("id");
-    
-    	if (programId == null) {
-    		programId = (String) request.getAttribute("id");
-    	}
-    
-    	String demographicNo = request.getParameter("clientId");
-    	
-    	if (demographicNo != null) {
-    		request.setAttribute("clientId", demographicNo);
-    	}
-    
-    	request.setAttribute("temporaryAdmission",programManager.getEnabled());
-    	
-    	// need the queue to determine which tab to go to first
-    	List queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
-    	request.setAttribute("queue", queue);
-    
-    	if (formBean.getTab() == null || formBean.getTab().equals("")) {
-    		if (queue.size() > 0) {
-    			formBean.setTab("Queue");
-    		} else {
-    			formBean.setTab("General");
-    		}
-    	}
-    
-    	Program program = programManager.getProgram(programId);
-    	request.setAttribute("program", program);
-    
-    	if (formBean.getTab().equals("General")) {
-    		request.setAttribute("agency", programManager.getAgencyByProgram(programId));
-    	}
+        ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
+
+        // find the program id
+        String programId = request.getParameter("id");
+
+        if (programId == null) {
+            programId = (String) request.getAttribute("id");
+        }
+
+        String demographicNo = request.getParameter("clientId");
+
+        if (demographicNo != null) {
+            request.setAttribute("clientId", demographicNo);
+        }
+
+        request.setAttribute("temporaryAdmission",programManager.getEnabled());
+
+        // need the queue to determine which tab to go to first
+        List queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
+        request.setAttribute("queue", queue);
+
+        if (formBean.getTab() == null || formBean.getTab().equals("")) {
+            if (queue.size() > 0) {
+                formBean.setTab("Queue");
+            } else {
+                formBean.setTab("General");
+            }
+        }
+
+        Program program = programManager.getProgram(programId);
+        request.setAttribute("program", program);
+
+        if (formBean.getTab().equals("General")) {
+            request.setAttribute("agency", programManager.getAgencyByProgram(programId));
+        }
 
         if (formBean.getTab().equals("Service Restrictions")) {
-                request.setAttribute("service_restriction", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(programId), new Date()));
+            request.setAttribute("service_restriction", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(programId), new Date()));
         }
         if (formBean.getTab().equals("Staff")) {
-    		request.setAttribute("providers", programManager.getProgramProviders(programId));
-    	}
-    
-    	if (formBean.getTab().equals("Function User")) {
-    		request.setAttribute("functional_users", programManager.getFunctionalUsers(programId));
-    	}
-    
-    	if (formBean.getTab().equals("Teams")) {
-    		List<ProgramTeam> teams = programManager.getProgramTeams(programId);
-    		
-    		for (ProgramTeam team : teams) {
-    			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
-    			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+            request.setAttribute("providers", programManager.getProgramProviders(programId));
+        }
+
+        if (formBean.getTab().equals("Function User")) {
+            request.setAttribute("functional_users", programManager.getFunctionalUsers(programId));
+        }
+
+        if (formBean.getTab().equals("Teams")) {
+            List<ProgramTeam> teams = programManager.getProgramTeams(programId);
+
+            for (ProgramTeam team : teams) {
+                team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
+                team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
             }
-    
-    		request.setAttribute("teams", teams);
-    	}
-    
-    	if (formBean.getTab().equals("Clients")) {
-    		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
-    		
-    		//request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
-    		//clients should be active
-    		List<Admission> admissions = new ArrayList<Admission>();
-    		List ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
+
+            request.setAttribute("teams", teams);
+        }
+
+        if (formBean.getTab().equals("Clients")) {
+            request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
+
+            //request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+            //clients should be active
+            List<Admission> admissions = new ArrayList<Admission>();
+            List ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
             for (Object ad1 : ads) {
                 Admission admission = (Admission) ad1;
                 Integer clientId = admission.getClientId();
@@ -130,189 +130,238 @@ public class ProgramManagerViewAction extends BaseAction {
                     }
                 }
             }
-    		request.setAttribute("admissions", admissions);
-    		
-    		request.setAttribute("program_name", program.getName());
-    		
-    		List<ProgramTeam> teams = programManager.getProgramTeams(programId);
-    
-    		for (ProgramTeam team : teams) {
-    			team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
-    			team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
+            request.setAttribute("admissions", admissions);
+
+            request.setAttribute("program_name", program.getName());
+
+            List<ProgramTeam> teams = programManager.getProgramTeams(programId);
+
+            for (ProgramTeam team : teams) {
+                team.setProviders(programManager.getAllProvidersInTeam(Integer.valueOf(programId), team.getId()));
+                team.setAdmissions(programManager.getAllClientsInTeam(Integer.valueOf(programId), team.getId()));
             }
-    		
-    		request.setAttribute("teams", teams);
-    
-    		List<Program> batchAdmissionPrograms = new ArrayList<Program>();
-    		
-    		for (Program bedProgram : programManager.getBedPrograms()) {
-    			if (bedProgram.isAllowBatchAdmission()&&bedProgram.getProgramStatus().equals("active")) {
-    				batchAdmissionPrograms.add(bedProgram);
-    			}
+
+            request.setAttribute("teams", teams);
+
+            List<Program> batchAdmissionPrograms = new ArrayList<Program>();
+
+            for (Program bedProgram : programManager.getBedPrograms()) {
+                if (bedProgram.isAllowBatchAdmission()&&bedProgram.getProgramStatus().equals("active")) {
+                    batchAdmissionPrograms.add(bedProgram);
+                }
             }
-            
-    		List<Program> batchAdmissionServicePrograms = new ArrayList<Program>();
-    		List servicePrograms;
-    		servicePrograms = programManager.getServicePrograms();
+
+            List<Program> batchAdmissionServicePrograms = new ArrayList<Program>();
+            List servicePrograms;
+            servicePrograms = programManager.getServicePrograms();
             for (Object serviceProgram1 : servicePrograms) {
                 Program sp = (Program) serviceProgram1;
                 if (sp.isAllowBatchAdmission() && sp.getProgramStatus().equals("active")) {
                     batchAdmissionServicePrograms.add(sp);
                 }
             }
-    		
-    		//request.setAttribute("programs", batchAdmissionPrograms);
-    		request.setAttribute("bedPrograms", batchAdmissionPrograms);    		
-    		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
-    		request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge()); 
-    		request.setAttribute("servicePrograms",batchAdmissionServicePrograms);
-    	}
-    
-    	if (formBean.getTab().equals("Access")) {
-    		request.setAttribute("accesses", programManager.getProgramAccesses(programId));
-    	}
-    
-    	if (formBean.getTab().equals("Bed Check")) {
-    		formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(programId), true));
-    		request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
-    		request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
-    		
-    		request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
-    	}
-    
-    	if(formBean.getTab().equals("Client Status")) {
-    		request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
-    	}
-    	
-    	logManager.log("view", "program", programId, request);
-    
-    	request.setAttribute("id", programId);
-    
-    	return mapping.findForward("view");
+
+            //request.setAttribute("programs", batchAdmissionPrograms);
+            request.setAttribute("bedPrograms", batchAdmissionPrograms);
+            request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
+            request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());
+            request.setAttribute("servicePrograms",batchAdmissionServicePrograms);
+        }
+
+        if (formBean.getTab().equals("Access")) {
+            request.setAttribute("accesses", programManager.getProgramAccesses(programId));
+        }
+
+        if (formBean.getTab().equals("Bed Check")) {
+            formBean.setReservedBeds(bedManager.getBedsByProgram(Integer.valueOf(programId), true));
+            request.setAttribute("bedDemographicStatuses", bedDemographicManager.getBedDemographicStatuses());
+            request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
+
+            request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
+        }
+
+        if(formBean.getTab().equals("Client Status")) {
+            request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
+        }
+
+        logManager.log("view", "program", programId, request);
+
+        request.setAttribute("id", programId);
+
+        return mapping.findForward("view");
     }
-	
-	public ActionForward viewBedReservationChangeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		Integer reservedBedId = Integer.valueOf(request.getParameter("reservedBedId"));
-		System.err.println(reservedBedId);
-		
-		// BedDemographicChange[] bedDemographicChanges = bedDemographicManager.getBedDemographicChanges(reservedBedId)
-		request.setAttribute("bedReservationChanges", null);
-		
-		return mapping.findForward("viewBedReservationChangeReport");
-	}
-	
-	public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-    	Integer programId = Integer.valueOf(request.getParameter("programId"));
 
-		request.setAttribute("reservedBeds", bedManager.getBedsByProgram(programId, true));
-		
-		return mapping.findForward("viewBedCheckReport");
-	}
+    public ActionForward viewBedReservationChangeReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        Integer reservedBedId = Integer.valueOf(request.getParameter("reservedBedId"));
+        System.err.println(reservedBedId);
 
-	public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String programId = request.getParameter("id");
-		String clientId = request.getParameter("clientId");
-		String queueId = request.getParameter("queueId");
+        // BedDemographicChange[] bedDemographicChanges = bedDemographicManager.getBedDemographicChanges(reservedBedId)
+        request.setAttribute("bedReservationChanges", null);
 
-		ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
+        return mapping.findForward("viewBedReservationChangeReport");
+    }
 
-		Program fullProgram = programManager.getProgram(String.valueOf(programId));
+    public ActionForward viewBedCheckReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        Integer programId = Integer.valueOf(request.getParameter("programId"));
 
-		try {
-			admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, request.getParameter("admission.dischargeNotes"), request.getParameter("admission.admissionNotes"), queue.isTemporaryAdmission());
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
-			saveMessages(request, messages);
-		} catch (ProgramFullException e) {
-			log.error(e);
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
-			saveMessages(request, messages);
-		} catch (AdmissionException e) {
-			log.error(e);
-			ActionMessages messages = new ActionMessages();
-			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
-			saveMessages(request, messages);
-		} catch (ServiceRestrictionException e) {
+        request.setAttribute("reservedBeds", bedManager.getBedsByProgram(programId, true));
+
+        return mapping.findForward("viewBedCheckReport");
+    }
+
+    public ActionForward admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String programId = request.getParameter("id");
+        String clientId = request.getParameter("clientId");
+        String queueId = request.getParameter("queueId");
+
+        ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
+        Program fullProgram = programManager.getProgram(String.valueOf(programId));
+        String dischargeNotes = request.getParameter("admission.dischargeNotes");
+        String admissionNotes = request.getParameter("admission.admissionNotes");
+
+        try {
+            admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission());
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
+            saveMessages(request, messages);
+        } catch (ProgramFullException e) {
+            log.error(e);
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
+            saveMessages(request, messages);
+        } catch (AdmissionException e) {
+            log.error(e);
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
+            saveMessages(request, messages);
+        } catch (ServiceRestrictionException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
             saveMessages(request, messages);
+
+            request.getSession().setAttribute("programId", programId);
+            request.getSession().setAttribute("admission.dischargeNotes", dischargeNotes);
+            request.getSession().setAttribute("admission.admissionNotes", admissionNotes);
+
+
+            return mapping.findForward("service_restriction_error");
         }
 
-		logManager.log("view", "admit to program", clientId, request);
+        logManager.log("view", "admit to program", clientId, request);
 
-		return view(mapping, form, request, response);
-	}
+        return view(mapping, form, request, response);
+    }
 
-	public ActionForward assign_team_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String admissionId = request.getParameter("admissionId");
-		String teamId = request.getParameter("teamId");
-		String programName = request.getParameter("program_name");
-		Admission ad = admissionManager.getAdmission(Long.valueOf(admissionId));
+    public ActionForward override_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String programId = (String) request.getSession().getAttribute("programId");
+        String clientId = request.getParameter("clientId");
+        String queueId = request.getParameter("queueId");
 
-		ad.setTeamId(Integer.valueOf(teamId));
+        String dischargeNotes = (String) request.getSession().getAttribute("admission.dischargeNotes");
+        String admissionNotes = (String) request.getSession().getAttribute("admission.admissionNotes");
 
-		admissionManager.saveAdmission(ad);
+        request.setAttribute("id", programId);
+        
+        if (isCancelled(request)) {
+            return view(mapping, form, request, response);
+        }
 
-		ActionMessages messages = new ActionMessages();
-		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
-		saveMessages(request, messages);
+        ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
+        Program fullProgram = programManager.getProgram(String.valueOf(programId));
 
-		logManager.log("write", "edit program - assign client to team", "", request);
-		return view(mapping, form, request, response);
-	}
+        try {
+            admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), true);
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
+            saveMessages(request, messages);
+        } catch (ProgramFullException e) {
+            log.error(e);
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
+            saveMessages(request, messages);
+        } catch (AdmissionException e) {
+            log.error(e);
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
+            saveMessages(request, messages);
+        } catch (ServiceRestrictionException e) {
+            throw new RuntimeException(e);
+        }
 
-	public ActionForward assign_status_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String admissionId = request.getParameter("admissionId");
-		String statusId = request.getParameter("clientStatusId");
-		String programName = request.getParameter("program_name");
-		Admission ad = admissionManager.getAdmission(Long.valueOf(admissionId));
+        logManager.log("view", "admit to program", clientId, request);
 
-		ad.setClientStatusId(Integer.valueOf(statusId));
+        return view(mapping, form, request, response);
+    }
 
-		admissionManager.saveAdmission(ad);
+    public ActionForward assign_team_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String admissionId = request.getParameter("admissionId");
+        String teamId = request.getParameter("teamId");
+        String programName = request.getParameter("program_name");
+        Admission ad = admissionManager.getAdmission(Long.valueOf(admissionId));
 
-		ActionMessages messages = new ActionMessages();
-		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
-		saveMessages(request, messages);
+        ad.setTeamId(Integer.valueOf(teamId));
 
-		logManager.log("write", "edit program - assign client to status", "", request);
-		return view(mapping, form, request, response);				
-	}	
-	
-	public ActionForward batch_discharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		log.info("do batch discharge");
-		String type = request.getParameter("type");
-		String admitToProgramId;
-		if (type != null && type.equals("community")) {
-			admitToProgramId = request.getParameter("batch_discharge_community_program");
-		} else if(type!=null && type.equals("bed")){
-			admitToProgramId = request.getParameter("batch_discharge_program");
-		} else {
-			admitToProgramId="";
-		}
+        admissionManager.saveAdmission(ad);
 
-		String message = "";
+        ActionMessages messages = new ActionMessages();
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
+        saveMessages(request, messages);
 
-		// get clients
-		Enumeration e = request.getParameterNames();
-		while (e.hasMoreElements()) {
-			String name = (String) e.nextElement();
-			if (name.startsWith("checked_") && request.getParameter(name).equals("on")) {
-				String admissionId = name.substring(8);
-				Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
-				if (admission == null) {
-					log.warn("admission #" + admissionId + " not found.");
-					continue;
-				}
-				
-				//temporary admission will not allow batach discharge from bed program.
-				if(admission.isTemporaryAdmission() && "bed".equals(type)){
-					message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
-					continue;
-				}
-				
-				//in case some clients maybe is already in the community program
+        logManager.log("write", "edit program - assign client to team", "", request);
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward assign_status_client(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String admissionId = request.getParameter("admissionId");
+        String statusId = request.getParameter("clientStatusId");
+        String programName = request.getParameter("program_name");
+        Admission ad = admissionManager.getAdmission(Long.valueOf(admissionId));
+
+        ad.setClientStatusId(Integer.valueOf(statusId));
+
+        admissionManager.saveAdmission(ad);
+
+        ActionMessages messages = new ActionMessages();
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("program.saved", programName));
+        saveMessages(request, messages);
+
+        logManager.log("write", "edit program - assign client to status", "", request);
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward batch_discharge(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        log.info("do batch discharge");
+        String type = request.getParameter("type");
+        String admitToProgramId;
+        if (type != null && type.equals("community")) {
+            admitToProgramId = request.getParameter("batch_discharge_community_program");
+        } else if(type!=null && type.equals("bed")){
+            admitToProgramId = request.getParameter("batch_discharge_program");
+        } else {
+            admitToProgramId="";
+        }
+
+        String message = "";
+
+        // get clients
+        Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            if (name.startsWith("checked_") && request.getParameter(name).equals("on")) {
+                String admissionId = name.substring(8);
+                Admission admission = admissionManager.getAdmission(Long.valueOf(admissionId));
+                if (admission == null) {
+                    log.warn("admission #" + admissionId + " not found.");
+                    continue;
+                }
+
+                //temporary admission will not allow batach discharge from bed program.
+                if(admission.isTemporaryAdmission() && "bed".equals(type)){
+                    message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
+                    continue;
+                }
+
+                //in case some clients maybe is already in the community program
                 if (type != null) {
                     if(type.equals("community")) {
                         Integer clientId = admission.getClientId();
@@ -339,134 +388,134 @@ public class ProgramManagerViewAction extends BaseAction {
                 }
                 // lets see if there's room first
                 if(!"service".equals(type)) {
-                	Program programToAdmit = programManager.getProgram(admitToProgramId);
-                	if (programToAdmit == null) {
-                		message += "Admitting program not found!";
-                		continue;
-                	}
-                	if (programToAdmit.getNumOfMembers() >= programToAdmit.getMaxAllowed()) {
-                		message += "Program Full. Cannot admit " + admission.getClient().getFormattedName() + "\n";
-                		continue;
-                	}
+                    Program programToAdmit = programManager.getProgram(admitToProgramId);
+                    if (programToAdmit == null) {
+                        message += "Admitting program not found!";
+                        continue;
+                    }
+                    if (programToAdmit.getNumOfMembers() >= programToAdmit.getMaxAllowed()) {
+                        message += "Program Full. Cannot admit " + admission.getClient().getFormattedName() + "\n";
+                        continue;
+                    }
                 }
-				admission.setDischargeDate(new Date());
-				admission.setDischargeNotes("Batch discharge");
-				admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
-				admissionManager.saveAdmission(admission);
-				
-				//The service program can only be batch discharged, can not be admitted to another program.
-				if(!"service".equals(type)) {
-					Admission newAdmission = new Admission();
-					newAdmission.setAdmissionDate(new Date());
-					newAdmission.setAdmissionNotes("Batch Admit");
-					newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
-					newAdmission.setClientId(admission.getClientId());
-					newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
-					newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));
-					newAdmission.setTeamId(0);
-					newAdmission.setAgencyId(admission.getAgencyId());
+                admission.setDischargeDate(new Date());
+                admission.setDischargeNotes("Batch discharge");
+                admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
+                admissionManager.saveAdmission(admission);
 
-					admissionManager.saveAdmission(newAdmission);
-				}
-			}
-		}
+                //The service program can only be batch discharged, can not be admitted to another program.
+                if(!"service".equals(type)) {
+                    Admission newAdmission = new Admission();
+                    newAdmission.setAdmissionDate(new Date());
+                    newAdmission.setAdmissionNotes("Batch Admit");
+                    newAdmission.setAdmissionStatus(Admission.STATUS_CURRENT);
+                    newAdmission.setClientId(admission.getClientId());
+                    newAdmission.setProgramId(Integer.valueOf(admitToProgramId));
+                    newAdmission.setProviderNo(Long.valueOf(getProviderNo(request)));
+                    newAdmission.setTeamId(0);
+                    newAdmission.setAgencyId(admission.getAgencyId());
 
-		ActionMessages messages = new ActionMessages();
-		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", message));
-		saveMessages(request, messages);
-
-		return view(mapping, form, request, response);
-	}
-
-	public ActionForward reject_from_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String notes = request.getParameter("admission.admissionNotes");
-		String programId = request.getParameter("id");
-		String clientId = request.getParameter("clientId");
-		String rejectionReason = request.getParameter("radioRejectionReason");
-		
-		
-		log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
-
-		programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
-
-		return view(mapping, form, request, response);
-	}
-
-	public ActionForward select_client_for_admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		String programId = request.getParameter("id");
-		String clientId = request.getParameter("clientId");
-		String queueId = request.getParameter("queueId");
-
-		Program program = programManager.getProgram(String.valueOf(programId));
-		ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
-		
-		/*
-		 * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
-		 */
-		if (program.getType().equalsIgnoreCase("bed") && queue != null && !queue.isTemporaryAdmission()) {
-			Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(clientId));
-			if (currentAdmission != null) {
-				log.warn("client already in a bed program..doing a discharge/admit if proceeding");
-				request.setAttribute("current_admission", currentAdmission);
-				request.setAttribute("current_program", programManager.getProgram(String.valueOf(currentAdmission.getProgramId())));
-			}
-		}
-		request.setAttribute("do_admit", Boolean.TRUE);
-
-		return view(mapping, form, request, response);
-	}
-
-	public ActionForward select_client_for_reject(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		request.setAttribute("do_reject", Boolean.TRUE);
-
-		return view(mapping, form, request, response);
-	}
-	
-	public ActionForward saveReservedBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-		ProgramManagerViewFormBean programManagerViewFormBean = (ProgramManagerViewFormBean) form;
-		
-		Bed[] reservedBeds = programManagerViewFormBean.getReservedBeds();
-		
-		for (int i = 0; i < reservedBeds.length; i++) {
-			Bed reservedBed = reservedBeds[i];
-	        
-			// detect check box false
-			if (request.getParameter("reservedBeds[" + i + "].latePass") == null) {
-				reservedBed.setLatePass(false);
-	        }
-	        
-			// save bed
-	        try {
-	            bedManager.saveBed(reservedBed);
-	            
-	            BedDemographic bedDemographic = reservedBed.getBedDemographic();
-	            
-	            if (bedDemographic != null) {
-	            	// save bed demographic
-	            	bedDemographicManager.saveBedDemographic(bedDemographic);
-	            	
-	            	Integer communityProgramId = reservedBed.getCommunityProgramId();
-	            	
-	            	if (communityProgramId > 0) {
-	            		try {
-	            			// discharge to community program
-	            			admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged","0");
-	            		} catch (AdmissionException e) {
-	            			ActionMessages messages = new ActionMessages();
-	            			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
-	            			saveMessages(request, messages);
-	            		}
-	            	}
-	            }
-            } catch (BedReservedException e) {
-    			ActionMessages messages = new ActionMessages();
-    			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
-    			saveMessages(request, messages);
+                    admissionManager.saveAdmission(newAdmission);
+                }
             }
         }
-		
-		return view(mapping, form, request, response);	
-	}
+
+        ActionMessages messages = new ActionMessages();
+        messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("errors.detail", message));
+        saveMessages(request, messages);
+
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward reject_from_queue(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String notes = request.getParameter("admission.admissionNotes");
+        String programId = request.getParameter("id");
+        String clientId = request.getParameter("clientId");
+        String rejectionReason = request.getParameter("radioRejectionReason");
+
+
+        log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
+
+        programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
+
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward select_client_for_admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String programId = request.getParameter("id");
+        String clientId = request.getParameter("clientId");
+        String queueId = request.getParameter("queueId");
+
+        Program program = programManager.getProgram(String.valueOf(programId));
+        ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
+
+        /*
+           * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
+           */
+        if (program.getType().equalsIgnoreCase("bed") && queue != null && !queue.isTemporaryAdmission()) {
+            Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(clientId));
+            if (currentAdmission != null) {
+                log.warn("client already in a bed program..doing a discharge/admit if proceeding");
+                request.setAttribute("current_admission", currentAdmission);
+                request.setAttribute("current_program", programManager.getProgram(String.valueOf(currentAdmission.getProgramId())));
+            }
+        }
+        request.setAttribute("do_admit", Boolean.TRUE);
+
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward select_client_for_reject(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("do_reject", Boolean.TRUE);
+
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward saveReservedBeds(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        ProgramManagerViewFormBean programManagerViewFormBean = (ProgramManagerViewFormBean) form;
+
+        Bed[] reservedBeds = programManagerViewFormBean.getReservedBeds();
+
+        for (int i = 0; i < reservedBeds.length; i++) {
+            Bed reservedBed = reservedBeds[i];
+
+            // detect check box false
+            if (request.getParameter("reservedBeds[" + i + "].latePass") == null) {
+                reservedBed.setLatePass(false);
+            }
+
+            // save bed
+            try {
+                bedManager.saveBed(reservedBed);
+
+                BedDemographic bedDemographic = reservedBed.getBedDemographic();
+
+                if (bedDemographic != null) {
+                    // save bed demographic
+                    bedDemographicManager.saveBedDemographic(bedDemographic);
+
+                    Integer communityProgramId = reservedBed.getCommunityProgramId();
+
+                    if (communityProgramId > 0) {
+                        try {
+                            // discharge to community program
+                            admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged","0");
+                        } catch (AdmissionException e) {
+                            ActionMessages messages = new ActionMessages();
+                            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
+                            saveMessages(request, messages);
+                        }
+                    }
+                }
+            } catch (BedReservedException e) {
+                ActionMessages messages = new ActionMessages();
+                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
+                saveMessages(request, messages);
+            }
+        }
+
+        return view(mapping, form, request, response);
+    }
 
     public ClientRestrictionManager getClientRestrictionManager() {
         return clientRestrictionManager;

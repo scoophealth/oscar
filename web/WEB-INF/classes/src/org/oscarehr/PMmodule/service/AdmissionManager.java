@@ -93,29 +93,35 @@ public class AdmissionManager {
 	}
 
 	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, null);
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, null, false);
 	}
 
 	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null);
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, false);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate);
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, boolean overrideRestriction) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, overrideRestriction);
 	}
 
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+    public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate, false);
+	}
+
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate, boolean overrideRestriction) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		// see if there's room first
 		if (program.getNumOfMembers().intValue() >= program.getMaxAllowed().intValue()) {
 			throw new ProgramFullException();
 		}
 
         // check if there's a service restriction in place on this individual for this program
-        ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(program.getId(), demographicNo, new Date());
-        if (restrInPlace != null) {
-            throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+        if (!overrideRestriction) {
+            ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(program.getId(), demographicNo, new Date());
+            if (restrInPlace != null) {
+                throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+            }
         }
-
+        
         // If admitting to bed program, discharge from old bed program
 		if (program.getType().equalsIgnoreCase("bed") && !tempAdmission) {
 			Admission fullAdmission = getCurrentBedProgramAdmission(demographicNo);

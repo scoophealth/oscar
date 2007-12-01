@@ -166,6 +166,16 @@
 			value="/PMmodule/ClientManager/service_restriction_error.jsp" />
 	</definition>
     <definition
+         name="page.pmm.program.service_restriction_error"
+         path="/PMmodule/layout.jsp">
+         <put
+             name="navigation"
+             value="/PMmodule/navigation.jsp" />
+         <put
+             name="body"
+             value="/PMmodule/Admin/ProgramView/service_restriction_error.jsp" />
+     </definition>
+    <definition
 		name="page.intake.form"
 		path="/PMmodule/layout.jsp">
 		<put

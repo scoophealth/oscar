@@ -10,11 +10,14 @@
 <%@page import="org.oscarehr.PMmodule.model.DemographicExt"%>
 
 
-<html:form action="/PMmodule/ClientManager.do">
+<html:form action="/PMmodule/ProgramManagerView">
 
     <%@ include file="/common/messages.jsp"%>
 
     <input type="hidden" name="method" value="override_restriction" />
+    <html:hidden property="clientId" />
+    <html:hidden property="queueId" />
+    <input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />
 
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>

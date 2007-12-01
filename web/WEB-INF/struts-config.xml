@@ -1336,6 +1336,8 @@
             <forward name="view" path="page.pmm.admin.view" />
             <forward name="viewBedReservationChangeReport" path="/PMmodule/Admin/ProgramView/bed_reservation_change_report.jsp" />
             <forward name="viewBedCheckReport" path="/PMmodule/Admin/ProgramView/bed_check_report.jsp" />
+            <forward name="service_restriction_error" path="page.pmm.program.service_restriction_error"/>
+
         </action>
         <action path="/PMmodule/AgencyManager" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" name="agencyManagerForm" scope="session">
             <forward name="view" path="page.pmm.admin.agency.view" />
