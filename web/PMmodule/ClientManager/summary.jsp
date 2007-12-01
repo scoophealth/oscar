@@ -92,19 +92,12 @@ function goToClient(clientId){
 }
 
 function openSurvey() {	
-
-	var selectBox = document.getElementById('form.formId');	alert("111");
-	
-	var formId = selectBox.options[selectBox.selectedIndex].value;	alert("2222");
-	
+	var selectBox = getElement('form.formId');		
+	var formId = selectBox.options[selectBox.selectedIndex].value;	
 	document.clientManagerForm.clientId.value='<c:out value="${client.demographicNo}"/>';
-	document.clientManagerForm.formId.value=formId;
-	alert("3333");
-	var id = document.getElementById('formInstanceId').value; alert("444");
-	
+	document.clientManagerForm.formId.value=formId;	
+	var id = document.getElementById('formInstanceId').value; 	
 	location.href = '<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
-	//url='<html:rewrite action="/PMmodule/Forms/SurveyExecute.do"/>' + "?method=survey&formId=" + formId + "&formInstanceId=" + id + "&clientId=" + '<c:out value="${client.demographicNo}"/>';
-	//popupPage(url);
 }
 
 </script>
