@@ -1,4 +1,4 @@
-#Table to join dependents to clients
+-- Table to join dependents to clients
 
 CREATE TABLE `joint_admissions` (
   `id` bigint(11) NOT NULL auto_increment,
