@@ -1373,6 +1373,7 @@
             <forward name="links" path="/PMmodule/ClientManager/links.jsp" />
             <forward name="view_referral" path="/PMmodule/ClientManager/view_referral.jsp"/>
             <forward name="view_admission" path="/PMmodule/ClientManager/view_admission.jsp"/>
+            <forward name="service_restriction_error" path="page.pmm.client.service_restriction_error"/>
         </action>
         <action path="/PMmodule/ProviderInfo" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request">
             <forward name="view" path="page.pmm.provider.view" />

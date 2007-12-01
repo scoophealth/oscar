@@ -331,7 +331,15 @@ public class ClientManagerAction extends BaseAction {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
             saveMessages(request, messages);
-            success = false;
+
+            // store this for display
+            clientForm.set("serviceRestriction", e.getRestriction());
+
+            // going to need this in case of override
+            clientForm.set("referral", referral);
+
+            // jump to service restriction error page to allow overrides, etc.
+            return mapping.findForward("service_restriction_error");
         }
 
         if (success) {
@@ -380,7 +388,7 @@ public class ClientManagerAction extends BaseAction {
         restriction.setProviderNo(getProviderNo(request));
         Calendar cal = new GregorianCalendar();
         cal.setTime(new Date());
-        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + days) ;        
+        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + days) ;
         restriction.setEndDate(cal.getTime());
         restriction.setEnabled(true);
 
@@ -425,6 +433,48 @@ public class ClientManagerAction extends BaseAction {
         request.setAttribute("program", program);
 
         return mapping.findForward("edit");
+    }
+
+    public ActionForward override_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm clientForm = (DynaActionForm) form;
+        ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");
+
+        if (isCancelled(request)) {
+            return mapping.findForward("edit");
+        }
+        ClientReferral referral = (ClientReferral) clientForm.get("referral");
+
+        boolean success = true;
+        try {
+            clientManager.processReferral(referral, true);
+        } catch (AlreadyAdmittedException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_admitted"));
+            saveMessages(request, messages);
+            success = false;
+        } catch (AlreadyQueuedException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_referred"));
+            saveMessages(request, messages);
+            success = false;
+        } catch (ServiceRestrictionException e) {
+            throw new RuntimeException("service restriction encountered during override");
+        }
+
+        if (success) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.success"));
+            saveMessages(request, messages);
+        }
+
+        clientForm.set("program", new Program());
+        clientForm.set("referral", new ClientReferral());
+        setEditAttributes(form, request, "" + referral.getClientId());
+        logManager.log("write", "referral", "" + referral.getClientId(), request);
+
+        return mapping.findForward("edit");
+
+
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

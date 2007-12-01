@@ -41,6 +41,10 @@ public class ProgramClientRestriction implements Serializable {
         return providerNo;
     }
 
+    public long getDaysRemaining() {
+        return (this.getEndDate().getTime() - this.getStartDate().getTime()) / 1000 / 60 / 60 / 24;
+    }
+
     public void setProviderNo(String providerNo) {
         this.providerNo = providerNo;
     }

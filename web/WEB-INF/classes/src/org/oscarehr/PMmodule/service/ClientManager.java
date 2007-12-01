@@ -41,228 +41,234 @@ import java.util.List;
 
 public class ClientManager {
 
-	private static Log log = LogFactory.getLog(ClientManager.class);
+    private static Log log = LogFactory.getLog(ClientManager.class);
 
-	private ClientDao dao;
-	private ClientReferralDAO referralDAO;
+    private ClientDao dao;
+    private ClientReferralDAO referralDAO;
     private JointAdmissionDAO jointAdmissionDAO;
-	private ProgramQueueManager queueManager;
-	private IntegratorManager integratorManager;
-	private AdmissionManager admissionManager;
-	private AgencyManager agencyManager;
+    private ProgramQueueManager queueManager;
+    private IntegratorManager integratorManager;
+    private AdmissionManager admissionManager;
+    private AgencyManager agencyManager;
     private ClientRestrictionManager clientRestrictionManager;
 
     private boolean outsideOfDomainEnabled;
-	
-	public boolean isOutsideOfDomainEnabled() {
-		return outsideOfDomainEnabled;
-	}
+
+    public boolean isOutsideOfDomainEnabled() {
+        return outsideOfDomainEnabled;
+    }
 
     public Demographic getClientByDemographicNo(String demographicNo) {
-		if (demographicNo == null || demographicNo.length() == 0) {
-			return null;
-		}
-		return dao.getClientByDemographicNo(Integer.valueOf(demographicNo));
-	}
+        if (demographicNo == null || demographicNo.length() == 0) {
+            return null;
+        }
+        return dao.getClientByDemographicNo(Integer.valueOf(demographicNo));
+    }
 
-	public List getClients() {
-		return dao.getClients();
-	}
+    public List getClients() {
+        return dao.getClients();
+    }
 
-	public List<Demographic> search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
-		return dao.search(criteria, returnOptinsOnly);
-	}
+    public List<Demographic> search(ClientSearchFormBean criteria, boolean returnOptinsOnly) {
+        return dao.search(criteria, returnOptinsOnly);
+    }
 
-	public java.util.Date getMostRecentIntakeADate(String demographicNo) {
-		return dao.getMostRecentIntakeADate(Integer.valueOf(demographicNo));
-	}
+    public java.util.Date getMostRecentIntakeADate(String demographicNo) {
+        return dao.getMostRecentIntakeADate(Integer.valueOf(demographicNo));
+    }
 
-	public java.util.Date getMostRecentIntakeCDate(String demographicNo) {
-		return dao.getMostRecentIntakeCDate(Integer.valueOf(demographicNo));
-	}
+    public java.util.Date getMostRecentIntakeCDate(String demographicNo) {
+        return dao.getMostRecentIntakeCDate(Integer.valueOf(demographicNo));
+    }
 
-	public String getMostRecentIntakeAProvider(String demographicNo) {
-		return dao.getMostRecentIntakeAProvider(Integer.valueOf(demographicNo));
-	}
+    public String getMostRecentIntakeAProvider(String demographicNo) {
+        return dao.getMostRecentIntakeAProvider(Integer.valueOf(demographicNo));
+    }
 
-	public String getMostRecentIntakeCProvider(String demographicNo) {
-		return dao.getMostRecentIntakeCProvider(Integer.valueOf(demographicNo));
-	}
+    public String getMostRecentIntakeCProvider(String demographicNo) {
+        return dao.getMostRecentIntakeCProvider(Integer.valueOf(demographicNo));
+    }
 
-	public List getReferrals() {
-		return referralDAO.getReferrals();
-	}
+    public List getReferrals() {
+        return referralDAO.getReferrals();
+    }
 
-	public List getReferrals(String clientId) {
-		return referralDAO.getReferrals(Long.valueOf(clientId));
-	}
+    public List getReferrals(String clientId) {
+        return referralDAO.getReferrals(Long.valueOf(clientId));
+    }
 
-	public List getActiveReferrals(String clientId) {
-		List results = referralDAO.getActiveReferrals(Long.valueOf(clientId));
-		for (Iterator iter = results.iterator(); iter.hasNext();) {
-			ClientReferral referral = (ClientReferral) iter.next();
-			if (referral.getAgencyId().longValue() > 0) {
-				try {
+    public List getActiveReferrals(String clientId) {
+        List results = referralDAO.getActiveReferrals(Long.valueOf(clientId));
+        for (Iterator iter = results.iterator(); iter.hasNext();) {
+            ClientReferral referral = (ClientReferral) iter.next();
+            if (referral.getAgencyId().longValue() > 0) {
+                try {
 // TODO : this part needs to be redone. Xfire should not be proliferated up to here
 //					Program p = integratorManager.getProgram(referral.getAgencyId(), referral.getProgramId());
 //					referral.setProgramName(p.getName());
-				} catch (org.codehaus.xfire.XFireRuntimeException ex) {
-					log.error(ex);
-					referral.setProgramName("<Unavailable>");
-				} catch (IntegratorNotEnabledException e) {
-					log.error(e);
-					referral.setProgramName("<Unavailable>");
-				}
-			}
-		}
-		return results;
-	}
-
-	public ClientReferral getClientReferral(String id) {
-		return referralDAO.getClientReferral(Long.valueOf(id));
-	}
-
-	/*
-	 * This should always be a new one. add the queue to the program.
-	 */
-	public void saveClientReferral(ClientReferral referral) {
-
-		referralDAO.saveClientReferral(referral);
-
-		if (referral.getStatus().equalsIgnoreCase(ClientReferral.STATUS_ACTIVE)) {
-			ProgramQueue queue = new ProgramQueue();
-			queue.setAgencyId(referral.getAgencyId());
-			queue.setClientId(referral.getClientId());
-			queue.setNotes(referral.getNotes());
-			queue.setProgramId(referral.getProgramId());
-			queue.setProviderNo(referral.getProviderNo());
-			queue.setReferralDate(referral.getReferralDate());
-			queue.setStatus(ProgramQueue.STATUS_ACTIVE);
-			queue.setReferralId(referral.getId());
-			queue.setTemporaryAdmission(referral.isTemporaryAdmission());
-			queue.setPresentProblems(referral.getPresentProblems());
-			
-			queueManager.saveProgramQueue(queue);
-		}
-	}
-
-	public List searchReferrals(ClientReferral referral) {
-		return referralDAO.search(referral);
-	}
-        
-        public void saveJointAdmission(JointAdmission admission) {
-            if (admission == null) {
-                throw new IllegalArgumentException();
+                } catch (org.codehaus.xfire.XFireRuntimeException ex) {
+                    log.error(ex);
+                    referral.setProgramName("<Unavailable>");
+                } catch (IntegratorNotEnabledException e) {
+                    log.error(e);
+                    referral.setProgramName("<Unavailable>");
+                }
             }
+        }
+        return results;
+    }
 
-            jointAdmissionDAO.saveJointAdmission(admission);
+    public ClientReferral getClientReferral(String id) {
+        return referralDAO.getClientReferral(Long.valueOf(id));
+    }
+
+    /*
+      * This should always be a new one. add the queue to the program.
+      */
+    public void saveClientReferral(ClientReferral referral) {
+
+        referralDAO.saveClientReferral(referral);
+
+        if (referral.getStatus().equalsIgnoreCase(ClientReferral.STATUS_ACTIVE)) {
+            ProgramQueue queue = new ProgramQueue();
+            queue.setAgencyId(referral.getAgencyId());
+            queue.setClientId(referral.getClientId());
+            queue.setNotes(referral.getNotes());
+            queue.setProgramId(referral.getProgramId());
+            queue.setProviderNo(referral.getProviderNo());
+            queue.setReferralDate(referral.getReferralDate());
+            queue.setStatus(ProgramQueue.STATUS_ACTIVE);
+            queue.setReferralId(referral.getId());
+            queue.setTemporaryAdmission(referral.isTemporaryAdmission());
+            queue.setPresentProblems(referral.getPresentProblems());
+
+            queueManager.saveProgramQueue(queue);
         }
-        
-        public List<JointAdmission> getDependents(Long clientId){
-            return jointAdmissionDAO.getSpouseAndDependents( clientId);
-        }
-        
-        public JointAdmission getJointAdmission(Long clientId){
-            return jointAdmissionDAO.getJointAdmission(clientId);
-        }
-        
-        public void removeJointAdmission(Long clientId,String providerNo){
-            jointAdmissionDAO.removeJointAdmission(clientId,providerNo);
-        }
-        
-        public void removeJointAdmission(JointAdmission admission){
-            jointAdmissionDAO.removeJointAdmission(admission);
+    }
+
+    public List searchReferrals(ClientReferral referral) {
+        return referralDAO.search(referral);
+    }
+
+    public void saveJointAdmission(JointAdmission admission) {
+        if (admission == null) {
+            throw new IllegalArgumentException();
         }
 
-	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException, ServiceRestrictionException {
-        // check if there's a service restriction in place on this individual for this program
-        ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(referral.getProgramId().intValue(), referral.getClientId().intValue(), new Date());
-        if (restrInPlace != null) {
-            throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+        jointAdmissionDAO.saveJointAdmission(admission);
+    }
+
+    public List<JointAdmission> getDependents(Long clientId){
+        return jointAdmissionDAO.getSpouseAndDependents( clientId);
+    }
+
+    public JointAdmission getJointAdmission(Long clientId){
+        return jointAdmissionDAO.getJointAdmission(clientId);
+    }
+
+    public void removeJointAdmission(Long clientId,String providerNo){
+        jointAdmissionDAO.removeJointAdmission(clientId,providerNo);
+    }
+
+    public void removeJointAdmission(JointAdmission admission){
+        jointAdmissionDAO.removeJointAdmission(admission);
+    }
+
+    public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException, ServiceRestrictionException {
+        processReferral(referral, false);
+    }
+
+    public void processReferral(ClientReferral referral, boolean override) throws AlreadyAdmittedException, AlreadyQueuedException, ServiceRestrictionException {
+        if (!override) {
+            // check if there's a service restriction in place on this individual for this program
+            ProgramClientRestriction restrInPlace = clientRestrictionManager.checkClientRestriction(referral.getProgramId().intValue(), referral.getClientId().intValue(), new Date());
+            if (restrInPlace != null) {
+                throw new ServiceRestrictionException("service restriction in place", restrInPlace);
+            }
         }
 
         Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
-		if (currentAdmission != null) {
-			referral.setStatus(ClientReferral.STATUS_REJECTED);
-			referral.setCompletionNotes("Client currently admitted");
-			referral.setCompletionDate(new Date());
-			
-			saveClientReferral(referral);
-			throw new AlreadyAdmittedException();
-		}
+        if (currentAdmission != null) {
+            referral.setStatus(ClientReferral.STATUS_REJECTED);
+            referral.setCompletionNotes("Client currently admitted");
+            referral.setCompletionDate(new Date());
 
-		ProgramQueue queue = queueManager.getActiveProgramQueue(String.valueOf(referral.getProgramId()), String.valueOf(referral.getClientId()));
-		if (queue != null) {
-			referral.setStatus(ClientReferral.STATUS_REJECTED);
-			referral.setCompletionNotes("Client already in queue");
-			referral.setCompletionDate(new Date());
-			
-			saveClientReferral(referral);
-			throw new AlreadyQueuedException();
-		}
+            saveClientReferral(referral);
+            throw new AlreadyAdmittedException();
+        }
 
-		saveClientReferral(referral);
-	}
+        ProgramQueue queue = queueManager.getActiveProgramQueue(String.valueOf(referral.getProgramId()), String.valueOf(referral.getClientId()));
+        if (queue != null) {
+            referral.setStatus(ClientReferral.STATUS_REJECTED);
+            referral.setCompletionNotes("Client already in queue");
+            referral.setCompletionDate(new Date());
 
-	public void processRemoteReferral(ClientReferral referral) {
-		/*
-		 * Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getId()),id); if(currentAdmission != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client currently admitted"); referral.setCompletionDate(new Date()); } ProgramQueue queue =
-		 * queueManager.getActiveProgramQueue(String.valueOf(program.getId()),id); if(queue != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client already in queue"); referral.setCompletionDate(new Date()); }
-		 */
-		ProgramQueue queue = new ProgramQueue();
-		queue.setAgencyId(referral.getSourceAgencyId());
-		queue.setClientId(referral.getClientId());
-		queue.setNotes(referral.getNotes());
-		queue.setProgramId(referral.getProgramId());
-		queue.setProviderNo(referral.getProviderNo());
-		queue.setReferralDate(referral.getReferralDate());
-		queue.setStatus(ProgramQueue.STATUS_ACTIVE);
-		queue.setReferralId(referral.getId());
-		queue.setTemporaryAdmission(referral.isTemporaryAdmission());
-		queueManager.saveProgramQueue(queue);
+            saveClientReferral(referral);
+            throw new AlreadyQueuedException();
+        }
 
-		referral.setStatus(ClientReferral.STATUS_ACTIVE);
+        saveClientReferral(referral);
+    }
 
-		// send back jms message
-		integratorManager.sendReferral(referral.getSourceAgencyId(), referral);
-	}
+    public void processRemoteReferral(ClientReferral referral) {
+        /*
+           * Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getId()),id); if(currentAdmission != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client currently admitted"); referral.setCompletionDate(new Date()); } ProgramQueue queue =
+           * queueManager.getActiveProgramQueue(String.valueOf(program.getId()),id); if(queue != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client already in queue"); referral.setCompletionDate(new Date()); }
+           */
+        ProgramQueue queue = new ProgramQueue();
+        queue.setAgencyId(referral.getSourceAgencyId());
+        queue.setClientId(referral.getClientId());
+        queue.setNotes(referral.getNotes());
+        queue.setProgramId(referral.getProgramId());
+        queue.setProviderNo(referral.getProviderNo());
+        queue.setReferralDate(referral.getReferralDate());
+        queue.setStatus(ProgramQueue.STATUS_ACTIVE);
+        queue.setReferralId(referral.getId());
+        queue.setTemporaryAdmission(referral.isTemporaryAdmission());
+        queueManager.saveProgramQueue(queue);
 
-	public void saveClient(Demographic client) {
-		dao.saveClient(client);
-	}
+        referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
-	public ClientReferral getReferralToRemoteAgency(long clientId, long agencyId, long programId) {
-		referralDAO.getReferralToRemoteAgency(clientId, agencyId, programId);
-		return null;
-	}
+        // send back jms message
+        integratorManager.sendReferral(referral.getSourceAgencyId(), referral);
+    }
 
-	public DemographicExt getDemographicExt(String id) {
-		return dao.getDemographicExt(Integer.valueOf(id));
-	}
+    public void saveClient(Demographic client) {
+        dao.saveClient(client);
+    }
 
-	public List getDemographicExtByDemographicNo(Integer demographicNo) {
-		return dao.getDemographicExtByDemographicNo(demographicNo);
-	}
+    public ClientReferral getReferralToRemoteAgency(long clientId, long agencyId, long programId) {
+        referralDAO.getReferralToRemoteAgency(clientId, agencyId, programId);
+        return null;
+    }
 
-	public DemographicExt getDemographicExt(Integer demographicNo, String key) {
-		return dao.getDemographicExt(demographicNo, key);
-	}
+    public DemographicExt getDemographicExt(String id) {
+        return dao.getDemographicExt(Integer.valueOf(id));
+    }
 
-	public void updateDemographicExt(DemographicExt de) {
-		dao.updateDemographicExt(de);
-	}
+    public List getDemographicExtByDemographicNo(Integer demographicNo) {
+        return dao.getDemographicExtByDemographicNo(demographicNo);
+    }
 
-	public void saveDemographicExt(Integer demographicNo, String key, String value) {
-		dao.saveDemographicExt(demographicNo, key, value);
-	}
+    public DemographicExt getDemographicExt(Integer demographicNo, String key) {
+        return dao.getDemographicExt(demographicNo, key);
+    }
 
-	public void removeDemographicExt(String id) {
-		dao.removeDemographicExt(Integer.valueOf(id));
-	}
+    public void updateDemographicExt(DemographicExt de) {
+        dao.updateDemographicExt(de);
+    }
 
-	public void removeDemographicExt(Integer demographicNo, String key) {
-		dao.removeDemographicExt(demographicNo, key);
-	}
+    public void saveDemographicExt(Integer demographicNo, String key, String value) {
+        dao.saveDemographicExt(demographicNo, key, value);
+    }
+
+    public void removeDemographicExt(String id) {
+        dao.removeDemographicExt(Integer.valueOf(id));
+    }
+
+    public void removeDemographicExt(Integer demographicNo, String key) {
+        dao.removeDemographicExt(demographicNo, key);
+    }
 
     public void setJointAdmissionDAO(JointAdmissionDAO jointAdmissionDAO) {
         this.jointAdmissionDAO = jointAdmissionDAO;
@@ -274,33 +280,33 @@ public class ClientManager {
 
     @Required
     public void setClientDao(ClientDao dao) {
-		this.dao = dao;
-	}
+        this.dao = dao;
+    }
 
     @Required
     public void setClientReferralDAO(ClientReferralDAO dao) {
-		this.referralDAO = dao;
-	}
+        this.referralDAO = dao;
+    }
 
     @Required
     public void setProgramQueueManager(ProgramQueueManager mgr) {
-		this.queueManager = mgr;
-	}
+        this.queueManager = mgr;
+    }
 
     @Required
     public void setAdmissionManager(AdmissionManager mgr) {
-		this.admissionManager = mgr;
-	}
+        this.admissionManager = mgr;
+    }
 
     @Required
-	public void setIntegratorManager(IntegratorManager mgr) {
-		this.integratorManager = mgr;
-	}
+    public void setIntegratorManager(IntegratorManager mgr) {
+        this.integratorManager = mgr;
+    }
 
     @Required
     public void setAgencyManager(AgencyManager mgr) {
-		this.agencyManager = mgr;
-	}
+        this.agencyManager = mgr;
+    }
 
     @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
@@ -309,8 +315,8 @@ public class ClientManager {
 
     @Required
     public void setOutsideOfDomainEnabled(boolean outsideOfDomainEnabled) {
-		this.outsideOfDomainEnabled = outsideOfDomainEnabled;
-	}
+        this.outsideOfDomainEnabled = outsideOfDomainEnabled;
+    }
 
 
 }

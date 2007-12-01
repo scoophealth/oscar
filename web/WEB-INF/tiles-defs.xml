@@ -144,7 +144,8 @@
 			name="body"
 			value="/PMmodule/ClientSearchResults.jsp" />
 	</definition>
-	<definition
+
+    <definition
 		name="page.pmm.client"
 		path="/PMmodule/layout.jsp">
 		<put
@@ -154,7 +155,17 @@
 			name="body"
 			value="/PMmodule/ClientManager.jsp" />
 	</definition>
-	<definition
+   <definition
+		name="page.pmm.client.service_restriction_error"
+		path="/PMmodule/layout.jsp">
+		<put
+			name="navigation"
+			value="/PMmodule/navigation.jsp" />
+		<put
+			name="body"
+			value="/PMmodule/ClientManager/service_restriction_error.jsp" />
+	</definition>
+    <definition
 		name="page.intake.form"
 		path="/PMmodule/layout.jsp">
 		<put
