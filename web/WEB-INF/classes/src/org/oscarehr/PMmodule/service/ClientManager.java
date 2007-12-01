@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
+import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
@@ -37,6 +38,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
+import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
@@ -48,6 +50,8 @@ public class ClientManager {
 	private ClientDao dao;
 
 	private ClientReferralDAO referralDAO;
+        
+        private JointAdmissionDAO jointAdmissionDAO;
 
 	private ProgramQueueManager queueManager;
 
@@ -182,6 +186,30 @@ public class ClientManager {
 	public List searchReferrals(ClientReferral referral) {
 		return referralDAO.search(referral);
 	}
+        
+        public void saveJointAdmission(JointAdmission admission) {
+            if (admission == null) {
+                throw new IllegalArgumentException();
+            }
+
+            jointAdmissionDAO.saveJointAdmission(admission);
+        }
+        
+        public List<JointAdmission> getDependents(Long clientId){
+            return jointAdmissionDAO.getSpouseAndDependents( clientId);
+        }
+        
+        public JointAdmission getJointAdmission(Long clientId){
+            return jointAdmissionDAO.getJointAdmission(clientId);
+        }
+        
+        public void removeJointAdmission(Long clientId,String providerNo){
+            jointAdmissionDAO.removeJointAdmission(clientId,providerNo);
+        }
+        
+        public void removeJointAdmission(JointAdmission admission){
+            jointAdmissionDAO.removeJointAdmission(admission);
+        }
 
 	public void processReferral(ClientReferral referral) throws AlreadyAdmittedException, AlreadyQueuedException {
 		Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(referral.getProgramId()), referral.getClientId().intValue());
@@ -266,5 +294,13 @@ public class ClientManager {
 	public void removeDemographicExt(Integer demographicNo, String key) {
 		dao.removeDemographicExt(demographicNo, key);
 	}
+
+    public void setJointAdmissionDAO(JointAdmissionDAO jointAdmissionDAO) {
+        this.jointAdmissionDAO = jointAdmissionDAO;
+    }
+
+    //public JointAdmission getJointAdmission(Long demoLong) {
+    //    return jointAdmissionDAO.getJointAdmission(demoLong);
+    //}
 	
 }
