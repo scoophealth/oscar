@@ -15,6 +15,7 @@ import java.util.List;
 public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     private DemographicDAO demographicDAOT;
     private ProgramDao programDao;
+    private ProviderDao providerDao;
 
     private static Log log = LogFactory.getLog(ProgramClientRestrictionDAO.class);
 
@@ -43,10 +44,20 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
         return pcrs;
     }
 
+
+    public Collection<ProgramClientRestriction> findForClient(int demographicNo) {
+        Collection<ProgramClientRestriction> pcrs = getHibernateTemplate().find("from ProgramClientRestriction pcr where pcr.enabled = true and pcr.demographicNo = ? order by pcr.programId", demographicNo);
+        for (ProgramClientRestriction pcr : pcrs) {
+            setRelationships(pcr);
+        }
+        return pcrs;
+    }
+
     private ProgramClientRestriction setRelationships(ProgramClientRestriction pcr) {
         pcr.setClient(demographicDAOT.getDemographic("" + pcr.getDemographicNo()));
         pcr.setProgram(programDao.getProgram(pcr.getProgramId()));
-
+        pcr.setProvider(providerDao.getProvider(pcr.getProviderNo()));
+        
         return pcr;
     }
 
@@ -59,4 +70,10 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
     public void setProgramDao(ProgramDao programDao) {
         this.programDao = programDao;
     }
+
+    @Required
+    public void setProviderDao(ProviderDao providerDao) {
+        this.providerDao = providerDao;
+    }
+
 }

@@ -393,6 +393,7 @@ public class Provider implements Serializable {
         this._rmaNo = _rmaNo;
     }
 
+   
     public ComparatorName ComparatorName() {
         return new ComparatorName();
     }

@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.service;
 
 import org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO;
+import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 
 import java.util.ArrayList;
@@ -43,11 +44,24 @@ public class ClientRestrictionManager {
         List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
         if (pcrs != null && !pcrs.isEmpty()) {
             for (ProgramClientRestriction pcr : pcrs) {
-                if (pcr.getStartDate().getTime() >= asOfDate.getTime() && pcr.getEndDate().getTime() <= pcr.getEndDate().getTime())
+                if (pcr.getStartDate().getTime() <= asOfDate.getTime() && pcr.getEndDate().getTime() <= pcr.getEndDate().getTime())
                     returnPcrs.add(pcr);
             }
         }
-        return returnPcrs;        
+        return returnPcrs;
+    }
+
+    public List<ProgramClientRestriction> getActiveRestrictionsForClient(int demographicNo, Date asOfDate) {
+        // check dao for restriction
+        Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findForClient(demographicNo);
+        List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
+        if (pcrs != null && !pcrs.isEmpty()) {
+            for (ProgramClientRestriction pcr : pcrs) {
+                if (pcr.getStartDate().getTime() <= asOfDate.getTime() && pcr.getEndDate().getTime() <= pcr.getEndDate().getTime())
+                    returnPcrs.add(pcr);
+            }
+        }
+        return returnPcrs;
     }
 
     public ProgramClientRestriction checkClientRestriction(int programId, int demographicNo, Date asOfDate) {
@@ -62,14 +76,25 @@ public class ClientRestrictionManager {
         return null;
     }
 
-    public void saveClientRestriction(ProgramClientRestriction restriction) {
+    public void saveClientRestriction(ProgramClientRestriction restriction) throws ClientAlreadyRestrictedException {
+        if (restriction.getId() == null) {
+            ProgramClientRestriction result = checkClientRestriction(restriction.getProgramId(), restriction.getDemographicNo(), new Date());
+            if (result != null)
+                throw new ClientAlreadyRestrictedException("the client has already been service restricted in this program");
+        }
+
         programClientRestrictionDAO.save(restriction);
     }
 
     public void disableClientRestriction(int restrictionId) {
         ProgramClientRestriction pcr = programClientRestrictionDAO.find(restrictionId);
         pcr.setEnabled(false);
-        saveClientRestriction(pcr);
+        try {
+            saveClientRestriction(pcr);
+        } catch (ClientAlreadyRestrictedException e) {
+            // this exception should not happen here, so toss it up as a runtime exception to be caught higher up
+            throw new RuntimeException(e);
+        }
     }
 
     public ProgramClientRestrictionDAO getProgramClientRestrictionDAO() {

@@ -13,3 +13,7 @@ CREATE TABLE `joint_admissions` (
   KEY `client_id` (`client_id`),
   KEY `head_client_id` (`head_client_id`)
 );
+
+ALTER TABLE `program_client_restriction` ADD COLUMN provider_no varchar(6) NOT NULL;
+ALTER TABLE `program_client_restriction` ADD CONSTRAINT `FK_pcr_provider` FOREIGN KEY (`provider_no`) REFERENCES `provider` (`provider_no`)
+ALTER TABLE `program_client_restriction` DROP KEY idx_program_gender_restr;

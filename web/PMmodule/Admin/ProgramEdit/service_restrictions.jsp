@@ -29,21 +29,23 @@
             <th title="Service Restrictions">Service Restrictions</th>
         </tr>
     </table>
-
-    <display:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="service_restriction" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
-        <display:setProperty name="paging.banner.placement" value="bottom" />
-        <display:setProperty name="basic.msg.empty_list" value="No service restrictions currently in place for this program." />
-        <display:column sortable="false" title="">
-            <a onclick="deleteRestriction('<c:out value="${restriction.id}"/>');" href="javascript:void(0);"> Delete </a>
-        </display:column>
-        <display:column sortable="false" title="">
-            <a onclick="editRestriction('<c:out value="${restriction.id}"/>');" href="javascript:void(0);"> Edit </a>
-        </display:column>
-        <display:column property="id" sortable="true" title="Id" />
-        <display:column property="client.formattedName" sortable="true" title="Client" />
-        <display:column property="startDate" sortable="true" title="Start date" />
-        <display:column property="endDate" sortable="true" title="End date" />
-        <display:column property="comments" sortable="true" title="Comments" />
-    </display:table>
-
 </div>
+
+<display:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="service_restriction" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+    <display:setProperty name="paging.banner.placement" value="bottom" />
+    <display:setProperty name="basic.msg.empty_list" value="No service restrictions currently in place for this program." />
+    <display:column sortable="false" title="">
+        <a onclick="deleteRestriction('<c:out value="${restriction.id}"/>');" href="javascript:void(0);"> Delete </a>
+    </display:column>
+    <display:column sortable="false" title="">
+        <a onclick="editRestriction('<c:out value="${restriction.id}"/>');" href="javascript:void(0);"> Edit </a>
+    </display:column>
+    <display:column property="id" sortable="true" title="Id" />
+    <display:column property="client.formattedName" sortable="true" title="Client" />
+    <display:column property="provider.formattedName" sortable="true" title="Restricted By"/>
+    <display:column property="comments" sortable="true" title="Comments" />
+    <display:column property="startDate" sortable="true" title="Start date" />
+    <display:column property="endDate" sortable="true" title="End date" />
+
+</display:table>
+

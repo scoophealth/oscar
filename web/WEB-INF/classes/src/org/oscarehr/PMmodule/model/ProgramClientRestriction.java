@@ -11,6 +11,7 @@ public class ProgramClientRestriction implements Serializable {
     private Integer id;
     private int programId;
     private int demographicNo;
+    private String providerNo;
     private String comments;
     private Date startDate;
     private Date endDate;
@@ -18,18 +19,30 @@ public class ProgramClientRestriction implements Serializable {
 
     private Program program;
     private Demographic client;
+    private Provider provider;
 
     public ProgramClientRestriction() {
     }
 
-    public ProgramClientRestriction(int id, int programId, int demographicNo, String comments, Date startDate, Date endDate, boolean enabled) {
+    public ProgramClientRestriction(Integer id, int programId, int demographicNo, String providerNo, String comments, Date startDate, Date endDate, boolean enabled, Program program, Demographic client) {
         this.id = id;
         this.programId = programId;
         this.demographicNo = demographicNo;
+        this.providerNo = providerNo;
         this.comments = comments;
         this.startDate = startDate;
         this.endDate = endDate;
         this.enabled = enabled;
+        this.program = program;
+        this.client = client;
+    }
+
+    public String getProviderNo() {
+        return providerNo;
+    }
+
+    public void setProviderNo(String providerNo) {
+        this.providerNo = providerNo;
     }
 
     public Integer getId() {
@@ -102,6 +115,14 @@ public class ProgramClientRestriction implements Serializable {
 
     public void setClient(Demographic client) {
         this.client = client;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
     public boolean equals(Object o) {

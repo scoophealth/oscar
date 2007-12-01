@@ -24,6 +24,7 @@
 		</id>
 		<property name="programId" column="program_id" type="integer" not-null="false" length="10" />
         <property name="demographicNo" column="demographic_no" type="integer" not-null="false" length="10" />
+        <property name="providerNo" column="provider_no" type="string" not-null="false" length="6" />
         <property name="comments" column="comments" type="string" not-null="true" length="255"/>
         <property name="startDate" column="start_date" type="date" not-null="true"/>
         <property name="endDate" column="end_date" type="date" not-null="true"/>
