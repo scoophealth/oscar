@@ -81,6 +81,16 @@ function updateSharingOpting(state) {
 	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=update_sharing_opting&state="+state+"&id=<c:out value='${client.demographicNo}'/>";
 }
 
+function saveJointAdmission(clientId,headClientId,jType){
+	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=save_joint_admission&clientId=<c:out value='${client.demographicNo}'/>&headClientId="+headClientId+"&dependentClientId="+clientId+"&type="+jType;
+}
+function removeJointAdmission(clientId){
+	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=remove_joint_admission&clientId=<c:out value='${client.demographicNo}'/>&dependentClientId="+clientId;
+}
+function goToClient(clientId){
+	location.href = '<html:rewrite action="/PMmodule/ClientManager.do"/>' + "?method=edit&clientId="+clientId;
+}
+
 function openSurvey() {	
 
 	var selectBox = document.getElementById('form.formId');	alert("111");
@@ -164,7 +174,12 @@ function openSurvey() {
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th>Family</th>
+			<th>
+                            Family
+                            <c:if test="${groupHead != null}">
+                                -- <c:out value="${client.formattedName}" /> ( HEAD )
+                            </c:if>
+                        </th>
 		</tr>
 	</table>
 </div>
@@ -181,21 +196,64 @@ function openSurvey() {
         </c:when>
         <c:otherwise>
             <thead>
+                <th>Name</th>
                 <th>Relation</th>
-                <th>Name</th> 
-                <th>Phone</th>
+                <th>Status</th>
+                <th>Joint Admission</th>
+                <th>Age</th>
             </thead>
             <c:forEach var="rHash" items="${relations}">
                 <tr>
+                        <td>
+                            <a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?method=edit&id=<c:out value="${rHash['demographicNo']}"/>">
+                                <c:out value="${rHash['lastName']}"/>, <c:out value="${rHash['firstName']}"/>
+                            </a><!-- <c:out value="${rHash}"/> -->
+                        </td> 
                         <td><c:out value="${rHash['relation']}"/></td>
-                        <td><c:out value="${rHash['lastName']}"/>, <c:out value="${rHash['firstName']}"/></td> 
-                        <td><c:out value="${rHash['phone']}"/></td>
-                        
+                        <td>
+                            <c:choose>
+                                <c:when test="${rHash['dependent'] == null}">
+                                    <c:if test="${rHash['dependentable'] != null}">
+                                        Add as 
+                                        <input type="button" onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','2')" value="dependent"/>
+                                        <input type="button" onclick="saveJointAdmission('<c:out value="${rHash['demographicNo']}"/>','<c:out value="${client.demographicNo}" />','1')" value="spouse"/>
+                                    </c:if>
+                                </c:when>
+                                <c:when test="${rHash['dependent'] == 2}">
+                                    Dependent <input type="button" onclick="removeJointAdmission('<c:out value="${rHash['demographicNo']}"/>')" value="remove"/>
+                                </c:when>
+                                <c:when test="${rHash['dependent'] == 1}">
+                                    Spouse <input type="button" onclick="removeJointAdmission('<c:out value="${rHash['demographicNo']}"/>')" value="remove"/>
+                                </c:when>
+                                 <c:when test="${rHash['dependent'] == 0}">
+                                    Head
+                                </c:when>
+                            </c:choose>    
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${rHash['jointAdmission'] == null}">
+                                    No
+                                </c:when>
+                                <c:otherwise>
+                                    Yes
+                                </c:otherwise>
+                            </c:choose>  
+                        </td>
+                        <td><c:out value="${rHash['age']}"/></td>
                 </tr>
             </c:forEach>
             <tr>
-                <td>Total Family Members jointly admitted: <c:out value="${relationSize}"/></td>
-                <td>&nbsp;</td>
+                <td colspan="4">
+                    <c:choose>
+                        <c:when test="${groupName == null}">
+                            Joint admit total for <c:out value="${client.formattedName}" /> : <c:out value="${relationSize}"/>
+                        </c:when>
+                        <c:otherwise>
+                             Joint admit total for <c:out value="${groupName}" /> : <c:out value="${relationSize}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
                 <td><input type="button" value="Update" onclick="openRelations()" /></td>
             </tr>
         </c:otherwise>
