@@ -14,6 +14,19 @@ CREATE TABLE `joint_admissions` (
   KEY `head_client_id` (`head_client_id`)
 );
 
-ALTER TABLE `program_client_restriction` ADD COLUMN provider_no varchar(6) NOT NULL;
-ALTER TABLE `program_client_restriction` ADD CONSTRAINT `FK_pcr_provider` FOREIGN KEY (`provider_no`) REFERENCES `provider` (`provider_no`);
-ALTER TABLE `program_client_restriction` DROP KEY idx_program_gender_restr;
+-- program restriction based on gender
+drop table if exists `program_client_restriction`;
+create table `program_client_restriction` (
+    `id` bigint(22) NOT NULL auto_increment,
+    `program_id` int(10) NOT NULL,
+    `demographic_no` int(10) NOT NULL,
+    `provider_no` varchar(6) NOT NULL,
+    `comments` varchar(255) default null,
+    `is_enabled` tinyint(1) NOT NULL default TRUE,
+    `start_date` datetime not null,
+    `end_date` datetime not null,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `FK_pcr_program` FOREIGN KEY (`program_id`) REFERENCES `program` (`id`),
+    CONSTRAINT `FK_pcr_provider` FOREIGN KEY (`provider_no`) REFERENCES `provider` (`provider_no`),
+    CONSTRAINT `FK_pcr_demographic` FOREIGN KEY (`demographic_no`) REFERENCES `demographic` (`demographic_no`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
