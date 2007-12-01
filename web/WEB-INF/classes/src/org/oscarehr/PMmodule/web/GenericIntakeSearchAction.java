@@ -54,6 +54,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
         intakeSearchBean.setLocalAgencyUsername(IntegratorManager.getLocalAgency().getIntegratorUsername());
         
+        //UCF
+		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
+		
         Collection<ClientTransfer> remoteMatches = new ArrayList<ClientTransfer>();
 
         // search for remote matches if integrator enabled

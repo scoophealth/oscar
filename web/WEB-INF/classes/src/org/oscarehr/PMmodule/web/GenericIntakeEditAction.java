@@ -75,7 +75,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 		
 		setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), null, null);
-
+				
 		return mapping.findForward(EDIT);
 	}
 
@@ -125,7 +125,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 
 		setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId));
-
+		//UCF
+		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
 		return mapping.findForward(EDIT);
 	}
 	
@@ -165,6 +166,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 			if(!formBean.getSelectedServiceProgramIds().isEmpty())
 				admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
 			saveIntake(intake, client.getDemographicNo());
+			
 			//don't move updateRemote up...this method has the problem needs to be fixed 
 			updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
         } catch (ServiceRestrictionException e) {
@@ -183,7 +185,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 		}
 		
 		setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()));
-
 		return mapping.findForward(EDIT);
 	}
 
