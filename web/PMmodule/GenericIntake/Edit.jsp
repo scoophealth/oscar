@@ -22,6 +22,11 @@
             parseWidgets: false,
             searchIds: ["layoutContainer", "topPane", "clientPane", "bottomPane", "clientTable", "admissionsTable"]
         };
+        
+        var programMaleOnly=<%=session.getAttribute("programMaleOnly")%>;
+        var programFemaleOnly=<%=session.getAttribute("programFemaleOnly")%>;
+        var programTransgenderOnly=<%=session.getAttribute("programTransgenderOnly")%>;
+        
         // -->
         
         function openSurvey(ctl) {
