@@ -7,6 +7,12 @@
 <%@page import="org.oscarehr.PMmodule.model.Program" %>
 
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
+<%
+    if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+%>
+
 <script>
 	function resetClientFields() {
 		var form = document.clientSearchForm2;
@@ -120,17 +126,17 @@
 				</tr>
 			</table>
 		</div>
-	</div>
-	
+	</div>     
+</html:form>
 	<br />
-
 	<c:if test="${requestScope.clients != null}">
-		<display:table class="simple" cellspacing="2" cellpadding="3" id="client" name="clients" export="false" pagesize="10" requestURI="/PMmodule/ClientSearch2.do">
+            <form method="post" name="mergeform" action="../admin/MergeRecords.do" > 
+            	<display:table class="simple" cellspacing="2" cellpadding="3" id="client" name="clients" export="false" pagesize="10" requestURI="/PMmodule/ClientSearch2.do">
 			<display:setProperty name="paging.banner.placement" value="bottom" />
 			<display:setProperty name="basic.msg.empty_list" value="No clients found." />
 			
 			<display:column sortable="true" title="Name">
-				<a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.demographicNo}"/>&consent=<c:out value="${consent}"/>"><c:out value="${client.formattedName}" /></a>
+                            <a href="<html:rewrite action="/PMmodule/ClientManager.do"/>?id=<c:out value="${client.currentRecord}"/>&consent=<c:out value="${consent}"/>"><c:out value="${client.formattedName}" /></a>
 			</display:column>
 			<display:column sortable="true" title="Date of Birth">
 				<c:out value="${client.yearOfBirth}" />/<c:out value="${client.monthOfBirth}" />/<c:out value="${client.dateOfBirth}" />
@@ -138,6 +144,50 @@
 			<display:column sortable="true" title="Master File Number">
 				<c:out value="${client.demographicNo}" />
 			</display:column>
+                        
+                        
+                        <security:oscarSec roleName="<%=roleName$%>" objectName="_merge" rights="r"  >
+                        
+                        <display:column sortable="true" title="Head Record">   
+                            <c:choose>
+                                
+                                <c:when test="${client.headRecord == null}">
+                                    <input type="radio" name="head" value="<c:out value="${client.demographicNo}" />">    
+                                </c:when>
+                                <c:otherwise>
+                                    &nbsp;
+                                </c:otherwise>
+                            </c:choose>   
+			</display:column>
+                        
+                        <display:column sortable="true" title="Include">
+                            <c:choose>
+                                <c:when test="${client.headRecord == null}">
+                                    	<input type="checkbox" name="records" value="<c:out value="${client.demographicNo}" />">
+                                </c:when>
+                                <c:otherwise>
+                                    &nbsp;
+                                </c:otherwise> 
+                                </c:choose>
+			</display:column>
+                        </security:oscarSec>
+                        
+                    
 		</display:table>
-	</c:if>
-</html:form>
+               <security:oscarSec roleName="<%=roleName$%>" objectName="_merge" rights="r"  >
+                        
+                <input type="hidden" name="mergeAction" value="merge" />
+                <input type="hidden" name="provider_no" value="<%= session.getAttribute("user") %>" />
+                <input type="hidden" name="caisiSearch" value="yes"
+            <input type="submit" value="Merge Selected Records"/>
+            </security:oscarSec>
+	
+            <br />
+            </form>
+            </c:if>
+        
+           
+        
+
+   
+            
