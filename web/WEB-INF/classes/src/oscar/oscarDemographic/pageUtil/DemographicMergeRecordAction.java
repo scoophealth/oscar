@@ -63,6 +63,11 @@ public class DemographicMergeRecordAction  extends Action {
         }else{
             outcome = "failure";
         }
+        request.setAttribute("mergeoutcome",outcome);
+        
+        if (request.getParameter("caisiSearch") != null && request.getParameter("caisiSearch").equalsIgnoreCase("yes")){
+            outcome = "caisiSearch";
+        }
         
         return mapping.findForward(outcome);
     }
