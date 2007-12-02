@@ -58,5 +58,15 @@
 		<property column="citizenship" length="40" name="Citizenship" type="string" />
 		<property column="sin" length="15" name="Sin" type="string" />
 	
+                <property
+			name="HeadRecord"
+			type="integer"
+                        formula="(select d.merged_to from demographic_merged d where d.deleted = 0 and d.demographic_no = demographic_no)"/>
+               
+                <set name="SubRecord" table="demographic_merged" where= "deleted = 0" lazy="false" >
+                    <key column="merged_to"/>
+                    <element column="demographic_no" type="integer"/>
+                </set>
+                        
 	</class>
 </hibernate-mapping>
