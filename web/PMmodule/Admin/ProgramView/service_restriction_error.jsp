@@ -19,14 +19,17 @@
     <html:hidden property="queueId" />
     <input type="hidden" name="id" value="<c:out value="${requestScope.id}"/>" />
 
+    <b style="color:red">The client currently has a service restriction in effect on the program you are trying to admit the client into.</b>
+
+    <c:if test="${requestScope.hasOverridePermission}">
+        <b>You have permission to override this restriction. To do so click on the "Override" below.  Otherwise, click on "Cancel".</b>
+    </c:if>
+
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>
-            <th title="Service Restrictions">Service Restriction</th>
+            <th title="Restriction details">Service restriction details</th>
         </tr>
     </table>
-
-    <b style="color:red">You cannot refer or admit this client to this program because a service restriction has been put in place.</b>
-
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr class="b">
             <td width="20%">Client name:</td>
