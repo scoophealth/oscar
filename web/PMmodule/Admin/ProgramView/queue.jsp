@@ -101,10 +101,14 @@
     		long clientId=((ProgramQueue)pageContext.getAttribute("queue_entry")).getClientId();
     		if (genderConflict.contains(clientId)) action="genderConflict";	
     	%>
-        <input type="button" value="Admit" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','<%=action %>','<c:out value="${queue_entry.id}"/>')" />
+        <input type="button" value="Admit" 
+               <c:if test="${queue_entry.headClientId != null}">disabled</c:if>
+               onclick="select_client('<c:out value="${queue_entry.clientId}"/>','<%=action %>','<c:out value="${queue_entry.id}"/>')" />
     </display:column>
     <display:column sortable="false">
-        <input type="button" value="Reject" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
+        <input type="button" value="Reject" 
+               <c:if test="${queue_entry.headClientId != null}">disabled</c:if>
+               onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
     </display:column>
     <!-- disabled by rwd because visibility of link and permissions in CME are a problem -->
     <%--<display:column sortable="false">--%>
@@ -120,6 +124,7 @@
     </caisi:isModuleLoad>
     <display:column property="notes" sortable="true" title="Reason for referral" />
     <display:column property="presentProblems" sortable="true" title="Present problems"/>
+    <display:column property="headRecord" sortable="true" title="Family Id"/>
 </display:table>
 <br />
 <br />
