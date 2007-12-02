@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.io.Serializable;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
@@ -84,6 +85,8 @@ public class Demographic implements Serializable {
     private String sourceOfIncome;
     private String citizenship;
     private String sin;
+    private Integer headRecord = null;
+    private Set subRecord = null;
     
     public enum OptingStatus {
         IMPLICITLY_OPTED_IN,
@@ -787,6 +790,28 @@ public class Demographic implements Serializable {
 
     public void setAgencyId(String agencyId) {
         this.agencyId = agencyId;
+    }
+
+    public Integer getHeadRecord() {
+        return headRecord;
+    }
+
+    public void setHeadRecord(Integer headRecord) {
+        this.headRecord = headRecord;
+    }
+    
+    public Integer getCurrentRecord(){
+        if (headRecord != null)
+            return headRecord;
+        return demographicNo;
+    }
+
+    public Set getSubRecord() {
+        return subRecord;
+    }
+
+    public void setSubRecord(Set subRecord) {
+        this.subRecord = subRecord;
     }
 }
 
