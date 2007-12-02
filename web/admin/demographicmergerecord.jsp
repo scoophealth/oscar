@@ -255,15 +255,25 @@ if(rs==null) {
 <tr bgcolor="<%=bodd?"ivory":"white"%>">
     <%
         DemographicMerged dmDAO = new DemographicMerged();
-        String head = dmDAO.getHead(rs.getString("demographic_no"));
         String dbop = "demographic_search_detail";
+        String head = dmDAO.getHead(rs.getString("demographic_no"));
+        String demographic = rs.getString("demographic_no") ;
+        boolean headRecord = head.equals(demographic);
         java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
         if (vLocale.getCountry().equals("BR"))
             dbop = "demographic_search_detail_ptbr";
-    %>
-    <td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= rs.getString("demographic_no") %>"></td>    
-    <% if (!mergedSearch){%>
+    if(headRecord){%>
+    <td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= rs.getString("demographic_no") %>"></td>
+    <%}else{%>
+    <td align="center" width="5%" height="25">&nbsp;</td>
+    <%}%>
+    <% if (!mergedSearch ){
+       if(headRecord){%>
         <td align="center" width="5%" height="25"><input type="radio" name="head" value="<%= rs.getString("demographic_no") %>"></td>
+       <%}else{%>
+        <td align="center" width="5%" height="25">&nbsp;</td>
+       <%}%>
+  
     <%}%>    
     <td width="15%" align="center" height="25"> <a href="javascript:popupWindow('admincontrol.jsp?demographic_no=<%= head %>&displaymode=Demographic_Edit2&dboperation=<%= dbop %>')"><%=rs.getString("demographic_no")%></a></td>
     <td align="center" width="20%" height="25"><%=rs.getString("last_name")%></td>
