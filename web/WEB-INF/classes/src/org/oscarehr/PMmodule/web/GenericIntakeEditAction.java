@@ -37,7 +37,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
@@ -47,7 +46,6 @@ import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeEditFormBean;
-import org.oscarehr.util.SpringUtils;
 
 import oscar.OscarProperties;
 
@@ -55,8 +53,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private static Log LOG = LogFactory.getLog(GenericIntakeEditAction.class);
 
-    private ProgramDao programDao=(ProgramDao)SpringUtils.beanFactory.getBean("programDao");
-    
     // Forwards
     private static final String EDIT = "edit";
     private static final String PRINT = "print";
@@ -83,40 +79,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
                 .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null);
 
-        //--- program gender issues ---
-        
-        StringBuilder programMaleOnly=new StringBuilder("[");
-        StringBuilder programFemaleOnly=new StringBuilder("[");
-        StringBuilder programTransgenderOnly=new StringBuilder("[");
-        
-        for (Program program : programDao.getProgramByGenderType("Man"))
-        {
-            if (programMaleOnly.length()>1) programMaleOnly.append(',');
-            programMaleOnly.append(program.getId());
-        }
-        for (Program program : programDao.getProgramByGenderType("Woman"))
-        {
-            if (programFemaleOnly.length()>1) programFemaleOnly.append(',');
-            programFemaleOnly.append(program.getId());
-        }
-        for (Program program : programDao.getProgramByGenderType("Transgender"))
-        {
-            if (programTransgenderOnly.length()>1) programTransgenderOnly.append(',');
-            programTransgenderOnly.append(program.getId());
-        }
-        
-        programMaleOnly.append(']');
-        programFemaleOnly.append(']');
-        programTransgenderOnly.append(']');
-        
-        // yeah I know we shouldn't set it in the session but I can't set it in the request because struts isn't being used properly and this method isn't actually called before render, it's called in a prior request method. 
-        // considering no one cares about the quality of this code anymore it's simpler for me to continue on as is and use the session space knowing it'll cause the session / shared variable issues. Sorry but management says quality is not a priority and speed is instead. So, here's proliferating a bad practice in the name of speed.
-        request.getSession().setAttribute("programMaleOnly", programMaleOnly.toString());
-        request.getSession().setAttribute("programFemaleOnly", programFemaleOnly.toString());
-        request.getSession().setAttribute("programTransgenderOnly", programTransgenderOnly.toString());
+        ProgramUtils.addProgramRestrictions(request);
                
         return mapping.findForward(EDIT);
     }
+
+
 
     public ActionForward create_remote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;

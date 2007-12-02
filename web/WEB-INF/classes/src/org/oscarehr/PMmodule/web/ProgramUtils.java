@@ -1,0 +1,72 @@
+/*
+* Copyright (c) 2007-2008. CAISI, Toronto. All Rights Reserved.
+* This software is published under the GPL GNU General Public License. 
+* This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 2 
+* of the License, or (at your option) any later version. 
+* 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. 
+* 
+* You should have received a copy of the GNU General Public License 
+* along with this program; if not, write to the Free Software 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+* 
+* This software was written for 
+* CAISI, 
+* Toronto, Ontario, Canada 
+*/
+package org.oscarehr.PMmodule.web;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.util.SpringUtils;
+
+public class ProgramUtils
+{
+    private static ProgramDao programDao=(ProgramDao)SpringUtils.beanFactory.getBean("programDao");    
+
+    /**
+     * This method stores the program ids as javascript arrays of numbers in the session space grouped
+     * by their restrictions.
+     * The intent is to allow javascript on a given page to determine if a restriction is being breached
+     * or not and to alert the user.
+     * @param request
+     */
+    public static void addProgramRestrictions(HttpServletRequest request) {
+        StringBuilder programMaleOnly=new StringBuilder("[");
+        StringBuilder programFemaleOnly=new StringBuilder("[");
+        StringBuilder programTransgenderOnly=new StringBuilder("[");
+        
+        for (Program program : programDao.getProgramByGenderType("Man"))
+        {
+            if (programMaleOnly.length()>1) programMaleOnly.append(',');
+            programMaleOnly.append(program.getId());
+        }
+        for (Program program : programDao.getProgramByGenderType("Woman"))
+        {
+            if (programFemaleOnly.length()>1) programFemaleOnly.append(',');
+            programFemaleOnly.append(program.getId());
+        }
+        for (Program program : programDao.getProgramByGenderType("Transgender"))
+        {
+            if (programTransgenderOnly.length()>1) programTransgenderOnly.append(',');
+            programTransgenderOnly.append(program.getId());
+        }
+        
+        programMaleOnly.append(']');
+        programFemaleOnly.append(']');
+        programTransgenderOnly.append(']');
+        
+        // yeah I know we shouldn't set it in the session but I can't set it in the request because struts isn't being used properly and this method isn't actually called before render, it's called in a prior request method. 
+        // considering no one cares about the quality of this code anymore it's simpler for me to continue on as is and use the session space knowing it'll cause the session / shared variable issues. Sorry but management says quality is not a priority and speed is instead. So, here's proliferating a bad practice in the name of speed.
+        request.getSession().setAttribute("programMaleOnly", programMaleOnly.toString());
+        request.getSession().setAttribute("programFemaleOnly", programFemaleOnly.toString());
+        request.getSession().setAttribute("programTransgenderOnly", programTransgenderOnly.toString());
+    }
+}

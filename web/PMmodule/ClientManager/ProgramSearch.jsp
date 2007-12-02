@@ -32,7 +32,42 @@
 	</head>
 	
 	<script type="text/javascript">
+		var gender='<%=request.getSession().getAttribute("clientGender")%>';
+		
+		var programMaleOnly=<%=session.getAttribute("programMaleOnly")%>;
+        var programFemaleOnly=<%=session.getAttribute("programFemaleOnly")%>;
+        var programTransgenderOnly=<%=session.getAttribute("programTransgenderOnly")%>;
+
+		function error(msg) {
+			alert(msg);
+			return false;
+		}
+
 		function selectProgram(agencyId,id,type) {
+		
+			var programId=Number(id);
+			if (gender == 'M')
+			{
+				if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
+				{
+					return error("This gender not allowed in selected program.");
+				}
+			}
+			if (gender == 'F')
+			{
+				if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
+				{
+					return error("This gender not allowed in selected program.");
+				}
+			}
+			if (gender == 'T')
+			{
+				if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
+				{
+					return error("This gender not allowed in selected program.");
+				}
+			}		
+		
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementId")%>'].value=id;
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementAgencyId")%>'].value=agencyId;
 			
@@ -42,6 +77,8 @@
 			
 			self.close();
 		}
+		
+		
 	</script>
 	
 	<body marginwidth="0" marginheight="0">

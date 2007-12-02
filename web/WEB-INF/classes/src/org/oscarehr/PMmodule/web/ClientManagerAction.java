@@ -25,7 +25,9 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
+import org.caisi.dao.DemographicDAO;
 import org.caisi.integrator.model.Client;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.exception.*;
 import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
@@ -35,6 +37,7 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import oscar.oscarDemographic.data.DemographicRelationship;
 
@@ -259,6 +262,9 @@ public class ClientManagerAction extends BaseAction {
             return mapping.findForward("er-redirect");
         }
 
+        Demographic demographic=clientManager.getClientByDemographicNo(id);
+        request.getSession().setAttribute("clientGender", demographic.getSex());
+        
         return mapping.findForward("edit");
     }
 
@@ -565,6 +571,8 @@ public class ClientManagerAction extends BaseAction {
         Program criteria = (Program) clientForm.get("program");
         request.setAttribute("programs", programManager.search(criteria));
 
+        ProgramUtils.addProgramRestrictions(request);
+        
         return mapping.findForward("search_programs");
     }
 
