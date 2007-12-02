@@ -1,47 +1,59 @@
 /*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
+ * 
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 
 package org.oscarehr.PMmodule.web.admin;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.PMmodule.model.BedDemographic;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.model.ProgramQueue;
+import org.oscarehr.PMmodule.model.ProgramTeam;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.beans.factory.annotation.Required;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
 
 public class ProgramManagerViewAction extends BaseAction {
 
@@ -71,16 +83,40 @@ public class ProgramManagerViewAction extends BaseAction {
             request.setAttribute("clientId", demographicNo);
         }
 
-        request.setAttribute("temporaryAdmission",programManager.getEnabled());
+        request.setAttribute("temporaryAdmission", programManager.getEnabled());
 
         // need the queue to determine which tab to go to first
-        List queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
+        List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
+
+        HashSet<Long> genderConflict = new HashSet<Long>();
+        for (ProgramQueue programQueue : queue) {
+            Demographic demographic=clientManager.getClientByDemographicNo(String.valueOf(programQueue.getClientId()));
+            Program program=programManager.getProgram(programQueue.getProgramId());
+            
+            if (program.getManOrWoman()!=null && demographic.getSex()!=null)
+            {
+                if ("Man".equals(program.getManOrWoman()) && !"M".equals(demographic.getSex()))
+                {
+                    genderConflict.add(programQueue.getClientId());
+                }
+                if ("Woman".equals(program.getManOrWoman()) && !"F".equals(demographic.getSex()))
+                {
+                    genderConflict.add(programQueue.getClientId());
+                }
+                if ("Transgendered".equals(program.getManOrWoman()) && !"T".equals(demographic.getSex()))
+                {
+                    genderConflict.add(programQueue.getClientId());
+                }
+            }
+        }
+        request.setAttribute("genderConflict", genderConflict);
 
         if (formBean.getTab() == null || formBean.getTab().equals("")) {
             if (queue.size() > 0) {
                 formBean.setTab("Queue");
-            } else {
+            }
+            else {
                 formBean.setTab("General");
             }
         }
@@ -117,8 +153,8 @@ public class ProgramManagerViewAction extends BaseAction {
         if (formBean.getTab().equals("Clients")) {
             request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
 
-            //request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
-            //clients should be active
+            // request.setAttribute("admissions", admissionManager.getCurrentAdmissionsByProgramId(programId));
+            // clients should be active
             List<Admission> admissions = new ArrayList<Admission>();
             List ads = admissionManager.getCurrentAdmissionsByProgramId(programId);
             for (Object ad1 : ads) {
@@ -128,8 +164,7 @@ public class ProgramManagerViewAction extends BaseAction {
                     Demographic client = clientManager.getClientByDemographicNo(Integer.toString(clientId));
                     if (client != null) {
                         String clientStatus = client.getPatientStatus();
-                        if (clientStatus != null && clientStatus.equals("AC"))
-                            admissions.add(admission);
+                        if (clientStatus != null && clientStatus.equals("AC")) admissions.add(admission);
                     }
                 }
             }
@@ -149,7 +184,7 @@ public class ProgramManagerViewAction extends BaseAction {
             List<Program> batchAdmissionPrograms = new ArrayList<Program>();
 
             for (Program bedProgram : programManager.getBedPrograms()) {
-                if (bedProgram.isAllowBatchAdmission()&&bedProgram.getProgramStatus().equals("active")) {
+                if (bedProgram.isAllowBatchAdmission() && bedProgram.getProgramStatus().equals("active")) {
                     batchAdmissionPrograms.add(bedProgram);
                 }
             }
@@ -164,11 +199,11 @@ public class ProgramManagerViewAction extends BaseAction {
                 }
             }
 
-            //request.setAttribute("programs", batchAdmissionPrograms);
+            // request.setAttribute("programs", batchAdmissionPrograms);
             request.setAttribute("bedPrograms", batchAdmissionPrograms);
             request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
             request.setAttribute("allowBatchDischarge", program.isAllowBatchDischarge());
-            request.setAttribute("servicePrograms",batchAdmissionServicePrograms);
+            request.setAttribute("servicePrograms", batchAdmissionServicePrograms);
         }
 
         if (formBean.getTab().equals("Access")) {
@@ -183,7 +218,7 @@ public class ProgramManagerViewAction extends BaseAction {
             request.setAttribute("expiredReservations", bedDemographicManager.getExpiredReservations());
         }
 
-        if(formBean.getTab().equals("Client Status")) {
+        if (formBean.getTab().equals("Client Status")) {
             request.setAttribute("client_statuses", programManager.getProgramClientStatuses(new Integer(programId)));
         }
 
@@ -223,23 +258,28 @@ public class ProgramManagerViewAction extends BaseAction {
         String admissionNotes = request.getParameter("admission.admissionNotes");
 
         try {
-            admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission());
+            admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue
+                    .isTemporaryAdmission());
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
             saveMessages(request, messages);
-        } catch (ProgramFullException e) {
+        }
+        catch (ProgramFullException e) {
             log.error(e);
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
             saveMessages(request, messages);
-        } catch (AdmissionException e) {
+        }
+        catch (AdmissionException e) {
             log.error(e);
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
             saveMessages(request, messages);
-        } catch (ServiceRestrictionException e) {
+        }
+        catch (ServiceRestrictionException e) {
             ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction()
+                    .getProvider().getFormattedName()));
             saveMessages(request, messages);
 
             // store this for display
@@ -252,8 +292,9 @@ public class ProgramManagerViewAction extends BaseAction {
             request.getSession().setAttribute("admission.admissionNotes", admissionNotes);
 
             request.setAttribute("id", programId);
-            
-            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on admission", "access", getProviderNo(request), clientId, programId));
+
+            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on admission", "access",
+                    getProviderNo(request), clientId, programId));
 
             return mapping.findForward("service_restriction_error");
         }
@@ -273,7 +314,8 @@ public class ProgramManagerViewAction extends BaseAction {
 
         request.setAttribute("id", programId);
 
-        if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), clientId, programId)) {
+        if (isCancelled(request)
+                || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), clientId, programId)) {
             return view(mapping, form, request, response);
         }
 
@@ -281,21 +323,25 @@ public class ProgramManagerViewAction extends BaseAction {
         Program fullProgram = programManager.getProgram(String.valueOf(programId));
 
         try {
-            admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue.isTemporaryAdmission(), true);
+            admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue
+                    .isTemporaryAdmission(), true);
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
             saveMessages(request, messages);
-        } catch (ProgramFullException e) {
+        }
+        catch (ProgramFullException e) {
             log.error(e);
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
             saveMessages(request, messages);
-        } catch (AdmissionException e) {
+        }
+        catch (AdmissionException e) {
             log.error(e);
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
             saveMessages(request, messages);
-        } catch (ServiceRestrictionException e) {
+        }
+        catch (ServiceRestrictionException e) {
             throw new RuntimeException(e);
         }
 
@@ -348,10 +394,12 @@ public class ProgramManagerViewAction extends BaseAction {
         String admitToProgramId;
         if (type != null && type.equals("community")) {
             admitToProgramId = request.getParameter("batch_discharge_community_program");
-        } else if(type!=null && type.equals("bed")){
+        }
+        else if (type != null && type.equals("bed")) {
             admitToProgramId = request.getParameter("batch_discharge_program");
-        } else {
-            admitToProgramId="";
+        }
+        else {
+            admitToProgramId = "";
         }
 
         String message = "";
@@ -368,39 +416,37 @@ public class ProgramManagerViewAction extends BaseAction {
                     continue;
                 }
 
-                //temporary admission will not allow batach discharge from bed program.
-                if(admission.isTemporaryAdmission() && "bed".equals(type)){
-                    message += admission.getClient().getFormattedName() + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
+                // temporary admission will not allow batach discharge from bed program.
+                if (admission.isTemporaryAdmission() && "bed".equals(type)) {
+                    message += admission.getClient().getFormattedName()
+                            + " is in this bed program temporarily. You cannot do batch discharge for this client!   \n";
                     continue;
                 }
 
-                //in case some clients maybe is already in the community program
+                // in case some clients maybe is already in the community program
                 if (type != null) {
-                    if(type.equals("community")) {
+                    if (type.equals("community")) {
                         Integer clientId = admission.getClientId();
                         String program_type = admission.getProgramType();
-                        //if discharged program is service program,
-                        //then should check if the client is in one bed program
-                        /*if(program_type.equals("Service")) {
-                            Admission admission_bed_program = admissionManager.getCurrentBedProgramAdmission(clientId);
-                            if(admission_bed_program!=null){
-                                if(!admission_bed_program.isTemporaryAdmission()){
-                                    message += admission.getClient().getFormattedName() + " is also in the bed program. You cannot do batch discharge for this client! \n";
-                                    continue;
-                                }
-                            }
-                        }
-                        */
-                        //if the client is already in the community program, then cannot do batch discharge to the community program.
+                        // if discharged program is service program,
+                        // then should check if the client is in one bed program
+                        /*
+                         * if(program_type.equals("Service")) { Admission admission_bed_program = admissionManager.getCurrentBedProgramAdmission(clientId);
+                         * if(admission_bed_program!=null){ if(!admission_bed_program.isTemporaryAdmission()){ message +=
+                         * admission.getClient().getFormattedName() + " is also in the bed program. You cannot do batch discharge for this client! \n";
+                         * continue; } } }
+                         */
+                        // if the client is already in the community program, then cannot do batch discharge to the community program.
                         Admission admission_community_program = admissionManager.getCurrentCommunityProgramAdmission(clientId);
-                        if(admission_community_program!=null) {
-                            message += admission.getClient().getFormattedName() + " is already in one community program. You cannot do batch discharge for this client! \n";
+                        if (admission_community_program != null) {
+                            message += admission.getClient().getFormattedName()
+                                    + " is already in one community program. You cannot do batch discharge for this client! \n";
                             continue;
                         }
                     }
                 }
                 // lets see if there's room first
-                if(!"service".equals(type)) {
+                if (!"service".equals(type)) {
                     Program programToAdmit = programManager.getProgram(admitToProgramId);
                     if (programToAdmit == null) {
                         message += "Admitting program not found!";
@@ -416,8 +462,8 @@ public class ProgramManagerViewAction extends BaseAction {
                 admission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
                 admissionManager.saveAdmission(admission);
 
-                //The service program can only be batch discharged, can not be admitted to another program.
-                if(!"service".equals(type)) {
+                // The service program can only be batch discharged, can not be admitted to another program.
+                if (!"service".equals(type)) {
                     Admission newAdmission = new Admission();
                     newAdmission.setAdmissionDate(new Date());
                     newAdmission.setAdmissionNotes("Batch Admit");
@@ -446,7 +492,6 @@ public class ProgramManagerViewAction extends BaseAction {
         String clientId = request.getParameter("clientId");
         String rejectionReason = request.getParameter("radioRejectionReason");
 
-
         log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
 
         programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
@@ -463,8 +508,8 @@ public class ProgramManagerViewAction extends BaseAction {
         ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
 
         /*
-           * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
-           */
+         * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
+         */
         if (program.getType().equalsIgnoreCase("bed") && queue != null && !queue.isTemporaryAdmission()) {
             Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(clientId));
             if (currentAdmission != null) {
@@ -512,15 +557,18 @@ public class ProgramManagerViewAction extends BaseAction {
                     if (communityProgramId > 0) {
                         try {
                             // discharge to community program
-                            admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request), "bed reservation ended - manually discharged","0");
-                        } catch (AdmissionException e) {
+                            admissionManager.processDischargeToCommunity(communityProgramId, bedDemographic.getId().getDemographicNo(), getProviderNo(request),
+                                    "bed reservation ended - manually discharged", "0");
+                        }
+                        catch (AdmissionException e) {
                             ActionMessages messages = new ActionMessages();
                             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
                             saveMessages(request, messages);
                         }
                     }
                 }
-            } catch (BedReservedException e) {
+            }
+            catch (BedReservedException e) {
                 ActionMessages messages = new ActionMessages();
                 messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));
                 saveMessages(request, messages);

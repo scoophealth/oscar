@@ -1,3 +1,4 @@
+<%@ page import="java.util.*" %>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue" %>
 <%@ page import="java.net.URLEncoder" %>
 <!--
@@ -60,9 +61,15 @@
             form.method.value='select_client_for_reject';
 			//form.method.value='reject_from_queue';
         }
+        if(action == 'genderConflict') {
+	    	alert("This gender not allowed in selected program.");
+	    	return(false);
+		}        
+        
         form.submit();
 
     }
+
 
     function popup(title, url) {
         window.open(url, title, 'width=800, height=800,resizable=yes, scrollbars=yes');
@@ -81,12 +88,20 @@
         </tr>
     </table>
 </div>
+<%
+	HashSet<Long> genderConflict=(HashSet<Long>)request.getAttribute("genderConflict");
+%>
 <!--  show current clients -->
 <display:table class="simple" cellspacing="2" cellpadding="3" id="queue_entry" name="queue" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
     <display:setProperty name="paging.banner.placement" value="bottom" />
     <display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
     <display:column sortable="false">
-        <input type="button" value="Admit" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','admit','<c:out value="${queue_entry.id}"/>')" />
+    	<%
+			String action="admit";
+    		long clientId=((ProgramQueue)pageContext.getAttribute("queue_entry")).getClientId();
+    		if (genderConflict.contains(clientId)) action="genderConflict";	
+    	%>
+        <input type="button" value="Admit" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','<%=action %>','<c:out value="${queue_entry.id}"/>')" />
     </display:column>
     <display:column sortable="false">
         <input type="button" value="Reject" onclick="select_client('<c:out value="${queue_entry.clientId}"/>','reject','<c:out value="${queue_entry.id}"/>')" />
