@@ -33,16 +33,43 @@ function validateEdit() {
 			<%
 		}
 
+	%>
+		var gender = getElement('client.sex');
+	<%
 		if (IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_GENDER))
 		{
 			%>
-				var gender = getElement('client.sex');
 				if (isEmpty(gender.value)) {
 					return error(gender, "Gender is mandatory");
 				}
 			<%
 		}
-
+	%> 
+		var programId=Number(getElement('bedCommunityProgramId').value);
+		if (gender.value == 'M')
+		{
+			if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
+			{
+				alert("Program gender conflict");
+			}
+		}
+		if (gender.value == 'F')
+		{
+			if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
+			{
+				alert("Program gender conflict");
+			}
+		}
+		if (gender.value == 'T')
+		{
+			if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
+			{
+				alert("Program gender conflict");
+			}
+		}
+	<%
+		
+		
 		if (IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_BIRTH_DATE))
 		{
 			%>
