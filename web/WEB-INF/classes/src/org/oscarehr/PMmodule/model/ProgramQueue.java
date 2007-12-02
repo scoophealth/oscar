@@ -70,6 +70,7 @@ public class ProgramQueue implements Serializable {
     private String _clientLastName;
     private String _clientFirstName;
     private String presentProblems;
+    private Long headClientId = null;
 
 
     // constructors
@@ -374,4 +375,20 @@ public class ProgramQueue implements Serializable {
     public String toString () {
         return super.toString();
     }
+
+    public Long getHeadClientId() {
+        return headClientId;
+    }
+
+    public void setHeadClientId(Long headClientId) {
+        System.out.println("Set HEAD CLIENT ID getting called "+headClientId);
+        this.headClientId = headClientId;
+    }
+    
+    public Long getHeadRecord(){
+        if ( headClientId != null)
+            return headClientId;
+        return _clientId;
+    }
+    
 }
