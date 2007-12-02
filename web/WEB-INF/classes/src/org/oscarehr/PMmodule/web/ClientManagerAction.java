@@ -33,6 +33,7 @@ import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.springframework.beans.factory.annotation.Required;
 import oscar.oscarDemographic.data.DemographicRelationship;
@@ -46,6 +47,7 @@ public class ClientManagerAction extends BaseAction {
     private static Log log = LogFactory.getLog(ClientManagerAction.class);
 
     protected ClientRestrictionManager clientRestrictionManager;
+    protected CaseManagementManager caseManagementManager;
 
     // Parameter
     public static final String ID = "id";
@@ -306,10 +308,10 @@ public class ClientManagerAction extends BaseAction {
 
         Program program = programManager.getProgram(p.getId());
 
-        referral.setAgencyId(new Long(0));
-        referral.setSourceAgencyId(new Long(0));
+        referral.setAgencyId((long) 0);
+        referral.setSourceAgencyId((long) 0);
         referral.setClientId(Long.valueOf(id));
-        referral.setProgramId(new Long(program.getId().longValue()));
+        referral.setProgramId(program.getId().longValue());
         referral.setProviderNo(Long.valueOf(getProviderNo(request)));
         referral.setReferralDate(new Date());
         referral.setStatus(ClientReferral.STATUS_ACTIVE);
@@ -337,6 +339,9 @@ public class ClientManagerAction extends BaseAction {
 
             // going to need this in case of override
             clientForm.set("referral", referral);
+
+            // store permission
+            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), id, "" + program.getId()));
 
             // jump to service restriction error page to allow overrides, etc.
             return mapping.findForward("service_restriction_error");
@@ -442,7 +447,8 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
         ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");
 
-        if (isCancelled(request)) {
+
+        if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
             return mapping.findForward("edit");
         }
         ClientReferral referral = (ClientReferral) clientForm.get("referral");
@@ -936,5 +942,10 @@ public class ClientManagerAction extends BaseAction {
     @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
         this.clientRestrictionManager = clientRestrictionManager;
+    }
+
+    @Required
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+        this.caseManagementManager = caseManagementManager;
     }
 }

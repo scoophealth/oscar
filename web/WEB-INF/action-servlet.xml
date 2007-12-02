@@ -51,6 +51,7 @@
         <property name="programQueueManager" ref="programQueueManager"/>
         <property name="surveyManager" ref="oscarSurveyManager"/>
         <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
+        <property name="caseManagementManager" ref="CaseManagementManager"/>
     </bean>
     <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
         <property name="programManager" ref="programManager"/>
@@ -74,6 +75,7 @@
         <property name="programQueueManager" ref="programQueueManager"/>
         <property name="clientManager" ref="clientManager"/>
         <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
+        <property name="caseManagementManager" ref="CaseManagementManager"/>
     </bean>
     <bean name="/PMmodule/AgencyManager" class="org.oscarehr.PMmodule.web.admin.AgencyManagerAction" singleton="false">
         <property name="admissionManager" ref="admissionManager"/>

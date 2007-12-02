@@ -33,6 +33,8 @@ import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.BaseAction;
 import org.oscarehr.PMmodule.web.formbean.ProgramManagerViewFormBean;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.springframework.beans.factory.annotation.Required;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +48,7 @@ public class ProgramManagerViewAction extends BaseAction {
     private static final Log log = LogFactory.getLog(ProgramManagerViewAction.class);
 
     protected ClientRestrictionManager clientRestrictionManager;
+    protected CaseManagementManager caseManagementManager;
 
     public ActionForward unspecified(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         return view(mapping, form, request, response);
@@ -239,10 +242,18 @@ public class ProgramManagerViewAction extends BaseAction {
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
             saveMessages(request, messages);
 
+            // store this for display
+            ProgramManagerViewFormBean formBean = (ProgramManagerViewFormBean) form;
+
+            formBean.setServiceRestriction(e.getRestriction());
+
             request.getSession().setAttribute("programId", programId);
             request.getSession().setAttribute("admission.dischargeNotes", dischargeNotes);
             request.getSession().setAttribute("admission.admissionNotes", admissionNotes);
 
+            request.setAttribute("id", programId);
+            
+            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on admission", "access", getProviderNo(request), clientId, programId));
 
             return mapping.findForward("service_restriction_error");
         }
@@ -261,8 +272,8 @@ public class ProgramManagerViewAction extends BaseAction {
         String admissionNotes = (String) request.getSession().getAttribute("admission.admissionNotes");
 
         request.setAttribute("id", programId);
-        
-        if (isCancelled(request)) {
+
+        if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), clientId, programId)) {
             return view(mapping, form, request, response);
         }
 
@@ -287,6 +298,8 @@ public class ProgramManagerViewAction extends BaseAction {
         } catch (ServiceRestrictionException e) {
             throw new RuntimeException(e);
         }
+
+        logManager.log("view", "override service restriction", clientId, request);
 
         logManager.log("view", "admit to program", clientId, request);
 
@@ -517,11 +530,13 @@ public class ProgramManagerViewAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
-    public ClientRestrictionManager getClientRestrictionManager() {
-        return clientRestrictionManager;
-    }
-
+    @Required
     public void setClientRestrictionManager(ClientRestrictionManager clientRestrictionManager) {
         this.clientRestrictionManager = clientRestrictionManager;
+    }
+
+    @Required
+    public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+        this.caseManagementManager = caseManagementManager;
     }
 }

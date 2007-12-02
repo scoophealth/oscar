@@ -24,6 +24,7 @@ package org.oscarehr.PMmodule.web.formbean;
 
 import org.apache.struts.action.ActionForm;
 import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 
 public class ProgramManagerViewFormBean extends ActionForm {
 
@@ -37,8 +38,9 @@ public class ProgramManagerViewFormBean extends ActionForm {
 	private Bed[] reservedBeds;
 
 	private String radioRejectionReason;
-	
-	public String getRadioRejectionReason() {
+    private ProgramClientRestriction serviceRestriction;
+
+    public String getRadioRejectionReason() {
 		return radioRejectionReason;
 	}
 
@@ -91,4 +93,11 @@ public class ProgramManagerViewFormBean extends ActionForm {
     	this.reservedBeds = reservedBeds;
     }
 
+    public ProgramClientRestriction getServiceRestriction() {
+        return serviceRestriction;
+    }
+
+    public void setServiceRestriction(ProgramClientRestriction serviceRestriction) {
+        this.serviceRestriction = serviceRestriction;
+    }
 }

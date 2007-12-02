@@ -30,39 +30,41 @@
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr class="b">
             <td width="20%">Client name:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.client.formattedName"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.client.formattedName"/></td>
         </tr>
         <tr class="b">
             <td width="20%">Restricted program:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.program.name"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.program.name"/></td>
         </tr>
         <tr class="b">
             <td width="20%">Service restriction creator:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.provider.formattedName"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.provider.formattedName"/></td>
         </tr>
         <tr class="b">
             <td width="20%">Comments:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.comments"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.comments"/></td>
         </tr>
 
         <tr class="b">
             <td width="20%">Start date:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.startDate"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.startDate"/></td>
         </tr>
 
         <tr class="b">
             <td width="20%">End date:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.endDate"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.endDate"/></td>
         </tr>
 
         <tr class="b">
             <td width="20%">Days remaining:</td>
-            <td><bean:write name="clientManagerForm" property="serviceRestriction.daysRemaining"/></td>
+            <td><bean:write name="programManagerViewForm" property="serviceRestriction.daysRemaining"/></td>
         </tr>
 
         <tr>
             <td colspan="2">
-                <html:submit property="submit.override">Override</html:submit>
+                <c:if test="${requestScope.hasOverridePermission}">
+                    <html:submit property="submit.override">Override</html:submit>
+                </c:if>
                 <html:cancel property="submit.cancel">Cancel</html:cancel>
             </td>
         </tr>
