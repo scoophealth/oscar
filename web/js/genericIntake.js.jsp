@@ -50,21 +50,21 @@ function validateEdit() {
 		{
 			if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 			{
-				alert("Program gender conflict");
+				return error(gender, "This gender not allowed in selected program.");
 			}
 		}
 		if (gender.value == 'F')
 		{
 			if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 			{
-				alert("Program gender conflict");
+				return error(gender, "This gender not allowed in selected program.");
 			}
 		}
 		if (gender.value == 'T')
 		{
 			if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
 			{
-				alert("Program gender conflict");
+				return error(gender, "This gender not allowed in selected program.");
 			}
 		}
 	<%
