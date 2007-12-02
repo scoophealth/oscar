@@ -31,6 +31,6 @@ create table `program_client_restriction` (
     CONSTRAINT `FK_pcr_demographic` FOREIGN KEY (`demographic_no`) REFERENCES `demographic` (`demographic_no`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-insert into access_type (name, type) values ('Service restriction override on referral','access'),('Service restriction override on admission','access')
+insert into access_type (name, type) values ('Service restriction override on referral','access'),('Service restriction override on admission','access');
 
 insert into secObjectName values ('_merge');
