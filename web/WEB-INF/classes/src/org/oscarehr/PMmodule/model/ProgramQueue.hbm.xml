@@ -36,5 +36,11 @@
 		<property name="ProviderFirstName" type="string" formula="(select p.first_name from provider p where p.provider_no = provider_no)" />
 		<property name="ClientLastName" type="string" formula="(select p.last_name from demographic p where p.demographic_no = client_id)" />
 		<property name="ClientFirstName" type="string" formula="(select p.first_name from demographic p where p.demographic_no = client_id)" />
+                
+                <property
+			name="HeadClientId"
+			type="java.lang.Long"
+                        formula="(select j.head_client_id from joint_admissions j where j.archived = 0 and j.client_id = client_id)"/>
+                
 	</class>
 </hibernate-mapping>
