@@ -108,6 +108,7 @@ Program p = (Program)request.getAttribute("oldProgram");
 			<html:select property="program.type">
 				<html:option value="Bed" />
 				<html:option value="Service" />
+				<html:option value="External"/>
 			</html:select>
 		</td>
 	</tr>
