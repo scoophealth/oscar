@@ -108,7 +108,9 @@ Program p = (Program)request.getAttribute("oldProgram");
 			<html:select property="program.type">
 				<html:option value="Bed" />
 				<html:option value="Service" />
+				<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 				<html:option value="External"/>
+				</caisi:isModuleLoad>
 			</html:select>
 		</td>
 	</tr>
