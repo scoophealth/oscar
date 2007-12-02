@@ -25,6 +25,9 @@
         <property name="issueAdminManager" ref="issueAdminManager"/>
         <property name="caisiRoleManager" ref="caisiRoleManager"/>
     </bean>
+    <bean name="/CaisiEditor" class="org.caisi.core.web.CaisiEditorAction" singleton="false">
+        <property name="caisiEditorManager" ref="caisiEditorManager"/>        
+    </bean>
     <bean name="/CaisiRole" class="org.caisi.core.web.RoleAction" singleton="false">
         <property name="caisiRoleManager" ref="caisiRoleManager"/>
     </bean>
