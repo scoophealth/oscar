@@ -32,3 +32,5 @@ create table `program_client_restriction` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 insert into access_type (name, type) values ('Service restriction override on referral','access'),('Service restriction override on admission','access')
+
+insert into secObjectName values ('_merge');
