@@ -117,7 +117,11 @@ public class GenericIntakeEditFormBean extends ActionForm {
 
 	public void setExternalPrograms(List<Program> externalPrograms_s) {
 		setExternalProgramLabel(!externalPrograms_s.isEmpty());
-		externalPrograms = convertToLabelValues(externalPrograms_s);
+		
+		List<LabelValueBean> labelValues = new ArrayList<LabelValueBean>();
+		labelValues.add(GenericIntakeConstants.EMPTY);
+		labelValues.addAll(convertToLabelValues(externalPrograms_s));	
+		externalPrograms = labelValues;
 	}
 
 	public String getExternalProgramLabel() {

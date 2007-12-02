@@ -221,14 +221,15 @@ public class ProgramDao extends HibernateDaoSupport {
 		return rs;
 	}
 	
-	public List<?> getExternalPrograms() {
-		List<?> rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'External' ORDER BY p.name");
+	
+	public Program[] getExternalPrograms() {
+		List rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'External' ORDER BY p.name");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getServicePrograms: # of programs: " + rs.size());
 		}
 
-		return rs;
+		return (Program[])rs.toArray(new Program[rs.size()]);
 	}
 	
 	@SuppressWarnings("unchecked")

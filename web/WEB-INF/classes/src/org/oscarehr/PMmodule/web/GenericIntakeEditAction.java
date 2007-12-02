@@ -137,8 +137,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
                 .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId),getCurrentExternalProgramId(clientId));
-
-        return mapping.findForward(EDIT);
+        
+        // UCF -- intake accessment : please don't remove the following line
+		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
+        
+		return mapping.findForward(EDIT);
     }
 
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -175,10 +178,17 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         try {
             saveClient(client, providerNo);
+            
+            if(OscarProperties.getInstance().isTorontoRFQ()) {
+            	admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
+            }
+            
             admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
-            if (!formBean.getSelectedServiceProgramIds().isEmpty()) admitServicePrograms(client.getDemographicNo(), providerNo, formBean
-                    .getSelectedServiceProgramIds());
+            
+            if (!formBean.getSelectedServiceProgramIds().isEmpty()) 
+            	admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
             saveIntake(intake, client.getDemographicNo());
+            
             // don't move updateRemote up...this method has the problem needs to be fixed
             updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
 
@@ -270,16 +280,10 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private List<Program> getExternalPrograms(Set<Program> providerPrograms) {
         List<Program> externalPrograms = new ArrayList<Program>();
-
-        for (Object o : programManager.getExternalPrograms()) {
-            Program program = (Program) o;
-
-           /* if (providerPrograms.contains(program)) {
-                externalPrograms.add(program);
-            }*/
+        
+        for (Program program : programManager.getExternalPrograms()) {            
             externalPrograms.add(program);
         }
-
         return externalPrograms;
     }
     
@@ -343,6 +347,29 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     }
 
+    private void admitExternalProgram(Integer clientId, String providerNo, Integer externalProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+    	Program externalProgram = null;
+        Integer currentExternalProgramId = getCurrentExternalProgramId(clientId);
+        
+        if (externalProgramId != null) {
+            externalProgram = programManager.getProgram(externalProgramId);
+        }
+
+        if (externalProgram != null) {
+            if (currentExternalProgramId == null) {
+                admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
+            }
+            else if (!currentExternalProgramId.equals(externalProgramId)) {
+                if (programManager.getProgram(externalProgramId).isExternal()) {
+                    if (externalProgram.isExternal()) {
+                        admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
+                    }                    
+                }                
+            }
+        }
+    }
+
+    
     private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
         Program bedCommunityProgram = null;
         Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);

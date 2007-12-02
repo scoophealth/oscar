@@ -31,7 +31,8 @@ public class Program implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final Integer DEFAULT_COMMUNITY_PROGRAM_ID = new Integer(10010);
-
+    
+    public static final String EXTERNAL_TYPE = "external";
     public static final String BED_TYPE = "Bed";
     public static final String COMMUNITY_TYPE = "community";
     public static final String SERVICE_TYPE = "Service";
@@ -121,6 +122,10 @@ public class Program implements Serializable {
         return getNumOfMembers() >= getMaxAllowed();
     }
 
+    public boolean isExternal() {
+    	return EXTERNAL_TYPE.equalsIgnoreCase(getType());
+    }
+    
     public boolean isBed() {
         return BED_TYPE.equalsIgnoreCase(getType());
     }

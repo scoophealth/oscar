@@ -172,7 +172,7 @@ public class ProgramManager {
 		return dao.getServicePrograms();
 	}
 
-	public List getExternalPrograms() {
+	public Program[] getExternalPrograms() {
 		return dao.getExternalPrograms();
 	}
 	
