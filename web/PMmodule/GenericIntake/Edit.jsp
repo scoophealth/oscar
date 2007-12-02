@@ -188,6 +188,9 @@
         </c:if>
     </table>
 </div>
+
+
+
 <c:if test="${not empty sessionScope.genericIntakeEditForm.bedCommunityPrograms || not empty sessionScope.genericIntakeEditForm.servicePrograms}">
     <div id="admissionsTable" dojoType="TitlePane" label="Program Admissions" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
         <table class="intakeTable">
@@ -220,6 +223,27 @@
 </c:if>
 
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+<div id="admissionsTable" dojoType="TitlePane" label="External Referral" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
+	<table class="intakeTable">	
+	<tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
+                    <td class="intakeBedCommunityProgramCell"><label><c:out value="${sessionScope.genericIntakeEditForm.externalProgramLabel}" /></label></td>
+                </c:if>
+                
+            </tr>
+            <tr>
+                <c:if test="${not empty sessionScope.genericIntakeEditForm.externalPrograms}">
+                    <td class="intakeBedCommunityProgramCell">
+                        <html:select property="externalProgramId">
+                            <html:optionsCollection property="externalPrograms" value="value" label="label" />
+                        </html:select>
+                    </td>
+                </c:if>                
+            </tr>
+	</table>
+</div>
+<br />
+
 <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
 <div id="admissionsTable" dojoType="TitlePane" label="Intake Assessment" labelNodeClass="intakeSectionLabel" containerNodeClass="intakeSectionContainer">
 	<table class="intakeTable">
