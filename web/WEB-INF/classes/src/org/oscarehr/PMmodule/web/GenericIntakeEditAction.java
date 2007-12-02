@@ -81,7 +81,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
 
         setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
-                .getLocalAgency().areServiceProgramsVisible(intakeType), null, null);
+                .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null);
 
         //--- program gender issues ---
         
@@ -137,7 +137,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
 
         setBeanProperties(formBean, intake, getRemoteClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
-                .getLocalAgency().areServiceProgramsVisible(intakeType), null, null);
+                .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null);
         formBean.setRemoteAgency(getRemoteAgency(request));
         formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
 
@@ -168,7 +168,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
 
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
-                .getLocalAgency().areServiceProgramsVisible(intakeType), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId));
+                .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId),getCurrentExternalProgramId(clientId));
 
         return mapping.findForward(EDIT);
     }
@@ -192,7 +192,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.getMostRecentProgramIntake(clientId, getProgramId(request));
         }
 
-        setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, null, null);
+        setBeanProperties(formBean, intake, getClient(clientId), providerNo, false, false, false, null, null, null);
 
         return mapping.findForward(PRINT);
     }
@@ -225,8 +225,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         }
 
         setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
-                .areServiceProgramsVisible(intakeType), getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client
-                .getDemographicNo()));
+                .areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client
+                .getDemographicNo()),getCurrentExternalProgramId(client.getDemographicNo()));
 
         return mapping.findForward(EDIT);
     }
@@ -300,6 +300,21 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         return servicePrograms;
     }
 
+    private List<Program> getExternalPrograms(Set<Program> providerPrograms) {
+        List<Program> externalPrograms = new ArrayList<Program>();
+
+        for (Object o : programManager.getExternalPrograms()) {
+            Program program = (Program) o;
+
+           /* if (providerPrograms.contains(program)) {
+                externalPrograms.add(program);
+            }*/
+            externalPrograms.add(program);
+        }
+
+        return externalPrograms;
+    }
+    
     private Integer getCurrentBedCommunityProgramId(Integer clientId) {
         Integer currentProgramId = null;
 
@@ -316,6 +331,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         return currentProgramId;
     }
 
+    private Integer getCurrentExternalProgramId(Integer clientId) {
+        Integer currentProgramId = null;
+
+        Admission externalProgramAdmission = admissionManager.getCurrentExternalProgramAdmission(clientId);
+        
+        if (externalProgramAdmission != null) {
+            currentProgramId = externalProgramAdmission.getProgramId();
+        }
+
+        return currentProgramId;
+    }
+    
     private SortedSet<Integer> getCurrentServiceProgramIds(Integer clientId) {
         SortedSet<Integer> currentProgramIds = new TreeSet<Integer>();
 
@@ -410,12 +437,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     // Bean
 
     private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo,
-            boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, Integer currentBedCommunityProgramId,
-            SortedSet<Integer> currentServiceProgramIds) {
+            boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible, Integer currentBedCommunityProgramId,
+            SortedSet<Integer> currentServiceProgramIds,Integer currentExternalProgramId) {
         formBean.setIntake(intake);
         formBean.setClient(client);
 
-        if (bedCommunityProgramsVisible || serviceProgramsVisible) {
+        if (bedCommunityProgramsVisible || serviceProgramsVisible || externalProgramsVisible) {
             Set<Program> providerPrograms = getActiveProviderPrograms(providerNo);
 
             if (bedCommunityProgramsVisible) {
@@ -426,6 +453,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             if (serviceProgramsVisible) {
                 formBean.setServicePrograms(getServicePrograms(providerPrograms));
                 formBean.setSelectedServiceProgramIds(currentServiceProgramIds);
+            }
+            
+            if (externalProgramsVisible) {
+                formBean.setExternalPrograms(getExternalPrograms(providerPrograms));
+                formBean.setSelectedExternalProgramId(currentExternalProgramId);
             }
         }
     }

@@ -133,6 +133,19 @@ public class Agency implements Serializable {
 		return visible;
 	}
 
+	public boolean areExternalProgramsVisible(String intakeType) {
+		boolean visible = false;
+
+		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeQuickState().contains("E");
+		}
+		else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
+			visible = getIntakeIndepthState().contains("E");
+		}
+
+		return visible;
+	}
+	
 	/**
 	 * Return the unique identifier of this class generator-class="native" column="id"
 	 */

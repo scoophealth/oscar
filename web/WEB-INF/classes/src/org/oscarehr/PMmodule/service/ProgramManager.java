@@ -172,6 +172,10 @@ public class ProgramManager {
 		return dao.getServicePrograms();
 	}
 
+	public List getExternalPrograms() {
+		return dao.getExternalPrograms();
+	}
+	
 	public boolean isBedProgram(String programId) {
 		return dao.isBedProgram(Integer.valueOf(programId));
 	}

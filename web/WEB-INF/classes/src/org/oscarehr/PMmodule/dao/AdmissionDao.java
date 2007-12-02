@@ -157,6 +157,39 @@ public class AdmissionDao extends HibernateDaoSupport {
 
     }
 
+    public Admission getCurrentExternalProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
+        if (programDAO == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ClientId=? AND a.AdmissionStatus='current' ORDER BY a.AdmissionDate DESC";
+
+        Admission admission = null;
+        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+
+        if (rs.isEmpty()) {
+            return null;
+        }
+
+        ListIterator listIterator = rs.listIterator();
+        while (listIterator.hasNext()) {
+            try {
+                admission = (Admission) listIterator.next();
+                if (programDAO.isExternalProgram(admission.getProgramId())) {
+                    return admission;
+                }
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    
     // TODO: rewrite
     public Admission getCurrentBedProgramAdmission(ProgramDao programDAO, Integer demographicNo) {
         if (programDAO == null) {

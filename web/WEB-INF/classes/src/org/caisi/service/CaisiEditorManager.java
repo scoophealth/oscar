@@ -22,6 +22,8 @@
 
 package org.caisi.service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -49,6 +51,20 @@ public class CaisiEditorManager {
         return CaisiEditor;
     }
 
+    public List getActiveLabelValue(String category, String label) {
+    	return dao.getActiveLabelValue(category, label);
+    }
+    
+    public List getActiveLabelValue(String label) {
+    	List results = new ArrayList();
+    	List values = dao.getActiveLabelValue(label);
+    	for(Iterator it = values.iterator(); it.hasNext();) {
+    		CaisiEditor ce = (CaisiEditor) it.next();
+    		results.add(ce.getLabelValue());
+    	}
+    	return results;
+    }
+    
     public CaisiEditor saveCaisiEditor(CaisiEditor CaisiEditor) {
         dao.saveCaisiEditor(CaisiEditor);
         return CaisiEditor;

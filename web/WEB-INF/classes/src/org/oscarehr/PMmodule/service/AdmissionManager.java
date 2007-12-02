@@ -76,6 +76,10 @@ public class AdmissionManager {
 		return dao.getCurrentServiceProgramAdmission(programDao, demographicNo);
 	}
 
+	public Admission getCurrentExternalProgramAdmission(Integer demographicNo) {
+		return dao.getCurrentExternalProgramAdmission(programDao, demographicNo);
+	}
+	
 	public Admission getCurrentCommunityProgramAdmission(Integer demographicNo) {
 		return dao.getCurrentCommunityProgramAdmission(programDao, demographicNo);
 	}

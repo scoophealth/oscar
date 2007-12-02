@@ -104,6 +104,27 @@ public class ProgramDao extends HibernateDaoSupport {
 		return result;
 	}
 
+	public boolean isExternalProgram(Integer programId) {
+		boolean result = false;
+
+		if (programId == null || programId <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		String queryStr = "FROM Program p WHERE p.id = ? AND p.type = 'external'";
+		List rs = getHibernateTemplate().find(queryStr, programId);
+
+		if (!rs.isEmpty()) {
+			result = true;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("isCommunityProgram: id=" + programId + " : " + result);
+		}
+
+		return result;
+	}
+	
 	public Program getProgram(Integer programId) {
 		if (programId == null || programId <= 0) {
 			return null;
@@ -192,6 +213,16 @@ public class ProgramDao extends HibernateDaoSupport {
 
 	public List<?> getServicePrograms() {
 		List<?> rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'Service' ORDER BY p.name");
+
+		if (log.isDebugEnabled()) {
+			log.debug("getServicePrograms: # of programs: " + rs.size());
+		}
+
+		return rs;
+	}
+	
+	public List<?> getExternalPrograms() {
+		List<?> rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'External' ORDER BY p.name");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getServicePrograms: # of programs: " + rs.size());

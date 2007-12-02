@@ -38,6 +38,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private static final long serialVersionUID = 1L;
 
 	private static final String BED_PROGRAM_LABEL = "Bed Program";
+	private static final String EXTERNAL_PROGRAM_LABEL = "External Agency Client Referred From";
 	private static final String COMMUNITY_PROGRAM_LABEL = "Residence Location";
 
 	private String method;
@@ -52,6 +53,10 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	private String bedCommunityProgramId;
 	private String bedCommunityProgramLabel;
 
+	private List<LabelValueBean> externalPrograms;
+	private String externalProgramId;
+	private String externalProgramLabel;
+	
 	private List<LabelValueBean> servicePrograms;
 	private String[] serviceProgramIds;
 
@@ -102,6 +107,51 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	public void setProvinces(LabelValueBean[] provinces) {
 		this.provinces = provinces;
 	}
+
+	
+	//	 external programs --------------------
+
+	public List<LabelValueBean> getExternalPrograms() {
+		return externalPrograms;
+	}
+
+	public void setExternalPrograms(List<Program> externalPrograms_s) {
+		setExternalProgramLabel(!externalPrograms_s.isEmpty());
+		externalPrograms = convertToLabelValues(externalPrograms_s);
+	}
+
+	public String getExternalProgramLabel() {
+		return externalProgramLabel;
+	}
+
+	public void setExternalProgramLabel(boolean hasExternalPrograms) {
+		StringBuffer buffer = new StringBuffer();
+
+		if (hasExternalPrograms) {
+			buffer.append(EXTERNAL_PROGRAM_LABEL);
+		}
+
+		externalProgramLabel = buffer.toString();
+	}
+
+	// Selected External program id
+
+	public Integer getSelectedExternalProgramId() {
+		return convertToInteger(externalProgramId);
+	}
+
+	public void setSelectedExternalProgramId(Integer selectedId) {
+		externalProgramId = convertToString(selectedId);
+	}
+
+	public String getExternalProgramId() {
+		return externalProgramId;
+	}
+
+	public void setExternalProgramId(String externalProgramId) {
+		this.externalProgramId = externalProgramId;
+	}
+	//---------------------	
 	
 	//	 Bed/Community programs
 
@@ -153,7 +203,7 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	public void setBedCommunityProgramId(String bedCommunityProgramId) {
 		this.bedCommunityProgramId = bedCommunityProgramId;
 	}
-
+	
 	// Service programs
 
 	public List<LabelValueBean> getServicePrograms() {
