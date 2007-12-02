@@ -10,3 +10,6 @@ CREATE TABLE `caisi_editor` (
   `isActive` char(3) default NULL,  
   PRIMARY KEY  (`id`)
 );
+
+insert into access_type (name, type) values('Create service restriction','access'),('Disable service restriction','access');
+
