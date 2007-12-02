@@ -124,12 +124,13 @@ public class ProgramManagerViewAction extends BaseAction {
         Program program = programManager.getProgram(programId);
         request.setAttribute("program", program);
 
+       
         if (formBean.getTab().equals("General")) {
             request.setAttribute("agency", programManager.getAgencyByProgram(programId));
         }
 
         if (formBean.getTab().equals("Service Restrictions")) {
-            request.setAttribute("service_restriction", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(programId), new Date()));
+            request.setAttribute("service_restrictions", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(programId), new Date()));
         }
         if (formBean.getTab().equals("Staff")) {
             request.setAttribute("providers", programManager.getProgramProviders(programId));

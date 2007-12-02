@@ -68,6 +68,7 @@
         <property name="programQueueManager" ref="programQueueManager"/>
         <property name="roleManager" ref="roleManager"/>
         <property name="providerManager" ref="providerManager"/>
+        <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
     </bean>
     <bean name="/PMmodule/ProgramManagerView" class="org.oscarehr.PMmodule.web.admin.ProgramManagerViewAction" singleton="false">
         <property name="admissionManager" ref="admissionManager"/>

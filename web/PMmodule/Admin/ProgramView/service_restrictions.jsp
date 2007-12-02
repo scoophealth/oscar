@@ -30,7 +30,7 @@
         </tr>
     </table>
 </div>
-<display:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="service_restriction" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
+<display:table class="simple" cellspacing="2" cellpadding="3" id="restriction" name="service_restrictions" export="false" pagesize="0" requestURI="/PMmodule/ProgramManager.do">
     <display:setProperty name="paging.banner.placement" value="bottom" />
     <display:setProperty name="basic.msg.empty_list" value="No service restrictions currently in place for this program." />
     <display:column property="id" sortable="true" title="Id" />

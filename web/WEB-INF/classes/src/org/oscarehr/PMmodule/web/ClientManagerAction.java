@@ -444,6 +444,7 @@ public class ClientManagerAction extends BaseAction {
         p.setName(program.getName());
 
         request.setAttribute("do_restrict", true);
+        request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", getProviderNo(request), id, "" + p.getId()));
         request.setAttribute("program", program);
 
         return mapping.findForward("edit");

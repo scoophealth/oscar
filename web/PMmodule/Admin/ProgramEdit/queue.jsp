@@ -23,7 +23,7 @@
  -->
 
 <%@ include file="/taglibs.jsp"%>
-<script>
+<script type="text/javascript">
 function removeFromQueue(id) {
 	document.programManagerForm.elements['queue.id'].value = id;
 	document.programManagerForm.method.value='remove_queue';
