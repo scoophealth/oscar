@@ -22,12 +22,14 @@
 
 package org.oscarehr.PMmodule.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Expression;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -57,8 +59,86 @@ public class ClientReferralDAO extends HibernateDaoSupport {
             log.debug("getReferrals: clientId=" + clientId + ",# of results=" + results.size());
         }
 
+        // [ 1842692 ] RFQ Feature - temp change for pmm referral history report
+        results = displayResult(results);
+        // end of change
+        
         return results;
     }
+    
+    // [ 1842692 ] RFQ Feature - temp change for pmm referral history report
+    // - suggestion: to add a new field to the table client_referral (Referring program/agency)
+    public List displayResult(List lResult) {
+    	List <ClientReferral> ret = new ArrayList <ClientReferral>();
+    	//ProgramDao pd = new ProgramDao();
+    	//AdmissionDao ad = new AdmissionDao();
+    	
+    	for(Object element : lResult) {
+    		ClientReferral cr = (ClientReferral) element;
+    		System.out.println(cr.getId() + "|" + cr.getProgramName() + "|" + cr.getClientId());
+
+            ClientReferral result = null;
+            List results = this.getHibernateTemplate().find("from ClientReferral r where r.ClientId = ? and r.Id < ? order by r.Id desc", new Object[] {cr.getClientId(), cr.getId()});
+
+            // temp - completionNotes/Referring program/agency, notes/External
+        	String completionNotes = "";
+        	String notes = "";
+            if (!results.isEmpty()) {
+                result = (ClientReferral)results.get(0);
+        		System.out.println("--" + result.getId() + "|" + result.getProgramName() + "|" + result.getClientId());
+            	completionNotes = result.getProgramName();
+            	notes = isExternalProgram(Integer.parseInt(result.getProgramId().toString())) ? "Yes" : "No";
+        		System.out.println("--" + result.getProgramId().toString());
+            } else {
+            	// get program from table admission
+        		System.out.println("--" + cr.getClientId());
+            	List lr = getAdmissions(Integer.parseInt(cr.getClientId().toString()));
+            	Admission admission = (Admission) lr.get(lr.size() - 1);
+            	completionNotes = admission.getProgramName(); 
+            	notes = isExternalProgram(Integer.parseInt(admission.getProgramId().toString())) ? "Yes" : "No";
+            }
+            
+            // set the values for added report fields
+            cr.setCompletionNotes(completionNotes);
+            cr.setNotes(notes);
+            
+        	ret.add(cr);
+    	}
+    	
+    	return ret;
+    }
+    
+    private boolean isExternalProgram(Integer programId) {
+		boolean result = false;
+
+		if (programId == null || programId <= 0) {
+			throw new IllegalArgumentException();
+		}
+
+		String queryStr = "FROM Program p WHERE p.id = ? AND p.type = 'external'";
+		List rs = getHibernateTemplate().find(queryStr, programId);
+
+		if (!rs.isEmpty()) {
+			result = true;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("isCommunityProgram: id=" + programId + " : " + result);
+		}
+
+		return result;
+	}
+	
+    private List getAdmissions(Integer demographicNo) {
+        if (demographicNo == null || demographicNo <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        String queryStr = "FROM Admission a WHERE a.ClientId=? ORDER BY a.AdmissionDate DESC";
+        List rs = getHibernateTemplate().find(queryStr, new Object[] { demographicNo });
+        return rs;
+    }
+    // end of change
 
     public List getActiveReferrals(Long clientId) {
         if (clientId == null || clientId.longValue() <= 0) {

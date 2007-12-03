@@ -104,9 +104,11 @@
 	<display:column property="programName" sortable="true" title="Program Name" />
 	<display:column property="programType" sortable="true" title="Program Type" />
 	<display:column property="referralDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Referral Date" />
-	<display:column property="providerFormattedName" sortable="true" title="Referring Provider" />
+	<!--  display:column property="providerFormattedName" sortable="true" title="Referring Provider" / -->
 	<display:column property="completionDate" format="{0, date, yyyy-MM-dd kk:mm}" sortable="true" title="Completion Date" />
-	<display:column property="completionNotes" sortable="true" title="Completion Notes" />
-	<display:column property="status" sortable="true" title="Status" />
-	<display:column property="notes" sortable="true" title="Notes" />
+	<!-- display:column property="completionNotes" sortable="true" title="Completion Notes" / -->
+	<!-- display:column property="status" sortable="true" title="Status" / -->
+	<!-- display:column property="notes" sortable="true" title="Notes" / -->
+	<display:column property="completionNotes" sortable="false" title="Referring program/agency" />
+	<display:column property="notes" sortable="false" title="External" />
 </display:table>
