@@ -219,7 +219,6 @@ public class ClientManager {
 
         saveClientReferral(referral);
         List<JointAdmission> dependents = getDependents(referral.getClientId());
-        saveClientReferral(referral);
         for(JointAdmission jadm: dependents){
             referral.setClientId(jadm.getClientId());
             saveClientReferral(referral);
