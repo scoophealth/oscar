@@ -84,7 +84,8 @@ public class ProgramManagerAction extends BaseAction {
 			setEditAttributes(request, id);
 		}
 
-        request.setAttribute("service_restrictions", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(id), new Date()));
+        request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(id), new Date()));
+        request.setAttribute("disabled_service_restrictions", clientRestrictionManager.getDisabledRestrictionsForProgram(Integer.valueOf(id), new Date()));
 
         return mapping.findForward("edit");
 	}
@@ -882,6 +883,15 @@ public class ProgramManagerAction extends BaseAction {
         clientRestrictionManager.disableClientRestriction(prc.getId());
         
         return edit(mapping, form, request, response);      
+    }
+
+    public ActionForward enable_restriction(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        DynaActionForm programForm = (DynaActionForm) form;
+
+        ProgramClientRestriction prc = (ProgramClientRestriction) programForm.get("restriction");
+        clientRestrictionManager.enableClientRestriction(prc.getId());
+
+        return edit(mapping, form, request, response);
     }
 
     private boolean isChanged(Program program1, Program program2) {

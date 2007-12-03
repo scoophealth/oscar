@@ -46,7 +46,6 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -131,7 +130,7 @@ public class ProgramManagerViewAction extends BaseAction {
         }
 
         if (formBean.getTab().equals("Service Restrictions")) {
-            request.setAttribute("service_restrictions", clientRestrictionManager.getRestrictionsForProgram(Integer.valueOf(programId), new Date()));
+            request.setAttribute("service_restrictions", clientRestrictionManager.getActiveRestrictionsForProgram(Integer.valueOf(programId), new Date()));
         }
         if (formBean.getTab().equals("Staff")) {
             request.setAttribute("providers", programManager.getProgramProviders(programId));

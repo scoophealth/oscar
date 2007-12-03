@@ -44,9 +44,24 @@ public class ProgramClientRestrictionDAO extends HibernateDaoSupport {
         return pcrs;
     }
 
+    public Collection<ProgramClientRestriction> findDisabledForProgram(int programId) {
+        Collection<ProgramClientRestriction> pcrs = getHibernateTemplate().find("from ProgramClientRestriction pcr where pcr.enabled = false and pcr.programId = ? order by pcr.demographicNo", programId);
+        for (ProgramClientRestriction pcr : pcrs) {
+            setRelationships(pcr);
+        }
+        return pcrs;
+    }
 
     public Collection<ProgramClientRestriction> findForClient(int demographicNo) {
         Collection<ProgramClientRestriction> pcrs = getHibernateTemplate().find("from ProgramClientRestriction pcr where pcr.enabled = true and pcr.demographicNo = ? order by pcr.programId", demographicNo);
+        for (ProgramClientRestriction pcr : pcrs) {
+            setRelationships(pcr);
+        }
+        return pcrs;
+    }
+
+    public Collection<ProgramClientRestriction> findDisabledForClient(int demographicNo) {
+        Collection<ProgramClientRestriction> pcrs = getHibernateTemplate().find("from ProgramClientRestriction pcr where pcr.enabled = false and pcr.demographicNo = ? order by pcr.programId", demographicNo);
         for (ProgramClientRestriction pcr : pcrs) {
             setRelationships(pcr);
         }

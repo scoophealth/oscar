@@ -25,6 +25,7 @@ package org.oscarehr.PMmodule.service;
 import org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO;
 import org.oscarehr.PMmodule.exception.ClientAlreadyRestrictedException;
 import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.springframework.beans.factory.annotation.Required;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,9 +39,23 @@ public class ClientRestrictionManager {
 
     private ProgramClientRestrictionDAO programClientRestrictionDAO;
 
-    public List<ProgramClientRestriction> getRestrictionsForProgram(int programId, Date asOfDate) {
+    public List<ProgramClientRestriction> getActiveRestrictionsForProgram(int programId, Date asOfDate) {
         // check dao for restriction
         Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findForProgram(programId);
+        List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
+        if (pcrs != null && !pcrs.isEmpty()) {
+            for (ProgramClientRestriction pcr : pcrs) {
+                if (pcr.getStartDate().getTime() <= asOfDate.getTime() && pcr.getEndDate().getTime() <= pcr.getEndDate().getTime())
+                    returnPcrs.add(pcr);
+            }
+        }
+        return returnPcrs;
+    }
+
+
+    public List<ProgramClientRestriction> getDisabledRestrictionsForProgram(Integer programId, Date asOfDate) {
+        // check dao for restriction
+        Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findDisabledForProgram(programId);
         List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
         if (pcrs != null && !pcrs.isEmpty()) {
             for (ProgramClientRestriction pcr : pcrs) {
@@ -54,6 +69,19 @@ public class ClientRestrictionManager {
     public List<ProgramClientRestriction> getActiveRestrictionsForClient(int demographicNo, Date asOfDate) {
         // check dao for restriction
         Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findForClient(demographicNo);
+        List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
+        if (pcrs != null && !pcrs.isEmpty()) {
+            for (ProgramClientRestriction pcr : pcrs) {
+                if (pcr.getStartDate().getTime() <= asOfDate.getTime() && pcr.getEndDate().getTime() <= pcr.getEndDate().getTime())
+                    returnPcrs.add(pcr);
+            }
+        }
+        return returnPcrs;
+    }
+
+    public List<ProgramClientRestriction> getDisabledRestrictionsForClient(int demographicNo, Date asOfDate) {
+        // check dao for restriction
+        Collection<ProgramClientRestriction> pcrs = programClientRestrictionDAO.findDisabledForClient(demographicNo);
         List<ProgramClientRestriction> returnPcrs = new ArrayList<ProgramClientRestriction>();
         if (pcrs != null && !pcrs.isEmpty()) {
             for (ProgramClientRestriction pcr : pcrs) {
@@ -97,11 +125,25 @@ public class ClientRestrictionManager {
         }
     }
 
+    public void enableClientRestriction(Integer restrictionId) {
+        ProgramClientRestriction pcr = programClientRestrictionDAO.find(restrictionId);
+        pcr.setEnabled(true);
+        try {
+            saveClientRestriction(pcr);
+        } catch (ClientAlreadyRestrictedException e) {
+            // this exception should not happen here, so toss it up as a runtime exception to be caught higher up
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public ProgramClientRestrictionDAO getProgramClientRestrictionDAO() {
         return programClientRestrictionDAO;
     }
 
+    @Required
     public void setProgramClientRestrictionDAO(ProgramClientRestrictionDAO programClientRestrictionDAO) {
         this.programClientRestrictionDAO = programClientRestrictionDAO;
     }
+
 }
