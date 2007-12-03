@@ -91,6 +91,10 @@ public class GenericIntakeEditFormBean extends ActionForm {
 	public LabelValueBean[] getGenders() {
 		return genders;
 	}
+	
+	public void setGenders(LabelValueBean[] genders) {
+		this.genders = genders;
+	}
 
 	public LabelValueBean[] getMonths() {
 		return months;
