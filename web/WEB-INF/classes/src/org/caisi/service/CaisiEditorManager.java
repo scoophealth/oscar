@@ -23,6 +23,7 @@
 package org.caisi.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,6 +62,16 @@ public class CaisiEditorManager {
     	for(Iterator it = values.iterator(); it.hasNext();) {
     		CaisiEditor ce = (CaisiEditor) it.next();
     		results.add(ce.getLabelValue());
+    	}
+    	return results;
+    }
+    
+    public List getActiveLabelCaisiEditor(String label) {
+    	List<CaisiEditor> results = new ArrayList<CaisiEditor>();
+    	List values = dao.getActiveLabelValue(label);
+    	for(Iterator it = values.iterator(); it.hasNext();) {
+    		CaisiEditor ce = (CaisiEditor) it.next();
+    		results.add(ce);
     	}
     	return results;
     }
