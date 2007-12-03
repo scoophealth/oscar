@@ -63,7 +63,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-
+        
+		//[ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
+		List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
+		int nSize = lGenders.size();
+		LabelValueBean [] genders = new LabelValueBean[nSize];
+		for (int i = 0; i < nSize; i++) {
+			CaisiEditor ce = (CaisiEditor) lGenders.get(i);
+			genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
+		}
+		formBean.setGenders(genders);
+		//end of change
+		
         String intakeType = getType(request);
         String providerNo = getProviderNo(request);
 
