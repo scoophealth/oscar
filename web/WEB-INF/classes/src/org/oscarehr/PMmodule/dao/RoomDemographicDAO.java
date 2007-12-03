@@ -1,0 +1,145 @@
+/*
+* 
+* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+* This software is published under the GPL GNU General Public License. 
+* This program is free software; you can redistribute it and/or 
+* modify it under the terms of the GNU General Public License 
+* as published by the Free Software Foundation; either version 2 
+* of the License, or (at your option) any later version. * 
+* This program is distributed in the hope that it will be useful, 
+* but WITHOUT ANY WARRANTY; without even the implied warranty of 
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+* along with this program; if not, write to the Free Software 
+* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+* 
+* <OSCAR TEAM>
+* 
+* This software was written for 
+* Centre for Research on Inner City Health, St. Michael's Hospital, 
+* Toronto, Ontario, Canada 
+*/
+
+package org.oscarehr.PMmodule.dao;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.model.RoomDemographic;
+import org.oscarehr.PMmodule.model.RoomDemographicPK;
+import org.oscarehr.PMmodule.utility.DateTimeFormatUtils;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+
+/**
+ * Hibernate implementation of RoomDemographicDAO
+ */
+public class RoomDemographicDAO extends HibernateDaoSupport {
+
+    private static final Log log = LogFactory.getLog(RoomDemographicDAO.class);
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#demographicExists(java.lang.Integer)
+     */
+    public boolean demographicExists(Integer roomId) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic bd where bd.id.roomId = " + roomId).next()) == 1);
+        log.debug("clientExists: " + exists);
+
+        return exists;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#roomExists(java.lang.Integer)
+     */
+    public boolean roomExists(Integer demographicNo) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic bd where bd.id.demographicNo = " + demographicNo).next()) == 1);
+        log.debug("roomExists: " + exists);
+
+        return exists;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#getRoomDemographicByRoom(java.lang.Integer)
+     */
+    public RoomDemographic getRoomDemographicByRoom(Integer roomId) {
+        List roomDemographics = getHibernateTemplate().find("from RoomDemographic bd where bd.id.roomId = ?", roomId);
+
+        if (roomDemographics.size() > 1) {
+            throw new IllegalStateException("Room is assigned to more than one client");
+        }
+
+        RoomDemographic roomDemographic = (RoomDemographic)((roomDemographics.size() == 1)?roomDemographics.get(0):null);
+
+        log.debug("getRoomDemographicByRoom: " + roomId);
+
+        return roomDemographic;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#getRoomDemographicByDemographic(java.lang.Integer)
+     */
+    public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo) {
+        List roomDemographics = getHibernateTemplate().find("from RoomDemographic bd where bd.id.demographicNo = ?", demographicNo);
+
+        if (roomDemographics.size() > 1) {
+            throw new IllegalStateException("Client is assigned to more than one room");
+        }
+
+        RoomDemographic roomDemographic = (RoomDemographic)((roomDemographics.size() == 1)?roomDemographics.get(0):null);
+
+        log.debug("getRoomDemographicByDemographic: " + demographicNo);
+
+        return roomDemographic;
+    }
+
+    /**
+     * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#saveRoomDemographic(org.oscarehr.PMmodule.model.RoomDemographic)
+     */
+    public void saveRoomDemographic(RoomDemographic roomDemographic) {
+        updateHistory(roomDemographic);
+
+        roomDemographic = (RoomDemographic)getHibernateTemplate().merge(roomDemographic);
+        getHibernateTemplate().flush();
+
+        log.debug("saveRoomDemographic: " + roomDemographic);
+    }
+
+    public void deleteRoomDemographic(RoomDemographic roomDemographic) {
+         // delete
+        getHibernateTemplate().delete(roomDemographic);
+        getHibernateTemplate().flush();
+    }
+
+    boolean roomDemographicExists(RoomDemographicPK id) {
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic bd where bd.id.roomId = " + id.getRoomId() + " and bd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
+        log.debug("roomDemographicExists: " + exists);
+
+        return exists;
+    }
+
+    void updateHistory(RoomDemographic roomDemographic) {
+        RoomDemographic existing = null;
+
+        RoomDemographicPK id = roomDemographic.getId();
+
+        if (!roomDemographicExists(id)) {
+            Integer demographicNo = id.getDemographicNo();
+            Integer roomId = id.getRoomId();
+
+            if (roomExists(demographicNo)) {
+                existing = getRoomDemographicByDemographic(demographicNo);
+            }
+            else if (demographicExists(roomId)) {
+                existing = getRoomDemographicByRoom(roomId);
+            }
+        }
+
+        if (existing != null) {
+            deleteRoomDemographic(existing);
+        }
+    }
+
+}
