@@ -88,7 +88,18 @@ Community Program:&nbsp;
 		</c:choose>
 	</c:forEach>
 </select>
+
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 &nbsp;<input type="button" value="Discharge" onclick="select_program_community()" />
+</caisi:isModuleLoad>
+
+<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+<c:if test="${sessionScope.performDischargeBed=='true'}">
+&nbsp;<input type="button" value="Discharge" onclick="select_program_community()" />
+</c:if>
+</caisi:isModuleLoad>
+
+
 <br />
 <br />
 
@@ -103,9 +114,20 @@ Community Program:&nbsp;
 	<display:setProperty name="paging.banner.placement" value="bottom" />
 	<display:setProperty name="basic.msg.empty_list" value="This client is not currently admitted to any programs." />
 	
+	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
 	<display:column sortable="false">
 		<input type="button" value="Discharge" onclick="select_program('<c:out value="${admission.programId}"/>')" />
 	</display:column>
+	</caisi:isModuleLoad>
+	
+	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
+	<c:if test="${sessionScope.performDischargeService=='true'}">
+	<display:column sortable="false">
+		<input type="button" value="Discharge" onclick="select_program('<c:out value="${admission.programId}"/>')" />
+	</display:column>
+	</c:if>
+	</caisi:isModuleLoad>
+	
 	<display:column sortable="true" title="Program Name">
 		<c:out value="${admission.programName}" />
 	</display:column>

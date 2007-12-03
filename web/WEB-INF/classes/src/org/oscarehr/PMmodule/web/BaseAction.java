@@ -52,6 +52,7 @@ import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.service.RoleManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -61,6 +62,7 @@ public abstract class BaseAction extends DispatchAction {
 	protected static final String PARAM_EQUALS = "=";
 	protected static final String PARAM_AND = "&";
 	
+	protected CaseManagementManager caseManagementManager;
 	protected AdmissionManager admissionManager;
 	protected AgencyManager agencyManager;
 	protected BedCheckTimeManager bedCheckTimeManager;
@@ -102,6 +104,10 @@ public abstract class BaseAction extends DispatchAction {
 
 	public ApplicationContext getAppContext() {
 		return WebApplicationContextUtils.getWebApplicationContext(getServlet().getServletContext());
+	}
+	
+	public CaseManagementManager getCaseManagementManager() {
+		return (CaseManagementManager)getAppContext().getBean("CaseManagementManager");
 	}
 
 	public AdmissionManager getAdmissionManager() {
@@ -149,6 +155,10 @@ public abstract class BaseAction extends DispatchAction {
 		mgr.notifyUpdate(dataType, Long.valueOf(id));
 	}
 
+	public void setCaseManagementManager(CaseManagementManager caseManagementManager) {
+		this.caseManagementManager = caseManagementManager;
+	}
+	
 	public void setAdmissionManager(AdmissionManager mgr) {
 		this.admissionManager = mgr;
 	}

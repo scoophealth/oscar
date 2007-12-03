@@ -43,6 +43,8 @@ import oscar.oscarDemographic.data.DemographicRelationship;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.util.*;
 
 public class ClientManagerAction extends BaseAction {
@@ -775,6 +777,22 @@ public class ClientManagerAction extends BaseAction {
 
         request.setAttribute("programDomain", programDomain);
 
+        //check role permission
+        HttpSession se=request.getSession();
+        List admissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
+        for(Iterator it = admissions.iterator(); it.hasNext();) {
+        	Admission admission = (Admission)it.next();
+        	String inProgramId = String.valueOf(admission.getProgramId());
+        	String inProgramType = admission.getProgramType();
+        	if(inProgramType.equalsIgnoreCase("service"))
+        		se.setAttribute("performDischargeService",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
+        	else if(inProgramType.equalsIgnoreCase("bed"))
+        		se.setAttribute("performDischargeBed",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
+        }
+        
+        
+        
+        
         // tab override - from survey module
         String tabOverride = (String) request.getAttribute("tab.override");
 
