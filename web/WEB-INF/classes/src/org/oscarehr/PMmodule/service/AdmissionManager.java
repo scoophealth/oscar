@@ -101,22 +101,26 @@ public class AdmissionManager {
 	}
 	*/
 	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, null, false);
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, null, false,null);
 	}
 
 	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, false);
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, false,null);
 	}
 
+        public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission,List<Long> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, false,dependents);
+	}
+        
 	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, boolean overrideRestriction) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, overrideRestriction);
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, tempAdmission, null, overrideRestriction,null);
+	}
+        
+        public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate, false,null);
 	}
 
-    public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, Date admissionDate) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-		processAdmission(demographicNo, providerNo, program, dischargeNotes, admissionNotes, false, admissionDate, false);
-	}
-
-	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate, boolean overrideRestriction) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
+	public void processAdmission(Integer demographicNo, String providerNo, Program program, String dischargeNotes, String admissionNotes, boolean tempAdmission, Date admissionDate, boolean overrideRestriction, List<Long> dependents) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
 		// see if there's room first
 		if (program.getNumOfMembers().intValue() >= program.getMaxAllowed().intValue()) {
 			throw new ProgramFullException();
@@ -129,7 +133,7 @@ public class AdmissionManager {
                 throw new ServiceRestrictionException("service restriction in place", restrInPlace);
             }
         }
-        
+                
         // If admitting to bed program, discharge from old bed program
 		if (program.getType().equalsIgnoreCase("bed") && !tempAdmission) {
 			Admission fullAdmission = getCurrentBedProgramAdmission(demographicNo);
@@ -204,6 +208,14 @@ public class AdmissionManager {
 				this.processDischarge(p.getId(), demographicNo,"", "");
 			}
 		}
+                
+                //For the clients dependents
+                if (dependents != null){
+                   for(Long l : dependents){  
+                      processAdmission(new Integer(l.intValue()), providerNo,program,dischargeNotes,admissionNotes,tempAdmission,newAdmission.getAdmissionDate(),true,null);
+                   }
+                }
+                
 	}
 
 	public void processInitialAdmission(Integer demographicNo, String providerNo, Program program, String admissionNotes, Date admissionDate) throws ProgramFullException, AlreadyAdmittedException, ServiceRestrictionException {
