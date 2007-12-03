@@ -74,6 +74,8 @@ public class Program implements Serializable {
     private String exclusiveView;
     private int ageMin=1;
     private int ageMax=200;
+    private Integer maximumServiceRestrictionDays;
+    private int defaultServiceRestrictionDays;
 
     // constructors
     public Program() {
@@ -624,6 +626,22 @@ public class Program implements Serializable {
 
     public void setAgeMax(int ageMax) {
         this.ageMax = ageMax;
+    }
+
+    public Integer getMaximumServiceRestrictionDays() {
+        return maximumServiceRestrictionDays;
+    }
+
+    public void setMaximumServiceRestrictionDays(Integer maximumServiceRestrictionDays) {
+        this.maximumServiceRestrictionDays = maximumServiceRestrictionDays;
+    }
+
+    public int getDefaultServiceRestrictionDays() {
+        return defaultServiceRestrictionDays;
+    }
+
+    public void setDefaultServiceRestrictionDays(int defaultServiceRestrictionDays) {
+        this.defaultServiceRestrictionDays = defaultServiceRestrictionDays;
     }
 
     public boolean equals(Object obj) {

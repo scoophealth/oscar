@@ -26,10 +26,54 @@
 -->
 
 <%@ include file="/taglibs.jsp"%>
+<script>
+	function save() {
+		var maxDays = document.programManagerForm.elements['program.maximumServiceRestrictionDays'].value;
+		if(maxDays != undefined && isNaN(maxDays)) {
+			alert("Maximum length of service restriction '" + maxDays + "' is not a number");
+			return false;
+		}
+
+        var defDays = document.programManagerForm.elements['program.defaultServiceRestrictionDays'].value;
+		if(isNaN(defDays)) {
+			alert("Default length of service restrcition '" + defDays + "' is not a number");
+			return false;
+		}
+
+        document.programManagerForm.method.value='save_restriction_settings';
+		document.programManagerForm.submit()
+	}
+
+</script>
+
 <div class="tabs" id="tabs">
     <table cellpadding="3" cellspacing="0" border="0">
         <tr>
-            <th title="Service Restrictions">Active Service Restrictions</th>
+            <th title="Service Restrictions">Service Restriction Settings</th>
+        </tr>
+    </table>
+</div>
+Please define the following parameters control the behaviour of new service restrictions for this program.
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+	<tr class="b">
+		<td width="20%">Maximum length of service restriction (in days):</td>
+		<td><html:text property="program.maximumServiceRestrictionDays" size="4" maxlength="4"/>&nbsp;(empty or zero means no maximum)</td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Default service restriction length (in days):</td>
+		<td><html:text property="program.defaultServiceRestrictionDays" size="4" maxlength="4"/></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="button" value="Save" onclick="return save()" />
+		</td>
+	</tr>
+</table>
+<br/>
+<div class="tabs" id="tabs">
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th title="Service Restrictions">Current Service Restrictions</th>
         </tr>
     </table>
 </div>

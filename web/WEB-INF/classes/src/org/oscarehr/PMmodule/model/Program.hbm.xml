@@ -55,5 +55,8 @@
 		<property name="exclusiveView" column="exclusive_view" type="string" not-null="false" length="20"/>
 		<property name="ageMin" column="ageMin" type="integer" not-null="true" length="10" />
 		<property name="ageMax" column="ageMax" type="integer" not-null="true" length="10" />
-	</class>
+        <property name="maximumServiceRestrictionDays" column="maximum_restriction_days" type="integer" not-null="false" length="11"/>
+        <property name="defaultServiceRestrictionDays" column="default_restriction_days" type="integer" not-null="true" length="11"/>
+
+    </class>
 </hibernate-mapping>

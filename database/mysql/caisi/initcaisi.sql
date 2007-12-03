@@ -1666,6 +1666,8 @@ CREATE TABLE `program` (
   `mentalHealth` tinyint(1) default 0,
   `housing` tinyint(1) default 0,  
   `exclusive_view` varchar(20) not null default 'no',
+  `maximum_restriction_days` tinyint(11) default NULL,
+  `default_restriction_days` tinyint(11) not null default 30,
   PRIMARY KEY  (`program_id`),
 	ageMin int not null,
 	ageMax int not null

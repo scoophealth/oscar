@@ -264,8 +264,7 @@ public class ClientManagerAction extends BaseAction {
 
         Demographic demographic=clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
-        request.getSession().setAttribute("clientAge", demographic.getAge());
-        
+
         return mapping.findForward("edit");
     }
 
@@ -789,17 +788,17 @@ public class ClientManagerAction extends BaseAction {
         	if(inProgramType.equalsIgnoreCase("service")) {
         		se.setAttribute("performDischargeService",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
         		se.setAttribute("performAdmissionService",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
-            	
+
         	}
         	else if(inProgramType.equalsIgnoreCase("bed")) {
         		se.setAttribute("performDischargeBed",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
         		se.setAttribute("performAdmissionBed",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
-        		se.setAttribute("performBedAssignments",new Boolean(caseManagementManager.hasAccessRight("perform bed assignments","access",providerNo,demographicNo,inProgramId)));      	    
-        	
+        		se.setAttribute("performBedAssignments",new Boolean(caseManagementManager.hasAccessRight("perform bed assignments","access",providerNo,demographicNo,inProgramId)));
+
         	}
-        }    
-        
-        
+        }
+
+
         // tab override - from survey module
         String tabOverride = (String) request.getAttribute("tab.override");
 
