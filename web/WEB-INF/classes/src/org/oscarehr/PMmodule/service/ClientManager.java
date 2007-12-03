@@ -22,6 +22,7 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.ArrayList;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.ClientDao;
@@ -160,6 +161,15 @@ public class ClientManager {
 
     public List<JointAdmission> getDependents(Long clientId){
         return jointAdmissionDAO.getSpouseAndDependents( clientId);
+    }
+    
+    public List<Long> getDependentsList(Long clientId){
+        List<Long> list = new ArrayList();
+        List<JointAdmission> jadms = jointAdmissionDAO.getSpouseAndDependents( clientId);
+        for (JointAdmission jadm: jadms){
+            list.add(jadm.getClientId());
+        }
+        return list; 
     }
 
     public JointAdmission getJointAdmission(Long clientId){
