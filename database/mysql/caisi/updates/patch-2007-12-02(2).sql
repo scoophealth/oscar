@@ -1,6 +1,6 @@
 
-alter table  room_patch  add  assigned_bed  tinyint(1)  NOT NULL default '1';
-alter table  room_patch  add  occupancy  int(10) NULL default '0';
+alter table  room  add  assigned_bed  tinyint(1)  NOT NULL default '1';
+alter table  room  add  occupancy  int(10) NULL default '0';
 
 CREATE TABLE `room_demographic` (
   `room_id` int(10) unsigned NOT NULL default '0',
