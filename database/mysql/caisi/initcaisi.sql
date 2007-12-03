@@ -1666,7 +1666,9 @@ CREATE TABLE `program` (
   `mentalHealth` tinyint(1) default 0,
   `housing` tinyint(1) default 0,  
   `exclusive_view` varchar(20) not null default 'no',
-  PRIMARY KEY  (`program_id`)
+  PRIMARY KEY  (`program_id`),
+	ageMin int not null,
+	ageMax int not null
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --

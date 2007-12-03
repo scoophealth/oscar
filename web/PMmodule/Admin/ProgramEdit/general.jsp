@@ -213,6 +213,14 @@ Program p = (Program)request.getAttribute("oldProgram");
 		    (Selecting "No" allows users to switch views)
 		</td>
 	</tr>	
+	<tr class="b">
+		<td width="20%">Minimum Age (inclusive):</td>
+		<td><html:text property="program.ageMin" size="8" maxlength="8"/></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Maximum Age (inclusive):</td>
+		<td><html:text property="program.ageMax" size="8" maxlength="8"/></td>
+	</tr>
 	<tr>
 		<td colspan="2">
 			<input type="button" value="Save" onclick="return save()" />

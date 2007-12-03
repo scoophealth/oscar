@@ -40,7 +40,7 @@ public class Program implements Serializable {
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private Integer id;// fields
-    private boolean userDefined=true;
+    private boolean userDefined = true;
     private Integer numOfMembers;
     private Integer queueSize;
     private Integer maxAllowed;
@@ -72,6 +72,8 @@ public class Program implements Serializable {
     private boolean mentalHealth;
     private boolean housing;
     private String exclusiveView;
+    private int ageMin=1;
+    private int ageMax=200;
 
     // constructors
     public Program() {
@@ -88,8 +90,8 @@ public class Program implements Serializable {
     /**
      * Constructor for required fields
      */
-    public Program(Integer id, boolean isUserDefined, Integer maxAllowed, String address, String phone, String fax, String url, String email, String emergencyNumber, String name,
-            Long agencyId, boolean holdingTank, String programStatus) {
+    public Program(Integer id, boolean isUserDefined, Integer maxAllowed, String address, String phone, String fax, String url, String email,
+            String emergencyNumber, String name, Long agencyId, boolean holdingTank, String programStatus) {
 
         setId(id);
         setUserDefined(isUserDefined);
@@ -605,6 +607,23 @@ public class Program implements Serializable {
 
     public void setExclusiveView(String exclusive_view) {
         this.exclusiveView = exclusive_view;
+    }
+
+
+    public int getAgeMin() {
+        return ageMin;
+    }
+
+    public void setAgeMin(int ageMin) {
+        this.ageMin = ageMin;
+    }
+
+    public int getAgeMax() {
+        return ageMax;
+    }
+
+    public void setAgeMax(int ageMax) {
+        this.ageMax = ageMax;
     }
 
     public boolean equals(Object obj) {

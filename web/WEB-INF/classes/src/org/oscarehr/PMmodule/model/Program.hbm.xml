@@ -53,5 +53,7 @@
 		<property name="mentalHealth" column="mentalHealth" type="boolean" not-null="false" length="1"/>
 		<property name="housing" column="housing" type="boolean" not-null="false" length="1"/>
 		<property name="exclusiveView" column="exclusive_view" type="string" not-null="false" length="20"/>
+		<property name="ageMin" column="ageMin" type="integer" not-null="true" length="10" />
+		<property name="ageMax" column="ageMax" type="integer" not-null="true" length="10" />
 	</class>
 </hibernate-mapping>

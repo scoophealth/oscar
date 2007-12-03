@@ -1,0 +1,1 @@
+alter table program add column (ageMin int not null, ageMax int not null);
