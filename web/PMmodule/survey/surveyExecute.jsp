@@ -88,7 +88,7 @@
 		<html:hidden property="view.admissionId"/>
 		<input type="hidden" name="method" value="save_survey"/>
 		<input type="hidden" name="type" value="<c:out value="${type}"/>"/>
-		<h3>Survey</h3>
+		
 		<br/>
 
 		<div class="tabs" id="tabs">
