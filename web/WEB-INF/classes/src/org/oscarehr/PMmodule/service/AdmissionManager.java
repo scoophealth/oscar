@@ -269,7 +269,10 @@ public class AdmissionManager {
 		return dao.search(searchBean);
 	}
 
-	public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
+        public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason) throws AdmissionException {
+            processDischarge(programId, demographicNo, dischargeNotes, radioDischargeReason,null);
+        }
+        public void processDischarge(Integer programId, Integer demographicNo, String dischargeNotes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
 		
 		Admission fullAdmission = getCurrentAdmission(String.valueOf(programId), demographicNo);
 
@@ -282,9 +285,20 @@ public class AdmissionManager {
 		fullAdmission.setAdmissionStatus(Admission.STATUS_DISCHARGED);
 		fullAdmission.setRadioDischargeReason(radioDischargeReason);
 		saveAdmission(fullAdmission);
+                
+                if (dependents != null){
+                    for(Long l:dependents){
+                        processDischarge(programId,new Integer(l.intValue()),dischargeNotes,radioDischargeReason,null);
+                    }
+                }
+                
 	}
 
-	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason) throws AdmissionException {
+        public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason) throws AdmissionException {
+                processDischargeToCommunity(communityProgramId,demographicNo,providerNo,notes,radioDischargeReason,null);
+        }
+        
+	public void processDischargeToCommunity(Integer communityProgramId, Integer demographicNo, String providerNo, String notes, String radioDischargeReason,List<Long> dependents) throws AdmissionException {
 		Admission currentBedAdmission = getCurrentBedProgramAdmission(demographicNo);
 
 		if (currentBedAdmission != null) {
@@ -317,6 +331,12 @@ public class AdmissionManager {
 		admission.setRadioDischargeReason(radioDischargeReason);
 		admission.setClientStatusId(0);
 		saveAdmission(admission);
+                
+                if (dependents != null){
+                    for(Long l:dependents){
+                        processDischargeToCommunity(communityProgramId,new Integer(l.intValue()),providerNo, notes, radioDischargeReason,null);
+                    }
+                }
 	}
 
     @Required
