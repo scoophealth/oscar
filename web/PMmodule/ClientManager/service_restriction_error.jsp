@@ -65,7 +65,7 @@
                 <c:if test="${requestScope.hasOverridePermission}">
                     <html:submit property="submit.override">Override</html:submit>
                 </c:if>
-                <html:cancel property="submit.cancel">Cancel</html:cancel>
+                <html:cancel>Cancel</html:cancel>
             </td>
         </tr>
 

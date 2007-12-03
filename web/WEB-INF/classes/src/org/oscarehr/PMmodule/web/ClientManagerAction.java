@@ -268,7 +268,7 @@ public class ClientManagerAction extends BaseAction {
 
         Demographic demographic=clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
-        
+
         return mapping.findForward("edit");
     }
 
@@ -458,11 +458,18 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
         ProgramClientRestriction restriction = (ProgramClientRestriction) clientForm.get("serviceRestriction");
 
+        ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
         if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
+            clientForm.set("referral", new ClientReferral());
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.cancelled"));
+            saveMessages(request, messages);
+
+            setEditAttributes(form, request, "" + referral.getClientId());
+
             return mapping.findForward("edit");
         }
-        ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
         boolean success = true;
         try {
@@ -493,8 +500,6 @@ public class ClientManagerAction extends BaseAction {
         logManager.log("write", "referral", "" + referral.getClientId(), request);
 
         return mapping.findForward("edit");
-
-
     }
 
     public ActionForward save(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -577,7 +582,7 @@ public class ClientManagerAction extends BaseAction {
         request.setAttribute("programs", programManager.search(criteria));
 
         ProgramUtils.addProgramRestrictions(request);
-        
+
         return mapping.findForward("search_programs");
     }
 
