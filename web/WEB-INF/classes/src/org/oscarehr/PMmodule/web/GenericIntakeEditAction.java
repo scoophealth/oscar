@@ -194,7 +194,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         try {
             saveClient(client, providerNo);
-
+            
+            //for RFQ: to save 'external' program.
             if(OscarProperties.getInstance().isTorontoRFQ()) {
                 admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
             }
@@ -382,11 +383,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
             }
             else if (!currentExternalProgramId.equals(externalProgramId)) {
-                if (programManager.getProgram(externalProgramId).isExternal()) {
+                /*if (programManager.getProgram(externalProgramId).isExternal()) {
                     if (externalProgram.isExternal()) {
                         admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
                     }
-                }
+                }*/
+            	admissionManager.processDischarge(currentExternalProgramId, clientId, "intake external discharge", "0");
+                admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");       
             }
         }
     }
