@@ -25,12 +25,13 @@ package org.oscarehr.survey.dao.oscar.hibernate;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
@@ -39,6 +40,7 @@ import org.oscarehr.survey.model.oscar.OscarFormInstance;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.SurveyDocument;
+import org.oscarehr.surveymodel.SelectDocument.Select;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.Ostermiller.util.StringHelper;
@@ -109,7 +111,6 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		
 		int page=1;
 		int section=0;
-		int question=1;
 		String id="";
 		for(Page p:model.getSurvey().getBody().getPageArray()) {
 			section=0;
@@ -118,11 +119,33 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 				if(container.isSetQuestion()) {
 					Question q = container.getQuestion();
 					id = page + "_" + section + "_"+ q.getId();
-					keyMap.put(id, q.getDescription());
+					if(q.getType().isSetSelect() /* && q.getType().getSelect().isSetMultiAnswer() */) {
+						Select select = q.getType().getSelect();
+						String answers[] = select.getPossibleAnswers().getAnswerArray();
+						for(int x=0;x<answers.length;x++) {
+							keyMap.put(id + "_" + answers[x], q.getDescription() + "::" + answers[x]);
+						}
+						if(select.getOtherAnswer()) {
+							keyMap.put(id + "_other", q.getDescription() + "::other");
+						}
+					} else {
+						keyMap.put(id, q.getDescription());
+					}
 				} else {
 					for(Question q:container.getSection().getQuestionArray()) {
 						id = page + "_" + section + "_"+ q.getId();
-						keyMap.put(id, q.getDescription());						
+						if(q.getType().isSetSelect() /* && q.getType().getSelect().isSetMultiAnswer() */) {
+							Select select = q.getType().getSelect();
+							String answers[] = select.getPossibleAnswers().getAnswerArray();
+							for(int x=0;x<answers.length;x++) {
+								keyMap.put(id + "_" + answers[x], q.getDescription() + "::" + answers[x]);
+							}
+							if(select.getOtherAnswer()) {
+								keyMap.put(id + "_other", q.getDescription() + "::other");
+							}	
+						} else {
+							keyMap.put(id, q.getDescription());
+						}
 					}
 					section++;
 				}
@@ -145,6 +168,7 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		}
 		
 		//print header line
+		pout.print(escapeAndQuote("Date"));pout.print(",");
 		pout.print(escapeAndQuote("Client ID"));pout.print(",");
 		pout.print(escapeAndQuote("Client First Name"));pout.print(",");
 		pout.print(escapeAndQuote("Client Last Name"));pout.print(",");
@@ -158,51 +182,96 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 		pout.println();
 		
 		//get form instances - for each one, output a line
-		List result = this.getHibernateTemplate().find("select f.id,f.clientId from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
+		List result = this.getHibernateTemplate().find("select f.id,f.clientId,f.dateCreated from OscarFormInstance f where f.formId = ? order by f.clientId, f.dateCreated",formId);
 		for(x=0;x<result.size();x++) {
 			Object o = result.get(x);
 			Long instanceId = (Long)((Object[])result.get(x))[0];
+			
 			//get data for this instance
-			Map<String,String> formMap = new HashMap<String,String>();
+			Map<String,OscarFormData> formMap = new HashMap<String,OscarFormData>();
 			List data = this.getHibernateTemplate().find("from OscarFormData d where d.instanceId=?",instanceId);
+			
+			//we want to match they header keys with these keys.			
 			for(int y=0;y<data.size();y++) {
 				OscarFormData d = (OscarFormData)data.get(y);
-				String key = d.getPageNumber() + "_" + d.getSectionId() + "_" + d.getQuestionId();
-				String value = formMap.get(key);
-				String val = d.getValue();
-				if(value == null) {
-					if(val == null) { val="";}
-					formMap.put(key,val);
-				} else {
-					if(val == null || val.length()==0) {continue;}
-					if(value.length()>0) {
-						val = value + "," + val;
-					}
-					formMap.put(key,val);
-				}				
+				//System.out.println("formdata=" +d.getKey());
+				formMap.put(d.getKey(),d);
 			}
+			/*
+			for(String key:keyMap.keySet()) {
+				System.out.println("header=" + key);
+			}
+			*/
+						
 			
 			//we need to add the client data
-			long clientId = (Long)((Object[])result.get(x))[1];
-			pout.print(escapeAndQuote(String.valueOf(clientId)));
+			long clientId = (Long)((Object[])result.get(x))[1];			
 			Demographic demographic = (Demographic)getHibernateTemplate().get(Demographic.class, (int)clientId);
 			if(demographic != null) {
+				Timestamp ts = (java.sql.Timestamp)((Object[])result.get(x))[2];
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				pout.print(escapeAndQuote(df.format(ts)));pout.print(",");
+				pout.print(escapeAndQuote(String.valueOf(clientId)));pout.print(",");
 				pout.print(escapeAndQuote(demographic.getFirstName()));pout.print(",");
 				pout.print(escapeAndQuote(demographic.getLastName()));pout.print(",");
-				pout.print(escapeAndQuote(demographic.getYearOfBirth() + "-" + demographic.getMonthOfBirth() + "-" + demographic.getDateOfBirth()));pout.print(",");
+				pout.print(escapeAndQuote(demographic.getYearOfBirth() + "-" + demographic.getMonthOfBirth() + "-" + demographic.getDateOfBirth()));
 			} else {
 				pout.print("\"\"");pout.print(",");
 				pout.print("\"\"");pout.print(",");
 				pout.print("\"\"");pout.print(",");			
+				pout.print("\"\"");pout.print(",");
+				pout.print("\"\"");
 			}
 			
-			
-			int z=0;
-			for(String key:keyMap.keySet()) {
-				if(z>0) {pout.print(",");}				
-				pout.print(escapeAndQuote(formMap.get(key)));							
-				z++;
+			String keys[] = keyMap.keySet().toArray(new String[keyMap.keySet().size()]);
+			for(int z=0;z<keys.length;z++) {				
+				if(keys[z].matches("[0-9]+_[0-9]+_[0-9]+")) {
+					//not a select
+					OscarFormData ofd = formMap.get(keys[z]);
+					pout.print(",");
+					if(ofd != null) {						
+						pout.print(escapeAndQuote(ofd.getValue()));
+					} else {
+						pout.print(escapeAndQuote("N/A"));
+					}
+				} else {
+					//it is a select
+					String[] keyParts = keys[z].split("_");
+					String questionKey = keyParts[0] + "_" + keyParts[1] + "_" + keyParts[2];
+					OscarFormData ofd = formMap.get(questionKey);
+					if(ofd != null) {
+						//radio buttons
+						while(keys[z].startsWith(questionKey)) {
+							String[] keyParts2 = keys[z].split("_");
+							pout.print(",");
+							if(keyParts2[3].equals(ofd.getValue())) {
+								pout.print(escapeAndQuote("Yes"));
+							} else {
+								pout.print(escapeAndQuote("No"));
+							}
+							z++;
+							if(keys.length==z) {break;}
+						}
+						z--;
+					} else {
+						//checkboxes
+						while(keys[z].startsWith(questionKey)) {
+							String checkName = keys[z].substring(questionKey.length()+1);
+							ofd = formMap.get(keys[z]);
+							pout.print(",");
+							if(ofd != null && ofd.getValue()!=null && ofd.getValue().equals(checkName)) {
+								pout.print(escapeAndQuote("Yes"));
+							} else {
+								pout.print(escapeAndQuote("No"));
+							}
+							z++;
+							if(keys.length==z) {break;}
+						}
+						z--;
+					}
+				}
 			}
+						
 			pout.println();
 		}
 		pout.flush();
