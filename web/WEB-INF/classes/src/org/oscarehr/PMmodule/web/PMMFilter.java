@@ -93,7 +93,9 @@ public class PMMFilter implements Filter {
 		if (oscarUser == null || oscarUser.length() == 0) {
 			log.info("Not logged in!");
 			chain.doFilter(baseRequest, baseResponse);
-		}
+
+            return;
+        }
 
 		if (session.getAttribute("provider") == null) {
 			log.debug("setting session variable: provider");
