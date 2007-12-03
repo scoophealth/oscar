@@ -174,7 +174,7 @@ public class ProgramDao extends HibernateDaoSupport {
 
 	public List<Program> getAllActivePrograms() {
 		@SuppressWarnings("unchecked")
-		List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.type != ? and p.programStatus = 'active' ORDER BY p.Name", "community");
+		List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.programStatus = 'active'");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getAllPrograms: # of programs: " + rs.size());

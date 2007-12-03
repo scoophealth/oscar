@@ -1,23 +1,12 @@
-<%@page import="java.util.*" %>
-<%@page import="org.oscarehr.util.*" %>
-<%
-	Set<Map.Entry<Thread,StackTraceElement[]>> entries=DbConnectionFilter.debugMap.entrySet();
-	for (Map.Entry<Thread,StackTraceElement[]> entry : entries)
-	{
-		Thread thread=entry.getKey();
-		StackTraceElement[] stackTrace=entry.getValue();
-		%>
-			<hr />
-			Thread : <%=thread.getName() %> <br />
-			StackTrace : <br /> 
-			<%
-				for (StackTraceElement ste : stackTrace)
-				{
-					%>
-						<%=ste.toString() %><br />
-					<%
-				}
-			%>
-		<%
-	}
-%>
+<html>
+<head>
+    <title>Generic Intake Edit</title>
+    <script type="text/javascript" src="/oscar/js/checkDate.js" />
+</head>
+<body>
+	<script>
+		alert("hi");
+		alert(calculateAge(1974, 11, 08));
+	</script>
+</body>
+</html>

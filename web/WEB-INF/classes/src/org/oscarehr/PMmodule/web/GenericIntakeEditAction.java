@@ -141,6 +141,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         // UCF -- intake accessment : please don't remove the following line
         request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
 
+        ProgramUtils.addProgramRestrictions(request);
+
         return mapping.findForward(EDIT);
     }
 

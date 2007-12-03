@@ -27,6 +27,8 @@
         var programFemaleOnly =<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly =<%=session.getAttribute("programTransgenderOnly")%>;
 
+		<%=session.getAttribute("programAgeValidationMethod")%>
+
         // -->
 
         function openSurvey(ctl) {

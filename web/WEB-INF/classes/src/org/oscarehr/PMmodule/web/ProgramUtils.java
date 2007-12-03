@@ -39,6 +39,34 @@ public class ProgramUtils
      * @param request
      */
     public static void addProgramRestrictions(HttpServletRequest request) {
+        addProgramGenderRestrictions(request);
+        addProgramAgeRestrictions(request);
+    }
+    
+    private static void addProgramAgeRestrictions(HttpServletRequest request) {
+        StringBuilder sb=new StringBuilder();
+        
+        
+        
+        sb.append("function check_age(programId, age)\n");
+        sb.append("{\n");
+        
+        for (Program program : programDao.getAllActivePrograms())
+        {
+            sb.append("if (programId == "+program.getId()+" && ( age<"+program.getAgeMin()+" || age>"+program.getAgeMax()+" ))\n");
+            sb.append("{\n");
+            sb.append("   alert('The client does not meet the age restrictions for this program.');\n");            
+            sb.append("   return false;\n");
+            sb.append("}\n");
+        }
+        
+        sb.append("}\n");
+        
+        request.getSession().setAttribute("programAgeValidationMethod", sb.toString());
+    }
+
+    private static void addProgramGenderRestrictions(HttpServletRequest request)
+    {
         StringBuilder programMaleOnly=new StringBuilder("[");
         StringBuilder programFemaleOnly=new StringBuilder("[");
         StringBuilder programTransgenderOnly=new StringBuilder("[");
