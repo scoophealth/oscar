@@ -6,7 +6,7 @@
 <%@page import="org.oscarehr.PMmodule.service.ClientManager"%>
 <%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 <%@page import="org.oscarehr.PMmodule.model.DemographicExt"%>
-
+<%@ page import="oscar.OscarProperties" %>
 <%
 	// This section is an obnoxtious security check with not so glamourous user feedback, but I don't really
 	// care right now as it would be a hacker or improper use that triggers this.
@@ -91,7 +91,8 @@
 				if (isExternal)
 				{
 					// "Bed Reservation", "Forms", "Refer"
-					if ("Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Forms".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Refer".equalsIgnoreCase(ClientManagerFormBean.tabs[x])) continue;
+					if ("Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Forms".equalsIgnoreCase(ClientManagerFormBean.tabs[x]) || "Refer".equalsIgnoreCase(ClientManagerFormBean.tabs[x])) 
+						continue;				
 				}
 					
 				if (!admin && ClientManagerFormBean.tabs[x].equalsIgnoreCase("refer")) {
@@ -101,6 +102,15 @@
 					}
 				}
 			
+				//check role:
+				//If the user don't have the role "perform bed assignments" for this program, then tab "perform bed assignments" won't show up.
+				if(OscarProperties.getInstance().isTorontoRFQ())  { 				
+					if(!((Boolean)request.getSession().getAttribute("performBedAssignments")) && 
+						"Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]))
+						continue;					
+				}
+				
+				
 				if (ClientManagerFormBean.tabs[x].equals(selectedTab)) {
 			%>
 			<td style="background-color: #555;"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=ClientManagerFormBean.tabs[x] %>'); return false;"><%=ClientManagerFormBean.tabs[x]%></a></td>

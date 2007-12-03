@@ -794,12 +794,10 @@ public class ClientManagerAction extends BaseAction {
         	else if(inProgramType.equalsIgnoreCase("bed")) {
         		se.setAttribute("performDischargeBed",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
         		se.setAttribute("performAdmissionBed",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
-        	    
+        		se.setAttribute("performBedAssignments",new Boolean(caseManagementManager.hasAccessRight("perform bed assignments","access",providerNo,demographicNo,inProgramId)));      	    
         	
         	}
-        }
-        
-        
+        }    
         
         
         // tab override - from survey module
