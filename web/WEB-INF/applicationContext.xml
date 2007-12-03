@@ -327,6 +327,7 @@
                 <property name="admissionManager" ref="admissionManager"/>
                 <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
                 <property name="outsideOfDomainEnabled" value="${pmm.client.search.outside.of.domain.enabled}"/>
+            	
             </bean>
         </property>
     </bean>

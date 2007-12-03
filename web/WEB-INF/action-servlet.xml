@@ -53,8 +53,10 @@
         <property name="providerManager" ref="providerManager"/>
         <property name="programQueueManager" ref="programQueueManager"/>
         <property name="surveyManager" ref="oscarSurveyManager"/>
-        <property name="clientRestrictionManager" ref="clientRestrictionManager"/>
-        <property name="caseManagementManager" ref="CaseManagementManager"/>
+        <property name="clientRestrictionManager" ref="clientRestrictionManager"/> 
+        
+        <property name="caseManagementManager" ref="CaseManagementManager"/>       
+        <property name="roleManager" ref="roleManager"/>        
     </bean>
     <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
         <property name="programManager" ref="programManager"/>
