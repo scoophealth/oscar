@@ -42,7 +42,9 @@
      <th>Label: </th>
      <td><html:text maxlength="255" property="caisiEditor.label"/></td>
 </tr>
-<tr>
+<input type="hidden" name="caisiEditor.type" value=""/>
+<input type="hidden" name="caisiEditor.horizontal" value=""/>
+<!-- tr>
      <th>Type: </th>
      <td>
      <select name="caisiEditor.type">
@@ -81,7 +83,7 @@
         </c:choose>      	
      </select>
      </td>
-</tr>
+</tr -->
 <tr>
      <th>Label Value: </th>
      <td><html:text maxlength="255" property="caisiEditor.labelValue"/></td>
@@ -90,7 +92,7 @@
      <th>Label Code: </th>
      <td><html:text maxlength="50" property="caisiEditor.labelCode"/></td>
 </tr>
-<tr>
+<!--  tr>
      <th>Horizontal: </th>
      <td>
      <select name="caisiEditor.horizontal">
@@ -113,7 +115,7 @@
         </c:choose>     	
      </select>
      </td>
-</tr>
+</tr -->
 <tr>
      <th>Active?</th>
      <td>
