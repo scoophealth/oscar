@@ -511,9 +511,19 @@ public class ProgramManagerViewAction extends BaseAction {
         String clientId = request.getParameter("clientId");
         String rejectionReason = request.getParameter("radioRejectionReason");
 
+        List<Long>  dependents = clientManager.getDependentsList(new Long(clientId));
+        
+        
         log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + clientId);
 
         programQueueManager.rejectQueue(programId, clientId, notes, rejectionReason);
+        
+        if (dependents != null){
+            for (Long l: dependents){
+                log.debug("rejecting from queue: program_id=" + programId + ",clientId=" + l.intValue());
+                programQueueManager.rejectQueue(programId, l.toString(), notes, rejectionReason);
+            }
+        }
 
         return view(mapping, form, request, response);
     }
