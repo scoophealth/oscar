@@ -133,11 +133,12 @@ public class ClientManagerAction extends BaseAction {
         Admission admission = (Admission) clientForm.get("admission");
         Program p = (Program) clientForm.get("program");
         String id = request.getParameter("id");
+        List<Long> dependents = clientManager.getDependentsList(new Long(id));
 
         boolean success = true;
 
         try {
-            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason());
+            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(),dependents);
         } catch (AdmissionException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
@@ -164,11 +165,12 @@ public class ClientManagerAction extends BaseAction {
         Admission admission = (Admission) clientForm.get("admission");
         Program program = (Program) clientForm.get("program");
         String clientId = request.getParameter("id");
+        List<Long> dependents = clientManager.getDependentsList(new Long(clientId));
 
         ActionMessages messages = new ActionMessages();
 
         try {
-            admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason());
+            admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason(),dependents);
             logManager.log("write", "discharge", clientId, request);
 
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
