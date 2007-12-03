@@ -223,7 +223,7 @@ public class ProgramDao extends HibernateDaoSupport {
 	
 	
 	public Program[] getExternalPrograms() {
-		List rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'External' ORDER BY p.name");
+		List rs = getHibernateTemplate().find("FROM Program p WHERE p.type = 'External' and p.programStatus='active' ORDER BY p.name");
 
 		if (log.isDebugEnabled()) {
 			log.debug("getServicePrograms: # of programs: " + rs.size());

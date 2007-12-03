@@ -506,6 +506,7 @@ public class ProgramManagerAction extends BaseAction {
 		
 		//if a program has a client in it, you cannot make it inactive
 		if(request.getParameter("program.programStatus").equals("inactive")) {
+			if(!("External".equals(request.getParameter("program.type")))) {
 			//Admission ad = admissionManager.getAdmission(Long.valueOf(request.getParameter("id")));
 			List admissions = admissionManager.getCurrentAdmissionsByProgramId(String.valueOf(program.getId()));
 			if(admissions.size()>0){
@@ -522,6 +523,7 @@ public class ProgramManagerAction extends BaseAction {
 				saveMessages(request, messages);				
 				setEditAttributes(request, String.valueOf(program.getId()));
 				return mapping.findForward("edit");
+			}
 			}
 		}
 				
