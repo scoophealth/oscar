@@ -97,6 +97,7 @@ public class ProgramManagerViewAction extends BaseAction {
         request.setAttribute("queue", queue);
 
         HashSet<Long> genderConflict = new HashSet<Long>();
+        HashSet<Long> ageConflict = new HashSet<Long>();
         for (ProgramQueue programQueue : queue) {
             Demographic demographic=clientManager.getClientByDemographicNo(String.valueOf(programQueue.getClientId()));
             Program program=programManager.getProgram(programQueue.getProgramId());
@@ -116,8 +117,15 @@ public class ProgramManagerViewAction extends BaseAction {
                     genderConflict.add(programQueue.getClientId());
                 }
             }
+            
+            if (demographic.getAge()!=null)
+            {
+                int age=Integer.parseInt(demographic.getAge());
+                if (age<program.getAgeMin() || age>program.getAgeMax()) ageConflict.add(programQueue.getClientId());
+            }
         }
         request.setAttribute("genderConflict", genderConflict);
+        request.setAttribute("ageConflict", ageConflict);
 
         if (formBean.getTab() == null || formBean.getTab().equals("")) {
             if (queue.size() > 0) {

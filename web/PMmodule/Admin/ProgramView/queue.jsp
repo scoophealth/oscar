@@ -65,6 +65,11 @@
 	    	alert("This gender not allowed in selected program.");
 	    	return(false);
 		}        
+        if(action == 'ageConflict') {
+	    	alert("A person of this age not allowed in selected program.");
+	    	return(false);
+		}        
+        
         
         form.submit();
 
@@ -90,6 +95,7 @@
 </div>
 <%
 	HashSet<Long> genderConflict=(HashSet<Long>)request.getAttribute("genderConflict");
+	HashSet<Long> ageConflict=(HashSet<Long>)request.getAttribute("ageConflict");
 %>
 <!--  show current clients -->
 <display:table class="simple" cellspacing="2" cellpadding="3" id="queue_entry" name="queue" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
@@ -100,6 +106,7 @@
 			String action="admit";
     		long clientId=((ProgramQueue)pageContext.getAttribute("queue_entry")).getClientId();
     		if (genderConflict.contains(clientId)) action="genderConflict";	
+    		if (ageConflict.contains(clientId)) action="ageConflict";	
     	%>
     	<caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="true">
         <input type="button" value="Admit" 
@@ -199,3 +206,4 @@
         </tr>
     </table>
 </c:if>
+
