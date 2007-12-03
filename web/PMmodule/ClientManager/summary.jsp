@@ -337,11 +337,13 @@ function openSurvey() {
 	</tr>
 </table>
 <br />
+
+<%/*User Created Form*/ %>
 <caisi:isModuleLoad moduleName="TORONTO_RFQ" reverse="false">
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th>User Created Form</th>
+			<th>Assessments</th>
 		</tr>
 	</table>
 </div>
