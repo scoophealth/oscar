@@ -259,7 +259,7 @@ function popUpBillStatus(vheight,vwidth,varpage) {
       <h3>&nbsp;<bean:message key="admin.admin.caisi"/></h3>
       <ul>
          <li><a href="../SystemMessage.do"><bean:message key="admin.admin.systemMessage"/></a></li>
-         <li><a href="../CaisiEditor.do?method=list">Caisi Editor</a></li>
+         <li><a href="../CaisiEditor.do?method=list">Caisi List Editor</a></li>
          <li><a href="../issueAdmin.do?method=list"><bean:message key="admin.admin.issueEditor"/></a></li>
          <li><a href="../CaisiRole.do"><bean:message key="admin.admin.caisiRole"/></a></li>         
          <li><a href="../SurveyManager.do"><bean:message key="admin.admin.surveyManager"/></a></li>         
