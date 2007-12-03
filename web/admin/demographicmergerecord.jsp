@@ -262,7 +262,7 @@ if(rs==null) {
         java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
         if (vLocale.getCountry().equals("BR"))
             dbop = "demographic_search_detail_ptbr";
-    if(headRecord){%>
+    if(mergedSearch || headRecord  ){%>
     <td align="center" width="5%" height="25"><input type="checkbox" name="records" value="<%= rs.getString("demographic_no") %>"></td>
     <%}else{%>
     <td align="center" width="5%" height="25">&nbsp;</td>
