@@ -137,10 +137,12 @@ public class Agency implements Serializable {
 		boolean visible = false;
 
 		if (Intake.QUICK.equalsIgnoreCase(intakeType)) {
-			visible = getIntakeQuickState().contains("E");
+			//"S" should be changed to be "E" in the future if still use this external program function.
+			visible = getIntakeQuickState().contains("S"); 			
 		}
 		else if (Intake.INDEPTH.equalsIgnoreCase(intakeType)) {
-			visible = getIntakeIndepthState().contains("E");
+			//"S" should be changed to be "E" in the future if still use this external program function.
+			visible = getIntakeIndepthState().contains("S");
 		}
 
 		return visible;
