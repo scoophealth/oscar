@@ -786,10 +786,17 @@ public class ClientManagerAction extends BaseAction {
         	Admission admission = (Admission)it.next();
         	String inProgramId = String.valueOf(admission.getProgramId());
         	String inProgramType = admission.getProgramType();
-        	if(inProgramType.equalsIgnoreCase("service"))
+        	if(inProgramType.equalsIgnoreCase("service")) {
         		se.setAttribute("performDischargeService",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
-        	else if(inProgramType.equalsIgnoreCase("bed"))
+        		se.setAttribute("performAdmissionService",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
+            	
+        	}
+        	else if(inProgramType.equalsIgnoreCase("bed")) {
         		se.setAttribute("performDischargeBed",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
+        		se.setAttribute("performAdmissionBed",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
+        	    
+        	
+        	}
         }
         
         

@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,6 +87,11 @@ public class ProgramManagerViewAction extends BaseAction {
 
         request.setAttribute("temporaryAdmission", programManager.getEnabled());
 
+        // check role permission
+        HttpSession se=request.getSession();
+        String providerNo = (String)se.getAttribute("user");
+        se.setAttribute("performAdmissions",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,"",programId)));
+		        
         // need the queue to determine which tab to go to first
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
