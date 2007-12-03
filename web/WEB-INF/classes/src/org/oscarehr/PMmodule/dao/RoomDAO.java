@@ -114,7 +114,25 @@ public class RoomDAO extends HibernateDaoSupport {
 		return (Room[]) rooms.toArray(new Room[rooms.size()]);
 	}
 
+	/**
+	 * Get assigned bed rooms
+	 *
+	 * @param active
+	 *            filter
+	 * @return list of assigned bed rooms
+	 */
+    @SuppressWarnings("unchecked")
+    public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {//Louis-debug
+		String queryString = getAssignedBedRoomsQueryString(facilityId, programId, active);
+		Object[] values = getRoomsValues(facilityId, programId, active);
 
+		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
+		log.debug("getRooms: size: " + rooms.size());
+
+		return (Room[]) rooms.toArray(new Room[rooms.size()]);
+	}
+
+    
 	/**
 	 * Get room types
 	 *
@@ -169,6 +187,43 @@ public class RoomDAO extends HibernateDaoSupport {
         return queryBuilder.toString();
 	}
 
+	String getAssignedBedRoomsQueryString(Integer facilityId, Integer programId, Boolean active) {
+		StringBuilder queryBuilder = new StringBuilder("from Room r");
+
+        queryBuilder.append(" where ");
+
+        boolean andClause = false;
+        if (facilityId != null) {
+            queryBuilder.append("r.facilityId = ?");
+            andClause = true;
+        }
+
+        if (programId != null) {
+            if (andClause){
+            	queryBuilder.append(" and "); 
+            }else{
+            	andClause = true;
+            }
+            queryBuilder.append("r.programId = ?");
+        }
+
+
+        if (active != null) {
+            if (andClause){
+            	queryBuilder.append(" and ");
+            }
+            queryBuilder.append("r.active = ?");
+        }
+        
+        if (andClause) {
+        	queryBuilder.append(" and ");
+        }
+        
+        queryBuilder.append("r.assignedBed = 1");
+
+        return queryBuilder.toString();
+	}
+	
 	Object[] getRoomsValues(Integer facilityId, Integer programId, Boolean active) {
 		List<Object> values = new ArrayList<Object>();
 
