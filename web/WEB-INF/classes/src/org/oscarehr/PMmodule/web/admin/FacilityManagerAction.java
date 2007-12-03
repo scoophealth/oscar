@@ -88,6 +88,8 @@ public class FacilityManagerAction extends BaseAction {
         FacilityManagerForm mform = (FacilityManagerForm) form;
         Facility facility = mform.getFacility();
 
+        if(request.getParameter("facility.hic") == null)
+            facility.setHic(false);
 
         if (isCancelled(request)) {
             request.getSession().removeAttribute("facilityManagerForm");

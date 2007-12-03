@@ -25,9 +25,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.*;
-import org.caisi.dao.DemographicDAO;
 import org.caisi.integrator.model.Client;
-import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.exception.*;
 import org.oscarehr.PMmodule.model.*;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
@@ -37,14 +35,12 @@ import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
-import org.oscarehr.util.SpringUtils;
 import org.springframework.beans.factory.annotation.Required;
 import oscar.oscarDemographic.data.DemographicRelationship;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.*;
 
 public class ClientManagerAction extends BaseAction {
@@ -287,7 +283,7 @@ public class ClientManagerAction extends BaseAction {
         String id = request.getParameter("id");
 
         try {
-            List<?> results = integratorManager.getCurrentAdmissions(Long.valueOf(id).longValue());
+            List<?> results = integratorManager.getCurrentAdmissions(Long.valueOf(id));
             request.setAttribute("admissions", results);
         } catch (IntegratorException e) {
             log.error(e);
@@ -301,7 +297,7 @@ public class ClientManagerAction extends BaseAction {
         String id = request.getParameter("id");
 
         try {
-            List<?> results = integratorManager.getCurrentReferrals(Long.valueOf(id).longValue());
+            List<?> results = integratorManager.getCurrentReferrals(Long.valueOf(id));
             request.setAttribute("referrals", results);
         } catch (IntegratorException e) {
             log.error(e);
@@ -610,13 +606,13 @@ public class ClientManagerAction extends BaseAction {
             ProgramProvider program = (ProgramProvider) programDomain.get(0);
             // refer/admin client to service program associated with this user
             ClientReferral referral = new ClientReferral();
-            referral.setAgencyId(new Long(0));
+            referral.setAgencyId((long) 0);
             referral.setClientId(new Long(demographicNo));
             referral.setNotes("ER Automated referral\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason());
-            referral.setProgramId(new Long(program.getProgramId().longValue()));
+            referral.setProgramId(program.getProgramId().longValue());
             referral.setProviderNo(Long.valueOf(getProviderNo(request)));
             referral.setReferralDate(new Date());
-            referral.setSourceAgencyId(new Long(0));
+            referral.setSourceAgencyId((long) 0);
             referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
             Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getProgramId()), Integer.valueOf(demographicNo));
@@ -863,7 +859,7 @@ public class ClientManagerAction extends BaseAction {
         if (tabBean.getTab().equals("Bed Reservation")) {
             // set bed program id
             Admission bedProgramAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo));
-            Integer bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId().intValue() : null;
+            Integer bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId() : null;
 
             request.setAttribute("bedProgramId", bedProgramId);
 
