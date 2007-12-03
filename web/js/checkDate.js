@@ -101,3 +101,44 @@ function check_date_format1(dateStr) {
 		return true;
 	}
 }
+
+function calculateAge(year, month, date) {
+	 month = month - 1;
+	
+	 if (month != parseInt(month)) { alert('Type Month of birth in digits only!'); return false; }
+	 if (date != parseInt(date)) { alert('Type Date of birth in digits only!'); return false; }
+	 if (year != parseInt(year)) { alert('Type Year of birth in digits only!'); return false; }
+	 if (year.length < 4) { alert('Type Year of birth in full!'); return false; }
+	
+	 today = new Date();
+	 dateStr = today.getDate();
+	 monthStr = today.getMonth();
+	 yearStr = today.getFullYear();
+	
+	 theYear = yearStr - year;
+	 theMonth = monthStr - month;
+	 theDate = dateStr - date;
+	
+	 var days = "";
+	 if (monthStr == 0 || monthStr == 2 || monthStr == 4 || monthStr == 6 || monthStr == 7 || monthStr == 9 || monthStr == 11) days = 31;
+	 if (monthStr == 3 || monthStr == 5 || monthStr == 8 || monthStr == 10) days = 30;
+	 if (monthStr == 1) days = 28;
+	
+	 theYear = theYear;
+	
+	 if (month < monthStr && date > dateStr) { theYear = theYear + 1;
+	                                           theMonth = theMonth - 1; }
+	 if (month < monthStr && date <= dateStr) { theMonth = theMonth; }
+	 else if (month == monthStr && (date < dateStr || date == dateStr)) { theMonth = 0; }
+	 else if (month == monthStr && date > dateStr) { theMonth = 11; }
+	 else if (month > monthStr && date <= dateStr) { theYear = theYear - 1;
+	                                                 theMonth = ((12 - -(theMonth)) + 1); }
+	 else if (month > monthStr && date > dateStr) { theMonth = ((12 - -(theMonth))); }
+	
+	 if (date < dateStr) { theDate = theDate; }
+	 else if (date == dateStr) { theDate = 0; }
+	 else { theYear = theYear - 1; theDate = days - (-(theDate)); }
+	 
+	 return(theYear);
+}
+
