@@ -1438,7 +1438,7 @@
             parameter="method"
             name="genericIntakeEditForm"
             scope="session">
-            <forward name="edit" path="/PMmodule/GenericIntake/Edit.jsp" redirect="true"/>
+            <forward name="edit" path="/PMmodule/GenericIntake/Edit.jsp" redirect="false"/>
             <!-- <forward name="print" path="/PMmodule/GenericIntake/Print.jsp" redirect="true"/> --> 
             <forward name="print" path="/PMmodule/GenericIntake/PrintPreview.jsp" redirect="true"/>
             <forward name="clientEdit" path="/PMmodule/ClientManager.do" redirect="true"/>            

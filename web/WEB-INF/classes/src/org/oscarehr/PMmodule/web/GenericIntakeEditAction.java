@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Gengeneral Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
@@ -176,7 +176,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
 
-
         try {
             saveClient(client, providerNo);
 
@@ -213,7 +212,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 .areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client
                 .getDemographicNo()),getCurrentExternalProgramId(client.getDemographicNo()));
 
-        return mapping.findForward(EDIT);
+        return  mapping.findForward(EDIT);
     }
 
     private void updateRemote(Demographic client, String remoteAgency, Long remoteAgencyDemographicNo) {
