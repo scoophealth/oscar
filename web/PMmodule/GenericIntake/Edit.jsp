@@ -58,6 +58,7 @@
         // -->
     </script>
     <script type="text/javascript" src="<html:rewrite page="/js/genericIntake.js.jsp" />"></script>
+    <script type="text/javascript" src="<html:rewrite page="/js/checkDate.js" />"></script>
     <html:base/>
 </head>
 <body class="edit">

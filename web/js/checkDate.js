@@ -115,6 +115,7 @@ function calculateAge(year, month, date) {
 	 monthStr = today.getMonth();
 	 yearStr = today.getFullYear();
 	
+	 var theYear=0;
 	 theYear = yearStr - year;
 	 theMonth = monthStr - month;
 	 theDate = dateStr - date;

@@ -1,3 +1,4 @@
+<%@page import="org.oscarehr.PMmodule.web.ProgramUtils"%>
 <%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
 <%@page contentType="text/javascript"%>
 
@@ -67,16 +68,23 @@ function validateEdit() {
 				return error(gender, "This gender not allowed in selected program.");
 			}
 		}
+		
+		var month = getElement('client.monthOfBirth');
+		var day = getElement('client.dateOfBirth');
+		var year = getElement('client.yearOfBirth');
+		
+		var age=calculateAge(year.value,month.value,day.value);
+		if (!validAgeRangeForProgram(programId,age))
+		{
+			return error(year, "This client does not meet the age range requirements for this program.");
+		}
+		
 	<%
 		
 		
 		if (IntakeRequiredFieldsDao.isRequired(IntakeRequiredFieldsDao.FIELD_BIRTH_DATE))
 		{
 			%>
-				var month = getElement('client.monthOfBirth');
-				var day = getElement('client.dateOfBirth');
-				var year = getElement('client.yearOfBirth');
-			
 				if (!isEmpty(month.value) || !isEmpty(day.value) || !isEmpty(year.value)) {
 					var date = month.value + "/" + day.value + "/" + year.value;
 					
