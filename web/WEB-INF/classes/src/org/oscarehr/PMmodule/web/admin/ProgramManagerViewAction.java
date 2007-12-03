@@ -46,6 +46,7 @@ import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.JointAdmission;
 import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.ProgramTeam;
@@ -257,10 +258,13 @@ public class ProgramManagerViewAction extends BaseAction {
         Program fullProgram = programManager.getProgram(String.valueOf(programId));
         String dischargeNotes = request.getParameter("admission.dischargeNotes");
         String admissionNotes = request.getParameter("admission.admissionNotes");
+        List<Long>  dependents = clientManager.getDependentsList(new Long(clientId));
+        
+        
 
         try {
             admissionManager.processAdmission(Integer.valueOf(clientId), getProviderNo(request), fullProgram, dischargeNotes, admissionNotes, queue
-                    .isTemporaryAdmission());
+                    .isTemporaryAdmission(),dependents);
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.success"));
             saveMessages(request, messages);
@@ -508,6 +512,11 @@ public class ProgramManagerViewAction extends BaseAction {
         Program program = programManager.getProgram(String.valueOf(programId));
         ProgramQueue queue = programQueueManager.getProgramQueue(queueId);
 
+        int numMembers = program.getNumOfMembers().intValue();
+        int maxMem     = program.getMaxAllowed().intValue();
+        int familySize = clientManager.getDependents(new Long(clientId)).size();
+        //TODO: add warning if this admission ( w/ dependents) will exceed the maxMem 
+        
         /*
          * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
          */
