@@ -1,17 +1,17 @@
 /**
  * Copyright (C) 2007.
  * Centre for Research on Inner City Health, St. Michael's Hospital, Toronto, Ontario, Canada.
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -80,7 +80,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null);
 
         ProgramUtils.addProgramRestrictions(request);
-               
+
         return mapping.findForward(EDIT);
     }
 
@@ -137,11 +137,11 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
                 .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId),getCurrentExternalProgramId(clientId));
-        
+
         // UCF -- intake accessment : please don't remove the following line
-		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
-        
-		return mapping.findForward(EDIT);
+        request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
+
+        return mapping.findForward(EDIT);
     }
 
     public ActionForward print(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -176,29 +176,36 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Demographic client = formBean.getClient();
         String providerNo = getProviderNo(request);
 
+
         try {
             saveClient(client, providerNo);
-            
-            if(OscarProperties.getInstance().isTorontoRFQ()) {
-            	admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
-            }
-            
-            admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
-            
-            if (!formBean.getSelectedServiceProgramIds().isEmpty()) 
-            	admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
-            saveIntake(intake, client.getDemographicNo());
-            
-            // don't move updateRemote up...this method has the problem needs to be fixed
-            updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
 
-        }
-        catch (Exception e) {
+            if(OscarProperties.getInstance().isTorontoRFQ()) {
+                admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
+            }
+
+            admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
+
+            if (!formBean.getSelectedServiceProgramIds().isEmpty())
+                admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+            saveIntake(intake, client.getDemographicNo());
+
+            // don't move updateRemote up...this method has the problem needs to be fixed
+            if (integratorManager.isEnabled()) updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
+        } catch (ProgramFullException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
+            saveErrors(request, messages);
+        } catch (AdmissionException e) {
             e.printStackTrace();
             LOG.error(e);
 
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
+            saveErrors(request, messages);
+        } catch (ServiceRestrictionException e) {
+            ActionMessages messages = new ActionMessages();
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
             saveErrors(request, messages);
         }
 
@@ -280,13 +287,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     private List<Program> getExternalPrograms(Set<Program> providerPrograms) {
         List<Program> externalPrograms = new ArrayList<Program>();
-        
-        for (Program program : programManager.getExternalPrograms()) {            
+
+        for (Program program : programManager.getExternalPrograms()) {
             externalPrograms.add(program);
         }
         return externalPrograms;
     }
-    
+
     private Integer getCurrentBedCommunityProgramId(Integer clientId) {
         Integer currentProgramId = null;
 
@@ -307,14 +314,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         Integer currentProgramId = null;
 
         Admission externalProgramAdmission = admissionManager.getCurrentExternalProgramAdmission(clientId);
-        
+
         if (externalProgramAdmission != null) {
             currentProgramId = externalProgramAdmission.getProgramId();
         }
 
         return currentProgramId;
     }
-    
+
     private SortedSet<Integer> getCurrentServiceProgramIds(Integer clientId) {
         SortedSet<Integer> currentProgramIds = new TreeSet<Integer>();
 
@@ -348,9 +355,9 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     }
 
     private void admitExternalProgram(Integer clientId, String providerNo, Integer externalProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
-    	Program externalProgram = null;
+        Program externalProgram = null;
         Integer currentExternalProgramId = getCurrentExternalProgramId(clientId);
-        
+
         if (externalProgramId != null) {
             externalProgram = programManager.getProgram(externalProgramId);
         }
@@ -363,13 +370,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 if (programManager.getProgram(externalProgramId).isExternal()) {
                     if (externalProgram.isExternal()) {
                         admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
-                    }                    
-                }                
+                    }
+                }
             }
         }
     }
 
-    
+
     private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
         Program bedCommunityProgram = null;
         Integer currentBedCommunityProgramId = getCurrentBedCommunityProgramId(clientId);
@@ -432,8 +439,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     // Bean
 
     private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo,
-            boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible, Integer currentBedCommunityProgramId,
-            SortedSet<Integer> currentServiceProgramIds,Integer currentExternalProgramId) {
+                                   boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible, Integer currentBedCommunityProgramId,
+                                   SortedSet<Integer> currentServiceProgramIds,Integer currentExternalProgramId) {
         formBean.setIntake(intake);
         formBean.setClient(client);
 
@@ -449,7 +456,7 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 formBean.setServicePrograms(getServicePrograms(providerPrograms));
                 formBean.setSelectedServiceProgramIds(currentServiceProgramIds);
             }
-            
+
             if (externalProgramsVisible) {
                 formBean.setExternalPrograms(getExternalPrograms(providerPrograms));
                 formBean.setSelectedExternalProgramId(currentExternalProgramId);
