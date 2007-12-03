@@ -12,10 +12,12 @@ public class BedManagerForm extends ActionForm {
     private Integer numRooms;
     private Integer numBeds;
     private Room[] rooms;
+    private Room[] assignedBedRooms;
     private RoomType[] roomTypes;
     private Bed[] beds;
     private BedType[] bedTypes;
     private Program[] programs;
+    
 
     public Integer getFacilityId() {
         return facilityId;
@@ -88,4 +90,12 @@ public class BedManagerForm extends ActionForm {
     public void setPrograms(Program[] programs) {
         this.programs = programs;
     }
+
+	public Room[] getAssignedBedRooms() {
+		return assignedBedRooms;
+	}
+
+	public void setAssignedBedRooms(Room[] assignedBedRooms) {
+		this.assignedBedRooms = assignedBedRooms;
+	}
 }

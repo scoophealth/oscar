@@ -46,6 +46,7 @@ public class BedManagerAction extends BaseAction {
 
         bForm.setFacilityId(facilityId);
         bForm.setRooms(roomManager.getRooms(facilityId));
+        bForm.setAssignedBedRooms(roomManager.getAssignedBedRooms(facilityId));
         bForm.setRoomTypes(roomManager.getRoomTypes());
         bForm.setNumRooms(1);
         bForm.setBeds(bedManager.getBedsByFacility(facilityId, false));
@@ -69,7 +70,7 @@ public class BedManagerAction extends BaseAction {
 	        	rooms[i].setActive(false);
 	        }
         }
-
+		
 		try {
 	        roomManager.saveRooms(rooms);
         } catch (RoomHasActiveBedsException e) {
@@ -91,9 +92,16 @@ public class BedManagerAction extends BaseAction {
 	        	beds[i].setActive(false);
 	        }
         }
-
+		Integer[][] roomsOccupancy = bedManager.calculateOccupancyAsNumOfBedsAssignedToRoom(beds);
+		Room[] rooms = roomManager.getRooms(roomsOccupancy);
+		
 		try {
+			roomManager.saveRooms(rooms);
 	        bedManager.saveBeds(beds);
+        } catch (RoomHasActiveBedsException e) {
+    		ActionMessages messages = new ActionMessages();
+    		messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("room.active.beds.error", e.getMessage()));
+    		saveMessages(request, messages);
         } catch (BedReservedException e) {
 			ActionMessages messages = new ActionMessages();
 			messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("bed.reserved.error", e.getMessage()));

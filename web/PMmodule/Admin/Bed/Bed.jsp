@@ -54,6 +54,57 @@
                     </c:forEach>
                 </select>
             </display:column>
+             <display:column title="Assigned Beds">
+                <select name="rooms[<c:out value="${room_rowNum - 1}" />].assignedBed">
+ 	                <c:choose>
+	                    <c:when test="${room.assignedBed != 1}">
+	          				<option value="1"> Y</option>
+	                		<option value="0" selected> N</option>
+	                    </c:when>
+	                    <c:otherwise>
+	                    	<option value="1" selected> Y</option>
+	                		<option value="0"> N</option>
+	                    </c:otherwise>
+	                </c:choose>
+                </select>
+            </display:column>
+            <display:column title="Room Occupancy">
+				<select name="rooms[<c:out value="${room_rowNum - 1}" />].occupancy">
+       
+					<c:forEach var="num" begin="1" end="20" step="1">
+                        <c:choose>
+			            	<c:when test="${room.assignedBed != 1}">
+                        			<c:choose>
+	                        			<c:when test="${room.occupancy == num}">
+											<option value="<c:out value='${num}' />" selected="selected"> 
+												<c:out value="${num}" />                                   
+						                    </option>
+					                    </c:when>
+				                        <c:otherwise>
+											<option value="<c:out value='${num}' />">
+												<c:out value="${num}" />                                   
+						                    </option>
+			                            </c:otherwise>
+	                            	</c:choose>
+		                    </c:when>       
+                            <c:otherwise>
+                        			<c:choose>
+	                        			<c:when test="${num == 1}">
+											<option value="<c:out value='${room.occupancy}' />" selected="selected"> 
+												N/A                                   
+						                    </option>
+					                    </c:when>
+	                            	</c:choose>
+		                    </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+              </select>
+                 
+            </display:column>
+
+<!-- end of Room Occupancy -->
+            
+            
             <display:column title="Program">
                 <select name="rooms[<c:out value="${room_rowNum - 1}" />].programId">
                     <c:forEach var="program" items="${bedManagerForm.programs}">
@@ -133,7 +184,7 @@
             </display:column>
             <display:column title="Room">
                 <select name="beds[<c:out value="${bed_rowNum - 1}" />].roomId">
-                    <c:forEach var="room" items="${bedManagerForm.rooms}">
+                    <c:forEach var="room" items="${bedManagerForm.assignedBedRooms}">
                         <c:choose>
                             <c:when test="${room.id == bed.roomId}">
                                 <option value="<c:out value="${room.id}"/>" selected="selected">
