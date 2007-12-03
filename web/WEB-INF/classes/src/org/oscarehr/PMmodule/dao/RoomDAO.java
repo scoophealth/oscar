@@ -122,7 +122,7 @@ public class RoomDAO extends HibernateDaoSupport {
 	 * @return list of assigned bed rooms
 	 */
     @SuppressWarnings("unchecked")
-    public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {//Louis-debug
+    public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
 		String queryString = getAssignedBedRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
 

@@ -50,6 +50,8 @@ public class Room implements Serializable {
     private String floor;
     private boolean active;
     private Integer facilityId;
+    private Integer assignedBed;
+    private Integer occupancy;
 
     private RoomType roomType;
     private Program program;
@@ -268,4 +270,32 @@ public class Room implements Serializable {
     public void setFacility(Facility facility) {
         this.facility = facility;
     }
+    /**
+     * Return the value associated with the column: assigned_bed
+     */
+	public Integer getAssignedBed() {
+		return assignedBed;
+	}
+    /**
+     * Set the value related to the column: assigned_bed
+     *
+     * @param assignedBed the assignedBed value
+     */
+	public void setAssignedBed(Integer assignedBed) {
+		this.assignedBed = assignedBed;
+	}
+    /**
+     * Return the value associated with the column: occupancy
+     */
+	public Integer getOccupancy() {
+		return occupancy;
+	}
+    /**
+     * Set the value related to the column: occupancy
+     *
+     * @param occupancy the occupancy value
+     */
+	public void setOccupancy(Integer occupancy) {
+		this.occupancy = occupancy;
+	}
 }
