@@ -32,6 +32,8 @@ public class Room implements Serializable {
 
     private static final String DEFAULT_NAME = "";
     private static final boolean DEFAULT_ACTIVE = true;
+    private static final Integer DEFAULT_ASSIGNED_BED = new Integer(1);
+    private static final Integer DEFAULT_OCCUPANCY = new Integer(1);
 
     public static String REF = "Room";
     public static String PROP_ROOM_TYPE_ID = "roomTypeId";
@@ -95,6 +97,8 @@ public class Room implements Serializable {
         room.setRoomTypeId(roomType.getId());
         room.setName(DEFAULT_NAME);
         room.setActive(DEFAULT_ACTIVE);
+        room.setAssignedBed(DEFAULT_ASSIGNED_BED);
+        room.setOccupancy(DEFAULT_OCCUPANCY);
 
         return room;
     }
