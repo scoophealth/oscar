@@ -811,8 +811,19 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("survey_list", surveyManager.getAllForms());
             request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 
-            request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
-
+            //request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
+            //only allow bed/service programs show up.(not external program)
+            List currentAdmissionList = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
+            List bedServiceList = new ArrayList();
+            for(Iterator ad = currentAdmissionList.iterator(); ad.hasNext();) {
+            	Admission admission1 = (Admission) ad.next();            	
+            	if("External".equalsIgnoreCase(programManager.getProgram(admission1.getProgramId()).getType())){
+            		continue;
+            	}
+            	bedServiceList.add(admission1);
+            }
+            request.setAttribute("admissions",bedServiceList);
+            
             Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
             request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
 

@@ -63,7 +63,7 @@ public class AdmissionManager {
 	public List getAdmissions(Integer demographicNo) {
 		return dao.getAdmissions(demographicNo);
 	}
-
+	
 	public List getCurrentAdmissions(Integer demographicNo) {
 		return dao.getCurrentAdmissions(demographicNo);
 	}
