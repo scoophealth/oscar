@@ -23,6 +23,7 @@
 package org.oscarehr.PMmodule.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -211,6 +212,56 @@ public class BedManager {
         }
     }
 
+    /**
+     * Calculate occupancy number as number of beds assigned to each room when 
+     * assignedBed attribute is set to 'Y'
+     *
+     * @param beds
+     *            
+     */
+    public Integer[][] calculateOccupancyAsNumOfBedsAssignedToRoom(Bed[] beds){
+    	
+    	List roomIdKeys = new ArrayList();
+    	List roomIdCounts = new ArrayList();
+    	int count = 1;
+    	int roomIdKey = -1;
+    	
+    	Integer[] roomIds = new Integer[beds.length];
+    	for(int i=0; i < beds.length; i++){
+    		roomIds[i] = beds[i].getRoomId();
+    	}
+
+    	Integer[][] roomsOccupancy = null;
+    	Arrays.sort( roomIds  );  
+
+    	if(roomIds != null  &&  roomIds.length > 0){
+    		roomIdKey = roomIds[0];
+    		for( int i=1; i < roomIds.length; i++  ){
+    			if( roomIdKey  == roomIds[i] ){
+    				count++;
+    			}else{
+     				if(i > 0){
+    					roomIdKeys.add(roomIdKey);
+    				}
+    				roomIdCounts.add( new Integer( count ) );
+    				count = 1;
+    			}
+    			roomIdKey = roomIds[i];
+    			if( i == roomIds.length - 1 ){
+    				roomIdKeys.add(roomIdKey);
+    				roomIdCounts.add( new Integer( count ) );
+    			}
+    		}
+    	}
+    	roomsOccupancy = new Integer[2][roomIdKeys.size()];
+    	for(int i=0; i < roomsOccupancy[0].length; i++){
+	        roomsOccupancy[0][i] = (Integer)roomIdKeys.get(i);
+	        roomsOccupancy[1][i] = (Integer)roomIdCounts.get(i);
+    	}
+    	return roomsOccupancy;
+    }
+    
+    
     /**
      * Save beds
      *

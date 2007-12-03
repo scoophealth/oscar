@@ -65,7 +65,7 @@ public class RoomDemographic implements Auditable, Serializable {
 		Date today = DateTimeFormatUtils.getToday();
 		
 		roomDemographic.setAssignStart(today);
-		roomDemographic.setAssignEnd(today);//Louis-debug -- placeholder now
+//		roomDemographic.setAssignEnd(today);
 		
 		return roomDemographic;
 	}

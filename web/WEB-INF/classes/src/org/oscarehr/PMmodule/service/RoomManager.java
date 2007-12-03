@@ -85,6 +85,42 @@ public class RoomManager {
     }
 
     /**
+     * Get rooms
+     *
+     * @return list of rooms
+     */
+    public Room[] getRooms(Integer[][] roomsOccupancy) {
+    	
+    	if(roomsOccupancy == null || roomsOccupancy[0] == null  ||  roomsOccupancy[0].length == 0){
+    		return null;
+    	}
+    	Room[] rooms = new Room[roomsOccupancy[0].length];
+    	
+    	for(int i=0; i < rooms.length; i++){
+    		
+    		rooms[i] = getRoom(roomsOccupancy[0][i]);
+    		rooms[i].setOccupancy(roomsOccupancy[1][i]);
+    	}
+
+        return rooms;
+    }
+    
+    /**
+     * Get assigned rooms
+     *
+     * @return list of assigned rooms
+     */
+    public Room[] getAssignedBedRooms(Integer facilityId) {
+        Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, null, null);
+
+        for (Room room : rooms) {
+            setAttributes(room);
+        }
+
+        return rooms;
+    }
+    
+    /**
      * Get room types
      *
      * @return list of room types
