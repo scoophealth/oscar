@@ -33,10 +33,13 @@
 	
 	<script type="text/javascript">
 		var gender='<%=request.getSession().getAttribute("clientGender")%>';
+		var age=<%=request.getSession().getAttribute("clientAge")%>;
 		
 		var programMaleOnly=<%=session.getAttribute("programMaleOnly")%>;
         var programFemaleOnly=<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly=<%=session.getAttribute("programTransgenderOnly")%>;
+
+		<%=session.getAttribute("programAgeValidationMethod")%>
 
 		function error(msg) {
 			alert(msg);
@@ -44,7 +47,6 @@
 		}
 
 		function selectProgram(agencyId,id,type) {
-		
 			var programId=Number(id);
 			if (gender == 'M')
 			{
@@ -67,6 +69,11 @@
 					return error("This gender not allowed in selected program.");
 				}
 			}		
+		
+			if (!validAgeRangeForProgram(programId,age))
+			{
+				return error("This client does not meet the age range requirements for this program.");
+			}
 		
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementId")%>'].value=id;
 			opener.document.<%=request.getParameter("formName")%>.elements['<%=request.getParameter("formElementAgencyId")%>'].value=agencyId;
