@@ -22,4 +22,7 @@ public class OscarFormManagerImpl implements OscarFormManager {
 		dao.generateCSV(formId, out);
 	}
 
+	public void convertFormXMLToDb(Long formId) {
+		dao.convertFormXMLToDb(formId);
+	}
 }

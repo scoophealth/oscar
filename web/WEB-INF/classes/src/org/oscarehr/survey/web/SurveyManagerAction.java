@@ -970,6 +970,14 @@ public class SurveyManagerAction extends AbstractSurveyAction {
 		return null;
 	}
 	
+	public ActionForward export_to_db(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+		
+		String id = request.getParameter("id");
+		this.oscarFormManager.convertFormXMLToDb(Long.valueOf(id));
+		
+		return list(mapping,form,request,response);
+	}
+	
 	protected static int getUnusedSectionId(Page page) {
 		int id  = 1;
 		for(int x=0;x<page.getQContainerArray().length;x++) {

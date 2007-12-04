@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ import org.oscarehr.survey.dao.oscar.OscarFormDAO;
 import org.oscarehr.survey.model.oscar.OscarForm;
 import org.oscarehr.survey.model.oscar.OscarFormData;
 import org.oscarehr.survey.model.oscar.OscarFormInstance;
+import org.oscarehr.survey.model.oscar.OscarFormQuestion;
 import org.oscarehr.surveymodel.Page;
 import org.oscarehr.surveymodel.Question;
 import org.oscarehr.surveymodel.SurveyDocument;
@@ -280,6 +282,96 @@ public class OscarFormDAOHibernate extends HibernateDaoSupport implements
 	private String escapeAndQuote(String value){
         String s = StringHelper.replace(value, String.valueOf(quoteChar), String.valueOf(quoteChar) + String.valueOf(quoteChar));
         return (new StringBuffer(2 + s.length())).append(quoteChar).append(s).append(quoteChar).toString();
+	}
+	
+	public void convertFormXMLToDb(Long formId) {
+		OscarForm form = (OscarForm)this.getHibernateTemplate().get(OscarForm.class,formId);
+
+		SurveyDocument model = null;
+		try {
+			model = SurveyDocument.Factory.parse(new StringReader(form.getSurveyData()));
+		}catch(Exception e) {
+			logger.error(e);
+			return;
+		}
+		
+		int page=1;
+		int section=0;
+		String id="";
+
+		LinkedHashMap<String,String> keyMap = new LinkedHashMap<String,String>();
+		List<OscarFormQuestion> ofqs = new ArrayList<OscarFormQuestion>();
+		
+		for(Page p:model.getSurvey().getBody().getPageArray()) {
+			section=0;
+			
+			for(Page.QContainer container:p.getQContainerArray()) {
+				if(container.isSetQuestion()) {
+					Question q = container.getQuestion();
+					id = page + "_" + section + "_"+ q.getId();	
+					/*
+					if(q.getType().isSetSelect()) {
+						Select select = q.getType().getSelect();
+						String answers[] = select.getPossibleAnswers().getAnswerArray();
+						for(int x=0;x<answers.length;x++) {
+							keyMap.put(id + "_" + answers[x], q.getDescription() + "::" + answers[x]);
+						}
+					} else {
+						*/
+						OscarFormQuestion ofq = new OscarFormQuestion();
+						ofq.setDescription(q.getDescription());
+						ofq.setFormId(formId);
+						ofq.setPage(page);
+						ofq.setSection(section);
+						ofq.setQuestion(q.getId());
+						ofq.setType(getTypeAsString(q));
+						ofqs.add(ofq);
+						keyMap.put(id,q.getDescription());
+					//}
+				} else {
+					for(Question q:container.getSection().getQuestionArray()) {
+						id = page + "_" + section + "_"+ q.getId();
+						/*
+						if(q.getType().isSetSelect()) {
+							Select select = q.getType().getSelect();
+							String answers[] = select.getPossibleAnswers().getAnswerArray();
+							for(int x=0;x<answers.length;x++) {
+								keyMap.put(id + "_" + answers[x], q.getDescription() + "::" + answers[x]);
+							}
+						} else {
+							*/						
+							OscarFormQuestion ofq = new OscarFormQuestion();
+							ofq.setDescription(q.getDescription());
+							ofq.setFormId(formId);
+							ofq.setPage(page);
+							ofq.setSection(section);
+							ofq.setQuestion(q.getId());	
+							ofq.setType(getTypeAsString(q));
+							ofqs.add(ofq);
+							keyMap.put(id,q.getDescription());
+						//}
+					}
+					section++;
+				}
+			}		
+			page++;
+		}	
+
+		this.getHibernateTemplate().deleteAll(this.getHibernateTemplate().find("from OscarFormQuestion ofq where ofq.formId=?",formId));
+		for(OscarFormQuestion ofq:ofqs) {
+			this.getHibernateTemplate().save(ofq);
+		}
+	}
+	
+	public String getTypeAsString(Question q) {
+		if(q.getType().isSetDate()) {
+			return "date";
+		} else if(q.getType().isSetOpenEnded()) {
+			return "text";
+		} else if(q.getType().isSetSelect()) {
+			return q.getType().getSelect().getRenderType();
+		} 
+		return "N/A";
 	}
 }
 

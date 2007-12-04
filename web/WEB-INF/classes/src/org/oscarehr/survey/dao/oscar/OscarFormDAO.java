@@ -44,5 +44,5 @@ public interface OscarFormDAO {
 	public List getOscarFormsByClientId(Long clientId);
 	
 	public void generateCSV(Long formId, OutputStream out);
-	
+	public void convertFormXMLToDb(Long formId);
 }

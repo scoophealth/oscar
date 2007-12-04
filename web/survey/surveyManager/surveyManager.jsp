@@ -145,9 +145,29 @@
 		
 		selectObj.selectedIndex=0;
 	}
+	
+	function export_to_db(selectObj) {
+		var formId = selectObj.options[selectObj.selectedIndex].value;
+		if(formId != "") {
+			//alert('<html:rewrite action="/SurveyManager"/>?method=export_csv&id=' + formId);	
+			location.href='<html:rewrite action="/SurveyManager"/>?method=export_to_db&id=' + formId;		
+		}
+		//run the command
+		
+		selectObj.selectedIndex=0;
+	}	
 </script>
 Export Form Data:&nbsp;
 <select onchange="export_csv(this);">
+	<option value=""></option>
+<c:forEach var="f" items="${released_forms}">
+	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
+</c:forEach>
+</select>
+
+<br/><br/>
+Export form structure to database:&nbsp;
+<select onchange="export_to_db(this);">
 	<option value=""></option>
 <c:forEach var="f" items="${released_forms}">
 	<option value="<c:out value="${f.formId}"/>"><c:out value="${f.description}"/></option>
