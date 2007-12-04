@@ -23,3 +23,4 @@ insert into access_type (name, type) values("perform bed assignments","access");
 
 insert into access_type (name, type) values("print bed rosters and reports","access");
 
+update agency set intake_quick_state='S';
