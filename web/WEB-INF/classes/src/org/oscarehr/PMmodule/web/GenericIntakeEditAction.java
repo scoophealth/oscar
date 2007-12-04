@@ -60,7 +60,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private static final String EDIT = "edit";
     private static final String PRINT = "print";
     private static final String CLIENT_EDIT = "clientEdit";
-
+   
+    
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
         
@@ -276,12 +277,19 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         return activeProviderPrograms;
     }
 
-    private List<Program> getBedPrograms(Set<Program> providerPrograms) {
+    private List<Program> getBedPrograms(Set<Program> providerPrograms,String providerNo) {
         List<Program> bedPrograms = new ArrayList<Program>();
 
         for (Program program : programManager.getBedPrograms()) {
             if (providerPrograms.contains(program)) {
-                bedPrograms.add(program);
+            	if(OscarProperties.getInstance().isTorontoRFQ()) {
+            		if(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,"",String.valueOf(program.getId()))) {
+            			bedPrograms.add(program);
+            		}
+            	}
+            	else {
+            		bedPrograms.add(program);
+            	}
             }
         }
 
@@ -292,20 +300,26 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         List<Program> communityPrograms = new ArrayList<Program>();
 
         for (Program program : programManager.getCommunityPrograms()) {
-            communityPrograms.add(program);
+        		communityPrograms.add(program);
         }
 
         return communityPrograms;
     }
 
-    private List<Program> getServicePrograms(Set<Program> providerPrograms) {
+    private List<Program> getServicePrograms(Set<Program> providerPrograms,String providerNo) {
         List<Program> servicePrograms = new ArrayList<Program>();
 
         for (Object o : programManager.getServicePrograms()) {
             Program program = (Program) o;
 
             if (providerPrograms.contains(program)) {
-                servicePrograms.add(program);
+            	if(OscarProperties.getInstance().isTorontoRFQ()) {
+            		if(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,"",String.valueOf(program.getId()))) {
+                    	 servicePrograms.add(program);
+            		} 
+            	}else {
+            		servicePrograms.add(program);
+            	}
             }
         }
 
@@ -315,8 +329,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private List<Program> getExternalPrograms(Set<Program> providerPrograms) {
         List<Program> externalPrograms = new ArrayList<Program>();
 
-        for (Program program : programManager.getExternalPrograms()) {
-            externalPrograms.add(program);
+        for (Program program : programManager.getExternalPrograms()) {        	
+        	externalPrograms.add(program);
         }
         return externalPrograms;
     }
@@ -477,12 +491,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             Set<Program> providerPrograms = getActiveProviderPrograms(providerNo);
 
             if (bedCommunityProgramsVisible) {
-                formBean.setBedCommunityPrograms(getBedPrograms(providerPrograms), getCommunityPrograms());
+                formBean.setBedCommunityPrograms(getBedPrograms(providerPrograms,providerNo), getCommunityPrograms());
                 formBean.setSelectedBedCommunityProgramId(currentBedCommunityProgramId);
             }
 
             if (serviceProgramsVisible) {
-                formBean.setServicePrograms(getServicePrograms(providerPrograms));
+                formBean.setServicePrograms(getServicePrograms(providerPrograms,providerNo));
                 formBean.setSelectedServiceProgramIds(currentServiceProgramIds);
             }
 
@@ -491,7 +505,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 formBean.setSelectedExternalProgramId(currentExternalProgramId);
             }
         }
-    }
-
+    }    
 
 }
