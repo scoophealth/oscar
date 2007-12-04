@@ -38,7 +38,7 @@
 		var programMaleOnly=<%=session.getAttribute("programMaleOnly")%>;
         var programFemaleOnly=<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly=<%=session.getAttribute("programTransgenderOnly")%>;
-
+		
 		<%=session.getAttribute("programAgeValidationMethod")%>
 
 		function error(msg) {
@@ -48,23 +48,24 @@
 
 		function selectProgram(agencyId,id,type) {
 			var programId=Number(id);
+			
 			if (gender == 'M')
 			{
-				if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
+				if (id.indexOf(programFemaleOnly)>=0 ||  id.indexOf(programTransgenderOnly)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
 			if (gender == 'F')
 			{
-				if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
+				if (id.indexOf(programMaleOnly)>=0 ||  id.indexOf(programTransgenderOnly)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
 			if (gender == 'T')
 			{
-				if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
+				if (id.indexOf(programFemaleOnly)>=0 ||  id.indexOf(programMaleOnly)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
