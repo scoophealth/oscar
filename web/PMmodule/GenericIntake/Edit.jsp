@@ -201,7 +201,7 @@
         <td><label>Postal Code<%=isRequired ? REQUIRED_MARKER : ""%><br><html:text property="client.postal" size="9"
                                                                                    maxlength="9"/></label></td>
     </tr>
-</caisi:isModuleLoad>
+
 <c:if test="${not empty sessionScope.genericIntakeEditForm.client.demographicNo}">
     <tr>
         <td>
@@ -212,6 +212,7 @@
         </td>
     </tr>
 </c:if>
+</caisi:isModuleLoad>
 </table>
 </div>
 
