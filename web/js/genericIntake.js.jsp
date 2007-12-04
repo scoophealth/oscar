@@ -2,6 +2,29 @@
 <%@page import="org.oscarehr.common.dao.IntakeRequiredFieldsDao"%>
 <%@page contentType="text/javascript"%>
 
+if (!Array.prototype.indexOf)
+{
+  Array.prototype.indexOf = function(elt /*, from*/)
+  {
+    var len = this.length;
+
+    var from = Number(arguments[1]) || 0;
+    from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+    if (from < 0)
+      from += len;
+
+    for (; from < len; from++)
+    {
+      if (from in this &&
+          this[from] === elt)
+        return from;
+    }
+    return -1;
+  };
+}
+
 function validateSearchForm() {
 	if (document.forms[0].elements['firstName'].value == '' || document.forms[0].elements['lastName'].value == '') {
 		alert('First name and last name are mandatory');
