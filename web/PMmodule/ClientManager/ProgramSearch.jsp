@@ -38,7 +38,7 @@
 		var programMaleOnly=<%=session.getAttribute("programMaleOnly")%>;
         var programFemaleOnly=<%=session.getAttribute("programFemaleOnly")%>;
         var programTransgenderOnly=<%=session.getAttribute("programTransgenderOnly")%>;
-		
+
 		<%=session.getAttribute("programAgeValidationMethod")%>
 
 		function error(msg) {
@@ -46,26 +46,49 @@
 			return false;
 		}
 
+if (!Array.prototype.indexOf)
+{
+  Array.prototype.indexOf = function(elt /*, from*/)
+  {
+    var len = this.length;
+
+    var from = Number(arguments[1]) || 0;
+    from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+    if (from < 0)
+      from += len;
+
+    for (; from < len; from++)
+    {
+      if (from in this &&
+          this[from] === elt)
+        return from;
+    }
+    return -1;
+  };
+}
+
+
 		function selectProgram(agencyId,id,type) {
 			var programId=Number(id);
-			
 			if (gender == 'M')
 			{
-				if (id.indexOf(programFemaleOnly)>=0 ||  id.indexOf(programTransgenderOnly)>=0)
+				if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
 			if (gender == 'F')
 			{
-				if (id.indexOf(programMaleOnly)>=0 ||  id.indexOf(programTransgenderOnly)>=0)
+				if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
 			if (gender == 'T')
 			{
-				if (id.indexOf(programFemaleOnly)>=0 ||  id.indexOf(programMaleOnly)>=0)
+				if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
