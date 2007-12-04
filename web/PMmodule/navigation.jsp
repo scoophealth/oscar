@@ -268,7 +268,8 @@
                     <span>System Administration</span>
 
                     <div>
-                        <a HREF="#" ONCLICK="popupPage2('../admin/admin.jsp', 'Admin');return false;">Admin Page</a>
+                        <a HREF="#" ONCLICK="popupPage2('<%=request.getContextPath()%>/admin/admin.jsp', 'Admin');return false;">Admin Page</a>
+                    	
                     </div>
                 </div>
             </security:oscarSec>
