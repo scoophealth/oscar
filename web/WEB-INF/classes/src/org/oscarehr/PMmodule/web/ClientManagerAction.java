@@ -264,6 +264,7 @@ public class ClientManagerAction extends BaseAction {
 
         Demographic demographic=clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
+        request.getSession().setAttribute("clientAge", demographic.getAge());
 
         return mapping.findForward("edit");
     }
