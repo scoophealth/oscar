@@ -104,9 +104,10 @@
 			
 				//check role:
 				//If the user don't have the role "perform bed assignments" for this program, then tab "perform bed assignments" won't show up.
-				if(OscarProperties.getInstance().isTorontoRFQ())  { 				
-					if(!((Boolean)request.getSession().getAttribute("performBedAssignments")) && 
-						"Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]))
+				if(OscarProperties.getInstance().isTorontoRFQ())  {
+                    Object pfb = request.getSession().getAttribute("performBedAssignments");
+                    if((pfb != null) && !((Boolean) pfb) &&
+                            "Bed Reservation".equalsIgnoreCase(ClientManagerFormBean.tabs[x]))
 						continue;					
 				}
 				
