@@ -39,29 +39,14 @@ public class IntegratorUpdateTask extends TimerTask {
     private static final Log log = LogFactory.getLog(IntegratorUpdateTask.class);
 
     private IntegratorManager integratorManager;
-    private AdmissionManager admissionManager;
     private ProgramManager programManager;
-    private ProviderManager providerManager;
-    private ClientManager clientManager;
 
     public void setIntegratorManager(IntegratorManager mgr) {
         this.integratorManager = mgr;
     }
 
-    public void setAdmissionManager(AdmissionManager mgr) {
-        this.admissionManager = mgr;
-    }
-
     public void setProgramManager(ProgramManager mgr) {
         this.programManager = mgr;
-    }
-
-    public void setProviderManager(ProviderManager mgr) {
-        this.providerManager = mgr;
-    }
-
-    public void setClientManager(ClientManager mgr) {
-        this.clientManager = mgr;
     }
 
     public void run() {
@@ -73,21 +58,6 @@ public class IntegratorUpdateTask extends TimerTask {
                 return;
             }
 
-            try {
-                integratorManager.refreshAdmissions(admissionManager.getAdmissions());
-                log.info("Admissions updated");
-            }
-            catch (IntegratorException e) {
-                log.error(e);
-            }
-
-            try {
-                integratorManager.refreshReferrals(clientManager.getReferrals());
-                log.info("referrals refreshed");
-            }
-            catch (IntegratorException e) {
-                log.error(e);
-            }
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
