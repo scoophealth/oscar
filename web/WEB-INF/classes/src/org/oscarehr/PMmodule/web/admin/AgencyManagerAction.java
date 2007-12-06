@@ -155,16 +155,14 @@ public class AgencyManagerAction extends BaseAction {
         Agency agency = agencyManager.getLocalAgency();
         agency.setIntegratorEnabled(true);
         agencyManager.saveAgency(agency);
-        integratorManager.refresh();
 
         try {
+            integratorManager.refresh();
             Long id = integratorManager.register(agency);
         }
-        catch (Throwable e) {
+        catch (Exception e) {
             e.printStackTrace();
 
-            agency.setIntegratorEnabled(false);
-            agencyManager.saveAgency(agency);
             integratorManager.refresh();
 
             log.error(e);

@@ -22,10 +22,12 @@
 */
 -->
 
+
 <%@ include file="/taglibs.jsp"%>
 
 <%@ page import="org.oscarehr.PMmodule.web.formbean.*"%>
 <html:form action="/PMmodule/AgencyManager">
+	<input type="hidden" name="method" />
     <script>
         function enableIntegrator() {
             document.agencyManagerForm.method.value='enable_integrator';

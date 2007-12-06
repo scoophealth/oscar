@@ -124,11 +124,13 @@ public class IntegratorManager {
         }
         catch (Throwable e) {
             log.error("could not get local agency", e);
+            initCalled = false;
             return;
         }
 
         if (localAgency == null) {
             log.warn("local agency information not in database");
+            initCalled = false;
             return;
         }
 
@@ -143,24 +145,14 @@ public class IntegratorManager {
 
                 // set up the map of other agencies
                 setupAgencyMap();
-
-                localAgency.setIntegratorEnabled(true);
             }
             catch (Throwable e) {
-                localAgency.setIntegratorEnabled(false);
-
                 throw new IntegratorNotInitializedException(e);
             }
-            finally {
-                if (agencyMap == null && localAgency != null) {
-                    setupLocalAgencyMap();
-                }
-            }
         }
-        else {
-            if (agencyMap == null && localAgency != null) {
-                setupLocalAgencyMap();
-            }
+
+        if (agencyMap == null && localAgency != null) {
+            setupLocalAgencyMap();
         }
     }
 
@@ -212,6 +204,7 @@ public class IntegratorManager {
     }
 
     public void refresh() {
+        initCalled=false;
         init();
     }
 

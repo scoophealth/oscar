@@ -214,7 +214,10 @@
             <bean class="org.oscarehr.PMmodule.task.IntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
         </property>
         <property name="delay" value="60000"/>
+        <!-- 
         <property name="period" value="1800000"/>
+         -->
+        <property name="period" value="30000"/>
     </bean>
     <bean id="scheduledBedProgramDischargeTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"
           lazy-init="default"  dependency-check="default">
