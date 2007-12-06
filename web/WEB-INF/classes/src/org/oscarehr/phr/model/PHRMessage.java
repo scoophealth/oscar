@@ -317,6 +317,15 @@ public class PHRMessage  extends PHRDocument implements Serializable{
         return ret;
     }
     
+    public boolean isFromDemographic(){
+        return PHRDocument.TYPE_DEMOGRAPHIC == this.getSenderType();
+    }
+    
+    public String getSenderDemographicNo(){   
+        Hashtable h = findOscarId(PHRDocument.TYPE_DEMOGRAPHIC,this.getSenderPhr());
+        System.out.println("TRYIGN TO FIND OSCAR ID for  "+this.getSenderPhr()+"  ====  "+h.get("oscarId"));    
+        return (String) h.get("oscarId");
+    }
     
     public Hashtable findOscarId(int idType, String phrId) {
        ProviderMyOscarIdData providerData = new ProviderMyOscarIdData();
