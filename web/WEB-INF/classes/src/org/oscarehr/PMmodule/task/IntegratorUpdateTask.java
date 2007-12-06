@@ -22,16 +22,16 @@
 
 package org.oscarehr.PMmodule.task;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.service.AdmissionManager;
-import org.oscarehr.PMmodule.service.ClientManager;
+import org.caisi.integrator.model.transfer.ProgramTransfer;
+import org.oscarehr.PMmodule.dao.ProgramDao;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.service.IntegratorManager;
-import org.oscarehr.PMmodule.service.ProgramManager;
-import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.util.DbConnectionFilter;
 
 public class IntegratorUpdateTask extends TimerTask {
@@ -39,14 +39,14 @@ public class IntegratorUpdateTask extends TimerTask {
     private static final Log log = LogFactory.getLog(IntegratorUpdateTask.class);
 
     private IntegratorManager integratorManager;
-    private ProgramManager programManager;
+    private ProgramDao programDao;
 
     public void setIntegratorManager(IntegratorManager mgr) {
         this.integratorManager = mgr;
     }
 
-    public void setProgramManager(ProgramManager mgr) {
-        this.programManager = mgr;
+    public void setProgramDao(ProgramDao programDao) {
+        this.programDao = programDao;
     }
 
     public void run() {
@@ -58,11 +58,24 @@ public class IntegratorUpdateTask extends TimerTask {
                 return;
             }
 
+            pushPrograms();
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
-            
+
             log.debug("IntegratorUpdateTask finished)");
+        }
+    }
+
+    private void pushPrograms() {
+        try {
+            List<Program> programs=programDao.getAllActivePrograms();
+            ArrayList<ProgramTransfer> al=new ArrayList<ProgramTransfer>();
+            for (Program program : programs) al.add(program.getProgramTransfer());
+            integratorManager.publishPrograms(al.toArray(new ProgramTransfer[0]));
+        }
+        catch (Exception e) {
+            log.error("Unexpected error occurred.", e);
         }
     }
 

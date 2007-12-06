@@ -156,10 +156,6 @@ public class ProgramManager {
 		return dao.getAllPrograms();
 	}
 
-	public List<Program> getAllActivePrograms() {
-		return dao.getAllActivePrograms();
-	}
-	
 	public List<Program> getProgramsByAgencyId(String agencyId) {
 		return dao.getProgramsByAgencyId(agencyId);
 	}
