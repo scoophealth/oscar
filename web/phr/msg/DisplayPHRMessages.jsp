@@ -55,6 +55,13 @@ if (pageMethod.equals("archive"))
     pageMethod = "viewMessages";
 if (pageMethod.equals("unarchive"))
     pageMethod = "viewArchivedMessages";
+    
+    
+    GregorianCalendar now=new GregorianCalendar();
+    int curYear = now.get(Calendar.YEAR);
+    int curMonth = (now.get(Calendar.MONTH)+1);
+    int curDay = now.get(Calendar.DAY_OF_MONTH);
+    String dateString = curYear+"-"+curMonth+"-"+curDay;    
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -68,6 +75,7 @@ if (pageMethod.equals("unarchive"))
         <%-- bean:message key="indivoMessenger.DisplayMessages.title"/ --%>  myOSCAR
         </title>
         <script type="text/javascript" src="../../share/javascript/prototype.js"></script>
+        <script type="text/javascript" src="../../share/javascript/Oscar.js"></script>
         <script type="text/javascript" src="../../phr/phr.js"></script>
         <style type="text/css">
         td.messengerButtonsA{
@@ -446,7 +454,9 @@ if (pageMethod.equals("unarchive"))
                                 Sent
                             </td>
                             <td>
-                                <c:out value="${sMessage.receiverPhr}"/></td>
+                                <c:out value="${sMessage.receiverPhr}"/>
+                                
+                            </td>
                             <td>
                                 
                                 <html-el:link action="/phr/PhrMessage?method=read&noreply=yes&comingfrom=viewSentMessages&id=${sMessage.id}"  >
@@ -517,8 +527,11 @@ if (pageMethod.equals("unarchive"))
                                    <c:otherwise>new</c:otherwise>
                                 </c:choose>
                             </td>
-                            <td bgcolor="#EEEEFF">
-                                <c:out value="${iMessage.senderPhr}"/></td>
+                            <td bgcolor="#EEEEFF"> 
+                                <a href="javascript: function myFunction() {return false; }" onClick="popup(755,1048,'../../oscarEncounter/IncomingEncounter.do?providerNo=<%=session.getAttribute("user")%>&appointmentNo=&demographicNo=<c:out value="${iMessage.senderDemographicNo}"/>&curProviderNo=&reason=<%=URLEncoder.encode("My Oscar Notes")%>&userName=<%=URLEncoder.encode(session.getAttribute("userfirstname")+" "+session.getAttribute("userlastname")) %>&curDate=<%=""+curYear%>-<%=""+curMonth%>-<%=""+curDay%>&appointmentDate=&startTime=&status=','apptProvider')" >
+                                    <c:out value="${iMessage.senderPhr}"/>
+                                </a>
+                            </td>
                             <td bgcolor="#EEEEFF">
                                 
                                 <html-el:link action="/phr/PhrMessage?&method=read&comingfrom=viewMessages&id=${iMessage.id}"  >
