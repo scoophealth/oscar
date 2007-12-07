@@ -26,14 +26,13 @@ package org.oscarehr.PMmodule.service;
  * unimplemented methods - implement Ext handling - implement program registry - implement notes
  */
 
+import java.net.MalformedURLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,16 +41,12 @@ import org.caisi.integrator.message.GetIntegratorInformationRequest;
 import org.caisi.integrator.message.MessageAck;
 import org.caisi.integrator.message.agencies.FindAgenciesRequest;
 import org.caisi.integrator.message.agencies.FindAgenciesResponse;
-import org.caisi.integrator.message.agencies.RegisterAgencyRequest;
-import org.caisi.integrator.message.agencies.RegisterAgencyResponse;
 import org.caisi.integrator.message.clientGroup.DemographicKey;
 import org.caisi.integrator.message.clientGroup.JoinClientRequest;
-import org.caisi.integrator.message.clientGroup.JoinClientResponse;
 import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicResponse;
 import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
-import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsResponse;
 import org.caisi.integrator.message.program.PublishProgramRequest;
 import org.caisi.integrator.message.program.PublishProgramResponse;
 import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
@@ -67,8 +62,6 @@ import org.codehaus.xfire.client.XFireProxyFactory;
 import org.codehaus.xfire.service.Service;
 import org.oscarehr.PMmodule.dao.AgencyDao;
 import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
-import org.oscarehr.PMmodule.exception.IntegratorNotInitializedException;
 import org.oscarehr.PMmodule.exception.OperationNotImplementedException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
@@ -78,123 +71,43 @@ import org.springframework.beans.factory.annotation.Required;
 
 public class IntegratorManager {
 
-    public static final short DATATYPE_CLIENT = 1;
-    public static final short DATATYPE_PROVIDER = 2;
-
     private static Log log = LogFactory.getLog(IntegratorManager.class);
 
-    private static Agency localAgency;
-    private static Map<Long, Agency> agencyMap;
-
-    private boolean initCalled = false;
-
-    // injected
-    protected AgencyDao agencyDAO;
+    protected AgencyDao agencyDao;
     protected ClientManager clientManager;
 
-    // set up during initialization
-    private IntegratorService integratorService;
-    private AuthenticationToken authenticationToken;
-
-    public static Agency getLocalAgency() {
-        return localAgency;
-    }
-
-    public static Map<Long, Agency> getAgencyMap() {
-        return agencyMap;
+    public Agency getLocalAgency() {
+        return (agencyDao.getLocalAgency());
     }
 
     public boolean isEnabled() {
-        if (!initCalled) {
-            init();
-        }
-
-        return localAgency != null && localAgency.isIntegratorEnabled();
+        return (getLocalAgency().isIntegratorEnabled());
     }
 
-    public void init() {
-        if (initCalled) {
-            return;
-        }
-
-        initCalled = true;
-
+    /**
+     * @return an instance of the integrator service or null on error.
+     */
+    public IntegratorService getIntegratorService() {
         try {
-            localAgency = agencyDAO.getLocalAgency();
+            Service serviceModel = new AnnotationServiceFactory().create(IntegratorService.class);
+            IntegratorService integratorService = (IntegratorService) new XFireProxyFactory().create(serviceModel, getLocalAgency().getIntegratorUrl());
+            return (integratorService);
         }
-        catch (Throwable e) {
-            log.error("could not get local agency", e);
-            initCalled = false;
-            return;
-        }
-
-        if (localAgency == null) {
-            log.warn("local agency information not in database");
-            initCalled = false;
-            return;
-        }
-
-        if (localAgency.isIntegratorEnabled()) {
-            try {
-                // prepare the service;
-                Service serviceModel = new AnnotationServiceFactory().create(IntegratorService.class);
-                integratorService = (IntegratorService) new XFireProxyFactory().create(serviceModel, localAgency.getIntegratorUrl());
-
-                // set up the auth token
-                authenticationToken = new AuthenticationToken(localAgency.getIntegratorUsername(), localAgency.getIntegratorPassword());
-
-                // set up the map of other agencies
-                setupAgencyMap();
-            }
-            catch (Throwable e) {
-                throw new IntegratorNotInitializedException(e);
-            }
-        }
-
-        if (agencyMap == null && localAgency != null) {
-            setupLocalAgencyMap();
+        catch (MalformedURLException e) {
+            log.error("Error with integrator.", e);
+            return(null);
         }
     }
 
-    /**
-     * Build the map of agencies available via the integrator.
-     */
-    protected void setupAgencyMap() {
-        if (integratorService != null) {
-            FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), authenticationToken);
-            agencyMap = new HashMap<Long, Agency>();
-            for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
-                // skip the local agency... we already have the information we need about ourselves
-                if (!agency.getName().equals(localAgency.getIntegratorUsername())) agencyMap.put(agency.getId(), integratorAgencyToCAISIAgency(agency));
-            }
-        }
-        agencyMap.put((long) 0, localAgency);
-        Agency.setAgencyMap(agencyMap);
-        log.info("Agency Map is setup");
-    }
-
-    /**
-     * Build a map of agencies available, but populate it only with the local agency
-     */
-    protected void setupLocalAgencyMap() {
-        agencyMap = new HashMap<Long, Agency>();
-        agencyMap.put((long) 0, localAgency);
-        Agency.setAgencyMap(agencyMap);
-        log.info("Agency Map is setup");
-    }
-
-    protected IntegratorService getIntegratorService() {
-        if (!isEnabled()) throw new IntegratorNotEnabledException("request made for integrator service, but integrator is not enabled");
-        else if (integratorService == null) throw new IntegratorNotInitializedException(
-                "request made for integrator service, which did not complete initialization");
-        else return integratorService;
+    public AuthenticationToken getAuthenticationToken() {
+        return (new AuthenticationToken(getLocalAgency().getIntegratorUsername(), getLocalAgency().getIntegratorPassword()));
     }
 
     /**
      * @return a list of all agencies
      */
     public List<Agency> getAgencies() {
-        FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), authenticationToken);
+        FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), getAuthenticationToken());
         List<Agency> agencies = new ArrayList<Agency>();
         for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
             agencies.add(integratorAgencyToCAISIAgency(agency));
@@ -203,38 +116,11 @@ public class IntegratorManager {
         return agencies;
     }
 
-    public void refresh() {
-        initCalled=false;
-        init();
-    }
-
-    /**
-     * @return the id of the local agency
-     */
-    public long getLocalAgencyId() {
-        return localAgency.getId();
-    }
-
-    /**
-     * Register an agency (presumably the local agency) with the integrator
-     * 
-     * @param agencyInfo
-     *            the agency to register
-     * @return the agency's id
-     */
-    public Long register(Agency agencyInfo) {
-        RegisterAgencyResponse response = getIntegratorService().registerAgency(new RegisterAgencyRequest(new Date(), caisiAgencyToIntegratorAgency(agencyInfo)
-
-        ), authenticationToken);
-
-        return response.getAgency().getId();
-    }
-
     public Collection<ClientTransfer> matchClient(Demographic client) throws IntegratorException {
 
         DemographicTransfer searchDemographic = caisiDemographicToIntegratorDemographic(client);
         SearchCandidateDemographicResponse response = getIntegratorService().searchCandidateDemographic(
-                new SearchCandidateDemographicRequest(new Date(), searchDemographic), authenticationToken);
+                new SearchCandidateDemographicRequest(new Date(), searchDemographic), getAuthenticationToken());
 
         Collection<ClientTransfer> clients = response.getCandidateClients();
 
@@ -243,14 +129,14 @@ public class IntegratorManager {
 
     public Client getClient(String agencyUsername, long demographicNo) throws IntegratorException {
         GetDemographicResponse response = getIntegratorService().getDemographic(new GetDemographicRequest(new Date(), agencyUsername, (int) demographicNo),
-                authenticationToken);
+                getAuthenticationToken());
 
         return response.getClient();
     }
 
     public Demographic getDemographic(String agencyUsername, long demographicNo) throws IntegratorException {
         GetDemographicResponse response = getIntegratorService().getDemographic(new GetDemographicRequest(new Date(), agencyUsername, (int) demographicNo),
-                authenticationToken);
+                getAuthenticationToken());
 
         Demographic demographic = integratorDemographicToCaisiDemographic(response.getDemographic());
 
@@ -262,8 +148,8 @@ public class IntegratorManager {
         for (Demographic client : clients) {
             demographics.add(caisiDemographicToIntegratorDemographic(client));
         }
-        SynchronizeAgencyDemographicsResponse response = getIntegratorService().synchronizeAgencyDemographics(
-                new SynchronizeAgencyDemographicsRequest(new Date(), demographics), authenticationToken);
+        getIntegratorService().synchronizeAgencyDemographics(
+                new SynchronizeAgencyDemographicsRequest(new Date(), demographics), getAuthenticationToken());
     }
 
     protected boolean updateClient(long id) {
@@ -276,38 +162,25 @@ public class IntegratorManager {
 
     public void saveClient(Demographic client) throws IntegratorException {
         getIntegratorService().addUpdateDemographic(new AddUpdateDemographicRequest(new Date(), caisiDemographicToIntegratorDemographic(client)),
-                authenticationToken);
+                getAuthenticationToken());
     }
 
     public void saveClient(Demographic client, String remoteAgency, Long remoteDemographicNo) throws IntegratorException {
         AddUpdateDemographicRequest demographicRequest = new AddUpdateDemographicRequest(new Date(), caisiDemographicToIntegratorDemographic(client));
         if (remoteAgency != null && remoteDemographicNo != null) demographicRequest.setSameClientAsDemographic(new DemographicKey(remoteAgency,
                 remoteDemographicNo));
-        getIntegratorService().addUpdateDemographic(demographicRequest, authenticationToken);
+        getIntegratorService().addUpdateDemographic(demographicRequest, getAuthenticationToken());
     }
 
     public void mergeClient(long demographicNo, String remoteAgency, long remoteDemographicNo) throws IntegratorException {
         JoinClientRequest request = new JoinClientRequest(new Date(), Arrays.asList(new DemographicKey(remoteAgency, remoteDemographicNo), new DemographicKey(
-                localAgency.getIntegratorUsername(), demographicNo)));
+                getLocalAgency().getIntegratorUsername(), demographicNo)));
 
-        JoinClientResponse response = integratorService.joinClient(request, authenticationToken);
+        getIntegratorService().joinClient(request, getAuthenticationToken());
     }
 
     public String getIntegratorVersion() {
-        return getIntegratorService().getIntegratorInformation(new GetIntegratorInformationRequest(new Date()), authenticationToken).getVersion();
-    }
-
-    public boolean notifyUpdate(short dataType, long id) {
-        if (!isEnabled()) {
-            return false;
-        }
-
-        switch (dataType) {
-            case IntegratorManager.DATATYPE_CLIENT:
-                return updateClient(id);
-        }
-
-        return true;
+        return getIntegratorService().getIntegratorInformation(new GetIntegratorInformationRequest(new Date()), getAuthenticationToken()).getVersion();
     }
 
     private org.caisi.integrator.model.Agency caisiAgencyToIntegratorAgency(Agency agencyInfo) {
@@ -448,9 +321,9 @@ public class IntegratorManager {
      */
     public void publishPrograms(ProgramTransfer[] programTransfers) {
         if (!isEnabled()) return;
-        
+
         PublishProgramRequest publishProgramRequest = new PublishProgramRequest(new Date(), programTransfers);
-        PublishProgramResponse publishProgramResponse = getIntegratorService().publishProgram(publishProgramRequest, authenticationToken);
+        PublishProgramResponse publishProgramResponse = getIntegratorService().publishProgram(publishProgramRequest, getAuthenticationToken());
 
         if (!publishProgramResponse.getAck().equals(MessageAck.OK)) {
             log.error("Error publishing programs. " + publishProgramResponse.getAck());
@@ -476,7 +349,7 @@ public class IntegratorManager {
 
     @Required
     public void setAgencyDao(AgencyDao dao) {
-        this.agencyDAO = dao;
+        this.agencyDao = dao;
     }
 
 }

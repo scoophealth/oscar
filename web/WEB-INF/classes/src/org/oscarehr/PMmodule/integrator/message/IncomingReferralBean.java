@@ -84,7 +84,7 @@ public class IncomingReferralBean implements MessageListener {
 		
 		
 		//here, i can be the source, if not, i am the receiver
-		if(referral.getSourceAgencyId().longValue() == integratorManager.getLocalAgencyId()) {
+		if(referral.getSourceAgencyId().longValue() == integratorManager.getLocalAgency().getId()) {
 			//i am the source of this referral,i should have it in record
 			log.debug("my own referral coming back to me");
 			log.debug("client_id=" + referral.getClientId() + ", agency_id = " + referral.getAgencyId() + ", program_id = " + referral.getProgramId());

@@ -270,8 +270,6 @@ public class IntakeAAction2 extends BaseAction {
                 integratorManager.saveClient(clientManager.getClientByDemographicNo(String.valueOf(intakea.getDemographicNo())));
             }
 
-            /* update regardless */
-            //integratorManager.notifyUpdate(IntegratorManager.DATATYPE_CLIENT, String.valueOf(intakea.getDemographicNo()));
         } catch (IntegratorException e) {
             log.error(e);
         }

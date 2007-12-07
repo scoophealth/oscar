@@ -156,25 +156,6 @@ public class AgencyManagerAction extends BaseAction {
         agency.setIntegratorEnabled(true);
         agencyManager.saveAgency(agency);
 
-        try {
-            integratorManager.refresh();
-            Long id = integratorManager.register(agency);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-
-            integratorManager.refresh();
-
-            log.error(e);
-            ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.registered.failed", e.getMessage()));
-            saveMessages(request, messages);
-            request.setAttribute("id", agency.getId());
-            request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
-
-            return mapping.findForward(FORWARD_EDIT);
-        }
-
         request.setAttribute("id", agency.getId());
         request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
@@ -186,42 +167,11 @@ public class AgencyManagerAction extends BaseAction {
 
         agency.setIntegratorEnabled(false);
         agencyManager.saveAgency(agency);
-        integratorManager.refresh();
 
         request.setAttribute("id", agency.getId());
         request.setAttribute("integratorEnabled", agency.isIntegratorEnabled());
 
         return mapping.findForward(FORWARD_EDIT);
-    }
-
-    public ActionForward register(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Agency agency = agencyManager.getLocalAgency();
-
-            if (agency.getId() == 0) {
-                Long id = integratorManager.register(agency);
-
-                if (id != null) {
-                    agency.setId(id);
-                    agencyManager.saveLocalAgency(agency);
-                }
-                else {
-                    log.error("error");
-                }
-                integratorManager.refresh();
-            }
-            else {
-                log.warn("already registered!!");
-            }
-        }
-        catch (Throwable e) {
-            log.error(e);
-            ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("integrator.registered.failed"));
-            saveMessages(request, messages);
-        }
-
-        return view(mapping, form, request, response);
     }
 
     public ActionForward refresh_admissions(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {

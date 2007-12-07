@@ -131,7 +131,6 @@ public class ConsentAction extends BaseAction {
 		}
 		
 		consentManager.saveConsent(consent);	
-		notifyIntegrator(IntegratorManager.DATATYPE_CLIENT,String.valueOf(consent.getDemographicNo()));
 		
 		String gotoStr = request.getParameter("goto");
 		if(gotoStr != null && !gotoStr.equals("")) {

@@ -22,26 +22,25 @@
 
 package org.oscarehr.PMmodule.web;
 
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.DynaActionForm;
-import org.caisi.integrator.model.Client;
 import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.model.Demographic;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.PreIntakeForm;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Collection;
-import java.util.List;
 
 public class IntakeAction extends BaseAction {
 
@@ -126,7 +125,7 @@ public class IntakeAction extends BaseAction {
 
 
         Demographic demographic = null;
-        if (!IntegratorManager.getLocalAgency().getIntegratorUsername().equals(formBean.getAgencyId())) {
+        if (!integratorManager.getLocalAgency().getIntegratorUsername().equals(formBean.getAgencyId())) {
             //integrator
             try {
                 demographic = integratorManager.getDemographic(formBean.getAgencyId(), Long.valueOf(formBean.getDemographicId()));

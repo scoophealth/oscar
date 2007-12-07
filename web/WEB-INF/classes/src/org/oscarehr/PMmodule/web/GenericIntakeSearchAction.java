@@ -18,24 +18,27 @@
  */
 package org.oscarehr.PMmodule.web;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.*;
-import org.caisi.integrator.model.Client;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.Intake;
-import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.PMmodule.web.formbean.GenericIntakeSearchFormBean;
 import org.oscarehr.PMmodule.web.utils.UserRoleUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
@@ -52,7 +55,7 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeSearchFormBean intakeSearchBean = (GenericIntakeSearchFormBean) form;
-        intakeSearchBean.setLocalAgencyUsername(IntegratorManager.getLocalAgency().getIntegratorUsername());
+        intakeSearchBean.setLocalAgencyUsername(integratorManager.getLocalAgency().getIntegratorUsername());
         
         //UCF
 		request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
