@@ -1070,7 +1070,7 @@ INSERT INTO oscarcommlocations VALUES (145,'Oscar Users',NULL,1,'<?xml version=\
 -- Dumping data for table 'preference'
 --
 
-INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue','','','disabled');
+INSERT INTO preference VALUES (138,'999998','8','18','15','.default','deepblue','','disabled');
 
 --
 -- Dumping data for table 'prescribe'
