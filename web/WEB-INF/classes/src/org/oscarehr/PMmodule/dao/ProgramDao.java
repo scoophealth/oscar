@@ -177,9 +177,9 @@ public class ProgramDao extends HibernateDaoSupport {
         return rs;
     }
 
-    public List<Program> getUserDefinedPrograms() {
+    public List<Program> getActiveUserDefinedPrograms() {
         @SuppressWarnings("unchecked")
-        List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.userDefined = ?1", new Boolean[] { true });
+        List<Program> rs = getHibernateTemplate().find("FROM Program p WHERE p.userDefined = ?1 and p.programStatus = 'active'", new Boolean[] { true });
         return rs;
     }
 

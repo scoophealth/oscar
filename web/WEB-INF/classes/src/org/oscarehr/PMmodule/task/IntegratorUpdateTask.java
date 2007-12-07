@@ -69,7 +69,7 @@ public class IntegratorUpdateTask extends TimerTask {
 
     private void pushPrograms() {
         try {
-            List<Program> programs=programDao.getAllActivePrograms();
+            List<Program> programs=programDao.getActiveUserDefinedPrograms();
             ArrayList<ProgramTransfer> al=new ArrayList<ProgramTransfer>();
             for (Program program : programs) al.add(program.getProgramTransfer());
             integratorManager.publishPrograms(al.toArray(new ProgramTransfer[0]));
