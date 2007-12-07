@@ -1,0 +1,41 @@
+patientName		: left, 400, 45, 0, BaseFont.HELVETICA, 9
+recordNo		: left, 510, 58, 0, BaseFont.HELVETICA, 9
+#motherStature	: left, 300, 581, 0, BaseFont.HELVETICA, 8
+#fatherStature	: left, 300, 595, 0, BaseFont.HELVETICA, 8
+#gestationalAge	: left, 380, 595, 0, BaseFont.HELVETICA, 8
+#edc		: left, 480, 610, 0, BaseFont.HELVETICA, 8
+#__edc    : left, 460, 610, 0, BaseFont.HELVETICA, 6 , EDC:
+
+date_1			: left, 228, 675, 0, BaseFont.HELVETICA, 8
+age_1			: left, 280, 675, 0, BaseFont.HELVETICA, 8
+weight_1		: left, 320, 675, 0, BaseFont.HELVETICA, 8
+length_1		: left, 360, 675, 0, BaseFont.HELVETICA, 8
+headCirc_1		: left, 405, 675, 0, BaseFont.HELVETICA, 8
+comment_1		: left, 450, 675, 0, BaseFont.HELVETICA, 8
+date_2			: left, 228, 685, 0, BaseFont.HELVETICA, 8
+age_2			: left, 280, 685, 0, BaseFont.HELVETICA, 8
+weight_2		: left, 320, 685, 0, BaseFont.HELVETICA, 8
+length_2		: left, 360, 685, 0, BaseFont.HELVETICA, 8
+headCirc_2		: left, 405, 685, 0, BaseFont.HELVETICA, 8
+comment_2		: left, 450, 685, 0, BaseFont.HELVETICA, 8
+
+date_3			: left, 228, 696, 0, BaseFont.HELVETICA, 8
+age_3			: left, 280, 696, 0, BaseFont.HELVETICA, 8
+weight_3		: left, 320, 696, 0, BaseFont.HELVETICA, 8
+length_3		: left, 360, 696, 0, BaseFont.HELVETICA, 8
+headCirc_3		: left, 405, 696, 0, BaseFont.HELVETICA, 8
+comment_3		: left, 450, 696, 0, BaseFont.HELVETICA, 8
+
+date_4			: left, 228, 706, 0, BaseFont.HELVETICA, 8
+age_4			: left, 280, 706, 0, BaseFont.HELVETICA, 8
+weight_4		: left, 320, 706, 0, BaseFont.HELVETICA, 8
+length_4		: left, 360, 706, 0, BaseFont.HELVETICA, 8
+headCirc_4		: left, 405, 706, 0, BaseFont.HELVETICA, 8
+comment_4		: left, 450, 706, 0, BaseFont.HELVETICA, 8
+
+date_5			: left, 228, 717, 0, BaseFont.HELVETICA, 8
+age_5			: left, 280, 717, 0, BaseFont.HELVETICA, 8
+weight_5		: left, 320, 717, 0, BaseFont.HELVETICA, 8
+length_5		: left, 360, 717, 0, BaseFont.HELVETICA, 8
+headCirc_5		: left, 405, 717, 0, BaseFont.HELVETICA, 8
+comment_5		: left, 450, 717, 0, BaseFont.HELVETICA, 8

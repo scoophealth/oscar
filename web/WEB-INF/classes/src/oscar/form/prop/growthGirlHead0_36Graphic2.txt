@@ -1,0 +1,31 @@
+length_1	:	weight_1
+length_2	:	weight_2
+length_3	:	weight_3
+length_4	:	weight_4
+length_5	:	weight_5
+length_6	:	weight_6
+length_7	:	weight_7
+length_8	:	weight_8
+length_9	:	weight_9
+length_10	:	weight_10
+length_11	:	weight_11
+length_12	:	weight_12
+length_13	:	weight_13
+length_14	:	weight_14
+length_15	:	weight_15
+length_16	:	weight_16
+length_17	:	weight_17
+length_18	:	weight_18
+length_19	:	weight_19
+length_20	:	weight_20
+
+__origX		:	110
+__origY		:	688
+__nMaxPixX	:	384
+__nMaxPixY	:	403
+__fStartX	:	45
+__fEndX		:	105
+__fStartY	:	0
+__fEndY		:	23
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart

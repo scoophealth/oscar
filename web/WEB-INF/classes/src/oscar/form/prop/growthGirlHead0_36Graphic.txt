@@ -1,0 +1,31 @@
+age_1	:	headCirc_1
+age_2	:	headCirc_2
+age_3	:	headCirc_3
+age_4	:	headCirc_4
+age_5	:	headCirc_5
+age_6	:	headCirc_6
+age_7	:	headCirc_7
+age_8	:	headCirc_8
+age_9	:	headCirc_9
+age_10	:	headCirc_10
+age_11	:	headCirc_11
+age_12	:	headCirc_12
+age_13	:	headCirc_13
+age_14	:	headCirc_14
+age_15	:	headCirc_15
+age_16	:	headCirc_16
+age_17	:	headCirc_17
+age_18	:	headCirc_18
+age_19	:	headCirc_19
+age_20	:	headCirc_20
+
+__origX		:	110
+__origY		:	468
+__nMaxPixX	:	384
+__nMaxPixY	:	380
+__fStartX	:	0
+__fEndX		:	36
+__fStartY	:	28
+__fEndY		:	54
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart

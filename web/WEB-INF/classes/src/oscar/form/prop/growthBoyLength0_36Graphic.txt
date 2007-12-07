@@ -1,0 +1,31 @@
+age_1	:	length_1
+age_2	:	length_2
+age_3	:	length_3
+age_4	:	length_4
+age_5	:	length_5
+age_6	:	length_6
+age_7	:	length_7
+age_8	:	length_8
+age_9	:	length_9
+age_10	:	length_10
+age_11	:	length_11
+age_12	:	length_12
+age_13	:	length_13
+age_14	:	length_14
+age_15	:	length_15
+age_16	:	length_16
+age_17	:	length_17
+age_18	:	length_18
+age_19	:	length_19
+age_20	:	length_20
+
+__origX		:	110
+__origY		:	511
+__nMaxPixX	:	384
+__nMaxPixY	:	421
+__fStartX	:	0
+__fEndX		:	36
+__fStartY	:	37
+__fEndY		:	107
+
+__className	:	oscar.form.graphic.FrmPdfGraphicGrowthChart
