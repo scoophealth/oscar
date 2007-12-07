@@ -216,7 +216,7 @@ public class IntegratorManager {
         DemographicTransfer demographicTransfer = new DemographicTransfer();
 
         demographicTransfer.setAddress(demographicInfo.getAddress());
-        if (demographicInfo.getDemographicNo() != null) demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo());
+        if (demographicInfo.getDemographicNo() != null) demographicTransfer.setAgencyDemographicNo(demographicInfo.getDemographicNo().longValue());
         demographicTransfer.setChartNo(demographicInfo.getChartNo());
         demographicTransfer.setCity(demographicInfo.getCity());
         demographicTransfer.setDateJoined(demographicInfo.getDateJoined());
