@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletException;
@@ -293,7 +294,13 @@ public class EctSaveEncounterAction
       bean.setPatientName(sessionbean.getPatientFirstName() + " " +
                           sessionbean.getPatientLastName());
       bean.setBillRegion(billRegion);
-      bean.setBillForm("GP");
+      Properties oscarVariables  = (Properties) httpservletrequest.getAttribute("oscarVariables"); 
+      String formBill = "GP";
+      
+      if (oscarVariables != null ){
+          formBill = oscarVariables.getProperty("default_view",formBill);
+      }
+      bean.setBillForm(formBill);
       bean.setPatientNo(sessionbean.demographicNo);
       bean.setApptNo(httpservletrequest.getParameter("appointment_no"));
       bean.setApptDate(sessionbean.appointmentDate);
