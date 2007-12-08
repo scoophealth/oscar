@@ -155,10 +155,11 @@ public class TeleplanFileWriter {
                 HashMap map = (HashMap) list.get(i);
                 String billType = (String) map.get("billingtype");
                 String billing_no = (String) map.get("billing_no");
+                String demoName = (String) map.get("demographic_name");
                 Claims c = null;
                 if (billType.equals("MSP")  || billType.equals("ICBC") ) {
                     log.debug("Billing # :"+billing_no+" Data Center :"+dataCenterId+ " ICBC / MSP BILL");
-                    c = createMSPICBCLines(billing_no,dataCenterId);   
+                    c = createMSPICBCLines(billing_no,dataCenterId,demoName);   
                 }else if(billType.equals("WCB")){
                     //TODO:Should pass dataCenterId to WCB but it looks it up in the properties currently, fix in the future
                     log.debug("Billing # :"+billing_no+" Data Center :"+dataCenterId+ " WCB BILL");
@@ -265,7 +266,7 @@ public class TeleplanFileWriter {
     }
     
     //This needs to handle having multiple billingmaster line per billing but from now 
-    private Claims createMSPICBCLines(String billing_no,String dataCenterId){
+    private Claims createMSPICBCLines(String billing_no,String dataCenterId,String demoName){
         log.debug("createMSPICBCLines Start");
         BillingmasterDAO masDAO = new BillingmasterDAO();
         
@@ -289,7 +290,7 @@ public class TeleplanFileWriter {
             }   
             claims.addToTotal(bm.getBillingAmountBigDecimal());
                                             //?this null is supposed to be the demographic name
-            appendToHTML( HtmlTeleplanHelper.htmlLine(""+bm.getBillingmasterNo(),billing_no,"", getHinForHTML(bm), bm.getServiceDate() ,bm.getBillingCode(),bm.getBillAmount(),bm.getDxCode1(),bm.getDxCode2(),bm.getDxCode3() ) ) ;
+            appendToHTML( HtmlTeleplanHelper.htmlLine(""+bm.getBillingmasterNo(),billing_no,demoName, getHinForHTML(bm), bm.getServiceDate() ,bm.getBillingCode(),bm.getBillAmount(),bm.getDxCode1(),bm.getDxCode2(),bm.getDxCode3() ) ) ;
             appendToHTML(checkData.checkC02(""+bm.getBillingmasterNo(), bm));
 
             addToMarkBillingmasterList(""+bm.getBillingmasterNo());
