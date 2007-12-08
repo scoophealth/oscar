@@ -174,28 +174,62 @@ public class WcbSb {
       }
        
    }
-   
-   
+  
    
    
    public String validate(){
-        String m = "";
+        StringBuffer m = new StringBuffer();
         if ( billamountforfeeitem1 == null || billamountforfeeitem1.equalsIgnoreCase("NULL")){
-            m += ": INVALID Fee Code "; 
+            m.append(": INVALID Fee Code "); 
         }
+        
+        try {
+            Integer.parseInt(this.w_icd9);
+        }catch(Exception e){
+            m.append(": ICD9 may only contain Numbers ");
+        }
+        
+        try {
+            Integer.parseInt(this.w_wcbno);
+        }catch(Exception e){
+            m.append(": WCB claim # may only contain Numbers ");
+        }
+        
+        if (this.w_reporttype != null && this.w_reporttype.equals("F") ){
+            if (this.w_empname != null && this.w_empname.trim().length() == 0 ){
+                m.append(": Employer's name can not be empty ");
+            }
+            
+            if (this.w_opaddress != null && this.w_opaddress.trim().length() == 0 ){
+                m.append(": Employer's Operation Address can not be empty ");
+            }
+            
+            if (this.w_opcity != null && this.w_opcity.trim().length() == 0 ){
+                m.append(": Employer's Operation City can not be empty ");
+            }
+             
+            if (this.w_empphone != null && this.w_empphone.trim().length() == 0 ){
+                m.append(": Employer's Phone # can not be empty ");
+            }
+        }    
+        
+//        if (this.w_doi != null && this.w_doi.trim().length() == 0 ){
+//            m.append(": Date of Injury is missing ");
+//        }
+//       
+//        w_bp        
+//        w_noi
+        
        
         String ret = "<tr bgcolor='red'><td colspan='11'>"
                 + "<a href='#' onClick=\"openBrWindow('billingTeleplanCorrectionWCB.jsp?billing_no="
                 + misc.forwardZero(this.billing_no, 7) 
                 + "','','resizable=yes,scrollbars=yes,top=0,left=0,width=900,height=600'); return false;\">"
-                + m + "</a>" + "</td></tr>";
-        if (m != ""){
+                + m.toString() + "</a>" + "</td></tr>";
+        if ("".equals(m.toString())){
+            return "" ;
+        }      
         return ret;
-        }else{
-            return "";
-        }
-        
-   
    }
    
    public BigDecimal getBillingAmountForFee1BigDecimal(){
