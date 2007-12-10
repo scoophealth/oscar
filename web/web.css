@@ -27,7 +27,7 @@
 BODY  {	font-size : 11pt; font-weight : normal;		font-style : normal; color : black; text-decoration : none; font-family: Verdana, Tahoma, Arial, sans-serif; background-attachment: fixed}
 
 a:active {  text-decoration : none;}
-a:link {  text-decoration : none; color: #CC6600}
+a:link {  text-decoration : none; color: #0066CC}
 a:visited {  text-decoration : none; color: #0080c0}
 a:hover {COLOR: red; TEXT-DECORATION: underline;}
 	td {	font-size: 18px;	}
