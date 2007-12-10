@@ -107,7 +107,7 @@ function t(s1,s2,s3,s4,s5,s6) {
   // note: brain-dead calendar numbers months from 0, thus all the +1s in the expressions below
 //  String dateString1 = outform.format(inform.parse(cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)) );
 %>
-<body bgcolor="#FFFFFF" text="#000000" topmargin="0" leftmargin="0" rightmargin="0">
+<body bgcolor="#999FFF" text="#000000" topmargin="0" leftmargin="0" rightmargin="0">
 <%--
   ResultSet rsdemo = flipviewMainBean.queryResults(mygroupno, "searchmygroupprovider");
   while (rsdemo.next()) { 
@@ -119,6 +119,10 @@ function t(s1,s2,s3,s4,s5,s6) {
   <!--font color='silver'--><%--=rsdemo.getString("first_name")+" "+rsdemo.getString("last_name")--%><!--/font></a-->
 <%-- }  } --%>
 
+<div style="colur:#FF0000;text-decoration: none">
+<a href="javascript:history.go(-1)" style="text-decoration: none;color: #000000">Go Back</a>
+<a href="../provider/providercontrol.jsp" style="text-decoration: none;color: #000000">Day Page</a>
+</div>
 <table width="100%" border="1" cellspacing="0" cellpadding="0">
   <tr align="center" bgcolor="#CCCCFF"> 
     <td width="15%" nowrap>
