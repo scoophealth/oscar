@@ -347,7 +347,7 @@ function showHideLayers() { //v3.0
               <tr>
               	<td colspan="4">
                <%
-               if (bean.getBillingType().compareTo("WCB") == 0){
+               if (bean.getBillingType().compareTo("WCB") == 0 && request.getSession().getAttribute("WCBForm") != null){
                  WCBForm wcb =(WCBForm) request.getSession().getAttribute("WCBForm");
                 %>
 						<%=wcb.getW_fname()%>
