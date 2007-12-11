@@ -19,7 +19,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
  * @author wrighd
  */
 public class CMLHandler implements MessageHandler  {
-    static String workingDir = "/home/wrighd/sandbox/oscar_mcmaster/FileManagement/";
+
     Logger logger = Logger.getLogger(CMLHandler.class);
     
    

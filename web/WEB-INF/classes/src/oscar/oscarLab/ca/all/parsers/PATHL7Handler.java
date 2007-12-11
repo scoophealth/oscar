@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class PATHL7Handler implements MessageHandler {
     
     Logger logger = Logger.getLogger(PATHL7Handler.class);
-    static ORU_R01 msg = null;
+    ORU_R01 msg = null;
     
     /** Creates a new instance of CMLHandler */
     public PATHL7Handler(){

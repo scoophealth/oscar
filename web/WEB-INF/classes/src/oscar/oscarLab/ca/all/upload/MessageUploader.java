@@ -6,7 +6,7 @@
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
  */
-
+ 
 package oscar.oscarLab.ca.all.upload;
 
 import java.sql.*;
@@ -44,8 +44,8 @@ public class MessageUploader {
         
         String retVal = "";
         try{
-            
-            MessageHandler h = Factory.getInstance().getHandler(type, hl7Body);
+            Factory f = new Factory();
+            MessageHandler h = f.getHandler(type, hl7Body);
             Base64 base64 = new Base64();
             
             String firstName = h.getFirstName();

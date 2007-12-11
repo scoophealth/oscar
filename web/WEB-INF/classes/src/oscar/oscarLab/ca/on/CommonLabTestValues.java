@@ -234,7 +234,7 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                MessageHandler h = f.getInstance().getHandler(rs.getString("lab_no"));
+                MessageHandler h = f.getHandler(rs.getString("lab_no"));
                 for (int i=0; i < h.getOBRCount(); i++){
                     for (int j=0; j < h.getOBXCount(i); j++){
                         
@@ -526,7 +526,7 @@ public class CommonLabTestValues {
                     String lab_no = rs.getString("lab_no");
                     
                     Factory f = new Factory();
-                    MessageHandler handler = f.getInstance().getHandler(lab_no);
+                    MessageHandler handler = f.getHandler(lab_no);
                     
                     Hashtable h = new Hashtable();
                     int i=0;

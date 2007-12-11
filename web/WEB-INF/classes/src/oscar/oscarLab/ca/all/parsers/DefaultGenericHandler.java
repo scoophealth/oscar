@@ -32,7 +32,7 @@ public class DefaultGenericHandler implements MessageHandler {
     
     Logger logger = Logger.getLogger(DefaultGenericHandler.class);
     
-    static Message msg = null;
+    Message msg = null;
     Terser terser;
     ArrayList obrGroups = null;
     

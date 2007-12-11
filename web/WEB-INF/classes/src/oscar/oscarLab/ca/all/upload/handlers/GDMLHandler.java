@@ -66,7 +66,8 @@ public class GDMLHandler implements MessageHandler  {
             
             // only recheck the result status if it is not already set to abnormal
             if (!rs.getString("result_status").equals("A")){
-                oscar.oscarLab.ca.all.parsers.MessageHandler h = Factory.getInstance().getHandler(rs.getString("lab_no"));
+                Factory f = new Factory();
+                oscar.oscarLab.ca.all.parsers.MessageHandler h = f.getInstance().getHandler(rs.getString("lab_no"));
                 int i=0;
                 int j=0;
                 String resultStatus = "";

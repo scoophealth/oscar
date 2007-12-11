@@ -36,11 +36,19 @@ if (ackList != null){
         }
     }
 }
-
-MessageHandler handler = Factory.getInstance().getHandler(request.getParameter("segmentID"));
+Factory f = new Factory();
+MessageHandler handler = f.getHandler(request.getParameter("segmentID"));
 Hl7textResultsData data = new Hl7textResultsData();
 String multiLabId = data.getMatchingLabs(request.getParameter("segmentID"));
 
+
+// check for errors printing
+if (request.getAttribute("printError") != null && (Boolean) request.getAttribute("printError")){
+%>
+<script language="JavaScript">
+    alert("The lab could not be printed due to an error. Please see the server logs for more detail.");
+</script>
+<%}
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -176,6 +184,11 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
        
             return ret;
         }
+        
+        function printPDF(){
+            document.acknowledgeForm.action="PrintPDF.do";
+            document.acknowledgeForm.submit();
+        }
 
         </script>
         
@@ -209,7 +222,7 @@ div.Title4   { font-weight: 600; font-size: 8pt; color: white; font-family:
                                     <% } %>
                                     <input type="button" class="smallButton" value="<bean:message key="oscarMDS.index.btnForward"/>" onClick="popupStart(300, 400, '../../../oscarMDS/SelectProvider.jsp', 'providerselect')">
                                     <input type="button" value=" <bean:message key="global.btnClose"/> " onClick="window.close()">
-                                    <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="window.print()">
+                                    <input type="button" value=" <bean:message key="global.btnPrint"/> " onClick="printPDF()">
                                     <% if ( demographicID != null && !demographicID.equals("") && !demographicID.equalsIgnoreCase("null")){ %>
                                     <input type="button" value="Msg" onclick="popup(700,960,'../../../oscarMessenger/SendDemoMessage.do?demographic_no=<%=demographicID%>','msg')"/>
                                     <input type="button" value="Tickler" onclick="popup(450,600,'../../../tickler/ForwardDemographicTickler.do?demographic_no=<%=demographicID%>','tickler')"/>

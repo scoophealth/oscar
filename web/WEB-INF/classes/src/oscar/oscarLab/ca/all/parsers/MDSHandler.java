@@ -29,7 +29,7 @@ import java.text.*;
  */
 public class MDSHandler implements MessageHandler {
     
-    static Message msg = null;
+    Message msg = null;
     Terser terser;
     ArrayList obrGroups = null;
     HashMap headerMaps = new HashMap();

@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  *  When implementing this class a global variable 'msg' should be created as 
  *  follows:
- *      static ORU_R01 msg = null;
+ *      ORU_R01 msg = null;
  *
  *  ORU_R01 is located at 'ca.uhn.hl7v2.model.vXX.message.ORU_R01' where 'vXX'
  *  is the version specified by the hl7 messages that you inted to parse, it is

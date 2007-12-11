@@ -27,11 +27,12 @@ public class Factory {
     
     Logger logger = Logger.getLogger(Factory.class);
     
-    public static Factory getInstance(){
+    public Factory getInstance(){
         return( new Factory());
     }
     
-    
+    public Factory() {
+    }
     /**
      *  Find the lab corresponding to segmentID and return the appropriate
      *  MessageHandler for it

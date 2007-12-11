@@ -33,7 +33,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class LabUploadAction extends Action {
     Logger logger = Logger.getLogger(LabUploadAction.class);
     
-    public synchronized ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
         
@@ -58,7 +58,8 @@ public class LabUploadAction extends Action {
             
             if (validateSignature(clientKey, signature, file)){
                 logger.debug("Validated Successfully");
-                MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
+                HandlerClassFactory f = new HandlerClassFactory();
+                MessageHandler msgHandler = f.getHandler(type);
                 
                 is = new FileInputStream(file);
                 FileUploadCheck fileC = new FileUploadCheck();

@@ -49,7 +49,8 @@ public class InsideLabUploadAction extends Action {
             
             if (checkFileUploadedSuccessfully != FileUploadCheck.UNSUCCESSFUL_SAVE){
                 logger.info("filePath"+filePath);
-                MessageHandler msgHandler = HandlerClassFactory.getInstance().getHandler(type);
+                HandlerClassFactory f = new HandlerClassFactory();
+                MessageHandler msgHandler = f.getHandler(type);
                 if((msgHandler.parse(filePath,checkFileUploadedSuccessfully)) != null)
                     outcome = "success";
                 

@@ -33,7 +33,8 @@ public class Hl7textResultsData {
     }
     
     public void populateMeasurementsTable(String lab_no, String demographic_no){
-        MessageHandler h = Factory.getInstance().getHandler(lab_no);
+        Factory f = new Factory();
+        MessageHandler h = f.getInstance().getHandler(lab_no);
         
         java.util.Calendar calender = java.util.Calendar.getInstance();
         String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
@@ -207,7 +208,7 @@ public class Hl7textResultsData {
         String sql = "SELECT hl7.lab_no, hl7.obr_date, hl7.discipline, hl7.accessionNum, hl7.final_result_count, patientLabRouting.id " +
                 "FROM hl7TextInfo hl7, patientLabRouting " +
                 "WHERE patientLabRouting.lab_no = hl7.lab_no "+
-                "AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no=" + demographicNo;
+                "AND patientLabRouting.lab_type = 'HL7' AND patientLabRouting.demographic_no=" + demographicNo+" GROUP BY hl7.lab_no";
         
         String attachQuery = "SELECT consultdocs.document_no FROM consultdocs, patientLabRouting " +
                 "WHERE patientLabRouting.id = consultdocs.document_no AND " +
@@ -232,7 +233,6 @@ public class Hl7textResultsData {
             
             while(rs.next()){
                 
-                lbData.labType = LabResultData.HL7TEXT;
                 lbData.segmentID = rs.getString("lab_no");
                 lbData.labPatientId = rs.getString("id");
                 lbData.dateTime = rs.getString("obr_date");
@@ -245,7 +245,7 @@ public class Hl7textResultsData {
                 else if( !attached && Collections.binarySearch(attachedLabs, lbData, c) < 0 )
                     labResults.add(lbData);
                 
-                lbData = new LabResultData(LabResultData.EXCELLERIS);
+                lbData = new LabResultData(LabResultData.HL7TEXT);
             }
             rs.close();
             db.CloseConn();

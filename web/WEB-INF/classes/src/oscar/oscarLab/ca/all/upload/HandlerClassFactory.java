@@ -28,8 +28,7 @@ public class HandlerClassFactory {
     
     Logger logger = Logger.getLogger(HandlerClassFactory.class);
     
-    public static HandlerClassFactory getInstance(){
-        return( new HandlerClassFactory());
+    public HandlerClassFactory(){
     }
     
     /*

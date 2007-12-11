@@ -35,7 +35,7 @@ import java.text.*;
 public class GDMLHandler implements MessageHandler {
     
     Logger logger = Logger.getLogger(GDMLHandler.class);
-    static ORU_R01 msg = null;
+    ORU_R01 msg = null;
     ArrayList headers = null;
     HashMap obrSegMap = null;
     ArrayList obrSegKeySet = null;

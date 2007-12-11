@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class CMLHandler implements MessageHandler {
     
-    static ORU_R01 msg = null;
+    ORU_R01 msg = null;
     Logger logger = Logger.getLogger(CMLHandler.class);
     
     /** Creates a new instance of CMLHandler */
