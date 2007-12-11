@@ -31,6 +31,7 @@ package oscar.oscarBilling.ca.bc.data;
 
 import java.sql.SQLException;
 import java.util.List;
+import oscar.entities.Billing;
 import oscar.entities.Billingmaster;
 import oscar.oscarDB.DBHandler;
 import oscar.util.SqlUtils;
@@ -54,6 +55,19 @@ public class BillingmasterDAO {
     public List getBillingMasterByBillingNo(String billingNo){
         String query = "select * from billingmaster where billing_no='"+ billingNo +"'"; 
         return getBillingMaster(query);
+    }
+    
+    
+    
+    
+    public Billingmaster getBillingMasterByBillingMasterNo(String billingNo){
+        String query = "select * from billingmaster where billingmaster_no='"+ billingNo +"'"; 
+        List l = getBillingMaster(query);
+        Billingmaster billingmaster = null;
+        try{
+            billingmaster =(Billingmaster) l.get(0);
+        }catch(Exception e){}
+        return billingmaster;
     }
     
     private List getBillingMaster(String qry) {
