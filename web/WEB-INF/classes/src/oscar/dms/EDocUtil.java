@@ -268,9 +268,9 @@ public class EDocUtil extends SqlUtilBaseS {
     }
 
     public static ArrayList listDemoDocs(String moduleid) {
-        String sql = "SELECT d.*, p.first_name, p.last_name FROM document d, provider p WHERE document_no IN " +
-		     "(SELECT document_no FROM ctl_document WHERE module='demographic' AND module_id=" + moduleid +
-		     ") AND d.doccreator=p.provider_no";
+	String sql = "SELECT d.*, p.first_name, p.last_name FROM document d, provider p, ctl_document c " +
+		     "WHERE d.doccreator=p.provider_no AND d.document_no = c.document_no " +
+		     "AND c.module='demographic' AND c.module_id=" + moduleid;
 
         log.debug("sql list: " + sql);
         ResultSet rs = getSQL(sql);
