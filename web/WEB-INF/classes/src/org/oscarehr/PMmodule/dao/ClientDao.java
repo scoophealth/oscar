@@ -304,9 +304,9 @@ public class ClientDao extends HibernateDaoSupport {
 		    c=DbConnectionFilter.getThreadLocalDbConnection();
 			ps=c.prepareStatement(sqlCommand);
 
-			ps.setString(1, Demographic.SHARING_OPTING_KEY);
-			ps.setString(2, Demographic.OptingStatus.IMPLICITLY_OPTED_IN.name());
-			ps.setString(3, Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name());
+			ps.setString(1, Demographic.CONSENT_GIVEN_KEY);
+			ps.setString(2, Demographic.ConsentGiven.ALL.name());
+			ps.setString(3, Demographic.ConsentGiven.CIRCLE_OF_CARE.name());
 			
 			int positionCounter=4;
 			for (Demographic demographic : tempList)

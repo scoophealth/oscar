@@ -89,8 +89,8 @@ public class ClientSearchAction2 extends BaseAction {
 		String consent=null;
 		
 		if (consentSearch!=null && emergencySearch!=null) throw(new IllegalStateException("This is an unexpected state, both search_with_consent and emergency_search are not null."));
-		else if (consentSearch!=null) consent=Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name();
-		else if (emergencySearch!=null) consent=Demographic.OptingStatus.INCAPACITATED_EMERGENCY.name();
+		else if (consentSearch!=null) consent=Demographic.ConsentGiven.ALL.name();
+		else if (emergencySearch!=null) consent=Demographic.ConsentGiven.ALL.name();
 		request.setAttribute("consent", consent);
 
 		if(formBean.isSearchOutsideDomain()) {

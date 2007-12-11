@@ -34,7 +34,7 @@ import org.oscarehr.PMmodule.utility.Utility;
 public class Demographic implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     private static final String DEFAULT_MONTH = "01";
     private static final String DEFAULT_DATE = "01";
     private static final String DEFAULT_YEAR = "1900";
@@ -45,7 +45,9 @@ public class Demographic implements Serializable {
 
     private static final String SEPERATOR = "-";
 
-    public static final String SHARING_OPTING_KEY="SHARE_OPT";
+    public static final String CONSENT_GIVEN_KEY="CONSENT_GIVEN";
+    public static final String METHOD_OBTAINED_KEY="METHOD_OBTAINED";
+
     private int hashCode = Integer.MIN_VALUE;// primary key
     private Integer demographicNo;// fields
     private String phone;
@@ -88,14 +90,16 @@ public class Demographic implements Serializable {
     private Integer headRecord = null;
     private Set subRecord = null;
     
-    public enum OptingStatus {
-        IMPLICITLY_OPTED_IN,
-        IMPLICITLY_OPTED_OUT,
-        EXPLICITLY_OPTED_IN,
-        EXPLICITLY_OPTED_OUT,
-        INCAPACITATED_EMERGENCY
+    public enum ConsentGiven
+    {
+        ALL, CIRCLE_OF_CARE, NONE
     }
-
+    
+    public enum MethodObtained
+    {
+        IMPLICIT, EXPLICIT, INCAPACITATED_EMERGENCY
+    }
+    
     public enum PatientStatus {
         AC,IN,DE,IC,ID,MO,FI
     }

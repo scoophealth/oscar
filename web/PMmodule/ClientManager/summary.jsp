@@ -152,11 +152,11 @@ function openSurvey() {
 				if (!UserRoleUtils.hasRole(request, UserRoleUtils.Roles.external))
 				{
 					%>
-						<input name="sharingOptingCheckBox" type="checkbox" <c:out value="${sharingOptingCheckBoxState}" /> onclick="updateSharingOpting(this.checked);"> &nbsp;&nbsp;&nbsp;&nbsp; 
+						<input name="consentCheckBox" type="checkbox" <c:out value="${consentCheckBoxState}" /> onclick="updateSharingOpting(this.checked);"> &nbsp;&nbsp;&nbsp;&nbsp; 
 					<%
 				}
 			%>
-			(current opting status : <c:out value="${sharingOptingStatus}" />)
+			(current circle-of-care consent status : <c:out value="${consentStatus}" />, <c:out value="${consentMethod}" />)
 		</td>
 	</tr>
 </table>

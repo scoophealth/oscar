@@ -17,13 +17,13 @@
 	{
 		WebApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
 		ClientManager clientManager = (ClientManager) applicationContext.getBean("clientManager");
-		DemographicExt demographicExt=clientManager.getDemographicExt(Integer.parseInt(request.getParameter("id")), Demographic.SHARING_OPTING_KEY);
+		DemographicExt demographicExtConsent=clientManager.getDemographicExt(Integer.parseInt(request.getParameter("id")), Demographic.CONSENT_GIVEN_KEY);
 		boolean allowed=false;
 		
-		if (demographicExt!=null)
+		if (demographicExtConsent!=null)
 		{
-			Demographic.OptingStatus optingStatus=Demographic.OptingStatus.valueOf(demographicExt.getValue());
-			if (optingStatus==Demographic.OptingStatus.IMPLICITLY_OPTED_IN || optingStatus==Demographic.OptingStatus.EXPLICITLY_OPTED_IN)
+			Demographic.ConsentGiven consent=Demographic.ConsentGiven.valueOf(demographicExtConsent.getValue());
+			if (consent==Demographic.ConsentGiven.ALL || consent==Demographic.ConsentGiven.CIRCLE_OF_CARE)
 			{
 				allowed=true;
 			}

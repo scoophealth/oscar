@@ -67,6 +67,7 @@ import org.oscarehr.PMmodule.model.ProgramClientRestriction;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.model.Provider;
+import org.oscarehr.PMmodule.model.Demographic.ConsentGiven;
 import org.oscarehr.PMmodule.service.ClientRestrictionManager;
 import org.oscarehr.PMmodule.web.formbean.ClientManagerFormBean;
 import org.oscarehr.PMmodule.web.formbean.ErConsentFormBean;
@@ -104,18 +105,23 @@ public class ClientManagerAction extends BaseAction {
         Program fullProgram = programManager.getProgram(String.valueOf(program.getId()));
 
         try {
-            admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), fullProgram, admission.getDischargeNotes(), admission.getAdmissionNotes(), admission.isTemporaryAdmission());
-        } catch (ProgramFullException e) {
+            admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), fullProgram, admission.getDischargeNotes(), admission
+                    .getAdmissionNotes(), admission.isTemporaryAdmission());
+        }
+        catch (ProgramFullException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", "Program is full."));
             saveMessages(request, messages);
-        } catch (AdmissionException e) {
+        }
+        catch (AdmissionException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
             saveMessages(request, messages);
-        } catch (ServiceRestrictionException e) {
+        }
+        catch (ServiceRestrictionException e) {
             ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction()
+                    .getProvider().getFormattedName()));
             saveMessages(request, messages);
         }
 
@@ -135,8 +141,8 @@ public class ClientManagerAction extends BaseAction {
         program = programManager.getProgram(program.getId());
 
         /*
-           * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
-           */
+         * If the user is currently enrolled in a bed program, we must warn the provider that this will also be a discharge
+         */
         if (program.getType().equalsIgnoreCase("bed")) {
             Admission currentAdmission = admissionManager.getCurrentBedProgramAdmission(Integer.valueOf(demographicNo));
             if (currentAdmission != null) {
@@ -170,8 +176,9 @@ public class ClientManagerAction extends BaseAction {
         boolean success = true;
 
         try {
-            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(),dependents);
-        } catch (AdmissionException e) {
+            admissionManager.processDischarge(p.getId(), new Integer(id), admission.getDischargeNotes(), admission.getRadioDischargeReason(), dependents);
+        }
+        catch (AdmissionException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
             saveMessages(request, messages);
@@ -202,12 +209,14 @@ public class ClientManagerAction extends BaseAction {
         ActionMessages messages = new ActionMessages();
 
         try {
-            admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(), admission.getRadioDischargeReason(),dependents);
+            admissionManager.processDischargeToCommunity(program.getId(), new Integer(clientId), getProviderNo(request), admission.getDischargeNotes(),
+                    admission.getRadioDischargeReason(), dependents);
             logManager.log("write", "discharge", clientId, request);
 
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.success"));
             saveMessages(request, messages);
-        } catch (AdmissionException e) {
+        }
+        catch (AdmissionException e) {
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("discharge.failure", e.getMessage()));
             saveMessages(request, messages);
         }
@@ -229,7 +238,8 @@ public class ClientManagerAction extends BaseAction {
         return mapping.findForward("edit");
     }
 
-    public ActionForward nested_discharge_community_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward nested_discharge_community_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) {
         request.setAttribute("nestedReason", "true");
         return discharge_community_select_program(mapping, form, request, response);
     }
@@ -238,7 +248,7 @@ public class ClientManagerAction extends BaseAction {
         String id = request.getParameter("id");
         DynaActionForm clientForm = (DynaActionForm) form;
         Program program = (Program) clientForm.get("program");
-        request.setAttribute("programId",String.valueOf(program.getId()));
+        request.setAttribute("programId", String.valueOf(program.getId()));
         setEditAttributes(form, request, id);
 
         request.setAttribute("do_discharge", new Boolean(true));
@@ -248,7 +258,7 @@ public class ClientManagerAction extends BaseAction {
 
     public ActionForward nested_discharge_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("nestedReason", "true");
-        setEditAttributes(form,request,request.getParameter("id"));
+        setEditAttributes(form, request, request.getParameter("id"));
         request.setAttribute("do_discharge", new Boolean(true));
         return mapping.findForward("edit");
     }
@@ -267,7 +277,6 @@ public class ClientManagerAction extends BaseAction {
                 id = String.valueOf((Long) o);
             }
         }
-
 
         setEditAttributes(form, request, id);
 
@@ -296,7 +305,7 @@ public class ClientManagerAction extends BaseAction {
             return mapping.findForward("er-redirect");
         }
 
-        Demographic demographic=clientManager.getClientByDemographicNo(id);
+        Demographic demographic = clientManager.getClientByDemographicNo(id);
         request.getSession().setAttribute("clientGender", demographic.getSex());
         request.getSession().setAttribute("clientAge", demographic.getAge());
 
@@ -320,7 +329,8 @@ public class ClientManagerAction extends BaseAction {
         try {
             List<?> results = integratorManager.getCurrentAdmissions(Long.valueOf(id));
             request.setAttribute("admissions", results);
-        } catch (IntegratorException e) {
+        }
+        catch (IntegratorException e) {
             log.error(e);
         }
 
@@ -334,7 +344,8 @@ public class ClientManagerAction extends BaseAction {
         try {
             List<?> results = integratorManager.getCurrentReferrals(Long.valueOf(id));
             request.setAttribute("referrals", results);
-        } catch (IntegratorException e) {
+        }
+        catch (IntegratorException e) {
             log.error(e);
         }
 
@@ -360,19 +371,23 @@ public class ClientManagerAction extends BaseAction {
         boolean success = true;
         try {
             clientManager.processReferral(referral);
-        } catch (AlreadyAdmittedException e) {
+        }
+        catch (AlreadyAdmittedException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_admitted"));
             saveMessages(request, messages);
             success = false;
-        } catch (AlreadyQueuedException e) {
+        }
+        catch (AlreadyQueuedException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_referred"));
             saveMessages(request, messages);
             success = false;
-        } catch (ServiceRestrictionException e) {
+        }
+        catch (ServiceRestrictionException e) {
             ActionMessages messages = new ActionMessages();
-            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
+            messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.service_restricted", e.getRestriction().getComments(), e.getRestriction()
+                    .getProvider().getFormattedName()));
             saveMessages(request, messages);
 
             // store this for display
@@ -382,7 +397,8 @@ public class ClientManagerAction extends BaseAction {
             clientForm.set("referral", referral);
 
             // store permission
-            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), id, "" + program.getId()));
+            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access",
+                    getProviderNo(request), id, "" + program.getId()));
 
             // jump to service restriction error page to allow overrides, etc.
             return mapping.findForward("service_restriction_error");
@@ -413,7 +429,7 @@ public class ClientManagerAction extends BaseAction {
 
         request.setAttribute("do_refer", true);
         request.setAttribute("program", program);
-        request.setAttribute("temporaryAdmission",programManager.getEnabled());
+        request.setAttribute("temporaryAdmission", programManager.getEnabled());
 
         return mapping.findForward("edit");
     }
@@ -437,7 +453,7 @@ public class ClientManagerAction extends BaseAction {
         cal.set(Calendar.HOUR, 23);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + days) ;
+        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + days);
         restriction.setEndDate(cal.getTime());
         restriction.setEnabled(true);
 
@@ -445,7 +461,8 @@ public class ClientManagerAction extends BaseAction {
         try {
             clientRestrictionManager.saveClientRestriction(restriction);
             success = true;
-        } catch (ClientAlreadyRestrictedException e) {
+        }
+        catch (ClientAlreadyRestrictedException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("restrict.already_restricted"));
             saveMessages(request, messages);
@@ -479,7 +496,8 @@ public class ClientManagerAction extends BaseAction {
         p.setName(program.getName());
 
         request.setAttribute("do_restrict", true);
-        request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", getProviderNo(request), id, "" + p.getId()));
+        request.setAttribute("can_restrict", caseManagementManager.hasAccessRight("Create service restriction", "access", getProviderNo(request), id, ""
+                + p.getId()));
         request.setAttribute("program", program);
 
         return mapping.findForward("edit");
@@ -491,7 +509,9 @@ public class ClientManagerAction extends BaseAction {
 
         ClientReferral referral = (ClientReferral) clientForm.get("referral");
 
-        if (isCancelled(request) || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), "" + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
+        if (isCancelled(request)
+                || !caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), ""
+                        + restriction.getDemographicNo(), "" + restriction.getProgramId())) {
             clientForm.set("referral", new ClientReferral());
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.cancelled"));
@@ -505,17 +525,20 @@ public class ClientManagerAction extends BaseAction {
         boolean success = true;
         try {
             clientManager.processReferral(referral, true);
-        } catch (AlreadyAdmittedException e) {
+        }
+        catch (AlreadyAdmittedException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_admitted"));
             saveMessages(request, messages);
             success = false;
-        } catch (AlreadyQueuedException e) {
+        }
+        catch (AlreadyQueuedException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("refer.already_referred"));
             saveMessages(request, messages);
             success = false;
-        } catch (ServiceRestrictionException e) {
+        }
+        catch (ServiceRestrictionException e) {
             throw new RuntimeException("service restriction encountered during override");
         }
 
@@ -584,13 +607,13 @@ public class ClientManagerAction extends BaseAction {
         Long headInteger = new Long(headClientId);
         Long clientInteger = new Long(clientId);
 
-        System.out.println("headClientId "+ headClientId+ " clientId "+clientId);
+        System.out.println("headClientId " + headClientId + " clientId " + clientId);
 
         jadmission.setAdmissionDate(new Date());
         jadmission.setHeadClientId(headInteger);
         jadmission.setArchived(false);
         jadmission.setClientId(clientInteger);
-        jadmission.setProviderNo((String)request.getSession().getAttribute("user"));
+        jadmission.setProviderNo((String) request.getSession().getAttribute("user"));
         jadmission.setTypeId(new Long(type));
         System.out.println(jadmission.toString());
         clientManager.saveJointAdmission(jadmission);
@@ -601,7 +624,7 @@ public class ClientManagerAction extends BaseAction {
 
     public ActionForward remove_joint_admission(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String clientId = request.getParameter("dependentClientId");
-        clientManager.removeJointAdmission(new Long(clientId), (String)request.getSession().getAttribute("user"));
+        clientManager.removeJointAdmission(new Long(clientId), (String) request.getSession().getAttribute("user"));
         setEditAttributes(form, request, (String) request.getParameter("clientId"));
         return mapping.findForward("edit");
     }
@@ -675,10 +698,13 @@ public class ClientManagerAction extends BaseAction {
             }
 
             if (doAdmit) {
-                String admissionNotes = "ER Automated admission\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: " + consentFormBean.getConsentReason();
+                String admissionNotes = "ER Automated admission\nConsent Type: " + consentFormBean.getConsentType() + "\nReason: "
+                        + consentFormBean.getConsentReason();
                 try {
-                    admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program.getProgramId())), null, admissionNotes);
-                } catch (Exception e) {
+                    admissionManager.processAdmission(Integer.valueOf(demographicNo), getProviderNo(request), programManager.getProgram(String.valueOf(program
+                            .getProgramId())), null, admissionNotes);
+                }
+                catch (Exception e) {
                     ActionMessages messages = new ActionMessages();
                     messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.error", e.getMessage()));
                     saveMessages(request, messages);
@@ -691,7 +717,8 @@ public class ClientManagerAction extends BaseAction {
         request.setAttribute("id", demographicNo);
         if (success) {
             return mapping.findForward("er-redirect");
-        } else {
+        }
+        else {
             return mapping.findForward("search");
         }
     }
@@ -750,7 +777,6 @@ public class ClientManagerAction extends BaseAction {
         clientForm.set("agency", agency);
         clientForm.set("provider", provider);
 
-
         return mapping.findForward("view_admission");
     }
 
@@ -759,18 +785,24 @@ public class ClientManagerAction extends BaseAction {
         if (sharingOptinChecked != null) {
             int id = Integer.parseInt(request.getParameter("id"));
 
-            String value = null;
 
-            if ("true".equals(sharingOptinChecked)) value = Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name();
-            else if ("false".equals(sharingOptinChecked)) value = Demographic.OptingStatus.EXPLICITLY_OPTED_OUT.name();
+            if ("true".equals(sharingOptinChecked)) {
+                String value = Demographic.ConsentGiven.CIRCLE_OF_CARE.name();
+                clientManager.saveDemographicExt(id, Demographic.CONSENT_GIVEN_KEY, value);
+                clientManager.saveDemographicExt(id, Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.EXPLICIT.name());
+                logManager.log("update", "DataSharingOpting:" + value, String.valueOf(id), request);
+            }
+            else if ("false".equals(sharingOptinChecked)) {
+                String value = Demographic.ConsentGiven.NONE.name();
+                clientManager.saveDemographicExt(id, Demographic.CONSENT_GIVEN_KEY, value);
+                clientManager.saveDemographicExt(id, Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.EXPLICIT.name());
+                logManager.log("update", "DataSharingOpting:" + value, String.valueOf(id), request);
+            }
             else throw (new IllegalStateException("Unexpected state, sharingOptinCheckbox state = " + sharingOptinChecked));
 
-            clientManager.saveDemographicExt(id, Demographic.SHARING_OPTING_KEY, value);
-
-            logManager.log("update", "DataSharingOpting:"+value, String.valueOf(id), request);
         }
 
-        return(unspecified(mapping, form, request, response));
+        return (unspecified(mapping, form, request, response));
     }
 
     private boolean isInDomain(long programId, List<?> programDomain) {
@@ -793,13 +825,19 @@ public class ClientManagerAction extends BaseAction {
         request.setAttribute("id", demographicNo);
         request.setAttribute("client", clientManager.getClientByDemographicNo(demographicNo));
 
-        DemographicExt sharingOptingStatus=clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.SHARING_OPTING_KEY);
-        String sharingOptingStatusValue=null;
-        if (sharingOptingStatus!=null) sharingOptingStatusValue=sharingOptingStatus.getValue();
-        else sharingOptingStatusValue="none";
-        request.setAttribute("sharingOptingStatus", sharingOptingStatusValue);
-        boolean sharingOptingStatusChecked=Demographic.OptingStatus.IMPLICITLY_OPTED_IN.name().equals(sharingOptingStatusValue) || Demographic.OptingStatus.EXPLICITLY_OPTED_IN.name().equals(sharingOptingStatusValue);
-        request.setAttribute("sharingOptingCheckBoxState", sharingOptingStatusChecked?"checked=\"checked\"":"");
+        DemographicExt demographicExtConsent = clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.CONSENT_GIVEN_KEY);
+        DemographicExt demographicExtConsentMethod = clientManager.getDemographicExt(Integer.parseInt(demographicNo), Demographic.METHOD_OBTAINED_KEY);
+
+        ConsentGiven consentGiven = ConsentGiven.NONE;
+        if (demographicExtConsent != null) consentGiven = ConsentGiven.valueOf(demographicExtConsent.getValue());
+
+        Demographic.MethodObtained methodObtained = Demographic.MethodObtained.IMPLICIT;
+        if (demographicExtConsentMethod != null) methodObtained = Demographic.MethodObtained.valueOf(demographicExtConsentMethod.getValue());
+
+        request.setAttribute("consentStatus", consentGiven.name());
+        request.setAttribute("consentMethod", methodObtained.name());
+        boolean consentStatusChecked = Demographic.ConsentGiven.ALL==consentGiven || Demographic.ConsentGiven.CIRCLE_OF_CARE==consentGiven;
+        request.setAttribute("consentCheckBoxState", consentStatusChecked ? "checked=\"checked\"" : "");
 
         String providerNo = getProviderNo(request);
 
@@ -813,26 +851,30 @@ public class ClientManagerAction extends BaseAction {
 
         request.setAttribute("programDomain", programDomain);
 
-        //check role permission
-        HttpSession se=request.getSession();
+        // check role permission
+        HttpSession se = request.getSession();
         List admissions = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
-        for(Iterator it = admissions.iterator(); it.hasNext();) {
-        	Admission admission = (Admission)it.next();
-        	String inProgramId = String.valueOf(admission.getProgramId());
-        	String inProgramType = admission.getProgramType();
-        	if(inProgramType.equalsIgnoreCase("service")) {
-        		se.setAttribute("performDischargeService",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
-        		se.setAttribute("performAdmissionService",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
+        for (Iterator it = admissions.iterator(); it.hasNext();) {
+            Admission admission = (Admission) it.next();
+            String inProgramId = String.valueOf(admission.getProgramId());
+            String inProgramType = admission.getProgramType();
+            if (inProgramType.equalsIgnoreCase("service")) {
+                se.setAttribute("performDischargeService", new Boolean(caseManagementManager.hasAccessRight("perform discharges", "access", providerNo,
+                        demographicNo, inProgramId)));
+                se.setAttribute("performAdmissionService", new Boolean(caseManagementManager.hasAccessRight("perform admissions", "access", providerNo,
+                        demographicNo, inProgramId)));
 
-        	}
-        	else if(inProgramType.equalsIgnoreCase("bed")) {
-        		se.setAttribute("performDischargeBed",new Boolean(caseManagementManager.hasAccessRight("perform discharges","access",providerNo,demographicNo,inProgramId)));
-        		se.setAttribute("performAdmissionBed",new Boolean(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,demographicNo,inProgramId)));
-        		se.setAttribute("performBedAssignments",new Boolean(caseManagementManager.hasAccessRight("perform bed assignments","access",providerNo,demographicNo,inProgramId)));
+            }
+            else if (inProgramType.equalsIgnoreCase("bed")) {
+                se.setAttribute("performDischargeBed", new Boolean(caseManagementManager.hasAccessRight("perform discharges", "access", providerNo,
+                        demographicNo, inProgramId)));
+                se.setAttribute("performAdmissionBed", new Boolean(caseManagementManager.hasAccessRight("perform admissions", "access", providerNo,
+                        demographicNo, inProgramId)));
+                se.setAttribute("performBedAssignments", new Boolean(caseManagementManager.hasAccessRight("perform bed assignments", "access", providerNo,
+                        demographicNo, inProgramId)));
 
-        	}
+            }
         }
-
 
         // tab override - from survey module
         String tabOverride = (String) request.getAttribute("tab.override");
@@ -846,19 +888,19 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("survey_list", surveyManager.getAllForms());
             request.setAttribute("surveys", surveyManager.getForms(demographicNo));
 
-            //request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
-            //only allow bed/service programs show up.(not external program)
+            // request.setAttribute("admissions", admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo)));
+            // only allow bed/service programs show up.(not external program)
             List currentAdmissionList = admissionManager.getCurrentAdmissions(Integer.valueOf(demographicNo));
             List bedServiceList = new ArrayList();
-            for(Iterator ad = currentAdmissionList.iterator(); ad.hasNext();) {
-            	Admission admission1 = (Admission) ad.next();            	
-            	if("External".equalsIgnoreCase(programManager.getProgram(admission1.getProgramId()).getType())){
-            		continue;
-            	}
-            	bedServiceList.add(admission1);
+            for (Iterator ad = currentAdmissionList.iterator(); ad.hasNext();) {
+                Admission admission1 = (Admission) ad.next();
+                if ("External".equalsIgnoreCase(programManager.getProgram(admission1.getProgramId()).getType())) {
+                    continue;
+                }
+                bedServiceList.add(admission1);
             }
-            request.setAttribute("admissions",bedServiceList);
-            
+            request.setAttribute("admissions", bedServiceList);
+
             Intake mostRecentQuickIntake = genericIntakeManager.getMostRecentQuickIntake(Integer.valueOf(demographicNo));
             request.setAttribute("mostRecentQuickIntake", mostRecentQuickIntake);
 
@@ -916,7 +958,8 @@ public class ClientManagerAction extends BaseAction {
 
             // set bed demographic
             boolean reservationExists = (bedDemographic != null);
-            bedDemographic = reservationExists ? bedDemographic : BedDemographic.create(Integer.valueOf(demographicNo), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
+            bedDemographic = reservationExists ? bedDemographic : BedDemographic.create(Integer.valueOf(demographicNo), bedDemographicManager
+                    .getDefaultBedDemographicStatus(), providerNo);
             Bed reservedBed = reservationExists ? bedManager.getBed(bedDemographic.getBedId()) : null;
 
             clientForm.set("bedDemographic", bedDemographic);
@@ -953,7 +996,6 @@ public class ClientManagerAction extends BaseAction {
             request.setAttribute("serviceRestrictions", clientRestrictionManager.getActiveRestrictionsForClient(Integer.valueOf(demographicNo), new Date()));
         }
 
-
         /* discharge */
         if (tabBean.getTab().equals("Discharge")) {
             request.setAttribute("communityPrograms", programManager.getCommunityPrograms());
@@ -968,54 +1010,57 @@ public class ClientManagerAction extends BaseAction {
         ArrayList<Hashtable> relList = demoRelation.getDemographicRelationshipsWithNamePhone(demographicNo);
         List<JointAdmission> list = clientManager.getDependents(new Long(demographicNo));
         JointAdmission clientsJadm = clientManager.getJointAdmission(new Long(demographicNo));
-        int familySize = list.size()+1;
-        if ( familySize > 1 ){
-            request.setAttribute("groupHead","yes");
+        int familySize = list.size() + 1;
+        if (familySize > 1) {
+            request.setAttribute("groupHead", "yes");
         }
-        if( clientsJadm != null){
-            request.setAttribute("dependentOn",clientsJadm.getHeadClientId());
+        if (clientsJadm != null) {
+            request.setAttribute("dependentOn", clientsJadm.getHeadClientId());
             List depList = clientManager.getDependents(clientsJadm.getHeadClientId());
-            familySize = depList.size()+1;
-            Demographic headClientDemo = clientManager.getClientByDemographicNo(""+clientsJadm.getHeadClientId());
-            request.setAttribute("groupName",headClientDemo.getFormattedName()+" Group");
+            familySize = depList.size() + 1;
+            Demographic headClientDemo = clientManager.getClientByDemographicNo("" + clientsJadm.getHeadClientId());
+            request.setAttribute("groupName", headClientDemo.getFormattedName() + " Group");
 
         }
 
-        if ( relList != null  && relList.size() > 0 ){
-            for (Hashtable h: relList){
+        if (relList != null && relList.size() > 0) {
+            for (Hashtable h : relList) {
                 String demographic = (String) h.get("demographicNo");
                 Long demoLong = new Long(demographic);
                 JointAdmission demoJadm = clientManager.getJointAdmission(demoLong);
-                System.out.println("DEMO JADM: "+demoJadm);
+                System.out.println("DEMO JADM: " + demoJadm);
 
-                //IS PERSON JOINTLY ADMITTED WITH ME, They will either  have the same HeadClient or be my headClient
-                if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong){  //they're my head client
-                    h.put("jointAdmission","head");
-                }else if ( demoJadm != null && clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoJadm.getHeadClientId().longValue()){
-                    //They depend on the same person i do!
-                    h.put("jointAdmission","dependent");
-                }else if( demoJadm != null && demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()){
-                    //They depend on me
-                    h.put("jointAdmission","dependent");
+                // IS PERSON JOINTLY ADMITTED WITH ME, They will either have the same HeadClient or be my headClient
+                if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong) { // they're my head client
+                    h.put("jointAdmission", "head");
                 }
-                //Can this person be added to my depended List
-                if (clientsJadm == null  && demoJadm == null && clientManager.getDependents(demoLong).size() == 0){
-                    //yes if - i am not dependent on anyone
-                    //- this person is not dependent on someone
-                    //- this person is not a head of a family already
-                    h.put("dependentable","yes");
+                else if (demoJadm != null && clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoJadm.getHeadClientId().longValue()) {
+                    // They depend on the same person i do!
+                    h.put("jointAdmission", "dependent");
                 }
-                if (demoJadm != null){  //DEPENDS ON SOMEONE
-                    h.put("dependentOn",demoJadm.getHeadClientId());
-                    if ( demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()){
+                else if (demoJadm != null && demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()) {
+                    // They depend on me
+                    h.put("jointAdmission", "dependent");
+                }
+                // Can this person be added to my depended List
+                if (clientsJadm == null && demoJadm == null && clientManager.getDependents(demoLong).size() == 0) {
+                    // yes if - i am not dependent on anyone
+                    // - this person is not dependent on someone
+                    // - this person is not a head of a family already
+                    h.put("dependentable", "yes");
+                }
+                if (demoJadm != null) { // DEPENDS ON SOMEONE
+                    h.put("dependentOn", demoJadm.getHeadClientId());
+                    if (demoJadm.getHeadClientId().longValue() == new Long(demographicNo).longValue()) {
                         h.put("dependent", demoJadm.getTypeId());
                     }
-                }else if( clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong){  //HEAD PERSON WON'T DEPEND ON ANYONE
+                }
+                else if (clientsJadm != null && clientsJadm.getHeadClientId().longValue() == demoLong) { // HEAD PERSON WON'T DEPEND ON ANYONE
                     h.put("dependent", new Long(0));
                 }
             }
-            request.setAttribute("relations",relList);
-            request.setAttribute("relationSize",familySize);
+            request.setAttribute("relations", relList);
+            request.setAttribute("relationSize", familySize);
 
         }
     }

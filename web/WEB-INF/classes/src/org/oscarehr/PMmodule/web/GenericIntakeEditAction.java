@@ -60,22 +60,21 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private static final String EDIT = "edit";
     private static final String PRINT = "print";
     private static final String CLIENT_EDIT = "clientEdit";
-   
-    
+
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-        
-		//[ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
-		List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
-		int nSize = lGenders.size();
-		LabelValueBean [] genders = new LabelValueBean[nSize];
-		for (int i = 0; i < nSize; i++) {
-			CaisiEditor ce = (CaisiEditor) lGenders.get(i);
-			genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
-		}
-		formBean.setGenders(genders);
-		//end of change
-		
+
+        // [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
+        List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
+        int nSize = lGenders.size();
+        LabelValueBean[] genders = new LabelValueBean[nSize];
+        for (int i = 0; i < nSize; i++) {
+            CaisiEditor ce = (CaisiEditor) lGenders.get(i);
+            genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
+        }
+        formBean.setGenders(genders);
+        // end of change
+
         String intakeType = getType(request);
         String providerNo = getProviderNo(request);
 
@@ -91,15 +90,13 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
         }
 
-        setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
-                .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null);
+        setBeanProperties(formBean, intake, getClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
+                intakeType), null, null, null);
 
         ProgramUtils.addProgramRestrictions(request);
 
         return mapping.findForward(EDIT);
     }
-
-
 
     public ActionForward create_remote(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
@@ -119,8 +116,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.createProgramIntake(getProgramId(request), providerNo);
         }
 
-        setBeanProperties(formBean, intake, getRemoteClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
-                .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType), null, null, null);
+        setBeanProperties(formBean, intake, getRemoteClient(request), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency()
+                .areExternalProgramsVisible(intakeType), null, null, null);
         formBean.setRemoteAgency(getRemoteAgency(request));
         formBean.setRemoteAgencyDemographicNo(getRemoteAgencyDemographicNo(request));
 
@@ -133,18 +130,18 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         GenericIntakeEditFormBean formBean = (GenericIntakeEditFormBean) form;
-        
-		//[ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
-		List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
-		int nSize = lGenders.size();
-		LabelValueBean [] genders = new LabelValueBean[nSize];
-		for (int i = 0; i < nSize; i++) {
-			CaisiEditor ce = (CaisiEditor) lGenders.get(i);
-			genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
-		}
-		formBean.setGenders(genders);
-		//end of change
-		
+
+        // [ 1842774 ] RFQ Feature: link reg intake gender to list editor table;
+        List lGenders = caisiEditorManager.getActiveLabelCaisiEditor("gender");
+        int nSize = lGenders.size();
+        LabelValueBean[] genders = new LabelValueBean[nSize];
+        for (int i = 0; i < nSize; i++) {
+            CaisiEditor ce = (CaisiEditor) lGenders.get(i);
+            genders[i] = new LabelValueBean(ce.getLabelValue(), ce.getLabelCode());
+        }
+        formBean.setGenders(genders);
+        // end of change
+
         String intakeType = getType(request);
         Integer clientId = getClientId(request);
         String providerNo = getProviderNo(request);
@@ -161,8 +158,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             intake = genericIntakeManager.copyProgramIntake(clientId, getProgramId(request), providerNo);
         }
 
-        setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency
-                .getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId),getCurrentExternalProgramId(clientId));
+        setBeanProperties(formBean, intake, getClient(clientId), providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(
+                intakeType), getCurrentBedCommunityProgramId(clientId), getCurrentServiceProgramIds(clientId), getCurrentExternalProgramId(clientId));
 
         // UCF -- intake accessment : please don't remove the following line
         request.getSession().setAttribute("survey_list", surveyManager.getAllForms());
@@ -206,42 +203,43 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
         try {
             saveClient(client, providerNo);
-            
-            //for RFQ: to save 'external' program.
-            if(OscarProperties.getInstance().isTorontoRFQ()) {
+
+            // for RFQ: to save 'external' program.
+            if (OscarProperties.getInstance().isTorontoRFQ()) {
                 admitExternalProgram(client.getDemographicNo(), providerNo, formBean.getSelectedExternalProgramId());
             }
 
             admitBedCommunityProgram(client.getDemographicNo(), providerNo, formBean.getSelectedBedCommunityProgramId());
 
-            if (!formBean.getSelectedServiceProgramIds().isEmpty())
-                admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
+            if (!formBean.getSelectedServiceProgramIds().isEmpty()) admitServicePrograms(client.getDemographicNo(), providerNo, formBean.getSelectedServiceProgramIds());
             saveIntake(intake, client.getDemographicNo());
 
             // don't move updateRemote up...this method has the problem needs to be fixed
             if (integratorManager.isEnabled()) updateRemote(client, formBean.getRemoteAgency(), formBean.getRemoteAgencyDemographicNo());
-        } catch (ProgramFullException e) {
+        }
+        catch (ProgramFullException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.full"));
             saveErrors(request, messages);
-        } catch (AdmissionException e) {
+        }
+        catch (AdmissionException e) {
             e.printStackTrace();
             LOG.error(e);
 
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("message", e.getMessage()));
             saveErrors(request, messages);
-        } catch (ServiceRestrictionException e) {
+        }
+        catch (ServiceRestrictionException e) {
             ActionMessages messages = new ActionMessages();
             messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("admit.service_restricted", e.getRestriction().getComments(), e.getRestriction().getProvider().getFormattedName()));
             saveErrors(request, messages);
         }
 
-        setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency()
-                .areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client
-                .getDemographicNo()),getCurrentExternalProgramId(client.getDemographicNo()));
+        setBeanProperties(formBean, intake, client, providerNo, Agency.getLocalAgency().areHousingProgramsVisible(intakeType), Agency.getLocalAgency().areServiceProgramsVisible(intakeType), Agency.getLocalAgency().areExternalProgramsVisible(intakeType),
+                getCurrentBedCommunityProgramId(client.getDemographicNo()), getCurrentServiceProgramIds(client.getDemographicNo()), getCurrentExternalProgramId(client.getDemographicNo()));
 
-        return  mapping.findForward(EDIT);
+        return mapping.findForward(EDIT);
     }
 
     private void updateRemote(Demographic client, String remoteAgency, Long remoteAgencyDemographicNo) {
@@ -277,19 +275,19 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         return activeProviderPrograms;
     }
 
-    private List<Program> getBedPrograms(Set<Program> providerPrograms,String providerNo) {
+    private List<Program> getBedPrograms(Set<Program> providerPrograms, String providerNo) {
         List<Program> bedPrograms = new ArrayList<Program>();
 
         for (Program program : programManager.getBedPrograms()) {
             if (providerPrograms.contains(program)) {
-            	if(OscarProperties.getInstance().isTorontoRFQ()) {
-            		if(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,"",String.valueOf(program.getId()))) {
-            			bedPrograms.add(program);
-            		}
-            	}
-            	else {
-            		bedPrograms.add(program);
-            	}
+                if (OscarProperties.getInstance().isTorontoRFQ()) {
+                    if (caseManagementManager.hasAccessRight("perform admissions", "access", providerNo, "", String.valueOf(program.getId()))) {
+                        bedPrograms.add(program);
+                    }
+                }
+                else {
+                    bedPrograms.add(program);
+                }
             }
         }
 
@@ -300,26 +298,27 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
         List<Program> communityPrograms = new ArrayList<Program>();
 
         for (Program program : programManager.getCommunityPrograms()) {
-        		communityPrograms.add(program);
+            communityPrograms.add(program);
         }
 
         return communityPrograms;
     }
 
-    private List<Program> getServicePrograms(Set<Program> providerPrograms,String providerNo) {
+    private List<Program> getServicePrograms(Set<Program> providerPrograms, String providerNo) {
         List<Program> servicePrograms = new ArrayList<Program>();
 
         for (Object o : programManager.getServicePrograms()) {
             Program program = (Program) o;
 
             if (providerPrograms.contains(program)) {
-            	if(OscarProperties.getInstance().isTorontoRFQ()) {
-            		if(caseManagementManager.hasAccessRight("perform admissions","access",providerNo,"",String.valueOf(program.getId()))) {
-                    	 servicePrograms.add(program);
-            		} 
-            	}else {
-            		servicePrograms.add(program);
-            	}
+                if (OscarProperties.getInstance().isTorontoRFQ()) {
+                    if (caseManagementManager.hasAccessRight("perform admissions", "access", providerNo, "", String.valueOf(program.getId()))) {
+                        servicePrograms.add(program);
+                    }
+                }
+                else {
+                    servicePrograms.add(program);
+                }
             }
         }
 
@@ -329,8 +328,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private List<Program> getExternalPrograms(Set<Program> providerPrograms) {
         List<Program> externalPrograms = new ArrayList<Program>();
 
-        for (Program program : programManager.getExternalPrograms()) {        	
-        	externalPrograms.add(program);
+        for (Program program : programManager.getExternalPrograms()) {
+            externalPrograms.add(program);
         }
         return externalPrograms;
     }
@@ -380,18 +379,20 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
     private void saveClient(Demographic client, String providerNo) {
         client.setProviderNo(providerNo);
 
-        Demographic.OptingStatus defaultOptingStatus = null;
+        Demographic.ConsentGiven defaultConsentStatus = null;
 
-        String optingDefaultString = OscarProperties.getInstance().getProperty("DATA_SHARING_OPTING_DEFAULT");
-        if (optingDefaultString != null) optingDefaultString = optingDefaultString.trim();
+        String consentDefaultString = OscarProperties.getInstance().getProperty("CONSENT_DEFAULT");
+        if (consentDefaultString != null) consentDefaultString = consentDefaultString.trim();
         // yes I know this step is silly since I convert it back to a string later but it ensures it's a valid option.
-        if (optingDefaultString != null) defaultOptingStatus = Demographic.OptingStatus.valueOf(optingDefaultString);
+        if (consentDefaultString != null) defaultConsentStatus = Demographic.ConsentGiven.valueOf(consentDefaultString);
 
         // local save
         clientManager.saveClient(client);
 
-        if (defaultOptingStatus != null) clientManager
-                .saveDemographicExt(client.getDemographicNo(), Demographic.SHARING_OPTING_KEY, defaultOptingStatus.name());
+        if (defaultConsentStatus != null){
+            clientManager.saveDemographicExt(client.getDemographicNo(), Demographic.CONSENT_GIVEN_KEY, defaultConsentStatus.name());
+            clientManager.saveDemographicExt(client.getDemographicNo(), Demographic.METHOD_OBTAINED_KEY, Demographic.MethodObtained.IMPLICIT.name());
+        }
 
     }
 
@@ -408,17 +409,14 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
             }
             else if (!currentExternalProgramId.equals(externalProgramId)) {
-                /*if (programManager.getProgram(externalProgramId).isExternal()) {
-                    if (externalProgram.isExternal()) {
-                        admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
-                    }
-                }*/
-            	admissionManager.processDischarge(currentExternalProgramId, clientId, "intake external discharge", "0");
-                admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");       
+                /*
+                 * if (programManager.getProgram(externalProgramId).isExternal()) { if (externalProgram.isExternal()) { admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit"); } }
+                 */
+                admissionManager.processDischarge(currentExternalProgramId, clientId, "intake external discharge", "0");
+                admissionManager.processAdmission(clientId, providerNo, externalProgram, "intake external discharge", "intake external admit");
             }
         }
     }
-
 
     private void admitBedCommunityProgram(Integer clientId, String providerNo, Integer bedCommunityProgramId) throws ProgramFullException, AdmissionException, ServiceRestrictionException {
         Program bedCommunityProgram = null;
@@ -481,9 +479,8 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
 
     // Bean
 
-    private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo,
-                                   boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible, Integer currentBedCommunityProgramId,
-                                   SortedSet<Integer> currentServiceProgramIds,Integer currentExternalProgramId) {
+    private void setBeanProperties(GenericIntakeEditFormBean formBean, Intake intake, Demographic client, String providerNo, boolean bedCommunityProgramsVisible, boolean serviceProgramsVisible, boolean externalProgramsVisible,
+            Integer currentBedCommunityProgramId, SortedSet<Integer> currentServiceProgramIds, Integer currentExternalProgramId) {
         formBean.setIntake(intake);
         formBean.setClient(client);
 
@@ -491,12 +488,12 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
             Set<Program> providerPrograms = getActiveProviderPrograms(providerNo);
 
             if (bedCommunityProgramsVisible) {
-                formBean.setBedCommunityPrograms(getBedPrograms(providerPrograms,providerNo), getCommunityPrograms());
+                formBean.setBedCommunityPrograms(getBedPrograms(providerPrograms, providerNo), getCommunityPrograms());
                 formBean.setSelectedBedCommunityProgramId(currentBedCommunityProgramId);
             }
 
             if (serviceProgramsVisible) {
-                formBean.setServicePrograms(getServicePrograms(providerPrograms,providerNo));
+                formBean.setServicePrograms(getServicePrograms(providerPrograms, providerNo));
                 formBean.setSelectedServiceProgramIds(currentServiceProgramIds);
             }
 
@@ -505,6 +502,6 @@ public class GenericIntakeEditAction extends BaseGenericIntakeAction {
                 formBean.setSelectedExternalProgramId(currentExternalProgramId);
             }
         }
-    }    
+    }
 
 }
