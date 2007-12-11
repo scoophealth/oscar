@@ -57,6 +57,7 @@ public class EctViewConsultationRequestsUtil {
       patient = new Vector();
       provider = new Vector();
       service = new Vector();
+      urgency = new Vector();
       date = new Vector();
       demographicNo = new Vector();
       this.patientWillBook = new Vector();
@@ -64,7 +65,7 @@ public class EctViewConsultationRequestsUtil {
       boolean verdict = true;
             
       StringBuffer sql = new StringBuffer();
-      sql.append(" select demo.demographic_no, cr.status, cr.referalDate, cr.requestId,  cr.patientWillBook, cr.appointmentDate, cr.appointmentTime, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc ");
+      sql.append(" select demo.demographic_no, cr.status, cr.referalDate, cr.requestId,  cr.patientWillBook, cr.urgency, cr.appointmentDate, cr.appointmentTime, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc ");
       sql.append("from consultationRequests cr,  demographic demo, provider pro, consultationServices ser ");
       sql.append("where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId ");
             
@@ -131,6 +132,7 @@ public class EctViewConsultationRequestsUtil {
             patient.add(rs.getString("last_name") +", "+ rs.getString("first_name")) ;
             provider.add(rs.getString("lName") +", "+ rs.getString("fName"));
             service.add(rs.getString("serviceDesc"));
+            urgency.add(rs.getString("urgency"));
             apptDate.add(rs.getString("appointmentDate")+" "+rs.getString("appointmentTime"));
             this.patientWillBook.add(rs.getString("patientWillBook"));
          }            
@@ -152,11 +154,12 @@ public class EctViewConsultationRequestsUtil {
       service = new Vector();      
       date = new Vector();
       this.patientWillBook = new Vector();     
+      urgency = new Vector();
       apptDate = new Vector();
       boolean verdict = true;      
       try {         
          DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);         
-         String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and demographicNo ='"+demoNo+"' order by cr.referalDate ";         
+         String sql = " select cr.status, cr.referalDate, cr.requestId, cr.patientWillBook, cr.urgency, demo.last_name, demo.first_name,  pro.last_name as lName, pro.first_name as fName, ser.serviceDesc from consultationRequests cr,  demographic demo, provider pro, consultationServices ser where  demo.demographic_no = cr.demographicNo and pro.provider_no = cr.providerNo and  ser.serviceId = cr.serviceId and demographicNo ='"+demoNo+"' order by cr.referalDate ";         
          ResultSet rs;         
          for(rs = db.GetSQL(sql); rs.next(); date.add(rs.getString("referalDate"))){            
             ids.add(rs.getString("requestId"));            
@@ -164,6 +167,7 @@ public class EctViewConsultationRequestsUtil {
             patient.add(rs.getString("last_name")+", "+rs.getString("first_name"));            
             provider.add(rs.getString("lName")+", "+rs.getString("fName"));            
             service.add(rs.getString("serviceDesc"));
+            urgency.add(rs.getString("urgency"));
             
             patientWillBook.add(rs.getString("patientWillBook"));            
          }                  
@@ -186,6 +190,6 @@ public class EctViewConsultationRequestsUtil {
    public Vector demographicNo;
    public Vector apptDate;
    public Vector patientWillBook;
+   public Vector urgency;
    
 }
-
