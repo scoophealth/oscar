@@ -258,6 +258,10 @@ function setOrder(val){
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgStatus"/>
                                    </a>
                                 </th>
+				 <th align="left" class="VCRheads" width="10%">
+					Urgency
+                                </th>
+
                                 <th align="left" class="VCRheads" width="75">
                                    <a href=# onclick="setOrder('2'); return false;">
                                    <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgPatient"/>
@@ -299,6 +303,7 @@ function setOrder(val){
                             String demo    = (String) theRequests.demographicNo.elementAt(i);
                             String appt    = (String) theRequests.apptDate.elementAt(i);
                             String patBook = (String) theRequests.patientWillBook.elementAt(i);
+                            String urgency = (String) theRequests.urgency.elementAt(i);
                             
                             if(status.equals("1") && dateGreaterThanWeek(date)){
                                 tickerList.add(demo);
@@ -315,6 +320,17 @@ function setOrder(val){
                                     <% }else if(status.equals("4")) { %>
                                     <bean:message key="oscarEncounter.oscarConsultationRequest.ViewConsultationRequests.msgDONE"/>    
                                     <% } %>
+				</td>
+                                <td class="stat<%=status%>">
+			            <% if (urgency.equals("1")){ %>
+					<div style="color:red";> Urgent </div>
+                                    <% }else if(urgency.equals("2")) { %>
+					Non-Urgent
+                                    <% }else if(urgency.equals("3")) { %>
+					Return
+                                    <% } %>
+
+
                                 </td>
                                 <td class="stat<%=status%>">
                                     <a href="javascript:popupOscarRx(700,960,'<%=serverURL%>/oscarEncounter/ViewRequest.do?requestId=<%=id%>')">
