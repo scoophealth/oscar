@@ -33,7 +33,7 @@ import oscar.oscarLab.ca.all.util.Utilities;
 public class LabUploadAction extends Action {
     Logger logger = Logger.getLogger(LabUploadAction.class);
     
-    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
+    public synchronized ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)  {
         LabUploadForm frm = (LabUploadForm) form;
         FormFile importFile = frm.getImportFile();
         
