@@ -92,7 +92,7 @@ public class Demographic implements Serializable {
     
     public enum ConsentGiven
     {
-        ALL, CIRCLE_OF_CARE, INCAPACITATED_EMERGENCY, NONE
+        ALL, CIRCLE_OF_CARE, EMPI, INCAPACITATED_EMERGENCY, NONE
     }
     
     public enum MethodObtained
