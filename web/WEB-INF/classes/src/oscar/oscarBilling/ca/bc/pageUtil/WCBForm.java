@@ -892,7 +892,11 @@ public final class WCBForm
   }
 
   public String getW_fname() {
-  System.out.println("this.toString()=" + this.toString());
+    try{
+       System.out.println("this.toString()=" + this.toString());
+    }catch(Exception e){
+        e.printStackTrace();
+    }
     return oscar.Misc.safeString(w_fname);
 
   }
@@ -1534,6 +1538,29 @@ public final class WCBForm
                  new ActionMessage(
                      "oscar.billing.CA.BC.billingBC.wcb.error.w_noi"));
     }
+    
+    if ( (w_noi != null && w_noi.length() > 0 ) && !StringUtils.isNumeric(w_noi)) {
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_noi.numeric"));
+    }
+    
+    if ( (w_feeitem != null && w_feeitem.length() > 0 ) && !StringUtils.isNumeric(w_feeitem)) {
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_feeitem.numeric"));
+    }
+    
+    if ( (w_extrafeeitem != null && w_extrafeeitem.length() > 0 ) &&  !StringUtils.isNumeric(w_extrafeeitem)) {
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_extrafeeitem.numeric"));
+    }
+            
+    if ( !StringUtils.isNumeric(w_icd9)) {
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_icd9.numeric"));
+    }
+                    
+    if ( (w_bp != null && w_bp.length() > 0 ) && !StringUtils.isNumeric(w_bp)) {
+      errors.add("",new ActionMessage("oscar.billing.CA.BC.billingBC.wcb.error.w_bp.numeric"));
+    }
+                          
+    
+    
 
     if ("1".equals(formNeeded)) {
       if (w_empname == null || "".equals(w_empname)) {
