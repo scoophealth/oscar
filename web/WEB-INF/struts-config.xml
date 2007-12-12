@@ -1291,8 +1291,8 @@
         </action>
         
         <action path="/billing/CA/BC/ProcessRemittance" scope="request" name="FrmForm" type="oscar.oscarBilling.ca.bc.MSP.GenTaAction">
-            <forward name="S21" path="/billing/CA/BC/billStatus.jsp" />          
-            <forward name="C12" path="/billing/CA/BC/viewReconcileReports.jsp" />          
+            <forward name="C12" path="/billing/CA/BC/billStatus.jsp" />          
+            <forward name="S21" path="/billing/CA/BC/viewReconcileReports.jsp" />          
         </action>
         
         <action path="/billing/CA/BC/SimulateTeleplanFile" scope="request" name="FrmForm" 
