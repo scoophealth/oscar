@@ -441,7 +441,9 @@ function popUpBillStatus(vheight,vwidth,varpage) {
             </span>
         </li>
         <% } } %>
-        <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
+         <oscar:oscarPropertiesCheck property="OLD_LAB_UPLOAD" value="yes" defaultVal="false">
+            <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/BC/LabUpload.jsp');return false;">Lab Upload</a></li>
+        </oscar:oscarPropertiesCheck>
         <li><a href="#" onclick ="popupPage(800,1000,'../lab/CA/ALL/testUploader.jsp');return false;">HL7 Lab Upload</a></li>
         <li><a href="#" onclick ="popupPage(800,1000,'../oscarKeys/keyGen.jsp');return false;">Key Pair Generator</a></li>
         <li><a href="#" onclick ="popupPage(800,1000,'labforwardingrules.jsp');return false;">Lab Forwarding Rules</a></li>
