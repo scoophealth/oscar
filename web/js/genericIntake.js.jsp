@@ -69,7 +69,14 @@ function validateEdit() {
 			<%
 		}
 	%> 
-		var programId=Number(getElement('bedCommunityProgramId').value);
+		var programIdStr=getElement('bedCommunityProgramId').value;
+		var programId = Number(programIdStr);
+		
+		if(programIdStr == "") {
+			alert( "Bed program is mandatory");
+			return false;
+		}
+		
 		if (gender.value == 'M')
 		{
 			if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
