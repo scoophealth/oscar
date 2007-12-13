@@ -219,10 +219,10 @@ public class ClientDao extends HibernateDaoSupport {
 					}
 				}
 			}
-
-			sql ="{alias}.demographic_no in (select client_id from admission " +  
-				 extraCond + ")"; 
-			
+			if(!"".equals(extraCond)) {
+				sql ="{alias}.demographic_no in (select client_id from admission " +  
+				 	extraCond + ")"; 
+			}
 			criteria.add(Restrictions.sqlRestriction(sql));
 		}
 
