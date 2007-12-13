@@ -81,7 +81,7 @@ CREATE TABLE formGrowthChart(
 
 create table labReportInformation(
   id  int(10) NOT NULL auto_increment primary key,
-  location_id  varchar(10),
+  location_id  varchar(255),
   print_date varchar(10),
   print_time varchar(10),
   total_BType varchar(5),
@@ -129,7 +129,7 @@ create table labTestResults(
   units varchar(65),
   result varchar(65),
   description text,
-  location_id  varchar(10),
+  location_id  varchar(255),
   last char(1)
 );
 
