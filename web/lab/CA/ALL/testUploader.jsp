@@ -5,6 +5,7 @@ if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 <%@page contentType="text/html"%>
 <%@page pageEncoding="UTF-8"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
 
 <%
 String outcome = (String) request.getAttribute("outcome");
@@ -96,7 +97,9 @@ if(outcome != null){
                                     <select name="type" onClick="selectOther()">
                                         <option value="MDS">MDS</option>
                                         <option value="CML">CML</option>
-                                        <option value="PATHL7">EXCELLERIS</option>
+                                        <option value="PATHL7"
+                                                <oscar:oscarPropertiesCheck property="PATHNET_LABS" value="yes">Selected</oscar:oscarPropertiesCheck> 
+                                        >EXCELLERIS</option>
                                         <option value="GDML">GDML -- TESTING DO NOT USE</option>
                                         <option value="OTHER">Other</option>
                                     </select>
