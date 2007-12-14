@@ -53,6 +53,7 @@ String percent = gstProp.getProperty("gstPercent", "");
 BigDecimal stotal = new BigDecimal(0);
 BigDecimal gstTotal = new BigDecimal(0);
 BigDecimal gstbilledtotal = new BigDecimal(0);
+boolean dupServiceCode = false;
 %>
 
 <%//
@@ -72,7 +73,18 @@ BigDecimal gstbilledtotal = new BigDecimal(0);
 	vecServiceParam[0].addAll(vecServiceParam0[0]);
 	vecServiceParam[1].addAll(vecServiceParam0[1]);
 	vecServiceParam[2].addAll(vecServiceParam0[2]);
-	
+
+        //Check whether there are duplicated service code existing
+        //User double click a service code, and then check off that 
+        //service code in billingON page will cause duplicated service
+        //code in billing review page.
+        TreeMap mapServiceParam = new TreeMap();
+        for (int i = 0 ; i< vecServiceParam[0].size(); i++){
+            mapServiceParam.put(vecServiceParam[0].get(i),i);
+        }
+        if (mapServiceParam.size()!=vecServiceParam[0].size())
+            dupServiceCode = true;
+        
         /////// hack used to order the billing codes
         /////// Would make sense to change getServiceCodeReviewVec method to accept the hashtable 
         /////// But should cause that much of a performance hit. It's generally under 3 items
@@ -596,11 +608,14 @@ function onCheckMaster() {
 
 				<td colspan='3' align='center' bgcolor="silver">
 				    <input type="submit" name="button" value="Back to Edit" style="width: 120px;" />
-                                    <% if (codeValid) { %>
+                                    <% if (codeValid & !dupServiceCode) { %>
                                     <input type="submit" name="submit" value="Save" style="width: 120px;" onClick="onClickSave();"/>
 				    <input type="submit" name="submit" value="Save & Add Another Bill" onClick="onClickSave();"/>
-                                    <% } %>
-				</td>
+                                    <% }else {%>
+                                    <td><div class='myError'>Warning: Duplicated service codes. </div></td>
+                                    <%    } 
+                                    %>
+                                    </td>
 			</tr>
 		</table>
 		</td>
