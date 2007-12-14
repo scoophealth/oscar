@@ -96,6 +96,7 @@ function checkTypeIn() {
 <table width="100%" border="0" bgcolor="#ffffff" cellspacing="2" cellpadding="2" > 
 <tr bgcolor="#CCCCFF">
 <TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=demographic_no&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnDemoNo"/></a></b></font></TH>
+<TH width="10%"><b>Links</a></b></font></TH>
 <TH width="20%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=last_name&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnLastName"/></a> </b></font></TH>
 <TH width="20%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=first_name&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnFirstName"/></a> </b></font></TH>
 <TH width="10%"><b><a href="demographiccontrol.jsp?fromMessenger=<%=fromMessenger%>&keyword=<%=request.getParameter("keyword")%>&displaymode=<%=request.getParameter("displaymode")%>&search_mode=<%=request.getParameter("search_mode")%>&dboperation=<%=request.getParameter("dboperation")%>&orderby=chart_no&limit1=0&limit2=<%=strLimit2%>"><bean:message key="demographic.demographicsearchresults.btnChart"/></a></b></font></TH>
@@ -176,7 +177,13 @@ function checkTypeIn() {
 			<a href="demographiccontrol.jsp?keyword=<%=Misc.toUpperLowerCase(rs.getString("last_name")+", "+rs.getString("first_name"))%>&demographic_no=<%= dem_no %>&displaymode=linkMsg2Demo&dboperation=search_detail"><%=rs.getString("demographic_no")%></a>	        
             <!-- Link to Oscar Message with display mode = edit ( default) -->
             <%}else{%>
-			<a href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail"><%=dem_no%></a>	        
+			<%= dem_no %>
+			<td>
+			<a title="Master Demo File" href="demographiccontrol.jsp?demographic_no=<%= head %>&displaymode=edit&dboperation=search_detail">M</a>
+			<a title="Encounter" href="../oscarEncounter/IncomingEncounter.do?demographicNo=<%=dem_no%>&curProviderNo=<%=rs.getString("provider_no")%>">E</a>
+			<a title="Prescriptions" href="../oscarRx/choosePatient.do?providerNo=<%=rs.getString("provider_no")%>&demographicNo=<%=dem_no%>">Rx</a>
+			</td>
+			
 	    <%}%>
       </td>
       <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
