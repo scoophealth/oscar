@@ -202,7 +202,7 @@ public class EctSaveEncounterAction
           {
               //If it is an ajax submit, it should cause and exception, if it is a
               // regular submission, it should just forward on to an error page.
-              if (httpservletrequest.getParameter("submitMethod").equals("ajax"))
+              if (httpservletrequest.getParameter("submitMethod") != null && httpservletrequest.getParameter("submitMethod").equals("ajax"))
               {
                   httpservletresponse.sendError(httpservletresponse.SC_PRECONDITION_FAILED, 
                     "Somebody else is currently modifying this encounter");
