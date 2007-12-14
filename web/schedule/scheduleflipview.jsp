@@ -171,11 +171,11 @@ function t(s1,s2,s3,s4,s5,s6) {
           	hourmin = new StringBuffer(rsdemo.getString("appointment_date")+ (hour<10?"0":"") +hour + (min<10?":0":":") +min +":00");
 		
 	        if(DateTimeCodeBean.get(hourmin.toString() ) == null) 
-            		DateTimeCodeBean.put(hourmin.toString(), "1");
-          	else if(DateTimeCodeBean.get(hourmin.toString() ).equals("1") ) 
-            		DateTimeCodeBean.put(hourmin.toString(), "2");
+            		DateTimeCodeBean.put(hourmin.toString(), "-");
+          	else if(DateTimeCodeBean.get(hourmin.toString() ).equals("-") ) 
+            		DateTimeCodeBean.put(hourmin.toString(), "||");
           	else
-            		DateTimeCodeBean.put(hourmin.toString(), "3+");
+            		DateTimeCodeBean.put(hourmin.toString(), "|||");
           		//System.out.println(hourmin.toString()+"*wwwwwww*"+rsdemo.getString("appointment_date")+rsdemo.getString("start_time")+rsdemo.getString("end_time"));
 	        continue;
 		  } else break; //e<=k
@@ -200,9 +200,9 @@ function t(s1,s2,s3,s4,s5,s6) {
     DateTimeCodeBean.put("color"+rsdemo.getString("code"), (rsdemo.getString("color")==null || rsdemo.getString("color").equals(""))?bgcolordef:rsdemo.getString("color") );
   } 
   flipviewMainBean.closePstmtConn();
-  DateTimeCodeBean.put("color1", "silver");
-  DateTimeCodeBean.put("color2", "gold");
-  DateTimeCodeBean.put("color3+", "red");
+  DateTimeCodeBean.put("color-", "silver");
+  DateTimeCodeBean.put("color||", "gold");
+  DateTimeCodeBean.put("color|||", "red");
 
   cal.add(cal.DATE, -31);
   StringBuffer temp = null;
