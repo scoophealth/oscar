@@ -54,6 +54,7 @@
         <form-bean name="FrmFormForm" type="oscar.form.pageUtil.FrmFormForm" />
         <form-bean name="EctConsultationFormRequestForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestForm" />
         <form-bean name="EctViewConsultationRequestsForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewConsultationRequestsForm" />
+        <form-bean name="EctConsultationFormRequestPrintAction" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction" />
         <form-bean name="EctViewRequestForm" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctViewRequestForm" />
         <form-bean name="EctDemographicSearchForm" type="oscar.oscarEncounter.search.pageUtil.EctDemographicSearchForm" />
         <form-bean name="EctProceedForm" type="oscar.oscarEncounter.search.pageUtil.EctProceedForm" />
@@ -514,6 +515,9 @@
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/lab/CA/ALL/labDisplay.jsp" />
         </action>
+        <action input="/labDisplay.jsp" path="/lab/CA/ALL/PrintPDF" scope="request" type="oscar.oscarLab.ca.all.pageUtil.PrintLabsAction">
+            <forward name="error" path="/lab/CA/ALL/labDisplay.jsp" />
+        </action>
         <action input="/labDisplay.jsp" path="/lab/CA/BC/Forward" scope="request" type="oscar.oscarMDS.pageUtil.ReportReassignAction">
             <forward name="failure" path="/errorpage.jsp" />
             <forward name="success" path="/lab/CA/BC/labDisplay.jsp" />
@@ -641,7 +645,11 @@
             <forward name="success" path="/oscarEncounter/oscarConsultationRequest/ConfirmConsultationRequest.jsp" />
             <forward name="print" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint.jsp" />
             <forward name="printalt" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormPrint2.jsp" />
+            <forward name="printpdf" path="/oscarEncounter/oscarConsultationRequest/printPdf.do" />
             <forward name="fax" path="/oscarEncounter/oscarConsultationRequest/ConsultationFormFax.jsp" />
+        </action>
+        <action input="/oscarEncounter/oscarconsultationRequest/ConsultationFormRequest.jsp" name="EctConsultationFormRequestPrintAction" path="/oscarEncounter/oscarConsultationRequest/printPdf" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.EctConsultationFormRequestPrintAction">
+            <forward name="error" path="/oscarEncounter/ViewRequest.do?error=error"/>
         </action>
         <action input="/oscarEncounter/oscarConsultationRequest/attachmentReport.jsp" name="FrmForm" path="/oscarEncounter/oscarConsultation/printAttached" scope="request" type="oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationPrintDocsAction">
             <forward name="noprint" path="/oscarEncounter/oscarConsultationRequest/nothingtoPrint.jsp" />

@@ -36,6 +36,7 @@ String userlastname = (String) session.getAttribute("userlastname");
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="page" />
 <%@ page import="java.math.*, java.util.*, java.io.*, java.sql.*, oscar.*, oscar.util.*, java.net.*,oscar.MyDateFormat, oscar.dms.*, oscar.dms.data.*, oscar.oscarEncounter.oscarConsultationRequest.pageUtil.ConsultationAttachDocs" %>
 <%@ page import="oscar.oscarLab.ca.on.*"%>
+<%@ page import="oscar.oscarLab.ca.all.Hl7textResultsData"%>
 <%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" %> 
 <%
@@ -275,14 +276,24 @@ function save() {
              <%
                 }
                 CommonLabResultData labData = new CommonLabResultData();
+                
                 ArrayList labs = labData.populateLabResultsData(demoNo, requestId, CommonLabResultData.UNATTACHED);
                 LabResultData resData;
                 for(int idx = 0; idx < labs.size(); ++idx) 
                 {
                     resData = (LabResultData)labs.get(idx);
-             %>
-                    <html:option styleClass="lab" value="<%=docType[1]+resData.labPatientId%>"><%=resData.getDiscipline()+" "+resData.getDateTime()%></html:option>
-             <%
+                    boolean displayFlag = true;
+                    if (resData.labType.equals(LabResultData.HL7TEXT)){
+                        Hl7textResultsData hl7Data = new Hl7textResultsData();
+                        if (!hl7Data.getMatchingLabs(resData.segmentID).endsWith(resData.segmentID))
+                            displayFlag = false;
+                    }
+                    
+                    if(displayFlag){
+                 %>
+                        <html:option styleClass="lab" value="<%=docType[1]+resData.labPatientId%>"><%=resData.getDiscipline()+" "+resData.getDateTime()%></html:option>
+                 <%
+                    }
                 }
              %>
                </html:select>

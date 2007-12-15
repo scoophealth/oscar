@@ -159,23 +159,23 @@ else
                         <%= patient.getFirstName() %> <%= patient.getSurname() %><br>
                         <%= patient.getAddress() %><br>
                         <%= patient.getCity() %> <%= patient.getPostal() %><br>
-                        <%= patient.getPhone() %><br>
-                        <b>
-                            <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
-                            <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
-                            <% } %>
-                        </b>
-                    </td>
-                    <td align=right valign=top><b>
-                            <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy") %>
-                    </b></td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=2 valign=top height="275px">
-            <table height=100% width=100%>
+                                <%= patient.getPhone() %><br>
+                                <b>
+                                    <% if(!props.getProperty("showRxHin", "").equals("false")) { %>
+                                    <bean:message key="oscar.oscarRx.hin"/><%= patient.getHin() %>
+                                    <% } %>
+                                </b>
+                            </td>
+                            <td align=right valign=top><b>
+                                    <%= oscar.oscarRx.util.RxUtil.DateToString(rxDate, "MMMM d, yyyy") %>
+                            </b></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+            <td colspan=2 valign=top height="275px">
+                <table height=100% width=100%>
                 <tr valign=top>
                     <td colspan=2 height=225px>
                         <%
@@ -214,6 +214,14 @@ else
                     <td height=25px></td>
                     <td height=25px>&nbsp; <%= doctorName%></td>
                 </tr>
+                <% if (oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){%>
+                <tr valign=bottom align="center" style="font-size:9px">
+                    <td height=25px colspan="2">
+                        </br>
+                        <%= oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") %>
+                    </td>
+                </tr>
+                <%}%>
             </table>
         </td>
     </tr>

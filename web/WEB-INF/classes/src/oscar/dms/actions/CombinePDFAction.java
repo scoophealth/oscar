@@ -60,7 +60,7 @@ public class CombinePDFAction extends Action {
             }
             if (alist.size() > 0 ){
                 response.setContentType("application/pdf");  //octet-stream
-                response.setHeader("Content-Disposition", "attachment; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-mm-dd.hh.mm.ss")+".pdf\"");
+                response.setHeader("Content-Disposition", "attachment; filename=\"combinedPDF-"+UtilDateUtilities.getToday("yyyy-MM-dd.hh.mm.ss")+".pdf\"");
                 try {
                     ConcatPDF.concat(alist,response.getOutputStream());            
                 } catch (IOException ex) {

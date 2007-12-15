@@ -553,6 +553,10 @@
 				</TABLE>
 			</TD>
 		</TR>
+                
+                <% if (props.getProperty("FORMS_PROMOTEXT") != null){%>
+                    <tr align="center"><td></br></br><%= props.getProperty("FORMS_PROMOTEXT") %></td></tr>
+                <%}%>
 			
 	</TABLE>
 </BODY>

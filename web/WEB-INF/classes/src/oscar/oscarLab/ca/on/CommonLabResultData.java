@@ -66,6 +66,7 @@ public class CommonLabResultData {
         String cml = op.getProperty("CML_LABS");
         String mds = op.getProperty("MDS_LABS");
         String pathnet = op.getProperty("PATHNET_LABS");
+        String hl7text = op.getProperty("HL7TEXT_LABS");
         
         
         if( cml != null && cml.trim().equals("yes")){
@@ -80,6 +81,11 @@ public class CommonLabResultData {
             PathnetResultsData pathData = new PathnetResultsData();
             ArrayList pathLabs = pathData.populatePathnetResultsData(demographicNo, reqId, attach);
             labs.addAll(pathLabs);
+        }
+        if (hl7text != null && hl7text.trim().equals("yes")){
+            Hl7textResultsData hl7Data = new Hl7textResultsData();
+            ArrayList hl7Labs = hl7Data.populateHL7ResultsData(demographicNo, reqId, attach);
+            labs.addAll(hl7Labs);
         }
         
         return labs;

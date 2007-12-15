@@ -632,12 +632,20 @@
                 <bean:message key="oscarEncounter.oscarConsultationRequest.consultationFormPrint.msgFamilyDoc"/>
        <% } %>
                 : <%=reqFrm.getFamilyDoctor() %>
-                &nbsp;<br>
-            </td>
-            </tr>
-            <tr>
-                <td id="faxFooter">
-                </td>
+                        &nbsp;<br>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="faxFooter">
+                        
+                    </td>
+                </tr>
+                <tr>
+                <td align="center">
+                    <% if (props.getProperty("FORMS_PROMOTEXT") != null){                    
+                        %></br><%= props.getProperty("FORMS_PROMOTEXT") %>                
+                    <%}%>
+                </td>    
             </tr>
         </table>
     </body>

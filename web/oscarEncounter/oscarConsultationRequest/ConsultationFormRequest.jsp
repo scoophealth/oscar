@@ -57,12 +57,20 @@ if (demo != null ){
     demoData = new oscar.oscarDemographic.data.DemographicData();
     demographic = demoData.getDemographic(demo);
 }
-else if(requestId==null)
+else if(requestId==null){
     response.sendRedirect("../error.jsp");
 
-
+}
 if (demo != null) consultUtil.estPatient(demo);
 consultUtil.estTeams();
+
+if (request.getParameter("error") != null){
+    %> 
+    <SCRIPT LANGUAGE="JavaScript">
+        alert("The form could not be printed due to an error. Please refer to the server logs for more details.");
+    </SCRIPT>
+    <%
+}
 
 java.util.Calendar calender = java.util.Calendar.getInstance();
 String day =  Integer.toString(calender.get(java.util.Calendar.DAY_OF_MONTH));
