@@ -41,7 +41,7 @@ public class RxPrescriptionData {
             //Get Prescription from database
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "SELECT * FROM drugs WHERE archived = 0 AND drugid = " + drugId;
+            String sql = "SELECT * FROM drugs WHERE drugid = " + drugId;
             
             rs = db.GetSQL(sql);
             
