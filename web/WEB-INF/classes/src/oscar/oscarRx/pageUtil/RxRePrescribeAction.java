@@ -66,7 +66,9 @@ public final class RxRePrescribeAction extends Action {
             
             int drugId;
             int i;
-            beanRX.clearStash();
+            if(frm.getReprint() ) {
+               beanRX.clearStash();
+            }
             for(i=0;i<drugArr.length;i++) {
                 try {
                     drugId = Integer.parseInt(drugArr[i]);
@@ -99,12 +101,13 @@ public final class RxRePrescribeAction extends Action {
         if( frm.getReprint() ) {
             //update print date and pass to view script                
             RxPrescriptionData.Prescription[] prescriptions = beanRX.getStash();
-            if( prescriptions.length > 0 )
-                prescriptions[0].Print();
+            if(prescriptions.length > 0 ){
+                   prescriptions[0].Print();
+            }
             request.setAttribute("rePrint", "true");
             return mapping.findForward("reprint");
-        }
-        else
+        }else{
             return (mapping.findForward("success"));
+        }
     }
 }
