@@ -10,16 +10,16 @@ if(session.getValue("user") == null) response.sendRedirect("../../logout.jsp");
 <%
 String outcome = (String) request.getAttribute("outcome");
 if(outcome != null){
-    if(outcome.equals("success"))
+    if(outcome.equals("success")){
 %><script type="text/javascript">alert("Lab uploaded successfully");</script><%
-    else if(outcome.equals("uploaded previously"))
+    }else if(outcome.equals("uploaded previously")){
 %><script type="text/javascript">alert("Lab has already been uploaded");</script><%    
-    else if(outcome.equals("exception"))
+    }else if(outcome.equals("exception")){
 %><script type="text/javascript">alert("Exception uploading the lab");</script><%
-    else
+    }else{
 %><script type="text/javascript">alert("Failed to upload lab");</script><%
+    }
 }
-
 %>
 
 
