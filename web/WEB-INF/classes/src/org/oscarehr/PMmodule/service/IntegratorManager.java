@@ -322,14 +322,30 @@ public class IntegratorManager {
     public void publishPrograms(ProgramTransfer[] programTransfers) {
         if (!isEnabled()) return;
 
-        PublishProgramRequest publishProgramRequest = new PublishProgramRequest(new Date(), programTransfers);
-        PublishProgramResponse publishProgramResponse = getIntegratorService().publishProgram(publishProgramRequest, getAuthenticationToken());
+        PublishProgramRequest request = new PublishProgramRequest(new Date(), programTransfers);
+        PublishProgramResponse response = getIntegratorService().publishProgram(request, getAuthenticationToken());
 
-        if (!publishProgramResponse.getAck().equals(MessageAck.OK)) {
-            log.error("Error publishing programs. " + publishProgramResponse.getAck());
+        if (!response.getAck().equals(MessageAck.OK)) {
+            log.error("Error publishing programs. " + response.getAck());
         }
     }
 
+    public ProgramTransfer[] getOtherAgenciesPrograms()
+    {
+        if (!isEnabled()) return(null);
+// TODO : pending new integrator code, but I can't copy it over cuz it doesn't compile right now.        
+//        GetProgramsRequest request=new GetProgramsRequest();
+//        GetProgramsResponse response = getIntegratorService().getPrograms(request, getAuthenticationToken());
+//        
+//        if (!response.getAck().equals(MessageAck.OK)) {
+//            log.error("Error retrieving programs. " + response.getAck());
+//            return(null);
+//        }
+//        
+//        return(response.getProgramTransfers());
+return(null);
+    }
+    
     public void sendReferral(Long agencyId, ClientReferral referral) {
         throw new OperationNotImplementedException("referral registrations not yet implemented in integrator");
     }
