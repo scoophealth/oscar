@@ -90,6 +90,16 @@ public final class RxChooseDrugAction extends Action {
                     rx.setRegionalIdentifier(f.regionalIdentifier);
                
                     request.setAttribute("components", f.components);
+                    String dosage = "";	
+                    for (int c = 0; c < f.components.size();c++){
+                        RxDrugData.DrugMonograph.DrugComponent dc = (RxDrugData.DrugMonograph.DrugComponent) f.components.get(c);                         
+                        if(c == (f.components.size()-1)){
+                           dosage += dc.strength+" "+dc.unit;
+                        }else{
+                           dosage += dc.strength+" "+dc.unit +" / ";
+                        }
+                    }          
+                    rx.setDosage(dosage);
                     
                     rx.setGenericName(genName);
                 }catch(java.lang.NumberFormatException numEx){          // Custom                

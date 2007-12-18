@@ -54,6 +54,7 @@ public final class RxWriteScriptForm extends ActionForm {
     String method = null;
     String unit = null;
     String route = null;
+    private String dosage = null;
     
     
     public String getAction() {
@@ -361,6 +362,14 @@ public final class RxWriteScriptForm extends ActionForm {
      */
     public void setRoute(java.lang.String route) {
        this.route = route;
+    }
+
+    public String getDosage() {
+        return dosage;
+    }
+
+    public void setDosage(String dosage) {
+        this.dosage = dosage;
     }
     
 }
