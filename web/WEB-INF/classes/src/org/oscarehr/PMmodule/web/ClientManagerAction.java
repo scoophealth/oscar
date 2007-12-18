@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForm;
@@ -45,6 +46,7 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.caisi.integrator.model.Client;
+import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
@@ -637,7 +639,67 @@ public class ClientManagerAction extends BaseAction {
 
         ProgramUtils.addProgramRestrictions(request);
 
+        List<ProgramTransfer> remotePrograms=getRemoteProgramsFiltered(criteria);
+        if (remotePrograms!=null) request.setAttribute("remotePrograms", remotePrograms);
+
         return mapping.findForward("search_programs");
+    }
+
+    /**
+     * @return null if integrator is disabled or upon error.
+     */
+    private List<ProgramTransfer> getRemoteProgramsFiltered(Program criteria)
+    {
+        ProgramTransfer[] remotePrograms=integratorManager.getOtherAgenciesPrograms();
+        if (remotePrograms==null) return(null);
+        
+        ArrayList<ProgramTransfer> remoteProgramsFiltered=new ArrayList<ProgramTransfer>();
+        
+        for (ProgramTransfer programTransfer : remotePrograms)
+        {
+            if (matchCriteria(criteria, programTransfer))
+            {
+                remoteProgramsFiltered.add(programTransfer);
+            }
+        }
+        
+        return(remoteProgramsFiltered);
+    }
+    
+    /**
+     * @param criteria
+     * @param programTransfer
+     * @return true if the program matches the criteria, false otherwise
+     */
+    private boolean matchCriteria(Program criteria, ProgramTransfer programTransfer) {
+
+        String temp=StringUtils.trimToNull(criteria.getName());
+        if (temp!=null) if (!programTransfer.getName().equalsIgnoreCase(temp)) return(false);
+        
+        temp=StringUtils.trimToNull(criteria.getType());
+        if (temp!=null) if (!programTransfer.getType().equalsIgnoreCase(temp)) return(false);
+        
+        temp=StringUtils.trimToNull(criteria.getManOrWoman());
+        if (temp!=null) if (!programTransfer.getManOrWoman().equalsIgnoreCase(temp)) return(false);
+        
+        if (criteria.isTransgender()) if (!programTransfer.isTransgender()) return(false);
+        
+        if (criteria.isFirstNation()) if (!programTransfer.isFirstNation()) return(false);
+        
+        if (criteria.isBedProgramAffiliated()) if (!programTransfer.isBedProgramAffiliated()) return(false);
+        
+        if (criteria.isAlcohol()) if (!programTransfer.isAlcohol()) return(false);
+        
+        temp=StringUtils.trimToNull(criteria.getAbstinenceSupport());
+        if (temp!=null) if (!programTransfer.getAbstinenceSupport().equalsIgnoreCase(temp)) return(false);
+        
+        if (criteria.isPhysicalHealth()) if (!programTransfer.isPhysicalHealth()) return(false);
+        
+        if (criteria.isMentalHealth()) if (!programTransfer.isMentalHealth()) return(false);
+        
+        if (criteria.isHousing()) if (!programTransfer.isHousing()) return(false);
+
+        return(true);
     }
 
     public ActionForward submit_erconsent(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
