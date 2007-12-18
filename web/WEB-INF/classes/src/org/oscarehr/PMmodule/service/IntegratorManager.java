@@ -261,7 +261,7 @@ public class IntegratorManager {
     public Demographic integratorDemographicToCaisiDemographic(org.caisi.integrator.model.Demographic demographicTransfer) {
         Demographic demographicInfo = new Demographic();
 
-        demographicInfo.setAgencyId(demographicTransfer.getAgency().getUsername());
+        demographicInfo.setAgencyId("" + demographicTransfer.getAgencyId());
         demographicInfo.setAddress(demographicTransfer.getAddress());
         demographicInfo.setChartNo(demographicTransfer.getChartNo());
         demographicInfo.setCity(demographicTransfer.getCity());
