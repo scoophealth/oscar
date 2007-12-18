@@ -24,6 +24,8 @@
 
 <%@ include file="/taglibs.jsp"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
 <html:html locale="true">
 	<head>
 		<title>Program Search</title>
@@ -133,5 +135,23 @@ if (!Array.prototype.indexOf)
 			</display:column>
 			<display:column property="descr" sortable="false" title="Description"></display:column>
 		</display:table>
+
+		<%
+			IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
+			if (integratorManager.isEnabled())
+			{
+				%>
+				<p />
+				<h3>Programs at other Agencies</h3>
+				<display:table class="simple" cellspacing="2" cellpadding="3" id="remoteProgram" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
+					<display:setProperty name="paging.banner.placement" value="bottom" />
+					<display:column sortable="true" title="Name">
+					</display:column>
+					<display:column property="type" sortable="true" title="Type"></display:column>
+					<display:column property="descr" sortable="false" title="Description"></display:column>
+				</display:table>
+				<%
+			}
+		%>
 	</body>
 </html:html>

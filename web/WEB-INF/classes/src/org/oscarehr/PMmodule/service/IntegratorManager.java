@@ -316,35 +316,46 @@ public class IntegratorManager {
      * This method will publish the provided program list to the integrator. The program list should not contain caisi standard programs, just user generated ones.
      */
     public void publishPrograms(ProgramTransfer[] programTransfers) {
-        if (!isEnabled()) return;
+        try {
+            if (!isEnabled()) return;
 
-        PublishProgramRequest request = new PublishProgramRequest(new Date(), programTransfers);
-        PublishProgramResponse response = getIntegratorService().publishProgram(request, getAuthenticationToken());
+            PublishProgramRequest request = new PublishProgramRequest(new Date(), programTransfers);
+            PublishProgramResponse response = getIntegratorService().publishProgram(request, getAuthenticationToken());
 
-        if (!response.getAck().equals(MessageAck.OK)) {
-            log.error("Error publishing programs. " + response.getAck());
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error publishing programs. " + response.getAck());
+            }
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
         }
     }
 
     public ProgramTransfer[] getOtherAgenciesPrograms() {
-        if (!isEnabled()) return (null);
+        try {
+            if (!isEnabled()) return (null);
 
-        String CACHE_KEY="OTHER_AGENCIES_PROGRAMS";
-        ProgramTransfer[] results = (ProgramTransfer[]) simpleTimeCache.get(CACHE_KEY);
-        
-        if (results == null) {
-            GetProgramsRequest request = new GetProgramsRequest();
-            GetProgramsResponse response = getIntegratorService().getPrograms(request, getAuthenticationToken());
+            String CACHE_KEY="OTHER_AGENCIES_PROGRAMS";
+            ProgramTransfer[] results = (ProgramTransfer[]) simpleTimeCache.get(CACHE_KEY);
+            
+            if (results == null) {
+                GetProgramsRequest request = new GetProgramsRequest();
+                GetProgramsResponse response = getIntegratorService().getPrograms(request, getAuthenticationToken());
 
-            if (!response.getAck().equals(MessageAck.OK)) {
-                log.error("Error retrieving programs. " + response.getAck());
-                return (null);
+                if (!response.getAck().equals(MessageAck.OK)) {
+                    log.error("Error retrieving programs. " + response.getAck());
+                    return (null);
+                }
+
+                simpleTimeCache.put(CACHE_KEY, response.getProgramTransfers());
             }
-
-            simpleTimeCache.put(CACHE_KEY, response.getProgramTransfers());
+            
+            return(results);
         }
-        
-        return(results);
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(null);
+        }
     }
 
     public void sendReferral(Long agencyId, ClientReferral referral) {
