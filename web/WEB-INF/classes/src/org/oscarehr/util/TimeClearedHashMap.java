@@ -88,7 +88,7 @@ public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
     // @Test
     // public void test() throws InterruptedException {
     public static void main(String... argv) throws Exception { 
-        TimeClearedHashMap<String,String> map = new TimeClearedHashMap<String,String>(1000, 1000);
+        TimeClearedHashMap<String,String> map = new TimeClearedHashMap<String,String>(1000, 25);
         map.put("foo", "FOO");
         // assertEquals(1, map.size());
         if (map.size()!=1) throw(new IllegalStateException());
