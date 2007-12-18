@@ -802,7 +802,8 @@ if(bean.getStashIndex() > -1){ //new way
     thisForm.setDuration(rx.getDuration());
     thisForm.setDurationUnit(rx.getDurationUnit());
     thisForm.setQuantity(rx.getQuantity());
-    
+
+    thisForm.setDosage(rx.getDosage());
     thisForm.setRepeat(rx.getRepeat());
     thisForm.setNosubs(rx.getNosubs());
     thisForm.setPrn(rx.getPrn());
@@ -839,7 +840,7 @@ Quantity:       <%= thisForm.getQuantity() %><br>
 Repeat:         <%= thisForm.getRepeat() %><br>
 Nosubs:         <%= String.valueOf(thisForm.getNosubs()) %><br>
 Prn:            <%= String.valueOf(thisForm.getPrn()) %><br>
-
+Dosage:         <%= thisForm.getDosage() %><br>
 Special:        <%= thisForm.getSpecial() %><br>
 ATC:            <%= thisForm.getAtcCode() %>
 regional ident  <%= thisForm.getRegionalIdentifier() %>
@@ -901,6 +902,7 @@ int i;
 <html:hidden property="GCN_SEQNO" />
 <html:hidden property="atcCode" />
 <html:hidden property="regionalIdentifier" />
+<html:hidden property="dosage" /> 
 
 
 
