@@ -162,7 +162,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                     if( rs.next() )
                         sql = "UPDATE program_provider SET role_id = " + roles.get(name) + " WHERE provider_no ='" + provNo + "'";
                     else
-                        sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "'," + provNo + "," + roles.get(name) + ")";
+                        sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "','" + provNo + "'," + roles.get(name) + ")";
                 }
 
                 dbObj.updateDBRecord(sql,curUser_no);
@@ -189,7 +189,7 @@ String keyword = request.getParameter("keyword")!=null?request.getParameter("key
                 if( rs.next() )
                     sql = "UPDATE program_provider SET role_id = " + roles.get(name) + " WHERE provider_no ='" + provNo + "'";
                 else
-                    sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "'," + provNo + "," + roles.get(name) + ")";
+                    sql = "INSERT INTO program_provider (program_id,provider_no,role_id) Values('" + caisiProgram + "','" + provNo + "'," + roles.get(name) + ")";
                                
                 dbObj.updateDBRecord(sql,curUser_no);
             }
