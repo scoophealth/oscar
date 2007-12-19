@@ -130,11 +130,19 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    
 	    data = demographic.getFirstName();
 	    if (data==null || data.trim().equals("")) err.add("Error: No First Name for Patient "+demoNo);
-	    else firstName.setPart(data);	    
+	    else {
+		firstName.setPart(data);
+		firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
+		firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+	    }
 	    
 	    data = demographic.getLastName();
 	    if (data==null || data.trim().equals("")) err.add("Error: No Last Name for Patient "+demoNo);
-	    else lastName.setPart(data);
+	    else {
+		lastName.setPart(data);
+		lastName.setPartType(cdsDt.PersonNamePartTypeCode.FAMC);
+		lastName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+	    }
 	    
 	    data = demographic.getSex();
 	    if (data==null || data.trim().equals("")) err.add("Error: No Gender for Patient "+demoNo);
