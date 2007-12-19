@@ -106,6 +106,7 @@ public class DemographicRelationship {
             h.put("demographic_no", rs.getString("relation_demographic_no"));
             h.put("relation", rs.getString("relation"));
             h.put("sub_decision_maker", rs.getString("sub_decision_maker"));
+	    h.put("emergency_contact", rs.getString("emergency_contact"));
             h.put("notes", rs.getString("notes"));
             list.add(h);
          }
