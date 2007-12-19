@@ -41,7 +41,7 @@ public class AppointmentDAO extends DAO {
         super(pvar);
     }
     
-    public int addAppointment(String providerNo, Date appointmentDate, Date startTime, Date endTime, String name, String demographicNo, String notes, String reason, String status) throws SQLException {
+    public int addAppointment(String providerNo, Date appointmentDate, String startTime, String endTime, String name, String demographicNo, String notes, String reason, String status) throws SQLException {
 	String add_record_string = "insert into appointment (provider_no,appointment_date,start_time,end_time,name,demographic_no,notes,reason,status) values (?,?,?,?,?,?,?,?,?)";
 	int key = 0;
 	
@@ -51,8 +51,8 @@ public class AppointmentDAO extends DAO {
 	
 	add_record.setString(1, providerNo);
 	add_record.setDate(2, new java.sql.Date(appointmentDate.getTime()));
-	add_record.setDate(3, new java.sql.Date(startTime.getTime()));
-	add_record.setDate(4, new java.sql.Date(endTime.getTime()));
+	add_record.setString(3, startTime);
+	add_record.setString(4, endTime);
 	add_record.setString(5, name);
 	add_record.setString(6, demographicNo);
 	add_record.setString(7, notes);
