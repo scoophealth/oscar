@@ -180,7 +180,6 @@ function newWindow(file,window) {
                                   <option value="Wife">Wife</option>
                                   <option value="Husband">Husband</option>
                                   <option value="Partner">Partner</option>
-                                  
                                   <option value="Brother">Brother</option>
                                   <option value="Sister">Sister</option>
                                   <option value="Son">Son</option>
@@ -190,6 +189,11 @@ function newWindow(file,window) {
                                   <option value="GrandFather">GrandFather</option>
                                   <option value="GrandMother">GrandMother</option>
                                   <option value="Guardian">Guardian</option>
+				  <option value="Administrative Staff">Administrative Staff</option>
+				  <option value="Care Giver">Care Giver</option>
+				  <option value="Power of Attorney">Power of Attorney</option>
+				  <option value="Insurance">Insurance</option>
+				  <option value="Guarantor">Guarantor</option>
                                   <option value="Other">Other</option>
                                </select>
                                <input type="checkbox" name="sdm" value="yes"> Substitute Decision Maker</input>
