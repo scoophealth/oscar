@@ -37,8 +37,16 @@ import java.util.zip.*;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 import javax.servlet.jsp.JspFactory;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
 import org.apache.struts.action.*;
 import org.apache.struts.util.MessageResources;
+import org.apache.xmlbeans.GDateBuilder;
+import org.apache.xmlbeans.XmlCalendar;
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 import oscar.appt.AppointmentDAO;
 import oscar.appt.AppointmentDAO.Appointment;
 import oscar.appt.ApptStatusData;
@@ -50,6 +58,7 @@ import oscar.oscarEncounter.data.EctEChartBean;
 import oscar.oscarFax.client.OSCARFAXClient;
 import oscar.oscarLab.ca.on.CommonLabTestValues;
 import oscar.oscarPrevention.*;
+import oscar.oscarProvider.data.ProviderData;
 import oscar.oscarReport.data.DemographicSets;
 import oscar.oscarRx.data.RxPatientData;
 import oscar.oscarRx.data.RxPatientData.Patient.Allergy;
@@ -148,17 +157,43 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		demo.setPersonStatusCode(cdsDt.PersonStatus.Enum.forString(data));
 	    }
 	    
-	    Calendar c = Calendar.getInstance();
+	    GDateBuilder gd = new GDateBuilder();
 	    data = demographic.getDob("-");
 	    if (data==null || data.trim().equals("")) {
 		err.add("Error: No Date Of Birth for Patient "+demoNo);
 	    } else {
-		c.setTime(UtilDateUtilities.StringToDate(data));
-		demo.setDateOfBirth(c);
+		gd.setDate(UtilDateUtilities.StringToDate(data));
+		gd.clearTimeZone();
+		demo.setDateOfBirth(gd.getCalendar());
 	    }
-	    
+	    data = demographic.getDateJoined();
+	    if (data!=null && !data.trim().equals("")) {
+		gd.setDate(UtilDateUtilities.StringToDate(data));
+		gd.clearTimeZone();
+		demo.setEnrollmentDate(gd.getCalendar());
+	    }
+	    data = demographic.getEndDate();
+	    if (data!=null && !data.trim().equals("")) {
+		gd.setDate(UtilDateUtilities.StringToDate(data));
+		gd.clearTimeZone();
+		demo.setEnrollmentTerminationDate(gd.getCalendar());
+	    }
 	    data = demographic.getChartNo();
 	    if (data!=null && !data.trim().equals("")) demo.setChartNumber(data);
+	    
+	    data = demographic.getEmail();
+	    if (data!=null && !data.trim().equals("")) demo.setEmail(data);
+	    
+	    data = demographic.getProviderNo();
+	    if (data!=null && !data.trim().equals("")) {
+		cds.DemographicsDocument.Demographics.PrimaryPhysician pph = demo.addNewPrimaryPhysician();
+		cdsDt.PersonNameSimple pphName = pph.addNewName();
+		
+		ProviderData provd = new ProviderData(data);
+		pphName.setFirstName(provd.getFirst_name());
+		pphName.setLastName(provd.getLast_name());
+		pph.setOHIPPhysicianId(provd.getOhip_no());
+	    }
 	    
 	    if (demographic.getJustHIN()!=null && !demographic.getJustHIN().trim().equals("")) {
 		cdsDt.HealthCard healthCard = demo.addNewHealthCard();
@@ -189,6 +224,53 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    }
 	    demoExt = null;
 	    
+	    DemographicRelationship demoRel = new DemographicRelationship();
+	    ArrayList demoR = demoRel.getDemographicRelationships(demoNo);
+	    for (int j=0; j<demoR.size(); j++) {
+		Hashtable r = (Hashtable) demoR.get(j);
+		data = (String) r.get("demographic_no");
+		if (data!=null || !data.trim().equals("")) {
+		    DemographicData.Demographic relDemo = d.getDemographic(data);
+		    Hashtable relDemoExt = ext.getAllValuesForDemo(data);
+		    
+		    cds.DemographicsDocument.Demographics.Contact contact = demo.addNewContact();
+		    cdsDt.PersonNameSimpleWithMiddleName contactName = contact.addNewName();
+		    contactName.setFirstName(relDemo.getFirstName());
+		    contactName.setLastName(relDemo.getLastName());
+		    
+		    String ec = (String) r.get("emergency_contact");
+		    String nk = (String) r.get("sub_decision_maker");
+		    String rel = (String) r.get("relation");
+		    
+		    if (ec.equals("1")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.EC);
+		    else if (data.equals("1")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.NK);
+		    else if (rel.equals("Administrative Staff")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.AS);
+		    else if (rel.equals("Care Giver")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.CG);
+		    else if (rel.equals("Power of Attorney")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.PA);
+		    else if (rel.equals("Insurance")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.IN);
+		    else if (rel.equals("Guarantor")) contact.setContactPurpose(cdsDt.ContactPersonPurpose.GT);
+		    else contact.setContactPurpose(cdsDt.ContactPersonPurpose.NK);
+		    
+		    data = relDemo.getEmail();
+		    if (data!=null && !data.trim().equals("")) contact.setEmailAddress(data);
+		    data = (String) r.get("notes");
+		    if (data!=null && !data.trim().equals("")) contact.setNote(data);
+		    
+		    if (relDemo.getPhone()!=null && !relDemo.getPhone().trim().equals("")) {
+			cdsDt.PhoneNumber phoneRes = contact.addNewPhoneNumber();
+			phoneRes.setPhoneNumberType(cdsDt.PhoneNumberType.R);
+			phoneRes.setPhoneNumber(relDemo.getPhone());
+			if (relDemoExt.get("hPhoneExt")!=null) phoneRes.setExtension((String)relDemoExt.get("hPhoneExt"));
+		    }
+		    if (relDemo.getPhone2()!=null && !relDemo.getPhone2().trim().equals("")) {
+			cdsDt.PhoneNumber phoneW = contact.addNewPhoneNumber();
+			phoneW.setPhoneNumberType(cdsDt.PhoneNumberType.W);
+			phoneW.setPhoneNumber(relDemo.getPhone2());
+			if (relDemoExt.get("wPhoneExt")!=null) phoneW.setExtension((String)relDemoExt.get("wPhoneExt"));
+		    }
+		}
+	    }
+	    
 	    // PERSONAL HISTORY	    
 	    EctEChartBean bean = new EctEChartBean();
 	    bean.setEChartBean(demoNo);
@@ -203,13 +285,41 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    data = bean.medicalHistory;
 	    if (!data.equals("")) patientRec.addNewPastHealth().setCategorySummaryLine(data);
 	    
-	    // PROBLEM LIST
-	    data = bean.ongoingConcerns;
-	    if (!data.equals("")) patientRec.addNewProblemList().setCategorySummaryLine(data);
-	    
 	    // RISK FACTORS
 	    data = bean.reminders;
 	    if (!data.equals("")) patientRec.addNewRiskFactors().setCategorySummaryLine(data);
+	    
+	    // PROBLEM LIST
+	    data = bean.ongoingConcerns;
+	    if (!data.equals("")) {
+		cds.ProblemListDocument.ProblemList pList = patientRec.addNewProblemList();
+		pList.setCategorySummaryLine(data);
+		if (bean.eChartTimeStamp!=null) {
+		    cdsDt.DateFullOrPartial onsetDate = pList.addNewOnsetDate();
+		    gd.setDate(bean.eChartTimeStamp);
+		    gd.clearTimeZone();
+		    onsetDate.setFullDate(gd.getCalendar());
+		}
+	    }
+	    
+	    // CLINCAL NOTES
+	    data = bean.encounter;
+	    if (!data.equals("")) {
+		cds.ClinicalNotesDocument.ClinicalNotes c_notes = patientRec.addNewClinicalNotes();
+		c_notes.setMyClinicalNotesContent(data);
+		gd.setDate(bean.eChartTimeStamp);
+		gd.clearTimeZone();
+		c_notes.setEnteredDateTime(gd.getCalendar());
+		data = bean.providerNo;
+		if (!data.equals("")) {
+		    cds.ClinicalNotesDocument.ClinicalNotes.PrincipalAuthor pAuthor = c_notes.addNewPrincipalAuthor();
+		    ProviderData provd = new ProviderData(data);
+		    cdsDt.PersonNameSimple authorName = pAuthor.addNewName();
+		    authorName.setFirstName(provd.getFirst_name());
+		    authorName.setLastName(provd.getLast_name());
+		    pAuthor.setOHIPPhysicianId(provd.getOhip_no());
+		}
+	    }	    
 	    
 	    // ALLERGIES & ADVERSE REACTIONS
 	    Allergy[] allergies = new RxPatientData().getPatient(demoNo).getAllergies();
@@ -223,8 +333,16 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = allergies[j].getAllergy().getReaction();
 		if (data!=null && !data.trim().equals("")) alr.setReaction(data);
 		
-		if (allergies[j].getEntryDate()!=null) c.setTime(allergies[j].getEntryDate());
-		alr.addNewRecordedDate().setFullDate(c);
+		if (allergies[j].getEntryDate()!=null) gd.setDate(allergies[j].getEntryDate());
+		gd.clearTimeZone();
+		alr.addNewRecordedDate().setFullDate(gd.getCalendar());
+		
+		data = String.valueOf(allergies[j].getAllergy().getPickID());
+		if (data!=null && !data.trim().equals("")) {
+		    cdsDt.Code drugCode = alr.addNewCode();
+		    drugCode.setCodingSystem("Drug Identification Number");
+		    drugCode.setValue(data);
+		}
 	    }	    
 
 	    // IMMUNIZATIONS
@@ -259,8 +377,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    
 		    data = (String) a.get("prevention_date");
 		    if (data!=null && !data.trim().equals("")) {
-			c.setTime(UtilDateUtilities.StringToDate((String)a.get("prevention_date")));
-			immu.setDate(c);
+			gd.setDate(UtilDateUtilities.StringToDate((String)a.get("prevention_date")));
+			gd.clearTimeZone();
+			immu.setDate(gd.getCalendar());
 		    }
 		    extraData = null;
 		}                                                       
@@ -278,19 +397,41 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = arr[p].getSpecial();
 		if (data==null || data.trim().equals("")) err.add("Error: No Category Summary Line (Medications & Treatments) for Patient "+demoNo);
 		else medi.setCategorySummaryLine(data);
+		data = arr[p].getProviderNo();
+		if (data!=null && !data.trim().equals("")) {
+		    cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
+		    cdsDt.PersonNameSimple pcbName = pcb.addNewName();
+		    
+		    ProviderData provd = new ProviderData(data);
+		    pcbName.setFirstName(provd.getFirst_name());
+		    pcbName.setLastName(provd.getLast_name());
+		    pcb.setOHIPPhysicianId(provd.getOhip_no());		    
+		}
 		
 		if (arr[p].getDosageDisplay()!=null) medi.setDosage(arr[p].getDosageDisplay());
 		if (arr[p].getFreqDisplay()!=null) medi.setFrequency(arr[p].getFreqDisplay());
-		if (arr[p].getQuantity()!=null) medi.setQuantity(arr[p].getQuantity());		
-		if (medi.getDrugName()!=null) medi.setNumberOfRefills(BigInteger.valueOf(arr[p].getRepeat()));
+		if (arr[p].getDuration()!=null) medi.setDuration(arr[p].getDuration());
+		if (arr[p].getQuantity()!=null) medi.setQuantity(arr[p].getQuantity());
+		if (arr[p].getRoute()!=null) medi.setRoute(arr[p].getRoute());
+		if (medi.getDrugName()!=null) {
+		    medi.setDrugIdentificationNumber(String.valueOf(arr[p].getGCN_SEQNO()));
+		    medi.setNumberOfRefills(BigInteger.valueOf(arr[p].getRepeat()));
+		}
 		if (arr[p].getRxDate()!=null) {
-		    c.setTime(arr[p].getRxDate());
-		    medi.setStartDate(c);
+		    gd.setDate(arr[p].getRxDate());
+		    gd.clearTimeZone();
+		    medi.setStartDate(gd.getCalendar());
+		}
+		if (arr[p].getEndDate()!=null) {
+		    gd.setDate(arr[p].getEndDate());
+		    gd.clearTimeZone();
+		    medi.setEndDate(gd.getCalendar());
 		}
 		if (arr[p].getRxCreatedDate()!=null) {
 		    cdsDt.DateFullOrPartial writtenDate = medi.addNewPrescriptionWrittenDate();
-		    c.setTime(arr[p].getRxCreatedDate());
-		    writtenDate.setFullDate(c);
+		    gd.setDate(arr[p].getRxCreatedDate());
+		    gd.clearTimeZone();
+		    writtenDate.setFullDate(gd.getCalendar());
 		}
 	    }
 	    arr = null;
@@ -308,15 +449,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = (String) h.get("abn");
 		if (data==null || data.trim().equals("")) err.add("Error: No Result Normal/Abnormal Flag for Patient "+demoNo);
 		else labr.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Enum.forString(data));
+		data = (String) h.get("location");
+		if (data==null || data.trim().equals("")) err.add("Error: No Laboratory Name for Patient "+demoNo);
+		else labr.setLaboratoryName("CML-" + data);
 		
+		if (h.get("description")!=null) labr.setNotesFromLab((String) h.get("description"));
 		if (h.get("result")!=null) labResult.setValue((String) h.get("result"));
 		if (h.get("unit")!=null) labResult.setUnitOfMeasure((String) h.get("unit"));
 		if (h.get("range")!=null) labRef.setReferenceRangeText((String) h.get("range"));
 		data = (String) h.get("collDate");
 		if (data==null || data.trim().equals("")) err.add("Error: No Collection Date/Time for Patient "+demoNo);
-		else c.setTime(UtilDateUtilities.StringToDate(data));
+		else gd.setDate(UtilDateUtilities.StringToDate(data));
 		
-		labr.setCollectionDateTime(c);
+		gd.clearTimeZone();
+		labr.setCollectionDateTime(gd.getCalendar());
 		h = null;
 	    }
 	    labs = null;
@@ -332,11 +478,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		
 		aptm.setSequenceIndex(Integer.parseInt(ap.getAppointment_no()));
 
-		c.setTime(ap.getDateAppointment());
-		aptm.setAppointmentDate(c);
+		gd.setDate(ap.getDateAppointment());
+		gd.clearTimeZone();
+		aptm.setAppointmentDate(gd.getCalendar());
 		
-		c.setTime(ap.getDateStartTime());
-		aptm.setAppointmentTime(c);
+		gd.setDate(ap.getDateStartTime());
+		gd.clearTimeZone();
+		aptm.setAppointmentTime(gd.getCalendar());
 		
 		long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000;
 		BigInteger duration = BigInteger.valueOf(dLong);
@@ -366,15 +514,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
  	    }
 	    
-	    // CLINCAL NOTES
-	    data = bean.encounter;
-	    if (!data.equals("")) {
-		cds.ClinicalNotesDocument.ClinicalNotes c_notes = patientRec.addNewClinicalNotes();
-		c_notes.setMyClinicalNotesContent(data);
-		c.setTime(bean.eChartTimeStamp);
-		c_notes.setEnteredDateTime(c);
-	    }	    
-	    
 	    // REPORTS RECEIVED
 	    ArrayList edoc_list = new EDocUtil().listDemoDocs(demoNo);
 	    
@@ -401,42 +540,45 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    
 			    if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
 			    in.close();
-			    
 			    rpc.setMedia(b);
+			    
+			    data = edoc.getContentType();
+			    if (data.equals("")) err.add("Error: No File Extension & Version info for Document \""+edoc.getFileName()+"\"");
+			    else rpr.setFileExtensionAndVersion(data);
+
+			    data = edoc.getType();
+			    if (!data.equals("")) {
+				if (data.trim().equalsIgnoreCase("radiology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
+				else if (data.trim().equalsIgnoreCase("pathology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
+				else if (data.trim().equalsIgnoreCase("consult")) rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
+				else {
+				    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+				    rpr.setSubClass(data);
+				}
+			    }
+			    rpr.setMedia(cdsDt.ReportMedia.HARDCOPY);
+			    rpr.setFormat(cdsDt.ReportFormat.IMAGE);
+
+			    data = edoc.getObservationDate();
+			    if (!data.equals("")) {
+				gd.setDate(UtilDateUtilities.StringToDate(data));
+				gd.clearTimeZone();
+				rpr.setEventDateTime(gd.getCalendar());
+			    }
+			    data = edoc.getDateTimeStamp();
+			    if (!data.equals("")) {
+				gd.setDate(UtilDateUtilities.StringToDate(data));
+				gd.clearTimeZone();
+				rpr.setReceivedDateTime(gd.getCalendar());
+			    }
+			    data = edoc.getCreatorName();
+			    if (!data.equals("")) {
+				cdsDt.PersonNameSimple author = rpr.addNewAuthorPhysician();
+				String[] name = data.split(", ");
+				if (!name[0].equals("")) author.setFirstName(name[0]);
+				if (!name[1].equals("")) author.setLastName(name[1]);
+			    }
 			}
-		    }
-		    data = edoc.getContentType();
-		    if (!data.equals("")) rpr.setFileExtensionAndVersion(data);
-		    
-		    data = edoc.getType();
-		    if (!data.equals("")) {
-			if (data.trim().equalsIgnoreCase("radiology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
-			else if (data.trim().equalsIgnoreCase("pathology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
-			else if (data.trim().equalsIgnoreCase("consult")) rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
-			else {
-			    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
-			    rpr.setSubClass(data);
-			}
-		    }
-		    rpr.setMedia(cdsDt.ReportMedia.HARDCOPY);
-		    rpr.setFormat(cdsDt.ReportFormat.IMAGE);
-		    
-		    data = edoc.getObservationDate();
-		    if (!data.equals("")) {
-			c.setTime(UtilDateUtilities.StringToDate(data));
-			rpr.setEventDateTime(c);
-		    }
-		    data = edoc.getDateTimeStamp();
-		    if (!data.equals("")) {
-			c.setTime(UtilDateUtilities.StringToDate(data));
-			rpr.setReceivedDateTime(c);
-		    }
-		    data = edoc.getCreatorName();
-		    if (!data.equals("")) {
-			cdsDt.PersonNameSimple author = rpr.addNewAuthorPhysician();
-			String[] name = data.split(", ");
-			if (!name[0].equals("")) author.setFirstName(name[0]);
-			if (!name[1].equals("")) author.setLastName(name[1]);
 		    }
 		}
 	    }
@@ -753,7 +895,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	}
 	return ret;
     }
-   
+    
+    String fillUp(String filled, char c, int size) {
+	if (size>=filled.length()) {
+	    int fill = size-filled.length();
+	    for (int i=0; i<fill; i++) filled += c;
+	}
+	return filled;
+    }
+    
     public DemographicExportAction2() {
     }
    
@@ -772,19 +922,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    System.out.println(")");
 	}
     }
-
+    
     public String currentMem(){        
 	long total = Runtime.getRuntime().totalMemory();
 	long free  = Runtime.getRuntime().freeMemory();
 	long Used = total -  free;
 	return "Total "+total+" Free "+free+" USED "+Used;
-    }
-    
-    String fillUp(String filled, char c, int size) {
-	if (size>=filled.length()) {
-	    int fill = size-filled.length();
-	    for (int i=0; i<fill; i++) filled += c;
-	}
-	return filled;
     }
 }
