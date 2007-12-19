@@ -578,7 +578,7 @@ public class CommonLabTestValues {
     public ArrayList findValuesForDemographic(String demographicNo){
         ArrayList labList = new ArrayList();
         
-        String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, lpp.collection_date " +
+        String sql = "select p.lab_no , p.lab_type, ltr.title, ltr.test_name, ltr.result,ltr.abn, ltr.minimum, ltr.maximum, ltr.units, ltr.location_id, ltr.description, lpp.collection_date " +
                 "from patientLabRouting p , labTestResults ltr, labPatientPhysicianInfo lpp " +
                 " where p.lab_type = 'CML' " +
                 " and p.demographic_no = '"+demographicNo+"' " +
@@ -595,6 +595,8 @@ public class CommonLabTestValues {
                 String result = rs.getString("result");
                 String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
                 String units = rs.getString("units");
+		String location = rs.getString("location_id");
+		String description = rs.getString("description");
                 String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd");
                 logger.info("This went in "+rs.getString("collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
                 //rs.getString("collection_date");
@@ -604,6 +606,8 @@ public class CommonLabTestValues {
                 h.put("result",result);
                 h.put("range",range);
                 h.put("units",units);
+		h.put("location",location);
+		h.put("description",description);
                 h.put("collDate",collDate);
                 labList.add(h);
             }
