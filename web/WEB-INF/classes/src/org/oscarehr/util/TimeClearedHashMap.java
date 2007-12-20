@@ -27,12 +27,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.WeakHashMap;
 
 public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
     private static Timer timer = new Timer(TimeClearedHashMap.class.getName(), true);
 
     /** E should be the item added and Long should be the time it was added in ms */
-    private HashMap<K, Long> data = new HashMap<K, Long>();
+    private WeakHashMap<K, Long> data = new WeakHashMap<K, Long>();
 
     private TimerTask timerTask = new TimerTask() {
         public void run() {
