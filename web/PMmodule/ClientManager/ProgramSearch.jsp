@@ -148,7 +148,7 @@ if (!Array.prototype.indexOf)
 					<display:column sortable="true" title="Name">
 					</display:column>
 					<display:column property="type" sortable="true" title="Type"></display:column>
-					<display:column property="descr" sortable="false" title="Description"></display:column>
+					<display:column property="description" sortable="false" title="Description"></display:column>
 				</display:table>
 				<%
 			}
