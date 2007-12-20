@@ -38,6 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.caisi.integrator.message.AuthenticationToken;
 import org.caisi.integrator.message.GetIntegratorInformationRequest;
+import org.caisi.integrator.message.GetIntegratorInformationResponse;
 import org.caisi.integrator.message.MessageAck;
 import org.caisi.integrator.message.agencies.FindAgenciesRequest;
 import org.caisi.integrator.message.agencies.FindAgenciesResponse;
@@ -85,11 +86,11 @@ public class IntegratorManager {
     protected ClientManager clientManager;
 
     public Agency getLocalAgency() {
-        return (agencyDao.getLocalAgency());
+        return(agencyDao.getLocalAgency());
     }
 
     public boolean isEnabled() {
-        return (getLocalAgency().isIntegratorEnabled());
+        return(getLocalAgency().isIntegratorEnabled());
     }
 
     /**
@@ -99,29 +100,43 @@ public class IntegratorManager {
         try {
             Service serviceModel = new AnnotationServiceFactory().create(IntegratorService.class);
             IntegratorService integratorService = (IntegratorService) new XFireProxyFactory().create(serviceModel, getLocalAgency().getIntegratorUrl());
-            return (integratorService);
+            return(integratorService);
         }
         catch (MalformedURLException e) {
             log.error("Error with integrator.", e);
-            return (null);
+            return(null);
         }
     }
 
     public AuthenticationToken getAuthenticationToken() {
-        return (new AuthenticationToken(getLocalAgency().getIntegratorUsername(), getLocalAgency().getIntegratorPassword()));
+        return(new AuthenticationToken(getLocalAgency().getIntegratorUsername(), getLocalAgency().getIntegratorPassword()));
     }
 
     /**
-     * @return a list of all agencies
+     * @return a list of all agencies, null upon error or integrator not enabled.
      */
     public List<Agency> getAgencies() {
-        FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), getAuthenticationToken());
-        List<Agency> agencies = new ArrayList<Agency>();
-        for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
-            agencies.add(integratorAgencyToCAISIAgency(agency));
-        }
+        try {
+            if (!isEnabled()) return(null);
 
-        return agencies;
+            FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error getting agency list. " + response.getAck());
+                return(null);
+            }
+
+            List<Agency> agencies = new ArrayList<Agency>();
+            for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
+                agencies.add(integratorAgencyToCAISIAgency(agency));
+            }
+
+            return agencies;
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(null);
+        }
     }
 
     public Collection<ClientTransfer> matchClient(Demographic client) throws IntegratorException {
@@ -180,8 +195,26 @@ public class IntegratorManager {
         getIntegratorService().joinClient(request, getAuthenticationToken());
     }
 
+    /**
+     * @return a String denoting the integrator version or null upon error or integrator not enabled.
+     */
     public String getIntegratorVersion() {
-        return getIntegratorService().getIntegratorInformation(new GetIntegratorInformationRequest(new Date()), getAuthenticationToken()).getVersion();
+        try {
+            if (!isEnabled()) return(null);
+
+            GetIntegratorInformationResponse response = getIntegratorService().getIntegratorInformation(new GetIntegratorInformationRequest(new Date()), getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error getting agency information. " + response.getAck());
+                return(null);
+            }
+
+            return response.getVersion();
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(null);
+        }
     }
 
     private org.caisi.integrator.model.Agency caisiAgencyToIntegratorAgency(Agency agencyInfo) {
@@ -333,23 +366,23 @@ public class IntegratorManager {
 
     public ProgramTransfer[] getOtherAgenciesPrograms() {
         try {
-            if (!isEnabled()) return (null);
+            if (!isEnabled()) return(null);
 
-            String CACHE_KEY="OTHER_AGENCIES_PROGRAMS";
+            String CACHE_KEY = "OTHER_AGENCIES_PROGRAMS";
             ProgramTransfer[] results = (ProgramTransfer[]) simpleTimeCache.get(CACHE_KEY);
-            
+
             if (results == null) {
                 GetProgramsRequest request = new GetProgramsRequest();
                 GetProgramsResponse response = getIntegratorService().getPrograms(request, getAuthenticationToken());
 
                 if (!response.getAck().equals(MessageAck.OK)) {
                     log.error("Error retrieving programs. " + response.getAck());
-                    return (null);
+                    return(null);
                 }
 
                 simpleTimeCache.put(CACHE_KEY, response.getProgramTransfers());
             }
-            
+
             return(results);
         }
         catch (Exception e) {
