@@ -26,6 +26,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.caisi.integrator.model.transfer.ProgramTransfer"%>
+<%@page import="org.caisi.integrator.model.transfer.AgencyTransfer"%>
 <html:html locale="true">
 	<head>
 		<title>Program Search</title>
@@ -146,7 +148,13 @@ if (!Array.prototype.indexOf)
 				<display:table class="simple" cellspacing="2" cellpadding="3" id="remoteProgram" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 					<display:setProperty name="paging.banner.placement" value="bottom" />
 					<display:column sortable="true" title="Name">
-						<c:out value="${remoteProgram.name}" />
+						<%
+							ProgramTransfer programTransfer=(ProgramTransfer)remoteProgram;
+							AgencyTransfer remoteAgency=integratorManager.getAgencyById(programTransfer.getAgencyId());
+							String agencyName="n/a";
+							if (remoteAgency!=null) agencyName=remoteAgency.getName();
+						%>
+						<c:out value="${remoteProgram.name}" /> (<%=agencyName%>)
 					</display:column>
 					<display:column property="type" sortable="true" title="Type"></display:column>
 					<display:column sortable="false" title="Participation">

@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.logging.Log;
@@ -40,8 +42,8 @@ import org.caisi.integrator.message.AuthenticationToken;
 import org.caisi.integrator.message.GetIntegratorInformationRequest;
 import org.caisi.integrator.message.GetIntegratorInformationResponse;
 import org.caisi.integrator.message.MessageAck;
-import org.caisi.integrator.message.agencies.FindAgenciesRequest;
-import org.caisi.integrator.message.agencies.FindAgenciesResponse;
+import org.caisi.integrator.message.agencies.GetAgenciesRequest;
+import org.caisi.integrator.message.agencies.GetAgenciesResponse;
 import org.caisi.integrator.message.clientGroup.DemographicKey;
 import org.caisi.integrator.message.clientGroup.JoinClientRequest;
 import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
@@ -112,35 +114,57 @@ public class IntegratorManager {
         return(new AuthenticationToken(getLocalAgency().getIntegratorUsername(), getLocalAgency().getIntegratorPassword()));
     }
 
-    /**
-     * @return a list of all agencies, null upon error or integrator not enabled.
-     */
-    public List<Agency> getAgencies() {
+
+    public AgencyTransfer[] getAgencies() {
         try {
             if (!isEnabled()) return(null);
 
             String CACHE_KEY = "ALL_AGENCIES";
 
-            @SuppressWarnings("unchecked")
-            List<Agency> results = (List<Agency>) simpleTimeCache.get(CACHE_KEY);
+            AgencyTransfer[] results = (AgencyTransfer[]) simpleTimeCache.get(CACHE_KEY);
 
             if (results == null) {
-                FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), getAuthenticationToken());
+                GetAgenciesResponse response = getIntegratorService().getAgencies(new GetAgenciesRequest(), getAuthenticationToken());
 
                 if (!response.getAck().equals(MessageAck.OK)) {
                     log.error("Error getting agency list. " + response.getAck());
                     return(null);
                 }
 
-                results = new ArrayList<Agency>();
-                for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
-                    results.add(integratorAgencyToCAISIAgency(agency));
-                }
-                
+                results = response.getAgencyTransfers();
                 simpleTimeCache.put(CACHE_KEY, results);
             }
-            
+
             return results;
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(null);
+        }
+    }
+
+    /**
+     * @param agencyId
+     * @return the agency or null upon either error or not found or integrator not enabled.
+     */
+    public AgencyTransfer getAgencyById(long agencyId) {
+        try {
+            if (!isEnabled()) return(null);
+
+            String CACHE_KEY = "ALL_AGENCIES_MAPPED_BY_ID";
+
+            @SuppressWarnings("unchecked")
+            Map<Long, AgencyTransfer> results = (Map<Long, AgencyTransfer>) simpleTimeCache.get(CACHE_KEY);
+            
+            // if no map, then make one
+            if (results == null) {
+                results = new HashMap<Long, AgencyTransfer>();
+                for (AgencyTransfer agency : getAgencies()) {
+                    results.put(agency.getId(), agency);
+                }
+            }
+
+            return(results.get(agencyId));
         }
         catch (Exception e) {
             log.error("Unexpected error.", e);
@@ -388,8 +412,7 @@ public class IntegratorManager {
             ProgramTransfer[] results = (ProgramTransfer[]) simpleTimeCache.get(CACHE_KEY);
 
             if (results == null) {
-                GetProgramsRequest request = new GetProgramsRequest();
-                GetProgramsResponse response = getIntegratorService().getPrograms(request, getAuthenticationToken());
+                GetProgramsResponse response = getIntegratorService().getPrograms(new GetProgramsRequest(), getAuthenticationToken());
 
                 if (!response.getAck().equals(MessageAck.OK)) {
                     log.error("Error retrieving programs. " + response.getAck());

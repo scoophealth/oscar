@@ -22,17 +22,21 @@
 
 package org.oscarehr.PMmodule.web.admin;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.DynaActionForm;
+import org.caisi.integrator.model.transfer.AgencyTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.web.BaseAction;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AgencyManagerAction extends BaseAction {
 
@@ -68,7 +72,7 @@ public class AgencyManagerAction extends BaseAction {
     public ActionForward view_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         boolean integratorEnabled = integratorManager.isEnabled();
 
-        List<Agency> agencyList = integratorEnabled ? integratorManager.getAgencies() : new ArrayList<Agency>();
+        AgencyTransfer[] agencyList = integratorManager.getAgencies();
 
         request.setAttribute("agencies", agencyList);
         request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
@@ -82,7 +86,7 @@ public class AgencyManagerAction extends BaseAction {
     public ActionForward view_community(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         boolean integratorEnabled = integratorManager.isEnabled();
 
-        List<Agency> agencyList = integratorEnabled ? integratorManager.getAgencies() : new ArrayList<Agency>();
+        AgencyTransfer[] agencyList = integratorManager.getAgencies();
 
         request.setAttribute("agencies", agencyList);
         request.setAttribute(BEAN_AGENCY, agencyManager.getLocalAgency());
