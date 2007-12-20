@@ -119,19 +119,28 @@ public class IntegratorManager {
         try {
             if (!isEnabled()) return(null);
 
-            FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), getAuthenticationToken());
+            String CACHE_KEY = "ALL_AGENCIES";
 
-            if (!response.getAck().equals(MessageAck.OK)) {
-                log.error("Error getting agency list. " + response.getAck());
-                return(null);
+            @SuppressWarnings("unchecked")
+            List<Agency> results = (List<Agency>) simpleTimeCache.get(CACHE_KEY);
+
+            if (results == null) {
+                FindAgenciesResponse response = getIntegratorService().findAgencies(new FindAgenciesRequest(new Date()), getAuthenticationToken());
+
+                if (!response.getAck().equals(MessageAck.OK)) {
+                    log.error("Error getting agency list. " + response.getAck());
+                    return(null);
+                }
+
+                results = new ArrayList<Agency>();
+                for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
+                    results.add(integratorAgencyToCAISIAgency(agency));
+                }
+                
+                simpleTimeCache.put(CACHE_KEY, results);
             }
-
-            List<Agency> agencies = new ArrayList<Agency>();
-            for (org.caisi.integrator.model.Agency agency : response.getAgencies()) {
-                agencies.add(integratorAgencyToCAISIAgency(agency));
-            }
-
-            return agencies;
+            
+            return results;
         }
         catch (Exception e) {
             log.error("Unexpected error.", e);
@@ -202,14 +211,21 @@ public class IntegratorManager {
         try {
             if (!isEnabled()) return(null);
 
-            GetIntegratorInformationResponse response = getIntegratorService().getIntegratorInformation(new GetIntegratorInformationRequest(new Date()), getAuthenticationToken());
+            String CACHE_KEY = "INTEGRATOR_VERSION";
+            String result = (String) simpleTimeCache.get(CACHE_KEY);
 
-            if (!response.getAck().equals(MessageAck.OK)) {
-                log.error("Error getting agency information. " + response.getAck());
-                return(null);
+            if (result == null) {
+                GetIntegratorInformationResponse response = getIntegratorService().getIntegratorInformation(new GetIntegratorInformationRequest(new Date()), getAuthenticationToken());
+
+                if (!response.getAck().equals(MessageAck.OK)) {
+                    log.error("Error getting agency information. " + response.getAck());
+                    return(null);
+                }
+                result = response.getVersion();
+                simpleTimeCache.put(CACHE_KEY, result);
             }
 
-            return response.getVersion();
+            return(result);
         }
         catch (Exception e) {
             log.error("Unexpected error.", e);
@@ -380,7 +396,8 @@ public class IntegratorManager {
                     return(null);
                 }
 
-                simpleTimeCache.put(CACHE_KEY, response.getProgramTransfers());
+                results = response.getProgramTransfers();
+                simpleTimeCache.put(CACHE_KEY, results);
             }
 
             return(results);
