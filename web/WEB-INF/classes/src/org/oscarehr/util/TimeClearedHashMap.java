@@ -75,15 +75,16 @@ public class TimeClearedHashMap<K, V> extends HashMap<K, V> {
     }
 
     public V put(K key, V value) {
+        V result=super.put(key, value);
         data.put(key, System.currentTimeMillis());
-        return (super.put(key, value));
+        return (result);
     }
 
     public void putAll(Map<? extends K, ? extends V> m) {
+        super.putAll(m);
         for (K key : m.keySet()) {
             data.put(key, System.currentTimeMillis());
         }
-        super.putAll(m);
     }
 
     // @Test
