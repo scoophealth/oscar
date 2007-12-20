@@ -146,8 +146,12 @@ if (!Array.prototype.indexOf)
 				<display:table class="simple" cellspacing="2" cellpadding="3" id="remoteProgram" name="remotePrograms" pagesize="200" requestURI="/PMmodule/ClientManager.do">
 					<display:setProperty name="paging.banner.placement" value="bottom" />
 					<display:column sortable="true" title="Name">
+						<c:out value="${remoteProgram.name}" />
 					</display:column>
 					<display:column property="type" sortable="true" title="Type"></display:column>
+					<display:column sortable="false" title="Participation">
+						<c:out value="${remoteProgram.numberOfMembers}" />/<c:out value="${remoteProgram.maxAllowed}" />
+					</display:column>
 					<display:column property="description" sortable="false" title="Description"></display:column>
 				</display:table>
 				<%
