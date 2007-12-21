@@ -48,6 +48,8 @@ import org.caisi.model.CustomFilter;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.ProgramProvider;
 import org.oscarehr.PMmodule.model.ProgramTeam;
+import org.oscarehr.common.model.UserProperty;
+import org.oscarehr.casemgmt.model.EncounterWindow;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
@@ -94,8 +96,10 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                 CaseManagementViewFormBean caseForm = (CaseManagementViewFormBean)form;
                 CaseManagementCPP cpp=caseForm.getCpp();
                 cpp.setUpdate_date(new Date());
+                EncounterWindow ectWin = caseForm.getEctWin();
                 String providerNo = getProviderNo(request);            
                 caseManagementMgr.saveCPP(cpp,providerNo);
+                caseManagementMgr.saveEctWin(ectWin);
            }
            else
                response.sendError(response.SC_FORBIDDEN);
@@ -171,6 +175,17 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
                         else
 		           se.setAttribute("restoring", null);
                 }
+                
+                //fetch and set cpp display dimensions
+                EncounterWindow ectWin = this.caseManagementMgr.getEctWin(providerNo);
+                if( ectWin == null ) {
+                    ectWin = new EncounterWindow();
+                    ectWin.setProvider_no(providerNo);
+                    ectWin.setRowOneSize(EncounterWindow.NORMAL);
+                    ectWin.setRowTwoSize(EncounterWindow.NORMAL);
+                }
+                
+                caseForm.setEctWin(ectWin);
 	
 		String teamName = "";
 		Admission admission = admissionMgr.getCurrentAdmission(programId, Integer.valueOf(demoNo));
@@ -225,18 +240,20 @@ public class CaseManagementViewAction extends BaseCaseManagementViewAction {
 			/* PROGRESS NOTES */			
 			List notes = null;
 			
-			//filter the notes by the checked issues                        
+			//filter the notes by the checked issues and date if set
+                        UserProperty userProp = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);                        
 			String[] checked_issues = request.getParameterValues("check_issue");
 			if(checked_issues != null && checked_issues[0].trim().length() > 0 ) {                                
 				//need to apply a filter
 				request.setAttribute("checked_issues",checked_issues);
-				notes = caseManagementMgr.getNotes(this.getDemographicNo(request),checked_issues);
+				notes = caseManagementMgr.getNotes(this.getDemographicNo(request),checked_issues, userProp);
 				notes = manageLockedNotes(notes,true,this.getUnlockedNotesMap(request));
 			} else {
-				notes = caseManagementMgr.getNotes(this.getDemographicNo(request));
+				notes = caseManagementMgr.getNotes(this.getDemographicNo(request), userProp);
 				notes = manageLockedNotes(notes,false,this.getUnlockedNotesMap(request));				
 			}
 			
+                        log.info("FETCHED " + notes.size() + " NOTES");
 			//apply role based access
 			//if(request.getSession().getAttribute("archiveView")!="true")
                         current = System.currentTimeMillis();

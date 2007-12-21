@@ -56,6 +56,7 @@ import org.oscarehr.casemgmt.model.CaseManagementNote;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.web.formbeans.CaseManagementEntryFormBean;
+import org.oscarehr.common.model.UserProperty;
 import org.springframework.web.context.WebApplicationContext;
 
 import oscar.oscarEncounter.pageUtil.EctSessionBean;
@@ -188,7 +189,12 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                     forceNote = "false";
                 
                 log.debug("NoteId " + nId);
-                CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId);
+                
+                //set date 2 weeks in past so we retrieve more recent saved notes
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.DAY_OF_MONTH, -14);
+                Date twoWeeksAgo = cal.getTime();
+                CaseManagementTmpSave tmpsavenote = this.caseManagementMgr.restoreTmpSave(providerNo,demono,programId, twoWeeksAgo);
                 if (request.getParameter("note_edit") != null && request.getParameter("note_edit").equals("new")) {
                         log.info("NEW NOTE GENERATED");
                         request.getSession().setAttribute("newNote","true");
@@ -569,8 +575,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
                 note.setUpdate_date(now);
                 if( note.getCreate_date() == null )
                     note.setCreate_date(now);
-                
-                
+                                
 		/* save note including add signature */	
 		String savedStr = caseManagementMgr.saveNote(cpp, note, providerNo, userName, lastSavedNoteString, roleName);
 		/* remember the str written into echart */
@@ -630,7 +635,7 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
             
             String oldId = cform.getCaseNote().getId() == null ? request.getParameter("newNoteIdx") : String.valueOf(cform.getCaseNote().getId());
             if( noteSave(cform, request) ) {
-                log.info("OLD ID " + oldId);
+                log.info("OLD ID " + oldId + " NEW ID " + String.valueOf(cform.getCaseNote().getId()));                
                 cform.setMethod("view");                
                 request.getSession().setAttribute("newNote",false); 
                 request.getSession().setAttribute("caseManagementEntryForm", cform);
@@ -1229,7 +1234,8 @@ public class CaseManagementEntryAction extends BaseCaseManagementEntryAction
             CaseManagementNote note = null;
             List notes = null;            
             
-            notes = caseManagementMgr.getNotes(demono);
+            UserProperty prop = caseManagementMgr.getUserProperty(providerNo, UserProperty.STALE_NOTEDATE);
+            notes = caseManagementMgr.getNotes(demono, prop);
             notes = manageLockedNotes(notes,false,this.getUnlockedNotesMap(request));
             
             String programId = (String)request.getSession().getAttribute("case_program_id");

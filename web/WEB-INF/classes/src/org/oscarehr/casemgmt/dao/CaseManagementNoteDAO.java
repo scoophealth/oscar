@@ -60,6 +60,25 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 		getHibernateTemplate().initialize(note.getIssues());
 		return note;
 	}
+        
+        public List getNotesByDemographic(String demographic_no,String[] issues, String staleDate) {
+            String list = null;
+            if(issues != null && issues.length>0) {
+                    list="";
+                    for(int x=0;x<issues.length;x++) {
+                            if(x!=0) {
+                                    list += ",";
+                            }
+                            list += issues[x];
+                    }
+            }            
+            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ?  and cmn.id in (select max(cmn.id) from cmn where cmn.observation_date >= ? GROUP BY uuid) ORDER BY cmn.observation_date asc";
+            return this.getHibernateTemplate().find(hql,new Object[] {demographic_no,staleDate});
+        }
+        
+        public List getNotesByDemographic(String demographic_no, String staleDate) {
+             return this.getHibernateTemplate().findByNamedQuery("mostRecentTime", new Object[] {demographic_no, staleDate});
+        }
 	
 	//This was created by OSCAR. if all notes' UUID are same like null, it will only get one note.
 	 public List getNotesByDemographic(String demographic_no) {            
@@ -72,19 +91,19 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
 	}*/
 	
 	public List getNotesByDemographic(String demographic_no,String[] issues) {
-		String list = null;
-		if(issues != null && issues.length>0) {
-			list="";
-			for(int x=0;x<issues.length;x++) {
-				if(x!=0) {
-					list += ",";
-				}
-				list += issues[x];
-			}
-		}
-		//String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
-		String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
-		return this.getHibernateTemplate().find(hql,demographic_no);
+            String list = null;
+            if(issues != null && issues.length>0) {
+                    list="";
+                    for(int x=0;x<issues.length;x++) {
+                            if(x!=0) {
+                                    list += ",";
+                            }
+                            list += issues[x];
+                    }
+            }
+            //String hql = "select distinct cmn from CaseManagementNote cmn where cmn.demographic_no = ? and cmn.issues.issue_id in (" + list + ") and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ? and cmn.id in (select max(cmn.id) from cmn GROUP BY uuid) ORDER BY cmn.observation_date asc";
+            return this.getHibernateTemplate().find(hql,demographic_no);
 	}
 
 	public void saveNote(CaseManagementNote note) {

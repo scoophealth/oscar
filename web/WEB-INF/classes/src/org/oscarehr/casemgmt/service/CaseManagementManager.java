@@ -63,6 +63,9 @@ import org.oscarehr.casemgmt.dao.MessagetblDAO;
 import org.oscarehr.casemgmt.dao.PrescriptionDAO;
 import org.oscarehr.casemgmt.dao.ProviderSignitureDao;
 import org.oscarehr.casemgmt.dao.RoleProgramAccessDAO;
+import org.oscarehr.casemgmt.dao.HashAuditDAO;
+import org.oscarehr.casemgmt.dao.EncounterWindowDAO;
+import org.oscarehr.common.dao.UserPropertyDAO;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
 import org.oscarehr.casemgmt.model.CaseManagementIssue;
 import org.oscarehr.casemgmt.model.CaseManagementNote;
@@ -70,6 +73,10 @@ import org.oscarehr.casemgmt.model.CaseManagementSearchBean;
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.oscarehr.casemgmt.model.Issue;
 import org.oscarehr.casemgmt.model.Messagetbl;
+import org.oscarehr.casemgmt.model.base.BaseHashAudit;
+import org.oscarehr.casemgmt.model.HashAuditImpl;
+import org.oscarehr.casemgmt.model.EncounterWindow;
+import org.oscarehr.common.model.UserProperty;
 
 public class CaseManagementManager {
 
@@ -92,6 +99,10 @@ public class CaseManagementManager {
     protected RoleManager roleManager;
     protected CaseManagementTmpSaveDAO caseManagementTmpSaveDAO;
     protected AdmissionManager admissionManager;
+    protected HashAuditDAO hashAuditDAO;
+    protected EncounterWindowDAO ectWindowDAO;
+    protected UserPropertyDAO userPropertyDAO;
+   
     private boolean enabled;
 
     //retrieve list of providers who have edited specific note
@@ -120,16 +131,30 @@ public class CaseManagementManager {
 
         apptDAO.updateAppointmentStatus(apptId, status, type);
     }
+    
+    public UserProperty getUserProperty(String provider_no, String name) {
+        return this.userPropertyDAO.getProp(provider_no, name);
+    }
+    
+    public void saveEctWin(EncounterWindow ectWin) {
+        ectWindowDAO.saveWindowDimensions(ectWin);
+    }
+    
+    public EncounterWindow getEctWin(String provider) {
+        return this.ectWindowDAO.getWindow(provider);
+    }
 
     public String saveNote(CaseManagementCPP cpp, CaseManagementNote note, String cproviderNo, String userName, String lastStr, String roleName) {
     	SimpleDateFormat dt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
     	Date now = new Date();
         String noteStr = note.getNote();
-        String noteHistory = note.getHistory();        
+        String noteHistory = note.getHistory();     
+        
         // process noteStr, remove existing signed on string
         // noteStr = removeSignature(noteStr);
         if (note.isSigned())
         {
+                
         	// add the time, signiture and role at the end of note
         	String rolename="";
         	rolename= roleName;
@@ -165,10 +190,44 @@ public class CaseManagementManager {
 
         //note.setNote(noteStr);
         note.setHistory(noteHistory);
-
+        
         caseManagementNoteDAO.saveNote(note);
+        
+        //if note is signed we hash it and save hash
+        if( note.isSigned() ) {
+            HashAuditImpl hashAudit = new HashAuditImpl();
+            hashAudit.setType(BaseHashAudit.NOTE);
+            hashAudit.setId(note.getId());
+            hashAudit.makeHash(note.getNote().getBytes());
+            hashAuditDAO.saveHash(hashAudit);
+        }
+        
         return echartDAO.saveEchart(note, cpp, userName, lastStr);                 
 
+    }
+    
+    /*
+     *fetch notes for demographic
+     *if date is set, fetch notes after specified date
+     */
+    public List getNotes(String demographic_no, UserProperty prop) {
+        if( prop == null )
+            return this.getNotes(demographic_no);
+        
+        String staleDate = prop.getValue();
+        return this.caseManagementNoteDAO.getNotesByDemographic(demographic_no, staleDate);
+    }
+    
+    /*
+     *fetch notes for demographic linked with specified issues
+     *if date is set, fetch notes after specified date
+     */
+    public List getNotes(String demographic_no, String[] issues, UserProperty prop) {
+        if( prop == null )
+            return this.getNotes(demographic_no, issues);
+                
+        String staleDate = prop.getValue();
+        return this.caseManagementNoteDAO.getNotesByDemographic(demographic_no, issues, staleDate);
     }
 
     public List getNotes(String demographic_no) {
@@ -663,6 +722,12 @@ public class CaseManagementManager {
         return obj;
     }
     
+    //we want to load a temp saved note only if it's more recent than date
+    public CaseManagementTmpSave restoreTmpSave(String providerNo, String demographicNo, String programId, Date date) {
+        CaseManagementTmpSave obj = caseManagementTmpSaveDAO.load(providerNo, new Long(demographicNo), new Long(programId), date);
+        return obj;
+    }
+    
     public List getHistory(String note_id) {
             CaseManagementNote note = caseManagementNoteDAO.getNote(Long.valueOf(note_id));
             return this.caseManagementNoteDAO.getHistory(note);
@@ -1047,5 +1112,17 @@ public class CaseManagementManager {
 
     public void setAdmissionManager(AdmissionManager mgr) {
         this.admissionManager = mgr;
+    }
+    
+    public void setHashAuditDAO(HashAuditDAO dao) {
+        this.hashAuditDAO = dao;
+    }
+    
+    public void setEctWindowDAO(EncounterWindowDAO dao) {
+        this.ectWindowDAO = dao;
+    }
+    
+    public void setUserPropertyDAO( UserPropertyDAO dao) {
+        this.userPropertyDAO = dao;
     }
 }
