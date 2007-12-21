@@ -25,6 +25,7 @@ package org.oscarehr.casemgmt.web.formbeans;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.upload.FormFile;
 import org.oscarehr.casemgmt.model.CaseManagementCPP;
+import org.oscarehr.casemgmt.model.EncounterWindow;
 
 public class CaseManagementViewFormBean extends ActionForm {
 	private String demographicNo;
@@ -37,6 +38,8 @@ public class CaseManagementViewFormBean extends ActionForm {
 	private String rootCompURL="";
 	private String hideActiveIssue="true"; 
 	private CaseManagementCPP cpp=new CaseManagementCPP();
+
+        private EncounterWindow ectWin = new EncounterWindow();
 	public static final String[] tabs = {"Current Issues","Client History","Allergies","Prescriptions","Reminders","Ticklers","Search"};
 	private FormFile imageFile;
 	
@@ -58,6 +61,14 @@ public class CaseManagementViewFormBean extends ActionForm {
 	
 	private int noteId;
 	private String password;
+        
+        public EncounterWindow getEctWin() {
+            return this.ectWin;
+        }
+        
+        public void setEctWin(EncounterWindow ectWin) {
+            this.ectWin = ectWin;
+        }
 	
 	public String getPassword() {
 		return password;
