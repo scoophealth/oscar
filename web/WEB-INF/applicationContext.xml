@@ -45,6 +45,7 @@
                 <value>classpath:/org/oscarehr/survey/model</value>
                 <value>classpath:/org/oscarehr/casemgmt/model</value>
                 <value>classpath:/org/oscarehr/phr/model</value>
+                <value>classpath:/org/oscarehr/common/model</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -155,8 +156,11 @@
     <bean id="chartDAOT" class="org.caisi.dao.EChartDAO" autowire="byName" />
     <bean id="ticklerDAOT" class="org.caisi.dao.TicklerDAO" autowire="byName"/>
     <bean id="customFilterDAOT" class="org.caisi.dao.CustomFilterDAO" autowire="byName"/>
-	<bean id="systemMessageDAO" class="org.caisi.dao.SystemMessageDAO" autowire="byName"/>
+    <bean id="systemMessageDAO" class="org.caisi.dao.SystemMessageDAO" autowire="byName"/>
+    <bean id="HashAuditDAO" class="org.oscarehr.casemgmt.dao.HashAuditDAO" autowire="byName"/>
     <bean id="programClientRestrictionDAO" class="org.oscarehr.PMmodule.dao.ProgramClientRestrictionDAO" autowire="byName"/>
+    <bean id="EncounterWindowDAO" class="org.oscarehr.casemgmt.dao.EncounterWindowDAO" autowire="byName" />
+    <bean id="UserPropertyDAO" class="org.oscarehr.common.dao.UserPropertyDAO" autowire="byName" />
 
 
     <!-- configure the available measurement flow sheets -->
@@ -258,6 +262,9 @@
         <property name="demographicDAO" ref="clientDao"/>
         <property name="roleProgramAccessDAO" ref="RoleProgramAccessDAO"/>
         <property name="clientImageDAO" ref="ClientImageDAO"/>
+        <property name="hashAuditDAO" ref="HashAuditDAO"/>
+        <property name="ectWindowDAO" ref="EncounterWindowDAO"/>
+        <property name="userPropertyDAO" ref="UserPropertyDAO"/>
         <property name="roleManager" ref="roleManager"/>
         <property name="caseManagementTmpSaveDAO" ref="CaseManagementTmpSaveDAO"/>
         <property name="admissionManager" ref="admissionManager"/>
