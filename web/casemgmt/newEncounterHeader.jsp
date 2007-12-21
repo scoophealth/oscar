@@ -33,27 +33,33 @@
   
     String demoNo = bean.demographicNo;
     EctPatientData.Patient pd = new EctPatientData().getPatient(demoNo);
-    String famDocName, famDocSurname, famDocColour, inverseFamDocColour;
+    String famDocName, famDocSurname, famDocColour, inverseUserColour, userColour;
+    String user = (String) session.getAttribute("user");
+    System.out.println("USER " + user);
+    ProviderColourUpdater colourUpdater = new ProviderColourUpdater(user);
+    userColour = colourUpdater.getColour();
+    //we calculate inverse of provider colour for text        
+    int base = 16;
+    if( userColour.length() == 0 )
+        userColour = "#CCCCFF";   //default blue if no preference set
+
+    int num = Integer.parseInt(userColour.substring(1), base);      //strip leading # sign and convert        
+    int inv = ~num;                                                 //get inverse
+    inverseUserColour = Integer.toHexString(inv).substring(2);    //strip 2 leading digits as html colour codes are 24bits
+
     if(bean.familyDoctorNo.equals("")) {
         famDocName = "";
         famDocSurname = "";      
-        famDocColour = "";
-        inverseFamDocColour = "";
+        famDocColour = "";        
     }
     else {
         EctProviderData.Provider prov = new EctProviderData().getProvider(bean.familyDoctorNo); 
         famDocName = prov.getFirstName();
         famDocSurname = prov.getSurname();
-        ProviderColourUpdater colourUpdater = new ProviderColourUpdater(bean.familyDoctorNo);
+        colourUpdater = new ProviderColourUpdater(bean.familyDoctorNo);
         famDocColour = colourUpdater.getColour();
-        //we calculate inverse of provider colour for text        
-        int base = 16;
         if( famDocColour.length() == 0 )
-            famDocColour = "#CCCCFF";   //default blue if no preference set
-            
-        int num = Integer.parseInt(famDocColour.substring(1), base);      //strip leading # sign and convert        
-        int inv = ~num;                                                 //get inverse
-        inverseFamDocColour = Integer.toHexString(inv).substring(2);    //strip 2 leading digits as html colour codes are 24bits
+            famDocColour = "#CCCCFF";        
     }
 
     String patientName = pd.getFirstName()+" "+pd.getSurname();
@@ -98,11 +104,11 @@
             return str;
     }
     </script>
-<div style="font-size: 12px; width:100%; color:#<%=inverseFamDocColour%>; background-color:<%=famDocColour%>">
-    <bean:message key="oscarEncounter.Index.msgEncounter"/>&nbsp;&nbsp;
-    <%=famDocName%>&nbsp;<%=famDocSurname%>&nbsp;&nbsp;
+<div style="font-size: 12px; width:100%; color:#<%=inverseUserColour%>; background-color:<%=userColour%>">
+    <span style="border-bottom: medium solid <%=famDocColour%>"><bean:message key="oscarEncounter.Index.msgMRP"/>&nbsp;&nbsp;
+    <%=famDocName%>&nbsp;<%=famDocSurname%>&nbsp;&nbsp;</span>
     <form style="display:inline;" action="" name="ksearch" >
-    <span class="Header" style="color:#<%=inverseFamDocColour%>; background-color:<%=famDocColour%>">
+    <span class="Header" style="color:#<%=inverseUserColour%>; background-color:<%=userColour%>">
         <%
             String winName = "Master" + bean.demographicNo;
             String url;
