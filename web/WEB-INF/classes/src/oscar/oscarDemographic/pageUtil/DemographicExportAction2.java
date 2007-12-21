@@ -207,6 +207,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 		healthCard.setNumber(demographic.getJustHIN());
 		if (demographic.getVersionCode()!=null && !demographic.getVersionCode().trim().equals("")) healthCard.setVersion(demographic.getVersionCode());
+		healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.CA_ON);
 	    }
 	    if (demographic.getAddress()!=null && !demographic.getAddress().trim().equals("")) {
 		cdsDt.Address addr = demo.addNewAddress();		
@@ -409,7 +410,6 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (data!=null && !data.trim().equals("")) {
 		    cds.MedicationsAndTreatmentsDocument.MedicationsAndTreatments.PrescribedBy pcb = medi.addNewPrescribedBy();
 		    cdsDt.PersonNameSimple pcbName = pcb.addNewName();
-		    
 		    ProviderData provd = new ProviderData(data);
 		    pcbName.setFirstName(provd.getFirst_name());
 		    pcbName.setLastName(provd.getLast_name());
