@@ -256,6 +256,11 @@
     <bean name="/PopulationReport" class="org.oscarehr.common.web.PopulationReportAction" singleton="false">
         <property name="populationReportManager" ref="populationReportManager"/>
     </bean>
+    
+    <!-- Provider Property -->
+    <bean name="/setProviderStaleDate" class="org.oscarehr.provider.web.ProviderPropertyAction" singleton="false">
+        <property name="userPropertyDAO" ref="UserPropertyDAO"/>
+    </bean>
 
     <!-- Indivo -->
 
