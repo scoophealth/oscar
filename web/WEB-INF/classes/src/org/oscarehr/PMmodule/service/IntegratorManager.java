@@ -114,7 +114,6 @@ public class IntegratorManager {
         return(new AuthenticationToken(getLocalAgency().getIntegratorUsername(), getLocalAgency().getIntegratorPassword()));
     }
 
-
     public AgencyTransfer[] getAgencies() {
         try {
             if (!isEnabled()) return(null);
@@ -155,7 +154,7 @@ public class IntegratorManager {
 
             @SuppressWarnings("unchecked")
             Map<Long, AgencyTransfer> results = (Map<Long, AgencyTransfer>) simpleTimeCache.get(CACHE_KEY);
-            
+
             // if no map, then make one
             if (results == null) {
                 results = new HashMap<Long, AgencyTransfer>();
@@ -431,8 +430,19 @@ public class IntegratorManager {
         }
     }
 
-    public void sendReferral(Long agencyId, ClientReferral referral) {
-        throw new OperationNotImplementedException("referral registrations not yet implemented in integrator");
+    /**
+     * @param agencyId
+     * @param remoteProgramId
+     * @return the programTransfer with the given agencyId and remoteProgramId or null if non exists or integrator is not enabled.
+     */
+    public ProgramTransfer getProgramByAgencyAndId(long agencyId, long remoteProgramId) {
+        if (!isEnabled()) return(null);
+
+        // meh, I'll just brute force it right now, not like this is called a lot or anything.
+        ProgramTransfer[] programTransfers = getOtherAgenciesPrograms();
+        if (programTransfers != null) for (ProgramTransfer programTransfer : programTransfers) if (programTransfer.getAgencyId() == agencyId && programTransfer.getRemoteProgramId() == remoteProgramId) return(programTransfer);
+
+        return(null);
     }
 
     public List getCurrentAdmissions(long clientId) throws IntegratorException {

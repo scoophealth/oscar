@@ -76,21 +76,21 @@ if (!Array.prototype.indexOf)
 
 		function selectProgram(agencyId,id,type) {
 			var programId=Number(id);
-			if (gender == 'M')
+			if (agencyId==0 && gender == 'M')
 			{
 				if (programFemaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
-			if (gender == 'F')
+			if (agencyId==0 && gender == 'F')
 			{
 				if (programMaleOnly.indexOf(programId)>=0 ||  programTransgenderOnly.indexOf(programId)>=0)
 				{
 					return error("This gender not allowed in selected program.");
 				}
 			}
-			if (gender == 'T')
+			if (agencyId==0 && gender == 'T')
 			{
 				if (programFemaleOnly.indexOf(programId)>=0 ||  programMaleOnly.indexOf(programId)>=0)
 				{
@@ -98,7 +98,7 @@ if (!Array.prototype.indexOf)
 				}
 			}		
 		
-			if (!validAgeRangeForProgram(programId,age))
+			if (agencyId==0 && !validAgeRangeForProgram(programId,age))
 			{
 				return error("This client does not meet the age range requirements for this program.");
 			}
@@ -154,7 +154,7 @@ if (!Array.prototype.indexOf)
 							String agencyName="n/a";
 							if (remoteAgency!=null) agencyName=remoteAgency.getName();
 						%>
-						<c:out value="${remoteProgram.name}" /> (<%=agencyName%>)
+						<a href="#javascript:void(0);" onclick="selectProgram('<c:out value="${remoteProgram.agencyId}" />','<c:out value="${remoteProgram.remoteProgramId}" />','<c:out value="${remoteProgram.type}" />');"><c:out value="${remoteProgram.name}" /></a> (<%=agencyName%>)
 					</display:column>
 					<display:column property="type" sortable="true" title="Type"></display:column>
 					<display:column sortable="false" title="Participation">

@@ -676,6 +676,14 @@ public class Program implements Serializable {
     {
         ProgramTransfer programTransfer=new ProgramTransfer();
         BeanCopyUtil.copyProperties(this, programTransfer, null, false);
+        programTransfer.setNumberOfMembers(numOfMembers);
         return(programTransfer);
     }
+    
+    public void mergeFromProgramTransfer(ProgramTransfer programTransfer)
+    {
+        BeanCopyUtil.copyProperties(programTransfer, this, null, false);
+        numOfMembers=programTransfer.getNumberOfMembers();   
+    }
+
 }

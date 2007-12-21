@@ -246,7 +246,7 @@ public class ClientManager {
         referral.setStatus(ClientReferral.STATUS_ACTIVE);
 
         // send back jms message
-        integratorManager.sendReferral(referral.getSourceAgencyId(), referral);
+        //integratorManager.sendReferral(referral.getSourceAgencyId(), referral);
     }
 
     public void saveClient(Demographic client) {
