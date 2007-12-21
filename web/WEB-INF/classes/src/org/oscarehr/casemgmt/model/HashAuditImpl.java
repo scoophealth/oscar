@@ -1,0 +1,67 @@
+/*
+ *
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version. *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. *
+ *
+ * <OSCAR TEAM>
+ *
+ * HashAuditImpl.java
+ *
+ * Created on November 28, 2007, 1:37 PM
+ *
+ *
+ *
+ */
+
+package org.oscarehr.casemgmt.model;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import org.oscarehr.casemgmt.model.base.BaseHashAudit;
+
+/**
+ *
+ * @author rjonasz
+ */
+public class HashAuditImpl extends BaseHashAudit {
+    
+    private final String ALGORITHM = "MD5";
+    private final String ENCODING = "UTF-8";
+    
+    /** Creates a new instance of HashAuditImpl */
+    public HashAuditImpl() {
+        super();
+        this.setAlgorithm(ALGORITHM);
+    }
+    
+    /*
+     *Implementation of creating a 32 byte hex representation of the md5 hash of input
+     */
+     public void makeHash(byte[] input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance(ALGORITHM);
+            digest.update(input);
+            byte[] bHash = digest.digest();           
+            
+            for( int i = 0; i < bHash.length; ++i ) {
+                signature.append(Integer.toHexString((bHash[i] >>> 4) & 0x0F));
+                signature.append(Integer.toHexString(bHash[i] & 0x0F));
+            }
+        }        
+        catch(NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+     }     
+    
+}
