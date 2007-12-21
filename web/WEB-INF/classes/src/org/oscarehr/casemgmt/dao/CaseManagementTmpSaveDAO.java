@@ -23,6 +23,7 @@
 package org.oscarehr.casemgmt.dao;
 
 import java.util.List;
+import java.util.Date;
 
 import org.oscarehr.casemgmt.model.CaseManagementTmpSave;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -36,6 +37,15 @@ public class CaseManagementTmpSaveDAO extends HibernateDaoSupport {
 
     public CaseManagementTmpSave load(String providerNo, Long demographicNo, Long programId) {
         List results = this.getHibernateTemplate().find("from CaseManagementTmpSave c where c.providerNo=? and c.demographicNo=? and c.programId=? order by c.update_date DESC", new Object[] {providerNo, demographicNo, programId});
+        if (!results.isEmpty()) {
+            return (CaseManagementTmpSave)results.get(0);
+        }
+
+        return null;
+    }
+    
+    public CaseManagementTmpSave load(String providerNo, Long demographicNo, Long programId, Date date) {
+        List results = this.getHibernateTemplate().find("from CaseManagementTmpSave c where c.providerNo=? and c.demographicNo=? and c.programId=? and c.update_date > ? order by c.update_date DESC", new Object[] {providerNo, demographicNo, programId, date});
         if (!results.isEmpty()) {
             return (CaseManagementTmpSave)results.get(0);
         }
