@@ -57,7 +57,129 @@
     ArrayList lockedNotes = new ArrayList();
     ArrayList unLockedNotes = new ArrayList();
 %>
-<script type="text/javascript">    
+<script type="text/javascript">   
+    var X       = 10;    
+    var small   = 60;
+    var normal  = 166;
+    var medium  = 272;
+    var large   = 378;
+    var full    = 649;
+    
+    function reset() {
+        rowOneSmall();
+        rowTwoSmall();
+    }
+    
+    function rowOneX(){
+        $("cpp.socialHistory").style.overflow="auto";
+        $("cpp.familyHistory").style.overflow="auto";
+        $("cpp.medicalHistory").style.overflow="auto";
+        $("cpp.socialHistory").style.height=X;
+        $("cpp.familyHistory").style.height=X;
+        $("cpp.medicalHistory").style.height=X;
+        $("rowOneSize").value=X;
+    }
+    
+    function rowOneSmall(){
+        $("cpp.socialHistory").style.overflow="auto";
+        $("cpp.familyHistory").style.overflow="auto";
+        $("cpp.medicalHistory").style.overflow="auto";
+        $("cpp.socialHistory").style.height=small;
+        $("cpp.familyHistory").style.height=small;
+        $("cpp.medicalHistory").style.height=small;
+        $("rowOneSize").value=small;
+    }
+    
+    function rowOneNormal(){
+        $("cpp.socialHistory").style.overflow="auto";
+        $("cpp.familyHistory").style.overflow="auto";
+        $("cpp.medicalHistory").style.overflow="auto";
+        $("cpp.socialHistory").style.height=normal;
+        $("cpp.familyHistory").style.height=normal;
+        $("cpp.medicalHistory").style.height=normal;
+        $("rowOneSize").value=normal;
+    }
+    
+    function rowOneLarge(){
+        $("cpp.socialHistory").style.overflow="auto";
+        $("cpp.familyHistory").style.overflow="auto";
+        $("cpp.medicalHistory").style.overflow="auto";
+        $("cpp.socialHistory").style.height=large;
+        $("cpp.familyHistory").style.height=large;
+        $("cpp.medicalHistory").style.height=large;        
+        $("rowOneSize").value=large;
+    }
+    function rowOneFull(){
+        $("cpp.socialHistory").style.overflow="auto";
+        $("cpp.familyHistory").style.overflow="auto";
+        $("cpp.medicalHistory").style.overflow="auto";
+        $("cpp.socialHistory").style.height=full;
+        $("cpp.familyHistory").style.height=full;
+        $("cpp.medicalHistory").style.height=full;        
+        $("rowOneSize").value=full;
+    }
+    function rowTwoX(){
+        $("cpp.ongoingConcerns").style.overflow="auto";
+        $("cpp.reminders").style.overflow="auto";
+        $("cpp.ongoingConcerns").style.height=X;
+        $("cpp.reminders").style.height=X;
+        $("rowTwoSize").value=X;
+    }
+    function rowTwoSmall(){
+        $("cpp.ongoingConcerns").style.overflow="auto";
+        $("cpp.reminders").style.overflow="auto";
+        $("cpp.ongoingConcerns").style.height=small;
+        $("cpp.reminders").style.height=small;
+        $("rowTwoSize").value=small;
+    }
+    function rowTwoNormal(){
+        $("cpp.ongoingConcerns").style.overflow="auto";
+        $("cpp.reminders").style.overflow="auto";
+        $("cpp.ongoingConcerns").style.height=normal;
+        $("cpp.reminders").style.height=normal;
+        $("rowTwoSize").value=normal;
+    }
+    function rowTwoLarge(){
+        $("cpp.ongoingConcerns").style.overflow="auto";
+        $("cpp.reminders").style.overflow="auto";
+        $("cpp.ongoingConcerns").style.height=large;
+        $("cpp.reminders").style.height=large;
+        $("rowTwoSize").value=large;
+    }
+    function rowTwoFull(){
+        $("cpp.ongoingConcerns").style.overflow="auto";
+        $("cpp.reminders").style.overflow="auto";
+        $("cpp.ongoingConcerns").style.height=full;
+        $("cpp.reminders").style.height=full;
+        $("rowTwoSize").value=full;
+    }
+
+    function getActiveText(e) {      
+         if(document.all) {
+
+            text = document.selection.createRange().text;
+            if(text != "" && document.ksearch.keyword.value=="") {
+              document.ksearch.keyword.value += text;
+            }
+            if(text != "" && document.ksearch.keyword.value!="") {
+              document.ksearch.keyword.value = text;
+            }
+          } else {
+            text = window.getSelection();
+
+            if (text.toString().length == 0){  //for firefox
+               var txtarea = $(caseNote);
+               var selLength = txtarea.textLength;
+               var selStart = txtarea.selectionStart;
+               var selEnd = txtarea.selectionEnd;
+               if (selEnd==1 || selEnd==2) selEnd=selLength;
+               text = (txtarea.value).substring(selStart, selEnd);
+            }
+            //
+            document.ksearch.keyword.value = text;
+          }
+          return true;
+    }
     
     function setCaretPosition(inpu, pos){
 
@@ -1316,15 +1438,14 @@ Version version = (Version) ctx.getBean("version");
  
 <jsp:include page="<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>"/>
 --%>
-<%-- <form id="encForm" name="encForm" action="SaveEncounter2.do" method="POST">
-    <input type="hidden" name="rowOneSize" value="<%=windowSizes.getProperty("rowOneSize")%>">
-    <input type="hidden" name="rowTwoSize" value="<%=windowSizes.getProperty("rowTwoSize")%>">
-    <input type="hidden" id="rowThreeSize" name="rowThreeSize" value="<%=windowSizes.getProperty("rowThreeSize")%>"> --%>
-    <html:form action="/CaseManagementView" method="get">
+
+    <html:form action="/CaseManagementView" method="post">        
         <html:hidden property="demographicNo"/>
         <html:hidden property="providerNo" value="<%=provNo%>" />
         <html:hidden property="tab" value="Current Issues"/>
         <html:hidden property="hideActiveIssue"/>
+        <html:hidden property="ectWin.rowOneSize" styleId="rowOneSize"/>
+        <html:hidden property="ectWin.rowTwoSize" styleId="rowTwoSize"/>
         <input type="hidden" name="chain" value="list" /> 
         <input type="hidden" name="method" value="view"/>
         <input type="hidden" id="check_issue" name="check_issue">
@@ -1339,7 +1460,7 @@ Version version = (Version) ctx.getBean("version");
             <bean:message key="oscarEncounter.Index.otherMed"/>:
             <% } %>
         </div>
-        <div style="float:left; width:33%; border-width:0px; margin-right:-5px; background-color:#CCCCFF;" class="RowTop" >
+        <div style="float:left; width:20%; border-width:0px; margin-right:-5px; background-color:#CCCCFF;" class="RowTop" >
             <% if(oscarVariables.getProperty("medicalHistory", "").length() > 1) {
             out.print(oscarVariables.getProperty("medicalHistory", ""));
             %>
@@ -1348,7 +1469,7 @@ Version version = (Version) ctx.getBean("version");
             <% } %>
         </div>   
         
-        <%-- <div style="clear:right; float:right; font-size:8pt;text-align:right;vertical-align:bottom">
+         <div style="clear:right; float:right; width:13%; font-size:8pt;text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
         <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowOneX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
         <bean:message key="oscarEncounter.Index.x"/></a> |
         <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowOneSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
@@ -1361,20 +1482,20 @@ Version version = (Version) ctx.getBean("version");
         <bean:message key="oscarEncounter.Index.f"/></a> |
         <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
         <bean:message key="oscarEncounter.Index.r"/></a>
-    </div> --%>
+    </div>
         <!-- Creating the table tag within the script allows you to adjust all table sizes at once, by changing the value of leftCol -->
         <div id="divR1" style="float:left; width:34%; border-width:0px; margin-left:2px; background-color:#CCCCFF;"><%-- <textarea name="shTextarea" tabindex="1" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.socialHistory%></textarea>--%>
-            <html:textarea property="cpp.socialHistory" tabindex="1" style="height:60; overflow: auto;" rows="4" cols="28"/>
+            <html:textarea styleId="cpp.socialHistory" property="cpp.socialHistory" tabindex="1" styleClass="rowOne" rows="4" cols="28"/>
         </div>
         
         <!-- This is the Family History cell ...fh...-->
         <div style="float:left; width:33%; border-width:0px; background-color:#CCCCFF;"><%-- <textarea name="fhTextarea" tabindex="2" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.familyHistory%></textarea>--%>
-            <html:textarea property="cpp.familyHistory" tabindex="2" style="height:60; overflow: auto;"  rows="4" cols="28"/>
+            <html:textarea styleId="cpp.familyHistory" property="cpp.familyHistory" tabindex="2" styleClass="rowOne"  rows="4" cols="28"/>
         </div>
         
         <!-- This is the Medical History cell ...mh...-->
         <div style="clear:right; float:left; width:33%; border-width:0px; margin-right:-5px; background-color:#CCCCFF;"><%-- <textarea name="mhTextarea" tabindex="3" wrap="hard"  cols= "28" style="height:<%=windowSizes.getProperty("rowOneSize")%>;overflow:auto"><%=bean.medicalHistory%></textarea>--%>
-            <html:textarea property="cpp.medicalHistory" tabindex="3" style="height:60; overflow: auto;"  rows="4" cols="28"/>
+            <html:textarea styleId="cpp.medicalHistory" property="cpp.medicalHistory" tabindex="3" styleClass="rowOne"  rows="4" cols="28"/>
         </div>
         
         <!--2nd row headers -->
@@ -1387,9 +1508,9 @@ Version version = (Version) ctx.getBean("version");
             <% } %>
         </div><input type="hidden" name="ocInput"/>
         
-        <div style="float:left; width:50%; margin-right:-5px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
+        <div style="float:left; width:37%; margin-right:-5px; background-color:#CCCCFF;" class="RowTop" ><bean:message key="oscarEncounter.Index.msgReminders"/>:</div>   
         
-        <%-- <div style="clear:right; float:right; font-size:8pt;text-align:right;vertical-align:bottom">
+        <div style="clear:right; float:right; width:13%; font-size:8pt;text-align:right;vertical-align:bottom; background-color:#CCCCFF;">
         <a onMouseOver="javascript:window.status='Minimize'; return true;" href="javascript:rowTwoX();" title="<bean:message key="oscarEncounter.Index.tooltipClose"/>">
             <bean:message key="oscarEncounter.Index.x"/></a> |
         <a onMouseOver="javascript:window.status='Small Size'; return true;" href="javascript:rowTwoSmall();" title="<bean:message key="oscarEncounter.Index.tooltipSmall"/>">
@@ -1402,16 +1523,16 @@ Version version = (Version) ctx.getBean("version");
             <bean:message key="oscarEncounter.Index.f"/></a> |
         <a onMouseOver="javascript:window.status='Full Size'; return true;" href="javascript:reset();" title="<bean:message key="oscarEncounter.Index.tooltipReset"/>">
             <bean:message key="oscarEncounter.Index.r"/></a>
-     </div> --%>
+     </div>
     
         <!--Ongoing Concerns cell -->
         <div style="float:left; width:50%; margin-left:2px; background-color:#CCCCFF;"><%-- <textarea id="ocTextarea" name='ocTextarea' tabindex="4" wrap="hard"  cols= "44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>"><%=bean.ongoingConcerns%></textarea>--%>
-            <html:textarea property="cpp.ongoingConcerns" tabindex="4" style="height:60; overflow: auto;"  rows="4" cols="44"/>
+            <html:textarea styleId="cpp.ongoingConcerns" property="cpp.ongoingConcerns" tabindex="4" styleClass="rowTwo"  rows="4" cols="44"/>
         </div>     
         
         <!--Reminders cell -->
         <div style="clear:right; float:left; width:50%; margin-right:-5px; background-color:#CCCCFF;"><%-- <textarea name='reTextarea' tabindex="5" wrap="hard" cols="44" style="height:<%=windowSizes.getProperty("rowTwoSize")%>;overflow:auto"><%=bean.reminders%></textarea>--%>
-            <html:textarea property="cpp.reminders" tabindex="5" style="height:60; overflow: auto;"  rows="4" cols="44"/>
+            <html:textarea styleId="cpp.reminders" property="cpp.reminders" tabindex="5" styleClass="rowTwo"  rows="4" cols="44"/>
         </div> 
     
     <div id="rightNavBar" style="width:25%; display:inline; float:right; background-color:white; padding-left:2px;"><jsp:include page="rightColumn.jsp" /></div>
@@ -1948,14 +2069,14 @@ Version version = (Version) ctx.getBean("version");
    //start timer for autosave
    setTimer();  
    
-   //are we editing existing note?  if so save current text otherwise init to "" and init newNoteIdx as we are dealing with a new note
-   <% if( found == true ) { %>
-        origCaseNote = $F(caseNote);
-   <%} else { %>
-        origCaseNote = "";  
+   //are we editing existing note?  if not init newNoteIdx as we are dealing with a new note
+   //save initial note to determine whether save is necessary
+   origCaseNote = $F(caseNote);
+   <% if( found != true ) { %>
         document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
    <%}%>
-                     
+                   
+    Element.observe(document, 'click', getActiveText);
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
    </script>
    
