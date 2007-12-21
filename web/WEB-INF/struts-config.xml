@@ -767,6 +767,8 @@
         <action name="EctMeasurementsForm" path="/oscarEncounter/oscarMeasurements/SetupMeasurements" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupMeasurementsAction">
             <forward name="continue" path="/oscarEncounter/oscarMeasurements/Measurements.jsp" />
         </action>
+        <action name="EctStreamStyleSheet" path="/oscarEncounter/oscarMeasurements/StreamStyleSheet" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctStreamStyleSheet">
+        </action>
         <action path="/oscarEncounter/oscarMeasurements/SetupDisplayHistory" scope="request" type="oscar.oscarEncounter.oscarMeasurements.pageUtil.EctSetupDisplayHistoryAction">
             <forward name="continue" path="/oscarEncounter/oscarMeasurements/DisplayHistory.jsp" />
         </action>

@@ -215,11 +215,15 @@ public class EctValidation{
                 sql = "SELECT * from measurementCSSLocation where cssID = '" + cssId + "'";
                 rs = db.GetSQL(sql);
                 if(rs.next()){
-                    
-                    String place= OscarProperties.getInstance().getProperty("oscarMeasurement_css");
-
-                    if(!place.endsWith("/"))
+                    String downloadMethod = OscarProperties.getInstance().getProperty("oscarMeasurement_css_download_method");
+                    String place = ""; 
+                    if (downloadMethod != null && downloadMethod.equalsIgnoreCase("stream"))
+                        place = "StreamStyleSheet.do?cssfilename=";
+                    else {
+                        place = OscarProperties.getInstance().getProperty("oscarMeasurement_css");
+                        if(!place.endsWith("/"))
                             place = new StringBuffer(place).insert(place.length(),"/").toString();
+                    }
                     cssLocation = place+rs.getString("location");
                 }
             }                                 
