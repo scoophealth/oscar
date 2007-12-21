@@ -68,6 +68,7 @@ public class ImportDemographicDataAction2 extends Action {
        
 	String proNo = (String) request.getSession().getAttribute("user");
 	String tmpDir = oscar.OscarProperties.getInstance().getProperty("TMP_DIR");
+	File importLog = null;
 	if (tmpDir==null || tmpDir.trim().equals("")) {
 	    throw new Exception("Temporary Import Directory not set! Check oscar.properties.");
 	} else {
@@ -109,7 +110,7 @@ public class ImportDemographicDataAction2 extends Action {
 		    cleanFile(ifile);
 		    throw new Exception ("Error! No XML file in zip");
 		} else {
-		    File importLog = makeImportLog(logResult, tmpDir);
+		    importLog = makeImportLog(logResult, tmpDir);
 		}
 		in.close();
 		if (!cleanFile(ifile)) throw new Exception ("Error! Cannot delete import file!");
@@ -118,7 +119,7 @@ public class ImportDemographicDataAction2 extends Action {
 		String[] logR = importXML(ifile, tmpDir, proNo, warnings, request);
 		if (logR!=null) {
 		    logResult.add(logR);
-		    File importLog = makeImportLog(logResult, tmpDir);
+		    importLog = makeImportLog(logResult, tmpDir);
 		}
 		
 	    } else {
@@ -220,21 +221,23 @@ public class ImportDemographicDataAction2 extends Action {
 	    String workPhone="", workExt="", homePhone="", homeExt="";
 	    for (int i=0; i<pn.length; i++) {
 		String phone = pn[i].getPhoneNumber();
-		if (!phone.equals("")) {
-		    if (pn[i].getAreaCode()!=null) {
-			if (pn[i].getNumber()!=null) phone = "("+pn[i].getAreaCode()+")"+pn[i].getNumber();
-			else phone = "("+pn[i].getAreaCode()+")"+phone;
+		if (phone==null) {
+		    if (pn[i].getNumber()!=null) {
+			if (pn[i].getAreaCode()!=null) phone = "("+pn[i].getAreaCode()+")"+pn[i].getNumber();
+			else phone = pn[i].getNumber();
 		    }
-		    String ext = null;
+		    String ext = "";
 		    if (pn[i].getExtension()!=null) ext = pn[i].getExtension();
 		    else if (pn[i].getExchange()!=null) ext = pn[i].getExchange();
-
-		    if (pn[i].getPhoneNumberType()==cdsDt.PhoneNumberType.W) {
-			workPhone = phone;
-			workExt   = ext;		    
-		    } else {
-			homePhone = phone;
-			homeExt   = ext;
+		    
+		    if (phone!=null) {
+			if (pn[i].getPhoneNumberType()==cdsDt.PhoneNumberType.W) {
+			    workPhone = phone;
+			    workExt   = ext;		    
+			} else {
+			    homePhone = phone;
+			    homeExt   = ext;
+			}
 		    }
 		}
 	    }
@@ -716,20 +719,6 @@ public class ImportDemographicDataAction2 extends Action {
 	    for (int i=0; i<fill; i++) filled += c;
 	}
 	return filled;
-    }
-    
-    void dlImportLog(File importLog, HttpServletResponse resp) throws FileNotFoundException, IOException, Exception {
-	resp.setContentType("application/octet-stream");
-	resp.setHeader("Content-Disposition", "attachment; filename=\""+importLog.getName()+"\"");
-
-	InputStream in = new FileInputStream(importLog);
-	OutputStream out = resp.getOutputStream();
-	byte[] buf = new byte[1024];
-	int len;
-	while ((len=in.read(buf)) > 0) out.write(buf,0,len);
-	in.close();
-	out.close();
-	if (!importLog.delete()) throw new Exception("Error! Cannot remove import log from temporary directory");
     }
     
     String getCalDate(Calendar c) {
