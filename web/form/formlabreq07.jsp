@@ -355,7 +355,14 @@ var maxYear=3100;
         <tr>
             <td class="borderGrayTopBottom" style="border-top: 0px;">
                 <font class="subHeading">Additional Clinical Information <i style="font-size: -1;">(e.g. diagnosis)</i></font><br>
-                <textarea name="aci" style="width:100%; height:59px;" tabindex="1"><%=props.getProperty("aci", "")%></textarea>
+                <textarea name="aci" style="width:100%; height:59px;" tabindex="1"><%
+                    if (props.getProperty("aci") == null) {
+                        if (oscarProps.getProperty("clinic_code") != null)
+                           out.print(" \n" + oscarProps.getProperty("clinic_code"));
+                    } else {
+                        out.print(props.getProperty("aci", ""));
+                    }
+                %></textarea>
             </td>
         </tr>
         <tr>
