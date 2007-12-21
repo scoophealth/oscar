@@ -30,6 +30,9 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
+
+<nested:define id="rowOneSize" name="caseManagementViewForm" property="ectWin.rowOneSize"/>
+<nested:define id="rowTwoSize" name="caseManagementViewForm" property="ectWin.rowTwoSize"/>
 <html:html locale="true">
   <head>
       <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -180,6 +183,17 @@
           }
 
 
+        /* CPP textareas */
+        .rowOne {
+            height: <nested:write name="rowOneSize"/>px;
+            overflow:auto;
+        }
+        
+        .rowTwo {
+            height: <nested:write name="rowTwoSize"/>px;
+            overflow:auto;
+        }
+        
     </style>
 
     <html:base />
