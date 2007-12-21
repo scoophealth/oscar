@@ -162,7 +162,7 @@
         <form-bean name="billingReceivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingReceivePaymentActionForm" />
         <form-bean name="receivePaymentActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.ReceivePaymentActionForm" />
         <form-bean name="billingPreferencesActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.BillingPreferencesActionForm" />
-        <form-bean name="supServiceCodeAssocActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocActionForm" />
+        <form-bean name="supServiceCodeAssocActionForm" type="oscar.oscarBilling.ca.bc.pageUtil.SupServiceCodeAssocActionForm" />        
         <form-bean name="eDocsAddEditDocument" type="oscar.dms.data.AddEditDocumentForm" />
         <form-bean name="addLinkDoc" type="oscar.dms.data.AddEditDocumentForm" />
         <form-bean name="addEditHtmlDoc" type="oscar.dms.data.AddEditDocumentForm" />
@@ -181,6 +181,9 @@
         <form-bean name="setProviderColour" type="org.apache.struts.action.DynaActionForm">
             <form-property name="colour" type="java.lang.String" />
         </form-bean>
+        <form-bean name="setProviderNoteStaleDateForm" type="org.apache.struts.action.DynaActionForm">
+            <form-property name="dateProperty" type="org.oscarehr.common.model.UserProperty" />
+        </form-bean>        
         <form-bean name="setMyOscarIdForm" type="org.apache.struts.action.DynaActionForm">
             <form-property name="myOscarLoginId" type="java.lang.String" />
             <form-property name="myOscarDomain" type="java.lang.String" />
@@ -928,6 +931,9 @@
             <forward name="error" path="/provider/providerColourErr.jsp" />
             <forward name="eject" path="/index.jsp" />
         </action>
+        <action path="/setProviderStaleDate" type="org.springframework.web.struts.DelegatingActionProxy" parameter="method" scope="request" input="/provider/setNoteStaleDate.jsp" name="setProviderNoteStaleDateForm">
+            <forward name="success" path="/provider/setNoteStaleDate.jsp" />
+        </action>
         <action input="/provider/providerIndivoIdSetter.jsp" name="setMyOscarIdForm" path="/setMyOscarId" scope="request" type="oscar.oscarProvider.pageUtil.ProEditMyOscarIdAction">
             <forward name="success" path="/provider/providerIndivoIdSetter.jsp" />
             <forward name="failure" path="/provider/providerIndivoIdSetter.jsp" />
@@ -1051,7 +1057,7 @@
         </action>
         <action input="/billing/CA/ON/billingOBECEA.jsp" name="BillingDocumentErrorReportUploadForm" path="/oscarBilling/DocumentErrorReportUpload" scope="request" type="oscar.oscarBilling.ca.on.pageUtil.BillingDocumentErrorReportUploadAction">
             <forward name="success" path="/billing/CA/ON/billingEAreport.jsp" />
-        </action>
+        </action>        
         <action name="CheckSurveillanceForm" path="/oscarSurveillance/CheckSurveillance" scope="request" type="oscar.oscarSurveillance.CheckSurveillanceAction">
             <forward name="survey" path="/oscarSurveillance/Surveillance.jsp" />
             <forward name="close" path="/oscarEncounter/TimeOut.jsp"/>
