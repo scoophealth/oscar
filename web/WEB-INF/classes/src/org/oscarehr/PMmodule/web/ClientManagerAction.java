@@ -354,13 +354,34 @@ public class ClientManagerAction extends BaseAction {
         DynaActionForm clientForm = (DynaActionForm) form;
         ClientReferral referral = (ClientReferral) clientForm.get("referral");
         Program p = (Program) clientForm.get("program");
-        String id = request.getParameter("id");
 
+        long clientId = Long.parseLong(request.getParameter("id"));
+        long agencyId = p.getAgencyId();
+        int programId = p.getId();
+        long providerId = Long.valueOf(getProviderNo(request));
+
+        if (agencyId == 0) {
+            referToLocalAgencyProgram(request, clientForm, referral, p, clientId);
+        }
+        else {
+            referToRemoteAgencyProgram(clientId, agencyId, programId, providerId);
+        }
+
+        setEditAttributes(form, request, String.valueOf(clientId));
+
+        return mapping.findForward("edit");
+    }
+
+    private void referToRemoteAgencyProgram(long clientId, long agencyId, int programId, long providerId) {
+// TODO TED        
+    }
+
+    private void referToLocalAgencyProgram(HttpServletRequest request, DynaActionForm clientForm, ClientReferral referral, Program p, long clientId) {
         Program program = programManager.getProgram(p.getId());
 
         referral.setAgencyId((long) 0);
         referral.setSourceAgencyId((long) 0);
-        referral.setClientId(Long.valueOf(id));
+        referral.setClientId(clientId);
         referral.setProgramId(program.getId().longValue());
         referral.setProviderNo(Long.valueOf(getProviderNo(request)));
         referral.setReferralDate(new Date());
@@ -394,10 +415,10 @@ public class ClientManagerAction extends BaseAction {
             clientForm.set("referral", referral);
 
             // store permission
-            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), id, "" + program.getId()));
+            request.setAttribute("hasOverridePermission", caseManagementManager.hasAccessRight("Service restriction override on referral", "access", getProviderNo(request), String.valueOf(clientId), "" + program.getId()));
 
             // jump to service restriction error page to allow overrides, etc.
-            return mapping.findForward("service_restriction_error");
+            // return mapping.findForward("service_restriction_error");
         }
 
         if (success) {
@@ -408,10 +429,7 @@ public class ClientManagerAction extends BaseAction {
 
         clientForm.set("program", new Program());
         clientForm.set("referral", new ClientReferral());
-        setEditAttributes(form, request, id);
-        logManager.log("write", "referral", id, request);
-
-        return mapping.findForward("edit");
+        logManager.log("write", "referral", String.valueOf(clientId), request);
     }
 
     public ActionForward refer_select_program(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
@@ -427,14 +445,13 @@ public class ClientManagerAction extends BaseAction {
             p.setName(program.getName());
             request.setAttribute("program", program);
         }
-        else
-        {
-            ProgramTransfer programTransfer=integratorManager.getProgramByAgencyAndId(agencyId, programId);
+        else {
+            ProgramTransfer programTransfer = integratorManager.getProgramByAgencyAndId(agencyId, programId);
             p.setName(programTransfer.getName());
             p.mergeFromProgramTransfer(programTransfer);
             request.setAttribute("program", p);
         }
-        
+
         request.setAttribute("do_refer", true);
         request.setAttribute("temporaryAdmission", programManager.getEnabled());
 
