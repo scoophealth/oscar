@@ -198,14 +198,14 @@ public class CaseManagementManager {
         caseManagementNoteDAO.saveNote(note);
         
         //if note is signed we hash it and save hash
-       /* if( note.isSigned() ) {
+        if( note.isSigned() ) {
             HashAuditImpl hashAudit = new HashAuditImpl();
             hashAudit.setType(BaseHashAudit.NOTE);
             hashAudit.setId(note.getId());
             hashAudit.makeHash(note.getNote().getBytes());
             hashAuditDAO.saveHash(hashAudit);
         }
-        */
+        
         return echartDAO.saveEchart(note, cpp, userName, lastStr);                 
 
     }
