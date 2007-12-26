@@ -126,6 +126,11 @@
 		</tr>
 	</table>
 	</div>
+<%
+if(selectedTab.contains("Bed/Room")){
+	selectedTab = selectedTab.toLowerCase().replaceAll("bed/room", "bed");
+}
+%>	
 	<%@ include file="/common/messages.jsp"%>
 	<jsp:include page="<%="/PMmodule/ClientManager/" + selectedTab.toLowerCase().replaceAll(" ", "_") + ".jsp"%>" />
 </html:form>

@@ -120,6 +120,7 @@
     <bean id="admissionDao" class="org.oscarehr.PMmodule.dao.AdmissionDao" autowire="byName" />
     <bean id="jointAdmissionDAO" class="org.oscarehr.PMmodule.dao.JointAdmissionDAO" autowire="byName" />
     <bean id="bedDemographicDAO" class="org.oscarehr.PMmodule.dao.BedDemographicDAO" autowire="byName"/>
+    <bean id="roomDemographicDAO" class="org.oscarehr.PMmodule.dao.RoomDemographicDAO" autowire="byName"/>
     <bean id="providerDao" class="org.oscarehr.PMmodule.dao.ProviderDao" autowire="byName" />
     <bean id="bedDAO" class="org.oscarehr.PMmodule.dao.BedDAO" autowire="byName"/>
     <bean id="clientDao" class="org.oscarehr.PMmodule.dao.ClientDao" autowire="byName" />
@@ -229,6 +230,30 @@
         <property name="target">
             <bean class="org.oscarehr.PMmodule.service.impl.BedDemographicManagerImpl">
                 <property name="bedDemographicDAO" ref="bedDemographicDAO"/>
+                <property name="providerDAO" ref="providerDao"/>
+                <property name="bedDAO" ref="bedDAO"/>
+                <property name="demographicDAO" ref="clientDao"/>
+                <property name="roomDAO" ref="roomDAO"/>
+                <property name="programDAO" ref="programDao"/>
+            </bean>
+        </property>
+    </bean>
+	<bean id="roomManager" parent="baseTransactionProxy">
+	    <property name="target">
+	        <bean class="org.oscarehr.PMmodule.service.RoomManager">
+	            <property name="roomDAO" ref="roomDAO"/>
+	            <property name="providerDAO" ref="providerDao"/>
+	            <property name="bedDAO" ref="bedDAO"/>
+	            <property name="demographicDAO" ref="clientDao"/>
+	            <property name="programDAO" ref="programDao"/>
+	        </bean>
+	    </property>
+	</bean>
+    <bean id="roomDemographicManager" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.impl.RoomDemographicManagerImpl">
+            	<property name="bedDemographicDAO" ref="bedDemographicDAO"/>
+                <property name="roomDemographicDAO" ref="roomDemographicDAO"/>
                 <property name="providerDAO" ref="providerDao"/>
                 <property name="bedDAO" ref="bedDAO"/>
                 <property name="demographicDAO" ref="clientDao"/>

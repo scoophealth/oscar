@@ -17,7 +17,7 @@
 <div class="tabs">
 	<table cellpadding="3" cellspacing="0" border="0">
 		<tr>
-			<th>Bed Reservation</th>
+			<th>Bed/Room Reservation</th>
 		</tr>
 	</table>
 </div>
@@ -32,21 +32,60 @@
 			</tr>
 		</table>
 	</c:when>
-	<c:when test="${empty clientManagerForm.map.unreservedBeds}">
+</c:choose>	
 		<table class="simple" cellspacing="2" cellpadding="3">
+		
+<!-- Begin of Assign Room -------------------------------------------------------------->
+	
 			<tr>
+				<th width="20%">Assign Room</th>
 				<td>
-					<span style="color:red">Program has no unreserved beds</span>
+					<c:choose>
+					<c:when test="${availableRooms == null}">
+						
+
+                        <select property="roomId">
+										<option value="" selected="selected">
+											 No available rooms
+										</option>
+						</select>
+
+					</c:when>
+					<c:otherwise>
+			
+						<select name="roomId"  onchange="clientManagerForm.method.value='refreshBedDropDownForReservation';clientManagerForm.submit();">
+							<option value="0">Select a room</option>
+							<c:forEach var="availableRoom" items="${availableRooms}">
+								<c:choose>
+									<c:when test="${roomId == availableRoom.id}">
+										<option value="<c:out value="${availableRoom.id}"/>" selected="selected">
+											 <c:out value="${availableRoom.name}" />
+										</option>
+									</c:when>
+									<c:otherwise>
+										<option value="<c:out value="${availableRoom.id}"/>">
+											 <c:out value="${availableRoom.name}" />
+										</option>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+						</select>
+						
+				</c:otherwise>					
+				</c:choose>
+					
 				</td>
 			</tr>
-		</table>
-	</c:when>
-	<c:otherwise>
-		<table class="simple" cellspacing="2" cellpadding="3">
+	
+	
+<!-- End of Assign Room -------------------------------------------------------------->
+		
+		
 			<tr>
-				<th width="20%">Assign</th>
+				<th width="20%">Assign Bed</th>
 				<td>
 					<html:select property="bedDemographic.bedId">
+						<option value="0"></option>
 						<c:forEach var="unreservedBed" items="${clientManagerForm.map.unreservedBeds}">
 							<c:choose>
 								<c:when test="${unreservedBed.id == clientManagerForm.map.bedDemographic.bedId}">
@@ -122,5 +161,3 @@
 				</td>
 			</tr>
 		</table>
-	</c:otherwise>
-</c:choose>
