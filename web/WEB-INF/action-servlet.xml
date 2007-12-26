@@ -43,6 +43,7 @@
         <property name="consentManager" ref="consentManager"/>
         <property name="bedManager" ref="bedManager"/>
         <property name="bedDemographicManager" ref="bedDemographicManager"/>
+        <property name="roomDemographicManager" ref="roomDemographicManager"/>
         <property name="formsManager" ref="formsManager"/>
         <property name="genericIntakeManager" ref="genericIntakeManager"/>
         <property name="intakeAManager" ref="intakeAManager"/>
