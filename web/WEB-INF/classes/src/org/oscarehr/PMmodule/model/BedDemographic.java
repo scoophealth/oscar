@@ -46,6 +46,7 @@ public class BedDemographic implements Auditable, Serializable {
     private int hashCode = Integer.MIN_VALUE;// primary key
 
     private BedDemographicPK id;// fields
+    private Integer roomId;
     private Integer bedDemographicStatusId;
     private String providerNo;
     private boolean latePass;
@@ -184,6 +185,14 @@ public class BedDemographic implements Auditable, Serializable {
 		System.out.println("BedDemographic.setRoomName()");
 	}
 
+	public Integer getRoomId() {
+		return roomId;
+	}
+	
+	public void setRoomId(Integer roomId) {
+		this.roomId = roomId;
+	}
+	
 	public String getProgramName() {
 		return bed != null ? bed.getProgramName() : null;
 	}

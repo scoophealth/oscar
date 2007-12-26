@@ -40,6 +40,8 @@ public class Room implements Serializable {
     public static String PROP_ACTIVE = "active";
     public static String PROP_FLOOR = "floor";
     public static String PROP_PROGRAM_ID = "programId";
+    public static String PROP_ASSIGNED_BED = "assignedBed";
+    public static String PROP_OCCUPANCY = "occupancy";
     public static String PROP_NAME = "name";
     public static String PROP_ID = "id";
 

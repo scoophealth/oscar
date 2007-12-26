@@ -61,7 +61,7 @@ public class RoomBed implements Auditable, Serializable {
 		Date today = DateTimeFormatUtils.getToday();
 		
 		roomBed.setAssignStart(today);
-		roomBed.setAssignEnd(today);//Louis-debug -- placeholder now
+		roomBed.setAssignEnd(today);
 		
 		return roomBed;
 	}

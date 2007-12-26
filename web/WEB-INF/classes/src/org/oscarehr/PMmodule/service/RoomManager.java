@@ -22,6 +22,9 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.dao.BedDAO;
@@ -29,8 +32,12 @@ import org.oscarehr.PMmodule.dao.FacilityDAO;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
+import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.Room;
+import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
+import org.oscarehr.PMmodule.service.BedManager;
+import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.springframework.beans.factory.annotation.Required;
 
 /**
@@ -46,10 +53,11 @@ public class RoomManager {
     }
 
     private RoomDAO roomDAO;
+    private BedManager bedManager;
+    private RoomDemographicManager roomDemographicManager;
     private ProgramDao programDao;
     private BedDAO bedDAO;
     private FacilityDAO facilityDAO;
-
 
     /**
      * Get room
@@ -87,7 +95,7 @@ public class RoomManager {
     /**
      * Get rooms
      *
-     * @return list of rooms
+     * @return array of rooms that have beds assigned to them.
      */
     public Room[] getRooms(Integer[][] roomsOccupancy) {
     	
@@ -95,11 +103,10 @@ public class RoomManager {
     		return null;
     	}
     	Room[] rooms = new Room[roomsOccupancy[0].length];
-    	
     	for(int i=0; i < rooms.length; i++){
-    		
     		rooms[i] = getRoom(roomsOccupancy[0][i]);
-    		rooms[i].setOccupancy(roomsOccupancy[1][i]);
+    		//not needed, this is the number of beds assigned to this particular room -- which has its occupancy limit
+    		//rooms[i].setOccupancy(roomsOccupancy[1][i]);
     	}
 
         return rooms;
@@ -120,6 +127,55 @@ public class RoomManager {
         return rooms;
     }
     
+    
+	/**
+	 * Get available rooms
+	 *
+	 * @param facilityId
+	 * @param programId
+	 * @param active           
+	 * @return list of available bed rooms that have client assigned less than 
+	 * 			its occupancy limit. 
+	 */
+    @SuppressWarnings("unchecked")
+    public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active) {
+    	Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, programId, active);
+    	List<RoomDemographic> roomDemograhics = null;
+    	List<Room> availableRooms = new ArrayList<Room>();
+    	
+    	for(int i=0; rooms != null  &&  i < rooms.length; i++){
+
+			Bed[] bedsForRoom = null;
+    		if(rooms != null && rooms.length > 0){
+   				//room[i].getRoomOccupancy - bedManager.getBedsInRoom(room[i].getRoomId()) > 0
+				bedsForRoom = bedManager.getBedsByRoom(rooms[i].getId());
+				
+				if(bedsForRoom != null){
+					if(rooms[i].getOccupancy().intValue() -  bedsForRoom.length > 0){
+    					availableRooms.add(rooms[i]);
+					}
+				}else{//if no bed assigned to this room, try checking whether it is in RoomDemographic table
+					  //i.e. whether this room has been assigned to client without associating it with beds
+		    		roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
+		    		
+		    		if(roomDemograhics != null && roomDemograhics.size() > 0){
+		    			if(rooms[i].getOccupancy().intValue() - roomDemograhics.size() > 0){
+		    				availableRooms.add(rooms[i]);
+		    			}
+		    		}else{
+		    			availableRooms.add(rooms[i]);
+		    		}
+				}//end of  bedsForRoom == null
+    			
+    		}else{//end of rooms != null
+    			//availableRooms.add(rooms[i]);
+    		}//end of rooms == null
+    	}
+		log.debug("getAvailableRooms(): availableRooms = " + availableRooms.size());
+		return (Room[]) availableRooms.toArray(new Room[availableRooms.size()]);
+	}
+    
+
     /**
      * Get room types
      *
@@ -214,7 +270,7 @@ public class RoomManager {
                 handleException(new IllegalStateException("no room with id : " + roomId));
             }
 
-            if (!room.isActive() && bedDAO.getBedsByRoom(roomId, true).length > 0) {
+            if (!room.isActive() && bedDAO.getBedsByRoom(roomId, Boolean.TRUE).length > 0) {
                 handleException(new RoomHasActiveBedsException("room with id : " + roomId + " has active beds"));
             }
         }
@@ -252,5 +308,14 @@ public class RoomManager {
         this.bedDAO = bedDAO;
     }
 
+    @Required
+    public void setBedManager(BedManager bedManager) {
+        this.bedManager = bedManager;
+    }
+
+    @Required
+    public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
+        this.roomDemographicManager = roomDemographicManager;
+    }
 
 }

@@ -66,10 +66,8 @@ public class RoomDemographic implements Auditable, Serializable {
 		
 		roomDemographic.setAssignStart(today);
 //		roomDemographic.setAssignEnd(today);
-		
 		return roomDemographic;
 	}
-
 
     // constructors
 	public RoomDemographic () {
@@ -102,6 +100,20 @@ public class RoomDemographic implements Auditable, Serializable {
 		initialize();
 	}
 
+	public void setRoomDemographicFromBedDemographic(BedDemographic bedDemographic) {
+	    
+		if(bedDemographic == null ){
+			return;
+		}
+		setRoomId(bedDemographic.getRoomId());
+		setProviderNo(bedDemographic.getProviderNo());
+		setAssignStart(bedDemographic.getReservationStart());
+		setAssignEnd(bedDemographic.getReservationEnd());
+		setComment(null);
+		
+		return; 
+    }
+	
 	public void setProvider(Provider provider) {
 	    this.provider = provider;
     }

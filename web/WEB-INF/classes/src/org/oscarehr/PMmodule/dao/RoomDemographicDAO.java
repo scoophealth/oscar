@@ -45,9 +45,8 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
      * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#demographicExists(java.lang.Integer)
      */
     public boolean demographicExists(Integer roomId) {
-        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic bd where bd.id.roomId = " + roomId).next()) == 1);
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.roomId = " + roomId).next()) == 1);
         log.debug("clientExists: " + exists);
-
         return exists;
     }
 
@@ -55,7 +54,7 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
      * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#roomExists(java.lang.Integer)
      */
     public boolean roomExists(Integer demographicNo) {
-        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic bd where bd.id.demographicNo = " + demographicNo).next()) == 1);
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.demographicNo = " + demographicNo).next()) == 1);
         log.debug("roomExists: " + exists);
 
         return exists;
@@ -64,34 +63,28 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     /**
      * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#getRoomDemographicByRoom(java.lang.Integer)
      */
-    public RoomDemographic getRoomDemographicByRoom(Integer roomId) {
-        List roomDemographics = getHibernateTemplate().find("from RoomDemographic bd where bd.id.roomId = ?", roomId);
+    public List<RoomDemographic> getRoomDemographicByRoom(Integer roomId) {
+        List roomDemographics = getHibernateTemplate().find("from RoomDemographic rd where rd.id.roomId = ?", roomId);
 
-        if (roomDemographics.size() > 1) {
-            throw new IllegalStateException("Room is assigned to more than one client");
+        if(roomDemographics != null){
+        	log.debug("getRoomDemographicByRoom: roomDemographics.size()" + roomDemographics.size());
         }
-
-        RoomDemographic roomDemographic = (RoomDemographic)((roomDemographics.size() == 1)?roomDemographics.get(0):null);
-
-        log.debug("getRoomDemographicByRoom: " + roomId);
-
-        return roomDemographic;
+        return roomDemographics;
     }
 
     /**
      * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#getRoomDemographicByDemographic(java.lang.Integer)
      */
     public RoomDemographic getRoomDemographicByDemographic(Integer demographicNo) {
-        List roomDemographics = getHibernateTemplate().find("from RoomDemographic bd where bd.id.demographicNo = ?", demographicNo);
-
+   	
+        List roomDemographics = getHibernateTemplate().find("from RoomDemographic rd where rd.id.demographicNo = ?", demographicNo);
         if (roomDemographics.size() > 1) {
             throw new IllegalStateException("Client is assigned to more than one room");
         }
 
-        RoomDemographic roomDemographic = (RoomDemographic)((roomDemographics.size() == 1)?roomDemographics.get(0):null);
+        RoomDemographic roomDemographic = (RoomDemographic)((roomDemographics.size() == 1)? roomDemographics.get(0): null);
 
         log.debug("getRoomDemographicByDemographic: " + demographicNo);
-
         return roomDemographic;
     }
 
@@ -99,7 +92,7 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
      * @see org.oscarehr.PMmodule.dao.RoomDemographicDAO#saveRoomDemographic(org.oscarehr.PMmodule.model.RoomDemographic)
      */
     public void saveRoomDemographic(RoomDemographic roomDemographic) {
-        updateHistory(roomDemographic);
+        //updateHistory(roomDemographic);
 
         roomDemographic = (RoomDemographic)getHibernateTemplate().merge(roomDemographic);
         getHibernateTemplate().flush();
@@ -114,32 +107,9 @@ public class RoomDemographicDAO extends HibernateDaoSupport {
     }
 
     boolean roomDemographicExists(RoomDemographicPK id) {
-        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic bd where bd.id.roomId = " + id.getRoomId() + " and bd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
+        boolean exists = (((Long)getHibernateTemplate().iterate("select count(*) from RoomDemographic rd where rd.id.roomId = " + id.getRoomId() + " and rd.id.demographicNo = " + id.getDemographicNo()).next()) == 1);
         log.debug("roomDemographicExists: " + exists);
 
         return exists;
     }
-
-    void updateHistory(RoomDemographic roomDemographic) {
-        RoomDemographic existing = null;
-
-        RoomDemographicPK id = roomDemographic.getId();
-
-        if (!roomDemographicExists(id)) {
-            Integer demographicNo = id.getDemographicNo();
-            Integer roomId = id.getRoomId();
-
-            if (roomExists(demographicNo)) {
-                existing = getRoomDemographicByDemographic(demographicNo);
-            }
-            else if (demographicExists(roomId)) {
-                existing = getRoomDemographicByRoom(roomId);
-            }
-        }
-
-        if (existing != null) {
-            deleteRoomDemographic(existing);
-        }
-    }
-
 }

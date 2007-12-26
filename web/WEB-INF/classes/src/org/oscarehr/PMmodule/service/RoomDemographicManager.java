@@ -22,6 +22,8 @@
 
 package org.oscarehr.PMmodule.service;
 
+import java.util.List;
+
 import org.oscarehr.PMmodule.model.RoomDemographic;
 
 public interface RoomDemographicManager {
@@ -42,7 +44,7 @@ public interface RoomDemographicManager {
 	 *            room identifier
 	 * @return RoomDemographic relationship object
 	 */
-	public RoomDemographic getRoomDemographicByRoom(Integer roomId);
+	public List<RoomDemographic> getRoomDemographicByRoom(Integer roomId);
 
 	/**
 	 * Get RoomDemographic relationship object with given demographic identifier
@@ -61,6 +63,14 @@ public interface RoomDemographicManager {
 	 */
 	public void saveRoomDemographic(RoomDemographic roomDemographic);
 
+	/**
+	 * Clean up BedDemographic relationship object
+	 * 
+	 * @param roomDemographic
+	 *            RoomDemographic relationship object
+	 */
+	public void cleanUpBedTables(RoomDemographic roomDemographic);
+	
 	/**
 	 * Delete room demographic and create room demographic historical
 	 * 

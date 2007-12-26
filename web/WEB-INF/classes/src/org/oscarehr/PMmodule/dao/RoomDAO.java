@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.oscarehr.PMmodule.model.Room;
+import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -107,32 +108,29 @@ public class RoomDAO extends HibernateDaoSupport {
     public Room[] getRooms(Integer facilityId, Integer programId, Boolean active) {
 		String queryString = getRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
-
 		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
 		log.debug("getRooms: size: " + rooms.size());
-
 		return (Room[]) rooms.toArray(new Room[rooms.size()]);
 	}
 
 	/**
 	 * Get assigned bed rooms
 	 *
-	 * @param active
-	 *            filter
+	 * @param facilityId
+	 * @param programId
+	 * @param active           
 	 * @return list of assigned bed rooms
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
 		String queryString = getAssignedBedRoomsQueryString(facilityId, programId, active);
 		Object[] values = getRoomsValues(facilityId, programId, active);
-
-		List rooms = (facilityId != null || programId != null || active != null) ? getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
+		List rooms = (facilityId != null || programId != null || active != null) ? 
+				getHibernateTemplate().find(queryString, values) : getHibernateTemplate().find(queryString);
 		log.debug("getRooms: size: " + rooms.size());
-
 		return (Room[]) rooms.toArray(new Room[rooms.size()]);
 	}
 
-    
 	/**
 	 * Get room types
 	 *
@@ -211,7 +209,10 @@ public class RoomDAO extends HibernateDaoSupport {
         if (active != null) {
             if (andClause){
             	queryBuilder.append(" and ");
+            }else{
+            	andClause = true;
             }
+
             queryBuilder.append("r.active = ?");
         }
         
@@ -238,7 +239,6 @@ public class RoomDAO extends HibernateDaoSupport {
 		if (active != null) {
 			values.add(active);
 		}
-
 		return values.toArray(new Object[values.size()]);
 	}
 
