@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.model.Bed;
 import org.oscarehr.PMmodule.model.BedType;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -96,6 +97,22 @@ public class BedDAO extends HibernateDaoSupport {
         return (Bed[]) beds.toArray(new Bed[beds.size()]);
     }
 
+    /**
+     * All beds for a given room
+     * @param roomId the room id to look up
+     * @param active activity flag
+     * @return an array of beds
+     */
+    @SuppressWarnings("unchecked")
+    public Bed[] getUnreservedBedsByRoom(Integer roomId, Boolean active) {
+        String query = getBedsQuery(null, roomId, active);
+        Object[] values = getBedsValues(null, roomId, active);
+        List beds = getBeds(query, values);
+        log.debug("getBedsByRoom: size " + beds.size());
+
+        return (Bed[]) beds.toArray(new Bed[beds.size()]);
+    }
+    
     @SuppressWarnings("unchecked")
     public List<Bed> getBedsByFacility(Integer facilityId, Boolean active) {
         String query = getBedsQuery(facilityId, null, active);
@@ -130,6 +147,19 @@ public class BedDAO extends HibernateDaoSupport {
     }
 
 
+    /**
+     * Delete bed
+     *
+     * @param bedId
+     *            
+     * @throws BedReservedException
+     *             bed is inactive and reserved
+     */
+    public void deleteBed(Bed bed) {
+        log.debug("deleteBed: id " + bed.getId());
+
+        getHibernateTemplate().delete(bed);
+    }
 
 
     String getBedsQuery(Integer facilityId, Integer roomId, Boolean active) {
@@ -156,6 +186,7 @@ public class BedDAO extends HibernateDaoSupport {
         return queryBuilder.toString();
     }
 
+    
     Object[] getBedsValues(Integer facilityId, Integer roomId, Boolean active) {
         List<Object> values = new ArrayList<Object>();
 
