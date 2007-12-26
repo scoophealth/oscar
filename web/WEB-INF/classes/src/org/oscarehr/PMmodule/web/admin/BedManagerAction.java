@@ -86,14 +86,18 @@ public class BedManagerAction extends BaseAction {
         BedManagerForm bForm = (BedManagerForm) form;
 
 		Bed[] beds = bForm.getBeds();
-
+		Room[] rooms = null;
 		for (int i = 0; i < beds.length; i++) {
 	        if (request.getParameter("beds[" + i + "].active") == null) {
 	        	beds[i].setActive(false);
 	        }
         }
 		Integer[][] roomsOccupancy = bedManager.calculateOccupancyAsNumOfBedsAssignedToRoom(beds);
-		Room[] rooms = roomManager.getRooms(roomsOccupancy);
+		if(roomsOccupancy != null  &&  roomsOccupancy.length > 0){
+			rooms = roomManager.getRooms(roomsOccupancy);
+		}else{
+			rooms = bForm.getRooms();;
+		}
 		
 		try {
 			roomManager.saveRooms(rooms);

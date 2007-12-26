@@ -51,6 +51,7 @@ import org.oscarehr.PMmodule.service.ProgramQueueManager;
 import org.oscarehr.PMmodule.service.ProviderManager;
 import org.oscarehr.PMmodule.service.RatePageManager;
 import org.oscarehr.PMmodule.service.RoleManager;
+import org.oscarehr.PMmodule.service.RoomDemographicManager;
 import org.oscarehr.PMmodule.service.RoomManager;
 import org.oscarehr.PMmodule.service.SurveyManager;
 import org.oscarehr.casemgmt.service.CaseManagementManager;
@@ -58,7 +59,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public abstract class BaseAction extends DispatchAction {
-
+	
 	protected static final String PARAM_START = "?";
 	protected static final String PARAM_EQUALS = "=";
 	protected static final String PARAM_AND = "&";
@@ -67,6 +68,7 @@ public abstract class BaseAction extends DispatchAction {
 	protected AdmissionManager admissionManager;
 	protected AgencyManager agencyManager;
 	protected BedCheckTimeManager bedCheckTimeManager;
+	protected RoomDemographicManager roomDemographicManager;
 	protected BedDemographicManager bedDemographicManager;
 	protected BedManager bedManager;
 	protected ClientManager clientManager;
@@ -144,6 +146,14 @@ public abstract class BaseAction extends DispatchAction {
 		return (ProgramQueueManager) getAppContext().getBean("programQueueManager");
 	}
 
+	public RoomManager getRoomManager() {
+		return (RoomManager) getAppContext().getBean("roomManager");
+	}
+	
+	public RoomDemographicManager getRoomDemographicManager() {
+		return (RoomDemographicManager) getAppContext().getBean("roomDemographicManager");
+	}
+	
 	public ProviderManager getProviderManager() {
 		return (ProviderManager) getAppContext().getBean("providerManager");
 	}
@@ -172,6 +182,11 @@ public abstract class BaseAction extends DispatchAction {
 		this.bedDemographicManager = demographicBedManager;
 	}
 
+	public void setRoomDemographicManager(
+			RoomDemographicManager roomDemographicManager) {
+		this.roomDemographicManager = roomDemographicManager;
+	}
+	
 	public void setBedManager(BedManager bedManager) {
 		this.bedManager = bedManager;
 	}

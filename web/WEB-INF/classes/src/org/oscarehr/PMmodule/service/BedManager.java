@@ -119,6 +119,34 @@ public class BedManager {
     }
 
     /**
+     * Get beds by available rooms & assigned program
+     *
+     * @param availableRooms
+     * @param programId
+     *            program identifier
+     * @param reserved
+     *            reserved flag
+     * @return array of beds
+     */
+    public Bed[] getBedsByRoomProgram(Room[] availableRooms, Integer programId, boolean reserved) {
+        if (programId == null) {
+            return new Bed[] {};
+        }
+        List<Bed> beds = new ArrayList<Bed>();
+
+        for (Room room : availableRooms) {
+            for (Bed bed : bedDAO.getBedsByRoom(room.getId(), Boolean.TRUE)) {
+                setAttributes(bed);
+
+                if (!filterBed(bed, reserved)) {
+                    beds.add(bed);
+                }
+            }
+        }
+        return beds.toArray(new Bed[beds.size()]);
+    }
+    
+    /**
      * Get beds by facility
      *
      * @param facilityId
@@ -184,6 +212,41 @@ public class BedManager {
 
         return beds;
     }
+    /**
+     * Get beds by roomId
+     * @param roomId
+     * @return array of beds
+     */
+    public Bed[] getBedsByRoom(Integer roomId) {
+        Bed[] beds = bedDAO.getBedsByRoom(roomId, Boolean.TRUE);
+        for (Bed bed : beds) {
+            setAttributes(bed);
+        }
+        return beds;
+    }
+    /**
+     * Get unreserved beds by roomId and clientBedId
+     * @param roomId
+     * @param clientBedId
+     * @return array of beds
+     */
+    public Bed[] getUnreservedBedsByRoom(Integer roomId, Integer clientBedId, boolean reserved) {
+        Bed[] beds = bedDAO.getUnreservedBedsByRoom(roomId, Boolean.TRUE);
+        List<Bed> bedList = new ArrayList<Bed>();
+        
+        for (Bed bed : beds) {
+            setAttributes(bed);
+            
+            if (!filterBed(bed, reserved)) {
+            	bedList.add(bed);
+            }
+            if(bed.getId().intValue() == clientBedId  &&  bed.getRoomId().intValue() == roomId){
+            	bedList.add(bed);
+            }
+        }
+        return bedList.toArray(new Bed[bedList.size()]);
+        
+    }
 
     /**
      * @see org.oscarehr.PMmodule.service.BedManager#getBedTypes()
@@ -221,17 +284,20 @@ public class BedManager {
      */
     public Integer[][] calculateOccupancyAsNumOfBedsAssignedToRoom(Bed[] beds){
     	
+    	if(beds == null){
+    		return null;
+    	}
     	List roomIdKeys = new ArrayList();
     	List roomIdCounts = new ArrayList();
+    	Integer[][] roomsOccupancy = null;
     	int count = 1;
     	int roomIdKey = -1;
-    	
+
     	Integer[] roomIds = new Integer[beds.length];
     	for(int i=0; i < beds.length; i++){
     		roomIds[i] = beds[i].getRoomId();
     	}
-
-    	Integer[][] roomsOccupancy = null;
+    	
     	Arrays.sort( roomIds  );  
 
     	if(roomIds != null  &&  roomIds.length > 0){
@@ -252,6 +318,9 @@ public class BedManager {
     				roomIdCounts.add( new Integer( count ) );
     			}
     		}
+    	}
+    	if(roomIdKeys == null  ||  roomIdKeys.size() <= 0){
+    		return null;
     	}
     	roomsOccupancy = new Integer[2][roomIdKeys.size()];
     	for(int i=0; i < roomsOccupancy[0].length; i++){
