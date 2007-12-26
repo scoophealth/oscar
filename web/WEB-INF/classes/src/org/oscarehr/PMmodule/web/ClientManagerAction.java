@@ -1088,12 +1088,24 @@ public class ClientManagerAction extends BaseAction {
             Integer bedProgramId = (bedProgramAdmission != null) ? bedProgramAdmission.getProgramId() : null;
             request.setAttribute("bedProgramId", bedProgramId);
 
-            // set bed demographic
-            boolean reservationExists = (bedDemographic != null);
-            bedDemographic = reservationExists ? bedDemographic : 
-                    BedDemographic.create( Integer.valueOf(demographicNo), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
+            Bed reservedBed = null;
 
-            Bed reservedBed = reservationExists ? bedManager.getBed(bedDemographic.getBedId()) : null;
+            if(bedDemographic == null){
+            	bedDemographic = BedDemographic.create( 
+            			Integer.valueOf(demographicNo), bedDemographicManager.getDefaultBedDemographicStatus(), providerNo);
+            	
+                if(roomDemographic != null){
+                	bedDemographic.setReservationStart(roomDemographic.getAssignStart());
+                	bedDemographic.setReservationEnd(roomDemographic.getAssignEnd());
+                }
+
+                reservedBed = null;
+                
+            }else{
+            	
+            	reservedBed = bedManager.getBed(bedDemographic.getBedId());
+            }
+            
 
             if( isRefreshRoomDropDown ){
                 bedDemographic.setRoomId(Integer.valueOf(roomId));
