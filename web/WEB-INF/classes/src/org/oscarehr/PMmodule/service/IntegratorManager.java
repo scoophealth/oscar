@@ -485,8 +485,6 @@ public class IntegratorManager {
             providerInfo.append(provider.getFullName());
             providerInfo.append(" (");
             providerInfo.append(provider.getProviderType());
-            providerInfo.append("@");
-            providerInfo.append(getLocalAgency().getIntegratorUsername());
             providerInfo.append(") ");
             providerInfo.append(provider.getWorkPhone());
             request.setSourceProviderInfo(providerInfo.toString());
