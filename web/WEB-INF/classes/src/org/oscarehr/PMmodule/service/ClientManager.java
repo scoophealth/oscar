@@ -1,44 +1,50 @@
 /*
-* 
-* Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
-* This software is published under the GPL GNU General Public License. 
-* This program is free software; you can redistribute it and/or 
-* modify it under the terms of the GNU General Public License 
-* as published by the Free Software Foundation; either version 2 
-* of the License, or (at your option) any later version. * 
-* This program is distributed in the hope that it will be useful, 
-* but WITHOUT ANY WARRANTY; without even the implied warranty of 
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
-* GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
-* along with this program; if not, write to the Free Software 
-* Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
-* 
-* <OSCAR TEAM>
-* 
-* This software was written for 
-* Centre for Research on Inner City Health, St. Michael's Hospital, 
-* Toronto, Ontario, Canada 
-*/
+ * 
+ * Copyright (c) 2001-2002. Centre for Research on Inner City Health, St. Michael's Hospital, Toronto. All Rights Reserved. *
+ * This software is published under the GPL GNU General Public License. 
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation; either version 2 
+ * of the License, or (at your option) any later version. * 
+ * This program is distributed in the hope that it will be useful, 
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ * GNU General Public License for more details. * * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software 
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. * 
+ * 
+ * <OSCAR TEAM>
+ * 
+ * This software was written for 
+ * Centre for Research on Inner City Health, St. Michael's Hospital, 
+ * Toronto, Ontario, Canada 
+ */
 
 package org.oscarehr.PMmodule.service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.caisi.integrator.model.transfer.AgencyTransfer;
+import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.oscarehr.PMmodule.dao.ClientDao;
 import org.oscarehr.PMmodule.dao.ClientReferralDAO;
 import org.oscarehr.PMmodule.dao.JointAdmissionDAO;
 import org.oscarehr.PMmodule.exception.AlreadyAdmittedException;
 import org.oscarehr.PMmodule.exception.AlreadyQueuedException;
-import org.oscarehr.PMmodule.exception.IntegratorNotEnabledException;
 import org.oscarehr.PMmodule.exception.ServiceRestrictionException;
-import org.oscarehr.PMmodule.model.*;
+import org.oscarehr.PMmodule.model.Admission;
+import org.oscarehr.PMmodule.model.ClientReferral;
+import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.DemographicExt;
+import org.oscarehr.PMmodule.model.JointAdmission;
+import org.oscarehr.PMmodule.model.ProgramClientRestriction;
+import org.oscarehr.PMmodule.model.ProgramQueue;
 import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.springframework.beans.factory.annotation.Required;
-
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 public class ClientManager {
 
@@ -98,21 +104,25 @@ public class ClientManager {
         return referralDAO.getReferrals(Long.valueOf(clientId));
     }
 
-    public List getActiveReferrals(String clientId) {
-        List results = referralDAO.getActiveReferrals(Long.valueOf(clientId));
-        for (Iterator iter = results.iterator(); iter.hasNext();) {
-            ClientReferral referral = (ClientReferral) iter.next();
+    public List<ClientReferral> getActiveReferrals(String clientId) {
+        List<ClientReferral> results = referralDAO.getActiveReferrals(Long.valueOf(clientId));
+
+        for (ClientReferral referral : results) {
             if (referral.getAgencyId().longValue() > 0) {
+                referral.setProgramName("<Remote and Unavailable>");
+
                 try {
-// TODO : this part needs to be redone. Xfire should not be proliferated up to here
-//					Program p = integratorManager.getProgram(referral.getAgencyId(), referral.getProgramId());
-//					referral.setProgramName(p.getName());
-                } catch (org.codehaus.xfire.XFireRuntimeException ex) {
+                    ProgramTransfer programTransfer = integratorManager.getProgramByAgencyAndId(referral.getAgencyId(), referral.getProgramId());
+                    if (programTransfer!=null){
+                        referral.setProgramName(programTransfer.getName());
+                        referral.setProgramType(programTransfer.getType());
+                    }
+                    
+                    AgencyTransfer agencyTransfer=integratorManager.getAgencyById(referral.getAgencyId());
+                    if (agencyTransfer!=null) referral.setProgramName(referral.getProgramName()+" ("+agencyTransfer.getName()+")");
+                }
+                catch (Exception ex) {
                     log.error(ex);
-                    referral.setProgramName("<Unavailable>");
-                } catch (IntegratorNotEnabledException e) {
-                    log.error(e);
-                    referral.setProgramName("<Unavailable>");
                 }
             }
         }
@@ -124,8 +134,8 @@ public class ClientManager {
     }
 
     /*
-      * This should always be a new one. add the queue to the program.
-      */
+     * This should always be a new one. add the queue to the program.
+     */
     public void saveClientReferral(ClientReferral referral) {
 
         referralDAO.saveClientReferral(referral);
@@ -159,28 +169,28 @@ public class ClientManager {
         jointAdmissionDAO.saveJointAdmission(admission);
     }
 
-    public List<JointAdmission> getDependents(Long clientId){
-        return jointAdmissionDAO.getSpouseAndDependents( clientId);
-    }
-    
-    public List<Long> getDependentsList(Long clientId){
-        List<Long> list = new ArrayList();
-        List<JointAdmission> jadms = jointAdmissionDAO.getSpouseAndDependents( clientId);
-        for (JointAdmission jadm: jadms){
-            list.add(jadm.getClientId());
-        }
-        return list; 
+    public List<JointAdmission> getDependents(Long clientId) {
+        return jointAdmissionDAO.getSpouseAndDependents(clientId);
     }
 
-    public JointAdmission getJointAdmission(Long clientId){
+    public List<Long> getDependentsList(Long clientId) {
+        List<Long> list = new ArrayList();
+        List<JointAdmission> jadms = jointAdmissionDAO.getSpouseAndDependents(clientId);
+        for (JointAdmission jadm : jadms) {
+            list.add(jadm.getClientId());
+        }
+        return list;
+    }
+
+    public JointAdmission getJointAdmission(Long clientId) {
         return jointAdmissionDAO.getJointAdmission(clientId);
     }
 
-    public void removeJointAdmission(Long clientId,String providerNo){
-        jointAdmissionDAO.removeJointAdmission(clientId,providerNo);
+    public void removeJointAdmission(Long clientId, String providerNo) {
+        jointAdmissionDAO.removeJointAdmission(clientId, providerNo);
     }
 
-    public void removeJointAdmission(JointAdmission admission){
+    public void removeJointAdmission(JointAdmission admission) {
         jointAdmissionDAO.removeJointAdmission(admission);
     }
 
@@ -219,34 +229,11 @@ public class ClientManager {
 
         saveClientReferral(referral);
         List<JointAdmission> dependents = getDependents(referral.getClientId());
-        for(JointAdmission jadm: dependents){
+        for (JointAdmission jadm : dependents) {
             referral.setClientId(jadm.getClientId());
             saveClientReferral(referral);
         }
-                
-    }
 
-    public void processRemoteReferral(ClientReferral referral) {
-        /*
-           * Admission currentAdmission = admissionManager.getCurrentAdmission(String.valueOf(program.getId()),id); if(currentAdmission != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client currently admitted"); referral.setCompletionDate(new Date()); } ProgramQueue queue =
-           * queueManager.getActiveProgramQueue(String.valueOf(program.getId()),id); if(queue != null) { referral.setStatus("rejected"); referral.setCompletionNotes("Client already in queue"); referral.setCompletionDate(new Date()); }
-           */
-        ProgramQueue queue = new ProgramQueue();
-        queue.setAgencyId(referral.getSourceAgencyId());
-        queue.setClientId(referral.getClientId());
-        queue.setNotes(referral.getNotes());
-        queue.setProgramId(referral.getProgramId());
-        queue.setProviderNo(referral.getProviderNo());
-        queue.setReferralDate(referral.getReferralDate());
-        queue.setStatus(ProgramQueue.STATUS_ACTIVE);
-        queue.setReferralId(referral.getId());
-        queue.setTemporaryAdmission(referral.isTemporaryAdmission());
-        queueManager.saveProgramQueue(queue);
-
-        referral.setStatus(ClientReferral.STATUS_ACTIVE);
-
-        // send back jms message
-        //integratorManager.sendReferral(referral.getSourceAgencyId(), referral);
     }
 
     public void saveClient(Demographic client) {
@@ -262,7 +249,7 @@ public class ClientManager {
         return dao.getDemographicExt(Integer.valueOf(id));
     }
 
-    public List getDemographicExtByDemographicNo(Integer demographicNo) {
+    public List<DemographicExt> getDemographicExtByDemographicNo(Integer demographicNo) {
         return dao.getDemographicExtByDemographicNo(demographicNo);
     }
 
@@ -290,9 +277,9 @@ public class ClientManager {
         this.jointAdmissionDAO = jointAdmissionDAO;
     }
 
-    //public JointAdmission getJointAdmission(Long demoLong) {
-    //    return jointAdmissionDAO.getJointAdmission(demoLong);
-    //}
+    // public JointAdmission getJointAdmission(Long demoLong) {
+    // return jointAdmissionDAO.getJointAdmission(demoLong);
+    // }
 
     @Required
     public void setClientDao(ClientDao dao) {
@@ -333,6 +320,5 @@ public class ClientManager {
     public void setOutsideOfDomainEnabled(boolean outsideOfDomainEnabled) {
         this.outsideOfDomainEnabled = outsideOfDomainEnabled;
     }
-
 
 }

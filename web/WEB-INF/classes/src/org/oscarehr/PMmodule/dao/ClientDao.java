@@ -475,13 +475,14 @@ public class ClientDao extends HibernateDaoSupport {
 		return result;
 	}
 
-	public List getDemographicExtByDemographicNo(Integer demographicNo) {
+    public List<DemographicExt> getDemographicExtByDemographicNo(Integer demographicNo) {
 
 		if (demographicNo == null || demographicNo.intValue() <= 0) {
 			throw new IllegalArgumentException();
 		}
 
-		List results = this.getHibernateTemplate().find("from DemographicExt d where d.demographicNo = ?", demographicNo);
+	    @SuppressWarnings("unchecked")
+		List<DemographicExt> results = this.getHibernateTemplate().find("from DemographicExt d where d.demographicNo = ?", demographicNo);
 
 		if (log.isDebugEnabled()) {
 			log.debug("getDemographicExtByDemographicNo: demographicNo=" + demographicNo + ",# of results=" + results.size());

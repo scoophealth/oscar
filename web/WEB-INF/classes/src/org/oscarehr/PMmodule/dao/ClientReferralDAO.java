@@ -140,12 +140,13 @@ public class ClientReferralDAO extends HibernateDaoSupport {
     }
     // end of change
 
-    public List getActiveReferrals(Long clientId) {
+    public List<ClientReferral> getActiveReferrals(Long clientId) {
         if (clientId == null || clientId.longValue() <= 0) {
             throw new IllegalArgumentException();
         }
 
-        List results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ? and (cr.Status = 'active' or cr.Status = 'pending')", clientId);
+        @SuppressWarnings("unchecked")
+        List<ClientReferral> results = this.getHibernateTemplate().find("from ClientReferral cr where cr.ClientId = ? and (cr.Status = '"+ClientReferral.STATUS_ACTIVE+"' or cr.Status = '"+ClientReferral.STATUS_PENDING+"' or cr.Status = '"+ClientReferral.STATUS_UNKNOWN+"')", clientId);
 
         if (log.isDebugEnabled()) {
             log.debug("getActiveReferrals: clientId=" + clientId + ",# of results=" + results.size());

@@ -1397,8 +1397,6 @@
             <forward name="er-redirect" path="/PMmodule/ErReceptionistReport.jsp" />
             <forward name="vaccine-report" path="/VaccineProviderReport.do" redirect="true"/>
             <forward name="search" path="/PMmodule/ClientSearch2.do" redirect="true" />
-            <forward name="integrator_admissions" path="/PMmodule/integrator/admissions.jsp" />
-            <forward name="integrator_referrals" path="/PMmodule/integrator/referrals.jsp" />
             <forward name="links" path="/PMmodule/ClientManager/links.jsp" />
             <forward name="view_referral" path="/PMmodule/ClientManager/view_referral.jsp"/>
             <forward name="view_admission" path="/PMmodule/ClientManager/view_admission.jsp"/>

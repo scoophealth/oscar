@@ -52,6 +52,8 @@ import org.caisi.integrator.message.demographics.GetDemographicResponse;
 import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
 import org.caisi.integrator.message.program.GetProgramsRequest;
 import org.caisi.integrator.message.program.GetProgramsResponse;
+import org.caisi.integrator.message.program.MakeReferralRequest;
+import org.caisi.integrator.message.program.MakeReferralResponse;
 import org.caisi.integrator.message.program.PublishProgramRequest;
 import org.caisi.integrator.message.program.PublishProgramResponse;
 import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
@@ -66,12 +68,14 @@ import org.codehaus.xfire.annotations.AnnotationServiceFactory;
 import org.codehaus.xfire.client.XFireProxyFactory;
 import org.codehaus.xfire.service.Service;
 import org.oscarehr.PMmodule.dao.AgencyDao;
+import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.exception.OperationNotImplementedException;
 import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.beans.factory.annotation.Required;
 
@@ -86,6 +90,11 @@ public class IntegratorManager {
 
     protected AgencyDao agencyDao;
     protected ClientManager clientManager;
+    protected ProviderDao providerDao;
+
+    public void setProviderDao(ProviderDao providerDao) {
+        this.providerDao = providerDao;
+    }
 
     public Agency getLocalAgency() {
         return(agencyDao.getLocalAgency());
@@ -440,17 +449,10 @@ public class IntegratorManager {
 
         // meh, I'll just brute force it right now, not like this is called a lot or anything.
         ProgramTransfer[] programTransfers = getOtherAgenciesPrograms();
-        if (programTransfers != null) for (ProgramTransfer programTransfer : programTransfers) if (programTransfer.getAgencyId() == agencyId && programTransfer.getRemoteProgramId() == remoteProgramId) return(programTransfer);
+        if (programTransfers != null) for (ProgramTransfer programTransfer : programTransfers)
+            if (programTransfer.getAgencyId() == agencyId && programTransfer.getRemoteProgramId() == remoteProgramId) return(programTransfer);
 
         return(null);
-    }
-
-    public List getCurrentAdmissions(long clientId) throws IntegratorException {
-        throw new OperationNotImplementedException("admission registrations not yet implemented in integrator");
-    }
-
-    public List getCurrentReferrals(long clientId) throws IntegratorException {
-        throw new OperationNotImplementedException("referral registrations not yet implemented in integrator");
     }
 
     @Required
@@ -463,4 +465,45 @@ public class IntegratorManager {
         this.agencyDao = dao;
     }
 
+    /**
+     * @param referral
+     * @return true if successfull false otherwise
+     */
+    public boolean makeReferral(ClientReferral referral) {
+        try {
+            if (!isEnabled()) return(false);
+
+            MakeReferralRequest request = new MakeReferralRequest();
+            request.setDestinationAgencyId(referral.getAgencyId());
+            request.setDestinationRemoteProgramId(referral.getProgramId().intValue());
+            request.setPresentingProblem(referral.getPresentProblems());
+            request.setReasonForReferral(referral.getNotes());
+            request.setSourceDemographicNo(referral.getClientId());
+            
+            Provider provider=providerDao.getProvider(String.valueOf(referral.getProviderNo()));
+            StringBuilder providerInfo=new StringBuilder();
+            providerInfo.append(provider.getFullName());
+            providerInfo.append(" (");
+            providerInfo.append(provider.getProviderType());
+            providerInfo.append("@");
+            providerInfo.append(getLocalAgency().getIntegratorUsername());
+            providerInfo.append(") ");
+            providerInfo.append(provider.getWorkPhone());
+            request.setSourceProviderInfo(providerInfo.toString());
+            
+            MakeReferralResponse response = getIntegratorService().makeReferral(request, getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error making referral. " + response.getAck());
+                return(false);
+            }
+            
+            return(true);
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+        }
+        
+        return(false);
+    }
 }

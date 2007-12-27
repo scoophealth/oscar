@@ -36,28 +36,9 @@
         <property name="logManager" ref="logManager"/>
         <property name="programManager" ref="programManager"/>
     </bean>
-    <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false">
-        <property name="admissionManager" ref="admissionManager"/>
-        <property name="clientManager" ref="clientManager"/>
-        <property name="agencyManager" ref="agencyManager"/>
-        <property name="consentManager" ref="consentManager"/>
-        <property name="bedManager" ref="bedManager"/>
-        <property name="bedDemographicManager" ref="bedDemographicManager"/>
-        <property name="roomDemographicManager" ref="roomDemographicManager"/>
-        <property name="formsManager" ref="formsManager"/>
-        <property name="genericIntakeManager" ref="genericIntakeManager"/>
-        <property name="intakeAManager" ref="intakeAManager"/>
-        <property name="intakeCManager" ref="intakeCManager"/>
-        <property name="integratorManager" ref="integratorManager"/>
-        <property name="logManager" ref="logManager"/>
-        <property name="programManager" ref="programManager"/>
-        <property name="providerManager" ref="providerManager"/>
-        <property name="programQueueManager" ref="programQueueManager"/>
-        <property name="surveyManager" ref="oscarSurveyManager"/>
-        <property name="clientRestrictionManager" ref="clientRestrictionManager"/> 
-        
+    <bean name="/PMmodule/ClientManager" class="org.oscarehr.PMmodule.web.ClientManagerAction" singleton="false" autowire="byName">
+        <property name="surveyManager" ref="oscarSurveyManager"/>        
         <property name="caseManagementManager" ref="CaseManagementManager"/>       
-        <property name="roleManager" ref="roleManager"/>        
     </bean>
     <bean name="/PMmodule/ProviderInfo" class="org.oscarehr.PMmodule.web.ProviderInfoAction" singleton="false">
         <property name="programManager" ref="programManager"/>

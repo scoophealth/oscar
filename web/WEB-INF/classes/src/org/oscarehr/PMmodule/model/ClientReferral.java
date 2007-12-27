@@ -32,6 +32,8 @@ public class ClientReferral implements Serializable {
     public static String STATUS_REJECTED = "rejected";        
     public static String STATUS_ACTIVE = "active";
     public static String STATUS_CURRENT = "current";
+    public static String STATUS_UNKNOWN = "unknown";
+    public static String STATUS_PENDING = "pending";
 
 
     private static final long serialVersionUID = 1L;
