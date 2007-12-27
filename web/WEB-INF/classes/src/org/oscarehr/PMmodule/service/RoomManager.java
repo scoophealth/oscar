@@ -23,7 +23,12 @@
 package org.oscarehr.PMmodule.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,6 +38,7 @@ import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.RoomDAO;
 import org.oscarehr.PMmodule.exception.RoomHasActiveBedsException;
 import org.oscarehr.PMmodule.model.Bed;
+import org.oscarehr.PMmodule.model.BedDemographic;
 import org.oscarehr.PMmodule.model.Room;
 import org.oscarehr.PMmodule.model.RoomDemographic;
 import org.oscarehr.PMmodule.model.RoomType;
@@ -55,6 +61,7 @@ public class RoomManager {
     private RoomDAO roomDAO;
     private BedManager bedManager;
     private RoomDemographicManager roomDemographicManager;
+    private BedDemographicManager bedDemographicManager;
     private ProgramDao programDao;
     private BedDAO bedDAO;
     private FacilityDAO facilityDAO;
@@ -127,7 +134,6 @@ public class RoomManager {
         return rooms;
     }
     
-    
 	/**
 	 * Get available rooms
 	 *
@@ -139,36 +145,53 @@ public class RoomManager {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active) {
+    	//rooms of particular facilityId, programId, active=1, assignedBed=1  
     	Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, programId, active);
+    	
     	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
+    	List clientsFromBedDemographic = new ArrayList();
+    	List clientsFromRoomDemographic = new ArrayList();
+    	int numOfUniqueClientsAssignedToRoom = 0;
     	
+		/*
+			roomId -->  get  all (multiple) bedIds from  table 'bed'
+			       -->  get  all demographicNo  from  table  'room_demographic'
+			bedIds -->  get all (1 to 1 relationship) demographicNo  from  table  'bed_demographic'
+			numOfClientsAssignedToRoom  ==  sum of  all unique demographicNo (subtracting the duplicates)
+		*/    	
+    	
+    	//get rooms that are not full or clients can still be assigned to these rooms
     	for(int i=0; rooms != null  &&  i < rooms.length; i++){
 
 			Bed[] bedsForRoom = null;
     		if(rooms != null && rooms.length > 0){
-   				//room[i].getRoomOccupancy - bedManager.getBedsInRoom(room[i].getRoomId()) > 0
+   				//get  all bedIds from  table 'bed' via room[i].id
 				bedsForRoom = bedManager.getBedsByRoom(rooms[i].getId());
 				
 				if(bedsForRoom != null){
-					if(rooms[i].getOccupancy().intValue() -  bedsForRoom.length > 0){
-    					availableRooms.add(rooms[i]);
+					//get all demographicNo  from  table  'bed_demographic' via Bed[j].id -- 1 to 1 relationship
+					for(int j=0; j < bedsForRoom.length; j++){
+						BedDemographic bedDemographic = bedDemographicManager.getBedDemographicByBed(bedsForRoom[j].getId()); 
+						if(bedDemographic != null ){
+							clientsFromBedDemographic.add(bedDemographic.getId().getDemographicNo());
+						}
 					}
-				}else{//if no bed assigned to this room, try checking whether it is in RoomDemographic table
-					  //i.e. whether this room has been assigned to client without associating it with beds
-		    		roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
-		    		
-		    		if(roomDemograhics != null && roomDemograhics.size() > 0){
-		    			if(rooms[i].getOccupancy().intValue() - roomDemograhics.size() > 0){
-		    				availableRooms.add(rooms[i]);
-		    			}
-		    		}else{
-		    			availableRooms.add(rooms[i]);
-		    		}
-				}//end of  bedsForRoom == null
+				}
+				//get  all demographicNo  from  table  'room_demographic' via room[i].id	
+				roomDemograhics = roomDemographicManager.getRoomDemographicByRoom(rooms[i].getId());
+				
+				if(roomDemograhics != null  &&  roomDemograhics.size() == 1){
+					clientsFromRoomDemographic.add(((RoomDemographic)roomDemograhics.get(0)).getId().getDemographicNo());
+				}
+					
+				numOfUniqueClientsAssignedToRoom = getNumOfUniqueClientsAssignedToRoom(clientsFromBedDemographic, clientsFromRoomDemographic);	
+				if(rooms[i].getOccupancy().intValue() -  numOfUniqueClientsAssignedToRoom > 0){
+					availableRooms.add(rooms[i]);
+				}
     			
     		}else{//end of rooms != null
-    			//availableRooms.add(rooms[i]);
+    			return null;
     		}//end of rooms == null
     	}
 		log.debug("getAvailableRooms(): availableRooms = " + availableRooms.size());
@@ -176,6 +199,23 @@ public class RoomManager {
 	}
     
 
+    private int getNumOfUniqueClientsAssignedToRoom(List clientsFromBedDemographic, List clientsFromRoomDemographic){
+    	
+    	if(clientsFromBedDemographic == null  &&  clientsFromRoomDemographic == null){
+    		return 0;
+    	}
+    	
+    	List<Integer> clientsCombined = new ArrayList<Integer>();
+    	clientsCombined.addAll(clientsFromBedDemographic);
+    	clientsCombined.addAll(clientsFromRoomDemographic);
+    	Collections.sort(clientsCombined);
+    	Set treeSet = new TreeSet(clientsCombined);
+    	if(treeSet == null){
+    		return 0;
+    	}
+    	return treeSet.size();
+    }
+    
     /**
      * Get room types
      *
@@ -316,6 +356,11 @@ public class RoomManager {
     @Required
     public void setRoomDemographicManager(RoomDemographicManager roomDemographicManager) {
         this.roomDemographicManager = roomDemographicManager;
+    }
+    
+    @Required
+    public void setBedDemographicManager(BedDemographicManager bedDemographicManager) {
+        this.bedDemographicManager = bedDemographicManager;
     }
 
 }
