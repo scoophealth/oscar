@@ -42,7 +42,6 @@ import org.caisi.integrator.message.AuthenticationToken;
 import org.caisi.integrator.message.GetIntegratorInformationRequest;
 import org.caisi.integrator.message.GetIntegratorInformationResponse;
 import org.caisi.integrator.message.MessageAck;
-import org.caisi.integrator.message.agencies.GetAgenciesRequest;
 import org.caisi.integrator.message.agencies.GetAgenciesResponse;
 import org.caisi.integrator.message.clientGroup.DemographicKey;
 import org.caisi.integrator.message.clientGroup.JoinClientRequest;
@@ -50,8 +49,8 @@ import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicResponse;
 import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
-import org.caisi.integrator.message.program.GetProgramsRequest;
 import org.caisi.integrator.message.program.GetProgramsResponse;
+import org.caisi.integrator.message.program.GetReferralsResponse;
 import org.caisi.integrator.message.program.MakeReferralRequest;
 import org.caisi.integrator.message.program.MakeReferralResponse;
 import org.caisi.integrator.message.program.PublishProgramRequest;
@@ -62,6 +61,7 @@ import org.caisi.integrator.model.Client;
 import org.caisi.integrator.model.transfer.AgencyTransfer;
 import org.caisi.integrator.model.transfer.ClientTransfer;
 import org.caisi.integrator.model.transfer.DemographicTransfer;
+import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
 import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.caisi.integrator.service.IntegratorService;
 import org.codehaus.xfire.annotations.AnnotationServiceFactory;
@@ -132,7 +132,7 @@ public class IntegratorManager {
             AgencyTransfer[] results = (AgencyTransfer[]) simpleTimeCache.get(CACHE_KEY);
 
             if (results == null) {
-                GetAgenciesResponse response = getIntegratorService().getAgencies(new GetAgenciesRequest(), getAuthenticationToken());
+                GetAgenciesResponse response = getIntegratorService().getAgencies(getAuthenticationToken());
 
                 if (!response.getAck().equals(MessageAck.OK)) {
                     log.error("Error getting agency list. " + response.getAck());
@@ -420,7 +420,7 @@ public class IntegratorManager {
             ProgramTransfer[] results = (ProgramTransfer[]) simpleTimeCache.get(CACHE_KEY);
 
             if (results == null) {
-                GetProgramsResponse response = getIntegratorService().getPrograms(new GetProgramsRequest(), getAuthenticationToken());
+                GetProgramsResponse response = getIntegratorService().getPrograms(getAuthenticationToken());
 
                 if (!response.getAck().equals(MessageAck.OK)) {
                     log.error("Error retrieving programs. " + response.getAck());
@@ -467,7 +467,7 @@ public class IntegratorManager {
 
     /**
      * @param referral
-     * @return true if successfull false otherwise
+     * @return true if successful false otherwise
      */
     public boolean makeReferral(ClientReferral referral) {
         try {
@@ -479,29 +479,51 @@ public class IntegratorManager {
             request.setPresentingProblem(referral.getPresentProblems());
             request.setReasonForReferral(referral.getNotes());
             request.setSourceDemographicNo(referral.getClientId());
-            
-            Provider provider=providerDao.getProvider(String.valueOf(referral.getProviderNo()));
-            StringBuilder providerInfo=new StringBuilder();
+
+            Provider provider = providerDao.getProvider(String.valueOf(referral.getProviderNo()));
+            StringBuilder providerInfo = new StringBuilder();
             providerInfo.append(provider.getFullName());
             providerInfo.append(" (");
             providerInfo.append(provider.getProviderType());
             providerInfo.append(") ");
             providerInfo.append(provider.getWorkPhone());
             request.setSourceProviderInfo(providerInfo.toString());
-            
+
             MakeReferralResponse response = getIntegratorService().makeReferral(request, getAuthenticationToken());
 
             if (!response.getAck().equals(MessageAck.OK)) {
                 log.error("Error making referral. " + response.getAck());
                 return(false);
             }
-            
+
             return(true);
         }
         catch (Exception e) {
             log.error("Unexpected error.", e);
         }
-        
+
         return(false);
+    }
+
+    /**
+     */
+    public GetReferralResponseTransfer[] getRemoteReferrals() {
+        try {
+            if (!isEnabled()) return(null);
+
+            GetReferralsResponse response = getIntegratorService().getReferralsByAgency(getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error getting referrals. " + response.getAck());
+                return(null);
+            }
+
+            return(response.getReferrals());
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+        }
+
+        return(null);
     }
 }
