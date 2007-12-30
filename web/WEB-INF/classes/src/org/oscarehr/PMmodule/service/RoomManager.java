@@ -86,26 +86,21 @@ public class RoomManager {
 
     /**
      * Get rooms
-     *
      * @return list of rooms
      */
     public Room[] getRooms(Integer facilityId) {
         Room[] rooms = roomDAO.getRooms(facilityId, null, null);
-
         for (Room room : rooms) {
             setAttributes(room);
         }
-
         return rooms;
     }
 
     /**
      * Get rooms
-     *
      * @return array of rooms that have beds assigned to them.
      */
     public Room[] getRooms(Integer[][] roomsOccupancy) {
-    	
     	if(roomsOccupancy == null || roomsOccupancy[0] == null  ||  roomsOccupancy[0].length == 0){
     		return null;
     	}
@@ -115,13 +110,24 @@ public class RoomManager {
     		//not needed, this is the number of beds assigned to this particular room -- which has its occupancy limit
     		//rooms[i].setOccupancy(roomsOccupancy[1][i]);
     	}
-
         return rooms;
     }
     
     /**
      * Get assigned rooms
-     *
+     * @return list of assigned rooms
+     */
+    public Room[] getAssignedBedRooms(Integer facilityId, Integer programId, Boolean active) {
+        Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, programId, active);
+
+        for (Room room : rooms) {
+            setAttributes(room);
+        }
+        return rooms;
+    }
+   
+    /**
+     * Get assigned rooms
      * @return list of assigned rooms
      */
     public Room[] getAssignedBedRooms(Integer facilityId) {
@@ -130,7 +136,6 @@ public class RoomManager {
         for (Room room : rooms) {
             setAttributes(room);
         }
-
         return rooms;
     }
     
@@ -145,8 +150,8 @@ public class RoomManager {
 	 */
     @SuppressWarnings("unchecked")
     public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active) {
-    	//rooms of particular facilityId, programId, active=1, assignedBed=1  
-    	Room[] rooms = roomDAO.getAssignedBedRooms(facilityId, programId, active);
+    	//rooms of particular facilityId, programId, active=1, (assignedBed=1 or assignedBed=0) 
+    	Room[] rooms = roomDAO.getRooms(facilityId, programId, active);
     	
     	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
@@ -158,7 +163,8 @@ public class RoomManager {
 			roomId -->  get  all (multiple) bedIds from  table 'bed'
 			       -->  get  all demographicNo  from  table  'room_demographic'
 			bedIds -->  get all (1 to 1 relationship) demographicNo  from  table  'bed_demographic'
-			numOfClientsAssignedToRoom  ==  sum of  all unique demographicNo (subtracting the duplicates)
+			numOfClientsAssignedToRoom  ==  sum of  all unique demographicNo (subtracting the duplicates
+			of clients from both 'bed_demographic' & 'room_demographic' tables)
 		*/    	
     	
     	//get rooms that are not full or clients can still be assigned to these rooms
@@ -184,7 +190,6 @@ public class RoomManager {
 				if(roomDemograhics != null  &&  roomDemograhics.size() == 1){
 					clientsFromRoomDemographic.add(((RoomDemographic)roomDemograhics.get(0)).getId().getDemographicNo());
 				}
-					
 				numOfUniqueClientsAssignedToRoom = getNumOfUniqueClientsAssignedToRoom(clientsFromBedDemographic, clientsFromRoomDemographic);	
 				if(rooms[i].getOccupancy().intValue() -  numOfUniqueClientsAssignedToRoom > 0){
 					availableRooms.add(rooms[i]);
@@ -197,17 +202,16 @@ public class RoomManager {
 		log.debug("getAvailableRooms(): availableRooms = " + availableRooms.size());
 		return (Room[]) availableRooms.toArray(new Room[availableRooms.size()]);
 	}
-    
 
     private int getNumOfUniqueClientsAssignedToRoom(List clientsFromBedDemographic, List clientsFromRoomDemographic){
     	
     	if(clientsFromBedDemographic == null  &&  clientsFromRoomDemographic == null){
     		return 0;
     	}
-    	
     	List<Integer> clientsCombined = new ArrayList<Integer>();
     	clientsCombined.addAll(clientsFromBedDemographic);
     	clientsCombined.addAll(clientsFromRoomDemographic);
+    	
     	Collections.sort(clientsCombined);
     	Set treeSet = new TreeSet(clientsCombined);
     	if(treeSet == null){
@@ -215,6 +219,26 @@ public class RoomManager {
     	}
     	return treeSet.size();
     }
+    
+    public boolean isAssignedBed( String roomId, Room[] rooms ){
+    	
+    	if(roomId == null  ||  rooms == null){
+    		return false;
+    	}
+    	for(int i=0; i < rooms.length; i++){
+			try{
+	    		if( Integer.parseInt(roomId) == rooms[i].getId().intValue()  &&  rooms[i].getAssignedBed().intValue() == 1){
+	    			return true;
+	    		}else if( Integer.parseInt(roomId) == rooms[i].getId().intValue()  &&  rooms[i].getAssignedBed().intValue() == 0){
+	    			return false;
+	    		}
+			}catch(NumberFormatException nfex){
+				return false;
+			}
+    	}
+    	return false;
+    }
+    
     
     /**
      * Get room types

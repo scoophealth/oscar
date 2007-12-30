@@ -96,7 +96,7 @@ public class BedManagerAction extends BaseAction {
 		if(roomsOccupancy != null  &&  roomsOccupancy.length > 0){
 			rooms = roomManager.getRooms(roomsOccupancy);
 		}else{
-			rooms = bForm.getRooms();;
+			rooms = bForm.getRooms();
 		}
 		
 		try {

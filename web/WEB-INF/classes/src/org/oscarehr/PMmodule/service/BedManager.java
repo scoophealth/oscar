@@ -237,12 +237,15 @@ public class BedManager {
         for (Bed bed : beds) {
             setAttributes(bed);
             
+            // filter for unreserved beds for roomId only
             if (!filterBed(bed, reserved)) {
             	bedList.add(bed);
             }
+            // include the reserved bed of this current room/bed combination for changing
             if(bed.getId().intValue() == clientBedId  &&  bed.getRoomId().intValue() == roomId){
             	bedList.add(bed);
             }
+            
         }
         return bedList.toArray(new Bed[bedList.size()]);
         
@@ -278,12 +281,9 @@ public class BedManager {
     /**
      * Calculate occupancy number as number of beds assigned to each room when 
      * assignedBed attribute is set to 'Y'
-     *
      * @param beds
-     *            
      */
     public Integer[][] calculateOccupancyAsNumOfBedsAssignedToRoom(Bed[] beds){
-    	
     	if(beds == null){
     		return null;
     	}
