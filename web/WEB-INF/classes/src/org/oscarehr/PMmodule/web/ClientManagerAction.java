@@ -1096,7 +1096,7 @@ public class ClientManagerAction extends BaseAction {
             clientForm.set("bedDemographic", bedDemographic);
 
             Room[] availableRooms = getRoomManager().getAvailableRooms(null, bedProgramId, Boolean.TRUE);
-            // clientForm.set("availableRooms", availableRooms);
+            
             request.setAttribute("availableRooms", availableRooms);
 
             if ((isRefreshRoomDropDown && roomId != null) || (reservedBed == null && !"0".equals(roomId))) {
@@ -1108,6 +1108,8 @@ public class ClientManagerAction extends BaseAction {
             else {
                 request.setAttribute("roomId", "0");
             }
+            request.setAttribute( "isAssignedBed", String.valueOf(getRoomManager().isAssignedBed((String)request.getAttribute("roomId"), availableRooms ) ) ); 
+            										
             // retrieve an array of beds associated with this roomId
             Bed[] unreservedBeds = null;
 

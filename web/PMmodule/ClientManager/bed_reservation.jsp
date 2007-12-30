@@ -76,16 +76,22 @@
 					
 				</td>
 			</tr>
-	
-	
 <!-- End of Assign Room -------------------------------------------------------------->
-		
-		
 			<tr>
 				<th width="20%">Assign Bed</th>
 				<td>
 					<html:select property="bedDemographic.bedId">
-						<option value="0"></option>
+							<c:choose>
+								<c:when test="${!isAssignedBed}">
+									<option value="0" selected="selected">
+										<c:out value="N/A" />
+									</option>
+								</c:when>
+								<c:otherwise>
+									<option value="0"></option>
+								</c:otherwise>
+							</c:choose>
+					
 						<c:forEach var="unreservedBed" items="${clientManagerForm.map.unreservedBeds}">
 							<c:choose>
 								<c:when test="${unreservedBed.id == clientManagerForm.map.bedDemographic.bedId}">
