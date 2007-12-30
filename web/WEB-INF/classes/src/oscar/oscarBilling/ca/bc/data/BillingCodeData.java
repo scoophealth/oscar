@@ -180,6 +180,33 @@ public final class BillingCodeData implements Comparable      {
     }
     return retval;
   }
+
+  public boolean updateBillingCodePrice(String code, String val) {
+    boolean retval = true;
+    DBHandler db = null;
+    String str = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      str = "update billingservice set value = '"+val+"' where service_code = '"+code+"'";
+      System.out.println(str);
+      db.RunSQL(str);
+    }
+    catch (Exception e1) {
+      e1.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+      }
+      catch (SQLException ex) {
+        ex.printStackTrace();
+      }
+    }
+    return retval;
+  }
+  
+  
+  
   private ArrayList codeSearch(String queryString) {
     ArrayList list = new ArrayList();
     DBHandler db = null;
@@ -206,6 +233,15 @@ public final class BillingCodeData implements Comparable      {
     return list;
   }
 
+  
+  public BillingCodeData getBillingCodeByCode(String code){
+    List list = codeSearch("select * from billingservice where service_code like '" +code + "'" );
+    if(list == null || list.size() ==0 ){
+        return null;
+    }
+    return (BillingCodeData) list.get(0);
+  }
+  
   /**
    * Finds private service codes by code id
    * @param code String - the service code
@@ -227,6 +263,10 @@ public final class BillingCodeData implements Comparable      {
     return  SqlUtils.getQueryResultsList("select service_code,description from billingservice where description like '" + Misc.mysqlEscape(searchTerm) + "%'");
   }
 
+  
+  
+  
+  
   /**
    * Getter for property billingserviceNo.
    * @return Value of property billingserviceNo.
