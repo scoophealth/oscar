@@ -69,6 +69,38 @@ public class BillingFormData {
     return types;
   }
 
+  
+  public String getProviderNo(String billno) {
+    String providerNo = null;
+    String sql = "select provider_no from billing where billing_no = "+billno;
+    DBHandler db = null;
+    ResultSet rs = null;
+    try {
+      db = new DBHandler(DBHandler.OSCAR_DATA);
+      rs = db.GetSQL(sql);
+
+      if (rs.next()) {
+        providerNo = rs.getString("provider_no");
+      }
+    }
+    catch (SQLException ex) {
+      ex.printStackTrace();
+    }
+    finally {
+      try {
+        db.CloseConn();
+        rs.close();
+      }
+      catch (SQLException ex1) {
+        ex1.printStackTrace();
+      }
+    }
+
+    return providerNo;
+  }
+  
+  
+  
   /**
    * Returns a list of status type instances according to the supplied String array of allowable status codes
    * If the supplied array is null or empty, a full list is returned
@@ -484,6 +516,30 @@ public class BillingFormData {
     public String getProviderNo() {
       return provider_no;
     }
+
+  }
+  
+  
+  public String getBillingType(String billNo) {
+    String billType = null;
+    try {
+      DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+      ResultSet rs;
+      String sql;
+
+      sql = "SELECT billingtype from billing where billing_no='" +billNo + "'";
+
+      rs = db.GetSQL(sql);
+      if(rs.next()) {
+        billType = rs.getString("billingtype");
+      }
+      rs.close();
+      db.CloseConn();
+    }
+    catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+    return billType;
 
   }
 
