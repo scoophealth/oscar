@@ -42,11 +42,13 @@ import org.apache.struts.actions.DispatchAction;
 import oscar.OscarProperties;
 import oscar.entities.Billactivity;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanAPI;
+import oscar.oscarBilling.ca.bc.Teleplan.TeleplanCodesManager;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanResponse;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanSequenceDAO;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanService;
 import oscar.oscarBilling.ca.bc.Teleplan.TeleplanUserPassDAO;
 import oscar.oscarBilling.ca.bc.data.BillActivityDAO;
+import oscar.oscarBilling.ca.bc.data.BillingCodeData;
 
 /**
  *
@@ -87,14 +89,40 @@ public class ManageTeleplanAction extends DispatchAction {
     public ActionForward updateBillingCodes(ActionMapping mapping, ActionForm  form,
            HttpServletRequest request, HttpServletResponse response)
            throws Exception {
+        
+           System.out.println("UPDATE BILLING CODE WITH PARSING");
            TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
            String[] userpass = dao.getUsernamePassword();
            TeleplanService tService = new TeleplanService();
            TeleplanAPI tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
            
            TeleplanResponse tr = tAPI.getAsciiFile("3");
-           log.debug(tr.toString());
+          
+           log.debug("real filename "+tr.getRealFilename());
+           
+           File file = tr.getFile();
+           TeleplanCodesManager tcm = new TeleplanCodesManager();
+           List list = tcm.parse(file);
+           request.setAttribute("codes",list);
+           return mapping.findForward("codelist");
+    }
     
+    
+    public ActionForward commitUpdateBillingCodes(ActionMapping mapping, ActionForm  form,HttpServletRequest request, HttpServletResponse response)
+           throws Exception {
+           String[] codes = request.getParameterValues("codes");
+           if (codes != null){
+               for(String code: codes){
+                  System.out.println(code);
+                  String[] codeval = code.split("À");   //="<%=h.get("code")%>|<%=h.get("fee")%>|<%=h.get("desc")%>"
+                  BillingCodeData bcd = new BillingCodeData();
+                  if (bcd.getBillingCodeByCode(codeval[0]) == null){ //NEW CODE
+                    bcd.addBillingCode(codeval[0],codeval[2],codeval[1]);
+                  }else{ //UPDATE PRICE
+                    bcd.updateBillingCodePrice(codeval[0],codeval[1]); 
+                  }
+               }
+           }
            return mapping.findForward("success");
     }
     
@@ -227,7 +255,7 @@ public class ManageTeleplanAction extends DispatchAction {
            log.debug(tr.toString());
            log.debug("real filename "+tr.getRealFilename());
            request.setAttribute("filename",tr.getRealFilename());
-        return mapping.findForward("remit");
+           return mapping.findForward("remit");
     }
             
     public ActionForward changePass(ActionMapping mapping, ActionForm  form,
@@ -270,6 +298,46 @@ public class ManageTeleplanAction extends DispatchAction {
            }
            return mapping.findForward("success");
     }
+    
+    
+    public ActionForward checkElig(ActionMapping mapping, ActionForm  form,
+           HttpServletRequest request, HttpServletResponse response)
+           throws Exception {
+           log.debug("checkElig");
+           OscarProperties prop = OscarProperties.getInstance();
+           
+           
+           TeleplanUserPassDAO dao = new TeleplanUserPassDAO();
+           String[] userpass = dao.getUsernamePassword();
+           TeleplanService tService = new TeleplanService();
+           
+           TeleplanAPI tAPI = null;
+           try{
+                tAPI = tService.getTeleplanAPI(userpass[0],userpass[1]);
+           }catch(Exception e){
+               log.debug(e.getMessage(),e);
+               request.setAttribute("error",e.getMessage());
+               return mapping.findForward("success");
+           }
+           
+           String phn = "";
+           String dateofbirthyyyy= "";
+           String dateofbirthmm= "";
+           String dateofbirthdd= "";
+           String dateofserviceyyyy= ""; 
+           String dateofservicemm= "";
+           String dateofservicedd= "";
+           boolean patientvisitcharge= true; 
+           boolean lasteyeexam=true;
+           boolean patientrestriction=true;
+           
+           //TeleplanResponse tr = tAPI.checkElig(phn,dateofbirthyyyy,dateofbirthmm,dateofbirthdd,dateofserviceyyyy,dateofservicemm,dateofservicedd,patientvisitcharge,lasteyeexam, patientrestriction);
+           //request.setAttribute("message",tr.toString());
+           return mapping.findForward("success");
+    }
+    
+   
+    
     
     
 }
