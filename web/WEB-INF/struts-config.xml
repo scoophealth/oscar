@@ -1317,6 +1317,7 @@
         </action>
         <action input="/billing/CA/BC/teleplan/ManageTeleplan.jsp" name="FrmForm" path="/billing/CA/BC/ManageTeleplan" parameter="method" scope="request" type="oscar.oscarBilling.ca.bc.pageUtil.ManageTeleplanAction">
             <forward name="success" path="/billing/CA/BC/teleplan/ManageTeleplan.jsp"/>
+            <forward name="codelist" path="/billing/CA/BC/teleplan/ManageBillingCodes.jsp"/>
             <forward name="submission" path="/billing/CA/BC/TeleplanSubmission.jsp" />
             <forward name="remit" path="/billing/CA/BC/ProcessRemittance.do" />
         </action>
