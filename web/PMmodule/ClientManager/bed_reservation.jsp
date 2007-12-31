@@ -41,16 +41,13 @@
 				<th width="20%">Assign Room</th>
 				<td>
 					<c:choose>
-					<c:when test="${availableRooms == null}">
-						
-
-                        <select property="roomId">
-										<option value="" selected="selected">
-											 No available rooms
-										</option>
-						</select>
-
-					</c:when>
+						<c:when test="${availableRooms == null}">
+	                        <select property="roomId">
+								<option value="" selected="selected">
+									 No available rooms
+								</option>
+							</select>
+						</c:when>
 					<c:otherwise>
 			
 						<select name="roomId"  onchange="clientManagerForm.method.value='refreshBedDropDownForReservation';clientManagerForm.submit();">
@@ -86,6 +83,9 @@
 									<option value="0" selected="selected">
 										<c:out value="N/A" />
 									</option>
+								</c:when>
+								<c:when test="${empty clientManagerForm.map.unreservedBeds}">
+										<option value="0">No beds assigned yet</option>
 								</c:when>
 								<c:otherwise>
 									<option value="0"></option>
