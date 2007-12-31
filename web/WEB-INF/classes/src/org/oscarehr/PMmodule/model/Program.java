@@ -677,6 +677,7 @@ public class Program implements Serializable {
         ProgramTransfer programTransfer=new ProgramTransfer();
         BeanCopyUtil.copyProperties(this, programTransfer, null, false);
         programTransfer.setNumberOfMembers(numOfMembers);
+        programTransfer.setRemoteProgramId(id);
         return(programTransfer);
     }
     

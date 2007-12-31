@@ -28,6 +28,7 @@ import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
 import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Program;
@@ -66,6 +67,7 @@ public class IntegratorUpdateTask extends TimerTask {
             log.debug("IntegratorUpdateTask finished)");
         }
     }
+
 
     private void pushPrograms() {
         try {

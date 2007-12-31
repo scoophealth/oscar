@@ -40,6 +40,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
 import org.oscarehr.PMmodule.exception.AdmissionException;
 import org.oscarehr.PMmodule.exception.BedReservedException;
 import org.oscarehr.PMmodule.exception.ProgramFullException;
@@ -96,6 +97,9 @@ public class ProgramManagerViewAction extends BaseAction {
         List<ProgramQueue> queue = programQueueManager.getActiveProgramQueuesByProgramId(Long.valueOf(programId));
         request.setAttribute("queue", queue);
 
+        GetReferralResponseTransfer[] remoteReferrals=integratorManager.getRemoteReferrals();
+        request.setAttribute("remoteReferrals", remoteReferrals);
+        
         HashSet<Long> genderConflict = new HashSet<Long>();
         HashSet<Long> ageConflict = new HashSet<Long>();
         for (ProgramQueue programQueue : queue) {
@@ -128,7 +132,7 @@ public class ProgramManagerViewAction extends BaseAction {
         request.setAttribute("ageConflict", ageConflict);
 
         if (formBean.getTab() == null || formBean.getTab().equals("")) {
-            if (queue.size() > 0) {
+            if (queue.size() > 0 || remoteReferrals.length>0) {
                 formBean.setTab("Queue");
             }
             else {

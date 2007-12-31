@@ -1,6 +1,12 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.oscarehr.PMmodule.model.ProgramQueue" %>
+<%@ page import="org.caisi.integrator.model.transfer.*" %>
 <%@ page import="java.net.URLEncoder" %>
+<%@page import="org.apache.commons.lang.time.DateFormatUtils"%>
+<%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
+<%@page import="org.oscarehr.util.SpringUtils"%>
+<%@page import="org.caisi.integrator.model.transfer.AgencyTransfer"%>
+
 <!--
 /*
 *
@@ -86,13 +92,7 @@
 </script>
 <html:hidden property="clientId" />
 <html:hidden property="queueId" />
-<div class="tabs" id="tabs">
-    <table cellpadding="3" cellspacing="0" border="0">
-        <tr>
-            <th title="Programs">Queue</th>
-        </tr>
-    </table>
-</div>
+<h3>Local Queue</h3>
 <%
 	HashSet<Long> genderConflict=(HashSet<Long>)request.getAttribute("genderConflict");
 	HashSet<Long> ageConflict=(HashSet<Long>)request.getAttribute("ageConflict");
@@ -153,6 +153,49 @@
 </display:table>
 <br />
 <br />
+<%
+	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
+	if (integratorManager.isEnabled())
+	{
+%>
+		<h3>Referrals from other agencies</h3>
+
+		<display:table class="simple" cellspacing="2" cellpadding="3" id="queue_entry" name="remoteReferrals" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
+		    <display:setProperty name="paging.banner.placement" value="bottom" />
+		    <display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
+			<%
+		    	GetReferralResponseTransfer getReferralResponseTransfer = (GetReferralResponseTransfer) pageContext.getAttribute("queue_entry");
+			%>
+			<display:column sortable="false">
+		        <input type="button" value="Admit" onclick="alert('does not  work yet')" />
+			</display:column>
+		    <display:column sortable="false">
+		        <input type="button" value="Reject" onclick="alert('does not work yet')" />
+		    </display:column>
+		    
+		    <display:column sortable="true" property="sourceDemographicNo" title="Remote Client No"/>
+		    <display:column sortable="true" title="From Agency">
+		    <%
+		    	AgencyTransfer agencyTransfer=integratorManager.getAgencyById(getReferralResponseTransfer.getSourceAgencyId());
+		    %>
+		    <%=agencyTransfer.getName() %>
+		    </display:column>
+		    <display:column sortable="true" title="Referral Date">
+			<%
+				String referralDate=DateFormatUtils.ISO_DATETIME_FORMAT.format(getReferralResponseTransfer.getReferralDate());
+		    %>
+		    <%=referralDate%>
+		    </display:column>
+		    <display:column property="sourceProviderInfo" sortable="true" title="Referring Provider" />
+		    <display:column property="reasonForReferral" sortable="true" title="Reason for referral" />
+		    <display:column property="presentingProblem" sortable="true" title="Present problems"/>
+		</display:table>
+	<br />
+	<br />
+<%
+	}
+%>
+
 <c:if test="${requestScope.do_admit != null}">
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <c:if test="${requestScope.current_admission != null}">
