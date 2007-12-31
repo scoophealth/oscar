@@ -84,9 +84,6 @@
 										<c:out value="N/A" />
 									</option>
 								</c:when>
-								<c:when test="${empty clientManagerForm.map.unreservedBeds}">
-										<option value="0">No beds assigned yet</option>
-								</c:when>
 								<c:otherwise>
 									<option value="0"></option>
 								</c:otherwise>
