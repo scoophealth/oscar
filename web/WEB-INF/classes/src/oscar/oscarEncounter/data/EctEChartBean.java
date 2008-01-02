@@ -48,6 +48,7 @@ public class EctEChartBean {
 				reminders = rs.getString("reminders");
 				encounter = rs.getString("encounter");
 				subject = rs.getString("subject");
+				providerNo = rs.getString("providerNo");
 			} else {
 				eChartTimeStamp = null;
 				socialHistory = "";
@@ -57,6 +58,7 @@ public class EctEChartBean {
 				reminders = "";
 				encounter = "";
 				subject = "";
+				providerNo = "";
 			}
 			rs.close();
 			db.CloseConn();
