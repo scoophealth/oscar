@@ -100,13 +100,14 @@ public class RoomManager {
      * Get rooms
      * @return array of rooms that have beds assigned to them.
      */
+    
     public Room[] getRooms(Integer[][] roomsOccupancy) {
     	if(roomsOccupancy == null || roomsOccupancy[0] == null  ||  roomsOccupancy[0].length == 0){
     		return null;
     	}
-    	Room[] rooms = new Room[roomsOccupancy[0].length];
+    	Room[] rooms = new Room[roomsOccupancy.length];
     	for(int i=0; i < rooms.length; i++){
-    		rooms[i] = getRoom(roomsOccupancy[0][i]);
+    		rooms[i] = getRoom(roomsOccupancy[i][0]);
     		//not needed, this is the number of beds assigned to this particular room -- which has its occupancy limit
     		//rooms[i].setOccupancy(roomsOccupancy[1][i]);
     	}
@@ -137,6 +138,41 @@ public class RoomManager {
             setAttributes(room);
         }
         return rooms;
+    }
+    
+    
+    /**
+     * Get rooms that are not full
+     * @return list of unfilled rooms
+     */
+    public Room[] getUnfilledRoomIds(Bed[] beds) {
+    	
+    	List<Room> roomList = new ArrayList<Room>();
+    	Integer[][] roomIdAndOccupancy = calculateOccupancyAsNumOfBedsAssignedToRoom(beds);
+
+		if(roomIdAndOccupancy == null){
+			return null;
+		}
+    	Room[] rooms = getRooms(roomIdAndOccupancy); 
+
+    	//rooms subject to condition: roomCapacity - occupancy > 0
+    	for(int i=0; rooms != null  &&  i < rooms.length; i++){
+    		
+    		for(int j=0; j < roomIdAndOccupancy.length; j++){
+    			
+    			if(  rooms[i].getId().intValue() == roomIdAndOccupancy[j][0].intValue() ){
+   			
+    				if( rooms[i].getOccupancy().intValue() - roomIdAndOccupancy[j][1].intValue() >= 0 ){
+    					roomList.add(rooms[i]);
+    				}
+    			}
+    		}
+    	}
+
+    	if(roomList == null || roomList.isEmpty()){
+    		return null;
+    	}
+        return (Room[]) roomList.toArray(new Room[roomList.size()]);
     }
     
 	/**
@@ -218,6 +254,64 @@ public class RoomManager {
     		return 0;
     	}
     	return treeSet.size();
+    }
+    
+    /**
+     * Calculate occupancy number as number of beds assigned to each room when 
+     * assignedBed attribute is set to 'Y'
+     * @param beds
+     */
+    public Integer[][] calculateOccupancyAsNumOfBedsAssignedToRoom(Bed[] beds){
+    	if(beds == null){
+    		return null;
+    	}
+    	List roomIdKeys = new ArrayList();
+    	List roomIdCounts = new ArrayList();
+    	Integer[][] roomsOccupancy = null;
+    	int count = 1;
+    	int roomIdKey = -1;
+
+    	Integer[] roomIds = new Integer[beds.length];
+    	for(int i=0; i < beds.length; i++){
+    		roomIds[i] = beds[i].getRoomId();
+    	}
+    	
+    	Arrays.sort( roomIds  );  
+		
+		//adding up repeated roomIds as the number of beds assigned to this roomId
+    	if(roomIds != null  &&  roomIds.length > 0){
+    		roomIdKey = roomIds[0];
+    		for( int i=1; i < roomIds.length; i++  ){
+    			if( roomIdKey  == roomIds[i] ){
+    				count++;
+    			}else{
+     				if(i > 0){
+    					roomIdKeys.add(roomIdKey);
+    				}
+    				roomIdCounts.add( new Integer( count ) );
+    				count = 1;
+    			}
+    			roomIdKey = roomIds[i];
+    			if( i == roomIds.length - 1 ){
+    				roomIdKeys.add(roomIdKey);
+    				roomIdCounts.add( new Integer( count ) );
+    			}
+    		}
+    	}
+    	
+    	if(roomIdKeys == null  ||  roomIdKeys.size() <= 0){
+    		return null;
+    	}
+    	
+    	
+    	roomsOccupancy = new Integer[roomIdKeys.size()][2];
+    	for(int i=0; i < roomsOccupancy.length; i++){
+    		
+	        roomsOccupancy[i][0] = (Integer)roomIdKeys.get(i);
+	        roomsOccupancy[i][1] = (Integer)roomIdCounts.get(i);
+    	}
+    	
+    	return roomsOccupancy;
     }
     
     public boolean isAssignedBed( String roomId, Room[] rooms ){
