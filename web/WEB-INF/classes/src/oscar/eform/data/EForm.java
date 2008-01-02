@@ -153,6 +153,8 @@ public class EForm extends EFormBase {
         
         if (tagType.equals("textarea")) {
             pointer = html.indexOf(">", pointer) + 1;
+            int endPointer = html.indexOf("<", pointer);
+            html.delete(pointer, endPointer);
             html.insert(pointer, value);
         }
         else if (tagType.equals("text") || tagType.equals("hidden")) {
