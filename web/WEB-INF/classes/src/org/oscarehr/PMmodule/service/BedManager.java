@@ -44,7 +44,6 @@ import org.oscarehr.PMmodule.service.BedDemographicManager;
 public class BedManager {
 
     private static final Log log = LogFactory.getLog(BedManager.class);
-
     private static <T extends Exception> void handleException(T e) throws T {
         log.error(e);
         throw e;
@@ -224,6 +223,27 @@ public class BedManager {
         }
         return beds;
     }
+    
+    public Bed[] getBedsForUnfilledRooms(Room[] rooms, Bed[] beds){
+    	
+    	if(rooms == null  ||  beds == null){
+    		return null;
+    	}
+    	
+    	List<Bed> bedList = new ArrayList<Bed>();
+    	for(int i=0; i < beds.length; i++){
+    		
+    		for(int j=0; j < rooms.length; j++){
+    			
+    			if(beds[i].getRoomId().intValue() == rooms[j].getId().intValue()){
+    				bedList.add(beds[i]);
+    				break;
+    			}
+    		}
+    	}
+    	return (Bed[])bedList.toArray(new Bed[bedList.size()]);
+    }
+    
     /**
      * Get unreserved beds by roomId and clientBedId
      * @param roomId
@@ -278,59 +298,6 @@ public class BedManager {
         }
     }
 
-    /**
-     * Calculate occupancy number as number of beds assigned to each room when 
-     * assignedBed attribute is set to 'Y'
-     * @param beds
-     */
-    public Integer[][] calculateOccupancyAsNumOfBedsAssignedToRoom(Bed[] beds){
-    	if(beds == null){
-    		return null;
-    	}
-    	List roomIdKeys = new ArrayList();
-    	List roomIdCounts = new ArrayList();
-    	Integer[][] roomsOccupancy = null;
-    	int count = 1;
-    	int roomIdKey = -1;
-
-    	Integer[] roomIds = new Integer[beds.length];
-    	for(int i=0; i < beds.length; i++){
-    		roomIds[i] = beds[i].getRoomId();
-    	}
-    	
-    	Arrays.sort( roomIds  );  
-
-    	if(roomIds != null  &&  roomIds.length > 0){
-    		roomIdKey = roomIds[0];
-    		for( int i=1; i < roomIds.length; i++  ){
-    			if( roomIdKey  == roomIds[i] ){
-    				count++;
-    			}else{
-     				if(i > 0){
-    					roomIdKeys.add(roomIdKey);
-    				}
-    				roomIdCounts.add( new Integer( count ) );
-    				count = 1;
-    			}
-    			roomIdKey = roomIds[i];
-    			if( i == roomIds.length - 1 ){
-    				roomIdKeys.add(roomIdKey);
-    				roomIdCounts.add( new Integer( count ) );
-    			}
-    		}
-    	}
-    	if(roomIdKeys == null  ||  roomIdKeys.size() <= 0){
-    		return null;
-    	}
-    	roomsOccupancy = new Integer[2][roomIdKeys.size()];
-    	for(int i=0; i < roomsOccupancy[0].length; i++){
-	        roomsOccupancy[0][i] = (Integer)roomIdKeys.get(i);
-	        roomsOccupancy[1][i] = (Integer)roomIdCounts.get(i);
-    	}
-    	return roomsOccupancy;
-    }
-    
-    
     /**
      * Save beds
      *
