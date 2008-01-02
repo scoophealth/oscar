@@ -155,6 +155,7 @@
 <br />
 <%
 	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
+	GetReferralResponseTransfer getReferralResponseTransfer = null;
 	if (integratorManager.isEnabled())
 	{
 %>
@@ -163,9 +164,6 @@
 		<display:table class="simple" cellspacing="2" cellpadding="3" id="queue_entry" name="remoteReferrals" export="false" pagesize="0" requestURI="/PMmodule/ProgramManagerView.do">
 		    <display:setProperty name="paging.banner.placement" value="bottom" />
 		    <display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
-			<%
-		    	GetReferralResponseTransfer getReferralResponseTransfer = (GetReferralResponseTransfer) pageContext.getAttribute("queue_entry");
-			%>
 			<display:column sortable="false">
 		        <input type="button" value="Admit" onclick="alert('does not  work yet')" />
 			</display:column>
@@ -176,6 +174,7 @@
 		    <display:column sortable="true" property="sourceDemographicNo" title="Remote Client No"/>
 		    <display:column sortable="true" title="From Agency">
 		    <%
+		    	getReferralResponseTransfer = (GetReferralResponseTransfer) queue_entry;
 		    	AgencyTransfer agencyTransfer=integratorManager.getAgencyById(getReferralResponseTransfer.getSourceAgencyId());
 		    %>
 		    <%=agencyTransfer.getName() %>
