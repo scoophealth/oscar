@@ -55,6 +55,8 @@ import org.caisi.integrator.message.program.MakeReferralRequest;
 import org.caisi.integrator.message.program.MakeReferralResponse;
 import org.caisi.integrator.message.program.PublishProgramRequest;
 import org.caisi.integrator.message.program.PublishProgramResponse;
+import org.caisi.integrator.message.program.RemoveReferralRequest;
+import org.caisi.integrator.message.program.RemoveReferralResponse;
 import org.caisi.integrator.message.search.SearchCandidateDemographicRequest;
 import org.caisi.integrator.message.search.SearchCandidateDemographicResponse;
 import org.caisi.integrator.model.Client;
@@ -526,4 +528,28 @@ public class IntegratorManager {
 
         return(null);
     }
+    
+    public boolean removeReferral(int referralId) {
+        try {
+            if (!isEnabled()) return(false);
+
+            RemoveReferralRequest request = new RemoveReferralRequest();
+            request.setReferralId(referralId);
+
+            RemoveReferralResponse response = getIntegratorService().removeReferral(request, getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error making referral. " + response.getAck());
+                return(false);
+            }
+
+            return(true);
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+        }
+
+        return(false);
+    }
+
 }
