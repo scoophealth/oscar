@@ -406,23 +406,25 @@ public class PreventionData {
 	       String provider = ProviderData.getProviderName(rs.getString("provider_no"));
 	       String summary = "Prevention " + rs.getString("prevention_type") + " provided by " + provider + " on " + rs.getString("prevention_date") +"\n";
 	       Hashtable ext = getPreventionKeyValues(rs.getString("id"));
-	       if (ext.containsKey("result")) {
+    	       if (ext.containsKey("result")) {
 		   summary += "Result: " + ext.get("result");
-		   if (!ext.get("reason").equals("")) summary += "\nReason: " + ext.get("reason");
+		   if (ext.containsKey("reason") && !ext.get("reason").equals("")) {
+		       summary += "\nReason: " + ext.get("reason");
+		   }
 	       } else {
-		   if (!ext.get("location").equals("")) {
+		   if (ext.containsKey("location") && !ext.get("location").equals("")) {
 		       addToHashIfNotNull(h, "location", (String)ext.get("location"));
 		       summary += "Location: " + ext.get("location") + "\n";
 		   }
-		   if (!ext.get("route").equals("")) {
+		   if (ext.containsKey("route") && !ext.get("route").equals("")) {
 		       addToHashIfNotNull(h, "route", (String)ext.get("route"));
 		       summary += "Route: " + ext.get("route") + "\n";
 		   }
-		   if (!ext.get("lot").equals("")) {
+		   if (ext.containsKey("lot") && !ext.get("lot").equals("")) {
 		       addToHashIfNotNull(h, "lot", (String)ext.get("lot"));
 		       summary += "Lot: " + ext.get("lot") + "\n";
 		   }
-		   if (!ext.get("manufacture").equals("")) {
+		   if (ext.containsKey("manufacture") && !ext.get("manufacture").equals("")) {
 		       addToHashIfNotNull(h, "manufacture", (String)ext.get("manufacture"));
 		       summary += "Manufacturer: " + ext.get("manufacture");
 		   }
