@@ -285,10 +285,11 @@ public class EFormUtil {
    public static String addEForm(EForm eForm) {
        //Adds an eform to the patient
        //open own connection - must be same connection for last_insert_id
+       String html = charEscape(eForm.getFormHtml(), '\'');
        String sql = "INSERT INTO eform_data (fid, form_name, subject, demographic_no, status, form_date, form_time, form_provider, form_data)" +
        "VALUES ('" + eForm.getFid() + "', '" + eForm.getFormName() + "', '" + StringEscapeUtils.escapeSql(eForm.getFormSubject()) +
                "', '" + eForm.getDemographicNo() + "', 1, '" + eForm.getFormDate() + "', '" + eForm.getFormTime() + "', '" + eForm.getProviderNo() +
-               "', '" + UtilMisc.charEscape(eForm.getFormHtml(), '\'') + "')";
+               "', '" + html + "')";
        try {           
            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
            db.RunSQL(sql);
@@ -301,6 +302,29 @@ public class EFormUtil {
        } catch (SQLException sqe) { sqe.printStackTrace(); }
        return "";
    }
+   
+ //used by addEForm for escaping characters
+ public static String charEscape(String S, char a) {
+    if (null == S) {
+      return S;
+    }
+    int N = S.length();
+    StringBuffer sb = new StringBuffer(N);
+    for (int i = 0; i < N; i++) {
+      char c = S.charAt(i);
+      //escape the escape characters
+      if (c == '\\') {
+        sb.append("\\\\");
+      }
+      else if (c == a) {
+        sb.append("\\" + a);
+      }
+      else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
    
    public static void addEFormValues(ArrayList names, ArrayList values, String fdid, String fid, 
                                 String demographic_no) {
