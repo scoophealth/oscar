@@ -52,6 +52,13 @@
         form.method.value='view';
         form.submit();
     }
+    
+    function reject_from_integrator(remote_referral_id) {
+        var form = document.programManagerViewForm;
+        form.elements['remoteReferralId'].value=remote_referral_id;
+        form.method.value='reject_from_integrator';
+        form.submit();
+    }
 
     function select_client(client_id,action,queue_id) {
         var form = document.programManagerViewForm;
@@ -92,6 +99,7 @@
 </script>
 <html:hidden property="clientId" />
 <html:hidden property="queueId" />
+<html:hidden property="remoteReferralId" />
 <h3>Local Queue</h3>
 <%
 	HashSet<Long> genderConflict=(HashSet<Long>)request.getAttribute("genderConflict");
@@ -165,16 +173,18 @@
 		    <display:setProperty name="paging.banner.placement" value="bottom" />
 		    <display:setProperty name="basic.msg.empty_list" value="Queue is empty." />
 			<display:column sortable="false">
+				<%
+			    	getReferralResponseTransfer = (GetReferralResponseTransfer) queue_entry;
+				%>
 		        <input type="button" value="Admit" onclick="alert('does not  work yet')" />
 			</display:column>
 		    <display:column sortable="false">
-		        <input type="button" value="Reject" onclick="alert('does not work yet')" />
+		        <input type="button" value="Reject" onclick="reject_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
 		    </display:column>
 		    
 		    <display:column sortable="true" property="sourceDemographicNo" title="Remote Client No"/>
 		    <display:column sortable="true" title="From Agency">
 		    <%
-		    	getReferralResponseTransfer = (GetReferralResponseTransfer) queue_entry;
 		    	AgencyTransfer agencyTransfer=integratorManager.getAgencyById(getReferralResponseTransfer.getSourceAgencyId());
 		    %>
 		    <%=agencyTransfer.getName() %>

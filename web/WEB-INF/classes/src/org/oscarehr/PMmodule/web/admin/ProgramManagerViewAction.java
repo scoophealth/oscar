@@ -532,6 +532,14 @@ public class ProgramManagerViewAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
+    public ActionForward reject_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+        String remoteReferralId = request.getParameter("remoteReferralId");
+
+        integratorManager.removeReferral(Integer.parseInt(remoteReferralId));
+
+        return view(mapping, form, request, response);
+    }
+
     public ActionForward select_client_for_admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String programId = request.getParameter("id");
         String clientId = request.getParameter("clientId");
