@@ -206,8 +206,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    if (demographic.getJustHIN()!=null && !demographic.getJustHIN().trim().equals("")) {
 		cdsDt.HealthCard healthCard = demo.addNewHealthCard();
 		healthCard.setNumber(demographic.getJustHIN());
-		if (demographic.getVersionCode()!=null && !demographic.getVersionCode().trim().equals("")) healthCard.setVersion(demographic.getVersionCode());
 		healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.CA_ON);
+		if (demographic.getVersionCode()!=null && !demographic.getVersionCode().trim().equals("")) healthCard.setVersion(demographic.getVersionCode());
+		if (demographic.getEffDate()!=null && !demographic.getEffDate().trim().equals("")) {
+		    gd.setDate(UtilDateUtilities.StringToDate(demographic.getEffDate()));
+		    gd.clearTimeZone();
+		    healthCard.setExpirydate(gd.getCalendar());
+		}
 	    }
 	    if (demographic.getAddress()!=null && !demographic.getAddress().trim().equals("")) {
 		cdsDt.Address addr = demo.addNewAddress();		
