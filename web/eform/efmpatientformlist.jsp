@@ -33,6 +33,8 @@
 <%@ page import = "java.util.*, oscar.eform.*" %> 
 
 <%
+if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
 String country = request.getLocale().getCountry();
 String orderByRequest = request.getParameter("orderby");
 String orderBy = "";
@@ -129,6 +131,10 @@ function updateAjax() {
                 <br>
                 <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" class="current"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
                 <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnDeleted"/> </a>
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
+                <br/>
+                <a href="#" onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');" style="color: #835921;">Manage eForms</a>
+                </security:oscarSec>
                 <jsp:include page="efmviewgroups.jsp">
                     <jsp:param name="url" value="../eform/efmpatientformlist.jsp"/>
                     <jsp:param name="groupView" value="<%=groupView%>"/>

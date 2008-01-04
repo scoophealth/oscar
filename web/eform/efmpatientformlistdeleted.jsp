@@ -24,6 +24,8 @@
  */
 -->
 <%
+if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
   if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
   //int demographic_no = Integer.parseInt(request.getParameter("demographic_no")); 
   String demographic_no = request.getParameter("demographic_no"); 
@@ -55,6 +57,7 @@ String parentAjaxId = request.getParameter("parentAjaxId");
 </title>
 <link rel="stylesheet" type="text/css" href="../share/css/OscarStandardLayout.css">
 <link rel="stylesheet" type="text/css" href="../share/css/eforms.css">
+<script type="text/javascript" language="JavaScript" src="../share/javascript/Oscar.js"></script>
 <script type="text/javascript" language="javascript">
 function popupPage(varpage, windowname) {
     var page = "" + varpage;
@@ -78,6 +81,7 @@ function updateAjax() {
 
 }
 </script>
+
 </head>
 
 <body onunload="updateAjax()" class="BodyStyle" vlink="#0000FF">
@@ -115,6 +119,10 @@ function updateAjax() {
                 <br>
                 <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
                 <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>" class="current"><bean:message key="eform.showmyform.btnDeleted"/></a>
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
+                <br/>
+                <a href="#" onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');" style="color: #835921;">Manage eForms</a>
+                </security:oscarSec>
             </td>
             <td class="MainTableRightColumn" valign="top">
 <table class="elements" width="100%">
