@@ -73,7 +73,7 @@ if (patientGroups.equals("1")) {
            <% } %>
           </ul>
           <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
-              <a href="#" onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')">Edit Groups</a>
+              <a href="#" onclick="popup(660, 1000, '../eform/efmmanageformgroups.jsp', 'editGroups')" style="color: #835921;">Edit Groups</a>
           </security:oscarSec>
       </div>
 </form>    
