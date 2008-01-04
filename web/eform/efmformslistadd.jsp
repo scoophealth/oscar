@@ -12,6 +12,7 @@
 <%@ page import = "java.util.*, java.sql.*, oscar.eform.*"%>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/security.tld" prefix="security" %>
 <!--  
 /*
  * 
@@ -39,6 +40,9 @@
 -->
 
 <%
+if(session.getAttribute("userrole") == null )  response.sendRedirect("../logout.jsp");
+    String roleName$ = (String)session.getAttribute("userrole") + "," + (String) session.getAttribute("user");
+    
 String orderByRequest = request.getParameter("orderby");
 String orderBy = "";
 if (orderByRequest == null) orderBy = EFormUtil.NAME;
@@ -119,7 +123,10 @@ function updateAjax() {
                 <br>
                 <a href="efmpatientformlist.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.calldeletedformdata.btnGoToForm"/></a><br/>
                 <a href="efmpatientformlistdeleted.jsp?demographic_no=<%=demographic_no%>&parentAjaxId=<%=parentAjaxId%>"><bean:message key="eform.showmyform.btnDeleted"/></a>
-                
+                <security:oscarSec roleName="<%=roleName$%>" objectName="_admin,_admin.eform" rights="r" reverse="<%=false%>" >
+                <br/>
+                <a href="#" onclick="javascript: return popup(600, 750, '../eform/efmformmanager.jsp', 'manageeforms');" style="color: #835921;">Manage eForms</a>
+                </security:oscarSec>
 <jsp:include page="efmviewgroups.jsp">
     <jsp:param name="url" value="../eform/efmformslistadd.jsp"/>
     <jsp:param name="groupView" value="<%=groupView%>"/>
