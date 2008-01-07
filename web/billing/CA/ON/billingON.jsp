@@ -1039,9 +1039,20 @@ function changeCodeDesc() {
 				<tr>
 				    <td><b>Admission Date</b></td>
 				    <td>
-<%	    String admDate = "";
-	    if (visitType.startsWith("02")) admDate = visitdate;
-%>
+        <%String admDate = "";
+          String inPatient = oscarVariables.getProperty("inPatient");
+          try{
+             if(inPatient != null && inPatient.trim().equalsIgnoreCase("YES")){
+		oscar.oscarDemographic.data.DemographicData demoData = new oscar.oscarDemographic.data.DemographicData();
+		admDate = demoData.getDemographicDateJoined(demo_no);
+	     }
+          }catch(Exception inPatientEx){
+	     inPatientEx.printStackTrace();
+	     admDate = "";
+          }
+            
+	  if (visitType.startsWith("02")) admDate = visitdate;
+          %>
 					<!--input type="text" name="xml_vdate" id="xml_vdate" value="<%--=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):visitdate--%>" size='10' maxlength='10' -->
 					<input type="text" name="xml_vdate" id="xml_vdate"
 					       value="<%=request.getParameter("xml_vdate")!=null? request.getParameter("xml_vdate"):admDate%>"
