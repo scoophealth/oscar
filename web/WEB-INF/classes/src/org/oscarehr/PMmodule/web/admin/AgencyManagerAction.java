@@ -189,17 +189,6 @@ public class AgencyManagerAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
-    public ActionForward refresh_referrals(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            integratorManager.refreshReferrals(clientManager.getReferrals());
-        }
-        catch (IntegratorException e) {
-            log.error(e);
-        }
-
-        return view(mapping, form, request, response);
-    }
-
     public ActionForward refresh_clients(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         try {
             integratorManager.refreshClients(clientManager.getClients());

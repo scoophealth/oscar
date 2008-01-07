@@ -199,11 +199,26 @@ public class IntegratorManager {
     }
 
     public Demographic getDemographic(String agencyUsername, long demographicNo) throws IntegratorException {
-        GetDemographicResponse response = getIntegratorService().getDemographic(new GetDemographicRequest(new Date(), agencyUsername, (int) demographicNo), getAuthenticationToken());
+        try {
+            if (!isEnabled()) return(null);
 
-        Demographic demographic = integratorDemographicToCaisiDemographic(response.getDemographic());
+            GetDemographicResponse response = getIntegratorService().getDemographic(new GetDemographicRequest(new Date(), agencyUsername, (int) demographicNo), getAuthenticationToken());
 
-        return demographic;
+            if (!response.getAck().equals(MessageAck.DEMOGRAPHIC_NOT_FOUND)) return(null);
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error getting demographic information. " + response.getAck());
+                return(null);
+            }
+
+            Demographic demographic = integratorDemographicToCaisiDemographic(response.getDemographic());
+
+            return demographic;
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(null);
+        }
     }
 
     public void refreshClients(List<Demographic> clients) throws IntegratorException {
@@ -389,10 +404,6 @@ public class IntegratorManager {
     public void refreshAdmissions(List<Admission> admissions) throws IntegratorException {
         throw new OperationNotImplementedException("admission registrations not yet implemented in integrator");
 
-    }
-
-    public void refreshReferrals(List<ClientReferral> referrals) throws IntegratorException {
-        throw new OperationNotImplementedException("referral registrations not yet implemented in integrator");
     }
 
     /**

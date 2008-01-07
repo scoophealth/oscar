@@ -6,6 +6,7 @@
 <%@page import="org.oscarehr.PMmodule.service.IntegratorManager"%>
 <%@page import="org.oscarehr.util.SpringUtils"%>
 <%@page import="org.caisi.integrator.model.transfer.AgencyTransfer"%>
+<%@page import="org.oscarehr.PMmodule.model.Demographic"%>
 
 <!--
 /*
@@ -53,10 +54,23 @@
         form.submit();
     }
     
-    function reject_from_integrator(remote_referral_id) {
+    function remove_from_integrator(remote_referral_id) {
+        if(!confirm('Are you sure you would like to reject admission for this client?')) {
+            return;
+        }
         var form = document.programManagerViewForm;
         form.elements['remoteReferralId'].value=remote_referral_id;
         form.method.value='reject_from_integrator';
+        form.submit();
+    }
+
+    function accept_from_integrator(remote_referral_id) {
+        if(!confirm('You must admit the client into your system. You will be forwarded to the intake pages where the clients information must be entered. Once you have admitted the client you can remove this referral from the list.')) {
+            return;
+        }
+        var form = document.programManagerViewForm;
+        form.elements['remoteReferralId'].value=remote_referral_id;
+        form.method.value='accept_from_integrator';
         form.submit();
     }
 
@@ -164,6 +178,8 @@
 <%
 	IntegratorManager integratorManager=(IntegratorManager)SpringUtils.beanFactory.getBean("integratorManager");
 	GetReferralResponseTransfer getReferralResponseTransfer = null;
+	AgencyTransfer agencyTransfer=null;
+	Demographic demographic=null;
 	if (integratorManager.isEnabled())
 	{
 %>
@@ -175,25 +191,34 @@
 			<display:column sortable="false">
 				<%
 			    	getReferralResponseTransfer = (GetReferralResponseTransfer) queue_entry;
+			    	agencyTransfer=integratorManager.getAgencyById(getReferralResponseTransfer.getSourceAgencyId());
+			    	demographic=integratorManager.getDemographic(agencyTransfer.getUsername(), getReferralResponseTransfer.getSourceDemographicNo());
 				%>
-		        <input type="button" value="Admit" onclick="alert('does not  work yet')" />
+		        <input type="button" value="Admit" onclick="accept_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
 			</display:column>
 		    <display:column sortable="false">
-		        <input type="button" value="Reject" onclick="reject_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
+		        <input type="button" value="Remove" onclick="remove_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
 		    </display:column>
 		    
 		    <display:column sortable="true" property="sourceDemographicNo" title="Remote Client No"/>
+		    <display:column sortable="true" title="Name">
+			    <%
+			    	String name="n/a";
+			    	if (demographic!=null)
+			    	{
+			    		if (demographic.getFormattedName()!=null) name=demographic.getFormattedName();
+			    	}
+			    %>
+			    <%=name%>
+		    </display:column>
 		    <display:column sortable="true" title="From Agency">
-		    <%
-		    	AgencyTransfer agencyTransfer=integratorManager.getAgencyById(getReferralResponseTransfer.getSourceAgencyId());
-		    %>
-		    <%=agencyTransfer.getName() %>
+		    	<%=agencyTransfer.getName() %>
 		    </display:column>
 		    <display:column sortable="true" title="Referral Date">
-			<%
-				String referralDate=DateFormatUtils.ISO_DATETIME_FORMAT.format(getReferralResponseTransfer.getReferralDate());
-		    %>
-		    <%=referralDate%>
+				<%
+					String referralDate=DateFormatUtils.ISO_DATETIME_FORMAT.format(getReferralResponseTransfer.getReferralDate());
+			    %>
+			    <%=referralDate%>
 		    </display:column>
 		    <display:column property="sourceProviderInfo" sortable="true" title="Referring Provider" />
 		    <display:column property="reasonForReferral" sortable="true" title="Reason for referral" />

@@ -531,11 +531,18 @@ public class ProgramManagerViewAction extends BaseAction {
         return view(mapping, form, request, response);
     }
 
-    public ActionForward reject_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+    public ActionForward remove_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
         String remoteReferralId = request.getParameter("remoteReferralId");
 
         integratorManager.removeReferral(Integer.parseInt(remoteReferralId));
 
+        return view(mapping, form, request, response);
+    }
+
+    public ActionForward accept_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
+
+// TODO : TED send to intake forms with username filled in if exists. maybe fill in reasons for referral too?
+        
         return view(mapping, form, request, response);
     }
 
