@@ -55,12 +55,12 @@
     }
     
     function remove_from_integrator(remote_referral_id) {
-        if(!confirm('Are you sure you would like to reject admission for this client?')) {
+        if(!confirm('Are you sure you would like to remove the referral from this list?')) {
             return;
         }
         var form = document.programManagerViewForm;
         form.elements['remoteReferralId'].value=remote_referral_id;
-        form.method.value='reject_from_integrator';
+        form.method.value='remove_from_integrator';
         form.submit();
     }
 
@@ -197,7 +197,7 @@
 		        <input type="button" value="Admit" onclick="accept_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
 			</display:column>
 		    <display:column sortable="false">
-		        <input type="button" value="Remove" onclick="remove_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
+		        <input type="button" value="Remove or Reject" onclick="remove_from_integrator('<%=getReferralResponseTransfer.getId()%>')" />
 		    </display:column>
 		    
 		    <display:column sortable="true" property="sourceDemographicNo" title="Remote Client No"/>
