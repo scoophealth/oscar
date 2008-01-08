@@ -1063,7 +1063,7 @@ public class ClientManagerAction extends BaseAction {
             String roomId = request.getParameter("roomId");
             RoomDemographic roomDemographic = getRoomDemographicManager().getRoomDemographicByDemographic(Integer.valueOf(demographicNo));
             if (roomDemographic != null && roomId == null) {
-                roomId = String.valueOf(roomDemographic.getId().getRoomId());
+                roomId = roomDemographic.getId().getRoomId().toString();
             }
 
             // set bed program id
@@ -1103,7 +1103,7 @@ public class ClientManagerAction extends BaseAction {
                 request.setAttribute("roomId", roomId);
             }
             else if (reservedBed != null) {
-                request.setAttribute("roomId", reservedBed.getRoomId());
+                request.setAttribute("roomId", reservedBed.getRoomId().toString());
             }
             else {
                 request.setAttribute("roomId", "0");
