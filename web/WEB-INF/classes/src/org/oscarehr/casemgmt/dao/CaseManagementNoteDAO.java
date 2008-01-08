@@ -26,6 +26,7 @@ package org.oscarehr.casemgmt.dao;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,9 +72,21 @@ public class CaseManagementNoteDAO extends HibernateDaoSupport {
                             }
                             list += issues[x];
                     }
-            }            
-            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ?  and cmn.id in (select max(cmn.id) from cmn where cmn.observation_date >= ? GROUP BY uuid) ORDER BY cmn.observation_date asc";
-            return this.getHibernateTemplate().find(hql,new Object[] {demographic_no,staleDate});
+            }
+            
+            Date d;
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                d = formatter.parse(staleDate);
+            }
+            catch(ParseException e) {
+                GregorianCalendar cal = new GregorianCalendar(1970,1,1);
+                d = cal.getTime();
+                e.printStackTrace();
+            }
+            String hql = "select distinct cmn from CaseManagementNote cmn join cmn.issues i where i.issue_id in (" + list + ") and cmn.demographic_no = ?  and cmn.id in (select max(cmn.id) from cmn where cmn.observation_date >= ? GROUP BY uuid) ORDER BY cmn.observation_date asc";            
+             
+            return this.getHibernateTemplate().find(hql,new Object[] {demographic_no,d});
         }
         
         public List getNotesByDemographic(String demographic_no, String staleDate) {
