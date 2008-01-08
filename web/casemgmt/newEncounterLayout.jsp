@@ -159,6 +159,7 @@
             width: 350px;
             background: #fff;
             font-size: 9px;
+            text-align:left;
           }
           .enTemplate_name_auto_complete ul {
             border:1px solid #888;
@@ -186,11 +187,13 @@
         /* CPP textareas */
         .rowOne {
             height: <nested:write name="rowOneSize"/>px;
+            width: 98%;
             overflow:auto;
         }
         
         .rowTwo {
             height: <nested:write name="rowTwoSize"/>px;
+            width:98%;
             overflow:auto;
         }
         
@@ -204,10 +207,48 @@
         var autoCompleted = new Object();
         var autoCompList = new Array();
         var measurementWindows = new Array();
+        var openWindows = new Object();
         var origCaseNote = "";
         var origObservationDate = "";
         var tmpSaveNeeded = true;
         var calendar;
+        
+        function popupPage(vheight,vwidth,name,varpage) { //open a new popup window
+          var page = "" + varpage;
+          windowprops = "height="+vheight+",width="+vwidth+",location=no,scrollbars=yes,menubars=no,toolbars=no,resizable=yes,screenX=600,screenY=200,top=0,left=0";
+                //var popup =window.open(page, "<bean:message key="oscarEncounter.Index.popupPageWindow"/>", windowprops);
+                openWindows[name] = window.open(page, name, windowprops);
+
+                if (openWindows[name] != null) {        
+                    if (openWindows[name].opener == null) {
+                        openWindows[name].opener = self;
+                        alert("<bean:message key="oscarEncounter.Index.popupPageAlert"/>");
+                    }
+                    openWindows[name].focus();
+                }     
+                
+        } 
+        
+        function urlencode(str) {
+            var ns = (navigator.appName=="Netscape") ? 1 : 0;
+            if (ns) { return escape(str); }
+            var ms = "%25#23 20+2B?3F<3C>3E{7B}7D[5B]5D|7C^5E~7E`60";
+            var msi = 0;
+            var i,c,rs,ts ;
+            while (msi < ms.length) {
+                c = ms.charAt(msi);
+                rs = ms.substring(++msi, msi +2);
+                msi += 2;
+                i = 0;
+                while (true)	{
+                    i = str.indexOf(c, i);
+                    if (i == -1) break;
+                    ts = str.substring(0, i);
+                    str = ts + "%" + rs + str.substring(++i, str.length);
+                }
+            }
+            return str;
+        }
     
         function measurementLoaded(name) {
             measurementWindows.push(openWindows[name]);
@@ -230,7 +271,8 @@
             return showPopup(menuId, eventObj);
         }
         
-   function listDisplay(Id) {
+   function listDisplay(Id) {           
+            
         var eqIdx = Id.indexOf("=");    
         var numId = Id.substr(eqIdx+1) + "num";
 
@@ -330,7 +372,7 @@ if(!NiftyCheck())
                             <tiles:insert attribute="navigation" />
                         </div>  
                         
-                        <div id="content" style="display:inline; float:left; width:80%;">
+                        <div id="content" style="display:inline; float:left; width:80%; background-color:#CCCCFF;">
                             <tiles:insert attribute="body" />
                         </div>
   </body>

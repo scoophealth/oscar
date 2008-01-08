@@ -158,11 +158,11 @@
          if(document.all) {
 
             text = document.selection.createRange().text;
-            if(text != "" && document.ksearch.keyword.value=="") {
-              document.ksearch.keyword.value += text;
+            if(text != "" && $F("keyword") == "") {
+              $("keyword").value += text;
             }
-            if(text != "" && document.ksearch.keyword.value!="") {
-              document.ksearch.keyword.value = text;
+            if(text != "" && $F("keyword") != "") {
+              $("keyword").value = text;
             }
           } else {
             text = window.getSelection();
@@ -176,8 +176,9 @@
                text = (txtarea.value).substring(selStart, selEnd);
             }
             //
-            document.ksearch.keyword.value = text;
+            $("keyword").value = text;
           }
+          Event.stop(e);
           return true;
     }
     
@@ -769,8 +770,9 @@ function viewNote(e) {
 }
 var showIssue = false;
 var expandedIssues = new Array();
-function showIssues() {    
+function showIssues(e) {    
         
+    Event.stop(e);
     Element.toggle('noteIssues');
     showIssue = !showIssue;
     
@@ -975,24 +977,11 @@ function savePage(method) {
         return false;
     }
     
- var showIssue = false;
-function showIssues() {    
-
-    Element.toggle('noteIssues');
-    showIssue = !showIssue;
-    
-    if( showIssue )
-        $("issueAutocomplete").focus();
-    else
-        $(caseNote).focus();
-        
-    return false;
-
-}
 
 function saveIssueId(txtField, listItem) {       
     $("newIssueId").value = listItem.id;
     $("newIssueName").value = listItem.innerHTML;
+    
     submitIssues = true;
 }
 
@@ -1010,6 +999,7 @@ function updateIssues(e) {
         Element.stopObserving('asgnIssues', 'click', changeIssueFunc);
         Element.observe('asgnIssues', 'click', addIssueFunc);
     }
+    Event.stop(e);
     submitIssues = false;
     return false;
 }
@@ -1536,8 +1526,9 @@ Version version = (Version) ctx.getBean("version");
             <html:textarea styleId="cpp.reminders" property="cpp.reminders" tabindex="5" styleClass="rowTwo"  rows="4" cols="44"/>
         </div> 
     
-    <div id="rightNavBar" style="width:25%; display:inline; float:right; background-color:white; padding-left:2px;"><jsp:include page="rightColumn.jsp" /></div>
-    <div style="float:left; width:75%; border-width:0px; margin-right:-5px; margin-left:2px; background-color:#CCCCFF; padding-bottom:5px; border-bottom:thin groove #000000; font-size:10px;">
+        <div style="float:left; height:70%; width:100%; margin-left:2px; margin-right:-4px; background-color:#FFFFFF;">
+        <div id="rightNavBar" style="width:25%; height:100%; display:inline; float:right; background-color:white; padding-left:2px;"><jsp:include page="rightColumn.jsp" /></div>
+        <div style="float:left; width:75%; margin-right:-4px; padding-bottom:15px; background-color:#CCCCFF; font-size:10px;">
             <span style="cursor:pointer; text-decoration:underline;" onclick="showFilter();">View Filter</span>
             <div id="filter" style="display:none;">
                 <div style="height:150px; width:auto; overflow:auto; float:left; position:relative; left:10%;">
@@ -1548,16 +1539,16 @@ Version version = (Version) ctx.getBean("version");
                         Set providers = (Set)request.getAttribute("providers"); 
                         Object[] arrProv = providers.toArray();
                         if( arrProv.length > 1 ) {
-                            Provider.ComparatorName comp = ((Provider)arrProv[0]).ComparatorName();
-                            Arrays.sort(arrProv, comp);
+                        Provider.ComparatorName comp = ((Provider)arrProv[0]).ComparatorName();
+                        Arrays.sort(arrProv, comp);
                         }
                         
                         String providerNo;
                         Provider prov;
                         
                         for(int idx = 0; idx < arrProv.length; ++idx ) {
-                            prov = (Provider)arrProv[idx];
-                            providerNo = prov.getProviderNo();
+                        prov = (Provider)arrProv[idx];
+                        providerNo = prov.getProviderNo();
                         %>
                         <li><html:multibox property="filter_providers" value="<%=providerNo%>" onclick="filterCheckBox(this)"></html:multibox><%=prov.getFormattedName()%></li>
                         <%                        
@@ -1574,13 +1565,13 @@ Version version = (Version) ctx.getBean("version");
                     <ul style="margin-left:0px; margin-top:1px; list-style: none inside none;">
                         <li><html:multibox property="filter_roles" value="a" onclick="filterCheckBox(this)"></html:multibox>All</li>
                         <%
-                            List roles = (List)request.getAttribute("roles");
-                            for( int num = 0; num < roles.size(); ++num ) {
-                                Role role = (Role)roles.get(num);
+                        List roles = (List)request.getAttribute("roles");
+                        for( int num = 0; num < roles.size(); ++num ) {
+                        Role role = (Role)roles.get(num);
                         %>
                         <li><html:multibox property="filter_roles" value="<%=String.valueOf(role.getId())%>" onclick="filterCheckBox(this)"></html:multibox><%=role.getName()%></li>
                         <%
-                            }
+                        }
                         %>
                     </ul>
                 </div>
@@ -1608,407 +1599,238 @@ Version version = (Version) ctx.getBean("version");
                 <div style="float:left; clear:both; cursor:pointer; text-decoration:underline;" onclick="return filter();">
                     Show View
                 </div>
-            </div>           
-                                
-                <input id="enTemplate" style="float:left; position:relative; left:45%; clear:both;" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
-                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none"></div>                 
-          </div>
-           </html:form>
-          
-              <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0; margin-right:-5px;">
-                  <html:hidden property="demographicNo"/>
-                  <html:hidden property="providerNo"/>
-                  <html:hidden property="includeIssue" value="off"/>
-                  <input type="hidden" name="deleteId" value="0">
-                  <input type="hidden" name="lineId" value="0">
-                  <input type="hidden" name="from" value="casemgmt">
-                  <input type="hidden" name="method" value="save">
-                  <input type="hidden" name="change_diagnosis" value="<c:out value="${change_diagnosis}"/>"/>
-                  <input type="hidden" name="change_diagnosis_id" value="<c:out value="${change_diagnosis_id}"/>"/>                                     
-                  <input type="hidden" name="newIssueId" id="newIssueId">
-                  <input type="hidden" name="newIssueName" id="newIssueName">
-                  <input type="hidden" name="ajax" value="false">
-                  <input type="hidden" name="chain" value="">
-                  <input type="hidden" name="caseNote.program_no" value="<%=pId%>">
-                  <input type="hidden" name="noteId" value="0">
-                  <input type="hidden" name="note_edit" value="new">
-                  <input type="hidden" name="sign" value="off">
-                  <input type="hidden" name="verify" value="off">
-                  <input type="hidden" name="forceNote" value="false">
-                  <input type="hidden" name="newNoteIdx" value="">
-                  <div id="mainContent" style="width:75%; display:inline; float:left; margin-right:-5px;"> 
-                     <span id="issueList" style="height:490px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
-                          <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
-                              <tr>
-                                  <td style="height:480px; vertical-align: bottom;"> 
-                                      <div class="enTemplate_name_auto_complete" id="issueAutocompleteList" name="issueAutocompleteList" style="position:relative; left:0px; display:none;"></div>
-                                  </td>
-                              </tr>
-                          </table> 
-                      </span>
-                      <div id="encMainDiv" style="width:99%; border-right: thin groove #000000; border-left: thin groove #000000; margin-right:-5px; background-color:#FFFFFF; height:480px; overflow:auto; margin-left:2px;">
-
-                          <%-- <p style="font-size:6px; clear:both"><a href="javascript:viewIssues()">view Issues</a></p> --%>
-        
-                          <%-- <div style="display:none" id="viewIssues">
-            <jsp:include page="/casemgmt/current_issues.jsp" />
-        </div> --%>
-        
-                          <%--
-<c:if test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
-<html:hidden property="note_view" value="summary"/>
-</c:if>
-<c:if test="${sessionScope.caseManagementViewForm.note_view=='detailed'}">
-<html:hidden property="note_view" value="detailed"/>
-</c:if>
-<c:if test="${sessionScope.caseManagementViewForm.prescipt_view!='all'}">
-<html:hidden property="prescipt_view" value="current"/>
-</c:if>
-<c:if test="${sessionScope.caseManagementViewForm.prescipt_view=='all'}">
-<html:hidden property="prescipt_view" value="all"/>
-</c:if>
-    --%>
-                          <c:if test="${not empty Notes}">                        
-                              <%-- <td align="left">
-<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='summary';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit(); return false;" >Summary</span>
-&nbsp;|&nbsp;
-<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit();return false;">Detailed</span>
-<c:if test="${sessionScope.readonly=='false'}">
-	<c:url value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
-	&nbsp;|&nbsp;
-	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New Note</span>
-</c:if>
-&nbsp;|&nbsp;
-<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="window.print();">Print</span>
-<c:if test="${can_restore}">
-	<c:url value="/CaseManagementEntry.do?method=restore&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
-	&nbsp;|&nbsp;
-	<span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore Lost Note</span>
-</c:if>
-</td> --%>                            
-                              <%-- <c:if test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
-        
-        <table id="test" width="100%" border="0"  cellpadding="0" cellspacing="1" bgcolor="#C0C0C0">
-            <tr class="title">
-                <td></td>
-                <td>Date</td>
-                <td>Provider</td>
-                <td>Status</td>		
-                <td>Program</td>
-                <td>Role</td>
-            </tr>
-            
-            <%int index=0; String bgcolor="white"; %>
-            <c:forEach var="note" items="${Notes}">
+            </div>  
+            <div style="float:left; clear:both; margin-bottom:5px; width:100%; text-align:center;">                
+                <input id="enTemplate" tabindex="6" size="16" type="text" value="" onkeypress="return grabEnterGetTemplate(event)" />
+                <div class="enTemplate_name_auto_complete" id="enTemplate_list" style="z-index:1; display:none"></div>  
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <select id="channel" >
+                    <option value="http://resource.oscarmcmaster.org/oscarResource/OSCAR_search/OSCAR_search_results?title="><bean:message key="oscarEncounter.Index.oscarSearch"/></option>
+                    <option value="http://www.google.com/search?q="><bean:message key="global.google"/></option>
+                    <option value="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?SUBMIT=y&amp;CDM=Search&amp;DB=PubMed&amp;term="><bean:message key="global.pubmed"/></option>
+                    <option value="http://search.nlm.nih.gov/medlineplus/query?DISAMBIGUATION=true&amp;FUNCTION=search&amp;SERVER2=server2&amp;SERVER1=server1&amp;PARAMETER="><bean:message key="global.medlineplus"/></option>
+                    <option value="http://www.bnf.org/bnf/bnf/current/noframes/search.htm?n=50&amp;searchButton=Search&amp;q="><bean:message key="global.BNF"/></option>
+                </select>
+                <input type="text" id="keyword" name="keyword"  value=""  onkeypress="return grabEnter('searchButton',event)"/>
+                <input type="button" id="searchButton" name="button"  value="Search" onClick="popupPage(600,800,'<bean:message key="oscarEncounter.Index.popupSearchPageWindow"/>',$('channel').options[$('channel').selectedIndex].value+urlencode($F('keyword')) ); return false;">       
+                
+            </div>
+        </div>
+    </html:form>          
+    
+    <nested:form action="/CaseManagementEntry" style="display:inline; margin-top:0; margin-bottom:0; margin-right:-5px;">
+        <html:hidden property="demographicNo"/>
+        <html:hidden property="providerNo"/>
+        <html:hidden property="includeIssue" value="off"/>
+        <input type="hidden" name="deleteId" value="0">
+        <input type="hidden" name="lineId" value="0">
+        <input type="hidden" name="from" value="casemgmt">
+        <input type="hidden" name="method" value="save">
+        <input type="hidden" name="change_diagnosis" value="<c:out value="${change_diagnosis}"/>"/>
+        <input type="hidden" name="change_diagnosis_id" value="<c:out value="${change_diagnosis_id}"/>"/>                                     
+        <input type="hidden" name="newIssueId" id="newIssueId">
+        <input type="hidden" name="newIssueName" id="newIssueName">
+        <input type="hidden" name="ajax" value="false">
+        <input type="hidden" name="chain" value="">
+        <input type="hidden" name="caseNote.program_no" value="<%=pId%>">
+        <input type="hidden" name="noteId" value="0">
+        <input type="hidden" name="note_edit" value="new">
+        <input type="hidden" name="sign" value="off">
+        <input type="hidden" name="verify" value="off">
+        <input type="hidden" name="forceNote" value="false">
+        <input type="hidden" name="newNoteIdx" value="">
+        <div id="mainContent" style="background-color:#FFFFFF; width:75%; display:inline; float:left; margin-right:-5px;"> 
+            <span id="issueList" style="background-color:#FFFFFF; height:440px; width:350px; position:absolute; z-index:1; display:none; overflow:auto;">
+                <table id="issueTable" class="enTemplate_name_auto_complete" style="position:relative; left:0px; display:none;">
+                    <tr>
+                        <td style="height:430px; vertical-align: bottom;"> 
+                            <div class="enTemplate_name_auto_complete" id="issueAutocompleteList" name="issueAutocompleteList" style="position:relative; left:0px; display:none;"></div>
+                        </td>
+                    </tr>
+                </table> 
+            </span>
+            <div id="encMainDiv" style="width:99%; border-top: thin groove #000000; border-right: thin groove #000000; border-left: thin groove #000000; margin-right:-5px; background-color:#FFFFFF; height:440px; overflow:auto; margin-left:2px;">
+                
+                
+                <c:if test="${not empty Notes}">                        
+                    
+                    <%
+                    java.util.List noteList=(java.util.List)request.getAttribute("Notes");
+                    int idx = 0;
+                    int noteSize = noteList.size();            
+                    
+                    //Notes list will contain all notes including most recently saved
+                    //we need to skip this one when displaying
+                    CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
+                    
+                    //if we're editing a note, display it
+                    //else check for last unsigned note and use it if present
+                    if( cform.getCaseNote().getId() != null ) {
+                    savedId = cform.getCaseNote().getId();                
+                    }                              
+                    
+                    for( idx = 0; idx < noteSize; ++idx ) {
+                    
+                    CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
+                    String noteStr = note.getNote();
+                    %>                               
+                    <div class="note"> 
+                        <div id="n<%=note.getId()%>">
+                            <%
+                            //display last saved note for editing
+                            if( note.getId() == savedId ) {    
+                            found = true;
+                            %>    
+                            <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
+                            <div class="sig" style="display:inline;" id="sig<%=note.getId()%>">
+                                <%@ include file="noteIssueList.jsp" %>
+                            </div>
+                            
+                            <c:if test="${sessionScope.passwordEnabled=='true'}">
+                                <p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
+                            </c:if>                                 
+                            
+                            <%    
+                            }
+                            //else display contents of note for viewing
+                            else {
+                            %>
+                            <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+                            
+                            <%
+                            if( note.isLocked() ) {
+                            %>
+                            <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>                                  
+                            <%
+                            }
+                            else {                                      
+                            
+                            String rev = note.getRevision();
+                            %>
+                            <pre><%=noteStr%></pre>
+                            <%
+                            if( largeNote(noteStr) ) {
+                            %>                                       
+                            <img title="Minimize Display" id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
+                            <%
+                            }
+                            %>                                      
+                            <div id="sig<%=note.getId()%>" style="clear:both;"><div class="sig" id="sumary<%=note.getId()%>">
+                                    <div id="observation<%=note.getId()%>" style="float:right;margin-right:3px;"><i>Date:&nbsp;<span id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
+                                    <div><span style="float:left;">Editors:</span>
+                                        <ul style="list-style: none inside none; margin:0px;">    
+                                            <%  
+                                            List editors = note.getEditors();
+                                            Iterator<Provider> it = editors.iterator(); 
+                                            int count = 0;
+                                            int MAXLINE = 2;
+                                            while( it.hasNext() ) {
+                                            Provider p = it.next();
+                                            
+                                            if( count % MAXLINE == 0 ) {
+                                            out.print("<li>" + p.getFormattedName() + "; ");
+                                            }
+                                            else {
+                                            out.print(p.getFormattedName() + "</li>");
+                                            }
+                                            ++count;
+                                            }
+                                            if( count % MAXLINE == 0 )
+                                            out.print("</li>");
+                                            %>
+                                            
+                                        </ul>
+                                    </div>
+                                    <%
+                                    Set issSet = note.getIssues();
+                                    if( issSet.size() > 0 ) {
+                                    %>
+                                    
+                                    Assigned Issues
+                                    <ul style="list-style: circle inside none; margin:0px;">                            
+                                        <% 
+                                        Iterator i = issSet.iterator();
+                                        while( i.hasNext() ) {
+                                        CaseManagementIssue iss = (CaseManagementIssue)i.next();
+                                        %>
+                                        <li><%=iss.getIssue().getDescription().trim()%></li>
+                                        <%
+                                        }
+                                    %></ul>                                     
+                                    <%
+                                    }
+                                    %>
+                                </div>
+                            </div>
+                            <%
+                            }
+                            }
+                            //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
+                            %>
+                        </div>
+                    </div>
+                    <%
+                    //if we are not editing note, remember note ids for setting event listeners
+                    //Internet Explorer does not play nice with inserting javascript between divs
+                    //so we store the ids here and list the event listeners at the end of this script
+                    if( note.getId() != savedId ) {
+                    
+                    if( note.isLocked() ) { 
+                    lockedNotes.add(note.getId());
+                    }
+                    else {
+                    unLockedNotes.add(note.getId());
+                    }
+                    }
+                    
+                    
+                    } //end for 
+                    %>
+                    
+                </c:if>        
+                
                 <%
-                if(index++%2!=0) {
-                bgcolor="white";
-                } else {
-                bgcolor="#EEEEFF";
+                if( !found ) {
+                savedId = 0;
+                %>    
+                <div class="note">
+                    <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
+                        <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
+                        <div id="sig0">
+                            <%@ include file="noteIssueList.jsp" %>                                        
+                        </div>
+                        
+                        <c:if test="${sessionScope.passwordEnabled=='true'}">
+                            <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
+                        </c:if>
+                        
+                        
+                    </div>
+                </div>
+                <%
                 }
                 %>
-                <tr bgcolor="<%=bgcolor %>" align="center">			
-                    <td>
-                        <c:choose>				
-                            <c:when test="${(!note.signed) and (sessionScope.readonly=='false')}">
-                                <c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
-                                <img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit/Sign Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
-                            </c:when>				
-                            <c:when test="${note.signed and note.provider_no eq param.providerNo and (note.locked !=true)}">
-                                <c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
-                                <img src="<c:out value="${ctx}"/>/images/edit_white.png" title="Edit Note" style="cursor:pointer" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" />
-                            </c:when>
-                            <c:otherwise>
-                                <img src="<c:out value="${ctx}"/>/images/transparent_icon.gif" title=""/>
-                            </c:otherwise>	
-                        </c:choose>
-                        <c:choose>				
-                            <c:when test="${note.hasHistory == true and note.locked != true}">
-                                <c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${note.id}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
-                                <img src="<c:out value="${ctx}"/>/images/history.gif" title="Note History" style="cursor:pointer" onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')" >
-                            </c:when>
-                            <c:otherwise>
-                                <img src="<c:out value="${ctx}"/>/images/transparent_icon.gif" title=""/>
-                            </c:otherwise>	
-                        </c:choose>
-                        <c:choose>
-                            <c:when test="${note.locked}">
-                                <c:url value="/CaseManagementView.do?method=unlock&noteId=${note.id}" var="lockedURL" />
-                                <img src="<c:out value="${ctx}"/>/images/ulock.gif" title="Unlock" style="cursor:pointer" onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')" />			
-                            </c:when>
-                            <c:otherwise>
-                                <img src="<c:out value="${ctx}"/>/images/transparent_icon.gif" title=""/>
-                            </c:otherwise>	
-                        </c:choose>
-                    </td>
-                    <td>
-                        <fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.update_date}"/>
-                    </td>			
-                    <td>
-                        <c:out value="${note.providerName}"/>
-                    </td>		
-                    <td>
-                        <c:out value="${note.status}"/>		
-                    </td>									
-                    <td>
-                        <c:out value="${note.programName}"/>
-                    </td>
-                    <td>
-                        <c:out value="${note.roleName}"/>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-    </c:if> 
-    <c:if test="${sessionScope.caseManagementViewForm.note_view=='detailed'}"> --%>            
-                              <%
-                              java.util.List noteList=(java.util.List)request.getAttribute("Notes");
-                              int idx = 0;
-                              int noteSize = noteList.size();            
-                              
-                              //Notes list will contain all notes including most recently saved
-                              //we need to skip this one when displaying
-                              CaseManagementEntryFormBean cform = (CaseManagementEntryFormBean)session.getAttribute("caseManagementEntryForm");
-                              
-                              //if we're editing a note, display it
-                              //else check for last unsigned note and use it if present
-                              if( cform.getCaseNote().getId() != null ) {
-                                savedId = cform.getCaseNote().getId();                
-                              }                              
-                              
-                              for( idx = 0; idx < noteSize; ++idx ) {
-                              
-                              CaseManagementNote note = (CaseManagementNote)noteList.get(idx);
-                              String noteStr = note.getNote();
-                              %>                               
-                              <div class="note"> 
-                                  <div id="n<%=note.getId()%>">
-                                      <%
-                                      //display last saved note for editing
-                                      if( note.getId() == savedId ) {    
-                                      found = true;
-                                      %>    
-                                      <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote.note"/></textarea>
-                                      <div class="sig" style="display:inline;" id="sig<%=note.getId()%>">
-                                          <%@ include file="noteIssueList.jsp" %>
-                                      </div>
-                                      
-                                      <c:if test="${sessionScope.passwordEnabled=='true'}">
-                                          <p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
-                                      </c:if>                                 
-                                      
-                                      <%    
-                                      }
-                                      //else display contents of note for viewing
-                                      else {
-                                      %>
-                                      <img title="Minimize Display" id='quitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
-                                      
-                                      <%
-                                      if( note.isLocked() ) {
-                                      %>
-                                      <pre><bean:message key="oscarEncounter.Index.msgLocked" /> <%=DateUtils.getDate(note.getUpdate_date(),dateFormat) + " " + note.getProviderName()%></pre>                                  
-                                      <%
-                                      }
-                                      else {                                      
-                                      
-                                      String rev = note.getRevision();
-                                      %>
-                                      <pre><%=noteStr%></pre>
-                                      <%
-                                        if( largeNote(noteStr) ) {
-                                      %>                                       
-                                        <img title="Minimize Display" id='bottomQuitImg<%=note.getId()%>' alt="Minimize Display" onclick="minView(event)" style='float:right; margin-right:5px; margin-bottom:3px;' src='<c:out value="${ctx}"/>/oscarEncounter/graphics/triangle_up.gif'/>
-                                      <%
-                                        }
-                                      %>                                      
-                                  <div id="sig<%=note.getId()%>" style="clear:both;"><div class="sig" id="sumary<%=note.getId()%>">
-                                          <div id="observation<%=note.getId()%>" style="float:right;margin-right:3px;"><i>Date:&nbsp;<span id="obs<%=note.getId()%>"><%=DateUtils.getDate(note.getObservation_date(),dateFormat)%></span>&nbsp;rev<a href="#" onclick="return showHistory('<%=note.getId()%>', event);"><%=rev%></a></i></div>
-                                              <div><span style="float:left;">Editors:</span>
-                                                  <ul style="list-style: none inside none; margin:0px;">    
-                                                      <%  
-                                                      List editors = note.getEditors();
-                                                      Iterator<Provider> it = editors.iterator(); 
-                                                      int count = 0;
-                                                      int MAXLINE = 2;
-                                                      while( it.hasNext() ) {
-                                                      Provider p = it.next();
-                                                      
-                                                      if( count % MAXLINE == 0 ) {
-                                                      out.print("<li>" + p.getFormattedName() + "; ");
-                                                      }
-                                                      else {
-                                                      out.print(p.getFormattedName() + "</li>");
-                                                      }
-                                                      ++count;
-                                                      }
-                                                      if( count % MAXLINE == 0 )
-                                                          out.print("</li>");
-                                                      %>
-                                                      
-                                                  </ul>
-                                              </div>
-                                              <%
-                                              Set issSet = note.getIssues();
-                                              if( issSet.size() > 0 ) {
-                                              %>
-                                          
-                                              Assigned Issues
-                                          <ul style="list-style: circle inside none; margin:0px;">                            
-                                              <% 
-                                              Iterator i = issSet.iterator();
-                                              while( i.hasNext() ) {
-                                              CaseManagementIssue iss = (CaseManagementIssue)i.next();
-                                              %>
-                                              <li><%=iss.getIssue().getDescription().trim()%></li>
-                                              <%
-                                              }
-                                          %></ul>                                     
-                                          <%
-                                          }
-                                          %>
-                                      </div>
-                                  </div>
-                                      <%
-                                      }
-                                      }
-                                      //System.out.println("READONLY SESSION " + session.getAttribute("readonly").equals(false));                                  
-                                      %>
-                                  </div>
-                              </div>
-                              <%
-                              //if we are not editing note, remember note ids for setting event listeners
-                              //Internet Explorer does not play nice with inserting javascript between divs
-                              //so we store the ids here and list the event listeners at the end of this script
-                              if( note.getId() != savedId ) {
-                                
-                                if( note.isLocked() ) { 
-                                    lockedNotes.add(note.getId());
-                                }
-                                else {
-                                    unLockedNotes.add(note.getId());
-                                }
-                              }
-                              %>
-                              <%--
-                                <tr bgcolor="<%=bgcolor1 %>">
-                                    <td width="7%">Date</td>
-                                    <td width="93%"><fmt:formatDate pattern="yyyy-MM-dd hh:mm a" value="${note.update_date}"/></td>
-                                </tr>
-                                <tr bgcolor="<%=bgcolor1 %>">
-                                    <td width="7%">Status</td>
-                                    <td width="93%">
-                                        <c:out value="${note.status}"/>		
-                                    </td>
-                                </tr>
-                                <tr bgcolor="<%=bgcolor1 %>">
-                                    <td width="7%">Action</td>
-                                    <td width="93%">
-                                        <c:if test="${(!note.signed) and (sessionScope.readonly=='false')}">
-                                            <c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
-                                            <input type="button" value="Edit and Sign" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" >
-                                        </c:if>
-                                        <c:if test="${note.signed and note.provider_no eq param.providerNo}">
-                                            <c:url value="/CaseManagementEntry.do?method=edit&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="notesURL" />
-                                            <input type="button" value="Edit This Note" onclick="popupNotePage('<c:out value="${notesURL}" escapeXml="false"/>')" >
-                                        </c:if>
-                                        <c:if test="${note.hasHistory == true}">
-                                            <c:url value="/CaseManagementEntry.do?method=history&from=casemgmt&noteId=${requestScope.noteId}&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="historyURL" />
-                                            <input type="button" value="Note History" onclick="popupHistoryPage('<c:out value="${historyURL}" escapeXml="false"/>')" >
-                                        </c:if>
-                                        <c:if test="${note.locked}">
-                                            <c:url value="/CaseManagementView.do?method=unlock&noteId=${requestScope.noteId}" var="lockedURL" />
-                                            <input type="button" value="Unlock" onclick="popupPage('<c:out value="${lockedURL}" escapeXml="false"/>')" >			
-                                        </c:if>
-                                    </td>
-                                </tr>
-                                <tr bgcolor="<%=bgcolor1 %>">
-                                    <td width="7%">Note</td>
-                                    <td width="93%">
-                                        <c:choose>
-                                            <c:when test="${note.locked}">
-                                                <span style="color:red"><i>Contents Hidden</i></span>						
-                                            </c:when>
-                                            <c:otherwise>
-                                                <pre><c:out value="${note.note }"/></pre>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                </tr> 
-                                --%>
-            
-                              <%}%>
-                              
-                              
-                              <%--</c:if>
-    
-    <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='summary';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit(); return false;" >Summary</span>
-    &nbsp;|&nbsp;
-    <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.note_view.value='detailed';document.caseManagementViewForm.method.value='setViewType';document.caseManagementViewForm.submit();return false;">Detailed</span>
-    <c:if test="${sessionScope.readonly=='false'}">
-        <c:url value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
-        &nbsp;|&nbsp;
-        <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New Note</span>
-    </c:if>
-    &nbsp;|&nbsp;
-    <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="window.print();">Print</span>
-    <c:if test="${can_restore}">
-        <c:url value="/CaseManagementEntry.do?method=restore&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
-        &nbsp;|&nbsp;
-        <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">Restore Note</span>
-    </c:if>
-    
-        <br/><br/>--%>
-                          </c:if>        
-                          
-                          <%
-                          if( !found ) {
-                          savedId = 0;
-                          %>    
-                          <div class="note">
-                              <div id="n<%=savedId%>" style="line-height:1.1em;">                                     
-                                  <textarea  tabindex="7" cols="84" rows="10" wrap='hard' class="txtArea" style="line-height:1.1em;" name="caseNote_note" id="caseNote_note<%=savedId%>"><nested:write property="caseNote_note"/></textarea>
-                                  <div id="sig0">
-                                      <%@ include file="noteIssueList.jsp" %>                                        
-                                  </div>
-                                  
-                                  <c:if test="${sessionScope.passwordEnabled=='true'}">
-                                      <p style='display:none;' id='notePasswd'>Password:&nbsp;<html:password property="caseNote.password"/></p>
-                                  </c:if>
-                                  
-                                  
-                              </div>
-                          </div>
-                          <%
-                          }
-                          %>
-                          
-                          <%--
-<c:if test="${empty Notes and sessionScope.readonly=='false'}">
-    <c:url value="/CaseManagementEntry.do?method=edit&note_edit=new&from=casemgmt&demographicNo=${param.demographicNo}&providerNo=${param.providerNo}" var="noteURL" />
-    <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="popupNotePage('<c:out value="${noteURL}" escapeXml="false"/>')">New Note</span>
-</c:if>
-
-        --%>                       
-                      </div>
-                      <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
-                          <span style="float:right; margin-right:5px;">                                
-                              <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="Event.stop(event);return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
-                              <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
-                              <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
-                              <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
-                              <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
-                              <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>
-                          </span>
-                              <input type='image' id='toggleIssue' onclick="return showIssues();" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
-                              <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;
-                              <input  tabindex="9" type="button" id="asgnIssues" value="Assign Issues">
-                              <span id="busy" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
-                                         
-                          
-                      </div>
-                  </div>
-              </nested:form>          
+                
+            </div>
+            <div id='save' style="width:99%; background-color:#CCCCFF; padding-top:5px; margin-left:2px; border-left: thin solid #000000; border-right: thin solid #000000; border-bottom: thin solid #000000;">  
+                <span style="float:right; margin-right:5px;">                                
+                    <input tabindex="10" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/media-floppy.png"/>" onclick="Event.stop(event);return savePage('save');" title='<bean:message key="oscarEncounter.Index.btnSave"/>'>&nbsp;                              
+                    <input tabindex="11" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/document-new.png"/>" id="newNoteImg" onclick="newNote(event); return false;" title='<bean:message key="oscarEncounter.Index.btnNew"/>'>&nbsp;                              
+                    <input tabindex="12" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/note-save.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSignSave"/>'>&nbsp;
+                    <input tabindex="13" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/verify-sign.png"/>" onclick="document.forms['caseManagementEntryForm'].sign.value='on';document.forms['caseManagementEntryForm'].verify.value='on';Event.stop(event);return savePage('saveAndExit');" title='<bean:message key="oscarEncounter.Index.btnSign"/>'>&nbsp;
+                    <input tabindex="14" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/lock-note.png"/>" onclick="return toggleNotePasswd();" title='<bean:message key="oscarEncounter.Index.btnLock"/>'>&nbsp;
+                    <input tabindex="15" type='image' src="<c:out value="${ctx}/oscarEncounter/graphics/system-log-out.png"/>" onclick='closeEnc(event);return false;' title='<bean:message key="global.btnExit"/>'>
+                </span>
+                <input type='image' id='toggleIssue' onclick="return showIssues(event);" src="<c:out value="${ctx}/oscarEncounter/graphics/issues.png"/>" title='Display Issues'>&nbsp;
+                <input  tabindex="8" type="text" id="issueAutocomplete" name="issueSearch" style="z-index: 2;" onkeypress="return submitIssue(event);" size="25">&nbsp;
+                <input  tabindex="9" type="button" id="asgnIssues" value="Assign Issues">
+                <span id="busy" style="display: none"><img style="position:absolute;" src="<c:out value="${ctx}/oscarEncounter/graphics/busy.gif"/>" alt="Working..." /></span>
+                
+                
+            </div>
+        </div>              
+    </nested:form>          
+    </div>
           
 <script type="text/javascript">                         
     document.forms["caseManagementEntryForm"].noteId.value = "<%=savedId%>";
