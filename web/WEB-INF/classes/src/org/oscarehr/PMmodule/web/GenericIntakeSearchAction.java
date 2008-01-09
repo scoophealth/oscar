@@ -65,7 +65,9 @@ public class GenericIntakeSearchAction extends BaseGenericIntakeAction {
         // search for remote matches if integrator enabled
         if (integratorManager.isEnabled()) {
             remoteMatches = remoteSearch(intakeSearchBean);
-            intakeSearchBean.setRemoteMatches(remoteMatches.toArray(new ClientTransfer[remoteMatches.size()]));
+            if (remoteMatches!=null) {
+                intakeSearchBean.setRemoteMatches(remoteMatches.toArray(new ClientTransfer[remoteMatches.size()]));
+            }
         }
 
 

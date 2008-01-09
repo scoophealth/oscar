@@ -183,13 +183,20 @@ public class IntegratorManager {
     }
 
     public Collection<ClientTransfer> matchClient(Demographic client) throws IntegratorException {
+        try {
+            if (!isEnabled()) return(null);
 
-        DemographicTransfer searchDemographic = caisiDemographicToIntegratorDemographic(client);
-        SearchCandidateDemographicResponse response = getIntegratorService().searchCandidateDemographic(new SearchCandidateDemographicRequest(new Date(), searchDemographic), getAuthenticationToken());
+            DemographicTransfer searchDemographic = caisiDemographicToIntegratorDemographic(client);
+            SearchCandidateDemographicResponse response = getIntegratorService().searchCandidateDemographic(new SearchCandidateDemographicRequest(new Date(), searchDemographic), getAuthenticationToken());
 
-        Collection<ClientTransfer> clients = response.getCandidateClients();
+            Collection<ClientTransfer> clients = response.getCandidateClients();
 
-        return clients;
+            return clients;
+        }
+        catch (Exception e) {
+            log.error("Unexpected error.", e);
+            return(null);
+        }
     }
 
     public Client getClient(String agencyUsername, long demographicNo) throws IntegratorException {
