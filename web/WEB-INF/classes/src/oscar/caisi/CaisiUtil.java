@@ -4,6 +4,8 @@ public class CaisiUtil
 {
 	public static String removeAttr(String str, String attr)
 	{
+	    if (str==null) return(null);
+	    
 		/*delete a parameter from query string*/
 		int index,index1;
 		String temps;
