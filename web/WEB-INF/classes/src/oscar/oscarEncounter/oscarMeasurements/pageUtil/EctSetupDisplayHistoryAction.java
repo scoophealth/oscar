@@ -58,6 +58,7 @@ public final class EctSetupDisplayHistoryAction extends Action {
         oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler hd = null;
         if (bean!=null){
             String demo = (String) bean.getDemographicNo();
+            request.setAttribute("demographicNo",demo);
             if(type!=null){
                 hd = new oscar.oscarEncounter.oscarMeasurements.bean.EctMeasurementsDataBeanHandler(demo, type);
                 request.setAttribute("type", type);
