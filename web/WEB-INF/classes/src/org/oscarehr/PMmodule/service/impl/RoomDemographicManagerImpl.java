@@ -110,7 +110,6 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 			roomDemographicList = roomDemographicDAO.getRoomDemographicByRoom(roomId);
 			
 			if(roomDemographicList != null  &&  roomDemographicList.size() > 0){
-			
 				Demographic demographic = demographicDAO.getClientByDemographicNo(roomDemographicList.get(0).getId().getDemographicNo());
 				roomDemographicList.get(0).setDemographic(demographic);
 			}
@@ -140,12 +139,17 @@ public class RoomDemographicManagerImpl implements RoomDemographicManager {
 		if (roomDemographic == null) {
 			handleException(new IllegalArgumentException("roomDemographic must not be null"));
 		}
-		validate(roomDemographic);
+		boolean isNoRoomAssigned = (roomDemographic.getId().getRoomId().intValue() == 0);
+		if(!isNoRoomAssigned){
+			validate(roomDemographic);
+		}
 		RoomDemographic roomDemographicPrevious = getRoomDemographicByDemographic(roomDemographic.getId().getDemographicNo()); 
 		if(roomDemographicPrevious != null){
 			deleteRoomDemographic(roomDemographicPrevious);
 		}
-		roomDemographicDAO.saveRoomDemographic(roomDemographic);
+		if(!isNoRoomAssigned){
+			roomDemographicDAO.saveRoomDemographic(roomDemographic);
+		}
 	}
 
 	public void cleanUpBedTables(RoomDemographic roomDemographic){

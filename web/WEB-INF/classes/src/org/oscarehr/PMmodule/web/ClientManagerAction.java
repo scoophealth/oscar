@@ -600,9 +600,10 @@ public class ClientManagerAction extends BaseAction {
         bedDemographic.setRoomId(Integer.valueOf(roomId));
 
         RoomDemographic roomDemographic = new RoomDemographic();
+        
         List roomDemographics = getRoomDemographicManager().getRoomDemographicByRoom(bedDemographic.getRoomId());
 
-        if (roomDemographics != null && roomDemographics.size() > 0) {
+        if (roomDemographics != null && roomDemographics.size() > 0) {//only 1 to 1 relationship for now
             roomDemographic = (RoomDemographic) roomDemographics.get(0);
             roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
         }
@@ -610,7 +611,7 @@ public class ClientManagerAction extends BaseAction {
             roomDemographic = RoomDemographic.create(bedDemographic.getId().getDemographicNo(), bedDemographic.getProviderNo());
             roomDemographic.setRoomDemographicFromBedDemographic(bedDemographic);
         }
-
+        
         // detect check box false
         if (request.getParameter("bedDemographic.latePass") == null) {
             bedDemographic.setLatePass(false);
