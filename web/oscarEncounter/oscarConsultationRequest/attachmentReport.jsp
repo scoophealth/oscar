@@ -219,10 +219,17 @@ function popup1(height, width, url, windowName){
                     }else if (result.isCML()){ 
                         labURL ="../../lab/CA/ON/CMLDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID; 
                         labDisplayName = result.getDiscipline()+" "+result.getDateTime();
-                    }else {
+                    }else if (result.isHL7TEXT()){
+                        labDisplayName = result.getDiscipline();
+                        labURL ="../../lab/CA/ALL/labDisplay.jsp?providerNo="+provNo+"&segmentID="+result.segmentID;
+                    }else{    
                         labURL ="../../lab/CA/BC/labDisplay.jsp?segmentID="+result.segmentID+"&providerNo="+provNo;
                         labDisplayName = result.getDiscipline()+" "+result.getDateTime();
                     }
+                    
+                    
+                    
+                    
             %>
                 <tr>
                     <td>&nbsp;</td>
