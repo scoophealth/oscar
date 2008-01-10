@@ -35,7 +35,12 @@ Prescriptions
 </tr>
 <c:forEach var="prescription" items="${Prescriptions}">
 	<tr>
-		<td bgcolor="white" ><fmt:formatDate pattern="MM/dd/yy" value="${prescription.date_prescribed}"/></td>
+		<td bgcolor="white" >
+			<c:if test="${prescription.expired}">
+			*
+			</c:if>
+			<fmt:formatDate pattern="MM/dd/yy" value="${prescription.date_prescribed}"/>
+		</td>
 		
 		<%String styleColor=""; %>
 		<c:if test="${!prescription.expired && prescription.drug_achived}">
@@ -71,4 +76,4 @@ Prescriptions
 <span style="text-decoration: underline;cursor:pointer;color: blue" onclick="document.caseManagementViewForm.prescipt_view.value='current';document.caseManagementViewForm.method.value='setPrescriptViewType';document.caseManagementViewForm.submit(); return false;" >show current</span>
 </c:if>
 <br>
-<span> *expired medications in black,</span><span style="color:red">current medications in red </span> 
+<span> *expired medications in blue,</span><span style="color:red">current medications in red </span> 
