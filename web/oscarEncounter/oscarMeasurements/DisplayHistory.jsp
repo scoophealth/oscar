@@ -35,10 +35,14 @@
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.pageUtil.*"%>
 <%@ page import="oscar.oscarEncounter.oscarMeasurements.bean.*"%>
 <%@ page import="java.util.Vector"%>
+<%@ taglib uri="/WEB-INF/oscar-tag.tld" prefix="oscar" %>
+
 <%
     response.setHeader("Cache-Control","no-cache"); //HTTP 1.1
     response.setHeader("Pragma","no-cache"); //HTTP 1.0
     response.setDateHeader ("Expires", 0); //prevents caching at the proxy   
+
+    String demo = (String) request.getAttribute("demographicNo");	
 %>
 
 <html:html locale="true">
@@ -79,6 +83,11 @@
                     <bean:write name="msg"/><br>
                     </logic:iterate>
                 </logic:present>
+                </tr>
+                	<td class="Header" colspan="9"> 
+                	<oscar:nameage demographicNo="<%=demo%>"/>
+                	</td>
+                <tr>
                 </tr>
                 <tr>
                     <td>               
