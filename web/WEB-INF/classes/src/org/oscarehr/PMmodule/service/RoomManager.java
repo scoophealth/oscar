@@ -188,9 +188,13 @@ public class RoomManager {
     public Room[] getAvailableRooms(Integer facilityId, Integer programId, Boolean active) {
     	//rooms of particular facilityId, programId, active=1, (assignedBed=1 or assignedBed=0) 
     	Room[] rooms = roomDAO.getRooms(facilityId, programId, active);
-    	
-    	List<RoomDemographic> roomDemograhics = null;
     	List<Room> availableRooms = new ArrayList<Room>();
+    	
+//    	get rooms that are not full or clients can still be assigned to these rooms
+    	for(int i=0; rooms != null  &&  i < rooms.length; i++){
+    		
+    	List<RoomDemographic> roomDemograhics = null;
+    	
     	List clientsFromBedDemographic = new ArrayList();
     	List clientsFromRoomDemographic = new ArrayList();
     	int numOfUniqueClientsAssignedToRoom = 0;
@@ -202,14 +206,13 @@ public class RoomManager {
 			numOfClientsAssignedToRoom  ==  sum of  all unique demographicNo (subtracting the duplicates
 			of clients from both 'bed_demographic' & 'room_demographic' tables)
 		*/    	
-    	
-    	//get rooms that are not full or clients can still be assigned to these rooms
-    	for(int i=0; rooms != null  &&  i < rooms.length; i++){
+    	  	
 
 			Bed[] bedsForRoom = null;
     		if(rooms != null && rooms.length > 0){
    				//get  all bedIds from  table 'bed' via room[i].id
 				bedsForRoom = bedManager.getBedsByRoom(rooms[i].getId());
+				int bedsInOneRoom = bedsForRoom.length;
 				
 				if(bedsForRoom != null){
 					//get all demographicNo  from  table  'bed_demographic' via Bed[j].id -- 1 to 1 relationship
@@ -227,7 +230,10 @@ public class RoomManager {
 					clientsFromRoomDemographic.add(((RoomDemographic)roomDemograhics.get(0)).getId().getDemographicNo());
 				}
 				numOfUniqueClientsAssignedToRoom = getNumOfUniqueClientsAssignedToRoom(clientsFromBedDemographic, clientsFromRoomDemographic);	
-				if(rooms[i].getOccupancy().intValue() -  numOfUniqueClientsAssignedToRoom > 0){
+				
+				//What is the meaning occupancy, how many beds in the room ? why is it always 1 ? 
+				//if(rooms[i].getOccupancy().intValue() -  numOfUniqueClientsAssignedToRoom > 0){
+				if(bedsInOneRoom -  numOfUniqueClientsAssignedToRoom > 0){
 					availableRooms.add(rooms[i]);
 				}
     			
