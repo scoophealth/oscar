@@ -116,9 +116,15 @@ public class Hl7textResultsData {
                     }
                     
                     
-                    sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES ('"+measType+"', '"+demographic_no+"', '0', '"+result+"', '"+measInst+"', '"+h.getTimeStamp(i, j)+"', '"+dateEntered+"')";
+                    sql = "INSERT INTO measurements (type, demographicNo, providerNo, dataField, measuringInstruction, dateObserved, dateEntered )VALUES (?, ?, '0', ?, ?, ?, ?)";
                     logger.info(sql);
                     pstmt = conn.prepareStatement(sql);
+                    pstmt.setString(1,measType);
+                    pstmt.setString(2,demographic_no);
+                    pstmt.setString(3,result);
+                    pstmt.setString(4,measInst);
+                    pstmt.setString(5,h.getTimeStamp(i, j));
+                    pstmt.setString(6,dateEntered);
                     pstmt.executeUpdate();
                     rs = pstmt.getGeneratedKeys();
                     String insertID = null;
