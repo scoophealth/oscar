@@ -65,7 +65,7 @@
     }
 
     function accept_from_integrator(remote_referral_id) {
-        if(!confirm('You must admit the client into your system. You will be forwarded to the intake pages where the clients information must be entered. Once you have admitted the client you can remove this referral from the list.')) {
+        if(!confirm('This feature is currently a manual process, you will be forwarded to the new client page where you need to admit the client and enter them into the program. Afterwards you should return here and remove them from the queue.')) {
             return;
         }
         var form = document.programManagerViewForm;

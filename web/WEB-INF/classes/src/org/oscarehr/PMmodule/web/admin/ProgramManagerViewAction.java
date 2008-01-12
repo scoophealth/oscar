@@ -541,9 +541,7 @@ public class ProgramManagerViewAction extends BaseAction {
 
     public ActionForward accept_from_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-// TODO : TED send to intake forms with username filled in if exists. maybe fill in reasons for referral too?
-        
-        return view(mapping, form, request, response);
+        return(mapping.findForward("searchForm"));
     }
 
     public ActionForward select_client_for_admit(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
