@@ -56,6 +56,10 @@ public class TicklerManager {
         return ticklerDAO.getTicklers(filter);
     }
 
+    public int getActiveTicklerCount(String providerNo){
+        return ticklerDAO.getActiveTicklerCount(providerNo);
+    }
+    
     public int getNumTicklers(CustomFilter filter){
         return ticklerDAO.getNumTicklers(filter);
     }
