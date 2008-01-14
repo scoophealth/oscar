@@ -34,8 +34,17 @@ import java.sql.SQLException;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.struts.util.*;
+import org.oscarehr.casemgmt.service.CaseManagementManager;
+import org.oscarehr.casemgmt.service.TicklerManager;
+import org.oscarehr.util.SpringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.oscarDB.DBHandler;
+
 
 /**
  *
@@ -49,8 +58,9 @@ public class TicklerTag extends TagSupport {
    }
 
    public int doStartTag() throws JspException    {
-        try {
-            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+/*
+	   try {
+        	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
 
             String sql = new String("select count(*) from tickler where status = 'A' and TO_DAYS(service_date) <= TO_DAYS(now()) and task_assigned_to  = '"+ providerNo +"' ");
             ResultSet rs = db.GetSQL(sql);
@@ -60,9 +70,20 @@ public class TicklerTag extends TagSupport {
 
             rs.close();
             db.CloseConn();
-        }      catch(SQLException e)        {
+            
+        } catch(SQLException e) {
             e.printStackTrace(System.out);
         }
+*/
+//        BasicDataSource ds = (BasicDataSource)SpringUtils.beanFactory.getBean("dataSource");
+
+	    if(providerNo!=null){
+	       org.caisi.service.TicklerManager tcm = (org.caisi.service.TicklerManager) WebApplicationContextUtils.getWebApplicationContext(
+     		 pageContext.getServletContext()).getBean("ticklerManagerTargetT");
+	       
+	       numNewLabs= tcm.getActiveTicklerCount(providerNo);
+	    }  
+	   
         try        {
             JspWriter out = super.pageContext.getOut();
             if(numNewLabs > 0) 
