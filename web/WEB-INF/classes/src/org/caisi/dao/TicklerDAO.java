@@ -95,6 +95,15 @@ public class TicklerDAO extends HibernateDaoSupport {
         return (List)getHibernateTemplate().find(query + "order by t.service_date " + tickler_date_order, params);
     }
     
+    public int getActiveTicklerCount(String providerNo){
+        ArrayList paramList = new ArrayList();
+        String query = "select count(*) from Tickler t where t.status = 'A' and t.service_date <= ? and t.task_assigned_to  = '"+ providerNo +"' ";
+        paramList.add(new Date());
+        Object params[] = paramList.toArray(new Object[paramList.size()]);
+        Long count = (Long) getHibernateTemplate().find(query ,params).get(0);
+        return count.intValue();
+ }
+    
     public int getNumTicklers(CustomFilter filter){
             ArrayList paramList = new ArrayList();
             String query = "select count(*) from Tickler t where t.service_date >= ? and t.service_date <= ? ";   
