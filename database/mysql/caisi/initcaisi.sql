@@ -233,6 +233,7 @@ DROP TABLE IF EXISTS `caisi_role`;
 CREATE TABLE `caisi_role` (
   `role_id` int(10) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
+  userDefined tinyint not null,
   `oscar_name` varchar(255) NOT NULL default '',
   `update_date` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`role_id`)

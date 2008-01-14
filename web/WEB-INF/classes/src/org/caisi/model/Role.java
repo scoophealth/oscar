@@ -27,6 +27,8 @@ import java.util.Date;
 public class Role extends BaseObject implements Comparable<Role>{
 	private Long id;
 	private String name="";
+	/** this signifies if it's a user defined role or one that's shipped with the caisi system */
+	private boolean userDefined=true;
 	private String oscar_name;
 	private Date update_date;
 	
@@ -59,6 +61,12 @@ public class Role extends BaseObject implements Comparable<Role>{
 	}
 	public int compareTo(Role o) {
 	    return(name.compareTo(o.name));
+    }
+    public boolean isUserDefined() {
+        return userDefined;
+    }
+    public void setUserDefined(boolean userDefined) {
+        this.userDefined = userDefined;
     }
 	
 }

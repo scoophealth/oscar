@@ -63,12 +63,14 @@
 <table border="0" cellspacing="0" cellpadding="0" width="100%" bgcolor="#CCCCFF">
 	  <tr class="subject"><th colspan="4">Caisi Roles</th></tr>
 	<tr>
-            <td class="searchTitle" colspan="4">Existing Caisi Role List</td>
+            <td class="searchTitle" colspan="3">Existing Caisi Role List</td>
+            <td class="searchTitle" colspan="1">User Defined</td>
 	</tr>
 	
 	<c:forEach var="role" items="${requestScope.roleList}">
 	<tr>
             <td class="fieldValue" colspan="3"><c:out value="${role.name}" /></td>
+            <td class="fieldValue" ><c:out value="${role.userDefined}" /></td>
 	</tr>
 
 	</c:forEach>

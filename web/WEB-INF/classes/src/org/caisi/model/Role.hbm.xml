@@ -22,6 +22,7 @@
 			<generator class="native" />
 		</id>
 		<property name="name" />
+		<property name="userDefined" />
 		<property name="oscar_name" />
 		<property name="update_date" type="java.util.Date" />
 	</class>
