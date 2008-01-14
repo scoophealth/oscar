@@ -30,13 +30,14 @@ import java.sql.*;
 
 public class LabResultImport {
    
-    public boolean Save(String testName, String abn, String minimum, String maximum, String result, String units, String description, String ppId) throws SQLException {
+    public boolean SaveLabTR(String testName, String abn, String minimum, String maximum, String result, String units, String description, String ppId) throws SQLException {
 	boolean b = false;            
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
 	String sql = "INSERT INTO labTestResults (test_name, abn, minimum, maximum, result, units, description, labPatientPhysicianInfo_id) VALUES ('"
 		+ testName + "','" + abn + "','" + minimum + "','" + maximum + "','" + result + "','" + units + "','" + description + "','" + ppId + "')";
 	b = db.RunSQL(sql);
-	db.CloseConn();            
+	db.CloseConn();
+	
 	return b;            
     }
     
@@ -54,5 +55,15 @@ public class LabResultImport {
 	db.CloseConn();
 	
 	return id;
+    }
+    
+    public boolean savePatientLR(String demo_no, String lab_no) throws SQLException {
+	boolean b = false;
+	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+	String sql = "insert into patientLabRouting (demographic_no, lab_no, lab_type) values ('"+demo_no+"', '"+lab_no+"', 'CML')";
+	b = db.RunSQL(sql);
+	db.CloseConn();
+	
+	return b;
     }
 }
