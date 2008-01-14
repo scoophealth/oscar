@@ -26,7 +26,7 @@
         <property name="maxActive" value="100"/>
 
         <property name="testOnBorrow" value="true" />
-		<property name="validationQuery" value="select 1" />
+		<property name="validationQuery" value="${db_validationQuery}" />
 		<property name="maxWait" value="4000" />
 
     </bean>
