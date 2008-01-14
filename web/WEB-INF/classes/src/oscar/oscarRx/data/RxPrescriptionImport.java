@@ -39,7 +39,7 @@ public class RxPrescriptionImport {
     String rxDate = "";
     String endDate = "";
     String BN = "";
-    String GCN_SEQNO = "";
+    String regionalId = "";
     String frequencyCode = "";
     String duration = "";
     String durationUnit = "D";
@@ -52,16 +52,17 @@ public class RxPrescriptionImport {
     String route = "";
     String createDate = "";
     String dosage = "";
+    String unit = "";
     
     public RxPrescriptionImport(String providerNo, String demographicNo, String rxDate, String endDate,
-	    String BN, String GCN_SEQNO, String frequencyCode, String duration, String quantity,
-	    String repeat, String special, String route, String createDate, String dosage) {
+	    String BN, String regionalId, String frequencyCode, String duration, String quantity,
+	    String repeat, String special, String route, String createDate, String dosage, String unit) {
 	this.providerNo = providerNo;
 	this.demographicNo = "";
 	this.rxDate = rxDate;
 	this.endDate = endDate;
 	this.BN = BN;
-	this.GCN_SEQNO = GCN_SEQNO;
+	this.regionalId = regionalId;
 	this.frequencyCode = frequencyCode;
 	this.duration = duration;
 	this.quantity = quantity;
@@ -70,6 +71,7 @@ public class RxPrescriptionImport {
 	this.route = route;
 	this.createDate = createDate;
 	this.dosage = dosage;
+	this.unit = unit;
     }
     
     public boolean Save() {
@@ -78,13 +80,13 @@ public class RxPrescriptionImport {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
             String sql = "INSERT INTO drugs (provider_no, demographic_no, rx_date, end_date, BN, " +
-		    "GCN_SEQNO, freqcode, duration, durunit, quantity, repeat, special, route, create_date, " +
-		    "dosage, nosubs, prn, archived) VALUES ('" +
+		    "regional_identifier, freqcode, duration, durunit, quantity, repeat, special, route, " +
+		    "create_date, dosage, unit, nosubs, prn, archived) VALUES ('" +
 		    this.providerNo + "','" + this. demographicNo + "','" + this.rxDate + "','" + "','" +
-		    this.endDate + "','" + this.BN + "','" + this.GCN_SEQNO + "','" + this.frequencyCode + "','" +
+		    this.endDate + "','" + this.BN + "','" + this.regionalId + "','" + this.frequencyCode + "','" +
 		    this.duration + "','" + this.durationUnit + "','" + this.quantity + "','" + this.repeat + "','" + 
-		    this.special + "','" + this.route + "','" + this.createDate + "','" + this.dosage + "'," + 
-		    this.nosubs + "," + this.prn + "," + this.archived + ")";
+		    this.special + "','" + this.route + "','" + this.createDate + "','" + this.dosage + "','" + 
+		    this.unit + "'," + this.nosubs + "," + this.prn + "," + this.archived + ")";
                     
 	    b = db.RunSQL(sql);
             db.CloseConn();
