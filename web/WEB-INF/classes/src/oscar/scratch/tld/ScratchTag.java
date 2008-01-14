@@ -28,6 +28,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import oscar.oscarDB.DBHandler;
 
 public class ScratchTag extends TagSupport {
@@ -45,7 +48,8 @@ public class ScratchTag extends TagSupport {
     }
 
     public int doStartTag() throws JspException    {
-        try {
+/*
+    	try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             String sql = new String("SELECT scratch_text FROM scratch_pad WHERE provider_no = '" + providerNo + "' order by id desc limit 1");
             ResultSet rs = db.GetSQL(sql);
@@ -59,6 +63,13 @@ public class ScratchTag extends TagSupport {
         }      catch(SQLException e)        {
             e.printStackTrace(System.out);
         }
+*/
+    	if(providerNo!=null){
+       	    com.quatro.service.ScratchPadManager spm = (com.quatro.service.ScratchPadManager) WebApplicationContextUtils.getWebApplicationContext(
+ 	       		pageContext.getServletContext()).getBean("scratchPadManagerTarget");
+ 		    scratchFilled= spm.isScratchFilled(providerNo);
+    	}
+        
         try        {
             JspWriter out = super.pageContext.getOut();
             if(scratchFilled)

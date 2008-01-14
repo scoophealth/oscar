@@ -21,8 +21,9 @@ public class ScratchPadDao extends HibernateDaoSupport {
 		  return (obj.trim().length()>0);
 		}
 		else{
-		  return false;
+		  return false; 
 		}
+		
 	}
 	
 /*
