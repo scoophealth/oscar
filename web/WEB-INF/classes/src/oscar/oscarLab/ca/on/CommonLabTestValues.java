@@ -590,17 +590,18 @@ public class CommonLabTestValues {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs = db.GetSQL(sql);
             while(rs.next()){
-                String testNam = rs.getString("test_name");
-                String abn = rs.getString("abn");
-                String result = rs.getString("result");
+                String testNam = rs.getString("test_name")==null ? "" : rs.getString("test_name");
+                String abn = rs.getString("abn")==null ? "" : rs.getString("abn");
+                String result = rs.getString("result")==null ? "" : rs.getString("result");
                 String range = getReferenceRange(rs.getString("minimum"),rs.getString("maximum"));
-                String units = rs.getString("units");
-		String location = rs.getString("location_id");
-		String description = rs.getString("description");
+                String units = rs.getString("units")==null ? "" : rs.getString("units");
+		String location = rs.getString("location_id")==null ? "" : rs.getString("location_id");
+		String description = rs.getString("description")==null ? "" : rs.getString("description");
+		
                 String collDate = UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd");
                 logger.info("This went in "+rs.getString("collection_date")+" this came out "+UtilDateUtilities.DateToString(UtilDateUtilities.StringToDate(rs.getString("collection_date"),"dd-MMM-yy"),"yyyy-MM-dd"));
-                //rs.getString("collection_date");
-                Hashtable h = new Hashtable();
+		
+		Hashtable h = new Hashtable();
                 h.put("testName", testNam);
                 h.put("abn",abn);
                 h.put("result",result);
