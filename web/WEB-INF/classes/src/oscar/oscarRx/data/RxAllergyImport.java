@@ -30,11 +30,11 @@ import java.sql.*;
 
 public class RxAllergyImport {
    
-    public boolean Save(String demographicNo, String entryDate, String description, String typeCode, String reaction, String drugrefId) throws SQLException {            
+    public boolean Save(String demographicNo, String entryDate, String description, String typeCode, String reaction, String severity, String drugrefId) throws SQLException {
 	boolean b = false;            
 	DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);            
-	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, drugref_id) VALUES ('"
-		+ demographicNo + "','" + entryDate + "','" + description + "','" + typeCode + "','" + reaction + "','" + drugrefId + "')";
+	String sql = "INSERT INTO allergies (demographic_no, entry_date, DESCRIPTION, TYPECODE, reaction, severity_of_reaction, drugref_id) VALUES ('"
+		+ demographicNo + "','" + entryDate + "','" + description + "','" + typeCode + "','" + reaction + "','" + severity + "','" + drugrefId + "')";
 	b = db.RunSQL(sql);
 	db.CloseConn();            
 	return b;            
