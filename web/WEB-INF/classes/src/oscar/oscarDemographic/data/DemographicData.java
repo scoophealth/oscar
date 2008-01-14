@@ -80,6 +80,34 @@ public class DemographicData {
        return demographicNo;
     }
     
+    public String getDemoNoByNamePhoneEmail(String firstName, String lastName, String hPhone, String wPhone, String email) {
+       String demographicNo = "";
+       
+       try {
+           DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+           ResultSet rs;
+	   
+	   firstName = "first_name='"+firstName.trim()+"' ";
+	   lastName = lastName.trim().equals("") ? "" : "AND last_name='"+lastName.trim()+"' ";
+	   hPhone = hPhone.trim().equals("") ? "" : "AND (phone='"+hPhone.trim()+"') ";
+	   wPhone = wPhone.trim().equals("") ? "" : "AND (phone2='"+wPhone.trim()+"') ";
+	   email = email.trim().equals("") ? "" : "AND email='"+email.trim()+"'";
+	   
+	   String sql = "SELECT demographic_no FROM demographic WHERE " + firstName + lastName + hPhone + wPhone + email;
+	   
+	   rs = db.GetSQL(sql);
+	   if (rs.next()) {
+	       demographicNo = rs.getString("demographic_no");
+	   }
+           rs.close();
+           db.CloseConn();
+           return demographicNo;
+       } catch (SQLException e) {
+           System.out.println(e.getMessage());
+       }
+       return demographicNo;
+    }
+    
     ////
     public int numDemographicsWithHIN(String hin){
        int num = 0; 
@@ -162,7 +190,7 @@ public class DemographicData {
        try {
             DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
             ResultSet rs;
-            String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";                                        
+            String sql = "SELECT last_name, first_name, year_of_birth,sex,month_of_birth,date_of_birth FROM demographic WHERE demographic_no = '" + demographicNo +"'";
             rs = db.GetSQL(sql);            
             if (rs.next()) {                                                                    
                String age =  UtilDateUtilities.calcAge(UtilDateUtilities.calcDate(rs.getString("year_of_birth"), rs.getString("month_of_birth"), rs.getString("date_of_birth")));
@@ -310,25 +338,6 @@ public class DemographicData {
         }
         return date;
     }
-    
-    public String getLastDemographicNo() {
-	String demoNo = null;
-	try {
-	    DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
-	    ResultSet rs;
-	    String sql = "SELECT MAX(demographic_no) FROM demographic";
-	    rs = db.GetSQL(sql);
-	    if (rs.next()) {
-		demoNo = rs.getString(1);
-	    }
-	    rs.close();
-	    db.CloseConn();
-	} catch (SQLException e) {
-	    System.out.append(e.getMessage());
-	}
-	return demoNo;
-    }
-    
     
     public class Demographic {
         
