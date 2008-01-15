@@ -1,0 +1,30 @@
+__R	 : left, 20, 53, 0, BaseFont.HELVETICA, 50 , R
+__x	 : left, 40, 66, 0, BaseFont.HELVETICA, 50 , x
+#doctorName			 : left, 90, 18, 0, BaseFont.HELVETICA, 10
+clinicName			 : left, 80, 15, 0, BaseFont.TIMES_ROMAN, 10, _, 280, 100, 11
+
+#clinicAddress			 : left, 90, 42, 0, BaseFont.HELVETICA, 10
+#clinicCityPostal			 : left, 90, 54, 0, BaseFont.HELVETICA, 10
+__tel	 : left, 190, 70, 0, BaseFont.HELVETICA, 10 , Tel:
+clinicPhone			 : left, 210, 70, 0, BaseFont.HELVETICA, 10
+__fax	 : left, 190, 80, 0, BaseFont.HELVETICA, 10 , Fax:
+clinicFax			 : left, 210, 80, 0, BaseFont.HELVETICA, 10
+__$line1		: 17, 323, 280, 323, 0.8
+patientName	 		: left, 20, 103, 0, BaseFont.HELVETICA, 10
+rxDate				: left, 200, 103, 0, BaseFont.HELVETICA, 10
+patientAddress		: left, 20, 115, 0, BaseFont.HELVETICA, 10
+patientCityPostal	: left, 20, 127, 0, BaseFont.HELVETICA, 10
+patientPhone		: left, 20, 139, 0, BaseFont.HELVETICA, 10
+__$line2		: 17, 265, 280, 265, 0.8
+rx		: left, 20, 152, 0, BaseFont.TIMES_ROMAN, 10, _, 250, 350, 12
+__signature	 : left, 20, 360, 0, BaseFont.HELVETICA, 10 , Signature:
+__$line3		: 75, 50, 280, 50, 0.5
+sigDoctorName		: left, 90, 378, 0, BaseFont.HELVETICA, 10
+__$lineL		: 10, 20, 10, 405, 0.5
+__$lineR		: 285, 20, 285, 405, 0.5
+__$lineT		: 10, 405, 285, 405, 0.5
+__$lineB		: 10, 20, 285, 20, 0.5
+__Reprint               : left, 20, 388, 0, BaseFont.HELVETICA, 6, Reprint; Originally Printed
+origPrintDate           : left, 90, 388, 0, BaseFont.HELVETICA, 6
+__NumPrint              : right, 270, 388, 0, BaseFont.HELVETICA, 6, Times Printed
+numPrints               : right, 280, 388, 0, BaseFont.HELVETICA, 6
