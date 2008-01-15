@@ -6717,7 +6717,7 @@ CREATE TABLE study (
   study_link varchar(255) NOT NULL default '',
   description varchar(255) NOT NULL default '',
   form_name varchar(30) default NULL,
-  current tinyint(1) default '0',
+  current1 tinyint(1) default '0',
   remote_serverurl varchar(50) default NULL,
   provider_no varchar(6) NOT NULL default '',
   timestamp timestamp(14) NOT NULL,
