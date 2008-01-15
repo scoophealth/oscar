@@ -6272,7 +6272,7 @@ CREATE TABLE oscarcommlocations (
   locationId int(10) NOT NULL default '0',
   locationDesc varchar(50) NOT NULL default '',
   locationAuth varchar(30) default NULL,
-  current tinyint(1) NOT NULL default '0',
+  current1 tinyint(1) NOT NULL default '0',
   addressBook text,
   remoteServerURL varchar(30) default NULL,
   PRIMARY KEY  (locationId)
