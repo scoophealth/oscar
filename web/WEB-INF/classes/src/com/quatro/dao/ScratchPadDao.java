@@ -10,7 +10,8 @@ public class ScratchPadDao extends HibernateDaoSupport {
 
 	public boolean isScratchFilled(String providerNo) {
         ArrayList paramList = new ArrayList();
-		String sSQL="SELECT scratch_text FROM ScratchPad s WHERE provider_no = ? order by id";		
+		String sSQL="SELECT s.scratch_text FROM ScratchPad s WHERE s.provider_no = ? order by s.id";		
+//		String sSQL="FROM ScratchPad s WHERE s.provider_no = ? order by s.id";		
         paramList.add(providerNo);
         Object params[] = paramList.toArray(new Object[paramList.size()]);
         List lst = getHibernateTemplate().find(sSQL ,params);
