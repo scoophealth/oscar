@@ -156,7 +156,7 @@
 
     function getActiveText(e) {      
          if(document.all) {
-
+            
             text = document.selection.createRange().text;
             if(text != "" && $F("keyword") == "") {
               $("keyword").value += text;
@@ -178,7 +178,7 @@
             //
             $("keyword").value = text;
           }
-          Event.stop(e);
+          
           return true;
     }
     
@@ -399,6 +399,7 @@ function changeToView(id) {
     
     Element.remove("notePasswd");
     Element.stopObserving(id, 'keyup', monitorCaseNote);
+    Element.stopObserving(id, 'click', getActiveText);
     nId = parent.substr(1);
     Element.remove(id);    
     
@@ -691,6 +692,7 @@ function editNote(e) {
     new Insertion.Top(txt, input);                 
     
     Element.observe(caseNote, 'keyup', monitorCaseNote);
+    Element.observe(caseNote, 'click', getActiveText);
       
     <c:if test="${sessionScope.passwordEnabled=='true'}">
            input = "<p style='background-color:#CCCCFF; display:none; margin:0px;' id='notePasswd'>Password:&nbsp;<input type='password' name='caseNote.password'/><\/p>";
@@ -1114,6 +1116,7 @@ function newNote(e) {
             setCaretPosition($(caseNote),$(caseNote).value.length);
             
         Element.observe(caseNote, 'keyup', monitorCaseNote);
+        Element.observe(caseNote, 'click', getActiveText);
 
         origCaseNote = "";        
         ajaxUpdateIssues("edit", sigId); 
@@ -1838,7 +1841,8 @@ Version version = (Version) ctx.getBean("version");
         
     caseNote = "caseNote_note" + "<%=savedId%>"; 
     setupNotes();
-    Element.observe(caseNote, "keyup", monitorCaseNote);   
+    Element.observe(caseNote, "keyup", monitorCaseNote); 
+    Element.observe(caseNote, 'click', getActiveText);
     <%
         Long num;
         Iterator iterator = lockedNotes.iterator();
@@ -1899,7 +1903,7 @@ Version version = (Version) ctx.getBean("version");
         document.forms["caseManagementEntryForm"].newNoteIdx.value = <%=savedId%>;
    <%}%>
                    
-    Element.observe(document, 'click', getActiveText);
+    
     //$("encMainDiv").scrollTop = $("n<%=savedId%>").offsetTop - $("encMainDiv").offsetTop;
    </script>
    
