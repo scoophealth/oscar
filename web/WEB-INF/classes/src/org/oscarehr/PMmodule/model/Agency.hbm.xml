@@ -134,6 +134,7 @@
             not-null="false"
             length="255"
         />
+        <property name="shareNotes" column="share_notes" />
         <property
             name="hic"
             column="hic"

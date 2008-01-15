@@ -51,6 +51,7 @@ public class Agency implements Serializable {
 	private String integratorJms;
 	private String integratorUsername;
 	private String integratorPassword;
+	private boolean shareNotes;
 	private boolean hic;
 
 	public static Agency getLocalAgency() {
@@ -421,7 +422,16 @@ public class Agency implements Serializable {
 		this.integratorPassword = integratorPassword;
 	}
 
-	/**
+
+    public boolean isShareNotes() {
+        return shareNotes;
+    }
+
+    public void setShareNotes(boolean shareNotes) {
+        this.shareNotes = shareNotes;
+    }
+
+    /**
 	 * Return the value associated with the column: hic
 	 */
 	public boolean isHic() {

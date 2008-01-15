@@ -57,6 +57,7 @@ CREATE TABLE `agency` (
   `integrator_jms` varchar(255) default NULL,
   `integrator_username` varchar(255) default NULL,
   `integrator_password` varchar(255) default NULL,
+  share_notes tinyint not null,
   `hic` tinyint(1) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
