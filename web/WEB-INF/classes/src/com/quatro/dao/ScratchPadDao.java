@@ -11,11 +11,9 @@ public class ScratchPadDao extends HibernateDaoSupport {
 	public boolean isScratchFilled(String providerNo) {
         ArrayList paramList = new ArrayList();
 		String sSQL="SELECT s.scratch_text FROM ScratchPad s WHERE s.provider_no = ? order by s.id";		
-//		String sSQL="FROM ScratchPad s WHERE s.provider_no = ? order by s.id";		
         paramList.add(providerNo);
         Object params[] = paramList.toArray(new Object[paramList.size()]);
         List lst = getHibernateTemplate().find(sSQL ,params);
-//        Long count = (Long) getHibernateTemplate().find(query).get(0);
 
 		if (lst.size()>0){
 		  String obj= (String)lst.get(0);
