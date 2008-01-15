@@ -96,7 +96,7 @@
     if (org.oscarehr.common.IsPropertiesOn.isCaisiEnable() && org.oscarehr.common.IsPropertiesOn.isTicklerPlusEnable()){
         dbOperation=new String[][] {
                 {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
-                {"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current='1'"},
+                {"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current1='1'"},
                 {"search_study","select s.* from demographicstudy d, study s where demographic_no=? and d.study_no = s.study_no limit 1 "},
                 {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "},
                 {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
@@ -157,7 +157,7 @@
     }else{
         dbOperation=new String[][] {
                 {"search_tickler","select * from tickler where demographic_no=? and service_date<=? and status='A' order by service_date desc"},
-                {"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current='1'"},
+                {"search_studycount","select count(ds.study_no) from demographicstudy ds, study s where ds.demographic_no=? and ds.study_no=s.study_no and s.current1='1'"},
                 {"search_study","select s.* from demographicstudy d, study s where demographic_no=? and d.study_no = s.study_no limit 1 "},
                 {"searchappointmentday", "select appointment_no,provider_no, start_time,end_time,name,demographic_no,reason,notes,status from appointment where provider_no=? and appointment_date=? order by start_time, status desc "},
                 {"searchmygroupcount", "select count(provider_no) from mygroup where mygroup_no=? "},
