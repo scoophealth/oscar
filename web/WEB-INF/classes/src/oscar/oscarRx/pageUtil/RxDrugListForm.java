@@ -31,17 +31,8 @@ import org.apache.struts.action.ActionMapping;
 
 public final class RxDrugListForm extends ActionForm {
     
-    private String drugList = null;
-    private boolean reprint = false;
-    
-    public boolean getReprint() {
-        return this.reprint;
-    }
-    
-    public void setReprint(boolean reprint) {
-        this.reprint = reprint;
-    }
-    
+    private String drugList = null;    
+        
     public String getDrugList() {
         return this.drugList;
     }
@@ -57,7 +48,6 @@ public final class RxDrugListForm extends ActionForm {
      */
     public void reset(ActionMapping mapping, HttpServletRequest request) {
         this.drugList = null;
-        this.reprint = false;
     }
     
     
