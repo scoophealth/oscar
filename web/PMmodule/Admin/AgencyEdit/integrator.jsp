@@ -75,6 +75,10 @@
             <td width="20%">Integrator password:</td>
             <td><html:text property="agency.integratorPassword" /></td>
         </tr>
+        <tr class="b">
+            <td width="20%">Share Issues and Notes:</td>
+            <td><html:checkbox property="agency.shareNotes" /></td>
+        </tr>
         <tr>
             <td colspan="2">
                 <input type="button" value="Save" onclick="this.form.method.value='save';this.form.submit()" />
