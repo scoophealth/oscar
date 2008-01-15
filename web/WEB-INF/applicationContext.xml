@@ -46,6 +46,7 @@
                 <value>classpath:/org/oscarehr/casemgmt/model</value>
                 <value>classpath:/org/oscarehr/phr/model</value>
                 <value>classpath:/org/oscarehr/common/model</value>
+                <value>classpath:/com/quatro/model</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -81,6 +82,7 @@
                 <value>classpath:/org/oscarehr/PMmodule/model</value>
                 <value>classpath:/org/oscarehr/survey/model</value>
                 <value>classpath:/org/oscarehr/casemgmt/model</value>
+                <value>classpath:/com/quatro/model</value>
             </list>
         </property>
         <property name="hibernateProperties">
@@ -452,6 +454,14 @@
 
     <bean id="version" class="org.caisi.service.Version">
         <property name="version" value="3.1.0"/>
+    </bean>
+
+    <bean id="scratchPadDao" class="com.quatro.dao.ScratchPadDao" autowire="byName" />
+    <bean id="scratchPadManager" parent="baseTransactionProxy" lazy-init="default" dependency-check="default">
+        <property name="target" ref="scratchPadManagerTarget"/>
+    </bean>
+    <bean id="scratchPadManagerTarget" class="com.quatro.service.ScratchPadManager">
+       <property name="scratchPadDao" ref="scratchPadDao"/>
     </bean>
 
       
