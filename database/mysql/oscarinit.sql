@@ -7243,3 +7243,12 @@ CREATE TABLE hash_audit (
     `algorithm` varchar(127),
     PRIMARY KEY (signature)
 ) TYPE=MyISAM;
+
+
+--
+-- table for 3rd bill 
+--
+CREATE TABLE `gstControl` (
+  `gstFlag` int(1) NOT NULL default '0',
+  `gstPercent` int(3) NOT NULL default '0'
+)ENGINE=MyISAM;

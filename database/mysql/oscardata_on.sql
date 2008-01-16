@@ -9364,6 +9364,7 @@ INSERT INTO ctl_billingservice_premium VALUES ('Office','Z904A','A','2002-08-30'
 INSERT INTO ctl_billingservice_premium VALUES ('Office','G378A','A','2002-08-30');
 INSERT INTO ctl_billingservice_premium VALUES ('Office','G361A','A','2002-08-30');
 INSERT INTO ctl_billingservice_premium VALUES ('Office','Z770A','A','2002-08-30');
+ALTER TABLE `billingservice` ADD COLUMN `gstFlag` tinyint(1) NOT NULL default '0'; 
 
 --
 -- Dumping data for table 'ctl_diagcode'
