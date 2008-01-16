@@ -226,6 +226,20 @@ CREATE TABLE `caisi_form_instance_tmpsave` (
   PRIMARY KEY  (`tmp_instance_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+CREATE TABLE `caisi_form_question` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `page` bigint(20),
+  `section` bigint(20),
+  `question` bigint(20),
+  `description` varchar(255) default NULL,
+  `form_id` bigint(20),
+  `form_question_id` bigint(20),
+  `type` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
 --
 -- Table structure for table `caisi_role`
 --
@@ -1805,6 +1819,8 @@ CREATE TABLE `room` (
   `floor` varchar(45) default NULL,
   `active` tinyint(1) NOT NULL default '1',
   `facility_id` int(10) NOT NULL,
+  `assigned_bed`  tinyint(1)  NOT NULL default '1',
+  `occupancy`  int(10) NULL default '0',
   CONSTRAINT `FK_room_facility` FOREIGN KEY (`facility_id`) REFERENCES `facility` (`id`),
   PRIMARY KEY  (`room_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -1833,6 +1849,29 @@ CREATE TABLE `room_type` (
   `dflt` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`room_type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `room_demographic` (
+  `room_id` int(10) unsigned NOT NULL default '0',
+  `demographic_no` int(10) unsigned NOT NULL default '0',
+  `provider_no` varchar(6) NOT NULL default '',
+  `assign_start` date  NULL default '0000-00-00',
+  `assign_end` date  NULL default '0000-00-00',
+  `comment` varchar(50)  NULL default '',
+
+  PRIMARY KEY  (`room_id`,`demographic_no`)
+);
+
+
+CREATE TABLE `room_bed` (
+  `room_id` int(10) unsigned NOT NULL default '0',
+  `bed_id` int(10) unsigned NOT NULL default '0',
+  `assign_start` date NULL default '0000-00-00',
+  `assign_end` date NULL default '0000-00-00',
+  `comment` varchar(50)  NULL default '',
+
+  PRIMARY KEY  (`room_id`,`bed_id`)
+);
 
 --
 -- Table structure for table `survey`
