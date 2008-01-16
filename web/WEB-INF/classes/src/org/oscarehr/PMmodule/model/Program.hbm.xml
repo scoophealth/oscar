@@ -27,12 +27,12 @@
 		<property name="maxAllowed" column="max_allowed" type="integer" not-null="true" length="6" />
 		<property name="type" column="type" type="string" not-null="false" length="50" />
 		<property name="descr" column="descr" type="string" not-null="false" length="255" />
-		<property name="address" column="address" type="string" not-null="true" length="255" />
-		<property name="phone" column="phone" type="string" not-null="true" length="255" />
-		<property name="fax" column="fax" type="string" not-null="true" length="255" />
-		<property name="url" column="url" type="string" not-null="true" length="255" />
-		<property name="email" column="email" type="string" not-null="true" length="255" />
-		<property name="emergencyNumber" column="emergency_number" type="string" not-null="true" length="255" />
+		<property name="address" column="address" type="string" not-null="false" length="255" />
+		<property name="phone" column="phone" type="string" not-null="false" length="255" />
+		<property name="fax" column="fax" type="string" not-null="false" length="255" />
+		<property name="url" column="url" type="string" not-null="false" length="255" />
+		<property name="email" column="email" type="string" not-null="false" length="255" />
+		<property name="emergencyNumber" column="emergency_number" type="string" not-null="false" length="255" />
 		<property name="location" column="location" type="string" not-null="false" length="70" />
 		<property name="name" column="name" type="string" not-null="true" length="70" />
 		<property name="agencyId" column="agency_id" type="java.lang.Long" not-null="true" length="11" />
