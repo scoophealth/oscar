@@ -339,6 +339,10 @@ public class RxPatientData {
          return new RxPrescriptionData().getPrescriptionsByPatient(this.getDemographicNo());         
       }
       
+      public RxPrescriptionData.Prescription[] getPrescribedDrugScripts() {
+        return new RxPrescriptionData().getPrescriptionScriptsByPatient(this.getDemographicNo());
+      }         
+      
       public class Allergy {         
          int allergyId;         
          java.util.Date entryDate;         
