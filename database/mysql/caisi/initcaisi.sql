@@ -553,6 +553,7 @@ CREATE TABLE `custom_filter` (
   `priority` varchar(20) NOT NULL default '',
   `demographic_no` varchar(20) NOT NULL default '',
   `name` varchar(255) NOT NULL default '',
+  `shortcut` tinyint(1) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
