@@ -217,6 +217,139 @@ public class RxPrescriptionData {
     }
     
     
+    /*
+     *Limit returned prescriptions to those which have an entry in both drugs and prescription table     
+     */
+    public Prescription[] getPrescriptionScriptsByPatient(int demographicNo) {
+        Prescription[] arr = {};
+        ArrayList lst = new ArrayList();
+        
+        try {
+            //Get Prescription from database
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "SELECT d.*, p.date_printed, p.dates_reprinted FROM drugs d, prescription p WHERE  "
+            + "d.demographic_no = " + demographicNo + " and d.script_no = p.script_no "
+            + "ORDER BY rx_date DESC, drugId DESC";
+            
+            Prescription p;
+            String datesRePrinted;
+            
+            rs = db.GetSQL(sql);
+            
+            while(rs.next()) {
+                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p.setRxDate(rs.getDate("rx_date"));
+                p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setEndDate(rs.getDate("end_date"));
+                p.setBrandName(rs.getString("BN"));
+                p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
+                p.setCustomName(rs.getString("customName"));
+                p.setTakeMin(rs.getFloat("takemin"));
+                p.setTakeMax(rs.getFloat("takemax"));
+                p.setFrequencyCode(rs.getString("freqcode"));
+                p.setDuration(rs.getString("duration"));
+                p.setDurationUnit(rs.getString("durunit"));
+                p.setQuantity(rs.getString("quantity"));
+                p.setRepeat(rs.getInt("repeat"));
+                p.setNosubs(rs.getInt("nosubs"));
+                p.setPrn(rs.getInt("prn"));
+                p.setSpecial(rs.getString("special"));
+                p.setArchived(rs.getString("archived"));
+                p.setGenericName(rs.getString("GN"));
+                p.setAtcCode(rs.getString("ATC"));
+                p.setScript_no(rs.getString("script_no"));
+                p.setRegionalIdentifier(rs.getString("regional_identifier"));
+                p.setUnit(rs.getString("unit"));
+                p.setMethod(rs.getString("method"));
+                p.setRoute(rs.getString("route"));
+                p.setCustomInstr(rs.getBoolean("custom_instructions"));
+                p.setDosage(rs.getString("dosage"));
+                
+                datesRePrinted = rs.getString("dates_reprinted");
+                if( datesRePrinted != null )
+                    p.setNumPrints(datesRePrinted.split(",").length+1);
+                else
+                    p.setNumPrints(1);
+                
+                lst.add(p);
+            }
+            
+            rs.close();
+            db.CloseConn();
+            
+            arr = (Prescription[])lst.toArray(arr);
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        return arr;
+    }    
+    
+    public ArrayList<Prescription> getPrescriptionsByScriptNo(int script_no, int demographicNo) {         
+         ArrayList<Prescription> lst = new ArrayList<Prescription>();
+         
+         try {
+            //Get Prescription from database
+            DBHandler db = new DBHandler(DBHandler.OSCAR_DATA);
+            ResultSet rs;
+            String sql = "select drugs.*, p.date_printed, p.dates_reprinted from drugs, prescription p where p.script_no = drugs.script_no and " + 
+                    "drugs.script_no = " + script_no;
+            
+            Prescription p;
+            String datesRePrinted;
+            
+            rs = db.GetSQL(sql);
+            
+            while(rs.next()) {
+                p = new Prescription(rs.getInt("drugid"), rs.getString("provider_no"), demographicNo);
+                p.setRxDate(rs.getDate("rx_date"));
+                p.setRxCreatedDate(rs.getDate("create_date"));
+                p.setEndDate(rs.getDate("end_date"));
+                p.setBrandName(rs.getString("BN"));
+                p.setGCN_SEQNO(rs.getInt("GCN_SEQNO"));
+                p.setCustomName(rs.getString("customName"));
+                p.setTakeMin(rs.getFloat("takemin"));
+                p.setTakeMax(rs.getFloat("takemax"));
+                p.setFrequencyCode(rs.getString("freqcode"));
+                p.setDuration(rs.getString("duration"));
+                p.setDurationUnit(rs.getString("durunit"));
+                p.setQuantity(rs.getString("quantity"));
+                p.setRepeat(rs.getInt("repeat"));
+                p.setNosubs(rs.getInt("nosubs"));
+                p.setPrn(rs.getInt("prn"));
+                p.setSpecial(rs.getString("special"));
+                p.setGenericName(rs.getString("GN"));
+                p.setAtcCode(rs.getString("ATC"));
+                p.setScript_no(rs.getString("script_no"));
+                p.setRegionalIdentifier(rs.getString("regional_identifier"));
+                p.setUnit(rs.getString("unit"));
+                p.setMethod(rs.getString("method"));
+                p.setRoute(rs.getString("route"));
+                p.setCustomInstr(rs.getBoolean("custom_instructions"));
+                p.setDosage(rs.getString("dosage"));
+                p.setPrintDate(rs.getDate("date_printed"));
+                
+                datesRePrinted = rs.getString("dates_reprinted");
+                if( datesRePrinted != null )
+                    p.setNumPrints(datesRePrinted.split(",").length+1);
+                else
+                    p.setNumPrints(1);
+
+                lst.add(p);
+            }
+            
+            rs.close();
+            db.CloseConn();
+                        
+         }
+         catch(SQLException e) {
+             e.printStackTrace();
+         }
+         
+         return lst;
+    }
     /////
     public Prescription[] getPrescriptionsByPatientHideDeleted(int demographicNo) {
         Prescription[] arr = {};
@@ -641,6 +774,7 @@ public class RxPrescriptionData {
             System.out.println(e.getMessage());
         }
                 
+        System.out.println("INSERT INTO PRESCRIPTION " + retval);
         return retval;
     }
     
@@ -655,6 +789,9 @@ public class Prescription {
     java.util.Date rxDate = null;
     java.util.Date rxCreatedDate = null;
     java.util.Date endDate = null;
+    java.util.Date printDate = null;
+    
+    int numPrints = 0;
     
     String BN = null;       //regular
     int GCN_SEQNO = 0;      //regular
@@ -690,6 +827,22 @@ public class Prescription {
         this.drugId = drugId;
         this.providerNo = providerNo;
         this.demographicNo = demographicNo;
+    }
+    
+    public int getNumPrints() {
+        return this.numPrints;
+    }
+    
+    public void setNumPrints(int numPrints) {
+        this.numPrints = numPrints;
+    }
+    
+    public java.util.Date getPrintDate() {
+        return this.printDate;
+    }
+    
+    public void setPrintDate(java.util.Date printDate) {
+        this.printDate = printDate;
     }
     
     public void setScript_no(String script_no) {
