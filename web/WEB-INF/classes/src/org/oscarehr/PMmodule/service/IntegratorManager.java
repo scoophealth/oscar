@@ -49,6 +49,7 @@ import org.caisi.integrator.message.demographics.AddUpdateDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicRequest;
 import org.caisi.integrator.message.demographics.GetDemographicResponse;
 import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsRequest;
+import org.caisi.integrator.message.demographics.SynchronizeAgencyDemographicsResponse;
 import org.caisi.integrator.message.program.GetProgramsResponse;
 import org.caisi.integrator.message.program.GetReferralsResponse;
 import org.caisi.integrator.message.program.MakeReferralRequest;
@@ -231,14 +232,6 @@ public class IntegratorManager {
             log.error("Unexpected error.", e);
             return(null);
         }
-    }
-
-    public void refreshClients(List<Demographic> clients) throws IntegratorException {
-        List<DemographicTransfer> demographics = new ArrayList<DemographicTransfer>();
-        for (Demographic client : clients) {
-            demographics.add(caisiDemographicToIntegratorDemographic(client));
-        }
-        getIntegratorService().synchronizeAgencyDemographics(new SynchronizeAgencyDemographicsRequest(new Date(), demographics), getAuthenticationToken());
     }
 
     protected boolean updateClient(long id) {
@@ -427,9 +420,19 @@ public class IntegratorManager {
         try {
             if (!isEnabled()) return;
 
-// TODO : Ted, right now it just sends everything, no checking. It also doesn't remove old data.
+// TODO : Ted, right now it just sends everything, no checking of permissions.
             
-            refreshClients(clientManager.getClients());
+            List<Demographic> demographics=clientManager.getClients();
+            
+            List<DemographicTransfer> demographicTransfers = new ArrayList<DemographicTransfer>();
+            for (Demographic demographic : demographics) {
+                demographicTransfers.add(caisiDemographicToIntegratorDemographic(demographic));
+            }
+            SynchronizeAgencyDemographicsResponse response=getIntegratorService().synchronizeAgencyDemographics(new SynchronizeAgencyDemographicsRequest(new Date(), demographicTransfers), getAuthenticationToken());
+
+            if (!response.getAck().equals(MessageAck.OK)) {
+                log.error("Error publishing Clients. " + response.getAck());
+            }
         }
         catch (Exception e) {
             log.error("Unexpected error occurred.", e);
