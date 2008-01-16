@@ -28,10 +28,10 @@ import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.integrator.model.transfer.GetReferralResponseTransfer;
 import org.caisi.integrator.model.transfer.ProgramTransfer;
 import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.model.Program;
+import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.util.DbConnectionFilter;
 
@@ -41,6 +41,7 @@ public class IntegratorUpdateTask extends TimerTask {
 
     private IntegratorManager integratorManager;
     private ProgramDao programDao;
+    private ClientManager clientManager;
 
     public void setIntegratorManager(IntegratorManager mgr) {
         this.integratorManager = mgr;
@@ -48,6 +49,10 @@ public class IntegratorUpdateTask extends TimerTask {
 
     public void setProgramDao(ProgramDao programDao) {
         this.programDao = programDao;
+    }
+
+    public void setClientManager(ClientManager clientManager) {
+        this.clientManager = clientManager;
     }
 
     public void run() {
@@ -60,6 +65,7 @@ public class IntegratorUpdateTask extends TimerTask {
             }
 
             pushPrograms();
+            pushClients();
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
@@ -79,6 +85,16 @@ public class IntegratorUpdateTask extends TimerTask {
         catch (Exception e) {
             log.error("Unexpected error occurred.", e);
         }
+    }
+    
+    private void pushClients()
+    {
+        try {
+            integratorManager.refreshClients(clientManager.getClients());
+        }
+        catch (Exception e) {
+            log.error("Unexpected error occurred.", e);
+        }        
     }
 
 }

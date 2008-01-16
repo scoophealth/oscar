@@ -214,7 +214,7 @@
             <bean class="org.oscarehr.PMmodule.task.IntegratorUpdateTask" lazy-init="default" dependency-check="default" autowire="byName" />
         </property>
         <property name="delay" value="30000"/>
-        <property name="period" value="1800000"/>
+        <property name="period" value="43200000"/>
         <!-- 
         <property name="period" value="60000"/>
          -->

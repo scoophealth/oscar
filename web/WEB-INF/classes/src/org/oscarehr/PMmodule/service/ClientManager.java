@@ -56,7 +56,6 @@ public class ClientManager {
     private ProgramQueueManager queueManager;
     private IntegratorManager integratorManager;
     private AdmissionManager admissionManager;
-    private AgencyManager agencyManager;
     private ClientRestrictionManager clientRestrictionManager;
 
     private boolean outsideOfDomainEnabled;
@@ -72,7 +71,7 @@ public class ClientManager {
         return dao.getClientByDemographicNo(Integer.valueOf(demographicNo));
     }
 
-    public List getClients() {
+    public List<Demographic> getClients() {
         return dao.getClients();
     }
 
@@ -304,11 +303,6 @@ public class ClientManager {
     @Required
     public void setIntegratorManager(IntegratorManager mgr) {
         this.integratorManager = mgr;
-    }
-
-    @Required
-    public void setAgencyManager(AgencyManager mgr) {
-        this.agencyManager = mgr;
     }
 
     @Required

@@ -36,6 +36,7 @@ import org.apache.struts.action.DynaActionForm;
 import org.caisi.integrator.model.transfer.AgencyTransfer;
 import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Agency;
+import org.oscarehr.PMmodule.task.IntegratorUpdateTask;
 import org.oscarehr.PMmodule.web.BaseAction;
 
 public class AgencyManagerAction extends BaseAction {
@@ -178,25 +179,12 @@ public class AgencyManagerAction extends BaseAction {
         return mapping.findForward(FORWARD_EDIT);
     }
 
-    public ActionForward refresh_admissions(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            integratorManager.refreshAdmissions(admissionManager.getAdmissions());
-        }
-        catch (IntegratorException e) {
-            log.error(e);
-        }
+    public ActionForward refresh_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-        return view(mapping, form, request, response);
-    }
-
-    public ActionForward refresh_clients(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
-        try {
-            integratorManager.refreshClients(clientManager.getClients());
-        }
-        catch (IntegratorException e) {
-            log.error(e);
-        }
-
+        Runnable r=new IntegratorUpdateTask();
+        Thread t=new Thread(r);
+        t.start();
+        
         return view(mapping, form, request, response);
     }
 

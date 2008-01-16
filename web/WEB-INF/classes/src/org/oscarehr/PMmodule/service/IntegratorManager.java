@@ -408,11 +408,6 @@ public class IntegratorManager {
         }
     }
 
-    public void refreshAdmissions(List<Admission> admissions) throws IntegratorException {
-        throw new OperationNotImplementedException("admission registrations not yet implemented in integrator");
-
-    }
-
     /**
      * This method will publish the provided program list to the integrator. The program list should not contain caisi standard programs, just user generated ones.
      */

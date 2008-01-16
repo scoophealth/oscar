@@ -61,8 +61,7 @@
             </display:table>
             <br />
 
-            <input type="button" value="Refresh Client Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_clients'" />
-            <input type="button" value="Refresh Program Participation Data To Integrator" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_admissions'" />
+            <input type="button" value="Refresh Integrator Data Now (not normally required, this is done automatically every 12 hours)" onclick="location.href='<html:rewrite action="/PMmodule/AgencyManager"/>?method=refresh_integrator'" />
         </c:otherwise>
     </c:choose>
 

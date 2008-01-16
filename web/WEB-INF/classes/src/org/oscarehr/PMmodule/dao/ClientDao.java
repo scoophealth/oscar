@@ -91,10 +91,11 @@ public class ClientDao extends HibernateDaoSupport {
 		return result;
 	}
 
-	public List getClients() {
+    public List<Demographic> getClients() {
 
 		String queryStr = " FROM Demographic";
-		List rs = getHibernateTemplate().find(queryStr);
+	    @SuppressWarnings("unchecked")
+		List<Demographic> rs = getHibernateTemplate().find(queryStr);
 
 		if (log.isDebugEnabled()) {
 			log.debug("getClients: # of results=" + rs.size());
@@ -141,12 +142,10 @@ public class ClientDao extends HibernateDaoSupport {
 			
 			if (firstName.length() > 0) {
 				sql = "((LEFT(SOUNDEX(first_name),4) = LEFT(SOUNDEX('" + firstName + "'),4))" + " OR (first_name like '" + firstName + "%'))";
-				//sql = "(SOUNDEX(first_name) = SOUNDEX('" + firstName + "')" + " OR (first_name like '" + firstName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 			if (lastName.length() > 0) {
 				sql = "((LEFT(SOUNDEX(last_name),4) = LEFT(SOUNDEX('" + lastName + "'),4))" + " OR (last_name like '" + lastName + "%'))";
-				//sql = "(SOUNDEX(last_name) = SOUNDEX('" + lastName + "')" + " OR (last_name like '" + lastName + "%'))";
 				criteria.add(Restrictions.sqlRestriction(sql));
 			}
 		}
