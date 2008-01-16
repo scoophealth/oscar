@@ -12,7 +12,7 @@
 <%@ page  import="java.sql.*, java.util.*, oscar.*" errorPage="errorpage.jsp" %>
 <%@ page import="oscar.login.*" %>
 <%@ page import="oscar.log.*" %>
-<%@ page import="org.apache.commons.lang.StringEscapeUtils" %>
+<%@ page import="org.apache.commons.lang.StringEscapeUtils,oscar.oscarProvider.data.ProviderBillCenter" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--
 /*
@@ -97,6 +97,9 @@ if(dbObj.updateDBRecord(sql, curUser_no)) {
 	String proId = param[0];
 	String ip = request.getRemoteAddr();
 	LogAction.addLog(curUser_no, "add", "adminAddUser", proId, ip);
+
+ProviderBillCenter billCenter = new ProviderBillCenter();
+billCenter.addBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
 
 //  int rowsAffected = apptMainBean.queryExecuteUpdate(param, request.getParameter("dboperation"));
 //  if (rowsAffected ==1) {

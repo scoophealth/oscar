@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page  import="java.sql.*, java.util.*, oscar.SxmlMisc" errorPage="errorpage.jsp" %>
+<%@ page  import="java.sql.*, java.util.*, oscar.SxmlMisc, oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 
 <%
@@ -171,6 +171,28 @@ function setfocus() {
   <tr> 
     <td align="right"><bean:message key="admin.provider.formBillingGroupNo"/>: </td>
     <td><input type="text" name="xml_p_billinggroup_no" value="<%= SxmlMisc.getXmlContent(rs.getString("comments"),"xml_p_billinggroup_no") %>" datafld='xml_p_billinggroup_no'></td>
+  </tr>
+  <tr>
+      <td align="right">Bill Center:</td>
+      <td>
+          <select name="billcenter">
+              <option value=""  ></option>
+              <% 
+              ProviderBillCenter billCenter = new ProviderBillCenter();
+              String billCode = "";
+              String codeDesc = "";
+              Enumeration<?> keys = billCenter.getAllBillCenter().propertyNames();
+              String currentBillCode = billCenter.getBillCenter(provider_no);
+              for(int i=0;i<billCenter.getAllBillCenter().size();i++){
+                  billCode=(String)keys.nextElement();
+                  codeDesc=(String)billCenter.getAllBillCenter().getProperty(billCode);
+              %>
+              <option value=<%= billCode %> <%=currentBillCode.compareTo(billCode)==0?"selected":""%> ><%= codeDesc%></option>
+              <%
+              }
+              %>
+          </select>
+      </td>    
   </tr>
   <% if (vLocale.getCountry().equals("BR")) { %>  
   <tr>

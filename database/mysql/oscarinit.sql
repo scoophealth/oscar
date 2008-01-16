@@ -7252,3 +7252,12 @@ CREATE TABLE `gstControl` (
   `gstFlag` int(1) NOT NULL default '0',
   `gstPercent` int(3) NOT NULL default '0'
 )ENGINE=MyISAM;
+
+--
+-- provider -- bill center table 
+--
+CREATE TABLE `providerbillcenter` (
+  `provider_no` varchar(6) NOT NULL default '""',
+  `billcenter_code` char(2) NOT NULL default '""',
+  PRIMARY KEY  (`provider_no`)
+) ENGINE=MyISAM ;

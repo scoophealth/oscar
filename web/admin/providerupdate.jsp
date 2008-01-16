@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="java.sql.*, java.util.*,oscar.*" errorPage="errorpage.jsp" %>
+<%@ page import="java.sql.*, oscar.login.*, java.util.*,oscar.*,oscar.oscarProvider.data.ProviderBillCenter" errorPage="errorpage.jsp" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <!--  
 /*
@@ -38,7 +38,10 @@
   </tr>
 </table>
 
-<%
+<% 
+  ProviderBillCenter billCenter = new ProviderBillCenter();
+  billCenter.updateBillCenter(request.getParameter("provider_no"),request.getParameter("billcenter")); 
+  
   String[] param =new String[18];
   param[0]=request.getParameter("last_name");
   param[1]=request.getParameter("first_name");

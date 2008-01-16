@@ -1,6 +1,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/caisi-tag.tld" prefix="caisi" %>
+<%@ page import="java.util.*, oscar.oscarProvider.data.ProviderBillCenter" %>
+
 <%
   if(session.getValue("user") == null)
     response.sendRedirect("../logout.jsp");
@@ -235,6 +237,27 @@ function upCaseCtrl(ctrl) {
         <td>
           <input type="text" name="xml_p_billinggroup_no" >
         </td>
+      </tr>
+      <tr>
+          <td align="right">Bill Center:</td>
+          <td>
+              <select name="billcenter">
+                  <option value=""></option>
+                <% 
+                    ProviderBillCenter billCenter = new ProviderBillCenter();
+                    String billCode = "";
+                    String codeDesc = "";
+                    Enumeration<?> keys = billCenter.getAllBillCenter().propertyNames();
+                    for(int i=0;i<billCenter.getAllBillCenter().size();i++){
+                        billCode=(String)keys.nextElement();
+                        codeDesc=(String)billCenter.getAllBillCenter().getProperty(billCode);
+                %>
+                    <option value=<%= billCode %>><%= codeDesc%></option>
+                <%
+                    }
+                %>
+          </select>
+          </td>    
       </tr>
        <% if (vLocale.getCountry().equals("BR")) { %>
       <tr>
