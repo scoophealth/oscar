@@ -177,16 +177,24 @@ function isEmpty(){
 }
     
 function buildRoute() {
+        
         pickRoute = "";
+<oscar:oscarPropertiesCheck property="drugref_route_search" value="on">        
 <% for (int i=0; i<d_route.length; i++) { %>
 	if (document.forms[2].route<%=i%>.checked) pickRoute += " "+document.forms[2].route<%=i%>.value;
 <% } %>
 	document.forms[2].searchRoute.value = pickRoute;
+</oscar:oscarPropertiesCheck>        
 }
 
 function processData() {
-    if (isEmpty()) buildRoute();
-    else return false;
+    
+    if (isEmpty()) 
+        buildRoute();
+    else 
+        return false;
+    
+    return true;
 }
 
 //make sure form is in viewport
@@ -280,46 +288,26 @@ function load() {
                     <div style="height:100px; overflow:auto; background-color: #DCDCDC; border: thin solid green; display:none;" id="reprint">
                         <%
                            oscar.oscarRx.data.RxPrescriptionData.Prescription[] prescribedDrugs;
-                           prescribedDrugs = patient.getPrescribedDrugs();
-                           String script_no = "";
-                           String jsVar ="d";
-                           StringBuffer drugIds = new StringBuffer();
+                           prescribedDrugs = patient.getPrescribedDrugScripts();    //this function only returns drugs which have an entry in prescription and drugs table
+                           String script_no = "";                           
                            
                            for(int i=0; i<prescribedDrugs.length; i++) {   
                                oscar.oscarRx.data.RxPrescriptionData.Prescription drug = prescribedDrugs[i];
-                                   if(drug.getScript_no() != null &&  script_no.equals(drug.getScript_no())) {                                     
-                                       drugIds.append(","+String.valueOf(drug.getDrugId()));
+                                   if(drug.getScript_no() != null &&  script_no.equals(drug.getScript_no())) {                                                                            
                         %>               
-                        <br><div style=" float:left; width:12%; padding-left:20px;">&nbsp;</div><a style="float:left;" href="javascript:reprint(<%=jsVar%>)"><%=drug.getRxDisplay()%></a>
+                        <br><div style=" float:left; width:24%; padding-left:40px;">&nbsp;</div><a style="float:left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
                         <%
                                     }                                       
-                                    else {                                               
-                                       if( i > 0 ) {
+                                    else {                                                                        
                          %>
-                         <script type="text/javascript">
-                             var <%=jsVar%> = "<%=drugIds.toString()%>";
-                         </script>
-                         <%
-                                            jsVar = "d" + String.valueOf(i);
-                                       }
-                         %>
-                             <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div style="float:left; width:12%; padding-left:20px;"><%=drug.getRxDate()%></div><a style="float:left;" href="javascript:reprint(<%=jsVar%>)"><%=drug.getRxDisplay()%></a>
-                             <%                                    
-                                        drugIds = new StringBuffer(String.valueOf(drug.getDrugId()));
+                         
+                             <%=i > 0 ? "<br style='clear:both;'><br style='clear:both;'>" : ""%><div style="float:left; width:12%; padding-left:20px;"><%=drug.getRxDate()%></div><div style="float:left; width:12%; padding-left:20px;"><%=drug.getNumPrints()%>&nbsp;Prints</div><a style="float:left;" href="javascript:reprint('<%=drug.getScript_no()%>')"><%=drug.getRxDisplay()%></a>
+                             <%                                                                            
                                     }
                                     script_no = drug.getScript_no() == null ? "" : drug.getScript_no();
                              }                           
                              %>  
-                             <% 
-                             if( prescribedDrugs.length>0 ) {
-                             %>
-                         
-                        <script type="text/javascript">
-                             var <%=jsVar%> = "<%=drugIds.toString()%>";
-                         </script>        
-                        <%
-                            }                                   
-                        %>                        
+                                              
                     </div>
                 </td>
             </tr>
@@ -341,6 +329,8 @@ function load() {
 
                                 if(!showall)                                                                    
                                     prescribedDrugs = patient.getPrescribedDrugsUnique();
+                                else
+                                    prescribedDrugs = patient.getPrescribedDrugs();
 
                                 long now = System.currentTimeMillis();
                                 long month = 1000L * 60L * 60L * 24L * 30L;
@@ -416,7 +406,7 @@ function load() {
                             <script language=javascript>
                                 function reprint(drug) {
                                     document.forms[0].drugList.value = drug;
-                                    document.forms[0].reprint.value = true;
+                                    document.forms[0].method.value = "reprint";
                                     document.forms[0].submit();
                                                                         
                                 }
@@ -438,7 +428,7 @@ function load() {
                                             s = s.substring(0, s.length - 1);                                                                                        
                                                                                             
                                             document.forms[0].drugList.value = s;
-                                            document.forms[0].reprint.value = false;
+                                            document.forms[0].method.value = "represcribe";
                                             document.forms[0].submit();
                                         }
                                     }
@@ -470,7 +460,7 @@ function load() {
 
                             <html:form  action="/oscarRx/rePrescribe">
                             <html:hidden property="drugList" />
-                            <html:hidden property="reprint" />
+                            <input type="hidden" name="method">
                             </html:form>
                             <br>
                             <html:form   action="/oscarRx/deleteRx">
