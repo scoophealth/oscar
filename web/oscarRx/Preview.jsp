@@ -52,14 +52,14 @@
 
 <link rel="stylesheet" type="text/css" href="styles.css">
 <script type="text/javascript" language="Javascript">
-    function onPrint() {
+    function onPrint(cfgPage) {
         //document.forms[0].submit.value="print";
         //var ret = checkAllDates();
         //if(ret==true) {
-            document.forms[0].action = "../form/createpdf?__title=Rx&__cfgfile=oscarRxPrintCfgPg1&__template=a6blank";
+            document.forms[0].action = "../form/createpdf?__title=Rx&__cfgfile=" + cfgPage + "&__template=a6blank";
             document.forms[0].target="_blank";
         //}
-       return ret;
+       return true;
     }
 </script>
 
@@ -70,7 +70,7 @@
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 oscar.oscarRx.data.RxPatientData.Patient patient = new oscar.oscarRx.data.RxPatientData().getPatient(bean.getDemographicNo());
 oscar.oscarRx.data.RxProviderData.Provider provider = new oscar.oscarRx.data.RxProviderData().getProvider(bean.getProviderNo());
-oscar.oscarRx.data.RxPrescriptionData.Prescription rx;
+oscar.oscarRx.data.RxPrescriptionData.Prescription rx = null;
 int i;
 ProSignatureData sig = new ProSignatureData();
 boolean hasSig = sig.hasSignature(bean.getProviderNo());
@@ -86,11 +86,16 @@ doctorName = doctorName.replaceAll("\\-","");
 OscarProperties props = OscarProperties.getInstance();
 
 Date rxDate;
-if( request.getParameter("rePrint") != null) {
+String rePrint = request.getParameter("rePrint");
+if( rePrint != null && rePrint.equalsIgnoreCase("true") ) {   
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");    
     rxDate = bean.getStashItem(0).getRxDate();
+    session.setAttribute("tmpBeanRX", null);
 }
-else
+else {
     rxDate = oscar.oscarRx.util.RxUtil.Today();
+    rePrint = "";
+}
 %>
 <html:form action="/form/formname">
 
@@ -98,7 +103,7 @@ else
     <tr>
         <td valign=top height="100px">
         	<input type="image" src="img/rx.gif" border="0" value="submit" alt="[Submit]" name="submit"
- 			title="Print in a half letter size paper" onclick="javascript:return onPrint();">
+ 			title="Print in a half letter size paper" onclick="<%=rePrint.equalsIgnoreCase("true") ? "javascript:return onPrint('oscarRxRePrintCfgPg1');" : "javascript:return onPrint('oscarRxPrintCfgPg1');" %>" >
 			<input type="hidden" name="printPageSize" value="PageSize.A6"/>
 			<% 	String clinicTitle = provider.getClinicName().replaceAll("\\(\\d{6}\\)","") + "<br>" ;
 			 	clinicTitle += provider.getClinicAddress() + "<br>" ;
@@ -214,7 +219,19 @@ else
                     <td height=25px></td>
                     <td height=25px>&nbsp; <%= doctorName%></td>
                 </tr>
-                <% if (oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){%>
+                <% if( rePrint.equalsIgnoreCase("true") && rx != null ) { %>
+                <tr valign=bottom style="font-size:6px;">
+                    <td height=25px colspan="2">
+                        <span style="float:left;">Reprint; Originally Printed:&nbsp;<%=rx.getPrintDate()%></span>                                        
+                        <span style="float:right;">Times Printed:&nbsp;<%=String.valueOf(rx.getNumPrints()+1)%></span>
+                    </td>
+                    <input type="hidden" name="origPrintDate" value="<%=rx.getPrintDate()%>">
+                    <input type="hidden" name="numPrints" value="<%=String.valueOf(rx.getNumPrints()+1)%>">
+                </tr>
+                    
+                <%
+                   }
+                 if (oscar.OscarProperties.getInstance().getProperty("FORMS_PROMOTEXT") != null){%>
                 <tr valign=bottom align="center" style="font-size:9px">
                     <td height=25px colspan="2">
                         </br>
