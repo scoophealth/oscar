@@ -154,6 +154,7 @@ oscar.oscarRx.data.RxPrescriptionData.Prescription[] drugs =
                             <td>
                                 <html:form action="/oscarRx/rePrescribe">
                                 <html:hidden property="drugList" value="<%= String.valueOf(drugs[i].getDrugId()) %>" />
+                                <input type="hidden" name="method" value="represcribe">
                                 <html:submit style="width:100px" styleClass="ControlPushButton" value="Re-prescribe"/>
                                 </html:form>
                                 <input type=button align=top value="Add to Favorites" style="width:100px" class="ControlPushButton"
