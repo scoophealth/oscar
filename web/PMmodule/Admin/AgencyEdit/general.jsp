@@ -35,6 +35,7 @@
         </table>
     </div>
     <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <input type="hidden" name="method" value="save"/> 
         <tr class="b">
             <td width="20%">Name:</td>
             <td><html:text property="agency.name" /></td>
