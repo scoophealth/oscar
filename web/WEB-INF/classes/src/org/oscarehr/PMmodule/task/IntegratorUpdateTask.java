@@ -22,16 +22,10 @@
 
 package org.oscarehr.PMmodule.task;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.caisi.integrator.model.transfer.ProgramTransfer;
-import org.oscarehr.PMmodule.dao.ProgramDao;
-import org.oscarehr.PMmodule.model.Program;
-import org.oscarehr.PMmodule.service.ClientManager;
 import org.oscarehr.PMmodule.service.IntegratorManager;
 import org.oscarehr.util.DbConnectionFilter;
 
@@ -40,19 +34,9 @@ public class IntegratorUpdateTask extends TimerTask {
     private static final Log log = LogFactory.getLog(IntegratorUpdateTask.class);
 
     private IntegratorManager integratorManager;
-    private ProgramDao programDao;
-    private ClientManager clientManager;
 
     public void setIntegratorManager(IntegratorManager mgr) {
         this.integratorManager = mgr;
-    }
-
-    public void setProgramDao(ProgramDao programDao) {
-        this.programDao = programDao;
-    }
-
-    public void setClientManager(ClientManager clientManager) {
-        this.clientManager = clientManager;
     }
 
     public void run() {
@@ -64,8 +48,8 @@ public class IntegratorUpdateTask extends TimerTask {
                 return;
             }
 
-            pushPrograms();
-            pushClients();
+            integratorManager.publishPrograms();
+            integratorManager.publishClients();
         }
         finally {
             DbConnectionFilter.releaseThreadLocalDbConnection();
@@ -73,28 +57,4 @@ public class IntegratorUpdateTask extends TimerTask {
             log.debug("IntegratorUpdateTask finished)");
         }
     }
-
-
-    private void pushPrograms() {
-        try {
-            List<Program> programs=programDao.getActiveUserDefinedPrograms();
-            ArrayList<ProgramTransfer> al=new ArrayList<ProgramTransfer>();
-            for (Program program : programs) al.add(program.getProgramTransfer());
-            integratorManager.publishPrograms(al.toArray(new ProgramTransfer[0]));
-        }
-        catch (Exception e) {
-            log.error("Unexpected error occurred.", e);
-        }
-    }
-    
-    private void pushClients()
-    {
-        try {
-            integratorManager.refreshClients(clientManager.getClients());
-        }
-        catch (Exception e) {
-            log.error("Unexpected error occurred.", e);
-        }        
-    }
-
 }

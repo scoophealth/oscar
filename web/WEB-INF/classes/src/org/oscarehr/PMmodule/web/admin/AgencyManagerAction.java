@@ -34,10 +34,10 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.action.DynaActionForm;
 import org.caisi.integrator.model.transfer.AgencyTransfer;
-import org.oscarehr.PMmodule.exception.IntegratorException;
 import org.oscarehr.PMmodule.model.Agency;
-import org.oscarehr.PMmodule.task.IntegratorUpdateTask;
 import org.oscarehr.PMmodule.web.BaseAction;
+import org.oscarehr.util.SpringUtils;
+import org.springframework.scheduling.timer.ScheduledTimerTask;
 
 public class AgencyManagerAction extends BaseAction {
 
@@ -181,8 +181,9 @@ public class AgencyManagerAction extends BaseAction {
 
     public ActionForward refresh_integrator(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) {
 
-        Runnable r=new IntegratorUpdateTask();
-        Thread t=new Thread(r);
+        ScheduledTimerTask tt=(ScheduledTimerTask)SpringUtils.beanFactory.getBean("scheduledIntegratorUpdateTask");
+        
+        Thread t=new Thread(tt.getTimerTask());
         t.start();
         
         return view(mapping, form, request, response);

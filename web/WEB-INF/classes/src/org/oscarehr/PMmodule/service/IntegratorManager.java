@@ -70,13 +70,13 @@ import org.codehaus.xfire.annotations.AnnotationServiceFactory;
 import org.codehaus.xfire.client.XFireProxyFactory;
 import org.codehaus.xfire.service.Service;
 import org.oscarehr.PMmodule.dao.AgencyDao;
+import org.oscarehr.PMmodule.dao.ProgramDao;
 import org.oscarehr.PMmodule.dao.ProviderDao;
 import org.oscarehr.PMmodule.exception.IntegratorException;
-import org.oscarehr.PMmodule.exception.OperationNotImplementedException;
-import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Agency;
 import org.oscarehr.PMmodule.model.ClientReferral;
 import org.oscarehr.PMmodule.model.Demographic;
+import org.oscarehr.PMmodule.model.Program;
 import org.oscarehr.PMmodule.model.Provider;
 import org.oscarehr.util.TimeClearedHashMap;
 import org.springframework.beans.factory.annotation.Required;
@@ -93,6 +93,11 @@ public class IntegratorManager {
     protected AgencyDao agencyDao;
     protected ClientManager clientManager;
     protected ProviderDao providerDao;
+    private ProgramDao programDao;
+
+    public void setProgramDao(ProgramDao programDao) {
+        this.programDao = programDao;
+    }
 
     public void setProviderDao(ProviderDao providerDao) {
         this.providerDao = providerDao;
@@ -407,6 +412,47 @@ public class IntegratorManager {
             return null;
         }
     }
+
+    /**
+     * This method should publish all clients who have consented to be published. As a side effect it should
+     * also remove all clients which have not consented or have removed consent.
+     * 
+     * This method should publish both the demographic data as well as issue and notes associated with the 
+     * client. This method is responsible for sorting out the level of consent and if it's appropriate
+     * to send the notes / issues based on consent, integrator notes and issues sharing enabled or not,
+     * and if the issues / notes have roles which are not caisi standard or not.
+     */
+    public void publishClients()
+    {
+        try {
+            if (!isEnabled()) return;
+
+// TODO : Ted, right now it just sends everything, no checking. It also doesn't remove old data.
+            
+            refreshClients(clientManager.getClients());
+        }
+        catch (Exception e) {
+            log.error("Unexpected error occurred.", e);
+        }        
+    }
+
+    /**
+     * This method will publish all user generated programs in this agency.
+     */
+    public void publishPrograms() {
+        try {
+            if (!isEnabled()) return;
+
+            List<Program> programs=programDao.getActiveUserDefinedPrograms();
+            ArrayList<ProgramTransfer> al=new ArrayList<ProgramTransfer>();
+            for (Program program : programs) al.add(program.getProgramTransfer());
+            publishPrograms(al.toArray(new ProgramTransfer[0]));
+        }
+        catch (Exception e) {
+            log.error("Unexpected error occurred.", e);
+        }
+    }
+    
 
     /**
      * This method will publish the provided program list to the integrator. The program list should not contain caisi standard programs, just user generated ones.
