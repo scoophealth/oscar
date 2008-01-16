@@ -48,11 +48,19 @@
         <logic:redirect href="error.html" />
     </logic:equal>
 </logic:present>
+
 <%
 oscar.oscarRx.pageUtil.RxSessionBean bean = (oscar.oscarRx.pageUtil.RxSessionBean)pageContext.findAttribute("bean");
 
 //are we printing in the past?
 String reprint = (String)request.getAttribute("rePrint") != null ? (String)request.getAttribute("rePrint") : "false";
+String createAnewRx;
+if( reprint.equalsIgnoreCase("true") ) {
+    bean = (oscar.oscarRx.pageUtil.RxSessionBean)session.getAttribute("tmpBeanRX");
+    createAnewRx = "window.location.href = '" + request.getContextPath() + "/oscarRx/SearchDrug.jsp'";
+}
+else
+    createAnewRx = "javascript:clearPending('')";
 
 // for satellite clinics
 Vector vecAddressName = null;
@@ -293,7 +301,7 @@ function toggleView(form) {
                                 <tr>
                                     <td width=10px></td>
                                     <td>
-                                        <span><input type=button value="Create a New Prescription" class="ControlPushButton" style="width:200px" onClick="javascript:clearPending('');" /></span>
+                                        <span><input type=button value="Create a New Prescription" class="ControlPushButton" style="width:200px" onClick="<%=createAnewRx%>" /></span>
                                     </td>
                                 </tr>
                                 <tr>
