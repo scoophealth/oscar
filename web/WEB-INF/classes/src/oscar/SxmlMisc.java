@@ -71,7 +71,9 @@ public class SxmlMisc extends Properties {
   }
   //get the value between the tags from a string
   public static String getXmlContent(String str, String sTag, String eTag) {
-  	int s = str.indexOf(sTag);
+  	if(str==null) return null;
+  	
+	int s = str.indexOf(sTag);
   	int e = str.indexOf(eTag);
   	String val = null;
   	if(s==-1 || e==-1) return val;
