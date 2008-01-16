@@ -30,7 +30,8 @@
     String useNewCaseMgmt;
     if((useNewCaseMgmt = request.getParameter("newCaseManagement")) != null ) {        
         session.setAttribute("newCaseManagement", useNewCaseMgmt); 
-        ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+        ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
+//Jdk 1.5        ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
         if( users != null ) {
             users.add(request.getParameter("providerNo"));
             session.getServletContext().setAttribute("CaseMgmtUsers", users);
@@ -46,7 +47,7 @@
     <jsp:param name="method" value="edit"/>
     <jsp:param name="from" value="casemgmt"/>
     <jsp:param name="chain" value="list" />
-    <jsp:param name="demographicNo" value="<%=request.getParameter("demographicNo")%>"/>
+    <jsp:param name="demographicNo" value='<%=request.getParameter("demographicNo")%>'/>
 </jsp:forward>        
 <%
     }
