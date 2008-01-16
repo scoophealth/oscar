@@ -430,7 +430,7 @@ if (pId==null) pId="";
 
 		<c:if test="${param.from=='casemgmt' || requestScope.from=='casemgmt'}" >
 		<c:url value="${sessionScope.billing_url}" var="url"/>
-		<caisirole:SecurityAccess accessName="billing" accessType="access" providerNo="<%=request.getParameter("providerNo")%>" demoNo="<%=request.getParameter("demographicNo")%>" programId="<%=pId%>">
+		<caisirole:SecurityAccess accessName="billing" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
 			<tr>
 				<td class="fieldTitle">Billing:</td>
 				

@@ -134,7 +134,7 @@ Version version = (Version) ctx.getBean("version");
 				
 			%>
 			<%if (CaseManagementViewFormBean.tabs[x].equals("Allergies") || CaseManagementViewFormBean.tabs[x].equals("Prescriptions")){%>
-			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo="<%=request.getParameter("providerNo")%>" demoNo="<%=request.getParameter("demographicNo")%>" programId="<%=pId%>">
+			<caisirole:SecurityAccess accessName="prescription Read" accessType="access" providerNo='<%=request.getParameter("providerNo")%>' demoNo='<%=request.getParameter("demographicNo")%>' programId="<%=pId%>">
 			<%if(CaseManagementViewFormBean.tabs[x].equals(selectedTab)) { %>
 				<td style="background-color: #555;<%=extra%>"><a href="javascript:void(0)" onclick="javascript:clickTab('<%=CaseManagementViewFormBean.tabs[x] %>'); return false;"><%=CaseManagementViewFormBean.tabs[x] %></a></td>
 			<%} else { %>
@@ -203,7 +203,7 @@ Version version = (Version) ctx.getBean("version");
 
 </tr>
 </table>
-<jsp:include page="<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>"/>
+<jsp:include page='<%="/casemgmt/"+selectedTab.toLowerCase().replaceAll(" ","_") + ".jsp"%>'/>
 
 <c:if test="${sessionScope.caseManagementViewForm.note_view!='detailed'}">
 <html:hidden property="note_view" value="summary"/>

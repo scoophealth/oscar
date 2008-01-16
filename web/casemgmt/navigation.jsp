@@ -367,8 +367,10 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
         <%
             dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
             Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
-            ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
-            for (String flowsheet : flowsheets) {
+            ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
+//Jdk1.5            ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getUniveralFlowsheets();
+            for (int i=0;i<flowsheets.size();i++) {
+            	String flowsheet = (String) flowsheets.get(i);
                 MeasurementFlowSheet measurementFlowSheet = MeasurementTemplateFlowSheetConfig.getInstance().getFlowSheet(flowsheet);
                 if (MeasurementHelper.flowSheetRequiresWork(bean.demographicNo, measurementFlowSheet)) {
                 %>* <% }         
@@ -387,8 +389,12 @@ String backurl=bsurl+"/oscarEncounter/IncomingEncounter.do?";
         <%
             dxResearchBeanHandler dxRes = new dxResearchBeanHandler(bean.demographicNo);
             Vector dxCodes = dxRes.getActiveCodeListWithCodingSystem();
-            ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
+/* JDk1.5            ArrayList<String> flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
             for (String flowsheet : flowsheets) {
+*/
+            ArrayList flowsheets = MeasurementTemplateFlowSheetConfig.getInstance().getFlowsheetsFromDxCodes(dxCodes);
+            for (int i=0; i<flowsheets.size();i++) {
+	            String flowsheet=(String) flowsheets.get(i);
         %>
         <a href="javascript:void(0)"
            onClick="popupPage('<%=bsurl%>/oscarEncounter/oscarMeasurements/TemplateFlowSheet.jsp?demographic_no=<%=bean.demographicNo%>&template=<%=flowsheet%>','flowsheet')"><%=MeasurementTemplateFlowSheetConfig.getInstance().getDisplayName(flowsheet)%>
