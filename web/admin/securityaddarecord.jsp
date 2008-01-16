@@ -170,7 +170,7 @@
       </tr>
       <%}else{%>
         <input type="hidden" name="b_RemoteLockSet" value="1" />
-        <input type="hidden" name="b_LocalLockSet" value="" />
+        <input type="hidden" name="b_LocalLockSet" value="1" />
       <%}%>  
 <!-- new security -->
       <tr>
