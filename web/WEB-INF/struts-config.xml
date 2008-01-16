@@ -468,7 +468,7 @@
         <action input="/oscarRx/EditFavorites.jsp" name="RxDeleteFavoriteForm" path="/oscarRx/deleteFavorite" scope="request" type="oscar.oscarRx.pageUtil.RxDeleteFavoriteAction">
             <forward name="success" path="/oscarRx/EditFavorites.jsp" />
         </action>
-        <action input="/oscarRx/SearchDrug.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
+        <action input="/oscarRx/SearchDrug.jsp" name="RxRePrescribeForm" path="/oscarRx/rePrescribe" parameter="method" scope="request" type="oscar.oscarRx.pageUtil.RxRePrescribeAction">
             <forward name="success" path="/oscarRx/WriteScript.jsp" />
             <forward name="reprint" path="/oscarRx/ViewScript.jsp" />
         </action>
