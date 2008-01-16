@@ -63,12 +63,14 @@ public final class RxViewScriptAction extends Action {
         }
         
         RxPrescriptionData.Prescription rx;
+        RxPrescriptionData prescription = new RxPrescriptionData();
+        String scriptId = prescription.saveScript(bean);
         
         int i;
         
         for(i=0; i<bean.getStashSize(); i++) {
             rx = bean.getStashItem(i);
-            rx.Save();
+            rx.Save(scriptId);
             rx = null;
         }
         
