@@ -114,7 +114,7 @@ public class MyDateFormat {
 	}
 
 	// Convert yyyy/mm/dd or yyyy-mm-dd or yyyymmdd to System format, used to pickup screen values
-    public static Date GetSysDateMin(String pDate) throws Exception
+    public static Date GetSysDate(String pDate) throws Exception
     {
         if (pDate == null || "".equals(pDate)) return null;
         if ("TODAY".equals(pDate.toUpperCase())) return new Date();
