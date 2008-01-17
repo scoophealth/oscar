@@ -15,7 +15,7 @@
 
  <%
  //select * from tickler where status = 'A' and service_date <= now() and task_assigned_to  = '999998' limit 1;
-  if(session.getValue("user") == null)
+  if(session.getAttribute("user") == null)
     response.sendRedirect("../logout.jsp");
   String user_no;
   user_no = (String) session.getAttribute("user");
