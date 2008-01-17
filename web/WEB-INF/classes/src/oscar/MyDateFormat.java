@@ -114,10 +114,10 @@ public class MyDateFormat {
 	}
 
 	// Convert yyyy/mm/dd or yyyy-mm-dd or yyyymmdd to System format, used to pickup screen values
-    public static Date GetSysDate(String pDate)
+    public static java.sql.Date GetSysDate(String pDate)
     {
         if (pDate == null || "".equals(pDate)) return null;
-        if ("TODAY".equals(pDate.toUpperCase())) return new Date();
+        if ("TODAY".equals(pDate.toUpperCase())) return new java.sql.Date(new Date().getTime());
         try
         {
         	char sep = '-';
@@ -145,7 +145,7 @@ public class MyDateFormat {
         		day = Integer.parseInt(pDate.substring(idx+1,idx1));
         	}
             GregorianCalendar cal = new GregorianCalendar(year, month, day);
-            return cal.getTime();
+            return new java.sql.Date(cal.getTime().getTime());
         }
         catch (Exception e)
         {
