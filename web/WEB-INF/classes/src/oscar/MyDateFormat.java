@@ -113,6 +113,45 @@ public class MyDateFormat {
 		return temp;
 	}
 
+	// Convert yyyy/mm/dd or yyyy-mm-dd or yyyymmdd to System format, used to pickup screen values
+    public static Date GetSysDateMin(String pDate) throws Exception
+    {
+        if (pDate == null || "".equals(pDate)) return null;
+        if ("TODAY".equals(pDate.toUpperCase())) return new Date();
+        try
+        {
+        	char sep = '-';
+        	boolean bnosep = false;
+        	int idx = pDate.indexOf(sep);
+        	if (idx < 0) {
+        		sep='/';
+        		idx= pDate.indexOf(sep);
+        	}
+        	bnosep = idx < 0;
+        	int day, month, year;
+        	if(bnosep) {
+                year = Integer.parseInt(pDate.substring(0, 4));
+                month = Integer.parseInt(pDate.substring(4, 2));
+                day= Integer.parseInt(pDate.substring(6, 2));
+        	}
+        	else
+        	{
+        		year = Integer.parseInt(pDate.substring(0,idx));
+        		int idx1 = pDate.indexOf(sep,idx+1);
+        		month = Integer.parseInt(pDate.substring(idx+1,idx1-idx-1));
+        		idx = idx1;
+        		idx1 = pDate.indexOf(sep,idx+1);
+        		day = Integer.parseInt(pDate.substring(idx+1,idx1-idx-1));
+        	}
+            Date date = new Date( year, month, day);
+            return date;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Invalid Date - the input date is in wrong format or out of range");
+        }
+    }
+
 	//from  20:20:00to 08:20pm,  09:09:00 to 09:09am, or 20:20 to 08:20pm
 	public static String getTimeXX_XXampm(String aXX_XX_XX) {
 		String temp=null; //mySQL = null
