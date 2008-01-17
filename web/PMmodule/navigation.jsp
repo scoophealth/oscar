@@ -158,7 +158,7 @@
             <html:link action="/PMmodule/GenericIntake/Search.do">New Client</html:link>
         </div>
         <div>
-            <a HREF="#" ONCLICK="popupPage2('../admin/demographicmergerecord.jsp', 'Merge');return false;">Merge
+            <a HREF="#" ONCLICK="popupPage2('<c:out value="${ctx}"/>/admin/demographicmergerecord.jsp', 'Merge');return false;">Merge
                 Records</a>
         </div>
         <%
