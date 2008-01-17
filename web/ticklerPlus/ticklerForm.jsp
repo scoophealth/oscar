@@ -71,7 +71,7 @@
 	<html:form action="/Tickler" focus="tickler.demographic_no" onsubmit="return validateTicklerForm(this);">
 	
 		<input type="hidden" name="method" value="save" />
-		<html:hidden property="tickler.creator" value="<%=(String) session.getAttribute("user")%>" />
+		<html:hidden property="tickler.creator" value='<%(String) session.getAttribute("user") %>' />
 		<html:hidden property="tickler.tickler_no" />
 		
 		<tr>
