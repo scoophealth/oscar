@@ -31,7 +31,6 @@ public class MyDateFormat {
 	public MyDateFormat() {
 		//this.aDateTime = d;
 	}
-	
 	// from 8 (int) to 08 (String), 19 to 19
 	public static String getDigitalXX(int d) {
 		return (d>9?(""+d):("0"+d));
@@ -46,6 +45,19 @@ public class MyDateFormat {
 	public static String getTimeAMPM(int hour) {
 		return (hour<12?"am":"pm");
 	}
+//from 2001-01-01 12:00:00 to 2001-01-01
+	public static String getMyStandardDate(String aDate)
+	{
+		if (aDate == null) return "";
+		if (aDate.indexOf(' ')<0) 
+		{
+			return aDate;
+		}
+		else
+		{
+			return aDate.substring(0,aDate.indexOf(' '));
+		}
+	}
 	//from 2001, 2, 2 to 2001-02-02
 	public static String getMysqlStandardDate(int year,int month, int day) {
 		return (year+ "-"+ getDigitalXX(month)+ "-" +getDigitalXX(day));
@@ -56,15 +68,20 @@ public class MyDateFormat {
 	}
 	//from 2001-02-02 to 2	
 	public static int getDayFromStandardDate(String aDate) {
+		aDate = getMyStandardDate(aDate);
 		return Integer.parseInt(aDate.trim().substring(aDate.trim().lastIndexOf('-')+1));
 	}
 	public static int getMonthFromStandardDate(String aDate) {
+		aDate = getMyStandardDate(aDate);
 		return Integer.parseInt(aDate.trim().substring(aDate.trim().indexOf('-')+1, aDate.trim().lastIndexOf('-')));
 	}
 	public static int getYearFromStandardDate(String aDate) {
+		aDate = getMyStandardDate(aDate);
 		return Integer.parseInt(aDate.trim().substring(0,aDate.trim().indexOf('-'))); 
 	}
 	public static int getHourFromStandardTime(String aTime) {
+		int i = aTime.indexOf(' '); 
+		if(i>=0) aTime = aTime.substring(i+1);
 		return Integer.parseInt(aTime.substring(0, 2));
 	}
 	
