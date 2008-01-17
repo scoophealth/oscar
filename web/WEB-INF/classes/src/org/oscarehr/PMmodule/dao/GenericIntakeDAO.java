@@ -145,10 +145,17 @@ public class GenericIntakeDAO extends HibernateDaoSupport {
 
 		// wrong, only got the oldest first record: List<?> results = getHibernateTemplate().find("select i.id, max(i.createdOn) from Intake i where i.node.id =
 		// ? and i.createdOn between ? and ? group by i.clientId", new Object[] { nodeId, startDate, endDate });
+		//List<?> results = getHibernateTemplate()
+		//		.find(
+		//				"select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId",
+		//				new Object[] { nodeId, startCal.getTime(), endCal.getTime() });
+		
 		List<?> results = getHibernateTemplate()
-				.find(
-						"select i.id, max(i.createdOn) from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId) group by i.clientId",
-						new Object[] { nodeId, startCal, endCal });
+		.find(
+				"select i.id, i.createdOn from Intake i where i.node.id = ? and i.createdOn between ? and ? and i.createdOn = (select max(ii.createdOn) from Intake ii where ii.clientId = i.clientId group by ii.clientId)",
+				new Object[] { nodeId, startCal, endCal });
+
+		
 		SortedSet<Integer> intakeIds = convertToIntegers(results);
 
 		LOG.info("get latest intake ids: " + intakeIds.size());
