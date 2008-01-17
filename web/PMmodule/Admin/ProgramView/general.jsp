@@ -110,4 +110,12 @@
 		<td width="20%">Exclusive View:</td>
 		<td><c:out value="${program.exclusiveView}" /></td>
 	</tr>
+	<tr class="b">
+		<td width="20%">Minimum Age:</td>
+		<td><c:out value="${program.ageMin}" /></td>
+	</tr>
+	<tr class="b">
+		<td width="20%">Maximum Age:</td>
+		<td><c:out value="${program.ageMax}" /></td>
+	</tr>
 </table>
