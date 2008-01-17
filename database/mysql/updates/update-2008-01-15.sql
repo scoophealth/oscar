@@ -1,5 +1,1 @@
-alter table oscarcommlocations drop current;
-alter table oscarcommlocations add current1 tinyint(1) NOT NULL default '0';
-
-
-
+alter table oscarcommlocations change current current1 tinyint(1) NOT NULL default '0' ;
