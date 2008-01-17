@@ -240,28 +240,16 @@
             </bean>
         </property>
     </bean>
-	<bean id="roomManager" parent="baseTransactionProxy">
-	    <property name="target">
-	        <bean class="org.oscarehr.PMmodule.service.RoomManager">
-	            <property name="roomDAO" ref="roomDAO"/>
-	            <property name="providerDAO" ref="providerDao"/>
-	            <property name="bedDAO" ref="bedDAO"/>
-	            <property name="demographicDAO" ref="clientDao"/>
-	            <property name="programDAO" ref="programDao"/>
-	        </bean>
-	    </property>
-	</bean>
-    <bean id="roomDemographicManager" parent="baseTransactionProxy">
+    <bean id="roomManager" parent="baseTransactionProxy" lazy-init="default"
+          dependency-check="default">
         <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.impl.RoomDemographicManagerImpl">
-            	<property name="bedDemographicDAO" ref="bedDemographicDAO"/>
-                <property name="roomDemographicDAO" ref="roomDemographicDAO"/>
-                <property name="providerDAO" ref="providerDao"/>
-                <property name="bedDAO" ref="bedDAO"/>
-                <property name="demographicDAO" ref="clientDao"/>
-                <property name="roomDAO" ref="roomDAO"/>
-                <property name="programDAO" ref="programDao"/>
-            </bean>
+            <bean class="org.oscarehr.PMmodule.service.RoomManager" autowire="byName"/>
+        </property>
+    </bean>
+    <bean id="bedManager" parent="baseTransactionProxy" lazy-init="default"
+          dependency-check="default">
+        <property name="target">
+            <bean class="org.oscarehr.PMmodule.service.BedManager" autowire="byName"/>
         </property>
     </bean>
     <bean id="CaseManagementManager" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">

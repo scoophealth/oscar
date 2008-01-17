@@ -90,18 +90,6 @@
             <bean class="org.oscarehr.PMmodule.service.FacilityManager" autowire="byName"/>
         </property>
     </bean>
-    <bean id="roomManager" parent="baseTransactionProxy" lazy-init="default"
-          dependency-check="default">
-        <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.RoomManager" autowire="byName"/>
-        </property>
-    </bean>
-    <bean id="bedManager" parent="baseTransactionProxy" lazy-init="default"
-          dependency-check="default">
-        <property name="target">
-            <bean class="org.oscarehr.PMmodule.service.BedManager" autowire="byName"/>
-        </property>
-    </bean>
     <bean id="bedCheckTimeManager" parent="baseTransactionProxy" lazy-init="default"
           dependency-check="default">
         <property name="target">
