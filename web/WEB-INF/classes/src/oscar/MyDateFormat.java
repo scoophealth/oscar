@@ -114,7 +114,7 @@ public class MyDateFormat {
 	}
 
 	// Convert yyyy/mm/dd or yyyy-mm-dd or yyyymmdd to System format, used to pickup screen values
-    public static Date GetSysDate(String pDate) throws Exception
+    public static Date GetSysDate(String pDate)
     {
         if (pDate == null || "".equals(pDate)) return null;
         if ("TODAY".equals(pDate.toUpperCase())) return new Date();
@@ -131,24 +131,26 @@ public class MyDateFormat {
         	int day, month, year;
         	if(bnosep) {
                 year = Integer.parseInt(pDate.substring(0, 4));
-                month = Integer.parseInt(pDate.substring(4, 2));
-                day= Integer.parseInt(pDate.substring(6, 2));
+                month = Integer.parseInt(pDate.substring(4, 6));
+                day= Integer.parseInt(pDate.substring(6, 8));
         	}
         	else
         	{
         		year = Integer.parseInt(pDate.substring(0,idx));
         		int idx1 = pDate.indexOf(sep,idx+1);
-        		month = Integer.parseInt(pDate.substring(idx+1,idx1-idx-1));
+        		month = Integer.parseInt(pDate.substring(idx+1,idx1));
         		idx = idx1;
-        		idx1 = pDate.indexOf(sep,idx+1);
-        		day = Integer.parseInt(pDate.substring(idx+1,idx1-idx-1));
+        		idx1 = pDate.indexOf(' ');
+        		if(idx1<0) idx1 = pDate.length();
+        		day = Integer.parseInt(pDate.substring(idx+1,idx1));
         	}
-            Date date = new Date( year, month, day);
-            return date;
+            GregorianCalendar cal = new GregorianCalendar(year, month, day);
+            return cal.getTime();
         }
         catch (Exception e)
         {
-            throw new Exception("Invalid Date - the input date is in wrong format or out of range");
+            System.out.println("Invalid Date - the input date is in wrong format or out of range");
+            return null;
         }
     }
 
