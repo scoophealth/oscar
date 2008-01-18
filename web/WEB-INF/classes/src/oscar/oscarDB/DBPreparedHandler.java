@@ -151,6 +151,16 @@ public class DBPreparedHandler {
         return rs;
     }
 
+    synchronized public ResultSet queryResults_paged(String preparedSQL, String param, int iOffSet) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        preparedStmt.setString(1, param);
+        rs = preparedStmt.executeQuery();
+        for(int i=1; i<=iOffSet; i++){
+          if(rs.next()==false) break;
+        }
+        return rs;
+    }
+
     synchronized public ResultSet queryResults(String preparedSQL, String[] param) throws SQLException {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         for (int i = 0; i < param.length; i++) {
@@ -160,6 +170,18 @@ public class DBPreparedHandler {
         return(rs);
     }
 
+    synchronized public ResultSet queryResults_paged(String preparedSQL, String[] param, int iOffSet) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        for (int i = 0; i < param.length; i++) {
+           preparedStmt.setString((i + 1), param[i]);
+        }
+        rs = preparedStmt.executeQuery();
+        for(int i=1; i<=iOffSet; i++){
+            if(rs.next()==false) break;
+        }
+        return(rs);
+    }
+    
     synchronized public Object[] queryResultsCaisi(String preparedSQL, int param) throws SQLException {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         preparedStmt.setInt(1, param);
@@ -192,6 +214,15 @@ public class DBPreparedHandler {
     synchronized public ResultSet queryResults(String preparedSQL) throws SQLException {
         stmt = getConnection().createStatement();
         rs = stmt.executeQuery(preparedSQL);
+        return rs;
+    }
+
+    synchronized public ResultSet queryResults_paged(String preparedSQL, int iOffSet) throws SQLException {
+        stmt = getConnection().createStatement();
+        rs = stmt.executeQuery(preparedSQL);
+        for(int i=1; i<=iOffSet; i++){
+            if(rs.next()==false) break;
+        }
         return rs;
     }
 
