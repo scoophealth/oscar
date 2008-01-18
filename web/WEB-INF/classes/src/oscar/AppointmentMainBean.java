@@ -87,6 +87,10 @@ public class AppointmentMainBean {
 	  String[] param =new String[] {aKeyword};
   	return (dbPH.queryExecuteUpdate(sqlExec, param));
   }
+  public int queryExecuteUpdate(String[] param,Date[] dtParam, int[] intparam, String dboperation) throws Exception{
+	  String sqlExec = dbSQL.getDef(dboperation,"");
+     return (dbPH.queryExecuteUpdate(sqlExec, param, dtParam,intparam));
+  }
   public int queryExecuteUpdate(String[] param, int[] intparam, String dboperation) throws Exception{
 	  String sqlExec = dbSQL.getDef(dboperation,"");
   	return (dbPH.queryExecuteUpdate(sqlExec, param, intparam));
