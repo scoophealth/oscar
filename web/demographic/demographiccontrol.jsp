@@ -24,7 +24,7 @@
  */
 --%>
 <%
-  if(session.getValue("user") == null) response.sendRedirect("../logout.jsp");
+  if(session.getAttribute("user") == null) response.sendRedirect("../logout.jsp");
 %>
 
 <%@ page errorPage="errorpage.jsp" import="oscar.OscarProperties" %>
@@ -80,8 +80,8 @@
       ptstatusexp=" and patient_status not in ("+props.getProperty("inactive_statuses", "'IN','DE','IC', 'ID', 'MO', 'FI'")+") ";   
 
   String [][] dbQueries=new String[][] {
-    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby+" "+limit},
-    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
+    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby},
+    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby},
     {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
     {"search_detail", "select * from demographic where demographic_no=?"},
     {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
@@ -114,6 +114,43 @@
     {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag, agency_id) Values(?,?,?,?,'current',0,0,0)"},
     {"update_admission", "update admission set provider_no = ? where client_id = ?"},
    };
+
+//  String [][] dbQueries=new String[][] {
+//    {"search_titlename", "select *  from demographic where "+fieldname+" "+regularexp+" ? "+ptstatusexp+orderby+" "+limit},
+//    {"add_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
+//    {"update_apptrecord", "select demographic_no,first_name,last_name,roster_status,sex,chart_no,year_of_birth,month_of_birth,date_of_birth,provider_no  from demographic where "+fieldname+ " "+regularexp+" ? " +ptstatusexp+orderby + " "+limit},
+//    {"search_detail", "select * from demographic where demographic_no=?"},
+//    {"search_detail_ptbr", "select * from demographic d left outer join demographic_ptbr dptbr on dptbr.demographic_no = d.demographic_no where d.demographic_no=?"},
+//    {"update_record", "update demographic set last_name=?,first_name =?,address=?, city=?,province=?,postal=?,phone =?,phone2=?,email=?,pin=?, year_of_birth=?,month_of_birth=?,date_of_birth=?,hin=?,ver=?, roster_status=?, patient_status=?, date_joined=?,  chart_no=?,provider_no=?,sex=? , end_date=?,eff_date=?, pcn_indicator=?,hc_type=? ,hc_renew_date=?, family_doctor=? where  demographic_no=?"},
+//    {"update_record_ptbr", "update demographic_ptbr set cpf=?,rg=?,chart_address=?,marriage_certificate=?,birth_certificate=?,marital_state=?,partner_name=?,father_name=?,mother_name=?,district=?,address_no=?,complementary_address=? where  demographic_no=?"},
+//    {"add_record", "insert into demographic (last_name, first_name, address, city, province, postal, phone, phone2, email, pin, year_of_birth, month_of_birth, date_of_birth, hin, ver, roster_status, patient_status, date_joined, chart_no, provider_no, sex, end_date, eff_date, pcn_indicator, hc_type, hc_renew_date, family_doctor) values(?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?,?)" },
+//    {"add_record_ptbr","insert into demographic_ptbr (demographic_no,cpf,rg,chart_address,marriage_certificate,birth_certificate,marital_state,partner_name,father_name,mother_name,district,address_no,complementary_address) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" },
+//    {"search_provider", "select * from provider status='1' order by last_name"},
+//    {"search_provider_doc", "select * from provider where provider_type='doctor' and status='1' order by last_name"},
+//    {"search_demographicid", "select * from demographic where demographic_no=?"},
+//    {"search*", "select * from demographic "+ ptstatusexp+orderby + " "+limit },
+//    {"search_lastfirstnamedob", "select demographic_no from demographic where last_name=? and first_name=? and year_of_birth=? and month_of_birth=? and date_of_birth=?"},
+//    {"search_demographiccust_alert", "select cust3 from demographiccust where demographic_no = ? " },
+//    {"search_demographiccust", "select * from demographiccust where demographic_no = ?" },
+//    {"search_demographic_ptbr","select * from demographic_ptbr where demographic_no = ?"},
+//    {"search_demoaddno", "select demographic_no from demographic where last_name=? and first_name =? and year_of_birth=? and month_of_birth=? and date_of_birth=? and hin=? and ver=?"},
+//    {"search_custrecordno", "select demographic_no from demographiccust  where demographic_no=?" },
+//    {"add_custrecord", "insert into demographiccust values(?,?,?,?,?, ?)" },
+//    {"update_custrecord", "update demographiccust set cust1=?,cust2=?,cust3=?,cust4=?,content=? where demographic_no=?" },
+//    {"appt_history", "select appointment_no, appointment_date, start_time, end_time, reason, appointment.status, provider.last_name, provider.first_name from appointment LEFT JOIN provider ON appointment.provider_no=provider.provider_no where appointment.demographic_no=? "+ orderby + " desc "+limit },
+//    {"search_ptstatus", "select distinct patient_status from demographic where patient_status != '' and patient_status != 'AC' and patient_status != 'IN' and patient_status != 'DE' and patient_status != 'MO' and patient_status != 'FI'"},
+//    {"search_rsstatus", "select distinct roster_status from demographic where roster_status != '' and roster_status != 'RO' and roster_status != 'NR' and roster_status != 'TE' and roster_status != 'FS' "},
+//    {"search_waitingListPosition", "select max(position) as position from waitingList where listID=? AND is_history='N' "}, 
+//    {"add2WaitingList", "insert into waitingList (listID, demographic_no, note, position, onListSince, is_history) values(?,?,?,?,?,?)"}, 
+//    {"search_wlstatus", "select * from waitingList where demographic_no=? AND is_history='N' order by onListSince DESC"}, 
+//    {"search_waiting_list", "select * from waitingListName where group_no='" + session.getAttribute("groupno") +"' AND is_history='N' order by name"}, 
+//    {"search_demo_waiting_list", "select * from waitingList where demographic_no=? AND listID=?  AND is_history='N' "}, 
+//    {"search_future_appt", "select a.demographic_no, a.appointment_date from appointment a where a.appointment_date >= now() AND a.demographic_no=?"},
+//    {"search_hin", "select demographic_no, ver from demographic where hin=?"},
+//    {"add2caisi_admission", "insert into admission (client_id,program_id,provider_no,admission_date,admission_status,team_id,temporary_admission_flag, agency_id) Values(?,?,?,?,'current',0,0,0)"},
+//    {"update_admission", "update admission set provider_no = ? where client_id = ?"},
+//   };
+
 
    //associate each operation with an output JSP file -- displaymode
    String[][] responseTargets=new String[][] {

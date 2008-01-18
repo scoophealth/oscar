@@ -236,31 +236,33 @@ function addNameCaisi(demographic_no,lastname,firstname,chartno,messageID) {
 <TH width="10%"><b><bean:message key="demographic.demographicsearch2apptresults.doctor"/></B></TH>
 </tr>
 
-<%@ include file="../demographic/zdemographicsearchresult.jsp" %>
+<%@ include file="../demographic/zzdemographicsearchresult.jsp" %>
 <%
 String bgColor = bodd?"#EEEEFF":"white";
+
+String sChart_no=(apptMainBean.getString(rs,"chart_no")==null)?"":apptMainBean.getString(rs,"chart_no");
 %>
  
 <tr bgcolor="<%=bgColor%>" align="center" 
 <%-- 07/10/2006 RJ Added doctor provider_no to url --%>
 onMouseOver="this.style.cursor='hand';this.style.backgroundColor='pink';" onMouseout="this.style.backgroundColor='<%=bgColor%>';" 
-onClick="document.forms[0].demographic_no.value=<%=rs.getString("demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>','<%=rs.getString("provider_no")%>')"
+onClick="document.forms[0].demographic_no.value=<%=apptMainBean.getString(rs,"demographic_no")%>;<% if(caisi) { out.print("addNameCaisi");} else { out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(sChart_no)%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"
 >
 <%-- 07/10/2006 RJ Added doctor provider_no to url --%>
-      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=rs.getString("demographic_no")%>"  onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=rs.getString("demographic_no")%>','<%=URLEncoder.encode(rs.getString("last_name"))%>','<%=URLEncoder.encode(rs.getString("first_name"))%>','<%=URLEncoder.encode(rs.getString("chart_no"))%>','<%=request.getParameter("messageId")%>','<%=rs.getString("provider_no")%>')"></td>
-      <td><%=Misc.toUpperLowerCase(rs.getString("last_name"))%></td>
-      <td><%=Misc.toUpperLowerCase(rs.getString("first_name"))%></td>
+      <td><input type="submit" class="mbttn" name="demographic_no" value="<%=apptMainBean.getString(rs,"demographic_no")%>"  onClick="<% if(caisi) {out.print("addNameCaisi");} else {out.print("addName");} %>('<%=apptMainBean.getString(rs,"demographic_no")%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"last_name"))%>','<%=URLEncoder.encode(apptMainBean.getString(rs,"first_name"))%>','<%=URLEncoder.encode(sChart_no)%>','<%=request.getParameter("messageId")%>','<%=apptMainBean.getString(rs,"provider_no")%>')"></td>
+      <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"last_name"))%></td>
+      <td><%=Misc.toUpperLowerCase(apptMainBean.getString(rs,"first_name"))%></td>
       <td><%=age%></td>
-      <td><%=rs.getString("roster_status")%></td>
-      <td><%=rs.getString("sex")%></td>
-      <td><%=rs.getString("year_of_birth")+"-"+rs.getString("month_of_birth")+"-"+rs.getString("date_of_birth")%></td>
-      <td><%=providerBean.getProperty(rs.getString("provider_no"))==null?"":providerBean.getProperty(rs.getString("provider_no"))%></td>
+      <td><%=apptMainBean.getString(rs,"roster_status")%></td>
+      <td><%=apptMainBean.getString(rs,"sex")%></td>
+      <td><%=apptMainBean.getString(rs,"year_of_birth")+"-"+apptMainBean.getString(rs,"month_of_birth")+"-"+apptMainBean.getString(rs,"date_of_birth")%></td>
+      <td><%=providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))==null?"":providerBean.getProperty(apptMainBean.getString(rs,"provider_no"))%></td>
 </tr> 
 <%
-      bufName = new StringBuffer( (rs.getString("last_name")+ ","+ rs.getString("first_name")) );
-      bufNo = new StringBuffer( (rs.getString("demographic_no")) );
-      bufChart = new StringBuffer( (rs.getString("chart_no"))   );
-      bufDoctorNo = new StringBuffer( rs.getString("provider_no") ); 
+      bufName = new StringBuffer( (apptMainBean.getString(rs,"last_name")+ ","+ apptMainBean.getString(rs,"first_name")) );
+      bufNo = new StringBuffer( (apptMainBean.getString(rs,"demographic_no")) );
+      bufChart = new StringBuffer(sChart_no);
+      bufDoctorNo = new StringBuffer( apptMainBean.getString(rs,"provider_no") ); 
     }
   }
 %> 
