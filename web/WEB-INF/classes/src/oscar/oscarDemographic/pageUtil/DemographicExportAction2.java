@@ -332,7 +332,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			if (data!=null) {
 			    if (data.length()>5) {
 				data = data.substring(0,5);
-				err.add("Error! Home phone extension too long, export trimmed for contact of Patient "+demoNo);
+				err.add("Error! Home phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+demoNo);
 			    }
 			    phoneRes.setExtension(data);
 			}
@@ -345,7 +345,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			if (data!=null) {
 			    if (data.length()>5) {
 				data = data.substring(0,5);
-				err.add("Error! Work phone extension too long, export trimmed for contact of Patient "+demoNo);
+				err.add("Error! Work phone extension too long, export trimmed for contact ("+(j+1)+") of Patient "+demoNo);
 			    }
 			    phoneW.setExtension(data);
 			}
@@ -428,7 +428,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    }
 		    if (date_index==-1) {
 			pList.addNewOnsetDate();
-			err.add("Error: Missing Onset Date (Problem List) for Patient "+demoNo);
+			err.add("Error: Missing Onset Date (Problem List) for Patient "+demoNo+" ("+(j+1)+")");
 		    }
 		}
 	    }
@@ -496,7 +496,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    else if (data.equals("3")) alr.setSeverity(cdsDt.AdverseReactionSeverity.LT);
 		    else { //SeverityOfReaction==0
 			alr.setSeverity(cdsDt.AdverseReactionSeverity.MI);
-			err.add("Note: Severity Of Allergy Reaction [Unknown] exported as [Mild] for Patient "+demoNo);
+			err.add("Note: Severity Of Allergy Reaction [Unknown] exported as [Mild] for Patient "+demoNo+" ("+(j+1)+")");
 		    }
 		    data = "Adverse Reaction Severity: "+alr.getSeverity().toString();
 		    aSummary += aSummary.equals("") ? data : "\n"+data;
@@ -507,11 +507,11 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			data = "Recorded Date: " + UtilDateUtilities.DateToString(allergies[j].getEntryDate(), "yyyy-MM-dd");
 			aSummary += aSummary.equals("") ? data : "\n"+data;
 		    } else {
-			err.add("Note: Not exporting invalid Recorded Date (Allergies) for Patient "+demoNo);
+			err.add("Note: Not exporting invalid Recorded Date (Allergies) for Patient "+demoNo+" ("+(j+1)+")");
 		    }
 		}
 		if (aSummary.trim().equals("")) {
-		    err.add("Error: No Category Summary Line (Allergies & Adverse Reactions) for Patient "+demoNo);
+		    err.add("Error: No Category Summary Line (Allergies & Adverse Reactions) for Patient "+demoNo+" ("+(j+1)+")");
 		}
 		alr.setCategorySummaryLine(aSummary);
 	    }
@@ -525,14 +525,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    data = (String) a.get("type");
 		    if (data==null || data.trim().equals("")) {
 			data = "";
-			err.add("Error: No Immunization Name for Patient "+demoNo);
+			err.add("Error: No Immunization Name for Patient "+demoNo+" ("+(k+1)+")");
 		    }
 		    immu.setImmunizationName(data);
 		    
 		    data = (String) a.get("refused");
 		    if (data==null || data.trim().equals("")) {
 			immu.addNewRefusedFlag();
-			err.add("Error: No Refused Flag for Patient "+demoNo);
+			err.add("Error: No Refused Flag for Patient "+demoNo+" ("+(k+1)+")");
 		    }
 		    else immu.addNewRefusedFlag().setBoolean(convert10toboolean(data));
 		    
@@ -540,7 +540,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    data = (String) extraData.get("summary");
 		    if (data==null || data.trim().equals("")) {
 			data = "";
-			err.add("Error: No Category Summary Line (Immunization) for Patient "+demoNo);
+			err.add("Error: No Category Summary Line (Immunization) for Patient "+demoNo+" ("+(k+1)+")");
 		    }
 		    immu.setCategorySummaryLine(data);
 		    
@@ -560,7 +560,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
 			    immu.addNewDate().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 			} else {
-			    err.add("Note: Not exporting invalid Immunization Date for Patient "+demoNo);
+			    err.add("Note: Not exporting invalid Immunization Date for Patient "+demoNo+" ("+(k+1)+")");
 			}
 		    }
 		    extraData = null;
@@ -580,7 +580,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			medi.addNewPrescriptionWrittenDate().setFullDate(getCalDate(arr[p].getRxCreatedDate()));
 			mSummary = "Prescription Written Date: " + UtilDateUtilities.DateToString(arr[p].getRxCreatedDate(), "yyyy-MM-dd");
 		    } else {
-			err.add("Note: Not exporting invalid Prescription Written Date for Patient "+demoNo);
+			err.add("Note: Not exporting invalid Prescription Written Date for Patient "+demoNo+" ("+(p+1)+")");
 		    }
 		}
 		if (arr[p].getRxDate()!=null) {
@@ -589,7 +589,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			data = "Start Date: " + UtilDateUtilities.DateToString(arr[p].getRxDate(), "yyyy-MM-dd");
 			mSummary += mSummary.equals("") ? data : "\n"+data;
 		    } else {
-			err.add("Note: Not exporting invalid Medication Start Date for Patient "+demoNo);
+			err.add("Note: Not exporting invalid Medication Start Date for Patient "+demoNo+" ("+(p+1)+")");
 		    }
 		}
 		if (arr[p].getEndDate()!=null) {
@@ -598,7 +598,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			data = "End Date: " + UtilDateUtilities.DateToString(arr[p].getEndDate(), "yyyy-MM-dd");
 			mSummary += mSummary.equals("") ? data : "\n"+data;
 		    } else {
-			err.add("Note: Not exporting invalid Medication End Date for Patient "+demoNo);
+			err.add("Note: Not exporting invalid Medication End Date for Patient "+demoNo+" ("+(p+1)+")");
 		    }
 		}
 		data = arr[p].getRegionalIdentifier();
@@ -609,7 +609,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = arr[p].getDrugName();
 		if (data==null || data.trim().equals("")) {
 		    data = "";
-		    err.add("Error: No Drug Name for Patient "+demoNo);
+		    err.add("Error: No Drug Name for Patient "+demoNo+" ("+(p+1)+")");
 		}
 		medi.setDrugName(data);
 		mSummary += mSummary.equals("") ? "Drug Name: "+data : "\nDrug Name: "+data;
@@ -669,7 +669,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    mSummary += mSummary.equals("") ? "Prescription Instructions: "+data : "\nPrescription Instructions: "+data;
 		}
 
-		if (mSummary.trim().equals("")) err.add("Error: No Category Summary Line (Medications & Treatments) for Patient "+demoNo);
+		if (mSummary.trim().equals("")) err.add("Error: No Category Summary Line (Medications & Treatments) for Patient "+demoNo+" ("+(p+1)+")");
 		medi.setCategorySummaryLine(mSummary);
 	    }
 	    arr = null;
@@ -687,14 +687,14 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = (String) h.get("abn");
 		if (data==null || data.trim().equals("")) {
 		    data = "U";
-		    err.add("Error: No Result Normal/Abnormal Flag for Patient "+demoNo);
+		    err.add("Error: No Result Normal/Abnormal Flag for Patient "+demoNo+" ("+(l+1)+")");
 		}
 		labr.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Enum.forString(data));
 		
 		data = (String) h.get("location");
 		if (data==null || data.trim().equals("")) {
 		    data = "";
-		    err.add("Error: No Laboratory Name for Patient "+demoNo);
+		    err.add("Error: No Laboratory Name for Patient "+demoNo+" ("+(l+1)+")");
 		}
 		boolean isNum = true;
 		try {
@@ -712,13 +712,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		data = (String) h.get("collDate");
 		if (data==null || data.trim().equals("")) {
 		    labr.addNewCollectionDateTime();
-		    err.add("Error: No Collection Date (Laboratory Results) for Patient "+demoNo);
+		    err.add("Error: No Collection Date (Laboratory Results) for Patient "+demoNo+" ("+(l+1)+")");
 		}
 		else {
 		    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
 			labr.addNewCollectionDateTime().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 		    } else {
-			err.add("Note: Not exporting invalid Collection Date (Laboratory Results) for Patient "+demoNo);
+			err.add("Note: Not exporting invalid Collection Date (Laboratory Results) for Patient "+demoNo+" ("+(l+1)+")");
 		    }
 		}
 		h = null;
@@ -739,7 +739,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (ap.getDateAppointment()!=null) {
 		    if (getCalDate(ap.getDateAppointment())!=null) {
 			aptm.addNewAppointmentDate().setFullDate(getCalDate(ap.getDateAppointment()));
-		    } else err.add("Note: Not exporting invalid Appointment Date ("+j+") for Patient "+demoNo);
+		    } else err.add("Note: Not exporting invalid Appointment Date ("+(j+1)+") for Patient "+demoNo);
 		} else {
 		    aptm.addNewAppointmentDate();
 		    err.add("Error: No Appointment Date ("+j+") for Patient "+demoNo);
@@ -747,9 +747,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (ap.getDateStartTime()!=null) {
 		    if (getCalDate(ap.getDateStartTime())!=null) {
 			aptm.setAppointmentTime(getCalDate(ap.getDateStartTime()));
-		    } else err.add("Note: Not exporting invalid Appointment Time ("+j+") for Patient "+demoNo);
+		    } else err.add("Note: Not exporting invalid Appointment Time ("+(j+1)+") for Patient "+demoNo);
 		} else {
-		    err.add("Error: No Appointment Time ("+j+") for Patient "+demoNo);
+		    err.add("Error: No Appointment Time ("+(j+1)+") for Patient "+demoNo);
 		}
 		
 		long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000;
@@ -772,7 +772,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (data!=null && !data.equals("")) aptm.setAppointmentNotes(data);
 		else {
 		    aptm.setAppointmentNotes("");
-		    err.add("Error! No Appointment Notes for Patient "+demoNo);
+		    err.add("Error! No Appointment Notes for Patient "+demoNo+" ("+(j+1)+")");
 		}
 		
 		if (ap.getProviderFirstN()!=null || ap.getProviderLastN()!=null) {
@@ -829,7 +829,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
 				rpr.addNewEventDateTime().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 			    } else {
-				err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo);
+				err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo+" ("+(j+1)+")");
 			    }
 			}
 			data = edoc.getDateTimeStamp();
@@ -837,7 +837,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
 				rpr.addNewReceivedDateTime().setDateTime(getCalDate(UtilDateUtilities.StringToDate(data, "yyyy-MM-dd HH:mm:ss")));
 			    } else {
-				err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo);
+				err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo+" ("+(j+1)+")");
 			    }
 			}
 			data = edoc.getCreatorName();
