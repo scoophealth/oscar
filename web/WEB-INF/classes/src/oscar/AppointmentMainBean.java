@@ -200,5 +200,12 @@ public class AppointmentMainBean {
     dbPH.closePstmt();
     dbPH.closeConn();
   }
- 
+  public String getString(ResultSet rs, String columnName) throws SQLException
+  {
+  	return Misc.getString(rs, columnName);
+  }
+  public String getString(ResultSet rs, int columnIndex) throws SQLException
+  {
+	  return Misc.getString(rs, columnIndex);
+  }
 }
