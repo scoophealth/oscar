@@ -333,7 +333,8 @@ table.ele td{
                        <td colspan="2">Total patients: <%=list.size()%><br/>Ineligible:<%=ineligible%></td>
                        <td colspan="3">Up to Date: <%=done%> = <%=percentage %> % 
                          <%if (percentageWithGrace != null){  %>
-                            <br/> With Grace <%=percentageWithGrace%> %
+                           <%-- <br/> With Grace <%=percentageWithGrace%> %
+                           --%>
                          <%}%>
                        </td>
                        <%if (type != null ){ %>
@@ -443,8 +444,10 @@ table.ele td{
                           <td bgcolor="<%=dis.color%>" id="nextSuggestedProcedure<%=i+1%>">
                               <%if ( dis.nextSuggestedProcedure != null && dis.nextSuggestedProcedure.equals("P1")){ %>
                                  <a href="javascript: return false;" onclick="return completedProcedure('<%=i+1%>','<%=followUpType%>','<%=dis.nextSuggestedProcedure%>','<%=dis.demographicNo%>');"><%=dis.nextSuggestedProcedure%></a>
-                              <%}else{%>
+                              <%}else if(dis.nextSuggestedProcedure != null){%>
                                     <%=dis.nextSuggestedProcedure%>
+                              <%}else{%>
+                                    ----
                               <%}%>
                           </td>
                           <td bgcolor="<%=dis.color%>"><%=providerBean.getProperty(demo.getProviderNo()) %></td>
