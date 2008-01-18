@@ -43,9 +43,13 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.JDBCException;
 import org.hibernate.Query;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Expression;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
+import org.oscarehr.PMmodule.model.Admission;
 import org.oscarehr.PMmodule.model.Demographic;
 import org.oscarehr.PMmodule.model.DemographicExt;
 import org.oscarehr.PMmodule.model.ProgramProvider;
@@ -55,6 +59,7 @@ import org.oscarehr.PMmodule.web.formbean.ClientSearchFormBean;
 import org.oscarehr.util.DbConnectionFilter;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import oscar.MyDateFormat;
 import oscar.util.SqlUtils;
 
 public class ClientDao extends HibernateDaoSupport {
@@ -169,64 +174,104 @@ public class ClientDao extends HibernateDaoSupport {
 			bedProgramIdCond = " program_id = " + bean.getBedProgramId();
 		}
 		
-		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
-			admitDateFromCond = " admission_date >= '" + bean.getDateFrom().trim() + "' ";
-		}
+		DetachedCriteria subq = DetachedCriteria.forClass(Admission.class)
+	    .setProjection(Property.forName("ClientId") );
 		
-		if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
-			
-			admitDateToCond = " admission_date <= '" + bean.getDateTo().trim() + "' ";
-		}
-
 		if (bean.getProgramDomain() != null && !bean.getProgramDomain().isEmpty() && !bean.isSearchOutsideDomain()) {
 
 			// program domain search
 			StringBuilder programIds = new StringBuilder();
-
 			for (int x = 0; x < bean.getProgramDomain().size(); x++) {
 				ProgramProvider p = (ProgramProvider)bean.getProgramDomain().get(x);
 				if (x > 0) {
 					programIds.append(",");
 				}
 				programIds.append(p.getProgramId());
+			}		
+			
+			String [] pIds ;			
+			if(bean.getBedProgramId()==null || bean.getBedProgramId().length()==0) {
+				pIds = programIds.toString().split(",");
+			} else {
+				pIds = bean.getBedProgramId().split(",");
 			}
-			sql ="{alias}.demographic_no in (select client_id from admission " + 
+			
+			Integer [] pIdi = new Integer[pIds.length];
+			for(int i=0;i<pIds.length;i++)
+			{
+				pIdi[i] = Integer.parseInt(pIds[i]);
+			}
+		    subq.add(Restrictions.in("ProgramId", pIdi));			
+		    
+		    
+		    
+
+		  /*  
+		    sql ="{alias}.demographic_no in (select client_id from admission " + 
 				 " where program_id in (" + programIds.toString() + ") " +
 				 (bedProgramIdCond.length()>0? AND + bedProgramIdCond : "") + 
-				 (admitDateFromCond.length()>0? AND + admitDateFromCond : "") + 
-				 (admitDateToCond.length()>0? AND + admitDateToCond : "") + 
+				// (admitDateFromCond.length()>0? AND + admitDateFromCond : "") + 
+				// (admitDateToCond.length()>0? AND + admitDateToCond : "") + 
 				 ")";
 			criteria.add(Restrictions.sqlRestriction(sql));
+			*/
 			
 		}else{  
 			String extraCond = "";
 			if(bedProgramIdCond.length()>0){
-				extraCond = WHERE + bedProgramIdCond;
-				if(admitDateFromCond.length()>0){
+				String [] pIds ;
+				pIds = bean.getBedProgramId().split(",");
+				Integer [] pIdi = new Integer[pIds.length];
+				for(int i=0;i<pIds.length;i++)
+				{
+					pIdi[i] = Integer.parseInt(pIds[i]);
+				}
+				
+			    subq.add(Restrictions.in("ProgramId", pIdi));		
+			}
+			
+/*		if(bedProgramIdCond.length()>0){		
+  			extraCond = WHERE + bedProgramIdCond;
+			if(admitDateFromCond.length()>0){
 					extraCond += AND + admitDateFromCond;
 				}
 				if(admitDateToCond.length()>0){
 					extraCond += AND + admitDateToCond;
 				}
-			}else{
+		}else{
 				if(admitDateFromCond.length()>0){
 					extraCond += WHERE + admitDateFromCond;
-					if(admitDateToCond.length()>0){
+				if(admitDateToCond.length()>0){
 						extraCond += AND + admitDateToCond;
 					}
 				}else{
 					if(admitDateToCond.length()>0){
 						extraCond += WHERE + admitDateToCond;
 					}
-				}
-			}
+				}				
+		}
+
 			if(!"".equals(extraCond)) {
 				sql ="{alias}.demographic_no in (select client_id from admission " +  
 				 	extraCond + ")"; 
 			}
 			criteria.add(Restrictions.sqlRestriction(sql));
+		*/	
+				
 		}
-
+		if(bean.getDateFrom() != null && bean.getDateFrom().length() > 0) {
+	    	Date dt = MyDateFormat.GetSysDate(bean.getDateFrom().trim());
+	    	subq.add(Restrictions.ge("AdmissionDate",dt ));
+	    }
+	    if(bean.getDateTo() != null && bean.getDateTo().length() > 0) {
+	    	Date dt1 =  MyDateFormat.GetSysDate(bean.getDateTo().trim());
+	    	subq.add(Restrictions.le("AdmissionDate",dt1));
+	    }
+	    
+	    
+	    criteria.add(Property.forName("DemographicNo").in(subq));
+		
+		
 		if (bean.getProgramDomain() != null && bean.getProgramDomain().isEmpty() && !bean.isSearchOutsideDomain()) {
 			sql = "{alias}.demographic_no = 0";
 			criteria.add(Restrictions.sqlRestriction(sql));
