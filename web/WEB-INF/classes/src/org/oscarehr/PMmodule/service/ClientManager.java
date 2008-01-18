@@ -248,11 +248,11 @@ public class ClientManager {
         return dao.getDemographicExt(Integer.valueOf(id));
     }
 
-    public List<DemographicExt> getDemographicExtByDemographicNo(Integer demographicNo) {
+    public List<DemographicExt> getDemographicExtByDemographicNo(int demographicNo) {
         return dao.getDemographicExtByDemographicNo(demographicNo);
     }
 
-    public DemographicExt getDemographicExt(Integer demographicNo, String key) {
+    public DemographicExt getDemographicExt(int demographicNo, String key) {
         return dao.getDemographicExt(demographicNo, key);
     }
 
@@ -260,7 +260,7 @@ public class ClientManager {
         dao.updateDemographicExt(de);
     }
 
-    public void saveDemographicExt(Integer demographicNo, String key, String value) {
+    public void saveDemographicExt(int demographicNo, String key, String value) {
         dao.saveDemographicExt(demographicNo, key, value);
     }
 
@@ -268,7 +268,7 @@ public class ClientManager {
         dao.removeDemographicExt(Integer.valueOf(id));
     }
 
-    public void removeDemographicExt(Integer demographicNo, String key) {
+    public void removeDemographicExt(int demographicNo, String key) {
         dao.removeDemographicExt(demographicNo, key);
     }
 
