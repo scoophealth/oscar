@@ -124,6 +124,21 @@ public class AppointmentMainBean {
   	return rs;
   }
 
+  public ResultSet queryResults_paged(String[] aKeyword, String dboperation, int iOffSet) throws Exception{
+	 	String sqlQuery =null;
+
+	  ResultSet rs =null;
+	  if(aKeyword[0].equals("*")) {
+	  	sqlQuery = dbSQL.getDef("search*","");
+  	    rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
+	  } else {
+	  	sqlQuery = dbSQL.getDef(dboperation,"");
+  	    rs = dbPH.queryResults_paged(sqlQuery, aKeyword, iOffSet);
+	  }
+   // System.out.println("sqlQuery=" + sqlQuery);
+	return rs;
+}
+  
   public Object[] queryResultsCaisi(String[] aKeyword, String dboperation) throws Exception{
 	String sqlQuery =null;
 	Object[] rs =null;
@@ -170,6 +185,20 @@ public class AppointmentMainBean {
 	  }
   	return rs;
   }
+  
+  public ResultSet queryResults_paged(String aKeyword, String dboperation, int iOffSet) throws Exception{
+	  String sqlQuery = null;
+	  ResultSet rs =null;
+	  if(aKeyword.equals("*")) {
+	  	sqlQuery = dbSQL.getDef("search*","");
+    	rs = dbPH.queryResults_paged(sqlQuery, iOffSet);
+	  } else {
+	  	sqlQuery = dbSQL.getDef(dboperation,"");
+    	rs = dbPH.queryResults_paged(sqlQuery, aKeyword, iOffSet);
+	  }
+  	return rs;
+  }
+  
   public ResultSet queryResults(int aKeyword, String dboperation) throws Exception{
 	  String sqlQuery = null;
 	  ResultSet rs =null;
