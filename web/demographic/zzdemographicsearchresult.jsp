@@ -1,0 +1,112 @@
+<!--  
+/*
+ * 
+ * Created by Quatro Group. *
+ */
+-->
+
+<%
+	GregorianCalendar now=new GregorianCalendar();
+  int curYear = now.get(Calendar.YEAR);
+  int curMonth = (now.get(Calendar.MONTH)+1);
+  int curDay = now.get(Calendar.DAY_OF_MONTH);
+  int age=0;
+  ResultSet rs=null ;
+    
+  String dboperation = request.getParameter("dboperation");
+  //String dboperation = "search_titlename"; 
+  // System.out.println("from editcpp : "+ param); 
+
+  String keyword=request.getParameter("keyword").trim();
+  //keyword=keyword.replace('*', '%');
+  int iRSOffSet=0;
+  int iPageSize=10;
+  int iRow=0;
+  if(request.getParameter("limit1")!=null) iRSOffSet= Integer.parseInt(request.getParameter("limit1"));
+  if(request.getParameter("limit2")!=null) iPageSize = Integer.parseInt(request.getParameter("limit2"));
+
+//iRSOffSet=0;
+//  iPageSize=10;
+  
+  
+  String sDbType = oscar.OscarProperties.getInstance().getProperty("db_type").trim();
+  if(request.getParameter("search_mode").equals("search_name")) {
+      if (sDbType.equalsIgnoreCase("oracle")) {
+        keyword=request.getParameter("keyword");
+        if(keyword.indexOf(",")==-1)  
+           rs = apptMainBean.queryResults_paged("%" + keyword + "%", dboperation, iRSOffSet) ; //lastname
+        else if(keyword.indexOf(",")==(keyword.length()-1))  
+           rs = apptMainBean.queryResults_paged("%" + keyword.substring(0,(keyword.length()-1)) + "%", dboperation, iRSOffSet);//lastname
+        else { //lastname,firstname
+           String[] param =new String[2];
+           int index = keyword.indexOf(",");
+           param[0]="%" + keyword.substring(0,index).trim() + "%"; // already has an "^" at the front, so no need to add another
+           param[1]=keyword.substring(index+1).trim() + "%";
+           //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
+           rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+        }
+      }
+      else
+      {
+        keyword="^"+request.getParameter("keyword");
+        if(keyword.indexOf(",")==-1)  
+           rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet) ; //lastname
+        else if(keyword.indexOf(",")==(keyword.length()-1))  
+           rs = apptMainBean.queryResults_paged(keyword.substring(0,(keyword.length()-1)), dboperation, iRSOffSet);//lastname
+        else { //lastname,firstname
+           String[] param =new String[2];
+           int index = keyword.indexOf(",");
+           param[0]=keyword.substring(0,index).trim(); // already has an "^" at the front, so no need to add another
+           param[1]="^"+keyword.substring(index+1).trim();
+           //System.out.println("from -------- :"+ param[0]+ ": next :"+param[1]);
+           rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+        }
+      }
+  } else if(request.getParameter("search_mode").equals("search_dob")) {
+            String[] param =new String[3];
+            param[0]=""+MyDateFormat.getYearFromStandardDate(keyword);//+"%";//(",");
+            param[1]=""+MyDateFormat.getMonthFromStandardDate(keyword);//+"%";
+            param[2]=""+MyDateFormat.getDayFromStandardDate(keyword);//+"%";  
+            //System.out.println("1111111111111111111 " +param[0]+param[1]+param[2]);
+            rs = apptMainBean.queryResults_paged(param, dboperation, iRSOffSet);
+  } else if(request.getParameter("search_mode").equals("search_address") || request.getParameter("search_mode").equals("search_phone")) {
+            keyword = keyword.replaceAll("-", "-?");
+            if (keyword.length() < 1) keyword="^";
+            rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+  } else {
+      if (sDbType.equalsIgnoreCase("oracle")) {
+          keyword= "%" + request.getParameter("keyword") + "%";
+          rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+      }else
+      {
+          keyword="^"+request.getParameter("keyword");
+          rs = apptMainBean.queryResults_paged(keyword, dboperation, iRSOffSet);
+      }
+  }
+ 
+  boolean bodd=false;
+  int nItems=0;
+  
+  if(rs==null) {
+    out.println("failed!!!");
+  } else {
+    while (rs.next()) {
+      iRow ++;
+      if(iRow>iPageSize) break;
+      bodd=bodd?false:true; //for the color of rows
+      nItems++; //to calculate if it is the end of records
+
+     if(!(rs.getString("month_of_birth").equals(""))) {//   ||rs.getString("year_of_birth")||rs.getString("date_of_birth")) {
+    	if(curMonth>Integer.parseInt(rs.getString("month_of_birth"))) {
+    		age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+    	} else {
+    		if(curMonth==Integer.parseInt(rs.getString("month_of_birth")) &&
+    			curDay>Integer.parseInt(rs.getString("date_of_birth"))) {
+    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"));
+    		} else {
+    			age=curYear-Integer.parseInt(rs.getString("year_of_birth"))-1; 
+    		}
+    	}	
+     }	
+   
+%>
