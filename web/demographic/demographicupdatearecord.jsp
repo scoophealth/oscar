@@ -1,9 +1,10 @@
-<%@ page import="java.sql.*, java.util.*, oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*" errorPage="errorpage.jsp" %> 
+<%@ page import="java.sql.*, java.util.*, oscar.MyDateFormat,oscar.oscarWaitingList.WaitingList, oscar.oscarWaitingList.util.WLWaitingListUtil, oscar.oscarDemographic.data.*" errorPage="errorpage.jsp" %> 
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <jsp:useBean id="apptMainBean" class="oscar.AppointmentMainBean" scope="session" />
 <jsp:useBean id="oscarVariables" class="java.util.Properties" scope="session" />
+
 <!--  
 /*
  * 
@@ -48,7 +49,8 @@
     </table>
 <%
   //check to see if new case management is request
-ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
+ArrayList users = (ArrayList)session.getServletContext().getAttribute("CaseMgmtUsers");
+//JDK1.5 ArrayList<String> users = (ArrayList<String>)session.getServletContext().getAttribute("CaseMgmtUsers");
 boolean newCaseManagement = false;
 
 if( users != null && users.size() > 0 )
@@ -58,7 +60,7 @@ if( users != null && users.size() > 0 )
   java.util.Locale vLocale =(java.util.Locale)session.getAttribute(org.apache.struts.Globals.LOCALE_KEY);
 
   //if action is good, then give me the result
-    String[] param =new String[27];
+    String[] param =new String[23];
 	  param[0]=request.getParameter("last_name");
 	  param[1]=request.getParameter("first_name");
 	  param[2]=request.getParameter("address");
@@ -70,26 +72,27 @@ if( users != null && users.size() > 0 )
 	  param[8]=request.getParameter("email");
 	  param[9]=request.getParameter("pin");
 	  param[10]=request.getParameter("year_of_birth");
-
 	  param[11]=request.getParameter("month_of_birth")!=null && request.getParameter("month_of_birth").length()==1 ? "0"+request.getParameter("month_of_birth") : request.getParameter("month_of_birth");
 	  param[12]=request.getParameter("date_of_birth")!=null && request.getParameter("date_of_birth").length()==1 ? "0"+request.getParameter("date_of_birth") : request.getParameter("date_of_birth");
 	  param[13]=request.getParameter("hin");
 	  param[14]=request.getParameter("ver");
 	  param[15]=request.getParameter("roster_status");
 	  param[16]=request.getParameter("patient_status");
-	  param[17]=request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date");
-	  param[18]=request.getParameter("chart_no");
-	  param[19]=request.getParameter("provider_no");
-	  param[20]=request.getParameter("sex");
-	  param[21]=request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date");
-	  param[22]=request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date");
-	  param[23]=request.getParameter("pcn_indicator");
-	  param[24]=request.getParameter("hc_type");
-	  param[25]=request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date");
-	  param[26]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
+	  param[17]=request.getParameter("chart_no");
+	  param[18]=request.getParameter("provider_no");
+	  param[19]=request.getParameter("sex");
+	  param[20]=request.getParameter("pcn_indicator");
+	  param[21]=request.getParameter("hc_type");
+	  param[22]="<rdohip>" + request.getParameter("r_doctor_ohip") + "</rdohip><rd>" + request.getParameter("r_doctor") + "</rd>" + (request.getParameter("family_doc")!=null? ("<family_doc>" + request.getParameter("family_doc") + "</family_doc>") : "") ;  
+
+	  java.sql.Date [] dtparam = new java.sql.Date[4];
+	  dtparam[0]=MyDateFormat.GetSysDate(request.getParameter("date_joined_year")+"-"+request.getParameter("date_joined_month")+"-"+request.getParameter("date_joined_date"));
+	  dtparam[1]=MyDateFormat.GetSysDate(request.getParameter("end_date_year")+"-"+request.getParameter("end_date_month")+"-"+request.getParameter("end_date_date"));
+	  dtparam[2]=MyDateFormat.GetSysDate(request.getParameter("eff_date_year")+"-"+request.getParameter("eff_date_month")+"-"+request.getParameter("eff_date_date"));
+	  dtparam[3]=MyDateFormat.GetSysDate(request.getParameter("hc_renew_date_year")+"-"+request.getParameter("hc_renew_date_month")+"-"+request.getParameter("hc_renew_date_date"));
+ 
 	  int []intparam=new int[] {Integer.parseInt(request.getParameter("demographic_no"))};
 
-          
   //DemographicExt
      DemographicExt dExt = new DemographicExt();
      String proNo = (String) session.getValue("user");
@@ -138,7 +141,7 @@ if( users != null && users.size() > 0 )
         }
     }
 
-  int rowsAffected = apptMainBean.queryExecuteUpdate(param, intparam,  request.getParameter("dboperation"));
+  int rowsAffected = apptMainBean.queryExecuteUpdate(param, dtparam, intparam, request.getParameter("dboperation"));
   if (rowsAffected ==1) {
       //propagate demographic to caisi admission table
       if( newCaseManagement ) {

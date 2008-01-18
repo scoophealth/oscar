@@ -35,7 +35,7 @@
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
-<security:oscarSec roleName="<%=roleName$%>" objectName="<%="_demographic$"+demographic$%>" rights="o" reverse="<%=false%>" >
+<security:oscarSec roleName="<%=roleName$%>" objectName='<%="_demographic$"+demographic$%>' rights="o" reverse="<%=false%>" >
 You have no rights to access the data!
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
@@ -520,7 +520,7 @@ div.demographicWrapper {
                                                 if(dob_year!=0) age=MyDateFormat.getAge(dob_year,dob_month,dob_date);
                         %>
                         <%=rs.getString("last_name")%>, <%=rs.getString("first_name")%> <%=rs.getString("sex")%> <%=age%> years
-                        <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo="<%=rs.getString("demographic_no")%>"/></i></span>
+                        <span style="margin-left:20px;"><i>Next Appointment: <oscar:nextAppt demographicNo='<%=rs.getString("demographic_no")%>'/></i></span>
                         </td>
                     </tr>
                 </table>
@@ -751,7 +751,7 @@ div.demographicWrapper {
                                         <ul>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formRosterStatus"/>: <b><%=rs.getString("roster_status")%></b>
-                                                <bean:message key="demographic.demographiceditdemographic.DateJoined"/>: <b><%=rs.getString("hc_renew_date")%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.DateJoined"/>: <b><%=MyDateFormat.getMyStandardDate(rs.getString("hc_renew_date"))%></b>
                                             </li>
                                             <li>
                                                 <bean:message key="demographic.demographiceditdemographic.formPatientStatus"/>:<b><%=rs.getString("patient_status")%></b>
@@ -763,8 +763,8 @@ div.demographicWrapper {
                                                 <bean:message key="demographic.demographiceditdemographic.cytolNum"/>: <b> <%=s(demoExt.get("cytolNum"))%></b>
                                             </li>
                                             <li>
-                                                <bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: <b><%=rs.getString("date_joined")%></b>
-                                                <bean:message key="demographic.demographiceditdemographic.formEndDate"/>: <b><%=rs.getString("end_date")%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.formDateJoined1"/>: <b><%=MyDateFormat.getMyStandardDate(rs.getString("date_joined"))%></b>
+                                                <bean:message key="demographic.demographiceditdemographic.formEndDate"/>: <b><%=MyDateFormat.getMyStandardDate(rs.getString("end_date"))%></b>
                                             </li>
                                         </ul>
                                         </div>
@@ -831,7 +831,7 @@ div.demographicWrapper {
                                           <bean:message key="demographic.demographiceditdemographic.formHCType"/>:<b><%=rs.getString("hc_type")==null?"":rs.getString("hc_type") %></b>
                                         </li>
                                         <li>
-                                          <bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:<b><%=rs.getString("eff_date")%></b>
+                                          <bean:message key="demographic.demographiceditdemographic.formEFFDate"/>:<b><%=MyDateFormat.getMyStandardDate(rs.getString("eff_date"))%></b>
                                         </li>
                                     </ul>
                                     </div>
@@ -997,27 +997,27 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <% } else { %>
                                 <% String province = rs.getString("province"); %>
                                 <select name="province" style="width:200px">
-                                  <option value="OT"<%=(province.equals("OT") || province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
+                                  <option value="OT"<%=(province==null || province.equals("OT") || province.equals("") || province.length() > 2)?" selected":""%>>Other</option>
                                 <% if (pNames.isDefined()) {
                                        for (ListIterator li = pNames.listIterator(); li.hasNext(); ) {
                                            String pr2 = (String) li.next(); %>
                                            <option value="<%=pr2%>"<%=pr2.equals(province)?" selected":""%>><%=li.next()%></option>
 										<% } %>
                                     <% } else { %>
-                                      <option value="AB"<%=province.equals("AB")?" selected":""%>>AB-Alberta</option>
-                                      <option value="BC"<%=province.equals("BC")?" selected":""%>>BC-British Columbia</option>
-                                      <option value="MB"<%=province.equals("MB")?" selected":""%>>MB-Manitoba</option>
-                                      <option value="NB"<%=province.equals("NB")?" selected":""%>>NB-New Brunswick</option>
-                                      <option value="NL"<%=province.equals("NL")?" selected":""%>>NL-Newfoundland & Labrador</option>
-                                      <option value="NT"<%=province.equals("NT")?" selected":""%>>NT-Northwest Territory</option>
-                                      <option value="NS"<%=province.equals("NS")?" selected":""%>>NS-Nova Scotia</option>
-                                      <option value="NU"<%=province.equals("NU")?" selected":""%>>NU-Nunavut</option>
-                                      <option value="ON"<%=province.equals("ON")?" selected":""%>>ON-Ontario</option>
-                                      <option value="PE"<%=province.equals("PE")?" selected":""%>>PE-Prince Edward Island</option>
-                                      <option value="QC"<%=province.equals("QC")?" selected":""%>>QC-Quebec</option>
-                                      <option value="SK"<%=province.equals("SK")?" selected":""%>>SK-Saskatchewan</option>
-                                      <option value="YT"<%=province.equals("YT")?" selected":""%>>YT-Yukon</option>
-                                      <option value="US"<%=province.equals("US")?" selected":""%>>US resident</option>
+                                      <option value="AB"<%="AB".equals(province)?" selected":""%>>AB-Alberta</option>
+                                      <option value="BC"<%="BC".equals(province)?" selected":""%>>BC-British Columbia</option>
+                                      <option value="MB"<%="MB".equals(province)?" selected":""%>>MB-Manitoba</option>
+                                      <option value="NB"<%="NB".equals(province)?" selected":""%>>NB-New Brunswick</option>
+                                      <option value="NL"<%="NL".equals(province)?" selected":""%>>NL-Newfoundland & Labrador</option>
+                                      <option value="NT"<%="NT".equals(province)?" selected":""%>>NT-Northwest Territory</option>
+                                      <option value="NS"<%="NS".equals(province)?" selected":""%>>NS-Nova Scotia</option>
+                                      <option value="NU"<%="NU".equals(province)?" selected":""%>>NU-Nunavut</option>
+                                      <option value="ON"<%="ON".equals(province)?" selected":""%>>ON-Ontario</option>
+                                      <option value="PE"<%="PE".equals(province)?" selected":""%>>PE-Prince Edward Island</option>
+                                      <option value="QC"<%="QC".equals(province)?" selected":""%>>QC-Quebec</option>
+                                      <option value="SK"<%="SK".equals(province)?" selected":""%>>SK-Saskatchewan</option>
+                                      <option value="YT"<%="YT".equals(province)?" selected":""%>>YT-Yukon</option>
+                                      <option value="US"<%="US".equals(province)?" selected":""%>>US resident</option>
                                     <% } %>
                                 </select>
                                 <% } %>
@@ -1171,7 +1171,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <select name="resident" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          rsdemo.beforeFirst();
+                          rsdemo.close();
+                          rsdemo=apptMainBean.queryResults("search_provider_doc");
                           while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(resident)?"selected":""%> >
@@ -1186,7 +1187,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <select name="midwife" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          rsdemo.beforeFirst();
+                          rsdemo.close();
+                          rsdemo=apptMainBean.queryResults("search_provider_doc");
                           while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(midwife)?"selected":""%> >
@@ -1199,7 +1201,8 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                 <select name="nurse" style="width:200px">
                                   <option value="" ></option>
                         <%
-                          rsdemo.beforeFirst();
+                          rsdemo.close();
+                          rsdemo = apptMainBean.queryResults("search_provider_doc");
                           while (rsdemo.next()) {
                         %>
                           <option value="<%=rsdemo.getString("provider_no")%>" <%=rsdemo.getString("provider_no").equals(nurse)?"selected":""%> >
@@ -1237,7 +1240,9 @@ if(oscarVariables.getProperty("demographicExt") != null) {
                                   	%>
                           <option value="<%=prop.getProperty("last_name")+","+prop.getProperty("first_name")%>" <%=prop.getProperty("referral_no").equals(rdohip)?"selected":""%> >
                           <%=Misc.getShortStr( (prop.getProperty("last_name")+","+prop.getProperty("first_name")),"",nStrShowLen)%></option>
- 	                      <% } %>         	</select>
+ 	                      <% }
+ 	                      	rsdemo.close();
+ 	                       %>         	</select>
 <script language="Javascript">
 <!--
 function changeRefDoc() {
@@ -1457,7 +1462,7 @@ if(oscarVariables.getProperty("demographicExt") != null) {
 								<input type="hidden" name="<%=propDemoExt[k].replace(' ', '_')%>Orig" value="<%=s(demoExt.get(propDemoExt[k].replace(' ', '_')))%>" />
                               </td>
                               <% if((k+1)<propDemoExt.length) { %>
-                              <td align="right" nowrap><b><%= propDemoExt[k+1]+":"%> </b></td>
+                              <td align="right" nowrap><b><%out.println(propDemoExt[k+1]+":");%> </b></td>
                               <td align="left" >
                               <% if(bExtForm) {
                                   	if(propDemoExtForm[k+1].indexOf("<select")>=0) {

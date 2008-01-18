@@ -39,7 +39,7 @@ public class CaseManagementViewFormBean extends ActionForm {
 	private String hideActiveIssue="true"; 
 	private CaseManagementCPP cpp=new CaseManagementCPP();
 
-        private EncounterWindow ectWin = new EncounterWindow();
+    private EncounterWindow ectWin = new EncounterWindow();
 	public static final String[] tabs = {"Current Issues","Client History","Allergies","Prescriptions","Reminders","Ticklers","Search"};
 	private FormFile imageFile;
 	

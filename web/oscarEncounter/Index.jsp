@@ -38,13 +38,13 @@
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
-<security:oscarSec roleName="<%=roleName$%>" objectName="<%="_eChart$"+demographic$%>" rights="o" reverse="<%=false%>" >
+<security:oscarSec roleName="<%=roleName$%>" objectName='<%="_eChart$"+demographic$%>' rights="o" reverse="<%=false%>" >
 You have no rights to access the data!
 <% response.sendRedirect("../noRights.html"); %>
 </security:oscarSec>
 
 <%-- only principal has the save rights --%>
-<security:oscarSec roleName="<%="_principal"%>" objectName="<%="_eChart"%>" rights="ow" reverse="<%=false%>" >
+<security:oscarSec roleName='<%="_principal"%>' objectName='<%="_eChart"%>' rights="ow" reverse="<%=false%>" >
 <% 	bPrincipalControl = true;
 	if(EctPatientData.getProviderNo(demographic$).equals((String) session.getAttribute("user")) ) {
 		bPrincipalDisplay = true;
