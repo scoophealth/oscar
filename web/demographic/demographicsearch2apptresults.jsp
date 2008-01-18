@@ -339,7 +339,8 @@ function next() {
 <input type="submit" class="mbttn" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnPrevPage"/>"  onClick="last()">
 <%
   }
-  if(nItems==Integer.parseInt(strLimit2)) {
+//  if(nItems==Integer.parseInt(strLimit2)) {
+  if(nItems<iRow) {
 %>
 <input type="submit" class="mbttn" name="submit" value="<bean:message key="demographic.demographicsearch2apptresults.btnNextPage"/>"  onClick="next()">
 <%
