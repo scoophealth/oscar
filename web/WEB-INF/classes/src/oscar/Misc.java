@@ -29,6 +29,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import java.sql.ResultSet; // for conversions
+import java.sql.SQLException;
 
 public class Misc {
 
@@ -439,6 +440,24 @@ public static String space(int i) {
     return moneyStr;
     }
     ///
+    public static String getString(ResultSet rs, String columnName) throws SQLException
+    {
+    	String text = rs.getString(columnName);
+    	if(rs.wasNull())
+    	{
+    		text = "";
+    	}
+    	return text;
+    }
+    public static String getString(ResultSet rs, int columnIndex) throws SQLException
+    {
+    	String text = rs.getString(columnIndex);
+    	if(rs.wasNull())
+    	{
+    		text = "";
+    	}
+    	return text;
+    }
 
 
 }
