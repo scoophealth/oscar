@@ -213,6 +213,12 @@
         maxAge="80"
         showIfMinRecordNum="1"/>
 
+   <item        
+        desc="Colonoscopy"
+        name="COLONOSCOPY"
+        link=""
+        layout="PAPMAM"
+        showIfMinRecordNum="1"/>
    
                 
    <item        
