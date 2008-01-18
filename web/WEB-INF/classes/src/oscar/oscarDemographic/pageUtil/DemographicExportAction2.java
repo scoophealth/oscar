@@ -121,7 +121,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	String data = null;
 	for(int i = 0 ; i < list.size(); i++){	
 	    String demoNo = (String) list.get(i);
-	    if (demoNo==null || demoNo.trim().equals("")) err.add("Error: No Demographic Number");
+	    if (demoNo==null || demoNo.trim().equals("")) {
+		demoNo="";
+		err.add("Error: No Demographic Number");
+	    }
 
 	    // DEMOGRAPHICS
 	    DemographicData.Demographic demographic = d.getDemographic(demoNo);
@@ -137,66 +140,75 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    cdsDt.PersonNameStandard.LegalName legalName = demo.addNewNames().addNewLegalName();
 	    cdsDt.PersonNameStandard.LegalName.FirstName firstName = legalName.addNewFirstName();
 	    cdsDt.PersonNameStandard.LegalName.LastName  lastName  = legalName.addNewLastName();
+	    legalName.setNamePurpose(cdsDt.PersonNamePurposeCode.L);
 	    
 	    data = demographic.getFirstName();
-	    if (data==null || data.trim().equals("")) err.add("Error: No First Name for Patient "+demoNo);
-	    else {
-		firstName.setPart(data);
-		firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
-		firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+	    if (data==null || data.trim().equals("")) {
+		data = "";
+		err.add("Error: No First Name for Patient "+demoNo);
 	    }
+	    firstName.setPart(data);
+	    firstName.setPartType(cdsDt.PersonNamePartTypeCode.GIV);
+	    firstName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
 	    
 	    data = demographic.getLastName();
-	    if (data==null || data.trim().equals("")) err.add("Error: No Last Name for Patient "+demoNo);
-	    else {
-		lastName.setPart(data);
-		lastName.setPartType(cdsDt.PersonNamePartTypeCode.FAMC);
-		lastName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
+	    if (data==null || data.trim().equals("")) {
+		data = "";
+		err.add("Error: No Last Name for Patient "+demoNo);
 	    }
+	    lastName.setPart(data);
+	    lastName.setPartType(cdsDt.PersonNamePartTypeCode.FAMC);
+	    lastName.setPartQualifier(cdsDt.PersonNamePartQualifierCode.BR);
 	    
 	    data = demographic.getSex();
-	    if (data==null || data.trim().equals("")) err.add("Error: No Gender for Patient "+demoNo);
-	    else demo.setGender(cdsDt.Gender.Enum.forString(data));
+	    if (data==null || data.trim().equals("")) {
+		data = "";
+		err.add("Error: No Gender for Patient "+demoNo);
+	    }
+	    demo.setGender(cdsDt.Gender.Enum.forString(data));
 	    
 	    data = demographic.getRosterStatus();
-	    if (data==null || data.trim().equals("")) err.add("Error: No Enrollment Status for Patient "+demoNo);
-	    else {
-		if (data.equals("RO")) data = "1";
-		else data = "0";
-		demo.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
+	    if (data==null || data.trim().equals("")) {
+		data = "";
+		err.add("Error: No Enrollment Status for Patient "+demoNo);
 	    }
+	    if (data.equals("RO")) data = "1";
+	    else data = "0";
+	    demo.setEnrollmentStatus(cdsDt.EnrollmentStatus.Enum.forString(data));
 	    
 	    data = demographic.getPatientStatus();
-	    if (data==null || data.trim().equals("")) err.add("Error: No Person Status Code for Patient "+demoNo);
-	    else {
-		if (data.equals("AC")) data = "A";
-		else if (data.equals("DE")) data = "D";
-		else data = "I";
-		demo.setPersonStatusCode(cdsDt.PersonStatus.Enum.forString(data));
+	    if (data==null || data.trim().equals("")) {
+		data = "";
+		err.add("Error: No Person Status Code for Patient "+demoNo);
 	    }
+	    if (data.equals("AC")) data = "A";
+	    else if (data.equals("DE")) data = "D";
+	    else data = "I";
+	    demo.setPersonStatusCode(cdsDt.PersonStatus.Enum.forString(data));
 	    
 	    data = demographic.getDob("-");
 	    if (data==null || data.trim().equals("")) {
+		demo.addNewDateOfBirth();
 		err.add("Error: No Date Of Birth for Patient "+demoNo);
 	    } else {
-		if (getCalDate(data)!=null) {
-		    demo.addNewDateOfBirth().setFullDate(getCalDate(data));
+		if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+		    demo.addNewDateOfBirth().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 		} else {
 		    err.add("Note: Not exporting invalid Date of Birth for Patient "+demoNo);
 		}
 	    }
 	    data = demographic.getDateJoined();
 	    if (data!=null && !data.trim().equals("")) {
-		if (getCalDate(data)!=null) {
-		    demo.addNewEnrollmentDate().setFullDate(getCalDate(data));
+		if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+		    demo.addNewEnrollmentDate().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 		} else {
 		    err.add("Note: Not exporting invalid Enrollment Date for Patient "+demoNo);
 		}
 	    }
 	    data = demographic.getEndDate();
 	    if (data!=null && !data.trim().equals("")) {
-		if (getCalDate(data)!=null) {
-		    demo.addNewEnrollmentTerminationDate().setFullDate(getCalDate(data));
+		if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+		    demo.addNewEnrollmentTerminationDate().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 		} else {
 		    err.add("Note: Not exporting invalid Enrollment Termination Date for Patient "+demoNo);
 		}
@@ -224,8 +236,9 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		healthCard.setProvinceCode(cdsDt.HealthCardProvinceCode.CA_ON);
 		if (demographic.getVersionCode()!=null && !demographic.getVersionCode().trim().equals("")) healthCard.setVersion(demographic.getVersionCode());
 		if (demographic.getEffDate()!=null && !demographic.getEffDate().trim().equals("")) {
-		    if (getCalDate(demographic.getEffDate())!=null) {
-			healthCard.setExpirydate(getCalDate(demographic.getEffDate()));
+		    data = demographic.getEffDate();
+		    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+			healthCard.setExpirydate(getCalDate(UtilDateUtilities.StringToDate(data)));
 		    } else {
 			err.add("Note: Not exporting invalid Health Card Expiry Date for Patient "+demoNo);
 		    }
@@ -245,13 +258,27 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		cdsDt.PhoneNumber phoneResident = demo.addNewPhoneNumber();
 		phoneResident.setPhoneNumberType(cdsDt.PhoneNumberType.R);
 		phoneResident.setPhoneNumber(demographic.getPhone());
-		if (demoExt.get("hPhoneExt")!=null) phoneResident.setExtension((String)demoExt.get("hPhoneExt"));
+		data = (String) demoExt.get("hPhoneExt");
+		if (data!=null) {
+		    if (data.length()>5) {
+			data = data.substring(0,5);
+			err.add("Error! Home phone extension too long, export trimmed for Patient "+demoNo);
+		    }
+		    phoneResident.setExtension(data);
+		}
 	    }
 	    if (demographic.getPhone2()!=null && !demographic.getPhone2().trim().equals("")) {
 		cdsDt.PhoneNumber phoneWork = demo.addNewPhoneNumber();
 		phoneWork.setPhoneNumberType(cdsDt.PhoneNumberType.W);
 		phoneWork.setPhoneNumber(demographic.getPhone2());
-		if (demoExt.get("wPhoneExt")!=null) phoneWork.setExtension((String)demoExt.get("wPhoneExt"));
+		data = (String) demoExt.get("wPhoneExt");
+		if (data!=null) {
+		    if (data.length()>5) {
+			data = data.substring(0,5);
+			err.add("Error! Work phone extension too long, export trimmed for Patient "+demoNo);
+		    }
+		    phoneWork.setExtension(data);
+		}
 	    }
 	    if (demoExt.get("demo_cell")!=null) {
 		cdsDt.PhoneNumber phoneCell = demo.addNewPhoneNumber();
@@ -271,8 +298,13 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    
 		    cds.DemographicsDocument.Demographics.Contact contact = demo.addNewContact();
 		    cdsDt.PersonNameSimpleWithMiddleName contactName = contact.addNewName();
-		    contactName.setFirstName(relDemo.getFirstName());
-		    contactName.setLastName(relDemo.getLastName());
+		    if (relDemo.getFirstName()!=null && !relDemo.getFirstName().trim().equals("")) {
+			contactName.setFirstName(relDemo.getFirstName());
+		    } else err.add("Error! No First Name for contact ("+j+") for Patient "+demoNo);
+		    
+		    if (relDemo.getLastName()!=null && !relDemo.getLastName().trim().equals("")) {
+			contactName.setLastName(relDemo.getLastName());
+		    } else err.add("Error! No Last Name for contact ("+j+") for Patient "+demoNo);
 		    
 		    String ec = (String) r.get("emergency_contact");
 		    String nk = (String) r.get("sub_decision_maker");
@@ -296,14 +328,34 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			cdsDt.PhoneNumber phoneRes = contact.addNewPhoneNumber();
 			phoneRes.setPhoneNumberType(cdsDt.PhoneNumberType.R);
 			phoneRes.setPhoneNumber(relDemo.getPhone());
-			if (relDemoExt.get("hPhoneExt")!=null) phoneRes.setExtension((String)relDemoExt.get("hPhoneExt"));
+			data = (String) relDemoExt.get("hPhoneExt");
+			if (data!=null) {
+			    if (data.length()>5) {
+				data = data.substring(0,5);
+				err.add("Error! Home phone extension too long, export trimmed for contact of Patient "+demoNo);
+			    }
+			    phoneRes.setExtension(data);
+			}
 		    }
 		    if (relDemo.getPhone2()!=null && !relDemo.getPhone2().trim().equals("")) {
 			cdsDt.PhoneNumber phoneW = contact.addNewPhoneNumber();
 			phoneW.setPhoneNumberType(cdsDt.PhoneNumberType.W);
 			phoneW.setPhoneNumber(relDemo.getPhone2());
-			if (relDemoExt.get("wPhoneExt")!=null) phoneW.setExtension((String)relDemoExt.get("wPhoneExt"));
+			data = (String) relDemoExt.get("wPhoneExt");
+			if (data!=null) {
+			    if (data.length()>5) {
+				data = data.substring(0,5);
+				err.add("Error! Work phone extension too long, export trimmed for contact of Patient "+demoNo);
+			    }
+			    phoneW.setExtension(data);
+			}
 		    }
+		    if (relDemoExt.get("demo_cell")!=null) {
+			cdsDt.PhoneNumber phoneCell = contact.addNewPhoneNumber();
+			phoneCell.setPhoneNumberType(cdsDt.PhoneNumberType.C);
+			phoneCell.setPhoneNumber((String)relDemoExt.get("demo_cell"));
+		    }
+		    relDemoExt = null;
 		}
 	    }
 	    
@@ -315,7 +367,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    // PERSONAL HISTORY
 	    data = bean.socialHistory;
 	    if (!data.equals("")) {
-		dataPart = extract(data, "\n===\r");
+		dataPart = extract(data, "===");
 		for (int j=0; j<dataPart.size(); j++) {
 		    dataIn = (String) dataPart.get(j);
 		    patientRec.addNewPersonalHistory().setCategorySummaryLine(dataIn);
@@ -324,7 +376,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    // FAMILY HISTORY
 	    data = bean.familyHistory;
 	    if (!data.equals("")) {
-		dataPart = extract(data, "\n===\r");
+		dataPart = extract(data, "===");
 		for (int j=0; j<dataPart.size(); j++) {
 		    dataIn = (String) dataPart.get(j);
 		    patientRec.addNewFamilyHistory().setCategorySummaryLine(dataIn);
@@ -333,7 +385,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    // PAST HEALTH
 	    data = bean.medicalHistory;
 	    if (!data.equals("")) {
-		dataPart = extract(data, "\n===\r");
+		dataPart = extract(data, "===");
 		for (int j=0; j<dataPart.size(); j++) {
 		    dataIn = (String) dataPart.get(j);
 		    patientRec.addNewPastHealth().setCategorySummaryLine(dataIn);
@@ -342,7 +394,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    // RISK FACTORS
 	    data = bean.reminders;
 	    if (!data.equals("")) {
-		dataPart = extract(data, "\n===\r");
+		dataPart = extract(data, "===");
 		for (int j=0; j<dataPart.size(); j++) {
 		    dataIn = (String) dataPart.get(j);
 		    patientRec.addNewRiskFactors().setCategorySummaryLine(dataIn);
@@ -351,7 +403,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    // PROBLEM LIST
 	    data = bean.ongoingConcerns;
 	    if (!data.equals("")) {
-		dataPart = extract(data, "\n===\r");
+		dataPart = extract(data, "===");
 		for (int j=0; j<dataPart.size(); j++) {
 		    dataIn = (String) dataPart.get(j);
 		    cds.ProblemListDocument.ProblemList pList = patientRec.addNewProblemList();
@@ -367,14 +419,15 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			    String onset_date = dataIn.substring(date_index, date_end).trim();
 			    if (!onset_date.equals("")) {
 				cdsDt.DateFullOrPartial onsetDate = pList.addNewOnsetDate();
-				if (getCalDate(onset_date)!=null) {
-				    onsetDate.setFullDate(getCalDate(onset_date));
+				if (getCalDate(UtilDateUtilities.StringToDate(onset_date))!=null) {
+				    onsetDate.setFullDate(getCalDate(UtilDateUtilities.StringToDate(onset_date)));
 				} else date_index = -1;
 
 			    } else date_index = -1;
 			} else date_index = -1;
 		    }
 		    if (date_index==-1) {
+			pList.addNewOnsetDate();
 			err.add("Error: Missing Onset Date (Problem List) for Patient "+demoNo);
 		    }
 		}
@@ -382,7 +435,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	    // CLINCAL NOTES
 	    data = bean.encounter;
 	    if (!data.equals("")) {
-		dataPart = extract(data, "\n===\r");
+		dataPart = extract(data, "===");
 		for (int j=0; j<dataPart.size(); j++) {
 		    dataIn = (String) dataPart.get(j);
 		    patientRec.addNewClinicalNotes().setMyClinicalNotesContent(dataIn);
@@ -390,7 +443,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		
 /* Non-mandatory fields; not match in case of multiple Notes; disabled export here to avoid confusions.
 		if (getCalDate(bean.eChartTimeStamp)!=null) {
-		    c_notes.addNewEnteredDateTime().setDateTime(getCalDate(bean.eChartTimeStamp));
+		    c_notes.addNewEnteredDateTime().setDateTime(getCalDateTime(bean.eChartTimeStamp));
 		}
 		
 		data = bean.providerNo;
@@ -457,8 +510,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 			err.add("Note: Not exporting invalid Recorded Date (Allergies) for Patient "+demoNo);
 		    }
 		}
-		if (aSummary.trim().equals("")) err.add("Error: No Category Summary Line (Allergies & Adverse Reactions) for Patient "+demoNo);
-		else alr.setCategorySummaryLine(aSummary);
+		if (aSummary.trim().equals("")) {
+		    err.add("Error: No Category Summary Line (Allergies & Adverse Reactions) for Patient "+demoNo);
+		}
+		alr.setCategorySummaryLine(aSummary);
 	    }
 
 	    // IMMUNIZATIONS
@@ -468,17 +523,26 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		if (a != null && inject.contains((String) a.get("type")) ){
 		    cds.ImmunizationsDocument.Immunizations immu = patientRec.addNewImmunizations();
 		    data = (String) a.get("type");
-		    if (data==null || data.trim().equals("")) err.add("Error: No Immunization Name for Patient "+demoNo);
-		    else immu.setImmunizationName(data);
+		    if (data==null || data.trim().equals("")) {
+			data = "";
+			err.add("Error: No Immunization Name for Patient "+demoNo);
+		    }
+		    immu.setImmunizationName(data);
 		    
 		    data = (String) a.get("refused");
-		    if (data==null || data.trim().equals("")) err.add("Error: No Refused Flag for Patient "+demoNo);
+		    if (data==null || data.trim().equals("")) {
+			immu.addNewRefusedFlag();
+			err.add("Error: No Refused Flag for Patient "+demoNo);
+		    }
 		    else immu.addNewRefusedFlag().setBoolean(convert10toboolean(data));
 		    
 		    Hashtable extraData = pd.getPreventionById((String) a.get("id"));
 		    data = (String) extraData.get("summary");
-		    if (data==null || data.trim().equals("")) err.add("Error: No Category Summary Line (Immunization) for Patient "+demoNo);
-		    else immu.setCategorySummaryLine(data);
+		    if (data==null || data.trim().equals("")) {
+			data = "";
+			err.add("Error: No Category Summary Line (Immunization) for Patient "+demoNo);
+		    }
+		    immu.setCategorySummaryLine(data);
 		    
 		    data = (String) extraData.get("manufacture");
 		    if (data!=null && !data.trim().equals("")) immu.setManufacturer(data);
@@ -493,8 +557,8 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    
 		    data = (String) a.get("prevention_date");
 		    if (data!=null && !data.trim().equals("")) {
-			if (getCalDate((String)a.get("prevention_date"))!=null) {
-			    immu.addNewDate().setFullDate(getCalDate((String)a.get("prevention_date")));
+			if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+			    immu.addNewDate().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 			} else {
 			    err.add("Note: Not exporting invalid Immunization Date for Patient "+demoNo);
 			}
@@ -543,11 +607,12 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		    mSummary += mSummary.equals("") ? "DIN: "+data : "\nDIN: "+data;
 		}
 		data = arr[p].getDrugName();
-		if (data==null || data.trim().equals("")) err.add("Error: No Drug Name for Patient "+demoNo);
-		else {
-		    medi.setDrugName(data);
-		    mSummary += mSummary.equals("") ? "Drug Name: "+data : "\nDrug Name: "+data;
+		if (data==null || data.trim().equals("")) {
+		    data = "";
+		    err.add("Error: No Drug Name for Patient "+demoNo);
 		}
+		medi.setDrugName(data);
+		mSummary += mSummary.equals("") ? "Drug Name: "+data : "\nDrug Name: "+data;
 		
 		if (arr[p].getDosage()!=null) {
 		    cdsDt.DrugMeasure drugM = medi.addNewStrength();
@@ -605,7 +670,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		}
 
 		if (mSummary.trim().equals("")) err.add("Error: No Category Summary Line (Medications & Treatments) for Patient "+demoNo);
-		else medi.setCategorySummaryLine(mSummary);
+		medi.setCategorySummaryLine(mSummary);
 	    }
 	    arr = null;
 
@@ -620,21 +685,38 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 
 		labr.setTestName((String) h.get("testName"));
 		data = (String) h.get("abn");
-		if (data==null || data.trim().equals("")) err.add("Error: No Result Normal/Abnormal Flag for Patient "+demoNo);
-		else labr.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Enum.forString(data));
+		if (data==null || data.trim().equals("")) {
+		    data = "U";
+		    err.add("Error: No Result Normal/Abnormal Flag for Patient "+demoNo);
+		}
+		labr.setResultNormalAbnormalFlag(cdsDt.ResultNormalAbnormalFlag.Enum.forString(data));
+		
 		data = (String) h.get("location");
-		if (data==null || data.trim().equals("")) err.add("Error: No Laboratory Name for Patient "+demoNo);
-		else labr.setLaboratoryName("CML-" + data);
+		if (data==null || data.trim().equals("")) {
+		    data = "";
+		    err.add("Error: No Laboratory Name for Patient "+demoNo);
+		}
+		boolean isNum = true;
+		try {
+		    Integer.valueOf(data);
+		} catch (NumberFormatException en) {
+		    isNum = false;
+		}
+		if (isNum) labr.setLaboratoryName("CML-" + data);
+		else labr.setLaboratoryName(data);
 		
 		if (h.get("description")!=null) labr.setNotesFromLab((String) h.get("description"));
 		if (h.get("result")!=null) labResult.setValue((String) h.get("result"));
 		if (h.get("unit")!=null) labResult.setUnitOfMeasure((String) h.get("unit"));
 		if (h.get("range")!=null) labRef.setReferenceRangeText((String) h.get("range"));
 		data = (String) h.get("collDate");
-		if (data==null || data.trim().equals("")) err.add("Error: Missing Collection Date (Laboratory Results) for Patient "+demoNo);
+		if (data==null || data.trim().equals("")) {
+		    labr.addNewCollectionDateTime();
+		    err.add("Error: No Collection Date (Laboratory Results) for Patient "+demoNo);
+		}
 		else {
-		    if (getCalDate(data)!=null) {
-			labr.addNewCollectionDateTime().setFullDate(getCalDate(data));
+		    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+			labr.addNewCollectionDateTime().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
 		    } else {
 			err.add("Note: Not exporting invalid Collection Date (Laboratory Results) for Patient "+demoNo);
 		    }
@@ -654,15 +736,20 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		
 		aptm.setSequenceIndex(Integer.parseInt(ap.getAppointment_no()));
 		
-		if (getCalDate(ap.getDateAppointment())!=null) {
-		    aptm.addNewAppointmentDate().setFullDate(getCalDate(ap.getDateAppointment()));
+		if (ap.getDateAppointment()!=null) {
+		    if (getCalDate(ap.getDateAppointment())!=null) {
+			aptm.addNewAppointmentDate().setFullDate(getCalDate(ap.getDateAppointment()));
+		    } else err.add("Note: Not exporting invalid Appointment Date ("+j+") for Patient "+demoNo);
 		} else {
-		    err.add("Note: Not exporting invalid Appointment Date for Patient "+demoNo);
+		    aptm.addNewAppointmentDate();
+		    err.add("Error: No Appointment Date ("+j+") for Patient "+demoNo);
 		}
-		if (getCalDate(ap.getDateStartTime())!=null) {
-		    aptm.setAppointmentTime(getCalDate(ap.getDateStartTime()));
+		if (ap.getDateStartTime()!=null) {
+		    if (getCalDate(ap.getDateStartTime())!=null) {
+			aptm.setAppointmentTime(getCalDate(ap.getDateStartTime()));
+		    } else err.add("Note: Not exporting invalid Appointment Time ("+j+") for Patient "+demoNo);
 		} else {
-		    err.add("Note: Not exporting invalid Appointment Time for Patient "+demoNo);
+		    err.add("Error: No Appointment Time ("+j+") for Patient "+demoNo);
 		}
 		
 		long dLong = (ap.getDateEndTime().getTime()-ap.getDateStartTime().getTime())/60000;
@@ -683,6 +770,10 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		
 		data = ap.getNotes();
 		if (data!=null && !data.equals("")) aptm.setAppointmentNotes(data);
+		else {
+		    aptm.setAppointmentNotes("");
+		    err.add("Error! No Appointment Notes for Patient "+demoNo);
+		}
 		
 		if (ap.getProviderFirstN()!=null || ap.getProviderLastN()!=null) {
 		    cds.AppointmentsDocument.Appointments.Provider prov = aptm.addNewProvider();
@@ -700,65 +791,61 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 		for (int j=0; j<edoc_list.size(); j++) {
 		    EDoc edoc = (EDoc)edoc_list.get(j);
 		    cds.ReportsReceivedDocument.ReportsReceived rpr = patientRec.addNewReportsReceived();
-		    
-		    data = edoc.getFileName();
-		    if (!data.equals("")) {
-			cdsDt.ReportContent rpc = rpr.addNewContent();
-			rpc.setTextContent(data);
-			
-			File f = new File(edoc.getFilePath());
-			if (!f.exists()) err.add("Error: Document \""+f.getName()+"\" does not exist!");
-			else if (f.length()>Runtime.getRuntime().freeMemory()) err.add("Error: Document \""+f.getName()+"\" too big to be exported. Not enough memory!");
-			else {
-			    InputStream in = new FileInputStream(f);
-			    byte[] b = new byte[(int)f.length()];
-			    
-			    int offset=0, numRead=0;
-			    while ((numRead=in.read(b,offset,b.length-offset)) >= 0
-				   && offset < b.length) offset += numRead;
-			    
-			    if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
-			    in.close();
-			    rpc.setMedia(b);
-			    
-			    data = edoc.getContentType();
-			    if (data.equals("")) err.add("Error: No File Extension & Version info for Document \""+edoc.getFileName()+"\"");
-			    else rpr.setFileExtensionAndVersion(data);
+		    cdsDt.ReportContent rpc = rpr.addNewContent();
 
-			    data = edoc.getType();
-			    if (!data.equals("")) {
-				if (data.trim().equalsIgnoreCase("radiology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
-				else if (data.trim().equalsIgnoreCase("pathology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
-				else if (data.trim().equalsIgnoreCase("consult")) rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
-				else {
-				    rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
-				    rpr.setSubClass(data);
-				}
-			    }
+		    File f = new File(edoc.getFilePath());
+		    if (!f.exists()) err.add("Error: Document \""+f.getName()+"\" does not exist!");
+		    else if (f.length()>Runtime.getRuntime().freeMemory()) err.add("Error: Document \""+f.getName()+"\" too big to be exported. Not enough memory!");
+		    else {
+			InputStream in = new FileInputStream(f);
+			byte[] b = new byte[(int)f.length()];
 
-			    data = edoc.getObservationDate();
-			    if (!data.equals("")) {
-				if (getCalDate(data)!=null) {
-				    rpr.addNewEventDateTime().setFullDate(getCalDate(data));
-				} else {
-				    err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo);
-				}
+			int offset=0, numRead=0;
+			while ((numRead=in.read(b,offset,b.length-offset)) >= 0
+			       && offset < b.length) offset += numRead;
+
+			if (offset < b.length) throw new IOException("Could not completely read file " + f.getName());
+			in.close();
+			rpc.setMedia(b);
+
+			data = edoc.getContentType();
+			if (data.equals("")) err.add("Error: No File Extension & Version info for Document \""+edoc.getFileName()+"\"");
+			rpr.setFileExtensionAndVersion(data);
+
+			data = edoc.getType();
+			if (!data.equals("")) {
+			    if (data.trim().equalsIgnoreCase("radiology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT);
+			    else if (data.trim().equalsIgnoreCase("pathology")) rpr.setClass1(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT);
+			    else if (data.trim().equalsIgnoreCase("consult")) rpr.setClass1(cdsDt.ReportClass.CONSULTANT_REPORT);
+			    else {
+				rpr.setClass1(cdsDt.ReportClass.OTHER_LETTER);
+				rpr.setSubClass(data);
 			    }
-			    data = edoc.getDateTimeStamp();
-			    if (!data.equals("")) {
-				if (getCalDate(data)!=null) {
-				    rpr.addNewReceivedDateTime().setDateTime(getCalDate(data));
-				} else {
-				    err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo);
-				}
+			} else {
+			    err.add("Error: No Class type for Document \""+edoc.getFileName()+"\"");
+			}
+			data = edoc.getObservationDate();
+			if (!data.equals("")) {
+			    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+				rpr.addNewEventDateTime().setFullDate(getCalDate(UtilDateUtilities.StringToDate(data)));
+			    } else {
+				err.add("Note: Not exporting invalid Event Date (Reports) for Patient "+demoNo);
 			    }
-			    data = edoc.getCreatorName();
-			    if (!data.equals("")) {
-				cdsDt.PersonNameSimple author = rpr.addNewAuthorPhysician();
-				String[] name = data.split(", ");
-				if (!name[0].equals("")) author.setFirstName(name[0]);
-				if (!name[1].equals("")) author.setLastName(name[1]);
+			}
+			data = edoc.getDateTimeStamp();
+			if (!data.equals("")) {
+			    if (getCalDate(UtilDateUtilities.StringToDate(data))!=null) {
+				rpr.addNewReceivedDateTime().setDateTime(getCalDate(UtilDateUtilities.StringToDate(data, "yyyy-MM-dd HH:mm:ss")));
+			    } else {
+				err.add("Note: Not exporting invalid Received DateTime (Reports) for Patient "+demoNo);
 			    }
+			}
+			data = edoc.getCreatorName();
+			if (!data.equals("")) {
+			    cdsDt.PersonNameSimple author = rpr.addNewAuthorPhysician();
+			    String[] name = data.split(", ");
+			    if (!name[0].equals("")) author.setFirstName(name[0]);
+			    if (!name[1].equals("")) author.setLastName(name[1]);
 			}
 		    }
 		}
@@ -1092,7 +1179,7 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	int a = 0, b = src.indexOf(sep)==-1 ? src.length() : src.indexOf(sep);
 	boolean ended = false;
 	while (!ended) {
-	    exs.add(source.substring(a, b));
+	    exs.add(clearBlank(source.substring(a, b)));
 	    a = b + sep.length();
 	    b = src.indexOf(sep, a)==-1 ? src.length() : src.indexOf(sep, a);
 	    if (b-a <= sep.length()) ended = true;
@@ -1100,14 +1187,18 @@ public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServlet
 	return exs;
     }
     
-    XmlCalendar getCalDate(String inDate) {
-	GDateBuilder gd = new GDateBuilder();
-	gd.setDate(UtilDateUtilities.StringToDate(inDate));
-	if (gd.getYear()<1600) return null;
-	else {
-	    gd.clearTimeZone();
-	    return gd.getCalendar();
+    String clearBlank(String source) {
+	boolean existBlank = true;
+	while (existBlank) {
+	    if (source.charAt(0)=='\n' || source.charAt(0)=='\r') {
+		source = source.substring(1);
+	    } else if (source.charAt(source.length()-1)=='\n' || source.charAt(source.length()-1)=='\r') {
+		source = source.substring(0,source.length()-1);
+	    } else {
+		existBlank = false;
+	    }
 	}
+	return source;
     }
     
     XmlCalendar getCalDate(Date inDate) {

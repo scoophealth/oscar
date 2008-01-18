@@ -180,14 +180,18 @@ public class ImportDemographicDataAction2 extends Action {
 		errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 	    }
 	    String roster_status = demo.getEnrollmentStatus()!=null ? demo.getEnrollmentStatus().toString() : "";
-	    if (roster_status.equals("")) {
+	    if (roster_status.equals("1")) roster_status = "RO";
+	    else if (roster_status.equals("0")) roster_status = "NR";
+	    else {
 		dataGood = "No";
 		errorMsg = "No Enrollment Status";
 		errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
-	    } else if (roster_status.equals("1")) roster_status = "RO";
-	    else if (roster_status.equals("0")) roster_status = "NR";
+	    }
 	    String patient_status = demo.getPersonStatusCode()!=null ? demo.getPersonStatusCode().toString() : "";
-	    if (patient_status.equals("")) {
+	    if (patient_status.equals("A")) patient_status = "AC";
+	    else if (patient_status.equals("I")) patient_status = "IN";
+	    else if (patient_status.equals("D")) patient_status = "DE";
+	    else {
 		dataGood = "No";
 		errorMsg = "No Person Status Code";
 		errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
@@ -234,12 +238,11 @@ public class ImportDemographicDataAction2 extends Action {
 			if (pn[i].getAreaCode()!=null) phone = "("+pn[i].getAreaCode()+")"+pn[i].getNumber();
 			else phone = pn[i].getNumber();
 		    }
-		    if (phone!=null) {
-			if (pn[i].getExtension()!=null) ext = pn[i].getExtension();
-			else if (pn[i].getExchange()!=null) ext = pn[i].getExchange();
-		    }
 		}
 		if (phone!=null) {
+		    if (pn[i].getExtension()!=null) ext = pn[i].getExtension();
+		    else if (pn[i].getExchange()!=null) ext = pn[i].getExchange();
+		    
 		    if (pn[i].getPhoneNumberType()==cdsDt.PhoneNumberType.W) {
 			workPhone = phone;
 			workExt   = ext;		    
@@ -299,12 +302,11 @@ public class ImportDemographicDataAction2 extends Action {
 				if (pn[j].getAreaCode()!=null) phone = pn[j].getAreaCode()+"-"+pn[j].getNumber();
 				else phone = pn[j].getNumber();
 			    }
-			    if (phone!=null) {
-				if (pn[j].getExtension()!=null) ext = pn[j].getExtension();
-				else if (pn[j].getExchange()!=null) ext = pn[j].getExchange();
-			    }
 			}
 			if (phone!=null) {
+			    if (pn[j].getExtension()!=null) ext = pn[j].getExtension();
+			    else if (pn[j].getExchange()!=null) ext = pn[j].getExchange();
+			    
 			    if (pn[j].getPhoneNumberType()==cdsDt.PhoneNumberType.W) {
 				workPhone = phone;
 				workExt   = ext;		    
@@ -729,21 +731,23 @@ public class ImportDemographicDataAction2 extends Action {
 		for (int i=0; i<repR.length; i++) {
 		    cdsDt.ReportContent repCt = repR[i].getContent();
 		    if (repCt!=null) {
-			byte[] b = repCt.getMedia()==null ? repCt.getTextContent().getBytes() : repCt.getMedia();
+			byte[] b = null;
+			if (repCt.getMedia()!=null) b = repCt.getMedia();
+			else if (repCt.getTextContent()!=null) b = repCt.getTextContent().getBytes();
 			if (b==null) {
 			    otherGood = "No";
 			    errorMsg = "No report file in xml";
 			    errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			} else {
-			    String docDesc=null, docType=null, contentType=null, observationDate=null, updateDateTime=null, docCreator=null;
 			    String docFileName = "ImportReport-"+UtilDateUtilities.getToday("yyyy-MM-dd.HH.mm.ss")+"-"+i;
+			    String docDesc = docFileName;
+			    String docType=null, contentType=null, observationDate=null, updateDateTime=null, docCreator=null;
 			    
 			    String docDir = oscar.OscarProperties.getInstance().getProperty("DOCUMENT_DIR");
 			    FileOutputStream f = new FileOutputStream(docDir+docFileName);
 			    f.write(b);
 			    f.close();
 
-			    if (repCt.getTextContent()!=null) docDesc = repCt.getTextContent();
 			    if (repR[i].getFileExtensionAndVersion()!=null) {
 				contentType = repR[i].getFileExtensionAndVersion();
 			    } else {
@@ -751,8 +755,8 @@ public class ImportDemographicDataAction2 extends Action {
 				errorMsg = "No File Extension & Version for Reports";
 				errorImport += errorImport.equals("") ? errorMsg : "\n"+errorMsg;
 			    }
-			    if (repR[i].getEventDateTime()!=null) observationDate = repR[i].getEventDateTime().toString();
-			    if (repR[i].getReceivedDateTime()!=null) updateDateTime = repR[i].getReceivedDateTime().toString();
+			    if (repR[i].getEventDateTime()!=null) observationDate = getDateFullPartial(repR[i].getEventDateTime());
+			    if (repR[i].getReceivedDateTime()!=null) updateDateTime = getDateFullPartial(repR[i].getReceivedDateTime());
 			    if (repR[i].getClass1()!=null) {
 				if (repR[i].getClass1().equals(cdsDt.ReportClass.DIAGNOSTIC_IMAGING_REPORT)) docType = "radiology";
 				else if (repR[i].getClass1().equals(cdsDt.ReportClass.DIAGNOSTIC_TEST_REPORT)) docType = "pathology";
@@ -768,14 +772,18 @@ public class ImportDemographicDataAction2 extends Action {
 				String authorLast  = repR[i].getAuthorPhysician().getLastName();
 				provD = new ProviderData();
 				ArrayList pList = provD.getProviderList();
+				boolean providerFound = false;
 				for (int j=0; j<pList.size(); j++) {
 				    Hashtable pHash = (Hashtable) pList.get(j);
 				    if (authorFirst.equalsIgnoreCase((String)pHash.get("firstName")) &&
-					authorLast.equalsIgnoreCase((String)pHash.get("lastName"))) docCreator = (String)pHash.get("providerNo");
-				    else {
-					docCreator = provD.getNewExtProviderNo();
-					provD.addProvider(docCreator, authorFirst, authorLast, "");
+					authorLast.equalsIgnoreCase((String)pHash.get("lastName"))) {
+					docCreator = (String)pHash.get("providerNo");
+					providerFound = true;
 				    }
+				}
+				if (!providerFound) {
+				    docCreator = provD.getNewExtProviderNo();
+				    provD.addProvider(docCreator, authorFirst, authorLast, "");
 				}
 			    }
 			    EDocUtil.addDocument(demoNo,docFileName,docDesc,docType,contentType,observationDate,updateDateTime,docCreator);
