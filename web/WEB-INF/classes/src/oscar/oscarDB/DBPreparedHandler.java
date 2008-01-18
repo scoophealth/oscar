@@ -29,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Date;
 
 import org.oscarehr.util.DbConnectionFilter;
 
@@ -74,6 +75,20 @@ public class DBPreparedHandler {
         preparedStmt = getConnection().prepareStatement(preparedSQL);
         for (int i = 0; i < param.length; i++) {
             preparedStmt.setInt((i + 1), param[i]);
+        }
+        return(preparedStmt.executeUpdate());
+    }
+    synchronized public int queryExecuteUpdate(String preparedSQL, String[] param, Date[] dtparam,int[] intparam) throws SQLException {
+        preparedStmt = getConnection().prepareStatement(preparedSQL);
+        int idx = 1;
+        for (int i = 0; i < param.length; i++) {
+            preparedStmt.setString((idx++), param[i]);
+        }
+        for (int i = 0; i < dtparam.length; i++) {
+            preparedStmt.setDate((idx++), dtparam[i]);
+        }
+        for (int i = 0; i < intparam.length; i++) {
+            preparedStmt.setInt((idx++), intparam[i]);
         }
         return(preparedStmt.executeUpdate());
     }
