@@ -280,9 +280,9 @@ div.recommendations li{
                             teleplan
                             <%
                             TeleplanSequenceDAO seq = new TeleplanSequenceDAO();
-                            
+                            oscar.OscarProperties op = oscar.OscarProperties.getInstance();
                             %>
-                            Last Sequence # = <%=seq.getLastSequenceNumber()%>   Current Datacenter # = 
+                            Last Sequence # = <%=seq.getLastSequenceNumber()%>   Current Datacenter # = <%=op.getProperty("dataCenterId","Not Set")%>
                         </td>
                         <td  >&nbsp;
 							
@@ -296,51 +296,27 @@ div.recommendations li{
         </tr>
         <tr>
             <td class="MainTableLeftColumn" valign="top">
-            
-                       
-               <div class="leftBox">
-                  <h3>&nbsp;TODO</h3>
-                  <div style="background-color: #EEEEFF;" >
-                    <ul>
-                        <li style="margin-top:2px;">Manually Set Sequence #</li>
-                        <li>Set Teleplan UserName Password</li>
-                        <li>Get Teleplan Sequence #</li>
-                        <li>Update Billing Codes</li>
-                    </ul>
-                
-                  </div>
-               </div> 
-               
-               <div class="leftBox">
-                  <h3>&nbsp;TODO</h3>
-                  <div style="background-color: #EEEEFF;" >
-                    <ul>
-                        
-                        <li>+add sending msp files from the sending page.</li>
-                        <li> beable to send an msp file</li>
-                        <li>process billing codes</li>
-                        <li>Add check from master screen</li>
-                    </ul>
-                
-                  </div>
-               </div>
-               
+                &nbsp;
             </td>
             <td valign="top" class="MainTableRightColumn">
                 <%if (request.getAttribute("error") != null) { %>
                 <div> <%=request.getAttribute("error")%></div>
                 <%}%>
-                <div class="leftBox">
-                  <h3>&nbsp;Manually Set Sequence #</h3>
-                  <div style="background-color: #EEEEFF;" >
-                      <html:form action="/billing/CA/BC/ManageTeleplan">
-                         <input type="hidden" name="method" value="setSequenceNumber"/> 
-                         Sequence #: <input type="text" name="num"/>
-                         <input type="submit"/>
-                      </html:form>
-                  </div>
-               </div>
+                <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=""+session.getAttribute("user")%>" >
+                    <div class="leftBox">
+                        <h3>&nbsp;Manually Set Sequence #</h3>
+                        <div style="background-color: #EEEEFF;" >
+                            <html:form action="/billing/CA/BC/ManageTeleplan">
+                                <input type="hidden" name="method" value="setSequenceNumber"/> 
+                                Sequence #: <input type="text" name="num"/>
+                                <input type="submit"/>
+                            </html:form>
+                        </div>
+                    </div>
+                </oscar:oscarPropertiesCheck>
                
+                <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=""+session.getAttribute("user")%>" >
+                
                <div class="leftBox">
                   <h3>&nbsp;Set Teleplan UserName Password</h3>
                   <div style="background-color: #EEEEFF;" >
@@ -353,8 +329,11 @@ div.recommendations li{
                 
                   </div>
                </div> 
+               </oscar:oscarPropertiesCheck>
                
                <% if ( dao.hasUsernamePassword()){ %> 
+               <oscar:oscarPropertiesCheck property="BILLING_SUPERUSER" value="<%=""+session.getAttribute("user")%>" >
+                
                <div class="leftBox">
                   <h3>&nbsp;Get Teleplan Sequence #</h3>
                   <div style="background-color: #EEEEFF;" >
@@ -364,6 +343,7 @@ div.recommendations li{
                     </html:form>
                   </div>
                </div> 
+               </oscar:oscarPropertiesCheck>
                
                <div class="leftBox">
                   <h3>&nbsp;Update Billing Codes</h3>
