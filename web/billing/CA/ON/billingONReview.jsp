@@ -752,5 +752,81 @@ if(props2.getProperty("clinicSatelliteCity") != null) {
 </table>
 <% if(bPerc) { out.println("* Click the code you want the % code to apply to [1 or 2 ...]."); } %>
 </form>
+
+
+<script language="JavaScript">
+
+function addToDiseaseRegistry(){
+    if ( validateItems() ) {
+	var url = "../../../oscarResearch/oscarDxResearch/dxResearch.do";
+	var data = Form.serialize(dxForm);
+	//alert ( data);
+	new Ajax.Updater('dxListing',url, {method: 'post',postBody: data,asynchronous:true,onComplete: getNewCurrentDxCodeList}); 
+    }else{
+       alert("Error: Nothing was selected");
+    }
+}
+
+function validateItems(form){    
+    var dxChecks;
+    var ret = false;    
+        
+    dxChecks = document.getElementsByName("xml_research");            
+     
+     for( idx = 0; idx < dxChecks.length; ++idx ) {   
+        if( dxChecks[idx].checked ) {
+            ret = true;
+            break;
+        }
+     }             
+    return ret;
+}
+    
+
+function getNewCurrentDxCodeList(origRequest){
+   //alert("calling get NEW current Dx Code List");
+   var url = "../../../oscarResearch/oscarDxResearch/currentCodeList.jsp";
+   var ran_number=Math.round(Math.random()*1000000);
+   var params = "demographicNo=<%=demo_no%>&rand="+ran_number;  //hack to get around ie caching the page
+   //alert(params);
+   new Ajax.Updater('dxFullListing',url, {method:'get',parameters:params,asynchronous:true}); 
+   //alert(origRequest.responseText);
+}
+
+
+</script>
+
+
+<oscar:oscarPropertiesCheck property="DX_QUICK_LIST_BILLING_REVIEW" value="yes">
+
+<div class="dxBox">
+    <h3>&nbsp;Dx Quick Pick Add List</h3>
+       <form id="dxForm">
+       <input type="hidden" name="demographicNo" value="<%=demo_no%>" />
+       <input type="hidden" name="providerNo" value="<%=session.getAttribute("user")%>" />
+       <input type="hidden" name="forward" value="" />
+       <input type="hidden" name="forwardTo" value="codeList"/>
+       <div class="wrapper" id="dxListing">
+       <jsp:include page="../../../oscarResearch/oscarDxResearch/quickCodeList.jsp">
+          <jsp:param name="demographicNo" value="<%=demo_no%>"/>
+       </jsp:include>
+       </div>
+       <input type="button" value="Add To Disease Registry" onclick="addToDiseaseRegistry()"/>
+       <!--input type="button" value="check" onclick="getNewCurrentDxCodeList()"/> 
+<input type="button" value="check" onclick="validateItems()"/--> 
+       </form>
+</div>
+
+
+<div class="dxBox">
+    <h3>&nbsp;Current Patient Dx List  <a href="#" onclick="Element.toggle('dxFullListing'); return false;" style="font-size:small;" >show/hide</a></h3>
+       <div class="wrapper" id="dxFullListing"  style="display:none;">
+       <jsp:include page="../../../oscarResearch/oscarDxResearch/currentCodeList.jsp">
+          <jsp:param name="demographicNo" value="<%=demo_no%>"/>
+       </jsp:include>
+       </div>
+</div>
+</oscar:oscarPropertiesCheck>
+
 </body>
 </html>
